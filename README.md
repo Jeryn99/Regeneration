@@ -1,1 +1,1 @@
-# rp-mod
+# Regeneration mod for minecraft
