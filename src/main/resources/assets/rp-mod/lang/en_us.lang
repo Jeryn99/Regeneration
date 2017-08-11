@@ -1,0 +1,6 @@
+entity.rp-mod.NPCJobGiver.name=Job Giver
+tile.Plot Block.name=Plot Block
+tile.City Block.name=City Block
+tile.Apartment Block.name=Apartment Block
+tile.inventorTableStone.name=Stone Inventor Table
+item.ApartmentDoor.name=Apartment Door

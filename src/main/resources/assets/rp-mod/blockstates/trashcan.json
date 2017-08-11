@@ -1,0 +1,10 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "rp-mod:trashcan"
+	},
+	"variants": {
+		"normal": [{}],
+		"inventory": [{}]
+	}
+}
