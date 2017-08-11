@@ -1,0 +1,17 @@
+superpower.Timelord.name=Timelord
+g-regen.abilities.bouncy.name=Trait: Bouncy
+g-regen.abilities.bouncy.desc=Take slightly less damage from falling
+g-regen.abilities.lucky.name=Trait: Lucky
+g-regen.abilities.lucky.desc=Increase chances of getting good loot from fishing and some other things
+g-regen.abilities.quick.name=Trait: Quick
+g-regen.abilities.quick.desc=Move slightly faster at all times
+g-regen.abilities.spry.name=Trait: Spry
+g-regen.abilities.spry.desc=Jump slightly higher
+g-regen.abilities.strong.name=Trait: Strong
+g-regen.abilities.strong.desc=Hit slightly harder
+g-regen.abilities.sturdy.name=Trait: Sturdy
+g-regen.abilities.sturdy.desc=Slightly increases resistance to being knocked back
+g-regen.abilities.thickskinned.name=Trait: Thick Skinned
+g-regen.abilities.thickskinned.desc=Gives a small amount of base armor
+g-regen.abilities.tough.name=Trait: Tough
+g-regen.abilities.tough.desc=Gives a small amount of extra health
