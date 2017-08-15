@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by AFlyingGrayson on 8/7/17
  */
 
-@Mod( modid = Regeneration.MODID, name = "Regeneration", version = Regeneration.VERSION)
+@Mod( modid = Regeneration.MODID, name = "Regeneration", version = Regeneration.VERSION, dependencies = "required-after:lucraftcore@[1.12-1.2.0,)")
 @Mod.EventBusSubscriber
 public class Regeneration
 {
