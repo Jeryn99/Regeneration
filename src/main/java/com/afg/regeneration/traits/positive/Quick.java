@@ -1,4 +1,4 @@
-package com.afg.regeneration.traits;
+package com.afg.regeneration.traits.positive;
 
 import lucraft.mods.lucraftcore.abilities.AbilityAttributeModifier;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -10,15 +10,16 @@ import java.util.UUID;
 /**
  * Created by AFlyingGrayson on 8/7/17
  */
-public class Lucky extends AbilityAttributeModifier
+public class Quick extends AbilityAttributeModifier
 {
-	public Lucky(EntityPlayer player, UUID uuid, float factor, int operation)
+
+	public Quick(EntityPlayer player, UUID uuid, float factor, int operation)
 	{
 		super(player, uuid, factor, operation);
 	}
 
 	@Override public IAttribute getAttribute()
 	{
-		return SharedMonsterAttributes.LUCK;
+		return SharedMonsterAttributes.MOVEMENT_SPEED;
 	}
 }

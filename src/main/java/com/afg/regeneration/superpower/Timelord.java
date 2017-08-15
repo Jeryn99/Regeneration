@@ -1,7 +1,8 @@
 package com.afg.regeneration.superpower;
 
 import com.afg.regeneration.Regeneration;
-import com.afg.regeneration.traits.*;
+import com.afg.regeneration.traits.negative.*;
+import com.afg.regeneration.traits.positive.*;
 import lucraft.mods.lucraftcore.abilities.Ability;
 import lucraft.mods.lucraftcore.superpower.ISuperpowerPlayerRenderer;
 import lucraft.mods.lucraftcore.superpower.Superpower;
@@ -19,7 +20,7 @@ import java.util.UUID;
  */
 public class Timelord extends Superpower
 {
-	private TimelordRenderhandler timelordRenderhandler = new TimelordRenderhandler();;
+	private TimelordRenderhandler timelordRenderhandler;
 
 	public Timelord()
 	{
@@ -46,12 +47,23 @@ public class Timelord extends Superpower
 		list.add(new ThickSkinned(player, uuid, 4.0f, 0));
 		list.add(new Tough(player, uuid, 6.0f, 0));
 
+		list.add(new Unlucky(player, uuid, -5.0f, 0));
+		list.add(new Slow(player, uuid, -0.035f, 0));
+		list.add(new Weak(player, uuid, -0.25f, 0));
+		list.add(new Rigid(player, uuid, -1.0f, 0));
+		list.add(new Clumsy(player, uuid, -0.5f, 0));
+		list.add(new Flimsy(player, uuid, -3.0f, 0));
+		list.add(new Frail(player, uuid, -4.0f, 0));
+		list.add(new Unhealthy(player, uuid, -6.0f, 0));
+
 		return list;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public ISuperpowerPlayerRenderer getPlayerRenderer() {
+		if(this.timelordRenderhandler == null)
+			timelordRenderhandler = new TimelordRenderhandler();
 		return this.timelordRenderhandler;
 	}
 }

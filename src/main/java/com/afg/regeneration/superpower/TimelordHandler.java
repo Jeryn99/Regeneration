@@ -1,6 +1,7 @@
 package com.afg.regeneration.superpower;
 
 import com.afg.regeneration.Regeneration;
+import com.afg.regeneration.traits.negative.INegativeTrait;
 import lucraft.mods.lucraftcore.abilities.Ability;
 import lucraft.mods.lucraftcore.superpower.Superpower;
 import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
@@ -34,8 +35,8 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		if(regenTicks > 0)
 		{
 			regenTicks++;
-			if(player.getHealth() > 0.1f)
-			player.setHealth(0.1f);
+//			if(player.getHealth() > 1f)
+//			player.setHealth();
 
 			if(player.world.isRemote)
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
@@ -59,9 +60,16 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 	private static void randomizeTraits(SuperpowerPlayerHandler handler){
 		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
 
-		for(int i = 0; i < 3; i++){
+		for(int i = 0; i < 2; i++){
 			Ability a = null;
-			while(a == null || a.isUnlocked())
+			while(a == null || a instanceof INegativeTrait || a.isUnlocked())
+				a = handler.getAbilities().get(handler.player.getRNG().nextInt(handler.getAbilities().size()));
+			a.setUnlocked(true);
+		}
+
+		for(int i = 0; i < 2; i++){
+			Ability a = null;
+			while(a == null || a.isUnlocked() || !(a instanceof INegativeTrait) || abilityIsUnlocked(handler, ((INegativeTrait) a).getPositiveTrait()))
 				a = handler.getAbilities().get(handler.player.getRNG().nextInt(handler.getAbilities().size()));
 			a.setUnlocked(true);
 		}
@@ -82,6 +90,13 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		s = s + ".";
 
 		handler.player.sendStatusMessage(new TextComponentString("You've gotten a new life, with new traits: " + s), true);
+	}
+
+	private static boolean abilityIsUnlocked(SuperpowerPlayerHandler handler, Class<? extends Ability> ability){
+		for (Ability ability1 : handler.getAbilities())
+			if(ability.equals(ability1.getClass()))
+				return ability1.isUnlocked();
+		return false;
 	}
 
 	@Override public NBTTagCompound writeToNBT(NBTTagCompound compound)
@@ -107,11 +122,8 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 			if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))
 			{
 				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
-
 				if (handler.regenTicks > 0)
-				{
 					e.setCanceled(true);
-				}
 			}
 		}
 	}

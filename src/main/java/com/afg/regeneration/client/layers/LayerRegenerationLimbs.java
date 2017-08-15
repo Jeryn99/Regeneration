@@ -1,8 +1,8 @@
 package com.afg.regeneration.client.layers;
 
 import com.afg.regeneration.Regeneration;
+import com.afg.regeneration.client.animation.LimbRotationUtil;
 import com.afg.regeneration.superpower.TimelordHandler;
-import com.afg.regeneration.superpower.TimelordRenderhandler;
 import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
@@ -10,12 +10,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 
 /**
  * Created by AFlyingGrayson on 8/8/17
  */
+@SideOnly(Side.CLIENT)
 public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer>
 {
 	private final RenderPlayer playerRenderer;
@@ -23,13 +26,13 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer>
 	private static final ModelPlayer playerModelSmallArms = new ModelPlayer(0.55F, true);
 
 	static {
-		TimelordRenderhandler.createLeftArm(playerModelLargeArms, 0, 0, -75, false);
-		TimelordRenderhandler.createRightArm(playerModelLargeArms, 0, 0, 75, false);
-		TimelordRenderhandler.createHead(playerModelLargeArms, -20, 0, 0);
+		LimbRotationUtil.createLeftArm(playerModelLargeArms, 0, 0, -75, false);
+		LimbRotationUtil.createRightArm(playerModelLargeArms, 0, 0, 75, false);
+		LimbRotationUtil.createHead(playerModelLargeArms, -20, 0, 0);
 
-		TimelordRenderhandler.createLeftArm(playerModelSmallArms, 0, 0, -75, true);
-		TimelordRenderhandler.createRightArm(playerModelSmallArms, 0, 0, 75, true);
-		TimelordRenderhandler.createHead(playerModelSmallArms, -20, 0, 0);
+		LimbRotationUtil.createLeftArm(playerModelSmallArms, 0, 0, -75, true);
+		LimbRotationUtil.createRightArm(playerModelSmallArms, 0, 0, 75, true);
+		LimbRotationUtil.createHead(playerModelSmallArms, -20, 0, 0);
 	}
 
 	public LayerRegenerationLimbs(RenderPlayer playerRenderer)
@@ -52,9 +55,9 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer>
 				boolean smallArms = ((AbstractClientPlayer) player).getSkinType().equals("slim");
 				ModelPlayer playerModel = smallArms ? playerModelSmallArms : playerModelLargeArms;
 
-//				TimelordRenderhandler.resetHead(playerModel);
-//				TimelordRenderhandler.resetRightArm(playerModel, smallArms);
-//				TimelordRenderhandler.resetLeftArm(playerModel, smallArms);
+//				LimbRotationUtil.resetHead(playerModel);
+//				LimbRotationUtil.resetRightArm(playerModel, smallArms);
+//				LimbRotationUtil.resetLeftArm(playerModel, smallArms);
 
 				GlStateManager.pushAttrib();
 				GlStateManager.disableTexture2D();
