@@ -29,8 +29,8 @@ public class PlayerRenderHandler
 			if (handler.regenTicks > 0)
 			{
 				boolean smallArms = ((AbstractClientPlayer) e.getEntityPlayer()).getSkinType().equals("slim");
-				LimbRotationUtil.createLeftArm(e.getRenderer().getMainModel(), 0, 0, -75, smallArms);
-				LimbRotationUtil.createRightArm(e.getRenderer().getMainModel(), 0, 0, 75, smallArms);
+				LimbRotationUtil.createLeftArm(e.getRenderer().getMainModel(), 0, 0, -75);
+				LimbRotationUtil.createRightArm(e.getRenderer().getMainModel(), 0, 0, 75);
 				LimbRotationUtil.createHead(e.getRenderer().getMainModel(), -20, 0, 0);
 			}
 		}

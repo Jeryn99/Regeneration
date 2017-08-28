@@ -4,6 +4,8 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by AFlyingGrayson on 8/15/17
  */
@@ -12,66 +14,96 @@ public class LimbRotationUtil
 	private final static float modelSize = 0.5f;
 	private final static int LEFTARM = 1, RIGHTARM = 2, HEAD = 3, LEFTARMWEAR = 4, RIGHTARMWEAR = 5, HEADWEAR = 6;
 
-	public static void createRightArm(ModelPlayer model, float x, float y, float z, boolean smallArms){
-		createRightArm(model, smallArms);
-		((CustomModelRenderer)model.bipedRightArm).setAngles(x,y,z);
-		((CustomModelRenderer)model.bipedRightArmwear).setAngles(x,y,z);
+	public static void createRightArm(ModelPlayer model, float x, float y, float z)
+	{
+		try
+		{
+			createRightArm(model);
+			((CustomModelRenderer) model.bipedRightArm).setAngles(x, y, z);
+			((CustomModelRenderer) model.bipedRightArmwear).setAngles(x, y, z);
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 
-	public static void createLeftArm(ModelPlayer model, float x, float y, float z, boolean smallArms){
-		createLeftArm(model, smallArms);
-		((CustomModelRenderer)model.bipedLeftArm).setAngles(x,y,z);
-		((CustomModelRenderer)model.bipedLeftArmwear).setAngles(x,y,z);
+	public static void createLeftArm(ModelPlayer model, float x, float y, float z)
+	{
+		try
+		{
+			createLeftArm(model);
+			((CustomModelRenderer) model.bipedLeftArm).setAngles(x, y, z);
+			((CustomModelRenderer) model.bipedLeftArmwear).setAngles(x, y, z);
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 
-	public static void createHead(ModelPlayer model, float x, float y, float z){
+	public static void createHead(ModelPlayer model, float x, float y, float z)
+	{
 		createHead(model);
-		((CustomModelRenderer)model.bipedHead).setAngles(x,y,z);
-		((CustomModelRenderer)model.bipedHeadwear).setAngles(x,y,z);
+		((CustomModelRenderer) model.bipedHead).setAngles(x, y, z);
+		((CustomModelRenderer) model.bipedHeadwear).setAngles(x, y, z);
 	}
 
-	public static void createRightArm(ModelPlayer model, boolean smallArms){
-		model.bipedRightArm = new CustomModelRenderer(model, 40, 16, RIGHTARM, model.bipedRightArm);
-		model.bipedRightArm.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, modelSize);
-		model.bipedRightArm.setRotationPoint(-5.0F, 2.0F, 0.0F);
-		if(smallArms){
-			model.bipedRightArm = new CustomModelRenderer(model, 40, 16, RIGHTARM, model.bipedRightArm);
-			model.bipedRightArm.addBox(-2.0F, -2.0F, -2.0F, 3, 12, 4, modelSize);
-			model.bipedRightArm.setRotationPoint(-5.0F, 2.5F, 0.0F);
+	public static void createRightArm(ModelPlayer model) throws IllegalAccessException
+	{
+		Field textureOffsetXField = ModelRenderer.class.getDeclaredFields()[2];
+		textureOffsetXField.setAccessible(true);
+		Field textureOffsetYField = ModelRenderer.class.getDeclaredFields()[3];
+		textureOffsetYField.setAccessible(true);
+		int textureOffsetX = textureOffsetXField.getInt(model.bipedRightArm);
+		int textureOffsetY = textureOffsetYField.getInt(model.bipedRightArm);
+		CustomModelRenderer newRightArm = new CustomModelRenderer(model, textureOffsetX, textureOffsetY, RIGHTARM, model.bipedRightArm);
+		newRightArm.cubeList = model.bipedRightArm.cubeList;
+		newRightArm.setRotationPoint(model.bipedRightArm.rotationPointX, model.bipedRightArm.rotationPointY, model.bipedRightArm.rotationPointZ);
+		model.bipedRightArm = newRightArm;
 
-			model.bipedRightArmwear = new CustomModelRenderer(model, 40, 32, RIGHTARMWEAR, model.bipedRightArmwear);
-			model.bipedRightArmwear.addBox(-2.0F, -2.0F, -2.0F, 3, 12, 4, modelSize + 0.25F);
-			model.bipedRightArmwear.setRotationPoint(-5.0F, 2.5F, 10.0F);
-		} else {
-			model.bipedRightArmwear = new CustomModelRenderer(model, 40, 32, RIGHTARMWEAR, model.bipedRightArmwear);
-			model.bipedRightArmwear.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, modelSize + 0.25F);
-			model.bipedRightArmwear.setRotationPoint(-5.0F, 2.0F, 10.0F);
-		}
+		textureOffsetX = textureOffsetXField.getInt(model.bipedRightArmwear);
+		textureOffsetY = textureOffsetYField.getInt(model.bipedRightArmwear);
+		CustomModelRenderer newRightArmwear = new CustomModelRenderer(model, textureOffsetX, textureOffsetY, RIGHTARMWEAR, model.bipedRightArmwear);
+		newRightArmwear.cubeList = model.bipedRightArmwear.cubeList;
+		newRightArmwear.setRotationPoint(model.bipedRightArmwear.rotationPointX, model.bipedRightArmwear.rotationPointY, model.bipedRightArmwear.rotationPointZ);
+		model.bipedRightArmwear = newRightArmwear;
+
+
+		textureOffsetXField.setAccessible(false);
+		textureOffsetYField.setAccessible(false);
 	}
 
-	public static void createLeftArm(ModelPlayer model, boolean smallArms){
-		if (smallArms)
-		{
-			model.bipedLeftArm = new CustomModelRenderer(model, 32, 48, LEFTARM, model.bipedLeftArm);
-			model.bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, modelSize);
-			model.bipedLeftArm.setRotationPoint(5.0F, 2.5F, 0.0F);
-			model.bipedLeftArmwear = new CustomModelRenderer(model, 48, 48, LEFTARMWEAR, model.bipedLeftArmwear);
-			model.bipedLeftArmwear.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, modelSize + 0.25F);
-			model.bipedLeftArmwear.setRotationPoint(5.0F, 2.5F, 0.0F);
+	public static void createLeftArm(ModelPlayer model) throws IllegalAccessException
+	{
+		Field textureOffsetXField = ModelRenderer.class.getDeclaredFields()[2];
+		textureOffsetXField.setAccessible(true);
+		Field textureOffsetYField = ModelRenderer.class.getDeclaredFields()[3];
+		textureOffsetYField.setAccessible(true);
+		int textureOffsetX = textureOffsetXField.getInt(model.bipedLeftArm);
+		int textureOffsetY = textureOffsetYField.getInt(model.bipedLeftArm);
+		CustomModelRenderer newLeftArm = new CustomModelRenderer(model, textureOffsetX, textureOffsetY, LEFTARM, model.bipedLeftArm);
+		newLeftArm.cubeList = model.bipedLeftArm.cubeList;
+		newLeftArm.setRotationPoint(model.bipedLeftArm.rotationPointX, model.bipedLeftArm.rotationPointY, model.bipedLeftArm.rotationPointZ);
+		model.bipedLeftArm = newLeftArm;
 
-		}
-		else
-		{
-			model.bipedLeftArm = new CustomModelRenderer(model, 32, 48, LEFTARM, model.bipedLeftArm);
-			model.bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, modelSize);
-			model.bipedLeftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
-			model.bipedLeftArmwear = new CustomModelRenderer(model, 48, 48, LEFTARMWEAR, model.bipedLeftArmwear);
-			model.bipedLeftArmwear.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, modelSize + 0.25F);
-			model.bipedLeftArmwear.setRotationPoint(5.0F, 2.0F, 0.0F);
-		}
+
+		textureOffsetX = textureOffsetXField.getInt(model.bipedLeftArmwear);
+		textureOffsetY = textureOffsetYField.getInt(model.bipedLeftArmwear);
+		CustomModelRenderer newLeftArmwear = new CustomModelRenderer(model, textureOffsetX, textureOffsetY, LEFTARMWEAR, model.bipedLeftArmwear);
+		newLeftArmwear.cubeList = model.bipedLeftArmwear.cubeList;
+		newLeftArmwear.setRotationPoint(model.bipedLeftArmwear.rotationPointX, model.bipedLeftArmwear.rotationPointY, model.bipedLeftArmwear.rotationPointZ);
+		model.bipedLeftArmwear = newLeftArmwear;
+
+
+		textureOffsetXField.setAccessible(false);
+		textureOffsetYField.setAccessible(false);
 	}
 
-	public static void createHead(ModelPlayer model){
+	public static void createHead(ModelPlayer model)
+	{
 		model.bipedHead = new CustomModelRenderer(model, 0, 0, HEAD, model.bipedHead);
 		model.bipedHead.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, modelSize);
 		model.bipedHead.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -80,7 +112,8 @@ public class LimbRotationUtil
 		model.bipedHeadwear.setRotationPoint(0.0F, 0.0F, 0.0F);
 	}
 
-	public static class CustomModelRenderer extends ModelRenderer{
+	public static class CustomModelRenderer extends ModelRenderer
+	{
 		private float actualX, actualY, actualZ;
 		private boolean changeAngles = false;
 		private ModelPlayer modelPlayer;
@@ -90,13 +123,14 @@ public class LimbRotationUtil
 		public CustomModelRenderer(ModelBase model, int boxNum, ModelRenderer old)
 		{
 			super(model, "");
-			if(model instanceof ModelPlayer)
+			if (model instanceof ModelPlayer)
 				modelPlayer = (ModelPlayer) model;
 			this.boxNum = boxNum;
 			this.old = old;
 		}
 
-		public CustomModelRenderer(ModelBase model, int texOffX, int texOffY, int boxNum, ModelRenderer old){
+		public CustomModelRenderer(ModelBase model, int texOffX, int texOffY, int boxNum, ModelRenderer old)
+		{
 			this(model, boxNum, old);
 			this.setTextureOffset(texOffX, texOffY);
 		}
@@ -104,7 +138,8 @@ public class LimbRotationUtil
 		@Override
 		public void render(float scale)
 		{
-			if(this.changeAngles){
+			if (this.changeAngles)
+			{
 				this.rotateAngleX = this.actualX;
 				this.rotateAngleY = this.actualY;
 				this.rotateAngleZ = this.actualZ;
@@ -112,8 +147,10 @@ public class LimbRotationUtil
 			super.render(scale);
 		}
 
-		public void reset(){
-			switch (boxNum){
+		public void reset()
+		{
+			switch (boxNum)
+			{
 			case LEFTARM:
 				modelPlayer.bipedLeftArm = this.old;
 				break;
@@ -135,14 +172,16 @@ public class LimbRotationUtil
 			}
 		}
 
-		void setAngle(float x, float y, float z){
+		void setAngle(float x, float y, float z)
+		{
 			this.actualX = x;
 			this.actualY = y;
 			this.actualZ = z;
 			this.changeAngles = true;
 		}
 
-		public void setAngles(float x, float y, float z){
+		public void setAngles(float x, float y, float z)
+		{
 			this.setAngle((float) Math.toRadians(x), (float) Math.toRadians(y), (float) Math.toRadians(z));
 		}
 	}

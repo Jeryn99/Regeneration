@@ -7,10 +7,15 @@ import lucraft.mods.lucraftcore.superpower.Superpower;
 import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpower.SuperpowerPlayerHandler;
 import lucraft.mods.lucraftcore.util.LucraftCoreUtil;
+import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -35,17 +40,30 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		{
 			regenTicks++;
 
-			if(player.world.isRemote && Minecraft.getMinecraft().player == player)
+			if(player.world.isRemote && Minecraft.getMinecraft().player.getName().equals(player.getName()))
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+
+			if(!player.world.isRemote && regenTicks > 100){
+				player.extinguish();
+				if(player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire)
+					player.world.setBlockToAir(player.getPosition());
+
+				double x = player.posX + player.getRNG().nextGaussian()*2;
+				double y = player.posY + 0.5 + player.getRNG().nextGaussian()*2;
+				double z = player.posZ + player.getRNG().nextGaussian()*2;
+
+				player.world.newExplosion(player, x, y, z, 1, true, false);
+			}
 		}
 
 		if(regenTicks > 200){
 			regenTicks = 0;
 			player.setHealth(player.getMaxHealth());
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 3600, 3, false, false));
 			randomizeTraits(this);
 			this.regenCount++;
 
-			if(player.world.isRemote && Minecraft.getMinecraft().player == player)
+			if(player.world.isRemote && Minecraft.getMinecraft().player.getName().equals(player.getName()))
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 		}
 	}
@@ -113,24 +131,51 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 	}
 
 	@SubscribeEvent
+	public static void onAttacked(LivingAttackEvent e){
+		if(e.getEntity() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) e.getEntity();
+			if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))
+			{
+				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
+
+				if ((e.getSource().isExplosion() || e.getSource().isFireDamage()) && handler.regenTicks >= 100)
+				{
+					e.setCanceled(true);
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onDeath(LivingDeathEvent e)
+	{
+		if (e.getEntity() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) e.getEntity();
+			if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))
+			{
+				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
+				handler.regenTicks = 0;
+			}
+		}
+	}
+
+
+	@SubscribeEvent
 	public static void onHurt(LivingHurtEvent e){
 		if(e.getEntity() instanceof EntityPlayer){
 			EntityPlayer player = (EntityPlayer) e.getEntity();
 			if(SuperpowerHandler.hasSuperpower(player, Regeneration.timelord)){
 				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
 
-				if(handler.regenTicks > 0)
-				{
-					e.setCanceled(true);
-					return;
-				}
-
 				if(((EntityPlayer) e.getEntity()).getHealth() - e.getAmount() <= 0)
 				{
-					if(handler.regenCount < 12)
+					if(handler.regenCount < 12 && handler.regenTicks == 0)
 					{
 						e.setCanceled(true);
-						((EntityPlayer) e.getEntity()).setHealth(0.1f);
+						((EntityPlayer) e.getEntity()).setHealth(1.5f);
+						((EntityPlayer) e.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionById(10), 200, 1, false, false));
 						if (handler.regenTicks == 0)
 							handler.regenTicks = 1;
 						LucraftCoreUtil.sendSuperpowerUpdatePacketToAllPlayers(player);
@@ -148,7 +193,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 						}
 						handler.player.sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + (11 - handler.regenCount) + " regenerations left."), true);
 
-					} else {
+					} else if(handler.regenCount > 12){
 						handler.player.sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
 					}
 				}
