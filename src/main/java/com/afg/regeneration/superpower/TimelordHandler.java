@@ -193,7 +193,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 						}
 						handler.player.sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + (11 - handler.regenCount) + " regenerations left."), true);
 
-					} else if(handler.regenCount > 12){
+					} else if(handler.regenCount >= 12){
 						handler.player.sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
 					}
 				}

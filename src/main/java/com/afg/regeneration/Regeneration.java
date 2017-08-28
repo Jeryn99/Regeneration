@@ -38,7 +38,7 @@ import java.lang.reflect.Field;
 @Mod.EventBusSubscriber
 public class Regeneration
 {
-	public static final String MODID = "g-regen", VERSION = "0.1";
+	public static final String MODID = "g-regen", VERSION = "1.0";
 
 	public static final Timelord timelord = new Timelord();
 

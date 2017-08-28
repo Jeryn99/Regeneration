@@ -53,8 +53,8 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer>
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 
-				LimbRotationUtil.createLeftArm(playerModel, 0, 0, -75, false);
-				LimbRotationUtil.createRightArm(playerModel, 0, 0, 75, false);
+				LimbRotationUtil.createLeftArm(playerModel, 0, 0, -75);
+				LimbRotationUtil.createRightArm(playerModel, 0, 0, 75);
 				LimbRotationUtil.createHead(playerModel, -20, 0, 0);
 
 				playerModel.setModelAttributes(this.playerRenderer.getMainModel());
