@@ -25,15 +25,6 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer>
 	private static final ModelPlayer playerModelLargeArms = new ModelPlayer(0.55F, false);
 	private static final ModelPlayer playerModelSmallArms = new ModelPlayer(0.55F, true);
 
-	static {
-		LimbRotationUtil.createLeftArm(playerModelLargeArms, 0, 0, -75, false);
-		LimbRotationUtil.createRightArm(playerModelLargeArms, 0, 0, 75, false);
-		LimbRotationUtil.createHead(playerModelLargeArms, -20, 0, 0);
-
-		LimbRotationUtil.createLeftArm(playerModelSmallArms, 0, 0, -75, true);
-		LimbRotationUtil.createRightArm(playerModelSmallArms, 0, 0, 75, true);
-		LimbRotationUtil.createHead(playerModelSmallArms, -20, 0, 0);
-	}
 
 	public LayerRegenerationLimbs(RenderPlayer playerRenderer)
 	{
@@ -55,16 +46,16 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer>
 				boolean smallArms = ((AbstractClientPlayer) player).getSkinType().equals("slim");
 				ModelPlayer playerModel = smallArms ? playerModelSmallArms : playerModelLargeArms;
 
-//				LimbRotationUtil.resetHead(playerModel);
-//				LimbRotationUtil.resetRightArm(playerModel, smallArms);
-//				LimbRotationUtil.resetLeftArm(playerModel, smallArms);
-
 				GlStateManager.pushAttrib();
 				GlStateManager.disableTexture2D();
 				GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 				GlStateManager.enableAlpha();
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+
+				LimbRotationUtil.createLeftArm(playerModel, 0, 0, -75, false);
+				LimbRotationUtil.createRightArm(playerModel, 0, 0, 75, false);
+				LimbRotationUtil.createHead(playerModel, -20, 0, 0);
 
 				playerModel.setModelAttributes(this.playerRenderer.getMainModel());
 				playerModel.render(player, p_177169_2_, p_177169_3_, p_177169_5_, p_177169_6_, p_177169_7_, p_177169_8_);

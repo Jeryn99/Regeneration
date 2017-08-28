@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -35,10 +34,8 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		if(regenTicks > 0)
 		{
 			regenTicks++;
-//			if(player.getHealth() > 1f)
-//			player.setHealth();
 
-			if(player.world.isRemote)
+			if(player.world.isRemote && Minecraft.getMinecraft().player == player)
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
 		}
 
@@ -47,8 +44,9 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 			player.setHealth(player.getMaxHealth());
 			randomizeTraits(this);
 			this.regenCount++;
-			Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 
+			if(player.world.isRemote && Minecraft.getMinecraft().player == player)
+				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 		}
 	}
 
@@ -112,20 +110,6 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		super.readFromNBT(compound);
 		regenCount = compound.getInteger("regenCount");
 		regenTicks = compound.getInteger("regenTicks");
-	}
-
-	@SubscribeEvent
-	public static void onDeath(LivingDeathEvent e){
-		if(e.getEntity() instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer) e.getEntity();
-			if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))
-			{
-				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
-				if (handler.regenTicks > 0)
-					e.setCanceled(true);
-			}
-		}
 	}
 
 	@SubscribeEvent
