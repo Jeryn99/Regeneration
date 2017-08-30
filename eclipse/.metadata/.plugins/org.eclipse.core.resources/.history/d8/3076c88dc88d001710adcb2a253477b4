@@ -1,0 +1,32 @@
+package com.wipyll.common.init;
+
+import com.wipyll.main.Main;
+
+import net.minecraft.entity.passive.EntityParrot;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+public class SoundReg {
+
+	public static SoundEvent BeeSound;
+
+	public static void init() {
+		
+		BeeSound = registerSound("bee_buzz");
+		
+		SoundReg.RegisterParrotNoises();
+	}
+
+	private static SoundEvent registerSound(String soundNameIn) {
+		ResourceLocation SoundResource = new ResourceLocation(Main.MODID, soundNameIn);
+		SoundEvent e = new SoundEvent(SoundResource).setRegistryName(soundNameIn);
+		ForgeRegistries.SOUND_EVENTS.register(e);
+		return e;
+	}
+
+	public static void RegisterParrotNoises() {
+		// EntityParrot.registerMimicSound(,);
+	}
+
+}

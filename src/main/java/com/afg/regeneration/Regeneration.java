@@ -2,6 +2,7 @@ package com.afg.regeneration;
 
 import com.afg.regeneration.client.animation.PlayerRenderHandler;
 import com.afg.regeneration.items.ChameleonArch;
+import com.afg.regeneration.sounds.SoundReg;
 import com.afg.regeneration.superpower.Timelord;
 import com.afg.regeneration.traits.negative.*;
 import com.afg.regeneration.traits.positive.*;
@@ -45,8 +46,16 @@ public class Regeneration
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		if (event.getSide().equals(Side.CLIENT))
+		
+		if (event.getSide().equals(Side.SERVER)){
+		//I'm not used to not using proxies so feel free to correct this - Sub 
+			SoundReg.init();
+		}
+			
+		if (event.getSide().equals(Side.CLIENT)){
 			MinecraftForge.EVENT_BUS.register(new PlayerRenderHandler());
+			SoundReg.init();
+		}
 	}
 
 	@GameRegistry.ObjectHolder(MODID)
