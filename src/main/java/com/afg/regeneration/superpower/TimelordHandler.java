@@ -1,6 +1,7 @@
 package com.afg.regeneration.superpower;
 
 import com.afg.regeneration.Regeneration;
+import com.afg.regeneration.sounds.SoundReg;
 import com.afg.regeneration.traits.negative.INegativeTrait;
 import lucraft.mods.lucraftcore.abilities.Ability;
 import lucraft.mods.lucraftcore.superpower.Superpower;
@@ -10,9 +11,12 @@ import lucraft.mods.lucraftcore.util.LucraftCoreUtil;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -153,7 +157,8 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		if (e.getEntity() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer) e.getEntity();
-			if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))
+			if (
+					SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))				
 			{
 				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
 				handler.regenTicks = 0;
@@ -167,6 +172,12 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		if(e.getEntity() instanceof EntityPlayer){
 			EntityPlayer player = (EntityPlayer) e.getEntity();
 			if(SuperpowerHandler.hasSuperpower(player, Regeneration.timelord)){
+				
+				SoundEvent[] RegenSounds = new SoundEvent[] { SoundReg.Reg_1, SoundReg.Reg_2 };
+				SoundEvent Sound = RegenSounds[player.world.rand.nextInt(RegenSounds.length)];
+				
+				player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, Sound, SoundCategory.PLAYERS, 1.0F, 1.0F);
+
 				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
 
 				if(((EntityPlayer) e.getEntity()).getHealth() - e.getAmount() <= 0)

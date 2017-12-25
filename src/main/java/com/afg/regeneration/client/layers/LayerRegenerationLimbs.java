@@ -66,19 +66,13 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer> {
 				GlStateManager.enableTexture2D();
 				GlStateManager.popAttrib();
 
-				SoundEvent[] RegenSounds = new SoundEvent[] { SoundReg.Reg_1, SoundReg.Reg_2 };
-				SoundEvent Sounds = RegenSounds[player.world.rand.nextInt(RegenSounds.length)];
+	
 
 				if (handler.regenTicks > 150) {
-
-					player.world.playSound(player, player.getPosition(), Sounds, SoundCategory.MASTER, 1.0F, 1.0F);
-
 					playerModelSmallArms.bipedBody.isHidden = playerModelSmallArms.bipedLeftLeg.isHidden = playerModelSmallArms.bipedRightLeg.isHidden = playerModelSmallArms.bipedBodyWear.isHidden = playerModelSmallArms.bipedHeadwear.isHidden = playerModelSmallArms.bipedLeftLegwear.isHidden = playerModelSmallArms.bipedRightLegwear.isHidden = false;
 
 					playerModelLargeArms.bipedBody.isHidden = playerModelLargeArms.bipedLeftLeg.isHidden = playerModelLargeArms.bipedRightLeg.isHidden = playerModelLargeArms.bipedBodyWear.isHidden = playerModelLargeArms.bipedHeadwear.isHidden = playerModelLargeArms.bipedLeftLegwear.isHidden = playerModelLargeArms.bipedRightLegwear.isHidden = false;
 				} else {
-
-					player.world.playSound(player, player.getPosition(), Sounds, SoundCategory.MASTER, 1.0F, 1.0F);
 
 					playerModelSmallArms.bipedBody.isHidden = playerModelSmallArms.bipedLeftLeg.isHidden = playerModelSmallArms.bipedRightLeg.isHidden = playerModelSmallArms.bipedBodyWear.isHidden = playerModelSmallArms.bipedHeadwear.isHidden = playerModelSmallArms.bipedLeftLegwear.isHidden = playerModelSmallArms.bipedRightLegwear.isHidden = true;
 

@@ -46,15 +46,8 @@ public class Regeneration
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		
-		if (event.getSide().equals(Side.SERVER)){
-		//I'm not used to not using proxies so feel free to correct this - Sub 
-			SoundReg.init();
-		}
-			
 		if (event.getSide().equals(Side.CLIENT)){
 			MinecraftForge.EVENT_BUS.register(new PlayerRenderHandler());
-			SoundReg.init();
 		}
 	}
 
