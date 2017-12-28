@@ -107,7 +107,7 @@ public class Regeneration
 	}
 
 	@SubscribeEvent
-	public void loot(LootTableLoadEvent e)
+	public static void loot(LootTableLoadEvent e)
 	{
 		if (e.getName().toString().toLowerCase().contains("minecraft:chests/"))
 		{
