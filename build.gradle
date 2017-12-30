@@ -18,7 +18,7 @@ archivesBaseName = "g-regen"
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    version = "1.12-14.21.1.2387"
+    version = "1.12.1-14.22.0.2462"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.

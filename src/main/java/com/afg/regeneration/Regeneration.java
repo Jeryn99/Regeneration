@@ -2,7 +2,6 @@ package com.afg.regeneration;
 
 import com.afg.regeneration.client.animation.PlayerRenderHandler;
 import com.afg.regeneration.items.ChameleonArch;
-import com.afg.regeneration.sounds.SoundReg;
 import com.afg.regeneration.superpower.Timelord;
 import com.afg.regeneration.traits.negative.*;
 import com.afg.regeneration.traits.positive.*;
@@ -35,7 +34,7 @@ import java.lang.reflect.Field;
  * Created by AFlyingGrayson on 8/7/17
  */
 
-@Mod(modid = Regeneration.MODID, name = "Regeneration", version = Regeneration.VERSION, dependencies = "required-after:lucraftcore@[1.12-1.2.0,)")
+@Mod(modid = Regeneration.MODID, name = "Regeneration", version = Regeneration.VERSION, dependencies = "required-after:lucraftcore@[1.12-1.2.0,)", acceptedMinecraftVersions = "1.12, 1.12.1, 1.12.2")
 @Mod.EventBusSubscriber
 public class Regeneration
 {

@@ -2,17 +2,15 @@ package com.afg.regeneration.client.layers;
 
 import com.afg.regeneration.Regeneration;
 import com.afg.regeneration.client.animation.LimbRotationUtil;
-import com.afg.regeneration.sounds.SoundReg;
 import com.afg.regeneration.superpower.TimelordHandler;
 import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -52,9 +50,17 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer> {
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 
-				LimbRotationUtil.createLeftArm(playerModel, 0, 0, -75);
-				LimbRotationUtil.createRightArm(playerModel, 0, 0, 75);
-				LimbRotationUtil.createHead(playerModel, -20, 0, 0);
+				//Left Arm/Armwear
+				LimbRotationUtil.createCustomModelRenderer(playerModel, 0, 0, -75, ModelBiped.class.getDeclaredFields()[4]);
+				LimbRotationUtil.createCustomModelRenderer(playerModel, 0, 0, -75, ModelPlayer.class.getDeclaredFields()[0]);
+
+				//Right Arm/Armwear
+				LimbRotationUtil.createCustomModelRenderer(playerModel, 0, 0, 75, ModelBiped.class.getDeclaredFields()[3]);
+				LimbRotationUtil.createCustomModelRenderer(playerModel, 0, 0, 75, ModelPlayer.class.getDeclaredFields()[1]);
+
+				//Head/Headwear
+				LimbRotationUtil.createCustomModelRenderer(playerModel, -20, 0, 0, ModelBiped.class.getDeclaredFields()[0]);
+				LimbRotationUtil.createCustomModelRenderer(playerModel, -20, 0, 0, ModelBiped.class.getDeclaredFields()[1]);
 
 				playerModel.setModelAttributes(this.playerRenderer.getMainModel());
 				playerModel.render(player, p_177169_2_, p_177169_3_, p_177169_5_, p_177169_6_, p_177169_7_,

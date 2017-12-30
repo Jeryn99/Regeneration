@@ -4,9 +4,12 @@ import com.afg.regeneration.Regeneration;
 import com.afg.regeneration.client.layers.LayerRegenerationLimbs;
 import com.afg.regeneration.superpower.TimelordHandler;
 import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
-import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -28,11 +31,22 @@ public class PlayerRenderHandler
 			TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordHandler.class);
 			if (handler.regenTicks > 0)
 			{
-				boolean smallArms = ((AbstractClientPlayer) e.getEntityPlayer()).getSkinType().equals("slim");
-				LimbRotationUtil.createLeftArm(e.getRenderer().getMainModel(), 0, 0, -75);
-				LimbRotationUtil.createRightArm(e.getRenderer().getMainModel(), 0, 0, 75);
-				LimbRotationUtil.createHead(e.getRenderer().getMainModel(), -20, 0, 0);
+				ModelPlayer player = e.getRenderer().getMainModel();
+
+				//Left Arm/Armwear
+				LimbRotationUtil.createCustomModelRenderer(player, 0, 0, -75, ModelBiped.class.getDeclaredFields()[4]);
+				LimbRotationUtil.createCustomModelRenderer(player, 0, 0, -75, ModelPlayer.class.getDeclaredFields()[0]);
+
+				//Right Arm/Armwear
+				LimbRotationUtil.createCustomModelRenderer(player, 0, 0, 75, ModelBiped.class.getDeclaredFields()[3]);
+				LimbRotationUtil.createCustomModelRenderer(player, 0, 0, 75, ModelPlayer.class.getDeclaredFields()[1]);
+
+				//Head/Headwear
+				LimbRotationUtil.createCustomModelRenderer(player, -20, 0, 0, ModelBiped.class.getDeclaredFields()[0]);
+				LimbRotationUtil.createCustomModelRenderer(player, -20, 0, 0, ModelBiped.class.getDeclaredFields()[1]);
+
 			}
+
 		}
 	}
 
@@ -55,5 +69,11 @@ public class PlayerRenderHandler
 						((LimbRotationUtil.CustomModelRenderer) renderer).reset();
 				}
 		}
+	}
+
+	@SubscribeEvent
+	public void onRenderGameOverlayEvent(RenderGameOverlayEvent e){
+		GlStateManager.color(0.0f, 0.1f, 0.1f, 1.0f);
+//		GuiScreen
 	}
 }
