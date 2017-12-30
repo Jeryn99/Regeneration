@@ -1,15 +1,12 @@
 package com.afg.regeneration.client.animation;
 
-import com.afg.regeneration.Regeneration;
+import com.afg.regeneration.capability.ITimelordCapability;
+import com.afg.regeneration.capability.TimelordCapability;
 import com.afg.regeneration.client.layers.LayerRegenerationLimbs;
-import com.afg.regeneration.superpower.TimelordHandler;
-import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -25,11 +22,11 @@ public class PlayerRenderHandler
 	@SubscribeEvent
 	public void onRenderPlayerPre(RenderPlayerEvent.Pre e)
 	{
-
-		if (SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), Regeneration.timelord))
+		if (e.getEntity().hasCapability(TimelordCapability.TIMELORD_CAP, null) && e.getEntity().getCapability(TimelordCapability.TIMELORD_CAP, null)
+				.isTimelord())
 		{
-			TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordHandler.class);
-			if (handler.regenTicks > 0)
+			ITimelordCapability capability = e.getEntity().getCapability(TimelordCapability.TIMELORD_CAP, null);
+			if (capability.getRegenTicks() > 0)
 			{
 				ModelPlayer player = e.getRenderer().getMainModel();
 
@@ -46,7 +43,6 @@ public class PlayerRenderHandler
 				LimbRotationUtil.createCustomModelRenderer(player, -20, 0, 0, ModelBiped.class.getDeclaredFields()[1]);
 
 			}
-
 		}
 	}
 
@@ -59,21 +55,16 @@ public class PlayerRenderHandler
 			e.getRenderer().addLayer(new LayerRegenerationLimbs(e.getRenderer()));
 		}
 
-		if (SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), Regeneration.timelord))
+		if (e.getEntity().hasCapability(TimelordCapability.TIMELORD_CAP, null) && e.getEntity().getCapability(TimelordCapability.TIMELORD_CAP, null)
+				.isTimelord())
 		{
-			TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordHandler.class);
-			if (handler.regenTicks > 0)
+			ITimelordCapability capability = e.getEntity().getCapability(TimelordCapability.TIMELORD_CAP, null);
+			if (capability.getRegenTicks() > 0)
 				for (ModelRenderer renderer : e.getRenderer().getMainModel().boxList)
 				{
-					if(renderer instanceof LimbRotationUtil.CustomModelRenderer)
+					if (renderer instanceof LimbRotationUtil.CustomModelRenderer)
 						((LimbRotationUtil.CustomModelRenderer) renderer).reset();
 				}
 		}
-	}
-
-	@SubscribeEvent
-	public void onRenderGameOverlayEvent(RenderGameOverlayEvent e){
-		GlStateManager.color(0.0f, 0.1f, 0.1f, 1.0f);
-//		GuiScreen
 	}
 }

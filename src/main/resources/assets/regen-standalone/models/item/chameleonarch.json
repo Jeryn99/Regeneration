@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "g-regen:items/chameleonarch"
+    "layer0": "regen-standalone:items/chameleonarch"
   },
   "display": {
     "thirdperson_righthand": {

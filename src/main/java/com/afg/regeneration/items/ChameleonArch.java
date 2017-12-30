@@ -1,9 +1,7 @@
 package com.afg.regeneration.items;
 
-import com.afg.regeneration.Regeneration;
-import com.afg.regeneration.superpower.TimelordHandler;
-import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
-import lucraft.mods.lucraftcore.superpower.SuperpowerPlayerHandler;
+import com.afg.regeneration.capability.ITimelordCapability;
+import com.afg.regeneration.capability.TimelordCapability;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -28,16 +26,20 @@ public class ChameleonArch extends Item
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(playerIn);
-		if (handler == null){
-			SuperpowerHandler.setSuperpower(playerIn, Regeneration.timelord);
-			playerIn.sendStatusMessage(new TextComponentString("You've become a timelord! (animation coming soon)"), true);
-		} else if (handler instanceof TimelordHandler){
-			playerIn.sendStatusMessage(new TextComponentString("You've reset your regeneration cycles!"), true);
-			((TimelordHandler) handler).regenCount = 0;
+		if (playerIn.hasCapability(TimelordCapability.TIMELORD_CAP, null))
+		{
+			ITimelordCapability capability = playerIn.getCapability(TimelordCapability.TIMELORD_CAP, null);
+			if(capability.isTimelord()){
+				playerIn.sendStatusMessage(new TextComponentString("You've reset your regeneration cycles!"), true);
+				capability.setRegenCount(0);
+				capability.syncToPlayer();
+			} else {
+				playerIn.sendStatusMessage(new TextComponentString("You've become a timelord! (animation coming soon)"), true);
+				capability.setTimelord(true);
+				capability.syncToPlayer();
+			}
 		}
 		else return new ActionResult<>(EnumActionResult.FAIL, itemstack);
-
 		return new ActionResult<>(EnumActionResult.PASS, ItemStack.EMPTY);
 	}
 }

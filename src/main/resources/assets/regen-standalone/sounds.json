@@ -3,7 +3,7 @@
 		"category": "master",
 		"subtitle": "regen_1",
 		"sounds": [{
-			"name": "g-regen:regen_1",
+			"name": "regen-standalone:regen_1",
 			"stream": true
 		}]
 	},
@@ -12,7 +12,7 @@
 		"category": "master",
 		"subtitle": "regen_2",
 		"sounds": [{
-			"name": "g-regen:regen_2",
+			"name": "regen-standalone:regen_2",
 			"stream": true
 		}]
 	}
