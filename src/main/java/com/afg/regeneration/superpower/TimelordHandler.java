@@ -173,15 +173,20 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 			EntityPlayer player = (EntityPlayer) e.getEntity();
 			if(SuperpowerHandler.hasSuperpower(player, Regeneration.timelord)){
 				
-				SoundEvent[] RegenSounds = new SoundEvent[] { SoundReg.Reg_1, SoundReg.Reg_2 };
-				SoundEvent Sound = RegenSounds[player.world.rand.nextInt(RegenSounds.length)];
-				
-				player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, Sound, SoundCategory.PLAYERS, 1.0F, 1.0F);
-
 				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
 
 				if(((EntityPlayer) e.getEntity()).getHealth() - e.getAmount() <= 0)
 				{
+					
+					if(handler.regenTicks == 1) 
+					{
+						SoundEvent[] RegenSounds = new SoundEvent[] { SoundReg.Reg_1, SoundReg.Reg_2 };
+						SoundEvent Sound = RegenSounds[player.world.rand.nextInt(RegenSounds.length)];
+						
+						player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, Sound, SoundCategory.PLAYERS, 1.0F, 1.0F);
+
+					}
+					
 					if(handler.regenCount < 12 && handler.regenTicks == 0)
 					{
 						e.setCanceled(true);
