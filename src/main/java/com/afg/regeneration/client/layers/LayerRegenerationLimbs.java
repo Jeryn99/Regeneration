@@ -3,7 +3,7 @@ package com.afg.regeneration.client.layers;
 import com.afg.regeneration.Regeneration;
 import com.afg.regeneration.client.animation.LimbRotationUtil;
 import com.afg.regeneration.superpower.TimelordHandler;
-import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
+import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;

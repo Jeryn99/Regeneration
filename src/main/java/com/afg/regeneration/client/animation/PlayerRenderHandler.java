@@ -3,13 +3,11 @@ package com.afg.regeneration.client.animation;
 import com.afg.regeneration.Regeneration;
 import com.afg.regeneration.client.layers.LayerRegenerationLimbs;
 import com.afg.regeneration.superpower.TimelordHandler;
-import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
+import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -69,11 +67,5 @@ public class PlayerRenderHandler
 						((LimbRotationUtil.CustomModelRenderer) renderer).reset();
 				}
 		}
-	}
-
-	@SubscribeEvent
-	public void onRenderGameOverlayEvent(RenderGameOverlayEvent e){
-		GlStateManager.color(0.0f, 0.1f, 0.1f, 1.0f);
-//		GuiScreen
 	}
 }

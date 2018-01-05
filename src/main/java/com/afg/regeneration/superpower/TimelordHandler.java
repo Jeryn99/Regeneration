@@ -3,15 +3,14 @@ package com.afg.regeneration.superpower;
 import com.afg.regeneration.Regeneration;
 import com.afg.regeneration.sounds.SoundReg;
 import com.afg.regeneration.traits.negative.INegativeTrait;
-import lucraft.mods.lucraftcore.abilities.Ability;
-import lucraft.mods.lucraftcore.superpower.Superpower;
-import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
-import lucraft.mods.lucraftcore.superpower.SuperpowerPlayerHandler;
-import lucraft.mods.lucraftcore.util.LucraftCoreUtil;
+import lucraft.mods.lucraftcore.superpowers.Superpower;
+import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
+import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
+import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
+import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -34,7 +33,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 	public int regenCount = 0;
 	public int regenTicks = 0;
 
-	public TimelordHandler(EntityPlayer player, Superpower superpower) { super(player, superpower); }
+	public TimelordHandler(ISuperpowerCapability cap, Superpower superpower) { super(cap, superpower); }
 
 	@Override public void onUpdate(TickEvent.Phase phase) {
 		if(phase.equals(TickEvent.Phase.END))
@@ -44,30 +43,30 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		{
 			regenTicks++;
 
-			if(player.world.isRemote && Minecraft.getMinecraft().player.getName().equals(player.getName()))
+			if(cap.getPlayer().world.isRemote && Minecraft.getMinecraft().player.getName().equals(cap.getPlayer().getName()))
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
 
-			if(!player.world.isRemote && regenTicks > 100){
-				player.extinguish();
-				if(player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire)
-					player.world.setBlockToAir(player.getPosition());
+			if(!cap.getPlayer().world.isRemote && regenTicks > 100){
+				cap.getPlayer().extinguish();
+				if(cap.getPlayer().world.getBlockState(cap.getPlayer().getPosition()).getBlock() instanceof BlockFire)
+					cap.getPlayer().world.setBlockToAir(cap.getPlayer().getPosition());
 
-				double x = player.posX + player.getRNG().nextGaussian()*2;
-				double y = player.posY + 0.5 + player.getRNG().nextGaussian()*2;
-				double z = player.posZ + player.getRNG().nextGaussian()*2;
+				double x = cap.getPlayer().posX + cap.getPlayer().getRNG().nextGaussian()*2;
+				double y = cap.getPlayer().posY + 0.5 + cap.getPlayer().getRNG().nextGaussian()*2;
+				double z = cap.getPlayer().posZ + cap.getPlayer().getRNG().nextGaussian()*2;
 
-				player.world.newExplosion(player, x, y, z, 1, true, false);
+				cap.getPlayer().world.newExplosion(cap.getPlayer(), x, y, z, 1, true, false);
 			}
 		}
 
 		if(regenTicks > 200){
 			regenTicks = 0;
-			player.setHealth(player.getMaxHealth());
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 3600, 3, false, false));
+			cap.getPlayer().setHealth(cap.getPlayer().getMaxHealth());
+			cap.getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionById(10), 3600, 3, false, false));
 			randomizeTraits(this);
 			this.regenCount++;
 
-			if(player.world.isRemote && Minecraft.getMinecraft().player.getName().equals(player.getName()))
+			if(cap.getPlayer().world.isRemote && Minecraft.getMinecraft().player.getName().equals(cap.getPlayer().getName()))
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 		}
 	}
@@ -83,18 +82,18 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		for(int i = 0; i < 2; i++){
 			Ability a = null;
 			while(a == null || a instanceof INegativeTrait || a.isUnlocked())
-				a = handler.getAbilities().get(handler.player.getRNG().nextInt(handler.getAbilities().size()));
+				a = handler.getAbilities().get(handler.getPlayer().getRNG().nextInt(handler.getAbilities().size()));
 			a.setUnlocked(true);
 		}
 
 		for(int i = 0; i < 2; i++){
 			Ability a = null;
 			while(a == null || a.isUnlocked() || !(a instanceof INegativeTrait) || abilityIsUnlocked(handler, ((INegativeTrait) a).getPositiveTrait()))
-				a = handler.getAbilities().get(handler.player.getRNG().nextInt(handler.getAbilities().size()));
+				a = handler.getAbilities().get(handler.getPlayer().getRNG().nextInt(handler.getAbilities().size()));
 			a.setUnlocked(true);
 		}
 
-		LucraftCoreUtil.sendSuperpowerUpdatePacketToAllPlayers(handler.player);
+		SuperpowerHandler.syncToAll(handler.getPlayer());
 
 		String s = "";
 		for (Ability ability : handler.getAbilities())
@@ -109,7 +108,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		}
 		s = s + ".";
 
-		handler.player.sendStatusMessage(new TextComponentString("You've gotten a new life, with new traits: " + s), true);
+		handler.getPlayer().sendStatusMessage(new TextComponentString("You've gotten a new life, with new traits: " + s), true);
 	}
 
 	private static boolean abilityIsUnlocked(SuperpowerPlayerHandler handler, Class<? extends Ability> ability){
@@ -158,7 +157,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		{
 			EntityPlayer player = (EntityPlayer) e.getEntity();
 			if (
-					SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))				
+					SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))
 			{
 				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
 				handler.regenTicks = 0;
@@ -177,16 +176,16 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 
 				if(((EntityPlayer) e.getEntity()).getHealth() - e.getAmount() <= 0)
 				{
-					
-					if(handler.regenTicks == 1) 
+
+					if(handler.regenTicks == 1)
 					{
 						SoundEvent[] RegenSounds = new SoundEvent[] { SoundReg.Reg_1, SoundReg.Reg_2 };
 						SoundEvent Sound = RegenSounds[player.world.rand.nextInt(RegenSounds.length)];
-						
-						player.world.playSound((EntityPlayer)null, player.posX, player.posY, player.posZ, Sound, SoundCategory.PLAYERS, 1.0F, 1.0F);
+
+						player.world.playSound(null, player.posX, player.posY, player.posZ, Sound, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
 					}
-					
+
 					if(handler.regenCount < 12 && handler.regenTicks == 0)
 					{
 						e.setCanceled(true);
@@ -194,7 +193,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 						((EntityPlayer) e.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionById(10), 200, 1, false, false));
 						if (handler.regenTicks == 0)
 							handler.regenTicks = 1;
-						LucraftCoreUtil.sendSuperpowerUpdatePacketToAllPlayers(player);
+						SuperpowerHandler.syncToAll(player);
 
 						String time = "" + (handler.regenCount + 1);
 						switch (handler.regenCount + 1){
@@ -207,10 +206,10 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 						default: time = time + "th";
 							break;
 						}
-						handler.player.sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + (11 - handler.regenCount) + " regenerations left."), true);
+						handler.getPlayer().sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + (11 - handler.regenCount) + " regenerations left."), true);
 
 					} else if(handler.regenCount >= 12){
-						handler.player.sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
+						handler.getPlayer().sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
 					}
 				}
 

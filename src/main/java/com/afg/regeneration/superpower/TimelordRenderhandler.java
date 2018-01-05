@@ -1,8 +1,8 @@
 package com.afg.regeneration.superpower;
 
-import lucraft.mods.lucraftcore.superpower.ISuperpowerPlayerRenderer;
-import lucraft.mods.lucraftcore.superpower.Superpower;
-import lucraft.mods.lucraftcore.superpower.SuperpowerPlayerHandler;
+import lucraft.mods.lucraftcore.superpowers.Superpower;
+import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
+import lucraft.mods.lucraftcore.superpowers.render.SuperpowerRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
@@ -23,9 +23,8 @@ import java.util.Random;
 /**
  * Created by AFlyingGrayson on 8/7/17
  */
-public class TimelordRenderhandler implements ISuperpowerPlayerRenderer
+public class TimelordRenderhandler implements SuperpowerRenderer.ISuperpowerRenderer
 {
-
 	@Override public void onRenderPlayer(RenderLivingBase<?> renderLivingBase, Minecraft minecraft, EntityPlayer entityPlayer, Superpower superpower,
 			SuperpowerPlayerHandler superpowerPlayerHandler, float v, float v1, float v2, float v3, float v4, float v5, float v6)
 	{

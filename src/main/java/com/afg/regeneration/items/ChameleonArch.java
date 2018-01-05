@@ -2,8 +2,8 @@ package com.afg.regeneration.items;
 
 import com.afg.regeneration.Regeneration;
 import com.afg.regeneration.superpower.TimelordHandler;
-import lucraft.mods.lucraftcore.superpower.SuperpowerHandler;
-import lucraft.mods.lucraftcore.superpower.SuperpowerPlayerHandler;
+import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
+import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

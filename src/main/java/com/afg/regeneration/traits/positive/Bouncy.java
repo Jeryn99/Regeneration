@@ -1,7 +1,7 @@
 package com.afg.regeneration.traits.positive;
 
-import lucraft.mods.lucraftcore.abilities.AbilityAttributeModifier;
-import lucraft.mods.lucraftcore.attributes.LCAttributes;
+import lucraft.mods.lucraftcore.superpowers.abilities.AbilityAttributeModifier;
+import lucraft.mods.lucraftcore.util.attributes.LCAttributes;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 

@@ -5,8 +5,8 @@ import com.afg.regeneration.items.ChameleonArch;
 import com.afg.regeneration.superpower.Timelord;
 import com.afg.regeneration.traits.negative.*;
 import com.afg.regeneration.traits.positive.*;
-import lucraft.mods.lucraftcore.abilities.Ability;
-import lucraft.mods.lucraftcore.superpower.Superpower;
+import lucraft.mods.lucraftcore.superpowers.Superpower;
+import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -75,6 +75,8 @@ public class Regeneration
 		e.getRegistry().register(new Ability.AbilityEntry(Sturdy.class, new ResourceLocation(MODID, "sturdy")));
 		e.getRegistry().register(new Ability.AbilityEntry(ThickSkinned.class, new ResourceLocation(MODID, "thickSkinned")));
 		e.getRegistry().register(new Ability.AbilityEntry(Tough.class, new ResourceLocation(MODID, "tough")));
+		e.getRegistry().register(new Ability.AbilityEntry(Smart.class, new ResourceLocation(MODID, "smart")));
+		e.getRegistry().register(new Ability.AbilityEntry(Sneaky.class, new ResourceLocation(MODID, "sneaky")));
 
 		//Negative
 
@@ -86,6 +88,8 @@ public class Regeneration
 		e.getRegistry().register(new Ability.AbilityEntry(Unhealthy.class, new ResourceLocation(MODID, "unhealthy")));
 		e.getRegistry().register(new Ability.AbilityEntry(Unlucky.class, new ResourceLocation(MODID, "unlucky")));
 		e.getRegistry().register(new Ability.AbilityEntry(Weak.class, new ResourceLocation(MODID, "weak")));
+		e.getRegistry().register(new Ability.AbilityEntry(Dumb.class, new ResourceLocation(MODID, "dumb")));
+		e.getRegistry().register(new Ability.AbilityEntry(Obvious.class, new ResourceLocation(MODID, "obvious")));
 	}
 
 	@SubscribeEvent
