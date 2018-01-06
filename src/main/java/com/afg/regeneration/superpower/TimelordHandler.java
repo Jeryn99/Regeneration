@@ -3,6 +3,9 @@ package com.afg.regeneration.superpower;
 import com.afg.regeneration.Regeneration;
 import com.afg.regeneration.sounds.SoundReg;
 import com.afg.regeneration.traits.negative.INegativeTrait;
+import lucraft.mods.lucraftcore.LCConfig;
+import lucraft.mods.lucraftcore.karma.KarmaHandler;
+import lucraft.mods.lucraftcore.karma.KarmaStat;
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
@@ -78,6 +81,9 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 
 	private static void randomizeTraits(SuperpowerPlayerHandler handler){
 		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
+
+		//Reset Karma
+		if(LCConfig.modules.karma) for (KarmaStat karmaStat : KarmaStat.getKarmaStats()) KarmaHandler.setKarmaStat(handler.getPlayer(), karmaStat, 0);
 
 		for(int i = 0; i < 2; i++){
 			Ability a = null;
@@ -156,8 +162,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 		if (e.getEntity() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer) e.getEntity();
-			if (
-					SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))
+			if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord))
 			{
 				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
 				handler.regenTicks = 0;
@@ -210,6 +215,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler
 
 					} else if(handler.regenCount >= 12){
 						handler.getPlayer().sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
+						SuperpowerHandler.removeSuperpower(handler.getPlayer());
 					}
 				}
 
