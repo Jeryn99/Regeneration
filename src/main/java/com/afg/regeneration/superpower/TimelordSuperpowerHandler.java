@@ -18,7 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -185,10 +184,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 					break;
 			}
 			handler.getPlayer().sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + (11 - handler.regenCount) + " regenerations left."), true);
-			
-			SoundEvent[] RegenSounds = new SoundEvent[] { SoundReg.Reg_1, SoundReg.Reg_2 };
-			SoundEvent sound = RegenSounds[player.world.rand.nextInt(RegenSounds.length)];
-			player.world.playSound(null, player.posX, player.posY, player.posZ, sound, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			player.world.playSound(null, player.posX, player.posY, player.posZ, SoundReg.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else if (handler.regenCount >= 12) {
 			handler.getPlayer().sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
 			SuperpowerHandler.removeSuperpower(handler.getPlayer());
