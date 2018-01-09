@@ -13,7 +13,8 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by AFlyingGrayson on 8/15/17
  */
-public class TraitRigid extends AbilityAttributeModifier implements TraitINegativeTrait {
+public class TraitRigid extends AbilityAttributeModifier implements INegativeTrait {
+	
 	public TraitRigid(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}

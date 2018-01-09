@@ -13,7 +13,8 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by AFlyingGrayson on 8/7/17
  */
-public class TraitUnlucky extends AbilityAttributeModifier implements TraitINegativeTrait {
+public class TraitUnlucky extends AbilityAttributeModifier implements INegativeTrait {
+	
 	public TraitUnlucky(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}

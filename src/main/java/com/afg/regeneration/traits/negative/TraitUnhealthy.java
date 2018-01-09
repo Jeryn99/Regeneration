@@ -13,7 +13,8 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by AFlyingGrayson on 8/10/17
  */
-public class TraitUnhealthy extends AbilityAttributeModifier implements TraitINegativeTrait {
+public class TraitUnhealthy extends AbilityAttributeModifier implements INegativeTrait {
+	
 	public TraitUnhealthy(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}

@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
  * Created by AFlyingGrayson on 8/10/17
  */
 public class TraitTough extends AbilityAttributeModifier {
+	
 	public TraitTough(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}

@@ -58,52 +58,19 @@ import net.minecraftforge.fml.relauncher.Side;
 public class RegenerationMod {
 	public static final String MODID = "g-regen", VERSION = "1.0";
 	
-	public static final TimelordSuperpower timelord = new TimelordSuperpower();
-	
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		if (event.getSide().equals(Side.CLIENT)) {
-			MinecraftForge.EVENT_BUS.register(new PlayerRenderHandler());
-		}
+		if (event.getSide().equals(Side.CLIENT)) MinecraftForge.EVENT_BUS.register(new PlayerRenderHandler());
 	}
 	
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
-	public static class Items {
+	public static class RegenerationItems {
 		public static final Item chameleonArch = null;
 	}
 	
 	@SubscribeEvent
 	public static void onRegisterSuperpower(RegistryEvent.Register<Superpower> e) {
-		e.getRegistry().register(RegenerationMod.timelord);
-	}
-	
-	@SubscribeEvent
-	public static void onRegisterAbility(RegistryEvent.Register<Ability.AbilityEntry> e) {
-		// Positive
-		
-		e.getRegistry().register(new Ability.AbilityEntry(TraitBouncy.class, new ResourceLocation(RegenerationMod.MODID, "bouncy")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitLucky.class, new ResourceLocation(RegenerationMod.MODID, "lucky")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitQuick.class, new ResourceLocation(RegenerationMod.MODID, "quick")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitSpry.class, new ResourceLocation(RegenerationMod.MODID, "spry")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitStrong.class, new ResourceLocation(RegenerationMod.MODID, "strong")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitSturdy.class, new ResourceLocation(RegenerationMod.MODID, "sturdy")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitThickSkinned.class, new ResourceLocation(RegenerationMod.MODID, "thickSkinned")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitTough.class, new ResourceLocation(RegenerationMod.MODID, "tough")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitSmart.class, new ResourceLocation(RegenerationMod.MODID, "smart")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitSneaky.class, new ResourceLocation(RegenerationMod.MODID, "sneaky")));
-		
-		// Negative
-		
-		e.getRegistry().register(new Ability.AbilityEntry(TraitClumsy.class, new ResourceLocation(RegenerationMod.MODID, "clumsy")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitFlimsy.class, new ResourceLocation(RegenerationMod.MODID, "flimsy")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitFrail.class, new ResourceLocation(RegenerationMod.MODID, "frail")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitRigid.class, new ResourceLocation(RegenerationMod.MODID, "rigid")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitSlow.class, new ResourceLocation(RegenerationMod.MODID, "slow")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitUnhealthy.class, new ResourceLocation(RegenerationMod.MODID, "unhealthy")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitUnlucky.class, new ResourceLocation(RegenerationMod.MODID, "unlucky")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitWeak.class, new ResourceLocation(RegenerationMod.MODID, "weak")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitDumb.class, new ResourceLocation(RegenerationMod.MODID, "dumb")));
-		e.getRegistry().register(new Ability.AbilityEntry(TraitObvious.class, new ResourceLocation(RegenerationMod.MODID, "obvious")));
+		e.getRegistry().register(TimelordSuperpower.instance);
 	}
 	
 	@SubscribeEvent
@@ -113,7 +80,7 @@ public class RegenerationMod {
 	
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) throws Exception {
-		for (Field f : Items.class.getDeclaredFields()) {
+		for (Field f : RegenerationItems.class.getDeclaredFields()) {
 			Item item = (Item) f.get(null);
 			ModelResourceLocation loc = new ModelResourceLocation(item.getRegistryName(), "inventory");
 			ModelLoader.setCustomModelResourceLocation(item, 0, loc);
@@ -122,12 +89,43 @@ public class RegenerationMod {
 	
 	@SubscribeEvent
 	public static void loot(LootTableLoadEvent e) {
-		if (e.getName().toString().toLowerCase().contains("minecraft:chests/")) {
-			LootPool pool = e.getTable().getPool("main");
-			LootCondition[] chance = { new RandomChance(0.5F) };
-			LootFunction[] count = { new SetCount(chance, new RandomValueRange(1.0F, 1.0F)) };
-			LootEntryItem item = new LootEntryItem(Items.chameleonArch, 10, 1, count, chance, "symbol_" + Items.chameleonArch.getUnlocalizedName());
-			pool.addEntry(item);
-		}
+		if (!e.getName().toString().toLowerCase().contains("minecraft:chests/")) return;
+
+		LootPool pool = e.getTable().getPool("main");
+		LootCondition[] chance = { new RandomChance(0.5F) };
+		LootFunction[] count = { new SetCount(chance, new RandomValueRange(1.0F, 1.0F)) };
+		LootEntryItem item = new LootEntryItem(RegenerationItems.chameleonArch, 10, 1, count, chance, "symbol_" + RegenerationItems.chameleonArch.getUnlocalizedName());
+		pool.addEntry(item);
+	}
+	
+	@SubscribeEvent
+	public static void onRegisterAbility(RegistryEvent.Register<Ability.AbilityEntry> e) {
+		// Positive
+		registerAbility(e, TraitBouncy.class, "bouncy");
+		registerAbility(e, TraitLucky.class, "lucky");
+		registerAbility(e, TraitQuick.class, "quick");
+		registerAbility(e, TraitSpry.class, "spry");
+		registerAbility(e, TraitStrong.class, "strong");
+		registerAbility(e, TraitSturdy.class, "sturdy");
+		registerAbility(e, TraitThickSkinned.class, "thickSkinned");
+		registerAbility(e, TraitTough.class, "tough");
+		registerAbility(e, TraitSmart.class, "smart");
+		registerAbility(e, TraitSneaky.class, "sneaky");
+		
+		// Negative
+		registerAbility(e, TraitClumsy.class, "clumsy");
+		registerAbility(e, TraitFlimsy.class, "flimsy");
+		registerAbility(e, TraitFrail.class, "frail");
+		registerAbility(e, TraitRigid.class, "rigid");
+		registerAbility(e, TraitSlow.class, "slow");
+		registerAbility(e, TraitUnhealthy.class, "unhealthy");
+		registerAbility(e, TraitUnlucky.class, "unlucky");
+		registerAbility(e, TraitWeak.class, "weak");
+		registerAbility(e, TraitDumb.class, "dumb");
+		registerAbility(e, TraitObvious.class, "obvious");
+	}
+	
+	private static void registerAbility(RegistryEvent.Register<Ability.AbilityEntry> event, Class<? extends Ability> ability, String name) {
+		event.getRegistry().register(new Ability.AbilityEntry(ability, new ResourceLocation(RegenerationMod.MODID, name)));
 	}
 }

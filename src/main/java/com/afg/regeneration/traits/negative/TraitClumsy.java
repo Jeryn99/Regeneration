@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by AFlyingGrayson on 8/10/17
  */
-public class TraitClumsy extends AbilityAttributeModifier implements TraitINegativeTrait {
+public class TraitClumsy extends AbilityAttributeModifier implements INegativeTrait {
 	
 	public TraitClumsy(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);

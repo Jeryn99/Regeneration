@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by AFlyingGrayson on 8/7/17
  */
-public class TraitSlow extends AbilityAttributeModifier implements TraitINegativeTrait {
+public class TraitSlow extends AbilityAttributeModifier implements INegativeTrait {
 	
 	public TraitSlow(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);

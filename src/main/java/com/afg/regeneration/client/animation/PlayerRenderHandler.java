@@ -2,7 +2,7 @@ package com.afg.regeneration.client.animation;
 
 import java.util.ArrayList;
 
-import com.afg.regeneration.RegenerationMod;
+import com.afg.regeneration.superpower.TimelordSuperpower;
 import com.afg.regeneration.superpower.TimelordSuperpowerHandler;
 
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
@@ -21,26 +21,23 @@ public class PlayerRenderHandler {
 	
 	@SubscribeEvent
 	public void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
+		if (!SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), TimelordSuperpower.instance)) return;
 		
-		if (SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), RegenerationMod.timelord)) {
-			TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class);
-			if (handler.regenTicks > 0 && handler.regenTicks < 200) {
-				ModelPlayer player = e.getRenderer().getMainModel();
-				
-				// Left Arm/Armwear
-				LimbRotationUtil.createCustomModelRenderer(player, 0, 0, -75, ModelBiped.class.getDeclaredFields()[4]);
-				LimbRotationUtil.createCustomModelRenderer(player, 0, 0, -75, ModelPlayer.class.getDeclaredFields()[0]);
-				
-				// Right Arm/Armwear
-				LimbRotationUtil.createCustomModelRenderer(player, 0, 0, 75, ModelBiped.class.getDeclaredFields()[3]);
-				LimbRotationUtil.createCustomModelRenderer(player, 0, 0, 75, ModelPlayer.class.getDeclaredFields()[1]);
-				
-				// Head/Headwear
-				LimbRotationUtil.createCustomModelRenderer(player, -20, 0, 0, ModelBiped.class.getDeclaredFields()[0]);
-				LimbRotationUtil.createCustomModelRenderer(player, -20, 0, 0, ModelBiped.class.getDeclaredFields()[1]);
-				
-			}
+		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class);
+		if (handler.regenTicks > 0 && handler.regenTicks < 200) {
+			ModelPlayer player = e.getRenderer().getMainModel();
 			
+			// Left Arm/Armwear
+			LimbRotationUtil.createCustomModelRenderer(player, 0, 0, -75, ModelBiped.class.getDeclaredFields()[4]);
+			LimbRotationUtil.createCustomModelRenderer(player, 0, 0, -75, ModelPlayer.class.getDeclaredFields()[0]);
+			
+			// Right Arm/Armwear
+			LimbRotationUtil.createCustomModelRenderer(player, 0, 0, 75, ModelBiped.class.getDeclaredFields()[3]);
+			LimbRotationUtil.createCustomModelRenderer(player, 0, 0, 75, ModelPlayer.class.getDeclaredFields()[1]);
+			
+			// Head/Headwear
+			LimbRotationUtil.createCustomModelRenderer(player, -20, 0, 0, ModelBiped.class.getDeclaredFields()[0]);
+			LimbRotationUtil.createCustomModelRenderer(player, -20, 0, 0, ModelBiped.class.getDeclaredFields()[1]);
 		}
 	}
 	
@@ -51,7 +48,7 @@ public class PlayerRenderHandler {
 			e.getRenderer().addLayer(new LayerRegenerationLimbs(e.getRenderer()));
 		}
 		
-		if (SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), RegenerationMod.timelord)) {
+		if (SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), TimelordSuperpower.instance)) {
 			TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class);
 			if (handler.regenTicks > 0) for (ModelRenderer renderer : e.getRenderer().getMainModel().boxList) {
 				if (renderer instanceof LimbRotationUtil.CustomModelRenderer) ((LimbRotationUtil.CustomModelRenderer) renderer).reset();

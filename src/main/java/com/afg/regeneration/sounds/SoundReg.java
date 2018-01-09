@@ -12,10 +12,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
-public class SoundReg {
-	
+public class SoundReg { //FIXME mostly no music
 	public static List<SoundEvent> SOUNDS = new ArrayList<>();
-	
 	public static SoundEvent Reg_1 = SoundReg.createSoundEvent("regen_1");
 	public static SoundEvent Reg_2 = SoundReg.createSoundEvent("regen_2");
 	
