@@ -31,6 +31,6 @@ public class TraitSmart extends AbilityConstant {
 			event.getOrb().xpValue *= 1.5;
 		}
 	}
-
+	
 	@Override public void updateTick() {}
 }

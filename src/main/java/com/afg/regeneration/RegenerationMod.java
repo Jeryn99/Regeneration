@@ -90,7 +90,7 @@ public class RegenerationMod {
 	@SubscribeEvent
 	public static void loot(LootTableLoadEvent e) {
 		if (!e.getName().toString().toLowerCase().contains("minecraft:chests/")) return;
-
+		
 		LootPool pool = e.getTable().getPool("main");
 		LootCondition[] chance = { new RandomChance(0.5F) };
 		LootFunction[] count = { new SetCount(chance, new RandomValueRange(1.0F, 1.0F)) };

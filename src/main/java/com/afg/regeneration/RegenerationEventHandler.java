@@ -45,10 +45,10 @@ public class RegenerationEventHandler {
 		
 		EntityPlayer player = (EntityPlayer) e.getEntity();
 		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.instance)) return;
-			
+		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
-			
-			
+		
+		
 		if (handler.regenCount < 12 && handler.regenTicks == 0) {
 			e.setCanceled(true);
 			((EntityPlayer) e.getEntity()).setHealth(1.5f);

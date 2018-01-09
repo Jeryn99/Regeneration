@@ -27,6 +27,6 @@ public class TraitSneaky extends AbilityConstant {
 			event.modifyVisibility(0.5);
 		}
 	}
-
+	
 	@Override public void updateTick() {}
 }

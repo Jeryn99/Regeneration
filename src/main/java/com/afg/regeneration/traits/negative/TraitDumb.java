@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public class TraitDumb extends AbilityConstant {
 	
-	public TraitDumb(EntityPlayer player) { 
+	public TraitDumb(EntityPlayer player) {
 		super(player);
 	}
 	
@@ -30,6 +30,6 @@ public class TraitDumb extends AbilityConstant {
 			event.getOrb().xpValue *= 0.5;
 		}
 	}
-
+	
 	@Override public void updateTick() {}
 }
