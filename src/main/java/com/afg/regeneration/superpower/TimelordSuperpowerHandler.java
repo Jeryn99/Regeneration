@@ -162,12 +162,6 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 			
 			
-		if (handler.regenTicks == 2) {
-			SoundEvent[] RegenSounds = new SoundEvent[] { SoundReg.Reg_1, SoundReg.Reg_2 };
-			SoundEvent sound = RegenSounds[player.world.rand.nextInt(RegenSounds.length)];
-			player.world.playSound(player, player.posX, player.posY, player.posZ, sound, SoundCategory.PLAYERS, 1.0F, 1.0F);
-		}
-		
 		if (handler.regenCount < 12 && handler.regenTicks == 0) {
 			e.setCanceled(true);
 			((EntityPlayer) e.getEntity()).setHealth(1.5f);
@@ -191,6 +185,10 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 					break;
 			}
 			handler.getPlayer().sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + (11 - handler.regenCount) + " regenerations left."), true);
+			
+			SoundEvent[] RegenSounds = new SoundEvent[] { SoundReg.Reg_1, SoundReg.Reg_2 };
+			SoundEvent sound = RegenSounds[player.world.rand.nextInt(RegenSounds.length)];
+			player.world.playSound(null, player.posX, player.posY, player.posZ, sound, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else if (handler.regenCount >= 12) {
 			handler.getPlayer().sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
 			SuperpowerHandler.removeSuperpower(handler.getPlayer());
