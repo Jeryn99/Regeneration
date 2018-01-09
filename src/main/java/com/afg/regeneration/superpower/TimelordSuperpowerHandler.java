@@ -53,15 +53,15 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 			}
 		}
 		
+		if (regenTicks == 199 && cap.getPlayer().world.isRemote && Minecraft.getMinecraft().player.getName().equals(cap.getPlayer().getName()))
+			Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+		
 		if (regenTicks == 200) {
 			regenTicks = 0;
 			cap.getPlayer().setHealth(cap.getPlayer().getMaxHealth());
 			cap.getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionById(10), 3600, 3, false, false));
 			TimelordSuperpowerHandler.randomizeTraits(this);
 			regenCount++;
-			
-			if (!cap.getPlayer().world.isRemote && Minecraft.getMinecraft().player.getName().equals(cap.getPlayer().getName()))
-				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 		}
 	}
 	
