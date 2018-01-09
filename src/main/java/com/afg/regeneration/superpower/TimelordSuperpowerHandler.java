@@ -1,8 +1,8 @@
 package com.afg.regeneration.superpower;
 
-import com.afg.regeneration.Regeneration;
+import com.afg.regeneration.RegenerationMod;
 import com.afg.regeneration.sounds.SoundReg;
-import com.afg.regeneration.traits.negative.INegativeTrait;
+import com.afg.regeneration.traits.negative.TraitINegativeTrait;
 
 import lucraft.mods.lucraftcore.LCConfig;
 import lucraft.mods.lucraftcore.karma.KarmaHandler;
@@ -32,11 +32,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  * Created by AFlyingGrayson on 8/7/17
  */
 @Mod.EventBusSubscriber
-public class TimelordHandler extends SuperpowerPlayerHandler {
+public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	public int regenCount = 0;
 	public int regenTicks = 0;
 	
-	public TimelordHandler(ISuperpowerCapability cap, Superpower superpower) {
+	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) {
 		super(cap, superpower);
 	}
 	
@@ -65,7 +65,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler {
 			regenTicks = 0;
 			cap.getPlayer().setHealth(cap.getPlayer().getMaxHealth());
 			cap.getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionById(10), 3600, 3, false, false));
-			TimelordHandler.randomizeTraits(this);
+			TimelordSuperpowerHandler.randomizeTraits(this);
 			regenCount++;
 			
 			if (cap.getPlayer().world.isRemote && Minecraft.getMinecraft().player.getName().equals(cap.getPlayer().getName())) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
@@ -75,7 +75,7 @@ public class TimelordHandler extends SuperpowerPlayerHandler {
 	
 	@Override
 	public void onApplyPower() {
-		TimelordHandler.randomizeTraits(this);
+		TimelordSuperpowerHandler.randomizeTraits(this);
 	}
 	
 	private static void randomizeTraits(SuperpowerPlayerHandler handler) {
@@ -87,14 +87,14 @@ public class TimelordHandler extends SuperpowerPlayerHandler {
 		
 		for (int i = 0; i < 2; i++) {
 			Ability a = null;
-			while (a == null || a instanceof INegativeTrait || a.isUnlocked())
+			while (a == null || a instanceof TraitINegativeTrait || a.isUnlocked())
 				a = handler.getAbilities().get(handler.getPlayer().getRNG().nextInt(handler.getAbilities().size()));
 			a.setUnlocked(true);
 		}
 		
 		for (int i = 0; i < 2; i++) {
 			Ability a = null;
-			while (a == null || a.isUnlocked() || !(a instanceof INegativeTrait) || TimelordHandler.abilityIsUnlocked(handler, ((INegativeTrait) a).getPositiveTrait()))
+			while (a == null || a.isUnlocked() || !(a instanceof TraitINegativeTrait) || TimelordSuperpowerHandler.abilityIsUnlocked(handler, ((TraitINegativeTrait) a).getPositiveTrait()))
 				a = handler.getAbilities().get(handler.getPlayer().getRNG().nextInt(handler.getAbilities().size()));
 			a.setUnlocked(true);
 		}
@@ -140,8 +140,8 @@ public class TimelordHandler extends SuperpowerPlayerHandler {
 	public static void onAttacked(LivingAttackEvent e) {
 		if (e.getEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntity();
-			if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord)) {
-				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
+			if (SuperpowerHandler.hasSuperpower(player, RegenerationMod.timelord)) {
+				TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 				
 				if ((e.getSource().isExplosion() || e.getSource().isFireDamage()) && handler.regenTicks >= 100) {
 					e.setCanceled(true);
@@ -154,8 +154,8 @@ public class TimelordHandler extends SuperpowerPlayerHandler {
 	public static void onDeath(LivingDeathEvent e) {
 		if (e.getEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntity();
-			if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord)) {
-				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
+			if (SuperpowerHandler.hasSuperpower(player, RegenerationMod.timelord)) {
+				TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 				handler.regenTicks = 0;
 			}
 		}
@@ -165,9 +165,9 @@ public class TimelordHandler extends SuperpowerPlayerHandler {
 	public static void onHurt(LivingHurtEvent e) {
 		if (e.getEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntity();
-			if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord)) {
+			if (SuperpowerHandler.hasSuperpower(player, RegenerationMod.timelord)) {
 				
-				TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
+				TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 				
 				if (((EntityPlayer) e.getEntity()).getHealth() - e.getAmount() <= 0) {
 					

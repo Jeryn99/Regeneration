@@ -14,8 +14,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by AFlyingGrayson on 9/3/17
  */
 @Mod.EventBusSubscriber
-public class Smart extends AbilityConstant {
-	public Smart(EntityPlayer player) {
+public class TraitSmart extends AbilityConstant {
+	public TraitSmart(EntityPlayer player) {
 		super(player);
 	}
 	
@@ -30,7 +30,7 @@ public class Smart extends AbilityConstant {
 			List<Ability> abilityList = SuperpowerHandler.getSuperpowerPlayerHandler(event.getEntityPlayer()).getAbilities();
 			if (abilityList != null) {
 				for (Ability ability : abilityList) {
-					if (ability instanceof Smart && ability.isUnlocked()) {
+					if (ability instanceof TraitSmart && ability.isUnlocked()) {
 						event.getOrb().xpValue *= 1.5;
 					}
 				}

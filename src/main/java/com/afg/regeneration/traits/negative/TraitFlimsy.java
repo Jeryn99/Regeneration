@@ -2,30 +2,29 @@ package com.afg.regeneration.traits.negative;
 
 import java.util.UUID;
 
-import com.afg.regeneration.traits.positive.Strong;
+import com.afg.regeneration.traits.positive.TraitSturdy;
 
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.abilities.AbilityAttributeModifier;
-import lucraft.mods.lucraftcore.util.attributes.LCAttributes;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * Created by AFlyingGrayson on 8/7/17
+ * Created by AFlyingGrayson on 8/10/17
  */
-public class Weak extends AbilityAttributeModifier implements INegativeTrait {
-	
-	public Weak(EntityPlayer player, UUID uuid, float factor, int operation) {
+public class TraitFlimsy extends AbilityAttributeModifier implements TraitINegativeTrait {
+	public TraitFlimsy(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}
 	
 	@Override
 	public IAttribute getAttribute() {
-		return LCAttributes.PUNCH_DAMAGE;
+		return SharedMonsterAttributes.KNOCKBACK_RESISTANCE;
 	}
 	
 	@Override
 	public Class<? extends Ability> getPositiveTrait() {
-		return Strong.class;
+		return TraitSturdy.class;
 	}
 }

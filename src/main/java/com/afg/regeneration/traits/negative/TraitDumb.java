@@ -14,8 +14,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by AFlyingGrayson on 9/3/17
  */
 @Mod.EventBusSubscriber
-public class Dumb extends AbilityConstant {
-	public Dumb(EntityPlayer player) {
+public class TraitDumb extends AbilityConstant {
+	public TraitDumb(EntityPlayer player) {
 		super(player);
 	}
 	
@@ -30,7 +30,7 @@ public class Dumb extends AbilityConstant {
 			List<Ability> abilityList = SuperpowerHandler.getSuperpowerPlayerHandler(event.getEntityPlayer()).getAbilities();
 			if (abilityList != null) {
 				for (Ability ability : abilityList) {
-					if (ability instanceof Dumb && ability.isUnlocked()) {
+					if (ability instanceof TraitDumb && ability.isUnlocked()) {
 						event.getOrb().xpValue *= 0.5;
 					}
 				}

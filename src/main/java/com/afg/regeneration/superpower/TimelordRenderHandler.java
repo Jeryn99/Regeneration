@@ -23,10 +23,10 @@ import net.minecraftforge.client.event.RenderSpecificHandEvent;
 /**
  * Created by AFlyingGrayson on 8/7/17
  */
-public class TimelordRenderhandler implements SuperpowerRenderer.ISuperpowerRenderer {
+public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRenderer {
 	@Override
 	public void onRenderPlayer(RenderLivingBase<?> renderLivingBase, Minecraft minecraft, EntityPlayer entityPlayer, Superpower superpower, SuperpowerPlayerHandler superpowerPlayerHandler, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
-		TimelordHandler handler = (TimelordHandler) superpowerPlayerHandler;
+		TimelordSuperpowerHandler handler = (TimelordSuperpowerHandler) superpowerPlayerHandler;
 		if (handler.regenTicks > 0 && handler.regenTicks < 200) {
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder vertexbuffer = tessellator.getBuffer();

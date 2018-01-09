@@ -2,7 +2,7 @@ package com.afg.regeneration.traits.negative;
 
 import java.util.UUID;
 
-import com.afg.regeneration.traits.positive.Tough;
+import com.afg.regeneration.traits.positive.TraitLucky;
 
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.abilities.AbilityAttributeModifier;
@@ -11,20 +11,20 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * Created by AFlyingGrayson on 8/10/17
+ * Created by AFlyingGrayson on 8/7/17
  */
-public class Unhealthy extends AbilityAttributeModifier implements INegativeTrait {
-	public Unhealthy(EntityPlayer player, UUID uuid, float factor, int operation) {
+public class TraitUnlucky extends AbilityAttributeModifier implements TraitINegativeTrait {
+	public TraitUnlucky(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}
 	
 	@Override
 	public IAttribute getAttribute() {
-		return SharedMonsterAttributes.MAX_HEALTH;
+		return SharedMonsterAttributes.LUCK;
 	}
 	
 	@Override
 	public Class<? extends Ability> getPositiveTrait() {
-		return Tough.class;
+		return TraitLucky.class;
 	}
 }

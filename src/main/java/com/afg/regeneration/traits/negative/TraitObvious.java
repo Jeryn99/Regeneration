@@ -14,8 +14,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by AFlyingGrayson on 9/3/17
  */
 @Mod.EventBusSubscriber
-public class Obvious extends AbilityConstant {
-	public Obvious(EntityPlayer player) {
+public class TraitObvious extends AbilityConstant {
+	public TraitObvious(EntityPlayer player) {
 		super(player);
 	}
 	
@@ -29,7 +29,7 @@ public class Obvious extends AbilityConstant {
 			List<Ability> abilityList = SuperpowerHandler.getSuperpowerPlayerHandler(event.getEntityPlayer()).getAbilities();
 			if (abilityList != null) {
 				for (Ability ability : abilityList) {
-					if (ability instanceof Obvious && ability.isUnlocked()) {
+					if (ability instanceof TraitObvious && ability.isUnlocked()) {
 						event.modifyVisibility(2);
 					}
 				}

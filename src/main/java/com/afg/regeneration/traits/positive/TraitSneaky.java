@@ -12,8 +12,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * Created by AFlyingGrayson on 9/3/17
  */
-public class Sneaky extends AbilityConstant {
-	public Sneaky(EntityPlayer player) {
+public class TraitSneaky extends AbilityConstant {
+	public TraitSneaky(EntityPlayer player) {
 		super(player);
 	}
 	
@@ -28,7 +28,7 @@ public class Sneaky extends AbilityConstant {
 			List<Ability> abilityList = SuperpowerHandler.getSuperpowerPlayerHandler(event.getEntityPlayer()).getAbilities();
 			if (abilityList != null) {
 				for (Ability ability : abilityList) {
-					if (ability instanceof Sneaky && ability.isUnlocked()) {
+					if (ability instanceof TraitSneaky && ability.isUnlocked()) {
 						event.modifyVisibility(0.5);
 					}
 				}

@@ -2,30 +2,30 @@ package com.afg.regeneration.traits.negative;
 
 import java.util.UUID;
 
-import com.afg.regeneration.traits.positive.Spry;
+import com.afg.regeneration.traits.positive.TraitQuick;
 
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.abilities.AbilityAttributeModifier;
-import lucraft.mods.lucraftcore.util.attributes.LCAttributes;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * Created by AFlyingGrayson on 8/10/17
+ * Created by AFlyingGrayson on 8/7/17
  */
-public class Clumsy extends AbilityAttributeModifier implements INegativeTrait {
+public class TraitSlow extends AbilityAttributeModifier implements TraitINegativeTrait {
 	
-	public Clumsy(EntityPlayer player, UUID uuid, float factor, int operation) {
+	public TraitSlow(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}
 	
 	@Override
 	public IAttribute getAttribute() {
-		return LCAttributes.JUMP_HEIGHT;
+		return SharedMonsterAttributes.MOVEMENT_SPEED;
 	}
 	
 	@Override
 	public Class<? extends Ability> getPositiveTrait() {
-		return Spry.class;
+		return TraitQuick.class;
 	}
 }

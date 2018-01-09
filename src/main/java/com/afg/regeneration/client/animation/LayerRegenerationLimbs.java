@@ -1,10 +1,9 @@
-package com.afg.regeneration.client.layers;
+package com.afg.regeneration.client.animation;
 
 import java.awt.Color;
 
-import com.afg.regeneration.Regeneration;
-import com.afg.regeneration.client.animation.LimbRotationUtil;
-import com.afg.regeneration.superpower.TimelordHandler;
+import com.afg.regeneration.RegenerationMod;
+import com.afg.regeneration.superpower.TimelordSuperpowerHandler;
 
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -34,8 +33,8 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer> {
 	@Override
 	public void doRenderLayer(EntityPlayer player, float p_177169_2_, float p_177169_3_, float p_177169_4_, float p_177169_5_, float p_177169_6_, float p_177169_7_, float p_177169_8_) {
 		
-		if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord)) {
-			TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordHandler.class);
+		if (SuperpowerHandler.hasSuperpower(player, RegenerationMod.timelord)) {
+			TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 			if (handler.regenTicks > 0 && handler.regenTicks < 200) {
 				
 				Color color = new Color(255, 200, 0, 1);
