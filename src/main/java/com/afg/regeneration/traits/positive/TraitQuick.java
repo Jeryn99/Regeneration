@@ -8,15 +8,16 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * Created by AFlyingGrayson on 8/10/17
+ * Created by AFlyingGrayson on 8/7/17
  */
-public class ThickSkinned extends AbilityAttributeModifier {
-	public ThickSkinned(EntityPlayer player, UUID uuid, float factor, int operation) {
+public class TraitQuick extends AbilityAttributeModifier {
+	
+	public TraitQuick(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}
 	
 	@Override
 	public IAttribute getAttribute() {
-		return SharedMonsterAttributes.ARMOR;
+		return SharedMonsterAttributes.MOVEMENT_SPEED;
 	}
 }

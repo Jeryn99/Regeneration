@@ -10,13 +10,14 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by AFlyingGrayson on 8/10/17
  */
-public class Sturdy extends AbilityAttributeModifier {
-	public Sturdy(EntityPlayer player, UUID uuid, float factor, int operation) {
+public class TraitThickSkinned extends AbilityAttributeModifier {
+	
+	public TraitThickSkinned(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}
 	
 	@Override
 	public IAttribute getAttribute() {
-		return SharedMonsterAttributes.KNOCKBACK_RESISTANCE;
+		return SharedMonsterAttributes.ARMOR;
 	}
 }

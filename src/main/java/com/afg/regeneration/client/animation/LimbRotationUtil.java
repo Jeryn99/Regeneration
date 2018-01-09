@@ -31,8 +31,7 @@ public class LimbRotationUtil {
 			
 			textureOffsetXField.setAccessible(false);
 			textureOffsetYField.setAccessible(false);
-		} catch (IllegalAccessException ignored) {
-		}
+		} catch (IllegalAccessException e) { e.printStackTrace(); }
 	}
 	
 	public static class CustomModelRenderer extends ModelRenderer {
@@ -45,9 +44,10 @@ public class LimbRotationUtil {
 		public CustomModelRenderer(ModelBase model, int texOffX, int texOffY, ModelRenderer old, Field field) {
 			super(model, "");
 			if (model instanceof ModelPlayer) modelPlayer = (ModelPlayer) model;
-			this.old = old;
+			
 			setTextureOffset(texOffX, texOffY);
-			f = field;
+			this.old = old;
+			this.f = field;
 		}
 		
 		@Override
@@ -63,12 +63,10 @@ public class LimbRotationUtil {
 		public void reset() {
 			if (f != null) try {
 				f.set(modelPlayer, old);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			} catch (IllegalAccessException e) { e.printStackTrace(); }
 		}
 		
-		void setAnglesRadians(float x, float y, float z) {
+		public void setAnglesRadians(float x, float y, float z) {
 			actualX = x;
 			actualY = y;
 			actualZ = z;

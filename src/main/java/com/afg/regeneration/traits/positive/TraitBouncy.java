@@ -8,16 +8,16 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * Created by AFlyingGrayson on 8/7/17
+ * Created by AFlyingGrayson on 8/10/17
  */
-public class Strong extends AbilityAttributeModifier {
+public class TraitBouncy extends AbilityAttributeModifier {
 	
-	public Strong(EntityPlayer player, UUID uuid, float factor, int operation) {
+	public TraitBouncy(EntityPlayer player, UUID uuid, float factor, int operation) {
 		super(player, uuid, factor, operation);
 	}
 	
 	@Override
 	public IAttribute getAttribute() {
-		return LCAttributes.PUNCH_DAMAGE;
+		return LCAttributes.FALL_RESISTANCE;
 	}
 }
