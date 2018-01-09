@@ -38,7 +38,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		if (regenTicks > 0 && regenTicks < 200) {
 			regenTicks++;
 			
-			if (cap.getPlayer().world.isRemote && Minecraft.getMinecraft().player.getName().equals(cap.getPlayer().getName())) 
+			if (cap.getPlayer().world.isRemote && Minecraft.getMinecraft().player.getName().equals(cap.getPlayer().getName()))
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
 			
 			if (!cap.getPlayer().world.isRemote && regenTicks > 100) {
@@ -60,7 +60,8 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 			TimelordSuperpowerHandler.randomizeTraits(this);
 			regenCount++;
 			
-			if (cap.getPlayer().world.isRemote && Minecraft.getMinecraft().player.getName().equals(cap.getPlayer().getName())) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+			if (!cap.getPlayer().world.isRemote && Minecraft.getMinecraft().player.getName().equals(cap.getPlayer().getName()))
+				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 		}
 	}
 	
