@@ -5,7 +5,6 @@ import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 /**
  * Created by AFlyingGrayson on 8/15/17
  */
-public interface INegativeTrait
-{
+public interface INegativeTrait {
 	Class<? extends Ability> getPositiveTrait();
 }
