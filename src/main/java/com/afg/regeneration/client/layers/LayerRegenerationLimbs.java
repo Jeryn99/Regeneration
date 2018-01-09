@@ -36,7 +36,7 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer> {
 		if (SuperpowerHandler.hasSuperpower(player, Regeneration.timelord)) {
 			TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player,
 					TimelordHandler.class);
-			if (handler.regenTicks > 0) {
+			if (handler.regenTicks > 0 && handler.regenTicks < 200) {
 
 				Color color = new Color(255, 200, 0, 1);
 

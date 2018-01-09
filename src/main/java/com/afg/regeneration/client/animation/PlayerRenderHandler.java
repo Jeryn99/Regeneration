@@ -27,7 +27,7 @@ public class PlayerRenderHandler
 		if (SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), Regeneration.timelord))
 		{
 			TimelordHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordHandler.class);
-			if (handler.regenTicks > 0)
+			if (handler.regenTicks > 0 && handler.regenTicks < 200)
 			{
 				ModelPlayer player = e.getRenderer().getMainModel();
 

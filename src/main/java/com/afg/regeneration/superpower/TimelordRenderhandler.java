@@ -29,7 +29,7 @@ public class TimelordRenderhandler implements SuperpowerRenderer.ISuperpowerRend
 			SuperpowerPlayerHandler superpowerPlayerHandler, float v, float v1, float v2, float v3, float v4, float v5, float v6)
 	{
 		TimelordHandler handler = (TimelordHandler) superpowerPlayerHandler;
-		if(handler.regenTicks > 0)
+		if(handler.regenTicks > 0 && handler.regenTicks < 200)
 		{
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder vertexbuffer = tessellator.getBuffer();
