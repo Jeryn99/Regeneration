@@ -38,6 +38,7 @@ public class ChameleonArch extends Item {
 		} else
 			return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 		
-		return new ActionResult<>(EnumActionResult.PASS, ItemStack.EMPTY);
+		itemstack.shrink(1);
+		return new ActionResult<>(EnumActionResult.PASS, itemstack);
 	}
 }
