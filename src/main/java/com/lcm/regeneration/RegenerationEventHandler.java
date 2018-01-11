@@ -22,6 +22,7 @@ public class RegenerationEventHandler {
 	public static void onAttacked(LivingAttackEvent e) {
 		if (!(e.getEntity() instanceof EntityPlayer)) return;
 		EntityPlayer player = (EntityPlayer) e.getEntity();
+		
 		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.instance)) return;
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 		
@@ -41,10 +42,9 @@ public class RegenerationEventHandler {
 	
 	@SubscribeEvent
 	public static void onHurt(LivingHurtEvent e) {
-		if (!(e.getEntity() instanceof EntityPlayer) || ((EntityPlayer) e.getEntity()).getHealth() - e.getAmount() > 0) return;
-		
+		if (!(e.getEntity() instanceof EntityPlayer)) return;
 		EntityPlayer player = (EntityPlayer) e.getEntity();
-		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.instance)) return;
+		if(((EntityPlayer) e.getEntity()).getHealth() - e.getAmount() > 0 || player.getPosition().getY() < 0 || !SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.instance)) return;
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 		
