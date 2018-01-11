@@ -1,6 +1,5 @@
 package com.lcm.regeneration;
 
-import com.lcm.regeneration.sounds.SoundReg;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 
@@ -73,7 +72,7 @@ public class RegenerationEventHandler {
 						break;
 				}
 				handler.getPlayer().sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + handler.regenerationsLeft + " regenerations left."), true);
-				player.world.playSound(null, player.posX, player.posY, player.posZ, SoundReg.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+				player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			} else if (handler.regenerationsLeft <= 0) {
 				handler.getPlayer().sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
 				SuperpowerHandler.removeSuperpower(handler.getPlayer());
