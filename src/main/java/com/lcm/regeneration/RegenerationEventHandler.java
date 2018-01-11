@@ -38,7 +38,7 @@ public class RegenerationEventHandler {
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 
-		if (handler.regenerating) { //death while regenerating
+		if (handler.regenerating || player.getPosition().getY() < 0) { //death while regenerating / falling into the void which does the same but doesn't trigger a regeneration
 			if (player.world.isRemote) if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) 
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 			handler.regenTicks = 0;
