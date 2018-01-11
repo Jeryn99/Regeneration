@@ -37,17 +37,17 @@ public class RegenerationEventHandler {
 		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.instance)) return;
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
-		
+
 		if (handler.regenerating) { //death while regenerating
 			if (player.world.isRemote) if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) 
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-			SuperpowerHandler.removeSuperpower(player);
+			handler.regenTicks = 0;
+			handler.regenerating = false;
 			handler.regenerationsLeft = 0;
 			handler.timesRegenerated = 0;
+			SuperpowerHandler.syncToAll(player);
+			SuperpowerHandler.removeSuperpower(player);
 		}
-		
-		handler.regenTicks = 0;
-		handler.regenerating = false;
 	}
 	
 	@SubscribeEvent
@@ -58,35 +58,34 @@ public class RegenerationEventHandler {
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 		
-		if (!player.world.isRemote) {
-			if (handler.regenerationsLeft > 0 && handler.regenTicks == 0) {
-				e.setCanceled(true);
-				((EntityPlayer) e.getEntity()).setHealth(1.5f);
-				((EntityPlayer) e.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionById(10), 200, 1, false, false));
-				if (handler.regenTicks == 0) handler.regenerating = true;
-				SuperpowerHandler.syncToAll(player);
-				
-				String time = "" + (handler.timesRegenerated + 1);
-				switch (handler.timesRegenerated) {
-					case 0:
-						time = time + "st";
-						break;
-					case 1:
-						time = time + "nd";
-						break;
-					case 2:
-						time = time + "rd";
-						break;
-					default:
-						time = time + "th";
-						break;
-				}
-				handler.getPlayer().sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + handler.regenerationsLeft + " regenerations left."), true);
-				player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-			} else if (handler.regenerationsLeft <= 0) {
-				handler.getPlayer().sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
-				SuperpowerHandler.removeSuperpower(handler.getPlayer());
+		if (player.world.isRemote) return;
+		if (handler.regenerationsLeft > 0 && handler.regenTicks == 0) {
+			e.setCanceled(true);
+			((EntityPlayer) e.getEntity()).setHealth(1.5f);
+			((EntityPlayer) e.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionById(10), 200, 1, false, false));
+			if (handler.regenTicks == 0) handler.regenerating = true;
+			SuperpowerHandler.syncToAll(player);
+			
+			String time = "" + (handler.timesRegenerated + 1);
+			switch (handler.timesRegenerated) {
+				case 0:
+					time = time + "st";
+					break;
+				case 1:
+					time = time + "nd";
+					break;
+				case 2:
+					time = time + "rd";
+					break;
+				default:
+					time = time + "th";
+					break;
 			}
+			handler.getPlayer().sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + handler.regenerationsLeft + " regenerations left."), true);
+			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+		} else if (handler.regenerationsLeft <= 0) {
+			handler.getPlayer().sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
+			SuperpowerHandler.removeSuperpower(handler.getPlayer());
 		}
 	}
 }
