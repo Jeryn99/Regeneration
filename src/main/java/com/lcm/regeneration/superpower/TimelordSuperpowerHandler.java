@@ -70,6 +70,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				cap.getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionById(10), 3600, 3, false, false));
 				TimelordSuperpowerHandler.randomizeTraits(this);
 				regenerationsLeft--;
+				timesRegenerated++;
 				cap.syncToAll();
 			}
 		}
