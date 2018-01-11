@@ -1,5 +1,6 @@
 package com.lcm.regeneration.superpower;
 
+import com.lcm.regeneration.RegenerationMod;
 import com.lcm.regeneration.traits.negative.INegativeTrait;
 
 import lucraft.mods.lucraftcore.LCConfig;
@@ -34,38 +35,35 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	@Override
 	public void onUpdate(TickEvent.Phase phase) {
 		if (phase.equals(TickEvent.Phase.END)) return;
-
-		if(cap.getPlayer().world.isRemote){
-			//Client Behavior
-			if(regenTicks == 0 && regenerating)
-				regenTicks = 1;
-			if(regenTicks > 0){
-				if(Minecraft.getMinecraft().player.getUniqueID() == cap.getPlayer().getUniqueID())
-					Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+		
+		if (cap.getPlayer().world.isRemote) {
+			// Client Behavior
+			if (regenTicks == 0 && regenerating) regenTicks = 1;
+			if (regenTicks > 0) {
+				if (Minecraft.getMinecraft().player.getUniqueID() == cap.getPlayer().getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
 				regenTicks++;
 			}
-			if(regenTicks >= 200 && !regenerating){
+			if (regenTicks >= 200 && !regenerating) {
 				regenTicks = 0;
-				if (Minecraft.getMinecraft().player.getUniqueID() == cap.getPlayer().getUniqueID())
-					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+				if (Minecraft.getMinecraft().player.getUniqueID() == cap.getPlayer().getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 			}
 		} else {
-			//Server Behavior
-			if(regenTicks == 0 && regenerating)
+			// Server Behavior
+			if (regenTicks == 0 && regenerating)
 				regenTicks = 1;
 			else if (regenTicks > 0 && regenTicks < 200) {
 				regenTicks++;
 				if (!cap.getPlayer().world.isRemote && regenTicks > 100) {
 					cap.getPlayer().extinguish();
 					if (cap.getPlayer().world.getBlockState(cap.getPlayer().getPosition()).getBlock() instanceof BlockFire) cap.getPlayer().world.setBlockToAir(cap.getPlayer().getPosition());
-
+					
 					double x = cap.getPlayer().posX + cap.getPlayer().getRNG().nextGaussian() * 2;
 					double y = cap.getPlayer().posY + 0.5 + cap.getPlayer().getRNG().nextGaussian() * 2;
 					double z = cap.getPlayer().posZ + cap.getPlayer().getRNG().nextGaussian() * 2;
-
+					
 					cap.getPlayer().world.newExplosion(cap.getPlayer(), x, y, z, 1, true, false);
 				}
-			} else if(regenTicks >= 200) {
+			} else if (regenTicks >= 200) {
 				regenerating = false;
 				regenTicks = 0;
 				cap.getPlayer().setHealth(cap.getPlayer().getMaxHealth());
@@ -84,11 +82,13 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	}
 	
 	private static void randomizeTraits(SuperpowerPlayerHandler handler) {
-		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
-		
 		// Reset Karma
 		if (LCConfig.modules.karma) for (KarmaStat karmaStat : KarmaStat.getKarmaStats())
 			KarmaHandler.setKarmaStat(handler.getPlayer(), karmaStat, 0);
+		
+		if (RegenerationMod.getConfig().disableTraits) return;
+
+		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
 		
 		for (int i = 0; i < 2; i++) {
 			Ability a = null;
@@ -118,7 +118,8 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	}
 	
 	private static boolean abilityIsUnlocked(SuperpowerPlayerHandler handler, Class<? extends Ability> ability) {
-		for (Ability ability1 : handler.getAbilities()) if (ability.equals(ability1.getClass())) return ability1.isUnlocked();
+		for (Ability ability1 : handler.getAbilities())
+			if (ability.equals(ability1.getClass())) return ability1.isUnlocked();
 		return false;
 	}
 	

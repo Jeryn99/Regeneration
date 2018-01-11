@@ -1,10 +1,33 @@
 package com.lcm.regeneration;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
 import com.lcm.regeneration.client.animation.PlayerRenderHandler;
 import com.lcm.regeneration.items.ItemChameleonArch;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
-import com.lcm.regeneration.traits.negative.*;
-import com.lcm.regeneration.traits.positive.*;
+import com.lcm.regeneration.traits.negative.TraitClumsy;
+import com.lcm.regeneration.traits.negative.TraitDumb;
+import com.lcm.regeneration.traits.negative.TraitFlimsy;
+import com.lcm.regeneration.traits.negative.TraitFrail;
+import com.lcm.regeneration.traits.negative.TraitObvious;
+import com.lcm.regeneration.traits.negative.TraitRigid;
+import com.lcm.regeneration.traits.negative.TraitSlow;
+import com.lcm.regeneration.traits.negative.TraitUnhealthy;
+import com.lcm.regeneration.traits.negative.TraitUnlucky;
+import com.lcm.regeneration.traits.negative.TraitWeak;
+import com.lcm.regeneration.traits.positive.TraitBouncy;
+import com.lcm.regeneration.traits.positive.TraitLucky;
+import com.lcm.regeneration.traits.positive.TraitQuick;
+import com.lcm.regeneration.traits.positive.TraitSmart;
+import com.lcm.regeneration.traits.positive.TraitSneaky;
+import com.lcm.regeneration.traits.positive.TraitSpry;
+import com.lcm.regeneration.traits.positive.TraitStrong;
+import com.lcm.regeneration.traits.positive.TraitSturdy;
+import com.lcm.regeneration.traits.positive.TraitThickSkinned;
+import com.lcm.regeneration.traits.positive.TraitTough;
+
+import lucraft.mods.lucraftcore.LCConfig;
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -20,15 +43,15 @@ import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by AFlyingGrayson on 8/7/17
@@ -38,11 +61,21 @@ import java.lang.reflect.Field;
 @Mod.EventBusSubscriber
 public class RegenerationMod {
 	public static final String MODID = "lcm-regen", VERSION = "1.3";
+	private static RegenerationConfiguration cfg;
+	
+	@Mod.EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		cfg = new RegenerationConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
+	}
 	
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
 		if (event.getSide().equals(Side.CLIENT)) MinecraftForge.EVENT_BUS.register(new PlayerRenderHandler());
 	}
+	
+	public static RegenerationConfiguration getConfig() { return cfg; }
+	
+	
 	
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class RegenerationItems {
@@ -81,32 +114,38 @@ public class RegenerationMod {
 	
 	@SubscribeEvent
 	public static void onRegisterAbility(RegistryEvent.Register<Ability.AbilityEntry> e) {
+		ArrayList<String> disabler = new ArrayList<>();
+		for (String s : LCConfig.superpowers.disabledAbilities) disabler.add(s);
+		
 		// Positive
-		registerAbility(e, TraitBouncy.class, "bouncy");
-		registerAbility(e, TraitLucky.class, "lucky");
-		registerAbility(e, TraitQuick.class, "quick");
-		registerAbility(e, TraitSpry.class, "spry");
-		registerAbility(e, TraitStrong.class, "strong");
-		registerAbility(e, TraitSturdy.class, "sturdy");
-		registerAbility(e, TraitThickSkinned.class, "thickSkinned");
-		registerAbility(e, TraitTough.class, "tough");
-		registerAbility(e, TraitSmart.class, "smart");
-		registerAbility(e, TraitSneaky.class, "sneaky");
+		registerAbility(e, TraitBouncy.class, "bouncy", disabler);
+		registerAbility(e, TraitLucky.class, "lucky", disabler);
+		registerAbility(e, TraitQuick.class, "quick", disabler);
+		registerAbility(e, TraitSpry.class, "spry", disabler);
+		registerAbility(e, TraitStrong.class, "strong", disabler);
+		registerAbility(e, TraitSturdy.class, "sturdy", disabler);
+		registerAbility(e, TraitThickSkinned.class, "thickSkinned", disabler);
+		registerAbility(e, TraitTough.class, "tough", disabler);
+		registerAbility(e, TraitSmart.class, "smart", disabler);
+		registerAbility(e, TraitSneaky.class, "sneaky", disabler);
 		
 		// Negative
-		registerAbility(e, TraitClumsy.class, "clumsy");
-		registerAbility(e, TraitFlimsy.class, "flimsy");
-		registerAbility(e, TraitFrail.class, "frail");
-		registerAbility(e, TraitRigid.class, "rigid");
-		registerAbility(e, TraitSlow.class, "slow");
-		registerAbility(e, TraitUnhealthy.class, "unhealthy");
-		registerAbility(e, TraitUnlucky.class, "unlucky");
-		registerAbility(e, TraitWeak.class, "weak");
-		registerAbility(e, TraitDumb.class, "dumb");
-		registerAbility(e, TraitObvious.class, "obvious");
+		registerAbility(e, TraitClumsy.class, "clumsy", disabler);
+		registerAbility(e, TraitFlimsy.class, "flimsy", disabler);
+		registerAbility(e, TraitFrail.class, "frail", disabler);
+		registerAbility(e, TraitRigid.class, "rigid", disabler);
+		registerAbility(e, TraitSlow.class, "slow", disabler);
+		registerAbility(e, TraitUnhealthy.class, "unhealthy", disabler);
+		registerAbility(e, TraitUnlucky.class, "unlucky", disabler);
+		registerAbility(e, TraitWeak.class, "weak", disabler);
+		registerAbility(e, TraitDumb.class, "dumb", disabler);
+		registerAbility(e, TraitObvious.class, "obvious", disabler);
+		
+		if (cfg.disableTraits) LCConfig.superpowers.disabledAbilities = disabler.toArray(new String[0]);
 	}
 	
-	private static void registerAbility(RegistryEvent.Register<Ability.AbilityEntry> event, Class<? extends Ability> ability, String name) {
+	private static void registerAbility(RegistryEvent.Register<Ability.AbilityEntry> event, Class<? extends Ability> ability, String name, ArrayList<String> disabler) {
 		event.getRegistry().register(new Ability.AbilityEntry(ability, new ResourceLocation(RegenerationMod.MODID, name)));
+		disabler.add(RegenerationMod.MODID + ":" + name);
 	}
 }

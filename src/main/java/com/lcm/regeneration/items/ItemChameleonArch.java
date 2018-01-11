@@ -1,5 +1,6 @@
 package com.lcm.regeneration.items;
 
+import com.lcm.regeneration.RegenerationSounds;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 
@@ -12,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
@@ -32,9 +34,12 @@ public class ItemChameleonArch extends Item {
 		
 		if (handler == null) {
 			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.instance);
-			playerIn.sendStatusMessage(new TextComponentString("You've become a timelord! (animation coming soon)"), true);
+			
+			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			playerIn.sendStatusMessage(new TextComponentString("You've become a timelord!"), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
 			((TimelordSuperpowerHandler) handler).regenerationsLeft = 12;
+			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			playerIn.sendStatusMessage(new TextComponentString("You've reset your regeneration cycles!"), true);
 		} else return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 		

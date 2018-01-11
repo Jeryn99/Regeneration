@@ -1,6 +1,6 @@
 {
 	"regen_1": {
-		"category": "master",
+		"category": "ambient",
 		"subtitle": "regen_1",
 		"sounds": [{
 			"name": "lcm-regen:regen_1",
@@ -8,11 +8,20 @@
 		}]
 	},
 	
-		"regen_2": {
-		"category": "master",
+	"regen_2": {
+		"category": "ambient",
 		"subtitle": "regen_2",
 		"sounds": [{
 			"name": "lcm-regen:regen_2",
+			"stream": true
+		}]
+	},
+	
+	"regen_get": {
+		"category": "players",
+		"subtitle": "regen_get",
+		"sounds": [{
+			"name": "lcm-regen:regen_get",
 			"stream": true
 		}]
 	}
