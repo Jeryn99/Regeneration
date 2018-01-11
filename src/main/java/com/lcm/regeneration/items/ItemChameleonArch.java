@@ -34,7 +34,7 @@ public class ItemChameleonArch extends Item {
 			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.instance);
 			playerIn.sendStatusMessage(new TextComponentString("You've become a timelord! (animation coming soon)"), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
-			((TimelordSuperpowerHandler) handler).regenCount = 0;
+			((TimelordSuperpowerHandler) handler).regenerationsLeft = 12;
 			playerIn.sendStatusMessage(new TextComponentString("You've reset your regeneration cycles!"), true);
 		} else return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 		
