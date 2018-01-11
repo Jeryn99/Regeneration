@@ -1,31 +1,10 @@
 package com.lcm.regeneration.superpower;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.lcm.regeneration.RegenerationMod;
-import com.lcm.regeneration.traits.negative.TraitClumsy;
-import com.lcm.regeneration.traits.negative.TraitDumb;
-import com.lcm.regeneration.traits.negative.TraitFlimsy;
-import com.lcm.regeneration.traits.negative.TraitFrail;
-import com.lcm.regeneration.traits.negative.TraitObvious;
-import com.lcm.regeneration.traits.negative.TraitRigid;
-import com.lcm.regeneration.traits.negative.TraitSlow;
-import com.lcm.regeneration.traits.negative.TraitUnhealthy;
-import com.lcm.regeneration.traits.negative.TraitUnlucky;
-import com.lcm.regeneration.traits.negative.TraitWeak;
-import com.lcm.regeneration.traits.positive.TraitBouncy;
-import com.lcm.regeneration.traits.positive.TraitLucky;
-import com.lcm.regeneration.traits.positive.TraitQuick;
-import com.lcm.regeneration.traits.positive.TraitSmart;
-import com.lcm.regeneration.traits.positive.TraitSneaky;
-import com.lcm.regeneration.traits.positive.TraitSpry;
-import com.lcm.regeneration.traits.positive.TraitStrong;
-import com.lcm.regeneration.traits.positive.TraitSturdy;
-import com.lcm.regeneration.traits.positive.TraitThickSkinned;
-import com.lcm.regeneration.traits.positive.TraitTough;
-
+import com.lcm.regeneration.traits.negative.*;
+import com.lcm.regeneration.traits.positive.*;
 import lucraft.mods.lucraftcore.superpowers.Superpower;
+import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
@@ -33,6 +12,9 @@ import lucraft.mods.lucraftcore.superpowers.render.SuperpowerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by AFlyingGrayson on 8/7/17
@@ -50,7 +32,8 @@ public class TimelordSuperpower extends Superpower {
 	
 	@Override
 	public SuperpowerPlayerHandler getNewSuperpowerHandler(ISuperpowerCapability iSuperpowerCapability) {
-		return new TimelordSuperpowerHandler(iSuperpowerCapability, this);
+		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(iSuperpowerCapability.getPlayer(), TimelordSuperpowerHandler.class);
+		return (handler == null) ? new TimelordSuperpowerHandler(iSuperpowerCapability, this) : handler;
 	}
 	
 	@Override
