@@ -41,7 +41,9 @@ public class TimelordSuperpower extends Superpower {
 	public static final TimelordSuperpower instance;
 	private TimelordRenderHandler timelordRenderhandler;
 	
-	static { instance = new TimelordSuperpower(); }
+	static {
+		instance = new TimelordSuperpower();
+	}
 	
 	public TimelordSuperpower() {
 		super("Timelord");
@@ -57,7 +59,7 @@ public class TimelordSuperpower extends Superpower {
 	protected List<Ability> addDefaultAbilities(EntityPlayer player, List<Ability> list) {
 		UUID uuid = UUID.fromString("fe163548-51b9-4bb5-89d2-9283c3283f6b");
 		
-		//Positive
+		// Positive
 		list.add(new TraitLucky(player, uuid, 5.0f, 0));
 		list.add(new TraitQuick(player, uuid, 0.075f, 0));
 		list.add(new TraitStrong(player, uuid, 4.0f, 0));
@@ -69,7 +71,7 @@ public class TimelordSuperpower extends Superpower {
 		list.add(new TraitSneaky(player));
 		list.add(new TraitSmart(player));
 		
-		//Negative
+		// Negative
 		list.add(new TraitUnlucky(player, uuid, -5.0f, 0));
 		list.add(new TraitSlow(player, uuid, -0.035f, 0));
 		list.add(new TraitWeak(player, uuid, -0.25f, 0));

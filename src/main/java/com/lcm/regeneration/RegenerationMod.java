@@ -1,10 +1,31 @@
 package com.lcm.regeneration;
 
+import java.lang.reflect.Field;
+
 import com.lcm.regeneration.client.animation.PlayerRenderHandler;
 import com.lcm.regeneration.items.ItemChameleonArch;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
-import com.lcm.regeneration.traits.negative.*;
-import com.lcm.regeneration.traits.positive.*;
+import com.lcm.regeneration.traits.negative.TraitClumsy;
+import com.lcm.regeneration.traits.negative.TraitDumb;
+import com.lcm.regeneration.traits.negative.TraitFlimsy;
+import com.lcm.regeneration.traits.negative.TraitFrail;
+import com.lcm.regeneration.traits.negative.TraitObvious;
+import com.lcm.regeneration.traits.negative.TraitRigid;
+import com.lcm.regeneration.traits.negative.TraitSlow;
+import com.lcm.regeneration.traits.negative.TraitUnhealthy;
+import com.lcm.regeneration.traits.negative.TraitUnlucky;
+import com.lcm.regeneration.traits.negative.TraitWeak;
+import com.lcm.regeneration.traits.positive.TraitBouncy;
+import com.lcm.regeneration.traits.positive.TraitLucky;
+import com.lcm.regeneration.traits.positive.TraitQuick;
+import com.lcm.regeneration.traits.positive.TraitSmart;
+import com.lcm.regeneration.traits.positive.TraitSneaky;
+import com.lcm.regeneration.traits.positive.TraitSpry;
+import com.lcm.regeneration.traits.positive.TraitStrong;
+import com.lcm.regeneration.traits.positive.TraitSturdy;
+import com.lcm.regeneration.traits.positive.TraitThickSkinned;
+import com.lcm.regeneration.traits.positive.TraitTough;
+
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -27,8 +48,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.lang.reflect.Field;
 
 /**
  * Created by AFlyingGrayson on 8/7/17

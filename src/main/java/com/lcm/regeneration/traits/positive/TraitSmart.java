@@ -20,7 +20,6 @@ public class TraitSmart extends AbilityConstant {
 		super(player);
 	}
 	
-	
 	@SubscribeEvent
 	public static void onExperienceGain(PlayerPickupXpEvent event) {
 		if (SuperpowerHandler.getSuperpowerPlayerHandler(event.getEntityPlayer()) == null) return;

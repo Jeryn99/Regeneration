@@ -1,14 +1,15 @@
 package com.lcm.regeneration.sounds;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.lcm.regeneration.RegenerationMod;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class SoundReg {
