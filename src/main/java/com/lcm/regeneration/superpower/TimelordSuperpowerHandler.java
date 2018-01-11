@@ -13,6 +13,7 @@ import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -35,17 +36,18 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	@Override
 	public void onUpdate(TickEvent.Phase phase) {
 		if (phase.equals(TickEvent.Phase.END)) return;
-		
-		if (cap.getPlayer().world.isRemote) {
+
+		EntityPlayer player = cap.getPlayer();
+		if (player.world.isRemote) {
 			// Client Behavior
 			if (regenTicks == 0 && regenerating) regenTicks = 1;
 			if (regenTicks > 0) {
-				if (Minecraft.getMinecraft().player.getUniqueID() == cap.getPlayer().getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
 				regenTicks++;
 			}
 			if (regenTicks >= 200 && !regenerating) {
 				regenTicks = 0;
-				if (Minecraft.getMinecraft().player.getUniqueID() == cap.getPlayer().getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 			}
 		} else {
 			// Server Behavior
@@ -53,21 +55,21 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				regenTicks = 1;
 			else if (regenTicks > 0 && regenTicks < 200) {
 				regenTicks++;
-				if (!cap.getPlayer().world.isRemote && regenTicks > 100) {
-					cap.getPlayer().extinguish();
-					if (cap.getPlayer().world.getBlockState(cap.getPlayer().getPosition()).getBlock() instanceof BlockFire) cap.getPlayer().world.setBlockToAir(cap.getPlayer().getPosition());
+				if (!player.world.isRemote && regenTicks > 100) {
+					player.extinguish();
+					if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire) player.world.setBlockToAir(player.getPosition());
 					
-					double x = cap.getPlayer().posX + cap.getPlayer().getRNG().nextGaussian() * 2;
-					double y = cap.getPlayer().posY + 0.5 + cap.getPlayer().getRNG().nextGaussian() * 2;
-					double z = cap.getPlayer().posZ + cap.getPlayer().getRNG().nextGaussian() * 2;
+					double x = player.posX + player.getRNG().nextGaussian() * 2;
+					double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
+					double z = player.posZ + player.getRNG().nextGaussian() * 2;
 					
-					cap.getPlayer().world.newExplosion(cap.getPlayer(), x, y, z, 1, true, false);
+					player.world.newExplosion(player, x, y, z, 1, player.getDistance(x, y, z) >= 4, false);
 				}
 			} else if (regenTicks >= 200) {
 				regenerating = false;
 				regenTicks = 0;
-				cap.getPlayer().setHealth(cap.getPlayer().getMaxHealth());
-				cap.getPlayer().addPotionEffect(new PotionEffect(Potion.getPotionById(10), 3600, 3, false, false));
+				player.setHealth(player.getMaxHealth());
+				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 3600, 3, false, false));
 				TimelordSuperpowerHandler.randomizeTraits(this);
 				regenerationsLeft--;
 				timesRegenerated++;

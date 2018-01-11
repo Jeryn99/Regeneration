@@ -1,7 +1,5 @@
 package com.lcm.regeneration.traits.negative;
 
-import java.util.List;
-
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.abilities.AbilityConstant;
@@ -9,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.List;
 
 /**
  * Created by AFlyingGrayson on 9/3/17
@@ -31,5 +31,10 @@ public class TraitObvious extends AbilityConstant {
 		for (Ability ability : abilityList) if (ability instanceof TraitObvious && ability.isUnlocked()) {
 			event.modifyVisibility(2);
 		}
+	}
+
+	@Override
+	public boolean showInAbilityBar() {
+		return false;
 	}
 }

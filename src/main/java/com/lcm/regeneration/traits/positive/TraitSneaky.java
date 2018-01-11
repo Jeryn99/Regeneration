@@ -1,13 +1,13 @@
 package com.lcm.regeneration.traits.positive;
 
-import java.util.List;
-
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.abilities.AbilityConstant;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.List;
 
 /**
  * Created by AFlyingGrayson on 9/3/17
@@ -29,4 +29,9 @@ public class TraitSneaky extends AbilityConstant {
 	}
 	
 	@Override public void updateTick() {}
+
+	@Override
+	public boolean showInAbilityBar() {
+		return false;
+	}
 }
