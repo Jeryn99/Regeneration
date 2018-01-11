@@ -1,5 +1,6 @@
 package com.lcm.regeneration.superpower;
 
+import com.lcm.regeneration.RegenerationMod;
 import com.lcm.regeneration.traits.negative.INegativeTrait;
 
 import lucraft.mods.lucraftcore.LCConfig;
@@ -81,11 +82,13 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	}
 	
 	private static void randomizeTraits(SuperpowerPlayerHandler handler) {
-		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
-		
 		// Reset Karma
 		if (LCConfig.modules.karma) for (KarmaStat karmaStat : KarmaStat.getKarmaStats())
 			KarmaHandler.setKarmaStat(handler.getPlayer(), karmaStat, 0);
+		
+		if (RegenerationMod.getConfig().disableTraits) return;
+
+		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
 		
 		for (int i = 0; i < 2; i++) {
 			Ability a = null;
