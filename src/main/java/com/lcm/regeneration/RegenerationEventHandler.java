@@ -4,6 +4,7 @@ import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -36,6 +37,15 @@ public class RegenerationEventHandler {
 		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.instance)) return;
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
+		
+		if (handler.regenerating) { //death while regenerating
+			if (player.world.isRemote) if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) 
+				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+			SuperpowerHandler.removeSuperpower(player);
+			handler.regenerationsLeft = 0;
+			handler.timesRegenerated = 0;
+		}
+		
 		handler.regenTicks = 0;
 		handler.regenerating = false;
 	}
