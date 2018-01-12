@@ -1,9 +1,31 @@
 package com.lcm.regeneration.superpower;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.lcm.regeneration.RegenerationMod;
 import com.lcm.regeneration.client.gui.GuiRegenCustomizer;
-import com.lcm.regeneration.traits.negative.*;
-import com.lcm.regeneration.traits.positive.*;
+import com.lcm.regeneration.traits.negative.TraitClumsy;
+import com.lcm.regeneration.traits.negative.TraitDumb;
+import com.lcm.regeneration.traits.negative.TraitFlimsy;
+import com.lcm.regeneration.traits.negative.TraitFrail;
+import com.lcm.regeneration.traits.negative.TraitObvious;
+import com.lcm.regeneration.traits.negative.TraitRigid;
+import com.lcm.regeneration.traits.negative.TraitSlow;
+import com.lcm.regeneration.traits.negative.TraitUnhealthy;
+import com.lcm.regeneration.traits.negative.TraitUnlucky;
+import com.lcm.regeneration.traits.negative.TraitWeak;
+import com.lcm.regeneration.traits.positive.TraitBouncy;
+import com.lcm.regeneration.traits.positive.TraitLucky;
+import com.lcm.regeneration.traits.positive.TraitQuick;
+import com.lcm.regeneration.traits.positive.TraitSmart;
+import com.lcm.regeneration.traits.positive.TraitSneaky;
+import com.lcm.regeneration.traits.positive.TraitSpry;
+import com.lcm.regeneration.traits.positive.TraitStrong;
+import com.lcm.regeneration.traits.positive.TraitSturdy;
+import com.lcm.regeneration.traits.positive.TraitThickSkinned;
+import com.lcm.regeneration.traits.positive.TraitTough;
+
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
@@ -11,13 +33,14 @@ import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
 import lucraft.mods.lucraftcore.superpowers.gui.GuiCustomizer;
 import lucraft.mods.lucraftcore.superpowers.render.SuperpowerRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by AFlyingGrayson on 8/7/17
@@ -25,7 +48,6 @@ import java.util.UUID;
 public class TimelordSuperpower extends Superpower {
 	
 	public static final TimelordSuperpower INSTANCE = new TimelordSuperpower();
-	
 	private TimelordRenderHandler timelordRenderhandler;
 	
 	public TimelordSuperpower() {
@@ -86,6 +108,18 @@ public class TimelordSuperpower extends Superpower {
 	@SideOnly(Side.CLIENT)
 	public GuiCustomizer getCustomizerGui(EntityPlayer player) {
 		return new GuiRegenCustomizer();
+	}
+	
+	@Override
+	public void renderIcon(Minecraft mc, Gui gui, int x, int y) {
+		float zLevel = Minecraft.getMinecraft().getRenderItem().zLevel;
+        Minecraft.getMinecraft().getRenderItem().zLevel = -100.5F;
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 0);
+        GlStateManager.scale(2, 2, 1);
+        Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(new ItemStack(RegenerationMod.RegenerationItems.chameleonArch), 0, 0);
+        GlStateManager.popMatrix();
+        Minecraft.getMinecraft().getRenderItem().zLevel = zLevel;
 	}
 	
 	@Override
