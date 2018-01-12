@@ -80,6 +80,8 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	
 	@Override
 	public void onApplyPower() {
+		if(this.getAbilities().isEmpty())
+			TimelordSuperpower.INSTANCE.addDefaultAbilities(this.getPlayer(), this.getAbilities());
 		TimelordSuperpowerHandler.randomizeTraits(this);
 		this.regenerationsLeft = 12;
 	}
