@@ -4,6 +4,7 @@ import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.capabilities.CapabilitySuperpower;
+import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -41,10 +42,19 @@ public class RegenerationEventHandler {
 			((CapabilitySuperpower) player.getCapability(CapabilitySuperpower.SUPERPOWER_CAP, null)).superpowerData.removeTag(TimelordSuperpower.INSTANCE.getRegistryName().toString());
 		} else if (handler.regenerationsLeft > 0) {
 			e.setCanceled(true);
-			player.setHealth(1.5f);
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 200, 1, false, false));
+<<<<<<< HEAD
+=======
 			handler.regenerating = true;
 			SuperpowerHandler.syncToAll(player);
+			
+>>>>>>> 89abee6... r - ext
+			player.setHealth(1.5f);
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 200, 1, false, false));
+			player.extinguish();
+			handler.regenerating = true;
+			SuperpowerHandler.syncToAll(player);
+			
+			if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire) player.world.setBlockToAir(player.getPosition());
 			
 			String time = "" + (handler.timesRegenerated + 1);
 			int lastDigit = handler.timesRegenerated;
