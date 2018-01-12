@@ -2,6 +2,7 @@ package com.lcm.regeneration;
 
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
+
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.capabilities.CapabilitySuperpower;
 import net.minecraft.block.BlockFire;
@@ -13,11 +14,20 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
 public class RegenerationEventHandler {
+	
+	@SubscribeEvent
+	public static void onWorldLoaded(WorldEvent.Load e) {
+		if (!e.getWorld().isRemote && !RegenerationMod.getConfig().enableTraits) {
+			for (EntityPlayer p : e.getWorld().playerEntities) if (SuperpowerHandler.hasSuperpower(p, TimelordSuperpower.INSTANCE))
+				SuperpowerHandler.getSuperpowerPlayerHandler(p).getAbilities().forEach(ability -> ability.setUnlocked(false));
+		}
+	}
 	
 	@SubscribeEvent
 	public static void onAttacked(LivingAttackEvent e) {
