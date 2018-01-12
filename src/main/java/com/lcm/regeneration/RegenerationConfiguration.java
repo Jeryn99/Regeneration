@@ -7,7 +7,7 @@ public class RegenerationConfiguration {
 	
 	public RegenerationConfiguration(Configuration cfg) {
 		cfg.load();
-		disableTraits = cfg.getBoolean("traits", "enableTraits", true, "Enable the trait system. If this is false all trait effects are disabled");
+		disableTraits = !cfg.getBoolean("traits", "enableTraits", true, "Enable the trait system. If this is false all trait effects are disabled");
 		cfg.save();
 	}
 }

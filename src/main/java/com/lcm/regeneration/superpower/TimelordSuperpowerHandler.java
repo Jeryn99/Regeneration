@@ -2,7 +2,6 @@ package com.lcm.regeneration.superpower;
 
 import com.lcm.regeneration.RegenerationMod;
 import com.lcm.regeneration.traits.negative.INegativeTrait;
-
 import lucraft.mods.lucraftcore.LCConfig;
 import lucraft.mods.lucraftcore.karma.KarmaHandler;
 import lucraft.mods.lucraftcore.karma.KarmaStat;
@@ -10,6 +9,7 @@ import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
+import lucraft.mods.lucraftcore.superpowers.capabilities.CapabilitySuperpower;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
@@ -20,6 +20,9 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Created by AFlyingGrayson on 8/7/17
@@ -80,10 +83,11 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	
 	@Override
 	public void onApplyPower() {
-		if(this.getAbilities().isEmpty())
-			TimelordSuperpower.INSTANCE.addDefaultAbilities(this.getPlayer(), this.getAbilities());
+		this.getAbilities().clear();
+		TimelordSuperpower.INSTANCE.addDefaultAbilities(this.getPlayer(), this.getAbilities());
 		TimelordSuperpowerHandler.randomizeTraits(this);
 		this.regenerationsLeft = 12;
+		SuperpowerHandler.syncToAll(this.getPlayer());
 	}
 	
 	private static void randomizeTraits(SuperpowerPlayerHandler handler) {
@@ -108,9 +112,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				a = handler.getAbilities().get(handler.getPlayer().getRNG().nextInt(handler.getAbilities().size()));
 			a.setUnlocked(true);
 		}
-		
-		SuperpowerHandler.syncToAll(handler.getPlayer());
-		
+
 		String s = "";
 		for (Ability ability : handler.getAbilities()) {
 			if (ability.isUnlocked()) {
@@ -143,5 +145,14 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		regenerationsLeft = compound.getInteger("regenerationsLeft");
 		timesRegenerated = compound.getInteger("timesRegenerated");
 		regenerating = compound.getBoolean("regenerating");
+
+		ArrayList<Ability> abilities = new ArrayList<>();
+		abilities.addAll(getAbilities());
+		abilities.removeAll(getAbilities().stream().filter(ability -> !ability.isUnlocked()).collect(Collectors.toCollection(ArrayList::new)));
+
+		this.getAbilities().clear();
+		((CapabilitySuperpower) getPlayer().getCapability(CapabilitySuperpower.SUPERPOWER_CAP, null)).superpowerData.getCompoundTag(TimelordSuperpower.INSTANCE.getRegistryName().toString()).removeTag("Abilities");
+
+		this.getAbilities().addAll(abilities);
 	}
 }
