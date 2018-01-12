@@ -140,4 +140,12 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		timesRegenerated = compound.getInteger("timesRegenerated");
 		regenerating = compound.getBoolean("regenerating");
 	}
+
+	public void reset(EntityPlayer player) {
+		regenTicks = 0;
+		regenerating = false;
+		regenerationsLeft = 0;
+		timesRegenerated = 0;
+		SuperpowerHandler.syncToAll(player);
+	}
 }

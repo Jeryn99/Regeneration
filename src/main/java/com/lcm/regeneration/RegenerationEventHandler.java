@@ -39,13 +39,7 @@ public class RegenerationEventHandler {
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 
 		if (handler.regenerating || player.getPosition().getY() < 0) { //death while regenerating / falling into the void which does the same but doesn't trigger a regeneration
-			if (player.world.isRemote) if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) 
-				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-			handler.regenTicks = 0;
-			handler.regenerating = false;
-			handler.regenerationsLeft = 0;
-			handler.timesRegenerated = 0;
-			SuperpowerHandler.syncToAll(player);
+			handler.reset(player);
 			SuperpowerHandler.removeSuperpower(player);
 		}
 	}
@@ -84,7 +78,8 @@ public class RegenerationEventHandler {
 			handler.getPlayer().sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + handler.regenerationsLeft + " regenerations left."), true);
 			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		} else if (handler.regenerationsLeft <= 0) {
-			handler.getPlayer().sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true);
+			handler.getPlayer().sendStatusMessage(new TextComponentString("You're out of regenerations. You're dying for real this time."), true); //XXX a message when dying for real?
+			handler.reset(player);
 			SuperpowerHandler.removeSuperpower(handler.getPlayer());
 		}
 	}
