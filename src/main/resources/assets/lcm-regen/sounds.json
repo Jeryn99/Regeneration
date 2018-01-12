@@ -1,7 +1,7 @@
 {
 	"regen_1": {
 		"category": "ambient",
-		"subtitle": "regen_1",
+		"subtitle": "lcm-regen.subtitles.regen",
 		"sounds": [{
 			"name": "lcm-regen:regen_1",
 			"stream": true
@@ -10,7 +10,7 @@
 	
 	"regen_2": {
 		"category": "ambient",
-		"subtitle": "regen_2",
+		"subtitle": "lcm-regen.subtitles.regen",
 		"sounds": [{
 			"name": "lcm-regen:regen_2",
 			"stream": true
@@ -19,7 +19,7 @@
 	
 	"regen_get": {
 		"category": "players",
-		"subtitle": "regen_get",
+		"subtitle": "lcm-regen.subtitles.regen_get",
 		"sounds": [{
 			"name": "lcm-regen:regen_get",
 			"stream": true
