@@ -84,7 +84,7 @@ public class RegenerationMod {
 	
 	@SubscribeEvent
 	public static void onRegisterSuperpower(RegistryEvent.Register<Superpower> e) {
-		e.getRegistry().register(TimelordSuperpower.instance);
+		e.getRegistry().register(TimelordSuperpower.INSTANCE);
 	}
 	
 	@SubscribeEvent

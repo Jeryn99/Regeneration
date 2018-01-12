@@ -20,13 +20,11 @@ import java.util.UUID;
  * Created by AFlyingGrayson on 8/7/17
  */
 public class TimelordSuperpower extends Superpower {
-	public static final TimelordSuperpower instance;
+
+	public static final TimelordSuperpower INSTANCE = new TimelordSuperpower();
+
 	private TimelordRenderHandler timelordRenderhandler;
-	
-	static {
-		instance = new TimelordSuperpower();
-	}
-	
+
 	public TimelordSuperpower() {
 		super("Timelord");
 		setRegistryName(RegenerationMod.MODID, "timelord");

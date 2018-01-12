@@ -33,7 +33,7 @@ public class ItemChameleonArch extends Item {
 		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(playerIn);
 		
 		if (handler == null) {
-			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.instance);
+			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.INSTANCE);
 			
 			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			playerIn.sendStatusMessage(new TextComponentString("You've become a timelord!"), true);

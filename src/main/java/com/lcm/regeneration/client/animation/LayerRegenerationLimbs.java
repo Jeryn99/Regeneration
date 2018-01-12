@@ -1,10 +1,7 @@
 package com.lcm.regeneration.client.animation;
 
-import java.awt.Color;
-
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
-
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -15,6 +12,8 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.awt.*;
 
 /**
  * Created by AFlyingGrayson on 8/8/17
@@ -31,7 +30,7 @@ public class LayerRegenerationLimbs implements LayerRenderer<EntityPlayer> {
 	
 	@Override
 	public void doRenderLayer(EntityPlayer player, float p_177169_2_, float p_177169_3_, float p_177169_4_, float p_177169_5_, float p_177169_6_, float p_177169_7_, float p_177169_8_) {
-		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.instance)) return;
+		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.INSTANCE)) return;
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 		if (!(handler.regenTicks > 0 && handler.regenTicks < 200)) return;

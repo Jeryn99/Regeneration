@@ -1,5 +1,6 @@
 package com.lcm.regeneration.traits.negative;
 
+import com.lcm.regeneration.traits.positive.TraitSneaky;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.abilities.AbilityConstant;
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by AFlyingGrayson on 9/3/17
  */
 @Mod.EventBusSubscriber
-public class TraitObvious extends AbilityConstant {
+public class TraitObvious extends AbilityConstant implements INegativeTrait{
 	
 	public TraitObvious(EntityPlayer player) {
 		super(player);
@@ -36,5 +37,10 @@ public class TraitObvious extends AbilityConstant {
 	@Override
 	public boolean showInAbilityBar() {
 		return false;
+	}
+
+	@Override public Class<? extends Ability> getPositiveTrait()
+	{
+		return TraitSneaky.class;
 	}
 }

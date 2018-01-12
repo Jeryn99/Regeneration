@@ -1,5 +1,6 @@
 package com.lcm.regeneration.traits.negative;
 
+import com.lcm.regeneration.traits.positive.TraitSmart;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.abilities.AbilityConstant;
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by AFlyingGrayson on 9/3/17
  */
 @Mod.EventBusSubscriber
-public class TraitDumb extends AbilityConstant {
+public class TraitDumb extends AbilityConstant implements INegativeTrait {
 	
 	public TraitDumb(EntityPlayer player) {
 		super(player);
@@ -36,5 +37,10 @@ public class TraitDumb extends AbilityConstant {
 	@Override
 	public boolean showInAbilityBar() {
 		return false;
+	}
+
+	@Override public Class<? extends Ability> getPositiveTrait()
+	{
+		return TraitSmart.class;
 	}
 }

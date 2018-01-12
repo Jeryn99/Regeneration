@@ -1,10 +1,7 @@
 package com.lcm.regeneration.client.animation;
 
-import java.util.ArrayList;
-
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
-
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
@@ -12,6 +9,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
 
 /**
  * Created by AFlyingGrayson on 8/15/17
@@ -21,7 +20,7 @@ public class PlayerRenderHandler {
 	
 	@SubscribeEvent
 	public void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
-		if (!SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), TimelordSuperpower.instance)) return;
+		if (!SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), TimelordSuperpower.INSTANCE)) return;
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class);
 		if (handler.regenTicks > 0 && handler.regenTicks < 200) {
@@ -48,7 +47,7 @@ public class PlayerRenderHandler {
 			e.getRenderer().addLayer(new LayerRegenerationLimbs(e.getRenderer()));
 		}
 		
-		if (SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), TimelordSuperpower.instance)) {
+		if (SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), TimelordSuperpower.INSTANCE)) {
 			TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class);
 			if (handler.regenTicks > 0) for (ModelRenderer renderer : e.getRenderer().getMainModel().boxList) {
 				if (renderer instanceof LimbRotationUtil.CustomModelRenderer) ((LimbRotationUtil.CustomModelRenderer) renderer).reset();
