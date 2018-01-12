@@ -23,11 +23,11 @@ import java.util.UUID;
  * Created by AFlyingGrayson on 8/7/17
  */
 public class TimelordSuperpower extends Superpower {
-
+	
 	public static final TimelordSuperpower INSTANCE = new TimelordSuperpower();
-
+	
 	private TimelordRenderHandler timelordRenderhandler;
-
+	
 	public TimelordSuperpower() {
 		super("Timelord");
 		setRegistryName(RegenerationMod.MODID, "timelord");
@@ -76,18 +76,20 @@ public class TimelordSuperpower extends Superpower {
 		if (timelordRenderhandler == null) timelordRenderhandler = new TimelordRenderHandler();
 		return timelordRenderhandler;
 	}
-
-	@Override public boolean canCustomize() {
+	
+	@Override
+	public boolean canCustomize() {
 		return true;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiCustomizer getCustomizerGui(EntityPlayer player) {
 		return new GuiRegenCustomizer();
 	}
-
-	@Override public NBTTagCompound getDefaultStyleTag() {
+	
+	@Override
+	public NBTTagCompound getDefaultStyleTag() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setFloat("PrimaryRed", 1.0f);
 		nbt.setFloat("PrimaryGreen", 0.78f);
@@ -97,6 +99,5 @@ public class TimelordSuperpower extends Superpower {
 		nbt.setFloat("SecondaryBlue", 0.0f);
 		return nbt;
 	}
-
-
+	
 }

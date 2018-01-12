@@ -1,6 +1,6 @@
 [
 {
-  "modid": "g-regen",
+  "modid": "lcm-regen",
   "name": "Regeneration",
   "description": "Mod that adds regeneration to Minecraft",
   "version": "${version}",

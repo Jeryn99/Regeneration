@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Created by AFlyingGrayson on 9/3/17
+ * @formatter:off
  */
 @Mod.EventBusSubscriber
 public class TraitDumb extends AbilityConstant implements INegativeTrait {
@@ -37,22 +38,22 @@ public class TraitDumb extends AbilityConstant implements INegativeTrait {
 		}
 	}
 	
-	@Override public void updateTick() {}
-
 	@Override
 	public boolean showInAbilityBar() {
 		return false;
 	}
-
-	@Override public Class<? extends Ability> getPositiveTrait()
-	{
+	
+	@Override
+	public Class<? extends Ability> getPositiveTrait() {
 		return TraitSmart.class;
 	}
 
 	@SideOnly(Side.CLIENT)
-	@Override public void drawIcon(Minecraft mc, Gui gui, int x, int y)
-	{
+	@Override
+	public void drawIcon(Minecraft mc, Gui gui, int x, int y) {
 		mc.renderEngine.bindTexture(RegenerationMod.ICONS);
 		gui.drawTexturedModalRect(x, y, 16, 0, 16, 16);
 	}
+	
+	@Override public void updateTick() {}
 }

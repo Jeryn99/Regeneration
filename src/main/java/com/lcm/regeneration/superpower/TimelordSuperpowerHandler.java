@@ -39,7 +39,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	@Override
 	public void onUpdate(TickEvent.Phase phase) {
 		if (phase.equals(TickEvent.Phase.END)) return;
-
+		
 		EntityPlayer player = cap.getPlayer();
 		if (player.world.isRemote) {
 			// Client Behavior
@@ -96,7 +96,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 			KarmaHandler.setKarmaStat(handler.getPlayer(), karmaStat, 0);
 		
 		if (RegenerationMod.getConfig().disableTraits) return;
-
+		
 		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
 		
 		for (int i = 0; i < 2; i++) {
@@ -116,8 +116,10 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		String s = "";
 		for (Ability ability : handler.getAbilities()) {
 			if (ability.isUnlocked()) {
-				if (s.equals("")) s = ability.getDisplayName().substring(7);
-				else s = s + ", " + ability.getDisplayName().substring(7);
+				if (s.equals(""))
+					s = ability.getDisplayName().substring(7);
+				else
+					s = s + ", " + ability.getDisplayName().substring(7);
 			}
 		}
 		

@@ -28,10 +28,10 @@ import java.awt.*;
  */
 @Mod.EventBusSubscriber
 public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRenderer {
-
+	
 	private static final ModelPlayer playerModelLargeArms = new ModelPlayer(0.55F, false);
 	private static final ModelPlayer playerModelSmallArms = new ModelPlayer(0.55F, true);
-
+	
 	static {
 		LimbManipulationUtil.getLimbManipulator(playerModelLargeArms, LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75);
 		LimbManipulationUtil.getLimbManipulator(playerModelLargeArms, LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75);
@@ -40,69 +40,68 @@ public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRend
 		LimbManipulationUtil.getLimbManipulator(playerModelSmallArms, LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75);
 		LimbManipulationUtil.getLimbManipulator(playerModelSmallArms, LimbManipulationUtil.Limb.HEAD).setAngles(-20, 0, 0);
 	}
-
+	
 	@Override
 	public void onRenderPlayer(RenderLivingBase<?> renderLivingBase, Minecraft minecraft, EntityPlayer entityPlayer, Superpower superpower, SuperpowerPlayerHandler superpowerPlayerHandler, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
-
+		
 		TimelordSuperpowerHandler handler = (TimelordSuperpowerHandler) superpowerPlayerHandler;
-
+		
 		if (!(handler.regenTicks > 0 && handler.regenTicks < 200)) return;
-
+		
 		ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
-
-		//State manager changes
+		
+		// State manager changes
 		GlStateManager.pushAttrib();
 		GlStateManager.disableTexture2D();
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 		GlStateManager.depthMask(false);
-
-
+		
 		NBTTagCompound style = handler.getStyleNBTTag();
 		Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
-
+		
 		float primaryScale = (float) handler.regenTicks / 40f;
 		float secondaryScale = (float) handler.regenTicks / 70f;
-		//Render right cone
+		// Render right cone
 		GlStateManager.pushMatrix();
 		model.postRenderArm(0.0625F, EnumHandSide.RIGHT);
 		GlStateManager.translate(0f, -0.2f, 0f);
 		renderCone(entityPlayer, primaryScale, primaryScale, primaryColor);
-		renderCone(entityPlayer, secondaryScale, secondaryScale*1.5f, secondaryColor);
+		renderCone(entityPlayer, secondaryScale, secondaryScale * 1.5f, secondaryColor);
 		GlStateManager.popMatrix();
-
-		//Render left cone
+		
+		// Render left cone
 		GlStateManager.pushMatrix();
 		model.postRenderArm(0.0625F, EnumHandSide.LEFT);
 		GlStateManager.translate(0f, -0.2f, 0f);
 		renderCone(entityPlayer, primaryScale, primaryScale, primaryColor);
-		renderCone(entityPlayer, secondaryScale, secondaryScale*1.5f, secondaryColor);
+		renderCone(entityPlayer, secondaryScale, secondaryScale * 1.5f, secondaryColor);
 		GlStateManager.popMatrix();
-
-		//Render head cone
+		
+		// Render head cone
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0f, 0.3f, 0f);
 		GlStateManager.rotate(180, 1.0f, 0.0f, 0.0f);
 		renderCone(entityPlayer, primaryScale, primaryScale, primaryColor);
-		renderCone(entityPlayer, secondaryScale, secondaryScale*1.5f, secondaryColor);
+		renderCone(entityPlayer, secondaryScale, secondaryScale * 1.5f, secondaryColor);
 		GlStateManager.popMatrix();
-
-		//Check which slightly larger model to use
+		
+		// Check which slightly larger model to use
 		ModelPlayer playerModel = ((AbstractClientPlayer) entityPlayer).getSkinType().equals("slim") ? playerModelSmallArms : playerModelLargeArms;
-
-		//Define which parts are glowing
+		
+		// Define which parts are glowing
 		playerModel.bipedBody.isHidden = playerModel.bipedLeftLeg.isHidden = playerModel.bipedRightLeg.isHidden = playerModel.bipedBodyWear.isHidden = playerModel.bipedHeadwear.isHidden = playerModel.bipedLeftLegwear.isHidden = playerModel.bipedRightLegwear.isHidden = handler.regenTicks < 150;
-
-		//Copy model attributes from the real player model
+		
+		// Copy model attributes from the real player model
 		playerModel.setModelAttributes(model);
-
-		//Render glowing overlay
+		
+		// Render glowing overlay
 		GlStateManager.color(primaryColor.getRed(), primaryColor.getGreen(), primaryColor.getBlue(), 1);
 		playerModel.render(entityPlayer, v, v1, v3, v4, v5, v6);
-
-		//Undo state manager changes
+		
+		// Undo state manager changes
 		GlStateManager.depthMask(true);
 		GlStateManager.disableBlend();
 		GlStateManager.disableAlpha();
@@ -110,8 +109,8 @@ public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRend
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();
 	}
-
-	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color){
+	
+	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
 		for (int i = 0; i < 8; i++) {
@@ -128,7 +127,7 @@ public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRend
 			GlStateManager.popMatrix();
 		}
 	}
-
+	
 	@SubscribeEvent
 	public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class);

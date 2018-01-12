@@ -18,15 +18,14 @@ import java.util.List;
 
 /**
  * Created by AFlyingGrayson on 9/3/17
+ * @formatter:off
  */
 @Mod.EventBusSubscriber
-public class TraitObvious extends AbilityConstant implements INegativeTrait{
+public class TraitObvious extends AbilityConstant implements INegativeTrait {
 	
 	public TraitObvious(EntityPlayer player) {
 		super(player);
 	}
-	
-	@Override public void updateTick() { }
 	
 	@SubscribeEvent
 	public static void onVisibilityCalc(PlayerEvent.Visibility event) {
@@ -34,25 +33,27 @@ public class TraitObvious extends AbilityConstant implements INegativeTrait{
 		List<Ability> abilityList = SuperpowerHandler.getSuperpowerPlayerHandler(event.getEntityPlayer()).getAbilities();
 		if (abilityList == null) return;
 		
-		for (Ability ability : abilityList) if (ability instanceof TraitObvious && ability.isUnlocked()) {
+		for (Ability ability : abilityList)	if (ability instanceof TraitObvious && ability.isUnlocked()) {
 			event.modifyVisibility(2);
 		}
 	}
-
+	
 	@Override
 	public boolean showInAbilityBar() {
 		return false;
 	}
-
-	@Override public Class<? extends Ability> getPositiveTrait()
-	{
+	
+	@Override
+	public Class<? extends Ability> getPositiveTrait() {
 		return TraitSneaky.class;
 	}
 
 	@SideOnly(Side.CLIENT)
-	@Override public void drawIcon(Minecraft mc, Gui gui, int x, int y)
-	{
+	@Override
+	public void drawIcon(Minecraft mc, Gui gui, int x, int y) {
 		mc.renderEngine.bindTexture(RegenerationMod.ICONS);
 		gui.drawTexturedModalRect(x, y, 16, 0, 16, 16);
 	}
+	
+	@Override public void updateTick() {}
 }
