@@ -25,9 +25,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-/**
- * Created by AFlyingGrayson on 8/7/17
- */
+/** Created by AFlyingGrayson on 8/7/17 */
 @Mod.EventBusSubscriber
 public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	public int regenerationsLeft, timesRegenerated, regenTicks;
@@ -94,11 +92,10 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		SuperpowerHandler.syncToAll(this.getPlayer());
 	}
 	
-	private static void randomizeTraits(SuperpowerPlayerHandler handler) {
+	protected static void randomizeTraits(SuperpowerPlayerHandler handler) {
 		// Reset Karma
 		if (LCConfig.modules.karma) for (KarmaStat karmaStat : KarmaStat.getKarmaStats())
 			KarmaHandler.setKarmaStat(handler.getPlayer(), karmaStat, 0);
-		
 		if (RegenerationMod.getConfig().disableTraits) return;
 		
 		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
@@ -116,7 +113,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				a = handler.getAbilities().get(handler.getPlayer().getRNG().nextInt(handler.getAbilities().size()));
 			a.setUnlocked(true);
 		}
-
+		
 		String s = "";
 		for (Ability ability : handler.getAbilities()) {
 			if (ability.isUnlocked()) {
@@ -130,7 +127,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		handler.getPlayer().sendStatusMessage(new TextComponentString("You've gotten a new life, with new traits: " + s + "."), true);
 	}
 	
-	private static boolean abilityIsUnlocked(SuperpowerPlayerHandler handler, Class<? extends Ability> ability) {
+	protected static boolean abilityIsUnlocked(SuperpowerPlayerHandler handler, Class<? extends Ability> ability) {
 		for (Ability ability1 : handler.getAbilities())
 			if (ability.equals(ability1.getClass())) return ability1.isUnlocked();
 		return false;
@@ -151,14 +148,14 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		regenerationsLeft = compound.getInteger("regenerationsLeft");
 		timesRegenerated = compound.getInteger("timesRegenerated");
 		regenerating = compound.getBoolean("regenerating");
-
+		
 		ArrayList<Ability> abilities = new ArrayList<>();
 		abilities.addAll(getAbilities());
 		abilities.removeAll(getAbilities().stream().filter(ability -> !ability.isUnlocked()).collect(Collectors.toCollection(ArrayList::new)));
-
+		
 		this.getAbilities().clear();
 		((CapabilitySuperpower) getPlayer().getCapability(CapabilitySuperpower.SUPERPOWER_CAP, null)).superpowerData.getCompoundTag(TimelordSuperpower.INSTANCE.getRegistryName().toString()).removeTag("Abilities");
-
+		
 		this.getAbilities().addAll(abilities);
 	}
 }

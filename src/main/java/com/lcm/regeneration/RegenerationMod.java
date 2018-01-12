@@ -31,9 +31,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Created by AFlyingGrayson on 8/7/17
- */
+/** Created by AFlyingGrayson on 8/7/17 */
 
 @Mod(modid = RegenerationMod.MODID, name = "Regeneration", version = RegenerationMod.VERSION, dependencies = "required-after:lucraftcore@[1.12-2.0.3,)", acceptedMinecraftVersions = "1.12, 1.12.1, 1.12.2")
 @Mod.EventBusSubscriber
@@ -41,14 +39,16 @@ public class RegenerationMod {
 	public static final String MODID = "lcm-regen", VERSION = "1.3";
 	public static final ResourceLocation ICONS = new ResourceLocation(MODID, "textures/gui/ability_icons.png");
 	private static RegenerationConfiguration cfg;
-
+	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		cfg = new RegenerationConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
 	}
-
-	public static RegenerationConfiguration getConfig() { return cfg; }
-
+	
+	public static RegenerationConfiguration getConfig() {
+		return cfg;
+	}
+	
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class RegenerationItems {
 		public static final Item chameleonArch = null;

@@ -14,9 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
-/**
- * Created by AFlyingGrayson on 8/10/17
- */
+/** Created by AFlyingGrayson on 8/10/17 */
 public class TraitClumsy extends AbilityAttributeModifier implements INegativeTrait {
 	
 	public TraitClumsy(EntityPlayer player, UUID uuid, float factor, int operation) {
@@ -32,10 +30,10 @@ public class TraitClumsy extends AbilityAttributeModifier implements INegativeTr
 	public Class<? extends Ability> getPositiveTrait() {
 		return TraitSpry.class;
 	}
-
+	
 	@SideOnly(Side.CLIENT)
-	@Override public void drawIcon(Minecraft mc, Gui gui, int x, int y)
-	{
+	@Override
+	public void drawIcon(Minecraft mc, Gui gui, int x, int y) {
 		mc.renderEngine.bindTexture(RegenerationMod.ICONS);
 		gui.drawTexturedModalRect(x, y, 16, 0, 16, 16);
 	}

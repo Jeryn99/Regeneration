@@ -23,9 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.awt.*;
 
-/**
- * Created by AFlyingGrayson on 8/7/17
- */
+/** Created by AFlyingGrayson on 8/7/17 */
 @Mod.EventBusSubscriber
 public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRenderer {
 	

@@ -12,9 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
-/**
- * Created by AFlyingGrayson on 8/7/17
- */
+/** Created by AFlyingGrayson on 8/7/17 */
 public class TraitStrong extends AbilityAttributeModifier {
 	
 	public TraitStrong(EntityPlayer player, UUID uuid, float factor, int operation) {
@@ -25,10 +23,10 @@ public class TraitStrong extends AbilityAttributeModifier {
 	public IAttribute getAttribute() {
 		return LCAttributes.PUNCH_DAMAGE;
 	}
-
+	
 	@SideOnly(Side.CLIENT)
-	@Override public void drawIcon(Minecraft mc, Gui gui, int x, int y)
-	{
+	@Override
+	public void drawIcon(Minecraft mc, Gui gui, int x, int y) {
 		mc.renderEngine.bindTexture(RegenerationMod.ICONS);
 		gui.drawTexturedModalRect(x, y, 0, 0, 16, 16);
 	}

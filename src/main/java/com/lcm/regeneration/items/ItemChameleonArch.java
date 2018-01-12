@@ -17,9 +17,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-/**
- * Created by AFlyingGrayson on 8/28/17
- */
+/** Created by AFlyingGrayson on 8/28/17 */
 public class ItemChameleonArch extends Item {
 	public ItemChameleonArch() {
 		setUnlocalizedName("chameleonArch");

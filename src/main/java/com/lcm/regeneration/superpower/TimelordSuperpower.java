@@ -42,9 +42,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-/**
- * Created by AFlyingGrayson on 8/7/17
- */
+/** Created by AFlyingGrayson on 8/7/17 */
 public class TimelordSuperpower extends Superpower {
 	
 	public static final TimelordSuperpower INSTANCE = new TimelordSuperpower();
@@ -113,13 +111,13 @@ public class TimelordSuperpower extends Superpower {
 	@Override
 	public void renderIcon(Minecraft mc, Gui gui, int x, int y) {
 		float zLevel = Minecraft.getMinecraft().getRenderItem().zLevel;
-        Minecraft.getMinecraft().getRenderItem().zLevel = -100.5F;
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 0);
-        GlStateManager.scale(2, 2, 1);
-        Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(new ItemStack(RegenerationMod.RegenerationItems.chameleonArch), 0, 0);
-        GlStateManager.popMatrix();
-        Minecraft.getMinecraft().getRenderItem().zLevel = zLevel;
+		Minecraft.getMinecraft().getRenderItem().zLevel = -100.5F;
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
+		GlStateManager.scale(2, 2, 1);
+		Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(new ItemStack(RegenerationMod.RegenerationItems.chameleonArch), 0, 0);
+		GlStateManager.popMatrix();
+		Minecraft.getMinecraft().getRenderItem().zLevel = zLevel;
 	}
 	
 	@Override
