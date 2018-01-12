@@ -39,8 +39,9 @@ import java.util.Collections;
 @Mod.EventBusSubscriber
 public class RegenerationMod {
 	public static final String MODID = "lcm-regen", VERSION = "1.3";
+	public static final ResourceLocation ICONS = new ResourceLocation(MODID, "textures/gui/ability_icons.png");
 	private static RegenerationConfiguration cfg;
-	
+
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		cfg = new RegenerationConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
