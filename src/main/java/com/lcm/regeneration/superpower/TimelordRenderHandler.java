@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -57,25 +58,35 @@ public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRend
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 		GlStateManager.depthMask(false);
 
+
+		NBTTagCompound style = handler.getStyleNBTTag();
+		Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
+		Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
+
+		float primaryScale = (float) handler.regenTicks / 40f;
+		float secondaryScale = (float) handler.regenTicks / 70f;
 		//Render right cone
 		GlStateManager.pushMatrix();
 		model.postRenderArm(0.0625F, EnumHandSide.RIGHT);
 		GlStateManager.translate(0f, -0.2f, 0f);
-		renderCone(entityPlayer, handler.regenTicks);
+		renderCone(entityPlayer, primaryScale, primaryScale, primaryColor);
+		renderCone(entityPlayer, secondaryScale, secondaryScale*1.5f, secondaryColor);
 		GlStateManager.popMatrix();
 
 		//Render left cone
 		GlStateManager.pushMatrix();
 		model.postRenderArm(0.0625F, EnumHandSide.LEFT);
 		GlStateManager.translate(0f, -0.2f, 0f);
-		renderCone(entityPlayer, handler.regenTicks);
+		renderCone(entityPlayer, primaryScale, primaryScale, primaryColor);
+		renderCone(entityPlayer, secondaryScale, secondaryScale*1.5f, secondaryColor);
 		GlStateManager.popMatrix();
 
 		//Render head cone
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0f, 0.3f, 0f);
 		GlStateManager.rotate(180, 1.0f, 0.0f, 0.0f);
-		renderCone(entityPlayer, handler.regenTicks);
+		renderCone(entityPlayer, primaryScale, primaryScale, primaryColor);
+		renderCone(entityPlayer, secondaryScale, secondaryScale*1.5f, secondaryColor);
 		GlStateManager.popMatrix();
 
 		//Check which slightly larger model to use
@@ -88,7 +99,7 @@ public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRend
 		playerModel.setModelAttributes(model);
 
 		//Render glowing overlay
-		GlStateManager.color(255, 200, 0,1);
+		GlStateManager.color(primaryColor.getRed(), primaryColor.getGreen(), primaryColor.getBlue(), 1);
 		playerModel.render(entityPlayer, v, v1, v3, v4, v5, v6);
 
 		//Undo state manager changes
@@ -100,23 +111,19 @@ public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRend
 		GlStateManager.popAttrib();
 	}
 
-	private void renderCone(EntityPlayer entityPlayer, int regenTicks){
+	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color){
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
-		int green = 120 + entityPlayer.getRNG().nextInt(80);
-		Color color = new Color(255, green, 0, 100);
-		float scale = (float) regenTicks / 40;
-		float f3 = (float) regenTicks / 40;
 		for (int i = 0; i < 8; i++) {
 			GlStateManager.pushMatrix();
 			GlStateManager.rotate(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
 			GlStateManager.scale(1.0f, 1.0f, 0.65f);
 			vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
-			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-			vertexBuffer.pos(-0.266D * f3, scale, -0.5F * f3).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-			vertexBuffer.pos(0.266D * f3, scale, -0.5F * f3).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-			vertexBuffer.pos(0.0D, scale, 1.0F * f3).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-			vertexBuffer.pos(-0.266D * f3, scale, -0.5F * f3).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
+			vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
+			vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
 			tessellator.draw();
 			GlStateManager.popMatrix();
 		}
@@ -125,7 +132,7 @@ public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRend
 	@SubscribeEvent
 	public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class);
-		if (handler == null || handler.regenTicks > 0 && handler.regenTicks < 200) {
+		if (handler != null && (handler.regenTicks > 0 && handler.regenTicks < 200)) {
 			LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75);
 			LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75);
 			LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-20, 0, 0);

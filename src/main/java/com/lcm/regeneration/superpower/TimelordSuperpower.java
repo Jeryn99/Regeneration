@@ -1,6 +1,7 @@
 package com.lcm.regeneration.superpower;
 
 import com.lcm.regeneration.RegenerationMod;
+import com.lcm.regeneration.client.gui.GuiRegenCustomizer;
 import com.lcm.regeneration.traits.negative.*;
 import com.lcm.regeneration.traits.positive.*;
 import lucraft.mods.lucraftcore.superpowers.Superpower;
@@ -8,8 +9,10 @@ import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
+import lucraft.mods.lucraftcore.superpowers.gui.GuiCustomizer;
 import lucraft.mods.lucraftcore.superpowers.render.SuperpowerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -73,4 +76,27 @@ public class TimelordSuperpower extends Superpower {
 		if (timelordRenderhandler == null) timelordRenderhandler = new TimelordRenderHandler();
 		return timelordRenderhandler;
 	}
+
+	@Override public boolean canCustomize() {
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiCustomizer getCustomizerGui(EntityPlayer player) {
+		return new GuiRegenCustomizer();
+	}
+
+	@Override public NBTTagCompound getDefaultStyleTag() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setFloat("PrimaryRed", 1.0f);
+		nbt.setFloat("PrimaryGreen", 0.78f);
+		nbt.setFloat("PrimaryBlue", 0.0f);
+		nbt.setFloat("SecondaryRed", 1.0f);
+		nbt.setFloat("SecondaryGreen", 0.47f);
+		nbt.setFloat("SecondaryBlue", 0.0f);
+		return nbt;
+	}
+
+
 }

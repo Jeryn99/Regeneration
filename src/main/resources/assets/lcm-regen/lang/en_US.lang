@@ -40,3 +40,5 @@ lcm-regen.abilities.dumb.desc=You gain experience slower
 lcm-regen.abilities.obvious.name=Trait: Obvious
 lcm-regen.abilities.obvious.desc=Enemies will notice you from a greater range
 item.chameleonArch.name=Chameleon Arch
+lcm-regen.info.primary=Primary Color
+lcm-regen.info.secondary=Secondary Color
