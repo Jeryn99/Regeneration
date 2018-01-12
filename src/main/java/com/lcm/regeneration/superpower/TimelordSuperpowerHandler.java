@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -66,7 +67,10 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 					double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 					double z = player.posZ + player.getRNG().nextGaussian() * 2;
 					
-					player.world.newExplosion(player, x, y, z, 1, player.getDistance(x, y, z) >= 4, false);
+					player.world.newExplosion(player, x, y, z, 1, true, false);
+					for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east())) {
+						if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) player.world.setBlockToAir(bs);
+					}
 				}
 			} else if (regenTicks >= 200) {
 				regenerating = false;
