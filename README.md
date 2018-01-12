@@ -1,4 +1,4 @@
-# Regeneration mod for minecraft
+# Regeneration mod for Minecraft
 
 ### What does it do?
 Inspired by a really unpopular British television show that no one has ever heard of, this mod allows you to obtain the regeneration of powers of a "timelord." Once you obtain the powers, you will regenerate into a new life instead of dying. However, this process will only occur 12 times, after which you will die for real.
@@ -14,25 +14,26 @@ When the regeneration sequence is over, you will be returned to max health in yo
 Currently the mod is in a beta phase, and in the end is just a little project for me to work on while bored with other things, so it's not feature complete.  
 
 ### Planned features
-- Better animations
+- Better animation
 - A better way to see your current traits
 - A wider variety of traits
 - A better way to get another/reset your regeneration cycle
+- Storing regenerations in an Arch
 - Possibly other small aspects of being a timelord
 
 ### FAQ
-**Q: How do I become a timelord?**
-A: Find a "Chameleon Arch" as dungeon loot, and use it while you don't have a superpower, or if you're feeling cheaty, use /superpower <playername> g-regen:timelord
+**Q: How do I become a timelord?**<br>
+A: Find a "Chameleon Arch" as dungeon loot, and use it while you don't have a superpower. Or if you're feeling cheaty, use `/superpower <playername> lmc-regen:timelord`
 
-**Q: What do all the traits do/what traits do I have?**
-A: By clicking the + sign in your inventory and navigating to abilities, you can see all the available traits and read their descriptions. The traits that do not have a padlock symbol next to them are your current life's traits.
+**Q: What do all the traits do/what traits do I have?**<br>
+A: By clicking the tab with the arch icon in your inventory, you can see all the available traits and read their descriptions. The traits that do not have a padlock symbol next to them are your current life's traits.
 
-**Q: It doesn't work!**
+**Q: It doesn't work!**<br>
 A: Ensure that you're using the latest 1.12.2 forge, and the latest 1.12 Lucraft Core.
 
-**Q: Why is the transformation animation too fast/not entirely accurate?**
+**Q: Why is the transformation animation too fast/not entirely accurate?**<br>
 A: I haven't actually seen much of the show, so all I had to go off was one picture of him exploding. My bad, I may fix it later.
 
-**Q: How do I get another regeneration cycle/more regenerations?**
-A: A slightly more accurate way is coming soon, but currently if you use another Chameleon Arch while you're already a timelord you can reset your regeneration cycle.
+**Q: How do I get another regeneration cycle/more regenerations?**<br>
+A: A slightly more accurate way is coming soon, but currently if you use a Chameleon Arch you'll have *exactly* 12 regenerations left (a less wasteful method is coming soon).
 
