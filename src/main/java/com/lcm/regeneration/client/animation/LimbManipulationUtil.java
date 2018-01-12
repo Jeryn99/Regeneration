@@ -68,6 +68,7 @@ public class LimbManipulationUtil
 					}
 				}
 			}
+
 			ModelPlayer model = renderPlayer.getMainModel();
 
 			ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
@@ -83,10 +84,8 @@ public class LimbManipulationUtil
 			textureOffsetXField.setAccessible(false);
 			textureOffsetYField.setAccessible(false);
 		}
-		catch (IllegalAccessException e)
-		{
-			System.out.println(e.toString());
-		}
+		catch (IllegalAccessException ignored)
+		{}
 		return manipulator;
 	}
 

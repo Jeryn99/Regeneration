@@ -1,6 +1,5 @@
 package com.lcm.regeneration;
 
-import com.lcm.regeneration.client.animation.PlayerRenderHandler;
 import com.lcm.regeneration.items.ItemChameleonArch;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.traits.negative.*;
@@ -20,16 +19,13 @@ import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -49,14 +45,9 @@ public class RegenerationMod {
 	public void preInit(FMLPreInitializationEvent event) {
 		cfg = new RegenerationConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
 	}
-	
-	@Mod.EventHandler
-	public void init(FMLInitializationEvent event) {
-		if (event.getSide().equals(Side.CLIENT)) MinecraftForge.EVENT_BUS.register(new PlayerRenderHandler());
-	}
-	
+
 	public static RegenerationConfiguration getConfig() { return cfg; }
-	
+
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class RegenerationItems {
 		public static final Item chameleonArch = null;
