@@ -5,6 +5,7 @@ import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.capabilities.CapabilitySuperpower;
+import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -67,21 +68,11 @@ public class RegenerationEventHandler {
 			int lastDigit = handler.timesRegenerated;
 			if (lastDigit > 20) while (lastDigit > 10)
 				lastDigit -= 10;
-			switch (lastDigit) {
-				case 0:
-					time = time + "st";
-					break;
-				case 1:
-					time = time + "nd";
-					break;
-				case 2:
-					time = time + "rd";
-					break;
-				default:
-					time = time + "th";
-					break;
-			}
-			player.sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + (handler.regenerationsLeft - 1) + " regenerations left."), true); //TODO localize
+			
+			if (lastDigit < 3) time = time + StringHelper.translateToLocal("lcm-regen.messages.numsuffix."+lastDigit);
+			else time = time + StringHelper.translateToLocal("lcm-regen.messages.numsuffix.ext");
+			
+			player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.regenLeftExt", time, (handler.regenerationsLeft - 1))), true);
 			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		}
 	}

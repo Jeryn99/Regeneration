@@ -22,10 +22,13 @@ minecraft {
 }
 
 repositories {
-	maven { url 'https://jitpack.io' }
+    maven { url "http://files.minecraftforge.net/maven" }
+    maven { url "http://dvs1.progwml6.com/files/maven" } //required for LucraftCore
+    maven { url "http://maven.covers1624.net" }
+	maven { url "https://jitpack.io" }
 }
 dependencies {
-	compile 'org.bitbucket.Lucraft:lucraftcore:4b9c93b998' //this commit includes a fix that hasn't been released yet, update to 2.0.4 once it's been released
+	compile 'org.bitbucket.Lucraft:lucraftcore:5a668c0882' //this commit includes fixes that haven't been released yet, update to 2.0.4 once it's been released
 }
 
 processResources {

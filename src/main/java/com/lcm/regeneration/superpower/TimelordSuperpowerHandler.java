@@ -15,6 +15,7 @@ import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.capabilities.CapabilitySuperpower;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
+import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -125,7 +126,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 					s = s + ", " + ability.getDisplayName().substring(7);
 			}
 		}
-		handler.getPlayer().sendStatusMessage(new TextComponentString("You've gotten a new life, with new traits: " + s + "."), true); //TODO localize
+		handler.getPlayer().sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.newLife", s)), true);
 	}
 	
 	protected static boolean isAbilityUnlocked(SuperpowerPlayerHandler handler, Class<? extends Ability> ability) {
