@@ -1,15 +1,39 @@
 package com.lcm.regeneration;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.lcm.regeneration.items.ItemChameleonArch;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
-import com.lcm.regeneration.traits.negative.*;
-import com.lcm.regeneration.traits.positive.*;
+import com.lcm.regeneration.traits.negative.TraitClumsy;
+import com.lcm.regeneration.traits.negative.TraitDumb;
+import com.lcm.regeneration.traits.negative.TraitFlimsy;
+import com.lcm.regeneration.traits.negative.TraitFrail;
+import com.lcm.regeneration.traits.negative.TraitObvious;
+import com.lcm.regeneration.traits.negative.TraitRigid;
+import com.lcm.regeneration.traits.negative.TraitSlow;
+import com.lcm.regeneration.traits.negative.TraitUnhealthy;
+import com.lcm.regeneration.traits.negative.TraitUnlucky;
+import com.lcm.regeneration.traits.negative.TraitWeak;
+import com.lcm.regeneration.traits.positive.TraitBouncy;
+import com.lcm.regeneration.traits.positive.TraitLucky;
+import com.lcm.regeneration.traits.positive.TraitQuick;
+import com.lcm.regeneration.traits.positive.TraitSmart;
+import com.lcm.regeneration.traits.positive.TraitSneaky;
+import com.lcm.regeneration.traits.positive.TraitSpry;
+import com.lcm.regeneration.traits.positive.TraitStrong;
+import com.lcm.regeneration.traits.positive.TraitSturdy;
+import com.lcm.regeneration.traits.positive.TraitThickSkinned;
+import com.lcm.regeneration.traits.positive.TraitTough;
+
 import lucraft.mods.lucraftcore.LCConfig;
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryItem;
 import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.RandomValueRange;
@@ -26,10 +50,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
 
 /** Created by AFlyingGrayson on 8/7/17 */
 
@@ -77,11 +97,13 @@ public class RegenerationMod {
 	public static void loot(LootTableLoadEvent e) {
 		if (!e.getName().toString().toLowerCase().contains("minecraft:chests/")) return;
 		
-		LootPool pool = e.getTable().getPool("main");
-		LootCondition[] chance = { new RandomChance(0.5F) };
-		LootFunction[] count = { new SetCount(chance, new RandomValueRange(1.0F, 1.0F)) };
-		LootEntryItem item = new LootEntryItem(RegenerationItems.chameleonArch, 10, 1, count, chance, "symbol_" + RegenerationItems.chameleonArch.getUnlocalizedName());
-		pool.addEntry(item);
+		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
+		LootCondition[] chance = new LootCondition[] { new RandomChance(.5F) };
+		
+		LootEntry[] entry = { new LootEntryItem(RegenerationItems.chameleonArch, 1, 1, new LootFunction[]{new SetCount(condAlways, new RandomValueRange(1F))}, chance, "lcm-regen:arch-entry") };
+		
+		LootPool pool = new LootPool(entry, condAlways, new RandomValueRange(1), new RandomValueRange(1), "lcm-regen:arch-pool");
+		e.getTable().addPool(pool);
 	}
 	
 	@SubscribeEvent
