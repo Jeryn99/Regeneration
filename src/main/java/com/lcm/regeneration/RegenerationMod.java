@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.lcm.regeneration.debug.CmdRegenDebug;
 import com.lcm.regeneration.items.ItemChameleonArch;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.traits.negative.TraitClumsy;
@@ -48,6 +49,7 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -63,6 +65,11 @@ public class RegenerationMod {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		cfg = new RegenerationConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
+	}
+	
+	@Mod.EventHandler
+	public void serverStart(FMLServerStartingEvent e) {
+		e.registerServerCommand(new CmdRegenDebug());
 	}
 	
 	public static RegenerationConfiguration getConfig() {
