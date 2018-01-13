@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.lcm.regeneration.RegenerationMod;
 import com.lcm.regeneration.client.gui.GuiRegenCustomizer;
+import com.lcm.regeneration.client.gui.GuiTimelordPowerAbilities;
 import com.lcm.regeneration.traits.negative.TraitClumsy;
 import com.lcm.regeneration.traits.negative.TraitDumb;
 import com.lcm.regeneration.traits.negative.TraitFlimsy;
@@ -35,6 +36,7 @@ import lucraft.mods.lucraftcore.superpowers.gui.GuiCustomizer;
 import lucraft.mods.lucraftcore.superpowers.render.SuperpowerRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -106,6 +108,12 @@ public class TimelordSuperpower extends Superpower {
 	@SideOnly(Side.CLIENT)
 	public GuiCustomizer getCustomizerGui(EntityPlayer player) {
 		return new GuiRegenCustomizer();
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public GuiScreen getAbilityGui(EntityPlayer player) {
+		return new GuiTimelordPowerAbilities(player);
 	}
 	
 	@Override
