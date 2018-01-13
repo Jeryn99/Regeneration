@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.lcm.regeneration.RegenerationMod;
 import com.lcm.regeneration.client.gui.GuiRegenCustomizer;
-import com.lcm.regeneration.client.gui.GuiTimelordPowerAbilities;
+import com.lcm.regeneration.client.gui.GuiTimelordPowerTab;
 import com.lcm.regeneration.traits.negative.TraitClumsy;
 import com.lcm.regeneration.traits.negative.TraitDumb;
 import com.lcm.regeneration.traits.negative.TraitFlimsy;
@@ -114,7 +114,7 @@ public class TimelordSuperpower extends Superpower {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getAbilityGui(EntityPlayer player) {
-		return new GuiTimelordPowerAbilities(player);
+		return new GuiTimelordPowerTab(player);
 	}
 	
 	@Override
