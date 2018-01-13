@@ -7,9 +7,9 @@ import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextFormatting;
 
-public class GuiTimelordPowerAbilities extends GuiSuperpowerAbilities {
-
-	public GuiTimelordPowerAbilities(EntityPlayer player) {
+public class GuiTimelordPowerTab extends GuiSuperpowerAbilities {
+	
+	public GuiTimelordPowerTab(EntityPlayer player) {
 		super(player);
 	}
 	
