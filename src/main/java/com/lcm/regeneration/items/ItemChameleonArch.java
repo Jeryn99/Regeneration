@@ -6,6 +6,7 @@ import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
+import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,7 +23,7 @@ public class ItemChameleonArch extends Item {
 	public ItemChameleonArch() {
 		setUnlocalizedName("chameleonArch");
 		setRegistryName("chameleonarch");
-		setCreativeTab(CreativeTabs.TOOLS);
+		setCreativeTab(CreativeTabs.MISC);
 	}
 	
 	@Override
@@ -34,11 +35,11 @@ public class ItemChameleonArch extends Item {
 			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.INSTANCE);
 			
 			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
-			playerIn.sendStatusMessage(new TextComponentString("You've become a timelord!"), true);
+			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
 			((TimelordSuperpowerHandler) handler).regenerationsLeft = 12;
 			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
-			playerIn.sendStatusMessage(new TextComponentString("You've reset your regeneration cycles!"), true);
+			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.resetCycle")), true);
 		} else return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 		
 		itemstack.shrink(1);

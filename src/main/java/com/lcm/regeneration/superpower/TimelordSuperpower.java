@@ -34,6 +34,7 @@ import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
 import lucraft.mods.lucraftcore.superpowers.gui.GuiCustomizer;
 import lucraft.mods.lucraftcore.superpowers.render.SuperpowerRenderer;
+import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -51,7 +52,7 @@ public class TimelordSuperpower extends Superpower {
 	private TimelordRenderHandler timelordRenderhandler;
 	
 	public TimelordSuperpower() {
-		super("Timelord");
+		super(StringHelper.translateToLocal("superpower.Timelord.name"));
 		setRegistryName(RegenerationMod.MODID, "timelord");
 	}
 	

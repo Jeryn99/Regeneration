@@ -81,7 +81,7 @@ public class RegenerationEventHandler {
 					time = time + "th";
 					break;
 			}
-			player.sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + (handler.regenerationsLeft - 1) + " regenerations left."), true);
+			player.sendStatusMessage(new TextComponentString("You're regenerating for the " + time + " time, you have " + (handler.regenerationsLeft - 1) + " regenerations left."), true); //TODO localize
 			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		}
 	}
