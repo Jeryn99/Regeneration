@@ -1,7 +1,10 @@
 package com.lcm.regeneration.traits.negative;
 
+import java.util.UUID;
+
 import com.lcm.regeneration.RegenerationMod;
 import com.lcm.regeneration.traits.positive.TraitQuick;
+
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.abilities.AbilityAttributeModifier;
 import net.minecraft.client.Minecraft;
@@ -11,8 +14,6 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.UUID;
 
 /** Created by AFlyingGrayson on 8/7/17 */
 public class TraitSlow extends AbilityAttributeModifier implements INegativeTrait {

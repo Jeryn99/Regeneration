@@ -1,6 +1,9 @@
 package com.lcm.regeneration.superpower;
 
+import java.awt.Color;
+
 import com.lcm.regeneration.client.animation.LimbManipulationUtil;
+
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
@@ -20,8 +23,6 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.awt.*;
 
 /** Created by AFlyingGrayson on 8/7/17 */
 @Mod.EventBusSubscriber
@@ -60,8 +61,8 @@ public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRend
 		Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 		
-		float primaryScale = (float) handler.regenTicks / 40f;
-		float secondaryScale = (float) handler.regenTicks / 70f;
+		float primaryScale = handler.regenTicks / 40f;
+		float secondaryScale = handler.regenTicks / 70f;
 		// Render right cone
 		GlStateManager.pushMatrix();
 		model.postRenderArm(0.0625F, EnumHandSide.RIGHT);

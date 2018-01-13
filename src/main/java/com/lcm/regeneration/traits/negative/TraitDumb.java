@@ -1,7 +1,10 @@
 package com.lcm.regeneration.traits.negative;
 
+import java.util.List;
+
 import com.lcm.regeneration.RegenerationMod;
 import com.lcm.regeneration.traits.positive.TraitSmart;
+
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
 import lucraft.mods.lucraftcore.superpowers.abilities.AbilityConstant;
@@ -13,8 +16,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 /**
  * Created by AFlyingGrayson on 9/3/17
@@ -47,7 +48,7 @@ public class TraitDumb extends AbilityConstant implements INegativeTrait {
 	public Class<? extends Ability> getPositiveTrait() {
 		return TraitSmart.class;
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void drawIcon(Minecraft mc, Gui gui, int x, int y) {

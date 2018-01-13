@@ -1,6 +1,9 @@
 package com.lcm.regeneration.client.gui;
 
+import java.io.IOException;
+
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
+
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.gui.GuiCustomizer;
 import lucraft.mods.lucraftcore.util.gui.GuiColorSlider;
@@ -10,8 +13,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
-
-import java.io.IOException;
 
 public class GuiRegenCustomizer extends GuiCustomizer implements GuiSlider.ISlider {
 	

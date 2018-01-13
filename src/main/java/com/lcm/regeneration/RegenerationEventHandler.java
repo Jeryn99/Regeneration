@@ -44,7 +44,7 @@ public class RegenerationEventHandler {
 		EntityPlayer player = (EntityPlayer) e.getEntity();
 		if (player.getHealth() - e.getAmount() > 0 || !SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.INSTANCE))
 			return;
-
+		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 		
 		if (handler.regenerating || player.posY < 0 || handler.regenerationsLeft <= 0) {
