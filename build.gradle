@@ -16,12 +16,17 @@ archivesBaseName = "lcm-regen"
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    version = "1.12.2-14.23.1.2559"
+    version = "1.12.2-14.23.1.2589"
     runDir = "run"
     mappings = "snapshot_20180101"
 }
 
-dependencies {}
+repositories {
+	maven { url 'https://jitpack.io' }
+}
+dependencies {
+	compile 'org.bitbucket.Lucraft:lucraftcore:4b9c93b998' //this commit includes a fix that hasn't been released yet, update to 2.0.4 once it's been released
+}
 
 processResources {
     // this will ensure that this task is redone when the versions change.
