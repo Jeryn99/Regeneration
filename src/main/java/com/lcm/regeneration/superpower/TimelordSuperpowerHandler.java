@@ -53,12 +53,13 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 			}
 		} else {
 			// Server Behavior
-			if (regenTicks == 0 && regenerating)
-				regenTicks = 1;
+			if (regenTicks == 0 && regenerating) regenTicks = 1;
 			else if (regenTicks > 0 && regenTicks < 200) {
 				regenTicks++;
-				if (!player.world.isRemote && regenTicks > 100) {
-					player.extinguish();
+				player.extinguish();
+				player.setArrowCountInEntity(0);
+				
+				if (regenTicks > 100) {
 					if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire) player.world.setBlockToAir(player.getPosition());
 					
 					double x = player.posX + player.getRNG().nextGaussian() * 2;
@@ -109,7 +110,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		
 		for (int i = 0; i < 2; i++) {
 			Ability a = null;
-			while (a == null || a.isUnlocked() || !(a instanceof INegativeTrait) || TimelordSuperpowerHandler.abilityIsUnlocked(handler, ((INegativeTrait) a).getPositiveTrait()))
+			while (a == null || a.isUnlocked() || !(a instanceof INegativeTrait) || TimelordSuperpowerHandler.isAbilityUnlocked(handler, ((INegativeTrait) a).getPositiveTrait()))
 				a = handler.getAbilities().get(handler.getPlayer().getRNG().nextInt(handler.getAbilities().size()));
 			a.setUnlocked(true);
 		}
@@ -127,7 +128,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		handler.getPlayer().sendStatusMessage(new TextComponentString("You've gotten a new life, with new traits: " + s + "."), true);
 	}
 	
-	protected static boolean abilityIsUnlocked(SuperpowerPlayerHandler handler, Class<? extends Ability> ability) {
+	protected static boolean isAbilityUnlocked(SuperpowerPlayerHandler handler, Class<? extends Ability> ability) {
 		for (Ability ability1 : handler.getAbilities())
 			if (ability.equals(ability1.getClass())) return ability1.isUnlocked();
 		return false;

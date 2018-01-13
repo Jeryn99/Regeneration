@@ -52,17 +52,14 @@ public class RegenerationEventHandler {
 			((CapabilitySuperpower) player.getCapability(CapabilitySuperpower.SUPERPOWER_CAP, null)).superpowerData.removeTag(TimelordSuperpower.INSTANCE.getRegistryName().toString());
 		} else if (handler.regenerationsLeft > 0) {
 			e.setCanceled(true);
-<<<<<<< HEAD
-=======
 			handler.regenerating = true;
 			SuperpowerHandler.syncToAll(player);
 			
->>>>>>> 89abee6... r - ext
 			player.setHealth(1.5f);
+			player.setAir(300);
+			player.getFoodStats().setFoodLevel(20);
 			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 200, 1, false, false));
 			player.extinguish();
-			handler.regenerating = true;
-			SuperpowerHandler.syncToAll(player);
 			
 			if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire) player.world.setBlockToAir(player.getPosition());
 			
