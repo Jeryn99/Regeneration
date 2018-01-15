@@ -17,6 +17,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
@@ -38,7 +39,7 @@ public class RegenerationEventHandler {
 			Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 	}
 	
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingHurtEvent e) {
 		if (!(e.getEntity() instanceof EntityPlayer)) return;
 		
@@ -51,7 +52,7 @@ public class RegenerationEventHandler {
 		if (handler.regenerating || player.posY < 0 || handler.regenerationsLeft <= 0) {
 			SuperpowerHandler.removeSuperpower(player);
 			((CapabilitySuperpower) player.getCapability(CapabilitySuperpower.SUPERPOWER_CAP, null)).superpowerData.removeTag(TimelordSuperpower.INSTANCE.getRegistryName().toString());
-		} else if (handler.regenerationsLeft > 0) {
+		} else if (handler.regenerationsLeft > 0) { //initiate regeneration
 			e.setCanceled(true);
 			handler.regenerating = true;
 			SuperpowerHandler.syncToAll(player);
