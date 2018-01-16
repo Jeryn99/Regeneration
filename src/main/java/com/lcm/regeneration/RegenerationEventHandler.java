@@ -1,5 +1,6 @@
 package com.lcm.regeneration;
 
+import com.lcm.regeneration.effects.ExplosionUtil;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 
@@ -75,6 +76,7 @@ public class RegenerationEventHandler {
 			
 			player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.regenLeftExt", time, (handler.regenerationsLeft - 1))), true);
 			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			ExplosionUtil.regenerationExplosion(player);
 		}
 	}
 }

@@ -45,10 +45,12 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		if (player.world.isRemote) {
 			// Client Behavior
 			if (regenTicks == 0 && regenerating) regenTicks = 1;
+			
 			if (regenTicks > 0) {
 				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
 				regenTicks++;
 			}
+			
 			if (regenTicks >= 200 && !regenerating) {
 				regenTicks = 0;
 				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
@@ -56,6 +58,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		} else {
 			// Server Behavior
 			if (regenTicks == 0 && regenerating) regenTicks = 1;
+			
 			else if (regenTicks > 0 && regenTicks < 200) {
 				regenTicks++;
 				player.extinguish();
