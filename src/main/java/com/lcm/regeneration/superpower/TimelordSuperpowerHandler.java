@@ -80,7 +80,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				regenerating = false;
 				regenTicks = 0;
 				player.setHealth(player.getMaxHealth());
-				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 3600, 3, false, false));
+				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 180*20, 3, false, false)); //180 seconds of 20 ticks of Regeneration 4
 				TimelordSuperpowerHandler.randomizeTraits(this);
 				regenerationsLeft--;
 				timesRegenerated++;

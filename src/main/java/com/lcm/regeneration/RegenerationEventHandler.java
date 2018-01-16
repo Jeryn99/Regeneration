@@ -7,7 +7,6 @@ import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.capabilities.CapabilitySuperpower;
 import lucraft.mods.lucraftcore.util.helper.StringHelper;
-import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -45,7 +44,7 @@ public class RegenerationEventHandler {
 		if (!(e.getEntity() instanceof EntityPlayer)) return;
 		
 		EntityPlayer player = (EntityPlayer) e.getEntity();
-		if (player.getHealth() - e.getAmount() > 0 || !SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.INSTANCE))
+		if (player.getHealth()+player.getAbsorptionAmount() - e.getAmount() > 0 || !SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.INSTANCE))
 			return;
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
@@ -58,10 +57,11 @@ public class RegenerationEventHandler {
 			handler.regenerating = true;
 			SuperpowerHandler.syncToAll(player);
 			
-			player.setHealth(1.5f);
+			player.setHealth(.5f);
+			player.setAbsorptionAmount(20);
 			player.setAir(300);
 			player.getFoodStats().setFoodLevel(20);
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 200, 1, false, false));
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10*20, 1, false, false)); //10 seconds of 20 ticks of Regeneration 2
 			player.extinguish();
 			
 			if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire) player.world.setBlockToAir(player.getPosition());
