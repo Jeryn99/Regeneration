@@ -1,4 +1,4 @@
-package com.lcm.regeneration.client.animation;
+package com.lcm.regeneration.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

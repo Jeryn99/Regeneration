@@ -1,4 +1,4 @@
-package com.lcm.regeneration.effects;
+package com.lcm.regeneration.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;

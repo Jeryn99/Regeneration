@@ -1,6 +1,9 @@
 package com.lcm.regeneration.client.gui;
 
+import java.io.IOException;
+
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
+
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.gui.GuiCustomizer;
 import lucraft.mods.lucraftcore.util.gui.GuiColorSlider;
@@ -10,8 +13,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
-
-import java.io.IOException;
 
 public class GuiRegenCustomizer extends GuiCustomizer implements GuiSlider.ISlider {
 	
@@ -51,7 +52,7 @@ public class GuiRegenCustomizer extends GuiCustomizer implements GuiSlider.ISlid
 		this.buttonList.add(new GuiButtonExt(1, i + 202, j + 167, 50, 18, StringHelper.translateToLocal("gui.cancel")));
 		this.texturedButton = new GuiButton(2, i + this.xSize/2 - 25, j + 45, 50, 20, StringHelper.translateToLocal(""));
 		this.buttonList.add(texturedButton);
-
+		
 		this.buttonList.add(new GuiColorSlider(6, i + 20, j + 90, 80, 20, StringHelper.translateToLocal("lucraftcore.info.red"), "", 0, 1, primaryRed, true, true, this));
 		this.buttonList.add(new GuiColorSlider(7, i + 20, j + 110, 80, 20, StringHelper.translateToLocal("lucraftcore.info.green"), "", 0, 1, primaryGreen, true, true, this));
 		this.buttonList.add(new GuiColorSlider(8, i + 20, j + 130, 80, 20, StringHelper.translateToLocal("lucraftcore.info.blue"), "", 0, 1, primaryBlue, true, true, this));
@@ -85,11 +86,11 @@ public class GuiRegenCustomizer extends GuiCustomizer implements GuiSlider.ISlid
 		
 		mc.getTextureManager().bindTexture(GuiCustomizer.DEFAULT_TEX);
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
-
+		
 		String name = StringHelper.translateToLocal("lcm-regen.info.textured");
 		int length = mc.fontRenderer.getStringWidth(name);
 		this.drawString(mc.fontRenderer, name, i + this.xSize/2 - length/2, j + 30, 0xffffff);
-
+		
 		this.texturedButton.displayString = (textured) ? "Yes" : "No";
 		
 		name = StringHelper.translateToLocal("lcm-regen.info.primary");

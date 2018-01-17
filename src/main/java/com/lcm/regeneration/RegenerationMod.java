@@ -4,29 +4,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.lcm.regeneration.debug.CmdRegenDebug;
-import com.lcm.regeneration.items.ItemChameleonArch;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
-import com.lcm.regeneration.traits.negative.TraitClumsy;
-import com.lcm.regeneration.traits.negative.TraitDumb;
-import com.lcm.regeneration.traits.negative.TraitFlimsy;
-import com.lcm.regeneration.traits.negative.TraitFrail;
-import com.lcm.regeneration.traits.negative.TraitObvious;
-import com.lcm.regeneration.traits.negative.TraitRigid;
-import com.lcm.regeneration.traits.negative.TraitSlow;
-import com.lcm.regeneration.traits.negative.TraitUnhealthy;
-import com.lcm.regeneration.traits.negative.TraitUnlucky;
-import com.lcm.regeneration.traits.negative.TraitWeak;
-import com.lcm.regeneration.traits.positive.TraitBouncy;
-import com.lcm.regeneration.traits.positive.TraitLucky;
-import com.lcm.regeneration.traits.positive.TraitQuick;
-import com.lcm.regeneration.traits.positive.TraitSmart;
-import com.lcm.regeneration.traits.positive.TraitSneaky;
-import com.lcm.regeneration.traits.positive.TraitSpry;
-import com.lcm.regeneration.traits.positive.TraitStrong;
-import com.lcm.regeneration.traits.positive.TraitSturdy;
-import com.lcm.regeneration.traits.positive.TraitThickSkinned;
-import com.lcm.regeneration.traits.positive.TraitTough;
+import com.lcm.regeneration.traits.negative.*;
+import com.lcm.regeneration.traits.positive.*;
+import com.lcm.regeneration.util.CmdRegenDebug;
 
 import lucraft.mods.lucraftcore.LCConfig;
 import lucraft.mods.lucraftcore.superpowers.Superpower;
@@ -51,7 +32,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /** Created by AFlyingGrayson on 8/7/17 */
 
@@ -76,19 +56,9 @@ public class RegenerationMod {
 		return cfg;
 	}
 	
-	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
-	public static class RegenerationItems {
-		public static final Item chameleonArch = null;
-	}
-	
 	@SubscribeEvent
 	public static void onRegisterSuperpower(RegistryEvent.Register<Superpower> e) {
 		e.getRegistry().register(TimelordSuperpower.INSTANCE);
-	}
-	
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) throws Exception {
-		event.getRegistry().register(new ItemChameleonArch());
 	}
 	
 	@SubscribeEvent
@@ -101,7 +71,7 @@ public class RegenerationMod {
 	}
 	
 	@SubscribeEvent
-	public static void loot(LootTableLoadEvent e) {
+	public static void registerLoot(LootTableLoadEvent e) { //TODO seperate loot table file?
 		if (!e.getName().toString().toLowerCase().contains("minecraft:chests/")) return;
 		
 		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };

@@ -1,4 +1,4 @@
-package com.lcm.regeneration.debug;
+package com.lcm.regeneration.util;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -25,6 +25,7 @@ public class CmdRegenDebug extends CommandBase {
 			int i;
 			try { i = Integer.parseInt(a); }
 			catch (Exception e) { throw new CommandException("Failed to execute debug action " + a, e); } //@formatter:on
+			@SuppressWarnings("unused")
 			EntityPlayer player = (EntityPlayer)sender.getCommandSenderEntity();
 			
 			switch (i) {

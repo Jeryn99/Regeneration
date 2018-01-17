@@ -42,29 +42,14 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		if (phase.equals(TickEvent.Phase.END)) return;
 		
 		EntityPlayer player = cap.getPlayer();
-		if (player.world.isRemote) {
-			// Client Behavior
-			if (regenTicks == 0 && regenerating) regenTicks = 1;
-			
-			if (regenTicks > 0) {
-				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
-				regenTicks++;
-			}
-			
-			if (regenTicks >= 200 && !regenerating) {
-				regenTicks = 0;
-				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-			}
-		} else {
+		if (!player.world.isRemote) {
 			// Server Behavior
-			if (regenTicks == 0 && regenerating) regenTicks = 1;
-			
-			else if (regenTicks > 0 && regenTicks < 200) {
+			if (regenTicks > 0 && regenTicks < 200) { //regenerating
 				regenTicks++;
 				player.extinguish();
 				player.setArrowCountInEntity(0);
 				
-				if (regenTicks > 100) {
+				if (regenTicks > 100) { //explosion phase
 					if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire) player.world.setBlockToAir(player.getPosition());
 					
 					double x = player.posX + player.getRNG().nextGaussian() * 2;
@@ -77,14 +62,29 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 					}
 				}
 			} else if (regenTicks >= 200) {
-				regenerating = false;
-				regenTicks = 0;
 				player.setHealth(player.getMaxHealth());
 				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 180*20, 3, false, false)); //180 seconds of 20 ticks of Regeneration 4
-				TimelordSuperpowerHandler.randomizeTraits(this);
+
+				regenerating = false;
+				regenTicks = 0;
 				regenerationsLeft--;
 				timesRegenerated++;
+				TimelordSuperpowerHandler.randomizeTraits(this);
 				cap.syncToAll();
+			} else if (regenTicks == 0 && regenerating) regenTicks = 1;
+		} else {
+			// Client Behavior
+			if (regenTicks == 0 && regenerating)
+				regenTicks = 1;
+			
+			if (regenTicks > 0) {
+				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+				regenTicks++;
+			}
+			
+			if (regenTicks >= 200 && !regenerating) {
+				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+				regenTicks = 0;
 			}
 		}
 	}
