@@ -15,10 +15,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber
 public class RegenerationEventHandler {
@@ -37,6 +39,12 @@ public class RegenerationEventHandler {
 		EntityPlayer player = (EntityPlayer) e.getEntity();
 		if(player.getHealth() - e.getAmount() < 0 && SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerating && player.world.isRemote && Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID())
 			Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerInterace(PlayerInteractEvent e) {
+		if (e.getSide() == Side.CLIENT || !SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), TimelordSuperpower.INSTANCE)) return;
+		if (SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class).regenerating) e.setCanceled(true);
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -61,6 +69,7 @@ public class RegenerationEventHandler {
 			player.setAbsorptionAmount(20);
 			player.setAir(300);
 			player.getFoodStats().setFoodLevel(20);
+			player.clearActivePotions();
 			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10*20, 1, false, false)); //10 seconds of 20 ticks of Regeneration 2
 			player.extinguish();
 			
