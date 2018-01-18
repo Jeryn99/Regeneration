@@ -1,32 +1,10 @@
 package com.lcm.regeneration.superpower;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.lcm.regeneration.RegenerationMod;
 import com.lcm.regeneration.client.gui.GuiRegenCustomizer;
 import com.lcm.regeneration.client.gui.GuiTimelordPowerTab;
-import com.lcm.regeneration.traits.negative.TraitClumsy;
-import com.lcm.regeneration.traits.negative.TraitDumb;
-import com.lcm.regeneration.traits.negative.TraitFlimsy;
-import com.lcm.regeneration.traits.negative.TraitFrail;
-import com.lcm.regeneration.traits.negative.TraitObvious;
-import com.lcm.regeneration.traits.negative.TraitRigid;
-import com.lcm.regeneration.traits.negative.TraitSlow;
-import com.lcm.regeneration.traits.negative.TraitUnhealthy;
-import com.lcm.regeneration.traits.negative.TraitUnlucky;
-import com.lcm.regeneration.traits.negative.TraitWeak;
-import com.lcm.regeneration.traits.positive.TraitBouncy;
-import com.lcm.regeneration.traits.positive.TraitLucky;
-import com.lcm.regeneration.traits.positive.TraitQuick;
-import com.lcm.regeneration.traits.positive.TraitSmart;
-import com.lcm.regeneration.traits.positive.TraitSneaky;
-import com.lcm.regeneration.traits.positive.TraitSpry;
-import com.lcm.regeneration.traits.positive.TraitStrong;
-import com.lcm.regeneration.traits.positive.TraitSturdy;
-import com.lcm.regeneration.traits.positive.TraitThickSkinned;
-import com.lcm.regeneration.traits.positive.TraitTough;
-
+import com.lcm.regeneration.traits.negative.*;
+import com.lcm.regeneration.traits.positive.*;
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
@@ -44,6 +22,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
+import java.util.UUID;
 
 /** Created by AFlyingGrayson on 8/7/17 */
 public class TimelordSuperpower extends Superpower {
@@ -138,6 +119,7 @@ public class TimelordSuperpower extends Superpower {
 		nbt.setFloat("SecondaryRed", 1.0f);
 		nbt.setFloat("SecondaryGreen", 0.47f);
 		nbt.setFloat("SecondaryBlue", 0.0f);
+		nbt.setBoolean("textured", false);
 		return nbt;
 	}
 	

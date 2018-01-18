@@ -42,6 +42,7 @@ lcm-regen.abilities.obvious.desc=Enemies will notice you from a greater range
 item.chameleonArch.name=Chameleon Arch
 lcm-regen.info.primary=Primary Color
 lcm-regen.info.secondary=Secondary Color
+lcm-regen.info.textured=Textured Regeneration?
 lcm-regen.subtitles.regen=Regeneration energy
 lcm-regen.subtitles.regen_get=Timey Wimey Woosh
 lcm-regen.messages.traitsDisabled=TRAITS ARE NOT ENABLED
