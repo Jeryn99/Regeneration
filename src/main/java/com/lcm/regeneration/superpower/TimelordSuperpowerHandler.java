@@ -31,8 +31,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 @Mod.EventBusSubscriber
 public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	public int regenerationsLeft, timesRegenerated, regenTicks;
-	public boolean regenerating = false;
-	public BlockPos position;
+	public boolean regenerating = false, positionSet = false;
+	public double pX, pY, pZ;
+	//public BlockPos position;
 	
 	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) {
 		super(cap, superpower);
@@ -75,21 +76,29 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 			} else if (regenTicks == 0 && regenerating) regenTicks = 1;
 		} else {
 			// Client Behavior
-			if (regenTicks == 0 && regenerating) {
-				regenTicks = 1;
-				position = player.getPosition();
+			if (regenTicks == 0 && regenerating) regenTicks = 1;
+			
+			if (regenerating && positionSet == false) {
+				pX = player.posX;
+				pY = player.posY;
+				pZ = player.posZ;
+				positionSet = true;
 			}
 			
 			if (regenTicks > 0) {
 				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
-				player.moveToBlockPosAndAngles(position, player.rotationYaw, player.rotationPitch);
+				if (pY > player.posY) pY = player.posY;
+				player.setLocationAndAngles(pX, pY, pZ, player.rotationYaw, player.rotationPitch);
 				regenTicks++;
 			}
 			
 			if (regenTicks >= 200 && !regenerating) {
 				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 				regenTicks = 0;
-				position = null;
+				pX = -1;
+				pY = -1;
+				pZ = -1;
+				positionSet = false;
 			}
 		}
 	}
