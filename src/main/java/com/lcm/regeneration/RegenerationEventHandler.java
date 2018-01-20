@@ -15,6 +15,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -45,6 +46,14 @@ public class RegenerationEventHandler {
 	public static void onPlayerInterace(PlayerInteractEvent e) {
 		if (e.getSide() == Side.CLIENT || !SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), TimelordSuperpower.INSTANCE)) return;
 		if (SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class).regenerating) e.setCanceled(true);
+	}
+	
+	@SubscribeEvent
+	public static void onKnockback(LivingKnockBackEvent e) {
+		if (!(e.getEntity() instanceof EntityPlayer)) return;
+		EntityPlayer player = ((EntityPlayer)e.getEntity());
+		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.INSTANCE)) return;
+		if (SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerating) e.setCanceled(true);
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)

@@ -1,6 +1,7 @@
 package com.lcm.regeneration.superpower;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import com.lcm.regeneration.RegenerationMod;
@@ -18,6 +19,8 @@ import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
 import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -31,11 +34,15 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 @Mod.EventBusSubscriber
 public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	public int regenerationsLeft, timesRegenerated, regenTicks;
-	public boolean regenerating = false;
+	public boolean regenerating = false, positionSet = false;
+	public double pX, pY, pZ;
 	
-	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) {
-		super(cap, superpower);
-	}
+	public final String[] LOCKED_KEYS = { //TODO configurable
+		"forward", "left", "right", "back", "jump", "sneak", "drop", "attack", "inventory", "sprint", "swapHands", "togglePerspective", "useItem"
+	};
+	public HashMap<KeyBinding, Integer> keylockMap = new HashMap<>();
+	
+	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) { super(cap, superpower); }
 	
 	@Override
 	public void onUpdate(TickEvent.Phase phase) {
@@ -74,17 +81,54 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 			} else if (regenTicks == 0 && regenerating) regenTicks = 1;
 		} else {
 			// Client Behavior
-			if (regenTicks == 0 && regenerating)
+			GameSettings settings = Minecraft.getMinecraft().gameSettings;
+			
+			if (regenTicks == 0 && regenerating) {
 				regenTicks = 1;
+
+				for (String key : LOCKED_KEYS) try {
+					Class<? extends GameSettings> setCls = settings.getClass();
+					key = key.substring(0, 1).toUpperCase() + key.substring(1);
+					
+					KeyBinding cBind = (KeyBinding)setCls.getField("keyBind"+key).get(settings);
+					keylockMap.put(cBind, cBind.getKeyCode());
+					cBind.setKeyCode(0);
+				} catch (NoSuchFieldException ex) { //TODO when configurable, delete offending key from array to prevent log spam (also config?) TODO list all possible variable names in the config file
+					System.err.println("Keybinding "+key+" does not exist!");
+					continue;
+				} catch (IllegalAccessException ex) { throw new RuntimeException("Minecraft changed the name of the keybinding variables", ex); }
+				KeyBinding.resetKeyBindingArrayAndHash();
+			}
+			
+			if (regenerating && positionSet == false) {
+				pX = player.posX;
+				pY = player.posY;
+				pZ = player.posZ;
+				positionSet = true;
+			}
 			
 			if (regenTicks > 0) {
 				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
 				regenTicks++;
+				
+				if (pY > player.posY) pY = player.posY;
+				player.setLocationAndAngles(pX, pY, pZ, player.rotationYaw, player.rotationPitch);
 			}
 			
 			if (regenTicks >= 200 && !regenerating) {
 				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 				regenTicks = 0;
+				
+				keylockMap.forEach((key,oCode)->{
+					key.setKeyCode(oCode);
+				});
+				KeyBinding.resetKeyBindingArrayAndHash();
+				keylockMap.clear();
+				
+				pX = -1;
+				pY = -1;
+				pZ = -1;
+				positionSet = false;
 			}
 		}
 	}
