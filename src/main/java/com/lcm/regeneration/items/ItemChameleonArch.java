@@ -24,9 +24,11 @@ public class ItemChameleonArch extends Item {
 		setUnlocalizedName("chameleonArch");
 		setRegistryName("chameleonarch");
 		setCreativeTab(CreativeTabs.MISC);
+		setMaxStackSize(1);
+		setMaxDamage(12);
 	}
 	
-	@Override
+	@Override //TODO where did the "new life" message go?
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(playerIn);
@@ -37,12 +39,20 @@ public class ItemChameleonArch extends Item {
 			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
-			((TimelordSuperpowerHandler) handler).regenerationsLeft = 12;
+			TimelordSuperpowerHandler tmh = ((TimelordSuperpowerHandler) handler);
+			ItemStack arch = playerIn.getHeldItem(handIn);
+
+			int supply = 12 - arch.getItemDamage(), needed = 12 - tmh.regenerationsLeft, used = Math.min(supply, needed);
+			if (used == 0) return new ActionResult<>(EnumActionResult.FAIL, itemstack);
+			
+			tmh.regenerationsLeft += used;
+			arch.setItemDamage(arch.getItemDamage() + used);
+			if (arch.getItemDamage() == 12) arch.shrink(1);
+			
 			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
-			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.resetCycle")), true);
+			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
 		} else return new ActionResult<>(EnumActionResult.FAIL, itemstack);
 		
-		itemstack.shrink(1);
 		return new ActionResult<>(EnumActionResult.PASS, itemstack);
 	}
 }
