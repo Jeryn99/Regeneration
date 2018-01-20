@@ -35,23 +35,33 @@ public class ItemChameleonArch extends Item {
 		
 		if (handler == null) {
 			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.INSTANCE);
-			arch.shrink(1);
+			
+			int used = doUsageDamage(arch, SuperpowerHandler.getSpecificSuperpowerPlayerHandler(playerIn, TimelordSuperpowerHandler.class));
+			if (arch.getCount() > 0) throw new RuntimeException("Did not fully use arch when receiving superpower ("+used+","+arch.getCount()+")");
+			
 			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
 			TimelordSuperpowerHandler tmh = ((TimelordSuperpowerHandler) handler);
 
-			int supply = 12 - arch.getItemDamage(), needed = 12 - tmh.regenerationsLeft, used = Math.min(supply, needed);
+			int used = doUsageDamage(arch, tmh);
 			if (used == 0) return new ActionResult<>(EnumActionResult.FAIL, arch);
-			
-			tmh.regenerationsLeft += used;
-			arch.setItemDamage(arch.getItemDamage() + used);
-			if (arch.getItemDamage() == 12) arch.shrink(1);
 			
 			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
 		} else return new ActionResult<>(EnumActionResult.FAIL, arch);
 		
 		return new ActionResult<>(EnumActionResult.PASS, arch);
+	}
+	
+	private int doUsageDamage(ItemStack stack, TimelordSuperpowerHandler handler) {
+		int supply = 12 - stack.getItemDamage(), needed = 12 - handler.regenerationsLeft, used = Math.min(supply, needed);
+		
+		if (used == 0) return 0;
+		
+		handler.regenerationsLeft += used;
+		stack.setItemDamage(stack.getItemDamage() + used);
+		if (stack.getItemDamage() == 12) stack.shrink(1);
+		return used;
 	}
 }
