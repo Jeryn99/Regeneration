@@ -30,20 +30,19 @@ public class ItemChameleonArch extends Item {
 	
 	@Override //TODO where did the "new life" message go?
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
+		ItemStack arch = playerIn.getHeldItem(handIn);
 		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(playerIn);
 		
 		if (handler == null) {
 			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.INSTANCE);
-			
+			arch.shrink(1);
 			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
 			TimelordSuperpowerHandler tmh = ((TimelordSuperpowerHandler) handler);
-			ItemStack arch = playerIn.getHeldItem(handIn);
 
 			int supply = 12 - arch.getItemDamage(), needed = 12 - tmh.regenerationsLeft, used = Math.min(supply, needed);
-			if (used == 0) return new ActionResult<>(EnumActionResult.FAIL, itemstack);
+			if (used == 0) return new ActionResult<>(EnumActionResult.FAIL, arch);
 			
 			tmh.regenerationsLeft += used;
 			arch.setItemDamage(arch.getItemDamage() + used);
@@ -51,8 +50,8 @@ public class ItemChameleonArch extends Item {
 			
 			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
-		} else return new ActionResult<>(EnumActionResult.FAIL, itemstack);
+		} else return new ActionResult<>(EnumActionResult.FAIL, arch);
 		
-		return new ActionResult<>(EnumActionResult.PASS, itemstack);
+		return new ActionResult<>(EnumActionResult.PASS, arch);
 	}
 }

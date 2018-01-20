@@ -1,8 +1,5 @@
 package com.lcm.regeneration.util;
 
-import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
-
-import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -32,10 +29,6 @@ public class CmdRegenDebug extends CommandBase {
 			EntityPlayer player = (EntityPlayer)sender.getCommandSenderEntity();
 			
 			switch (c) {
-				case 0:
-					SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerationsLeft = Integer.valueOf(args[i+1]);
-					i++;
-					break;
 				default:
 					server.sendMessage(new TextComponentString("No debug action defined for " + c));
 			}
