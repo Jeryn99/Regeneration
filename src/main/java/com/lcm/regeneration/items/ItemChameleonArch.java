@@ -45,11 +45,26 @@ public class ItemChameleonArch extends Item {
 		} else if (handler instanceof TimelordSuperpowerHandler) {
 			TimelordSuperpowerHandler tmh = ((TimelordSuperpowerHandler) handler);
 
-			int used = doUsageDamage(arch, tmh);
-			if (used == 0) return new ActionResult<>(EnumActionResult.FAIL, arch);
-			
-			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
-			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
+			if (!playerIn.isSneaking()) {
+				int used = doUsageDamage(arch, tmh);
+				if (used == 0) return new ActionResult<>(EnumActionResult.FAIL, arch);
+				
+				playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
+				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
+			} else {
+				if (arch.getItemDamage() == 0) {
+					playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.noCapacity")), true);
+					return new ActionResult<>(EnumActionResult.FAIL, arch);
+				} else if (tmh.regenerationsLeft < 1) {
+					playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.empty")), true);
+					return new ActionResult<>(EnumActionResult.FAIL, arch);
+				}
+				
+				//TODO sound effect?
+				arch.setItemDamage(arch.getItemDamage() - 1);
+				tmh.regenerationsLeft--;
+				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer")), true);
+			}
 		} else return new ActionResult<>(EnumActionResult.FAIL, arch);
 		
 		return new ActionResult<>(EnumActionResult.PASS, arch);
