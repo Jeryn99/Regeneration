@@ -21,16 +21,16 @@ public class CmdRegenDebug extends CommandBase {
 	
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		for (String a : args) { //@formatter:off
-			int i;
-			try { i = Integer.parseInt(a); }
-			catch (Exception e) { throw new CommandException("Failed to execute debug action " + a, e); } //@formatter:on
+		for (int i=0; i<args.length; i++) { //@formatter:off
+			int c;
+			try { c = Integer.parseInt(args[i]); }
+			catch (Exception e) { throw new CommandException("Failed to execute debug action " + args[i], e); } //@formatter:on
 			@SuppressWarnings("unused")
 			EntityPlayer player = (EntityPlayer)sender.getCommandSenderEntity();
 			
-			switch (i) {
+			switch (c) {
 				default:
-					server.sendMessage(new TextComponentString("No debug action defined for " + i));
+					server.sendMessage(new TextComponentString("No debug action defined for " + c));
 			}
 		}
 	}
