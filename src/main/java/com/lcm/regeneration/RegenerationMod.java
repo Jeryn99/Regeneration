@@ -69,7 +69,7 @@ public class RegenerationMod {
 	}
 	
 	@SubscribeEvent
-	public static void registerLoot(LootTableLoadEvent e) {
+	public static void registerLoot(LootTableLoadEvent e) { //TODO can this loot table actually be overriden in resource packs?
 		if (!e.getName().toString().toLowerCase().contains("minecraft:chests/")) return; //TODO configurable regex matching (default: "minecraft:chests\/.*")
 		
 		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };

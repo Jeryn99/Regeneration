@@ -20,7 +20,8 @@ import net.minecraft.world.World;
 
 /** Created by AFlyingGrayson on 8/28/17 */
 public class ItemChameleonArch extends Item {
-	public ItemChameleonArch() {
+	
+	public ItemChameleonArch() { //TODO how does combining/repairing work out?
 		setUnlocalizedName("chameleonArch");
 		setRegistryName("chameleonarch");
 		setCreativeTab(CreativeTabs.MISC);

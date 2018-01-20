@@ -7,11 +7,25 @@
                 {
                     "type": "item",
                     "name": "lcm-regen:chameleonarch",
-                    "weight": 20
+                    "weight": 20,
+                    "functions": [
+                    	{
+                    		"function": "set_damage",
+                    		"damage": {
+	                    		"min": 0.3,
+	                    		"max": 0.7
+                    		}
+                    	}
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "lcm-regen:chameleonarch",
+                    "weight": 10
                 },
                 {
                     "type": "empty",
-                    "weight": 80
+                    "weight": 70
                 }
             ]
         }
