@@ -47,16 +47,22 @@ public class ItemChameleonArch extends Item {
 
 			if (!playerIn.isSneaking()) {
 				int used = doUsageDamage(arch, tmh);
-				if (used == 0) return new ActionResult<>(EnumActionResult.FAIL, arch);
+				if (used == 0) {
+					if (tmh.regenerationsLeft == 12)
+						playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullCycle", used)), true);
+					else if (arch.getItemDamage() == 12)
+						playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyArch", used)), true);
+					return new ActionResult<>(EnumActionResult.FAIL, arch);
+				}
 				
 				playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.GET, SoundCategory.PLAYERS, 1.0F, 1.0F);
 				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
 			} else {
 				if (arch.getItemDamage() == 0) {
-					playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.noCapacity")), true);
+					playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullArch")), true);
 					return new ActionResult<>(EnumActionResult.FAIL, arch);
 				} else if (tmh.regenerationsLeft < 1) {
-					playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.empty")), true);
+					playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyCycle")), true);
 					return new ActionResult<>(EnumActionResult.FAIL, arch);
 				}
 				
@@ -77,7 +83,6 @@ public class ItemChameleonArch extends Item {
 		
 		handler.regenerationsLeft += used;
 		stack.setItemDamage(stack.getItemDamage() + used);
-		if (stack.getItemDamage() == 12) stack.shrink(1);
 		return used;
 	}
 }
