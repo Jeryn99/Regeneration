@@ -54,7 +54,6 @@ public class RegenerationEventHandler {
 		EntityPlayer player = ((EntityPlayer)e.getEntity());
 		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.INSTANCE)) return;
 		if (SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerating) e.setCanceled(true);
-		
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
