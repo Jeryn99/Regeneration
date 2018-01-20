@@ -1,0 +1,19 @@
+{
+    "pools": [
+        {
+            "name": "lcm-regen:arch-pool",
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "lcm-regen:chameleonarch",
+                    "weight": 20
+                },
+                {
+                    "type": "empty",
+                    "weight": 80
+                }
+            ]
+        }
+    ]
+}

@@ -16,13 +16,11 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootEntry;
-import net.minecraft.world.storage.loot.LootEntryItem;
+import net.minecraft.world.storage.loot.LootEntryTable;
 import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.conditions.RandomChance;
-import net.minecraft.world.storage.loot.functions.LootFunction;
-import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.Configuration;
@@ -43,8 +41,8 @@ public class RegenerationMod {
 	private static RegenerationConfiguration cfg;
 	
 	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		cfg = new RegenerationConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
+	public void preInit(FMLPreInitializationEvent e) {
+		cfg = new RegenerationConfiguration(new Configuration(e.getSuggestedConfigurationFile()));
 	}
 	
 	@Mod.EventHandler
@@ -71,16 +69,13 @@ public class RegenerationMod {
 	}
 	
 	@SubscribeEvent
-	public static void registerLoot(LootTableLoadEvent e) { //TODO seperate loot table file?
-		if (!e.getName().toString().toLowerCase().contains("minecraft:chests/")) return;
+	public static void registerLoot(LootTableLoadEvent e) {
+		if (!e.getName().toString().toLowerCase().contains("minecraft:chests/")) return; //TODO configurable regex matching (default: "minecraft:chests\/.*")
 		
 		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
-		LootCondition[] chance = new LootCondition[] { new RandomChance(.5F) };
-		
-		LootEntry[] entry = { new LootEntryItem(RegenerationItems.chameleonArch, 1, 1, new LootFunction[]{new SetCount(condAlways, new RandomValueRange(1F))}, chance, "lcm-regen:arch-entry") };
-		
-		LootPool pool = new LootPool(entry, condAlways, new RandomValueRange(1), new RandomValueRange(1), "lcm-regen:arch-pool");
-		e.getTable().addPool(pool);
+		LootEntry entry = new LootEntryTable(new ResourceLocation(MODID+":inject/arch_loot"), 1, 1, condAlways, "lcm-regen:arch-entry");
+		LootPool lootPool = new LootPool(new LootEntry[] {entry}, condAlways, new RandomValueRange(1), new RandomValueRange(1), "lcm-regen:arch-pool"); 
+		e.getTable().addPool(lootPool);
 	}
 	
 	@SubscribeEvent
