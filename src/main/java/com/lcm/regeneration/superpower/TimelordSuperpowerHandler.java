@@ -41,6 +41,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		"forward", "left", "right", "back", "jump", "sneak", "drop", "attack", "inventory", "sprint", "swapHands", "togglePerspective", "useItem"
 	};
 	public HashMap<KeyBinding, Integer> keylockMap = new HashMap<>();
+	public float prevMouseSensitivity;
 	
 	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) { super(cap, superpower); }
 	
@@ -85,7 +86,11 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 			
 			if (regenTicks == 0 && regenerating) {
 				regenTicks = 1;
-
+				
+				player.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, 0);
+				prevMouseSensitivity = settings.mouseSensitivity;
+				settings.mouseSensitivity = -(1F/3F);
+				
 				for (String key : LOCKED_KEYS) try {
 					Class<? extends GameSettings> setCls = settings.getClass();
 					key = key.substring(0, 1).toUpperCase() + key.substring(1);
@@ -98,6 +103,9 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 					continue;
 				} catch (IllegalAccessException ex) { throw new RuntimeException("Minecraft changed the name of the keybinding variables", ex); }
 				KeyBinding.resetKeyBindingArrayAndHash();
+				KeyBinding.unPressAllKeys();
+				KeyBinding.updateKeyBindState();
+				settings.saveOptions();
 			}
 			
 			if (regenerating && positionSet == false) {
@@ -122,8 +130,15 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				keylockMap.forEach((key,oCode)->{
 					key.setKeyCode(oCode);
 				});
-				KeyBinding.resetKeyBindingArrayAndHash();
 				keylockMap.clear();
+				
+				settings.mouseSensitivity = prevMouseSensitivity;
+				prevMouseSensitivity = 0;
+				
+				KeyBinding.resetKeyBindingArrayAndHash();
+				KeyBinding.unPressAllKeys();
+				KeyBinding.updateKeyBindState();
+				settings.saveOptions();
 				
 				pX = -1;
 				pY = -1;
