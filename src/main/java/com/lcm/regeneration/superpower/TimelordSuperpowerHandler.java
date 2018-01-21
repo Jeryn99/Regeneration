@@ -155,7 +155,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		this.getAbilities().clear();
 		TimelordSuperpower.INSTANCE.addDefaultAbilities(this.getPlayer(), this.getAbilities());
 		TimelordSuperpowerHandler.randomizeTraits(this);
-		this.regenerationsLeft = 12;
+		this.regenerationsLeft = 0;
 		SuperpowerHandler.syncToAll(this.getPlayer());
 	}
 	

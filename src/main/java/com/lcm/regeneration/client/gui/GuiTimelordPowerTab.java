@@ -24,19 +24,19 @@ public class GuiTimelordPowerTab extends GuiSuperpowerAbilities {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+
+		int i = (this.width - this.xSize) / 2;
+		int j = (this.height - this.ySize) / 2;
+		
 		if (RegenerationMod.getConfig().disableTraits) {
-			int i = (this.width - this.xSize) / 2;
-			int j = (this.height - this.ySize) / 2;
-			
 			String txtDisabled = StringHelper.translateToLocal("lcm-regen.messages.traitsDisabled");
-			String txtCount = StringHelper.translateToLocal("lcm-regen.messages.regenLeft", ((TimelordSuperpowerHandler)SuperpowerHandler.getSuperpowerPlayerHandler(player)).regenerationsLeft);
-			
 			int xDisabled = this.xSize / 2 - mc.fontRenderer.getStringWidth(txtDisabled) / 2;
 			mc.fontRenderer.drawString(TextFormatting.BOLD.toString() + TextFormatting.RED + txtDisabled, i + xDisabled, j + ySize/2, 0x373737);
-			
-			int xCount = (this.width - i) - mc.fontRenderer.getStringWidth(txtCount) - 20;
-			mc.fontRenderer.drawString(TextFormatting.DARK_GRAY + txtCount, xCount, j + 165 + 5, 0x373737);
 		}
+		
+		String txtCount = StringHelper.translateToLocal("lcm-regen.messages.regenLeft", ((TimelordSuperpowerHandler)SuperpowerHandler.getSuperpowerPlayerHandler(player)).regenerationsLeft);
+		int xCount = (this.width - i) - mc.fontRenderer.getStringWidth(txtCount) - 20;
+		mc.fontRenderer.drawString(TextFormatting.DARK_GRAY + txtCount, xCount, j + 165 + 5, 0x373737);
 	}
 	
 }

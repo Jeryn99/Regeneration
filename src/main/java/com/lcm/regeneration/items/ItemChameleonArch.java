@@ -35,12 +35,16 @@ public class ItemChameleonArch extends Item {
 		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(playerIn);
 		
 		if (handler == null) {
+			if (arch.getItemDamage() == 12) {
+				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.emptyArch")), true);
+				return new ActionResult<>(EnumActionResult.FAIL, arch);
+			}
+			
 			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.INSTANCE);
 			
 			int used = doUsageDamage(arch, SuperpowerHandler.getSpecificSuperpowerPlayerHandler(playerIn, TimelordSuperpowerHandler.class));
-			if (arch.getCount() > 0) throw new RuntimeException("Did not fully use arch when receiving superpower (" + used + "," + arch.getCount() + ")");
+			if (arch.getItemDamage() < 12) throw new RuntimeException("Did not fully use arch when receiving superpower (" + used + "," + arch.getCount() + ")");
 			
-			playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
 			TimelordSuperpowerHandler tmh = ((TimelordSuperpowerHandler) handler);
@@ -54,8 +58,6 @@ public class ItemChameleonArch extends Item {
 						playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyArch", used)), true);
 					return new ActionResult<>(EnumActionResult.FAIL, arch);
 				}
-				
-				playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
 				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
 			} else {
 				if (arch.getItemDamage() == 0) {
@@ -73,6 +75,7 @@ public class ItemChameleonArch extends Item {
 			}
 		} else return new ActionResult<>(EnumActionResult.FAIL, arch);
 		
+		playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		return new ActionResult<>(EnumActionResult.PASS, arch);
 	}
 	
@@ -83,6 +86,7 @@ public class ItemChameleonArch extends Item {
 		
 		handler.regenerationsLeft += used;
 		stack.setItemDamage(stack.getItemDamage() + used);
+		SuperpowerHandler.syncToAll(handler.getPlayer());
 		return used;
 	}
 }
