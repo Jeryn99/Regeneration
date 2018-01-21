@@ -15,9 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class RegenerationItems { //not sure 'Items' is the correct term
 	public static final ItemChameleonArch chameleonArch = new ItemChameleonArch();
 	
-	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> e) {
-	}
+	@SubscribeEvent public static void registerBlocks(RegistryEvent.Register<Block> e) {}
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> e) {

@@ -20,8 +20,8 @@ public class CmdRegenDebug extends CommandBase {
 	}
 	
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		for (int i=0; i<args.length; i++) { //@formatter:off
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException { //@formatter:off
+		for (int i = 0; i < args.length; i++) {
 			int c;
 			try { c = Integer.parseInt(args[i]); }
 			catch (Exception e) { throw new CommandException("Failed to execute debug action " + args[i], e); } //@formatter:on

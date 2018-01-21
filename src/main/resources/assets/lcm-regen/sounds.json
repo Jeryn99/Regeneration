@@ -1,27 +1,18 @@
 {
-	"regen_1": {
+	"regeneration": {
 		"category": "ambient",
-		"subtitle": "lcm-regen.subtitles.regen",
+		"subtitle": "lcm-regen.subtitles.regeneration",
 		"sounds": [{
-			"name": "lcm-regen:regen_1",
+			"name": "lcm-regen:regeneration",
 			"stream": true
 		}]
 	},
 	
-	"regen_2": {
-		"category": "ambient",
-		"subtitle": "lcm-regen.subtitles.regen",
-		"sounds": [{
-			"name": "lcm-regen:regen_2",
-			"stream": true
-		}]
-	},
-	
-	"regen_get": {
+	"timey_wimey": {
 		"category": "players",
-		"subtitle": "lcm-regen.subtitles.regen_get",
+		"subtitle": "lcm-regen.subtitles.timey_wimey",
 		"sounds": [{
-			"name": "lcm-regen:regen_get",
+			"name": "lcm-regen:timey_wimey",
 			"stream": true
 		}]
 	}

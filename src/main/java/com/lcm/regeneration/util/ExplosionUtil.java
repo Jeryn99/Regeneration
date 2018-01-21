@@ -26,7 +26,7 @@ public class ExplosionUtil {
 			xr = (int) -(victim.posX - exploder.posX);
 			zr = (int) -(victim.posZ - exploder.posZ);
 			
-			victim.knockBack(exploder, knockback*densMod, xr, zr);
+			victim.knockBack(exploder, knockback * densMod, xr, zr);
 		});
 	}
 	

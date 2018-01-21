@@ -43,7 +43,7 @@ public class RegenerationEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerInterace(PlayerInteractEvent e) {
+	public static void onPlayerInteract(PlayerInteractEvent e) {
 		if (e.getSide() == Side.CLIENT || !SuperpowerHandler.hasSuperpower(e.getEntityPlayer(), TimelordSuperpower.INSTANCE)) return;
 		if (SuperpowerHandler.getSpecificSuperpowerPlayerHandler(e.getEntityPlayer(), TimelordSuperpowerHandler.class).regenerating) e.setCanceled(true);
 	}
@@ -51,7 +51,7 @@ public class RegenerationEventHandler {
 	@SubscribeEvent
 	public static void onKnockback(LivingKnockBackEvent e) {
 		if (!(e.getEntity() instanceof EntityPlayer)) return;
-		EntityPlayer player = ((EntityPlayer)e.getEntity());
+		EntityPlayer player = ((EntityPlayer) e.getEntity());
 		if (!SuperpowerHandler.hasSuperpower(player, TimelordSuperpower.INSTANCE)) return;
 		if (SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerating) e.setCanceled(true);
 	}
@@ -87,11 +87,13 @@ public class RegenerationEventHandler {
 			if (lastDigit > 20) while (lastDigit > 10)
 				lastDigit -= 10;
 			
-			if (lastDigit < 3) time = time + StringHelper.translateToLocal("lcm-regen.messages.numsuffix."+lastDigit);
-			else time = time + StringHelper.translateToLocal("lcm-regen.messages.numsuffix.ext");
+			if (lastDigit < 3)
+				time = time + StringHelper.translateToLocal("lcm-regen.messages.numsuffix." + lastDigit);
+			else
+				time = time + StringHelper.translateToLocal("lcm-regen.messages.numsuffix.ext");
 			
 			player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.regenLeftExt", time, (handler.regenerationsLeft - 1))), true);
-			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.SHORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.REGENERATION, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			ExplosionUtil.regenerationExplosion(player);
 		}
 	}

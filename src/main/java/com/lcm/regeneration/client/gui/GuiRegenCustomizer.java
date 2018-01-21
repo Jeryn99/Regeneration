@@ -2,8 +2,6 @@ package com.lcm.regeneration.client.gui;
 
 import java.io.IOException;
 
-import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
-
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.gui.GuiCustomizer;
 import lucraft.mods.lucraftcore.util.gui.GuiColorSlider;
@@ -25,8 +23,6 @@ public class GuiRegenCustomizer extends GuiCustomizer implements GuiSlider.ISlid
 	public boolean textured;
 	public GuiButton texturedButton;
 	
-	public TimelordSuperpowerHandler data;
-	
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -36,10 +32,7 @@ public class GuiRegenCustomizer extends GuiCustomizer implements GuiSlider.ISlid
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		
-		data = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(mc.player, TimelordSuperpowerHandler.class);
-		
 		NBTTagCompound old = SuperpowerHandler.getSuperpowerPlayerHandler(mc.player).getStyleNBTTag();
-		
 		primaryRed = old.getFloat("PrimaryRed");
 		primaryGreen = old.getFloat("PrimaryGreen");
 		primaryBlue = old.getFloat("PrimaryBlue");
@@ -60,7 +53,6 @@ public class GuiRegenCustomizer extends GuiCustomizer implements GuiSlider.ISlid
 		this.buttonList.add(new GuiColorSlider(9, i + 135, j + 90, 80, 20, StringHelper.translateToLocal("lucraftcore.info.red"), "", 0, 1, secondaryRed, true, true, this));
 		this.buttonList.add(new GuiColorSlider(10, i + 135, j + 110, 80, 20, StringHelper.translateToLocal("lucraftcore.info.green"), "", 0, 1, secondaryGreen, true, true, this));
 		this.buttonList.add(new GuiColorSlider(11, i + 135, j + 130, 80, 20, StringHelper.translateToLocal("lucraftcore.info.blue"), "", 0, 1, secondaryBlue, true, true, this));
-		
 	}
 	
 	@Override
@@ -117,7 +109,7 @@ public class GuiRegenCustomizer extends GuiCustomizer implements GuiSlider.ISlid
 			mc.player.closeScreen();
 		}
 		if (button.id == 1) mc.player.closeScreen();
-		if(button.id == 2) textured = !textured;
+		if (button.id == 2) textured = !textured;
 	}
 	
 	@Override

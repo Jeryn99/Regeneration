@@ -11,22 +11,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class RegenerationSounds {
-	public static List<SoundEvent> SOUNDS = new ArrayList<>();
+	private static List<SoundEvent> SOUNDS = new ArrayList<>();
 	
-	public static SoundEvent SHORT = createSoundEvent("regen_1");
-	public static SoundEvent LONG = createSoundEvent("regen_2");
-	
-	public static SoundEvent GET = createSoundEvent("regen_get");
+	public static final SoundEvent REGENERATION = createSoundEvent("regeneration");
+	public static final SoundEvent TIMEY_WIMEY = createSoundEvent("timey_wimey");
 	
 	@SubscribeEvent
 	public static void registerSoundEvents(RegistryEvent.Register<SoundEvent> event) {
 		event.getRegistry().registerAll(RegenerationSounds.SOUNDS.toArray(new SoundEvent[RegenerationSounds.SOUNDS.size()]));
 	}
 	
-	public static SoundEvent createSoundEvent(String soundName) {
-		ResourceLocation SoundResource = new ResourceLocation(RegenerationMod.MODID, soundName);
-		SoundEvent e = new SoundEvent(SoundResource).setRegistryName(soundName);
-		RegenerationSounds.SOUNDS.add(e);
+	private static SoundEvent createSoundEvent(String soundName) {
+		ResourceLocation soundResource = new ResourceLocation(RegenerationMod.MODID, soundName);
+		SoundEvent e = new SoundEvent(soundResource).setRegistryName(soundName);
+		SOUNDS.add(e);
 		return e;
 	}
 	

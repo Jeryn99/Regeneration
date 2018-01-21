@@ -34,16 +34,20 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 @Mod.EventBusSubscriber
 public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	public int regenerationsLeft, timesRegenerated, regenTicks;
-	public boolean regenerating = false, positionSet = false;
-	public double pX, pY, pZ;
+	public boolean regenerating = false;
+	
+	private boolean positionSet = false;
+	private double pX, pY, pZ;
 	
 	public final String[] LOCKED_KEYS = { //TODO configurable
 		"forward", "left", "right", "back", "jump", "sneak", "drop", "attack", "inventory", "sprint", "swapHands", "togglePerspective", "useItem"
 	};
-	public HashMap<KeyBinding, Integer> keylockMap = new HashMap<>();
-	public float prevMouseSensitivity;
+	private HashMap<KeyBinding, Integer> keylockMap = new HashMap<>();
+	private float prevMouseSensitivity;
 	
-	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) { super(cap, superpower); }
+	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) {
+		super(cap, superpower);
+	}
 	
 	@Override
 	public void onUpdate(TickEvent.Phase phase) {
@@ -51,7 +55,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		
 		EntityPlayer player = cap.getPlayer();
 		if (!player.world.isRemote) {
-			// Server Behavior
+			//Server Behavior
 			if (regenTicks > 0 && regenTicks < 200) { //regenerating
 				regenTicks++;
 				player.extinguish();
@@ -69,37 +73,37 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 						if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) player.world.setBlockToAir(bs);
 					}
 				}
-			} else if (regenTicks >= 200) {
+			} else if (regenTicks >= 200) { //end regeneration
 				player.setHealth(player.getMaxHealth());
-				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 180*20, 3, false, false)); //180 seconds of 20 ticks of Regeneration 4
-
+				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 180 * 20, 3, false, false)); //180 seconds of 20 ticks of Regeneration 4
+				
 				regenerating = false;
 				regenTicks = 0;
 				regenerationsLeft--;
 				timesRegenerated++;
 				TimelordSuperpowerHandler.randomizeTraits(this);
 				cap.syncToAll();
-			} else if (regenTicks == 0 && regenerating) regenTicks = 1;
+			} else if (regenTicks == 0 && regenerating) regenTicks = 1; //initiate regeneration
 		} else {
-			// Client Behavior
+			//Client Behavior
 			GameSettings settings = Minecraft.getMinecraft().gameSettings;
 			
-			if (regenTicks == 0 && regenerating) {
+			if (regenTicks == 0 && regenerating) { //initiate regeneration
 				regenTicks = 1;
 				
 				player.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, 0);
 				prevMouseSensitivity = settings.mouseSensitivity;
-				settings.mouseSensitivity = -(1F/3F);
+				settings.mouseSensitivity = -(1F/3F); //specific value needed to counter a constant added in the mc source
 				
 				for (String key : LOCKED_KEYS) try {
 					Class<? extends GameSettings> setCls = settings.getClass();
 					key = key.substring(0, 1).toUpperCase() + key.substring(1);
 					
-					KeyBinding cBind = (KeyBinding)setCls.getField("keyBind"+key).get(settings);
+					KeyBinding cBind = (KeyBinding)setCls.getField("keyBind" + key).get(settings);
 					keylockMap.put(cBind, cBind.getKeyCode());
 					cBind.setKeyCode(0);
 				} catch (NoSuchFieldException ex) { //TODO when configurable, delete offending key from array to prevent log spam (also config?) TODO list all possible variable names in the config file
-					System.err.println("Keybinding "+key+" does not exist!");
+					System.err.println("Keybinding " + key + " does not exist!");
 					continue;
 				} catch (IllegalAccessException ex) { throw new RuntimeException("Minecraft changed the name of the keybinding variables", ex); }
 				KeyBinding.resetKeyBindingArrayAndHash();
@@ -115,7 +119,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				positionSet = true;
 			}
 			
-			if (regenTicks > 0) {
+			if (regenTicks > 0) { //regenerating
 				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
 				regenTicks++;
 				
@@ -123,13 +127,11 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				player.setLocationAndAngles(pX, pY, pZ, player.rotationYaw, player.rotationPitch);
 			}
 			
-			if (regenTicks >= 200 && !regenerating) {
+			if (regenTicks >= 200 && !regenerating) { //end regeneration
 				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 				regenTicks = 0;
 				
-				keylockMap.forEach((key,oCode)->{
-					key.setKeyCode(oCode);
-				});
+				keylockMap.forEach((key, oCode) -> key.setKeyCode(oCode));
 				keylockMap.clear();
 				
 				settings.mouseSensitivity = prevMouseSensitivity;
@@ -158,7 +160,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	}
 	
 	protected static void randomizeTraits(SuperpowerPlayerHandler handler) {
-		// Reset Karma
+		//Reset Karma
 		if (LCConfig.modules.karma) for (KarmaStat karmaStat : KarmaStat.getKarmaStats())
 			KarmaHandler.setKarmaStat(handler.getPlayer(), karmaStat, 0);
 		if (RegenerationMod.getConfig().disableTraits) return;

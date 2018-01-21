@@ -73,8 +73,8 @@ public class RegenerationMod {
 		if (!e.getName().toString().toLowerCase().contains("minecraft:chests/")) return; //TODO configurable regex matching (default: "minecraft:chests\/.*")
 		
 		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
-		LootEntry entry = new LootEntryTable(new ResourceLocation(MODID+":inject/arch_loot"), 1, 1, condAlways, "lcm-regen:arch-entry");
-		LootPool lootPool = new LootPool(new LootEntry[] {entry}, condAlways, new RandomValueRange(1), new RandomValueRange(1), "lcm-regen:arch-pool"); 
+		LootEntry entry = new LootEntryTable(new ResourceLocation(MODID + ":inject/arch_loot"), 1, 1, condAlways, "lcm-regen:arch-entry");
+		LootPool lootPool = new LootPool(new LootEntry[] { entry }, condAlways, new RandomValueRange(1), new RandomValueRange(1), "lcm-regen:arch-pool");
 		e.getTable().addPool(lootPool);
 	}
 	
@@ -83,7 +83,7 @@ public class RegenerationMod {
 		ArrayList<String> disabler = new ArrayList<>();
 		Collections.addAll(disabler, LCConfig.superpowers.disabledAbilities);
 		
-		// Positive
+		//Positive
 		registerAbility(e, TraitBouncy.class, "bouncy", disabler);
 		registerAbility(e, TraitLucky.class, "lucky", disabler);
 		registerAbility(e, TraitQuick.class, "quick", disabler);
@@ -95,7 +95,7 @@ public class RegenerationMod {
 		registerAbility(e, TraitSmart.class, "smart", disabler);
 		registerAbility(e, TraitSneaky.class, "sneaky", disabler);
 		
-		// Negative
+		//Negative
 		registerAbility(e, TraitClumsy.class, "clumsy", disabler);
 		registerAbility(e, TraitFlimsy.class, "flimsy", disabler);
 		registerAbility(e, TraitFrail.class, "frail", disabler);
