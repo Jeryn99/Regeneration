@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-	deobfCompile ('org.bitbucket.Lucraft:lucraftcore:5a668c0882') { //this commit includes fixes that haven't been released yet, update to 2.0.4 once it's been released
+	deobfCompile ('org.bitbucket.Lucraft:lucraftcore:2.0.5') {
 		exclude group: 'slimeknights.mantle'
 		exclude group: 'slimeknights'
 		exclude group: 'cofh'
