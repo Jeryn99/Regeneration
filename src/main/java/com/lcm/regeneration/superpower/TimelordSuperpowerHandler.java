@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import com.lcm.regeneration.RegenerationMod;
+import com.lcm.regeneration.RegenerationConfiguration;
 import com.lcm.regeneration.traits.negative.INegativeTrait;
 
 import lucraft.mods.lucraftcore.LCConfig;
@@ -39,9 +39,6 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	private boolean positionSet = false;
 	private double pX, pY, pZ;
 	
-	public final String[] LOCKED_KEYS = { //TODO configurable
-		"forward", "left", "right", "back", "jump", "sneak", "drop", "attack", "inventory", "sprint", "swapHands", "togglePerspective", "useItem"
-	};
 	private HashMap<KeyBinding, Integer> keylockMap = new HashMap<>();
 	private float prevMouseSensitivity;
 	
@@ -75,7 +72,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				}
 			} else if (regenTicks >= 200) { //end regeneration
 				player.setHealth(player.getMaxHealth());
-				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 180 * 20, 3, false, false)); //180 seconds of 20 ticks of Regeneration 4
+				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), RegenerationConfiguration.postRegenerationDuration, RegenerationConfiguration.postRegenerationLevel, false, false)); //180 seconds of 20 ticks of Regeneration 4
 				
 				regenerating = false;
 				regenTicks = 0;
@@ -92,20 +89,25 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				regenTicks = 1;
 				
 				player.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, 0);
-				prevMouseSensitivity = settings.mouseSensitivity;
-				settings.mouseSensitivity = -(1F/3F); //specific value needed to counter a constant added in the mc source
 				
-				for (String key : LOCKED_KEYS) try {
+				if (RegenerationConfiguration.lockMouse) {
+					prevMouseSensitivity = settings.mouseSensitivity;
+					settings.mouseSensitivity = -(1F / 3F); //specific value needed to counter a constant added in the mc source
+				}
+				
+				for (String key : RegenerationConfiguration.lockedKeys) try {
 					Class<? extends GameSettings> setCls = settings.getClass();
 					key = key.substring(0, 1).toUpperCase() + key.substring(1);
 					
 					KeyBinding cBind = (KeyBinding)setCls.getField("keyBind" + key).get(settings);
 					keylockMap.put(cBind, cBind.getKeyCode());
 					cBind.setKeyCode(0);
-				} catch (NoSuchFieldException ex) { //TODO when configurable, delete offending key from array to prevent log spam (also config?) TODO list all possible variable names in the config file
+				} catch (NoSuchFieldException ex) {
 					System.err.println("Keybinding " + key + " does not exist!");
+					RegenerationConfiguration.lockedKeys.remove(key);
 					continue;
 				} catch (IllegalAccessException ex) { throw new RuntimeException("Minecraft changed the name of the keybinding variables", ex); }
+				
 				KeyBinding.resetKeyBindingArrayAndHash();
 				KeyBinding.unPressAllKeys();
 				KeyBinding.updateKeyBindState();
@@ -134,8 +136,10 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				keylockMap.forEach((key, oCode) -> key.setKeyCode(oCode));
 				keylockMap.clear();
 				
-				settings.mouseSensitivity = prevMouseSensitivity;
-				prevMouseSensitivity = 0;
+				if (RegenerationConfiguration.lockMouse) {
+					settings.mouseSensitivity = prevMouseSensitivity;
+					prevMouseSensitivity = 0;
+				}
 				
 				KeyBinding.resetKeyBindingArrayAndHash();
 				KeyBinding.unPressAllKeys();
@@ -163,7 +167,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		//Reset Karma
 		if (LCConfig.modules.karma) for (KarmaStat karmaStat : KarmaStat.getKarmaStats())
 			KarmaHandler.setKarmaStat(handler.getPlayer(), karmaStat, 0);
-		if (RegenerationMod.getConfig().disableTraits) return;
+		if (RegenerationConfiguration.disableTraits) return;
 		
 		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
 		

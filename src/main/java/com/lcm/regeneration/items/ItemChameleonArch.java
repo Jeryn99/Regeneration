@@ -1,5 +1,6 @@
 package com.lcm.regeneration.items;
 
+import com.lcm.regeneration.RegenerationConfiguration;
 import com.lcm.regeneration.RegenerationSounds;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
@@ -26,7 +27,7 @@ public class ItemChameleonArch extends Item {
 		setRegistryName("chameleonarch");
 		setCreativeTab(CreativeTabs.MISC);
 		setMaxStackSize(1);
-		setMaxDamage(12);
+		setMaxDamage(RegenerationConfiguration.regenCapacity);
 	}
 	
 	@Override //TODO where did the "new life" message go?
@@ -35,7 +36,7 @@ public class ItemChameleonArch extends Item {
 		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(playerIn);
 		
 		if (handler == null) {
-			if (arch.getItemDamage() == 12) {
+			if (arch.getItemDamage() == RegenerationConfiguration.regenCapacity) {
 				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.emptyArch")), true);
 				return new ActionResult<>(EnumActionResult.FAIL, arch);
 			}
@@ -43,7 +44,7 @@ public class ItemChameleonArch extends Item {
 			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.INSTANCE);
 			
 			int used = doUsageDamage(arch, SuperpowerHandler.getSpecificSuperpowerPlayerHandler(playerIn, TimelordSuperpowerHandler.class));
-			if (arch.getItemDamage() < 12) throw new RuntimeException("Did not fully use arch when receiving superpower (" + used + "," + arch.getCount() + ")");
+			if (arch.getItemDamage() < RegenerationConfiguration.regenCapacity) throw new RuntimeException("Did not fully use arch when receiving superpower (" + used + "," + arch.getCount() + ")");
 			
 			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
@@ -52,9 +53,9 @@ public class ItemChameleonArch extends Item {
 			if (!playerIn.isSneaking()) {
 				int used = doUsageDamage(arch, tmh);
 				if (used == 0) {
-					if (tmh.regenerationsLeft == 12)
+					if (tmh.regenerationsLeft == RegenerationConfiguration.regenCapacity)
 						playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullCycle", used)), true);
-					else if (arch.getItemDamage() == 12)
+					else if (arch.getItemDamage() == RegenerationConfiguration.regenCapacity)
 						playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyArch", used)), true);
 					return new ActionResult<>(EnumActionResult.FAIL, arch);
 				}
@@ -80,7 +81,7 @@ public class ItemChameleonArch extends Item {
 	}
 	
 	private int doUsageDamage(ItemStack stack, TimelordSuperpowerHandler handler) {
-		int supply = 12 - stack.getItemDamage(), needed = 12 - handler.regenerationsLeft, used = Math.min(supply, needed);
+		int supply = RegenerationConfiguration.regenCapacity - stack.getItemDamage(), needed = RegenerationConfiguration.regenCapacity - handler.regenerationsLeft, used = Math.min(supply, needed);
 		
 		if (used == 0) return 0;
 		
