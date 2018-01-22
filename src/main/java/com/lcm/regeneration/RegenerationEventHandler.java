@@ -75,11 +75,11 @@ public class RegenerationEventHandler {
 			SuperpowerHandler.syncToAll(player);
 			
 			player.setHealth(.5f);
-			player.setAbsorptionAmount(20);
-			player.setAir(300);
-			player.getFoodStats().setFoodLevel(20);
+			player.setAbsorptionAmount(RegenerationConfiguration.absorbtionLevel);
+			if (RegenerationConfiguration.resetOxygen) player.setAir(300);
+			if (RegenerationConfiguration.resetHunger) player.getFoodStats().setFoodLevel(20);
 			player.clearActivePotions();
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10*20, 1, false, false)); //10 seconds of 20 ticks of Regeneration 2
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10*20, RegenerationConfiguration.regenerationLevel, false, false)); //10 seconds of 20 ticks of Regeneration 2
 			player.extinguish();
 			
 			String time = "" + (handler.timesRegenerated + 1);

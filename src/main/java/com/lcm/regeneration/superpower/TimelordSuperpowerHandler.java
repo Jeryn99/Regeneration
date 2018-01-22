@@ -39,9 +39,6 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	private boolean positionSet = false;
 	private double pX, pY, pZ;
 	
-	/*public final String[] LOCKED_KEYS = {
-		"forward", "left", "right", "back", "jump", "sneak", "drop", "attack", "inventory", "sprint", "swapHands", "togglePerspective", "useItem"
-	};*/
 	private HashMap<KeyBinding, Integer> keylockMap = new HashMap<>();
 	private float prevMouseSensitivity;
 	
@@ -75,7 +72,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				}
 			} else if (regenTicks >= 200) { //end regeneration
 				player.setHealth(player.getMaxHealth());
-				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 180 * 20, 3, false, false)); //180 seconds of 20 ticks of Regeneration 4
+				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), RegenerationConfiguration.postRegenerationDuration, RegenerationConfiguration.postRegenerationLevel, false, false)); //180 seconds of 20 ticks of Regeneration 4
 				
 				regenerating = false;
 				regenTicks = 0;
@@ -110,6 +107,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 					RegenerationConfiguration.lockedKeys.remove(key);
 					continue;
 				} catch (IllegalAccessException ex) { throw new RuntimeException("Minecraft changed the name of the keybinding variables", ex); }
+				
 				KeyBinding.resetKeyBindingArrayAndHash();
 				KeyBinding.unPressAllKeys();
 				KeyBinding.updateKeyBindState();
