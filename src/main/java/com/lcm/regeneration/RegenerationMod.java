@@ -38,20 +38,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class RegenerationMod {
 	public static final String MODID = "lcm-regen", VERSION = "1.3";
 	public static final ResourceLocation ICONS = new ResourceLocation(MODID, "textures/gui/ability_icons.png");
-	private static RegenerationConfiguration cfg;
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
-		cfg = new RegenerationConfiguration(new Configuration(e.getSuggestedConfigurationFile()));
+		RegenerationConfiguration.init(new Configuration(e.getSuggestedConfigurationFile()), e.getSide());
 	}
 	
 	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CmdRegenDebug());
-	}
-	
-	public static RegenerationConfiguration getConfig() {
-		return cfg;
 	}
 	
 	@SubscribeEvent
@@ -70,7 +65,7 @@ public class RegenerationMod {
 	
 	@SubscribeEvent
 	public static void registerLoot(LootTableLoadEvent e) { //TODO can this loot table actually be overriden in resource packs?
-		if (!e.getName().toString().toLowerCase().contains("minecraft:chests/")) return; //TODO configurable regex matching (default: "minecraft:chests\/.*")
+		if (!e.getName().toString().toLowerCase().matches(RegenerationConfiguration.lootRegex)) return;
 		
 		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
 		LootEntry entry = new LootEntryTable(new ResourceLocation(MODID + ":inject/arch_loot"), 1, 1, condAlways, "lcm-regen:arch-entry");
@@ -107,7 +102,7 @@ public class RegenerationMod {
 		registerAbility(e, TraitDumb.class, "dumb", disabler);
 		registerAbility(e, TraitObvious.class, "obvious", disabler);
 		
-		if (cfg.disableTraits) LCConfig.superpowers.disabledAbilities = disabler.toArray(new String[0]);
+		if (RegenerationConfiguration.disableTraits) LCConfig.superpowers.disabledAbilities = disabler.toArray(new String[0]);
 	}
 	
 	private static void registerAbility(RegistryEvent.Register<Ability.AbilityEntry> event, Class<? extends Ability> ability, String name, ArrayList<String> disabler) {

@@ -28,7 +28,7 @@ public class RegenerationEventHandler {
 	
 	@SubscribeEvent
 	public static void onWorldLoaded(WorldEvent.Load e) {
-		if (!e.getWorld().isRemote && RegenerationMod.getConfig().disableTraits) {
+		if (!e.getWorld().isRemote && RegenerationConfiguration.disableTraits) {
 			for (EntityPlayer p : e.getWorld().playerEntities) if (SuperpowerHandler.hasSuperpower(p, TimelordSuperpower.INSTANCE))
 				SuperpowerHandler.getSuperpowerPlayerHandler(p).getAbilities().forEach(ability -> ability.setUnlocked(false));
 		}
