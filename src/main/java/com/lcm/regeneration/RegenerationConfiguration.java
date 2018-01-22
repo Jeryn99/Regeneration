@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class RegenerationConfiguration {
 	public static boolean disableTraits, lockMouse;
-	public static int regenerativeKillRange, regenerativeKnockbackRange;
+	public static int regenerativeKillRange, regenerativeKnockbackRange, regenCapacity;
 	public static float regenerativeKnockback;
 	public static ArrayList<String> lockedKeys;
 	public static String lootRegex;
@@ -20,6 +20,7 @@ public class RegenerationConfiguration {
 		
 		disableTraits = !cfg.getBoolean("enableTraits", "traits", true, "Enable the trait system. If this is false all trait effects are disabled");
 		lootRegex = cfg.getString("lootRegex", "loot", "minecraft:chests\\/.*", "The loot pool for chameleon arch's will only be added to loot tables whose name matches this regular expression");
+		regenCapacity = cfg.getInt("maxRegenCapacity", "regeneration", 12, 1, Integer.MAX_VALUE, "The maximum regeneration capacity. This affects the durability of a Chameleon Arch and the amount of regenerations in a full cycle"); //TODO 0 for infinite regenerations?
 		
 		regenerativeKillRange = cfg.getInt("immediateKillRange", "regeneration", 4, 0, Integer.MAX_VALUE, "Upon regeneration every mob inside of this radius is immediately killed. Keep in mind that you should round up to accomodate for mobs that aren't standing in the center of a block");
 		regenerativeKnockbackRange = cfg.getInt("knockbackRange", "regeneration", 7, 0, 30000000, "Range wherein every mob is knocked back upon regeneration");
