@@ -65,7 +65,7 @@ public class RegenerationMod {
 	
 	@SubscribeEvent
 	public static void registerLoot(LootTableLoadEvent e) { //TODO can this loot table actually be overriden in resource packs?
-		if (!e.getName().toString().toLowerCase().matches(RegenerationConfiguration.lootRegex)) return;
+		if (!e.getName().toString().toLowerCase().matches(RegenerationConfiguration.lootRegex) || RegenerationConfiguration.disableArch) return;
 		
 		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
 		LootEntry entry = new LootEntryTable(new ResourceLocation(MODID + ":inject/arch_loot"), 1, 1, condAlways, "lcm-regen:arch-entry");

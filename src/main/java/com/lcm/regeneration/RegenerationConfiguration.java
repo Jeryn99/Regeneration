@@ -2,6 +2,7 @@ package com.lcm.regeneration;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import net.minecraft.client.settings.GameSettings;
@@ -9,10 +10,10 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class RegenerationConfiguration {
-	public static boolean disableTraits, lockMouse, resetHunger, resetOxygen;
+	public static boolean disableTraits, lockMouse, resetHunger, resetOxygen, dontLoseUponDeath, startAsTimelord, disableArch;
 	public static int regenerativeKillRange, regenerativeKnockbackRange, regenCapacity, regenerationLevel, postRegenerationLevel, postRegenerationDuration;
 	public static float regenerativeKnockback, absorbtionLevel;
-	public static ArrayList<String> lockedKeys;
+	public static ArrayList<String> lockedKeys = new ArrayList<>();
 	public static String lootRegex;
 	
 	public static void init(Configuration cfg, Side side) {
@@ -20,7 +21,12 @@ public class RegenerationConfiguration {
 		
 		disableTraits = !cfg.getBoolean("enableTraits", "traits", true, "Enable the trait system. If this is false all trait effects are disabled");
 		lootRegex = cfg.getString("lootRegex", "loot", "minecraft:chests\\/.*", "The loot pool for chameleon arch's will only be added to loot tables whose name matches this regular expression");
-		regenCapacity = cfg.getInt("maxRegenCapacity", "regeneration", 12, 0, Integer.MAX_VALUE, "The maximum regeneration capacity. This affects the durability of a Chameleon Arch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations, the chameleon arch will grant the timelord ability and give you infinite regenerations. If you die while regenerating you'll lose your ability"); //TODO 0 for infinite regenerations?
+		
+		regenCapacity = cfg.getInt("maxRegenCapacity", "superpower", 12, 0, Integer.MAX_VALUE, "The maximum regeneration capacity. This affects the durability of a Chameleon Arch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations, the chameleon arch will grant the timelord ability and give you infinite regenerations. If you die while regenerating you'll lose your ability (unless dontLosePower is set to true)");
+		dontLoseUponDeath = cfg.getBoolean("dontLosePower", "superpower", false, "If this is true you won't lose your timelord power if you get killed during regeneration");
+		startAsTimelord = cfg.getBoolean("startAsTimelord", "superpower", false, "If this is true you'll be granted the timelord power when you first join your world");
+		disableArch = cfg.getBoolean("disableArch", "superpower", false, "If this is true the chameleon arch item won't spawn naturally. Useful when combining all the other options in this category to create a seamless immortal experience");
+		cfg.setCategoryComment("superpower", "These options can be used to tweak the amount of immortality");
 		
 		absorbtionLevel = cfg.getFloat("absorbtionAmount", "regeneration", 10, 0, Float.MAX_VALUE, "The amount of absorbtion hearts you get when regenerating") * 2;
 		resetHunger = cfg.getBoolean("resetHunger", "regeneration", true, "Regenerate hunger bars");
@@ -36,6 +42,7 @@ public class RegenerationConfiguration {
 		if (side == Side.CLIENT) { //this information is not required on the server side as it can't lock keys
 			Collections.addAll(lockedKeys, cfg.getStringList("lockedActions", "keylocks", new String[] { "forward", "left", "right", "back", "jump", "sneak", "drop", "attack", "inventory", "sprint", "swapHands", "togglePerspective", "useItem" }, "When regenerating these keybindings are unbound", validKeybindings()));
 			lockMouse = cfg.getBoolean("lockMouse", "keylocks", true, "Lock the mouse while regenerating");
+			cfg.setCategoryComment("keylocks", "Actions that can be locked (case sensitive): "+Arrays.toString(validKeybindings()));
 		}
 		
 		cfg.save();

@@ -9,6 +9,8 @@ import lucraft.mods.lucraftcore.superpowers.capabilities.CapabilitySuperpower;
 import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
@@ -21,6 +23,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber
@@ -56,6 +59,18 @@ public class RegenerationEventHandler {
 		if (SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerating) e.setCanceled(true);
 	}
 	
+	@SubscribeEvent
+	public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
+		if (!RegenerationConfiguration.startAsTimelord || !e.player.world.isRemote) return;
+		
+		NBTTagCompound nbt = e.player.getEntityData();
+		boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
+		if(!loggedInBefore){
+			e.player.inventory.addItemStackToInventory(new ItemStack(RegenerationItems.chameleonArch));
+			nbt.setBoolean("loggedInBefore", true);
+		}
+	}
+	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingHurtEvent e) {
 		if (!(e.getEntity() instanceof EntityPlayer)) return;
@@ -66,7 +81,7 @@ public class RegenerationEventHandler {
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 		
-		if (handler.regenerating || player.posY < 0 || handler.regenerationsLeft == 0) {
+		if ((handler.regenerating || player.posY < 0 || handler.regenerationsLeft == 0) && !RegenerationConfiguration.dontLoseUponDeath) {
 			SuperpowerHandler.removeSuperpower(player);
 			((CapabilitySuperpower) player.getCapability(CapabilitySuperpower.SUPERPOWER_CAP, null)).superpowerData.removeTag(TimelordSuperpower.INSTANCE.getRegistryName().toString());
 		} else if (handler.regenerationsLeft > 0 || handler.regenerationsLeft == -1) { //initiate regeneration
