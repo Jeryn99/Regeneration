@@ -66,10 +66,10 @@ public class RegenerationEventHandler {
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 		
-		if (handler.regenerating || player.posY < 0 || handler.regenerationsLeft <= 0) {
+		if (handler.regenerating || player.posY < 0 || handler.regenerationsLeft == 0) {
 			SuperpowerHandler.removeSuperpower(player);
 			((CapabilitySuperpower) player.getCapability(CapabilitySuperpower.SUPERPOWER_CAP, null)).superpowerData.removeTag(TimelordSuperpower.INSTANCE.getRegistryName().toString());
-		} else if (handler.regenerationsLeft > 0) { //initiate regeneration
+		} else if (handler.regenerationsLeft > 0 || handler.regenerationsLeft == -1) { //initiate regeneration
 			e.setCanceled(true);
 			handler.regenerating = true;
 			SuperpowerHandler.syncToAll(player);
@@ -92,7 +92,7 @@ public class RegenerationEventHandler {
 			else
 				time = time + StringHelper.translateToLocal("lcm-regen.messages.numsuffix.ext");
 			
-			player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.regenLeftExt", time, (handler.regenerationsLeft - 1))), true);
+			if (handler.regenerationsLeft != -1) player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.regenLeftExt", time, (handler.regenerationsLeft - 1))), true);
 			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.REGENERATION, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			ExplosionUtil.regenerationExplosion(player);
 		}

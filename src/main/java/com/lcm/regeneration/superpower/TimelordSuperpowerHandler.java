@@ -76,7 +76,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				
 				regenerating = false;
 				regenTicks = 0;
-				regenerationsLeft--;
+				if (regenerationsLeft != -1) regenerationsLeft--;
 				timesRegenerated++;
 				TimelordSuperpowerHandler.randomizeTraits(this);
 				cap.syncToAll();

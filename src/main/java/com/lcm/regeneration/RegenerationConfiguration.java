@@ -20,7 +20,7 @@ public class RegenerationConfiguration {
 		
 		disableTraits = !cfg.getBoolean("enableTraits", "traits", true, "Enable the trait system. If this is false all trait effects are disabled");
 		lootRegex = cfg.getString("lootRegex", "loot", "minecraft:chests\\/.*", "The loot pool for chameleon arch's will only be added to loot tables whose name matches this regular expression");
-		regenCapacity = cfg.getInt("maxRegenCapacity", "regeneration", 12, 1, Integer.MAX_VALUE, "The maximum regeneration capacity. This affects the durability of a Chameleon Arch and the amount of regenerations in a full cycle"); //TODO 0 for infinite regenerations?
+		regenCapacity = cfg.getInt("maxRegenCapacity", "regeneration", 12, 0, Integer.MAX_VALUE, "The maximum regeneration capacity. This affects the durability of a Chameleon Arch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations, the chameleon arch will grant the timelord ability and give you infinite regenerations. If you die while regenerating you'll lose your ability"); //TODO 0 for infinite regenerations?
 		
 		absorbtionLevel = cfg.getFloat("absorbtionAmount", "regeneration", 10, 0, Float.MAX_VALUE, "The amount of absorbtion hearts you get when regenerating") * 2;
 		resetHunger = cfg.getBoolean("resetHunger", "regeneration", true, "Regenerate hunger bars");

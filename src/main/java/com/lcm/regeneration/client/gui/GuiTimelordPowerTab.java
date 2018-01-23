@@ -34,9 +34,13 @@ public class GuiTimelordPowerTab extends GuiSuperpowerAbilities {
 			mc.fontRenderer.drawString(TextFormatting.BOLD.toString() + TextFormatting.RED + txtDisabled, i + xDisabled, j + ySize/2, 0x373737);
 		}
 		
-		String txtCount = StringHelper.translateToLocal("lcm-regen.messages.regenLeft", ((TimelordSuperpowerHandler)SuperpowerHandler.getSuperpowerPlayerHandler(player)).regenerationsLeft);
-		int xCount = (this.width - i) - mc.fontRenderer.getStringWidth(txtCount) - 20;
-		mc.fontRenderer.drawString(TextFormatting.DARK_GRAY + txtCount, xCount, j + 165 + 5, 0x373737);
+		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
+		
+		if (handler.regenerationsLeft != -1) {
+			String txtCount = StringHelper.translateToLocal("lcm-regen.messages.regenLeft", handler.regenerationsLeft);
+			int xCount = (this.width - i) - mc.fontRenderer.getStringWidth(txtCount) - 20;
+			mc.fontRenderer.drawString(TextFormatting.DARK_GRAY + txtCount, xCount, j + 165 + 5, 0x373737);
+		}
 	}
 	
 }
