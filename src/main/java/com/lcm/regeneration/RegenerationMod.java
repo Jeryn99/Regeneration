@@ -27,24 +27,25 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /** Created by AFlyingGrayson on 8/7/17 */
-
-@Mod(modid = RegenerationMod.MODID, name = "Regeneration", version = RegenerationMod.VERSION, dependencies = "required-after:lucraftcore@[1.12-2.0.4,)", acceptedMinecraftVersions = "1.12, 1.12.1, 1.12.2")
-@Mod.EventBusSubscriber
+@Mod(modid = RegenerationMod.MODID, name = "Regeneration", version = RegenerationMod.VERSION, dependencies = "required:forge@[14.23.1.2574,); required-after:lucraftcore@[1.12-2.0.4,)", acceptedMinecraftVersions = "1.12, 1.12.1, 1.12.2")
+@EventBusSubscriber
 public class RegenerationMod {
 	public static final String MODID = "lcm-regen", VERSION = "1.3";
 	public static final ResourceLocation ICONS = new ResourceLocation(MODID, "textures/gui/ability_icons.png");
 	
-	@Mod.EventHandler
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		RegenerationConfiguration.init(new Configuration(e.getSuggestedConfigurationFile()), e.getSide());
 	}
 	
-	@Mod.EventHandler
+	@EventHandler
 	public void serverStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CmdRegenDebug());
 	}

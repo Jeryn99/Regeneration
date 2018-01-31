@@ -31,65 +31,65 @@ public class ItemChameleonArch extends Item {
 	}
 	
 	@Override //TODO where did the "new life" message go?
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-		ItemStack arch = playerIn.getHeldItem(handIn);
-		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(playerIn);
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		ItemStack arch = player.getHeldItem(hand);
+		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(player);
 		
 		
 		if (RegenerationConfiguration.regenCapacity == 0) { //with infinite regenerations the behavior is quite different
 			if (handler == null) {
-				SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.INSTANCE);
-				SuperpowerHandler.getSpecificSuperpowerPlayerHandler(playerIn, TimelordSuperpowerHandler.class).regenerationsLeft = -1;
-				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
+				SuperpowerHandler.setSuperpower(player, TimelordSuperpower.INSTANCE);
+				SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerationsLeft = -1;
+				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
 				return new ActionResult<>(EnumActionResult.PASS, arch);
 			} else {
-				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.alreadyTimelord")), true);
+				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.alreadyTimelord")), true);
 				return new ActionResult<>(EnumActionResult.FAIL, arch);
 			}
 		}
 		
 		if (handler == null) {
 			if (arch.getItemDamage() == RegenerationConfiguration.regenCapacity) {
-				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.emptyArch")), true);
+				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.emptyArch")), true);
 				return new ActionResult<>(EnumActionResult.FAIL, arch);
 			}
 			
-			SuperpowerHandler.setSuperpower(playerIn, TimelordSuperpower.INSTANCE);
+			SuperpowerHandler.setSuperpower(player, TimelordSuperpower.INSTANCE);
 			
-			int used = doUsageDamage(arch, SuperpowerHandler.getSpecificSuperpowerPlayerHandler(playerIn, TimelordSuperpowerHandler.class));
+			int used = doUsageDamage(arch, SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class));
 			if (arch.getItemDamage() < RegenerationConfiguration.regenCapacity) throw new RuntimeException("Did not fully use arch when receiving superpower (" + used + "," + arch.getCount() + ")");
 			
-			playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
+			player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
 			TimelordSuperpowerHandler tmh = ((TimelordSuperpowerHandler) handler);
 			
-			if (!playerIn.isSneaking()) {
+			if (!player.isSneaking()) {
 				int used = doUsageDamage(arch, tmh);
 				if (used == 0) {
 					if (tmh.regenerationsLeft == RegenerationConfiguration.regenCapacity)
-						playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullCycle", used)), true);
+						player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullCycle", used)), true);
 					else if (arch.getItemDamage() == RegenerationConfiguration.regenCapacity)
-						playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyArch", used)), true);
+						player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyArch", used)), true);
 					return new ActionResult<>(EnumActionResult.FAIL, arch);
 				}
-				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
+				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
 			} else {
 				if (arch.getItemDamage() == 0) {
-					playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullArch")), true);
+					player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullArch")), true);
 					return new ActionResult<>(EnumActionResult.FAIL, arch);
 				} else if (tmh.regenerationsLeft < 1) {
-					playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyCycle")), true);
+					player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyCycle")), true);
 					return new ActionResult<>(EnumActionResult.FAIL, arch);
 				}
 				
 				//TODO sound effect?
 				arch.setItemDamage(arch.getItemDamage() - 1);
 				tmh.regenerationsLeft--;
-				playerIn.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer")), true);
+				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer")), true);
 			}
 		} else return new ActionResult<>(EnumActionResult.FAIL, arch);
 		
-		playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, RegenerationSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
+		player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		return new ActionResult<>(EnumActionResult.PASS, arch);
 	}
 	

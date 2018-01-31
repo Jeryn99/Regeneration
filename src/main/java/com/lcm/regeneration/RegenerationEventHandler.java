@@ -65,7 +65,7 @@ public class RegenerationEventHandler {
 		
 		NBTTagCompound nbt = e.player.getEntityData();
 		boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
-		if(!loggedInBefore){
+		if (!loggedInBefore) {
 			e.player.inventory.addItemStackToInventory(new ItemStack(RegenerationItems.chameleonArch));
 			nbt.setBoolean("loggedInBefore", true);
 		}
