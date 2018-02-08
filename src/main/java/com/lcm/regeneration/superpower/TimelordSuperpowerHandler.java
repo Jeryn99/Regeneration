@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.lcm.regeneration.RegenerationConfiguration;
 import com.lcm.regeneration.traits.negative.INegativeTrait;
 
+import com.lcm.regeneration.util.PlayerUtils;
 import lucraft.mods.lucraftcore.LCConfig;
 import lucraft.mods.lucraftcore.karma.KarmaHandler;
 import lucraft.mods.lucraftcore.karma.KarmaStat;
@@ -22,6 +23,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -38,9 +41,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 	
 	private boolean positionSet = false;
 	private double pX, pY, pZ;
-	
-	private HashMap<KeyBinding, Integer> keylockMap = new HashMap<>();
-	private float prevMouseSensitivity;
+
 	
 	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) {
 		super(cap, superpower);
@@ -51,16 +52,20 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		if (phase.equals(TickEvent.Phase.END)) return;
 		
 		EntityPlayer player = cap.getPlayer();
+		EntityPlayerMP playerMP = cap.getPlayer();
+
 		if (!player.world.isRemote) {
 			//Server Behavior
 			if (regenTicks > 0 && regenTicks < 200) { //regenerating
 				regenTicks++;
 				player.extinguish();
 				player.setArrowCountInEntity(0);
+				PlayerUtils.setWalkSpeed(playerMP, 0.0F);
 				
 				if (regenTicks > 100) { //explosion phase
 					if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire) player.world.setBlockToAir(player.getPosition());
-					
+
+
 					double x = player.posX + player.getRNG().nextGaussian() * 2;
 					double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 					double z = player.posZ + player.getRNG().nextGaussian() * 2;
@@ -72,8 +77,10 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				}
 			} else if (regenTicks >= 200) { //end regeneration
 				player.setHealth(player.getMaxHealth());
-				player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), RegenerationConfiguration.postRegenerationDuration, RegenerationConfiguration.postRegenerationLevel, false, false)); //180 seconds of 20 ticks of Regeneration 4
-				
+				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenerationConfiguration.postRegenerationDuration, RegenerationConfiguration.postRegenerationLevel, false, false)); //180 seconds of 20 ticks of Regeneration 4
+
+				PlayerUtils.setWalkSpeed(playerMP, 0.1F);
+
 				regenerating = false;
 				regenTicks = 0;
 				if (regenerationsLeft != -1) regenerationsLeft--;
@@ -81,76 +88,6 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				TimelordSuperpowerHandler.randomizeTraits(this);
 				cap.syncToAll();
 			} else if (regenTicks == 0 && regenerating) regenTicks = 1; //initiate regeneration
-		} else {
-			//Client Behavior
-			GameSettings settings = Minecraft.getMinecraft().gameSettings;
-			
-			if (regenTicks == 0 && regenerating) { //initiate regeneration
-				regenTicks = 1;
-				
-				player.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, 0);
-				
-				if (RegenerationConfiguration.lockMouse) {
-					prevMouseSensitivity = settings.mouseSensitivity;
-					settings.mouseSensitivity = -(1F / 3F); //specific value needed to counter a constant added in the mc source
-				}
-				
-				for (String key : RegenerationConfiguration.lockedKeys) try {
-					Class<? extends GameSettings> setCls = settings.getClass();
-					key = key.substring(0, 1).toUpperCase() + key.substring(1);
-					
-					KeyBinding cBind = (KeyBinding)setCls.getField("keyBind" + key).get(settings);
-					keylockMap.put(cBind, cBind.getKeyCode());
-					cBind.setKeyCode(0);
-				} catch (NoSuchFieldException ex) {
-					System.err.println("Keybinding " + key + " does not exist!");
-					RegenerationConfiguration.lockedKeys.remove(key);
-					continue;
-				} catch (IllegalAccessException ex) { throw new RuntimeException("Minecraft changed the name of the keybinding variables", ex); }
-				
-				KeyBinding.resetKeyBindingArrayAndHash();
-				KeyBinding.unPressAllKeys();
-				KeyBinding.updateKeyBindState();
-				settings.saveOptions();
-			}
-			
-			if (regenerating && positionSet == false) {
-				pX = player.posX;
-				pY = player.posY;
-				pZ = player.posZ;
-				positionSet = true;
-			}
-			
-			if (regenTicks > 0) { //regenerating
-				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
-				regenTicks++;
-				
-				if (pY > player.posY) pY = player.posY;
-				player.setLocationAndAngles(pX, pY, pZ, player.rotationYaw, player.rotationPitch);
-			}
-			
-			if (regenTicks >= 200 && !regenerating) { //end regeneration
-				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-				regenTicks = 0;
-				
-				keylockMap.forEach((key, oCode) -> key.setKeyCode(oCode));
-				keylockMap.clear();
-				
-				if (RegenerationConfiguration.lockMouse) {
-					settings.mouseSensitivity = prevMouseSensitivity;
-					prevMouseSensitivity = 0;
-				}
-				
-				KeyBinding.resetKeyBindingArrayAndHash();
-				KeyBinding.unPressAllKeys();
-				KeyBinding.updateKeyBindState();
-				settings.saveOptions();
-				
-				pX = -1;
-				pY = -1;
-				pZ = -1;
-				positionSet = false;
-			}
 		}
 	}
 	
