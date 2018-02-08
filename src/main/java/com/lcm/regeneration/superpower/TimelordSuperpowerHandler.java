@@ -1,12 +1,7 @@
 package com.lcm.regeneration.superpower;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.stream.Collectors;
-
 import com.lcm.regeneration.RegenerationConfiguration;
 import com.lcm.regeneration.traits.negative.INegativeTrait;
-
 import com.lcm.regeneration.util.PlayerUtils;
 import lucraft.mods.lucraftcore.LCConfig;
 import lucraft.mods.lucraftcore.karma.KarmaHandler;
@@ -20,28 +15,24 @@ import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
 import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 /** Created by AFlyingGrayson on 8/7/17 */
 @Mod.EventBusSubscriber
 public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
-	public int regenerationsLeft, timesRegenerated, regenTicks;
+	public int regenerationsLeft = RegenerationConfiguration.regenCapacity, timesRegenerated, regenTicks;
 	public boolean regenerating = false;
-	
-	private boolean positionSet = false;
-	private double pX, pY, pZ;
-
 	
 	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) {
 		super(cap, superpower);
@@ -52,7 +43,6 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		if (phase.equals(TickEvent.Phase.END)) return;
 		
 		EntityPlayer player = cap.getPlayer();
-		EntityPlayerMP playerMP = cap.getPlayer();
 
 		if (!player.world.isRemote) {
 			//Server Behavior
@@ -60,12 +50,9 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				regenTicks++;
 				player.extinguish();
 				player.setArrowCountInEntity(0);
-				PlayerUtils.setWalkSpeed(playerMP, 0.0F);
-				
+				PlayerUtils.setWalkSpeed((EntityPlayerMP) player, 0f);
 				if (regenTicks > 100) { //explosion phase
 					if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire) player.world.setBlockToAir(player.getPosition());
-
-
 					double x = player.posX + player.getRNG().nextGaussian() * 2;
 					double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 					double z = player.posZ + player.getRNG().nextGaussian() * 2;
@@ -78,9 +65,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 			} else if (regenTicks >= 200) { //end regeneration
 				player.setHealth(player.getMaxHealth());
 				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenerationConfiguration.postRegenerationDuration, RegenerationConfiguration.postRegenerationLevel, false, false)); //180 seconds of 20 ticks of Regeneration 4
-
-				PlayerUtils.setWalkSpeed(playerMP, 0.1F);
-
+				PlayerUtils.setWalkSpeed((EntityPlayerMP) player, 0.1F);
 				regenerating = false;
 				regenTicks = 0;
 				if (regenerationsLeft != -1) regenerationsLeft--;
@@ -88,6 +73,24 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				TimelordSuperpowerHandler.randomizeTraits(this);
 				cap.syncToAll();
 			} else if (regenTicks == 0 && regenerating) regenTicks = 1; //initiate regeneration
+		} else {
+			//Client Behavior
+
+			if (regenTicks == 0 && regenerating) //initiate regeneration
+				regenTicks = 1;
+
+			if (regenTicks > 0) { //regenerating
+				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID())
+					Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+				regenTicks++;
+
+			}
+
+			if (regenTicks >= 200 && !regenerating) { //end regeneration
+				if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID())
+					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+				regenTicks = 0;
+			}
 		}
 	}
 	
