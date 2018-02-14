@@ -1,4 +1,4 @@
-package com.lcm.regeneration;
+package com.lcm.regeneration.init;
 
 import com.lcm.regeneration.items.ItemChameleonArch;
 
@@ -12,18 +12,19 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
-public class RegenerationItems { //not sure 'Items' is the correct term
+public class RegenItems {
+
 	public static final ItemChameleonArch chameleonArch = new ItemChameleonArch();
 	
 	@SubscribeEvent public static void registerBlocks(RegistryEvent.Register<Block> e) {}
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> e) {
-		e.getRegistry().register(RegenerationItems.chameleonArch);
+		e.getRegistry().register(RegenItems.chameleonArch);
 	}
 	
 	@SubscribeEvent
-	public static void registerModels(ModelRegistryEvent e) throws ReflectiveOperationException {
-		ModelLoader.setCustomModelResourceLocation(RegenerationItems.chameleonArch, 0, new ModelResourceLocation(RegenerationItems.chameleonArch.getRegistryName(), "inventory"));
+	public static void registerModels(ModelRegistryEvent e) {
+		ModelLoader.setCustomModelResourceLocation(RegenItems.chameleonArch, 0, new ModelResourceLocation(RegenItems.chameleonArch.getRegistryName(), "inventory"));
 	}
 }

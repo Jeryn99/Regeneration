@@ -1,6 +1,6 @@
 package com.lcm.regeneration.util;
 
-import com.lcm.regeneration.RegenerationConfiguration;
+import com.lcm.regeneration.RegenConfig;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 public class ExplosionUtil {
 	
 	public static void regenerationExplosion(EntityPlayer player) {
-		explodeKill(player, player.world, player.getPosition(), RegenerationConfiguration.regenerativeKillRange);
-		explodeKnockback(player, player.world, player.getPosition(), RegenerationConfiguration.regenerativeKnockback, RegenerationConfiguration.regenerativeKnockbackRange);
+		explodeKill(player, player.world, player.getPosition(), RegenConfig.regenerativeKillRange);
+		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback, RegenConfig.regenerativeKnockbackRange);
 	}
 	
 	public static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {

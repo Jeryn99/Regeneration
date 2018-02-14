@@ -1,7 +1,7 @@
 package com.lcm.regeneration.items;
 
-import com.lcm.regeneration.RegenerationConfiguration;
-import com.lcm.regeneration.RegenerationSounds;
+import com.lcm.regeneration.RegenConfig;
+import com.lcm.regeneration.init.RegenSounds;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 
@@ -27,7 +27,7 @@ public class ItemChameleonArch extends Item {
 		setRegistryName("chameleonarch");
 		setCreativeTab(CreativeTabs.MISC);
 		setMaxStackSize(1);
-		setMaxDamage(RegenerationConfiguration.regenCapacity);
+		setMaxDamage(RegenConfig.regenCapacity);
 	}
 	
 	@Override //TODO where did the "new life" message go?
@@ -36,7 +36,7 @@ public class ItemChameleonArch extends Item {
 		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(player);
 		
 		
-		if (RegenerationConfiguration.regenCapacity == 0) { //with infinite regenerations the behavior is quite different
+		if (RegenConfig.regenCapacity == 0) { //with infinite regenerations the behavior is quite different
 			if (handler == null) {
 				SuperpowerHandler.setSuperpower(player, TimelordSuperpower.INSTANCE);
 				SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerationsLeft = -1;
@@ -49,7 +49,7 @@ public class ItemChameleonArch extends Item {
 		}
 		
 		if (handler == null) {
-			if (arch.getItemDamage() == RegenerationConfiguration.regenCapacity) {
+			if (arch.getItemDamage() == RegenConfig.regenCapacity) {
 				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.emptyArch")), true);
 				return new ActionResult<>(EnumActionResult.FAIL, arch);
 			}
@@ -57,7 +57,7 @@ public class ItemChameleonArch extends Item {
 			SuperpowerHandler.setSuperpower(player, TimelordSuperpower.INSTANCE);
 			
 			int used = doUsageDamage(arch, SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class));
-			if (arch.getItemDamage() < RegenerationConfiguration.regenCapacity) throw new RuntimeException("Did not fully use arch when receiving superpower (" + used + "," + arch.getCount() + ")");
+			if (arch.getItemDamage() < RegenConfig.regenCapacity) throw new RuntimeException("Did not fully use arch when receiving superpower (" + used + "," + arch.getCount() + ")");
 			
 			player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
 		} else if (handler instanceof TimelordSuperpowerHandler) {
@@ -66,9 +66,9 @@ public class ItemChameleonArch extends Item {
 			if (!player.isSneaking()) {
 				int used = doUsageDamage(arch, tmh);
 				if (used == 0) {
-					if (tmh.regenerationsLeft == RegenerationConfiguration.regenCapacity)
+					if (tmh.regenerationsLeft == RegenConfig.regenCapacity)
 						player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullCycle", used)), true);
-					else if (arch.getItemDamage() == RegenerationConfiguration.regenCapacity)
+					else if (arch.getItemDamage() == RegenConfig.regenCapacity)
 						player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyArch", used)), true);
 					return new ActionResult<>(EnumActionResult.FAIL, arch);
 				}
@@ -89,12 +89,12 @@ public class ItemChameleonArch extends Item {
 			}
 		} else return new ActionResult<>(EnumActionResult.FAIL, arch);
 		
-		player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
+		player.world.playSound(null, player.posX, player.posY, player.posZ, RegenSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		return new ActionResult<>(EnumActionResult.PASS, arch);
 	}
 	
 	private int doUsageDamage(ItemStack stack, TimelordSuperpowerHandler handler) {
-		int supply = RegenerationConfiguration.regenCapacity - stack.getItemDamage(), needed = RegenerationConfiguration.regenCapacity - handler.regenerationsLeft, used = Math.min(supply, needed);
+		int supply = RegenConfig.regenCapacity - stack.getItemDamage(), needed = RegenConfig.regenCapacity - handler.regenerationsLeft, used = Math.min(supply, needed);
 		
 		if (used == 0) return 0;
 		

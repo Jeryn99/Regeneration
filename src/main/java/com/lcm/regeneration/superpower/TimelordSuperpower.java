@@ -3,10 +3,10 @@ package com.lcm.regeneration.superpower;
 import java.util.List;
 import java.util.UUID;
 
-import com.lcm.regeneration.RegenerationItems;
-import com.lcm.regeneration.RegenerationMod;
+import com.lcm.regeneration.Regeneration;
 import com.lcm.regeneration.client.gui.GuiRegenCustomizer;
 import com.lcm.regeneration.client.gui.GuiTimelordPowerTab;
+import com.lcm.regeneration.init.RegenItems;
 import com.lcm.regeneration.traits.negative.*;
 import com.lcm.regeneration.traits.positive.*;
 
@@ -36,7 +36,7 @@ public class TimelordSuperpower extends Superpower {
 	
 	public TimelordSuperpower() {
 		super(StringHelper.translateToLocal("superpower.Timelord.name"));
-		setRegistryName(RegenerationMod.MODID, "timelord");
+		setRegistryName(Regeneration.MODID, "timelord");
 	}
 	
 	@Override
@@ -107,7 +107,7 @@ public class TimelordSuperpower extends Superpower {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
 		GlStateManager.scale(2, 2, 1);
-		Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(new ItemStack(RegenerationItems.chameleonArch), 0, 0);
+		Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(new ItemStack(RegenItems.chameleonArch), 0, 0);
 		GlStateManager.popMatrix();
 		Minecraft.getMinecraft().getRenderItem().zLevel = zLevel;
 	}

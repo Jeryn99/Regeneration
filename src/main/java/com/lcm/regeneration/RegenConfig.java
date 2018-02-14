@@ -9,7 +9,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class RegenerationConfiguration {
+public class RegenConfig {
 	public static boolean disableTraits, lockMouse, resetHunger, resetOxygen, dontLoseUponDeath, startAsTimelord, disableArch;
 	public static int regenerativeKillRange, regenerativeKnockbackRange, regenCapacity, regenerationLevel, postRegenerationLevel, postRegenerationDuration;
 	public static float regenerativeKnockback, absorbtionLevel;

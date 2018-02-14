@@ -2,7 +2,7 @@ package com.lcm.regeneration.traits.negative;
 
 import java.util.UUID;
 
-import com.lcm.regeneration.RegenerationMod;
+import com.lcm.regeneration.Regeneration;
 import com.lcm.regeneration.traits.positive.TraitStrong;
 
 import lucraft.mods.lucraftcore.superpowers.abilities.Ability;
@@ -35,7 +35,7 @@ public class TraitWeak extends AbilityAttributeModifier implements INegativeTrai
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void drawIcon(Minecraft mc, Gui gui, int x, int y) {
-		mc.renderEngine.bindTexture(RegenerationMod.ICONS);
+		mc.renderEngine.bindTexture(Regeneration.ICONS);
 		gui.drawTexturedModalRect(x, y, 16, 0, 16, 16);
 	}
 }

@@ -1,6 +1,6 @@
 package com.lcm.regeneration.client.gui;
 
-import com.lcm.regeneration.RegenerationConfiguration;
+import com.lcm.regeneration.RegenConfig;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
@@ -28,7 +28,7 @@ public class GuiTimelordPowerTab extends GuiSuperpowerAbilities {
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
 		
-		if (RegenerationConfiguration.disableTraits) {
+		if (RegenConfig.disableTraits) {
 			String txtDisabled = StringHelper.translateToLocal("lcm-regen.messages.traitsDisabled");
 			int xDisabled = this.xSize / 2 - mc.fontRenderer.getStringWidth(txtDisabled) / 2;
 			mc.fontRenderer.drawString(TextFormatting.BOLD.toString() + TextFormatting.RED + txtDisabled, i + xDisabled, j + ySize/2, 0x373737);

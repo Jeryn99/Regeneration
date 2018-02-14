@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.lcm.regeneration.init.RegenItems;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.traits.negative.*;
 import com.lcm.regeneration.traits.positive.*;
@@ -34,15 +35,15 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /** Created by AFlyingGrayson on 8/7/17 */
-@Mod(modid = RegenerationMod.MODID, name = "Regeneration", version = RegenerationMod.VERSION, dependencies = "required:forge@[14.23.1.2574,); required-after:lucraftcore@[1.12-2.0.4,)", acceptedMinecraftVersions = "1.12, 1.12.1, 1.12.2")
+@Mod(modid = Regeneration.MODID, name = "Regeneration", version = Regeneration.VERSION, dependencies = "required:forge@[14.23.1.2574,); required-after:lucraftcore@[1.12-2.0.4,)", acceptedMinecraftVersions = "1.12, 1.12.1, 1.12.2")
 @EventBusSubscriber
-public class RegenerationMod {
+public class Regeneration {
 	public static final String MODID = "lcm-regen", VERSION = "1.3";
 	public static final ResourceLocation ICONS = new ResourceLocation(MODID, "textures/gui/ability_icons.png");
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
-		RegenerationConfiguration.init(new Configuration(e.getSuggestedConfigurationFile()), e.getSide());
+		RegenConfig.init(new Configuration(e.getSuggestedConfigurationFile()), e.getSide());
 	}
 	
 	@EventHandler
@@ -57,7 +58,7 @@ public class RegenerationMod {
 	
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) throws Exception {
-		for (Field f : RegenerationItems.class.getDeclaredFields()) {
+		for (Field f : RegenItems.class.getDeclaredFields()) {
 			Item item = (Item) f.get(null);
 			ModelResourceLocation loc = new ModelResourceLocation(item.getRegistryName(), "inventory");
 			ModelLoader.setCustomModelResourceLocation(item, 0, loc);
@@ -66,7 +67,7 @@ public class RegenerationMod {
 	
 	@SubscribeEvent
 	public static void registerLoot(LootTableLoadEvent e) { //TODO can this loot table actually be overriden in resource packs?
-		if (!e.getName().toString().toLowerCase().matches(RegenerationConfiguration.lootRegex) || RegenerationConfiguration.disableArch) return;
+		if (!e.getName().toString().toLowerCase().matches(RegenConfig.lootRegex) || RegenConfig.disableArch) return;
 		
 		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
 		LootEntry entry = new LootEntryTable(new ResourceLocation(MODID + ":inject/arch_loot"), 1, 1, condAlways, "lcm-regen:arch-entry");
@@ -103,11 +104,11 @@ public class RegenerationMod {
 		registerAbility(e, TraitDumb.class, "dumb", disabler);
 		registerAbility(e, TraitObvious.class, "obvious", disabler);
 		
-		if (RegenerationConfiguration.disableTraits) LCConfig.superpowers.disabledAbilities = disabler.toArray(new String[0]);
+		if (RegenConfig.disableTraits) LCConfig.superpowers.disabledAbilities = disabler.toArray(new String[0]);
 	}
 	
 	private static void registerAbility(RegistryEvent.Register<Ability.AbilityEntry> event, Class<? extends Ability> ability, String name, ArrayList<String> disabler) {
-		event.getRegistry().register(new Ability.AbilityEntry(ability, new ResourceLocation(RegenerationMod.MODID, name)));
-		disabler.add(RegenerationMod.MODID + ":" + name);
+		event.getRegistry().register(new Ability.AbilityEntry(ability, new ResourceLocation(Regeneration.MODID, name)));
+		disabler.add(Regeneration.MODID + ":" + name);
 	}
 }

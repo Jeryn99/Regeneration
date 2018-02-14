@@ -1,6 +1,6 @@
 package com.lcm.regeneration.superpower;
 
-import com.lcm.regeneration.RegenerationConfiguration;
+import com.lcm.regeneration.RegenConfig;
 import com.lcm.regeneration.traits.negative.INegativeTrait;
 import com.lcm.regeneration.util.PlayerUtils;
 import lucraft.mods.lucraftcore.LCConfig;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /** Created by AFlyingGrayson on 8/7/17 */
 @Mod.EventBusSubscriber
 public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
-	public int regenerationsLeft = RegenerationConfiguration.regenCapacity, timesRegenerated, regenTicks;
+	public int regenerationsLeft = RegenConfig.regenCapacity, timesRegenerated, regenTicks;
 	public boolean regenerating = false;
 	
 	public TimelordSuperpowerHandler(ISuperpowerCapability cap, Superpower superpower) {
@@ -64,7 +64,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 				}
 			} else if (regenTicks >= 200) { //end regeneration
 				player.setHealth(player.getMaxHealth());
-				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenerationConfiguration.postRegenerationDuration, RegenerationConfiguration.postRegenerationLevel, false, false)); //180 seconds of 20 ticks of Regeneration 4
+				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration, RegenConfig.postRegenerationLevel, false, false)); //180 seconds of 20 ticks of Regeneration 4
 				PlayerUtils.setWalkSpeed((EntityPlayerMP) player, 0.1F);
 				regenerating = false;
 				regenTicks = 0;
@@ -107,7 +107,7 @@ public class TimelordSuperpowerHandler extends SuperpowerPlayerHandler {
 		//Reset Karma
 		if (LCConfig.modules.karma) for (KarmaStat karmaStat : KarmaStat.getKarmaStats())
 			KarmaHandler.setKarmaStat(handler.getPlayer(), karmaStat, 0);
-		if (RegenerationConfiguration.disableTraits) return;
+		if (RegenConfig.disableTraits) return;
 		
 		handler.getAbilities().forEach(ability -> ability.setUnlocked(false));
 		

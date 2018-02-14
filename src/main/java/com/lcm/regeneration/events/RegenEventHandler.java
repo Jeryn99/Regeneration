@@ -1,5 +1,8 @@
-package com.lcm.regeneration;
+package com.lcm.regeneration.events;
 
+import com.lcm.regeneration.RegenConfig;
+import com.lcm.regeneration.init.RegenItems;
+import com.lcm.regeneration.init.RegenSounds;
 import com.lcm.regeneration.superpower.TimelordSuperpower;
 import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 import com.lcm.regeneration.util.ExplosionUtil;
@@ -27,11 +30,11 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber
-public class RegenerationEventHandler {
+public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void onWorldLoaded(WorldEvent.Load e) {
-		if (!e.getWorld().isRemote && RegenerationConfiguration.disableTraits) {
+		if (!e.getWorld().isRemote && RegenConfig.disableTraits) {
 			for (EntityPlayer p : e.getWorld().playerEntities) if (SuperpowerHandler.hasSuperpower(p, TimelordSuperpower.INSTANCE))
 				SuperpowerHandler.getSuperpowerPlayerHandler(p).getAbilities().forEach(ability -> ability.setUnlocked(false));
 		}
@@ -61,12 +64,12 @@ public class RegenerationEventHandler {
 	
 	@SubscribeEvent
 	public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
-		if (!RegenerationConfiguration.startAsTimelord || !e.player.world.isRemote) return;
+		if (!RegenConfig.startAsTimelord || !e.player.world.isRemote) return;
 		
 		NBTTagCompound nbt = e.player.getEntityData();
 		boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
 		if (!loggedInBefore) {
-			e.player.inventory.addItemStackToInventory(new ItemStack(RegenerationItems.chameleonArch));
+			e.player.inventory.addItemStackToInventory(new ItemStack(RegenItems.chameleonArch));
 			nbt.setBoolean("loggedInBefore", true);
 		}
 	}
@@ -81,7 +84,7 @@ public class RegenerationEventHandler {
 		
 		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
 		
-		if ((handler.regenerating || player.posY < 0 || handler.regenerationsLeft == 0) && !RegenerationConfiguration.dontLoseUponDeath) {
+		if ((handler.regenerating || player.posY < 0 || handler.regenerationsLeft == 0) && !RegenConfig.dontLoseUponDeath) {
 			SuperpowerHandler.removeSuperpower(player);
 			((CapabilitySuperpower) player.getCapability(CapabilitySuperpower.SUPERPOWER_CAP, null)).superpowerData.removeTag(TimelordSuperpower.INSTANCE.getRegistryName().toString());
 		} else if (handler.regenerationsLeft > 0 || handler.regenerationsLeft == -1) { //initiate regeneration
@@ -90,11 +93,11 @@ public class RegenerationEventHandler {
 			SuperpowerHandler.syncToAll(player);
 			
 			player.setHealth(.5f);
-			player.setAbsorptionAmount(RegenerationConfiguration.absorbtionLevel);
-			if (RegenerationConfiguration.resetOxygen) player.setAir(300);
-			if (RegenerationConfiguration.resetHunger) player.getFoodStats().setFoodLevel(20);
+			player.setAbsorptionAmount(RegenConfig.absorbtionLevel);
+			if (RegenConfig.resetOxygen) player.setAir(300);
+			if (RegenConfig.resetHunger) player.getFoodStats().setFoodLevel(20);
 			player.clearActivePotions();
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10*20, RegenerationConfiguration.regenerationLevel, false, false)); //10 seconds of 20 ticks of Regeneration 2
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10*20, RegenConfig.regenerationLevel, false, false)); //10 seconds of 20 ticks of Regeneration 2
 			player.extinguish();
 			
 			String time = "" + (handler.timesRegenerated + 1);
@@ -108,7 +111,7 @@ public class RegenerationEventHandler {
 				time = time + StringHelper.translateToLocal("lcm-regen.messages.numsuffix.ext");
 			
 			if (handler.regenerationsLeft != -1) player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.regenLeftExt", time, (handler.regenerationsLeft - 1))), true);
-			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenerationSounds.REGENERATION, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenSounds.REGENERATION, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			ExplosionUtil.regenerationExplosion(player);
 		}
 	}
