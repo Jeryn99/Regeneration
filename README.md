@@ -35,3 +35,7 @@ A: Ensure that you're using the latest 1.12.2 forge, and the latest 1.12 Lucraft
 
 **Q: Why is the transformation animation too fast/not entirely accurate?**<br>
 A: I haven't actually seen much of the show, so all I had to go off was one picture of him exploding. My bad, I may fix it later.
+
+
+
+/sub was her - webhook test thing\
