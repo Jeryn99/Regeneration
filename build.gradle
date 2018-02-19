@@ -9,7 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.3"
+version = "2.0"
 group = "com.lcm.regeneration"
 archivesBaseName = "lcm-regen"
 

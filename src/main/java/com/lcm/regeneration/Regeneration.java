@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod(modid = Regeneration.MODID, name = "Regeneration", version = Regeneration.VERSION, dependencies = "required:forge@[14.23.1.2574,); required-after:lucraftcore@[1.12-2.0.4,)", acceptedMinecraftVersions = "1.12, 1.12.1, 1.12.2")
 @EventBusSubscriber
 public class Regeneration {
-	public static final String MODID = "lcm-regen", VERSION = "1.3";
+	public static final String MODID = "lcm-regen", VERSION = "2.0";
 	public static final ResourceLocation ICONS = new ResourceLocation(MODID, "textures/gui/ability_icons.png");
 	
 	@EventHandler
