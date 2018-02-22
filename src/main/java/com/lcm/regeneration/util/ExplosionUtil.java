@@ -34,7 +34,7 @@ public class ExplosionUtil {
 	
 	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-			if (!(entity instanceof EntityCreature)) return;
+			if (!(entity instanceof EntityCreature) || !entity.isNonBoss()) return;
 			((EntityCreature)entity).attackEntityFrom(RegenerativeDamageSource.INSTANCE, Float.MAX_VALUE);
 		});
 	}
