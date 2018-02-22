@@ -9,7 +9,16 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.0"
+def getGitHash = { ->
+	def stdout = new ByteArrayOutputStream()
+	exec {
+		commandLine 'git', 'rev-parse', '--short', 'HEAD'
+		standardOutput = stdout
+	}
+	return stdout.toString().trim()
+}
+
+version = "2.0"+"-SNAPSHOT_"+getGitHash()
 group = "com.lcm.regeneration"
 archivesBaseName = "lcm-regen"
 
