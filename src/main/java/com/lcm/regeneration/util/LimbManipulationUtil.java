@@ -17,8 +17,9 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(Side.CLIENT)
 public class LimbManipulationUtil {
 	private static Field textureOffsetXField = ModelRenderer.class.getDeclaredFields()[2];
 	private static Field textureOffsetYField = ModelRenderer.class.getDeclaredFields()[3];

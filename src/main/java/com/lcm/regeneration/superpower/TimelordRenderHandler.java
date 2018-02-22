@@ -26,9 +26,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 /** Created by AFlyingGrayson on 8/7/17 */
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(Side.CLIENT)
 public class TimelordRenderHandler implements SuperpowerRenderer.ISuperpowerRenderer {
 	
 	private static final ModelPlayer playerModelLargeArms = new ModelPlayer(0.1F, false);
