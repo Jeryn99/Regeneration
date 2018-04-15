@@ -1,12 +1,10 @@
 package com.lcm.regeneration.items;
 
 import com.lcm.regeneration.RegenConfig;
+import com.lcm.regeneration.Regeneration;
+import com.lcm.regeneration.common.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capability.IRegeneration;
 import com.lcm.regeneration.init.RegenSounds;
-import com.lcm.regeneration.superpower.TimelordSuperpower;
-import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
-
-import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
-import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
 import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,88 +17,72 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-/** Created by AFlyingGrayson on 8/28/17 */
 public class ItemChameleonArch extends Item {
-	
-	public ItemChameleonArch() { //TODO how does combining/repairing work out?
-		setUnlocalizedName("chameleonArch");
-		setRegistryName("chameleonarch");
-		setCreativeTab(CreativeTabs.MISC);
-		setMaxStackSize(1);
-		setMaxDamage(RegenConfig.regenCapacity);
-	}
-	
-	@Override //TODO where did the "new life" message go?
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		ItemStack arch = player.getHeldItem(hand);
-		SuperpowerPlayerHandler handler = SuperpowerHandler.getSuperpowerPlayerHandler(player);
-		
-		
-		if (RegenConfig.regenCapacity == 0) { //with infinite regenerations the behavior is quite different
-			if (handler == null) {
-				SuperpowerHandler.setSuperpower(player, TimelordSuperpower.INSTANCE);
-				SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerationsLeft = -1;
-				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
-				return new ActionResult<>(EnumActionResult.PASS, arch);
-			} else {
-				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.alreadyTimelord")), true);
-				return new ActionResult<>(EnumActionResult.FAIL, arch);
-			}
-		}
-		
-		if (handler == null) {
-			if (arch.getItemDamage() == RegenConfig.regenCapacity) {
-				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.emptyArch")), true);
-				return new ActionResult<>(EnumActionResult.FAIL, arch);
-			}
-			
-			SuperpowerHandler.setSuperpower(player, TimelordSuperpower.INSTANCE);
-			
-			int used = doUsageDamage(arch, SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class));
-			if (arch.getItemDamage() < RegenConfig.regenCapacity) throw new RuntimeException("Did not fully use arch when receiving superpower (" + used + "," + arch.getCount() + ")");
-			
-			player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.becomeTimelord")), true);
-		} else if (handler instanceof TimelordSuperpowerHandler) {
-			TimelordSuperpowerHandler tmh = ((TimelordSuperpowerHandler) handler);
-			
-			if (!player.isSneaking()) {
-				int used = doUsageDamage(arch, tmh);
-				if (used == 0) {
-					if (tmh.regenerationsLeft == RegenConfig.regenCapacity)
-						player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullCycle", used)), true);
-					else if (arch.getItemDamage() == RegenConfig.regenCapacity)
-						player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyArch", used)), true);
-					return new ActionResult<>(EnumActionResult.FAIL, arch);
-				}
-				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.gainedRegenerations", used)), true); //too lazy to fix a single/plural issue here
-			} else {
-				if (arch.getItemDamage() == 0) {
-					player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.fullArch")), true);
-					return new ActionResult<>(EnumActionResult.FAIL, arch);
-				} else if (tmh.regenerationsLeft < 1) {
-					player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer.emptyCycle")), true);
-					return new ActionResult<>(EnumActionResult.FAIL, arch);
-				}
-				
-				//TODO sound effect?
-				arch.setItemDamage(arch.getItemDamage() - 1);
-				tmh.regenerationsLeft--;
-				player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-regen.messages.transfer")), true);
-			}
-		} else return new ActionResult<>(EnumActionResult.FAIL, arch);
-		
-		player.world.playSound(null, player.posX, player.posY, player.posZ, RegenSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
-		return new ActionResult<>(EnumActionResult.PASS, arch);
-	}
-	
-	private int doUsageDamage(ItemStack stack, TimelordSuperpowerHandler handler) {
-		int supply = RegenConfig.regenCapacity - stack.getItemDamage(), needed = RegenConfig.regenCapacity - handler.regenerationsLeft, used = Math.min(supply, needed);
-		
-		if (used == 0) return 0;
-		
-		handler.regenerationsLeft += used;
-		stack.setItemDamage(stack.getItemDamage() + used);
-		SuperpowerHandler.syncToAll(handler.getPlayer());
-		return used;
-	}
+
+    public ItemChameleonArch() { // CHECK how should combining/repairing work out?
+        setUnlocalizedName("chameleonArch");
+        setRegistryName(Regeneration.MODID, "chameleonarch");
+        setCreativeTab(CreativeTabs.MISC);
+        setMaxStackSize(1);
+        setMaxDamage(RegenConfig.regenCapacity);
+    }
+
+    @Override public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack arch = player.getHeldItem(hand);
+        IRegeneration handler = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
+        if(handler == null) return new ActionResult<>(EnumActionResult.PASS, arch);
+        player.world.playSound(null, player.posX, player.posY, player.posZ, RegenSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
+
+        if (arch.getItemDamage() == RegenConfig.regenCapacity) {
+            player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.emptyArch")), true);
+            return new ActionResult<>(EnumActionResult.FAIL, arch);
+        }
+
+        if (!handler.isTimelord()) {
+            handler.setTimelord(true);
+            doUsageDamage(arch, handler);
+            player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.becomeTimelord")), true);
+        } else {
+
+            if (!player.isSneaking()) {
+                int used = doUsageDamage(arch, handler);
+                if (used == 0) {
+                    if (handler.getRegensLeft() == RegenConfig.regenCapacity) {
+                        player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.fullCycle", used)), true);
+                    } else if (arch.getItemDamage() == RegenConfig.regenCapacity)
+                        player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.emptyArch", used)), true);
+                    return new ActionResult<>(EnumActionResult.FAIL, arch);
+                }
+                player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.gainedRegenerations", used)), true); // too lazy to fix a single/plural issue here
+            } else {
+                if (arch.getItemDamage() == 0 && !player.isCreative()) {
+                    player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.fullArch")), true);
+                    return new ActionResult<>(EnumActionResult.FAIL, arch);
+                } else if (handler.getRegensLeft() < 1) {
+                    player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.emptyCycle")), true);
+                    return new ActionResult<>(EnumActionResult.FAIL, arch);
+                }
+
+                // TODO sound effect?
+                arch.setItemDamage(arch.getItemDamage() - 1);
+                handler.setRegensLeft(handler.getRegensLeft() - 1);
+                player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer")), true);
+                return new ActionResult<>(EnumActionResult.PASS, arch);
+            }
+        }
+        return new ActionResult<>(EnumActionResult.PASS, arch);
+    }
+
+    private int doUsageDamage(ItemStack stack, IRegeneration handler) {
+        int supply = RegenConfig.regenCapacity - stack.getItemDamage(), needed = RegenConfig.regenCapacity - handler.getRegensLeft(), used = Math.min(supply, needed);
+        if (used == 0)
+            return 0;
+
+        handler.setRegensLeft(handler.getRegensLeft() + used);
+        handler.syncToAll();
+
+        if (!handler.getPlayer().isCreative())
+            stack.setItemDamage(stack.getItemDamage() + used);
+        return used;
+    }
 }
