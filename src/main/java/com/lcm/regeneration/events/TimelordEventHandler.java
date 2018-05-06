@@ -38,7 +38,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod.EventBusSubscriber
 public class TimelordEventHandler {
 
     @SubscribeEvent public void onWorldTick(TickEvent.PlayerTickEvent event) {
@@ -119,7 +118,8 @@ public class TimelordEventHandler {
         ExplosionUtil.regenerationExplosion(player);
     }
 
-    @SubscribeEvent public void registerLoot(LootTableLoadEvent e) { // CHECK can this loot table actually be overriden in resource packs?
+    //@SubscribeEvent
+    public void registerLoot(LootTableLoadEvent e) { // CHECK can this loot table actually be overriden in resource packs?
         if (!e.getName().toString().toLowerCase().matches(RegenConfig.lootRegex) || RegenConfig.disableArch)
             return;
 
@@ -146,6 +146,7 @@ public class TimelordEventHandler {
             return;
 
         EntityPlayer player = (EntityPlayer) e.getEntity();
+        System.out.println(e.getSource());
         if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 || !e.getEntity().hasCapability(CapabilityRegeneration.TIMELORD_CAP, null) || !e.getEntity().getCapability(CapabilityRegeneration.TIMELORD_CAP, null).isTimelord())
             return;
 

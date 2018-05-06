@@ -2,6 +2,9 @@ package com.lcm.regeneration;
 
 import java.lang.reflect.Field;
 
+import com.lcm.regeneration.common.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capability.IRegeneration;
+import com.lcm.regeneration.events.TimelordEventHandler;
 import com.lcm.regeneration.init.RegenItems;
 import com.lcm.regeneration.network.MessageChangeState;
 import com.lcm.regeneration.network.MessageChangeStyle;
@@ -18,6 +21,8 @@ import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.conditions.RandomChance;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -48,10 +53,14 @@ public class Regeneration {
 
     @EventHandler
     public void init(FMLInitializationEvent e) {
-        INSTANCE.registerMessage(MessageChangeState.Handler.class, MessageChangeState.class, 1, Side.CLIENT);
-        INSTANCE.registerMessage(MessageSyncData.Handler.class, MessageSyncData.class, 2, Side.CLIENT);
-        INSTANCE.registerMessage(MessageChangeStyle.Handler.class, MessageChangeStyle.class, 3, Side.SERVER);
-    }
+
+		CapabilityManager.INSTANCE.register(IRegeneration.class, new CapabilityRegeneration.Storage(), CapabilityRegeneration.class);
+		MinecraftForge.EVENT_BUS.register(new TimelordEventHandler());
+
+		INSTANCE.registerMessage(MessageChangeState.Handler.class, MessageChangeState.class, 1, Side.CLIENT);
+		INSTANCE.registerMessage(MessageSyncData.Handler.class, MessageSyncData.class, 2, Side.CLIENT);
+		INSTANCE.registerMessage(MessageChangeStyle.Handler.class, MessageChangeStyle.class, 3, Side.SERVER);
+	}
 	
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent e) {

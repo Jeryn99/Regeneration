@@ -1,8 +1,9 @@
 package com.lcm.regeneration.client.gui;
 
 import com.lcm.regeneration.RegenConfig;
-import com.lcm.regeneration.superpower.TimelordSuperpowerHandler;
 
+import com.lcm.regeneration.common.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capability.IRegeneration;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.superpowers.gui.GuiSuperpowerAbilities;
 import lucraft.mods.lucraftcore.util.helper.StringHelper;
@@ -34,10 +35,10 @@ public class GuiTimelordPowerTab extends GuiSuperpowerAbilities {
 			mc.fontRenderer.drawString(TextFormatting.BOLD.toString() + TextFormatting.RED + txtDisabled, i + xDisabled, j + ySize/2, 0x373737);
 		}
 		
-		TimelordSuperpowerHandler handler = SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class);
+		IRegeneration handler = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 		
-		if (handler.regenerationsLeft != -1) {
-			String txtCount = StringHelper.translateToLocal("lcm-regen.messages.regenLeft", handler.regenerationsLeft);
+		if (handler.getRegensLeft() != -1) {
+			String txtCount = StringHelper.translateToLocal("lcm-regen.messages.regenLeft", handler.getRegensLeft());
 			int xCount = (this.width - i) - mc.fontRenderer.getStringWidth(txtCount) - 20;
 			mc.fontRenderer.drawString(TextFormatting.DARK_GRAY + txtCount, xCount, j + 165 + 5, 0x373737);
 		}

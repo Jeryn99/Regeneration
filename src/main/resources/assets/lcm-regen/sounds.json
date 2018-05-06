@@ -8,6 +8,17 @@
 		}]
 	},
 	
+	
+	"fob_watch": {
+		"category": "ambient",
+		"subtitle": "lcm-regen.subtitles.fob_watch",
+		"sounds": [{
+			"name": "lcm-regen:fob_watch",
+			"stream": false
+		}]
+	},
+	
+	
 	"timey_wimey": {
 		"category": "players",
 		"subtitle": "lcm-regen.subtitles.timey_wimey",

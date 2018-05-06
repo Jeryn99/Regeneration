@@ -16,6 +16,7 @@ public class RegenSounds {
 	
 	public static final SoundEvent REGENERATION = createSoundEvent("regeneration");
 	public static final SoundEvent TIMEY_WIMEY = createSoundEvent("timey_wimey");
+	public static final SoundEvent FOB_WATCH = createSoundEvent("fob_watch");
 	
 	@SubscribeEvent
 	public static void registerSoundEvents(RegistryEvent.Register<SoundEvent> event) {

@@ -30,8 +30,9 @@ public class ItemChameleonArch extends Item {
     @Override public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack arch = player.getHeldItem(hand);
         IRegeneration handler = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
+        System.out.println(handler);
         if(handler == null) return new ActionResult<>(EnumActionResult.PASS, arch);
-        player.world.playSound(null, player.posX, player.posY, player.posZ, RegenSounds.TIMEY_WIMEY, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        player.world.playSound(null, player.posX, player.posY, player.posZ, RegenSounds.FOB_WATCH, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         if (arch.getItemDamage() == RegenConfig.regenCapacity) {
             player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.emptyArch")), true);
@@ -62,8 +63,6 @@ public class ItemChameleonArch extends Item {
                     player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.emptyCycle")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, arch);
                 }
-
-                // TODO sound effect?
                 arch.setItemDamage(arch.getItemDamage() - 1);
                 handler.setRegensLeft(handler.getRegensLeft() - 1);
                 player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer")), true);
