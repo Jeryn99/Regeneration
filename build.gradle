@@ -25,22 +25,9 @@ archivesBaseName = "lcm-regen"
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    version = "1.12.2-14.23.1.2589"
+    version = "1.12.2-14.23.4.2705"
     runDir = "run"
     mappings = "snapshot_20180101"
-}
-
-repositories {
-	maven { url "https://jitpack.io" }
-}
-
-dependencies {
-	deobfCompile ('org.bitbucket.Lucraft:lucraftcore:2.0.5') {
-		exclude group: 'slimeknights.mantle'
-		exclude group: 'slimeknights'
-		exclude group: 'cofh'
-		exclude group: 'mezz.jei'
-	}
 }
 
 processResources {
