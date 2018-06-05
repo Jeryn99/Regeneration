@@ -1,15 +1,17 @@
 [
 {
-  "modid": "lcm-regen",
-  "name": "Regeneration",
-  "description": "Mod that adds regeneration to Minecraft",
+  "modid": "lcm-atg",
+  "name": "Doctor who - Across the Galaxy",
+  "description": "Mod that brings a Doctor who experience to Minecraft!",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["Grayson, Sub, HoldYourWaffle"],
-  "credits": "Lucraft, for the core, SmokedOak for the idea, Sheriff for item textures",
-  "logoFile": "",
+  "authorList": [
+    "Sub, Lucraft, Nictogen, HoldYourWaffle"
+  ],
+  "credits": "",
+  "logoFile": "atg_logo.png",
   "screenshots": [],
   "dependencies": []
 }

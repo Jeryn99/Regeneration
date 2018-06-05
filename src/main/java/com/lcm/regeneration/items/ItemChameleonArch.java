@@ -1,10 +1,10 @@
 package com.lcm.regeneration.items;
 
-import com.lcm.regeneration.RegenConfig;
 import com.lcm.regeneration.Regeneration;
-import com.lcm.regeneration.common.capability.CapabilityRegeneration;
-import com.lcm.regeneration.common.capability.IRegeneration;
-import com.lcm.regeneration.init.RegenSounds;
+import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityTimelord;
+import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCapability;
+import com.lcm.regeneration.events.RObjects;
+import com.lcm.regeneration.utils.RegenConfig;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -29,10 +29,10 @@ public class ItemChameleonArch extends Item {
 
     @Override public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack arch = player.getHeldItem(hand);
-        IRegeneration handler = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
+        ITimelordCapability handler = player.getCapability(CapabilityTimelord.TIMELORD_CAP, null);
         System.out.println(handler);
         if(handler == null) return new ActionResult<>(EnumActionResult.PASS, arch);
-        player.world.playSound(null, player.posX, player.posY, player.posZ, RegenSounds.FOB_WATCH, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.SoundEvents.timeyWimey, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         if (arch.getItemDamage() == RegenConfig.regenCapacity) {
             player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.transfer.emptyArch")), true);
@@ -72,7 +72,7 @@ public class ItemChameleonArch extends Item {
         return new ActionResult<>(EnumActionResult.PASS, arch);
     }
 
-    private int doUsageDamage(ItemStack stack, IRegeneration handler) {
+    private int doUsageDamage(ItemStack stack, ITimelordCapability handler) {
         int supply = RegenConfig.regenCapacity - stack.getItemDamage(), needed = RegenConfig.regenCapacity - handler.getRegensLeft(), used = Math.min(supply, needed);
         if (used == 0)
             return 0;
