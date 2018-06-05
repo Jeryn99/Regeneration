@@ -4,13 +4,13 @@ import com.lcm.regeneration.Regeneration;
 import com.lcm.regeneration.common.capability.CapabilityRegeneration;
 import com.lcm.regeneration.common.capability.IRegeneration;
 import com.lcm.regeneration.util.LimbManipulationUtil;
-import lucraft.mods.lucraftcore.util.helper.LCRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -80,7 +80,7 @@ import java.util.Random;
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE);
         GlStateManager.depthMask(false);
-        LCRenderHelper.setLightmapTextureCoords(175, 175);
+        setLightmapTextureCoords(175, 175);
 
         NBTTagCompound style = capability.getStyle();
         Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
@@ -173,7 +173,7 @@ import java.util.Random;
         GlStateManager.loadIdentity();
         GlStateManager.matrixMode(5888);
         GlStateManager.disableBlend();
-        LCRenderHelper.restoreLightmapTextureCoords();
+        restoreLightmapTextureCoords();
     }
 
     private void renderTexturedCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
@@ -205,7 +205,7 @@ import java.util.Random;
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
         GlStateManager.depthMask(false);
-        LCRenderHelper.setLightmapTextureCoords(65, 65);
+        setLightmapTextureCoords(65, 65);
 
         NBTTagCompound style = capability.getStyle();
         Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
@@ -251,13 +251,17 @@ import java.util.Random;
         playerModel.render(entityPlayer, v, v1, v3, v4, v5, v6);
 
         // Undo state manager changes
-        LCRenderHelper.restoreLightmapTextureCoords();
+        restoreLightmapTextureCoords();
         GlStateManager.depthMask(true);
         GlStateManager.disableBlend();
         GlStateManager.disableAlpha();
         GlStateManager.color(255, 255, 255, 255);
         GlStateManager.enableTexture2D();
         GlStateManager.popAttrib();
+    }
+
+    private void restoreLightmapTextureCoords() {
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
     }
 
     private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
@@ -304,4 +308,15 @@ import java.util.Random;
     public boolean shouldCombineTextures() {
         return false;
     }
+
+    private static float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+    private static float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+
+
+    public static void setLightmapTextureCoords(float x, float y) {
+        lastBrightnessX = OpenGlHelper.lastBrightnessX;
+        lastBrightnessY = OpenGlHelper.lastBrightnessY;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, x, y);
+    }
+
 }

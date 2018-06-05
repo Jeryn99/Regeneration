@@ -10,7 +10,6 @@ import com.lcm.regeneration.regeneration_events.RegenerationEvent;
 import com.lcm.regeneration.regeneration_events.RegenerationFinishEvent;
 import com.lcm.regeneration.regeneration_events.RegenerationStartEvent;
 import com.lcm.regeneration.util.ExplosionUtil;
-import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryTable;
 import net.minecraft.world.storage.loot.LootPool;
@@ -65,7 +65,7 @@ public class TimelordEventHandler {
         double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
         double z = player.posZ + player.getRNG().nextGaussian() * 2;
 
-       //repair - player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
+       player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
         for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east()))
             if (player.world.getBlockState(bs).getBlock() instanceof BlockFire)
                 player.world.setBlockToAir(bs);
@@ -107,13 +107,14 @@ public class TimelordEventHandler {
         if (lastDigit > 20)
             while (lastDigit > 10)
                 lastDigit -= 10;
+        lastDigit -= 10;
 
         if (lastDigit < 3)
-            time = time + StringHelper.translateToLocal("lcm-atg.messages.numsuffix." + lastDigit);
+            time = time + I18n.translateToLocalFormatted("lcm-atg.messages.numsuffix." + lastDigit);
         else
-            time = time + StringHelper.translateToLocal("lcm-atg.messages.numsuffix.ext");
+            time = time + I18n.translateToLocalFormatted("lcm-atg.messages.numsuffix.ext");
 
-        player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.regenLeftExt", time, (handler.getRegensLeft() - 1))), true);
+        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.regenLeftExt", time, (handler.getRegensLeft() - 1))), true);
         player.world.playSound(null, player.posX, player.posY, player.posZ, RegenSounds.REGENERATION, SoundCategory.PLAYERS, 1.0F, 1.0F);
         ExplosionUtil.regenerationExplosion(player);
     }

@@ -48,7 +48,7 @@ public class Regeneration {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
-        RegenConfig.init(new Configuration(e.getSuggestedConfigurationFile()), e.getSide());
+        RegenConfig.init(new Configuration(e.getSuggestedConfigurationFile()));
     }
 
     @EventHandler

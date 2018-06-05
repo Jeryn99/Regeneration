@@ -5,7 +5,6 @@ import com.lcm.regeneration.Regeneration;
 import com.lcm.regeneration.common.capability.CapabilityRegeneration;
 import com.lcm.regeneration.common.capability.IRegeneration;
 import com.lcm.regeneration.init.RegenSounds;
-import lucraft.mods.lucraftcore.util.helper.StringHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,6 +14,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 public class ItemChameleonArch extends Item {
@@ -35,37 +35,37 @@ public class ItemChameleonArch extends Item {
         player.world.playSound(null, player.posX, player.posY, player.posZ, RegenSounds.FOB_WATCH, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         if (arch.getItemDamage() == RegenConfig.regenCapacity) {
-            player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.emptyArch")), true);
+            player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.transfer.emptyArch")), true);
             return new ActionResult<>(EnumActionResult.FAIL, arch);
         }
 
         if (!handler.isTimelord()) {
             handler.setTimelord(true);
             doUsageDamage(arch, handler);
-            player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.becomeTimelord")), true);
+            player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.becomeTimelord")), true);
         } else {
 
             if (!player.isSneaking()) {
                 int used = doUsageDamage(arch, handler);
                 if (used == 0) {
                     if (handler.getRegensLeft() == RegenConfig.regenCapacity) {
-                        player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.fullCycle", used)), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.transfer.fullCycle", used)), true);
                     } else if (arch.getItemDamage() == RegenConfig.regenCapacity)
-                        player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.emptyArch", used)), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.transfer.emptyArch", used)), true);
                     return new ActionResult<>(EnumActionResult.FAIL, arch);
                 }
-                player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.gainedRegenerations", used)), true); // too lazy to fix a single/plural issue here
+                player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.gainedRegenerations", used)), true); // too lazy to fix a single/plural issue here
             } else {
                 if (arch.getItemDamage() == 0 && !player.isCreative()) {
-                    player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.fullArch")), true);
+                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.transfer.fullArch")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, arch);
                 } else if (handler.getRegensLeft() < 1) {
-                    player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer.emptyCycle")), true);
+                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.transfer.emptyCycle")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, arch);
                 }
                 arch.setItemDamage(arch.getItemDamage() - 1);
                 handler.setRegensLeft(handler.getRegensLeft() - 1);
-                player.sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.transfer")), true);
+                player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.transfer")), true);
                 return new ActionResult<>(EnumActionResult.PASS, arch);
             }
         }
@@ -84,4 +84,7 @@ public class ItemChameleonArch extends Item {
             stack.setItemDamage(stack.getItemDamage() + used);
         return used;
     }
+
+
+    
 }

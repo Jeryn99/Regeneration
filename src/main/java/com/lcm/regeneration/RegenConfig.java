@@ -15,8 +15,9 @@ public class RegenConfig {
 	public static float regenerativeKnockback, absorbtionLevel;
 	public static ArrayList<String> lockedKeys = new ArrayList<>();
 	public static String lootRegex;
-	
-	public static void init(Configuration cfg, Side side) {
+	public static boolean fieryRegen;
+
+	public static void init(Configuration cfg) {
 		cfg.load();
 		
 		disableTraits = !cfg.getBoolean("enableTraits", "traits", true, "Enable the trait system. If this is false all trait effects are disabled");
@@ -38,20 +39,8 @@ public class RegenConfig {
 		regenerativeKillRange = cfg.getInt("immediateKillRange", "regeneration", 4, 0, Integer.MAX_VALUE, "Upon regeneration every mob inside of this radius is immediately killed. Keep in mind that you should round up to accomodate for mobs that aren't standing in the center of a block");
 		regenerativeKnockbackRange = cfg.getInt("knockbackRange", "regeneration", 7, 0, 30000000, "Range wherein every mob is knocked back upon regeneration");
 		regenerativeKnockback = cfg.getFloat("knockback", "regeneration", 2.5F, 0, Float.MAX_VALUE, "The amount of knockback every mob inside of the knock back radius gets");
-		
-		if (side == Side.CLIENT) { //this information is not required on the server side as it can't lock keys
-			Collections.addAll(lockedKeys, cfg.getStringList("lockedActions", "keylocks", new String[] { "forward", "left", "right", "back", "jump", "sneak", "drop", "attack", "inventory", "sprint", "swapHands", "togglePerspective", "useItem" }, "When regenerating these keybindings are unbound", validKeybindings()));
-			lockMouse = cfg.getBoolean("lockMouse", "keylocks", true, "Lock the mouse while regenerating");
-			cfg.setCategoryComment("keylocks", "Actions that can be locked (case sensitive): "+Arrays.toString(validKeybindings()));
-		}
-		
+
 		cfg.save();
 	}
 
-	private static String[] validKeybindings() {
-		ArrayList<String> kbs = new ArrayList<>();
-		for (Field f : GameSettings.class.getFields())
-			if (f.getName().startsWith("keyBind")) kbs.add(f.getName().substring(0, 1).toLowerCase() + f.getName().substring(1));
-		return kbs.toArray(new String[0]);
-	}
 }

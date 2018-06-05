@@ -9,38 +9,25 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-def getGitHash = { ->
-	def stdout = new ByteArrayOutputStream()
-	exec {
-		commandLine 'git', 'rev-parse', '--short', 'HEAD'
-		standardOutput = stdout
-	}
-	return stdout.toString().trim()
-}
 
-version = "2.0"+"-SNAPSHOT_"+getGitHash()
+
+version = "3.0"
 group = "com.lcm.regeneration"
-archivesBaseName = "lcm-regen"
-
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+archivesBaseName = "regeneration"
+
+    sourceCompatibility = targetCompatibility = '1.8'
+}
 
 minecraft {
-    version = "1.12.2-14.23.1.2589"
+    version = "1.12.2-14.23.4.2707"
     runDir = "run"
-    mappings = "snapshot_20180101"
-}
-
-repositories {
-	maven { url "https://jitpack.io" }
+    mappings = "snapshot_20171003"
+    makeObfSourceJar = false
 }
 
 dependencies {
-	deobfCompile ('org.bitbucket.Lucraft:lucraftcore:2.0.5') {
-		exclude group: 'slimeknights.mantle'
-		exclude group: 'slimeknights'
-		exclude group: 'cofh'
-		exclude group: 'mezz.jei'
-	}
 }
 
 processResources {
