@@ -1,0 +1,43 @@
+package com.lcm.regeneration.common.capabilities.timelord.capability;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+
+/**
+ * Created by Nictogen on 3/16/18.
+ */
+public interface ITimelordCapability {
+    void update();
+
+    NBTTagCompound writeNBT();
+
+    void readNBT(NBTTagCompound nbt);
+
+    void syncToAll();
+
+    boolean isTimelord();
+
+    void setTimelord(boolean timelord);
+
+    int getRegenTicks();
+
+    void setRegenTicks(int ticks);
+
+    int getRegensLeft();
+
+    void setRegensLeft(int left);
+
+    int getTimesRegenerated();
+
+    void setTimesRegenerated(int times);
+
+    CapabilityTimelord.RegenerationState getState();
+
+    EntityPlayer getPlayer();
+
+    NBTTagCompound getStyle();
+
+    void setStyle(NBTTagCompound nbtTagCompound);
+
+    void changeState(CapabilityTimelord.RegenerationState state);
+}
