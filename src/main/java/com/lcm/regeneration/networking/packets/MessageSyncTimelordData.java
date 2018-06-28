@@ -1,7 +1,7 @@
 package com.lcm.regeneration.networking.packets;
 
-import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCapability;
-import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityTimelord;
+import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,8 +44,8 @@ public class MessageSyncTimelordData implements IMessage {
 
 		@Override public IMessage onMessage(MessageSyncTimelordData message, MessageContext ctx) {
 			EntityPlayer player = message.player;
-			if(player == null || !player.hasCapability(CapabilityTimelord.TIMELORD_CAP, null)) return null;
-			ITimelordCapability handler = player.getCapability(CapabilityTimelord.TIMELORD_CAP, null);
+            if (player == null || !player.hasCapability(CapabilityRegeneration.TIMELORD_CAP, null)) return null;
+            IRegenerationCapability handler = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 			Minecraft.getMinecraft().addScheduledTask(() -> handler.readNBT(message.data));
 
 			return null;

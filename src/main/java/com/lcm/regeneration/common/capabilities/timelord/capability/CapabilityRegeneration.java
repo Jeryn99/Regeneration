@@ -24,10 +24,10 @@ import javax.annotation.Nullable;
 /**
  * Created by Nictogen on 3/16/18.
  */
-public class CapabilityTimelord implements ITimelordCapability {
+public class CapabilityRegeneration implements IRegenerationCapability {
 
-    @CapabilityInject(ITimelordCapability.class)
-    public static final Capability<ITimelordCapability> TIMELORD_CAP = null;
+    @CapabilityInject(IRegenerationCapability.class)
+    public static final Capability<IRegenerationCapability> TIMELORD_CAP = null;
     public int regenerationsLeft = RegenConfig.regenCapacity, timesRegenerated, regenTicks;
     public RegenerationState state = RegenerationState.NONE;
     private boolean isTimelord;
@@ -36,7 +36,7 @@ public class CapabilityTimelord implements ITimelordCapability {
     private boolean dirty = true;
     public TraitHandler.Trait trait = TraitHandler.Trait.NONE;
 
-    public CapabilityTimelord(EntityPlayer player) {
+    public CapabilityRegeneration(EntityPlayer player) {
         this.player = player;
     }
 
@@ -48,7 +48,7 @@ public class CapabilityTimelord implements ITimelordCapability {
                 dirty = false;
                 syncToAll();
             }
-            CapabilityTimelord.RegenerationState nextState = determineState();
+            CapabilityRegeneration.RegenerationState nextState = determineState();
             if (this.state != nextState) {
                 RNetwork.INSTANCE.sendToAll(new MessageChangeRegenState(player, nextState));
                 changeState(nextState);
@@ -203,9 +203,9 @@ public class CapabilityTimelord implements ITimelordCapability {
 
     public static class CapabilityTimelordProvider implements ICapabilitySerializable<NBTTagCompound> {
 
-        private ITimelordCapability capability;
+        private IRegenerationCapability capability;
 
-        public CapabilityTimelordProvider(ITimelordCapability capability) {
+        public CapabilityTimelordProvider(IRegenerationCapability capability) {
             this.capability = capability;
         }
 
@@ -231,16 +231,16 @@ public class CapabilityTimelord implements ITimelordCapability {
         }
     }
 
-    public static class Storage implements Capability.IStorage<ITimelordCapability> {
+    public static class Storage implements Capability.IStorage<IRegenerationCapability> {
 
         @Nullable
         @Override
-        public NBTBase writeNBT(Capability<ITimelordCapability> capability, ITimelordCapability instance, EnumFacing side) {
+        public NBTBase writeNBT(Capability<IRegenerationCapability> capability, IRegenerationCapability instance, EnumFacing side) {
             return instance.writeNBT();
         }
 
         @Override
-        public void readNBT(Capability<ITimelordCapability> capability, ITimelordCapability instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<IRegenerationCapability> capability, IRegenerationCapability instance, EnumFacing side, NBTBase nbt) {
             instance.readNBT((NBTTagCompound) nbt);
         }
     }

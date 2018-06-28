@@ -12,7 +12,7 @@ public class CommonProxy {
 	}
 
 	@Mod.EventHandler public void init(FMLInitializationEvent ev) {
-		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+        MinecraftForge.EVENT_BUS.register(new ClientHandler());
 	}
 
 	@Mod.EventHandler public void postInit(FMLPostInitializationEvent ev) {

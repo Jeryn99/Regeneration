@@ -1,8 +1,8 @@
 package com.lcm.regeneration.events;
 
 import com.lcm.regeneration.Regeneration;
-import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityTimelord;
-import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCapability;
+import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationEvent;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationStartEvent;
@@ -38,15 +38,15 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 @Mod.EventBusSubscriber
-public class CommonEventHandler {
+public class CommonHandler {
 
     @SubscribeEvent
     public static void onWorldTick(TickEvent.PlayerTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.END))
             return;
-        if (!event.player.hasCapability(CapabilityTimelord.TIMELORD_CAP, null))
+        if (!event.player.hasCapability(CapabilityRegeneration.TIMELORD_CAP, null))
             return;
-        ITimelordCapability handler = event.player.getCapability(CapabilityTimelord.TIMELORD_CAP, null);
+        IRegenerationCapability handler = event.player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
         handler.update();
     }
 
@@ -58,6 +58,7 @@ public class CommonEventHandler {
 
     @SubscribeEvent
     public static void onRegenerationExplosion(RegenerationEvent.RegenerationExplosionEvent event) {
+        event.getEntityPlayer().extinguish();
         EntityPlayer player = event.getEntityPlayer();
         if (player.world.isRemote)
             return;
@@ -68,7 +69,7 @@ public class CommonEventHandler {
         double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
         double z = player.posZ + player.getRNG().nextGaussian() * 2;
 
-        //repair - player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
+        player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
         for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east()))
             if (player.world.getBlockState(bs).getBlock() instanceof BlockFire)
                 player.world.setBlockToAir(bs);
@@ -76,11 +77,12 @@ public class CommonEventHandler {
 
     @SubscribeEvent
     public static void onRegenerationFinish(RegenerationFinishEvent event) {
+        event.getEntityPlayer().extinguish();
         EntityPlayer player = event.getEntityPlayer();
         if (player.world.isRemote)
             return;
 
-        ITimelordCapability handler = event.getHandler();
+        IRegenerationCapability handler = event.getHandler();
         player.setHealth(player.getMaxHealth());
         player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration, RegenConfig.postRegenerationLevel, false, false)); // 180 seconds of 20 ticks of Regeneration 4
 
@@ -88,17 +90,17 @@ public class CommonEventHandler {
         handler.setTimesRegenerated(handler.getTimesRegenerated() + 1);
 
         handler.setTrait(TraitHandler.getRandomTrait());
-        System.out.println(handler.getTrait().getClass().getName());
         handler.syncToAll();
     }
 
     @SubscribeEvent
     public static void onRegenerationStart(RegenerationStartEvent event) {
+        event.getEntityPlayer().extinguish();
         EntityPlayer player = event.getEntityPlayer();
         if (player.world.isRemote)
             return;
 
-        ITimelordCapability handler = event.getHandler();
+        IRegenerationCapability handler = event.getHandler();
         player.setHealth(.5f);
         player.setAbsorptionAmount(RegenConfig.absorbtionLevel);
         if (RegenConfig.resetOxygen)
@@ -116,11 +118,11 @@ public class CommonEventHandler {
                 lastDigit -= 10;
 
         if (lastDigit < 3)
-            time = time + I18n.translateToLocalFormatted("lcm-atg.messages.numsuffix." + lastDigit);
+            time = time + I18n.translateToLocalFormatted("lcm-regen.messages.numsuffix." + lastDigit);
         else
-            time = time + I18n.translateToLocalFormatted("lcm-atg.messages.numsuffix.ext");
+            time = time + I18n.translateToLocalFormatted("lcm-regen.messages.numsuffix.ext");
 
-        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-atg.messages.regenLeftExt", time, (handler.getRegensLeft() - 1))), true);
+        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.regenLeftExt", time, (handler.getRegensLeft() - 1))), true);
         player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.SoundEvents.regeneration, SoundCategory.PLAYERS, 1.0F, 1.0F);
         RegenUtils.regenerationExplosion(player);
     }
@@ -155,13 +157,12 @@ public class CommonEventHandler {
             return;
 
         EntityPlayer player = (EntityPlayer) e.getEntity();
-        System.out.println(e.getSource());
-        if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 || !e.getEntity().hasCapability(CapabilityTimelord.TIMELORD_CAP, null) || !e.getEntity().getCapability(CapabilityTimelord.TIMELORD_CAP, null).isTimelord())
+        if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 || !e.getEntity().hasCapability(CapabilityRegeneration.TIMELORD_CAP, null) || !e.getEntity().getCapability(CapabilityRegeneration.TIMELORD_CAP, null).isTimelord())
             return;
 
-        ITimelordCapability handler = e.getEntity().getCapability(CapabilityTimelord.TIMELORD_CAP, null);
+        IRegenerationCapability handler = e.getEntity().getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 
-        if ((handler.getState() != CapabilityTimelord.RegenerationState.NONE || player.posY < 0 || handler.getRegensLeft() <= 0) && !RegenConfig.dontLoseUponDeath) {
+        if ((handler.getState() != CapabilityRegeneration.RegenerationState.NONE || player.posY < 0 || handler.getRegensLeft() <= 0) && !RegenConfig.dontLoseUponDeath || player.isInLava()) {
             handler.setTimelord(false);
             handler.setRegensLeft(0);
             handler.setRegenTicks(0);
@@ -175,16 +176,16 @@ public class CommonEventHandler {
 
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (!(event.getObject() instanceof EntityPlayer) || event.getObject().hasCapability(CapabilityTimelord.TIMELORD_CAP, null))
+        if (!(event.getObject() instanceof EntityPlayer) || event.getObject().hasCapability(CapabilityRegeneration.TIMELORD_CAP, null))
             return;
-        event.addCapability(new ResourceLocation(Regeneration.MODID, "timelord"), new CapabilityTimelord.CapabilityTimelordProvider(new CapabilityTimelord((EntityPlayer) event.getObject())));
+        event.addCapability(new ResourceLocation(Regeneration.MODID, "timelord"), new CapabilityRegeneration.CapabilityTimelordProvider(new CapabilityRegeneration((EntityPlayer) event.getObject())));
 
     }
 
     @SubscribeEvent
     public static void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
-        NBTTagCompound nbt = (NBTTagCompound) CapabilityTimelord.TIMELORD_CAP.getStorage().writeNBT(CapabilityTimelord.TIMELORD_CAP, event.getOriginal().getCapability(CapabilityTimelord.TIMELORD_CAP, null), null);
-        CapabilityTimelord.TIMELORD_CAP.getStorage().readNBT(CapabilityTimelord.TIMELORD_CAP, event.getEntityPlayer().getCapability(CapabilityTimelord.TIMELORD_CAP, null), null, nbt);
+        NBTTagCompound nbt = (NBTTagCompound) CapabilityRegeneration.TIMELORD_CAP.getStorage().writeNBT(CapabilityRegeneration.TIMELORD_CAP, event.getOriginal().getCapability(CapabilityRegeneration.TIMELORD_CAP, null), null);
+        CapabilityRegeneration.TIMELORD_CAP.getStorage().readNBT(CapabilityRegeneration.TIMELORD_CAP, event.getEntityPlayer().getCapability(CapabilityRegeneration.TIMELORD_CAP, null), null, nbt);
     }
 
 }

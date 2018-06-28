@@ -1,7 +1,7 @@
 package com.lcm.regeneration.common.trait;
 
-import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityTimelord;
-import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCapability;
+import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import com.lcm.regeneration.common.trait.traits.TraitClumsy;
 import com.lcm.regeneration.common.trait.traits.TraitNone;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +17,7 @@ public class TraitHandler {
     @SubscribeEvent
     public static void playerUpdate(TickEvent.PlayerTickEvent e) {
         EntityPlayer player = e.player;
-        ITimelordCapability capa = player.getCapability(CapabilityTimelord.TIMELORD_CAP, null);
+        IRegenerationCapability capa = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
         capa.getTrait().update(player);
     }
 

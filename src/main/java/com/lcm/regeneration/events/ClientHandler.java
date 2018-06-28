@@ -1,7 +1,7 @@
 package com.lcm.regeneration.events;
 
-import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityTimelord;
-import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCapability;
+import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationEvent;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
 import net.minecraft.client.Minecraft;
@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by Nictogen on 3/16/18.
  */
 
-public class ClientEventHandler {
+public class ClientHandler {
 
     @SubscribeEvent
     public void onRegeneration(RegenerationEvent event) {
@@ -37,21 +37,21 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onAttacked(LivingAttackEvent e) {
         if (!e.getEntity().world.isRemote) return;
-        if (!e.getEntity().world.isRemote || !(e.getEntity() instanceof EntityPlayer) || !e.getEntity().hasCapability(CapabilityTimelord.TIMELORD_CAP, null) || !e.getEntity().getCapability(CapabilityTimelord.TIMELORD_CAP, null).isTimelord())
+        if (!e.getEntity().world.isRemote || !(e.getEntity() instanceof EntityPlayer) || !e.getEntity().hasCapability(CapabilityRegeneration.TIMELORD_CAP, null) || !e.getEntity().getCapability(CapabilityRegeneration.TIMELORD_CAP, null).isTimelord())
             return;
         EntityPlayer player = (EntityPlayer) e.getEntity();
-        if (player.getHealth() - e.getAmount() < 0 && e.getEntity().getCapability(CapabilityTimelord.TIMELORD_CAP, null).getState() != CapabilityTimelord.RegenerationState.NONE)
-            MinecraftForge.EVENT_BUS.post(new RegenerationFinishEvent(player, player.getCapability(CapabilityTimelord.TIMELORD_CAP, null)));
+        if (player.getHealth() - e.getAmount() < 0 && e.getEntity().getCapability(CapabilityRegeneration.TIMELORD_CAP, null).getState() != CapabilityRegeneration.RegenerationState.NONE)
+            MinecraftForge.EVENT_BUS.post(new RegenerationFinishEvent(player, player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null)));
     }
 
     @SubscribeEvent
     public void keyInput(InputUpdateEvent e) {
-        if (Minecraft.getMinecraft().player == null || !Minecraft.getMinecraft().player.hasCapability(CapabilityTimelord.TIMELORD_CAP, null) || !Minecraft.getMinecraft().player.getCapability(CapabilityTimelord.TIMELORD_CAP, null).isTimelord())
+        if (Minecraft.getMinecraft().player == null || !Minecraft.getMinecraft().player.hasCapability(CapabilityRegeneration.TIMELORD_CAP, null) || !Minecraft.getMinecraft().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null).isTimelord())
             return;
 
-        ITimelordCapability capability = Minecraft.getMinecraft().player.getCapability(CapabilityTimelord.TIMELORD_CAP, null);
+        IRegenerationCapability capability = Minecraft.getMinecraft().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 
-        if (capability.getState() != CapabilityTimelord.RegenerationState.NONE) {
+        if (capability.getState() != CapabilityRegeneration.RegenerationState.NONE) {
             MovementInput moveType = e.getMovementInput();
             moveType.rightKeyDown = false;
             moveType.leftKeyDown = false;

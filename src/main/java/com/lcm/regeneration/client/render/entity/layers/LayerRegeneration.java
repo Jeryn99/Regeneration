@@ -1,8 +1,8 @@
 package com.lcm.regeneration.client.render.entity.layers;
 
 import com.lcm.regeneration.Regeneration;
-import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityTimelord;
-import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCapability;
+import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import com.lcm.regeneration.utils.LimbManipulationUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -50,13 +50,26 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         this.playerRenderer = playerRenderer;
     }
 
+    @SubscribeEvent
+    public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
+        IRegenerationCapability handler = e.getEntityPlayer().getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
+        if (handler != null && handler.isTimelord() && handler.getState() != CapabilityRegeneration.RegenerationState.NONE) {
+            int arm_shake = RAND.nextInt(7);
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
+        }
+    }
+
     public void doRenderLayer(EntityPlayer player, float p_177169_2_, float p_177169_3_, float p_177169_4_, float p_177169_5_, float p_177169_6_, float p_177169_7_, float p_177169_8_) {
 
-        if (player.hasCapability(CapabilityTimelord.TIMELORD_CAP, null)
-                && player.getCapability(CapabilityTimelord.TIMELORD_CAP, null).isTimelord()) {
-            ITimelordCapability capability = player.getCapability(CapabilityTimelord.TIMELORD_CAP, null);
+        if (player.hasCapability(CapabilityRegeneration.TIMELORD_CAP, null)
+                && player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null).isTimelord()) {
+            IRegenerationCapability capability = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 
-            if (capability.getState() == CapabilityTimelord.RegenerationState.NONE)
+            if (capability.getState() == CapabilityRegeneration.RegenerationState.NONE)
                 return;
 
             NBTTagCompound style = capability.getStyle();
@@ -70,7 +83,26 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
     }
 
-    private void renderTexturedEffect(RenderLivingBase<?> renderLivingBase, ITimelordCapability capability, EntityPlayer entityPlayer, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
+    private void renderTexturedCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder vertexBuffer = tessellator.getBuffer();
+        for (int i = 0; i < 8; i++) {
+            float tex = 0.5F;
+            GlStateManager.pushMatrix();
+            GlStateManager.rotate(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
+            GlStateManager.scale(1.0f, 1.0f, 0.65f);
+            vertexBuffer.begin(6, DefaultVertexFormats.POSITION_TEX_COLOR);
+            vertexBuffer.pos(0.0D, 0.0D, 0.0D).tex(0, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
+            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).tex(0, tex).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
+            vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).tex(tex, tex).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
+            vertexBuffer.pos(0.0D, scale2, 1.0F * scale).tex(tex, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
+            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).tex(0, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
+            tessellator.draw();
+            GlStateManager.popMatrix();
+        }
+    }
+
+    private void renderTexturedEffect(RenderLivingBase<?> renderLivingBase, IRegenerationCapability capability, EntityPlayer entityPlayer, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
 
         ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 
@@ -177,26 +209,29 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         restoreLightmapTextureCoords();
     }
 
-    private void renderTexturedCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
+    private void restoreLightmapTextureCoords() {
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+    }
+
+    private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexBuffer = tessellator.getBuffer();
         for (int i = 0; i < 8; i++) {
-            float tex = 0.5F;
             GlStateManager.pushMatrix();
             GlStateManager.rotate(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
             GlStateManager.scale(1.0f, 1.0f, 0.65f);
-            vertexBuffer.begin(6, DefaultVertexFormats.POSITION_TEX_COLOR);
-            vertexBuffer.pos(0.0D, 0.0D, 0.0D).tex(0, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
-            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).tex(0, tex).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
-            vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).tex(tex, tex).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
-            vertexBuffer.pos(0.0D, scale2, 1.0F * scale).tex(tex, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
-            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).tex(0, 0).color(color.getRed(), color.getGreen(), color.getBlue(), 50).endVertex();
+            vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
+            vertexBuffer.pos(0.0D, 0.0D, 0.0D).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
+            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
+            vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
+            vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
+            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
             tessellator.draw();
             GlStateManager.popMatrix();
         }
     }
 
-    private void renderEffect(RenderLivingBase<?> renderLivingBase, ITimelordCapability capability, EntityPlayer entityPlayer, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
+    private void renderEffect(RenderLivingBase<?> renderLivingBase, IRegenerationCapability capability, EntityPlayer entityPlayer, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
         ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 
         // State manager changes
@@ -259,40 +294,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         GlStateManager.color(255, 255, 255, 255);
         GlStateManager.enableTexture2D();
         GlStateManager.popAttrib();
-    }
-
-    private void restoreLightmapTextureCoords() {
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
-    }
-
-    private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexBuffer = tessellator.getBuffer();
-        for (int i = 0; i < 8; i++) {
-            GlStateManager.pushMatrix();
-            GlStateManager.rotate(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
-            GlStateManager.scale(1.0f, 1.0f, 0.65f);
-            vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
-            vertexBuffer.pos(0.0D, 0.0D, 0.0D).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-            vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-            vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-            tessellator.draw();
-            GlStateManager.popMatrix();
-        }
-    }
-
-    @SubscribeEvent public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
-        ITimelordCapability handler = e.getEntityPlayer().getCapability(CapabilityTimelord.TIMELORD_CAP, null);
-        if (handler != null && handler.isTimelord() && handler.getState() != CapabilityTimelord.RegenerationState.NONE) {
-            int arm_shake = RAND.nextInt(7);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
-        }
     }
 
     @SubscribeEvent public static void onRenderPlayerPost(RenderPlayerEvent.Post e) {

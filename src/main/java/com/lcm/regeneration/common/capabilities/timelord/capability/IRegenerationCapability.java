@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Created by Nictogen on 3/16/18.
  */
-public interface ITimelordCapability {
+public interface IRegenerationCapability {
     void update();
 
     NBTTagCompound writeNBT();
@@ -33,7 +33,7 @@ public interface ITimelordCapability {
 
     void setTimesRegenerated(int times);
 
-    CapabilityTimelord.RegenerationState getState();
+    CapabilityRegeneration.RegenerationState getState();
 
     EntityPlayer getPlayer();
 
@@ -41,7 +41,7 @@ public interface ITimelordCapability {
 
     void setStyle(NBTTagCompound nbtTagCompound);
 
-    void changeState(CapabilityTimelord.RegenerationState state);
+    void changeState(CapabilityRegeneration.RegenerationState state);
 
     ITrait getTrait();
 

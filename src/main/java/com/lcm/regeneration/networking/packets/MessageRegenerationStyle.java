@@ -1,7 +1,7 @@
 package com.lcm.regeneration.networking.packets;
 
-import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCapability;
-import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityTimelord;
+import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -34,7 +34,7 @@ public class MessageRegenerationStyle implements IMessage {
 
 		@Override public IMessage onMessage(MessageRegenerationStyle message, MessageContext ctx) {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-				ITimelordCapability capability = ctx.getServerHandler().player.getCapability(CapabilityTimelord.TIMELORD_CAP, null);
+                IRegenerationCapability capability = ctx.getServerHandler().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 				if(capability != null)
 					capability.setStyle(message.style);
 			});

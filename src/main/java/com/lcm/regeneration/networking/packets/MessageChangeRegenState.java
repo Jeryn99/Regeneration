@@ -1,7 +1,7 @@
 package com.lcm.regeneration.networking.packets;
 
-import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCapability;
-import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityTimelord;
+import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +22,7 @@ public class MessageChangeRegenState implements IMessage {
 
 	public MessageChangeRegenState() { }
 
-	public MessageChangeRegenState(EntityPlayer player, CapabilityTimelord.RegenerationState state) {
+    public MessageChangeRegenState(EntityPlayer player, CapabilityRegeneration.RegenerationState state) {
 		this.player = player;
 		this.state = state.ordinal();
 	}
@@ -41,9 +41,9 @@ public class MessageChangeRegenState implements IMessage {
 
 		@Override public IMessage onMessage(MessageChangeRegenState message, MessageContext ctx) {
 			EntityPlayer player = message.player;
-			if(!player.hasCapability(CapabilityTimelord.TIMELORD_CAP, null)) return null;
-			ITimelordCapability handler = player.getCapability(CapabilityTimelord.TIMELORD_CAP, null);
-			Minecraft.getMinecraft().addScheduledTask(() -> handler.changeState(CapabilityTimelord.RegenerationState.values()[message.state]));
+            if (!player.hasCapability(CapabilityRegeneration.TIMELORD_CAP, null)) return null;
+            IRegenerationCapability handler = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
+            Minecraft.getMinecraft().addScheduledTask(() -> handler.changeState(CapabilityRegeneration.RegenerationState.values()[message.state]));
 			return null;
 		}
 	}

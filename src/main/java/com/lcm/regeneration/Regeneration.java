@@ -1,11 +1,11 @@
 package com.lcm.regeneration;
 
-import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityTimelord;
-import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCapability;
+import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import com.lcm.regeneration.events.CommonProxy;
 import com.lcm.regeneration.networking.RNetwork;
-import com.lcm.regeneration.utils.RegenConfig;
 import com.lcm.regeneration.utils.DebugCommand;
+import com.lcm.regeneration.utils.RegenConfig;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -46,7 +46,7 @@ public class Regeneration {
 	@EventHandler public void init(FMLInitializationEvent event) {
 		RNetwork.init();
 		MinecraftForge.EVENT_BUS.register(proxy);
-		CapabilityManager.INSTANCE.register(ITimelordCapability.class, new CapabilityTimelord.Storage(), CapabilityTimelord.class);
+		CapabilityManager.INSTANCE.register(IRegenerationCapability.class, new CapabilityRegeneration.Storage(), CapabilityRegeneration.class);
 		proxy.init(event);
 	}
 
