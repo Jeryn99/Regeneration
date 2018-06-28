@@ -34,16 +34,17 @@ import java.util.Random;
 /**
  * Created by Nictogen on 3/16/18.
  */
-@Mod.EventBusSubscriber @SideOnly(Side.CLIENT) public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
+@Mod.EventBusSubscriber
+@SideOnly(Side.CLIENT)
+public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     private static final ModelPlayer playerModelLargeArms = new ModelPlayer(0.1F, false);
     private static final ModelPlayer playerModelSmallArms = new ModelPlayer(0.1F, true);
     private static final ResourceLocation REGEN_TEXTURE = new ResourceLocation(Regeneration.MODID, "textures/entity/regen.png");
     private static ArrayList<EntityPlayer> layersAddedTo = new ArrayList<>();
     private static World lastWorld;
     private RenderPlayer playerRenderer;
-    static int arm_shake = 0;
 
-    static Random RAND = new Random();
+    private static Random RAND = new Random();
 
     public LayerRegeneration(RenderPlayer playerRenderer) {
         this.playerRenderer = playerRenderer;
@@ -285,7 +286,7 @@ import java.util.Random;
     @SubscribeEvent public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
         ITimelordCapability handler = e.getEntityPlayer().getCapability(CapabilityTimelord.TIMELORD_CAP, null);
         if (handler != null && handler.isTimelord() && handler.getState() != CapabilityTimelord.RegenerationState.NONE) {
-            arm_shake = RAND.nextInt(7);
+            int arm_shake = RAND.nextInt(7);
             LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
             LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
             LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);

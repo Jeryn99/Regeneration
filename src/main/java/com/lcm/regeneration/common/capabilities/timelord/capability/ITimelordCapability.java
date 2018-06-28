@@ -1,5 +1,7 @@
 package com.lcm.regeneration.common.capabilities.timelord.capability;
 
+import com.lcm.regeneration.common.trait.ITrait;
+import com.lcm.regeneration.common.trait.TraitHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -40,4 +42,8 @@ public interface ITimelordCapability {
     void setStyle(NBTTagCompound nbtTagCompound);
 
     void changeState(CapabilityTimelord.RegenerationState state);
+
+    ITrait getTrait();
+
+    void setTrait(TraitHandler.Trait trait);
 }

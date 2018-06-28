@@ -13,7 +13,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override public void postInit(FMLPostInitializationEvent ev) {
-	//	ClientCommandHandler.instance.registerCommand(new GuiRegenCustomizer.CustomizeCommand());
+		//ClientCommandHandler.instance.registerCommand(new GuiRegenCustomizer.CustomizeCommand());
 	}
 
 

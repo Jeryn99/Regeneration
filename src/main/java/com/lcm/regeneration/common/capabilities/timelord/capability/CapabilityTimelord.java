@@ -3,6 +3,8 @@ package com.lcm.regeneration.common.capabilities.timelord.capability;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationEvent;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationStartEvent;
+import com.lcm.regeneration.common.trait.ITrait;
+import com.lcm.regeneration.common.trait.TraitHandler;
 import com.lcm.regeneration.networking.RNetwork;
 import com.lcm.regeneration.networking.packets.MessageChangeRegenState;
 import com.lcm.regeneration.networking.packets.MessageSyncTimelordData;
@@ -32,6 +34,7 @@ public class CapabilityTimelord implements ITimelordCapability {
     private EntityPlayer player;
     private NBTTagCompound styleTag = defaultStyle();
     private boolean dirty = true;
+    public TraitHandler.Trait trait = TraitHandler.Trait.NONE;
 
     public CapabilityTimelord(EntityPlayer player) {
         this.player = player;
@@ -111,45 +114,6 @@ public class CapabilityTimelord implements ITimelordCapability {
         return compound;
     }
 
-    //	@Override public void onApplyPower() {
-    //		this.getAbilities().clear();
-    //		TimelordSuperpower.INSTANCE.addDefaultAbilities(this.getPlayer(), this.getAbilities());
-    //		randomizeTraits();
-    //		this.regenerationsLeft = 0;
-    //	}
-
-    //	public void randomizeTraits() {
-    //		// Reset Karma
-    //		if (LCConfig.modules.karma)
-    //			for (KarmaStat karmaStat : KarmaStat.getKarmaStats())
-    //				KarmaHandler.setKarmaStat(getPlayer(), karmaStat, 0);
-    //
-    //		getAbilities().forEach(ability -> ability.setUnlocked(false));
-    //
-    //		for (int i = 0; i < 2; i++) {
-    //			Ability a = null;
-    //			while (a == null || a instanceof INegativeTrait || a.isUnlocked())
-    //				a = getAbilities().get(getPlayer().getRNG().nextInt(getAbilities().size()));
-    //			a.setUnlocked(true);
-    //		}
-    //
-    //		for (int i = 0; i < 2; i++) {
-    //			Ability a = null;
-    //			while (a == null || a.isUnlocked() || !(a instanceof INegativeTrait) || TimelordSuperpowerHandler.isAbilityUnlocked(this, ((INegativeTrait) a).getPositiveTrait()))
-    //				a = getAbilities().get(getPlayer().getRNG().nextInt(getAbilities().size()));
-    //			a.setUnlocked(true);
-    //		}
-    //
-    //		String s = "";
-    //		for (Ability ability : getAbilities())
-    //			if (ability.isUnlocked())
-    //				if (s.equals(""))
-    //					s = ability.getDisplayName().substring(7);
-    //				else
-    //					s = s + ", " + ability.getDisplayName().substring(7);
-    //		// handler.getPlayer().sendStatusMessage(new TextComponentString(StringHelper.translateToLocal("lcm-atg.messages.newLife", s)), true);
-    //	}
-
     @Override
     public void readNBT(NBTTagCompound compound) {
         regenerationsLeft = compound.getInteger("regenerationsLeft");
@@ -218,6 +182,16 @@ public class CapabilityTimelord implements ITimelordCapability {
     }
 
     @Override
+    public ITrait getTrait() {
+        return trait.getTrait();
+    }
+
+    public void setTrait(TraitHandler.Trait trait) {
+        this.trait = trait;
+    }
+
+
+    @Override
     public void setStyle(NBTTagCompound nbtTagCompound) {
         styleTag = nbtTagCompound;
     }
@@ -225,6 +199,7 @@ public class CapabilityTimelord implements ITimelordCapability {
     public enum RegenerationState {
         NONE, REGENERATING, EXPLODING
     }
+
 
     public static class CapabilityTimelordProvider implements ICapabilitySerializable<NBTTagCompound> {
 

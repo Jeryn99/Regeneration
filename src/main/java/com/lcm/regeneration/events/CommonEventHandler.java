@@ -6,6 +6,7 @@ import com.lcm.regeneration.common.capabilities.timelord.capability.ITimelordCap
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationEvent;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationStartEvent;
+import com.lcm.regeneration.common.trait.TraitHandler;
 import com.lcm.regeneration.utils.RegenConfig;
 import com.lcm.regeneration.utils.RegenUtils;
 import net.minecraft.block.BlockFire;
@@ -85,7 +86,9 @@ public class CommonEventHandler {
 
         handler.setRegensLeft(handler.getRegensLeft() - 1);
         handler.setTimesRegenerated(handler.getTimesRegenerated() + 1);
-        //		handler.randomizeTraits(); TODO
+
+        handler.setTrait(TraitHandler.getRandomTrait());
+        System.out.println(handler.getTrait().getClass().getName());
         handler.syncToAll();
     }
 
