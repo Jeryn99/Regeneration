@@ -4,6 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public interface ITrait {
 
+    String getName();
+
     void update(EntityPlayer player);
 
 }

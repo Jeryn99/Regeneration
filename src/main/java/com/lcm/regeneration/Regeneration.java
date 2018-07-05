@@ -19,8 +19,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-import java.util.Random;
-
 @Mod(modid = Regeneration.MODID, name = Regeneration.NAME, version = Regeneration.VERSION, dependencies = "required:forge@[14.23.1.2574,)", acceptedMinecraftVersions = "1.12.2")
 @EventBusSubscriber
 public class Regeneration {
@@ -34,7 +32,6 @@ public class Regeneration {
 	public static final ResourceLocation ICONS = new ResourceLocation(MODID, "textures/gui/ability_icons.png");
 
 
-	public static Random RAND = new Random();
 
 	@Mod.Instance("lcm-regen") public static Regeneration instance;
 
@@ -50,11 +47,13 @@ public class Regeneration {
 		proxy.init(event);
 	}
 
-	@EventHandler public void postInit(FMLPostInitializationEvent event) {
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit(event);
 	}
 
-	@EventHandler public void serverStart(FMLServerStartingEvent event) {
+	@EventHandler
+	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new DebugCommand());
 	}
 

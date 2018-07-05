@@ -90,6 +90,7 @@ public class CommonHandler {
         handler.setTimesRegenerated(handler.getTimesRegenerated() + 1);
 
         handler.setTrait(TraitHandler.getRandomTrait());
+        System.out.println(handler.getTrait().getName());
         handler.syncToAll();
     }
 

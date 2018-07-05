@@ -2,8 +2,7 @@ package com.lcm.regeneration.common.trait;
 
 import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
 import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
-import com.lcm.regeneration.common.trait.traits.TraitClumsy;
-import com.lcm.regeneration.common.trait.traits.TraitNone;
+import com.lcm.regeneration.common.trait.traits.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -29,7 +28,10 @@ public class TraitHandler {
     public enum Trait {
 
         NONE(new TraitNone()),
-        CLUMSY(new TraitClumsy());
+        CLUMSY(new TraitClumsy()),
+        SPEED(new TraitSpeed()),
+        HUNGER(new TraitHunger()),
+        NIGHT_VISION(new TraitNightVision());
 
         ITrait trait;
 

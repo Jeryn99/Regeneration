@@ -18,19 +18,18 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Created by Nictogen on 2/18/18
- */
-@SuppressWarnings("unused")
-@Mod.EventBusSubscriber public class RObjects {
+@Mod.EventBusSubscriber
+public class RObjects {
 
 	public static class Items {
 		public static Item chameleonArch = new ItemChameleonArch();
-		}
+	}
+
 
 	public static class SoundEvents {
 		public static final SoundEvent regeneration = new RegenSoundEvent("regeneration");
 		public static final SoundEvent timeyWimey = new RegenSoundEvent("timey_wimey");
+		public static final SoundEvent fobwatch = new RegenSoundEvent("fob_watch");
 	}
 
 
