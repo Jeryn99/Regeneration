@@ -2,20 +2,22 @@ package com.lcm.regeneration.common.trait.traits;
 
 import com.lcm.regeneration.common.trait.ITrait;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 
-public class TraitNone implements ITrait {
+public class TraitStrength implements ITrait {
     @Override
     public String getName() {
-        return "BLANK";
+        return "Srength";
     }
 
     @Override
     public void update(EntityPlayer player) {
-
+        player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, Integer.MAX_VALUE, 2, false, false));
     }
 
     @Override
     public String getMessage() {
-        return "trait.messages.no_trait";
+        return "trait.messages.strength";
     }
 }

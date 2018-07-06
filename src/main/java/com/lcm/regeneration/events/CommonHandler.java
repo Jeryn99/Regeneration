@@ -21,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryTable;
@@ -90,7 +91,8 @@ public class CommonHandler {
         handler.setTimesRegenerated(handler.getTimesRegenerated() + 1);
 
         handler.setTrait(TraitHandler.getRandomTrait());
-        System.out.println(handler.getTrait().getName());
+        player.sendStatusMessage(new TextComponentTranslation(handler.getTrait().getMessage()), true);
+        player.clearActivePotions();
         handler.syncToAll();
     }
 

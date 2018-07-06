@@ -7,7 +7,6 @@ import net.minecraft.util.NonNullList;
 
 public class TraitClumsy implements ITrait {
 
-
     private int timer;
 
     @Override
@@ -30,5 +29,10 @@ public class TraitClumsy implements ITrait {
             stack.shrink(1);
             timer = 0;
         }
+    }
+
+    @Override
+    public String getMessage() {
+        return "trait.messages.clumsy";
     }
 }

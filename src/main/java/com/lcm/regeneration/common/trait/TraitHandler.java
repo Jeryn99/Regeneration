@@ -31,9 +31,11 @@ public class TraitHandler {
         CLUMSY(new TraitClumsy()),
         SPEED(new TraitSpeed()),
         HUNGER(new TraitHunger()),
+        STRENGTH(new TraitStrength()),
+        SATURATION(new TraitSaturation()),
         NIGHT_VISION(new TraitNightVision());
 
-        ITrait trait;
+        private ITrait trait;
 
         Trait(ITrait trait) {
             this.trait = trait;

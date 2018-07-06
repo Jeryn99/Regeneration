@@ -8,4 +8,6 @@ public interface ITrait {
 
     void update(EntityPlayer player);
 
+    String getMessage();
+
 }

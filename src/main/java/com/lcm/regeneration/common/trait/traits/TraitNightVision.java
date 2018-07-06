@@ -14,7 +14,12 @@ public class TraitNightVision implements ITrait {
 
     @Override
     public void update(EntityPlayer player) {
-        player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, Integer.MAX_VALUE, 2));
+        player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, Integer.MAX_VALUE, 2, false, false));
+    }
+
+    @Override
+    public String getMessage() {
+        return "trait.messages.night_vision";
     }
 
 

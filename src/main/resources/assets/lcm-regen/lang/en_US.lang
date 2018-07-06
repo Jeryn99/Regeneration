@@ -25,4 +25,12 @@ lcm-regen.messages.transfer.emptyArch=This arch is empty!
 lcm-regen.messages.transfer.fullCycle=You already have a full cycle of regenerations
 lcm-regen.messages.transfer.emptyCycle=You don't have any regenerations left to transfer
 
+trait.messages.strength=You have gained the Strength Trait!
+trait.messages.speed=You have gained the Speed Trait!
+trait.messages.night_vision=You have gained the Night Vision Trait!
+trait.messages.hunger=You have gained the Hungry Trait!
+trait.messages.none=You have not recieved a trait. You are normal.
+trait.messages.clumsy=Watch your things! You now have the clumsy trait...
+
+
 
