@@ -1,6 +1,7 @@
 package com.lcm.regeneration.common.trait.traits;
 
 import com.lcm.regeneration.common.trait.ITrait;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;

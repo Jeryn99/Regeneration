@@ -1,7 +1,10 @@
 package com.lcm.regeneration.networking.packets;
 
+import java.util.UUID;
+
 import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
 import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,8 +13,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.util.UUID;
 
 /**
  * Created by Nictogen on 3/16/18.

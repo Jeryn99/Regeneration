@@ -2,6 +2,7 @@ package com.lcm.regeneration.common.capabilities.timelord.capability;
 
 import com.lcm.regeneration.common.trait.ITrait;
 import com.lcm.regeneration.common.trait.TraitHandler;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 

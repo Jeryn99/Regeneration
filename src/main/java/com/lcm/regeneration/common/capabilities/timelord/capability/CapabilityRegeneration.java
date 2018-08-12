@@ -1,5 +1,8 @@
 package com.lcm.regeneration.common.capabilities.timelord.capability;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationEvent;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationStartEvent;
@@ -9,6 +12,7 @@ import com.lcm.regeneration.networking.RNetwork;
 import com.lcm.regeneration.networking.packets.MessageChangeRegenState;
 import com.lcm.regeneration.networking.packets.MessageSyncTimelordData;
 import com.lcm.regeneration.utils.RegenConfig;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,9 +21,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Created by Nictogen on 3/16/18.
@@ -35,11 +36,30 @@ public class CapabilityRegeneration implements IRegenerationCapability {
     private NBTTagCompound styleTag = defaultStyle();
     private boolean dirty = true;
     public TraitHandler.Trait trait = TraitHandler.Trait.NONE;
-
+	private float primaryRed = 1.0f;
+	private float primaryGreen = 0.78f;
+	private float primaryBlue = 0.0f;
+	private float secondaryGreen = 0.47f;
+	private float secondaryRed = 1.0f;
+	private float secondaryBlue = 0.0f;
+	private boolean textured= false;
+	
     public CapabilityRegeneration(EntityPlayer player) {
         this.player = player;
     }
 
+    private NBTTagCompound defaultStyle() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setFloat("PrimaryRed", 1.0f);
+        nbt.setFloat("PrimaryGreen", 0.78f);
+        nbt.setFloat("PrimaryBlue", 0.0f);
+        nbt.setFloat("SecondaryRed", 1.0f);
+        nbt.setFloat("SecondaryGreen", 0.47f);
+        nbt.setFloat("SecondaryBlue", 0.0f);
+        nbt.setBoolean("textured", false);
+        return nbt;
+    }
+    
     @Override
     public void update() {
 
@@ -59,9 +79,11 @@ public class CapabilityRegeneration implements IRegenerationCapability {
             case NONE:
                 break;
             case REGENERATING:
+            	syncToAll();
                 MinecraftForge.EVENT_BUS.post(new RegenerationEvent(player, this));
                 break;
             case EXPLODING:
+            	syncToAll();
                 MinecraftForge.EVENT_BUS.post(new RegenerationEvent.RegenerationExplosionEvent(player, this));
                 break;
         }
@@ -82,18 +104,6 @@ public class CapabilityRegeneration implements IRegenerationCapability {
         }
     }
 
-    private NBTTagCompound defaultStyle() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setFloat("PrimaryRed", 1.0f);
-        nbt.setFloat("PrimaryGreen", 0.78f);
-        nbt.setFloat("PrimaryBlue", 0.0f);
-        nbt.setFloat("SecondaryRed", 1.0f);
-        nbt.setFloat("SecondaryGreen", 0.47f);
-        nbt.setFloat("SecondaryBlue", 0.0f);
-        nbt.setBoolean("textured", false);
-        return nbt;
-    }
-
     private RegenerationState determineState() {
         if (regenTicks <= 0)
             return RegenerationState.NONE;
@@ -108,9 +118,18 @@ public class CapabilityRegeneration implements IRegenerationCapability {
     @Override
     public NBTTagCompound writeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
+        compound.setFloat("PrimaryRed", primaryRed);
+        compound.setFloat("PrimaryGreen", primaryGreen);
+        compound.setFloat("PrimaryBlue", primaryBlue);
+        compound.setFloat("SecondaryRed", secondaryRed);
+        compound.setFloat("SecondaryGreen", secondaryGreen);
+        compound.setFloat("SecondaryBlue", secondaryBlue);
         compound.setInteger("regenerationsLeft", regenerationsLeft);
         compound.setInteger("timesRegenerated", timesRegenerated);
         compound.setBoolean("isTimelord", isTimelord);
+        compound.setInteger("regenTicks", regenTicks);
+        compound.setBoolean("textured", false);
+        styleTag = compound;
         return compound;
     }
 
@@ -119,6 +138,14 @@ public class CapabilityRegeneration implements IRegenerationCapability {
         regenerationsLeft = compound.getInteger("regenerationsLeft");
         timesRegenerated = compound.getInteger("timesRegenerated");
         isTimelord = compound.getBoolean("isTimelord");
+        regenTicks = compound.getInteger("regenTicks");
+        primaryRed = compound.getFloat("PrimaryRed");
+        primaryGreen = compound.getFloat("PrimaryGreen");
+        primaryBlue = compound.getFloat("PrimaryBlue");
+        secondaryRed = compound.getFloat("SecondaryRed");
+        secondaryGreen = compound.getFloat("SecondaryGreen");
+        secondaryBlue =compound.getFloat("SecondaryBlue");
+        textured = compound.getBoolean("textured");
     }
 
     @Override
@@ -192,8 +219,13 @@ public class CapabilityRegeneration implements IRegenerationCapability {
 
 
     @Override
-    public void setStyle(NBTTagCompound nbtTagCompound) {
-        styleTag = nbtTagCompound;
+    public void setStyle(NBTTagCompound compound) {
+    	  primaryRed = compound.getFloat("PrimaryRed");
+          primaryGreen = compound.getFloat("PrimaryGreen");
+          primaryBlue = compound.getFloat("PrimaryBlue");
+          secondaryRed = compound.getFloat("SecondaryRed");
+          secondaryGreen = compound.getFloat("SecondaryGreen");
+          secondaryBlue =compound.getFloat("SecondaryBlue");
     }
 
     public enum RegenerationState {

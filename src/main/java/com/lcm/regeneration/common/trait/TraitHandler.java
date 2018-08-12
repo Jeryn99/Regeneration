@@ -1,14 +1,21 @@
 package com.lcm.regeneration.common.trait;
 
+import java.util.Random;
+
 import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
 import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
-import com.lcm.regeneration.common.trait.traits.*;
+import com.lcm.regeneration.common.trait.traits.TraitClumsy;
+import com.lcm.regeneration.common.trait.traits.TraitHunger;
+import com.lcm.regeneration.common.trait.traits.TraitNightVision;
+import com.lcm.regeneration.common.trait.traits.TraitNone;
+import com.lcm.regeneration.common.trait.traits.TraitSaturation;
+import com.lcm.regeneration.common.trait.traits.TraitSpeed;
+import com.lcm.regeneration.common.trait.traits.TraitStrength;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.util.Random;
 
 @Mod.EventBusSubscriber
 public class TraitHandler {

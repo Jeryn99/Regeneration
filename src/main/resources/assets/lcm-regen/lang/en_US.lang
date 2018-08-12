@@ -32,5 +32,10 @@ trait.messages.hunger=You have gained the Hungry Trait!
 trait.messages.none=You have not recieved a trait. You are normal.
 trait.messages.clumsy=Watch your things! You now have the clumsy trait...
 
+lcm-regen.info.customizer=Customizer
+lcm-regen.info.save=Save
+lcm-regen.info.red=Red
+lcm-regen.info.green=Green
+lcm-regen.info.blue=Blue
 
 

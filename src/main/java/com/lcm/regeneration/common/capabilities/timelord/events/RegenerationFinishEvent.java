@@ -1,6 +1,7 @@
 package com.lcm.regeneration.common.capabilities.timelord.events;
 
 import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 

@@ -1,7 +1,12 @@
 package com.lcm.regeneration.events;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.lcm.regeneration.Regeneration;
 import com.lcm.regeneration.common.items.ItemChameleonArch;
+
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -13,10 +18,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 @Mod.EventBusSubscriber
 public class RObjects {
@@ -33,7 +34,8 @@ public class RObjects {
 	}
 
 
-	@SuppressWarnings({ "rawtypes", "unchecked" }) @SubscribeEvent public static void registerObjects(RegistryEvent ev) {
+	 @SubscribeEvent
+	 public static void registerObjects(RegistryEvent ev) {
 		if (!(ev instanceof RegistryEvent.Register))
 			return;
 		IForgeRegistry registry = ((RegistryEvent.Register) ev).getRegistry();
@@ -54,7 +56,8 @@ public class RObjects {
 		}
 	}
 
-	@SubscribeEvent public static void registerModels(ModelRegistryEvent ev) {
+	@SubscribeEvent
+	public static void registerModels(ModelRegistryEvent ev) {
 		for (Field f : Items.class.getDeclaredFields()) {
 			try {
 				Item item = (Item) f.get(null);

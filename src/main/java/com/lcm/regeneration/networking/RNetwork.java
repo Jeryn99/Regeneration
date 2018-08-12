@@ -1,7 +1,10 @@
 package com.lcm.regeneration.networking;
 
 import com.lcm.regeneration.Regeneration;
-import com.lcm.regeneration.networking.packets.*;
+import com.lcm.regeneration.networking.packets.MessageChangeRegenState;
+import com.lcm.regeneration.networking.packets.MessageRegenerationStyle;
+import com.lcm.regeneration.networking.packets.MessageSyncTimelordData;
+
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;

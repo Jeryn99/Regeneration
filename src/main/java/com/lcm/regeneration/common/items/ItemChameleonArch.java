@@ -5,6 +5,7 @@ import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRe
 import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import com.lcm.regeneration.events.RObjects;
 import com.lcm.regeneration.utils.RegenConfig;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

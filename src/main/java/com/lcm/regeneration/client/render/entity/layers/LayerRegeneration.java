@@ -1,9 +1,13 @@
 package com.lcm.regeneration.client.render.entity.layers;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
 import com.lcm.regeneration.Regeneration;
 import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
 import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import com.lcm.regeneration.utils.LimbManipulationUtil;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -27,10 +31,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
-
 /**
  * Created by Nictogen on 3/16/18.
  */
@@ -44,8 +44,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     private static World lastWorld;
     private RenderPlayer playerRenderer;
 
-    private static Random RAND = new Random();
-
     public LayerRegeneration(RenderPlayer playerRenderer) {
         this.playerRenderer = playerRenderer;
     }
@@ -54,7 +52,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
         IRegenerationCapability handler = e.getEntityPlayer().getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
         if (handler != null && handler.isTimelord() && handler.getState() != CapabilityRegeneration.RegenerationState.NONE) {
-            int arm_shake = RAND.nextInt(7);
+            int arm_shake = e.getEntityPlayer().world.rand.nextInt(7);
             LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
             LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
             LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
@@ -63,7 +61,8 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         }
     }
 
-    public void doRenderLayer(EntityPlayer player, float p_177169_2_, float p_177169_3_, float p_177169_4_, float p_177169_5_, float p_177169_6_, float p_177169_7_, float p_177169_8_) {
+    @Override
+    public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
         if (player.hasCapability(CapabilityRegeneration.TIMELORD_CAP, null)
                 && player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null).isTimelord()) {
@@ -75,10 +74,9 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
             NBTTagCompound style = capability.getStyle();
 
             if (style.getBoolean("textured"))
-                renderTexturedEffect(this.playerRenderer, capability, player, p_177169_2_, p_177169_3_, p_177169_4_, p_177169_5_, p_177169_6_, p_177169_7_, p_177169_8_);
+                renderTexturedEffect(this.playerRenderer, capability, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
             else
-                renderEffect(this.playerRenderer, capability, player, p_177169_2_, p_177169_3_, p_177169_4_, p_177169_5_, p_177169_6_, p_177169_7_, p_177169_8_);
-
+                renderEffect(this.playerRenderer, capability, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
         }
 
     }
@@ -249,6 +247,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
         float primaryScale = capability.getRegenTicks() / 40f;
         float secondaryScale = capability.getRegenTicks() / 70f;
+       
         // Render right cone
         GlStateManager.pushMatrix();
         model.postRenderArm(0.0625F, EnumHandSide.RIGHT);

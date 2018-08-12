@@ -2,6 +2,7 @@ package com.lcm.regeneration.networking.packets;
 
 import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
 import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -19,7 +20,7 @@ public class MessageRegenerationStyle implements IMessage {
 	}
 
 	public MessageRegenerationStyle(NBTTagCompound nbtTagCompound) {
-
+		this.style = nbtTagCompound;
 	}
 
 	@Override public void fromBytes(ByteBuf buf) {
@@ -37,6 +38,7 @@ public class MessageRegenerationStyle implements IMessage {
                 IRegenerationCapability capability = ctx.getServerHandler().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 				if(capability != null)
 					capability.setStyle(message.style);
+					capability.syncToAll();
 			});
 			return null;
 		}

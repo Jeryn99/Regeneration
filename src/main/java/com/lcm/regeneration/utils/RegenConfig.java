@@ -1,6 +1,7 @@
 package com.lcm.regeneration.utils;
 
-import com.lcm.regeneration.Regeneration;
+import com.lcm.regeneration.utils.RegenConfig.Regeneration;
+
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;

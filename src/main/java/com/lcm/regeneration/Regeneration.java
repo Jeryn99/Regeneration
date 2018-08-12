@@ -5,6 +5,7 @@ import com.lcm.regeneration.common.capabilities.timelord.capability.IRegeneratio
 import com.lcm.regeneration.events.CommonProxy;
 import com.lcm.regeneration.networking.RNetwork;
 import com.lcm.regeneration.utils.DebugCommand;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;

@@ -1,5 +1,9 @@
 package com.lcm.regeneration.utils;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -14,10 +18,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod.EventBusSubscriber(Side.CLIENT) public class LimbManipulationUtil {
 	private static Field textureOffsetXField = ModelRenderer.class.getDeclaredFields()[2];

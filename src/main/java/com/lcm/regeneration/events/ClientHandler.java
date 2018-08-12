@@ -3,6 +3,7 @@ package com.lcm.regeneration.events;
 import com.lcm.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
 import com.lcm.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
 import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovementInput;

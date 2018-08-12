@@ -9,6 +9,7 @@ import com.lcm.regeneration.common.capabilities.timelord.events.RegenerationStar
 import com.lcm.regeneration.common.trait.TraitHandler;
 import com.lcm.regeneration.utils.RegenConfig;
 import com.lcm.regeneration.utils.RegenUtils;
+
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -190,6 +191,13 @@ public class CommonHandler {
     public static void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
         NBTTagCompound nbt = (NBTTagCompound) CapabilityRegeneration.TIMELORD_CAP.getStorage().writeNBT(CapabilityRegeneration.TIMELORD_CAP, event.getOriginal().getCapability(CapabilityRegeneration.TIMELORD_CAP, null), null);
         CapabilityRegeneration.TIMELORD_CAP.getStorage().readNBT(CapabilityRegeneration.TIMELORD_CAP, event.getEntityPlayer().getCapability(CapabilityRegeneration.TIMELORD_CAP, null), null, nbt);
+    }
+    
+    @SubscribeEvent
+    public static void playerTrackingEvent(net.minecraftforge.event.entity.player.PlayerEvent.StartTracking event) {
+    	if(event.getEntityPlayer().getCapability(CapabilityRegeneration.TIMELORD_CAP, null) != null) {
+    		event.getEntityPlayer().getCapability(CapabilityRegeneration.TIMELORD_CAP, null).syncToAll();
+    	}
     }
 
 }
