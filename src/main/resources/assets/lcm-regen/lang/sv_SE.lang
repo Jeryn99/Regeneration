@@ -1,0 +1,41 @@
+﻿
+item.chameleonArch.name=Kameleon Valv
+
+lcm-regen.info.primary=Primär Kulör
+lcm-regen.info.secondary=Sekundär Kulör
+lcm-regen.info.textured=Texturerad regenerering?
+
+lcm-regen.subtitles.regeneration=Regenereringsenergi
+lcm-regen.subtitles.timey_wimey=Timey Wimey Woosh
+
+lcm-regen.messages.traitsDisabled=KARAKTÄRSDRAG ÄR INTE AKTIVERADE!
+lcm-regen.messages.becomeTimelord=Du har blivit en tidsherre!
+lcm-regen.messages.alreadyTimelord=Du är redan en tidsherre!
+lcm-regen.messages.gainedRegenerations=Ni har fått %s liv från kameleon valvet.
+lcm-regen.messages.regenLeft=Liv kvar: %s
+lcm-regen.messages.regenLeftExt=Du regenererar för den %s gången. Du har %s liv kvar.
+lcm-regen.messages.numsuffix.0=a
+lcm-regen.messages.numsuffix.1=a
+lcm-regen.messages.numsuffix.2=e
+lcm-regen.messages.numsuffix.ext=e
+//lcm-regen.messages.newLife=Du har fått ett nytt liv, med nya karaktärsdrag: %s.
+lcm-regen.messages.transfer=Du har överfört en av dina liv till kameleon valvet.
+lcm-regen.messages.transfer.fullArch=Du kan inte överföra fler liv till detta kameleon valv.
+lcm-regen.messages.transfer.emptyArch=Detta kameleon valv är tomt!
+lcm-regen.messages.transfer.fullCycle=Du har redan en full livscykel!
+lcm-regen.messages.transfer.emptyCycle=Du har inga liv kvar att överföra.
+
+trait.messages.strength=Du är stark!
+trait.messages.speed=Du är snabb!
+trait.messages.night_vision=Du kan se i mörkret!
+trait.messages.hunger=Du gillar att äta. :P
+trait.messages.none=Du är helt normal.
+trait.messages.clumsy=Var försiktig! Du är ganska klumpig...
+
+lcm-regen.info.customizer=Anpassare
+lcm-regen.info.save=Spara
+lcm-regen.info.red=Röd
+lcm-regen.info.green=Grön
+lcm-regen.info.blue=Blå
+
+
