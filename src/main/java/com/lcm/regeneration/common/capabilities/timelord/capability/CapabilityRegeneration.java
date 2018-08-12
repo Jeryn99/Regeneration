@@ -28,7 +28,7 @@ public class CapabilityRegeneration implements IRegenerationCapability {
 
     @CapabilityInject(IRegenerationCapability.class)
     public static final Capability<IRegenerationCapability> TIMELORD_CAP = null;
-    public int regenerationsLeft = RegenConfig.regenCapacity, timesRegenerated, regenTicks;
+    public int regenerationsLeft = RegenConfig.REGENERATION.regenCapacity, timesRegenerated, regenTicks;
     public RegenerationState state = RegenerationState.NONE;
     private boolean isTimelord;
     private EntityPlayer player;

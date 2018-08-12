@@ -57,6 +57,7 @@ public class CommonHandler {
         event.getEntityPlayer().setArrowCountInEntity(0);
     }
 
+
     @SubscribeEvent
     public static void onRegenerationExplosion(RegenerationEvent.RegenerationExplosionEvent event) {
         event.getEntityPlayer().extinguish();
@@ -70,7 +71,7 @@ public class CommonHandler {
         double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
         double z = player.posZ + player.getRNG().nextGaussian() * 2;
 
-        player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
+        player.world.newExplosion(player, x, y, z, 1, RegenConfig.REGENERATION.fieryRegen, false);
         for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east()))
             if (player.world.getBlockState(bs).getBlock() instanceof BlockFire)
                 player.world.setBlockToAir(bs);
@@ -85,7 +86,7 @@ public class CommonHandler {
 
         IRegenerationCapability handler = event.getHandler();
         player.setHealth(player.getMaxHealth());
-        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration, RegenConfig.postRegenerationLevel, false, false)); // 180 seconds of 20 ticks of Regeneration 4
+        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.REGENERATION.postRegenerationDuration, RegenConfig.REGENERATION.postRegenerationLevel, false, false)); // 180 seconds of 20 ticks of Regeneration 4
 
         handler.setRegensLeft(handler.getRegensLeft() - 1);
         handler.setTimesRegenerated(handler.getTimesRegenerated() + 1);
@@ -105,13 +106,13 @@ public class CommonHandler {
 
         IRegenerationCapability handler = event.getHandler();
         player.setHealth(.5f);
-        player.setAbsorptionAmount(RegenConfig.absorbtionLevel);
-        if (RegenConfig.resetOxygen)
+        player.setAbsorptionAmount(RegenConfig.REGENERATION.absorbtionLevel);
+        if (RegenConfig.REGENERATION.resetOxygen)
             player.setAir(300);
-        if (RegenConfig.resetHunger)
+        if (RegenConfig.REGENERATION.resetHunger)
             player.getFoodStats().setFoodLevel(20);
         player.clearActivePotions();
-        player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10 * 20, RegenConfig.regenerationLevel, false, false)); // 10 seconds of 20 ticks of Regeneration 2
+        player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10 * 20, RegenConfig.REGENERATION.regenerationLevel, false, false)); // 10 seconds of 20 ticks of Regeneration 2
         player.extinguish();
 
         String time = "" + (handler.getTimesRegenerated() + 1);
@@ -132,7 +133,7 @@ public class CommonHandler {
 
     @SubscribeEvent
     public static void registerLoot(LootTableLoadEvent e) { // CHECK can this loot table actually be overriden in resource packs?
-        if (!e.getName().toString().toLowerCase().matches(RegenConfig.lootRegex) || RegenConfig.disableArch)
+        if (!e.getName().toString().toLowerCase().matches(RegenConfig.LOOT.lootRegex) || RegenConfig.REGENERATION.disableArch)
             return;
 
         LootCondition[] condAlways = new LootCondition[]{new RandomChance(1F)};
@@ -143,7 +144,7 @@ public class CommonHandler {
 
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
-        if (!RegenConfig.startAsTimelord || e.player.world.isRemote)
+        if (!RegenConfig.REGENERATION.startAsTimelord || e.player.world.isRemote)
             return;
 
         NBTTagCompound nbt = e.player.getEntityData();
@@ -165,7 +166,7 @@ public class CommonHandler {
 
         IRegenerationCapability handler = e.getEntity().getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 
-        if ((handler.getState() != CapabilityRegeneration.RegenerationState.NONE || player.posY < 0 || handler.getRegensLeft() <= 0) && !RegenConfig.dontLoseUponDeath || player.isInLava()) {
+        if ((handler.getState() != CapabilityRegeneration.RegenerationState.NONE || player.posY < 0 || handler.getRegensLeft() <= 0) && !RegenConfig.REGENERATION.dontLoseUponDeath || player.isInLava()) {
             handler.setTimelord(false);
             handler.setRegensLeft(0);
             handler.setRegenTicks(0);

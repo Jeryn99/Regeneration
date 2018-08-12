@@ -1,11 +1,14 @@
 package com.lcm.regeneration.client.render.item;
 
+import com.lcm.regeneration.events.RObjects;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class RenderItemFobwatch extends TileEntityItemStackRenderer {
 
 
@@ -20,7 +23,7 @@ public class RenderItemFobwatch extends TileEntityItemStackRenderer {
 
 
 	@SubscribeEvent
-	public static void setUptheStupidModelISwearToGod(ModelBakeEvent e) {
-		//RObjects.Items.chameleonArch.setTileEntityItemStackRenderer(new RenderItemFobwatch());
+	public static void registerModel(ModelBakeEvent e) {
+		RObjects.Items.chameleonArch.setTileEntityItemStackRenderer(new RenderItemFobwatch());
 	}
 }

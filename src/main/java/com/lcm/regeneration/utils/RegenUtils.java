@@ -17,8 +17,8 @@ public class RegenUtils {
     }
     
     public static void regenerationExplosion(EntityPlayer player) {
-        explodeKill(player, player.world, player.getPosition(), RegenConfig.regenerativeKillRange);
-        explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback, RegenConfig.regenerativeKnockbackRange);
+        explodeKill(player, player.world, player.getPosition(), RegenConfig.REGENERATION.regenerativeKillRange);
+        explodeKnockback(player, player.world, player.getPosition(), RegenConfig.REGENERATION.regenerativeKnockback, RegenConfig.REGENERATION.regenerativeKnockbackRange);
     }
 
     private static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {

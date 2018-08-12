@@ -24,7 +24,7 @@ public class ItemChameleonArch extends Item {
         setRegistryName(Regeneration.MODID, "chameleonarch");
         setCreativeTab(CreativeTabs.MISC);
         setMaxStackSize(1);
-        setMaxDamage(RegenConfig.regenCapacity);
+        setMaxDamage(RegenConfig.REGENERATION.regenCapacity);
     }
 
     @Override public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
@@ -34,7 +34,7 @@ public class ItemChameleonArch extends Item {
         if(handler == null) return new ActionResult<>(EnumActionResult.PASS, arch);
         player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.SoundEvents.fobwatch, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
-        if (arch.getItemDamage() == RegenConfig.regenCapacity) {
+        if (arch.getItemDamage() == RegenConfig.REGENERATION.regenCapacity) {
             player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.transfer.emptyArch")), true);
             return new ActionResult<>(EnumActionResult.FAIL, arch);
         }
@@ -48,9 +48,9 @@ public class ItemChameleonArch extends Item {
             if (!player.isSneaking()) {
                 int used = doUsageDamage(arch, handler);
                 if (used == 0) {
-                    if (handler.getRegensLeft() == RegenConfig.regenCapacity) {
+                    if (handler.getRegensLeft() == RegenConfig.REGENERATION.regenCapacity) {
                         player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.transfer.fullCycle", used)), true);
-                    } else if (arch.getItemDamage() == RegenConfig.regenCapacity)
+                    } else if (arch.getItemDamage() == RegenConfig.REGENERATION.regenCapacity)
                         player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.transfer.emptyArch", used)), true);
                     return new ActionResult<>(EnumActionResult.FAIL, arch);
                 }
@@ -73,7 +73,7 @@ public class ItemChameleonArch extends Item {
     }
 
     private int doUsageDamage(ItemStack stack, IRegenerationCapability handler) {
-        int supply = RegenConfig.regenCapacity - stack.getItemDamage(), needed = RegenConfig.regenCapacity - handler.getRegensLeft(), used = Math.min(supply, needed);
+        int supply = RegenConfig.REGENERATION.regenCapacity - stack.getItemDamage(), needed = RegenConfig.REGENERATION.regenCapacity - handler.getRegensLeft(), used = Math.min(supply, needed);
         if (used == 0)
             return 0;
 

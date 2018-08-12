@@ -5,11 +5,9 @@ import com.lcm.regeneration.common.capabilities.timelord.capability.IRegeneratio
 import com.lcm.regeneration.events.CommonProxy;
 import com.lcm.regeneration.networking.RNetwork;
 import com.lcm.regeneration.utils.DebugCommand;
-import com.lcm.regeneration.utils.RegenConfig;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -31,16 +29,16 @@ public class Regeneration {
 	public static final String VERSION = "1.0";
 	public static final ResourceLocation ICONS = new ResourceLocation(MODID, "textures/gui/ability_icons.png");
 
+	@Mod.Instance(MODID)
+	public static Regeneration INSTANCE;
 
-
-	@Mod.Instance("lcm-regen") public static Regeneration instance;
-
-	@EventHandler public void preInit(FMLPreInitializationEvent event) {
-		RegenConfig.init(new Configuration(event.getSuggestedConfigurationFile()));
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
 		proxy.preInit(event);
 	}
 
-	@EventHandler public void init(FMLInitializationEvent event) {
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
 		RNetwork.init();
 		MinecraftForge.EVENT_BUS.register(proxy);
 		CapabilityManager.INSTANCE.register(IRegenerationCapability.class, new CapabilityRegeneration.Storage(), CapabilityRegeneration.class);
