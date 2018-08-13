@@ -1,6 +1,6 @@
 package com.lcm.regeneration.utils;
 
-import com.lcm.regeneration.utils.RegenConfig.Regeneration;
+import com.lcm.regeneration.Regeneration;
 
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class RegenConfig {
 
 	public static final Loot LOOT = new Loot();
-	public static final Regeneration REGENERATION = new Regeneration();
+	public static final Regen REGENERATION = new Regen();
 
 	public static class Loot {
 		@Config.LangKey("config.loot_regex")
@@ -20,7 +20,7 @@ public class RegenConfig {
 		public String lootRegex = "minecraft:chests\\/.*";
 	}
 
-	public static class Regeneration {
+	public static class Regen {
 
 		@Config.LangKey("config.max_regens")
 		@Config.Comment("The maximum regeneration capacity. This affects the durability of a Chameleon Arch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations, the chameleon arch will grant the timelord ability and give you infinite regenerations. If you die while regenerating you'll lose your ability (unless dontLosePower is set to true)")
@@ -55,16 +55,16 @@ public class RegenConfig {
 
 		@Config.LangKey("config.post_regen_duration")
 		@Config.Comment("Amount of seconds the post-regeneration effect lasts")
-		public int postRegenerationDuration = 180; //Remember to times this by 20
+		public int postRegenerationDuration = 180;
 
 		@Config.LangKey("config.post_regenerationEffect_level")
 		@Config.Comment("The level of the regeneration status effect granted upon regeneration finish")
-		public int postRegenerationLevel = 4; //Take away 1
+		public int postRegenerationLevel = 4; 
 
 		@Config.LangKey("config.regenerationEffect_level")
 		@Config.Comment("The level of the regeneration status effect granted upon regeneration finish")
 		@Config.RangeInt(max = 127, min = 0)
-		public int regenerationLevel = 2; //Take away 1
+		public int regenerationLevel = 2;
 
 		@Config.LangKey("config.reset_hunger")
 		@Config.Comment("Regenerate hunger bars")
@@ -76,7 +76,7 @@ public class RegenConfig {
 
 		@Config.LangKey("config.absorbtion_level")
 		@Config.Comment("The amount of absorbtion hearts you get when regenerating")
-		public int absorbtionLevel = 10; //times by 2
+		public int absorbtionLevel = 10; 
 
 		@Config.LangKey("config.loose_regens_on_death")
 		@Config.Comment("If this is true you won't lose your timelord power if you get killed during regeneration")

@@ -87,7 +87,7 @@ public class CommonHandler {
 
         IRegenerationCapability handler = event.getHandler();
         player.setHealth(player.getMaxHealth());
-        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.REGENERATION.postRegenerationDuration, RegenConfig.REGENERATION.postRegenerationLevel, false, false)); // 180 seconds of 20 ticks of Regeneration 4
+        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.REGENERATION.postRegenerationDuration * 2, RegenConfig.REGENERATION.postRegenerationLevel - 1, false, false)); // 180 seconds of 20 ticks of Regeneration 4
 
         handler.setRegensLeft(handler.getRegensLeft() - 1);
         handler.setTimesRegenerated(handler.getTimesRegenerated() + 1);
@@ -107,13 +107,13 @@ public class CommonHandler {
 
         IRegenerationCapability handler = event.getHandler();
         player.setHealth(.5f);
-        player.setAbsorptionAmount(RegenConfig.REGENERATION.absorbtionLevel);
+        player.setAbsorptionAmount(RegenConfig.REGENERATION.absorbtionLevel * 2);
         if (RegenConfig.REGENERATION.resetOxygen)
             player.setAir(300);
         if (RegenConfig.REGENERATION.resetHunger)
             player.getFoodStats().setFoodLevel(20);
         player.clearActivePotions();
-        player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10 * 20, RegenConfig.REGENERATION.regenerationLevel, false, false)); // 10 seconds of 20 ticks of Regeneration 2
+        player.addPotionEffect(new PotionEffect(Potion.getPotionById(10), 10 * 20, RegenConfig.REGENERATION.regenerationLevel - 1, false, false)); // 10 seconds of 20 ticks of Regeneration 2
         player.extinguish();
 
         String time = "" + (handler.getTimesRegenerated() + 1);
