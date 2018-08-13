@@ -1,31 +1,22 @@
 package micdoodle8.mods.galacticraft.api.client.tabs;
 
-import java.awt.Color;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import com.lcm.regeneration.client.gui.GuiRegenCustomisation;
-import com.lcm.regeneration.events.RObjects;
-
+import me.sub.regeneration.client.gui.GuiRegenCustomisation;
+import me.sub.regeneration.events.RObjects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.model.ModelPlayer;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
 
 public class InventoryTabRegeneration extends AbstractTab {
-	private static final ModelPlayer biped = new ModelPlayer(0, true);
 	
 	public InventoryTabRegeneration() {
 		super(0, 0, 0, new ItemStack(RObjects.Items.chameleonArch, 1, 3));
-		displayString = I18n.translateToLocal("menu.regeneration");
+		displayString = "Regeneration";
 	}
 
 	@Override
@@ -61,23 +52,6 @@ public class InventoryTabRegeneration extends AbstractTab {
         super.drawButton(minecraft, mouseX, mouseY, partialTicks);
     }
 
-	 private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
-	        Tessellator tessellator = Tessellator.getInstance();
-	        BufferBuilder vertexBuffer = tessellator.getBuffer();
-	        for (int i = 0; i < 8; i++) {
-	            GlStateManager.pushMatrix();
-	            GlStateManager.rotate(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
-	            GlStateManager.scale(1.0f, 1.0f, 0.65f);
-	            vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
-	            vertexBuffer.pos(0.0D, 0.0D, 0.0D).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-	            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-	            vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-	            vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-	            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-	            tessellator.draw();
-	            GlStateManager.popMatrix();
-	        }
-	    }
 	
     protected void drawHoveringText(List list, int x, int y, FontRenderer font){
         if (list.isEmpty())

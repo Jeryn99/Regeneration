@@ -17,7 +17,6 @@ lcm-regen.messages.numsuffix.0=st
 lcm-regen.messages.numsuffix.1=nd
 lcm-regen.messages.numsuffix.2=rd
 lcm-regen.messages.numsuffix.ext=th
-//lcm-regen.messages.newLife=You've got a new life, with new traits: %s.
 lcm-regen.messages.transfer=You've transferred one of your regenerations into the arch
 lcm-regen.messages.transfer.fullArch=You can't store anymore regenerations in this arch
 lcm-regen.messages.transfer.emptyArch=This arch is empty!
@@ -37,3 +36,6 @@ lcm-regen.info.red=Red
 lcm-regen.info.green=Green
 lcm-regen.info.blue=Blue
 
+category.regeneration=Regeneration
+category.loot=Loot settings
+menu.regeneration=Regeneration Customizer
