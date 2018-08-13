@@ -38,6 +38,7 @@ public class MessageRegenerationStyle implements IMessage {
 				if(capability != null)
 					capability.setStyle(message.style);
 					capability.syncToAll();
+					System.out.println(message.style);
 			});
 			return null;
 		}

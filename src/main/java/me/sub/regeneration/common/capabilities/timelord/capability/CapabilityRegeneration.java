@@ -41,8 +41,10 @@ public class CapabilityRegeneration implements IRegenerationCapability {
 	private float secondaryGreen = 0.47f;
 	private float secondaryRed = 1.0f;
 	private float secondaryBlue = 0.0f;
-	private boolean textured= false;
-	
+	private boolean textured = false;
+
+    public CapabilityRegeneration() {}
+
     public CapabilityRegeneration(EntityPlayer player) {
         this.player = player;
     }
@@ -127,7 +129,7 @@ public class CapabilityRegeneration implements IRegenerationCapability {
         compound.setInteger("timesRegenerated", timesRegenerated);
         compound.setBoolean("isTimelord", isTimelord);
         compound.setInteger("regenTicks", regenTicks);
-        compound.setBoolean("textured", false);
+        compound.setBoolean("textured", textured);
         styleTag = compound;
         return compound;
     }
@@ -225,6 +227,7 @@ public class CapabilityRegeneration implements IRegenerationCapability {
           secondaryRed = compound.getFloat("SecondaryRed");
           secondaryGreen = compound.getFloat("SecondaryGreen");
           secondaryBlue =compound.getFloat("SecondaryBlue");
+          textured = compound.getBoolean("textured");
     }
 
     public enum RegenerationState {

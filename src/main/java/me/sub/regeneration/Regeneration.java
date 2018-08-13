@@ -42,7 +42,7 @@ public class Regeneration {
 	public void init(FMLInitializationEvent event) {
 		RNetwork.init();
 		MinecraftForge.EVENT_BUS.register(proxy);
-		CapabilityManager.INSTANCE.register(IRegenerationCapability.class, new CapabilityRegeneration.Storage(), CapabilityRegeneration.class);
+		CapabilityManager.INSTANCE.register(IRegenerationCapability.class, new CapabilityRegeneration.Storage(), CapabilityRegeneration::new);
 		proxy.init(event);
 	}
 
