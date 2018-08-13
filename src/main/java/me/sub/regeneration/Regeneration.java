@@ -1,11 +1,10 @@
 package me.sub.regeneration;
 
-import me.sub.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.IRegenerationCapability;
+import me.sub.regeneration.common.commands.CommandDebug;
 import me.sub.regeneration.networking.RNetwork;
 import me.sub.regeneration.proxy.CommonProxy;
-import me.sub.regeneration.utils.DebugCommand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
@@ -27,7 +26,6 @@ public class Regeneration {
 	public static final String MODID = "lcm-regen";
 	public static final String NAME = "Regeneration";
 	public static final String VERSION = "a4";
-	public static final ResourceLocation ICONS = new ResourceLocation(MODID, "textures/gui/ability_icons.png");
 	public static final String UPDATE_JSON = "https://github.com/SandedShoes/Regeneration/blob/master-1.12.2/update.json";
 	
 	@Mod.Instance(MODID)
@@ -35,7 +33,7 @@ public class Regeneration {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		proxy.preInit(event);
+		proxy.preInit();
 	}
 
 	@EventHandler
@@ -43,17 +41,17 @@ public class Regeneration {
 		RNetwork.init();
 		MinecraftForge.EVENT_BUS.register(proxy);
 		CapabilityManager.INSTANCE.register(IRegenerationCapability.class, new CapabilityRegeneration.Storage(), CapabilityRegeneration::new);
-		proxy.init(event);
+		proxy.init();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		proxy.postInit(event);
+		proxy.postInit();
 	}
 
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
-		event.registerServerCommand(new DebugCommand());
+		event.registerServerCommand(new CommandDebug());
 	}
 
 }

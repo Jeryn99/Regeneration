@@ -3,7 +3,7 @@ package me.sub.regeneration.client.gui;
 import java.io.IOException;
 
 import me.sub.regeneration.Regeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
 import me.sub.regeneration.networking.RNetwork;
 import me.sub.regeneration.networking.packets.MessageRegenerationStyle;
 import net.minecraft.client.Minecraft;

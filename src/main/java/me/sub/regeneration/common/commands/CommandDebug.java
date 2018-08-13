@@ -1,5 +1,6 @@
-package me.sub.regeneration.utils;
+package me.sub.regeneration.common.commands;
 
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -7,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 
-public class DebugCommand extends CommandBase {
+public class CommandDebug extends CommandBase {
 
 	@Override public String getName() {
 		return "regdebug";
@@ -33,7 +34,7 @@ public class DebugCommand extends CommandBase {
 				break;
 			case "set":
 				try {
-//					SuperpowerHandler.getSpecificSuperpowerPlayerHandler(player, TimelordSuperpowerHandler.class).regenerationsLeft = Integer.valueOf(args[1]);
+				player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null).setRegensLeft(Integer.valueOf(args[1]));
 				} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
 					throw new CommandException("Invalid use of set", (Object[]) args);
 				} catch (NullPointerException e) {

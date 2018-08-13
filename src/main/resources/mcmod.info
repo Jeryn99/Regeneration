@@ -1,8 +1,8 @@
 [
 {
   "modid": "lcm-regen",
-  "name": "Doctor who - Across the Galaxy",
-  "description": "Mod that brings a Doctor who experience to Minecraft!",
+  "name": "Regeneration",
+  "description": "Mod that brings a Doctor who Regeneration experience to Minecraft!",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
@@ -11,7 +11,7 @@
     "Sub, Lucraft, Nictogen, HoldYourWaffle"
   ],
   "credits": "",
-  "logoFile": "atg_logo.png",
+  "logoFile": "",
   "screenshots": [],
   "dependencies": []
 }

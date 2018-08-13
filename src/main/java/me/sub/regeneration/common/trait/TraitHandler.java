@@ -2,8 +2,8 @@ package me.sub.regeneration.common.trait;
 
 import java.util.Random;
 
-import me.sub.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.IRegenerationCapability;
 import me.sub.regeneration.common.trait.traits.TraitClumsy;
 import me.sub.regeneration.common.trait.traits.TraitHunger;
 import me.sub.regeneration.common.trait.traits.TraitNightVision;

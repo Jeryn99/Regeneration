@@ -1,6 +1,6 @@
-package me.sub.regeneration.common.capabilities.timelord.events;
+package me.sub.regeneration.common.events;
 
-import me.sub.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
+import me.sub.regeneration.common.capability.IRegenerationCapability;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 

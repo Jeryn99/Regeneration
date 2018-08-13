@@ -1,8 +1,8 @@
 package me.sub.regeneration.networking.packets;
 
 import io.netty.buffer.ByteBuf;
-import me.sub.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.IRegenerationCapability;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -38,7 +38,6 @@ public class MessageRegenerationStyle implements IMessage {
 				if(capability != null)
 					capability.setStyle(message.style);
 					capability.syncToAll();
-					System.out.println(message.style);
 			});
 			return null;
 		}

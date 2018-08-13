@@ -1,11 +1,11 @@
-package me.sub.regeneration.common.capabilities.timelord.capability;
+package me.sub.regeneration.common.capability;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationEvent;
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationStartEvent;
+import me.sub.regeneration.common.events.RegenerationEvent;
+import me.sub.regeneration.common.events.RegenerationFinishEvent;
+import me.sub.regeneration.common.events.RegenerationStartEvent;
 import me.sub.regeneration.common.trait.ITrait;
 import me.sub.regeneration.common.trait.TraitHandler;
 import me.sub.regeneration.networking.RNetwork;
