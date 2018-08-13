@@ -1,4 +1,4 @@
-package me.sub.regeneration.common.capabilities.timelord.capability;
+package me.sub.regeneration.common.capability;
 
 import me.sub.regeneration.common.trait.ITrait;
 import me.sub.regeneration.common.trait.TraitHandler;
@@ -46,4 +46,6 @@ public interface IRegenerationCapability {
     ITrait getTrait();
 
     void setTrait(TraitHandler.Trait trait);
+
+    NBTTagCompound getDefaultStyle();
 }

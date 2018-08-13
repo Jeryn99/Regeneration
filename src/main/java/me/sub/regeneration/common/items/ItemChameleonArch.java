@@ -1,8 +1,7 @@
 package me.sub.regeneration.common.items;
 
-import me.sub.regeneration.Regeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.IRegenerationCapability;
 import me.sub.regeneration.events.RObjects;
 import me.sub.regeneration.utils.RegenConfig;
 import net.minecraft.creativetab.CreativeTabs;
@@ -20,17 +19,22 @@ import net.minecraft.world.World;
 public class ItemChameleonArch extends Item {
 
     public ItemChameleonArch() { // CHECK how should combining/repairing work out?
-        setUnlocalizedName("chameleonArch");
-        setRegistryName(Regeneration.MODID, "chameleonarch");
         setCreativeTab(CreativeTabs.MISC);
         setMaxStackSize(1);
         setMaxDamage(RegenConfig.REGENERATION.regenCapacity);
     }
 
-    @Override public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    @Override
+    public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+        super.onCreated(stack, worldIn, playerIn);
+        stack.setItemDamage(RegenConfig.REGENERATION.regenCapacity);
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack arch = player.getHeldItem(hand);
         IRegenerationCapability handler = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
-        System.out.println(handler);
+
         if(handler == null) return new ActionResult<>(EnumActionResult.PASS, arch);
         player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.SoundEvents.fobwatch, SoundCategory.PLAYERS, 1.0F, 1.0F);
 

@@ -1,8 +1,9 @@
 package me.sub.regeneration.events;
 
-import me.sub.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
+import me.sub.regeneration.Regeneration;
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.IRegenerationCapability;
+import me.sub.regeneration.common.events.RegenerationFinishEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovementInput;
@@ -14,7 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 
-@Mod.EventBusSubscriber(Side.CLIENT)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
 public class ClientHandler {
 
     @SubscribeEvent

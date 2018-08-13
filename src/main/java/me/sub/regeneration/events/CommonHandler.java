@@ -1,11 +1,11 @@
 package me.sub.regeneration.events;
 
 import me.sub.regeneration.Regeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationEvent;
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationStartEvent;
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.IRegenerationCapability;
+import me.sub.regeneration.common.events.RegenerationEvent;
+import me.sub.regeneration.common.events.RegenerationFinishEvent;
+import me.sub.regeneration.common.events.RegenerationStartEvent;
 import me.sub.regeneration.common.trait.TraitHandler;
 import me.sub.regeneration.utils.RegenConfig;
 import me.sub.regeneration.utils.RegenUtils;
@@ -43,7 +43,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Regeneration.MODID)
 public class CommonHandler {
 
     @SubscribeEvent

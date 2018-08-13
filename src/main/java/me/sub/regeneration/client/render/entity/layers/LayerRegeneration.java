@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import me.sub.regeneration.Regeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.IRegenerationCapability;
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.IRegenerationCapability;
 import me.sub.regeneration.utils.LimbManipulationUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -63,8 +63,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     @Override
     public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
-        if (player.hasCapability(CapabilityRegeneration.TIMELORD_CAP, null)
-                && player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null).isTimelord()) {
+        if (player.hasCapability(CapabilityRegeneration.TIMELORD_CAP, null) && player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null).isTimelord()) {
             IRegenerationCapability capability = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 
             if (capability.getState() == CapabilityRegeneration.RegenerationState.NONE)
@@ -296,12 +295,15 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
     @SubscribeEvent 
     public static void onRenderPlayerPost(RenderPlayerEvent.Post e) {
-        if(lastWorld != e.getEntityPlayer().world){
-            lastWorld = e.getEntityPlayer().world;
+
+    	EntityPlayer player = e.getEntityPlayer();
+    	
+    	if(lastWorld != player.world){
+            lastWorld = player.world;
             layersAddedTo.clear();
         }
-        if (!layersAddedTo.contains(e.getEntityPlayer())) {
-            layersAddedTo.add(e.getEntityPlayer());
+        if (!layersAddedTo.contains(player)) {
+            layersAddedTo.add(player);
             e.getRenderer().addLayer(new LayerRegeneration(e.getRenderer()));
         }
     }

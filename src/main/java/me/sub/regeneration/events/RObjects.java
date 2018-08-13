@@ -7,6 +7,7 @@ import java.util.Arrays;
 import me.sub.regeneration.Regeneration;
 import me.sub.regeneration.common.items.ItemChameleonArch;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -18,11 +19,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Regeneration.MODID)
 public class RObjects {
 
 	public static class Items {
-		public static Item chameleonArch = new ItemChameleonArch();
+		public static Item chameleonArch = createItem(new ItemChameleonArch(), "chameleonarch");
 	}
 
 
@@ -66,6 +67,13 @@ public class RObjects {
 				throw new RuntimeException("Incorrect field in item sub-class", e);
 			}
 		}
+	}
+
+	public static Item createItem(Item item, String name){
+		item.setRegistryName(Regeneration.MODID, name);
+		item.setUnlocalizedName(name);
+		item.setCreativeTab(CreativeTabs.MISC);
+		return item;
 	}
 
 

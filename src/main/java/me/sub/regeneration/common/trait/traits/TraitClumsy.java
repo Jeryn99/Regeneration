@@ -7,8 +7,6 @@ import net.minecraft.util.NonNullList;
 
 public class TraitClumsy implements ITrait {
 
-    private int timer;
-
     @Override
     public String getName() {
         return "Clumsy";
@@ -19,17 +17,15 @@ public class TraitClumsy implements ITrait {
         if (player.world.isRemote)
             return;
 
-        timer++;
 
         NonNullList<ItemStack> inv = player.inventory.mainInventory;
         ItemStack stack = inv.get(player.world.rand.nextInt(inv.size()));
         ItemStack droppedStack = stack.copy();
-        if (!stack.isEmpty() && timer == 1573) {
+        if (!stack.isEmpty() && player.ticksExisted % 130 == 0) {
             player.dropItem(droppedStack, false);
             stack.shrink(1);
-            timer = 0;
+            }
         }
-    }
 
     @Override
     public String getMessage() {

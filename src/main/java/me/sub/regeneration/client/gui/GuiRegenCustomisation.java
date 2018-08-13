@@ -1,9 +1,8 @@
 package me.sub.regeneration.client.gui;
 
-import java.io.IOException;
-
 import me.sub.regeneration.Regeneration;
-import me.sub.regeneration.common.capabilities.timelord.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.CapabilityRegeneration;
+import me.sub.regeneration.common.capability.IRegenerationCapability;
 import me.sub.regeneration.networking.RNetwork;
 import me.sub.regeneration.networking.packets.MessageRegenerationStyle;
 import net.minecraft.client.Minecraft;
@@ -20,8 +19,8 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
 
 public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISlider {
-	
-	public static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/customizer.png");
+
+	public static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/longbg.png");
 	
 	public GuiRegenCustomisation() {
 		super(new Blankcontainer());
@@ -55,6 +54,7 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 		textured = old.getBoolean("textured");
 		
 		this.buttonList.add(new GuiButtonExt(0, i + 4, j + 167, 50, 18, I18n.translateToLocal("lcm-regen.info.save")));
+		this.buttonList.add(new GuiButtonExt(3, i + 100, j + 167, 50, 18, I18n.translateToLocal("Reset")));
 		this.buttonList.add(new GuiButtonExt(1, i + 202, j + 167, 50, 18, I18n.translateToLocal("gui.cancel")));
 		this.texturedButton = new GuiButton(2, i + this.xSize/2 - 25, j + 45, 50, 20, I18n.translateToLocal(""));
 		this.buttonList.add(texturedButton);
@@ -78,6 +78,18 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 		nbt.setFloat("SecondaryGreen", secondaryGreen);
 		nbt.setFloat("SecondaryBlue", secondaryBlue);
 		nbt.setBoolean("textured", textured);
+		return nbt;
+	}
+
+	public NBTTagCompound getDefaultStyle() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setFloat("PrimaryRed", 1.0f);
+		nbt.setFloat("PrimaryGreen", 0.78f);
+		nbt.setFloat("PrimaryBlue", 0.0f);
+		nbt.setFloat("SecondaryRed", 1.0f);
+		nbt.setFloat("SecondaryGreen", 0.47f);
+		nbt.setFloat("SecondaryBlue", 0.0f);
+		nbt.setBoolean("textured", false);
 		return nbt;
 	}
 	
@@ -113,18 +125,27 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 	}
 	
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(GuiButton button) {
 		if (button.id == 0) {
-			sendStyleNBTTagToServer();
+			sendStyleNBTTagToServer(true);
 			mc.player.closeScreen();
 		}
 		if (button.id == 1) mc.player.closeScreen();
 		if (button.id == 2) textured = !textured;
+		if (button.id == 3) sendStyleNBTTagToServer(false);
+	}
+
+	private void sendStyleNBTTagToServer(boolean notReset) {
+		if (notReset) {
+		RNetwork.INSTANCE.sendToServer(new MessageRegenerationStyle(getStyleNBTTag()));
+		} else {
+			System.out.println("sadasdasdas");
+			IRegenerationCapability capa = Minecraft.getMinecraft().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
+			RNetwork.INSTANCE.sendToServer(new MessageRegenerationStyle(getDefaultStyle()));
+		}
 	}
 	
-	private void sendStyleNBTTagToServer() {
-		RNetwork.INSTANCE.sendToServer(new MessageRegenerationStyle(getStyleNBTTag()));
-	}
+	
 	
 	@Override
 	public void onChangeSliderValue(GuiSlider slider) {

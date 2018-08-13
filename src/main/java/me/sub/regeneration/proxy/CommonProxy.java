@@ -1,19 +1,20 @@
 package me.sub.regeneration.proxy;
 
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+public class CommonProxy implements IProxy{
 
-public class CommonProxy {
 
-	@Mod.EventHandler public void preInit(FMLPreInitializationEvent ev) {
+	@Override
+	public void preInit() {
+
 	}
 
-	@Mod.EventHandler public void init(FMLInitializationEvent ev) {
+	@Override
+	public void init() {
+
 	}
 
-	@Mod.EventHandler public void postInit(FMLPostInitializationEvent ev) {
-	}
+	@Override
+	public void postInit() {
 
+	}
 }

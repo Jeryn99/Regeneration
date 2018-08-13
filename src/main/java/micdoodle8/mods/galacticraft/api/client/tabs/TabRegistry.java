@@ -3,18 +3,19 @@ package micdoodle8.mods.galacticraft.api.client.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.sub.regeneration.Regeneration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@EventBusSubscriber(Side.CLIENT)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
 public class TabRegistry
 {
 	private static ArrayList<AbstractTab> tabList = new ArrayList<AbstractTab>();

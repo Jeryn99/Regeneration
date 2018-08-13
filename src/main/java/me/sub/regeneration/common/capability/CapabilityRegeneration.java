@@ -1,11 +1,8 @@
-package me.sub.regeneration.common.capabilities.timelord.capability;
+package me.sub.regeneration.common.capability;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationEvent;
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationFinishEvent;
-import me.sub.regeneration.common.capabilities.timelord.events.RegenerationStartEvent;
+import me.sub.regeneration.common.events.RegenerationEvent;
+import me.sub.regeneration.common.events.RegenerationFinishEvent;
+import me.sub.regeneration.common.events.RegenerationStartEvent;
 import me.sub.regeneration.common.trait.ITrait;
 import me.sub.regeneration.common.trait.TraitHandler;
 import me.sub.regeneration.networking.RNetwork;
@@ -21,6 +18,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Created by Nictogen on 3/16/18.
  */
@@ -32,7 +32,7 @@ public class CapabilityRegeneration implements IRegenerationCapability {
     public RegenerationState state = RegenerationState.NONE;
     private boolean isTimelord;
     private EntityPlayer player;
-    private NBTTagCompound styleTag = defaultStyle();
+    private NBTTagCompound styleTag = getDefaultStyle();
     private boolean dirty = true;
     public TraitHandler.Trait trait = TraitHandler.Trait.NONE;
 	private float primaryRed = 1.0f;
@@ -49,7 +49,8 @@ public class CapabilityRegeneration implements IRegenerationCapability {
         this.player = player;
     }
 
-    private NBTTagCompound defaultStyle() {
+    @Override
+    public NBTTagCompound getDefaultStyle() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setFloat("PrimaryRed", 1.0f);
         nbt.setFloat("PrimaryGreen", 0.78f);
