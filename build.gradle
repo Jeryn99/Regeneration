@@ -27,6 +27,12 @@ minecraft {
     makeObfSourceJar = true
 }
 
+jar {
+    manifest {
+        attributes 'FMLAT': 'lcm-regen_at.cfg'
+    }
+}
+
 dependencies {}
 
 processResources {

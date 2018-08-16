@@ -1,12 +1,8 @@
 package me.sub.regeneration.client.render.entity.layers;
 
-import java.awt.Color;
-import java.util.ArrayList;
-
 import me.sub.regeneration.Regeneration;
 import me.sub.regeneration.common.capability.CapabilityRegeneration;
 import me.sub.regeneration.common.capability.IRegenerationCapability;
-import me.sub.regeneration.utils.LimbManipulationUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -23,41 +19,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.awt.*;
 
 /**
  * Created by Nictogen on 3/16/18.
  */
-@Mod.EventBusSubscriber(Side.CLIENT)
 @SideOnly(Side.CLIENT)
 public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     private static final ModelPlayer playerModelLargeArms = new ModelPlayer(0.1F, false);
     private static final ModelPlayer playerModelSmallArms = new ModelPlayer(0.1F, true);
     private static final ResourceLocation REGEN_TEXTURE = new ResourceLocation(Regeneration.MODID, "textures/entity/regen.png");
-    private static ArrayList<EntityPlayer> layersAddedTo = new ArrayList<>();
-    private static World lastWorld;
     private RenderPlayer playerRenderer;
 
     public LayerRegeneration(RenderPlayer playerRenderer) {
         this.playerRenderer = playerRenderer;
-    }
-
-    @SubscribeEvent
-    public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
-        IRegenerationCapability handler = e.getEntityPlayer().getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
-        if (handler != null && handler.isTimelord() && handler.getState() != CapabilityRegeneration.RegenerationState.NONE) {
-            int arm_shake = e.getEntityPlayer().world.rand.nextInt(7);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
-        }
     }
 
     @Override
@@ -291,21 +269,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         GlStateManager.color(255, 255, 255, 255);
         GlStateManager.enableTexture2D();
         GlStateManager.popAttrib();
-    }
-
-    @SubscribeEvent 
-    public static void onRenderPlayerPost(RenderPlayerEvent.Post e) {
-
-    	EntityPlayer player = e.getEntityPlayer();
-    	
-    	if(lastWorld != player.world){
-            lastWorld = player.world;
-            layersAddedTo.clear();
-        }
-        if (!layersAddedTo.contains(player)) {
-            layersAddedTo.add(player);
-            e.getRenderer().addLayer(new LayerRegeneration(e.getRenderer()));
-        }
     }
 
     public boolean shouldCombineTextures() {

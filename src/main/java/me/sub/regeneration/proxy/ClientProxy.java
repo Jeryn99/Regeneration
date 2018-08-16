@@ -3,6 +3,13 @@ package me.sub.regeneration.proxy;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabRegeneration;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+
+import java.util.List;
 
 public class ClientProxy extends CommonProxy {
 
@@ -11,10 +18,10 @@ public class ClientProxy extends CommonProxy {
 		super.preInit();
 	}
 
-	@Override
-	public void init() {
-		super.init();
-	}
+    private static void correctLayers(RenderLivingBase playerRender) {
+        List<LayerRenderer> list = playerRender.layerRenderers;
+        list.removeIf(layer -> layer instanceof LayerHeldItem);
+    }
 
 	@Override
 	public void postInit() {
@@ -23,4 +30,18 @@ public class ClientProxy extends CommonProxy {
         }
     	TabRegistry.registerTab(new InventoryTabRegeneration());
 	}
+
+    @Override
+    public void init() {
+        super.init();
+        itemFix();
+    }
+
+    public void itemFix() {
+
+        for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
+            correctLayers(playerRender);
+        }
+    }
+	 
 }

@@ -32,7 +32,8 @@ public class MessageRegenerationStyle implements IMessage {
 
 	public static class Handler implements IMessageHandler<MessageRegenerationStyle, IMessage> {
 
-		@Override public IMessage onMessage(MessageRegenerationStyle message, MessageContext ctx) {
+        @Override
+        public IMessage onMessage(final MessageRegenerationStyle message, final MessageContext ctx) {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
                 IRegenerationCapability capability = ctx.getServerHandler().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 				if(capability != null)
