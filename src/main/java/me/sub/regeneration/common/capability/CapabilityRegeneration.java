@@ -7,9 +7,11 @@ import me.sub.regeneration.common.trait.ITrait;
 import me.sub.regeneration.common.trait.TraitHandler;
 import me.sub.regeneration.networking.RNetwork;
 import me.sub.regeneration.networking.packets.MessageChangeRegenState;
+import me.sub.regeneration.networking.packets.MessageChangeView;
 import me.sub.regeneration.networking.packets.MessageSyncTimelordData;
 import me.sub.regeneration.utils.RegenConfig;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -66,6 +68,11 @@ public class CapabilityRegeneration implements IRegenerationCapability {
     public void update() {
 
         if (!player.world.isRemote) {
+
+            if (getRegenTicks() > 0) {
+                RNetwork.INSTANCE.sendTo(new MessageChangeView(), (EntityPlayerMP) player);
+            }
+
             if (dirty) {
                 dirty = false;
                 syncToAll();
