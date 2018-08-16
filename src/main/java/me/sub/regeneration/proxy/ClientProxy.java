@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.util.List;
 
@@ -17,11 +18,6 @@ public class ClientProxy extends CommonProxy {
 	public void preInit() {
 		super.preInit();
 	}
-
-    private static void correctLayers(RenderLivingBase playerRender) {
-        List<LayerRenderer> list = playerRender.layerRenderers;
-        list.removeIf(layer -> layer instanceof LayerHeldItem);
-    }
 
 	@Override
 	public void postInit() {
@@ -38,9 +34,9 @@ public class ClientProxy extends CommonProxy {
     }
 
     public void itemFix() {
-
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
-            correctLayers(playerRender);
+            List<LayerRenderer> list = ReflectionHelper.getPrivateValue(RenderLivingBase.class, playerRender, "layerRenderers", "field_177097_h");
+            list.removeIf(layer -> layer instanceof LayerHeldItem);
         }
     }
 	 

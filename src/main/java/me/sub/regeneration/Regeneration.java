@@ -5,19 +5,15 @@ import me.sub.regeneration.common.capability.IRegenerationCapability;
 import me.sub.regeneration.common.commands.CommandDebug;
 import me.sub.regeneration.networking.RNetwork;
 import me.sub.regeneration.proxy.CommonProxy;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Regeneration.MODID, name = Regeneration.NAME, version = Regeneration.VERSION, dependencies = "required:forge@[14.23.1.2574,)", acceptedMinecraftVersions = "1.12.2", updateJSON = Regeneration.UPDATE_JSON)
-@EventBusSubscriber
 public class Regeneration {
 
 	@SidedProxy(serverSide = "me.sub.regeneration.proxy.CommonProxy", clientSide = "me.sub.regeneration.proxy.ClientProxy")
@@ -31,6 +27,8 @@ public class Regeneration {
 	@Mod.Instance(MODID)
 	public static Regeneration INSTANCE;
 
+    Logger LOG = LogManager.getLogger(NAME);
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		proxy.preInit();
@@ -39,7 +37,6 @@ public class Regeneration {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		RNetwork.init();
-		MinecraftForge.EVENT_BUS.register(proxy);
 		CapabilityManager.INSTANCE.register(IRegenerationCapability.class, new CapabilityRegeneration.Storage(), CapabilityRegeneration::new);
 		proxy.init();
 	}
@@ -53,5 +50,10 @@ public class Regeneration {
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandDebug());
 	}
+
+    @EventHandler
+    public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+        LOG.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
+    }
 
 }
