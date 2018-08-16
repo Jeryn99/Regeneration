@@ -1,9 +1,5 @@
 package me.sub.regeneration.utils;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -19,7 +15,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(Side.CLIENT) public class LimbManipulationUtil {
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+@Mod.EventBusSubscriber(Side.CLIENT)
+public class LimbManipulationUtil {
 	private static Field textureOffsetXField = ModelRenderer.class.getDeclaredFields()[2];
 	private static Field textureOffsetYField = ModelRenderer.class.getDeclaredFields()[3];
 
@@ -91,15 +92,40 @@ import net.minecraftforge.fml.relauncher.Side;
 		RIGHT_ARM(ModelBiped.class.getDeclaredFields()[3], ModelPlayer.class.getDeclaredFields()[1]),
 		LEFT_LEG(ModelBiped.class.getDeclaredFields()[6], ModelPlayer.class.getDeclaredFields()[2]),
 		RIGHT_LEG(ModelBiped.class.getDeclaredFields()[5], ModelPlayer.class.getDeclaredFields()[3]);
-		
 		private Field rendererField, secondaryRendererField;
-		
 		Limb(Field rendererField, Field secondaryRendererField) {
 			this.rendererField = rendererField;
 			this.secondaryRendererField = secondaryRendererField;
 		}
 	}
 	//@formatter:on
+
+
+	@SubscribeEvent
+	public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+		System.out.println("sdfsdfsdfsdsdf");
+		RenderLivingBase renderer = (RenderLivingBase) Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(event.getEntityPlayer());
+		List<LayerRenderer<AbstractClientPlayer>> layerList = ReflectionHelper.getPrivateValue(RenderLivingBase.class, renderer, 4);
+		try {
+			for (LayerRenderer<AbstractClientPlayer> layer : layerList)
+				for (Field field : layer.getClass().getDeclaredFields()) {
+					field.setAccessible(true);
+					if (field.getType() == ModelBiped.class) {
+						for (ModelRenderer modelRenderer : ((ModelBiped) field.get(layer)).boxList)
+							if (modelRenderer instanceof CustomModelRenderer)
+								((CustomModelRenderer) modelRenderer).reset();
+					} else if (field.getType() == ModelPlayer.class)
+						for (ModelRenderer modelRenderer : ((ModelBiped) field.get(layer)).boxList)
+							if (modelRenderer instanceof CustomModelRenderer)
+								((CustomModelRenderer) modelRenderer).reset();
+				}
+			for (ModelRenderer modelRenderer : event.getRenderer().getMainModel().boxList)
+				if (modelRenderer instanceof CustomModelRenderer)
+					((CustomModelRenderer) modelRenderer).reset();
+		} catch (IllegalAccessException ignored) {
+		}
+	}
+	
 
 	public static class LimbManipulator {
 
@@ -184,26 +210,31 @@ import net.minecraftforge.fml.relauncher.Side;
 		}
 	}
 
-	@SubscribeEvent public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-		@SuppressWarnings("rawtypes") RenderLivingBase renderer = (RenderLivingBase) Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(event.getEntityPlayer());
-		List<LayerRenderer<AbstractClientPlayer>> layerList = ReflectionHelper.getPrivateValue(RenderLivingBase.class, renderer, 4);
+	public static LimbManipulator getLimbManipulator(ModelBiped model, BipedLimb limb) {
+		LimbManipulator manipulator = new LimbManipulator();
 		try {
-			for (LayerRenderer<AbstractClientPlayer> layer : layerList)
-				for (Field field : layer.getClass().getDeclaredFields()) {
-					field.setAccessible(true);
-					if (field.getType() == ModelBiped.class) {
-						for (ModelRenderer modelRenderer : ((ModelBiped) field.get(layer)).boxList)
-							if (modelRenderer instanceof CustomModelRenderer)
-								((CustomModelRenderer) modelRenderer).reset();
-					} else if (field.getType() == ModelPlayer.class)
-						for (ModelRenderer modelRenderer : ((ModelBiped) field.get(layer)).boxList)
-							if (modelRenderer instanceof CustomModelRenderer)
-								((CustomModelRenderer) modelRenderer).reset();
-				}
-			for (ModelRenderer modelRenderer : event.getRenderer().getMainModel().boxList)
-				if (modelRenderer instanceof CustomModelRenderer)
-					((CustomModelRenderer) modelRenderer).reset();
+			textureOffsetXField.setAccessible(true);
+			textureOffsetYField.setAccessible(true);
+			ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
+			manipulator.limbs.add(new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer), textureOffsetYField.getInt(modelRenderer), modelRenderer, limb.rendererField));
+			textureOffsetXField.setAccessible(false);
+			textureOffsetYField.setAccessible(false);
 		} catch (IllegalAccessException ignored) {}
+		return manipulator;
+	}
+
+	public enum BipedLimb {
+		HEAD(ModelBiped.class.getDeclaredFields()[0]),
+		BODY(ModelBiped.class.getDeclaredFields()[2]),
+		LEFT_ARM(ModelBiped.class.getDeclaredFields()[4]),
+		RIGHT_ARM(ModelBiped.class.getDeclaredFields()[3]),
+		LEFT_LEG(ModelBiped.class.getDeclaredFields()[6]),
+		RIGHT_LEG(ModelBiped.class.getDeclaredFields()[5]);
+		private Field rendererField;
+
+		BipedLimb(Field rendererField) {
+			this.rendererField = rendererField;
+		}
 	}
 
 }

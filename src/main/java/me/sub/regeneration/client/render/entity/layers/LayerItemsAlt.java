@@ -22,7 +22,6 @@ public class LayerItemsAlt extends LayerHeldItem {
                 return;
             }
         }
-
         super.doRenderLayer(entityLiving, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
     }
 }
