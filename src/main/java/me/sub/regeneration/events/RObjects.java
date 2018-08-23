@@ -29,7 +29,6 @@ public class RObjects {
 	
 	public static class SoundEvents {
 		public static final SoundEvent regeneration = new RegenSoundEvent("regeneration");
-		public static final SoundEvent timeyWimey = new RegenSoundEvent("timey_wimey");
 		public static final SoundEvent fobwatch = new RegenSoundEvent("fob_watch");
 	}
 	
