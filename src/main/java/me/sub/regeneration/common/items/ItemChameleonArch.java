@@ -36,7 +36,6 @@ public class ItemChameleonArch extends Item {
 		IRegenerationCapability handler = player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 		
 		if(handler == null) return new ActionResult<>(EnumActionResult.PASS, arch);
-		player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.SoundEvents.fobwatch, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		
 		if (arch.getItemDamage() == RegenConfig.REGENERATION.regenCapacity) {
 			player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.transfer.emptyArch")), true);
@@ -44,11 +43,11 @@ public class ItemChameleonArch extends Item {
 		}
 		
 		if (!handler.isTimelord()) {
+			player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.SoundEvents.fobwatch, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			handler.setTimelord(true);
 			doUsageDamage(arch, handler);
 			player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.becomeTimelord")), true);
 		} else {
-			
 			if (!player.isSneaking()) {
 				int used = doUsageDamage(arch, handler);
 				if (used == 0) {
