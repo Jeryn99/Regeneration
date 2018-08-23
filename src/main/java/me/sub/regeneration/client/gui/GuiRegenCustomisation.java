@@ -2,7 +2,6 @@ package me.sub.regeneration.client.gui;
 
 import me.sub.regeneration.Regeneration;
 import me.sub.regeneration.common.capability.CapabilityRegeneration;
-import me.sub.regeneration.common.capability.IRegenerationCapability;
 import me.sub.regeneration.networking.RNetwork;
 import me.sub.regeneration.networking.packets.MessageRegenerationStyle;
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,7 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 	public static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/longbg.png");
 	
 	public GuiRegenCustomisation() {
-		super(new Blankcontainer());
+		super(new BlankContainer());
 	}
 	
 	public float primaryRed;
@@ -139,8 +138,8 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 		if (notReset) {
 			RNetwork.INSTANCE.sendToServer(new MessageRegenerationStyle(getStyleNBTTag()));
 		} else {
-			System.out.println("sadasdasdas");
-			IRegenerationCapability capa = Minecraft.getMinecraft().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
+			System.out.println("sadasdasdas"); //XXX wot?
+			Minecraft.getMinecraft().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 			RNetwork.INSTANCE.sendToServer(new MessageRegenerationStyle(getDefaultStyle()));
 		}
 	}

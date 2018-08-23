@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class ItemChameleonArch extends Item {
 	
-	public ItemChameleonArch() { // CHECK how should combining/repairing work out?
+	public ItemChameleonArch() { // TODO how should combining/repairing work out?
 		setCreativeTab(CreativeTabs.MISC);
 		setMaxStackSize(1);
 		setMaxDamage(RegenConfig.REGENERATION.regenCapacity);

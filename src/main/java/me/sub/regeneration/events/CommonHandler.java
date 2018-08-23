@@ -155,7 +155,7 @@ public class CommonHandler {
 	}
 	
 	@SubscribeEvent
-	public static void registerLoot(LootTableLoadEvent e) { // CHECK can this loot table actually be overriden in resource packs?
+	public static void registerLoot(LootTableLoadEvent e) { // TODO can this loot table actually be overriden in resource packs?
 		if (!e.getName().toString().toLowerCase().matches(RegenConfig.LOOT.lootRegex) || RegenConfig.REGENERATION.disableArch)
 			return;
 		

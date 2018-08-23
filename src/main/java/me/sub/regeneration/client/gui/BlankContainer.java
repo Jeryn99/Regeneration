@@ -3,7 +3,7 @@ package me.sub.regeneration.client.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 
-public class Blankcontainer extends Container {
+public class BlankContainer extends Container {
 	
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
