@@ -8,12 +8,6 @@ import me.sub.regeneration.common.capability.IRegenerationCapability;
 import me.sub.regeneration.common.events.RegenerationFinishEvent;
 import me.sub.regeneration.utils.LimbManipulationUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
-import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovementInput;
 import net.minecraft.world.World;
@@ -23,11 +17,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
@@ -86,36 +78,16 @@ public class ClientHandler {
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
 
-        RenderPlayer renderer = e.getRenderer();
-
         IRegenerationCapability handler = e.getEntityPlayer().getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
         if (handler != null && handler.isTimelord() && handler.getState() != CapabilityRegeneration.RegenerationState.NONE) {
-            int arm_shake = e.getEntityPlayer().world.rand.nextInt(7);
+            int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
 
-            LimbManipulationUtil.getLimbManipulator(renderer, LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
-            LimbManipulationUtil.getLimbManipulator(renderer, LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
-            LimbManipulationUtil.getLimbManipulator(renderer, LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
-            LimbManipulationUtil.getLimbManipulator(renderer, LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
-            LimbManipulationUtil.getLimbManipulator(renderer, LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
-
-            List<LayerRenderer> list = ReflectionHelper.getPrivateValue(RenderLivingBase.class, renderer, "layerRenderers", "field_177097_h");
-
-            for (LayerRenderer layer : list)
-                if (layer instanceof LayerBipedArmor) {
-                    LayerBipedArmor layerArmorBase = (LayerBipedArmor) layer;
-                    ModelBiped modelBipedLegs = ReflectionHelper.getPrivateValue(LayerArmorBase.class, layerArmorBase, 1);
-                    ModelBiped modelBiped = ReflectionHelper.getPrivateValue(LayerArmorBase.class, layerArmorBase, 2);
-                    animateArmor(modelBiped, modelBipedLegs, arm_shake);
-                }
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
+            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
         }
-    }
-
-    private static void animateArmor(ModelBiped modelBiped, ModelBiped legs, int arm_shake) {
-        LimbManipulationUtil.getLimbManipulator(modelBiped, LimbManipulationUtil.BipedLimb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
-        LimbManipulationUtil.getLimbManipulator(modelBiped, LimbManipulationUtil.BipedLimb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
-        LimbManipulationUtil.getLimbManipulator(modelBiped, LimbManipulationUtil.BipedLimb.HEAD).setAngles(-50, 0, 0);
-        LimbManipulationUtil.getLimbManipulator(legs, LimbManipulationUtil.BipedLimb.LEFT_LEG).setAngles(0, 0, -10);
-        LimbManipulationUtil.getLimbManipulator(legs, LimbManipulationUtil.BipedLimb.RIGHT_LEG).setAngles(0, 0, 10);
     }
 
 }
