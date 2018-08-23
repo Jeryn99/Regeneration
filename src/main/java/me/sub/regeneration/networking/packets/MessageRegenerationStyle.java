@@ -14,31 +14,31 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class MessageRegenerationStyle implements IMessage {
 	private NBTTagCompound style;
-
+	
 	public MessageRegenerationStyle() {
 	}
-
+	
 	public MessageRegenerationStyle(NBTTagCompound nbtTagCompound) {
 		this.style = nbtTagCompound;
 	}
-
+	
 	@Override public void fromBytes(ByteBuf buf) {
 		this.style = ByteBufUtils.readTag(buf);
 	}
-
+	
 	@Override public void toBytes(ByteBuf buf) {
 		ByteBufUtils.writeTag(buf, this.style);
 	}
-
+	
 	public static class Handler implements IMessageHandler<MessageRegenerationStyle, IMessage> {
-
-        @Override
-        public IMessage onMessage(final MessageRegenerationStyle message, final MessageContext ctx) {
+		
+		@Override
+		public IMessage onMessage(final MessageRegenerationStyle message, final MessageContext ctx) {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-                IRegenerationCapability capability = ctx.getServerHandler().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
+				IRegenerationCapability capability = ctx.getServerHandler().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
 				if(capability != null)
 					capability.setStyle(message.style);
-					capability.syncToAll();
+				capability.syncToAll();
 			});
 			return null;
 		}

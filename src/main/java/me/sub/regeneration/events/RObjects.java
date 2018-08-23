@@ -21,41 +21,42 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 @Mod.EventBusSubscriber(modid = Regeneration.MODID)
 public class RObjects {
-
+	
 	public static class Items {
 		public static Item chameleonArch = createItem(new ItemChameleonArch(), "chameleonarch");
 	}
-
-
+	
+	
 	public static class SoundEvents {
 		public static final SoundEvent regeneration = new RegenSoundEvent("regeneration");
 		public static final SoundEvent timeyWimey = new RegenSoundEvent("timey_wimey");
 		public static final SoundEvent fobwatch = new RegenSoundEvent("fob_watch");
 	}
-
-
-	 @SubscribeEvent
-	 public static void registerObjects(RegistryEvent ev) {
+	
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SubscribeEvent
+	public static void registerObjects(RegistryEvent ev) {
 		if (!(ev instanceof RegistryEvent.Register))
 			return;
 		IForgeRegistry registry = ((RegistryEvent.Register) ev).getRegistry();
-
+		
 		for (Class<?> aClass : RObjects.class.getDeclaredClasses()) {
 			if (Arrays.stream(aClass.getDeclaredFields()).noneMatch(field -> registry.getRegistrySuperType().isAssignableFrom(field.getType())))
 				continue;
 			ArrayList<IForgeRegistryEntry> entries = new ArrayList<>();
-
+			
 			for (Field field : aClass.getDeclaredFields())
 				try {
 					entries.add((IForgeRegistryEntry) field.get(null));
 				} catch (IllegalAccessException | ClassCastException e) {
 					throw new RuntimeException("Incorrect field in object sub-class", e);
 				}
-
+			
 			entries.forEach(registry::register);
 		}
 	}
-
+	
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent ev) {
 		for (Field f : Items.class.getDeclaredFields()) {
@@ -68,15 +69,15 @@ public class RObjects {
 			}
 		}
 	}
-
+	
 	public static Item createItem(Item item, String name){
 		item.setRegistryName(Regeneration.MODID, name);
 		item.setUnlocalizedName(name);
 		item.setCreativeTab(CreativeTabs.MISC);
 		return item;
 	}
-
-
+	
+	
 	public static class RegenSoundEvent extends SoundEvent {
 		public RegenSoundEvent(String name) {
 			super(new ResourceLocation(Regeneration.MODID, name));

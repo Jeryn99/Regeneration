@@ -1,5 +1,9 @@
 package me.sub.regeneration.utils;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -15,17 +19,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class LimbManipulationUtil
 {
-
+	
 	private static Field textureOffsetXField = ModelRenderer.class.getDeclaredFields()[2];
 	private static Field textureOffsetYField = ModelRenderer.class.getDeclaredFields()[3];
-
+	
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb)
 	{
 		LimbManipulator manipulator = new LimbManipulator();
@@ -33,10 +33,10 @@ public class LimbManipulationUtil
 		{
 			textureOffsetXField.setAccessible(true);
 			textureOffsetYField.setAccessible(true);
-
+			
 			List<LayerRenderer<AbstractClientPlayer>> layerList = ReflectionHelper
 					.getPrivateValue(RenderLivingBase.class, renderPlayer, 4);
-
+			
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList)
 			{
 				for (Field field : layer.getClass().getDeclaredFields())
@@ -79,11 +79,11 @@ public class LimbManipulationUtil
 					}
 				}
 			}
-
+			
 			ModelPlayer model = renderPlayer.getMainModel();
-
+			
 			ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
-
+			
 			manipulator.limbs.add(
 					new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer),
 							textureOffsetYField.getInt(modelRenderer), modelRenderer, limb.rendererField));
@@ -92,7 +92,7 @@ public class LimbManipulationUtil
 					new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer),
 							textureOffsetYField.getInt(modelRenderer), modelRenderer,
 							limb.secondaryRendererField));
-
+			
 			textureOffsetXField.setAccessible(false);
 			textureOffsetYField.setAccessible(false);
 		}
@@ -101,7 +101,7 @@ public class LimbManipulationUtil
 		}
 		return manipulator;
 	}
-
+	
 	public enum Limb
 	{
 		HEAD(ModelBiped.class.getDeclaredFields()[0], ModelBiped.class.getDeclaredFields()[1]),
@@ -112,21 +112,21 @@ public class LimbManipulationUtil
 		LEFT_LEG(ModelBiped.class.getDeclaredFields()[6], ModelPlayer.class.getDeclaredFields()[2]),
 		RIGHT_LEG(ModelBiped.class.getDeclaredFields()[5],
 				ModelPlayer.class.getDeclaredFields()[3]);
-
+		
 		public Field rendererField, secondaryRendererField;
-
+		
 		Limb(Field rendererField, Field secondaryRendererField)
 		{
 			this.rendererField = rendererField;
 			this.secondaryRendererField = secondaryRendererField;
 		}
 	}
-
+	
 	public static class LimbManipulator
 	{
-
+		
 		private ArrayList<CustomModelRenderer> limbs = new ArrayList<>();
-
+		
 		public LimbManipulator setAngles(float x, float y, float z)
 		{
 			for (CustomModelRenderer limb : limbs)
@@ -135,7 +135,7 @@ public class LimbManipulationUtil
 			}
 			return this;
 		}
-
+		
 		public LimbManipulator setOffsets(float x, float y, float z)
 		{
 			for (CustomModelRenderer limb : limbs)
@@ -145,17 +145,17 @@ public class LimbManipulationUtil
 			return this;
 		}
 	}
-
+	
 	public static class CustomModelRenderer extends ModelRenderer
 	{
-
+		
 		private float actualX, actualY, actualZ;
 		private float offX, offY, offZ;
 		private boolean changeAngles = false;
 		private ModelBiped modelBiped;
 		private ModelRenderer old;
 		private Field f;
-
+		
 		private CustomModelRenderer(ModelBiped model, int texOffX, int texOffY, ModelRenderer old,
 				Field field) throws IllegalAccessException
 		{
@@ -168,7 +168,7 @@ public class LimbManipulationUtil
 			this.setRotationPoint(old.rotationPointX, old.rotationPointY, old.rotationPointZ);
 			field.set(model, this);
 		}
-
+		
 		@Override
 		public void render(float scale)
 		{
@@ -193,7 +193,7 @@ public class LimbManipulationUtil
 			super.render(scale);
 			GlStateManager.popMatrix();
 		}
-
+		
 		public void reset()
 		{
 			if (f != null)
@@ -208,7 +208,7 @@ public class LimbManipulationUtil
 				}
 			}
 		}
-
+		
 		private void setAnglesRadians(float x, float y, float z)
 		{
 			this.actualX = x;
@@ -216,13 +216,13 @@ public class LimbManipulationUtil
 			this.actualZ = z;
 			this.changeAngles = true;
 		}
-
+		
 		private void setAngles(float x, float y, float z)
 		{
 			this.setAnglesRadians((float) Math.toRadians(x), (float) Math.toRadians(y),
 					(float) Math.toRadians(z));
 		}
-
+		
 		private void setOffsets(float x, float y, float z)
 		{
 			this.offX = x;
@@ -230,7 +230,7 @@ public class LimbManipulationUtil
 			this.offZ = z;
 		}
 	}
-
+	
 	@SubscribeEvent
 	public static void onRenderPlayerPost(RenderPlayerEvent.Post event)
 	{

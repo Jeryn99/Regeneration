@@ -19,13 +19,13 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
 
 public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISlider {
-
+	
 	public static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/longbg.png");
 	
 	public GuiRegenCustomisation() {
 		super(new Blankcontainer());
 	}
-
+	
 	public float primaryRed;
 	public float primaryGreen;
 	public float primaryBlue;
@@ -68,7 +68,7 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 		this.buttonList.add(new GuiColorSlider(11, i + 135, j + 130, 80, 20, I18n.translateToLocal("lcm-regen.info.blue"), "", 0, 1, secondaryBlue, true, true, this));
 	}
 	
-
+	
 	public NBTTagCompound getStyleNBTTag() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setFloat("PrimaryRed", primaryRed);
@@ -80,7 +80,7 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 		nbt.setBoolean("textured", textured);
 		return nbt;
 	}
-
+	
 	public NBTTagCompound getDefaultStyle() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setFloat("PrimaryRed", 1.0f);
@@ -97,7 +97,7 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		int i = (this.width - this.xSize) / 2;
 		int j = (this.height - this.ySize) / 2;
-			
+		
 		mc.getTextureManager().bindTexture(DEFAULT_TEX);
 		this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 		
@@ -134,10 +134,10 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 		if (button.id == 2) textured = !textured;
 		if (button.id == 3) sendStyleNBTTagToServer(false);
 	}
-
+	
 	private void sendStyleNBTTagToServer(boolean notReset) {
 		if (notReset) {
-		RNetwork.INSTANCE.sendToServer(new MessageRegenerationStyle(getStyleNBTTag()));
+			RNetwork.INSTANCE.sendToServer(new MessageRegenerationStyle(getStyleNBTTag()));
 		} else {
 			System.out.println("sadasdasdas");
 			IRegenerationCapability capa = Minecraft.getMinecraft().player.getCapability(CapabilityRegeneration.TIMELORD_CAP, null);
@@ -168,7 +168,7 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.renderHoveredToolTip(mouseX, mouseY);
 	}
-
+	
 	
 	public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
 		if (left < right) {
@@ -176,13 +176,13 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 			left = right;
 			right = i;
 		}
-
+		
 		if (top < bottom) {
 			int j = top;
 			top = bottom;
 			bottom = j;
 		}
-
+		
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder worldrenderer = tessellator.getBuffer();
 		GlStateManager.enableBlend();
@@ -190,14 +190,14 @@ public class GuiRegenCustomisation extends GuiContainer implements GuiSlider.ISl
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color(red, green, blue, alpha);
 		worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-		worldrenderer.pos((double) left, (double) bottom, 0.0D).endVertex();
-		worldrenderer.pos((double) right, (double) bottom, 0.0D).endVertex();
-		worldrenderer.pos((double) right, (double) top, 0.0D).endVertex();
-		worldrenderer.pos((double) left, (double) top, 0.0D).endVertex();
+		worldrenderer.pos(left, bottom, 0.0D).endVertex();
+		worldrenderer.pos(right, bottom, 0.0D).endVertex();
+		worldrenderer.pos(right, top, 0.0D).endVertex();
+		worldrenderer.pos(left, top, 0.0D).endVertex();
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
 	}
-
+	
 	
 }

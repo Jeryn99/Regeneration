@@ -3,11 +3,11 @@ package me.sub.regeneration.common.trait;
 import net.minecraft.entity.player.EntityPlayer;
 
 public interface ITrait {
-
-    String getName();
-
-    void update(EntityPlayer player);
-
-    String getMessage();
-
+	
+	String getName();
+	
+	void update(EntityPlayer player);
+	
+	String getMessage();
+	
 }
