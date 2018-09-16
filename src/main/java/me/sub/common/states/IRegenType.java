@@ -17,4 +17,6 @@ public interface IRegenType {
     void onFinish(EntityPlayer player);
 
     SoundEvent getSound();
+
+    boolean blockMovement();
 }

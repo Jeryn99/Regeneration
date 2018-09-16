@@ -4,13 +4,18 @@ import me.sub.Regeneration;
 import me.sub.client.layers.LayerRegeneration;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
+import me.sub.common.init.RObjects;
 import me.sub.util.LimbManipulationUtil;
+import me.sub.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.MovementInput;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -42,10 +47,21 @@ public class ClientHandler {
     }
 
     @SubscribeEvent
+    public static void onUpdate(LivingEvent.LivingUpdateEvent e) {
+        if (e.getEntityLiving() instanceof EntityPlayer) {
+            IRegeneration regeneration = CapabilityRegeneration.get((EntityPlayer) e.getEntityLiving());
+            if (regeneration.isRegenerating()) {
+                Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
 
         IRegeneration handler = CapabilityRegeneration.get(e.getEntityPlayer());
         if (handler != null && handler.isRegenerating()) {
+
             int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
 
             LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
@@ -63,7 +79,7 @@ public class ClientHandler {
 
         IRegeneration capability = CapabilityRegeneration.get(Minecraft.getMinecraft().player);
 
-        if (capability.isRegenerating()) {
+        if (capability.isRegenerating() && capability.getType().getType().blockMovement()) {
             MovementInput moveType = e.getMovementInput();
             moveType.rightKeyDown = false;
             moveType.leftKeyDown = false;
@@ -73,6 +89,15 @@ public class ClientHandler {
             moveType.sneak = false;
             moveType.moveStrafe = 0.0F;
         }
+    }
+
+
+    @SubscribeEvent
+    public static void registerModels(ModelRegistryEvent ev) {
+        for (Item item : RObjects.ITEMS) {
+            RenderUtil.setItemRender(item);
+        }
+        RObjects.ITEMS = new ArrayList<>();
     }
 
 }

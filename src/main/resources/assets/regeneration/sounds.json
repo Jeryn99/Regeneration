@@ -1,0 +1,22 @@
+{
+  "regen_1": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration",
+        "stream": false
+      }
+    ]
+  },
+  "fob_watch": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.fob_watch",
+    "sounds": [
+      {
+        "name": "regeneration:fob_watch",
+        "stream": false
+      }
+    ]
+  }
+}

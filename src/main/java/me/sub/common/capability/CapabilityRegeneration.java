@@ -7,6 +7,7 @@ import me.sub.network.packets.MessageUpdateRegen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -48,9 +49,6 @@ public class CapabilityRegeneration implements IRegeneration {
 
     @Override
     public void update() {
-        if (player.world.isRemote) return;
-
-        System.out.println(getTicksRegenerating());
 
         if (isRegenerating()) {
             startRegenerating();
@@ -68,11 +66,12 @@ public class CapabilityRegeneration implements IRegeneration {
         isRegenerating = regenerating;
     }
 
+    @Override
     public boolean isCapable() {
-        //return isCapable && getLivesLeft() > 0 && player.posY < 0;
-        return true;
+        return isCapable && getLivesLeft() > 0 && player.posY > 0;
     }
 
+    @Override
     public void setCapable(boolean capable) {
         isCapable = capable;
     }
@@ -153,9 +152,16 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     private void startRegenerating() {
+
         setTicksRegenerating(getTicksRegenerating() + 1);
+
+        if (getTicksRegenerating() == 1) {
+            player.world.playSound(null, player.posX, player.posY, player.posZ, getType().getType().getSound(), SoundCategory.PLAYERS, 0.5F, 1.0F);
+        }
+
         if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100)
             getType().getType().onInitial(player);
+
         if (getTicksRegenerating() >= 100 && getTicksRegenerating() < 200)
             getType().getType().onMidRegen(player);
 
@@ -167,6 +173,8 @@ public class CapabilityRegeneration implements IRegeneration {
             getType().getType().onFinish(player);
             setTicksRegenerating(0);
             setRegenerating(false);
+            setLivesLeft(getLivesLeft() - 1);
+            setTimesRegenerated(getTimesRegenerated() + 1);
         }
     }
 

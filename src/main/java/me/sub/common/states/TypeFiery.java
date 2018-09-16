@@ -2,10 +2,13 @@ package me.sub.common.states;
 
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
+import me.sub.common.init.RObjects;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -26,6 +29,11 @@ public class TypeFiery implements IRegenType {
     @Override
     public void onMidRegen(EntityPlayer player) {
         player.extinguish();
+
+        Random rand = player.world.rand;
+        player.rotationPitch += (rand.nextInt(10) - 5) * 0.1;
+        player.rotationYaw += (rand.nextInt(10) - 5) * 0.1;
+
         if (player.world.isRemote)
             return;
 
@@ -47,12 +55,7 @@ public class TypeFiery implements IRegenType {
             return;
 
         IRegeneration handler = CapabilityRegeneration.get(player);
-        player.setHealth(player.getMaxHealth());
         // player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.REGENERATION.postRegenerationDuration * 2, RegenConfig.REGENERATION.postRegenerationLevel - 1, false, false)); // 180 seconds of 20 ticks of Regeneration 4
-
-        handler.setLivesLeft(handler.getLivesLeft() - 1);
-        handler.setTimesRegenerated(handler.getTimesRegenerated() + 1);
-
         //   handler.setTrait(TraitHandler.getRandomTrait());
         //    player.sendStatusMessage(new TextComponentTranslation(handler.getTrait().getMessage()), true);
         player.clearActivePotions();
@@ -61,6 +64,11 @@ public class TypeFiery implements IRegenType {
 
     @Override
     public SoundEvent getSound() {
-        return null;
+        return RObjects.Sounds.REGEN_1;
+    }
+
+    @Override
+    public boolean blockMovement() {
+        return true;
     }
 }

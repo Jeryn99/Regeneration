@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -13,7 +14,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import static me.sub.common.capability.CapabilityRegeneration.REGEN_ID;
 
@@ -25,13 +25,12 @@ import static me.sub.common.capability.CapabilityRegeneration.REGEN_ID;
 public class RegenerationHandler {
 
     @SubscribeEvent
-    public static void onWorldTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase.equals(TickEvent.Phase.END))
-            return;
-        if (!event.player.hasCapability(CapabilityRegeneration.CAPABILITY, null))
-            return;
-        IRegeneration handler = CapabilityRegeneration.get(event.player);
-        handler.update();
+    public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+            IRegeneration handler = CapabilityRegeneration.get(player);
+            handler.update();
+        }
     }
 
 
