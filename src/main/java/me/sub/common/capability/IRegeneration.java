@@ -1,6 +1,6 @@
 package me.sub.common.capability;
 
-import me.sub.common.states.RegenType;
+import me.sub.common.states.EnumRegenType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -37,7 +37,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     //Sync
     void sync();
 
-    RegenType getType();
+    EnumRegenType getType();
 
     boolean isCapable();
 

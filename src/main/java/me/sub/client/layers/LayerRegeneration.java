@@ -40,7 +40,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         IRegeneration capability = CapabilityRegeneration.get(player);
         if (capability.isCapable() && capability.isRegenerating()) {
-            Regeneration.LOG.info(capability.getTicksRegenerating());
             renderEffect(playerRenderer, capability, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
         }
     }

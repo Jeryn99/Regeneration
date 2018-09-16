@@ -5,6 +5,7 @@ import me.sub.client.layers.LayerRegeneration;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
+import me.sub.common.states.EnumRegenType;
 import me.sub.util.LimbManipulationUtil;
 import me.sub.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -34,6 +35,7 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void onRenderPlayerPost(RenderPlayerEvent.Post e) {
+
         EntityPlayer player = e.getEntityPlayer();
         if (lastWorld != player.world) {
             lastWorld = player.world;
@@ -44,15 +46,18 @@ public class ClientHandler {
             e.getRenderer().addLayer(new LayerRegeneration(e.getRenderer()));
             //e.getRenderer().addLayer(new LayerItemsAlt(e.getRenderer()));
         }
+
     }
 
     @SubscribeEvent
     public static void onUpdate(LivingEvent.LivingUpdateEvent e) {
         if (e.getEntityLiving() instanceof EntityPlayer) {
-            IRegeneration regeneration = CapabilityRegeneration.get((EntityPlayer) e.getEntityLiving());
-            if (regeneration.isRegenerating()) {
+            EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+            IRegeneration regeneration = CapabilityRegeneration.get(player);
+            if (regeneration.isRegenerating() && Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
                 Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
             }
+
         }
     }
 
@@ -60,15 +65,18 @@ public class ClientHandler {
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
 
         IRegeneration handler = CapabilityRegeneration.get(e.getEntityPlayer());
+
         if (handler != null && handler.isRegenerating()) {
 
-            int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
-
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
-            LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
+            //Fiery Regen T-Posing
+            if (handler.getType().equals(EnumRegenType.FIERY)) {
+                int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
+                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
+                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
+                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
+                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
+                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
+            }
         }
     }
 

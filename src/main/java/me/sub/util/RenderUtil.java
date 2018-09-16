@@ -13,6 +13,7 @@ public class RenderUtil {
 
     private static float lastBrightnessX = OpenGlHelper.lastBrightnessX;
     private static float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+
     public static void setLightmapTextureCoords(float x, float y) {
         lastBrightnessX = OpenGlHelper.lastBrightnessX;
         lastBrightnessY = OpenGlHelper.lastBrightnessY;

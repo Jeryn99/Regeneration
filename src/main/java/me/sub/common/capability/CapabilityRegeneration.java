@@ -1,7 +1,7 @@
 package me.sub.common.capability;
 
 import me.sub.Regeneration;
-import me.sub.common.states.RegenType;
+import me.sub.common.states.EnumRegenType;
 import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageUpdateRegen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public class CapabilityRegeneration implements IRegeneration {
     private int timesRegenerated = 0, livesLeft = 12, regenTicks = 0;
     private EntityPlayer player;
     private boolean isRegenerating = false, isCapable = false;
-    private String typeName = RegenType.FIERY.getType().getName();
+    private String typeName = EnumRegenType.FIERY.getType().getName();
 
     public CapabilityRegeneration() {
     }
@@ -127,8 +127,8 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     @Override
-    public RegenType getType() {
-        return RegenType.valueOf(typeName);
+    public EnumRegenType getType() {
+        return EnumRegenType.valueOf(typeName);
     }
 
     @Override
@@ -152,6 +152,8 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     private void startRegenerating() {
+        player.dismountRidingEntity();
+        player.removePassengers();
 
         setTicksRegenerating(getTicksRegenerating() + 1);
 

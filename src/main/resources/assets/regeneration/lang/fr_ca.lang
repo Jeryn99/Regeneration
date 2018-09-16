@@ -1,29 +1,29 @@
 ﻿
 item.chameleonArch.name=Arc de Caméléon
 
-lcm-regen.info.primary=Couleur Primaire
-lcm-regen.info.secondary=Couleur secondaire
-lcm-regen.info.textured=Régénération Texturée?
+regeneration.info.primary=Couleur Primaire
+regeneration.info.secondary=Couleur secondaire
+regeneration.info.textured=Régénération Texturée?
 
-lcm-regen.subtitles.regeneration=Énergie Régénératrice
-lcm-regen.subtitles.timey_wimey=Woosh Spatio-Temporel
+regeneration.subtitles.regeneration=Énergie Régénératrice
+regeneration.subtitles.timey_wimey=Woosh Spatio-Temporel
 
-lcm-regen.messages.traitsDisabled=LES TRAITS NE SONT PAS ACTIVÉS
-lcm-regen.messages.becomeTimelord=Vous êtes devenu un seigneur du temps!
-lcm-regen.messages.alreadyTimelord=Vous êtes déjà un seigneur du temps!
-lcm-regen.messages.gainedRegenerations=Vous avez reçu %s régénérations de l'Arc de Caméléon
-lcm-regen.messages.regenLeft=Régénérations restantes: %s
-lcm-regen.messages.regenLeftExt=Vous vous régénérez pour la %s fois, vous avez %s régénérations restantes.
-lcm-regen.messages.numsuffix.0=re
-lcm-regen.messages.numsuffix.1=ième
-lcm-regen.messages.numsuffix.2=ième
-lcm-regen.messages.numsuffix.ext=ième
-//lcm-regen.messages.newLife=Vous avez une nouvelle vie, avec les nouveaux traits: %s.
-lcm-regen.messages.transfer=Vous avez transféré l'une de vos régénérations dans l'arc
-lcm-regen.messages.transfer.fullArch=Vous ne pouvez plus stocker de régénération dans l'arc
-lcm-regen.messages.transfer.emptyArch=Cet arc est vide!
-lcm-regen.messages.transfer.fullCycle=Vous avez déjà un cycle de régénération plein
-lcm-regen.messages.transfer.emptyCycle=Vous n'avez plus de régénération restante à transférer
+regeneration.messages.traitsDisabled=LES TRAITS NE SONT PAS ACTIVÉS
+regeneration.messages.becomeTimelord=Vous êtes devenu un seigneur du temps!
+regeneration.messages.alreadyTimelord=Vous êtes déjà un seigneur du temps!
+regeneration.messages.gainedRegenerations=Vous avez reçu %s régénérations de l'Arc de Caméléon
+regeneration.messages.regenLeft=Régénérations restantes: %s
+regeneration.messages.regenLeftExt=Vous vous régénérez pour la %s fois, vous avez %s régénérations restantes.
+regeneration.messages.numsuffix.0=re
+regeneration.messages.numsuffix.1=ième
+regeneration.messages.numsuffix.2=ième
+regeneration.messages.numsuffix.ext=ième
+//regeneration.messages.newLife=Vous avez une nouvelle vie, avec les nouveaux traits: %s.
+regeneration.messages.transfer=Vous avez transféré l'une de vos régénérations dans l'arc
+regeneration.messages.transfer.fullArch=Vous ne pouvez plus stocker de régénération dans l'arc
+regeneration.messages.transfer.emptyArch=Cet arc est vide!
+regeneration.messages.transfer.fullCycle=Vous avez déjà un cycle de régénération plein
+regeneration.messages.transfer.emptyCycle=Vous n'avez plus de régénération restante à transférer
 
 trait.messages.strength=Vous avez obtenu le trait de Force!
 trait.messages.speed=Vous avez obtenu le trait de Vitesse!
@@ -32,10 +32,10 @@ trait.messages.hunger=Vous avez obtenu le trait de Faim!
 trait.messages.none=Vous n'avez pas reçu de trait. Vous êtes normal.
 trait.messages.clumsy=Faites attention! Vous avez maintenant le trait de maladresse...
 
-lcm-regen.info.customizer=Personnalisateur
-lcm-regen.info.save=Sauvegarder
-lcm-regen.info.red=Rouge
-lcm-regen.info.green=Vert
-lcm-regen.info.blue=Bleu
+regeneration.info.customizer=Personnalisateur
+regeneration.info.save=Sauvegarder
+regeneration.info.red=Rouge
+regeneration.info.green=Vert
+regeneration.info.blue=Bleu
 
 

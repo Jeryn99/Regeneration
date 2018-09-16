@@ -1,12 +1,12 @@
 {
   "pools": [
     {
-      "name": "lcm-regen:arch-pool",
+      "name": "regeneration:arch-pool",
       "rolls": 1,
       "entries": [
         {
           "type": "item",
-          "name": "lcm-regen:chameleonarch",
+          "name": "regeneration:chameleonarch",
           "weight": 20,
           "functions": [
             {
@@ -20,7 +20,7 @@
         },
         {
           "type": "item",
-          "name": "lcm-regen:chameleonarch",
+          "name": "regeneration:chameleonarch",
           "weight": 10
         },
         {

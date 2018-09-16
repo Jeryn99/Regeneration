@@ -1,6 +1,6 @@
 [
 {
-  "modid": "lcm-regen",
+  "modid": "regeneration",
   "name": "Regeneration",
   "description": "Mod that brings a Doctor who Regeneration experience to Minecraft!",
   "version": "${version}",

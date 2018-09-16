@@ -3,36 +3,36 @@ category.regeneration=Regeneration
 
 item.chameleonarch.name=Chameleon Arch
 
-lcm-regen.info.blue=Blue
-lcm-regen.info.customizer=Customizer
-lcm-regen.info.green=Green
-lcm-regen.info.primary=Primary Color
-lcm-regen.info.red=Red
-lcm-regen.info.save=Save
-lcm-regen.info.secondary=Secondary Color
-lcm-regen.info.textured=Textured Regeneration?
+regeneration.info.blue=Blue
+regeneration.info.customizer=Customizer
+regeneration.info.green=Green
+regeneration.info.primary=Primary Color
+regeneration.info.red=Red
+regeneration.info.save=Save
+regeneration.info.secondary=Secondary Color
+regeneration.info.textured=Textured Regeneration?
 
-lcm-regen.messages.alreadyTimelord=You're already a timelord!
-lcm-regen.messages.becomeTimelord=You've become a timelord!
-lcm-regen.messages.gainedRegenerations=You've received %s regenerations from the Chameleon Arch
+regeneration.messages.alreadyTimelord=You're already a timelord!
+regeneration.messages.becomeTimelord=You've become a timelord!
+regeneration.messages.gainedRegenerations=You've received %s regenerations from the Chameleon Arch
 
-lcm-regen.messages.numsuffix.0=st
-lcm-regen.messages.numsuffix.1=nd
-lcm-regen.messages.numsuffix.2=rd
-lcm-regen.messages.numsuffix.ext=th
+regeneration.messages.numsuffix.0=st
+regeneration.messages.numsuffix.1=nd
+regeneration.messages.numsuffix.2=rd
+regeneration.messages.numsuffix.ext=th
 
-lcm-regen.messages.regenLeft=Regenerations left: %s
-lcm-regen.messages.regenLeftExt=You're regenerating for the %s time, you have %s regenerations left.
-lcm-regen.messages.traitsDisabled=TRAITS ARE NOT ENABLED
+regeneration.messages.regenLeft=Regenerations left: %s
+regeneration.messages.regenLeftExt=You're regenerating for the %s time, you have %s regenerations left.
+regeneration.messages.traitsDisabled=TRAITS ARE NOT ENABLED
 
-lcm-regen.messages.transfer.emptyArch=This arch is empty!
-lcm-regen.messages.transfer.emptyCycle=You don't have any regenerations left to transfer
-lcm-regen.messages.transfer.fullArch=You can't store anymore regenerations in this arch
-lcm-regen.messages.transfer.fullCycle=You already have a full cycle of regenerations
-lcm-regen.messages.transfer=You've transferred one of your regenerations into the arch
+regeneration.messages.transfer.emptyArch=This arch is empty!
+regeneration.messages.transfer.emptyCycle=You don't have any regenerations left to transfer
+regeneration.messages.transfer.fullArch=You can't store anymore regenerations in this arch
+regeneration.messages.transfer.fullCycle=You already have a full cycle of regenerations
+regeneration.messages.transfer=You've transferred one of your regenerations into the arch
 
-lcm-regen.subtitles.regeneration=Regeneration energy
-lcm-regen.subtitles.fob_watch=Chameleon Arch opening
+regeneration.subtitles.regeneration=Regeneration energy
+regeneration.subtitles.fob_watch=Chameleon Arch opening
 menu.regeneration=Regeneration Customizer
 
 trait.messages.clumsy=Watch your things! You now have the clumsy trait...
