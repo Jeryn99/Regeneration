@@ -83,7 +83,7 @@ public class ClientHandler {
 
         IRegeneration handler = CapabilityRegeneration.get(e.getEntityPlayer());
 
-        if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 190 && !handler.isInGracePeriod()) {
+        if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
 
             //Fiery Regen T-Posing
             if (handler.getType().equals(EnumRegenType.FIERY)) {
