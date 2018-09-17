@@ -5,6 +5,7 @@ import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.states.EnumRegenType;
 import me.sub.util.RenderUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
@@ -19,8 +20,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -45,6 +48,45 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
             if (handler.getType().equals(EnumRegenType.FIERY)) {
                 renderFieryRegen(playerRenderer, handler, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            }
+        }
+
+
+        //Glowing Hands
+        renderGlowingHands(player, handler);
+
+    }
+
+
+    private void renderGlowingHands(EntityPlayer player, IRegeneration handler) {
+
+        NBTTagCompound style = handler.getStyle();
+        Color color = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
+
+        if (handler != null && handler.isGlowing()) {
+
+            Minecraft mc = Minecraft.getMinecraft();
+            Random rand = new Random(2);
+            float f = 0.2F;
+
+            for (int j = 0; j < 2; j++) {
+                RenderUtil.setupRenderLightning();
+
+                //   if (j == 0)
+                //     this.renderer.getMainModel().bipedRightArm.postRender(scale);
+                //   else
+                //      playerRenderer.getMainModel().bipedLeftArm.postRender(scale);
+
+                GlStateManager.translate(0, 0.5F, 0);
+                //  GlStateManager.scale(effects.size, effects.size, effects.size);
+                GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
+
+                for (int i = 0; i < 30; i++) {
+                    GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
+                    RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, color, 0);
+                }
+
+                RenderUtil.finishRenderLightning();
             }
         }
     }

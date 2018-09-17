@@ -50,7 +50,7 @@ public class MessageUpdateRegen implements IMessage {
         public IMessage onMessage(MessageUpdateRegen message, MessageContext ctx) {
             EntityPlayer player = message.player;
             if (player == null || !player.hasCapability(CapabilityRegeneration.CAPABILITY, null)) return null;
-            IRegeneration handler = player.getCapability(CapabilityRegeneration.CAPABILITY, null);
+            IRegeneration handler = CapabilityRegeneration.get(player);
             Minecraft.getMinecraft().addScheduledTask(() -> handler.deserializeNBT(message.data));
             return null;
         }

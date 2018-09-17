@@ -17,14 +17,14 @@ import net.minecraftforge.fml.relauncher.Side;
 public class GracePeriodHandler {
 
     @SubscribeEvent
-    public static void breakBlock(PlayerInteractEvent.RightClickBlock e) {
+    public static void breakBlock(PlayerInteractEvent.LeftClickBlock e) {
         EntityPlayer player = e.getEntityPlayer();
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
         boolean inGracePeriod = regenInfo.isInGracePeriod() && regenInfo.isGlowing();
 
         if (inGracePeriod) {
             regenInfo.setGlowing(false);
-            Regeneration.LOG.info("IM GLOW NO MORE");
+            regenInfo.setTicksGlowing(0);
         }
     }
 

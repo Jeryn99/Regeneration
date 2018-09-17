@@ -9,6 +9,17 @@
       }
     ]
   },
+  "critical_stage": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.critical_stage",
+    "sounds": [
+      {
+        "name": "regeneration:critical_stage",
+        "stream": true
+      }
+    ]
+  },
+  
   "fob_watch": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.fob_watch",
@@ -20,3 +31,4 @@
     ]
   }
 }
+

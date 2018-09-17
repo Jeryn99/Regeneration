@@ -49,8 +49,11 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 
     //Grace stuff
     boolean isGlowing();
-
     void setGlowing(boolean glowing);
+
+    int getTicksGlowing();
+
+    void setTicksGlowing(int ticks);
 
     boolean isInGracePeriod();
 
@@ -58,7 +61,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 
     //Solace ticks
     int getSolaceTicks();
-
     void setSolaceTicks(int ticks);
 
 }

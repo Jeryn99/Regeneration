@@ -5,6 +5,7 @@ import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -51,6 +52,7 @@ public class MessageNoDiePls implements IMessage {
                 regenInfo.setSolaceTicks(0);
                 regenInfo.setTicksRegenerating(0);
                 regenInfo.sync();
+                player.sendStatusMessage(new TextComponentString("You have entered a grace period of 15 minutes"), true);
             }
 
             return null;

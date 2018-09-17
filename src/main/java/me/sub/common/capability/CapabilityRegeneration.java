@@ -2,6 +2,7 @@ package me.sub.common.capability;
 
 import me.sub.Regeneration;
 import me.sub.client.RKeyBinds;
+import me.sub.common.init.RObjects;
 import me.sub.common.states.EnumRegenType;
 import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageUpdateRegen;
@@ -25,7 +26,7 @@ public class CapabilityRegeneration implements IRegeneration {
     public static final ResourceLocation REGEN_ID = new ResourceLocation(Regeneration.MODID, "regeneration");
     @CapabilityInject(IRegeneration.class)
     public static final Capability<IRegeneration> CAPABILITY = null;
-    private int timesRegenerated = 0, livesLeft = 12, regenTicks = 0, ticksInSolace = 0;
+    private int timesRegenerated = 0, livesLeft = 12, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
     private EntityPlayer player;
     private boolean isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
     private String typeName = EnumRegenType.FIERY.getType().getName();
@@ -57,6 +58,8 @@ public class CapabilityRegeneration implements IRegeneration {
         } else {
             setSolaceTicks(0);
             setInGracePeriod(false);
+            setTicksGlowing(0);
+            setGlowing(false);
         }
     }
 
@@ -78,6 +81,16 @@ public class CapabilityRegeneration implements IRegeneration {
     @Override
     public void setGlowing(boolean glowing) {
         isGraceGlowing = glowing;
+    }
+
+    @Override
+    public int getTicksGlowing() {
+        return ticksGlowing;
+    }
+
+    @Override
+    public void setTicksGlowing(int ticks) {
+        ticksGlowing = ticks;
     }
 
     @Override
@@ -175,6 +188,7 @@ public class CapabilityRegeneration implements IRegeneration {
         nbt.setInteger("regenTicks", regenTicks);
         nbt.setBoolean("gracePeriod", isInGrace);
         nbt.setInteger("solaceTicks", ticksInSolace);
+        nbt.setBoolean("handGlowing", isGlowing());
         return nbt;
     }
 
@@ -187,13 +201,14 @@ public class CapabilityRegeneration implements IRegeneration {
         setTicksRegenerating(nbt.getInteger("regenTicks"));
         setInGracePeriod(nbt.getBoolean("gracePeriod"));
         setSolaceTicks(nbt.getInteger("solaceTicks"));
+        setGlowing(nbt.getBoolean("handGlowing"));
     }
 
     //Invokes the Regeneration and handles it.
     private void startRegenerating() {
         setSolaceTicks(getSolaceTicks() + 1);
 
-        if (player.world.isRemote && getSolaceTicks() < 200) {
+        if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
             if (ticksInSolace % 25 == 0) {
                 player.sendStatusMessage(new TextComponentString("Press " + RKeyBinds.GRACE.getDisplayName() + " to not regenerate!"), true);
             }
@@ -233,7 +248,45 @@ public class CapabilityRegeneration implements IRegeneration {
             }
         }
 
-        // TODO Force Regen to happen when 15 minutes elapse
+        //Grace handling
+        if (isInGracePeriod()) {
+
+            if (isGlowing()) {
+                setTicksGlowing(getTicksGlowing() + 1);
+            }
+
+            if (getTicksGlowing() >= 600) {
+                setInGracePeriod(false);
+            }
+
+            //Every Minute
+            if (getSolaceTicks() % 1200 == 0) {
+                setGlowing(true);
+            }
+
+            //Five minutes
+            if (getSolaceTicks() == 6000) {
+
+            }
+
+            //14 Minutes - Critical stage start
+            if (getSolaceTicks() == 16800) {
+            }
+
+            //CRITICAL STAGE
+            if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
+                player.playSound(RObjects.Sounds.CRITICAL_STAGE, 1, 1);
+            }
+
+            //15 minutes all gone, rip user
+            if (getSolaceTicks() == 18000) {
+                setCapable(false);
+                player.setDead();
+                setCapable(true);
+                setTicksGlowing(0);
+            }
+        }
+
     }
 
     public NBTTagCompound getDefaultStyle() {
