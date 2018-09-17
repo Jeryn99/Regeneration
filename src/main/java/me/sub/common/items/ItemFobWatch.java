@@ -24,18 +24,18 @@ public class ItemFobWatch extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
 
         IRegeneration capability = CapabilityRegeneration.get(player);
 
         if (capability.isCapable()) {
             // TODO Store
         } else {
-            worldIn.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
+            world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
             capability.setCapable(true);
             capability.setLivesLeft(12);
         }
 
-        return super.onItemRightClick(worldIn, player, handIn);
+        return super.onItemRightClick(world, player, handIn);
     }
 }

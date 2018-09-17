@@ -31,8 +31,8 @@ public class TypeFiery implements IRegenType {
         player.extinguish();
 
         Random rand = player.world.rand;
-        player.rotationPitch += (rand.nextInt(10) - 5) * 0.1;
-        player.rotationYaw += (rand.nextInt(10) - 5) * 0.1;
+        player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
+        player.rotationYaw += (rand.nextInt(10) - 5) * 0.2;
 
         if (player.world.isRemote)
             return;

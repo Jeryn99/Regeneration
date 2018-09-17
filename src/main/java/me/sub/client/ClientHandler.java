@@ -6,6 +6,8 @@ import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
 import me.sub.common.states.EnumRegenType;
+import me.sub.network.NetworkHandler;
+import me.sub.network.packets.MessageNoDiePls;
 import me.sub.util.LimbManipulationUtil;
 import me.sub.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -19,6 +21,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
@@ -51,13 +54,27 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void onUpdate(LivingEvent.LivingUpdateEvent e) {
+
         if (e.getEntityLiving() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) e.getEntityLiving();
             IRegeneration regeneration = CapabilityRegeneration.get(player);
-            if (regeneration.isRegenerating() && Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
-                Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+            if (regeneration != null && player != null && Minecraft.getMinecraft().player != null) {
+                if (regeneration.isRegenerating() && !regeneration.isInGracePeriod() && regeneration.getSolaceTicks() >= 200 && Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
+                    Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+                }
             }
+        }
+    }
 
+    @SubscribeEvent
+    public static void onClientTick(TickEvent.ClientTickEvent e) {
+        if (Minecraft.getMinecraft().world != null) {
+            if (RKeyBinds.GRACE.isPressed()) {
+                EntityPlayer player = Minecraft.getMinecraft().player;
+                if (player != null) {
+                    NetworkHandler.INSTANCE.sendToServer(new MessageNoDiePls(player));
+                }
+            }
         }
     }
 
@@ -66,11 +83,12 @@ public class ClientHandler {
 
         IRegeneration handler = CapabilityRegeneration.get(e.getEntityPlayer());
 
-        if (handler != null && handler.isRegenerating()) {
+        if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 190 && !handler.isInGracePeriod()) {
 
             //Fiery Regen T-Posing
             if (handler.getType().equals(EnumRegenType.FIERY)) {
                 int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
+
                 LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
                 LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
                 LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
@@ -87,7 +105,7 @@ public class ClientHandler {
 
         IRegeneration capability = CapabilityRegeneration.get(Minecraft.getMinecraft().player);
 
-        if (capability.isRegenerating() && capability.getType().getType().blockMovement()) {
+        if (capability.isRegenerating() && !capability.isInGracePeriod() && capability.getType().getType().blockMovement() && capability.getSolaceTicks() >= 200) {
             MovementInput moveType = e.getMovementInput();
             moveType.rightKeyDown = false;
             moveType.leftKeyDown = false;

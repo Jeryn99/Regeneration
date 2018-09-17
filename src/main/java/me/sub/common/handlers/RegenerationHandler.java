@@ -1,6 +1,9 @@
-package me.sub.common.capability;
+package me.sub.common.handlers;
 
 import me.sub.Regeneration;
+import me.sub.common.capability.CapabilityRegeneration;
+import me.sub.common.capability.IRegeneration;
+import me.sub.common.capability.RegenerationProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,7 +54,7 @@ public class RegenerationHandler {
     @SubscribeEvent
     public static void playerTracking(PlayerEvent.StartTracking event) {
         if (event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null) != null) {
-            event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null).sync();
+            CapabilityRegeneration.get(event.getEntityPlayer()).sync();
         }
     }
 
@@ -82,6 +85,11 @@ public class RegenerationHandler {
         IRegeneration handler = CapabilityRegeneration.get(player);
         e.setCanceled(true);
         handler.setRegenerating(true);
+
+        if (handler.isRegenerating() && handler.isInGracePeriod()) {
+            handler.setInGracePeriod(false);
+            handler.setSolaceTicks(200);
+        }
     }
 }
 

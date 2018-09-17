@@ -3,6 +3,7 @@ package me.sub.client.layers;
 import me.sub.Regeneration;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
+import me.sub.common.states.EnumRegenType;
 import me.sub.util.RenderUtil;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -38,14 +39,18 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
     @Override
     public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        IRegeneration capability = CapabilityRegeneration.get(player);
-        if (capability.isCapable() && capability.isRegenerating()) {
-            renderEffect(playerRenderer, capability, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+        IRegeneration handler = CapabilityRegeneration.get(player);
+
+        //Render the Fiery Regeneration 
+        if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
+            if (handler.getType().equals(EnumRegenType.FIERY)) {
+                renderFieryRegen(playerRenderer, handler, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            }
         }
     }
 
 
-    private void renderEffect(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
+    private void renderFieryRegen(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float v, float v1, float v2, float v3, float v4, float v5, float v6) {
         ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 
         // State manager changes
@@ -61,8 +66,8 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
         Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 
-        float primaryScale = capability.getTimesRegenerated() * 40f;
-        float secondaryScale = capability.getTimesRegenerated() * 70f;
+        float primaryScale = capability.getTicksRegenerating() * 40f;
+        float secondaryScale = capability.getTicksRegenerating() * 70f;
 
         // Render right cone
         GlStateManager.pushMatrix();
@@ -112,6 +117,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     }
 
 
+    //Renders the fiery cones
     public void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexBuffer = tessellator.getBuffer();
