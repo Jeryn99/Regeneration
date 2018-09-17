@@ -53,17 +53,17 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
 
         //Glowing Hands
-        renderGlowingHands(player, handler);
+        renderGlowingHands(player, handler, scale);
 
     }
 
 
-    private void renderGlowingHands(EntityPlayer player, IRegeneration handler) {
+    private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
 
         NBTTagCompound style = handler.getStyle();
         Color color = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 
-        if (handler != null && handler.isGlowing()) {
+        if (handler != null && true) {
 
             Minecraft mc = Minecraft.getMinecraft();
             Random rand = new Random(2);
@@ -72,13 +72,18 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
             for (int j = 0; j < 2; j++) {
                 RenderUtil.setupRenderLightning();
 
-                //   if (j == 0)
-                //     this.renderer.getMainModel().bipedRightArm.postRender(scale);
-                //   else
-                //      playerRenderer.getMainModel().bipedLeftArm.postRender(scale);
+                if (j == 0)
+                    playerRenderer.getMainModel().bipedRightArm.postRender(scale);
+                else
+                    playerRenderer.getMainModel().bipedLeftArm.postRender(scale);
 
-                GlStateManager.translate(0, 0.5F, 0);
-                //  GlStateManager.scale(effects.size, effects.size, effects.size);
+                GlStateManager.scale(1.5F, 1.5F, 1.5F);
+
+                if (player.isSneaking()) {
+                    GlStateManager.translate(0.0F, 0.2F, 0.0F);
+                }
+
+                GlStateManager.translate(0, 0.3F, 0);
                 GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
 
                 for (int i = 0; i < 30; i++) {

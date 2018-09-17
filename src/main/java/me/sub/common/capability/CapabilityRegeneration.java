@@ -271,11 +271,12 @@ public class CapabilityRegeneration implements IRegeneration {
 
             //14 Minutes - Critical stage start
             if (getSolaceTicks() == 16800) {
+                player.playSound(RObjects.Sounds.CRITICAL_STAGE, 1, 1);
             }
 
             //CRITICAL STAGE
             if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
-                player.playSound(RObjects.Sounds.CRITICAL_STAGE, 1, 1);
+
             }
 
             //15 minutes all gone, rip user
