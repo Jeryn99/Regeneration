@@ -5,7 +5,8 @@ package me.sub.common.states;
  * on 16/09/2018.
  */
 public enum EnumRegenType {
-    FIERY(new TypeFiery());
+    FIERY(new TypeFiery()),
+    LAYFADE(new TypeLayFade());
 
     private final IRegenType type;
 

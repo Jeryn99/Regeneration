@@ -19,4 +19,6 @@ public interface IRegenType {
     SoundEvent getSound();
 
     boolean blockMovement();
+
+    boolean isLaying();
 }

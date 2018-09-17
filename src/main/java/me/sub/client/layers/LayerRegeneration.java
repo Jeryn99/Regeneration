@@ -31,8 +31,8 @@ import java.util.Random;
  */
 public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
-    private static final ModelPlayer playerModelLargeArms = new ModelPlayer(0.1F, false);
-    private static final ModelPlayer playerModelSmallArms = new ModelPlayer(0.1F, true);
+    public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
+    public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
     private static final ResourceLocation REGEN_TEXTURE = new ResourceLocation(Regeneration.MODID, "textures/entity/regen.png");
     private RenderPlayer playerRenderer;
 
@@ -51,7 +51,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
             }
         }
 
-
         //Glowing Hands
         renderGlowingHands(player, handler, scale);
 
@@ -63,10 +62,10 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         NBTTagCompound style = handler.getStyle();
         Color color = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 
-        if (handler != null && true) {
+        if (handler != null && handler.isGlowing()) {
 
             Minecraft mc = Minecraft.getMinecraft();
-            Random rand = new Random(2);
+            Random rand = player.world.rand;
             float f = 0.2F;
 
             for (int j = 0; j < 2; j++) {
@@ -86,7 +85,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
                 GlStateManager.translate(0, 0.3F, 0);
                 GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
 
-                for (int i = 0; i < 30; i++) {
+                for (int i = 0; i < 15; i++) {
                     GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
                     RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, color, 0);
                 }
@@ -141,7 +140,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         GlStateManager.popMatrix();
 
         // Check which slightly larger model to use
-        ModelPlayer playerModel = ((AbstractClientPlayer) entityPlayer).getSkinType().equals("slim") ? playerModelSmallArms : playerModelLargeArms;
+        ModelPlayer playerModel = ((AbstractClientPlayer) entityPlayer).getSkinType().equals("slim") ? playerModelAlex : playerModelSteve;
 
         // Define which parts are glowing
         playerModel.bipedBody.isHidden = playerModel.bipedLeftLeg.isHidden = playerModel.bipedRightLeg.isHidden = playerModel.bipedBodyWear.isHidden = playerModel.bipedHeadwear.isHidden = playerModel.bipedLeftLegwear.isHidden = playerModel.bipedRightLegwear.isHidden = false;

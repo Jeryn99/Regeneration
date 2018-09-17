@@ -3,8 +3,11 @@ package me.sub.common.states;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
+import me.sub.config.RegenConfig;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
@@ -42,11 +45,12 @@ public class TypeFiery implements IRegenType {
         double x = player.posX + player.getRNG().nextGaussian() * 2;
         double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
         double z = player.posZ + player.getRNG().nextGaussian() * 2;
-//RegenConfig.REGENERATION.fieryRegen
-        player.world.newExplosion(player, x, y, z, 1, true, false);
+
+        player.world.newExplosion(player, x, y, z, 1, RegenConfig.Regen.fieryRegen, false);
         for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east()))
-            if (player.world.getBlockState(bs).getBlock() instanceof BlockFire)
+            if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) {
                 player.world.setBlockToAir(bs);
+            }
     }
 
     @Override
@@ -55,7 +59,7 @@ public class TypeFiery implements IRegenType {
             return;
 
         IRegeneration handler = CapabilityRegeneration.get(player);
-        // player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.REGENERATION.postRegenerationDuration * 2, RegenConfig.REGENERATION.postRegenerationLevel - 1, false, false)); // 180 seconds of 20 ticks of Regeneration 4
+        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.Regen.postRegenerationDuration * 2, RegenConfig.Regen.postRegenerationLevel - 1, false, false));
         //   handler.setTrait(TraitHandler.getRandomTrait());
         //    player.sendStatusMessage(new TextComponentTranslation(handler.getTrait().getMessage()), true);
         player.clearActivePotions();
@@ -70,5 +74,10 @@ public class TypeFiery implements IRegenType {
     @Override
     public boolean blockMovement() {
         return true;
+    }
+
+    @Override
+    public boolean isLaying() {
+        return false;
     }
 }

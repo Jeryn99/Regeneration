@@ -17,14 +17,14 @@ import java.util.UUID;
  * Created by Sub
  * on 17/09/2018.
  */
-public class MessageNoDiePls implements IMessage {
+public class MessageEnterGrace implements IMessage {
 
     private EntityPlayer player;
 
-    public MessageNoDiePls() {
+    public MessageEnterGrace() {
     }
 
-    public MessageNoDiePls(EntityPlayer player) {
+    public MessageEnterGrace(EntityPlayer player) {
         this.player = player;
     }
 
@@ -39,10 +39,10 @@ public class MessageNoDiePls implements IMessage {
         ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
     }
 
-    public static class Handler implements IMessageHandler<MessageNoDiePls, IMessage> {
+    public static class Handler implements IMessageHandler<MessageEnterGrace, IMessage> {
 
         @Override
-        public IMessage onMessage(MessageNoDiePls message, MessageContext ctx) {
+        public IMessage onMessage(MessageEnterGrace message, MessageContext ctx) {
             EntityPlayer player = ctx.getServerHandler().player;
             if (player == null || !player.hasCapability(CapabilityRegeneration.CAPABILITY, null)) return null;
 

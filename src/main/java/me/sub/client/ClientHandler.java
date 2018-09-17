@@ -7,14 +7,16 @@ import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
 import me.sub.common.states.EnumRegenType;
 import me.sub.network.NetworkHandler;
-import me.sub.network.packets.MessageNoDiePls;
+import me.sub.network.packets.MessageEnterGrace;
 import me.sub.util.LimbManipulationUtil;
 import me.sub.util.RenderUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MovementInput;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -49,7 +51,6 @@ public class ClientHandler {
             e.getRenderer().addLayer(new LayerRegeneration(e.getRenderer()));
             //e.getRenderer().addLayer(new LayerItemsAlt(e.getRenderer()));
         }
-
     }
 
     @SubscribeEvent
@@ -72,8 +73,21 @@ public class ClientHandler {
             if (RKeyBinds.GRACE.isPressed()) {
                 EntityPlayer player = Minecraft.getMinecraft().player;
                 if (player != null) {
-                    NetworkHandler.INSTANCE.sendToServer(new MessageNoDiePls(player));
+                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(player));
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void cameraUpdate(EntityViewRenderEvent.FOVModifier e) {
+
+        if (Minecraft.getMinecraft().player != null) {
+            EntityPlayerSP player = Minecraft.getMinecraft().player;
+            IRegeneration handler = CapabilityRegeneration.get(player);
+
+            if (handler.getTicksRegenerating() >= 1 && handler.getType().equals(EnumRegenType.LAYFADE)) {
+                e.setFOV(30);
             }
         }
     }
@@ -81,7 +95,9 @@ public class ClientHandler {
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
 
-        IRegeneration handler = CapabilityRegeneration.get(e.getEntityPlayer());
+        EntityPlayer player = e.getEntityPlayer();
+
+        IRegeneration handler = CapabilityRegeneration.get(player);
 
         if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
 
@@ -95,7 +111,13 @@ public class ClientHandler {
                 LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
                 LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
             }
+
+            if (handler.getType().equals(EnumRegenType.LAYFADE)) {
+                RenderUtil.renderPlayerLaying(e, handler, player);
+            }
+
         }
+
     }
 
     @SubscribeEvent

@@ -3,6 +3,7 @@ package me.sub.common.items;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
+import me.sub.config.RegenConfig;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -19,6 +20,7 @@ import net.minecraft.world.World;
 public class ItemFobWatch extends Item {
 
     public ItemFobWatch() {
+        setMaxDamage(RegenConfig.Regen.regenCapacity);
         setCreativeTab(CreativeTabs.MISC);
         setMaxStackSize(1);
     }

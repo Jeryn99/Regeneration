@@ -39,6 +39,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     //The type of Regeneration in use
     EnumRegenType getType();
 
+    void setType(String name);
+
     //Does the player have the ability to regenerate?
     boolean isCapable();
     void setCapable(boolean capable);
@@ -62,5 +64,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     //Solace ticks
     int getSolaceTicks();
     void setSolaceTicks(int ticks);
+
 
 }

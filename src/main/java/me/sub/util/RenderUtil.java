@@ -1,15 +1,23 @@
 package me.sub.util;
 
+import me.sub.common.capability.IRegeneration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 
@@ -132,5 +140,43 @@ public class RenderUtil {
         GlStateManager.popMatrix();
     }
 
+
+    public static ResourceLocation getPlayerTexture(String username) {
+        ResourceLocation resourcelocation;
+        resourcelocation = AbstractClientPlayer.getLocationSkin(username);
+        getDownloadImageSkin(resourcelocation, username);
+        return resourcelocation;
+    }
+
+    public static ThreadDownloadImageData getDownloadImageSkin(ResourceLocation resourceLocationIn, String username) {
+        TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+        ITextureObject texture = texturemanager.getTexture(resourceLocationIn);
+        if (texture == null) {
+            texture = new ThreadDownloadImageData(null, String.format("https://minotar.net/skin/%s.png", StringUtils.stripControlCodes(username)), DefaultPlayerSkin.getDefaultSkin(AbstractClientPlayer.getOfflineUUID(username)), new ImageBufferDownload());
+            texturemanager.loadTexture(resourceLocationIn, texture);
+        }
+        return (ThreadDownloadImageData) texture;
+    }
+
+    public static void renderPlayerLaying(RenderPlayerEvent.Pre e, IRegeneration handler, EntityPlayer player) {
+        NBTTagCompound style = handler.getStyle();
+        Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
+        Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
+
+        GlStateManager.pushMatrix();
+        ModelPlayer model = e.getRenderer().getMainModel();
+        model.isChild = false;
+        GlStateManager.translate(0, 0.2F, 0);
+        GlStateManager.rotate(90, 1, 0, 0);
+        e.setCanceled(true);
+
+        GlStateManager.pushMatrix();
+        ResourceLocation skin = RenderUtil.getPlayerTexture(player.getGameProfile().getName());
+        Minecraft.getMinecraft().getTextureManager().bindTexture(skin);
+        model.render(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, player.rotationYawHead, player.cameraPitch, 0.0625f);
+        GlStateManager.popMatrix();
+
+        GlStateManager.popMatrix();
+    }
 
 }

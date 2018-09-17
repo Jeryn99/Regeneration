@@ -4,12 +4,17 @@ import me.sub.Regeneration;
 import me.sub.client.RKeyBinds;
 import me.sub.common.init.RObjects;
 import me.sub.common.states.EnumRegenType;
+import me.sub.config.RegenConfig;
 import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageUpdateRegen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketSoundEffect;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -29,7 +34,7 @@ public class CapabilityRegeneration implements IRegeneration {
     private int timesRegenerated = 0, livesLeft = 12, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
     private EntityPlayer player;
     private boolean isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
-    private String typeName = EnumRegenType.FIERY.getType().getName();
+    private String typeName = EnumRegenType.LAYFADE.name();
 
     public CapabilityRegeneration() {
     }
@@ -179,6 +184,11 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     @Override
+    public void setType(String name) {
+        typeName = name;
+    }
+
+    @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setBoolean("isRegenerating", isRegenerating);
@@ -188,7 +198,8 @@ public class CapabilityRegeneration implements IRegeneration {
         nbt.setInteger("regenTicks", regenTicks);
         nbt.setBoolean("gracePeriod", isInGrace);
         nbt.setInteger("solaceTicks", ticksInSolace);
-        nbt.setBoolean("handGlowing", isGlowing());
+        nbt.setBoolean("handGlowing", isGraceGlowing);
+        nbt.setString("type", typeName);
         return nbt;
     }
 
@@ -202,10 +213,16 @@ public class CapabilityRegeneration implements IRegeneration {
         setInGracePeriod(nbt.getBoolean("gracePeriod"));
         setSolaceTicks(nbt.getInteger("solaceTicks"));
         setGlowing(nbt.getBoolean("handGlowing"));
+        setType(nbt.getString("type"));
     }
 
     //Invokes the Regeneration and handles it.
     private void startRegenerating() {
+
+        if (player.getHealth() <= 0) {
+            setCapable(RegenConfig.Regen.dontLoseUponDeath);
+        }
+
         setSolaceTicks(getSolaceTicks() + 1);
 
         if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
@@ -237,6 +254,15 @@ public class CapabilityRegeneration implements IRegeneration {
                 player.setHealth(player.getHealth() + 1);
             }
 
+            if (RegenConfig.Regen.resetHunger) {
+                FoodStats foodStats = player.getFoodStats();
+                foodStats.setFoodLevel(foodStats.getFoodLevel() + 1);
+            }
+
+            if (RegenConfig.Regen.resetOxygen) {
+                player.setAir(player.getAir() + 1);
+            }
+
             if (getTicksRegenerating() == 200) {
                 getType().getType().onFinish(player);
                 setTicksRegenerating(0);
@@ -259,6 +285,14 @@ public class CapabilityRegeneration implements IRegeneration {
                 setInGracePeriod(false);
             }
 
+            if (getSolaceTicks() % 220 == 0) {
+                if (player instanceof EntityPlayerMP) {
+                    EntityPlayerMP playerMP = (EntityPlayerMP) player;
+                    BlockPos pos = playerMP.getPosition();
+                    playerMP.connection.sendPacket(new SPacketSoundEffect(RObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, pos.getX(), pos.getY(), pos.getZ(), 0.3F, 1));
+                }
+            }
+
             //Every Minute
             if (getSolaceTicks() % 1200 == 0) {
                 setGlowing(true);
@@ -270,7 +304,7 @@ public class CapabilityRegeneration implements IRegeneration {
             }
 
             //14 Minutes - Critical stage start
-            if (getSolaceTicks() == 16800) {
+            if (getSolaceTicks() == 17100) {
                 player.playSound(RObjects.Sounds.CRITICAL_STAGE, 1, 1);
             }
 
@@ -280,11 +314,20 @@ public class CapabilityRegeneration implements IRegeneration {
             }
 
             //15 minutes all gone, rip user
-            if (getSolaceTicks() == 18000) {
+            if (getSolaceTicks() >= 18000) {
+
+                if (!player.world.isRemote) {
+                    player.setDead();
+                    setSolaceTicks(0);
+                }
+
                 setCapable(false);
-                player.setDead();
-                setCapable(true);
+                setLivesLeft(0);
+                setInGracePeriod(false);
+                setGlowing(false);
                 setTicksGlowing(0);
+                setTicksRegenerating(0);
+                setRegenerating(false);
             }
         }
 

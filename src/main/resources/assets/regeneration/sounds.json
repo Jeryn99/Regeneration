@@ -19,6 +19,16 @@
       }
     ]
   },
+  "heart_beat": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.heart_beat",
+    "sounds": [
+      {
+        "name": "regeneration:heart_beat",
+        "stream": false
+      }
+    ]
+  },
   
   "fob_watch": {
     "category": "ambient",
