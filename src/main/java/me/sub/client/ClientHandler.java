@@ -104,7 +104,6 @@ public class ClientHandler {
             //Fiery Regen T-Posing
             if (handler.getType().equals(EnumRegenType.FIERY)) {
                 int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
-
                 LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
                 LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
                 LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
@@ -112,8 +111,8 @@ public class ClientHandler {
                 LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
             }
 
-            if (handler.getType().equals(EnumRegenType.LAYFADE)) {
-                RenderUtil.renderPlayerLaying(e, handler, player);
+            if (handler.getType().getType().isLaying()) {
+                RenderUtil.renderPlayerLaying(e, player);
             }
 
         }

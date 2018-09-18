@@ -29,6 +29,7 @@ public class ItemFobWatch extends Item {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
 
         IRegeneration capability = CapabilityRegeneration.get(player);
+        ItemStack stack = player.getHeldItem(handIn);
 
         if (capability.isCapable()) {
             // TODO Store
@@ -36,6 +37,7 @@ public class ItemFobWatch extends Item {
             world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
             capability.setCapable(true);
             capability.setLivesLeft(12);
+            setDamage(stack, stack.getItemDamage() + 1);
         }
 
         return super.onItemRightClick(world, player, handIn);

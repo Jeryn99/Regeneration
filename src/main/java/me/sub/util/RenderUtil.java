@@ -1,6 +1,5 @@
 package me.sub.util;
 
-import me.sub.common.capability.IRegeneration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
@@ -12,7 +11,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
@@ -158,11 +156,7 @@ public class RenderUtil {
         return (ThreadDownloadImageData) texture;
     }
 
-    public static void renderPlayerLaying(RenderPlayerEvent.Pre e, IRegeneration handler, EntityPlayer player) {
-        NBTTagCompound style = handler.getStyle();
-        Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
-        Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
-
+    public static void renderPlayerLaying(RenderPlayerEvent.Pre e, EntityPlayer player) {
         GlStateManager.pushMatrix();
         ModelPlayer model = e.getRenderer().getMainModel();
         model.isChild = false;
