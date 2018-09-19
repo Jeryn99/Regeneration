@@ -25,7 +25,7 @@ public class RegenConfig {
 
         @Config.LangKey("config.start_as_timelord")
         @Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations, the Fob Watch will grant the timelord ability and give you infinite regenerations. If you die while regenerating you'll lose your ability (unless dontLosePower is set to true)")
-        public boolean startAsTimelord = false;
+        public boolean startAsTimelord = false; //Currently unused
 
         @Config.LangKey("config.fiery_regen")
         @Config.Comment("Spawn fire when regenerating")
@@ -34,16 +34,16 @@ public class RegenConfig {
         @Config.LangKey("config.regenerative_kill_range")
         @Config.Comment("Upon regeneration every mob inside of this radius is immediately killed. Keep in mind that you should round up to accommodate for mobs that aren't standing in the center of a block")
         @Config.RangeInt(max = 200, min = 0)
-        public int regenerativeKillRange = 4;
+        public int regenerativeKillRange = 4; //Currently unused
 
         @Config.LangKey("config.regenerative_knockback")
         @Config.Comment("The amount of knockback every mob inside of the knock back radius gets")
-        public float regenerativeKnockback = 2.5F;
+        public float regenerativeKnockback = 2.5F; //Currently unused
 
         @Config.LangKey("config.regenerative_knockback_range")
         @Config.Comment("Range wherein every mob is knocked back upon regeneration")
         @Config.RangeInt(max = 300, min = 0)
-        public int regenerativeKnockbackRange = 7;
+        public int regenerativeKnockbackRange = 7; //Currently unused
 
         @Config.LangKey("config.post_regen_duration")
         @Config.Comment("Amount of seconds the post-regeneration effect lasts")
@@ -63,7 +63,7 @@ public class RegenConfig {
 
         @Config.LangKey("config.absorbtion_level")
         @Config.Comment("The amount of absorption hearts you get when regenerating")
-        public int absorbtionLevel = 10;
+        public int absorbtionLevel = 10; //Currently unused
 
         @Config.LangKey("config.lose_regens_on_death")
         @Config.Comment("If this is false you won't lose your timelord power if you get killed during regeneration")
