@@ -34,7 +34,7 @@ public class CapabilityRegeneration implements IRegeneration {
     private int timesRegenerated = 0, livesLeft = 12, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
     private EntityPlayer player;
     private boolean isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
-    private String typeName = EnumRegenType.LAYFADE.name();
+    private String typeName = EnumRegenType.FIERY.name();
 
     public CapabilityRegeneration() {
     }
@@ -225,9 +225,13 @@ public class CapabilityRegeneration implements IRegeneration {
 
         setSolaceTicks(getSolaceTicks() + 1);
 
+        if (getSolaceTicks() == 1 && !isInGracePeriod()) {
+            player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        }
+
         if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
             if (ticksInSolace % 25 == 0) {
-                player.sendStatusMessage(new TextComponentString("Press " + RKeyBinds.GRACE.getDisplayName() + " to not regenerate!"), true);
+                player.sendStatusMessage(new TextComponentString("Grace: " + RKeyBinds.GRACE.getDisplayName() + " || Regenerate: " + RKeyBinds.JUSTDOIT.getDisplayName()), true);
             }
         }
 
@@ -240,6 +244,8 @@ public class CapabilityRegeneration implements IRegeneration {
 
             if (getTicksRegenerating() == 1) {
                 player.world.playSound(null, player.posX, player.posY, player.posZ, getType().getType().getSound(), SoundCategory.PLAYERS, 0.5F, 1.0F);
+                setLivesLeft(getLivesLeft() - 1);
+                setTimesRegenerated(getTimesRegenerated() + 1);
             }
 
             if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100)
@@ -267,8 +273,6 @@ public class CapabilityRegeneration implements IRegeneration {
                 getType().getType().onFinish(player);
                 setTicksRegenerating(0);
                 setRegenerating(false);
-                setLivesLeft(getLivesLeft() - 1);
-                setTimesRegenerated(getTimesRegenerated() + 1);
                 setSolaceTicks(0);
                 setInGracePeriod(false);
             }
@@ -276,7 +280,6 @@ public class CapabilityRegeneration implements IRegeneration {
 
         //Grace handling
         if (isInGracePeriod()) {
-
             if (isGlowing()) {
                 setTicksGlowing(getTicksGlowing() + 1);
             }
@@ -305,7 +308,11 @@ public class CapabilityRegeneration implements IRegeneration {
 
             //14 Minutes - Critical stage start
             if (getSolaceTicks() == 17100) {
-                player.playSound(RObjects.Sounds.CRITICAL_STAGE, 1, 1);
+                if (player instanceof EntityPlayerMP) {
+                    EntityPlayerMP playerMP = (EntityPlayerMP) player;
+                    BlockPos pos = playerMP.getPosition();
+                    playerMP.connection.sendPacket(new SPacketSoundEffect(RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, pos.getX(), pos.getY(), pos.getZ(), 0.3F, 1));
+                }
             }
 
             //CRITICAL STAGE

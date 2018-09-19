@@ -59,10 +59,10 @@ public class TypeFiery implements IRegenType {
             return;
 
         IRegeneration handler = CapabilityRegeneration.get(player);
-        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.Regen.postRegenerationDuration * 2, RegenConfig.Regen.postRegenerationLevel - 1, false, false));
         //   handler.setTrait(TraitHandler.getRandomTrait());
         //    player.sendStatusMessage(new TextComponentTranslation(handler.getTrait().getMessage()), true);
         player.clearActivePotions();
+        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.Regen.postRegenerationDuration * 2, RegenConfig.Regen.postRegenerationLevel - 1, false, false));
         handler.sync();
     }
 

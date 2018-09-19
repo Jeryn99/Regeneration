@@ -42,7 +42,7 @@ public class RObjects {
     @SubscribeEvent
     public static void addSounds(RegistryEvent.Register<SoundEvent> e) {
         IForgeRegistry<SoundEvent> reg = e.getRegistry();
-        reg.registerAll(setUpSound("regen_1"), setUpSound("fob_watch"), setUpSound("critical_stage"), setUpSound("heart_beat"));
+        reg.registerAll(setUpSound("regen_1"), setUpSound("fob_watch"), setUpSound("critical_stage"), setUpSound("heart_beat"), setUpSound("hand_glow"));
     }
 
     private static SoundEvent setUpSound(String soundName) {
@@ -60,5 +60,6 @@ public class RObjects {
         public static final SoundEvent REGEN_1 = null;
         public static final SoundEvent CRITICAL_STAGE = null;
         public static final SoundEvent HEART_BEAT = null;
+        public static final SoundEvent HAND_GLOW = null;
     }
 }

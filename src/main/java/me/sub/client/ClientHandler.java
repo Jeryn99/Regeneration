@@ -16,10 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MovementInput;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -54,6 +51,22 @@ public class ClientHandler {
     }
 
     @SubscribeEvent
+    public static void overlayEvent(RenderGameOverlayEvent.Pre e) {
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        IRegeneration regenInfo = CapabilityRegeneration.get(player);
+        if (regenInfo.getTicksRegenerating() > 0 && regenInfo.getTicksRegenerating() < 200 && !regenInfo.isInGracePeriod()) {
+            e.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void renderHandEvent(RenderHandEvent e) {
+
+    }
+
+
+
+    @SubscribeEvent
     public static void onUpdate(LivingEvent.LivingUpdateEvent e) {
 
         if (e.getEntityLiving() instanceof EntityPlayer) {
@@ -70,12 +83,22 @@ public class ClientHandler {
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent e) {
         if (Minecraft.getMinecraft().world != null) {
+
             if (RKeyBinds.GRACE.isPressed()) {
                 EntityPlayer player = Minecraft.getMinecraft().player;
                 if (player != null) {
-                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(player));
+                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(player, true));
                 }
             }
+
+            if (RKeyBinds.JUSTDOIT.isPressed()) {
+                EntityPlayer player = Minecraft.getMinecraft().player;
+                if (player != null) {
+                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(player, false));
+                }
+            }
+
+
         }
     }
 

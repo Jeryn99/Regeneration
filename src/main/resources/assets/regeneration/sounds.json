@@ -29,6 +29,16 @@
       }
     ]
   },
+  "hand_glow": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.heart_beat",
+    "sounds": [
+      {
+        "name": "regeneration:hand_glow",
+        "stream": false
+      }
+    ]
+  },
   
   "fob_watch": {
     "category": "ambient",

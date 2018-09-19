@@ -62,7 +62,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         NBTTagCompound style = handler.getStyle();
         Color color = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 
-        if (handler != null && handler.isGlowing()) {
+        if (handler != null && handler.isGlowing() || handler.getSolaceTicks() > 0 && handler.getSolaceTicks() < 200) {
 
             Minecraft mc = Minecraft.getMinecraft();
             Random rand = player.world.rand;

@@ -20,22 +20,28 @@ import java.util.UUID;
 public class MessageEnterGrace implements IMessage {
 
     private EntityPlayer player;
+    private boolean stopRegen;
 
     public MessageEnterGrace() {
     }
 
-    public MessageEnterGrace(EntityPlayer player) {
+    public MessageEnterGrace(EntityPlayer player, boolean stopRegen) {
         this.player = player;
+        this.stopRegen = stopRegen;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
+
+        stopRegen = buf.readBoolean();
+
         if (Minecraft.getMinecraft().player != null)
             player = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
+        buf.writeBoolean(this.stopRegen);
         ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
     }
 
@@ -47,14 +53,22 @@ public class MessageEnterGrace implements IMessage {
             if (player == null || !player.hasCapability(CapabilityRegeneration.CAPABILITY, null)) return null;
 
             IRegeneration regenInfo = CapabilityRegeneration.get(player);
-            if (regenInfo.getSolaceTicks() < 199) {
-                regenInfo.setInGracePeriod(true);
-                regenInfo.setSolaceTicks(0);
-                regenInfo.setTicksRegenerating(0);
-                regenInfo.sync();
-                player.sendStatusMessage(new TextComponentString("You have entered a grace period of 15 minutes"), true);
-            }
 
+            if (message.stopRegen) {
+                if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 199 && !regenInfo.isInGracePeriod()) {
+                    regenInfo.setInGracePeriod(true);
+                    regenInfo.setSolaceTicks(0);
+                    regenInfo.setTicksRegenerating(0);
+                    regenInfo.sync();
+                    player.sendStatusMessage(new TextComponentString("You have entered a grace period of 15 minutes"), true);
+                }
+            } else {
+                if (regenInfo.getSolaceTicks() < 199) {
+                    regenInfo.setInGracePeriod(false);
+                    regenInfo.setSolaceTicks(200);
+                    regenInfo.sync();
+                }
+            }
             return null;
         }
     }

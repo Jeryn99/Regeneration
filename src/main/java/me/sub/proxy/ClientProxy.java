@@ -13,4 +13,9 @@ public class ClientProxy extends CommonProxy {
         super.init();
         RKeyBinds.init();
     }
+
+    @Override
+    public void postInit() {
+        super.postInit();
+    }
 }
