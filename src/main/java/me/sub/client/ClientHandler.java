@@ -54,13 +54,18 @@ public class ClientHandler {
     public static void overlayEvent(RenderGameOverlayEvent.Pre e) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
-        if (regenInfo.getTicksRegenerating() > 0 && regenInfo.getTicksRegenerating() < 200 && !regenInfo.isInGracePeriod()) {
-            e.setCanceled(true);
-        }
+
     }
 
     @SubscribeEvent
-    public static void renderHandEvent(RenderHandEvent e) {
+    public static void overlayEvent(RenderGameOverlayEvent.Post e) {
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        IRegeneration regenInfo = CapabilityRegeneration.get(player);
+
+    }
+
+    @SubscribeEvent
+    public static void onRenderHand(RenderSpecificHandEvent e) {
 
     }
 

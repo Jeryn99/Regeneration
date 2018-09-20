@@ -1,9 +1,11 @@
 package me.sub.common.items;
 
+import me.sub.client.gui.GuiCustomizer;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
 import me.sub.config.RegenConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -40,6 +42,8 @@ public class ItemFobWatch extends Item {
         IRegeneration capability = CapabilityRegeneration.get(player);
         ItemStack stack = player.getHeldItem(handIn);
 
+        Minecraft.getMinecraft().displayGuiScreen(new GuiCustomizer());
+
         if (capability == null) return new ActionResult<>(EnumActionResult.PASS, stack);
 
         if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity) {
@@ -51,23 +55,23 @@ public class ItemFobWatch extends Item {
                 int used = doUsageDamage(stack, capability);
                 if (used == 0) {
                     if (capability.getLivesLeft() == RegenConfig.Regen.regenCapacity) {
-                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.transfer.fullCycle", used)), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullCycle", used)), true);
                     } else if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity)
-                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.transfer.emptystack", used)), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptystack", used)), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 }
-                player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.gainedRegens", used)), true); // too lazy to fix a single/plural issue here
+                player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.gainedRegens", used)), true); // too lazy to fix a single/plural issue here
             } else {
                 if (stack.getItemDamage() == 0 && !player.isCreative()) {
-                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.transfer.fullstack")), true);
+                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullstack")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 } else if (capability.getLivesLeft() < 1) {
-                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.transfer.emptyCycle")), true);
+                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptyCycle")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 }
                 stack.setItemDamage(stack.getItemDamage() - 1);
                 capability.setLivesLeft(capability.getLivesLeft() - 1);
-                player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("lcm-regen.messages.transfer")), true);
+                player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer")), true);
                 return new ActionResult<>(EnumActionResult.PASS, stack);
             }
         } else {

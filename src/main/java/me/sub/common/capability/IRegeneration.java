@@ -5,6 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import java.awt.*;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -29,7 +31,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     int getTimesRegenerated();
     void setTimesRegenerated(int times);
 
-    //TODO handle style stuff
     NBTTagCompound getStyle();
     void setStyle(NBTTagCompound nbt);
 
@@ -65,5 +66,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     int getSolaceTicks();
     void setSolaceTicks(int ticks);
 
+    Color getPrimaryColor();
+
+    Color getSecondaryColor();
 
 }

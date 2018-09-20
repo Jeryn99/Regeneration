@@ -21,6 +21,8 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 
+import java.awt.*;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -31,10 +33,14 @@ public class CapabilityRegeneration implements IRegeneration {
     public static final ResourceLocation REGEN_ID = new ResourceLocation(Regeneration.MODID, "regeneration");
     @CapabilityInject(IRegeneration.class)
     public static final Capability<IRegeneration> CAPABILITY = null;
-    private int timesRegenerated = 0, livesLeft = 12, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
+
+    private int timesRegenerated = 0, livesLeft = RegenConfig.Regen.regenCapacity, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
     private EntityPlayer player;
-    private boolean isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
+    private boolean textured = false, isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
     private String typeName = EnumRegenType.FIERY.name();
+
+    private float primaryRed = 1.0f, primaryGreen = 0.78f, primaryBlue = 0.0f;
+    private float secondaryGreen = 0.47f, secondaryRed = 1.0f, secondaryBlue = 0.0f;
 
     public CapabilityRegeneration() {
     }
@@ -165,12 +171,26 @@ public class CapabilityRegeneration implements IRegeneration {
 
     @Override
     public NBTTagCompound getStyle() {
-        return getDefaultStyle();
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setFloat("PrimaryRed", primaryRed);
+        nbt.setFloat("PrimaryGreen", primaryGreen);
+        nbt.setFloat("PrimaryBlue", primaryBlue);
+        nbt.setFloat("SecondaryRed", secondaryRed);
+        nbt.setFloat("SecondaryGreen", secondaryGreen);
+        nbt.setFloat("SecondaryBlue", secondaryBlue);
+        nbt.setBoolean("textured", textured);
+        return nbt;
     }
 
     @Override
     public void setStyle(NBTTagCompound nbt) {
-
+        primaryRed = nbt.getFloat("PrimaryRed");
+        primaryGreen = nbt.getFloat("PrimaryGreen");
+        primaryBlue = nbt.getFloat("PrimaryBlue");
+        secondaryRed = nbt.getFloat("SecondaryRed");
+        secondaryGreen = nbt.getFloat("SecondaryGreen");
+        secondaryBlue = nbt.getFloat("SecondaryBlue");
+        textured = nbt.getBoolean("textured");
     }
 
     @Override
@@ -190,7 +210,8 @@ public class CapabilityRegeneration implements IRegeneration {
 
     @Override
     public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = new NBTTagCompound();
+        NBTTagCompound nbt = getStyle();
+
         nbt.setBoolean("isRegenerating", isRegenerating);
         nbt.setInteger("timesRegenerated", timesRegenerated);
         nbt.setInteger("livesLeft", livesLeft);
@@ -200,6 +221,15 @@ public class CapabilityRegeneration implements IRegeneration {
         nbt.setInteger("solaceTicks", ticksInSolace);
         nbt.setBoolean("handGlowing", isGraceGlowing);
         nbt.setString("type", typeName);
+
+        nbt.setFloat("PrimaryRed", primaryRed);
+        nbt.setFloat("PrimaryGreen", primaryGreen);
+        nbt.setFloat("PrimaryBlue", primaryBlue);
+        nbt.setFloat("SecondaryRed", secondaryRed);
+        nbt.setFloat("SecondaryGreen", secondaryGreen);
+        nbt.setFloat("SecondaryBlue", secondaryBlue);
+        nbt.setBoolean("textured", textured);
+
         return nbt;
     }
 
@@ -214,6 +244,19 @@ public class CapabilityRegeneration implements IRegeneration {
         setSolaceTicks(nbt.getInteger("solaceTicks"));
         setGlowing(nbt.getBoolean("handGlowing"));
         setType(nbt.getString("type"));
+
+        //Primary
+        primaryRed = nbt.getFloat("PrimaryRed");
+        primaryBlue = nbt.getFloat("PrimaryBlue");
+        primaryGreen = nbt.getFloat("PrimaryGreen");
+
+        //Secondary
+        secondaryRed = nbt.getFloat("SecondaryRed");
+        secondaryGreen = nbt.getFloat("SecondaryGreen");
+        secondaryBlue = nbt.getFloat("SecondaryBlue");
+
+        //textured
+        textured = nbt.getBoolean("textured");
     }
 
     //Invokes the Regeneration and handles it.
@@ -340,16 +383,14 @@ public class CapabilityRegeneration implements IRegeneration {
 
     }
 
-    public NBTTagCompound getDefaultStyle() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setFloat("PrimaryRed", 1.0f);
-        nbt.setFloat("PrimaryGreen", 0.78f);
-        nbt.setFloat("PrimaryBlue", 0.0f);
-        nbt.setFloat("SecondaryRed", 1.0f);
-        nbt.setFloat("SecondaryGreen", 0.47f);
-        nbt.setFloat("SecondaryBlue", 0.0f);
-        nbt.setBoolean("textured", false);
-        return nbt;
+    @Override
+    public Color getPrimaryColor() {
+        return new Color(primaryRed, primaryGreen, primaryBlue);
+    }
+
+    @Override
+    public Color getSecondaryColor() {
+        return new Color(secondaryRed, secondaryGreen, secondaryBlue);
     }
 
 }

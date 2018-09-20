@@ -59,8 +59,8 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
     private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
 
-        NBTTagCompound style = handler.getStyle();
-        Color color = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
+        Color primaryColor = handler.getPrimaryColor();
+        Color secondaryColor = handler.getSecondaryColor();
 
         if (handler != null && handler.isGlowing() || handler.getSolaceTicks() > 0 && handler.getSolaceTicks() < 200) {
 
@@ -87,7 +87,8 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
                 for (int i = 0; i < 15; i++) {
                     GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
-                    RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, color, 0);
+                    RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
+                    RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, secondaryColor, 0);
                 }
 
                 RenderUtil.finishRenderLightning();
