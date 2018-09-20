@@ -23,7 +23,6 @@ public class PlayerUtil {
 
     @SideOnly(Side.CLIENT)
     public static void playMovingSound(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn) {
-        System.out.println(soundIn.getSoundName());
         Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(player, soundIn, categoryIn));
     }
 

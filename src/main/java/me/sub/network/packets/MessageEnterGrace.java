@@ -65,7 +65,8 @@ public class MessageEnterGrace implements IMessage {
             } else {
                 if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 18000) {
                     regenInfo.setInGracePeriod(false);
-                    regenInfo.setSolaceTicks(200);
+                    regenInfo.setSolaceTicks(199);
+                    regenInfo.setTicksRegenerating(1);
                     regenInfo.sync();
                 }
             }

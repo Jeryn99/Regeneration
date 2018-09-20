@@ -326,7 +326,7 @@ public class CapabilityRegeneration implements IRegeneration {
                 }
 
                 if (player.world.isRemote) {
-                    PlayerUtil.playMovingSound(player, RObjects.Sounds.REGEN_1, SoundCategory.PLAYERS);
+                    PlayerUtil.playMovingSound(player, getType().getType().getSound(), SoundCategory.PLAYERS);
                 }
 
                 setLivesLeft(getLivesLeft() - 1);
@@ -374,10 +374,6 @@ public class CapabilityRegeneration implements IRegeneration {
                 }
             }
 
-            if (player.isSprinting()) {
-                player.setSprinting(false);
-            }
-
             if (isGlowing()) {
                 setTicksGlowing(getTicksGlowing() + 1);
             }
@@ -409,11 +405,13 @@ public class CapabilityRegeneration implements IRegeneration {
                 if (player.world.isRemote) {
                     PlayerUtil.playMovingSound(player, RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
                 }
+
             }
         }
 
             //CRITICAL STAGE
             if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
+                player.sendStatusMessage(new TextComponentString("Regenerate now! or you will die!"), true);
                 if (getSolaceTicks() == 16800) {
                     player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 900, 2));
                 }
