@@ -50,7 +50,7 @@ public class CommandDebug extends CommandTreeBase {
             if (args[0].equalsIgnoreCase("grace")) {
                 regenInfo.setRegenerating(true);
                 regenInfo.setInGracePeriod(true);
-                regenInfo.setSolaceTicks(17100 - 1);
+                regenInfo.setSolaceTicks(16800);
             }
 
 

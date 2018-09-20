@@ -1,7 +1,7 @@
 category.loot=Loot settings
 category.regeneration=Regeneration
 
-item.chameleonarch.name=Chameleon Arch
+item.fob_watch.name=Fob Watch
 
 regeneration.info.blue=Blue
 regeneration.info.customizer=Customizer
@@ -10,11 +10,10 @@ regeneration.info.primary=Primary Color
 regeneration.info.red=Red
 regeneration.info.save=Save
 regeneration.info.secondary=Secondary Color
-regeneration.info.textured=Textured Regeneration?
 
 regeneration.messages.alreadyTimelord=You're already a timelord!
 regeneration.messages.becomeTimelord=You've become a timelord!
-regeneration.messages.gainedRegenerations=You've received %s regenerations from the Chameleon Arch
+regeneration.messages.gainedRegenerations=You've received %s regenerations from the Fob Watch
 
 regeneration.messages.numsuffix.0=st
 regeneration.messages.numsuffix.1=nd
@@ -38,6 +37,6 @@ menu.regeneration=Regeneration Customizer
 trait.messages.clumsy=Watch your things! You now have the clumsy trait...
 trait.messages.hunger=You have gained the Hungry Trait!
 trait.messages.night_vision=You have gained the Night Vision Trait!
-trait.messages.none=You have not recieved a trait. You are normal.
+trait.messages.none=You have not received a trait. You are normal.
 trait.messages.speed=You have gained the Speed Trait!
 trait.messages.strength=You have gained the Strength Trait!

@@ -2,6 +2,7 @@ package me.sub.common.capability;
 
 import me.sub.Regeneration;
 import me.sub.client.RKeyBinds;
+import me.sub.common.events.EventRegenerationBase;
 import me.sub.common.init.RObjects;
 import me.sub.common.states.EnumRegenType;
 import me.sub.config.RegenConfig;
@@ -9,13 +10,16 @@ import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageUpdateRegen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketSoundEffect;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -259,12 +263,28 @@ public class CapabilityRegeneration implements IRegeneration {
         textured = nbt.getBoolean("textured");
     }
 
+    public static void reset(EntityPlayer player) {
+        IRegeneration regenInfo = CapabilityRegeneration.get(player);
+        regenInfo.setRegenerating(false);
+        regenInfo.setTicksRegenerating(0);
+        regenInfo.setSolaceTicks(0);
+        regenInfo.setInGracePeriod(false);
+        regenInfo.setTicksGlowing(0);
+        regenInfo.setGlowing(false);
+    }
+
+    @Override
+    public Color getPrimaryColor() {
+        return new Color(primaryRed, primaryGreen, primaryBlue);
+    }
+
+    @Override
+    public Color getSecondaryColor() {
+        return new Color(secondaryRed, secondaryGreen, secondaryBlue);
+    }
+
     //Invokes the Regeneration and handles it.
     private void startRegenerating() {
-
-        if (player.getHealth() <= 0) {
-            setCapable(RegenConfig.Regen.dontLoseUponDeath);
-        }
 
         setSolaceTicks(getSolaceTicks() + 1);
 
@@ -283,9 +303,28 @@ public class CapabilityRegeneration implements IRegeneration {
             player.dismountRidingEntity();
             player.removePassengers();
 
+            player.setAbsorptionAmount(RegenConfig.Regen.absorbtionLevel * 2);
+
+            if (player.getHealth() <= 0) {
+                setCapable(RegenConfig.Regen.dontLoseUponDeath);
+            }
+
+            EventRegenerationBase.EventRegeneration regenEvent = new EventRegenerationBase.EventRegeneration(player);
+            MinecraftForge.EVENT_BUS.post(regenEvent);
+
             setTicksRegenerating(getTicksRegenerating() + 1);
 
             if (getTicksRegenerating() == 1) {
+
+                EventRegenerationBase.EventEnterRegeneration regenEnterEvent = new EventRegenerationBase.EventEnterRegeneration(player);
+                MinecraftForge.EVENT_BUS.post(regenEvent);
+
+                if (regenEnterEvent.isCanceled()) {
+                    reset(player);
+                    player.setDead();
+                    return;
+                }
+
                 player.world.playSound(null, player.posX, player.posY, player.posZ, getType().getType().getSound(), SoundCategory.PLAYERS, 0.5F, 1.0F);
                 setLivesLeft(getLivesLeft() - 1);
                 setTimesRegenerated(getTimesRegenerated() + 1);
@@ -296,6 +335,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
             if (getTicksRegenerating() >= 100 && getTicksRegenerating() < 200) {
                 getType().getType().onMidRegen(player);
+
                 player.sendStatusMessage(new TextComponentString("This is Regeneration #" + getTimesRegenerated() + ", You have " + getLivesLeft() + " lives left!"), true);
             }
 
@@ -313,6 +353,7 @@ public class CapabilityRegeneration implements IRegeneration {
             }
 
             if (getTicksRegenerating() == 200) {
+                MinecraftForge.EVENT_BUS.post(new EventRegenerationBase.EventEndRegeneration(player));
                 getType().getType().onFinish(player);
                 setTicksRegenerating(0);
                 setRegenerating(false);
@@ -323,6 +364,13 @@ public class CapabilityRegeneration implements IRegeneration {
 
         //Grace handling
         if (isInGracePeriod()) {
+
+            System.out.println(getSolaceTicks());
+
+            if (player.isSprinting()) {
+                player.setSprinting(false);
+            }
+
             if (isGlowing()) {
                 setTicksGlowing(getTicksGlowing() + 1);
             }
@@ -342,6 +390,7 @@ public class CapabilityRegeneration implements IRegeneration {
             //Every Minute
             if (getSolaceTicks() % 1200 == 0) {
                 setGlowing(true);
+                player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
             }
 
             //Five minutes
@@ -354,21 +403,22 @@ public class CapabilityRegeneration implements IRegeneration {
                 if (player instanceof EntityPlayerMP) {
                     EntityPlayerMP playerMP = (EntityPlayerMP) player;
                     BlockPos pos = playerMP.getPosition();
-                    playerMP.connection.sendPacket(new SPacketSoundEffect(RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, pos.getX(), pos.getY(), pos.getZ(), 0.3F, 1));
+                    playerMP.connection.sendPacket(new SPacketSoundEffect(RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, pos.getX(), pos.getY(), pos.getZ(), 0.8F, 1));
                 }
             }
 
             //CRITICAL STAGE
             if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
-
+                if (getSolaceTicks() == 16800) {
+                    player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 900, 2));
+                }
             }
 
             //15 minutes all gone, rip user
-            if (getSolaceTicks() >= 18000) {
+            if (getSolaceTicks() == 17999) {
 
                 if (!player.world.isRemote) {
-                    player.setDead();
-                    setSolaceTicks(0);
+                    player.setHealth(-1);
                 }
 
                 setCapable(false);
@@ -381,16 +431,6 @@ public class CapabilityRegeneration implements IRegeneration {
             }
         }
 
-    }
-
-    @Override
-    public Color getPrimaryColor() {
-        return new Color(primaryRed, primaryGreen, primaryBlue);
-    }
-
-    @Override
-    public Color getSecondaryColor() {
-        return new Color(secondaryRed, secondaryGreen, secondaryBlue);
     }
 
 }

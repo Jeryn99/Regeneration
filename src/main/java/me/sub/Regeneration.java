@@ -1,6 +1,7 @@
 package me.sub;
 
 import me.sub.common.capability.CapabilityRegeneration;
+import me.sub.common.command.CommandDebug;
 import me.sub.network.NetworkHandler;
 import me.sub.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
@@ -46,6 +47,6 @@ public class Regeneration {
 
     @EventHandler
     public void serverStart(FMLServerStartingEvent e) {
-        // e.registerServerCommand(new CommandDebug());
+        e.registerServerCommand(new CommandDebug());
     }
 }

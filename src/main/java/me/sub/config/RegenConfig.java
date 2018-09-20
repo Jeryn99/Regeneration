@@ -15,17 +15,19 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class RegenConfig {
 
     public static final Regen Regen = new Regen();
+    public static final Loot Loot = new Loot();
 
+    @Config.LangKey("category.regeneration")
     public static class Regen {
 
         @Config.LangKey("config.max_regens")
         @Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations, the Fob Watch will grant the timelord ability and give you infinite regenerations. If you die while regenerating you'll lose your ability (unless dontLosePower is set to true)")
-        @Config.RangeInt(max = Integer.MAX_VALUE, min = 0)
+        @Config.RangeInt(min = 0)
         public int regenCapacity = 12;
 
         @Config.LangKey("config.start_as_timelord")
         @Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations, the Fob Watch will grant the timelord ability and give you infinite regenerations. If you die while regenerating you'll lose your ability (unless dontLosePower is set to true)")
-        public boolean startAsTimelord = false; //Currently unused
+        public boolean startAsTimelord = false;
 
         @Config.LangKey("config.fiery_regen")
         @Config.Comment("Spawn fire when regenerating")
@@ -63,11 +65,22 @@ public class RegenConfig {
 
         @Config.LangKey("config.absorbtion_level")
         @Config.Comment("The amount of absorption hearts you get when regenerating")
-        public int absorbtionLevel = 10; //Currently unused
+        public int absorbtionLevel = 10;
 
         @Config.LangKey("config.lose_regens_on_death")
         @Config.Comment("If this is false you won't lose your timelord power if you get killed during regeneration")
         public boolean dontLoseUponDeath = true;
+    }
+
+    @Config.LangKey("category.loot")
+    public static class Loot {
+        @Config.LangKey("config.loot_regex")
+        @Config.Comment("The loot pool for chameleon arch's will only be added to loot tables whose name matches this regular expression")
+        public String lootRegex = "minecraft:chests\\/.*";
+
+        @Config.LangKey("config.disable_arch")
+        @Config.Comment("If this is true you won't lose your timelord power if you get killed during regeneration")
+        public boolean disableArch = false;
 
     }
 

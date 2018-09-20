@@ -5,8 +5,10 @@ import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.capability.RegenerationProvider;
 import me.sub.common.init.RObjects;
+import me.sub.config.RegenConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -93,6 +95,20 @@ public class RegenerationHandler {
             player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
             handler.setInGracePeriod(false);
             handler.setSolaceTicks(200);
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void onLogin(PlayerLoggedInEvent e) {
+        if (!RegenConfig.Regen.startAsTimelord || e.player.world.isRemote)
+            return;
+
+        NBTTagCompound nbt = e.player.getEntityData();
+        boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
+        if (!loggedInBefore) {
+            e.player.inventory.addItemStackToInventory(new ItemStack(RObjects.Items.FOB_WATCH));
+            nbt.setBoolean("loggedInBefore", true);
         }
     }
 }

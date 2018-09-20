@@ -76,7 +76,7 @@ public class ClientHandler {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         Random rand = player.world.rand;
         float f = 0.2F;
-        
+
         if (player.getHeldItemMainhand().getItem() != Items.AIR) return;
 
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
