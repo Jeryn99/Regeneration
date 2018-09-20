@@ -12,9 +12,13 @@ import me.sub.util.LimbManipulationUtil;
 import me.sub.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -23,7 +27,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -65,10 +71,43 @@ public class ClientHandler {
     }
 
     @SubscribeEvent
-    public static void onRenderHand(RenderSpecificHandEvent e) {
+    public static void onRenderHand(RenderHandEvent e) {
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        Random rand = player.world.rand;
+        float f = 0.2F;
+        
+        if (player.getHeldItemMainhand().getItem() != Items.AIR) return;
 
+        IRegeneration regenInfo = CapabilityRegeneration.get(player);
+
+        if (regenInfo.isGlowing() || regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 200) {
+
+            if (Minecraft.getMinecraft().gameSettings.thirdPersonView > 0) return;
+
+            GlStateManager.pushMatrix();
+
+            if (mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT)) {
+                GlStateManager.translate(-0.6F, -0.18F, -0.5F);
+                GlStateManager.translate(1, -0.1, 0);
+            } else {
+                GlStateManager.translate(-0.3F, -0.18F, -0.5F);
+            }
+
+            RenderUtil.setupRenderLightning();
+            GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
+            for (int i = 0; i < 15; i++) {
+                GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
+                Color primaryColor = regenInfo.getPrimaryColor();
+                Color secondaryColor = regenInfo.getSecondaryColor();
+                RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
+                RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, secondaryColor, 0);
+            }
+            RenderUtil.finishRenderLightning();
+
+            GlStateManager.popMatrix();
+        }
     }
-
 
 
     @SubscribeEvent
@@ -102,8 +141,6 @@ public class ClientHandler {
                     NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(player, false));
                 }
             }
-
-
         }
     }
 
@@ -123,7 +160,7 @@ public class ClientHandler {
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
 
-        EntityPlayer player = e.getEntityPlayer();
+        EntityPlayerSP player = (EntityPlayerSP) e.getEntityPlayer();
 
         IRegeneration handler = CapabilityRegeneration.get(player);
 

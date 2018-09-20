@@ -1,11 +1,9 @@
 package me.sub.common.items;
 
-import me.sub.client.gui.GuiCustomizer;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
 import me.sub.config.RegenConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -41,9 +39,6 @@ public class ItemFobWatch extends Item {
 
         IRegeneration capability = CapabilityRegeneration.get(player);
         ItemStack stack = player.getHeldItem(handIn);
-
-        Minecraft.getMinecraft().displayGuiScreen(new GuiCustomizer());
-
         if (capability == null) return new ActionResult<>(EnumActionResult.PASS, stack);
 
         if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity) {
