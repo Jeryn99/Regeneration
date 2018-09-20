@@ -8,16 +8,14 @@ import me.sub.common.states.EnumRegenType;
 import me.sub.config.RegenConfig;
 import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageUpdateRegen;
+import me.sub.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -289,7 +287,9 @@ public class CapabilityRegeneration implements IRegeneration {
         setSolaceTicks(getSolaceTicks() + 1);
 
         if (getSolaceTicks() == 1 && !isInGracePeriod()) {
-            player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            if (player.world.isRemote) {
+                PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
+            }
         }
 
         if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
@@ -325,7 +325,10 @@ public class CapabilityRegeneration implements IRegeneration {
                     return;
                 }
 
-                player.world.playSound(null, player.posX, player.posY, player.posZ, getType().getType().getSound(), SoundCategory.PLAYERS, 0.5F, 1.0F);
+                if (player.world.isRemote) {
+                    PlayerUtil.playMovingSound(player, RObjects.Sounds.REGEN_1, SoundCategory.PLAYERS);
+                }
+
                 setLivesLeft(getLivesLeft() - 1);
                 setTimesRegenerated(getTimesRegenerated() + 1);
             }
@@ -365,7 +368,11 @@ public class CapabilityRegeneration implements IRegeneration {
         //Grace handling
         if (isInGracePeriod()) {
 
-            System.out.println(getSolaceTicks());
+            if (getSolaceTicks() == 2) {
+                if (player.world.isRemote) {
+                    PlayerUtil.playMovingSound(player, RObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS);
+                }
+            }
 
             if (player.isSprinting()) {
                 player.setSprinting(false);
@@ -379,18 +386,17 @@ public class CapabilityRegeneration implements IRegeneration {
                 setInGracePeriod(false);
             }
 
+
             if (getSolaceTicks() % 220 == 0) {
-                if (player instanceof EntityPlayerMP) {
-                    EntityPlayerMP playerMP = (EntityPlayerMP) player;
-                    BlockPos pos = playerMP.getPosition();
-                    playerMP.connection.sendPacket(new SPacketSoundEffect(RObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, pos.getX(), pos.getY(), pos.getZ(), 0.3F, 1));
-                }
+
             }
 
             //Every Minute
             if (getSolaceTicks() % 1200 == 0) {
                 setGlowing(true);
-                player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                if (player.world.isRemote) {
+                    PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
+                }
             }
 
             //Five minutes
@@ -400,12 +406,11 @@ public class CapabilityRegeneration implements IRegeneration {
 
             //14 Minutes - Critical stage start
             if (getSolaceTicks() == 17100) {
-                if (player instanceof EntityPlayerMP) {
-                    EntityPlayerMP playerMP = (EntityPlayerMP) player;
-                    BlockPos pos = playerMP.getPosition();
-                    playerMP.connection.sendPacket(new SPacketSoundEffect(RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, pos.getX(), pos.getY(), pos.getZ(), 0.8F, 1));
+                if (player.world.isRemote) {
+                    PlayerUtil.playMovingSound(player, RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
                 }
             }
+        }
 
             //CRITICAL STAGE
             if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
@@ -431,6 +436,5 @@ public class CapabilityRegeneration implements IRegeneration {
             }
         }
 
-    }
-
 }
+
