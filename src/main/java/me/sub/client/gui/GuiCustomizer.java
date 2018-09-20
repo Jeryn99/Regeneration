@@ -5,8 +5,10 @@ import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageRegenerationStyle;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -21,10 +23,10 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 //TODO - Make EnumRegenTypes cycleable
 public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 
-    public static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/smallbg.png");
-    public float primaryRed, primaryGreen, primaryBlue, secondaryRed, secondaryGreen, secondaryBlue;
-    public boolean textured;
-    public GuiButton texturedButton;
+    private static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/smallbg.png");
+    private float primaryRed, primaryGreen, primaryBlue, secondaryRed, secondaryGreen, secondaryBlue;
+    private boolean textured;
+    private GuiButton texturedButton;
 
     public GuiCustomizer() {
         super(new BlankContainer());
@@ -62,8 +64,13 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
     @Override
     public void initGui() {
         super.initGui();
-        this.xSize = 176;
-        this.ySize = 166;
+        xSize = 182;
+        ySize = 185;
+
+        //Galacticraft API for Tabs
+        TabRegistry.updateTabValues(this.guiLeft + 2, this.guiTop + 8, GuiCustomizer.class);
+        TabRegistry.addTabsToList(this.buttonList);
+
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
 
@@ -76,11 +83,9 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
         secondaryBlue = old.getFloat("SecondaryBlue");
         textured = old.getBoolean("textured");
 
-        this.buttonList.add(new GuiButtonExt(0, i + 4, j + 167, 50, 18, new TextComponentTranslation("regeneration.info.save").getFormattedText()));
-        this.buttonList.add(new GuiButtonExt(3, i + 100, j + 167, 50, 18, new TextComponentTranslation("Reset").getFormattedText()));
-        this.buttonList.add(new GuiButtonExt(1, i + 202, j + 167, 50, 18, new TextComponentTranslation("gui.cancel").getFormattedText()));
-        this.texturedButton = new GuiButton(2, i + this.xSize / 2 - 25, j + 45, 50, 20, new TextComponentTranslation("").getFormattedText());
-        this.buttonList.add(texturedButton);
+        this.buttonList.add(new GuiButtonExt(0, guiLeft + 48, guiTop + 176, 45, 15, new TextComponentTranslation("regeneration.info.save").getFormattedText()));
+        this.buttonList.add(new GuiButtonExt(3, guiLeft, guiTop + 176, 45, 15, new TextComponentTranslation("Reset").getFormattedText()));
+        this.buttonList.add(new GuiButtonExt(1, guiLeft + 48 * 2, guiTop + 176, 45, 15, new TextComponentTranslation("gui.cancel").getFormattedText()));
 
         this.buttonList.add(new GuiColorSlider(6, i + 20, j + 90, 80, 20, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this));
         this.buttonList.add(new GuiColorSlider(7, i + 20, j + 110, 80, 20, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this));
@@ -90,9 +95,6 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
         this.buttonList.add(new GuiColorSlider(10, i + 135, j + 110, 80, 20, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this));
         this.buttonList.add(new GuiColorSlider(11, i + 135, j + 130, 80, 20, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this));
 
-        //Galacticraft API for Tabs
-        TabRegistry.updateTabValues(this.guiLeft, this.guiTop, GuiCustomizer.class);
-        TabRegistry.addTabsToList(this.buttonList);
 
     }
 
@@ -127,23 +129,11 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 
         mc.getTextureManager().bindTexture(DEFAULT_TEX);
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
-
-        String name = new TextComponentTranslation("regeneration.info.textured").getFormattedText();
-        int length = mc.fontRenderer.getStringWidth(name);
-        this.drawString(mc.fontRenderer, name, i + this.xSize / 2 - length / 2, j + 30, 0xffffff);
-
-        this.texturedButton.displayString = (textured) ? "Yes" : "No";
-
-        name = new TextComponentTranslation("regeneration.info.primary").getFormattedText();
-        length = mc.fontRenderer.getStringWidth(name);
-        this.drawString(mc.fontRenderer, name, i + 70 - length / 2, j + 75, 0xffffff);
-
-        name = new TextComponentTranslation("regeneration.info.secondary").getFormattedText();
-        length = mc.fontRenderer.getStringWidth(name);
-        this.drawString(mc.fontRenderer, name, i + 185 - length / 2, j + 75, 0xffffff);
-
+        GlStateManager.pushMatrix();
+        // GlStateManager.translate(1,1,1);
         drawRect(i + 99, j + 90, i + 121, j + 150, 0.1F, 0.1F, 0.1F, 1);
         drawRect(i + 100, j + 91, i + 120, j + 149, primaryRed, primaryGreen, primaryBlue, 1);
+        GlStateManager.popMatrix();
 
         drawRect(i + 214, j + 90, i + 236, j + 150, 0.1F, 0.1F, 0.1F, 1);
         drawRect(i + 215, j + 91, i + 235, j + 149, secondaryRed, secondaryGreen, secondaryBlue, 1);
@@ -193,6 +183,7 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
+        GuiInventory.drawEntityOnScreen(guiLeft + 130, guiTop + 130, 40, guiLeft + 130 - mouseX, guiTop + 60 - mouseY, Minecraft.getMinecraft().player);
     }
 
 
