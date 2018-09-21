@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 public class TabRegeneration extends AbstractTab {
 
     public TabRegeneration() {
-        super(150, 0, 0, new ItemStack(RObjects.Items.FOB_WATCH));
+        super(0, 0, 0, new ItemStack(RObjects.Items.FOB_WATCH));
     }
 
     @Override

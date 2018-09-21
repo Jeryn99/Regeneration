@@ -1,4 +1,4 @@
-package me.sub;
+package me.sub.client.sound;
 
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;

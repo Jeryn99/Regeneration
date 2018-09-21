@@ -7,72 +7,36 @@ import me.sub.network.packets.MessageRegenerationStyle;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.client.config.GuiSlider;
 
 //TODO - Make look nicer
 //TODO - Make EnumRegenTypes cycleable
-public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
+public class GuiCustomizer extends GuiScreen {
 
     private static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/smallbg.png");
+    private int guiLeft, guiTop, xSize, ySize;
     private float primaryRed, primaryGreen, primaryBlue, secondaryRed, secondaryGreen, secondaryBlue;
     private boolean textured;
-    private GuiButton texturedButton;
+    private EntityPlayer player = Minecraft.getMinecraft().player;
 
     public GuiCustomizer() {
-        super(new BlankContainer());
-    }
-
-    public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
-        if (left < right) {
-            int i = left;
-            left = right;
-            right = i;
-        }
-
-        if (top < bottom) {
-            int j = top;
-            top = bottom;
-            bottom = j;
-        }
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.color(red, green, blue, alpha);
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION);
-        bufferBuilder.pos(left, bottom, 0.0D).endVertex();
-        bufferBuilder.pos(right, bottom, 0.0D).endVertex();
-        bufferBuilder.pos(right, top, 0.0D).endVertex();
-        bufferBuilder.pos(left, top, 0.0D).endVertex();
-        tessellator.draw();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
+        xSize = 182;
+        ySize = 185;
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        xSize = 182;
-        ySize = 185;
 
-        //Galacticraft API for Tabs
-        TabRegistry.updateTabValues(this.guiLeft + 2, this.guiTop + 8, GuiCustomizer.class);
-        TabRegistry.addTabsToList(this.buttonList);
-
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
+        guiLeft = (width - xSize) / 2;
+        guiTop = (height - ySize) / 2;
 
         NBTTagCompound old = CapabilityRegeneration.get(mc.player).getStyle();
         primaryRed = old.getFloat("PrimaryRed");
@@ -83,18 +47,47 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
         secondaryBlue = old.getFloat("SecondaryBlue");
         textured = old.getBoolean("textured");
 
-        this.buttonList.add(new GuiButtonExt(0, guiLeft + 48, guiTop + 176, 45, 15, new TextComponentTranslation("regeneration.info.save").getFormattedText()));
-        this.buttonList.add(new GuiButtonExt(3, guiLeft, guiTop + 176, 45, 15, new TextComponentTranslation("Reset").getFormattedText()));
-        this.buttonList.add(new GuiButtonExt(1, guiLeft + 48 * 2, guiTop + 176, 45, 15, new TextComponentTranslation("gui.cancel").getFormattedText()));
+        TabRegistry.updateTabValues(guiLeft + 2, guiTop + 8, GuiCustomizer.class);
+        TabRegistry.addTabsToList(buttonList);
 
-        this.buttonList.add(new GuiColorSlider(6, i + 20, j + 90, 80, 20, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this));
-        this.buttonList.add(new GuiColorSlider(7, i + 20, j + 110, 80, 20, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this));
-        this.buttonList.add(new GuiColorSlider(8, i + 20, j + 130, 80, 20, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this));
 
-        this.buttonList.add(new GuiColorSlider(9, i + 135, j + 90, 80, 20, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, this));
-        this.buttonList.add(new GuiColorSlider(10, i + 135, j + 110, 80, 20, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this));
-        this.buttonList.add(new GuiColorSlider(11, i + 135, j + 130, 80, 20, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this));
+        buttonList.add(new GuiButtonExt(1, guiLeft + 10, guiTop + 176, 45, 15, new TextComponentTranslation("regeneration.info.save").getFormattedText()));
+        buttonList.add(new GuiButtonExt(2, guiLeft + 70, guiTop + 176, 45, 15, new TextComponentTranslation("Reset").getFormattedText()));
+        buttonList.add(new GuiButtonExt(3, guiLeft + 130, guiTop + 176, 45, 15, new TextComponentTranslation("gui.cancel").getFormattedText()));
 
+    }
+
+    @Override
+    public void drawScreen(int i, int j, float f) {
+        drawDefaultBackground();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        mc.renderEngine.bindTexture(DEFAULT_TEX);
+        drawTexturedModalRect(guiLeft, guiTop + 8, 0, 0, xSize, 192);
+        super.drawScreen(i, j, f);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GuiInventory.drawEntityOnScreen(guiLeft + 130, guiTop + 130, 40, guiLeft + 130 - i, guiTop + 60 - j, player);
+    }
+
+    @Override
+    public void drawTexturedModalRect(int i, int j, int textureX, int textureY, int width, int height) {
+        super.drawTexturedModalRect(i, j, textureX, textureY, width, height);
+
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) {
+
+        if (button.id == 1) {
+            NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(getStyleNBTTag()));
+            player.closeScreen();
+        }
+        if (button.id == 2) {
+            NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(getDefaultStyle()));
+            player.closeScreen();
+        }
+        if (button.id == 3) {
+            player.closeScreen();
+        }
 
     }
 
@@ -121,70 +114,5 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
         nbt.setBoolean("textured", false);
         return nbt;
     }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
-
-        mc.getTextureManager().bindTexture(DEFAULT_TEX);
-        this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
-        GlStateManager.pushMatrix();
-        // GlStateManager.translate(1,1,1);
-        drawRect(i + 99, j + 90, i + 121, j + 150, 0.1F, 0.1F, 0.1F, 1);
-        drawRect(i + 100, j + 91, i + 120, j + 149, primaryRed, primaryGreen, primaryBlue, 1);
-        GlStateManager.popMatrix();
-
-        drawRect(i + 214, j + 90, i + 236, j + 150, 0.1F, 0.1F, 0.1F, 1);
-        drawRect(i + 215, j + 91, i + 235, j + 149, secondaryRed, secondaryGreen, secondaryBlue, 1);
-
-        this.drawString(mc.fontRenderer, new TextComponentTranslation("regeneration.info.customizer").getFormattedText(), i + 5, j + 5, 0xffffff);
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button) {
-        if (button.id == 0) {
-            updateServer(true);
-            mc.player.closeScreen();
-        }
-        if (button.id == 1) mc.player.closeScreen();
-        if (button.id == 2) textured = !textured;
-        if (button.id == 3) {
-            updateServer(false);
-            mc.player.closeScreen();
-        }
-    }
-
-    private void updateServer(boolean notReset) {
-        if (notReset) {
-            NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(getStyleNBTTag()));
-        } else {
-            NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(getDefaultStyle()));
-        }
-    }
-
-    @Override
-    public void onChangeSliderValue(GuiSlider slider) {
-        if (slider.id == 6)
-            this.primaryRed = (float) slider.sliderValue;
-        else if (slider.id == 7)
-            this.primaryGreen = (float) slider.sliderValue;
-        else if (slider.id == 8)
-            this.primaryBlue = (float) slider.sliderValue;
-        else if (slider.id == 9)
-            this.secondaryRed = (float) slider.sliderValue;
-        else if (slider.id == 10)
-            this.secondaryGreen = (float) slider.sliderValue;
-        else if (slider.id == 11) this.secondaryBlue = (float) slider.sliderValue;
-    }
-
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
-        GuiInventory.drawEntityOnScreen(guiLeft + 130, guiTop + 130, 40, guiLeft + 130 - mouseX, guiTop + 60 - mouseY, Minecraft.getMinecraft().player);
-    }
-
 
 }

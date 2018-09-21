@@ -1,6 +1,6 @@
 package me.sub.util;
 
-import me.sub.MovingSoundPlayer;
+import me.sub.client.sound.MovingSoundPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
