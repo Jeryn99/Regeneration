@@ -22,12 +22,12 @@ public class GuiColorSlider extends GuiSlider {
     @Override
     protected void mouseDragged(Minecraft par1Minecraft, int par2, int par3) {
         super.mouseDragged(par1Minecraft, par2, par3);
-        this.sliderValue = round(sliderValue, 2);
+        sliderValue = round(sliderValue, 2);
         updateText();
     }
 
     public void updateText() {
-        this.displayString = this.dispString + ": " + sliderValue;
+        displayString = dispString + ": " + sliderValue;
     }
 
 }

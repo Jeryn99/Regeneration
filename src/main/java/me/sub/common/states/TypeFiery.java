@@ -1,5 +1,7 @@
 package me.sub.common.states;
 
+import java.util.Random;
+
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
@@ -10,8 +12,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Random;
 
 /**
  * Created by Sub

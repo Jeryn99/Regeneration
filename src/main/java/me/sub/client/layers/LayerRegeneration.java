@@ -1,5 +1,8 @@
 package me.sub.client.layers;
 
+import java.awt.Color;
+import java.util.Random;
+
 import me.sub.Regeneration;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
@@ -22,9 +25,6 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
-import java.util.Random;
-
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -44,7 +44,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         IRegeneration handler = CapabilityRegeneration.get(player);
 
-        //Render the Fiery Regeneration 
+        //Render the Fiery Regeneration
         if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
             if (handler.getType().equals(EnumRegenType.FIERY)) {
                 renderFieryRegen(playerRenderer, handler, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
@@ -59,7 +59,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
     private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
 
-        Color primaryColor = handler.getPrimaryColor();
+        Color primaryColor = handler.getPrimaryColor(); //FIXME redundant null check, it would van NPE'd here
         Color secondaryColor = handler.getSecondaryColor();
 
         if (handler != null && handler.isGlowing() || handler.getSolaceTicks() > 0 && handler.getSolaceTicks() < 200) {

@@ -1,12 +1,12 @@
 package me.sub.common.capability;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Created by Sub
@@ -33,12 +33,12 @@ public class RegenerationProvider implements ICapabilitySerializable<NBTTagCompo
 
     @Override
     public NBTTagCompound serializeNBT() {
-        return (NBTTagCompound) CapabilityRegeneration.CAPABILITY.getStorage().writeNBT(CapabilityRegeneration.CAPABILITY, this.capability, null);
+        return (NBTTagCompound) CapabilityRegeneration.CAPABILITY.getStorage().writeNBT(CapabilityRegeneration.CAPABILITY, capability, null);
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, this.capability, null, nbt);
+        CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, capability, null, nbt);
     }
 
 }

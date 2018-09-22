@@ -1,5 +1,8 @@
 package micdoodle8.mods.galacticraft.api.client.tabs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -13,13 +16,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TabRegistry {
     public static Class<?> clazzNEIConfig = null;
     public static int recipeBookOffset;
-    private static ArrayList<AbstractTab> tabList = new ArrayList<AbstractTab>();
+    private static ArrayList<AbstractTab> tabList = new ArrayList<>();
     private static Class<?> clazzJEIConfig = null;
     private static Minecraft mc = FMLClientHandler.instance().getClient();
     private static boolean initWithPotion;

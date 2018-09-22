@@ -20,7 +20,7 @@ public abstract class AbstractTab extends GuiButton {
     public AbstractTab(int id, int posX, int posY, ItemStack renderStack) {
         super(id, posX, posY, 28, 32, "");
         this.renderStack = renderStack;
-        this.itemRender = FMLClientHandler.instance().getClient().getRenderItem();
+        itemRender = FMLClientHandler.instance().getClient().getRenderItem();
     }
 
     @Override
@@ -30,42 +30,42 @@ public abstract class AbstractTab extends GuiButton {
         if (screen instanceof GuiInventory) {
             newPotionOffset += TabRegistry.getRecipeBookOffset((GuiInventory) screen) - TabRegistry.recipeBookOffset;
         }
-        if (newPotionOffset != this.potionOffsetLast) {
-            this.x += newPotionOffset - this.potionOffsetLast;
-            this.potionOffsetLast = newPotionOffset;
+        if (newPotionOffset != potionOffsetLast) {
+            x += newPotionOffset - potionOffsetLast;
+            potionOffsetLast = newPotionOffset;
         }
-        if (this.visible) {
+        if (visible) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-            int yTexPos = this.enabled ? 3 : 32;
-            int ySize = this.enabled ? 25 : 32;
-            int xOffset = this.id == 2 ? 0 : 1;
-            int yPos = this.y + (this.enabled ? 3 : 0);
+            int yTexPos = enabled ? 3 : 32;
+            int ySize = enabled ? 25 : 32;
+            int xOffset = id == 2 ? 0 : 1;
+            int yPos = y + (enabled ? 3 : 0);
 
-            mc.renderEngine.bindTexture(this.texture);
-            this.drawTexturedModalRect(this.x, yPos, xOffset * 28, yTexPos, 28, ySize);
+            mc.renderEngine.bindTexture(texture);
+            this.drawTexturedModalRect(x, yPos, xOffset * 28, yTexPos, 28, ySize);
 
             RenderHelper.enableGUIStandardItemLighting();
-            this.zLevel = 100.0F;
-            this.itemRender.zLevel = 100.0F;
+            zLevel = 100.0F;
+            itemRender.zLevel = 100.0F;
             GlStateManager.enableLighting();
             GlStateManager.enableRescaleNormal();
-            this.itemRender.renderItemAndEffectIntoGUI(this.renderStack, this.x + 6, this.y + 8);
-            this.itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, this.renderStack, this.x + 6, this.y + 8, null);
+            itemRender.renderItemAndEffectIntoGUI(renderStack, x + 6, y + 8);
+            itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, renderStack, x + 6, y + 8, null);
             GlStateManager.disableLighting();
             GlStateManager.enableBlend();
-            this.itemRender.zLevel = 0.0F;
-            this.zLevel = 0.0F;
+            itemRender.zLevel = 0.0F;
+            zLevel = 0.0F;
             RenderHelper.disableStandardItemLighting();
         }
     }
 
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        boolean inWindow = this.enabled && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+        boolean inWindow = enabled && visible && mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 
         if (inWindow) {
-            this.onTabClicked();
+            onTabClicked();
         }
 
         return inWindow;

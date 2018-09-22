@@ -1,5 +1,9 @@
 package me.sub.client;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Random;
+
 import me.sub.Regeneration;
 import me.sub.client.layers.LayerRegeneration;
 import me.sub.common.capability.CapabilityRegeneration;
@@ -20,16 +24,17 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Sub
@@ -60,14 +65,14 @@ public class ClientHandler {
     public static void overlayEvent(RenderGameOverlayEvent.Pre e) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
-
+        //TODO ?
     }
 
     @SubscribeEvent
     public static void overlayEvent(RenderGameOverlayEvent.Post e) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
-
+        //TODO ?
     }
 
     @SubscribeEvent

@@ -1,11 +1,11 @@
 package me.sub.common.capability;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by Sub

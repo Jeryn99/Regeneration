@@ -1,5 +1,7 @@
 package me.sub.network.packets;
 
+import java.util.UUID;
+
 import io.netty.buffer.ByteBuf;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
@@ -10,8 +12,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.util.UUID;
 
 /**
  * Created by Sub
@@ -41,7 +41,7 @@ public class MessageEnterGrace implements IMessage {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeBoolean(this.stopRegen);
+        buf.writeBoolean(stopRegen);
         ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
     }
 

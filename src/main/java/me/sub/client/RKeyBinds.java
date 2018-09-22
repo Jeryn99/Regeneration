@@ -1,9 +1,10 @@
 package me.sub.client;
 
+import org.lwjgl.input.Keyboard;
+
 import me.sub.Regeneration;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import org.lwjgl.input.Keyboard;
 
 
 /**

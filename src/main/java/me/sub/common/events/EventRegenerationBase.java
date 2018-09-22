@@ -15,7 +15,7 @@ public class EventRegenerationBase extends PlayerEvent {
 
     public EventRegenerationBase(EntityPlayer player) {
         super(player);
-        this.regenInfo = CapabilityRegeneration.get(player);
+        regenInfo = CapabilityRegeneration.get(player);
     }
 
     @Override

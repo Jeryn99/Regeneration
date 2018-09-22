@@ -1,5 +1,9 @@
 package me.sub.util;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import me.sub.Regeneration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -15,10 +19,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
 public class LimbManipulationUtil {
@@ -175,34 +175,34 @@ public class LimbManipulationUtil {
         private CustomModelRenderer(ModelBiped model, int texOffX, int texOffY, ModelRenderer old,
                                     Field field) throws IllegalAccessException {
             super(model, "");
-            this.modelBiped = model;
+            modelBiped = model;
             this.old = old;
-            this.setTextureOffset(texOffX, texOffY);
-            this.f = field;
-            this.cubeList = old.cubeList;
-            this.setRotationPoint(old.rotationPointX, old.rotationPointY, old.rotationPointZ);
+            setTextureOffset(texOffX, texOffY);
+            f = field;
+            cubeList = old.cubeList;
+            setRotationPoint(old.rotationPointX, old.rotationPointY, old.rotationPointZ);
             field.set(model, this);
         }
 
         @Override
         public void render(float scale) {
-            if (this.changeAngles) {
-                this.rotateAngleX = this.actualX;
-                this.rotateAngleY = this.actualY;
-                this.rotateAngleZ = this.actualZ;
+            if (changeAngles) {
+                rotateAngleX = actualX;
+                rotateAngleY = actualY;
+                rotateAngleZ = actualZ;
             }
             GlStateManager.pushMatrix();
-            GlStateManager.translate(this.rotationPointX * scale, this.rotationPointY * scale,
-                    this.rotationPointZ * scale);
-            GlStateManager.rotate(this.rotateAngleZ * 57.295776F, 0.0F, 0.0F, 1.0F);
-            GlStateManager.rotate(this.rotateAngleY * 57.295776F, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(this.rotateAngleX * 57.295776F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.translate(rotationPointX * scale, rotationPointY * scale,
+                    rotationPointZ * scale);
+            GlStateManager.rotate(rotateAngleZ * 57.295776F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(rotateAngleY * 57.295776F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(rotateAngleX * 57.295776F, 1.0F, 0.0F, 0.0F);
             GlStateManager.translate(offX, offY, offZ);
-            GlStateManager.rotate(this.rotateAngleX * 57.295776F, -1.0F, 0.0F, 0.0F);
-            GlStateManager.rotate(this.rotateAngleY * 57.295776F, 0.0F, -1.0F, 0.0F);
-            GlStateManager.rotate(this.rotateAngleZ * 57.295776F, 0.0F, 0.0F, -1.0F);
-            GlStateManager.translate(-this.rotationPointX * scale, -this.rotationPointY * scale,
-                    -this.rotationPointZ * scale);
+            GlStateManager.rotate(rotateAngleX * 57.295776F, -1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(rotateAngleY * 57.295776F, 0.0F, -1.0F, 0.0F);
+            GlStateManager.rotate(rotateAngleZ * 57.295776F, 0.0F, 0.0F, -1.0F);
+            GlStateManager.translate(-rotationPointX * scale, -rotationPointY * scale,
+                    -rotationPointZ * scale);
             super.render(scale);
             GlStateManager.popMatrix();
         }
@@ -210,7 +210,7 @@ public class LimbManipulationUtil {
         public void reset() {
             if (f != null) {
                 try {
-                    this.f.set(modelBiped, this.old);
+                    f.set(modelBiped, old);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -218,21 +218,21 @@ public class LimbManipulationUtil {
         }
 
         private void setAnglesRadians(float x, float y, float z) {
-            this.actualX = x;
-            this.actualY = y;
-            this.actualZ = z;
-            this.changeAngles = true;
+            actualX = x;
+            actualY = y;
+            actualZ = z;
+            changeAngles = true;
         }
 
         private void setAngles(float x, float y, float z) {
-            this.setAnglesRadians((float) Math.toRadians(x), (float) Math.toRadians(y),
+            setAnglesRadians((float) Math.toRadians(x), (float) Math.toRadians(y),
                     (float) Math.toRadians(z));
         }
 
         private void setOffsets(float x, float y, float z) {
-            this.offX = x;
-            this.offY = y;
-            this.offZ = z;
+            offX = x;
+            offY = y;
+            offZ = z;
         }
     }
 }

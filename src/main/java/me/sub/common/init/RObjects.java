@@ -1,5 +1,8 @@
 package me.sub.common.init;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.sub.Regeneration;
 import me.sub.common.items.ItemFobWatch;
 import net.minecraft.item.Item;
@@ -11,9 +14,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.IForgeRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Sub

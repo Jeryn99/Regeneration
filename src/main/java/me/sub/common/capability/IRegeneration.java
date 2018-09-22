@@ -1,11 +1,11 @@
 package me.sub.common.capability;
 
+import java.awt.Color;
+
 import me.sub.common.states.EnumRegenType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import java.awt.*;
 
 /**
  * Created by Sub

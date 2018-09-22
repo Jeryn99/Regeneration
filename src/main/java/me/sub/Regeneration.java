@@ -1,5 +1,8 @@
 package me.sub;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.command.CommandDebug;
 import me.sub.network.NetworkHandler;
@@ -11,8 +14,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Regeneration.MODID, name = Regeneration.NAME, version = Regeneration.VERSION)
 public class Regeneration {

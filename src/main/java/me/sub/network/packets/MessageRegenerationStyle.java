@@ -20,17 +20,17 @@ public class MessageRegenerationStyle implements IMessage {
     }
 
     public MessageRegenerationStyle(NBTTagCompound nbtTagCompound) {
-        this.style = nbtTagCompound;
+        style = nbtTagCompound;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.style = ByteBufUtils.readTag(buf);
+        style = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeTag(buf, this.style);
+        ByteBufUtils.writeTag(buf, style);
     }
 
     public static class Handler implements IMessageHandler<MessageRegenerationStyle, IMessage> {

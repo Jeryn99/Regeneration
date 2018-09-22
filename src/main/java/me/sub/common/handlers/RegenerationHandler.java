@@ -1,5 +1,7 @@
 package me.sub.common.handlers;
 
+import static me.sub.common.capability.CapabilityRegeneration.*;
+
 import me.sub.Regeneration;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
@@ -21,8 +23,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
-
-import static me.sub.common.capability.CapabilityRegeneration.REGEN_ID;
 
 /**
  * Created by Sub

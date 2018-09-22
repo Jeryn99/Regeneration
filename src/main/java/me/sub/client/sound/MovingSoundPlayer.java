@@ -22,8 +22,8 @@ public class MovingSoundPlayer extends MovingSound {
     public MovingSoundPlayer(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn) {
         super(soundIn, categoryIn);
         this.player = player;
-        this.repeat = true;
-        this.repeatDelay = 0;
+        repeat = true;
+        repeatDelay = 0;
         soundCheck = soundIn;
     }
 
@@ -53,15 +53,15 @@ public class MovingSoundPlayer extends MovingSound {
             }
         }
 
-        if (this.player.isDead) {
-            this.donePlaying = true;
+        if (player.isDead) {
+            donePlaying = true;
         } else {
-            this.xPosF = (float) this.player.posX;
-            this.yPosF = (float) this.player.posY;
-            this.zPosF = (float) this.player.posZ;
+            xPosF = (float) player.posX;
+            yPosF = (float) player.posY;
+            zPosF = (float) player.posZ;
 
-            this.distance = MathHelper.clamp(this.distance + 0.0025F, 0.0F, 1.0F);
-            this.volume = 1.0F;
+            distance = MathHelper.clamp(distance + 0.0025F, 0.0F, 1.0F);
+            volume = 1.0F;
         }
     }
 }

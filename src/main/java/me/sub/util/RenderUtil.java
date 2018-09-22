@@ -1,5 +1,9 @@
 package me.sub.util;
 
+import java.awt.Color;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelPlayer;
@@ -14,9 +18,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import org.lwjgl.opengl.GL11;
-
-import java.awt.*;
 
 /**
  * Created by Sub
@@ -71,7 +72,7 @@ public class RenderUtil {
 
         for (int layer = 0; layer <= layers; ++layer) {
             if (layer < layers) {
-                GlStateManager.color((float) color.getRed(), (float) color.getGreen(), (float) color.getBlue(), 1.0F / layers / 2);
+                GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), 1.0F / layers / 2);
                 GlStateManager.depthMask(false);
             } else {
                 GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);

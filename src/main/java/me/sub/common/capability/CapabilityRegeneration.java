@@ -1,5 +1,7 @@
 package me.sub.common.capability;
 
+import java.awt.Color;
+
 import me.sub.Regeneration;
 import me.sub.client.RKeyBinds;
 import me.sub.common.events.EventRegenerationBase;
@@ -22,8 +24,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
-
-import java.awt.*;
 
 /**
  * Created by Sub
