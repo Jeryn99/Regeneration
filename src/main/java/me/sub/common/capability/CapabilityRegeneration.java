@@ -10,6 +10,7 @@ import me.sub.common.states.EnumRegenType;
 import me.sub.config.RegenConfig;
 import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageUpdateRegen;
+import me.sub.util.ExplosionUtil;
 import me.sub.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -331,8 +332,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
                 setLivesLeft(getLivesLeft() - 1);
                 setTimesRegenerated(getTimesRegenerated() + 1);
-                
-                //TODO do knockback/killing
+                ExplosionUtil.regenerationExplosion(player);
             }
 
             if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100)

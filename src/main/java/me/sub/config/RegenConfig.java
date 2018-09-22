@@ -36,16 +36,16 @@ public class RegenConfig {
         @Config.LangKey("config.regenerative_kill_range")
         @Config.Comment("Upon regeneration every mob inside of this radius is immediately killed. Keep in mind that you should round up to accommodate for mobs that aren't standing in the center of a block")
         @Config.RangeInt(max = 200, min = 0)
-        public int regenerativeKillRange = 4; //TODO unused
+        public int regenerativeKillRange = 4;
 
         @Config.LangKey("config.regenerative_knockback")
         @Config.Comment("The amount of knockback every mob inside of the knock back radius gets")
-        public float regenerativeKnockback = 2.5F; //TODO unused
+        public float regenerativeKnockback = 2.5F;
 
         @Config.LangKey("config.regenerative_knockback_range")
         @Config.Comment("Range wherein every mob is knocked back upon regeneration")
         @Config.RangeInt(max = 300, min = 0)
-        public int regenerativeKnockbackRange = 7; //TODO unused
+        public int regenerativeKnockbackRange = 7;
 
         @Config.LangKey("config.post_regen_duration")
         @Config.Comment("Amount of seconds the post-regeneration effect lasts")
