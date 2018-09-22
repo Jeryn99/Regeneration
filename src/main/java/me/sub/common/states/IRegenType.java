@@ -10,9 +10,9 @@ import net.minecraft.util.SoundEvent;
 public interface IRegenType {
     String getName();
 
-    void onInitial(EntityPlayer player);
+    void onUpdateInitial(EntityPlayer player);
 
-    void onMidRegen(EntityPlayer player);
+    void onUpdateMidRegen(EntityPlayer player);
 
     void onFinish(EntityPlayer player);
 

@@ -66,7 +66,7 @@ public class CapabilityRegeneration implements IRegeneration {
     @Override
     public void update() {
         if (isRegenerating()) {
-            startRegenerating();
+            updateRegeneration();
             sync();
         } else {
             setSolaceTicks(0);
@@ -282,7 +282,7 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     //Invokes the Regeneration and handles it.
-    private void startRegenerating() {
+    private void updateRegeneration() {
 
         setSolaceTicks(getSolaceTicks() + 1);
 
@@ -331,13 +331,15 @@ public class CapabilityRegeneration implements IRegeneration {
 
                 setLivesLeft(getLivesLeft() - 1);
                 setTimesRegenerated(getTimesRegenerated() + 1);
+                
+                //TODO do knockback/killing
             }
 
             if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100)
-                getType().getType().onInitial(player);
+                getType().getType().onUpdateInitial(player);
 
             if (getTicksRegenerating() >= 100 && getTicksRegenerating() < 200) {
-                getType().getType().onMidRegen(player);
+                getType().getType().onUpdateMidRegen(player);
 
                 player.sendStatusMessage(new TextComponentString("This is Regeneration #" + getTimesRegenerated() + ", You have " + getLivesLeft() + " lives left!"), true);
             }

@@ -65,14 +65,12 @@ public class ClientHandler {
     public static void overlayEvent(RenderGameOverlayEvent.Pre e) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
-        //TODO ?
     }
 
     @SubscribeEvent
     public static void overlayEvent(RenderGameOverlayEvent.Post e) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
-        //TODO ?
     }
 
     @SubscribeEvent

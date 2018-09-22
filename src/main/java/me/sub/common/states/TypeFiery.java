@@ -24,13 +24,13 @@ public class TypeFiery implements IRegenType {
     }
 
     @Override
-    public void onInitial(EntityPlayer player) {
+    public void onUpdateInitial(EntityPlayer player) {
         player.extinguish();
         player.setArrowCountInEntity(0);
     }
 
     @Override
-    public void onMidRegen(EntityPlayer player) {
+    public void onUpdateMidRegen(EntityPlayer player) {
         player.extinguish();
 
         Random rand = player.world.rand;

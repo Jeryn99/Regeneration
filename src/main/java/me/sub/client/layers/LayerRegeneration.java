@@ -59,10 +59,10 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
     private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
 
-        Color primaryColor = handler.getPrimaryColor(); //FIXME redundant null check, it would van NPE'd here
-        Color secondaryColor = handler.getSecondaryColor();
-
         if (handler != null && handler.isGlowing() || handler.getSolaceTicks() > 0 && handler.getSolaceTicks() < 200) {
+            Color primaryColor = handler.getPrimaryColor();
+            Color secondaryColor = handler.getSecondaryColor();
+
 
             Minecraft mc = Minecraft.getMinecraft();
             Random rand = player.world.rand;

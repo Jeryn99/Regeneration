@@ -17,22 +17,25 @@ public class TypeLayFade implements IRegenType {
     //TODO Yeah I know, some magic numbers in this class. They were copy pasted from a System out.
     //I'll look further into them soon
     @Override
-    public void onInitial(EntityPlayer player) {
-        player.rotationPitch = -83.550026F;
-        player.rotationYaw = -0.54983205F;
+    public void onUpdateInitial(EntityPlayer player) {
+        setPlayerRotation(player);
     }
 
     @Override
-    public void onMidRegen(EntityPlayer player) {
-        player.rotationPitch = -83.550026F;
-        player.rotationYaw = -0.54983205F;
+    public void onUpdateMidRegen(EntityPlayer player) {
+        setPlayerRotation(player);
     }
 
     @Override
     public void onFinish(EntityPlayer player) {
+        setPlayerRotation(player);
+    }
+    
+    private void setPlayerRotation(EntityPlayer player) {
         player.rotationPitch = -83.550026F;
         player.rotationYaw = -0.54983205F;
     }
+
 
     @Override
     public SoundEvent getSound() {
