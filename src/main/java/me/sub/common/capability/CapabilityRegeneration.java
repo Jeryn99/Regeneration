@@ -1,8 +1,5 @@
 package me.sub.common.capability;
 
-import java.awt.Color;
-import java.util.UUID;
-
 import me.sub.Regeneration;
 import me.sub.client.RKeyBinds;
 import me.sub.common.events.EventRegenerationBase;
@@ -29,6 +26,9 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 
+import java.awt.*;
+import java.util.UUID;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -49,7 +49,7 @@ public class CapabilityRegeneration implements IRegeneration {
     private float secondaryGreen = 0.47f, secondaryRed = 1.0f, secondaryBlue = 0.0f;
 
     private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
-    private AttributeModifier slownessModifier = new AttributeModifier(this.SLOWNESS_ID, "slow", -0.5D, 1);
+    private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
     
     public CapabilityRegeneration() {
     }
@@ -121,10 +121,6 @@ public class CapabilityRegeneration implements IRegeneration {
     @Override
     public void setInGracePeriod(boolean gracePeriod) {
         isInGrace = gracePeriod;
-        if(gracePeriod && !player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)){
-        	player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(this.slownessModifier);
-        }
-        else player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
     }
 
     @Override
@@ -280,6 +276,8 @@ public class CapabilityRegeneration implements IRegeneration {
         regenInfo.setInGracePeriod(false);
         regenInfo.setTicksGlowing(0);
         regenInfo.setGlowing(false);
+        player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
+
     }
 
     @Override
@@ -374,6 +372,7 @@ public class CapabilityRegeneration implements IRegeneration {
                 setRegenerating(false);
                 setSolaceTicks(0);
                 setInGracePeriod(false);
+                player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
             }
         }
 
@@ -381,6 +380,11 @@ public class CapabilityRegeneration implements IRegeneration {
         if (isInGracePeriod()) {
 
             if (getSolaceTicks() == 2) {
+
+                if (isInGracePeriod() && !player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
+                    player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(this.slownessModifier);
+                }
+
                 if (player.world.isRemote) {
                     PlayerUtil.playMovingSound(player, RObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS);
                 }

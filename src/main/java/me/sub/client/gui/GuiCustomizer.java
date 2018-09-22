@@ -69,12 +69,6 @@ public class GuiCustomizer extends GuiScreen {
     }
 
     @Override
-    public void drawTexturedModalRect(int i, int j, int textureX, int textureY, int width, int height) {
-        super.drawTexturedModalRect(i, j, textureX, textureY, width, height);
-
-    }
-
-    @Override
     protected void actionPerformed(GuiButton button) {
 
         if (button.id == 1) {
