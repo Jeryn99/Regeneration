@@ -28,6 +28,8 @@ public class Regeneration {
     public static CommonProxy proxy;
 
     public static Logger LOG = LogManager.getLogger(NAME);
+    
+    
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {

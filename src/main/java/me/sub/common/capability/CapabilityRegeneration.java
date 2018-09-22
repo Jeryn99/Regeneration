@@ -1,6 +1,7 @@
 package me.sub.common.capability;
 
 import java.awt.Color;
+import java.util.UUID;
 
 import me.sub.Regeneration;
 import me.sub.client.RKeyBinds;
@@ -12,6 +13,8 @@ import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageUpdateRegen;
 import me.sub.util.ExplosionUtil;
 import me.sub.util.PlayerUtil;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
@@ -45,6 +48,8 @@ public class CapabilityRegeneration implements IRegeneration {
     private float primaryRed = 1.0f, primaryGreen = 0.78f, primaryBlue = 0.0f;
     private float secondaryGreen = 0.47f, secondaryRed = 1.0f, secondaryBlue = 0.0f;
 
+    private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
+    
     public CapabilityRegeneration() {
     }
 
@@ -115,6 +120,10 @@ public class CapabilityRegeneration implements IRegeneration {
     @Override
     public void setInGracePeriod(boolean gracePeriod) {
         isInGrace = gracePeriod;
+        if(gracePeriod){
+        	player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(this.SLOWNESS_ID, "slow", -0.5D, 1));
+        }
+        else player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
     }
 
     @Override

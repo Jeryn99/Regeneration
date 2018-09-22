@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
 public class GracePeriodHandler {
 
+	
     @SubscribeEvent
     public static void breakBlock(PlayerInteractEvent.LeftClickBlock e) {
         EntityPlayer player = e.getEntityPlayer();
