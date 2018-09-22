@@ -49,6 +49,7 @@ public class CapabilityRegeneration implements IRegeneration {
     private float secondaryGreen = 0.47f, secondaryRed = 1.0f, secondaryBlue = 0.0f;
 
     private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
+    private AttributeModifier slownessModifier = new AttributeModifier(this.SLOWNESS_ID, "slow", -0.5D, 1);
     
     public CapabilityRegeneration() {
     }
@@ -120,8 +121,8 @@ public class CapabilityRegeneration implements IRegeneration {
     @Override
     public void setInGracePeriod(boolean gracePeriod) {
         isInGrace = gracePeriod;
-        if(gracePeriod){
-        	player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(this.SLOWNESS_ID, "slow", -0.5D, 1));
+        if(gracePeriod && !player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)){
+        	player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(this.slownessModifier);
         }
         else player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
     }
