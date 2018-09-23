@@ -1,10 +1,8 @@
 package me.sub;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.command.CommandDebug;
+import me.sub.common.traits.TraitHandler;
 import me.sub.network.NetworkHandler;
 import me.sub.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
@@ -14,6 +12,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Regeneration.MODID, name = Regeneration.NAME, version = Regeneration.VERSION)
 public class Regeneration {
@@ -41,6 +41,7 @@ public class Regeneration {
     public void init(FMLInitializationEvent event) {
         proxy.init();
         NetworkHandler.init();
+        TraitHandler.init();
     }
 
     @EventHandler

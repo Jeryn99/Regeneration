@@ -40,3 +40,4 @@ trait.messages.night_vision=You have gained the Night Vision Trait!
 trait.messages.none=You have not received a trait. You are normal.
 trait.messages.speed=You have gained the Speed Trait!
 trait.messages.strength=You have gained the Strength Trait!
+regeneration.info.reset=Reset

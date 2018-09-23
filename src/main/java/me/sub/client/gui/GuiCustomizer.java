@@ -52,7 +52,7 @@ public class GuiCustomizer extends GuiScreen {
 
 
         buttonList.add(new GuiButtonExt(1, guiLeft + 10, guiTop + 176, 45, 15, new TextComponentTranslation("regeneration.info.save").getFormattedText()));
-        buttonList.add(new GuiButtonExt(2, guiLeft + 70, guiTop + 176, 45, 15, new TextComponentTranslation("Reset").getFormattedText()));
+        buttonList.add(new GuiButtonExt(2, guiLeft + 70, guiTop + 176, 45, 15, new TextComponentTranslation("regeneration.info.reset").getFormattedText()));
         buttonList.add(new GuiButtonExt(3, guiLeft + 130, guiTop + 176, 45, 15, new TextComponentTranslation("gui.cancel").getFormattedText()));
 
     }

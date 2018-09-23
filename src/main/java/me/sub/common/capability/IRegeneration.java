@@ -1,11 +1,12 @@
 package me.sub.common.capability;
 
-import java.awt.Color;
-
 import me.sub.common.states.EnumRegenType;
+import me.sub.common.traits.Trait;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
+
+import java.awt.*;
 
 /**
  * Created by Sub
@@ -13,7 +14,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 
-
+    //Update
     void update();
 
     //Regen Ticks
@@ -31,6 +32,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     int getTimesRegenerated();
     void setTimesRegenerated(int times);
 
+    //Style
     NBTTagCompound getStyle();
     void setStyle(NBTTagCompound nbt);
 
@@ -39,7 +41,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 
     //The type of Regeneration in use
     EnumRegenType getType();
-
     void setType(String name);
 
     //Does the player have the ability to regenerate?
@@ -54,20 +55,24 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     boolean isGlowing();
     void setGlowing(boolean glowing);
 
+    //Glowing Ticks
     int getTicksGlowing();
-
     void setTicksGlowing(int ticks);
 
+    //Is the player in grace period
     boolean isInGracePeriod();
-
     void setInGracePeriod(boolean gracePeriod);
 
     //Solace ticks
     int getSolaceTicks();
     void setSolaceTicks(int ticks);
 
+    //Just helper things
     Color getPrimaryColor();
-
     Color getSecondaryColor();
+
+    Trait getTrait();
+
+    void setTrait(String name);
 
 }
