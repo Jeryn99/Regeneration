@@ -134,14 +134,14 @@ public class ClientHandler {
             if (RKeyBinds.GRACE.isPressed()) {
                 EntityPlayer player = Minecraft.getMinecraft().player;
                 if (player != null) {
-                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(player, true));
+                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(true));
                 }
             }
 
             if (RKeyBinds.JUSTDOIT.isPressed()) {
                 EntityPlayer player = Minecraft.getMinecraft().player;
                 if (player != null) {
-                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(player, false));
+                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(false));
                 }
             }
         }
@@ -162,8 +162,7 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
-        if (e.getEntityPlayer() instanceof EntityPlayerSP) {
-            EntityPlayerSP player = (EntityPlayerSP) e.getEntityPlayer();
+        EntityPlayer player = e.getEntityPlayer();
 
             IRegeneration handler = CapabilityRegeneration.get(player);
 
@@ -179,11 +178,10 @@ public class ClientHandler {
                     LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
                 }
 
-                if (handler.getType().getType().isLaying()) {
-                    RenderUtil.renderPlayerLaying(e, player);
-                }
+                //  if (handler.getType().getType().isLaying()) {
+                //      RenderUtil.renderPlayerLaying(e, player);
+                //  }
             }
-        }
     }
 
     @SubscribeEvent

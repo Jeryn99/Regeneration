@@ -2,7 +2,6 @@ package me.sub.common.capability;
 
 import me.sub.Regeneration;
 import me.sub.client.RKeyBinds;
-import me.sub.common.events.EventRegenerationBase;
 import me.sub.common.init.RObjects;
 import me.sub.common.states.EnumRegenType;
 import me.sub.common.traits.Trait;
@@ -22,7 +21,6 @@ import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -334,24 +332,12 @@ public class CapabilityRegeneration implements IRegeneration {
                 setCapable(RegenConfig.Regen.dontLoseUponDeath);
             }
 
-            EventRegenerationBase.EventRegeneration regenEvent = new EventRegenerationBase.EventRegeneration(player);
-            MinecraftForge.EVENT_BUS.post(regenEvent);
-
-
             if (getTicksRegenerating() == 1) {
 
                 if (getTrait().doesEdit() && player.getEntityAttribute(getTrait().getAttributeToEdit()).hasModifier(getTrait().modifier)) {
                     player.getEntityAttribute(getTrait().getAttributeToEdit()).removeModifier(getTrait().modifier);
                 }
 
-                EventRegenerationBase.EventEnterRegeneration regenEnterEvent = new EventRegenerationBase.EventEnterRegeneration(player);
-                MinecraftForge.EVENT_BUS.post(regenEvent);
-
-                if (regenEnterEvent.isCanceled()) {
-                    reset(player);
-                    player.setDead();
-                    return;
-                }
 
                 if (player.world.isRemote) {
                     PlayerUtil.playMovingSound(player, getType().getType().getSound(), SoundCategory.PLAYERS);
@@ -368,7 +354,10 @@ public class CapabilityRegeneration implements IRegeneration {
             if (getTicksRegenerating() >= 100 && getTicksRegenerating() < 200) {
                 getType().getType().onUpdateMidRegen(player);
 
-                player.sendStatusMessage(new TextComponentString("This is Regeneration #" + getTimesRegenerated() + ", You have " + getLivesLeft() + " lives left!"), true);
+                if (getTicksRegenerating() == 100) {
+                    player.sendStatusMessage(new TextComponentString("This is Regeneration #" + getTimesRegenerated() + ", You have " + getLivesLeft() + " lives left!"), true);
+                }
+
             }
 
             if (player.getHealth() < player.getMaxHealth()) {
@@ -385,7 +374,6 @@ public class CapabilityRegeneration implements IRegeneration {
             }
 
             if (getTicksRegenerating() == 200) {
-                MinecraftForge.EVENT_BUS.post(new EventRegenerationBase.EventEndRegeneration(player));
                 getType().getType().onFinish(player);
                 setTicksRegenerating(0);
                 setRegenerating(false);

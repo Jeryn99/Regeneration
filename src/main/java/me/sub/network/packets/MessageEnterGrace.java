@@ -3,15 +3,11 @@ package me.sub.network.packets;
 import io.netty.buffer.ByteBuf;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.util.UUID;
 
 /**
  * Created by Sub
@@ -19,30 +15,23 @@ import java.util.UUID;
  */
 public class MessageEnterGrace implements IMessage {
 
-    private EntityPlayer player;
     private boolean stopRegen;
 
     public MessageEnterGrace() {
     }
 
-    public MessageEnterGrace(EntityPlayer player, boolean stopRegen) {
-        this.player = player;
+    public MessageEnterGrace(boolean stopRegen) {
         this.stopRegen = stopRegen;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-
         stopRegen = buf.readBoolean();
-
-        if (Minecraft.getMinecraft().player != null)
-            player = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(stopRegen);
-        ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
     }
 
     public static class Handler implements IMessageHandler<MessageEnterGrace, IMessage> {
