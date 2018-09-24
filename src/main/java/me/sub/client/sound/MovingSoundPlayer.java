@@ -36,7 +36,7 @@ public class MovingSoundPlayer extends MovingSound {
 
         if (soundCheck.getSoundName().equals(RObjects.Sounds.HAND_GLOW.getSoundName())) {
             volume = 0.3F;
-            if (!regenInfo.isGlowing() || regenInfo.getTicksRegenerating() == 2) {
+            if (!regenInfo.isGlowing()) {
                 donePlaying = true;
             }
         }

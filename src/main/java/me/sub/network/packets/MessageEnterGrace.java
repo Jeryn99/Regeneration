@@ -48,6 +48,7 @@ public class MessageEnterGrace implements IMessage {
                     regenInfo.setInGracePeriod(true);
                     regenInfo.setSolaceTicks(0);
                     regenInfo.setTicksRegenerating(0);
+                    regenInfo.setGlowing(false);
                     regenInfo.sync();
                     player.sendStatusMessage(new TextComponentString("You have entered a grace period of 15 minutes"), true);
                 }
@@ -55,6 +56,7 @@ public class MessageEnterGrace implements IMessage {
                 if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 18000) {
                     regenInfo.setInGracePeriod(false);
                     regenInfo.setSolaceTicks(199);
+                    regenInfo.setGlowing(false);
                     regenInfo.sync();
                 }
             }

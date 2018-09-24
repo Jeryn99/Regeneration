@@ -1,9 +1,5 @@
 package me.sub.client.layers;
 
-import java.awt.Color;
-import java.util.Random;
-
-import me.sub.Regeneration;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.states.EnumRegenType;
@@ -22,8 +18,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+
+import java.awt.*;
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -33,7 +31,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
     public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
     public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
-    private static final ResourceLocation REGEN_TEXTURE = new ResourceLocation(Regeneration.MODID, "textures/entity/regen.png");
     private RenderPlayer playerRenderer;
 
     public LayerRegeneration(RenderPlayer playerRenderer) {
@@ -59,10 +56,9 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
     private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
 
-        if (handler != null && handler.isGlowing() || handler.getSolaceTicks() > 0 && handler.getSolaceTicks() < 200) {
+        if (handler != null && handler.isGlowing()) {
             Color primaryColor = handler.getPrimaryColor();
             Color secondaryColor = handler.getSecondaryColor();
-
 
             Minecraft mc = Minecraft.getMinecraft();
             Random rand = player.world.rand;

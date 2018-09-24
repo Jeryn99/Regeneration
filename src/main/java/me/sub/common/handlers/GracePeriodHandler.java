@@ -16,13 +16,12 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
+@Mod.EventBusSubscriber(modid = Regeneration.MODID)
 public class GracePeriodHandler {
 
 	
@@ -35,6 +34,7 @@ public class GracePeriodHandler {
         if (inGracePeriod) {
             regenInfo.setGlowing(false);
             regenInfo.setTicksGlowing(0);
+            regenInfo.sync();
         }
     }
 

@@ -269,20 +269,6 @@ public class CapabilityRegeneration implements IRegeneration {
         textured = nbt.getBoolean("textured");
     }
 
-    public void reset(EntityPlayer player) {
-        IRegeneration regenInfo = CapabilityRegeneration.get(player);
-        regenInfo.setRegenerating(false);
-        regenInfo.setTicksRegenerating(0);
-        regenInfo.setSolaceTicks(0);
-        regenInfo.setInGracePeriod(false);
-        regenInfo.setTicksGlowing(0);
-        regenInfo.setGlowing(false);
-        if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
-            player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
-        }
-        setTrait("none");
-    }
-
     @Override
     public Color getPrimaryColor() {
         return new Color(primaryRed, primaryGreen, primaryBlue);
@@ -312,6 +298,8 @@ public class CapabilityRegeneration implements IRegeneration {
             if (player.world.isRemote) {
                 PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
             }
+
+            setGlowing(true);
         }
 
         if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
@@ -322,6 +310,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
         //The actual regeneration
         if (!isInGracePeriod() && getSolaceTicks() > 200) {
+            setGlowing(false);
             player.dismountRidingEntity();
             player.removePassengers();
             setTicksRegenerating(getTicksRegenerating() + 1);

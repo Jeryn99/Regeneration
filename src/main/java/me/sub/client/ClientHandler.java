@@ -45,7 +45,6 @@ public class ClientHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onRenderPlayerPost(RenderPlayerEvent.Post e) {
-
         EntityPlayer player = e.getEntityPlayer();
         if (lastWorld != player.world) {
             lastWorld = player.world;
@@ -54,22 +53,7 @@ public class ClientHandler {
         if (!layersAddedTo.contains(player)) {
             layersAddedTo.add(player);
             e.getRenderer().addLayer(new LayerRegeneration(e.getRenderer()));
-            //e.getRenderer().addLayer(new LayerItemsAlt(e.getRenderer()));
         }
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public static void overlayEvent(RenderGameOverlayEvent.Pre e) {
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
-        IRegeneration regenInfo = CapabilityRegeneration.get(player);
-    }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public static void overlayEvent(RenderGameOverlayEvent.Post e) {
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
-        IRegeneration regenInfo = CapabilityRegeneration.get(player);
     }
 
     @SubscribeEvent
@@ -102,9 +86,7 @@ public class ClientHandler {
             for (int i = 0; i < 15; i++) {
                 GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
                 Color primaryColor = regenInfo.getPrimaryColor();
-                Color secondaryColor = regenInfo.getSecondaryColor();
                 RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
-                RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, secondaryColor, 0);
             }
             RenderUtil.finishRenderLightning();
 
