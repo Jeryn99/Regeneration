@@ -1,8 +1,5 @@
 package me.sub.common.init;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.sub.Regeneration;
 import me.sub.common.items.ItemFobWatch;
 import net.minecraft.item.Item;
@@ -12,14 +9,16 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
+@Mod.EventBusSubscriber(modid = Regeneration.MODID)
 public class RObjects {
 
     //Items
