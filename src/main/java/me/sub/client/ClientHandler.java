@@ -1,9 +1,5 @@
 package me.sub.client;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Random;
-
 import me.sub.Regeneration;
 import me.sub.client.layers.LayerRegeneration;
 import me.sub.common.capability.CapabilityRegeneration;
@@ -24,17 +20,17 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -47,6 +43,7 @@ public class ClientHandler {
     private static World lastWorld;
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void onRenderPlayerPost(RenderPlayerEvent.Post e) {
 
         EntityPlayer player = e.getEntityPlayer();
@@ -62,18 +59,21 @@ public class ClientHandler {
     }
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void overlayEvent(RenderGameOverlayEvent.Pre e) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
     }
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void overlayEvent(RenderGameOverlayEvent.Post e) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
     }
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void onRenderHand(RenderHandEvent e) {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayerSP player = Minecraft.getMinecraft().player;
@@ -114,9 +114,9 @@ public class ClientHandler {
 
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void onUpdate(LivingEvent.LivingUpdateEvent e) {
-
-        if (e.getEntityLiving() instanceof EntityPlayer) {
+        if (e.getEntityLiving() instanceof EntityPlayerSP) {
             EntityPlayer player = (EntityPlayer) e.getEntityLiving();
             IRegeneration regeneration = CapabilityRegeneration.get(player);
             if (regeneration != null && player != null && Minecraft.getMinecraft().player != null) {
@@ -162,29 +162,28 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
+        if (e.getEntityPlayer() instanceof EntityPlayerSP) {
+            EntityPlayerSP player = (EntityPlayerSP) e.getEntityPlayer();
 
-        EntityPlayerSP player = (EntityPlayerSP) e.getEntityPlayer();
+            IRegeneration handler = CapabilityRegeneration.get(player);
 
-        IRegeneration handler = CapabilityRegeneration.get(player);
+            if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
 
-        if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
+                //Fiery Regen T-Posing
+                if (handler.getType().equals(EnumRegenType.FIERY)) {
+                    int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
+                    LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
+                    LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
+                    LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
+                    LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
+                    LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
+                }
 
-            //Fiery Regen T-Posing
-            if (handler.getType().equals(EnumRegenType.FIERY)) {
-                int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
-                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
-                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
-                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
-                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
-                LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
+                if (handler.getType().getType().isLaying()) {
+                    RenderUtil.renderPlayerLaying(e, player);
+                }
             }
-
-            if (handler.getType().getType().isLaying()) {
-                RenderUtil.renderPlayerLaying(e, player);
-            }
-
         }
-
     }
 
     @SubscribeEvent

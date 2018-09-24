@@ -34,8 +34,7 @@ public class TraitHandler {
     }
 
     public static Trait getRandomTrait() {
-        Trait trait = traitList.get(RAND.nextInt(traitList.size()));
-        return trait;
+        return traitList.get(RAND.nextInt(traitList.size()));
     }
 
     public static Trait getTraitByName(String name) {
