@@ -328,10 +328,8 @@ public class CapabilityRegeneration implements IRegeneration {
 
             if (getTicksRegenerating() == 1) {
 
-                if (getTrait() != TraitHandler.NONE && getTrait().doesEdit()) {
-                    if (player.getEntityAttribute(getTrait().getAttributeToEdit()).hasModifier(getTrait().modifier)) {
-                        player.getEntityAttribute(getTrait().getAttributeToEdit()).removeModifier(getTrait().modifier);
-                    }
+                if (getTrait() != null) {
+                    getTrait().onTraitRemove(player);
                 }
 
                 if (player.world.isRemote) {
@@ -396,6 +394,9 @@ public class CapabilityRegeneration implements IRegeneration {
                 }
 
                 setTrait(TraitHandler.getRandomTrait().getName());
+                if (getTrait() != null) {
+                    getTrait().onTraitAdd(player);
+                }
                 PlayerUtil.sendMessage(player, getTrait().getTranslatedName(), true);
 
             }

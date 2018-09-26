@@ -47,3 +47,5 @@ regeneration.messages.transfer.emptystack=This arch is empty!
 regeneration.messages.transfer.fullstack=You can't store anymore regenerations in this arch!
 regeneration.messages.grace=You have entered a grace period of 15 minutes
 regeneration.messages.must_have_regens=You must have regenerations to use.
+
+trait.messages.no_trait=No trait gained!

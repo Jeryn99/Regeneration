@@ -1,6 +1,7 @@
 package me.sub.common.traits.negative;
 
 import me.sub.common.traits.Trait;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Created by Sub
@@ -18,4 +19,13 @@ public class TraitNone extends Trait {
         return false;
     }
 
+    @Override
+    public void onTraitAdd(EntityPlayer player) {
+
+    }
+
+    @Override
+    public void onTraitRemove(EntityPlayer player) {
+
+    }
 }
