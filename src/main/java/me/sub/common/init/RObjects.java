@@ -32,7 +32,7 @@ public class RObjects {
 
     private static Item setUpItem(Item item, String name) {
         item.setRegistryName(Regeneration.MODID, name);
-        item.setUnlocalizedName(name);
+        item.setTranslationKey(name);
         ITEMS.add(item);
         return item;
     }
