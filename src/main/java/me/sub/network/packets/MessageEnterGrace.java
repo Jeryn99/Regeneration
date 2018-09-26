@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -39,7 +39,7 @@ public class MessageEnterGrace implements IMessage {
         @Override
         public IMessage onMessage(MessageEnterGrace message, MessageContext ctx) {
             EntityPlayer player = ctx.getServerHandler().player;
-            if (player == null || !player.hasCapability(CapabilityRegeneration.CAPABILITY, null)) return null;
+            if (player == null) return null;
 
             IRegeneration regenInfo = CapabilityRegeneration.get(player);
 
@@ -50,7 +50,7 @@ public class MessageEnterGrace implements IMessage {
                     regenInfo.setTicksRegenerating(0);
                     regenInfo.setGlowing(false);
                     regenInfo.sync();
-                    player.sendStatusMessage(new TextComponentString("You have entered a grace period of 15 minutes"), true);
+                    player.sendStatusMessage(new TextComponentTranslation("regeneration.messages.grace"), true);
                 }
             } else {
                 if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 18000) {

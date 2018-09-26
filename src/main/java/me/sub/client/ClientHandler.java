@@ -1,11 +1,10 @@
 package me.sub.client;
 
 import me.sub.Regeneration;
-import me.sub.client.layers.LayerRegeneration;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
-import me.sub.common.states.EnumRegenType;
+import me.sub.common.states.RegenTypes;
 import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageEnterGrace;
 import me.sub.util.LimbManipulationUtil;
@@ -19,7 +18,6 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -38,23 +36,6 @@ import java.util.Random;
  */
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
 public class ClientHandler {
-
-    private static ArrayList<EntityPlayer> layersAddedTo = new ArrayList<>();
-    private static World lastWorld;
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public static void onRenderPlayerPost(RenderPlayerEvent.Post e) {
-        EntityPlayer player = e.getEntityPlayer();
-        if (lastWorld != player.world) {
-            lastWorld = player.world;
-            layersAddedTo.clear();
-        }
-        if (!layersAddedTo.contains(player)) {
-            layersAddedTo.add(player);
-            e.getRenderer().addLayer(new LayerRegeneration(e.getRenderer()));
-        }
-    }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
@@ -136,7 +117,7 @@ public class ClientHandler {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             IRegeneration handler = CapabilityRegeneration.get(player);
 
-            if (handler.getTicksRegenerating() >= 1 && handler.getType().equals(EnumRegenType.LAYFADE)) {
+            if (handler.getTicksRegenerating() >= 1 && handler.getType() == RegenTypes.LAYDOWN) {
                 e.setFOV(30);
             }
         }
@@ -151,7 +132,7 @@ public class ClientHandler {
             if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
 
                 //Fiery Regen T-Posing
-                if (handler.getType().equals(EnumRegenType.FIERY)) {
+                if (handler.getType() == RegenTypes.FIERY) {
                     int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
                     LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
                     LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
@@ -173,7 +154,7 @@ public class ClientHandler {
 
         IRegeneration capability = CapabilityRegeneration.get(Minecraft.getMinecraft().player);
 
-        if (capability.isRegenerating() && !capability.isInGracePeriod() && capability.getType().getType().blockMovement() && capability.getSolaceTicks() >= 200) {
+        if (capability.isRegenerating() && !capability.isInGracePeriod() && capability.getType().blockMovement() && capability.getSolaceTicks() >= 200) {
             MovementInput moveType = e.getMovementInput();
             moveType.rightKeyDown = false;
             moveType.leftKeyDown = false;

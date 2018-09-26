@@ -2,6 +2,7 @@ package me.sub;
 
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.command.CommandDebug;
+import me.sub.common.states.RegenTypes;
 import me.sub.common.traits.TraitHandler;
 import me.sub.network.NetworkHandler;
 import me.sub.proxy.CommonProxy;
@@ -28,8 +29,6 @@ public class Regeneration {
     public static CommonProxy proxy;
 
     public static Logger LOG = LogManager.getLogger(NAME);
-    
-    
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -42,6 +41,7 @@ public class Regeneration {
         proxy.init();
         NetworkHandler.init();
         TraitHandler.init();
+        RegenTypes.init();
     }
 
     @EventHandler

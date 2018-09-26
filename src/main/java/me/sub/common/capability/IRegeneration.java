@@ -1,6 +1,6 @@
 package me.sub.common.capability;
 
-import me.sub.common.states.EnumRegenType;
+import me.sub.common.states.IRegenType;
 import me.sub.common.traits.Trait;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,7 +40,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     void sync();
 
     //The type of Regeneration in use
-    EnumRegenType getType();
+    IRegenType getType();
     void setType(String name);
 
     //Does the player have the ability to regenerate?

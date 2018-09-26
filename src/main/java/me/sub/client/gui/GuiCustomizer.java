@@ -85,7 +85,7 @@ public class GuiCustomizer extends GuiScreen {
 
     }
 
-    public NBTTagCompound getStyleNBTTag() {
+    private NBTTagCompound getStyleNBTTag() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setFloat("PrimaryRed", primaryRed);
         nbt.setFloat("PrimaryGreen", primaryGreen);
@@ -97,7 +97,7 @@ public class GuiCustomizer extends GuiScreen {
         return nbt;
     }
 
-    public NBTTagCompound getDefaultStyle() {
+    private NBTTagCompound getDefaultStyle() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setFloat("PrimaryRed", 1.0f);
         nbt.setFloat("PrimaryGreen", 0.78f);

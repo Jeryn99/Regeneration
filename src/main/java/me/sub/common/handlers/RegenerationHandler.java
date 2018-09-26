@@ -1,7 +1,5 @@
 package me.sub.common.handlers;
 
-import static me.sub.common.capability.CapabilityRegeneration.*;
-
 import me.sub.Regeneration;
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
@@ -24,6 +22,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
+import static me.sub.common.capability.CapabilityRegeneration.REGEN_ID;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -36,7 +36,9 @@ public class RegenerationHandler {
         if (event.getEntityLiving() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             IRegeneration handler = CapabilityRegeneration.get(player);
-            handler.update();
+            if (handler != null) {
+                handler.update();
+            }
         }
     }
 

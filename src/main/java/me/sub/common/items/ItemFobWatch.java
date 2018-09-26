@@ -50,9 +50,9 @@ public class ItemFobWatch extends Item {
                 int used = doUsageDamage(stack, capability);
                 if (used == 0) {
                     if (capability.getLivesLeft() == RegenConfig.Regen.regenCapacity) {
-                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullCycle", used)), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullCycle")), true);
                     } else if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity)
-                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptystack", used)), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptystack")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 }
                 player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.gainedRegens", used)), true); // too lazy to fix a single/plural issue here

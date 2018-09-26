@@ -2,7 +2,7 @@ package me.sub.client.layers;
 
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
-import me.sub.common.states.EnumRegenType;
+import me.sub.common.states.RegenTypes;
 import me.sub.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -41,16 +41,17 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         IRegeneration handler = CapabilityRegeneration.get(player);
 
-        //Render the Fiery Regeneration
-        if (handler != null && handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
-            if (handler.getType().equals(EnumRegenType.FIERY)) {
-                renderFieryRegen(playerRenderer, handler, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+        if (handler != null) {
+            //Render the Fiery Regeneration
+            if (handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
+                if (handler.getType() == RegenTypes.FIERY) {
+                    renderFieryRegen(playerRenderer, handler, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+                }
             }
+
+            //Glowing Hands
+            renderGlowingHands(player, handler, scale);
         }
-
-        //Glowing Hands
-        renderGlowingHands(player, handler, scale);
-
     }
 
 

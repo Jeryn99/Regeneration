@@ -1,11 +1,7 @@
 package me.sub.util;
 
-import java.awt.Color;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,6 +14,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 /**
  * Created by Sub
@@ -115,37 +114,6 @@ public class RenderUtil {
         GlStateManager.popMatrix();
     }
 
-
-    public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
-        if (left < right) {
-            int i = left;
-            left = right;
-            right = i;
-        }
-
-        if (top < bottom) {
-            int j = top;
-            top = bottom;
-            bottom = j;
-        }
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.color(red, green, blue, alpha);
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION);
-        bufferBuilder.pos(left, bottom, 0.0D).endVertex();
-        bufferBuilder.pos(right, bottom, 0.0D).endVertex();
-        bufferBuilder.pos(right, top, 0.0D).endVertex();
-        bufferBuilder.pos(left, top, 0.0D).endVertex();
-        tessellator.draw();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-    }
-
-
     public static void setupRenderLightning() {
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
@@ -167,13 +135,13 @@ public class RenderUtil {
     }
 
 
-    public static void renderPlayerLaying(RenderPlayerEvent.Pre e, EntityPlayerSP player) {
+    public static void renderPlayerLaying(RenderPlayerEvent.Pre e, AbstractClientPlayer player, boolean cancelEvent) {
         GlStateManager.pushMatrix();
         ModelPlayer model = e.getRenderer().getMainModel();
         model.isChild = false;
         GlStateManager.translate(0, 0.2F, 0);
         GlStateManager.rotate(90, 1, 0, 0);
-        e.setCanceled(true);
+        e.setCanceled(cancelEvent);
 
         GlStateManager.pushMatrix();
         Minecraft.getMinecraft().renderEngine.bindTexture(player.getLocationSkin());

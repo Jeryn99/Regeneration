@@ -39,8 +39,7 @@ public class TraitHandler {
 
     public static Trait getTraitByName(String name) {
         if (TRAITS.containsKey(name)) {
-            Trait trait = TRAITS.get(name);
-            return trait;
+            return TRAITS.get(name);
         }
         return NONE;
     }

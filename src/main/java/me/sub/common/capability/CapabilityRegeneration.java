@@ -3,7 +3,8 @@ package me.sub.common.capability;
 import me.sub.Regeneration;
 import me.sub.client.RKeyBinds;
 import me.sub.common.init.RObjects;
-import me.sub.common.states.EnumRegenType;
+import me.sub.common.states.IRegenType;
+import me.sub.common.states.RegenTypes;
 import me.sub.common.traits.Trait;
 import me.sub.common.traits.TraitHandler;
 import me.sub.config.RegenConfig;
@@ -37,13 +38,14 @@ import java.util.UUID;
 public class CapabilityRegeneration implements IRegeneration {
 
     public static final ResourceLocation REGEN_ID = new ResourceLocation(Regeneration.MODID, "regeneration");
+
     @CapabilityInject(IRegeneration.class)
     public static final Capability<IRegeneration> CAPABILITY = null;
 
     private int timesRegenerated = 0, livesLeft = RegenConfig.Regen.regenCapacity, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
     private EntityPlayer player;
     private boolean textured = false, isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
-    private String typeName = EnumRegenType.FIERY.name(), traitName = "none";
+    private String typeName = RegenTypes.FIERY.getName(), traitName = TraitHandler.NONE.getName();
 
     private float primaryRed = 1.0f, primaryGreen = 0.78f, primaryBlue = 0.0f;
     private float secondaryGreen = 0.47f, secondaryRed = 1.0f, secondaryBlue = 0.0f;
@@ -73,6 +75,11 @@ public class CapabilityRegeneration implements IRegeneration {
 
     @Override
     public void update() {
+
+        if (getTrait() == null) {
+            setTrait(TraitHandler.NONE.getName());
+        }
+
         if (isRegenerating()) {
             updateRegeneration();
             sync();
@@ -209,8 +216,8 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     @Override
-    public EnumRegenType getType() {
-        return EnumRegenType.valueOf(typeName);
+    public IRegenType getType() {
+        return RegenTypes.getTypeByName(typeName);
     }
 
     @Override
@@ -296,15 +303,14 @@ public class CapabilityRegeneration implements IRegeneration {
 
         if (getSolaceTicks() == 1 && !isInGracePeriod()) {
             if (player.world.isRemote) {
-                PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
+                PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, false);
             }
-
             setGlowing(true);
         }
 
         if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
             if (ticksInSolace % 25 == 0) {
-                player.sendStatusMessage(new TextComponentString("Grace: " + RKeyBinds.GRACE.getDisplayName() + " || Regenerate: " + RKeyBinds.JUSTDOIT.getDisplayName()), true);
+                player.sendStatusMessage(new TextComponentString(RKeyBinds.GRACE.getDisplayName() + " for Grace Period," + RKeyBinds.JUSTDOIT.getDisplayName() + " to Regenerate!"), true);
             }
         }
 
@@ -323,13 +329,13 @@ public class CapabilityRegeneration implements IRegeneration {
 
             if (getTicksRegenerating() == 1) {
 
-                if (getTrait().doesEdit() && player.getEntityAttribute(getTrait().getAttributeToEdit()).hasModifier(getTrait().modifier)) {
+                if (getTrait() != TraitHandler.NONE && getTrait().doesEdit() && player.getEntityAttribute(getTrait().getAttributeToEdit()).hasModifier(getTrait().modifier)) {
                     player.getEntityAttribute(getTrait().getAttributeToEdit()).removeModifier(getTrait().modifier);
                 }
 
 
                 if (player.world.isRemote) {
-                    PlayerUtil.playMovingSound(player, getType().getType().getSound(), SoundCategory.PLAYERS);
+                    PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS, false);
                 }
 
                 setLivesLeft(getLivesLeft() - 1);
@@ -337,15 +343,17 @@ public class CapabilityRegeneration implements IRegeneration {
                 ExplosionUtil.regenerationExplosion(player);
             }
 
-            if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100)
-                getType().getType().onUpdateInitial(player);
+            if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100) {
+                getType().onUpdateInitial(player);
+
+                if (getTicksRegenerating() <= 50) {
+                    PlayerUtil.sendMessage(player, "This is Regeneration #" + getTimesRegenerated() + ", You have " + getLivesLeft() + " lives left!", true);
+                }
+            }
+
 
             if (getTicksRegenerating() >= 100 && getTicksRegenerating() < 200) {
-                getType().getType().onUpdateMidRegen(player);
-
-                if (getTicksRegenerating() == 100) {
-                    player.sendStatusMessage(new TextComponentString("This is Regeneration #" + getTimesRegenerated() + ", You have " + getLivesLeft() + " lives left!"), true);
-                }
+                getType().onUpdateMidRegen(player);
 
             }
 
@@ -363,7 +371,7 @@ public class CapabilityRegeneration implements IRegeneration {
             }
 
             if (getTicksRegenerating() == 200) {
-                getType().getType().onFinish(player);
+                getType().onFinish(player);
                 setTicksRegenerating(0);
                 setRegenerating(false);
                 setSolaceTicks(0);
@@ -389,7 +397,7 @@ public class CapabilityRegeneration implements IRegeneration {
                 }
 
                 if (player.world.isRemote) {
-                    PlayerUtil.playMovingSound(player, RObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS);
+                    PlayerUtil.playMovingSound(player, RObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true);
                 }
             }
 
@@ -410,7 +418,7 @@ public class CapabilityRegeneration implements IRegeneration {
             if (getSolaceTicks() % 1200 == 0) {
                 setGlowing(true);
                 if (player.world.isRemote) {
-                    PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
+                    PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, false);
                 }
             }
 
@@ -422,7 +430,7 @@ public class CapabilityRegeneration implements IRegeneration {
             //14 Minutes - Critical stage start
             if (getSolaceTicks() == 17100) {
                 if (player.world.isRemote) {
-                    PlayerUtil.playMovingSound(player, RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
+                    PlayerUtil.playMovingSound(player, RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, false);
                 }
 
             }
