@@ -14,6 +14,7 @@ regeneration.info.secondary=Secondary Color
 regeneration.messages.alreadyTimelord=You're already a timelord!
 regeneration.messages.becomeTimelord=You've become a timelord!
 regeneration.messages.gainedRegenerations=You've received %s regenerations from the Fob Watch
+regeneration.messages.regen_or_die=Regenerate now! or you will die!
 
 regeneration.messages.numsuffix.0=st
 regeneration.messages.numsuffix.1=nd

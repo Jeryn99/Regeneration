@@ -15,13 +15,12 @@ import me.sub.util.PlayerUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -329,10 +328,11 @@ public class CapabilityRegeneration implements IRegeneration {
 
             if (getTicksRegenerating() == 1) {
 
-                if (getTrait() != TraitHandler.NONE && getTrait().doesEdit() && player.getEntityAttribute(getTrait().getAttributeToEdit()).hasModifier(getTrait().modifier)) {
-                    player.getEntityAttribute(getTrait().getAttributeToEdit()).removeModifier(getTrait().modifier);
+                if (getTrait() != TraitHandler.NONE && getTrait().doesEdit()) {
+                    if (player.getEntityAttribute(getTrait().getAttributeToEdit()).hasModifier(getTrait().modifier)) {
+                        player.getEntityAttribute(getTrait().getAttributeToEdit()).removeModifier(getTrait().modifier);
+                    }
                 }
-
 
                 if (player.world.isRemote) {
                     PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS, false);
@@ -347,7 +347,21 @@ public class CapabilityRegeneration implements IRegeneration {
                 getType().onUpdateInitial(player);
 
                 if (getTicksRegenerating() <= 50) {
-                    PlayerUtil.sendMessage(player, "This is Regeneration #" + getTimesRegenerated() + ", You have " + getLivesLeft() + " lives left!", true);
+
+                    String time = "" + (getTimesRegenerated() + 1);
+                    int lastDigit = getTimesRegenerated();
+                    if (lastDigit > 20)
+                        while (lastDigit > 10)
+                            lastDigit -= 10;
+
+                    if (lastDigit < 3)
+                        time = time + I18n.translateToLocalFormatted("regeneration.messages.numsuffix." + lastDigit);
+                    else
+                        time = time + I18n.translateToLocalFormatted("regeneration.messages.numsuffix.ext");
+
+                    if (!player.world.isRemote) {
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.regenLeftExt", time, (getLivesLeft() - 1))), true);
+                    }
                 }
             }
 
@@ -382,7 +396,7 @@ public class CapabilityRegeneration implements IRegeneration {
                 }
 
                 setTrait(TraitHandler.getRandomTrait().getName());
-                player.sendStatusMessage(getTrait().getTranslatedName(), true);
+                PlayerUtil.sendMessage(player, getTrait().getTranslatedName(), true);
 
             }
         }
@@ -394,10 +408,6 @@ public class CapabilityRegeneration implements IRegeneration {
 
                 if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
                     player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(this.slownessModifier);
-                }
-
-                if (player.world.isRemote) {
-                    PlayerUtil.playMovingSound(player, RObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true);
                 }
             }
 
@@ -438,10 +448,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
             //CRITICAL STAGE
             if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
-                player.sendStatusMessage(new TextComponentString("Regenerate now! or you will die!"), true);
-                if (getSolaceTicks() == 16800) {
-                    player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 900, 2));
-                }
+                PlayerUtil.sendMessage(player, "regeneration.messages.regen_or_die", true);
             }
 
             //15 minutes all gone, rip user

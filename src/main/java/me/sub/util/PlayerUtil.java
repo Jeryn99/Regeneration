@@ -21,6 +21,12 @@ public class PlayerUtil {
         }
     }
 
+    public static void sendMessage(EntityPlayer player, TextComponentTranslation translation, boolean hotBar) {
+        if (!player.world.isRemote) {
+            player.sendStatusMessage(translation, hotBar);
+        }
+    }
+
 
     @SideOnly(Side.CLIENT)
     public static void playMovingSound(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn, boolean playerOnly) {
