@@ -2,6 +2,9 @@ package me.sub.util;
 
 import me.sub.client.sound.MovingSoundPlayer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -36,6 +39,18 @@ public class PlayerUtil {
             }
         }
         Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(player, soundIn, categoryIn));
+    }
+
+    public static boolean canEntityAttack(Entity entity) {
+        if (entity instanceof EntityLiving) {
+            EntityLiving ent = (EntityLiving) entity;
+            for (EntityAITasks.EntityAITaskEntry task : ent.tasks.taskEntries) {
+                if (task.action instanceof EntityAIAttackMelee || task.action instanceof EntityAIAttackRanged || task.action instanceof EntityAIAttackRangedBow
+                        || task.action instanceof EntityAINearestAttackableTarget || task.action instanceof EntityAIZombieAttack || task.action instanceof EntityAIOwnerHurtByTarget)
+                    return true;
+            }
+        }
+        return false;
     }
 
 }
