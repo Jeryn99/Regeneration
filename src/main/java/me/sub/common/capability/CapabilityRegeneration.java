@@ -20,6 +20,7 @@ import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -277,12 +278,12 @@ public class CapabilityRegeneration implements IRegeneration {
 
     @Override
     public Color getPrimaryColor() {
-        return new Color(primaryRed, primaryGreen, primaryBlue);
+        return new Color((int)primaryRed, (int)primaryGreen, (int)primaryBlue);
     }
 
     @Override
     public Color getSecondaryColor() {
-        return new Color(secondaryRed, secondaryGreen, secondaryBlue);
+        return new Color((int)secondaryRed, (int)secondaryGreen, (int)secondaryBlue);
     }
 
     @Override
@@ -309,7 +310,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
         if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
             if (ticksInSolace % 25 == 0) {
-                player.sendStatusMessage(new TextComponentString(RKeyBinds.GRACE.getDisplayName() + " for Grace Period," + RKeyBinds.JUSTDOIT.getDisplayName() + " to Regenerate!"), true);
+                player.sendStatusMessage(new TextComponentString(RKeyBinds.GRACE.getDisplayName() + " for Grace Period, " + RKeyBinds.JUSTDOIT.getDisplayName() + " to Regenerate!"), true);
             }
         }
 
@@ -338,7 +339,6 @@ public class CapabilityRegeneration implements IRegeneration {
 
                 setLivesLeft(getLivesLeft() - 1);
                 setTimesRegenerated(getTimesRegenerated() + 1);
-                ExplosionUtil.regenerationExplosion(player);
             }
 
             if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100) {
@@ -397,7 +397,8 @@ public class CapabilityRegeneration implements IRegeneration {
                 if (getTrait() != null) {
                     getTrait().onTraitAdd(player);
                 }
-                PlayerUtil.sendMessage(player, getTrait().getTranslatedName(), true);
+                TextComponentString color = new TextComponentString(getTrait().isPositive() ? TextFormatting.RED.toString() : TextFormatting.YELLOW.toString());
+                PlayerUtil.sendMessage(player, color.appendSibling(getTrait().getTranslatedName()), true);
 
             }
         }
@@ -466,6 +467,9 @@ public class CapabilityRegeneration implements IRegeneration {
                 setTicksGlowing(0);
                 setTicksRegenerating(0);
                 setRegenerating(false);
+                if (getTrait() != null) {
+                    getTrait().onTraitRemove(player);
+                }
             }
         }
 

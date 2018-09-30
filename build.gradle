@@ -26,11 +26,6 @@ minecraft {
 		runDir = "../run"
 	else
 		runDir = "run"
-	
-	replace '@VERSION@', project.version
-	replaceIn ("${project.reference_class}".replace(".", "/") + ".java")
-	if(project.hasProperty('signSHA1'))
-		replace '@FINGERPRINT@', project.findProperty('signSHA1')
 }
 
 repositories {
@@ -43,21 +38,50 @@ repositories {
 		name = "JitPack"
 		url = "https://jitpack.io"
 	}
+
+	maven {
+		name = "DarkRoleplayMaven"
+		url = "https://dark-roleplay.net/files/maven/"
+	}
+}
+
+configurations {
+	// configuration that holds jars to embed inside the jar
+	embed
+	compile.extendsFrom(embed)
 }
 
 dependencies {
-
+	embed "darkroleplay.core_modules:drpcmguis:1.12.2-0.0.1:pre"
+	embed "darkroleplay:drplibrary:1.12.2-0.1.2.3:pre"
 }
+
+
+jar{
+	into('META-INF/libraries'){
+		from configurations.embed
+	}
+
+	manifest {
+		attributes([
+				'FMLAT': "drpcore_at.cfg",
+				'ContainedDeps': configurations.embed.collect { it.getName() }.join(' '),
+				'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
+				'Timestamp': System.currentTimeMillis()
+		])
+	}
+}
+
 
 processResources {
 	inputs.property "version", project.version
 	inputs.property "mcversion", project.minecraft.version
-	
+
 	from(sourceSets.main.resources.srcDirs) {
 		include 'mcmod.info'
 		expand 'version':project.version, 'mcversion':project.minecraft.version
 	}
-	
+
 	from(sourceSets.main.resources.srcDirs) {
 		exclude 'mcmod.info'
 	}

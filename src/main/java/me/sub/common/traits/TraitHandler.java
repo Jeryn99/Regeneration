@@ -27,7 +27,7 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = Regeneration.MODID)
 public class TraitHandler {
 
-    public static Trait SPEED, HEALTH, NONE, STRENGTH, SENTIMENTAL;
+    public static Trait SPEED, HEALTH, NONE, STRENGTH, SENTIMENTAL, PYSCHO;
     private static HashMap<String, Trait> TRAITS = new HashMap<>();
     private static ArrayList<Trait> traitList = new ArrayList<>();
     private static Random RAND = new Random();
@@ -38,6 +38,7 @@ public class TraitHandler {
         NONE = registerTrait(new TraitNone());
         STRENGTH = registerTrait(new TraitStrong());
         SENTIMENTAL = registerTrait(new TraitSentimental());
+        PYSCHO = registerTrait(new Trait("pyscho", "7f6fdbd5-0657-4002-8d27-a3430eb77e67", 0, 0));
     }
 
     private static Trait registerTrait(Trait trait) {
@@ -74,10 +75,10 @@ public class TraitHandler {
         }
 
         //TODO PSYCHO
-        if (regenInfo.getTrait() != null && regenInfo.getTrait() == SENTIMENTAL) {
-            //  if(!PlayerUtil.canEntityAttack(deadEntity)) {
-            //      player.attackEntityFrom(DamageSource.GENERIC, 1F); //TODO Make own source
-            //  }
+        if (regenInfo.getTrait() != null && regenInfo.getTrait() == PYSCHO) {
+             if(!PlayerUtil.canEntityAttack(deadEntity)) {
+                  player.heal(1);
+              }
         }
 
     }

@@ -8,6 +8,7 @@ import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,4 +54,9 @@ public class PlayerUtil {
         return false;
     }
 
+    public static void sendMessage(EntityPlayer player, ITextComponent textComponent, boolean hotBar) {
+        if (!player.world.isRemote) {
+            player.sendStatusMessage(textComponent, hotBar);
+        }
+    }
 }
