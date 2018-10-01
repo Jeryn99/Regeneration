@@ -5,6 +5,9 @@ import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageRegenerationStyle;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
+import net.dark_roleplay.core_modules.guis.api.components.DRPGuiScreen;
+import net.dark_roleplay.core_modules.guis.api.components.base.input.floats.SliderBoxFloat;
+import net.dark_roleplay.library.experimental.variables.wrappers.FloatWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -18,15 +21,16 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 //TODO - Make look nicer
 //TODO - Make EnumRegenTypes cycleable
-public class GuiCustomizer extends GuiScreen {
+public class GuiCustomizer extends DRPGuiScreen {
 
     private static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/smallbg.png");
     private int guiLeft, guiTop, xSize, ySize;
-    private float primaryRed, primaryGreen, primaryBlue, secondaryRed, secondaryGreen, secondaryBlue;
+    private FloatWrapper primaryRed = new FloatWrapper(1),  primaryGreen = new FloatWrapper(1), primaryBlue =  new FloatWrapper(1),  secondaryRed = new FloatWrapper(1), secondaryGreen = new FloatWrapper(1), secondaryBlue = new FloatWrapper(1);
     private boolean textured;
     private EntityPlayer player = Minecraft.getMinecraft().player;
 
     public GuiCustomizer() {
+        super();
         xSize = 182;
         ySize = 185;
     }
@@ -38,18 +42,27 @@ public class GuiCustomizer extends GuiScreen {
         guiLeft = (width - xSize) / 2;
         guiTop = (height - ySize) / 2;
 
+
         NBTTagCompound old = CapabilityRegeneration.get(mc.player).getStyle();
-        primaryRed = old.getFloat("PrimaryRed");
-        primaryGreen = old.getFloat("PrimaryGreen");
-        primaryBlue = old.getFloat("PrimaryBlue");
-        secondaryRed = old.getFloat("SecondaryRed");
-        secondaryGreen = old.getFloat("SecondaryGreen");
-        secondaryBlue = old.getFloat("SecondaryBlue");
+        primaryRed.set(old.getFloat("PrimaryRed") % 256);
+        primaryGreen.set(old.getFloat("PrimaryGreen") % 256);
+        primaryBlue.set(old.getFloat("PrimaryBlue") % 256);
+        secondaryRed.set(old.getFloat("SecondaryRed") % 256);
+        secondaryGreen.set(old.getFloat("SecondaryGreen") % 256);
+        secondaryBlue.set(old.getFloat("SecondaryBlue") % 256);
         textured = old.getBoolean("textured");
 
         TabRegistry.updateTabValues(guiLeft + 2, guiTop + 8, GuiCustomizer.class);
         TabRegistry.addTabsToList(buttonList);
 
+
+        addComponent(new SliderBoxFloat(guiLeft + 10, guiTop + 65, 10, primaryRed));
+        addComponent(new SliderBoxFloat(guiLeft + 10, guiTop + 75, 10, primaryGreen));
+        addComponent(new SliderBoxFloat(guiLeft + 10, guiTop + 85, 10, primaryBlue));
+
+        addComponent(new SliderBoxFloat(guiLeft + 10, guiTop + 115, 10, secondaryRed));
+        addComponent(new SliderBoxFloat(guiLeft + 10, guiTop + 125, 10, secondaryGreen));
+        addComponent(new SliderBoxFloat(guiLeft + 10, guiTop + 135, 10, secondaryBlue));
 
         buttonList.add(new GuiButtonExt(1, guiLeft + 10, guiTop + 176, 45, 15, new TextComponentTranslation("regeneration.info.save").getFormattedText()));
         buttonList.add(new GuiButtonExt(2, guiLeft + 70, guiTop + 176, 45, 15, new TextComponentTranslation("regeneration.info.reset").getFormattedText()));
@@ -65,7 +78,7 @@ public class GuiCustomizer extends GuiScreen {
         drawTexturedModalRect(guiLeft, guiTop + 8, 0, 0, xSize, 192);
         super.drawScreen(i, j, f);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GuiInventory.drawEntityOnScreen(guiLeft + 130, guiTop + 130, 40, guiLeft + 130 - i, guiTop + 60 - j, player);
+        System.out.println(primaryBlue.get());
     }
 
     @Override
@@ -87,12 +100,12 @@ public class GuiCustomizer extends GuiScreen {
 
     private NBTTagCompound getStyleNBTTag() {
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setFloat("PrimaryRed", primaryRed);
-        nbt.setFloat("PrimaryGreen", primaryGreen);
-        nbt.setFloat("PrimaryBlue", primaryBlue);
-        nbt.setFloat("SecondaryRed", secondaryRed);
-        nbt.setFloat("SecondaryGreen", secondaryGreen);
-        nbt.setFloat("SecondaryBlue", secondaryBlue);
+        nbt.setFloat("PrimaryRed", primaryRed.get() % 256);
+        nbt.setFloat("PrimaryGreen", primaryGreen.get() % 256);
+        nbt.setFloat("PrimaryBlue", primaryBlue.get() % 256);
+        nbt.setFloat("SecondaryRed", secondaryRed.get() % 256);
+        nbt.setFloat("SecondaryGreen", secondaryGreen.get() % 256);
+        nbt.setFloat("SecondaryBlue", secondaryBlue.get() % 256);
         nbt.setBoolean("textured", textured);
         return nbt;
     }

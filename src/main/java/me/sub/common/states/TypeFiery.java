@@ -6,6 +6,7 @@ import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
 import me.sub.config.RegenConfig;
+import me.sub.util.ExplosionUtil;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -32,7 +33,7 @@ public class TypeFiery implements IRegenType {
     @Override
     public void onUpdateMidRegen(EntityPlayer player) {
         player.extinguish();
-
+        ExplosionUtil.regenerationExplosion(player);
         Random rand = player.world.rand;
         player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
         player.rotationYaw += (rand.nextInt(10) - 5) * 0.2;
