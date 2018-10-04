@@ -26,23 +26,9 @@ minecraft {
 		runDir = "../run"
 	else
 		runDir = "run"
-	
-	replace '@VERSION@', project.version
-	replaceIn ("${project.reference_class}".replace(".", "/") + ".java")
-	if(project.hasProperty('signSHA1'))
-		replace '@FINGERPRINT@', project.findProperty('signSHA1')
 }
 
 repositories {
-	maven {
-		name = "CurseForge"
-		url = "https://minecraft.curseforge.com/api/maven"
-	}
-	
-	maven {
-		name = "JitPack"
-		url = "https://jitpack.io"
-	}
 }
 
 dependencies {

@@ -6,15 +6,26 @@ import me.sub.common.capability.IRegeneration;
 import me.sub.common.capability.RegenerationProvider;
 import me.sub.common.init.RObjects;
 import me.sub.config.RegenConfig;
+import me.sub.util.PlayerUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryTable;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.conditions.RandomChance;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -30,6 +41,39 @@ import static me.sub.common.capability.CapabilityRegeneration.REGEN_ID;
  */
 @Mod.EventBusSubscriber(modid = Regeneration.MODID)
 public class RegenerationHandler {
+
+    @SubscribeEvent
+    public static void breakBlock(PlayerInteractEvent.LeftClickBlock e) {
+        EntityPlayer player = e.getEntityPlayer();
+        IRegeneration regenInfo = CapabilityRegeneration.get(player);
+        boolean inGracePeriod = regenInfo.isInGracePeriod() && regenInfo.isGlowing();
+
+        if (inGracePeriod) {
+            regenInfo.setGlowing(false);
+            regenInfo.setTicksGlowing(0);
+            regenInfo.sync();
+        }
+    }
+
+    @SubscribeEvent
+    public static void joinWorldMessage(EntityJoinWorldEvent e) {
+        if (e.getEntity() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) e.getEntity();
+            PlayerUtil.sendMessage(player, "Regeneration: This mod is WIP after being re-written, there are CURRENTLY on a few traits, more will come, let us know of any bugs.", false);
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerLoot(LootTableLoadEvent e) {
+        if (!e.getName().toString().toLowerCase().matches(RegenConfig.Loot.lootRegex) || RegenConfig.Loot.disableArch)
+            return;
+
+        LootCondition[] condAlways = new LootCondition[]{new RandomChance(1F)};
+        LootEntry entry = new LootEntryTable(new ResourceLocation(Regeneration.MODID, "inject/arch_loot"), 1, 1, condAlways, "regeneration:arch-entry");
+        LootPool lootPool = new LootPool(new LootEntry[]{entry}, condAlways, new RandomValueRange(1), new RandomValueRange(1), "regeneration:arch-pool");
+        e.getTable().addPool(lootPool);
+    }
+
 
     @SubscribeEvent
     public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {

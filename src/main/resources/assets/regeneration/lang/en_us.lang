@@ -23,7 +23,6 @@ regeneration.messages.numsuffix.ext=th
 
 regeneration.messages.regenLeft=Regenerations left: %s
 regeneration.messages.regenLeftExt=You're regenerating for the %s time, you have %s regenerations left.
-regeneration.messages.traitsDisabled=TRAITS ARE NOT ENABLED
 
 regeneration.messages.transfer.emptyArch=This arch is empty!
 regeneration.messages.transfer.emptyCycle=You don't have any regenerations left to transfer
@@ -41,6 +40,9 @@ trait.messages.night_vision=You have gained the Night Vision Trait!
 trait.messages.none=You have not received a trait. You are normal.
 trait.messages.speed=You have gained the Speed Trait!
 trait.messages.strength=You have gained the Strength Trait!
+trait.messages.pycho=Pyschopath
+trait.messages.sentimental=Sentimental
+
 regeneration.info.reset=Reset
 regeneration.messages.gainedRegens=You've received %s regenerations from the Fob Watch
 regeneration.messages.transfer.emptystack=This arch is empty!
@@ -49,3 +51,5 @@ regeneration.messages.grace=You have entered a grace period of 15 minutes
 regeneration.messages.must_have_regens=You must have regenerations to use.
 
 trait.messages.no_trait=No trait gained!
+
+regeneration.current_trait=Current Trait:

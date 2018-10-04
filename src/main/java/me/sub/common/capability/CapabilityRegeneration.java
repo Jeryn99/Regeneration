@@ -309,7 +309,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
         if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
             if (ticksInSolace % 25 == 0) {
-                player.sendStatusMessage(new TextComponentString(RKeyBinds.GRACE.getDisplayName() + " for Grace Period," + RKeyBinds.JUSTDOIT.getDisplayName() + " to Regenerate!"), true);
+                player.sendStatusMessage(new TextComponentString(RKeyBinds.GRACE.getDisplayName() + " for Grace Period, " + RKeyBinds.JUSTDOIT.getDisplayName() + " to Regenerate!"), true);
             }
         }
 
