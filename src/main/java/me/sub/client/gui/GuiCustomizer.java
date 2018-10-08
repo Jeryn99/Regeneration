@@ -17,14 +17,10 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
 
-import java.awt.*;
-
 public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 
     public static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/longbg.png");
     public boolean textured = false;
-    //private GuiColorPicker colorpicker;
-    private Color selectedColor = Color.WHITE;
     private float primaryRed, primaryGreen, primaryBlue, secondaryRed, secondaryGreen, secondaryBlue;
     public GuiCustomizer() {
         super(new BlankContainer());
@@ -154,9 +150,14 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
             sendStyleNBTTagToServer(true);
             mc.player.closeScreen();
         }
-        if (button.id == 1) mc.player.closeScreen();
-        if (button.id == 2) textured = !textured;
-        if (button.id == 3) sendStyleNBTTagToServer(false);
+        if (button.id == 1) {
+            mc.player.closeScreen();
+        }
+
+        if (button.id == 3) {
+            sendStyleNBTTagToServer(false);
+            mc.player.closeScreen();
+        }
     }
 
     private void sendStyleNBTTagToServer(boolean notReset) {
@@ -165,6 +166,15 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
         } else {
             NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(getDefaultStyle()));
         }
+
+        NBTTagCompound old = CapabilityRegeneration.get(mc.player).getStyle();
+        primaryRed = old.getFloat("PrimaryRed");
+        primaryGreen = old.getFloat("PrimaryGreen");
+        primaryBlue = old.getFloat("PrimaryBlue");
+        secondaryRed = old.getFloat("SecondaryRed");
+        secondaryGreen = old.getFloat("SecondaryGreen");
+        secondaryBlue = old.getFloat("SecondaryBlue");
+        textured = old.getBoolean("texture");
     }
 
     @Override

@@ -332,14 +332,15 @@ public class CapabilityRegeneration implements IRegeneration {
                         while (lastDigit > 10)
                             lastDigit -= 10;
 
-                    if (lastDigit < 3)
+                    if (lastDigit < 3) {
                         time = time + I18n.translateToLocalFormatted("regeneration.messages.numsuffix." + lastDigit);
-                    else
+                    } else {
                         time = time + I18n.translateToLocalFormatted("regeneration.messages.numsuffix.ext");
+                    }
 
                     if (!player.world.isRemote) {
                         RObjects.FIRST_REGEN.trigger((EntityPlayerMP) player);
-                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.regenLeftExt", time, (getLivesLeft() - 1))), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.regenLeftExt", time, (getLivesLeft()))), true);
                     }
                 }
             }

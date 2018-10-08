@@ -1,17 +1,19 @@
 package me.sub.common.states;
 
-import java.util.Random;
-
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
 import me.sub.config.RegenConfig;
+import me.sub.util.PlayerUtil;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -45,6 +47,14 @@ public class TypeFiery implements IRegenType {
         double x = player.posX + player.getRNG().nextGaussian() * 2;
         double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
         double z = player.posZ + player.getRNG().nextGaussian() * 2;
+
+        IRegeneration capa = CapabilityRegeneration.get(player);
+
+        if (capa.getTicksRegenerating() > 150 && capa.getTicksRegenerating() < 152) {
+            if (!player.world.isRemote) {
+                PlayerUtil.damagePlayerArmor((EntityPlayerMP) player);
+            }
+        }
 
         player.world.newExplosion(player, x, y, z, 1, RegenConfig.Regen.fieryRegen, false);
         for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east()))

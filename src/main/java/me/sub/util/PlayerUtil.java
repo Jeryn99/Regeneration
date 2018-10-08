@@ -6,6 +6,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -51,6 +54,17 @@ public class PlayerUtil {
             }
         }
         return false;
+    }
+
+    public static void damagePlayerArmor(EntityPlayerMP playerMP) {
+        for (EntityEquipmentSlot type : EntityEquipmentSlot.values()) {
+            if (!type.equals(EntityEquipmentSlot.MAINHAND) && !type.equals(EntityEquipmentSlot.OFFHAND)) {
+                if (playerMP.getItemStackFromSlot(type).getItem() instanceof ItemArmor) {
+                    ItemArmor armor = (ItemArmor) playerMP.getItemStackFromSlot(type).getItem();
+                    armor.setDamage(playerMP.getItemStackFromSlot(type), playerMP.getItemStackFromSlot(type).getItemDamage() - playerMP.world.rand.nextInt(3));
+                }
+            }
+        }
     }
 
 }
