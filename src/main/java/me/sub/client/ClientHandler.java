@@ -117,7 +117,7 @@ public class ClientHandler {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             IRegeneration handler = CapabilityRegeneration.get(player);
 
-            if (handler.getTicksRegenerating() >= 1 && handler.getType() == RegenTypes.LAYDOWN) {
+            if (handler.getTicksRegenerating() >= 1 && handler.getType() == RegenTypes.LAYDOWN || handler.getSolaceTicks() > 0 && handler.getSolaceTicks() < 200 && !handler.isInGracePeriod()) {
                 e.setFOV(30);
             }
         }
@@ -149,12 +149,12 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void keyInput(InputUpdateEvent e) {
-        if (Minecraft.getMinecraft().player == null || !Minecraft.getMinecraft().player.hasCapability(CapabilityRegeneration.CAPABILITY, null) || !CapabilityRegeneration.get(Minecraft.getMinecraft().player).isCapable())
+        if (Minecraft.getMinecraft().player == null)
             return;
 
         IRegeneration capability = CapabilityRegeneration.get(Minecraft.getMinecraft().player);
 
-        if (capability.isRegenerating() && !capability.isInGracePeriod() && capability.getType().blockMovement() && capability.getSolaceTicks() >= 200) {
+        if (capability.isRegenerating() && !capability.isInGracePeriod() && capability.getType().blockMovement()) {
             MovementInput moveType = e.getMovementInput();
             moveType.rightKeyDown = false;
             moveType.leftKeyDown = false;

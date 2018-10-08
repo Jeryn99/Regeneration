@@ -285,7 +285,7 @@ public class CapabilityRegeneration implements IRegeneration {
         setSolaceTicks(getSolaceTicks() + 1);
 
         //Start glowing and playing the hand sound
-        if (getSolaceTicks() == 1 && !isInGracePeriod()) {
+        if (getSolaceTicks() == 2) {
             setGlowing(true);
             if (player.world.isRemote) {
                 PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, false);

@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:sapling"
+    },
+    "title": {
+      "translate": "advancements.place_cloud_sapling.title"
+    },
+    "description": {
+      "translate": "advancements.place_cloud_sapling.description"
+    }
+  },
+  "parent": "minecraft:husbandry/root",
+  "criteria": {
+    "place_cloud_sapling": {
+      "trigger": "place_cloud_sapling"
+    }
+  }
+}

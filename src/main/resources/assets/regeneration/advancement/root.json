@@ -1,0 +1,12 @@
+{
+  "display": {
+    "icon": "minecraft:gold_block",
+    "title": "A new tree in its own tab",
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "crafting_table": {
+      "trigger": "minecraft:player_damaged"
+    }
+  }
+}

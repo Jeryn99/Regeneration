@@ -1,5 +1,6 @@
 package me.sub.util;
 
+import me.sub.client.models.ModelArmorOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
@@ -8,15 +9,25 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
+import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * Created by Sub
@@ -147,8 +158,30 @@ public class RenderUtil {
         Minecraft.getMinecraft().renderEngine.bindTexture(player.getLocationSkin());
         model.render(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, player.rotationYawHead, player.cameraPitch, 0.0625f);
         GlStateManager.popMatrix();
-
         GlStateManager.popMatrix();
     }
+
+
+    public static void setupArmorModelOverride(RenderPlayer renderPlayer) {
+        List<LayerRenderer<EntityLivingBase>> layers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, "field_177097_h");
+        if (layers != null) {
+            LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer -> layer instanceof LayerBipedArmor).findFirst().orElse(null);
+            if (armorLayer != null) {
+                Field mainModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177186_d"));
+                Field legModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177189_c"));
+                mainModel.setAccessible(true);
+                legModel.setAccessible(true);
+                try {
+                    ModelArmorOverride model = new ModelArmorOverride();
+                    mainModel.set(armorLayer, model);
+                    legModel.set(armorLayer, model);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
 
 }
