@@ -15,6 +15,7 @@ import me.sub.util.PlayerUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
@@ -86,7 +87,6 @@ public class CapabilityRegeneration implements IRegeneration {
             setSolaceTicks(0);
             setInGracePeriod(false);
             setTicksGlowing(0);
-            setGlowing(false);
         }
     }
 
@@ -300,13 +300,15 @@ public class CapabilityRegeneration implements IRegeneration {
 
         setSolaceTicks(getSolaceTicks() + 1);
 
+        //Start glowing and playing the hand sound
         if (getSolaceTicks() == 1 && !isInGracePeriod()) {
+            setGlowing(true);
             if (player.world.isRemote) {
                 PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, false);
             }
-            setGlowing(true);
         }
 
+        //Indicate to the player what keybinds to use on the client
         if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
             if (ticksInSolace % 25 == 0) {
                 player.sendStatusMessage(new TextComponentString(RKeyBinds.GRACE.getDisplayName() + " for Grace Period, " + RKeyBinds.JUSTDOIT.getDisplayName() + " to Regenerate!"), true);
@@ -326,16 +328,13 @@ public class CapabilityRegeneration implements IRegeneration {
                 setCapable(RegenConfig.Regen.dontLoseUponDeath);
             }
 
-            if (getTicksRegenerating() == 1) {
-
+            if (getTicksRegenerating() == 3) {
                 if (getTrait() != null) {
                     getTrait().onTraitRemove(player);
                 }
-
                 if (player.world.isRemote) {
                     PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS, false);
                 }
-
                 setLivesLeft(getLivesLeft() - 1);
                 setTimesRegenerated(getTimesRegenerated() + 1);
                 ExplosionUtil.regenerationExplosion(player);
@@ -358,15 +357,14 @@ public class CapabilityRegeneration implements IRegeneration {
                         time = time + I18n.translateToLocalFormatted("regeneration.messages.numsuffix.ext");
 
                     if (!player.world.isRemote) {
+                        RObjects.FIRST_REGEN.trigger((EntityPlayerMP) player);
                         player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.regenLeftExt", time, (getLivesLeft() - 1))), true);
                     }
                 }
             }
 
-
             if (getTicksRegenerating() >= 100 && getTicksRegenerating() < 200) {
                 getType().onUpdateMidRegen(player);
-
             }
 
             if (player.getHealth() < player.getMaxHealth()) {
@@ -388,12 +386,14 @@ public class CapabilityRegeneration implements IRegeneration {
                 setRegenerating(false);
                 setSolaceTicks(0);
                 setInGracePeriod(false);
+                setGlowing(false);
 
                 if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
                     player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
                 }
 
                 setTrait(TraitHandler.getRandomTrait().getName());
+
                 if (getTrait() != null) {
                     getTrait().onTraitAdd(player);
                 }
@@ -405,8 +405,11 @@ public class CapabilityRegeneration implements IRegeneration {
         //Grace handling
         if (isInGracePeriod()) {
 
-            if (getSolaceTicks() == 2) {
+            if (player.ticksExisted % 200 == 0) {
+                player.heal(2.0F);
+            }
 
+            if (getSolaceTicks() == 2) {
                 if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
                     player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(this.slownessModifier);
                 }

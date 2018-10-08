@@ -1,7 +1,9 @@
 package me.sub.common.init;
 
 import me.sub.Regeneration;
+import me.sub.common.advancements.AdvancementBase;
 import me.sub.common.items.ItemFobWatch;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -28,6 +30,24 @@ public class RObjects {
     public static void addItems(RegistryEvent.Register<Item> e) {
         IForgeRegistry<Item> reg = e.getRegistry();
         reg.registerAll(setUpItem(new ItemFobWatch(), "fob_watch"));
+    }
+
+    public static List<AdvancementBase> ADVANCEMENTS = new ArrayList<>();
+    public static AdvancementBase BECOME_TIMELORD, IWILLNOTCHANGE, FIRST_REGEN;
+
+    public static void advancements() {
+        BECOME_TIMELORD = createAdvancement(new AdvancementBase("become_timelord"));
+        IWILLNOTCHANGE = createAdvancement(new AdvancementBase("change_refusal"));
+        FIRST_REGEN = createAdvancement(new AdvancementBase("first_regen"));
+        for (AdvancementBase base : RObjects.ADVANCEMENTS) {
+            CriteriaTriggers.register(base);
+        }
+        ADVANCEMENTS.clear();
+    }
+
+    private static AdvancementBase createAdvancement(AdvancementBase advancementBase) {
+        ADVANCEMENTS.add(advancementBase);
+        return advancementBase;
     }
 
     private static Item setUpItem(Item item, String name) {

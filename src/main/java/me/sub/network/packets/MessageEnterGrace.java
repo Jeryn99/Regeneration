@@ -42,7 +42,6 @@ public class MessageEnterGrace implements IMessage {
             if (player == null) return null;
 
             IRegeneration regenInfo = CapabilityRegeneration.get(player);
-
             if (message.stopRegen) {
                 if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 199 && !regenInfo.isInGracePeriod()) {
                     regenInfo.setInGracePeriod(true);
@@ -57,6 +56,7 @@ public class MessageEnterGrace implements IMessage {
                     regenInfo.setInGracePeriod(false);
                     regenInfo.setSolaceTicks(199);
                     regenInfo.setGlowing(false);
+                    regenInfo.setTicksRegenerating(0);
                     regenInfo.sync();
                 }
             }

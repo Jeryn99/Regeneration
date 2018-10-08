@@ -47,7 +47,7 @@ public class TraitHandler {
     }
 
     public static Trait getRandomTrait() {
-        return SENTIMENTAL;
+        return traitList.get(RAND.nextInt(traitList.size()));
     }
 
     public static Trait getTraitByName(String name) {
@@ -69,15 +69,8 @@ public class TraitHandler {
 
         if (regenInfo.getTrait() != null && regenInfo.getTrait() == SENTIMENTAL) {
             if (!PlayerUtil.canEntityAttack(deadEntity)) {
-                player.attackEntityFrom(DamageSource.GENERIC, 1F); //TODO Make own source
+                player.attackEntityFrom(DamageSource.GENERIC, 1F);
             }
-        }
-
-        //TODO PSYCHO
-        if (regenInfo.getTrait() != null && regenInfo.getTrait() == SENTIMENTAL) {
-            //  if(!PlayerUtil.canEntityAttack(deadEntity)) {
-            //      player.attackEntityFrom(DamageSource.GENERIC, 1F); //TODO Make own source
-            //  }
         }
 
     }

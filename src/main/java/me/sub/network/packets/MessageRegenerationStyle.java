@@ -34,15 +34,6 @@ public class MessageRegenerationStyle implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<MessageRegenerationStyle, IMessage> {
-
-        /**
-         * Called when a message is received of the appropriate type. You can optionally return a reply message, or null if no reply
-         * is needed.
-         *
-         * @param message The message
-         * @param ctx
-         * @return an optional return message
-         */
         @Override
         public IMessage onMessage(MessageRegenerationStyle message, MessageContext ctx) {
             ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {

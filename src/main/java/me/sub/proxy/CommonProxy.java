@@ -1,5 +1,7 @@
 package me.sub.proxy;
 
+import me.sub.common.init.RObjects;
+
 /**
  * Created by Sub
  * on 17/09/2018.
@@ -13,7 +15,7 @@ public class CommonProxy implements IProxy {
 
     @Override
     public void init() {
-
+        RObjects.advancements();
     }
 
     @Override

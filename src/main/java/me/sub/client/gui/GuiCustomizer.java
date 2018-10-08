@@ -17,11 +17,14 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
 
+import java.awt.*;
+
 public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 
     public static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/longbg.png");
     public boolean textured = false;
-    public GuiButton texturedButton;
+    //private GuiColorPicker colorpicker;
+    private Color selectedColor = Color.WHITE;
     private float primaryRed, primaryGreen, primaryBlue, secondaryRed, secondaryGreen, secondaryBlue;
     public GuiCustomizer() {
         super(new BlankContainer());
