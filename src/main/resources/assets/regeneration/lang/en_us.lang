@@ -34,14 +34,17 @@ regeneration.subtitles.regeneration=Regeneration energy
 regeneration.subtitles.fob_watch=Chameleon Arch opening
 menu.regeneration=Regeneration Customizer
 
-trait.messages.clumsy=Watch your things! You now have the clumsy trait...
-trait.messages.hunger=You have gained the Hungry Trait!
-trait.messages.night_vision=You have gained the Night Vision Trait!
+trait.messages.clumsy=Clumsy
+trait.messages.hunger=Hungry
+trait.messages.night_vision=Night Vision
 trait.messages.none=You have not received a trait. You are normal.
-trait.messages.speed=You have gained the Speed Trait!
-trait.messages.strength=You have gained the Strength Trait!
+trait.messages.speed=Speed
 trait.messages.pycho=Pyschopath
 trait.messages.sentimental=Sentimental
+trait.messages.health=Extended Health
+trait.messages.strong=Strength
+trait.messages.psycho=Psycho
+
 
 regeneration.info.reset=Reset
 regeneration.messages.gainedRegens=You've received %s regenerations from the Fob Watch
@@ -50,6 +53,5 @@ regeneration.messages.transfer.fullstack=You can't store anymore regenerations i
 regeneration.messages.grace=You have entered a grace period of 15 minutes
 regeneration.messages.must_have_regens=You must have regenerations to use.
 
-trait.messages.no_trait=No trait gained!
 
 regeneration.current_trait=Current Trait:

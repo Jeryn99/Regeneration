@@ -5,8 +5,6 @@ import me.sub.client.RKeyBinds;
 import me.sub.common.init.RObjects;
 import me.sub.common.states.IRegenType;
 import me.sub.common.states.RegenTypes;
-import me.sub.common.traits.Trait;
-import me.sub.common.traits.TraitHandler;
 import me.sub.config.RegenConfig;
 import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageUpdateRegen;
@@ -45,7 +43,7 @@ public class CapabilityRegeneration implements IRegeneration {
     private int timesRegenerated = 0, livesLeft = RegenConfig.Regen.regenCapacity, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
     private EntityPlayer player;
     private boolean textured = false, isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
-    private String typeName = RegenTypes.FIERY.getName(), traitName = TraitHandler.NONE.getName();
+    private String typeName = RegenTypes.FIERY.getName(), traitName = "none";
 
     private float primaryRed = 1.0f, primaryGreen = 0.78f, primaryBlue = 0.0f;
     private float secondaryGreen = 0.47f, secondaryRed = 1.0f, secondaryBlue = 0.0f;
@@ -75,11 +73,6 @@ public class CapabilityRegeneration implements IRegeneration {
 
     @Override
     public void update() {
-
-        if (getTrait() == null) {
-            setTrait(TraitHandler.NONE.getName());
-        }
-
         if (isRegenerating()) {
             updateRegeneration();
             sync();
@@ -285,15 +278,6 @@ public class CapabilityRegeneration implements IRegeneration {
         return new Color(secondaryRed, secondaryGreen, secondaryBlue);
     }
 
-    @Override
-    public Trait getTrait() {
-        return TraitHandler.getTraitByName(traitName);
-    }
-
-    @Override
-    public void setTrait(String name) {
-        this.traitName = name;
-    }
 
     //Invokes the Regeneration and handles it.
     private void updateRegeneration() {
@@ -329,9 +313,6 @@ public class CapabilityRegeneration implements IRegeneration {
             }
 
             if (getTicksRegenerating() == 3) {
-                if (getTrait() != null) {
-                    getTrait().onTraitRemove(player);
-                }
                 if (player.world.isRemote) {
                     PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS, false);
                 }
@@ -391,14 +372,6 @@ public class CapabilityRegeneration implements IRegeneration {
                 if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
                     player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
                 }
-
-                setTrait(TraitHandler.getRandomTrait().getName());
-
-                if (getTrait() != null) {
-                    getTrait().onTraitAdd(player);
-                }
-                PlayerUtil.sendMessage(player, getTrait().getTranslatedName(), true);
-
             }
         }
 
@@ -406,7 +379,9 @@ public class CapabilityRegeneration implements IRegeneration {
         if (isInGracePeriod()) {
 
             if (player.ticksExisted % 200 == 0) {
-                player.heal(2.0F);
+                if (player.getHealth() < player.getMaxHealth()) {
+                    player.heal(2.0F);
+                }
             }
 
             if (getSolaceTicks() == 2) {

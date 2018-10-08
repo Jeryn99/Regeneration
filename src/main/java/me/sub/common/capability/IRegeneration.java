@@ -1,7 +1,6 @@
 package me.sub.common.capability;
 
 import me.sub.common.states.IRegenType;
-import me.sub.common.traits.Trait;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -70,9 +69,5 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     //Just helper things
     Color getPrimaryColor();
     Color getSecondaryColor();
-
-    Trait getTrait();
-
-    void setTrait(String name);
 
 }

@@ -32,7 +32,7 @@ public class RObjects {
         reg.registerAll(setUpItem(new ItemFobWatch(), "fob_watch"));
     }
 
-    public static List<AdvancementBase> ADVANCEMENTS = new ArrayList<>();
+    private static List<AdvancementBase> ADVANCEMENTS = new ArrayList<>();
     public static AdvancementBase BECOME_TIMELORD, IWILLNOTCHANGE, FIRST_REGEN;
 
     public static void advancements() {

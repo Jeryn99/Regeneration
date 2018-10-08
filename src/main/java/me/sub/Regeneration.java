@@ -2,7 +2,6 @@ package me.sub;
 
 import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.states.RegenTypes;
-import me.sub.common.traits.TraitHandler;
 import me.sub.network.NetworkHandler;
 import me.sub.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
@@ -38,7 +37,6 @@ public class Regeneration {
     public void init(FMLInitializationEvent event) {
         proxy.init();
         NetworkHandler.init();
-        TraitHandler.init();
         RegenTypes.init();
     }
 

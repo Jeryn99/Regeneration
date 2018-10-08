@@ -49,7 +49,7 @@ public class ClientHandler {
 
         IRegeneration regenInfo = CapabilityRegeneration.get(player);
 
-        if (regenInfo.isGlowing() || regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 200) {
+        if (regenInfo.isGlowing()) {
 
             if (Minecraft.getMinecraft().gameSettings.thirdPersonView > 0) return;
 
