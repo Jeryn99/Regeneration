@@ -83,7 +83,7 @@ public class ClientHandler {
             EntityPlayer player = (EntityPlayer) e.getEntityLiving();
             IRegeneration regeneration = CapabilityRegeneration.get(player);
             if (regeneration != null && player != null && Minecraft.getMinecraft().player != null) {
-                if (regeneration.isRegenerating() && !regeneration.isInGracePeriod() && regeneration.getSolaceTicks() >= 200 && Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
+                if (regeneration.isRegenerating() && !regeneration.isInGracePeriod() && regeneration.getSolaceTicks() > 0 && regeneration.getSolaceTicks() <= 200 && Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
                     Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
                 }
             }

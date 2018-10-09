@@ -4,6 +4,7 @@ import me.sub.common.capability.CapabilityRegeneration;
 import me.sub.common.capability.IRegeneration;
 import me.sub.common.init.RObjects;
 import me.sub.config.RegenConfig;
+import me.sub.util.PlayerUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -13,6 +14,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
@@ -72,8 +74,8 @@ public class ItemFobWatch extends Item {
         } else {
             world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
             capability.setCapable(true);
-            capability.setLivesLeft(12);
             doUsageDamage(stack, capability);
+            PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.nowatimelord"), true);
         }
 
         return super.onItemRightClick(world, player, handIn);
