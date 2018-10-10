@@ -1,5 +1,8 @@
 package me.sub.common.capability;
 
+import java.awt.Color;
+import java.util.UUID;
+
 import me.sub.Regeneration;
 import me.sub.client.RKeyBinds;
 import me.sub.common.init.RObjects;
@@ -25,9 +28,6 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 
-import java.awt.*;
-import java.util.UUID;
-
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -40,7 +40,7 @@ public class CapabilityRegeneration implements IRegeneration {
     @CapabilityInject(IRegeneration.class)
     public static final Capability<IRegeneration> CAPABILITY = null;
 
-    private int timesRegenerated = 0, livesLeft = RegenConfig.Regen.regenCapacity, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
+    private int timesRegenerated = 0, livesLeft = 0, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
     private EntityPlayer player;
     private boolean textured = false, isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
     private String typeName = RegenTypes.FIERY.getName(), traitName = "none";
