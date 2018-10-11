@@ -1,5 +1,9 @@
 package me.sub.client.gui;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import me.sub.common.init.RObjects;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import net.minecraft.client.Minecraft;
@@ -7,10 +11,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by Sub
@@ -53,7 +53,7 @@ public class TabRegeneration extends AbstractTab {
         }
     }
 
-    protected void drawHoveringText(List list, int x, int y, FontRenderer font) {
+    protected void drawHoveringText(List<String> list, int x, int y, FontRenderer font) {
         if (list.isEmpty())
             return;
 
@@ -62,10 +62,10 @@ public class TabRegeneration extends AbstractTab {
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
         int k = 0;
-        Iterator iterator = list.iterator();
+        Iterator<String> iterator = list.iterator();
 
         while (iterator.hasNext()) {
-            String s = (String) iterator.next();
+            String s = iterator.next();
             int l = font.getStringWidth(s);
 
             if (l > k) {
@@ -105,7 +105,7 @@ public class TabRegeneration extends AbstractTab {
         this.drawGradientRect(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
 
         for (int i2 = 0; i2 < list.size(); ++i2) {
-            String s1 = (String) list.get(i2);
+            String s1 = list.get(i2);
             font.drawStringWithShadow(s1, j2, k2, -1);
 
             if (i2 == 0) {

@@ -43,9 +43,9 @@ public class ItemFobWatch extends Item {
         ItemStack stack = player.getHeldItem(handIn);
         if (capability == null) return new ActionResult<>(EnumActionResult.PASS, stack);
 
-        if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity) {
+        /*if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity) {
             return new ActionResult<>(EnumActionResult.FAIL, stack);
-        }
+        }*/
 
         if (capability.isCapable()) {
             if (!player.isSneaking()) {
@@ -55,17 +55,19 @@ public class ItemFobWatch extends Item {
                         player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullCycle")), true);
                     } else if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity)
                         player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptystack")), true);
+                    //XXX there should probably be an else here that just errors stuff because that shouldn't be happening
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 }
                 player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.gainedRegens", used)), true); // too lazy to fix a single/plural issue here
             } else {
-                if (stack.getItemDamage() == 0 && !player.isCreative()) {
+                if (stack.getItemDamage() == 0) {
                     player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullstack")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 } else if (capability.getLivesLeft() < 1) {
                     player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptyCycle")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 }
+                
                 stack.setItemDamage(stack.getItemDamage() - 1);
                 capability.setLivesLeft(capability.getLivesLeft() - 1);
                 player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer")), true);
