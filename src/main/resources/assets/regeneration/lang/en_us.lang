@@ -56,3 +56,4 @@ regeneration.messages.must_have_regens=You must have regenerations to use.
 
 regeneration.current_trait=Current Trait:
 regeneration.messages.nowatimelord=You are now a timelord!
+regeneration.remaining_regens=Remaining Regenerations:

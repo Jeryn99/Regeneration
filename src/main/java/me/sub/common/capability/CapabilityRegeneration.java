@@ -10,6 +10,7 @@ import me.sub.network.NetworkHandler;
 import me.sub.network.packets.MessageUpdateRegen;
 import me.sub.util.ExplosionUtil;
 import me.sub.util.PlayerUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,8 +46,8 @@ public class CapabilityRegeneration implements IRegeneration {
     private boolean textured = false, isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
     private String typeName = RegenTypes.FIERY.getName(), traitName = "none";
 
-    private float primaryRed = 1.0f, primaryGreen = 0.78f, primaryBlue = 0.0f;
-    private float secondaryGreen = 0.47f, secondaryRed = 1.0f, secondaryBlue = 0.0f;
+    private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
+    private float secondaryGreen = 0.58f, secondaryRed = 0.29f, secondaryBlue = 0.18f;
 
     private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
     private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
@@ -238,7 +239,6 @@ public class CapabilityRegeneration implements IRegeneration {
         nbt.setFloat("SecondaryGreen", secondaryGreen);
         nbt.setFloat("SecondaryBlue", secondaryBlue);
         nbt.setBoolean("textured", textured);
-
         return nbt;
     }
 
@@ -326,7 +326,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
                 if (getTicksRegenerating() <= 50) {
 
-                    String time = "" + (getTimesRegenerated() + 1);
+                    String time = "" + (getTimesRegenerated());
                     int lastDigit = getTimesRegenerated();
                     if (lastDigit > 20)
                         while (lastDigit > 10)
@@ -372,6 +372,10 @@ public class CapabilityRegeneration implements IRegeneration {
 
                 if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
                     player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
+                }
+
+                if (player.world.isRemote) {
+                    Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
                 }
             }
         }
