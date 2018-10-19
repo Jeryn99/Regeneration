@@ -16,9 +16,9 @@ regeneration.messages.becomeTimelord=You've become a timelord!
 regeneration.messages.gainedRegenerations=You've received %s regenerations from the Fob Watch
 regeneration.messages.regen_or_die=Regenerate now! or you will die!
 
-regeneration.messages.numsuffix.0=st
-regeneration.messages.numsuffix.1=nd
-regeneration.messages.numsuffix.2=rd
+regeneration.messages.numsuffix.1=st
+regeneration.messages.numsuffix.2=nd
+regeneration.messages.numsuffix.3=rd
 regeneration.messages.numsuffix.ext=th
 
 regeneration.messages.regenLeft=Regenerations left: %s
