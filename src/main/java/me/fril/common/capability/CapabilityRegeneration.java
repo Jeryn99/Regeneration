@@ -1,8 +1,5 @@
 package me.fril.common.capability;
 
-import java.awt.Color;
-import java.util.UUID;
-
 import me.fril.Regeneration;
 import me.fril.client.RKeyBinds;
 import me.fril.common.init.RObjects;
@@ -17,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
@@ -28,6 +24,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
+
+import java.awt.*;
+import java.util.UUID;
 
 /**
  * Created by Sub
@@ -43,7 +42,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
     private int timesRegenerated = 0, livesLeft = 0, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
     private EntityPlayer player;
-    private boolean textured = false, isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
+    private boolean isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
     private String typeName = RegenTypes.FIERY.getName(), traitName = "none";
 
     private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
@@ -188,7 +187,6 @@ public class CapabilityRegeneration implements IRegeneration {
         nbt.setFloat("SecondaryRed", secondaryRed);
         nbt.setFloat("SecondaryGreen", secondaryGreen);
         nbt.setFloat("SecondaryBlue", secondaryBlue);
-        nbt.setBoolean("textured", textured);
         return nbt;
     }
 
@@ -200,7 +198,6 @@ public class CapabilityRegeneration implements IRegeneration {
         secondaryRed = nbt.getFloat("SecondaryRed");
         secondaryGreen = nbt.getFloat("SecondaryGreen");
         secondaryBlue = nbt.getFloat("SecondaryBlue");
-        textured = nbt.getBoolean("textured");
     }
 
     @Override
@@ -238,7 +235,6 @@ public class CapabilityRegeneration implements IRegeneration {
         nbt.setFloat("SecondaryRed", secondaryRed);
         nbt.setFloat("SecondaryGreen", secondaryGreen);
         nbt.setFloat("SecondaryBlue", secondaryBlue);
-        nbt.setBoolean("textured", textured);
         return nbt;
     }
 
@@ -263,9 +259,6 @@ public class CapabilityRegeneration implements IRegeneration {
         secondaryRed = nbt.getFloat("SecondaryRed");
         secondaryGreen = nbt.getFloat("SecondaryGreen");
         secondaryBlue = nbt.getFloat("SecondaryBlue");
-
-        //textured
-        textured = nbt.getBoolean("textured");
     }
 
     @Override
@@ -339,7 +332,6 @@ public class CapabilityRegeneration implements IRegeneration {
                     }
 
                     if (!player.world.isRemote) {
-                        RObjects.FIRST_REGEN.trigger((EntityPlayerMP) player);
                         player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.regenLeftExt", time, (getLivesLeft()))), true);
                     }
                 }
