@@ -98,6 +98,7 @@ public class ClientHandler {
                 EntityPlayer player = Minecraft.getMinecraft().player;
                 if (player != null) {
                     NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(true));
+                    Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
                 }
             }
 
