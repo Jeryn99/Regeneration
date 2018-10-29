@@ -130,11 +130,9 @@ public class LimbManipulationUtil {
         HEAD(ModelBiped.class.getDeclaredFields()[0], ModelBiped.class.getDeclaredFields()[1]),
         BODY(ModelBiped.class.getDeclaredFields()[2], ModelPlayer.class.getDeclaredFields()[4]),
         LEFT_ARM(ModelBiped.class.getDeclaredFields()[4], ModelPlayer.class.getDeclaredFields()[0]),
-        RIGHT_ARM(ModelBiped.class.getDeclaredFields()[3],
-                ModelPlayer.class.getDeclaredFields()[1]),
+        RIGHT_ARM(ModelBiped.class.getDeclaredFields()[3], ModelPlayer.class.getDeclaredFields()[1]),
         LEFT_LEG(ModelBiped.class.getDeclaredFields()[6], ModelPlayer.class.getDeclaredFields()[2]),
-        RIGHT_LEG(ModelBiped.class.getDeclaredFields()[5],
-                ModelPlayer.class.getDeclaredFields()[3]);
+        RIGHT_LEG(ModelBiped.class.getDeclaredFields()[5], ModelPlayer.class.getDeclaredFields()[3]);
 
         public Field rendererField, secondaryRendererField;
 

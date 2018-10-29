@@ -66,6 +66,7 @@ public class RegenerationHandler {
     }
 
 
+
     @SubscribeEvent
     public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntityLiving() instanceof EntityPlayer) {
