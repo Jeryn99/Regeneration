@@ -47,7 +47,7 @@ public class ItemFobWatch extends Item {
             return new ActionResult<>(EnumActionResult.FAIL, stack);
         }*/
 
-        if (capability.isCapable()) {
+        if (capability.isCapable()) { //TODO this could probably be cleaned up
             if (!player.isSneaking()) {
                 int used = doUsageDamage(stack, capability);
                 if (used == 0) {
@@ -63,7 +63,7 @@ public class ItemFobWatch extends Item {
                 if (stack.getItemDamage() == 0) {
                     player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullWatch")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
-                } else if (capability.getLivesLeft() < 1) {
+                } else if (capability.getLivesLeft() < 1) { //FIXME impossible condition? How does getLivesLeft relate to isCapable?
                     player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptyCycle")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 }
@@ -74,10 +74,15 @@ public class ItemFobWatch extends Item {
                 return new ActionResult<>(EnumActionResult.PASS, stack);
             }
         } else {
-            world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
-            capability.setCapable(true);
-            doUsageDamage(stack, capability);
-            PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.nowTimelord"), true);
+        	if (!player.isSneaking()) {
+	            world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
+	            capability.setCapable(true);
+	            doUsageDamage(stack, capability);
+	            PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.nowTimelord"), true);
+        	} else {
+        		player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptyCycle")), true);
+                return new ActionResult<>(EnumActionResult.FAIL, stack);
+        	}
         }
 
         return super.onItemRightClick(world, player, handIn);

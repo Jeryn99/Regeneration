@@ -1,5 +1,6 @@
-category.loot=Loot settings
 category.regeneration=Regeneration
+item.fob_watch.name=Fob Watch
+category.loot=Loot settings
 
 regeneration.info.customizer=Customizer
 regeneration.info.red=Red
@@ -34,6 +35,8 @@ regeneration.subtitles.hand_glow=Glowing hands
 regeneration.subtitles.heart_beat=Heartbeat
 regeneration.subtitles.critical_stage=Critical grace stage
 
+regeneration.keybinds.grace=Enter grace period
+regeneration.keybinds.just_regen=Regenerate immediately
 
 
 

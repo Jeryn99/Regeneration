@@ -1,9 +1,11 @@
 package me.fril.client;
 
+import org.lwjgl.input.Keyboard;
+
 import me.fril.Regeneration;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import org.lwjgl.input.Keyboard;
 
 
 /**
@@ -15,8 +17,8 @@ public class RKeyBinds {
     public static KeyBinding JUSTDOIT, GRACE;
 
     public static void init() {
-        GRACE = new KeyBinding("regen.keybinds.grace", Keyboard.KEY_V, Regeneration.NAME);
-        JUSTDOIT = new KeyBinding("regen.keybinds.just_regen", Keyboard.KEY_R, Regeneration.NAME);
+        GRACE = new KeyBinding(I18n.translateToLocalFormatted("regeneration.keybinds.grace"), Keyboard.KEY_V, Regeneration.NAME);
+        JUSTDOIT = new KeyBinding(I18n.translateToLocalFormatted("regeneration.keybinds.just_regen"), Keyboard.KEY_R, Regeneration.NAME);
         ClientRegistry.registerKeyBinding(GRACE);
         ClientRegistry.registerKeyBinding(JUSTDOIT);
     }
