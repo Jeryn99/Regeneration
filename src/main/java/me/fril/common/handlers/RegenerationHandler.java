@@ -1,5 +1,7 @@
 package me.fril.common.handlers;
 
+import static me.fril.common.capability.CapabilityRegeneration.*;
+
 import me.fril.Regeneration;
 import me.fril.common.capability.CapabilityRegeneration;
 import me.fril.common.capability.IRegeneration;
@@ -31,8 +33,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
-import static me.fril.common.capability.CapabilityRegeneration.REGEN_ID;
-
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -56,12 +56,12 @@ public class RegenerationHandler {
 
     @SubscribeEvent
     public static void registerLoot(LootTableLoadEvent e) {
-        if (!e.getName().toString().toLowerCase().matches(RegenConfig.Loot.lootRegex) || RegenConfig.Loot.disableArch)
+        if (!e.getName().toString().toLowerCase().matches(RegenConfig.Loot.lootRegex) || RegenConfig.Loot.disableLoot)
             return;
 
         LootCondition[] condAlways = new LootCondition[]{new RandomChance(1F)};
-        LootEntry entry = new LootEntryTable(new ResourceLocation(Regeneration.MODID, "inject/arch_loot"), 1, 1, condAlways, "regeneration:arch-entry");
-        LootPool lootPool = new LootPool(new LootEntry[]{entry}, condAlways, new RandomValueRange(1), new RandomValueRange(1), "regeneration:arch-pool");
+        LootEntry entry = new LootEntryTable(new ResourceLocation(Regeneration.MODID, "inject/fob_watch_loot"), 1, 1, condAlways, "regeneration:fob-watch-entry");
+        LootPool lootPool = new LootPool(new LootEntry[]{entry}, condAlways, new RandomValueRange(1), new RandomValueRange(1), "regeneration:fob-watch-pool");
         e.getTable().addPool(lootPool);
     }
 

@@ -31,7 +31,7 @@
   },
   "hand_glow": {
     "category": "ambient",
-    "subtitle": "regeneration.subtitles.heart_beat",
+    "subtitle": "regeneration.subtitles.hand_glow",
     "sounds": [
       {
         "name": "regeneration:hand_glow",

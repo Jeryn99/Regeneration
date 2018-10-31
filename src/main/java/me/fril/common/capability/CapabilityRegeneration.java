@@ -1,5 +1,8 @@
 package me.fril.common.capability;
 
+import java.awt.Color;
+import java.util.UUID;
+
 import me.fril.Regeneration;
 import me.fril.client.RKeyBinds;
 import me.fril.common.init.RObjects;
@@ -24,9 +27,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
-
-import java.awt.*;
-import java.util.UUID;
 
 /**
  * Created by Sub
@@ -302,7 +302,7 @@ public class CapabilityRegeneration implements IRegeneration {
             player.setAbsorptionAmount(RegenConfig.Regen.absorbtionLevel * 2);
 
             if (player.getHealth() <= 0) {
-                setCapable(RegenConfig.Regen.dontLoseUponDeath);
+                setCapable(!RegenConfig.Regen.losePowerOnMidRegenDeath);
             }
 
             if (getTicksRegenerating() == 3) {
@@ -332,7 +332,7 @@ public class CapabilityRegeneration implements IRegeneration {
                     }
 
                     if (!player.world.isRemote) {
-                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.regenLeftExt", time, (getLivesLeft()))), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.remainingRegens.notification", time, (getLivesLeft()))), true);
                     }
                 }
             }
@@ -424,7 +424,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
             //CRITICAL STAGE
             if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
-                PlayerUtil.sendMessage(player, "regeneration.messages.regen_or_die", true);
+                PlayerUtil.sendMessage(player, "regeneration.messages.regenOrDie", true);
             }
 
             //15 minutes all gone, rip user

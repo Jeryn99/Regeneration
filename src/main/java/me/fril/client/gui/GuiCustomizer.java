@@ -121,7 +121,7 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
         mc.getTextureManager().bindTexture(DEFAULT_TEX);
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
         IRegeneration capa = CapabilityRegeneration.get(mc.player);
-        String name = new TextComponentTranslation("regeneration.remaining_regens").getFormattedText() + " " + capa.getLivesLeft();
+        String name = new TextComponentTranslation("regeneration.messages.remainingRegens.status").getFormattedText() + " " + capa.getLivesLeft();
         int length = mc.fontRenderer.getStringWidth(name);
         this.drawString(mc.fontRenderer, name, i + this.xSize / 2 - length / 2, j + 30, 0xffffff);
 

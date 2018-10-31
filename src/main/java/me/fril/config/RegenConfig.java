@@ -69,7 +69,7 @@ public class RegenConfig {
 
         @Config.LangKey("config.lose_regens_on_death")
         @Config.Comment("If this is false you won't lose your timelord power if you get killed during regeneration")
-        public boolean dontLoseUponDeath = true;
+        public boolean losePowerOnMidRegenDeath = true;
     }
 
     @Config.LangKey("category.loot")
@@ -78,9 +78,9 @@ public class RegenConfig {
         @Config.Comment("The loot pool for chameleon arch's will only be added to loot tables whose name matches this regular expression")
         public String lootRegex = "minecraft:chests\\/.*";
 
-        @Config.LangKey("config.disable_arch")
-        @Config.Comment("If this is true you won't lose your timelord power if you get killed during regeneration")
-        public boolean disableArch = false;
+        @Config.LangKey("config.disable_loot")
+        @Config.Comment("If this is true there won't be any Fob Watches spawned naturally")
+        public boolean disableLoot = false;
 
     }
 

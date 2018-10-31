@@ -1,39 +1,43 @@
 category.loot=Loot settings
 category.regeneration=Regeneration
 
-item.fob_watch.name=Fob Watch
-
-regeneration.info.blue=Blue
 regeneration.info.customizer=Customizer
-regeneration.info.green=Green
-regeneration.info.primary=Primary Color
 regeneration.info.red=Red
-regeneration.info.save=Save
+regeneration.info.green=Green
+regeneration.info.blue=Blue
+regeneration.info.primary=Primary Color
 regeneration.info.secondary=Secondary Color
+regeneration.info.save=Save
+regeneration.info.reset=Reset
 
-regeneration.messages.alreadyTimelord=You're already a timelord!
-regeneration.messages.becomeTimelord=You've become a timelord!
-regeneration.messages.gainedRegenerations=You've received %s regenerations from the Fob Watch
-regeneration.messages.regen_or_die=Regenerate now! or you will die!
+regeneration.messages.nowTimelord=You are now a timelord!
+regeneration.messages.regenOrDie=Regenerate now or you will die!
+regeneration.messages.remainingRegens.status=Remaining Regenerations:
+regeneration.messages.remainingRegens.notification=You're regenerating for the %s time, you have %s regenerations left.
+regeneration.messages.gainedRegens=You've received %s regenerations from the Fob Watch
+regeneration.messages.grace=You have entered a grace period of 15 minutes
 
 regeneration.messages.numsuffix.1=st
 regeneration.messages.numsuffix.2=nd
 regeneration.messages.numsuffix.3=rd
 regeneration.messages.numsuffix.ext=th
 
-regeneration.messages.regenLeft=Regenerations left: %s
-regeneration.messages.regenLeftExt=You're regenerating for the %s time, you have %s regenerations left.
-
-regeneration.messages.transfer.emptyArch=This arch is empty!
-regeneration.messages.transfer.emptyCycle=You don't have any regenerations left to transfer
-regeneration.messages.transfer.fullArch=You can't store anymore regenerations in this arch
+regeneration.messages.transfer.success=You've transferred one of your regenerations into the arch
+regeneration.messages.transfer.fullWatch=You can't store anymore regenerations in this watch!
+regeneration.messages.transfer.emptyWatch=This watch is empty!
 regeneration.messages.transfer.fullCycle=You already have a full cycle of regenerations
-regeneration.messages.transfer=You've transferred one of your regenerations into the arch
+regeneration.messages.transfer.emptyCycle=You don't have any regenerations left to transfer
 
+regeneration.subtitles.fob_watch=Fob Watch opening
 regeneration.subtitles.regeneration=Regeneration energy
-regeneration.subtitles.fob_watch=Chameleon Arch opening
-menu.regeneration=Regeneration Customizer
+regeneration.subtitles.hand_glow=Glowing hands
+regeneration.subtitles.heart_beat=Heartbeat
+regeneration.subtitles.critical_stage=Critical grace stage
 
+
+
+
+regeneration.current_trait=Current Trait:
 trait.messages.clumsy=Clumsy
 trait.messages.hunger=Hungry
 trait.messages.night_vision=Night Vision
@@ -44,16 +48,3 @@ trait.messages.sentimental=Sentimental
 trait.messages.health=Extended Health
 trait.messages.strong=Strength
 trait.messages.psycho=Psycho
-
-
-regeneration.info.reset=Reset
-regeneration.messages.gainedRegens=You've received %s regenerations from the Fob Watch
-regeneration.messages.transfer.emptystack=This arch is empty!
-regeneration.messages.transfer.fullstack=You can't store anymore regenerations in this arch!
-regeneration.messages.grace=You have entered a grace period of 15 minutes
-regeneration.messages.must_have_regens=You must have regenerations to use.
-
-
-regeneration.current_trait=Current Trait:
-regeneration.messages.nowatimelord=You are now a timelord!
-regeneration.remaining_regens=Remaining Regenerations:

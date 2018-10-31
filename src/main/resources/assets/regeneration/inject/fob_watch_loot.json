@@ -1,7 +1,7 @@
 {
   "pools": [
     {
-      "name": "regeneration:arch-pool",
+      "name": "regeneration:fob-watch-pool",
       "rolls": 1,
       "entries": [
         {
