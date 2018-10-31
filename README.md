@@ -9,14 +9,17 @@ To store your regenerations in the watch you can use the watch in combination wi
 
 ### 'Grace period'
 Sometimes a regeneration just comes at the worst possible moment. You obviously don't want your house to burn down, or maybe you're in a very dangerous situation and can't afford to be vulnerable right now. Luckily this mod allows you to enter a so-called 'grace period'. When you die, your death will be held off and you'll be given the choice: enter a grace period, or regenerate right now.
-If you choose to enter the grace period, you can delay your regeneration for up to 15 minutes. Waiting too long will result in a loss of regenerations and a wasteful death.
+If you choose to enter the grace period, you can delay your regeneration for up to 15 minutes. Waiting too long will result in a loss of regenerations and a wasteful death. You can also activate immediate regeneration by pressing the 'R' key.
 Once you've entered the grace period, your walking speed will be heavily limited, and your hand will glow once a minute to warn you that a regeneration is coming. Punching any block will delay your regeneration for longer, as long as you stay within the 15 minute limit.
 
 ![The moment of choice](https://i.imgur.com/4pmJ7HK.gif)
 _The moment of choice_
 
 ### The actual regeneration
-The process of regeneration itself is quite simple. You'll explode in a violent burt of light and tnt-like explosions. Everything within a range of 3 blocks will be killed immediately (this can be changed in the configuration file), and everything in a range of 5 blocks will be knocked back (this too can be changed). Once you finish your regeneration you will receive a full health and hunger bar, and maximum oxygen if you're underwater. (All of this can be changed in the configuration file.)
+The process of regeneration itself is quite simple. You'll explode in a violent burt of light and tnt-like explosions. Everything within a range of 3 blocks will be killed immediately (this can be changed in the configuration file), and everything in a range of 7 blocks will be knocked back (this too can be changed). Once you finish your regeneration you will receive a full health and hunger bar, and maximum oxygen if you're underwater. (All of this can be changed in the configuration file.)
+
+![Aaaaaaaaaaaaaaaaaaaaaaah](https://i.imgur.com/rxVQY86.png)
+_Aaaaaaaaaaaaaaaaaaaah_
 
 ### Planned features
 - Better animation
