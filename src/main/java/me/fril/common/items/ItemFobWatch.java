@@ -41,8 +41,7 @@ public class ItemFobWatch extends Item {
 
         IRegeneration capability = CapabilityRegeneration.get(player);
         ItemStack stack = player.getHeldItem(handIn);
-        if (capability == null) return new ActionResult<>(EnumActionResult.PASS, stack);
-
+        
         /*if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity) {
             return new ActionResult<>(EnumActionResult.FAIL, stack);
         }*/

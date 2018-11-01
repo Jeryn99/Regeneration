@@ -87,11 +87,11 @@ public class ClientHandler {
         
         EntityPlayer player = (EntityPlayer) e.getEntityLiving();
         IRegeneration regeneration = CapabilityRegeneration.get(player);
-        if (regeneration == null || Minecraft.getMinecraft().player == null) return;
+        if (Minecraft.getMinecraft().player == null) return;
         
         if (regeneration.isRegenerating() && !regeneration.isInGracePeriod() && //player is actually regenerating or choosing
         	  regeneration.getSolaceTicks() > 0 &&
-        	  Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) { //XXX is this a redundant check?
+        	  Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
             Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
         }
     }

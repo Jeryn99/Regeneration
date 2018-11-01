@@ -3,6 +3,8 @@ package me.fril.common.capability;
 import java.awt.Color;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
 import me.fril.RegenConfig;
 import me.fril.Regeneration;
 import me.fril.client.RKeyBinds;
@@ -64,6 +66,7 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     //Returns the players Regeneration capability
+    @Nonnull
     public static IRegeneration get(EntityPlayer player) {
         if (player.hasCapability(CAPABILITY, null)) {
             return player.getCapability(CAPABILITY, null);

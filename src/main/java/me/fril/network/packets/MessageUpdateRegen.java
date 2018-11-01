@@ -1,5 +1,7 @@
 package me.fril.network.packets;
 
+import java.util.UUID;
+
 import io.netty.buffer.ByteBuf;
 import me.fril.common.capability.CapabilityRegeneration;
 import me.fril.common.capability.IRegeneration;
@@ -10,8 +12,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.util.UUID;
 
 /**
  * Created by Sub
@@ -49,7 +49,7 @@ public class MessageUpdateRegen implements IMessage {
         @Override
         public IMessage onMessage(MessageUpdateRegen message, MessageContext ctx) {
             EntityPlayer player = message.player;
-            if (player == null || !player.hasCapability(CapabilityRegeneration.CAPABILITY, null)) return null;
+            if (player == null) return null;
             IRegeneration handler = CapabilityRegeneration.get(player);
             Minecraft.getMinecraft().addScheduledTask(() -> handler.deserializeNBT(message.data));
             return null;
