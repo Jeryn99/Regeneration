@@ -107,7 +107,8 @@ public class ClientHandler {
         if (RKeyBinds.GRACE.isPressed()) {
             NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(true));
             
-            if (CapabilityRegeneration.get(player).getSolaceTicks() > 0) { //player has chosen to enter grace period, set the perspective back to 0
+            IRegeneration cap = CapabilityRegeneration.get(player);
+            if (cap.getSolaceTicks() > 0 && cap.getTicksRegenerating() == 0) { //player has chosen to enter grace period, set the perspective back to 0
             	Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
             }
         }

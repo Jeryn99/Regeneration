@@ -129,6 +129,7 @@ public class RegenerationHandler {
         IRegeneration handler = CapabilityRegeneration.get(player);
         e.setCanceled(true);
         handler.setRegenerating(true);
+        player.clearActivePotions();
 
         if (handler.isRegenerating() && handler.isInGracePeriod()) {
             player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);

@@ -20,6 +20,8 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -377,7 +379,6 @@ public class CapabilityRegeneration implements IRegeneration {
 
         //Grace handling
         if (isInGracePeriod()) {
-
             if (player.ticksExisted % 200 == 0) {
                 if (player.getHealth() < player.getMaxHealth()) {
                     player.heal(2.0F);
@@ -420,7 +421,7 @@ public class CapabilityRegeneration implements IRegeneration {
             if (getSolaceTicks() == 17100) {
                 if (player.world.isRemote) {
                     PlayerUtil.playMovingSound(player, RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, false);
-                    //TODO nausea
+                    player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 800, 0, false, false)); //could be removed with milk, but I think that's not that bad
                 }
 
             }
