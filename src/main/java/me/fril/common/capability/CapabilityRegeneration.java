@@ -354,7 +354,7 @@ public class CapabilityRegeneration implements IRegeneration {
                 player.setAir(player.getAir() + 1);
             }
 
-            if (getTicksRegenerating() == 200) {
+            if (getTicksRegenerating() == 200) { //regeneration has finished, reset
                 getType().onFinish(player);
                 setTicksRegenerating(0);
                 setRegenerating(false);

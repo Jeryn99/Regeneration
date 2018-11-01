@@ -35,7 +35,8 @@ public class MessageEnterGrace implements IMessage {
     }
 
     public static class Handler implements IMessageHandler<MessageEnterGrace, IMessage> {
-
+    	
+    	//XXX There isn't any null check on the capability. As far as I know it isn't needed either as every player has one, but they are still in a lot of places through the code
         @Override
         public IMessage onMessage(MessageEnterGrace message, MessageContext ctx) {
             EntityPlayer player = ctx.getServerHandler().player;

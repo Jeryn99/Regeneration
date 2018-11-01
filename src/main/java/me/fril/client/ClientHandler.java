@@ -1,5 +1,9 @@
 package me.fril.client;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Random;
+
 import me.fril.Regeneration;
 import me.fril.common.capability.CapabilityRegeneration;
 import me.fril.common.capability.IRegeneration;
@@ -18,17 +22,17 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Sub
@@ -79,35 +83,37 @@ public class ClientHandler {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onUpdate(LivingEvent.LivingUpdateEvent e) {
-        if (e.getEntityLiving() instanceof EntityPlayerSP) {
-            EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-            IRegeneration regeneration = CapabilityRegeneration.get(player);
-            if (regeneration != null && player != null && Minecraft.getMinecraft().player != null) {
-                if (regeneration.isRegenerating() && !regeneration.isInGracePeriod() && regeneration.getSolaceTicks() > 0 && regeneration.getSolaceTicks() <= 200 && Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
-                    Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
-                }
-            }
+        if (!(e.getEntityLiving() instanceof EntityPlayerSP)) return;
+        
+        EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+        IRegeneration regeneration = CapabilityRegeneration.get(player);
+        if (regeneration == null || Minecraft.getMinecraft().player == null) return;
+        
+        if (regeneration.isRegenerating() && !regeneration.isInGracePeriod() && //player is actually regenerating or choosing
+        	  regeneration.getSolaceTicks() > 0 &&
+        	  Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) { //XXX is this a redundant check?
+            Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
         }
     }
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent e) {
-        if (Minecraft.getMinecraft().world != null) {
+        if (Minecraft.getMinecraft().world == null) return;
 
-            if (RKeyBinds.GRACE.isPressed()) {
-                EntityPlayer player = Minecraft.getMinecraft().player;
-                if (player != null) {
-                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(true));
-                    Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-                }
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if (player == null) return;
+        
+        //apparently there's no check if we're actually in a situation where we have to choose between grace/immediate regen, that happens on the server side (packet handler)
+        if (RKeyBinds.GRACE.isPressed()) {
+            NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(true));
+            
+            if (CapabilityRegeneration.get(player).getSolaceTicks() > 0) { //player has chosen to enter grace period, set the perspective back to 0
+            	Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
             }
+        }
 
-            if (RKeyBinds.JUSTDOIT.isPressed()) {
-                EntityPlayer player = Minecraft.getMinecraft().player;
-                if (player != null) {
-                    NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(false));
-                }
-            }
+        if (RKeyBinds.JUSTDOIT.isPressed()) {
+            NetworkHandler.INSTANCE.sendToServer(new MessageEnterGrace(false));
         }
     }
 
