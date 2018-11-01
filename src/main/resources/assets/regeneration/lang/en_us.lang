@@ -1,6 +1,4 @@
-category.regeneration=Regeneration
 item.fob_watch.name=Fob Watch
-category.loot=Loot settings
 
 regeneration.info.customizer=Customizer
 regeneration.info.red=Red
@@ -38,16 +36,31 @@ regeneration.subtitles.critical_stage=Critical grace stage
 regeneration.keybinds.grace=Enter grace period
 regeneration.keybinds.just_regen=Regenerate immediately
 
+config.regeneration.max_regens=Amount of regenerations per cycle
+config.regeneration.start_as_timelord=Start a world as a timelord
+config.regeneration.fiery_regen=Spawn fire while regenerating
+config.regeneration.regenerative_kill_range=Regeneration kill range
+config.regeneration.regenerative_knockback=Regeneration knockback
+config.regeneration.regenerative_knockback_range=Regeneration knockback range
+config.regeneration.post_regen_duration=Post-regeneration effect duration
+config.regeneration.post_regenerationEffect_level=Post-regeneration effect level
+config.regeneration.reset_hunger=Reset hunger
+config.regeneration.reset_oxygen=Reset oxygen
+config.regeneration.absorbtion_level=Amount of extra hearts post-regen
+config.regeneration.lose_power_on_mid_regen_death=Lose timelord if killed mid-regeneration
+config.regeneration.loot_regex=Loot pool matcher
+config.regeneration.disable_loot=Disable Fob Watch loot
 
 
-regeneration.current_trait=Current Trait:
-trait.messages.clumsy=Clumsy
-trait.messages.hunger=Hungry
-trait.messages.night_vision=Night Vision
-trait.messages.none=You have not received a trait. You are normal.
-trait.messages.speed=Speed
-trait.messages.pycho=Pyschopath
-trait.messages.sentimental=Sentimental
-trait.messages.health=Extended Health
-trait.messages.strong=Strength
-trait.messages.psycho=Psycho
+
+regeneration.trait.current=Current Trait:
+regeneration.trait.messages.clumsy=Clumsy
+regeneration.trait.messages.hunger=Hungry
+regeneration.trait.messages.night_vision=Night Vision
+regeneration.trait.messages.none=You have not received a trait. You are normal.
+regeneration.trait.messages.speed=Speed
+regeneration.trait.messages.pycho=Pyschopath
+regeneration.trait.messages.sentimental=Sentimental
+regeneration.trait.messages.health=Extended Health
+regeneration.trait.messages.strong=Strength
+regeneration.trait.messages.psycho=Psycho
