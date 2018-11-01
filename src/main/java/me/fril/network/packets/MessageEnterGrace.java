@@ -53,7 +53,7 @@ public class MessageEnterGrace implements IMessage {
                     player.sendStatusMessage(new TextComponentTranslation("regeneration.messages.grace"), true);
                 }
             } else {
-                if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 18000) {
+                if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 18000 && regenInfo.getTicksRegenerating() == 0) {
                     regenInfo.setInGracePeriod(false);
                     regenInfo.setSolaceTicks(199);
                     regenInfo.setGlowing(false);

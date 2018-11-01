@@ -123,7 +123,8 @@ public class RegenerationHandler {
         EntityPlayer player = (EntityPlayer) e.getEntity();
         if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 || !e.getEntity().hasCapability(CapabilityRegeneration.CAPABILITY, null) || !e.getEntity().getCapability(CapabilityRegeneration.CAPABILITY, null).isCapable())
             return;
-
+        
+        //TODO die if already regenerating
 
         IRegeneration handler = CapabilityRegeneration.get(player);
         e.setCanceled(true);

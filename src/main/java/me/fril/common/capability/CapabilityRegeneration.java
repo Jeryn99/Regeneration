@@ -417,13 +417,16 @@ public class CapabilityRegeneration implements IRegeneration {
             if (getSolaceTicks() == 17100) {
                 if (player.world.isRemote) {
                     PlayerUtil.playMovingSound(player, RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, false);
+                    //TODO nausea
                 }
 
             }
+            
         }
 
             //CRITICAL STAGE
             if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
+            	//TODO random damage
                 PlayerUtil.sendMessage(player, "regeneration.messages.regen_or_die", true);
             }
 
