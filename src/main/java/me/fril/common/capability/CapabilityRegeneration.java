@@ -332,7 +332,7 @@ public class CapabilityRegeneration implements IRegeneration {
                     }
 
                     if (!player.world.isRemote) {
-                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.remainingRegens.notification", time, (getLivesLeft()))), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.remaining_regens.notification", time, (getLivesLeft()))), true);
                     }
                 }
             }
@@ -424,7 +424,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
             //CRITICAL STAGE
             if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
-                PlayerUtil.sendMessage(player, "regeneration.messages.regenOrDie", true);
+                PlayerUtil.sendMessage(player, "regeneration.messages.regen_or_die", true);
             }
 
             //15 minutes all gone, rip user

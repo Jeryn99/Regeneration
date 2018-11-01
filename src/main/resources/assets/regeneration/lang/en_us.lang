@@ -9,11 +9,11 @@ regeneration.info.secondary=Secondary Color
 regeneration.info.save=Save
 regeneration.info.reset=Reset
 
-regeneration.messages.nowTimelord=You are now a timelord!
-regeneration.messages.regenOrDie=Regenerate now or you will die!
-regeneration.messages.remainingRegens.status=Remaining Regenerations:
-regeneration.messages.remainingRegens.notification=You're regenerating for the %s time, you have %s regenerations left.
-regeneration.messages.gainedRegens=You've received %s regenerations from the Fob Watch
+regeneration.messages.now_timelord=You are now a timelord!
+regeneration.messages.regen_or_die=Regenerate now or you will die!
+regeneration.messages.remaining_regens.status=Remaining Regenerations:
+regeneration.messages.remaining_regens.notification=You're regenerating for the %s time, you have %s regenerations left.
+regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch
 regeneration.messages.grace=You have entered a grace period of 15 minutes
 
 regeneration.messages.numsuffix.1=st
@@ -22,10 +22,10 @@ regeneration.messages.numsuffix.3=rd
 regeneration.messages.numsuffix.ext=th
 
 regeneration.messages.transfer.success=You've transferred one of your regenerations into the arch
-regeneration.messages.transfer.fullWatch=You can't store anymore regenerations in this watch!
-regeneration.messages.transfer.emptyWatch=This watch is empty!
-regeneration.messages.transfer.fullCycle=You already have a full cycle of regenerations
-regeneration.messages.transfer.emptyCycle=You don't have any regenerations left to transfer
+regeneration.messages.transfer.full_watch=You can't store anymore regenerations in this watch!
+regeneration.messages.transfer.empty_watch=This watch is empty!
+regeneration.messages.transfer.full_cycle=You already have a full cycle of regenerations
+regeneration.messages.transfer.empty_cycle=You don't have any regenerations left to transfer
 
 regeneration.subtitles.fob_watch=Fob Watch opening
 regeneration.subtitles.regeneration=Regeneration energy

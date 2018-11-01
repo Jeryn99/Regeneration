@@ -52,19 +52,19 @@ public class ItemFobWatch extends Item {
                 int used = doUsageDamage(stack, capability);
                 if (used == 0) {
                     if (capability.getLivesLeft() == RegenConfig.regenCapacity) {
-                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullCycle")), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.full_cycle")), true);
                     } else if (stack.getItemDamage() == RegenConfig.regenCapacity)
-                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptyWatch")), true);
+                        player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.empty_watch")), true);
                     //XXX there should probably be an else here that just errors stuff because that shouldn't be happening
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 }
-                player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.gainedRegens", used)), true); // too lazy to fix a single/plural issue here
+                player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.gained_regens", used)), true); // too lazy to fix a single/plural issue here
             } else {
                 if (stack.getItemDamage() == 0) {
-                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullWatch")), true);
+                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.full_watch")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 } else if (capability.getLivesLeft() < 1) { //FIXME impossible condition? How does getLivesLeft relate to isCapable?
-                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptyCycle")), true);
+                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.empty_cycle")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
                 }
                 
@@ -78,9 +78,9 @@ public class ItemFobWatch extends Item {
 	            world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
 	            capability.setCapable(true);
 	            doUsageDamage(stack, capability);
-	            PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.nowTimelord"), true);
+	            PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
         	} else {
-        		player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptyCycle")), true);
+        		player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.empty_cycle")), true);
                 return new ActionResult<>(EnumActionResult.FAIL, stack);
         	}
         }
