@@ -2,16 +2,14 @@ package me.fril.common.states;
 
 import java.util.Random;
 
-import me.fril.RegenConfig;
 import me.fril.common.capability.CapabilityRegeneration;
 import me.fril.common.capability.IRegeneration;
 import me.fril.common.init.RObjects;
 import me.fril.util.PlayerUtil;
+import me.fril.util.RegenConfig;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
@@ -71,7 +69,6 @@ public class TypeFiery implements IRegenType {
         IRegeneration handler = CapabilityRegeneration.get(player);
         //   handler.setTrait(TraitHandler.getRandomTrait());
         //    player.sendStatusMessage(new TextComponentTranslation(handler.getTrait().getMessage()), true);
-        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false)); //XXX move to general handler?
         handler.sync();
     }
 

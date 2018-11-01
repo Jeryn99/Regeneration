@@ -2,12 +2,13 @@ package me.fril.common.handlers;
 
 import static me.fril.common.capability.CapabilityRegeneration.*;
 
-import me.fril.RegenConfig;
 import me.fril.Regeneration;
 import me.fril.common.capability.CapabilityRegeneration;
 import me.fril.common.capability.IRegeneration;
 import me.fril.common.capability.RegenerationProvider;
 import me.fril.common.init.RObjects;
+import me.fril.util.RegenConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -121,8 +122,18 @@ public class RegenerationHandler {
             return;
 
         EntityPlayer player = (EntityPlayer) e.getEntity();
-        if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 || !e.getEntity().hasCapability(CapabilityRegeneration.CAPABILITY, null) || !e.getEntity().getCapability(CapabilityRegeneration.CAPABILITY, null).isCapable())
+        IRegeneration cap = CapabilityRegeneration.get(player);
+        if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 ||
+    		!cap.isCapable() || cap.isRegenerating()) {
+        	
+        	if (cap.isRegenerating()) {
+        		cap.reset();
+        		if (player.world.isRemote && player.getEntityId() == Minecraft.getMinecraft().player.getEntityId()) { //XXX does not work, I remember something about onHurt only firing on server, but how do I fix it?
+        			Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+        		}
+        	}
             return;
+        }
         
         //TODO die if already regenerating
 

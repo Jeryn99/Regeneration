@@ -1,5 +1,6 @@
-package me.fril;
+package me.fril.util;
 
+import me.fril.Regeneration;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;

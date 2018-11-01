@@ -1,11 +1,11 @@
 package me.fril.common.capability;
 
+import java.awt.Color;
+
 import me.fril.common.states.IRegenType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import java.awt.*;
 
 /**
  * Created by Sub
@@ -69,5 +69,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     //Just helper things
     Color getPrimaryColor();
     Color getSecondaryColor();
+
+	void reset();
 
 }

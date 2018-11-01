@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import me.fril.RegenConfig;
 import me.fril.Regeneration;
 import me.fril.client.RKeyBinds;
 import me.fril.common.init.RObjects;
@@ -15,10 +14,12 @@ import me.fril.network.NetworkHandler;
 import me.fril.network.packets.MessageUpdateRegen;
 import me.fril.util.ExplosionUtil;
 import me.fril.util.PlayerUtil;
+import me.fril.util.RegenConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -306,10 +307,6 @@ public class CapabilityRegeneration implements IRegeneration {
 
             player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
 
-            if (player.getHealth() <= 0) {
-                setCapable(!RegenConfig.losePowerOnMidRegenDeath);
-            }
-
             if (getTicksRegenerating() == 3) {
                 if (player.world.isRemote) {
                     PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS, false);
@@ -366,6 +363,8 @@ public class CapabilityRegeneration implements IRegeneration {
                 setSolaceTicks(0);
                 setInGracePeriod(false);
                 setGlowing(false);
+                
+                player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
 
                 if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
                     player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
@@ -428,28 +427,33 @@ public class CapabilityRegeneration implements IRegeneration {
             
         }
 
-            //CRITICAL STAGE
-            if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
-            	//TODO random damage
-                PlayerUtil.sendMessage(player, "regeneration.messages.regen_or_die", true);
-            }
-
-            //15 minutes all gone, rip user
-            if (getSolaceTicks() == 17999) {
-
-                if (!player.world.isRemote) {
-                    player.setHealth(-1);
-                }
-
-                setCapable(false);
-                setLivesLeft(0);
-                setInGracePeriod(false);
-                setGlowing(false);
-                setTicksGlowing(0);
-                setTicksRegenerating(0);
-                setRegenerating(false);
-            }
+        //CRITICAL STAGE
+        if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
+        	//TODO random damage
+            PlayerUtil.sendMessage(player, "regeneration.messages.regen_or_die", true);
         }
+
+        //15 minutes all gone, rip user
+        if (getSolaceTicks() == 17999) {
+
+            if (!player.world.isRemote) {
+                player.setHealth(-1);
+            }
+
+            reset();
+        }
+    }
+    
+    @Override
+    public void reset() {
+    	setCapable(!RegenConfig.losePowerOnMidRegenDeath);
+        setLivesLeft(0);
+        setInGracePeriod(false);
+        setGlowing(false);
+        setTicksGlowing(0);
+        setTicksRegenerating(0);
+        setRegenerating(false);
+    }
 
 }
 

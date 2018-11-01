@@ -1,6 +1,5 @@
 package me.fril.util;
 
-import me.fril.RegenConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
