@@ -62,9 +62,6 @@ public class ItemFobWatch extends Item {
                 if (stack.getItemDamage() == 0) {
                     player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.full_watch")), true);
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
-                } else if (capability.getLivesLeft() < 1) { //FIXME impossible condition? How does getLivesLeft relate to isCapable?
-                    player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.empty_cycle")), true);
-                    return new ActionResult<>(EnumActionResult.FAIL, stack);
                 }
                 
                 stack.setItemDamage(stack.getItemDamage() - 1);
@@ -75,7 +72,6 @@ public class ItemFobWatch extends Item {
         } else {
         	if (!player.isSneaking()) {
 	            world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
-	            capability.setCapable(true);
 	            doUsageDamage(stack, capability);
 	            PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
         	} else {

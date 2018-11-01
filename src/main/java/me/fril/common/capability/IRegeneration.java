@@ -43,9 +43,10 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     void setType(String name);
 
     //Does the player have the ability to regenerate?
-    boolean isCapable();
-    void setCapable(boolean capable);
-
+    default boolean isCapable() {
+    	return getLivesLeft() > 0 && getPlayer().posY > 0;
+    }
+    
     //Regen
     boolean isRegenerating();
     void setRegenerating(boolean regenerating);

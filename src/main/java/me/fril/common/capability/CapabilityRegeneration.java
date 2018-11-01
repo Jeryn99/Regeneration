@@ -47,7 +47,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
     private int timesRegenerated = 0, livesLeft = 0, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
     private EntityPlayer player;
-    private boolean isRegenerating = false, isCapable = false, isInGrace = false, isGraceGlowing = false;
+    private boolean isRegenerating = false, isInGrace = false, isGraceGlowing = false;
     private String typeName = RegenTypes.FIERY.getName(), traitName = "none";
 
     private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
@@ -140,16 +140,6 @@ public class CapabilityRegeneration implements IRegeneration {
     }
 
     @Override
-    public boolean isCapable() {
-        return isCapable && getLivesLeft() > 0 && player.posY > 0;
-    }
-
-    @Override
-    public void setCapable(boolean capable) {
-        isCapable = capable;
-    }
-
-    @Override
     public int getTicksRegenerating() {
         return regenTicks;
     }
@@ -228,7 +218,6 @@ public class CapabilityRegeneration implements IRegeneration {
         nbt.setBoolean("isRegenerating", isRegenerating);
         nbt.setInteger("timesRegenerated", timesRegenerated);
         nbt.setInteger("livesLeft", livesLeft);
-        nbt.setBoolean("isCapable", isCapable);
         nbt.setInteger("regenTicks", regenTicks);
         nbt.setBoolean("gracePeriod", isInGrace);
         nbt.setInteger("solaceTicks", ticksInSolace);
@@ -249,7 +238,6 @@ public class CapabilityRegeneration implements IRegeneration {
         setRegenerating(nbt.getBoolean("isRegenerating"));
         setTimesRegenerated(nbt.getInteger("timesRegenerated"));
         setLivesLeft(nbt.getInteger("livesLeft"));
-        setCapable(nbt.getBoolean("isCapable"));
         setTicksRegenerating(nbt.getInteger("regenTicks"));
         setInGracePeriod(nbt.getBoolean("gracePeriod"));
         setSolaceTicks(nbt.getInteger("solaceTicks"));
@@ -446,13 +434,13 @@ public class CapabilityRegeneration implements IRegeneration {
     
     @Override
     public void reset() {
-    	setCapable(!RegenConfig.losePowerOnMidRegenDeath);
-        setLivesLeft(0);
         setInGracePeriod(false);
         setGlowing(false);
         setTicksGlowing(0);
         setTicksRegenerating(0);
         setRegenerating(false);
+        if (RegenConfig.losePowerOnMidRegenDeath)
+        	setLivesLeft(0);
     }
 
 }
