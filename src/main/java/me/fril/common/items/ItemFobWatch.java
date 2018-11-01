@@ -1,9 +1,9 @@
 package me.fril.common.items;
 
+import me.fril.RegenConfig;
 import me.fril.common.capability.CapabilityRegeneration;
 import me.fril.common.capability.IRegeneration;
 import me.fril.common.init.RObjects;
-import me.fril.config.RegenConfig;
 import me.fril.util.PlayerUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

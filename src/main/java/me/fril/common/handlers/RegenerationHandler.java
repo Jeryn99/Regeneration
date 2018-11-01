@@ -2,12 +2,12 @@ package me.fril.common.handlers;
 
 import static me.fril.common.capability.CapabilityRegeneration.*;
 
+import me.fril.RegenConfig;
 import me.fril.Regeneration;
 import me.fril.common.capability.CapabilityRegeneration;
 import me.fril.common.capability.IRegeneration;
 import me.fril.common.capability.RegenerationProvider;
 import me.fril.common.init.RObjects;
-import me.fril.config.RegenConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

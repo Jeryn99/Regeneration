@@ -3,12 +3,12 @@ package me.fril.common.capability;
 import java.awt.Color;
 import java.util.UUID;
 
+import me.fril.RegenConfig;
 import me.fril.Regeneration;
 import me.fril.client.RKeyBinds;
 import me.fril.common.init.RObjects;
 import me.fril.common.states.IRegenType;
 import me.fril.common.states.RegenTypes;
-import me.fril.config.RegenConfig;
 import me.fril.network.NetworkHandler;
 import me.fril.network.packets.MessageUpdateRegen;
 import me.fril.util.ExplosionUtil;

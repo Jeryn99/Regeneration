@@ -1,9 +1,9 @@
 package me.fril.common.states;
 
+import me.fril.RegenConfig;
 import me.fril.common.capability.CapabilityRegeneration;
 import me.fril.common.capability.IRegeneration;
 import me.fril.common.init.RObjects;
-import me.fril.config.RegenConfig;
 import me.fril.util.PlayerUtil;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
