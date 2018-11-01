@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 public class ItemFobWatch extends Item {
 
     public ItemFobWatch() {
-        setMaxDamage(RegenConfig.Regen.regenCapacity);
+        setMaxDamage(RegenConfig.regenCapacity);
         setCreativeTab(CreativeTabs.MISC);
         setMaxStackSize(1);
     }
@@ -33,7 +33,7 @@ public class ItemFobWatch extends Item {
     @Override
     public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
         super.onCreated(stack, worldIn, playerIn);
-        stack.setItemDamage(RegenConfig.Regen.regenCapacity);
+        stack.setItemDamage(RegenConfig.regenCapacity);
     }
 
     @Override
@@ -51,9 +51,9 @@ public class ItemFobWatch extends Item {
             if (!player.isSneaking()) {
                 int used = doUsageDamage(stack, capability);
                 if (used == 0) {
-                    if (capability.getLivesLeft() == RegenConfig.Regen.regenCapacity) {
+                    if (capability.getLivesLeft() == RegenConfig.regenCapacity) {
                         player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.fullCycle")), true);
-                    } else if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity)
+                    } else if (stack.getItemDamage() == RegenConfig.regenCapacity)
                         player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.transfer.emptyWatch")), true);
                     //XXX there should probably be an else here that just errors stuff because that shouldn't be happening
                     return new ActionResult<>(EnumActionResult.FAIL, stack);
@@ -89,7 +89,7 @@ public class ItemFobWatch extends Item {
     }
 
     private int doUsageDamage(ItemStack stack, IRegeneration capability) {
-        int supply = RegenConfig.Regen.regenCapacity - stack.getItemDamage(), needed = RegenConfig.Regen.regenCapacity - capability.getLivesLeft(), used = Math.min(supply, needed);
+        int supply = RegenConfig.regenCapacity - stack.getItemDamage(), needed = RegenConfig.regenCapacity - capability.getLivesLeft(), used = Math.min(supply, needed);
         if (used == 0)
             return 0;
 

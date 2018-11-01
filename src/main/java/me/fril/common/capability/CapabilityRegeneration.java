@@ -299,10 +299,10 @@ public class CapabilityRegeneration implements IRegeneration {
             player.removePassengers();
             setTicksRegenerating(getTicksRegenerating() + 1);
 
-            player.setAbsorptionAmount(RegenConfig.Regen.absorbtionLevel * 2);
+            player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
 
             if (player.getHealth() <= 0) {
-                setCapable(!RegenConfig.Regen.losePowerOnMidRegenDeath);
+                setCapable(!RegenConfig.losePowerOnMidRegenDeath);
             }
 
             if (getTicksRegenerating() == 3) {
@@ -345,12 +345,12 @@ public class CapabilityRegeneration implements IRegeneration {
                 player.setHealth(player.getHealth() + 1);
             }
 
-            if (RegenConfig.Regen.resetHunger) {
+            if (RegenConfig.resetHunger) {
                 FoodStats foodStats = player.getFoodStats();
                 foodStats.setFoodLevel(foodStats.getFoodLevel() + 1);
             }
 
-            if (RegenConfig.Regen.resetOxygen) {
+            if (RegenConfig.resetOxygen) {
                 player.setAir(player.getAir() + 1);
             }
 

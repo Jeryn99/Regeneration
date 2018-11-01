@@ -139,7 +139,7 @@ public class RegenerationHandler {
 
     @SubscribeEvent
     public static void onLogin(PlayerLoggedInEvent e) {
-        if (!RegenConfig.Regen.startAsTimelord || e.player.world.isRemote)
+        if (!RegenConfig.startAsTimelord || e.player.world.isRemote)
             return;
 
         NBTTagCompound nbt = e.player.getEntityData();

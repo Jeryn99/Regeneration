@@ -1,5 +1,7 @@
 package me.fril.common.states;
 
+import java.util.Random;
+
 import me.fril.RegenConfig;
 import me.fril.common.capability.CapabilityRegeneration;
 import me.fril.common.capability.IRegeneration;
@@ -12,8 +14,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Random;
 
 /**
  * Created by Sub
@@ -56,7 +56,7 @@ public class TypeFiery implements IRegenType {
             }
         }
 
-        player.world.newExplosion(player, x, y, z, 1, RegenConfig.Regen.fieryRegen, false);
+        player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
         for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east()))
             if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) {
                 player.world.setBlockToAir(bs);
@@ -72,7 +72,7 @@ public class TypeFiery implements IRegenType {
         //   handler.setTrait(TraitHandler.getRandomTrait());
         //    player.sendStatusMessage(new TextComponentTranslation(handler.getTrait().getMessage()), true);
         player.clearActivePotions();
-        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.Regen.postRegenerationDuration * 2, RegenConfig.Regen.postRegenerationLevel - 1, false, false));
+        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
         handler.sync();
     }
 

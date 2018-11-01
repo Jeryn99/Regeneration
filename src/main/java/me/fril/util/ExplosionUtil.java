@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 public class ExplosionUtil {
 
     public static void regenerationExplosion(EntityPlayer player) {
-        explodeKill(player, player.world, player.getPosition(), RegenConfig.Regen.regenerativeKillRange);
-        explodeKnockback(player, player.world, player.getPosition(), RegenConfig.Regen.regenerativeKnockback, RegenConfig.Regen.regenerativeKnockbackRange);
+        explodeKill(player, player.world, player.getPosition(), RegenConfig.regenerativeKillRange);
+        explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback, RegenConfig.regenerativeKnockbackRange);
     }
 
     public static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {
