@@ -38,7 +38,7 @@ public class TypeLayFade implements IRegenType {
 	
 	@Override
 	public SoundEvent getSound() {
-		return RObjects.Sounds.REGEN_1;
+		return RObjects.Sounds.REGENERATION;
 	}
 	
 	@Override

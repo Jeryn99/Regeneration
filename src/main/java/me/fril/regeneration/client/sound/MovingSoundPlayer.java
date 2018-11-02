@@ -47,7 +47,7 @@ public class MovingSoundPlayer extends MovingSound {
 			}
 		}
 		
-		if (soundCheck.getSoundName().equals(RObjects.Sounds.REGEN_1.getSoundName())) {
+		if (soundCheck.getSoundName().equals(RObjects.Sounds.REGENERATION.getSoundName())) {
 			if (regenInfo.getTicksRegenerating() == 199) {
 				donePlaying = true;
 			}
