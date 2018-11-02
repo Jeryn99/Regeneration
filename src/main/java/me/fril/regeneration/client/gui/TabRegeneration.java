@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import me.fril.regeneration.common.init.RObjects;
+import me.fril.regeneration.util.RegenObjects;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -19,7 +19,7 @@ import net.minecraft.item.ItemStack;
 public class TabRegeneration extends AbstractTab {
 	
 	public TabRegeneration() {
-		super(0, 0, 0, new ItemStack(RObjects.Items.FOB_WATCH));
+		super(0, 0, 0, new ItemStack(RegenObjects.Items.FOB_WATCH));
 		displayString = "Regeneration";
 	}
 	

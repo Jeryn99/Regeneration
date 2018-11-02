@@ -1,6 +1,6 @@
 package me.fril.regeneration.common.states;
 
-import me.fril.regeneration.common.init.RObjects;
+import me.fril.regeneration.util.RegenObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
 
@@ -38,7 +38,7 @@ public class TypeLayFade implements IRegenType {
 	
 	@Override
 	public SoundEvent getSound() {
-		return RObjects.Sounds.REGENERATION;
+		return RegenObjects.Sounds.REGENERATION;
 	}
 	
 	@Override

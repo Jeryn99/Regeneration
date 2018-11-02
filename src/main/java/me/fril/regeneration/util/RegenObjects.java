@@ -1,4 +1,4 @@
-package me.fril.regeneration.common.init;
+package me.fril.regeneration.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import net.minecraftforge.registries.IForgeRegistry;
  * on 16/09/2018.
  */
 @Mod.EventBusSubscriber(modid = Regeneration.MODID)
-public class RObjects {
+public class RegenObjects {
 	
 	// Items
 	public static List<Item> ITEMS = new ArrayList<>();

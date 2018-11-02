@@ -7,11 +7,11 @@ import java.util.Random;
 import me.fril.regeneration.Regeneration;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.common.init.RObjects;
 import me.fril.regeneration.common.states.RegenTypes;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.network.packets.MessageEnterGrace;
 import me.fril.regeneration.util.LimbManipulationUtil;
+import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -181,10 +181,10 @@ public class ClientHandler {
 	
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent ev) {
-		for (Item item : RObjects.ITEMS) {
+		for (Item item : RegenObjects.ITEMS) {
 			RenderUtil.setItemRender(item);
 		}
-		RObjects.ITEMS = new ArrayList<>();
+		RegenObjects.ITEMS = new ArrayList<>();
 	}
 	
 }

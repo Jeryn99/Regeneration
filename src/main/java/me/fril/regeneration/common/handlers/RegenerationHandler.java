@@ -6,7 +6,7 @@ import me.fril.regeneration.Regeneration;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
-import me.fril.regeneration.common.init.RObjects;
+import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RegenConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -139,7 +139,7 @@ public class RegenerationHandler {
 		player.clearActivePotions();
 		
 		if (handler.isRegenerating() && handler.isInGracePeriod()) {
-			player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			handler.setInGracePeriod(false);
 			handler.setSolaceTicks(199);
 		}
@@ -153,7 +153,7 @@ public class RegenerationHandler {
 		NBTTagCompound nbt = e.player.getEntityData();
 		boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
 		if (!loggedInBefore) {
-			e.player.inventory.addItemStackToInventory(new ItemStack(RObjects.Items.FOB_WATCH));
+			e.player.inventory.addItemStackToInventory(new ItemStack(RegenObjects.Items.FOB_WATCH));
 			nbt.setBoolean("loggedInBefore", true);
 		}
 	}

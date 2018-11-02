@@ -2,8 +2,8 @@ package me.fril.regeneration.common.items;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.common.init.RObjects;
 import me.fril.regeneration.util.PlayerUtil;
+import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RegenConfig;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -73,7 +73,7 @@ public class ItemFobWatch extends Item {
 			}
 		} else {
 			if (!player.isSneaking()) {
-				world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
+				world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
 				doUsageDamage(stack, capability);
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 			} else {

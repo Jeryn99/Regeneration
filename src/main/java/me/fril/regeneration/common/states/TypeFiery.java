@@ -4,8 +4,8 @@ import java.util.Random;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.common.init.RObjects;
 import me.fril.regeneration.util.PlayerUtil;
+import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RegenConfig;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
@@ -74,7 +74,7 @@ public class TypeFiery implements IRegenType {
 	
 	@Override
 	public SoundEvent getSound() {
-		return RObjects.Sounds.REGENERATION;
+		return RegenObjects.Sounds.REGENERATION;
 	}
 	
 	@Override

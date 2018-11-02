@@ -2,7 +2,7 @@ package me.fril.regeneration.client.sound;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.common.init.RObjects;
+import me.fril.regeneration.util.RegenObjects;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
@@ -34,20 +34,20 @@ public class MovingSoundPlayer extends MovingSound {
 	public void update() {
 		IRegeneration regenInfo = CapabilityRegeneration.get(player);
 		
-		if (soundCheck.getSoundName().equals(RObjects.Sounds.HAND_GLOW.getSoundName())) {
+		if (soundCheck.getSoundName().equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
 			volume = 0.3F;
 			if (!regenInfo.isGlowing()) {
 				donePlaying = true;
 			}
 		}
 		
-		if (soundCheck.getSoundName().equals(RObjects.Sounds.HEART_BEAT.getSoundName())) {
+		if (soundCheck.getSoundName().equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) {
 			if (!regenInfo.isInGracePeriod()) {
 				donePlaying = true;
 			}
 		}
 		
-		if (soundCheck.getSoundName().equals(RObjects.Sounds.REGENERATION.getSoundName())) {
+		if (soundCheck.getSoundName().equals(RegenObjects.Sounds.REGENERATION.getSoundName())) {
 			if (regenInfo.getTicksRegenerating() == 199) {
 				donePlaying = true;
 			}

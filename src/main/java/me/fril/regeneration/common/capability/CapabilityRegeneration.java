@@ -7,13 +7,13 @@ import javax.annotation.Nonnull;
 
 import me.fril.regeneration.Regeneration;
 import me.fril.regeneration.client.RKeyBinds;
-import me.fril.regeneration.common.init.RObjects;
 import me.fril.regeneration.common.states.IRegenType;
 import me.fril.regeneration.common.states.RegenTypes;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.network.packets.MessageUpdateRegen;
 import me.fril.regeneration.util.ExplosionUtil;
 import me.fril.regeneration.util.PlayerUtil;
+import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RegenConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -273,7 +273,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (getSolaceTicks() == 2) {
 			setGlowing(true);
 			if (player.world.isRemote) {
-				PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, false);
+				PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, false);
 			}
 		}
 		
@@ -392,7 +392,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (getSolaceTicks() % 1200 == 0) {
 				setGlowing(true);
 				if (player.world.isRemote) {
-					PlayerUtil.playMovingSound(player, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, false);
+					PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, false);
 				}
 			}
 			
@@ -404,7 +404,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			// 14 Minutes - Critical stage start
 			if (getSolaceTicks() == 17100) {
 				if (player.world.isRemote) {
-					PlayerUtil.playMovingSound(player, RObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, false);
+					PlayerUtil.playMovingSound(player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, false);
 					player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 800, 0, false, false)); // could be removed with milk, but I think that's not that bad
 				}
 				
