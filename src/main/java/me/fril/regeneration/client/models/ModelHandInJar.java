@@ -1,6 +1,6 @@
 package me.fril.regeneration.client.models;
 
-import me.fril.regeneration.Regeneration;
+import me.fril.regeneration.RegenerationMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModelHandInJar extends ModelBase {
 	
-	ResourceLocation TEXTURE = new ResourceLocation(Regeneration.MODID, "textures/misc/handjar.png");
+	ResourceLocation TEXTURE = new ResourceLocation(RegenerationMod.MODID, "textures/misc/handjar.png");
 	
 	ModelRenderer Glass1;
 	ModelRenderer Base1;

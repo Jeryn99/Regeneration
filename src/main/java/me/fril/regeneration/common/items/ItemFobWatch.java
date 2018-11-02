@@ -37,14 +37,8 @@ public class ItemFobWatch extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
 		
-		IRegeneration capability = CapabilityRegeneration.get(player);
+		IRegeneration capability = CapabilityRegeneration.getForPlayer(player);
 		ItemStack stack = player.getHeldItem(handIn);
-		
-		/*
-		 * if (stack.getItemDamage() == RegenConfig.Regen.regenCapacity) {
-		 * return new ActionResult<>(EnumActionResult.FAIL, stack);
-		 * }
-		 */
 		
 		if (capability.isCapable()) { // TODO this could probably be cleaned up
 			if (!player.isSneaking()) {

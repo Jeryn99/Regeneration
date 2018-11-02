@@ -1,16 +1,15 @@
 package me.fril.regeneration.client.gui;
 
-import me.fril.regeneration.Regeneration;
+import java.awt.Color;
+
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.network.MessageRegenerationStyle;
 import me.fril.regeneration.network.NetworkHandler;
-import me.fril.regeneration.network.packets.MessageRegenerationStyle;
+import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -19,41 +18,12 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 
 public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 	
-	public static ResourceLocation DEFAULT_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/longbg.png");
+	public static ResourceLocation DEFAULT_TEX = new ResourceLocation(RegenerationMod.MODID, "textures/gui/longbg.png");
 	public boolean textured = false;
 	private float primaryRed, primaryGreen, primaryBlue, secondaryRed, secondaryGreen, secondaryBlue;
 	
 	public GuiCustomizer() {
 		super(new BlankContainer());
-	}
-	
-	public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
-		if (left < right) {
-			int i = left;
-			left = right;
-			right = i;
-		}
-		
-		if (top < bottom) {
-			int j = top;
-			top = bottom;
-			bottom = j;
-		}
-		
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder worldrenderer = tessellator.getBuffer();
-		GlStateManager.enableBlend();
-		GlStateManager.disableTexture2D();
-		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.color(red, green, blue, alpha);
-		worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-		worldrenderer.pos(left, bottom, 0.0D).endVertex();
-		worldrenderer.pos(right, bottom, 0.0D).endVertex();
-		worldrenderer.pos(right, top, 0.0D).endVertex();
-		worldrenderer.pos(left, top, 0.0D).endVertex();
-		tessellator.draw();
-		GlStateManager.enableTexture2D();
-		GlStateManager.disableBlend();
 	}
 	
 	@Override
@@ -65,20 +35,20 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
 		
-		NBTTagCompound old = CapabilityRegeneration.get(mc.player).getStyle();
-		primaryRed = old.getFloat("PrimaryRed");
-		primaryGreen = old.getFloat("PrimaryGreen");
-		primaryBlue = old.getFloat("PrimaryBlue");
-		secondaryRed = old.getFloat("SecondaryRed");
-		secondaryGreen = old.getFloat("SecondaryGreen");
-		secondaryBlue = old.getFloat("SecondaryBlue");
-		textured = old.getBoolean("textured");
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(mc.player);
+		Color primary = cap.getPrimaryColor(), secondary = cap.getSecondaryColor();
+		
+		primaryRed = primary.getRed();
+		primaryGreen = primary.getGreen();
+		primaryBlue = primary.getBlue();
+		
+		secondaryRed = secondary.getRed();
+		secondaryGreen = secondary.getGreen();
+		secondaryBlue = secondary.getBlue();
 		
 		buttonList.add(new GuiButtonExt(0, i + 4, j + 167, 50, 18, new TextComponentTranslation("regeneration.info.save").getFormattedText()));
 		buttonList.add(new GuiButtonExt(3, i + 100, j + 167, 50, 18, new TextComponentTranslation("regeneration.info.reset").getFormattedText()));
 		buttonList.add(new GuiButtonExt(1, i + 202, j + 167, 50, 18, new TextComponentTranslation("gui.cancel").getFormattedText()));
-		// this.texturedButton = new GuiButton(2, i + this.xSize/2 - 25, j + 45, 50, 20, new TextComponentTranslation("").getFormattedText());
-		// this.buttonList.add(texturedButton);
 		
 		buttonList.add(new GuiColorSlider(6, i + 20, j + 90, 80, 20, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this));
 		buttonList.add(new GuiColorSlider(7, i + 20, j + 110, 80, 20, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this));
@@ -89,7 +59,7 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 		buttonList.add(new GuiColorSlider(11, i + 135, j + 130, 80, 20, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this));
 	}
 	
-	public NBTTagCompound getStyleNBTTag() {
+	public NBTTagCompound getCurrentStyleNBTTag() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setFloat("PrimaryRed", primaryRed);
 		nbt.setFloat("PrimaryGreen", primaryGreen);
@@ -101,7 +71,7 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 		return nbt;
 	}
 	
-	public NBTTagCompound getDefaultStyle() {
+	public NBTTagCompound getDefaultStyleNBTTag() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setFloat("PrimaryRed", 0.93f);
 		nbt.setFloat("PrimaryGreen", 0.61f);
@@ -120,7 +90,7 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 		
 		mc.getTextureManager().bindTexture(DEFAULT_TEX);
 		this.drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
-		IRegeneration capa = CapabilityRegeneration.get(mc.player);
+		IRegeneration capa = CapabilityRegeneration.getForPlayer(mc.player);
 		String name = new TextComponentTranslation("regeneration.messages.remaining_regens.status").getFormattedText() + " " + capa.getLivesLeft();
 		int length = mc.fontRenderer.getStringWidth(name);
 		drawString(mc.fontRenderer, name, i + xSize / 2 - length / 2, j + 30, 0xffffff);
@@ -135,39 +105,41 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 		length = mc.fontRenderer.getStringWidth(name);
 		drawString(mc.fontRenderer, name, i + 185 - length / 2, j + 75, 0xffffff);
 		
-		drawRect(i + 99, j + 90, i + 121, j + 150, 0.1F, 0.1F, 0.1F, 1);
-		drawRect(i + 100, j + 91, i + 120, j + 149, primaryRed, primaryGreen, primaryBlue, 1);
+		RenderUtil.drawRect(i + 99, j + 90, i + 121, j + 150, 0.1F, 0.1F, 0.1F, 1);
+		RenderUtil.drawRect(i + 100, j + 91, i + 120, j + 149, primaryRed, primaryGreen, primaryBlue, 1);
 		
-		drawRect(i + 214, j + 90, i + 236, j + 150, 0.1F, 0.1F, 0.1F, 1);
-		drawRect(i + 215, j + 91, i + 235, j + 149, secondaryRed, secondaryGreen, secondaryBlue, 1);
+		RenderUtil.drawRect(i + 214, j + 90, i + 236, j + 150, 0.1F, 0.1F, 0.1F, 1);
+		RenderUtil.drawRect(i + 215, j + 91, i + 235, j + 149, secondaryRed, secondaryGreen, secondaryBlue, 1);
 		
 		drawString(mc.fontRenderer, new TextComponentTranslation("regeneration.info.customizer").getFormattedText(), i + 5, j + 5, 0xffffff);
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton button) {
-		if (button.id == 0) {
-			sendStyleNBTTagToServer(true);
-			mc.player.closeScreen();
-		}
-		if (button.id == 1) {
-			mc.player.closeScreen();
-		}
-		
-		if (button.id == 3) {
-			sendStyleNBTTagToServer(false);
-			mc.player.closeScreen();
+		switch (button.id) { //TODO change closeScreen to switching back to inventory tab
+			case 0: //save
+				sendStyleNBTTagToServer(false);
+				mc.player.closeScreen();
+				break;
+			case 1: //cancel
+				mc.player.closeScreen();
+				break;
+			case 3: //reset
+				sendStyleNBTTagToServer(true); //TODO change to setting the current values to default
+				mc.player.closeScreen();
+				break;
+			default: throw new RuntimeException("Unknown button id: "+button.id);
 		}
 	}
 	
 	private void sendStyleNBTTagToServer(boolean notReset) {
 		if (notReset) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(getStyleNBTTag()));
+			NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(getCurrentStyleNBTTag()));
 		} else {
-			NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(getDefaultStyle()));
+			NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(getDefaultStyleNBTTag()));
 		}
 		
-		NBTTagCompound old = CapabilityRegeneration.get(mc.player).getStyle();
+		NBTTagCompound old = CapabilityRegeneration.getForPlayer(mc.player).getStyle();
 		primaryRed = old.getFloat("PrimaryRed");
 		primaryGreen = old.getFloat("PrimaryGreen");
 		primaryBlue = old.getFloat("PrimaryBlue");
@@ -179,18 +151,27 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 	
 	@Override
 	public void onChangeSliderValue(GuiSlider slider) {
-		if (slider.id == 6)
-			primaryRed = (float) slider.sliderValue;
-		else if (slider.id == 7)
-			primaryGreen = (float) slider.sliderValue;
-		else if (slider.id == 8)
-			primaryBlue = (float) slider.sliderValue;
-		else if (slider.id == 9)
-			secondaryRed = (float) slider.sliderValue;
-		else if (slider.id == 10)
-			secondaryGreen = (float) slider.sliderValue;
-		else if (slider.id == 11)
-			secondaryBlue = (float) slider.sliderValue;
+		float val = (float) slider.sliderValue;
+		switch (slider.id) {
+			case 6:
+				primaryRed = val;
+				break;
+			case 7:
+				primaryGreen = val;
+				break;
+			case 8:
+				primaryBlue = val;
+				break;
+			case 9:
+				secondaryRed = val;
+				break;
+			case 10:
+				secondaryGreen = val;
+				break;
+			case 11:
+				secondaryBlue = val;
+				break;
+		}
 	}
 	
 	@Override

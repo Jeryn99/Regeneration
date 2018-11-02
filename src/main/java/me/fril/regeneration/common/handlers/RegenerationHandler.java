@@ -2,12 +2,12 @@ package me.fril.regeneration.common.handlers;
 
 import static me.fril.regeneration.common.capability.CapabilityRegeneration.*;
 
-import me.fril.regeneration.Regeneration;
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
-import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RegenConfig;
+import me.fril.regeneration.util.RegenObjects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,13 +38,13 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = Regeneration.MODID)
+@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class RegenerationHandler {
 	
 	@SubscribeEvent
 	public static void breakBlock(PlayerInteractEvent.LeftClickBlock e) {
 		EntityPlayer player = e.getEntityPlayer();
-		IRegeneration regenInfo = CapabilityRegeneration.get(player);
+		IRegeneration regenInfo = CapabilityRegeneration.getForPlayer(player);
 		boolean inGracePeriod = regenInfo.isInGracePeriod() && regenInfo.isGlowing();
 		
 		if (inGracePeriod) {
@@ -60,7 +60,7 @@ public class RegenerationHandler {
 			return;
 		
 		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
-		LootEntry entry = new LootEntryTable(new ResourceLocation(Regeneration.MODID, "inject/fob_watch_loot"), 1, 1, condAlways, "regeneration:fob-watch-entry");
+		LootEntry entry = new LootEntryTable(new ResourceLocation(RegenerationMod.MODID, "inject/fob_watch_loot"), 1, 1, condAlways, "regeneration:fob-watch-entry");
 		LootPool lootPool = new LootPool(new LootEntry[] { entry }, condAlways, new RandomValueRange(1), new RandomValueRange(1), "regeneration:fob-watch-pool");
 		e.getTable().addPool(lootPool);
 	}
@@ -69,10 +69,8 @@ public class RegenerationHandler {
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-			IRegeneration handler = CapabilityRegeneration.get(player);
-			if (handler != null) {
-				handler.update();
-			}
+			IRegeneration handler = CapabilityRegeneration.getForPlayer(player);
+			handler.update();
 		}
 	}
 	
@@ -86,30 +84,28 @@ public class RegenerationHandler {
 	
 	@SubscribeEvent
 	public static void onPlayerClone(PlayerEvent.Clone event) {
-		NBTTagCompound nbt = (NBTTagCompound) CapabilityRegeneration.CAPABILITY.getStorage().writeNBT(CapabilityRegeneration.CAPABILITY, event.getOriginal().getCapability(CapabilityRegeneration.CAPABILITY, null), null);
-		CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null), null, nbt);
+		NBTTagCompound nbt = (NBTTagCompound) CapabilityRegeneration.CAPABILITY.getStorage().writeNBT(CapabilityRegeneration.CAPABILITY, CapabilityRegeneration.getForPlayer(event.getEntityPlayer()), null);
+		CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, CapabilityRegeneration.getForPlayer(event.getEntityPlayer()), null, nbt);
 	}
 	
 	@SubscribeEvent
 	public static void playerTracking(PlayerEvent.StartTracking event) {
-		if (event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null) != null) {
-			CapabilityRegeneration.get(event.getEntityPlayer()).sync();
-		}
+		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).sync();
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerRespawn(PlayerRespawnEvent event) {
-		CapabilityRegeneration.get(event.player).sync();
+		CapabilityRegeneration.getForPlayer(event.player).sync();
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		CapabilityRegeneration.get(event.player).sync();
+		CapabilityRegeneration.getForPlayer(event.player).sync();
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		CapabilityRegeneration.get(event.player).sync();
+		CapabilityRegeneration.getForPlayer(event.player).sync();
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -118,7 +114,7 @@ public class RegenerationHandler {
 			return;
 		
 		EntityPlayer player = (EntityPlayer) e.getEntity();
-		IRegeneration cap = CapabilityRegeneration.get(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 ||
 				!cap.isCapable() || cap.isRegenerating()) {
 			
@@ -133,7 +129,7 @@ public class RegenerationHandler {
 		
 		// TODO die if already regenerating
 		
-		IRegeneration handler = CapabilityRegeneration.get(player);
+		IRegeneration handler = CapabilityRegeneration.getForPlayer(player);
 		e.setCanceled(true);
 		handler.setRegenerating(true);
 		player.clearActivePotions();

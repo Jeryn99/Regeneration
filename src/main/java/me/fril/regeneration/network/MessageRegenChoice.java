@@ -1,4 +1,4 @@
-package me.fril.regeneration.network.packets;
+package me.fril.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -13,38 +13,38 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * Created by Sub
  * on 17/09/2018.
  */
-public class MessageEnterGrace implements IMessage {
+public class MessageRegenChoice implements IMessage {
 	
-	private boolean stopRegen;
+	private boolean enterGrace;
 	
-	public MessageEnterGrace() {
+	public MessageRegenChoice() {
 	}
 	
-	public MessageEnterGrace(boolean stopRegen) {
-		this.stopRegen = stopRegen;
+	public MessageRegenChoice(boolean enterGrace) {
+		this.enterGrace = enterGrace;
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		stopRegen = buf.readBoolean();
+		enterGrace = buf.readBoolean();
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeBoolean(stopRegen);
+		buf.writeBoolean(enterGrace);
 	}
 	
-	public static class Handler implements IMessageHandler<MessageEnterGrace, IMessage> {
+	public static class Handler implements IMessageHandler<MessageRegenChoice, IMessage> {
 		
 		// XXX There isn't any null check on the capability. As far as I know it isn't needed either as every player has one, but they are still in a lot of places through the code
 		@Override
-		public IMessage onMessage(MessageEnterGrace message, MessageContext ctx) {
+		public IMessage onMessage(MessageRegenChoice message, MessageContext ctx) {
 			EntityPlayer player = ctx.getServerHandler().player;
 			if (player == null)
 				return null;
 			
-			IRegeneration regenInfo = CapabilityRegeneration.get(player);
-			if (message.stopRegen) {
+			IRegeneration regenInfo = CapabilityRegeneration.getForPlayer(player);
+			if (message.enterGrace) {
 				if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 199 && !regenInfo.isInGracePeriod()) {
 					regenInfo.setInGracePeriod(true);
 					regenInfo.setSolaceTicks(0);

@@ -1,4 +1,4 @@
-package me.fril.regeneration.network.packets;
+package me.fril.regeneration.network;
 
 import java.util.UUID;
 
@@ -38,10 +38,10 @@ public class MessageUpdateRegen implements IMessage {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		if (Minecraft.getMinecraft().player != null)
+		if (Minecraft.getMinecraft().player != null) {
 			player = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
-		if (player != null)
 			data = ByteBufUtils.readTag(buf);
+		}
 	}
 	
 	public static class Handler implements IMessageHandler<MessageUpdateRegen, IMessage> {
@@ -51,7 +51,7 @@ public class MessageUpdateRegen implements IMessage {
 			EntityPlayer player = message.player;
 			if (player == null)
 				return null;
-			IRegeneration handler = CapabilityRegeneration.get(player);
+			IRegeneration handler = CapabilityRegeneration.getForPlayer(player);
 			Minecraft.getMinecraft().addScheduledTask(()->handler.deserializeNBT(message.data));
 			return null;
 		}

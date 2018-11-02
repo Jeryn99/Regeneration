@@ -25,10 +25,7 @@ public class TabRegeneration extends AbstractTab {
 	
 	@Override
 	public void onTabClicked() {
-		Minecraft.getMinecraft().addScheduledTask(()-> {
-			Minecraft mc = Minecraft.getMinecraft();
-			mc.displayGuiScreen(new GuiCustomizer());
-		});
+		Minecraft.getMinecraft().addScheduledTask(()->Minecraft.getMinecraft().displayGuiScreen(new GuiCustomizer()));
 	}
 	
 	@Override

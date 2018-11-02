@@ -32,7 +32,7 @@ public class MovingSoundPlayer extends MovingSound {
 	 */
 	@Override
 	public void update() {
-		IRegeneration regenInfo = CapabilityRegeneration.get(player);
+		IRegeneration regenInfo = CapabilityRegeneration.getForPlayer(player);
 		
 		if (soundCheck.getSoundName().equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
 			volume = 0.3F;

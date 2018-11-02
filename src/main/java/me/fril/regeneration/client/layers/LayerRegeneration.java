@@ -39,24 +39,22 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	
 	@Override
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		IRegeneration handler = CapabilityRegeneration.get(player);
+		IRegeneration handler = CapabilityRegeneration.getForPlayer(player);
 		
-		if (handler != null) {
-			// Render the Fiery Regeneration
-			if (handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
-				if (handler.getType() == RegenTypes.FIERY) {
-					renderFieryRegen(playerRenderer, handler, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-				}
+		// Render the Fiery Regeneration TODO generalise
+		if (handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
+			if (handler.getType() == RegenTypes.FIERY) {
+				renderFieryRegen(playerRenderer, handler, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 			}
-			
-			// Glowing Hands
-			renderGlowingHands(player, handler, scale);
 		}
+		
+		// Glowing Hands
+		renderGlowingHands(player, handler, scale);
 	}
 	
 	private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
 		
-		if (handler != null && handler.isGlowing()) {
+		if (handler.isGlowing()) {
 			Color primaryColor = handler.getPrimaryColor();
 			Color secondaryColor = handler.getSecondaryColor();
 			
@@ -159,7 +157,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	}
 	
 	// Renders the fiery cones
-	public void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
+	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
 		for (int i = 0; i < 8; i++) {

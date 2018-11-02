@@ -1,4 +1,4 @@
-package me.fril.regeneration.network.packets;
+package me.fril.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -37,9 +37,8 @@ public class MessageRegenerationStyle implements IMessage {
 		@Override
 		public IMessage onMessage(MessageRegenerationStyle message, MessageContext ctx) {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(()-> {
-				IRegeneration capability = CapabilityRegeneration.get(ctx.getServerHandler().player);
-				if (capability != null)
-					capability.setStyle(message.style);
+				IRegeneration capability = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
+				capability.setStyle(message.style);
 				capability.sync();
 			});
 			return null;

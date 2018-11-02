@@ -16,6 +16,7 @@ public class ExplosionUtil {
 		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback, RegenConfig.regenerativeKnockbackRange);
 	}
 	
+	
 	public static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity-> {
 			if (!(entity instanceof EntityCreature) || exploder.isDead)
@@ -39,18 +40,21 @@ public class ExplosionUtil {
 		});
 	}
 	
+	
 	public static AxisAlignedBB getReach(BlockPos pos, int range) {
 		return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
 	}
 	
-	public static class RegenerativeDamageSource extends DamageSource { // useful for future extension / add-on hooking
+	
+	/** Useful for future extension / add-on hooking */
+	public static class RegenerativeDamageSource extends DamageSource {
 		public static final DamageSource INSTANCE;
 		
 		static {
 			INSTANCE = new RegenerativeDamageSource();
 		}
 		
-		public RegenerativeDamageSource() {
+		private RegenerativeDamageSource() {
 			super("regeneration");
 		}
 	}

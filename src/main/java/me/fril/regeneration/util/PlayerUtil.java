@@ -40,16 +40,11 @@ public class PlayerUtil {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static void playMovingSound(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn, boolean playerOnly) {
-		if (playerOnly) {
-			if (player.getUniqueID() == Minecraft.getMinecraft().player.getUniqueID()) {
-				return;
-			}
-		}
+	public static void playMovingSound(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(player, soundIn, categoryIn));
 	}
 	
-	public static boolean canEntityAttack(Entity entity) {
+	public static boolean canEntityAttack(Entity entity) { //XXX unused
 		if (entity instanceof EntityLiving) {
 			EntityLiving ent = (EntityLiving) entity;
 			for (EntityAITasks.EntityAITaskEntry task : ent.tasks.taskEntries) {
@@ -61,12 +56,12 @@ public class PlayerUtil {
 		return false;
 	}
 	
-	public static void damagePlayerArmor(EntityPlayerMP playerMP) {
+	public static void damagePlayerArmor(EntityPlayerMP playerMP, int amount) {
 		for (EntityEquipmentSlot type : EntityEquipmentSlot.values()) {
 			if (!type.equals(EntityEquipmentSlot.MAINHAND) && !type.equals(EntityEquipmentSlot.OFFHAND)) {
 				if (playerMP.getItemStackFromSlot(type).getItem() instanceof ItemArmor) {
 					ItemArmor armor = (ItemArmor) playerMP.getItemStackFromSlot(type).getItem();
-					armor.setDamage(playerMP.getItemStackFromSlot(type), playerMP.getItemStackFromSlot(type).getItemDamage() - playerMP.world.rand.nextInt(3));
+					armor.setDamage(playerMP.getItemStackFromSlot(type), playerMP.getItemStackFromSlot(type).getItemDamage() - amount);
 				}
 			}
 		}

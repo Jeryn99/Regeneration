@@ -3,7 +3,7 @@ package me.fril.regeneration.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.fril.regeneration.Regeneration;
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.items.ItemFobWatch;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -18,7 +18,7 @@ import net.minecraftforge.registries.IForgeRegistry;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = Regeneration.MODID)
+@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class RegenObjects {
 	
 	// Items
@@ -31,7 +31,7 @@ public class RegenObjects {
 	}
 	
 	private static Item setUpItem(Item item, String name) {
-		item.setRegistryName(Regeneration.MODID, name);
+		item.setRegistryName(RegenerationMod.MODID, name);
 		item.setTranslationKey(name);
 		ITEMS.add(item);
 		return item;
@@ -45,15 +45,15 @@ public class RegenObjects {
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {
-		return new SoundEvent(new ResourceLocation(Regeneration.MODID, soundName)).setRegistryName(soundName);
+		return new SoundEvent(new ResourceLocation(RegenerationMod.MODID, soundName)).setRegistryName(soundName);
 	}
 	
-	@GameRegistry.ObjectHolder(Regeneration.MODID)
+	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class Items {
 		public static final Item FOB_WATCH = null;
 	}
 	
-	@GameRegistry.ObjectHolder(Regeneration.MODID)
+	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class Sounds {
 		public static final SoundEvent FOB_WATCH = null;
 		public static final SoundEvent REGENERATION = null;
