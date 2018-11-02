@@ -3,8 +3,8 @@ package me.fril.regeneration.network.packets;
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -51,7 +51,7 @@ public class MessageEnterGrace implements IMessage {
 					regenInfo.setTicksRegenerating(0);
 					regenInfo.setGlowing(false);
 					regenInfo.sync();
-					player.sendStatusMessage(new TextComponentTranslation("regeneration.messages.grace"), true);
+					PlayerUtil.sendMessage(player, "regeneration.messages.grace", true);
 				}
 			} else {
 				if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 18000 && regenInfo.getTicksRegenerating() == 0) {

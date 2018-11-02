@@ -13,8 +13,8 @@ import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.network.packets.MessageUpdateRegen;
 import me.fril.regeneration.util.ExplosionUtil;
 import me.fril.regeneration.util.PlayerUtil;
-import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RegenConfig;
+import me.fril.regeneration.util.RegenObjects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -26,7 +26,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -280,7 +280,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		// Indicate to the player what keybinds to use on the client
 		if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
 			if (ticksInSolace % 25 == 0) {
-				player.sendStatusMessage(new TextComponentString(RKeyBinds.GRACE.getDisplayName() + " for Grace Period, " + RKeyBinds.JUSTDOIT.getDisplayName() + " to Regenerate!"), true);
+				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.choice", RKeyBinds.GRACE.getDisplayName(), RKeyBinds.JUSTDOIT.getDisplayName()), true);
 			}
 		}
 		
@@ -319,9 +319,7 @@ public class CapabilityRegeneration implements IRegeneration {
 						time = time + I18n.translateToLocalFormatted("regeneration.messages.numsuffix.ext");
 					}
 					
-					if (!player.world.isRemote) {
-						player.sendStatusMessage(new TextComponentString(I18n.translateToLocalFormatted("regeneration.messages.remaining_regens.notification", time, (getLivesLeft()))), true);
-					}
+					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.remaining_regens.notification", time, getLivesLeft()), true);
 				}
 			}
 			
