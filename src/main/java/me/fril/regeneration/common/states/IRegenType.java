@@ -8,17 +8,17 @@ import net.minecraft.util.SoundEvent;
  * on 16/09/2018.
  */
 public interface IRegenType {
-    String getName();
-
-    void onUpdateInitial(EntityPlayer player);
-
-    void onUpdateMidRegen(EntityPlayer player);
-
-    void onFinish(EntityPlayer player);
-
-    SoundEvent getSound();
-
-    boolean blockMovement();
-
-    boolean isLaying();
+	String getName();
+	
+	void onUpdateInitial(EntityPlayer player);
+	
+	void onUpdateMidRegen(EntityPlayer player);
+	
+	void onFinish(EntityPlayer player);
+	
+	SoundEvent getSound();
+	
+	boolean blockMovement();
+	
+	boolean isLaying();
 }

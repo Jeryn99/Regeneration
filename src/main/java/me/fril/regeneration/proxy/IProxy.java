@@ -5,11 +5,11 @@ package me.fril.regeneration.proxy;
  * on 17/09/2018.
  */
 public interface IProxy {
-
-    void preInit();
-
-    void init();
-
-    void postInit();
-
+	
+	void preInit();
+	
+	void init();
+	
+	void postInit();
+	
 }

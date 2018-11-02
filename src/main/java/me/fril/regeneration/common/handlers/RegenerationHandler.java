@@ -40,130 +40,121 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
  */
 @Mod.EventBusSubscriber(modid = Regeneration.MODID)
 public class RegenerationHandler {
-
-    @SubscribeEvent
-    public static void breakBlock(PlayerInteractEvent.LeftClickBlock e) {
-        EntityPlayer player = e.getEntityPlayer();
-        IRegeneration regenInfo = CapabilityRegeneration.get(player);
-        boolean inGracePeriod = regenInfo.isInGracePeriod() && regenInfo.isGlowing();
-
-        if (inGracePeriod) {
-            regenInfo.setGlowing(false);
-            regenInfo.setTicksGlowing(0);
-            regenInfo.sync();
-        }
-    }
-
-
-    @SubscribeEvent
-    public static void registerLoot(LootTableLoadEvent e) {
-        if (!e.getName().toString().toLowerCase().matches(RegenConfig.Loot.lootRegex) || RegenConfig.Loot.disableLoot)
-            return;
-
-        LootCondition[] condAlways = new LootCondition[]{new RandomChance(1F)};
-        LootEntry entry = new LootEntryTable(new ResourceLocation(Regeneration.MODID, "inject/fob_watch_loot"), 1, 1, condAlways, "regeneration:fob-watch-entry");
-        LootPool lootPool = new LootPool(new LootEntry[]{entry}, condAlways, new RandomValueRange(1), new RandomValueRange(1), "regeneration:fob-watch-pool");
-        e.getTable().addPool(lootPool);
-    }
-
-
-
-    @SubscribeEvent
-    public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntityLiving() instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-            IRegeneration handler = CapabilityRegeneration.get(player);
-            if (handler != null) {
-                handler.update();
-            }
-        }
-    }
-
-
-    @SubscribeEvent
-    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        Entity entity = event.getObject();
-        if (entity instanceof EntityPlayer) {
-            event.addCapability(REGEN_ID, new RegenerationProvider(new CapabilityRegeneration((EntityPlayer) event.getObject())));
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-        NBTTagCompound nbt = (NBTTagCompound) CapabilityRegeneration.CAPABILITY.getStorage().writeNBT(CapabilityRegeneration.CAPABILITY, event.getOriginal().getCapability(CapabilityRegeneration.CAPABILITY, null), null);
-        CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null), null, nbt);
-    }
-
-    @SubscribeEvent
-    public static void playerTracking(PlayerEvent.StartTracking event) {
-        if (event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null) != null) {
-            CapabilityRegeneration.get(event.getEntityPlayer()).sync();
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPlayerRespawn(PlayerRespawnEvent event) {
-        CapabilityRegeneration.get(event.player).sync();
-    }
-
-    @SubscribeEvent
-    public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-        CapabilityRegeneration.get(event.player).sync();
-    }
-
-    @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-        CapabilityRegeneration.get(event.player).sync();
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onHurt(LivingHurtEvent e) {
-        if (!(e.getEntity() instanceof EntityPlayer))
-            return;
-
-        EntityPlayer player = (EntityPlayer) e.getEntity();
-        IRegeneration cap = CapabilityRegeneration.get(player);
-        if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 ||
-    		!cap.isCapable() || cap.isRegenerating()) {
-        	
-        	if (cap.isRegenerating()) {
-        		cap.reset();
-        		if (player.world.isRemote && player.getEntityId() == Minecraft.getMinecraft().player.getEntityId()) { //XXX does not work, I remember something about onHurt only firing on server, but how do I fix it?
-        			Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-        		}
-        	}
-            return;
-        }
-        
-        //TODO die if already regenerating
-
-        IRegeneration handler = CapabilityRegeneration.get(player);
-        e.setCanceled(true);
-        handler.setRegenerating(true);
-        player.clearActivePotions();
-
-        if (handler.isRegenerating() && handler.isInGracePeriod()) {
-            player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
-            handler.setInGracePeriod(false);
-            handler.setSolaceTicks(199);
-        }
-    }
-
-
-    @SubscribeEvent
-    public static void onLogin(PlayerLoggedInEvent e) {
-        if (!RegenConfig.startAsTimelord || e.player.world.isRemote)
-            return;
-
-        NBTTagCompound nbt = e.player.getEntityData();
-        boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
-        if (!loggedInBefore) {
-            e.player.inventory.addItemStackToInventory(new ItemStack(RObjects.Items.FOB_WATCH));
-            nbt.setBoolean("loggedInBefore", true);
-        }
-    }
+	
+	@SubscribeEvent
+	public static void breakBlock(PlayerInteractEvent.LeftClickBlock e) {
+		EntityPlayer player = e.getEntityPlayer();
+		IRegeneration regenInfo = CapabilityRegeneration.get(player);
+		boolean inGracePeriod = regenInfo.isInGracePeriod() && regenInfo.isGlowing();
+		
+		if (inGracePeriod) {
+			regenInfo.setGlowing(false);
+			regenInfo.setTicksGlowing(0);
+			regenInfo.sync();
+		}
+	}
+	
+	@SubscribeEvent
+	public static void registerLoot(LootTableLoadEvent e) {
+		if (!e.getName().toString().toLowerCase().matches(RegenConfig.Loot.lootRegex) || RegenConfig.Loot.disableLoot)
+			return;
+		
+		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
+		LootEntry entry = new LootEntryTable(new ResourceLocation(Regeneration.MODID, "inject/fob_watch_loot"), 1, 1, condAlways, "regeneration:fob-watch-entry");
+		LootPool lootPool = new LootPool(new LootEntry[] { entry }, condAlways, new RandomValueRange(1), new RandomValueRange(1), "regeneration:fob-watch-pool");
+		e.getTable().addPool(lootPool);
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
+		if (event.getEntityLiving() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+			IRegeneration handler = CapabilityRegeneration.get(player);
+			if (handler != null) {
+				handler.update();
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+		Entity entity = event.getObject();
+		if (entity instanceof EntityPlayer) {
+			event.addCapability(REGEN_ID, new RegenerationProvider(new CapabilityRegeneration((EntityPlayer) event.getObject())));
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerClone(PlayerEvent.Clone event) {
+		NBTTagCompound nbt = (NBTTagCompound) CapabilityRegeneration.CAPABILITY.getStorage().writeNBT(CapabilityRegeneration.CAPABILITY, event.getOriginal().getCapability(CapabilityRegeneration.CAPABILITY, null), null);
+		CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null), null, nbt);
+	}
+	
+	@SubscribeEvent
+	public static void playerTracking(PlayerEvent.StartTracking event) {
+		if (event.getEntityPlayer().getCapability(CapabilityRegeneration.CAPABILITY, null) != null) {
+			CapabilityRegeneration.get(event.getEntityPlayer()).sync();
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerRespawn(PlayerRespawnEvent event) {
+		CapabilityRegeneration.get(event.player).sync();
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
+		CapabilityRegeneration.get(event.player).sync();
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
+		CapabilityRegeneration.get(event.player).sync();
+	}
+	
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onHurt(LivingHurtEvent e) {
+		if (!(e.getEntity() instanceof EntityPlayer))
+			return;
+		
+		EntityPlayer player = (EntityPlayer) e.getEntity();
+		IRegeneration cap = CapabilityRegeneration.get(player);
+		if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 ||
+				!cap.isCapable() || cap.isRegenerating()) {
+			
+			if (cap.isRegenerating()) {
+				cap.reset();
+				if (player.world.isRemote && player.getEntityId() == Minecraft.getMinecraft().player.getEntityId()) { // XXX does not work, I remember something about onHurt only firing on server, but how do I fix it?
+					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+				}
+			}
+			return;
+		}
+		
+		// TODO die if already regenerating
+		
+		IRegeneration handler = CapabilityRegeneration.get(player);
+		e.setCanceled(true);
+		handler.setRegenerating(true);
+		player.clearActivePotions();
+		
+		if (handler.isRegenerating() && handler.isInGracePeriod()) {
+			player.world.playSound(null, player.posX, player.posY, player.posZ, RObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			handler.setInGracePeriod(false);
+			handler.setSolaceTicks(199);
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onLogin(PlayerLoggedInEvent e) {
+		if (!RegenConfig.startAsTimelord || e.player.world.isRemote)
+			return;
+		
+		NBTTagCompound nbt = e.player.getEntityData();
+		boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
+		if (!loggedInBefore) {
+			e.player.inventory.addItemStackToInventory(new ItemStack(RObjects.Items.FOB_WATCH));
+			nbt.setBoolean("loggedInBefore", true);
+		}
+	}
 }
-
-
-
-

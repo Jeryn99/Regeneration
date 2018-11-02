@@ -5,8 +5,8 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 
 public class BlockHandInJar extends Block {
-
-    public BlockHandInJar(Material blockMaterialIn, MapColor blockMapColorIn) {
-        super(blockMaterialIn, blockMapColorIn);
-    }
+	
+	public BlockHandInJar(Material blockMaterialIn, MapColor blockMapColorIn) {
+		super(blockMaterialIn, blockMapColorIn);
+	}
 }

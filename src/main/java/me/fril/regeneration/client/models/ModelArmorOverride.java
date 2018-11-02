@@ -8,24 +8,24 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 
 public class ModelArmorOverride extends ModelBiped {
-    public ModelArmorOverride() {
-        super(1.0F);
-    }
-
-    @Override
-    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
-        super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
-
-        RenderPlayer render = (RenderPlayer) Minecraft.getMinecraft().getRenderManager().<AbstractClientPlayer>getEntityRenderObject(entityIn);
-        ModelPlayer modelPlayer = render.getMainModel();
-
-        copyModelAngles(modelPlayer.bipedRightArm, this.bipedRightArm);
-        copyModelAngles(modelPlayer.bipedLeftArm, this.bipedLeftArm);
-        copyModelAngles(modelPlayer.bipedHead, this.bipedHead);
-        copyModelAngles(modelPlayer.bipedHeadwear, this.bipedHeadwear);
-        copyModelAngles(modelPlayer.bipedLeftLegwear, this.bipedLeftLeg);
-        copyModelAngles(modelPlayer.bipedLeftLeg, this.bipedLeftLeg);
-        copyModelAngles(modelPlayer.bipedRightLegwear, this.bipedRightLeg);
-        copyModelAngles(modelPlayer.bipedRightLeg, this.bipedRightLeg);
-    }
+	public ModelArmorOverride() {
+		super(1.0F);
+	}
+	
+	@Override
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+		super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
+		
+		RenderPlayer render = (RenderPlayer) Minecraft.getMinecraft().getRenderManager().<AbstractClientPlayer>getEntityRenderObject(entityIn);
+		ModelPlayer modelPlayer = render.getMainModel();
+		
+		copyModelAngles(modelPlayer.bipedRightArm, bipedRightArm);
+		copyModelAngles(modelPlayer.bipedLeftArm, bipedLeftArm);
+		copyModelAngles(modelPlayer.bipedHead, bipedHead);
+		copyModelAngles(modelPlayer.bipedHeadwear, bipedHeadwear);
+		copyModelAngles(modelPlayer.bipedLeftLegwear, bipedLeftLeg);
+		copyModelAngles(modelPlayer.bipedLeftLeg, bipedLeftLeg);
+		copyModelAngles(modelPlayer.bipedRightLegwear, bipedRightLeg);
+		copyModelAngles(modelPlayer.bipedRightLeg, bipedRightLeg);
+	}
 }

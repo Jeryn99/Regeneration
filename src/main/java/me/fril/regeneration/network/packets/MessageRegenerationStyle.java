@@ -14,35 +14,35 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * on 20/09/2018.
  */
 public class MessageRegenerationStyle implements IMessage {
-    private NBTTagCompound style;
-
-    public MessageRegenerationStyle() {
-    }
-
-    public MessageRegenerationStyle(NBTTagCompound nbtTagCompound) {
-        style = nbtTagCompound;
-    }
-
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        style = ByteBufUtils.readTag(buf);
-    }
-
-    @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeTag(buf, style);
-    }
-
-    public static class Handler implements IMessageHandler<MessageRegenerationStyle, IMessage> {
-        @Override
-        public IMessage onMessage(MessageRegenerationStyle message, MessageContext ctx) {
-            ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-                IRegeneration capability = CapabilityRegeneration.get(ctx.getServerHandler().player);
-                if (capability != null)
-                    capability.setStyle(message.style);
-                capability.sync();
-            });
-            return null;
-        }
-    }
+	private NBTTagCompound style;
+	
+	public MessageRegenerationStyle() {
+	}
+	
+	public MessageRegenerationStyle(NBTTagCompound nbtTagCompound) {
+		style = nbtTagCompound;
+	}
+	
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		style = ByteBufUtils.readTag(buf);
+	}
+	
+	@Override
+	public void toBytes(ByteBuf buf) {
+		ByteBufUtils.writeTag(buf, style);
+	}
+	
+	public static class Handler implements IMessageHandler<MessageRegenerationStyle, IMessage> {
+		@Override
+		public IMessage onMessage(MessageRegenerationStyle message, MessageContext ctx) {
+			ctx.getServerHandler().player.getServerWorld().addScheduledTask(()-> {
+				IRegeneration capability = CapabilityRegeneration.get(ctx.getServerHandler().player);
+				if (capability != null)
+					capability.setStyle(message.style);
+				capability.sync();
+			});
+			return null;
+		}
+	}
 }
