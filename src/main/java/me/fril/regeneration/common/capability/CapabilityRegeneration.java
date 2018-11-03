@@ -50,7 +50,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private String typeName = RegenTypes.FIERY.getName(), traitName = "none"; //NOTE unused
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
-	private float secondaryGreen = 0.58f, secondaryRed = 0.29f, secondaryBlue = 0.18f;
+	private float secondaryRed = 1f, secondaryGreen = 0.11f, secondaryBlue = 0.18f;
 	
 	private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
 	private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
@@ -174,6 +174,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setFloat("PrimaryRed", primaryRed);
 		nbt.setFloat("PrimaryGreen", primaryGreen);
 		nbt.setFloat("PrimaryBlue", primaryBlue);
+		
 		nbt.setFloat("SecondaryRed", secondaryRed);
 		nbt.setFloat("SecondaryGreen", secondaryGreen);
 		nbt.setFloat("SecondaryBlue", secondaryBlue);
@@ -185,6 +186,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		primaryRed = nbt.getFloat("PrimaryRed");
 		primaryGreen = nbt.getFloat("PrimaryGreen");
 		primaryBlue = nbt.getFloat("PrimaryBlue");
+		
 		secondaryRed = nbt.getFloat("SecondaryRed");
 		secondaryGreen = nbt.getFloat("SecondaryGreen");
 		secondaryBlue = nbt.getFloat("SecondaryBlue");
@@ -221,6 +223,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setFloat("PrimaryRed", primaryRed);
 		nbt.setFloat("PrimaryGreen", primaryGreen);
 		nbt.setFloat("PrimaryBlue", primaryBlue);
+		
 		nbt.setFloat("SecondaryRed", secondaryRed);
 		nbt.setFloat("SecondaryGreen", secondaryGreen);
 		nbt.setFloat("SecondaryBlue", secondaryBlue);
@@ -350,7 +353,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				}
 				
 				if (player.world.isRemote) {
-					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0; //TODO reset view back to eye level?
 				} else {
 					sync();
 				}
