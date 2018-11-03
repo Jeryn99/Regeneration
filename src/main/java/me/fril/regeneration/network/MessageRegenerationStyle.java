@@ -1,4 +1,4 @@
-package me.fril.regeneration.network.packets;
+package me.fril.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -14,10 +14,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * on 20/09/2018.
  */
 public class MessageRegenerationStyle implements IMessage {
+	
 	private NBTTagCompound style;
 	
-	public MessageRegenerationStyle() {
-	}
+	public MessageRegenerationStyle() {}
 	
 	public MessageRegenerationStyle(NBTTagCompound nbtTagCompound) {
 		style = nbtTagCompound;
@@ -37,10 +37,9 @@ public class MessageRegenerationStyle implements IMessage {
 		@Override
 		public IMessage onMessage(MessageRegenerationStyle message, MessageContext ctx) {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(()-> {
-				IRegeneration capability = CapabilityRegeneration.get(ctx.getServerHandler().player);
-				if (capability != null)
-					capability.setStyle(message.style);
-				capability.sync();
+				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
+				cap.setStyle(message.style);
+				cap.sync();
 			});
 			return null;
 		}

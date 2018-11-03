@@ -54,4 +54,5 @@ public class EntityMetacrisis extends EntityCreature {
 	public void setPlayerUuid(UUID uuid) {
 		getDataManager().set(PLAYER_UUID, uuid.toString());
 	}
+	
 }

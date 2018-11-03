@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.fril.regeneration.Regeneration;
+import me.fril.regeneration.RegenerationMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class LimbManipulationUtil {
 	
 	private static Field textureOffsetXField = ModelRenderer.class.getDeclaredFields()[2];

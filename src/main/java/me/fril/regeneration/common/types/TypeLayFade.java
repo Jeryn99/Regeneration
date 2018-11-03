@@ -1,6 +1,6 @@
-package me.fril.regeneration.common.states;
+package me.fril.regeneration.common.types;
 
-import me.fril.regeneration.common.init.RObjects;
+import me.fril.regeneration.util.RegenObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
 
@@ -9,15 +9,9 @@ import net.minecraft.util.SoundEvent;
  * on 17/09/2018.
  */
 public class TypeLayFade implements IRegenType {
-	@Override
-	public String getName() {
-		return "LAYFADE";
-	}
 	
-	// TODO Yeah I know, some magic numbers in this class. They were copy pasted from a System out.
-	// I'll look further into them soon
 	@Override
-	public void onUpdateInitial(EntityPlayer player) {
+	public void onStartRegeneration(EntityPlayer player) {
 		setPlayerRotation(player);
 	}
 	
@@ -27,18 +21,26 @@ public class TypeLayFade implements IRegenType {
 	}
 	
 	@Override
-	public void onFinish(EntityPlayer player) {
+	public void onFinishRegeneration(EntityPlayer player) {
 		setPlayerRotation(player);
 	}
 	
+	// TODO Yeah I know, some magic numbers in this class. They were copy pasted from a System out. I'll look further into them soon
 	private void setPlayerRotation(EntityPlayer player) {
 		player.rotationPitch = -83.550026F;
 		player.rotationYaw = -0.54983205F;
 	}
 	
+	
+	
+	@Override
+	public String getName() {
+		return "LAYFADE";
+	}
+	
 	@Override
 	public SoundEvent getSound() {
-		return RObjects.Sounds.REGEN_1;
+		return RegenObjects.Sounds.REGENERATION;
 	}
 	
 	@Override
@@ -50,4 +52,5 @@ public class TypeLayFade implements IRegenType {
 	public boolean isLaying() {
 		return true;
 	}
+	
 }

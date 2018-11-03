@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 
 public class ModelArmorOverride extends ModelBiped {
+	
 	public ModelArmorOverride() {
 		super(1.0F);
 	}
@@ -28,4 +29,5 @@ public class ModelArmorOverride extends ModelBiped {
 		copyModelAngles(modelPlayer.bipedRightLegwear, bipedRightLeg);
 		copyModelAngles(modelPlayer.bipedRightLeg, bipedRightLeg);
 	}
+	
 }

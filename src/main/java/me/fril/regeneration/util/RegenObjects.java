@@ -1,9 +1,9 @@
-package me.fril.regeneration.common.init;
+package me.fril.regeneration.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.fril.regeneration.Regeneration;
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.items.ItemFobWatch;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -18,10 +18,9 @@ import net.minecraftforge.registries.IForgeRegistry;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = Regeneration.MODID)
-public class RObjects {
+@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
+public class RegenObjects {
 	
-	// Items
 	public static List<Item> ITEMS = new ArrayList<>();
 	
 	@SubscribeEvent
@@ -31,32 +30,38 @@ public class RObjects {
 	}
 	
 	private static Item setUpItem(Item item, String name) {
-		item.setRegistryName(Regeneration.MODID, name);
+		item.setRegistryName(RegenerationMod.MODID, name);
 		item.setTranslationKey(name);
 		ITEMS.add(item);
 		return item;
 	}
 	
-	// Sounds
+	
+	
 	@SubscribeEvent
 	public static void addSounds(RegistryEvent.Register<SoundEvent> e) {
-		IForgeRegistry<SoundEvent> reg = e.getRegistry();
-		reg.registerAll(setUpSound("regen_1"), setUpSound("fob_watch"), setUpSound("critical_stage"), setUpSound("heart_beat"), setUpSound("hand_glow"));
+		e.getRegistry().registerAll(setUpSound("regeneration"),
+									setUpSound("fob_watch"),
+									setUpSound("critical_stage"),
+									setUpSound("heart_beat"),
+									setUpSound("hand_glow"));
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {
-		return new SoundEvent(new ResourceLocation(Regeneration.MODID, soundName)).setRegistryName(soundName);
+		return new SoundEvent(new ResourceLocation(RegenerationMod.MODID, soundName)).setRegistryName(soundName);
 	}
 	
-	@GameRegistry.ObjectHolder(Regeneration.MODID)
+	
+	
+	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class Items {
 		public static final Item FOB_WATCH = null;
 	}
 	
-	@GameRegistry.ObjectHolder(Regeneration.MODID)
+	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class Sounds {
 		public static final SoundEvent FOB_WATCH = null;
-		public static final SoundEvent REGEN_1 = null;
+		public static final SoundEvent REGENERATION = null;
 		public static final SoundEvent CRITICAL_STAGE = null;
 		public static final SoundEvent HEART_BEAT = null;
 		public static final SoundEvent HAND_GLOW = null;

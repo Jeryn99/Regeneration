@@ -1,10 +1,9 @@
-package me.fril.regeneration.network.packets;
+package me.fril.regeneration.network;
 
 import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.common.capability.IRegeneration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,8 +21,7 @@ public class MessageUpdateRegen implements IMessage {
 	private EntityPlayer player;
 	private NBTTagCompound data;
 	
-	public MessageUpdateRegen() {
-	}
+	public MessageUpdateRegen() {}
 	
 	public MessageUpdateRegen(EntityPlayer player, NBTTagCompound data) {
 		this.player = player;
@@ -38,10 +36,10 @@ public class MessageUpdateRegen implements IMessage {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		if (Minecraft.getMinecraft().player != null)
-			player = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
-		if (player != null)
-			data = ByteBufUtils.readTag(buf);
+		if (Minecraft.getMinecraft().player == null) return;
+		
+		player = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+		data = ByteBufUtils.readTag(buf);
 	}
 	
 	public static class Handler implements IMessageHandler<MessageUpdateRegen, IMessage> {
@@ -49,10 +47,9 @@ public class MessageUpdateRegen implements IMessage {
 		@Override
 		public IMessage onMessage(MessageUpdateRegen message, MessageContext ctx) {
 			EntityPlayer player = message.player;
-			if (player == null)
-				return null;
-			IRegeneration handler = CapabilityRegeneration.get(player);
-			Minecraft.getMinecraft().addScheduledTask(()->handler.deserializeNBT(message.data));
+			if (player == null) return null;
+			
+			Minecraft.getMinecraft().addScheduledTask(()->CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
 			return null;
 		}
 	}

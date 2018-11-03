@@ -1,6 +1,6 @@
 package me.fril.regeneration.util;
 
-import me.fril.regeneration.Regeneration;
+import me.fril.regeneration.RegenerationMod;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by Sub
  * on 17/09/2018.
  */
-@Config(modid = Regeneration.MODID)
+@Config(modid = RegenerationMod.MODID)
 public class RegenConfig { // TODO externalize comment strings?
 	
 	public static final Loot Loot = new Loot();
@@ -81,12 +81,13 @@ public class RegenConfig { // TODO externalize comment strings?
 		
 	}
 	
+	
 	@Mod.EventBusSubscriber
 	public static class EventHandler {
 		@SubscribeEvent
 		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-			if (event.getModID().equals(Regeneration.MODID)) {
-				ConfigManager.sync(Regeneration.MODID, Config.Type.INSTANCE);
+			if (event.getModID().equals(RegenerationMod.MODID)) {
+				ConfigManager.sync(RegenerationMod.MODID, Config.Type.INSTANCE);
 			}
 		}
 	}

@@ -2,7 +2,7 @@ package me.fril.regeneration.client.sound;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.common.init.RObjects;
+import me.fril.regeneration.util.RegenObjects;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
@@ -27,30 +27,24 @@ public class MovingSoundPlayer extends MovingSound {
 		soundCheck = soundIn;
 	}
 	
-	/**
-	 * Like the old updateEntity(), except more generic.
-	 */
 	@Override
 	public void update() {
-		IRegeneration regenInfo = CapabilityRegeneration.get(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
-		if (soundCheck.getSoundName().equals(RObjects.Sounds.HAND_GLOW.getSoundName())) {
-			volume = 0.3F;
-			if (!regenInfo.isGlowing()) {
+		if (soundCheck.getSoundName().equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
+			volume = 0.3F; //XXX is this needed?
+			if (!cap.isGlowing())
 				donePlaying = true;
-			}
 		}
 		
-		if (soundCheck.getSoundName().equals(RObjects.Sounds.HEART_BEAT.getSoundName())) {
-			if (!regenInfo.isInGracePeriod()) {
+		if (soundCheck.getSoundName().equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) {
+			if (!cap.isInGracePeriod())
 				donePlaying = true;
-			}
 		}
 		
-		if (soundCheck.getSoundName().equals(RObjects.Sounds.REGEN_1.getSoundName())) {
-			if (regenInfo.getTicksRegenerating() == 199) {
+		if (soundCheck.getSoundName().equals(RegenObjects.Sounds.REGENERATION.getSoundName())) {
+			if (cap.getTicksRegenerating() == 199)
 				donePlaying = true;
-			}
 		}
 		
 		if (player.isDead) {
@@ -61,7 +55,7 @@ public class MovingSoundPlayer extends MovingSound {
 			zPosF = (float) player.posZ;
 			
 			distance = MathHelper.clamp(distance + 0.0025F, 0.0F, 1.0F);
-			volume = 1.0F;
+			volume = 1.0F; //XXX is this needed?
 		}
 	}
 }
