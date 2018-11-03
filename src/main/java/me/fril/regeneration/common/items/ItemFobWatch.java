@@ -35,63 +35,50 @@ public class ItemFobWatch extends Item {
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
-		
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		ItemStack stack = player.getHeldItem(handIn);
+		ItemStack stack = player.getHeldItem(hand);
 		
-		if (cap.isCapable()) { //NOW clean up this mess
-			if (!player.isSneaking()) {
-				int used = doUsageDamage(stack, cap);
-				if (used == 0) {
-					if (cap.getLivesLeft() == RegenConfig.regenCapacity) {
-						PlayerUtil.sendMessage(player, "regeneration.messages.transfer.max_regens", true);
-					} else if (stack.getItemDamage() == RegenConfig.regenCapacity) {
-						PlayerUtil.sendMessage(player, "regeneration.messages.transfer.empty_watch", true);
-					}
-					//NOTE there should probably be an else here that just errors stuff because that shouldn't be happening
-					return new ActionResult<>(EnumActionResult.FAIL, stack);
-				}
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true); // too lazy to fix a single/plural issue here
-			} else {
-				if (stack.getItemDamage() == 0) {
-					PlayerUtil.sendMessage(player, "regeneration.messages.transfer.full_watch", true);
-					return new ActionResult<>(EnumActionResult.FAIL, stack);
-				}
-				
-				stack.setItemDamage(stack.getItemDamage() - 1);
-				cap.setLivesLeft(cap.getLivesLeft() - 1);
-				PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
-				return new ActionResult<>(EnumActionResult.PASS, stack);
+		if (!player.isSneaking()) { //transferring watch->player
+			if (stack.getItemDamage() == RegenConfig.regenCapacity) {
+				return usageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
+			} else if (cap.getLivesLeft() == RegenConfig.regenCapacity) {
+				return usageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 			}
-		} else {
-			if (!player.isSneaking()) {
-				if (doUsageDamage(stack, cap) > 0) {
-					world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
-					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
-				} else if (stack.getItemDamage() == RegenConfig.regenCapacity) {
-					PlayerUtil.sendMessage(player, "regeneration.messages.transfer.empty_watch", true);
-				}
-				//NOTE there should probably be an else here that just errors stuff because that shouldn't be happening
-			} else {
-				PlayerUtil.sendMessage(player, "regeneration.messages.transfer.no_regens", true);
-				return new ActionResult<>(EnumActionResult.FAIL, stack);
+			
+			int supply = RegenConfig.regenCapacity - stack.getItemDamage(),
+				needed = RegenConfig.regenCapacity - cap.getLivesLeft(),
+				used = Math.min(supply, needed);
+			
+			if (cap.isCapable())
+				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
+			else
+				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
+			
+			cap.setLivesLeft(cap.getLivesLeft() + used);
+			cap.sync();
+			
+			if (!cap.getPlayer().isCreative())
+				stack.setItemDamage(stack.getItemDamage() + used);
+			
+			world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
+		} else { //transferring player->watch
+			if (stack.getItemDamage() == 0) {
+				return usageFailed(player, cap.isCapable() ? "regeneration.messages.transfer.full_watch" : "regeneration.messages.transfer.no_regens", stack);
 			}
+			
+			stack.setItemDamage(stack.getItemDamage() - 1);
+			cap.setLivesLeft(cap.getLivesLeft() - 1);
+			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
+			return new ActionResult<>(EnumActionResult.PASS, stack);
 		}
 		
-		return super.onItemRightClick(world, player, handIn);
+		return super.onItemRightClick(world, player, hand);
 	}
 	
-	private int doUsageDamage(ItemStack stack, IRegeneration capability) {
-		int supply = RegenConfig.regenCapacity - stack.getItemDamage(), needed = RegenConfig.regenCapacity - capability.getLivesLeft(), used = Math.min(supply, needed);
-		if (used == 0)
-			return 0;
-		
-		capability.setLivesLeft(capability.getLivesLeft() + used);
-		capability.sync();
-		
-		if (!capability.getPlayer().isCreative())
-			stack.setItemDamage(stack.getItemDamage() + used);
-		return used;
+	private ActionResult<ItemStack> usageFailed(EntityPlayer player, String message, ItemStack stack) {
+		PlayerUtil.sendMessage(player, message, true);
+		return ActionResult.newResult(EnumActionResult.FAIL, stack);
 	}
+	
 }

@@ -21,7 +21,7 @@ regeneration.messages.numsuffix.2=nd
 regeneration.messages.numsuffix.3=rd
 regeneration.messages.numsuffix.ext=th
 
-regeneration.messages.transfer.success=You've transferred one of your regenerations into the arch
+regeneration.messages.transfer.success=You've transferred one of your regenerations into the watch
 regeneration.messages.transfer.full_watch=You can't store anymore regenerations in this watch!
 regeneration.messages.transfer.empty_watch=This watch is empty!
 regeneration.messages.transfer.max_regens=You already have the maximum number of regenerations
