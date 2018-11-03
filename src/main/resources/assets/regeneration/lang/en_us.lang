@@ -24,8 +24,8 @@ regeneration.messages.numsuffix.ext=th
 regeneration.messages.transfer.success=You've transferred one of your regenerations into the arch
 regeneration.messages.transfer.full_watch=You can't store anymore regenerations in this watch!
 regeneration.messages.transfer.empty_watch=This watch is empty!
-regeneration.messages.transfer.full_cycle=You already have a full cycle of regenerations
-regeneration.messages.transfer.empty_cycle=You don't have any regenerations left to transfer
+regeneration.messages.transfer.max_regens=You already have the maximum number of regenerations
+regeneration.messages.transfer.no_regens=You don't have any regenerations left to transfer
 
 regeneration.subtitles.fob_watch=Fob Watch opening
 regeneration.subtitles.regeneration=Regeneration energy

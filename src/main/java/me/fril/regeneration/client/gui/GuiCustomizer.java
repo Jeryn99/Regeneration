@@ -124,7 +124,7 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 	protected void actionPerformed(GuiButton button) {
 		if (button.id == btnSave.id) {
 			sendStyleNBTTagToServer();
-			TabRegistry.openInventoryGui();
+			TabRegistry.openInventoryGui(); //NOW mouse is reset to middle of the screen
 		} else if (button.id == btnCancel.id) {
 			TabRegistry.openInventoryGui();
 		} else if (button.id == btnReset.id) {

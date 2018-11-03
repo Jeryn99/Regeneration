@@ -45,7 +45,7 @@ public class ItemFobWatch extends Item {
 				int used = doUsageDamage(stack, capability);
 				if (used == 0) {
 					if (capability.getLivesLeft() == RegenConfig.regenCapacity) {
-						PlayerUtil.sendMessage(player, "regeneration.messages.transfer.full_cycle", true);
+						PlayerUtil.sendMessage(player, "regeneration.messages.transfer.max_regens", true);
 					} else if (stack.getItemDamage() == RegenConfig.regenCapacity) {
 						PlayerUtil.sendMessage(player, "regeneration.messages.transfer.empty_watch", true);
 					}
@@ -66,11 +66,15 @@ public class ItemFobWatch extends Item {
 			}
 		} else {
 			if (!player.isSneaking()) {
-				world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
-				doUsageDamage(stack, capability);
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
+				if (doUsageDamage(stack, capability) > 0) {
+					world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
+					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
+				} else if (stack.getItemDamage() == RegenConfig.regenCapacity) {
+					PlayerUtil.sendMessage(player, "regeneration.messages.transfer.empty_watch", true);
+				}
+				//NOTE there should probably be an else here that just errors stuff because that shouldn't be happening
 			} else {
-				PlayerUtil.sendMessage(player, "regeneration.messages.transfer.empty_cycle", true);
+				PlayerUtil.sendMessage(player, "regeneration.messages.transfer.no_regens", true);
 				return new ActionResult<>(EnumActionResult.FAIL, stack);
 			}
 		}
