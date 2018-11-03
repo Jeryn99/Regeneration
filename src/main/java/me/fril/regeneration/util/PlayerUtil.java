@@ -4,13 +4,7 @@ import me.fril.regeneration.client.sound.MovingSoundPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIAttackRanged;
-import net.minecraft.entity.ai.EntityAIAttackRangedBow;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIOwnerHurtByTarget;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.EntityAIZombieAttack;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -32,13 +26,12 @@ public class PlayerUtil {
 			player.sendStatusMessage(new TextComponentTranslation(message), hotBar);
 		}
 	}
-	
+
 	public static void sendMessage(EntityPlayer player, TextComponentTranslation translation, boolean hotBar) {
 		if (!player.world.isRemote) {
 			player.sendStatusMessage(translation, hotBar);
 		}
 	}
-	
 	
 	@SideOnly(Side.CLIENT)
 	public static void playMovingSound(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn) {

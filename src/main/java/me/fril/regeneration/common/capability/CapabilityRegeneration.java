@@ -1,10 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.awt.Color;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.common.types.IRegenType;
@@ -31,6 +26,10 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Mod;
+
+import javax.annotation.Nonnull;
+import java.awt.*;
+import java.util.UUID;
 
 /**
  * Created by Sub
@@ -279,7 +278,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		// Indicate to the player what keybinds to use on the client
 		if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
 			if (ticksInSolace % 25 == 0) {
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.choice", RegenKeyBinds.ENTER_GRACE.getDisplayName(), RegenKeyBinds.REGEN_NOW.getDisplayName()), true); //FIXME conflicting isRemote check
+                player.sendStatusMessage(new TextComponentTranslation("regeneration.messages.choice", RegenKeyBinds.ENTER_GRACE.getDisplayName(), RegenKeyBinds.REGEN_NOW.getDisplayName()), true);
 			}
 		}
 		
