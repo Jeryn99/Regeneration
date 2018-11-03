@@ -9,7 +9,7 @@ public class GuiColorSlider extends GuiSlider {
 		super(id, xPos, yPos, width, height, prefix, suf, minVal, maxVal, currentVal, showDec, drawStr, parent);
 	}
 	
-	public static double round(double value, int places) {
+	private static double round(double value, int places) {
 		if (places < 0)
 			throw new IllegalArgumentException();
 		
@@ -20,8 +20,8 @@ public class GuiColorSlider extends GuiSlider {
 	}
 	
 	@Override
-	protected void mouseDragged(Minecraft par1Minecraft, int par2, int par3) {
-		super.mouseDragged(par1Minecraft, par2, par3);
+	protected void mouseDragged(Minecraft mc, int x, int y) {
+		super.mouseDragged(mc, x, y);
 		sliderValue = round(sliderValue, 2);
 		updateText();
 	}

@@ -3,6 +3,7 @@ package me.fril.regeneration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import me.fril.regeneration.client.gui.GuiHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL)
 public class RegenerationMod {
@@ -41,6 +43,7 @@ public class RegenerationMod {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.init();
+		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 		NetworkHandler.init();
 		RegenTypes.init();
 	}

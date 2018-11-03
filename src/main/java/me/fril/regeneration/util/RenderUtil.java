@@ -210,4 +210,16 @@ public class RenderUtil {
 		GlStateManager.disableBlend();
 	}
 	
+	
+	
+	/** <a href="https://stackoverflow.com/a/41491220/10434371">Source</a> */
+	public static double calculateColorBrightness(Color c) {
+		float r = c.getRed() / 255F, g = c.getGreen() / 255F, b = c.getBlue() / 255F;
+		r = r <= 0.03928 ? r / 12.92F : (float)Math.pow((r + 0.055) / 1.055, 2.4);
+		g = g <= 0.03928 ? g / 12.92F : (float)Math.pow((g + 0.055) / 1.055, 2.4);
+		b = b <= 0.03928 ? b / 12.92F : (float)Math.pow((b + 0.055) / 1.055, 2.4);
+		
+		return (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
+	}
+	
 }
