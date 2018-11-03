@@ -116,7 +116,7 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 	
 	@Override
 	protected void actionPerformed(GuiButton button) {
-		switch (button.id) { //TODO change closeScreen to switching back to inventory tab
+		switch (button.id) { //FIXME change closeScreen to switching back to inventory tab
 			case 0: //save
 				sendStyleNBTTagToServer(false);
 				mc.player.closeScreen();
@@ -125,7 +125,7 @@ public class GuiCustomizer extends GuiContainer implements GuiSlider.ISlider {
 				mc.player.closeScreen();
 				break;
 			case 3: //reset
-				sendStyleNBTTagToServer(true); //TODO change to setting the current values to default
+				sendStyleNBTTagToServer(true); //FIXME change to setting the current values to default & resetting the UI
 				mc.player.closeScreen();
 				break;
 			default: throw new RuntimeException("Unknown button id: "+button.id);

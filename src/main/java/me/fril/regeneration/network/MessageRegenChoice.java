@@ -36,7 +36,6 @@ public class MessageRegenChoice implements IMessage {
 	
 	public static class Handler implements IMessageHandler<MessageRegenChoice, IMessage> {
 		
-		// XXX There isn't any null check on the capability. As far as I know it isn't needed either as every player has one, but they are still in a lot of places through the code
 		@Override
 		public IMessage onMessage(MessageRegenChoice message, MessageContext ctx) {
 			EntityPlayer player = ctx.getServerHandler().player;

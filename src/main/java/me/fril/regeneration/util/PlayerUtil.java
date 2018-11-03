@@ -44,7 +44,7 @@ public class PlayerUtil {
 		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(player, soundIn, categoryIn));
 	}
 	
-	public static boolean canEntityAttack(Entity entity) { //XXX unused
+	public static boolean canEntityAttack(Entity entity) { //NOTE unused
 		if (entity instanceof EntityLiving) {
 			EntityLiving ent = (EntityLiving) entity;
 			for (EntityAITasks.EntityAITaskEntry task : ent.tasks.taskEntries) {

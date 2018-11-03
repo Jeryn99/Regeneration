@@ -14,8 +14,7 @@ public class TypeLayFade implements IRegenType {
 		return "LAYFADE";
 	}
 	
-	// TODO Yeah I know, some magic numbers in this class. They were copy pasted from a System out.
-	// I'll look further into them soon
+	// TODO Yeah I know, some magic numbers in this class. They were copy pasted from a System out. I'll look further into them soon
 	@Override
 	public void onUpdateInitial(EntityPlayer player) {
 		setPlayerRotation(player);

@@ -18,7 +18,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	// Regen Ticks
 	int getTicksRegenerating();
-	
 	void setTicksRegenerating(int ticks);
 	
 	// Returns the player
@@ -26,17 +25,14 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	// Lives left
 	int getLivesLeft();
-	
 	void setLivesLeft(int left);
 	
 	// Times IN TOTAL, NOT PER CYCLE
 	int getTimesRegenerated();
-	
 	void setTimesRegenerated(int times);
 	
 	// Style
 	NBTTagCompound getStyle();
-	
 	void setStyle(NBTTagCompound nbt);
 	
 	// Sync to clients
@@ -44,7 +40,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	// The type of Regeneration in use
 	IRegenType getType();
-	
 	void setType(String name);
 	
 	// Does the player have the ability to regenerate?
@@ -54,34 +49,27 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	// Regen
 	boolean isRegenerating();
-	
 	void setRegenerating(boolean regenerating);
 	
 	// Grace stuff
 	boolean isGlowing();
-	
 	void setGlowing(boolean glowing);
 	
 	// Glowing Ticks
 	int getTicksGlowing();
-	
 	void setTicksGlowing(int ticks);
 	
 	// Is the player in grace period
 	boolean isInGracePeriod();
-	
 	void setInGracePeriod(boolean gracePeriod);
 	
 	// Solace ticks
 	int getSolaceTicks();
-	
 	void setSolaceTicks(int ticks);
 	
 	// Just helper things
 	Color getPrimaryColor();
-	
 	Color getSecondaryColor();
-	
 	void reset();
 	
 }

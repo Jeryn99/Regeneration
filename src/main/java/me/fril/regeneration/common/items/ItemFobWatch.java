@@ -40,7 +40,7 @@ public class ItemFobWatch extends Item {
 		IRegeneration capability = CapabilityRegeneration.getForPlayer(player);
 		ItemStack stack = player.getHeldItem(handIn);
 		
-		if (capability.isCapable()) { // TODO this could probably be cleaned up
+		if (capability.isCapable()) { //FIXME clean up this mess
 			if (!player.isSneaking()) {
 				int used = doUsageDamage(stack, capability);
 				if (used == 0) {
@@ -49,7 +49,7 @@ public class ItemFobWatch extends Item {
 					} else if (stack.getItemDamage() == RegenConfig.regenCapacity) {
 						PlayerUtil.sendMessage(player, "regeneration.messages.transfer.empty_watch", true);
 					}
-					// XXX there should probably be an else here that just errors stuff because that shouldn't be happening
+					//NOTE there should probably be an else here that just errors stuff because that shouldn't be happening
 					return new ActionResult<>(EnumActionResult.FAIL, stack);
 				}
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true); // too lazy to fix a single/plural issue here

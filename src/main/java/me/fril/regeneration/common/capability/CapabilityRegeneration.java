@@ -47,7 +47,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private int timesRegenerated = 0, livesLeft = 0, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
 	private EntityPlayer player;
 	private boolean isRegenerating = false, isInGrace = false, isGraceGlowing = false;
-	private String typeName = RegenTypes.FIERY.getName(), traitName = "none"; //XXX unused
+	private String typeName = RegenTypes.FIERY.getName(), traitName = "none"; //NOTE unused
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryGreen = 0.58f, secondaryRed = 0.29f, secondaryBlue = 0.18f;

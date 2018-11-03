@@ -32,7 +32,7 @@ public class ExplosionUtil {
 		});
 	}
 	
-	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
+	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) { //TODO config option to never immediately kill players, but just knocking them back
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity-> {
 			if (!(entity instanceof EntityCreature) || !entity.isNonBoss())
 				return;
