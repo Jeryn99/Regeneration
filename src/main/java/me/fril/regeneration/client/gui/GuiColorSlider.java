@@ -23,10 +23,6 @@ public class GuiColorSlider extends GuiSlider {
 	protected void mouseDragged(Minecraft mc, int x, int y) {
 		super.mouseDragged(mc, x, y);
 		sliderValue = round(sliderValue, 2);
-		updateText();
-	}
-	
-	public void updateText() {
 		displayString = dispString + ": " + sliderValue;
 	}
 	

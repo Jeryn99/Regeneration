@@ -2,7 +2,7 @@ package me.fril.regeneration.proxy;
 
 import java.util.Map;
 
-import me.fril.regeneration.client.RKeyBinds;
+import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
 import me.fril.regeneration.client.layers.LayerRegeneration;
 import me.fril.regeneration.util.RenderUtil;
@@ -23,7 +23,7 @@ public class ClientProxy extends CommonProxy {
 		super.init();
 		
 		// Registering the mods Keybinds
-		RKeyBinds.init();
+		RegenKeyBinds.init();
 		
 		// Galacticraft API for TABS
 		if (TabRegistry.getTabList().isEmpty()) {

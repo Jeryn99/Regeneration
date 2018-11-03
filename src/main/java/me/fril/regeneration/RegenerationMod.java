@@ -1,8 +1,5 @@
 package me.fril.regeneration;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import me.fril.regeneration.client.gui.GuiHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -32,8 +29,6 @@ public class RegenerationMod {
 	@SidedProxy(clientSide = "me.fril.regeneration.proxy.ClientProxy", serverSide = "me.fril.regeneration.proxy.CommonProxy")
 	public static CommonProxy proxy;
 	
-	public static Logger LOG = LogManager.getLogger(NAME); //XXX unused
-	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		proxy.preInit();
@@ -43,9 +38,9 @@ public class RegenerationMod {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.init();
-		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 		NetworkHandler.init();
 		RegenTypes.init();
+		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 	}
 	
 	@EventHandler

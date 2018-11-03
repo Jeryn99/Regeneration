@@ -6,7 +6,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.client.RKeyBinds;
+import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.network.MessageUpdateRegen;
@@ -39,30 +39,33 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class CapabilityRegeneration implements IRegeneration {
 	
-	public static final ResourceLocation REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
+	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
+	private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
 	
 	@CapabilityInject(IRegeneration.class)
 	public static final Capability<IRegeneration> CAPABILITY = null;
 	
+	
+	private final EntityPlayer player;
 	private int timesRegenerated = 0, livesLeft = 0, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
-	private EntityPlayer player;
 	private boolean isRegenerating = false, isInGrace = false, isGraceGlowing = false;
 	private String typeName = RegenTypes.FIERY.getName(), traitName = "none"; //NOTE unused
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.11f, secondaryBlue = 0.18f;
 	
-	private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
 	private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
 	
+	
+	
 	public CapabilityRegeneration() {
+		this.player = null;
 	}
 	
 	public CapabilityRegeneration(EntityPlayer player) {
 		this.player = player;
 	}
 	
-	// Returns the players Regeneration capability
 	@Nonnull
 	public static IRegeneration getForPlayer(EntityPlayer player) {
 		if (player.hasCapability(CAPABILITY, null)) {
@@ -227,6 +230,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setFloat("SecondaryRed", secondaryRed);
 		nbt.setFloat("SecondaryGreen", secondaryGreen);
 		nbt.setFloat("SecondaryBlue", secondaryBlue);
+		
 		return nbt;
 	}
 	
@@ -241,12 +245,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		setGlowing(nbt.getBoolean("handGlowing"));
 		setType(nbt.getString("type"));
 		
-		// Primary
 		primaryRed = nbt.getFloat("PrimaryRed");
-		primaryBlue = nbt.getFloat("PrimaryBlue");
 		primaryGreen = nbt.getFloat("PrimaryGreen");
+		primaryBlue = nbt.getFloat("PrimaryBlue");
 		
-		// Secondary
 		secondaryRed = nbt.getFloat("SecondaryRed");
 		secondaryGreen = nbt.getFloat("SecondaryGreen");
 		secondaryBlue = nbt.getFloat("SecondaryBlue");
@@ -262,9 +264,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		return new Color(secondaryRed, secondaryGreen, secondaryBlue);
 	}
 	
-	// Invokes the Regeneration and handles it.
+	
 	private void updateRegeneration() {
-		
 		setSolaceTicks(getSolaceTicks() + 1);
 		
 		// Start glowing and playing the hand sound
@@ -278,7 +279,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		// Indicate to the player what keybinds to use on the client
 		if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
 			if (ticksInSolace % 25 == 0) {
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.choice", RKeyBinds.ENTER_GRACE.getDisplayName(), RKeyBinds.REGEN_NOW.getDisplayName()), true);
+				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.choice", RegenKeyBinds.ENTER_GRACE.getDisplayName(), RegenKeyBinds.REGEN_NOW.getDisplayName()), true);
 			}
 		}
 		
@@ -383,7 +384,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 			
 			if (getSolaceTicks() % 220 == 0) {
-				
+				//XXX there's nothing here
 			}
 			
 			// Every Minute
@@ -396,7 +397,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			// Five minutes
 			if (getSolaceTicks() == 6000) {
-				
+				//XXX there's nothing here
 			}
 			
 			// 14 Minutes - Critical stage start
@@ -405,7 +406,6 @@ public class CapabilityRegeneration implements IRegeneration {
 					PlayerUtil.playMovingSound(player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
 					player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 800, 0, false, false)); // could be removed with milk, but I think that's not that bad
 				}
-				
 			}
 			
 		}
@@ -418,11 +418,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		// 15 minutes all gone, rip user
 		if (getSolaceTicks() == 17999) {
-			
-			if (!player.world.isRemote) {
+			if (!player.world.isRemote)
 				player.setHealth(-1);
-			}
-			
 			reset();
 		}
 	}

@@ -17,8 +17,7 @@ public class MessageRegenChoice implements IMessage {
 	
 	private boolean enterGrace;
 	
-	public MessageRegenChoice() {
-	}
+	public MessageRegenChoice() {} //NOW needed
 	
 	public MessageRegenChoice(boolean enterGrace) {
 		this.enterGrace = enterGrace;
@@ -34,33 +33,35 @@ public class MessageRegenChoice implements IMessage {
 		buf.writeBoolean(enterGrace);
 	}
 	
+	
+	
 	public static class Handler implements IMessageHandler<MessageRegenChoice, IMessage> {
 		
 		@Override
 		public IMessage onMessage(MessageRegenChoice message, MessageContext ctx) {
 			EntityPlayer player = ctx.getServerHandler().player;
-			if (player == null)
-				return null;
+			if (player == null) return null;
 			
-			IRegeneration regenInfo = CapabilityRegeneration.getForPlayer(player);
+			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 			if (message.enterGrace) {
-				if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 199 && !regenInfo.isInGracePeriod()) {
-					regenInfo.setInGracePeriod(true);
-					regenInfo.setSolaceTicks(0);
-					regenInfo.setTicksRegenerating(0);
-					regenInfo.setGlowing(false);
-					regenInfo.sync();
+				if (cap.getSolaceTicks() > 0 && cap.getSolaceTicks() < 199 && !cap.isInGracePeriod()) {
+					cap.setInGracePeriod(true);
+					cap.setSolaceTicks(0);
+					cap.setTicksRegenerating(0);
+					cap.setGlowing(false);
+					cap.sync();
 					PlayerUtil.sendMessage(player, "regeneration.messages.grace", true);
 				}
 			} else {
-				if (regenInfo.getSolaceTicks() > 0 && regenInfo.getSolaceTicks() < 18000 && regenInfo.getTicksRegenerating() == 0) {
-					regenInfo.setInGracePeriod(false);
-					regenInfo.setSolaceTicks(199);
-					regenInfo.setGlowing(false);
-					regenInfo.setTicksRegenerating(0);
-					regenInfo.sync();
+				if (cap.getSolaceTicks() > 0 && cap.getSolaceTicks() < 18000 && cap.getTicksRegenerating() == 0) {
+					cap.setInGracePeriod(false);
+					cap.setSolaceTicks(199);
+					cap.setGlowing(false);
+					cap.setTicksRegenerating(0);
+					cap.sync();
 				}
 			}
+			
 			return null;
 		}
 	}

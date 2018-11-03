@@ -1,7 +1,5 @@
 package me.fril.regeneration;
 
-import static me.fril.regeneration.common.capability.CapabilityRegeneration.*;
-
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
@@ -40,44 +38,18 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class RegenerationEventHandler {
 	
-	@SubscribeEvent
-	public static void breakBlock(PlayerInteractEvent.LeftClickBlock e) {
-		EntityPlayer player = e.getEntityPlayer();
-		IRegeneration regenInfo = CapabilityRegeneration.getForPlayer(player);
-		boolean inGracePeriod = regenInfo.isInGracePeriod() && regenInfo.isGlowing();
-		
-		if (inGracePeriod) {
-			regenInfo.setGlowing(false);
-			regenInfo.setTicksGlowing(0);
-			regenInfo.sync();
-		}
-	}
-	
-	@SubscribeEvent
-	public static void registerLoot(LootTableLoadEvent e) {
-		if (!e.getName().toString().toLowerCase().matches(RegenConfig.Loot.lootRegex) || RegenConfig.Loot.disableLoot)
-			return;
-		
-		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
-		LootEntry entry = new LootEntryTable(new ResourceLocation(RegenerationMod.MODID, "inject/fob_watch_loot"), 1, 1, condAlways, "regeneration:fob-watch-entry");
-		LootPool lootPool = new LootPool(new LootEntry[] { entry }, condAlways, new RandomValueRange(1), new RandomValueRange(1), "regeneration:fob-watch-pool");
-		e.getTable().addPool(lootPool);
-	}
-	
+	//=========== CAPABILITY HANDLING =============
 	@SubscribeEvent
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-			IRegeneration handler = CapabilityRegeneration.getForPlayer(player);
-			handler.update();
+			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).update();
 		}
 	}
 	
 	@SubscribeEvent
 	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		Entity entity = event.getObject();
-		if (entity instanceof EntityPlayer) {
-			event.addCapability(REGEN_ID, new RegenerationProvider(new CapabilityRegeneration((EntityPlayer) event.getObject())));
+		if (event.getObject() instanceof EntityPlayer) {
+			event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new RegenerationProvider(new CapabilityRegeneration((EntityPlayer) event.getObject())));
 		}
 	}
 	
@@ -107,6 +79,23 @@ public class RegenerationEventHandler {
 		CapabilityRegeneration.getForPlayer(event.player).sync();
 	}
 	
+	
+	
+	
+	//============ USER EVENTS ==========
+	@SubscribeEvent
+	public static void breakBlock(PlayerInteractEvent.LeftClickBlock event) {
+		EntityPlayer player = event.getEntityPlayer();
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		boolean inGracePeriod = cap.isInGracePeriod() && cap.isGlowing();
+		
+		if (inGracePeriod) {
+			cap.setGlowing(false);
+			cap.setTicksGlowing(0);
+			cap.sync();
+		}
+	}
+	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingHurtEvent e) {
 		if (!(e.getEntity() instanceof EntityPlayer))
@@ -130,21 +119,25 @@ public class RegenerationEventHandler {
 			return;
 		}
 		
-		IRegeneration handler = CapabilityRegeneration.getForPlayer(player);
 		e.setCanceled(true);
-		handler.setRegenerating(true);
+		cap.setRegenerating(true);
 		
 		player.clearActivePotions();
 		player.extinguish();
 		player.setArrowCountInEntity(0);
 		
-		if (handler.isRegenerating() && handler.isInGracePeriod()) {
+		if (cap.isRegenerating() && cap.isInGracePeriod()) {
 			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
-			handler.setInGracePeriod(false);
-			handler.setSolaceTicks(199);
+			cap.setInGracePeriod(false);
+			cap.setSolaceTicks(199);
 		}
 	}
 	
+	
+	
+	
+	
+	//================ OTHER ==============
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent e) {
 		if (!RegenConfig.startAsTimelord || e.player.world.isRemote)
@@ -156,5 +149,16 @@ public class RegenerationEventHandler {
 			e.player.inventory.addItemStackToInventory(new ItemStack(RegenObjects.Items.FOB_WATCH));
 			nbt.setBoolean("loggedInBefore", true);
 		}
+	}
+	
+	@SubscribeEvent
+	public static void registerLoot(LootTableLoadEvent event) {
+		if (!event.getName().toString().toLowerCase().matches(RegenConfig.Loot.lootRegex) || RegenConfig.Loot.disableLoot)
+			return;
+		
+		LootCondition[] condAlways = new LootCondition[] { new RandomChance(1F) };
+		LootEntry entry = new LootEntryTable(new ResourceLocation(RegenerationMod.MODID, "inject/fob_watch_loot"), 1, 1, condAlways, "regeneration:fob-watch-entry");
+		LootPool lootPool = new LootPool(new LootEntry[] { entry }, condAlways, new RandomValueRange(1), new RandomValueRange(1), "regeneration:fob-watch-pool");
+		event.getTable().addPool(lootPool);
 	}
 }

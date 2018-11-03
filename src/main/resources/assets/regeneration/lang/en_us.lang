@@ -6,7 +6,7 @@ regeneration.info.blue=Blue
 regeneration.info.primary=Primary
 regeneration.info.secondary=Secondary
 regeneration.info.reset=Reset
-regeneration.info.default=Default
+regeneration.info.undo=Undo
 
 regeneration.messages.now_timelord=You are now a timelord!
 regeneration.messages.regen_or_die=Regenerate now or you will die!

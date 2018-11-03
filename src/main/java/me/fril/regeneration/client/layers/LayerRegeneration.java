@@ -22,6 +22,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	
 	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
 	public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
+	
 	private RenderPlayer playerRenderer;
 	
 	public LayerRegeneration(RenderPlayer playerRenderer) {
@@ -30,19 +31,17 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	
 	@Override
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		IRegeneration handler = CapabilityRegeneration.getForPlayer(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
-		// Render the Fiery Regeneration
-		if (handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
-			handler.getType().onRenderLayer(playerRenderer, handler, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+		if (cap.isRegenerating() && cap.getSolaceTicks() >= 200 && !cap.isInGracePeriod()) {
+			cap.getType().onRenderLayer(playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 		
-		// Glowing Hands
-		renderGlowingHands(player, handler, scale);
+		if (cap.isGlowing())
+			renderGlowingHands(player, cap, scale);
 	}
 	
 	private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
-		if (!handler.isGlowing()) return;
 		Color primaryColor = handler.getPrimaryColor();
 		Color secondaryColor = handler.getSecondaryColor();
 		
@@ -81,4 +80,5 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	public boolean shouldCombineTextures() {
 		return false;
 	}
+	
 }

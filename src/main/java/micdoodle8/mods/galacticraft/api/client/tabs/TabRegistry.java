@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TabRegistry {
+	
 	public static Class<?> clazzNEIConfig = null;
 	public static int recipeBookOffset;
 	private static ArrayList<AbstractTab> tabList = new ArrayList<>();
@@ -171,4 +172,5 @@ public class TabRegistry {
 			TabRegistry.addTabsToList(event.getButtonList());
 		}
 	}
+	
 }

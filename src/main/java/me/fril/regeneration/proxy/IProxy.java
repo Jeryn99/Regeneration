@@ -6,10 +6,8 @@ package me.fril.regeneration.proxy;
  */
 public interface IProxy {
 	
-	void preInit();
-	
-	void init();
-	
-	void postInit();
+	default void preInit() {}
+	default void init() {}
+	default void postInit() {}
 	
 }

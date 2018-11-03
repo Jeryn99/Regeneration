@@ -55,7 +55,7 @@ public class CustomizerGui extends GuiContainer {
 		final int btnW = 50, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
 		
-		btnReset   = new GuiButtonExt(1, cx + 34, cy + 135, btnW, btnH, new TextComponentTranslation("regeneration.info.reset").getFormattedText());
+		btnReset   = new GuiButtonExt(1, cx + 34, cy + 135, btnW, btnH, new TextComponentTranslation("regeneration.info.undo").getFormattedText());
 		btnDefault = new GuiButtonExt(2, cx + 90, cy + 135, btnW, btnH, new TextComponentTranslation("regeneration.info.default").getFormattedText());
 		
 		btnReset.enabled = false;

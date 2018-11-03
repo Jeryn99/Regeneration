@@ -11,7 +11,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
  * Created by Sub
  * on 17/09/2018.
  */
-public class RKeyBinds {
+public class RegenKeyBinds {
 	
 	public static KeyBinding REGEN_NOW, ENTER_GRACE;
 	

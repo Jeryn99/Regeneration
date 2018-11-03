@@ -21,7 +21,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class RegenObjects {
 	
-	// Items
 	public static List<Item> ITEMS = new ArrayList<>();
 	
 	@SubscribeEvent
@@ -37,16 +36,22 @@ public class RegenObjects {
 		return item;
 	}
 	
-	// Sounds
+	
+	
 	@SubscribeEvent
 	public static void addSounds(RegistryEvent.Register<SoundEvent> e) {
-		IForgeRegistry<SoundEvent> reg = e.getRegistry();
-		reg.registerAll(setUpSound("regeneration"), setUpSound("fob_watch"), setUpSound("critical_stage"), setUpSound("heart_beat"), setUpSound("hand_glow"));
+		e.getRegistry().registerAll(setUpSound("regeneration"),
+									setUpSound("fob_watch"),
+									setUpSound("critical_stage"),
+									setUpSound("heart_beat"),
+									setUpSound("hand_glow"));
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {
 		return new SoundEvent(new ResourceLocation(RegenerationMod.MODID, soundName)).setRegistryName(soundName);
 	}
+	
+	
 	
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class Items {

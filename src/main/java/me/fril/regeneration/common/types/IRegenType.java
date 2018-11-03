@@ -13,15 +13,14 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 public interface IRegenType {
 	String getName();
 	
-	void onStartRegeneration(EntityPlayer player);
-	void onUpdateMidRegen(EntityPlayer player);
-	void onFinishRegeneration(EntityPlayer player);
+	default void onStartRegeneration(EntityPlayer player) {}
+	default void onUpdateMidRegen(EntityPlayer player) {}
+	default void onFinishRegeneration(EntityPlayer player) {}
 	
-	void onRenderPlayerPre(RenderPlayerEvent.Pre ev);
-	void onRenderLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
+	default void onRenderPlayerPre(RenderPlayerEvent.Pre ev) {}
+	default void onRenderLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {}
 	
 	SoundEvent getSound();
 	boolean blockMovement();
 	boolean isLaying();
-
 }

@@ -33,15 +33,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
  * on 16/09/2018.
  */
 public class TypeFiery implements IRegenType {
-	@Override
-	public String getName() {
-		return "FIERY";
-	}
-	
-	@Override
-	public void onStartRegeneration(EntityPlayer player) {
-		
-	}
 	
 	@Override
 	public void onUpdateMidRegen(EntityPlayer player) {
@@ -76,27 +67,7 @@ public class TypeFiery implements IRegenType {
 		}
 	}
 	
-	@Override
-	public void onFinishRegeneration(EntityPlayer player) {
-		/*handler.setTrait(TraitHandler.getRandomTrait());
-		player.sendStatusMessage(new TextComponentTranslation(handler.getTrait().getMessage()), true);*/
-	}
 	
-	@Override
-	public SoundEvent getSound() {
-		return RegenObjects.Sounds.REGENERATION;
-	}
-	
-	@Override
-	public boolean blockMovement() {
-		return true;
-	}
-	
-	@Override
-	public boolean isLaying() {
-		return false;
-	}
-
 	@Override
 	public void onRenderPlayerPre(RenderPlayerEvent.Pre ev) {
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
@@ -174,7 +145,6 @@ public class TypeFiery implements IRegenType {
 		GlStateManager.popAttrib();
 	}
 	
-	// Renders the fiery cones
 	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
@@ -192,4 +162,28 @@ public class TypeFiery implements IRegenType {
 			GlStateManager.popMatrix();
 		}
 	}
+	
+	
+	
+	
+	@Override
+	public String getName() {
+		return "FIERY";
+	}
+	
+	@Override
+	public SoundEvent getSound() {
+		return RegenObjects.Sounds.REGENERATION;
+	}
+	
+	@Override
+	public boolean blockMovement() {
+		return true;
+	}
+	
+	@Override
+	public boolean isLaying() {
+		return false;
+	}
+	
 }

@@ -81,6 +81,7 @@ public class RegenConfig { // TODO externalize comment strings?
 		
 	}
 	
+	
 	@Mod.EventBusSubscriber
 	public static class EventHandler {
 		@SubscribeEvent

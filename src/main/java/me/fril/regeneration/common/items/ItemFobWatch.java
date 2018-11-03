@@ -37,14 +37,14 @@ public class ItemFobWatch extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
 		
-		IRegeneration capability = CapabilityRegeneration.getForPlayer(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		ItemStack stack = player.getHeldItem(handIn);
 		
-		if (capability.isCapable()) { //FIXME clean up this mess
+		if (cap.isCapable()) { //NOW clean up this mess
 			if (!player.isSneaking()) {
-				int used = doUsageDamage(stack, capability);
+				int used = doUsageDamage(stack, cap);
 				if (used == 0) {
-					if (capability.getLivesLeft() == RegenConfig.regenCapacity) {
+					if (cap.getLivesLeft() == RegenConfig.regenCapacity) {
 						PlayerUtil.sendMessage(player, "regeneration.messages.transfer.max_regens", true);
 					} else if (stack.getItemDamage() == RegenConfig.regenCapacity) {
 						PlayerUtil.sendMessage(player, "regeneration.messages.transfer.empty_watch", true);
@@ -60,13 +60,13 @@ public class ItemFobWatch extends Item {
 				}
 				
 				stack.setItemDamage(stack.getItemDamage() - 1);
-				capability.setLivesLeft(capability.getLivesLeft() - 1);
+				cap.setLivesLeft(cap.getLivesLeft() - 1);
 				PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
 				return new ActionResult<>(EnumActionResult.PASS, stack);
 			}
 		} else {
 			if (!player.isSneaking()) {
-				if (doUsageDamage(stack, capability) > 0) {
+				if (doUsageDamage(stack, cap) > 0) {
 					world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 				} else if (stack.getItemDamage() == RegenConfig.regenCapacity) {
