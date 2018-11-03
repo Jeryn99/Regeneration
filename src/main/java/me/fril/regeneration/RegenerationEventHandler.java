@@ -1,8 +1,7 @@
-package me.fril.regeneration.common.handlers;
+package me.fril.regeneration;
 
 import static me.fril.regeneration.common.capability.CapabilityRegeneration.*;
 
-import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
@@ -39,7 +38,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
  * on 16/09/2018.
  */
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
-public class RegenerationHandler {
+public class RegenerationEventHandler {
 	
 	@SubscribeEvent
 	public static void breakBlock(PlayerInteractEvent.LeftClickBlock e) {

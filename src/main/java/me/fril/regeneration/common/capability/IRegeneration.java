@@ -2,7 +2,7 @@ package me.fril.regeneration.common.capability;
 
 import java.awt.Color;
 
-import me.fril.regeneration.common.states.IRegenType;
+import me.fril.regeneration.common.types.IRegenType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;

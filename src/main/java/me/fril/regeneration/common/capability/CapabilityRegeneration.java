@@ -7,8 +7,8 @@ import javax.annotation.Nonnull;
 
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.RKeyBinds;
-import me.fril.regeneration.common.states.IRegenType;
-import me.fril.regeneration.common.states.RegenTypes;
+import me.fril.regeneration.common.types.IRegenType;
+import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.network.MessageUpdateRegen;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.ExplosionUtil;

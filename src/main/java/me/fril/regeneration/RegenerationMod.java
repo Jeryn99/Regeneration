@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
-import me.fril.regeneration.common.states.RegenTypes;
+import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
 import net.minecraftforge.common.capabilities.CapabilityManager;

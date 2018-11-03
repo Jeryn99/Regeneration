@@ -1,4 +1,4 @@
-package me.fril.regeneration.common.states;
+package me.fril.regeneration.common.types;
 
 import java.awt.Color;
 import java.util.Random;

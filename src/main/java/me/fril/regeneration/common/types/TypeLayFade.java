@@ -1,4 +1,4 @@
-package me.fril.regeneration.common.states;
+package me.fril.regeneration.common.types;
 
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.RegenObjects;
