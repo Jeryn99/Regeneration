@@ -119,23 +119,25 @@ public class RegenerationHandler {
 				!cap.isCapable() || cap.isRegenerating()) {
 			
 			if (cap.isRegenerating()) {
+				//FIXME correctly handle death mid-regen
 				cap.reset();
-				//FIXME perspective not resetting when killed mid-regen
 				
 				//XXX does not work, I remember something about onHurt only firing on server, but how do I fix it?
 				if (player.world.isRemote && player.getEntityId() == Minecraft.getMinecraft().player.getEntityId()) {
+					//FIXME perspective not resetting when killed mid-regen
 					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 				}
 			}
 			return;
 		}
 		
-		//FIXME correctly handle death mid-regen
-		
 		IRegeneration handler = CapabilityRegeneration.getForPlayer(player);
 		e.setCanceled(true);
 		handler.setRegenerating(true);
+		
 		player.clearActivePotions();
+		player.extinguish();
+		player.setArrowCountInEntity(0);
 		
 		if (handler.isRegenerating() && handler.isInGracePeriod()) {
 			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);

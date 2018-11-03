@@ -10,7 +10,6 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.states.RegenTypes;
 import me.fril.regeneration.network.MessageRegenChoice;
 import me.fril.regeneration.network.NetworkHandler;
-import me.fril.regeneration.util.LimbManipulationUtil;
 import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -146,18 +145,9 @@ public class ClientHandler {
 		IRegeneration handler = CapabilityRegeneration.getForPlayer(player);
 		
 		if (handler.isRegenerating() && handler.getSolaceTicks() >= 200 && !handler.isInGracePeriod()) {
+			handler.getType().onRenderPlayerPre(e);
 			
-			// Fiery Regen T-Posing
-			if (handler.getType() == RegenTypes.FIERY) { //TODO generalise
-				int arm_shake = e.getEntityPlayer().getRNG().nextInt(7);
-				LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
-				LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
-				LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
-				LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
-				LimbManipulationUtil.getLimbManipulator(e.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
-			}
-			
-			/*if (handler.getType().getType().isLaying()) {
+			/*if (handler.getType().getType().isLaying()) { XXX reimplement somehow? I'm not sure how to handle this
 				RenderUtil.renderPlayerLaying(e, player);
 			}*/
 		}

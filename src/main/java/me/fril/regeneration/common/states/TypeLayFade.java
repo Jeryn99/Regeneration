@@ -1,8 +1,11 @@
 package me.fril.regeneration.common.states;
 
+import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.RegenObjects;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent.Pre;
 
 /**
  * Created by Sub
@@ -16,7 +19,7 @@ public class TypeLayFade implements IRegenType {
 	
 	// TODO Yeah I know, some magic numbers in this class. They were copy pasted from a System out. I'll look further into them soon
 	@Override
-	public void onUpdateInitial(EntityPlayer player) {
+	public void onStartRegeneration(EntityPlayer player) {
 		setPlayerRotation(player);
 	}
 	
@@ -26,7 +29,7 @@ public class TypeLayFade implements IRegenType {
 	}
 	
 	@Override
-	public void onFinish(EntityPlayer player) {
+	public void onFinishRegeneration(EntityPlayer player) {
 		setPlayerRotation(player);
 	}
 	
@@ -48,5 +51,18 @@ public class TypeLayFade implements IRegenType {
 	@Override
 	public boolean isLaying() {
 		return true;
+	}
+	
+	
+	@Override
+	public void onRenderPlayerPre(Pre ev) {
+		//STUB Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRenderLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		//STUB Auto-generated method stub
+		
 	}
 }

@@ -298,7 +298,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 			
 			if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100) {
-				getType().onUpdateInitial(player);
+				getType().onStartRegeneration(player);
 				
 				if (getTicksRegenerating() <= 50) {
 					
@@ -336,7 +336,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 			
 			if (getTicksRegenerating() == 200) { // regeneration has finished, reset
-				getType().onFinish(player);
+				getType().onFinishRegeneration(player);
 				setTicksRegenerating(0);
 				setRegenerating(false);
 				setSolaceTicks(0);
@@ -351,6 +351,8 @@ public class CapabilityRegeneration implements IRegeneration {
 				
 				if (player.world.isRemote) {
 					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+				} else {
+					sync();
 				}
 			}
 		}
