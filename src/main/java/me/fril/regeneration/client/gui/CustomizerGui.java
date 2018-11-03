@@ -55,20 +55,21 @@ public class CustomizerGui extends GuiContainer {
 		final int btnW = 50, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
 		
+		//WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
 		btnReset   = new GuiButtonExt(1, cx + 34, cy + 135, btnW, btnH, new TextComponentTranslation("regeneration.info.undo").getFormattedText());
-		btnDefault = new GuiButtonExt(2, cx + 90, cy + 135, btnW, btnH, new TextComponentTranslation("regeneration.info.default").getFormattedText());
+		btnDefault = new GuiButtonExt(4, cx + 90, cy + 135, btnW, btnH, new TextComponentTranslation("regeneration.info.default").getFormattedText());
 		
 		btnReset.enabled = false;
 		buttonList.add(btnReset);
 		buttonList.add(btnDefault);
 		
-		slidePrimaryRed     = new GuiColorSlider(3, cx + 10, cy + 65,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
-		slidePrimaryGreen   = new GuiColorSlider(4, cx + 10, cy + 84,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
-		slidePrimaryBlue    = new GuiColorSlider(5, cx + 10, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this::onChangeSliderValue);
+		slidePrimaryRed     = new GuiColorSlider(5, cx + 10, cy + 65,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
+		slidePrimaryGreen   = new GuiColorSlider(6, cx + 10, cy + 84,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
+		slidePrimaryBlue    = new GuiColorSlider(7, cx + 10, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this::onChangeSliderValue);
 		
-		slideSecondaryRed   = new GuiColorSlider(7, cx + 96, cy + 65,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, this::onChangeSliderValue);
-		slideSecondaryGreen = new GuiColorSlider(8, cx + 96, cy + 84,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this::onChangeSliderValue);
-		slideSecondaryBlue  = new GuiColorSlider(9, cx + 96, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this::onChangeSliderValue);
+		slideSecondaryRed   = new GuiColorSlider(8, cx + 96, cy + 65,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, this::onChangeSliderValue);
+		slideSecondaryGreen = new GuiColorSlider(9, cx + 96, cy + 84,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this::onChangeSliderValue);
+		slideSecondaryBlue  = new GuiColorSlider(10, cx + 96, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this::onChangeSliderValue);
 		
 		buttonList.add(slidePrimaryRed);
 		buttonList.add(slidePrimaryGreen);
@@ -81,10 +82,7 @@ public class CustomizerGui extends GuiContainer {
     
     private void onChangeSliderValue(@Nullable GuiSlider slider) {
     	btnReset.enabled = true;
-    	sendStyleNBTTagToServer();
-    }
-    
-    private void sendStyleNBTTagToServer() {
+    	
     	NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setFloat("PrimaryRed",   (float) slidePrimaryRed.getValue());
 		nbt.setFloat("PrimaryGreen", (float) slidePrimaryGreen.getValue());
