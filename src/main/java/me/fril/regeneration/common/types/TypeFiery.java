@@ -1,16 +1,9 @@
 package me.fril.regeneration.common.types;
 
-import java.awt.Color;
-import java.util.Random;
-
 import me.fril.regeneration.client.layers.LayerRegeneration;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.util.LimbManipulationUtil;
-import me.fril.regeneration.util.PlayerUtil;
-import me.fril.regeneration.util.RegenConfig;
-import me.fril.regeneration.util.RegenObjects;
-import me.fril.regeneration.util.RenderUtil;
+import me.fril.regeneration.util.*;
 import net.minecraft.block.BlockFire;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -27,6 +20,9 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+
+import java.awt.*;
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -75,10 +71,27 @@ public class TypeFiery implements IRegenType {
 	
 	@Override
 	public void onRenderPlayerPre(RenderPlayerEvent.Pre ev) {
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(ev.getEntityPlayer());
+
+		int headRot = 50;
+		if (cap.getTicksRegenerating() < 50 / 5) {
+			headRot = cap.getTicksRegenerating() * 5;
+		}
+
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
+
+		float armRot = 85;
+
+		if (cap.getTicksRegenerating() < 75 / 5) {
+			arm_shake = 0;
+			armRot = cap.getTicksRegenerating() * 5;
+		}
+
+		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
+		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);
+
+		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-headRot, 0, 0);
+
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
 	}
