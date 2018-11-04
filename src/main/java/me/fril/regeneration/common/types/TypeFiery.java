@@ -3,14 +3,13 @@ package me.fril.regeneration.common.types;
 import java.awt.Color;
 import java.util.Random;
 
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.layers.LayerRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.LimbManipulationUtil;
-import me.fril.regeneration.util.RegenConfig;
-import me.fril.regeneration.util.RegenState;
+import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.block.BlockFire;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
@@ -20,6 +19,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
@@ -35,8 +35,8 @@ public class TypeFiery implements IRegenType {
 	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
 		player.extinguish();
 		
-		if (player.world.isRemote && capability.getState() == RegenState.REGENERATING && Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
-			Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+		if (!player.world.isRemote) {
+			PlayerUtil.setPerspective((EntityPlayerMP) player, true);
 		}
 		
 		Random rand = player.world.rand;
@@ -70,6 +70,10 @@ public class TypeFiery implements IRegenType {
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
 		player.rotationPitch = 0;
+		
+		if (!player.world.isRemote) {
+			PlayerUtil.setPerspective((EntityPlayerMP)player, false);
+		}
 	}
 	
 	

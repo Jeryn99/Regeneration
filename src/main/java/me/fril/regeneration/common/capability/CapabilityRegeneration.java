@@ -74,6 +74,10 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void tick() {
 		//NOW handle capability tick
+		if (state == RegenState.REGENERATING) {
+			type.onUpdateMidRegen(player, this);
+		}
+		
 	}
 	
 	private void setState(RegenState state) {
@@ -358,21 +362,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
-	public void sync() {
-		NetworkHandler.INSTANCE.sendToAll(new MessageUpdateRegen(player, serializeNBT()));
-	}
-	
-	@Override
-	public IRegenType getType() {
-		return RegenTypes.getTypeByName(typeName);
-	}
-	
-	@Override
-	public void setType(String name) {
-		typeName = name;
-	}
-	
-	@Override
 	public void reset() {
 		setInGracePeriod(false);
 		setGlowing(false);
@@ -393,86 +382,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			setInGracePeriod(false);
 			setTicksGlowing(0);
 		}
-	}
-	
-	@Override
-	public boolean isRegenerating() {
-		return isRegenerating;
-	}
-	
-	@Override
-	public void setRegenerating(boolean regenerating) {
-		isRegenerating = regenerating;
-	}
-	
-	@Override
-	public boolean isGlowing() {
-		return isGraceGlowing;
-	}
-	
-	@Override
-	public void setGlowing(boolean glowing) {
-		isGraceGlowing = glowing;
-	}
-	
-	@Override
-	public int getTicksGlowing() {
-		return ticksGlowing;
-	}
-	
-	@Override
-	public void setTicksGlowing(int ticks) {
-		ticksGlowing = ticks;
-	}
-	
-	@Override
-	public boolean isInGracePeriod() {
-		return isInGrace;
-	}
-	
-	@Override
-	public void setInGracePeriod(boolean gracePeriod) {
-		isInGrace = gracePeriod;
-	}
-	
-	@Override
-	public int getSolaceTicks() {
-		return ticksInSolace;
-	}
-	
-	@Override
-	public void setSolaceTicks(int ticks) {
-		ticksInSolace = ticks;
-	}
-	
-	@Override
-	public int getTicksRegenerating() {
-		return regenTicks;
-	}
-	
-	@Override
-	public void setTicksRegenerating(int ticks) {
-		regenTicks = ticks;
-	}
-	
-	@Override
-	public int getLivesLeft() {
-		return livesLeft;
-	}
-	
-	@Override
-	public void setLivesLeft(int left) {
-		livesLeft = left;
-	}
-	
-	@Override
-	public int getTimesRegenerated() {
-		return timesRegenerated;
-	}
-	
-	@Override
-	public void setTimesRegenerated(int times) {
-		timesRegenerated = times;
 	}*/
 	
 }

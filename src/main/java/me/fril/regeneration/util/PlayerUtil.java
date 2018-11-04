@@ -1,6 +1,8 @@
 package me.fril.regeneration.util;
 
 import me.fril.regeneration.client.sound.MovingSoundPlayer;
+import me.fril.regeneration.network.MessageSetPerspective;
+import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -42,6 +44,12 @@ public class PlayerUtil {
 	@SideOnly(Side.CLIENT)
 	public static void playMovingSound(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(player, soundIn, categoryIn));
+	}
+	
+	
+	@SideOnly(Side.SERVER)
+	public static void setPerspective(EntityPlayerMP player, boolean thirdperson) {
+		NetworkHandler.INSTANCE.sendTo(new MessageSetPerspective(thirdperson), player);
 	}
 	
 	
