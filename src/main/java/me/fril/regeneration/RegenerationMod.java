@@ -20,8 +20,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class RegenerationMod {
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
-	public static final String VERSION = "1.0.0";
-	public static final String UPDATE_URL = "https://github.com/Suffril/Regeneration/blob/master/update.json";
+	public static final String VERSION = "1.1.0";
+	public static final String UPDATE_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/master/update.json";
 	
 	@Mod.Instance(MODID)
 	public static RegenerationMod INSTANCE;
