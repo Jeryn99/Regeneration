@@ -13,13 +13,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * Created by Sub
  * on 20/09/2018.
  */
-public class MessageRegenerationStyle implements IMessage {
+public class MessageSaveStyle implements IMessage {
 	
 	private NBTTagCompound style;
 	
-	public MessageRegenerationStyle() {}
+	public MessageSaveStyle() {}
 	
-	public MessageRegenerationStyle(NBTTagCompound nbtTagCompound) {
+	public MessageSaveStyle(NBTTagCompound nbtTagCompound) {
 		style = nbtTagCompound;
 	}
 	
@@ -33,13 +33,13 @@ public class MessageRegenerationStyle implements IMessage {
 		ByteBufUtils.writeTag(buf, style);
 	}
 	
-	public static class Handler implements IMessageHandler<MessageRegenerationStyle, IMessage> {
+	public static class Handler implements IMessageHandler<MessageSaveStyle, IMessage> {
 		@Override
-		public IMessage onMessage(MessageRegenerationStyle message, MessageContext ctx) {
+		public IMessage onMessage(MessageSaveStyle message, MessageContext ctx) {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(()-> {
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
 				cap.setStyle(message.style);
-				cap.sync();
+				cap.synchronise();
 			});
 			return null;
 		}

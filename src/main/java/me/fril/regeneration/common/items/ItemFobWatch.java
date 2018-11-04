@@ -42,21 +42,20 @@ public class ItemFobWatch extends Item {
 		if (!player.isSneaking()) { //transferring watch->player
 			if (stack.getItemDamage() == RegenConfig.regenCapacity) {
 				return usageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
-			} else if (cap.getLivesLeft() == RegenConfig.regenCapacity) {
+			} else if (cap.getRegenerationsLeft() == RegenConfig.regenCapacity) {
 				return usageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 			}
 			
 			int supply = RegenConfig.regenCapacity - stack.getItemDamage(),
-				needed = RegenConfig.regenCapacity - cap.getLivesLeft(),
+				needed = RegenConfig.regenCapacity - cap.getRegenerationsLeft(),
 				used = Math.min(supply, needed);
 			
-			if (cap.isCapable())
+			if (cap.canRegenerate())
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
 			else
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 			
-			cap.setLivesLeft(cap.getLivesLeft() + used);
-			cap.sync();
+			cap.receiveRegenerations(used);
 			
 			if (!cap.getPlayer().isCreative())
 				stack.setItemDamage(stack.getItemDamage() + used);
@@ -64,11 +63,11 @@ public class ItemFobWatch extends Item {
 			world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
 		} else { //transferring player->watch
 			if (stack.getItemDamage() == 0) {
-				return usageFailed(player, cap.isCapable() ? "regeneration.messages.transfer.full_watch" : "regeneration.messages.transfer.no_regens", stack);
+				return usageFailed(player, cap.canRegenerate() ? "regeneration.messages.transfer.full_watch" : "regeneration.messages.transfer.no_regens", stack);
 			}
 			
 			stack.setItemDamage(stack.getItemDamage() - 1);
-			cap.setLivesLeft(cap.getLivesLeft() - 1);
+			cap.extractRegeneration(1);
 			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
 			return new ActionResult<>(EnumActionResult.PASS, stack);
 		}

@@ -41,9 +41,8 @@ public class RegenerationEventHandler {
 	//=========== CAPABILITY HANDLING =============
 	@SubscribeEvent
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
-		if (event.getEntityLiving() instanceof EntityPlayer) {
-			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).update();
-		}
+		if (event.getEntityLiving() instanceof EntityPlayer)
+			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).tick();
 	}
 	
 	@SubscribeEvent
@@ -61,22 +60,22 @@ public class RegenerationEventHandler {
 	
 	@SubscribeEvent
 	public static void playerTracking(PlayerEvent.StartTracking event) {
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).sync();
+		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerRespawn(PlayerRespawnEvent event) {
-		CapabilityRegeneration.getForPlayer(event.player).sync();
+		CapabilityRegeneration.getForPlayer(event.player).synchronise();
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		CapabilityRegeneration.getForPlayer(event.player).sync();
+		CapabilityRegeneration.getForPlayer(event.player).synchronise();
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		CapabilityRegeneration.getForPlayer(event.player).sync();
+		CapabilityRegeneration.getForPlayer(event.player).synchronise();
 	}
 	
 	

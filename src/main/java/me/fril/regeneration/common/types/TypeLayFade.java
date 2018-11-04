@@ -1,8 +1,7 @@
 package me.fril.regeneration.common.types;
 
-import me.fril.regeneration.util.RegenObjects;
+import me.fril.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.SoundEvent;
 
 /**
  * Created by Sub
@@ -11,46 +10,30 @@ import net.minecraft.util.SoundEvent;
 public class TypeLayFade implements IRegenType {
 	
 	@Override
-	public void onStartRegeneration(EntityPlayer player) {
+	public void onStartRegeneration(EntityPlayer player, IRegeneration capability) {
 		setPlayerRotation(player);
 	}
 	
 	@Override
-	public void onUpdateMidRegen(EntityPlayer player) {
+	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
 		setPlayerRotation(player);
 	}
 	
 	@Override
-	public void onFinishRegeneration(EntityPlayer player) {
+	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
 		setPlayerRotation(player);
 	}
 	
-	// TODO Yeah I know, some magic numbers in this class. They were copy pasted from a System out. I'll look further into them soon
+	//TODO Yeah I know, some magic numbers in this class. They were copy pasted from a System out. I'll look further into them soon
 	private void setPlayerRotation(EntityPlayer player) {
 		player.rotationPitch = -83.550026F;
 		player.rotationYaw = -0.54983205F;
 	}
 	
 	
-	
 	@Override
 	public String getName() {
 		return "LAYFADE";
-	}
-	
-	@Override
-	public SoundEvent getSound() {
-		return RegenObjects.Sounds.REGENERATION;
-	}
-	
-	@Override
-	public boolean blockMovement() {
-		return true;
-	}
-	
-	@Override
-	public boolean isLaying() {
-		return true;
 	}
 	
 }

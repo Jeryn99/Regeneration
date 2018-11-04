@@ -4,14 +4,13 @@ import java.awt.Color;
 import java.util.Random;
 
 import me.fril.regeneration.client.layers.LayerRegeneration;
-import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.LimbManipulationUtil;
-import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenConfig;
-import me.fril.regeneration.util.RegenObjects;
+import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.block.BlockFire;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
@@ -21,10 +20,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
@@ -35,8 +32,12 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 public class TypeFiery implements IRegenType {
 	
 	@Override
-	public void onUpdateMidRegen(EntityPlayer player) {
+	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
 		player.extinguish();
+		
+		if (player.world.isRemote && capability.getState() == RegenState.REGENERATING && Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
+			Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
+		}
 		
 		Random rand = player.world.rand;
 		player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
@@ -48,12 +49,11 @@ public class TypeFiery implements IRegenType {
 		if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire)
 			player.world.setBlockToAir(player.getPosition());
 		
-		IRegeneration capa = CapabilityRegeneration.getForPlayer(player);
-		if (capa.getTicksRegenerating() > 150 && capa.getTicksRegenerating() < 152) {
+		/*if (capability.getTicksRegenerating() > 150 && capability.getTicksRegenerating() < 152) { TODO damage armor
 			if (!player.world.isRemote) {
 				PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(3));
 			}
-		}
+		}*/
 		
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
 		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
@@ -68,13 +68,13 @@ public class TypeFiery implements IRegenType {
 	}
 	
 	@Override
-		public void onFinishRegeneration(EntityPlayer player) {
-			player.rotationPitch = 0;
-		}
+	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
+		player.rotationPitch = 0;
+	}
 	
 	
 	@Override
-	public void onRenderPlayerPre(RenderPlayerEvent.Pre ev) {
+	public void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre ev, IRegeneration capability) {
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
@@ -84,7 +84,7 @@ public class TypeFiery implements IRegenType {
 	}
 
 	@Override
-	public void onRenderLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public void onRenderRegenerationLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 		
 		// State manager changes
@@ -176,19 +176,9 @@ public class TypeFiery implements IRegenType {
 		return "FIERY";
 	}
 	
-	@Override
+	/*@Override
 	public SoundEvent getSound() {
 		return RegenObjects.Sounds.REGENERATION;
-	}
-	
-	@Override
-	public boolean blockMovement() {
-		return true;
-	}
-	
-	@Override
-	public boolean isLaying() {
-		return false;
-	}
+	}*/
 	
 }

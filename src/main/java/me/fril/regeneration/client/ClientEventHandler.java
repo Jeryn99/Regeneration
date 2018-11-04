@@ -7,10 +7,10 @@ import java.util.Random;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.network.MessageRegenChoice;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenObjects;
+import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -21,12 +21,10 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -47,12 +45,13 @@ public class ClientEventHandler {
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		float f = 0.2F;
 		
-		if (player.getHeldItemMainhand().getItem() != Items.AIR)
+		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
 			return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
-		if (!cap.isGlowing() || mc.gameSettings.thirdPersonView > 0) return;
+		if ((cap.getState() != RegenState.GRACE_GLOWING && cap.getState() != RegenState.GRACE_CRIT))
+			return;
 		
 		
 		GlStateManager.pushMatrix();
@@ -79,21 +78,6 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public static void onUpdate(LivingEvent.LivingUpdateEvent e) {
-		if (!(e.getEntityLiving() instanceof EntityPlayerSP) || Minecraft.getMinecraft().player == null) return;
-		
-		EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-		IRegeneration regeneration = CapabilityRegeneration.getForPlayer(player);
-		
-		if (regeneration.isRegenerating() && !regeneration.isInGracePeriod() && // player is actually regenerating or choosing
-				regeneration.getSolaceTicks() > 0 &&
-				Minecraft.getMinecraft().player.getEntityId() == player.getEntityId()) {
-			Minecraft.getMinecraft().gameSettings.thirdPersonView = 2;
-		}
-	}
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
 	public static void onClientTick(TickEvent.ClientTickEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		if (player == null || Minecraft.getMinecraft().world == null) return;
@@ -113,7 +97,7 @@ public class ClientEventHandler {
 		}
 	}
 	
-	@SubscribeEvent
+	/*@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public static void cameraUpdate(EntityViewRenderEvent.FOVModifier e) {
 		if (Minecraft.getMinecraft().player == null) return;
@@ -123,7 +107,7 @@ public class ClientEventHandler {
 		if (cap.getTicksRegenerating() >= 1 && cap.getType() == RegenTypes.LAYDOWN || cap.getSolaceTicks() > 0 && cap.getSolaceTicks() < 200 && !cap.isInGracePeriod()) {
 			e.setFOV(30);
 		}
-	}
+	}*/
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
@@ -131,12 +115,8 @@ public class ClientEventHandler {
 		EntityPlayer player = e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
-		if (cap.isRegenerating() && cap.getSolaceTicks() >= 200 && !cap.isInGracePeriod()) {
-			cap.getType().onRenderPlayerPre(e);
-			
-			/*if (handler.getType().getType().isLaying()) { XXX reimplement somehow? I'm not sure how to handle this
-				RenderUtil.renderPlayerLaying(e, player);
-			}*/
+		if (cap.getState() == RegenState.REGENERATING) {
+			cap.onRenderRegeneratingPlayerPre(e);
 		}
 	}
 	
@@ -146,7 +126,7 @@ public class ClientEventHandler {
 		if (Minecraft.getMinecraft().player == null) return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
-		if (cap.isRegenerating() && !cap.isInGracePeriod() && cap.getType().blockMovement()) { //locking user
+		if (cap.getState() == RegenState.REGENERATING) { //locking user
 			MovementInput moveType = e.getMovementInput();
 			moveType.rightKeyDown = false;
 			moveType.leftKeyDown = false;

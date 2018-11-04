@@ -2,9 +2,11 @@ package me.fril.regeneration.common.capability;
 
 import java.awt.Color;
 
-import me.fril.regeneration.common.types.IRegenType;
+import me.fril.regeneration.util.RegenState;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
@@ -13,6 +15,31 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
+	RegenState getState();
+	EntityPlayer getPlayer();
+	
+	void tick();
+	void synchronise();
+	
+	NBTTagCompound getStyle();
+	void setStyle(NBTTagCompound nbt);
+	Color getPrimaryColor();
+	Color getSecondaryColor();
+	
+	int getRegenerationsLeft();
+	
+	/** Returns if the player is currently <i>able to</i> regenerate */
+	default boolean canRegenerate() {
+		return getRegenerationsLeft() > 0 && getPlayer().posY > 0;
+	}
+	
+	void receiveRegenerations(int amount);
+	void extractRegeneration(int amount);
+	
+	void onRenderRegenerationLayer(RenderPlayer playerRenderer, IRegeneration cap, EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
+	void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre event);
+	
+	/*
 	// Update
 	void update();
 	
@@ -71,5 +98,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	Color getPrimaryColor();
 	Color getSecondaryColor();
 	void reset();
+	*/
 	
 }

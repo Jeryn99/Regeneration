@@ -28,22 +28,25 @@ public class RegenDebugCommand extends CommandBase {
 		int amount = args.length > 1 ? parseInt(args[1], 0) : -1;
 		
 		switch (args[0]) {
-			case "solace":
+			/*case "solace": TODO implement state change
 				if (amount > 0)
 					cap.setSolaceTicks(amount);
 				else
 					notifyCommandListener(sender, this, "Solace ticks: "+cap.getSolaceTicks());
-				break;
+				break;*/
 			
 			case "regen":
-				if (amount > 0)
-					cap.setLivesLeft(amount);
-				else
-					notifyCommandListener(sender, this, "Regenerations: "+cap.getLivesLeft());
+				if (amount > 0) {
+					int difference = amount - cap.getRegenerationsLeft();
+					if (difference > 0)
+						cap.receiveRegenerations(difference);
+					else
+						cap.extractRegeneration(difference);
+				} else notifyCommandListener(sender, this, "Regenerations: "+cap.getRegenerationsLeft());
 				break;
 		}
 		
-		cap.sync();
+		cap.synchronise();
 	}
 	
 	@Override

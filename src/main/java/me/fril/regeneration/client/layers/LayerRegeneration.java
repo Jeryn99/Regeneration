@@ -5,6 +5,7 @@ import java.util.Random;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
@@ -33,11 +34,11 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
-		if (cap.isRegenerating() && cap.getSolaceTicks() >= 200 && !cap.isInGracePeriod()) {
-			cap.getType().onRenderLayer(playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+		if (cap.getState() == RegenState.REGENERATING) {
+			cap.onRenderRegenerationLayer(playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 		
-		if (cap.isGlowing())
+		if (cap.getState() == RegenState.GRACE_GLOWING)
 			renderGlowingHands(player, cap, scale);
 	}
 	

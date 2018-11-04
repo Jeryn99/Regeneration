@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.network.MessageRegenerationStyle;
+import me.fril.regeneration.network.MessageSaveStyle;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
@@ -92,7 +92,7 @@ public class CustomizerGui extends GuiContainer {
 		nbt.setFloat("SecondaryGreen", (float) slideSecondaryGreen.getValue());
 		nbt.setFloat("SecondaryBlue",  (float) slideSecondaryBlue.getValue());
 		
-		NetworkHandler.INSTANCE.sendToServer(new MessageRegenerationStyle(nbt));
+		NetworkHandler.INSTANCE.sendToServer(new MessageSaveStyle(nbt));
 	}
     
     @Override
@@ -146,7 +146,7 @@ public class CustomizerGui extends GuiContainer {
 		length = mc.fontRenderer.getStringWidth(str);
 		fontRenderer.drawString(str, cx + 131 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(secondaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
 		
-		str = new TextComponentTranslation("regeneration.messages.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getLivesLeft();
+		str = new TextComponentTranslation("regeneration.messages.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft();
 		length = mc.fontRenderer.getStringWidth(str);
 		fontRenderer.drawString(str, cx + 86 - length / 2, cy + 21, Color.DARK_GRAY.getRGB());
     }

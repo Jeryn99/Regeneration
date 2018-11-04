@@ -16,14 +16,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * Created by Sub
  * on 16/09/2018.
  */
-public class MessageUpdateRegen implements IMessage {
+public class MessageSynchroniseRegen implements IMessage {
 	
 	private EntityPlayer player;
 	private NBTTagCompound data;
 	
-	public MessageUpdateRegen() {}
+	public MessageSynchroniseRegen() {}
 	
-	public MessageUpdateRegen(EntityPlayer player, NBTTagCompound data) {
+	public MessageSynchroniseRegen(EntityPlayer player, NBTTagCompound data) {
 		this.player = player;
 		this.data = data;
 	}
@@ -42,10 +42,10 @@ public class MessageUpdateRegen implements IMessage {
 		data = ByteBufUtils.readTag(buf);
 	}
 	
-	public static class Handler implements IMessageHandler<MessageUpdateRegen, IMessage> {
+	public static class Handler implements IMessageHandler<MessageSynchroniseRegen, IMessage> {
 		
 		@Override
-		public IMessage onMessage(MessageUpdateRegen message, MessageContext ctx) {
+		public IMessage onMessage(MessageSynchroniseRegen message, MessageContext ctx) {
 			EntityPlayer player = message.player;
 			if (player == null) return null;
 			
