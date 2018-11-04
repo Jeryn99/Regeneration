@@ -67,6 +67,11 @@ public class TypeFiery implements IRegenType {
 		}
 	}
 	
+	@Override
+		public void onFinishRegeneration(EntityPlayer player) {
+			player.rotationPitch = 0;
+		}
+	
 	
 	@Override
 	public void onRenderPlayerPre(RenderPlayerEvent.Pre ev) {

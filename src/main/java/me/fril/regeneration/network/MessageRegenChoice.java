@@ -17,7 +17,7 @@ public class MessageRegenChoice implements IMessage {
 	
 	private boolean enterGrace;
 	
-	public MessageRegenChoice() {} //NOW needed
+	public MessageRegenChoice() {}
 	
 	public MessageRegenChoice(boolean enterGrace) {
 		this.enterGrace = enterGrace;

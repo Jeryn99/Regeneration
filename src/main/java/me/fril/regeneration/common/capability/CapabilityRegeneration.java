@@ -1,5 +1,10 @@
 package me.fril.regeneration.common.capability;
 
+import java.awt.Color;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.common.types.IRegenType;
@@ -26,10 +31,6 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Mod;
-
-import javax.annotation.Nonnull;
-import java.awt.*;
-import java.util.UUID;
 
 /**
  * Created by Sub
@@ -353,7 +354,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				}
 				
 				if (player.world.isRemote) {
-					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0; //TODO reset view back to eye level?
+					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 				} else {
 					sync();
 				}

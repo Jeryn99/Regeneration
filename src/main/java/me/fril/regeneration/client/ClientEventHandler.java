@@ -42,7 +42,7 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public static void onRenderHand(RenderHandEvent e) { //TODO move effect a little bit to the right?
+	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		float f = 0.2F;
