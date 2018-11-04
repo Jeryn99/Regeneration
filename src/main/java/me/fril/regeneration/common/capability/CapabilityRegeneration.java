@@ -34,7 +34,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	private final EntityPlayer player;
-	private RegenState state;
+	private RegenState state = RegenState.ALIVE;
 	private int regenerationsLeft;
 	private IRegenType type = RegenTypes.FIERY;
 	
@@ -101,7 +101,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		setStyle(nbt.getCompoundTag("style"));
-		setState(RegenState.valueOf(nbt.getString("state")));
+		setState(nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE); //I need to check for versions before 1.2
 		regenerationsLeft = nbt.getInteger("regenerationsLeft");
 	}
 	
