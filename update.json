@@ -1,11 +1,12 @@
 {
   "homepage": "https://minecraft.curseforge.com/projects/regeneration",
   "promos": {
-    "1.12.2-latest": "1.1.0",
-    "1.12.2-recommended": "1.1.0"
+    "1.12.2-latest": "1.2.0",
+    "1.12.2-recommended": "1.2.0"
   },
   "1.12.2": {
     "1.0.0": "Time for a full release then boys",
-    "1.1.0": "Alot of bug fixes, see github for the full changelog"
+    "1.1.0": "Alot of bug fixes, see github for the full changelog",
+    "1.2.0": "Fixes to server crash #BlameWaffle"
   }
 }

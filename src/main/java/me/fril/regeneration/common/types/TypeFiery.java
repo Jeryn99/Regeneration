@@ -20,6 +20,8 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.util.Random;
@@ -64,12 +66,13 @@ public class TypeFiery implements IRegenType {
 	}
 	
 	@Override
-		public void onFinishRegeneration(EntityPlayer player) {
+	public void onFinishRegeneration(EntityPlayer player) {
 			player.rotationPitch = 0;
 		}
 	
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void onRenderPlayerPre(RenderPlayerEvent.Pre ev) {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(ev.getEntityPlayer());
 
@@ -97,6 +100,7 @@ public class TypeFiery implements IRegenType {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void onRenderLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 		
@@ -112,9 +116,6 @@ public class TypeFiery implements IRegenType {
 		NBTTagCompound style = capability.getStyle();
 		Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
-		
-		/*float primaryScale = capability.getTicksRegenerating() * 40f; TODO reimplement the startup animation
-		float secondaryScale = capability.getTicksRegenerating() * 70f;*/
 
 		float primaryScale = capability.getTicksRegenerating() / 5.0F;
 		float secondaryScale = capability.getTicksRegenerating() / 8.5F;
@@ -165,7 +166,8 @@ public class TypeFiery implements IRegenType {
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();
 	}
-	
+
+	@SideOnly(Side.CLIENT)
 	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
