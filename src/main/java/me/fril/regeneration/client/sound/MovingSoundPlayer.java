@@ -1,8 +1,8 @@
 package me.fril.regeneration.client.sound;
 
+import me.fril.regeneration.RegenObjects;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,8 +1,12 @@
 package me.fril.regeneration;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
+import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
-import me.fril.regeneration.util.RegenConfig;
+import me.fril.regeneration.common.events.RegenDeathEvent;
+import me.fril.regeneration.common.events.RegenEnterGraceEvent;
+import me.fril.regeneration.common.events.RegenTriggerRegenerationEvent;
+import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +17,7 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.conditions.RandomChance;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -31,7 +36,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
  * on 16/09/2018.
  */
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
-public class RegenerationEventHandler {
+public class RegenEventHandler {
 	
 	//=========== CAPABILITY HANDLING =============
 	@SubscribeEvent
@@ -93,15 +98,34 @@ public class RegenerationEventHandler {
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onHurt(LivingHurtEvent event) {
-		//NOW handle onHurt (the whole dying shenanigans)
-		
-		/*if (!(event.getEntity() instanceof EntityPlayer))
+	public static void onHurt(LivingHurtEvent event) { //NOW handle onHurt (the whole dying shenanigans)
+		if (!(event.getEntity() instanceof EntityPlayer))
 			return;
 		
 		EntityPlayer player = (EntityPlayer) event.getEntity();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() > 0 ||
+		
+		if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() > 0) return; //no death
+		
+		
+		if (cap.getState() == RegenState.ALIVE) {
+			
+			MinecraftForge.EVENT_BUS.post(new RegenEnterGraceEvent(cap));
+			event.setCanceled(true);
+			
+		} else if (cap.getState().isGraceful()) {
+			
+			MinecraftForge.EVENT_BUS.post(new RegenTriggerRegenerationEvent(cap));
+			event.setCanceled(true);
+			
+		} else if (cap.getState() == RegenState.REGENERATING) {
+			
+			MinecraftForge.EVENT_BUS.post(new RegenDeathEvent(cap));
+			event.setCanceled(false);
+			
+		} else throw new IllegalStateException("Unknown state: "+cap.getState());
+		
+		/*if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() > 0 ||
 				!cap.isCapable() || cap.isRegenerating()) {
 			
 			if (cap.isRegenerating()) {

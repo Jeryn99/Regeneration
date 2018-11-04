@@ -1,10 +1,10 @@
 package me.fril.regeneration.common.items;
 
+import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.RegenObjects;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.PlayerUtil;
-import me.fril.regeneration.util.RegenConfig;
-import me.fril.regeneration.util.RegenObjects;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

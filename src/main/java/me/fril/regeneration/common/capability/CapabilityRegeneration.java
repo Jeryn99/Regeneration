@@ -198,21 +198,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	/*
-	@Override
-	public void sync() {
-		NetworkHandler.INSTANCE.sendToAll(new MessageUpdateRegen(player, serializeNBT()));
-	}
-	
-	@Override
-	public IRegenType getType() {
-		return RegenTypes.getTypeByName(typeName);
-	}
-	
-	@Override
-	public void setType(String name) {
-		typeName = name;
-	}
-	
 	private void updateRegeneration() {
 		setSolaceTicks(getSolaceTicks() + 1);
 		
@@ -236,9 +221,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			setGlowing(false);
 			player.dismountRidingEntity();
 			player.removePassengers();
+			player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
 			setTicksRegenerating(getTicksRegenerating() + 1);
 			
-			player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
 			
 			if (getTicksRegenerating() == 3) {
 				if (player.world.isRemote) {
@@ -370,6 +355,21 @@ public class CapabilityRegeneration implements IRegeneration {
 				player.setHealth(-1);
 			reset();
 		}
+	}
+	
+	@Override
+	public void sync() {
+		NetworkHandler.INSTANCE.sendToAll(new MessageUpdateRegen(player, serializeNBT()));
+	}
+	
+	@Override
+	public IRegenType getType() {
+		return RegenTypes.getTypeByName(typeName);
+	}
+	
+	@Override
+	public void setType(String name) {
+		typeName = name;
 	}
 	
 	@Override

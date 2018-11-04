@@ -1,6 +1,5 @@
-package me.fril.regeneration.util;
+package me.fril.regeneration;
 
-import me.fril.regeneration.RegenerationMod;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
