@@ -113,7 +113,7 @@ public class CustomizerGui extends GuiContainer {
 			slidePrimaryBlue.setValue(0F);
 			
 			slideSecondaryRed.setValue(1F);
-			slideSecondaryGreen.setValue(0.11F);
+			slideSecondaryGreen.setValue(0.5F);
 			slideSecondaryBlue.setValue(0.18F);
 			
 			onChangeSliderValue(null);
