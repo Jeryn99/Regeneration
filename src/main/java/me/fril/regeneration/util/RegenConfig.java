@@ -26,7 +26,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	public static boolean startAsTimelord = false;
 	
 	@Config.LangKey("config.regeneration.fiery_regen")
-	@Config.Comment("Spawn fire when regenerating")
+	@Config.Comment("Spawn fire during regeneration")
 	public static boolean fieryRegen = true;
 	
 	@Config.LangKey("config.regeneration.regenerative_kill_range")
@@ -66,6 +66,14 @@ public class RegenConfig { // TODO externalize comment strings?
 	@Config.LangKey("config.regeneration.lose_power_on_mid_regen_death")
 	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration")
 	public static boolean losePowerOnMidRegenDeath = true;
+	
+	@Config.LangKey("config.regeneration.regeneration_knocksback_players")
+	@Config.Comment("Players can be knocked back when too close to a regeneration")
+	public static boolean regenerationKnocksbackPlayers = true;
+	
+	@Config.LangKey("config.regeneration.regeneration_kills_players")
+	@Config.Comment("Players can be killed when too close to a regeneration")
+	public static boolean regenerationKillsPlayers = false;
 	
 	public static class Loot {
 		

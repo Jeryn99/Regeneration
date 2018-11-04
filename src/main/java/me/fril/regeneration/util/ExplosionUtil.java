@@ -19,24 +19,23 @@ public class ExplosionUtil {
 	
 	public static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity-> {
-			if (!(entity instanceof EntityCreature) || exploder.isDead)
-				return;
-			EntityCreature victim = (EntityCreature) entity;
-			float densMod = world.getBlockDensity(new Vec3d(pos), entity.getEntityBoundingBox());
-			
-			int xr, zr;
-			xr = (int) -(victim.posX - exploder.posX);
-			zr = (int) -(victim.posZ - exploder.posZ);
-			
-			victim.knockBack(exploder, knockback * densMod, xr, zr);
+			if ((entity instanceof EntityCreature || (entity instanceof EntityPlayer && RegenConfig.regenerationKnocksbackPlayers)) && !exploder.isDead) {
+				EntityCreature victim = (EntityCreature) entity;
+				float densMod = world.getBlockDensity(new Vec3d(pos), entity.getEntityBoundingBox());
+				
+				int xr, zr;
+				xr = (int) -(victim.posX - exploder.posX);
+				zr = (int) -(victim.posZ - exploder.posZ);
+				
+				victim.knockBack(exploder, knockback * densMod, xr, zr);
+			}
 		});
 	}
 	
-	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) { //TODO config option to never immediately kill players, but just knocking them back
+	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity-> {
-			if (!(entity instanceof EntityCreature) || !entity.isNonBoss())
-				return;
-			entity.attackEntityFrom(RegenerativeDamageSource.INSTANCE, Float.MAX_VALUE);
+			if ((entity instanceof EntityCreature && entity.isNonBoss()) || (entity instanceof EntityPlayer && RegenConfig.regenerationKillsPlayers))
+				entity.attackEntityFrom(RegenerativeDamageSource.INSTANCE, Float.MAX_VALUE);
 		});
 	}
 	
