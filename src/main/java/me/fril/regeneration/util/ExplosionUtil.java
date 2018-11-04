@@ -3,7 +3,6 @@ package me.fril.regeneration.util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -35,7 +34,7 @@ public class ExplosionUtil {
 	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity-> {
 			if ((entity instanceof EntityCreature && entity.isNonBoss()) || (entity instanceof EntityPlayer && RegenConfig.regenerationKillsPlayers))
-				entity.attackEntityFrom(RegenerativeDamageSource.INSTANCE, Float.MAX_VALUE);
+				entity.attackEntityFrom(RegenObjects.REGEN_SOURCE, Float.MAX_VALUE);
 		});
 	}
 	
@@ -43,19 +42,5 @@ public class ExplosionUtil {
 	public static AxisAlignedBB getReach(BlockPos pos, int range) {
 		return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
 	}
-	
-	
-	/** Useful for future extension / add-on hooking */
-	public static class RegenerativeDamageSource extends DamageSource {
-		public static final DamageSource INSTANCE;
-		
-		static {
-			INSTANCE = new RegenerativeDamageSource();
-		}
-		
-		private RegenerativeDamageSource() {
-			super("regeneration");
-		}
-	}
-	
+
 }
