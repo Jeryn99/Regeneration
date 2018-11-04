@@ -7,6 +7,7 @@ import me.fril.regeneration.common.capability.RegenerationStorage;
 import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
+import me.fril.regeneration.util.RegenDebugCommand;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL)
@@ -41,6 +43,11 @@ public class RegenerationMod {
 		NetworkHandler.init();
 		RegenTypes.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
+	}
+	
+	@EventHandler
+	public void serverInit(FMLServerStartingEvent event) {
+		event.registerServerCommand(new RegenDebugCommand());
 	}
 	
 	@EventHandler

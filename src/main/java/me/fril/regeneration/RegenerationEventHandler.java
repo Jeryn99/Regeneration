@@ -97,13 +97,13 @@ public class RegenerationEventHandler {
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onHurt(LivingHurtEvent e) {
-		if (!(e.getEntity() instanceof EntityPlayer))
+	public static void onHurt(LivingHurtEvent event) {
+		if (!(event.getEntity() instanceof EntityPlayer))
 			return;
 		
-		EntityPlayer player = (EntityPlayer) e.getEntity();
+		EntityPlayer player = (EntityPlayer) event.getEntity();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (player.getHealth() + player.getAbsorptionAmount() - e.getAmount() > 0 ||
+		if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() > 0 ||
 				!cap.isCapable() || cap.isRegenerating()) {
 			
 			if (cap.isRegenerating()) {
@@ -119,7 +119,7 @@ public class RegenerationEventHandler {
 			return;
 		}
 		
-		e.setCanceled(true);
+		event.setCanceled(true);
 		cap.setRegenerating(true);
 		
 		player.clearActivePotions();
@@ -139,14 +139,14 @@ public class RegenerationEventHandler {
 	
 	//================ OTHER ==============
 	@SubscribeEvent
-	public static void onLogin(PlayerLoggedInEvent e) {
-		if (!RegenConfig.startAsTimelord || e.player.world.isRemote)
+	public static void onLogin(PlayerLoggedInEvent event) {
+		if (!RegenConfig.startAsTimelord || event.player.world.isRemote)
 			return;
 		
-		NBTTagCompound nbt = e.player.getEntityData();
+		NBTTagCompound nbt = event.player.getEntityData();
 		boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
 		if (!loggedInBefore) {
-			e.player.inventory.addItemStackToInventory(new ItemStack(RegenObjects.Items.FOB_WATCH));
+			event.player.inventory.addItemStackToInventory(new ItemStack(RegenObjects.Items.FOB_WATCH));
 			nbt.setBoolean("loggedInBefore", true);
 		}
 	}
@@ -161,4 +161,5 @@ public class RegenerationEventHandler {
 		LootPool lootPool = new LootPool(new LootEntry[] { entry }, condAlways, new RandomValueRange(1), new RandomValueRange(1), "regeneration:fob-watch-pool");
 		event.getTable().addPool(lootPool);
 	}
+	
 }

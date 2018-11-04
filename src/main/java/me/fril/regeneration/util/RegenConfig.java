@@ -17,7 +17,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	public static final Loot Loot = new Loot();
 	
 	@Config.LangKey("config.regeneration.max_regens")
-	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations, the Fob Watch will grant the timelord ability and give you infinite regenerations. If you die while regenerating you'll lose your ability (unless dontLosePower is set to true)")
+	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
 	@Config.RangeInt(min = 0)
 	public static int regenCapacity = 12;
 	

@@ -51,7 +51,7 @@ config.regeneration.lose_power_on_mid_regen_death=Lose timelord if killed mid-re
 config.regeneration.loot_regex=Loot pool matcher
 config.regeneration.disable_loot=Disable Fob Watch loot
 
-
+regeneration.commands.debug.usage="<solace|regen> [amount]"
 
 regeneration.trait.current=Current Trait:
 regeneration.trait.messages.clumsy=Clumsy
