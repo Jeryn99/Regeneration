@@ -115,10 +115,10 @@ public class TypeFiery implements IRegenType {
 		
 		/*float primaryScale = capability.getTicksRegenerating() * 40f; TODO reimplement the startup animation
 		float secondaryScale = capability.getTicksRegenerating() * 70f;*/
-		
-		float primaryScale = 5;
-		float secondaryScale = 8;
-		
+
+		float primaryScale = capability.getTicksRegenerating() / 5.0F;
+		float secondaryScale = capability.getTicksRegenerating() / 8.5F;
+
 		// Render right cone
 		GlStateManager.pushMatrix();
 		model.postRenderArm(0.0625F, EnumHandSide.RIGHT);
