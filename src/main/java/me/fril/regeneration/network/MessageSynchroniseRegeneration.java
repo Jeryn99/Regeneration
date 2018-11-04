@@ -16,14 +16,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * Created by Sub
  * on 16/09/2018.
  */
-public class MessageSynchroniseRegen implements IMessage {
+public class MessageSynchroniseRegeneration implements IMessage {
 	
 	private EntityPlayer player;
 	private NBTTagCompound data;
 	
-	public MessageSynchroniseRegen() {}
+	public MessageSynchroniseRegeneration() {}
 	
-	public MessageSynchroniseRegen(EntityPlayer player, NBTTagCompound data) {
+	public MessageSynchroniseRegeneration(EntityPlayer player, NBTTagCompound data) {
 		this.player = player;
 		this.data = data;
 	}
@@ -42,14 +42,13 @@ public class MessageSynchroniseRegen implements IMessage {
 		data = ByteBufUtils.readTag(buf);
 	}
 	
-	public static class Handler implements IMessageHandler<MessageSynchroniseRegen, IMessage> {
+	public static class Handler implements IMessageHandler<MessageSynchroniseRegeneration, IMessage> {
 		
 		@Override
-		public IMessage onMessage(MessageSynchroniseRegen message, MessageContext ctx) {
+		public IMessage onMessage(MessageSynchroniseRegeneration message, MessageContext ctx) {
 			EntityPlayer player = message.player;
-			if (player == null) return null;
-			
-			Minecraft.getMinecraft().addScheduledTask(()->CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
+			if (player != null)
+				Minecraft.getMinecraft().addScheduledTask(()->CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
 			return null;
 		}
 	}

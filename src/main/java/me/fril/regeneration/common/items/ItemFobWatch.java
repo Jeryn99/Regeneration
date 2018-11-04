@@ -41,9 +41,9 @@ public class ItemFobWatch extends Item {
 		
 		if (!player.isSneaking()) { //transferring watch->player
 			if (stack.getItemDamage() == RegenConfig.regenCapacity) {
-				return usageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
+				return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
 			} else if (cap.getRegenerationsLeft() == RegenConfig.regenCapacity) {
-				return usageFailed(player, "regeneration.messages.transfer.max_regens", stack);
+				return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 			}
 			
 			int supply = RegenConfig.regenCapacity - stack.getItemDamage(),
@@ -51,9 +51,9 @@ public class ItemFobWatch extends Item {
 				used = Math.min(supply, needed);
 			
 			if (cap.canRegenerate())
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
+				PlayerUtil.sendHotbarMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
 			else
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
+				PlayerUtil.sendHotbarMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 			
 			cap.receiveRegenerations(used);
 			
@@ -63,20 +63,20 @@ public class ItemFobWatch extends Item {
 			world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
 		} else { //transferring player->watch
 			if (stack.getItemDamage() == 0) {
-				return usageFailed(player, cap.canRegenerate() ? "regeneration.messages.transfer.full_watch" : "regeneration.messages.transfer.no_regens", stack);
+				return msgUsageFailed(player, cap.canRegenerate() ? "regeneration.messages.transfer.full_watch" : "regeneration.messages.transfer.no_regens", stack);
 			}
 			
 			stack.setItemDamage(stack.getItemDamage() - 1);
 			cap.extractRegeneration(1);
-			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
+			PlayerUtil.sendHotbarMessage(player, "regeneration.messages.transfer.success", true);
 			return new ActionResult<>(EnumActionResult.PASS, stack);
 		}
 		
 		return super.onItemRightClick(world, player, hand);
 	}
 	
-	private ActionResult<ItemStack> usageFailed(EntityPlayer player, String message, ItemStack stack) {
-		PlayerUtil.sendMessage(player, message, true);
+	private ActionResult<ItemStack> msgUsageFailed(EntityPlayer player, String message, ItemStack stack) {
+		PlayerUtil.sendHotbarMessage(player, message, true);
 		return ActionResult.newResult(EnumActionResult.FAIL, stack);
 	}
 	

@@ -7,8 +7,6 @@ import java.util.Random;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.network.MessageRegenChoice;
-import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenObjects;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
@@ -49,8 +47,7 @@ public class ClientEventHandler {
 			return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		if ((cap.getState() != RegenState.GRACE_GLOWING && cap.getState() != RegenState.GRACE_CRIT))
+		if (cap.getState() != RegenState.GRACE_GLOWING && cap.getState() != RegenState.GRACE_CRIT)
 			return;
 		
 		
@@ -82,7 +79,9 @@ public class ClientEventHandler {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		if (player == null || Minecraft.getMinecraft().world == null) return;
 		
-		// apparently there's no check if we're actually in a situation where we have to choose between grace/immediate regen, that happens on the server side (packet handler)
+		//NOW handle onClientTick (keybinds)
+		
+		/* apparently there's no check if we're actually in a situation where we have to choose between grace/immediate regen, that happens on the server side (packet handler)
 		if (RegenKeyBinds.ENTER_GRACE.isPressed()) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageRegenChoice(true));
 			
@@ -94,7 +93,7 @@ public class ClientEventHandler {
 		
 		if (RegenKeyBinds.REGEN_NOW.isPressed()) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageRegenChoice(false));
-		}
+		}*/
 	}
 	
 	/*@SubscribeEvent

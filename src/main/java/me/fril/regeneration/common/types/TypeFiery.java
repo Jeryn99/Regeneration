@@ -100,6 +100,7 @@ public class TypeFiery implements IRegenType {
 		Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 		
+		//NOW find a good default scale, reimplement the startup animation later
 		float primaryScale = capability.getTicksRegenerating() * 40f;
 		float secondaryScale = capability.getTicksRegenerating() * 70f;
 		

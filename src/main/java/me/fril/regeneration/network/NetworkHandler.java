@@ -14,8 +14,8 @@ public class NetworkHandler {
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(RegenerationMod.MODID);
 	
 	public static void init() {
-		INSTANCE.registerMessage(MessageSynchroniseRegen.Handler.class, MessageSynchroniseRegen.class, 1, Side.CLIENT);
-		INSTANCE.registerMessage(MessageRegenChoice.Handler.class, MessageRegenChoice.class, 2, Side.SERVER);
+		INSTANCE.registerMessage(MessageSynchroniseRegeneration.Handler.class, MessageSynchroniseRegeneration.class, 1, Side.CLIENT);
+		//INSTANCE.registerMessage(MessageRegenChoice.Handler.class, MessageRegenChoice.class, 2, Side.SERVER);
 		INSTANCE.registerMessage(MessageSaveStyle.Handler.class, MessageSaveStyle.class, 3, Side.SERVER);
 	}
 	

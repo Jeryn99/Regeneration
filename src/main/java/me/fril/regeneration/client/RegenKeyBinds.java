@@ -13,7 +13,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
  */
 public class RegenKeyBinds {
 	
-	public static KeyBinding REGEN_NOW, ENTER_GRACE;
+	public static KeyBinding REGEN_NOW, ENTER_GRACE; //TODO treat the "undead" state as grace
 	
 	public static void init() {
 		ENTER_GRACE = new KeyBinding(I18n.translateToLocalFormatted("regeneration.keybinds.grace"), Keyboard.KEY_V, RegenerationMod.NAME);

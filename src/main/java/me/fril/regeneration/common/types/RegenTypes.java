@@ -6,11 +6,6 @@ package me.fril.regeneration.common.types;
  */
 public class RegenTypes {
 	
-	public static IRegenType FIERY, LAYDOWN;
-	
-	public static void init() {
-		FIERY = new TypeFiery();
-		LAYDOWN = new TypeLayFade();
-	}
+	public final static IRegenType FIERY = new TypeFiery();
 	
 }

@@ -4,7 +4,6 @@ import me.fril.regeneration.client.gui.GuiHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
-import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
 import me.fril.regeneration.util.RegenDebugCommand;
@@ -41,7 +40,6 @@ public class RegenerationMod {
 	public void init(FMLInitializationEvent event) {
 		proxy.init();
 		NetworkHandler.init();
-		RegenTypes.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 	}
 	

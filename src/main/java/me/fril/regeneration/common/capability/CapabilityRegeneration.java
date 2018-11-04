@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
-import me.fril.regeneration.network.MessageSynchroniseRegen;
+import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -73,7 +73,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void tick() {
-		//type.tick(player, this);
+		//NOW handle capability tick
 	}
 	
 	private void setState(RegenState state) {
@@ -86,7 +86,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void synchronise() {
-		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegen(player, serializeNBT()));
+		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, serializeNBT()));
 	}
 
 	@Override

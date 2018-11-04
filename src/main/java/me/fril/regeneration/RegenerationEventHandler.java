@@ -1,17 +1,12 @@
 package me.fril.regeneration;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
 import me.fril.regeneration.util.RegenConfig;
-import me.fril.regeneration.util.RegenObjects;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryTable;
 import net.minecraft.world.storage.loot.LootPool;
@@ -83,8 +78,10 @@ public class RegenerationEventHandler {
 	
 	//============ USER EVENTS ==========
 	@SubscribeEvent
-	public static void breakBlock(PlayerInteractEvent.LeftClickBlock event) {
-		EntityPlayer player = event.getEntityPlayer();
+	public static void onBreakBlock(PlayerInteractEvent.LeftClickBlock event) {
+		//NOW handle onBreakBlock (remove grace glow)
+		
+		/*EntityPlayer player = event.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		boolean inGracePeriod = cap.isInGracePeriod() && cap.isGlowing();
 		
@@ -92,12 +89,14 @@ public class RegenerationEventHandler {
 			cap.setGlowing(false);
 			cap.setTicksGlowing(0);
 			cap.sync();
-		}
+		}*/
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingHurtEvent event) {
-		if (!(event.getEntity() instanceof EntityPlayer))
+		//NOW handle onHurt (the whole dying shenanigans)
+		
+		/*if (!(event.getEntity() instanceof EntityPlayer))
 			return;
 		
 		EntityPlayer player = (EntityPlayer) event.getEntity();
@@ -129,7 +128,7 @@ public class RegenerationEventHandler {
 			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			cap.setInGracePeriod(false);
 			cap.setSolaceTicks(199);
-		}
+		}*/
 	}
 	
 	
@@ -139,7 +138,9 @@ public class RegenerationEventHandler {
 	//================ OTHER ==============
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {
-		if (!RegenConfig.startAsTimelord || event.player.world.isRemote)
+		//NOW handle onLogin (actually giving the player regenerations [replace startAsTimelord with initialRegenAmount])
+		
+		/*if (!RegenConfig.startAsTimelord || event.player.world.isRemote)
 			return;
 		
 		NBTTagCompound nbt = event.player.getEntityData();
@@ -147,7 +148,7 @@ public class RegenerationEventHandler {
 		if (!loggedInBefore) {
 			event.player.inventory.addItemStackToInventory(new ItemStack(RegenObjects.Items.FOB_WATCH));
 			nbt.setBoolean("loggedInBefore", true);
-		}
+		}*/
 	}
 	
 	@SubscribeEvent

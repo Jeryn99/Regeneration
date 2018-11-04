@@ -1,18 +1,11 @@
 package me.fril.regeneration.network;
 
-import io.netty.buffer.ByteBuf;
-import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.util.PlayerUtil;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+//NOW a packet to singal the start of a regeneration (needed?)
 
 /**
  * Created by Sub
  * on 17/09/2018.
- */
+ *
 public class MessageRegenChoice implements IMessage {
 	
 	private boolean enterGrace;
@@ -65,4 +58,4 @@ public class MessageRegenChoice implements IMessage {
 			return null;
 		}
 	}
-}
+}*/

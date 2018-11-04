@@ -28,7 +28,7 @@ public class RegenDebugCommand extends CommandBase {
 		int amount = args.length > 1 ? parseInt(args[1], 0) : -1;
 		
 		switch (args[0]) {
-			/*case "solace": TODO implement state change
+			/*case "solace": TODO implement debug state change
 				if (amount > 0)
 					cap.setSolaceTicks(amount);
 				else
