@@ -43,7 +43,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private String typeName = RegenTypes.FIERY.getName(), traitName = "none"; //NoTE unused*/
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
-	private float secondaryRed = 1f, secondaryGreen = 0.11f, secondaryBlue = 0.18f;
+	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	
 	//private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
 	

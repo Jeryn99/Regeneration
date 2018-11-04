@@ -1,11 +1,9 @@
 package me.fril.regeneration.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.items.ItemFobWatch;
 import net.minecraft.item.Item;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
@@ -13,6 +11,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sub
@@ -22,7 +23,9 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class RegenObjects {
 	
 	public static List<Item> ITEMS = new ArrayList<>();
-	
+
+	public static DamageSource REGEN_SOURCE = new RegenSource("regen_energy");
+
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		IForgeRegistry<Item> reg = e.getRegistry();

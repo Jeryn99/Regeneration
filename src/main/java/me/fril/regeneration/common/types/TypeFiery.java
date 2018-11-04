@@ -100,9 +100,11 @@ public class TypeFiery implements IRegenType {
 		Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 		
-		//NOW find a good default scale, reimplement the startup animation later
-		float primaryScale = capability.getTicksRegenerating() * 40f;
-		float secondaryScale = capability.getTicksRegenerating() * 70f;
+		/*float primaryScale = capability.getTicksRegenerating() * 40f; TODO reimplement the startup animation
+		float secondaryScale = capability.getTicksRegenerating() * 70f;*/
+		
+		float primaryScale = 5;
+		float secondaryScale = 8;
 		
 		// Render right cone
 		GlStateManager.pushMatrix();
@@ -124,8 +126,8 @@ public class TypeFiery implements IRegenType {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0f, 0.3f, 0f);
 		GlStateManager.rotate(180, 1.0f, 0.0f, 0.0f);
-		renderCone(entityPlayer, primaryScale, primaryScale, primaryColor);
-		renderCone(entityPlayer, secondaryScale, secondaryScale * 1.5f, secondaryColor);
+		renderCone(entityPlayer, primaryScale / 2F, primaryScale * .75F, primaryColor);
+		renderCone(entityPlayer, secondaryScale / 2F, secondaryScale / 2F, secondaryColor);
 		GlStateManager.popMatrix();
 		
 		// Check which slightly larger model to use
