@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.annotation.Nonnull;
 
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
@@ -216,7 +217,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	
-	public class RegenerationStateManager implements IRegenerationStateManager { //TODO configurable timing intervals
+	public class RegenerationStateManager implements IRegenerationStateManager {
 		
 		private final Scheduler scheduler;
 		private ScheduledTask scheduledRegenerationTrigger, scheduledRegenerationFinish,
@@ -240,7 +241,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state == RegenState.ALIVE) {
 				
 				//We're entering grace period...
-				scheduledGraceCritical = scheduler.scheduleInSeconds(15 * 60, this::enterCriticalPhase); //... schedule the transition to critical phase in 15 minutes
+				scheduledGraceCritical = scheduler.scheduleInSeconds(RegenConfig.Grace.gracePeriodLength, this::enterCriticalPhase); //... schedule the transition to critical phase
+				System.out.println("SCHEDULED graceCritial FOR "+scheduledGraceCritical.scheduledTick()+" in "+scheduledGraceCritical.ticksLeft());
+				
 				/*if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness
 					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier); NOW move to external event handler
 				}*/
@@ -252,8 +255,11 @@ public class CapabilityRegeneration implements IRegeneration {
 				
 				//we're being forced to regenerate...
 				scheduledRegenerationTrigger.cancel(); //... cancel the original regeneration trigger
+				System.out.println("CANCELLED regenTrigger");
 				scheduledGraceCritical.cancel(); //... cancel the shift to critical phase
+				System.out.println("CANCELLED graceCritical");
 				scheduledGraceGlowing.cancel(); //... cancel the start of glowing
+				System.out.println("CANCELLED graceGlowing");
 				
 				triggerRegeneration();
 				return true;
@@ -262,6 +268,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				
 				//We've been killed mid regeneration!
 				scheduledRegenerationFinish.cancel(); //... cancel the finishing of the regeneration
+				System.out.println("CANCELLED regenFinish");
 				
 				midSequenceKill();
 				return false;
@@ -274,8 +281,10 @@ public class CapabilityRegeneration implements IRegeneration {
 			//We're punching away our glow...
 			if (state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) { //... check if we're actually glowing
 				state = state == RegenState.GRACE_GLOWING ? RegenState.GRACE_STD : RegenState.GRACE_CRIT;
-				scheduledRegenerationTrigger.cancel(); //... cancel the letted regeneration trigger
-				scheduledGraceGlowing = scheduler.scheduleInSeconds(60, this::startGlowing); //... schedule the new glowing
+				scheduledRegenerationTrigger.cancel(); //... cancel the allowed regeneration trigger
+				System.out.println("CANCELLED regenTrigger");
+				scheduledGraceGlowing = scheduler.scheduleInSeconds(RegenConfig.Grace.handGlowInterval, this::startGlowing); //... schedule the new glowing
+				System.out.println("SCHEDULED graceGlowing FOR "+scheduledGraceGlowing.scheduledTick()+" in "+scheduledGraceGlowing.ticksLeft());
 				synchronise();
 			}
 		}
@@ -289,6 +298,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				throw new IllegalStateException("Ticking state manager on the client");
 			
 			scheduler.tick();
+			//System.out.println(scheduledCriticalDeath.ticksLeft());
 			
 			/*if (player.getHealth() < player.getMaxHealth()) { TODO actually regenerate health
 				player.setHealth(player.getHealth() + 1); NOW move to external event handler
@@ -305,10 +315,15 @@ public class CapabilityRegeneration implements IRegeneration {
 			//We're actually regenerating!
 			state = RegenState.REGENERATING;
 			scheduledGraceCritical.cancel(); //... cancel the transition to critical phase
+			System.out.println("CANCELLED graceCritical");
 			scheduledGraceGlowing.cancel(); //... cancel the scheduled glowing
+			System.out.println("CANCELLED graceGlowing");
 			scheduledCriticalDeath.cancel(); //... cancel the scheduled critical death
+			System.out.println("CANCELLED criticalDeath");
 			
+			//TODO configurable regeneration length based on the type
 			scheduledRegenerationFinish = scheduler.scheduleInSeconds(10, this::finishRegeneration); //... schedule the finishing of the regeneration
+			System.out.println("SCHEDULED regenFinish FOR "+scheduledRegenerationFinish.scheduledTick()+" in "+scheduledRegenerationFinish.ticksLeft());
 			
 			type.onStartRegeneration(player, CapabilityRegeneration.this);
 			
@@ -330,7 +345,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void startGlowing() {
 			//We're starting to glow...
 			state = RegenState.GRACE_GLOWING;
-			scheduledRegenerationTrigger = scheduler.scheduleInSeconds(20, this::triggerRegeneration); //... schedule letted regeneration in 20 seconds
+			scheduledRegenerationTrigger = scheduler.scheduleInSeconds(RegenConfig.Grace.allowedRegenDelay, this::triggerRegeneration); //... schedule allowed regeneration in 20 seconds
+			System.out.println("SCHEDULED regenTrigger FOR "+scheduledRegenerationTrigger.scheduledTick()+" in "+scheduledRegenerationTrigger.ticksLeft());
 			
 			synchronise();
 			
@@ -347,7 +363,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void enterCriticalPhase() {
 			//We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduledCriticalDeath = scheduler.scheduleInSeconds(60, this::midSequenceKill);
+			scheduledCriticalDeath = scheduler.scheduleInSeconds(RegenConfig.Grace.criticalPhaseLength, this::midSequenceKill);
+			System.out.println("SCHEDULED critialDeath FOR "+scheduledCriticalDeath.scheduledTick()+" in "+scheduledCriticalDeath.ticksLeft());
 			
 			synchronise();
 			

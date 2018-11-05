@@ -13,6 +13,9 @@ public class Scheduler {
 	public void tick() {
 		ticks++;
 		
+		if (ticks % 20 == 0)
+			System.out.println("TICK "+ticks);
+		
 		if (schedule.containsKey(ticks)) {
 			schedule.get(ticks).forEach(r->r.run());
 			schedule.remove(ticks);

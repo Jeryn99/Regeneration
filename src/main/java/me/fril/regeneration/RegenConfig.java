@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class RegenConfig { // TODO externalize comment strings?
 	
 	public static final Loot Loot = new Loot();
+	public static final GracePeriod Grace = new GracePeriod();
 	
 	@Config.LangKey("config.regeneration.max_regens")
 	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
@@ -85,6 +86,26 @@ public class RegenConfig { // TODO externalize comment strings?
 		@Config.Comment("If this is true there won't be any Fob Watches spawned naturally")
 		@Config.RequiresWorldRestart
 		public boolean disableLoot = false;
+		
+	}
+	
+	public static class GracePeriod { //FIXME add documentation stuff here
+		
+		@Config.LangKey("")
+		@Config.Comment("")
+		public int gracePeriodLength = 15 * 60;
+		
+		@Config.LangKey("")
+		@Config.Comment("")
+		public int criticalPhaseLength = 60;
+		
+		@Config.LangKey("")
+		@Config.Comment("")
+		public int handGlowInterval = 60;
+		
+		@Config.LangKey("")
+		@Config.Comment("")
+		public int allowedRegenDelay = 20;
 		
 	}
 	
