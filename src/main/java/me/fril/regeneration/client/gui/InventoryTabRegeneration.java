@@ -1,6 +1,6 @@
 package me.fril.regeneration.client.gui;
 
-import me.fril.regeneration.RegenObjects;
+import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.RegenerationMod;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import net.minecraft.client.Minecraft;

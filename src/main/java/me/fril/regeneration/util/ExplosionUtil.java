@@ -1,7 +1,7 @@
 package me.fril.regeneration.util;
 
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.RegenObjects;
+import me.fril.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;

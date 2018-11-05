@@ -1,5 +1,7 @@
-package me.fril.regeneration;
+package me.fril.regeneration.handlers;
 
+import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
 import net.minecraft.entity.Entity;

@@ -1,4 +1,4 @@
-package me.fril.regeneration.util;
+package me.fril.regeneration.common.commands;
 
 import java.util.Collections;
 import java.util.List;

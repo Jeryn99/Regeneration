@@ -1,6 +1,6 @@
 package me.fril.regeneration.client.sound;
 
-import me.fril.regeneration.RegenObjects;
+import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.RegenState;

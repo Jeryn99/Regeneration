@@ -1,5 +1,6 @@
-package me.fril.regeneration;
+package me.fril.regeneration.handlers;
 
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.items.ItemFobWatch;
 import me.fril.regeneration.util.RegenDamageSource;
 import net.minecraft.item.Item;
