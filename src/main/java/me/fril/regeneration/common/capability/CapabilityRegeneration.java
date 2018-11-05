@@ -1,6 +1,8 @@
 package me.fril.regeneration.common.capability;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -8,11 +10,14 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
+import me.fril.regeneration.debugger.IDebugChannel;
+import me.fril.regeneration.debugger.MainDebugger;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.Scheduler;
 import me.fril.regeneration.util.Scheduler.ScheduledTask;
+import me.fril.regeneration.util.TimerChannel;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -220,16 +225,36 @@ public class CapabilityRegeneration implements IRegeneration {
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
 		private final Scheduler scheduler;
-		private ScheduledTask scheduledRegenerationTrigger, scheduledRegenerationFinish,
-		                      scheduledGraceCritical, scheduledGraceGlowing, scheduledCriticalDeath;
+		private Map<TimerChannel, ScheduledTask> timers = new HashMap<>();
+		private IDebugChannel debugChannel;
 		
 		private RegenerationStateManager() {
 			this.scheduler = new Scheduler();
-			scheduledRegenerationTrigger = scheduler.createBlankTask();
-			scheduledRegenerationFinish = scheduler.createBlankTask();
-			scheduledGraceCritical = scheduler.createBlankTask();
-			scheduledGraceGlowing = scheduler.createBlankTask();
-			scheduledCriticalDeath = scheduler.createBlankTask();
+			
+			for (TimerChannel tc : TimerChannel.values()) {
+				timers.put(tc, scheduler.createBlankTask());
+			}
+		}
+		
+		private ScheduledTask scheduleInSeconds(TimerChannel channel, long inSeconds, Runnable callback) {
+			return scheduleInTicks(channel, inSeconds*20, callback);
+		}
+		
+		private ScheduledTask scheduleInTicks(TimerChannel channel, long inTicks, Runnable callback) {
+			if (timers.get(channel).ticksLeft() >= 0)
+				throw new IllegalStateException("Overwriting scheduled action ("+channel+" scheduled in "+timers.get(channel).ticksLeft()+")");
+			
+			ScheduledTask task = inTicks >= 0 ? scheduler.scheduleInTicks(inTicks, callback) : scheduler.createBlankTask();
+			timers.put(channel, task);
+			
+			/*System.out.println("SCHEDULING "+channel+" IN "+inTicks+"t ("+(inTicks/20F)+"s)"); TODO log via debug channel
+			if (inTicks < 0) System.out.println("\t(SCHEDULED BLANK)");*/
+			
+			return task;
+		}
+		
+		private void cancelTimer(TimerChannel channel) {
+			timers.get(channel).cancel();
 		}
 		
 		
@@ -241,8 +266,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state == RegenState.ALIVE) {
 				
 				//We're entering grace period...
-				scheduledGraceCritical = scheduler.scheduleInSeconds(RegenConfig.Grace.gracePeriodLength, this::enterCriticalPhase); //... schedule the transition to critical phase
-				System.out.println("SCHEDULED graceCritial FOR "+scheduledGraceCritical.scheduledTick()+" in "+scheduledGraceCritical.ticksLeft());
+				scheduleInSeconds(TimerChannel.GRACE_CRITICAL, RegenConfig.Grace.gracePeriodLength, this::enterCriticalPhase); //... schedule the transition to critical phase
 				
 				/*if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness
 					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier); NOW move to external event handler
@@ -254,12 +278,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			} else if (state.isGraceful()) {
 				
 				//we're being forced to regenerate...
-				scheduledRegenerationTrigger.cancel(); //... cancel the original regeneration trigger
-				System.out.println("CANCELLED regenTrigger");
-				scheduledGraceCritical.cancel(); //... cancel the shift to critical phase
-				System.out.println("CANCELLED graceCritical");
-				scheduledGraceGlowing.cancel(); //... cancel the start of glowing
-				System.out.println("CANCELLED graceGlowing");
+				cancelTimer(TimerChannel.REGENERATION_TRIGGER); //... cancel the original regeneration trigger
+				cancelTimer(TimerChannel.GRACE_CRITICAL); //... cancel the shift to critical phase
+				cancelTimer(TimerChannel.GRACE_GLOWING); //... cancel the start of glowing
 				
 				triggerRegeneration();
 				return true;
@@ -267,9 +288,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			} else if (state == RegenState.REGENERATING) {
 				
 				//We've been killed mid regeneration!
-				scheduledRegenerationFinish.cancel(); //... cancel the finishing of the regeneration
-				System.out.println("CANCELLED regenFinish");
-				
+				cancelTimer(TimerChannel.REGENERATION_FINISH); //... cancel the finishing of the regeneration
 				midSequenceKill();
 				return false;
 				
@@ -281,10 +300,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			//We're punching away our glow...
 			if (state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) { //... check if we're actually glowing
 				state = state == RegenState.GRACE_GLOWING ? RegenState.GRACE_STD : RegenState.GRACE_CRIT;
-				scheduledRegenerationTrigger.cancel(); //... cancel the allowed regeneration trigger
-				System.out.println("CANCELLED regenTrigger");
-				scheduledGraceGlowing = scheduler.scheduleInSeconds(RegenConfig.Grace.handGlowInterval, this::startGlowing); //... schedule the new glowing
-				System.out.println("SCHEDULED graceGlowing FOR "+scheduledGraceGlowing.scheduledTick()+" in "+scheduledGraceGlowing.ticksLeft());
+				cancelTimer(TimerChannel.REGENERATION_TRIGGER); //... cancel the allowed regeneration trigger
+				scheduleInSeconds(TimerChannel.GRACE_GLOWING, RegenConfig.Grace.handGlowInterval, this::startGlowing); //... schedule the new glowing
 				synchronise();
 			}
 		}
@@ -321,17 +338,12 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void triggerRegeneration() { //FUTURE do animation using a ticksLeft() method on the scheduled task
 			//We're actually regenerating!
 			state = RegenState.REGENERATING;
-			scheduledGraceCritical.cancel(); //... cancel the transition to critical phase
-			System.out.println("CANCELLED graceCritical");
-			scheduledGraceGlowing.cancel(); //... cancel the scheduled glowing
-			System.out.println("CANCELLED graceGlowing");
-			scheduledCriticalDeath.cancel(); //... cancel the scheduled critical death
-			System.out.println("CANCELLED criticalDeath");
+			cancelTimer(TimerChannel.GRACE_CRITICAL); //... cancel the transition to critical phase
+			cancelTimer(TimerChannel.GRACE_GLOWING); //... cancel the scheduled glowing
+			cancelTimer(TimerChannel.GRACE_CRITICAL_DEATH); //... cancel the scheduled critical death
 			
 			//TODO configurable regeneration length based on the type
-			scheduledRegenerationFinish = scheduler.scheduleInSeconds(10, this::finishRegeneration); //... schedule the finishing of the regeneration
-			System.out.println("SCHEDULED regenFinish FOR "+scheduledRegenerationFinish.scheduledTick()+" in "+scheduledRegenerationFinish.ticksLeft());
-			
+			scheduleInSeconds(TimerChannel.REGENERATION_FINISH, 10, this::finishRegeneration); //... schedule the finishing of the regeneration
 			type.onStartRegeneration(player, CapabilityRegeneration.this);
 			
 			synchronise();
@@ -352,9 +364,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void startGlowing() {
 			//We're starting to glow...
 			state = RegenState.GRACE_GLOWING;
-			scheduledRegenerationTrigger = scheduler.scheduleInSeconds(RegenConfig.Grace.allowedRegenDelay, this::triggerRegeneration); //... schedule allowed regeneration in 20 seconds
-			System.out.println("SCHEDULED regenTrigger FOR "+scheduledRegenerationTrigger.scheduledTick()+" in "+scheduledRegenerationTrigger.ticksLeft());
-			
+			scheduleInSeconds(TimerChannel.REGENERATION_TRIGGER, RegenConfig.Grace.allowedRegenDelay, this::triggerRegeneration); //... schedule allowed regeneration in 20 seconds
 			synchronise();
 			
 			//this causes these things to happen each time the player starts to glow. It's a feature.
@@ -370,9 +380,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void enterCriticalPhase() {
 			//We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduledCriticalDeath = scheduler.scheduleInSeconds(RegenConfig.Grace.criticalPhaseLength, this::midSequenceKill);
-			System.out.println("SCHEDULED critialDeath FOR "+scheduledCriticalDeath.scheduledTick()+" in "+scheduledCriticalDeath.ticksLeft());
-			
+			scheduleInSeconds(TimerChannel.GRACE_CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength, this::midSequenceKill);
 			synchronise();
 			
 			//TODO play music on client
@@ -421,12 +429,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		
 		private void reset() {
+			for (TimerChannel tc : TimerChannel.values()) {
+				cancelTimer(tc);
+			}
 			scheduler.reset();
-			scheduledRegenerationTrigger = scheduler.createBlankTask();
-			scheduledRegenerationFinish = scheduler.createBlankTask();
-			scheduledGraceCritical = scheduler.createBlankTask();
-			scheduledGraceGlowing = scheduler.createBlankTask();
-			scheduledCriticalDeath = scheduler.createBlankTask();
 		}
 		
 		
@@ -434,22 +440,23 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public NBTTagCompound serializeNBT() {
 			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setLong("regenerationTrigger", scheduledRegenerationTrigger.ticksLeft());
-			nbt.setLong("regenerationFinish", scheduledRegenerationFinish.ticksLeft());
-            nbt.setLong("graceCritical", scheduledGraceCritical.ticksLeft());
-            nbt.setLong("graceGlowing", scheduledGraceGlowing.ticksLeft());
-            nbt.setLong("criticalDeath", scheduledCriticalDeath.ticksLeft());
+			
+			for (TimerChannel tc : TimerChannel.values()) {
+				nbt.setLong(tc.toString(), timers.get(tc).ticksLeft());
+			}
+			
 			return nbt;
 		}
 
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
 			scheduler.reset();
-			scheduler.scheduleInTicks(nbt.getLong("regenerationTrigger"), this::triggerRegeneration);
-			scheduler.scheduleInTicks(nbt.getLong("regenerationFinish"), this::finishRegeneration);
-            scheduler.scheduleInTicks(nbt.getLong("graceCritical"), this::enterCriticalPhase);
-            scheduler.scheduleInTicks(nbt.getLong("graceGlowing"), this::startGlowing);
-            scheduler.scheduleInTicks(nbt.getLong("criticalDeath"), this::midSequenceKill);
+			
+			scheduleInTicks(TimerChannel.REGENERATION_TRIGGER, nbt.getLong(TimerChannel.REGENERATION_TRIGGER.toString()), this::triggerRegeneration);
+			scheduleInTicks(TimerChannel.REGENERATION_FINISH,  nbt.getLong(TimerChannel.REGENERATION_FINISH.toString()),  this::finishRegeneration);
+            scheduleInTicks(TimerChannel.GRACE_CRITICAL,       nbt.getLong(TimerChannel.GRACE_CRITICAL.toString()),       this::enterCriticalPhase);
+            scheduleInTicks(TimerChannel.GRACE_GLOWING,        nbt.getLong(TimerChannel.GRACE_GLOWING.toString()),        this::startGlowing);
+            scheduleInTicks(TimerChannel.GRACE_CRITICAL_DEATH, nbt.getLong(TimerChannel.GRACE_CRITICAL_DEATH.toString()), this::midSequenceKill);
 		}
 		
 	}

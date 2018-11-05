@@ -14,7 +14,7 @@ public class Scheduler {
 		ticks++;
 		
 		if (ticks % 20 == 0)
-			System.out.println("TICK "+ticks);
+			System.out.println("TICK "+ticks); //TODO debug channel
 		
 		if (schedule.containsKey(ticks)) {
 			schedule.get(ticks).forEach(r->r.run());
@@ -66,23 +66,17 @@ public class Scheduler {
 		
 		public void cancel() {
 			if (canceled)
-				System.err.println("WARNING: Cancelling already canceled action");
+				System.err.println("WARNING: Cancelling already canceled action"); //TODO debug channel
 			canceled = true;
 			
 			if (scheduledTick - Scheduler.this.ticks > 0)
 				Scheduler.this.schedule.get(scheduledTick).remove(this);
 			else
-				System.err.println("WARNING: Cancelling already completed action");
+				System.err.println("WARNING: Cancelling already completed action"); //TODO debug channel
 		}
 		
 		public long ticksLeft() {
 			return canceled ? -1 : scheduledTick - Scheduler.this.ticks;
-		}
-
-		/** @deprecated Meant for debugging! */
-		@Deprecated
-		public long scheduledTick() {
-			return scheduledTick;
 		}
 		
 	}
@@ -109,6 +103,12 @@ public class Scheduler {
 			return -1;
 		}
 		
+	}
+
+	
+	@Deprecated
+	public long currentTick() {
+		return ticks;
 	}
 
 }
