@@ -297,8 +297,15 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (player.world.isRemote)
 				throw new IllegalStateException("Ticking state manager on the client");
 			
+			if (debugChannel == null)
+				debugChannel = MainDebugger.registerPlayer(player.getGameProfile());
+			
 			scheduler.tick();
-			//System.out.println(scheduledCriticalDeath.ticksLeft());
+			
+			/*for (TimerChannel tc : TimerChannel.values()) {
+				System.out.println(tc + ": " + timers.get(tc).ticksLeft());
+			}
+			System.out.println();*/
 			
 			/*if (player.getHealth() < player.getMaxHealth()) { TODO actually regenerate health
 				player.setHealth(player.getHealth() + 1); NOW move to external event handler

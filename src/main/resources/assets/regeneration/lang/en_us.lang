@@ -55,7 +55,7 @@ config.regeneration.regeneration_kills_players=Regeneration kills players
 
 regeneration.damagesrc.regen_energy=&s was blasted by Regeneration Energy!
 
-regeneration.commands.debug.usage=<solace|regen> [amount]
+regeneration.commands.debug.usage=<solace|regen|open> [amount]
 
 regeneration.trait.current=Current Trait:
 regeneration.trait.messages.clumsy=Clumsy

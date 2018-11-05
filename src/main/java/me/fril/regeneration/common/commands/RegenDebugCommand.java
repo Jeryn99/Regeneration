@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.debugger.MainDebugger;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -37,6 +38,10 @@ public class RegenDebugCommand extends CommandBase {
 					notifyCommandListener(sender, this, "Solace ticks: "+cap.getSolaceTicks());
 				break;*/
 			
+			case "open":
+				MainDebugger.open();
+				break;
+			
 			case "regen":
 				if (amount > 0) {
 					int difference = amount - cap.getRegenerationsLeft();
@@ -64,7 +69,7 @@ public class RegenDebugCommand extends CommandBase {
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		if (args.length < 2)
-			return getListOfStringsMatchingLastWord(args, "solace", "regen");
+			return getListOfStringsMatchingLastWord(args, "solace", "regen", "open");
 		else
 			return Collections.emptyList();
 	}
