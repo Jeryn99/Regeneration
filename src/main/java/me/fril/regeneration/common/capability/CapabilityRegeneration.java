@@ -57,8 +57,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		throw new IllegalStateException("Missing Regeneration capability: " + player + ", please report this to the issue tracker");
 	}
 	
-	
-	
 	public CapabilityRegeneration() {
 		this.player = null;
 	}
@@ -74,7 +72,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void tick() {
 		if (!player.world.isRemote) //ticking only on the server for simplicity
-			stateManager.tick();
+			stateManager.tick(); //TODO only tick when state != ALIVE
 		
 		if (state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, this);
@@ -91,7 +89,9 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void synchronise() {
-		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, serializeNBT()));
+		NBTTagCompound nbt = serializeNBT();
+		nbt.removeTag("stateManager");
+		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
-		else
+		else if (!player.world.isRemote)
 			stateManager.reset();
 	}
 	
