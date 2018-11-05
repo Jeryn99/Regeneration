@@ -30,7 +30,7 @@ public class MessageSetPerspective implements IMessage {
 	public static class Handler implements IMessageHandler<MessageSetPerspective, IMessage> {
 		@Override
 		public IMessage onMessage(MessageSetPerspective message, MessageContext ctx) {
-			Minecraft.getMinecraft().gameSettings.thirdPersonView = message.thirdperson ? 2 : 0;
+			Minecraft.getMinecraft().addScheduledTask(()->Minecraft.getMinecraft().gameSettings.thirdPersonView = message.thirdperson ? 2 : 0);
 			return null;
 		}
 	}
