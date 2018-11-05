@@ -39,4 +39,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	void onRenderRegenerationLayer(RenderPlayer playerRenderer, IRegeneration cap, EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
 	void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre event);
 	
+	IRegenerationStateManager getStateManager();
+	
 }

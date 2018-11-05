@@ -1,12 +1,7 @@
 package me.fril.regeneration;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
-import me.fril.regeneration.common.events.RegenDeathEvent;
-import me.fril.regeneration.common.events.RegenEnterGraceEvent;
-import me.fril.regeneration.common.events.RegenTriggerRegenerationEvent;
-import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,7 +12,6 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.conditions.RandomChance;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -30,6 +24,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Sub
@@ -84,75 +80,20 @@ public class RegenEventHandler {
 	//============ USER EVENTS ==========
 	@SubscribeEvent
 	public static void onBreakBlock(PlayerInteractEvent.LeftClickBlock event) {
-		//NOW handle onBreakBlock (remove grace glow)
-		
-		/*EntityPlayer player = event.getEntityPlayer();
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		boolean inGracePeriod = cap.isInGracePeriod() && cap.isGlowing();
-		
-		if (inGracePeriod) {
-			cap.setGlowing(false);
-			cap.setTicksGlowing(0);
-			cap.sync();
-		}*/
+		EntityPlayer player = event.getEntityPlayer();
+		CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchBlock();
 	}
 	
+	@SideOnly(Side.SERVER)
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onHurt(LivingHurtEvent event) { //NOW handle onHurt (the whole dying shenanigans)
+	public static void onHurt(LivingHurtEvent event) {
 		if (!(event.getEntity() instanceof EntityPlayer))
 			return;
 		
 		EntityPlayer player = (EntityPlayer) event.getEntity();
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() > 0) return; //no death
-		
-		
-		if (cap.getState() == RegenState.ALIVE) {
-			
-			MinecraftForge.EVENT_BUS.post(new RegenEnterGraceEvent(cap));
-			event.setCanceled(true);
-			
-		} else if (cap.getState().isGraceful()) {
-			
-			MinecraftForge.EVENT_BUS.post(new RegenTriggerRegenerationEvent(cap));
-			event.setCanceled(true);
-			
-		} else if (cap.getState() == RegenState.REGENERATING) {
-			
-			MinecraftForge.EVENT_BUS.post(new RegenDeathEvent(cap));
-			event.setCanceled(false);
-			
-		} else throw new IllegalStateException("Unknown state: "+cap.getState());
-		
-		/*if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() > 0 ||
-				!cap.isCapable() || cap.isRegenerating()) {
-			
-			if (cap.isRegenerating()) {
-				//FIXME correctly handle death mid-regen
-				cap.reset();
-				
-				//XXX does not work, I remember something about onHurt only firing on server, but how do I fix it?
-				if (player.world.isRemote && player.getEntityId() == Minecraft.getMinecraft().player.getEntityId()) {
-					//FIXME perspective not resetting when killed mid-regen
-					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-				}
-			}
-			return;
+		if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { //player has actually died
+			event.setCanceled(CapabilityRegeneration.getForPlayer(player).getStateManager().onKilled());
 		}
-		
-		event.setCanceled(true);
-		cap.setRegenerating(true);
-		
-		player.clearActivePotions();
-		player.extinguish();
-		player.setArrowCountInEntity(0);
-		
-		if (cap.isRegenerating() && cap.isInGracePeriod()) {
-			player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 1.0F);
-			cap.setInGracePeriod(false);
-			cap.setSolaceTicks(199);
-		}*/
 	}
 	
 	
@@ -162,7 +103,7 @@ public class RegenEventHandler {
 	//================ OTHER ==============
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {
-		//NOW handle onLogin (actually giving the player regenerations [replace startAsTimelord with initialRegenAmount])
+		//TODO handle onLogin (actually giving the player regenerations [replace startAsTimelord with initialRegenAmount])
 		
 		/*if (!RegenConfig.startAsTimelord || event.player.world.isRemote)
 			return;

@@ -1,7 +1,6 @@
 package me.fril.regeneration.common.capability;
 
 import java.awt.Color;
-import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -11,6 +10,8 @@ import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
+import me.fril.regeneration.util.Scheduler;
+import me.fril.regeneration.util.Scheduler.ScheduledTask;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +20,8 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Sub
@@ -30,17 +33,15 @@ public class CapabilityRegeneration implements IRegeneration {
 	@CapabilityInject(IRegeneration.class)
 	public static final Capability<IRegeneration> CAPABILITY = null;
 	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
-	private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
+	//private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
 	
 	
 	private final EntityPlayer player;
-	private RegenState state = RegenState.ALIVE;
 	private int regenerationsLeft;
 	private IRegenType type = RegenTypes.FIERY;
 	
-	/*private int timesRegenerated = 0, livesLeft = 0, regenTicks = 0, ticksInSolace = 0, ticksGlowing = 0;
-	private boolean isRegenerating = false, isInGrace = false, isGraceGlowing = false;
-	private String typeName = RegenTypes.FIERY.getName(), traitName = "none"; //NoTE unused*/
+	private RegenState state = RegenState.ALIVE;
+	private RegenerationStateManager stateManager = new RegenerationStateManager();
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
@@ -73,11 +74,12 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void tick() {
-		//NOW handle capability tick
+		if (!player.world.isRemote) //ticking only on the server for simplicity
+			stateManager.tick();
+		
 		if (state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, this);
 		}
-		
 	}
 	
 	private void setState(RegenState state) {
@@ -94,7 +96,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 
 	@Override
-	public NBTTagCompound serializeNBT() {
+	public NBTTagCompound serializeNBT() { //FIXME serialize scheduler
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setString("state", state.toString());
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
@@ -201,73 +203,104 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	
-	/*
-	private void updateRegeneration() {
-		setSolaceTicks(getSolaceTicks() + 1);
+	@Override
+	public IRegenerationStateManager getStateManager() {
+		return stateManager;
+	}
+	
+	
+	
+	
+	
+	public class RegenerationStateManager implements IRegenerationStateManager { //FIXME synchronisation
+		private final Scheduler scheduler;
 		
-		// Start glowing and playing the hand sound
-		if (getSolaceTicks() == 2) {
-			setGlowing(true);
-			if (player.world.isRemote) {
-				PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
-			}
+		private ScheduledTask scheduledRegenerationTrigger, scheduledRegenerationFinish,
+		                      scheduledGraceCritical, scheduledGraceGlowing, scheduledCriticalDeath;
+		
+		private RegenerationStateManager() {
+			this.scheduler = new Scheduler();
 		}
 		
-		// Indicate to the player what keybinds to use on the client
-		if (player.world.isRemote && getSolaceTicks() < 200 && !isInGracePeriod()) {
-			if (ticksInSolace % 25 == 0) {
-                player.sendStatusMessage(new TextComponentTranslation("regeneration.messages.choice", RegenKeyBinds.ENTER_GRACE.getDisplayName(), RegenKeyBinds.REGEN_NOW.getDisplayName()), true);
+		@SideOnly(Side.SERVER)
+		private void tick() {
+			scheduler.tick();
+			
+			/*if (player.getHealth() < player.getMaxHealth()) { TODO actually regenerate health
+				player.setHealth(player.getHealth() + 1); NOW move to external event handler
 			}
+			player.heal(2.0F);
+			TODO random damage*/
 		}
 		
-		// The actual regeneration
-		if (!isInGracePeriod() && getSolaceTicks() > 200) {
-			setGlowing(false);
-			player.dismountRidingEntity();
+		
+		
+		//TODO post events to client?
+		@SideOnly(Side.SERVER)
+		private void triggerRegeneration() { //FUTURE do animation using a ticksLeft() method on the scheduled task
+			//We're actually regenerating!
+			state = RegenState.REGENERATING;
+			scheduledGraceCritical.cancel(); //... cancel the transition to critical phase
+			scheduledGraceGlowing.cancel(); //... cancel the scheduled glowing
+			scheduledCriticalDeath.cancel(); //... cancel the scheduled critical death (FIXME this will NPE if never entered critical phase)
+			scheduledRegenerationFinish = scheduler.schedule(10, this::finishRegeneration); //... schedule the finishing of the regeneration
+			
+			type.onStartRegeneration(player, CapabilityRegeneration.this);
+			
+			/*player.dismountRidingEntity(); NOW move to external event handler
 			player.removePassengers();
 			player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
-			setTicksRegenerating(getTicksRegenerating() + 1);
 			
+			extractRegeneration(1);
+			ExplosionUtil.regenerationExplosion(player);*/
 			
-			if (getTicksRegenerating() == 3) {
-				if (player.world.isRemote) {
-					PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS);
-				}
-				setLivesLeft(getLivesLeft() - 1);
-				setTimesRegenerated(getTimesRegenerated() + 1);
-				ExplosionUtil.regenerationExplosion(player);
-			}
+			//TODO play music on client
+			//PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS);
+			//TODO toast notification
+		}
+		
+		@SideOnly(Side.SERVER)
+		private void startGlowing() {
+			//We're starting to glow...
+			state = RegenState.GRACE_GLOWING;
+			scheduledRegenerationTrigger = scheduler.schedule(20, this::triggerRegeneration); //... schedule letted regeneration in 20 seconds
 			
-			if (getTicksRegenerating() > 0 && getTicksRegenerating() < 100) {
-				getType().onStartRegeneration(player);
-				
-				if (getTicksRegenerating() <= 50) {
-					
-					String time = "" + (getTimesRegenerated());
-					int lastDigit = getTimesRegenerated();
-					if (lastDigit > 20)
-						while (lastDigit > 10)
-							lastDigit -= 10;
-						
-					if (lastDigit < 3) {
-						time = time + I18n.translateToLocalFormatted("regeneration.messages.numsuffix." + lastDigit);
-					} else {
-						time = time + I18n.translateToLocalFormatted("regeneration.messages.numsuffix.ext");
-					}
-					
-					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.remaining_regens.notification", time, getLivesLeft()), true);
-				}
-			}
+			//this causes these things to happen each time the player starts to glow. It's a feature.
+			/*player.clearActivePotions(); NOW move to external event handler
+			player.extinguish();
+			player.setArrowCountInEntity(0);*/
 			
-			if (getTicksRegenerating() >= 100 && getTicksRegenerating() < 200) {
-				getType().onUpdateMidRegen(player);
-			}
+			//TODO play music on client
+			//PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
+		}
+		
+		@SideOnly(Side.SERVER)
+		private void enterCriticalPhase() {
+			//We're entering critical phase...
+			state = RegenState.GRACE_CRIT;
+			scheduledCriticalDeath = scheduler.schedule(60, this::midSequenceKill);
 			
-			if (player.getHealth() < player.getMaxHealth()) {
-				player.setHealth(player.getHealth() + 1);
-			}
+			//TODO play music on client
+			//TODO nausea
+			/*PlayerUtil.playMovingSound(player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 800, 0, false, false)); // could be removed with milk, but I think that's not that bad*/
+			//TODO toast notification
+		}
+		
+		@SideOnly(Side.SERVER)
+		private void midSequenceKill() {
+			state = RegenState.ALIVE;
+			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			
-			if (RegenConfig.resetHunger) {
+			player.setHealth(-1); //in case this method was called by the 15 minute counter
+		}
+		
+		@SideOnly(Side.SERVER)
+		private void finishRegeneration() {
+			state = RegenState.ALIVE;
+			type.onFinishRegeneration(player, CapabilityRegeneration.this);
+			
+			/*if (RegenConfig.resetHunger) { NOW move to external event handler
 				FoodStats foodStats = player.getFoodStats();
 				foodStats.setFoodLevel(foodStats.getFoodLevel() + 1);
 			}
@@ -276,112 +309,60 @@ public class CapabilityRegeneration implements IRegeneration {
 				player.setAir(player.getAir() + 1);
 			}
 			
-			if (getTicksRegenerating() == 200) { // regeneration has finished, reset
-				getType().onFinishRegeneration(player);
-				setTicksRegenerating(0);
-				setRegenerating(false);
-				setSolaceTicks(0);
-				setInGracePeriod(false);
-				setGlowing(false);
+			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));*/
+			
+			/*if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness
+				player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
+			}*/
+		}
+		
+		
+		
+		
+		@Override
+		public boolean onKilled() { //TODO add invariant checkers
+			if (state == RegenState.ALIVE) {
 				
-				player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
+				//We're entering grace period...
+				scheduledGraceCritical = scheduler.schedule(15 * 60, this::enterCriticalPhase); //... schedule the transition to critical phase in 15 minutes
+				/*if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness
+					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier); NOW move to external event handler
+				}*/
 				
-				if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
-					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
-				}
+				startGlowing();
+				return true;
 				
-				if (player.world.isRemote) {
-					Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-				} else {
-					sync();
-				}
+			} else if (state.isGraceful()) {
+				
+				//we're being forced to regenerate...
+				scheduledRegenerationTrigger.cancel(); //... cancel the original regeneration trigger
+				scheduledGraceCritical.cancel(); //... cancel the shift to critical phase
+				scheduledGraceGlowing.cancel(); //... cancel the start of glowing
+				
+				triggerRegeneration();
+				return true;
+				
+			} else if (state == RegenState.REGENERATING) {
+				
+				//We've been killed mid regeneration!
+				scheduledRegenerationFinish.cancel(); //... cancel the finishing of the regeneration
+				
+				midSequenceKill();
+				return false;
+				
+			} else throw new IllegalStateException("Unknown cap.getState(): "+state);
+		}
+		
+		@Override
+		public void onPunchBlock() {
+			//We're punching away our glow...
+			if (state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) { //... check if we're actually glowing
+				scheduledRegenerationTrigger.cancel(); //... cancel the letted regeneration trigger
+				scheduledGraceGlowing = scheduler.schedule(60, this::startGlowing); //... schedule the new glowing
+				state = state == RegenState.GRACE_GLOWING ? RegenState.GRACE_STD : RegenState.GRACE_CRIT;
 			}
 		}
 		
-		// Grace handling
-		if (isInGracePeriod()) {
-			if (player.ticksExisted % 200 == 0) {
-				if (player.getHealth() < player.getMaxHealth()) {
-					player.heal(2.0F);
-				}
-			}
-			
-			if (getSolaceTicks() == 2) {
-				if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
-					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
-				}
-			}
-			
-			if (isGlowing()) {
-				setTicksGlowing(getTicksGlowing() + 1);
-			}
-			
-			if (getTicksGlowing() >= 600) {
-				setInGracePeriod(false);
-			}
-			
-			if (getSolaceTicks() % 220 == 0) {
-				//XxX there's nothing here
-			}
-			
-			// Every Minute
-			if (getSolaceTicks() % 1200 == 0) {
-				setGlowing(true);
-				if (player.world.isRemote) {
-					PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
-				}
-			}
-			
-			// Five minutes
-			if (getSolaceTicks() == 6000) {
-				//XxX there's nothing here
-			}
-			
-			// 14 Minutes - Critical stage start
-			if (getSolaceTicks() == 17100) {
-				if (player.world.isRemote) {
-					PlayerUtil.playMovingSound(player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
-					player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 800, 0, false, false)); // could be removed with milk, but I think that's not that bad
-				}
-			}
-			
-		}
-		
-		// CRITICAL STAGE
-		if (getSolaceTicks() > 16800 && getSolaceTicks() < 18000) {
-			// ToDO random damage
-			PlayerUtil.sendMessage(player, "regeneration.messages.regen_or_die", true);
-		}
-		
-		// 15 minutes all gone, rip user
-		if (getSolaceTicks() == 17999) {
-			if (!player.world.isRemote)
-				player.setHealth(-1);
-			reset();
-		}
 	}
-	
-	@Override
-	public void reset() {
-		setInGracePeriod(false);
-		setGlowing(false);
-		setTicksGlowing(0);
-		setTicksRegenerating(0);
-		setRegenerating(false);
-		if (RegenConfig.losePowerOnMidRegenDeath)
-			setLivesLeft(0);
-	}
-	
-	@Override
-	public void update() {
-		if (isRegenerating()) {
-			updateRegeneration();
-			sync();
-		} else {
-			setSolaceTicks(0);
-			setInGracePeriod(false);
-			setTicksGlowing(0);
-		}
-	}*/
 	
 }

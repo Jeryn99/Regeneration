@@ -49,7 +49,7 @@ public class MovingSoundPlayer extends MovingSound {
 		ResourceLocation sound = soundCheck.getSoundName();
 		boolean stopCondition = false;
 		
-		//FIXME shouldn't heartbeat be a player-only sound?
+		//NOTE shouldn't heartbeat be a player-only sound?
 		//I wish I could use a switch here...
 		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //FIXME heartbeat is never played
 			stopCondition = cap.getState().isGraceful();
