@@ -47,7 +47,6 @@ public class PlayerUtil {
 	}
 	
 	
-	@SideOnly(Side.SERVER)
 	public static void setPerspective(EntityPlayerMP player, boolean thirdperson) {
 		NetworkHandler.INSTANCE.sendTo(new MessageSetPerspective(thirdperson), player);
 	}

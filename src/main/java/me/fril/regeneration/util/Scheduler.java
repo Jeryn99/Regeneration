@@ -19,8 +19,12 @@ public class Scheduler {
 		}
 	}
 	
-	public ScheduledTask schedule(int inSeconds, Runnable callback) {
-		long scheduledTick = ticks + (inSeconds * 20);
+	public ScheduledTask scheduleInSeconds(long inSeconds, Runnable callback) {
+		return scheduleInTicks(inSeconds * 20, callback);
+	}
+	
+	public ScheduledTask scheduleInTicks(long inTicks, Runnable callback) {
+		long scheduledTick = ticks + inTicks;
 		
 		List<ScheduledTask> list = schedule.containsKey(scheduledTick) ? schedule.get(scheduledTick) : new ArrayList<>();
 		ScheduledTask task = new ScheduledTask(callback, scheduledTick);
@@ -30,12 +34,22 @@ public class Scheduler {
 		return task;
 	}
 	
+	public ScheduledTask createBlankTask() {
+		return new BlankScheduledTask();
+	}
+	
+	public void reset() {
+		ticks = 0;
+		schedule.clear();
+	}
+	
 	
 	
 	public class ScheduledTask implements Runnable {
+		
 		private final Runnable callback;
 		private final long scheduledTick;
-		private boolean canceled; //mostly for debug purposes
+		private boolean canceled;
 		
 		private ScheduledTask(Runnable callback, long scheduledTick) {
 			this.callback = callback;
@@ -55,6 +69,34 @@ public class Scheduler {
 			Scheduler.this.schedule.get(scheduledTick).remove(this);
 		}
 		
+		public long ticksLeft() {
+			return canceled ? -1 : Scheduler.this.ticks - scheduledTick;
+		}
+		
 	}
 	
+	
+	private class BlankScheduledTask extends ScheduledTask {
+		
+		public BlankScheduledTask() {
+			super(()->{}, -1);
+		}
+		
+		@Override
+		public void run() {
+			
+		}
+		
+		@Override
+		public void cancel() {
+			
+		}
+		
+		@Override
+		public long ticksLeft() {
+			return -1;
+		}
+		
+	}
+
 }

@@ -24,8 +24,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Sub
@@ -84,7 +82,6 @@ public class RegenEventHandler {
 		CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchBlock();
 	}
 	
-	@SideOnly(Side.SERVER)
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingHurtEvent event) {
 		if (!(event.getEntity() instanceof EntityPlayer))
