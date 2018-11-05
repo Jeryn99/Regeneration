@@ -216,7 +216,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	
-	public class RegenerationStateManager implements IRegenerationStateManager {
+	public class RegenerationStateManager implements IRegenerationStateManager { //TODO configurable timing intervals
 		
 		private final Scheduler scheduler;
 		private ScheduledTask scheduledRegenerationTrigger, scheduledRegenerationFinish,

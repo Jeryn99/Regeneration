@@ -66,11 +66,20 @@ public class Scheduler {
 				System.err.println("WARNING: Cancelling already canceled action");
 			canceled = true;
 			
-			Scheduler.this.schedule.get(scheduledTick).remove(this);
+			if (scheduledTick - Scheduler.this.ticks > 0)
+				Scheduler.this.schedule.get(scheduledTick).remove(this);
+			else
+				System.err.println("WARNING: Cancelling already completed action");
 		}
 		
 		public long ticksLeft() {
-			return canceled ? -1 : Scheduler.this.ticks - scheduledTick;
+			return canceled ? -1 : scheduledTick - Scheduler.this.ticks;
+		}
+
+		/** @deprecated Meant for debugging! */
+		@Deprecated
+		public long scheduledTick() {
+			return scheduledTick;
 		}
 		
 	}

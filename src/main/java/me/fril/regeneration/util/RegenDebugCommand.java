@@ -27,6 +27,8 @@ public class RegenDebugCommand extends CommandBase {
 		
 		int amount = args.length > 1 ? parseInt(args[1], 0) : -1;
 		
+		//TODO fast forward scheduler command
+		//TODO querying scheduler status
 		switch (args[0]) {
 			/*case "solace": TODO implement debug state change
 				if (amount > 0)

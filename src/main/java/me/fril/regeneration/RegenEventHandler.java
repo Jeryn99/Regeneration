@@ -79,7 +79,8 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onBreakBlock(PlayerInteractEvent.LeftClickBlock event) {
 		EntityPlayer player = event.getEntityPlayer();
-		CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchBlock();
+		if (!player.world.isRemote)
+			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchBlock();
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
