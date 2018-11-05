@@ -1,7 +1,7 @@
 package me.fril.regeneration;
 
 import me.fril.regeneration.common.items.ItemFobWatch;
-import me.fril.regeneration.util.RegenerationEnergyDamageSource;
+import me.fril.regeneration.util.RegenDamageSource;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +24,7 @@ public class RegenObjects {
 	
 	public static List<Item> ITEMS = new ArrayList<>();
 
-	public static DamageSource REGEN_SOURCE = new RegenerationEnergyDamageSource("regen_energy");
+	public static DamageSource REGEN_SOURCE = new RegenDamageSource("regen_energy");
 
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
