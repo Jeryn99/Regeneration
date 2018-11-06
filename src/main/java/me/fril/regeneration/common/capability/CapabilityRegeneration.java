@@ -235,7 +235,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		//private IDebugChannel debugChannel;
 		
 		private RegenerationStateManager() {
-			this.scheduler = new Scheduler(RegenDebugger.registerPlayer(CapabilityRegeneration.this));
+			this.scheduler = new Scheduler(RegenDebugger.newSession(CapabilityRegeneration.this));
 		}
 		
 		

@@ -38,9 +38,9 @@ public class RegenDebugger {
 	private RegenDebugger() {}
 	
 	
-	public static IDebugChannel registerPlayer(IRegeneration capability) {
+	public static IDebugChannel newSession(IRegeneration capability) {
 		if (tabReg.containsKey(capability))
-			return tabReg.get(capability).getChannel();
+			throw new IllegalStateException("Tried to start session for a capability that was already registered");
 		
 		DebugChannelTab tab = new DebugChannelTab(capability);
 		EventQueue.invokeLater(()->tabs.addTab(tab.getName(), tab));
@@ -50,9 +50,7 @@ public class RegenDebugger {
 	
 	
 	public static void unregisterPlayer(IRegeneration capability) {
-		EventQueue.invokeLater(()->{
-			//TODO mark "finished" session
-		});
+		EventQueue.invokeLater(()->tabs.removeTabAt(tabs.indexOfTabComponent(tabReg.get(capability))));
 		tabReg.remove(capability);
 	}
 	

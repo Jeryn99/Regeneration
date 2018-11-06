@@ -2,6 +2,7 @@ package me.fril.regeneration.debugger;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ public class DebugChannelTab extends JPanel {
 		JPanel pnlTop = new JPanel();
 		{
 			lblTick = new JLabel("Current tick: ", SwingConstants.CENTER);
+			lblTick.setFont(new Font(lblTick.getFont().getFontName(), Font.PLAIN, 16));
 			
 			JPanel pnlTimers = new JPanel();
 			for (TimerChannel tc : TimerChannel.values()) {
