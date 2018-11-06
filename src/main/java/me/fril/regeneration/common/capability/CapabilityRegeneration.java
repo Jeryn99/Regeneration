@@ -77,8 +77,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void tick() {
-		if (!player.world.isRemote) //ticking only on the server for simplicity
-			stateManager.tick(); //TODO only tick when state != ALIVE
+		if (!player.world.isRemote && state != RegenState.ALIVE) //ticking only on the server for simplicity
+			stateManager.tick();
 		
 		if (state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, this);
@@ -369,7 +369,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
 		private void midSequenceKill() {
-			state = RegenState.ALIVE; //FIXME if we're killing the player by the 15 minute counter this'll just start the regeneration cycle over
+			state = RegenState.ALIVE;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1); //in case this method was called by the 15 minute counter
 			

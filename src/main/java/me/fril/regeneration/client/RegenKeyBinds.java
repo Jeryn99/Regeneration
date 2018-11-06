@@ -13,7 +13,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
  */
 public class RegenKeyBinds {
 	
-	public static KeyBinding REGEN_NOW; //TODO remove keybind entry in lang file for enter grace
+	public static KeyBinding REGEN_NOW;
 	
 	public static void init() {
 		REGEN_NOW = new KeyBinding(I18n.translateToLocalFormatted("regeneration.keybinds.just_regen"), Keyboard.KEY_R, RegenerationMod.NAME);

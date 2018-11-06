@@ -33,8 +33,7 @@ regeneration.subtitles.hand_glow=Glowing hands
 regeneration.subtitles.heart_beat=Heartbeat
 regeneration.subtitles.critical_stage=Critical grace stage
 
-regeneration.keybinds.grace=Enter grace period
-regeneration.keybinds.just_regen=Regenerate immediately
+regeneration.keybinds.just_regen=Regenerate
 
 config.regeneration.max_regens=Amount of regenerations per cycle
 config.regeneration.start_as_timelord=Start a world as a timelord
