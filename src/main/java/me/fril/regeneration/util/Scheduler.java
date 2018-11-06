@@ -36,49 +36,39 @@ public class Scheduler { //TODO document why we can't instiate it with a debug c
 		}
 	}
 	
-	public ScheduledTask scheduleBlank(TimerChannel channel) {
-		if (schedule.get(channel).ticksLeft() >= 0)
-			throw new IllegalStateException("Overwriting non-completed action with blank on channel "+channel+" (old: "+schedule.get(channel)+")");
-		
-		ScheduledTask task = new BlankScheduledTask(channel);
-		schedule.put(channel, task);
-		
-		debugChannel.notifyScheduleBlank(channel);
-		return task;
-	}
 	
 	
-	
-	public ScheduledTask scheduleInTicks(TimerChannel channel, long inTicks, Runnable callback) {
-		if (schedule.get(channel).ticksLeft() >= 0)
+	public void scheduleInTicks(TimerChannel channel, long inTicks, Runnable callback) {
+		if (schedule.get(channel) != null && schedule.get(channel).ticksLeft() >= 0)
 			throw new IllegalStateException("Overwriting non-completed action on channel "+channel+" (old: "+schedule.get(channel)+", new would be in "+inTicks+")");
 		
-		if (inTicks < 0)
-			return scheduleBlank(channel);
-		else {
+		if (inTicks >= 0) {
 			ScheduledTask task = new ScheduledTask(channel, callback, currentTick+inTicks);
 			schedule.put(channel, task);
-			
 			debugChannel.notifySchedule(channel, inTicks, task.scheduledTick);
-			return task;
+		} else {
+			schedule.remove(channel);
+			debugChannel.notifyScheduleBlank(channel);
 		}
 	}
 	
-	public ScheduledTask scheduleInSeconds(TimerChannel channel, long inSeconds, Runnable callback) {
-		return scheduleInTicks(channel, inSeconds*20, callback);
+	public void scheduleInSeconds(TimerChannel channel, long inSeconds, Runnable callback) {
+		scheduleInTicks(channel, inSeconds*20, callback);
 	}
 	
 	
 	
 	public void cancel(TimerChannel channel) {
-		debugChannel.notifyCancel(channel, schedule.get(channel).ticksLeft(), schedule.get(channel).scheduledTick);
-		schedule.get(channel).cancel();
+		if (schedule.containsKey(channel)) {
+			debugChannel.notifyCancel(channel, schedule.get(channel).ticksLeft(), schedule.get(channel).scheduledTick);
+			schedule.get(channel).cancel();
+		} else {
+			debugChannel.warn("Cancelling non-scheduled action on "+channel);
+		}
 	}
 	
-	
-	
 	public long getTicksLeft(TimerChannel channel) {
-		return schedule.get(channel).ticksLeft();
+		return schedule.containsKey(channel) ? schedule.get(channel).ticksLeft() : -1;
 	}
 	
 	public boolean hasDebugChannel() {
@@ -137,31 +127,5 @@ public class Scheduler { //TODO document why we can't instiate it with a debug c
 		}
 		
 	}
-	
-	private class BlankScheduledTask extends ScheduledTask {
-		
-		public BlankScheduledTask(TimerChannel channel) {
-			super(channel, ()->{}, -1);
-		}
-		
-		@Override public void run() {}
-		@Override public void cancel() {}
-		
-		@Override
-		public long ticksLeft() {
-			return -1;
-		}
-		
-		@Override
-		public String toString() {
-			return "BlankScheduledTask";
-		}
-		
-	}
-	
-	/*@Deprecated
-	public long currentTick() {
-		return ticks;
-	}*/
 
 }
