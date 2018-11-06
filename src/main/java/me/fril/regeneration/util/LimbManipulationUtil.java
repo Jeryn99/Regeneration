@@ -101,26 +101,35 @@ public class LimbManipulationUtil {
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
+
+					//Model Biped
 					if (field.getType() == ModelBiped.class) {
-						for (ModelRenderer modelRenderer : ((ModelBiped) field
-								.get(layer)).boxList) {
-							if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-								((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
+						if(((ModelBiped) field.get(layer)).boxList != null) {
+							for (ModelRenderer modelRenderer : ((ModelBiped) field.get(layer)).boxList) {
+								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+									((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
+								}
 							}
 						}
+
+						//Model Player
 					} else if (field.getType() == ModelPlayer.class) {
-						for (ModelRenderer modelRenderer : ((ModelBiped) field
-								.get(layer)).boxList) {
-							if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-								((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
+						if(((ModelBiped) field.get(layer)).boxList != null) {
+							for (ModelRenderer modelRenderer : ((ModelBiped) field.get(layer)).boxList) {
+								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+									((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
+								}
 							}
 						}
 					}
 				}
 			}
-			for (ModelRenderer modelRenderer : event.getRenderer().getMainModel().boxList) {
-				if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-					((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
+
+			if(event.getRenderer().getMainModel().boxList != null) {
+				for (ModelRenderer modelRenderer : event.getRenderer().getMainModel().boxList) {
+					if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+						((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
+					}
 				}
 			}
 		} catch (IllegalAccessException ignored) {
