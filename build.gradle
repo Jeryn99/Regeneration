@@ -80,3 +80,25 @@ task checkUpdateJson doLast {
 	}
 }
 project.tasks.test.dependsOn(checkUpdateJson)
+
+
+
+sourceSets {
+	debugger {
+		java {
+			srcDir 'src/debugger/java'
+		}
+		resources {
+			srcDir 'src/debugger/resources'
+		}
+	}
+}
+
+task debuggerJar(type: Jar, dependsOn: classes) {
+	classifier = 'debugger'
+	from sourceSets.debugger.allSource
+}
+
+artifacts {
+	archives debuggerJar
+}

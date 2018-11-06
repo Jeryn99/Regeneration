@@ -4,6 +4,7 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
+import me.fril.regeneration.debugger.RegenDebugger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,6 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
 /**
@@ -72,6 +74,11 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 		CapabilityRegeneration.getForPlayer(event.player).synchronise();
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
+		RegenDebugger.unregisterPlayer(CapabilityRegeneration.getForPlayer(event.player));
 	}
 	
 	

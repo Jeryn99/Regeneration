@@ -1,114 +1,133 @@
 package me.fril.regeneration.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+
+import me.fril.regeneration.debugger.IDebugChannel;
 
 public class Scheduler {
 	
-	private long ticks = 0; //this could theoretically overflow if you left the game running for >10 billion years
-	private Map<Long, List<ScheduledTask>> schedule = new HashMap<>();
+	private final Map<TimerChannel, ScheduledTask> schedule = new ConcurrentHashMap<>();
+	private final IDebugChannel debugChannel;
+	
+	private long currentTick = 0;
+	
+	public Scheduler(IDebugChannel debugChannel) {
+		this.debugChannel = debugChannel;
+	}
 	
 	public void tick() {
-		ticks++;
+		currentTick++;
+		debugChannel.updateCurrentTick(currentTick);
 		
-		if (ticks % 20 == 0)
-			System.out.println("TICK "+ticks);
-		
-		if (schedule.containsKey(ticks)) {
-			schedule.get(ticks).forEach(r->r.run());
-			schedule.remove(ticks);
+		//iterator needed because we modify the collection while iterating through it
+		Iterator<Entry<TimerChannel, ScheduledTask>> it = schedule.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<TimerChannel, ScheduledTask> en = it.next();
+			
+			if (en.getValue().scheduledTick == currentTick) {
+				debugChannel.notifyExecution(en.getKey(), currentTick);
+				
+				en.getValue().run();
+				it.remove();
+			}
 		}
 	}
 	
-	public ScheduledTask scheduleInSeconds(long inSeconds, Runnable callback) {
-		return scheduleInTicks(inSeconds * 20, callback);
+	
+	
+	public void scheduleInTicks(TimerChannel channel, long inTicks, Runnable callback) {
+		if (schedule.get(channel) != null && schedule.get(channel).ticksLeft() >= 0)
+			throw new IllegalStateException("Overwriting non-completed action on channel "+channel+" (old: "+schedule.get(channel)+", new would be in "+inTicks+")");
+		
+		if (inTicks >= 0) {
+			ScheduledTask task = new ScheduledTask(channel, callback, currentTick+inTicks);
+			schedule.put(channel, task);
+			debugChannel.notifySchedule(channel, inTicks, task.scheduledTick);
+		} else {
+			schedule.remove(channel);
+			debugChannel.notifyScheduleBlank(channel);
+		}
 	}
 	
-	public ScheduledTask scheduleInTicks(long inTicks, Runnable callback) {
-		long scheduledTick = ticks + inTicks;
-		
-		List<ScheduledTask> list = schedule.containsKey(scheduledTick) ? schedule.get(scheduledTick) : new ArrayList<>();
-		ScheduledTask task = new ScheduledTask(callback, scheduledTick);
-		list.add(task);
-		schedule.put(scheduledTick, list);
-		
-		return task;
+	public void scheduleInSeconds(TimerChannel channel, long inSeconds, Runnable callback) {
+		scheduleInTicks(channel, inSeconds*20, callback);
 	}
 	
-	public ScheduledTask createBlankTask() {
-		return new BlankScheduledTask();
+	
+	
+	public void cancel(TimerChannel channel) {
+		if (schedule.containsKey(channel)) {
+			debugChannel.notifyCancel(channel, schedule.get(channel).ticksLeft(), schedule.get(channel).scheduledTick);
+			schedule.get(channel).cancel();
+		} else {
+			debugChannel.warn("Cancelling non-scheduled action on "+channel);
+		}
+	}
+	
+	public long getTicksLeft(TimerChannel channel) {
+		return schedule.containsKey(channel) ? schedule.get(channel).ticksLeft() : -1;
 	}
 	
 	public void reset() {
-		ticks = 0;
+		currentTick = 0;
 		schedule.clear();
 	}
+	
+	
+	@Deprecated
+	public Map<TimerChannel, ScheduledTask> getSchedule() {
+		return schedule;
+	}
+	
+	
+	
 	
 	
 	
 	public class ScheduledTask implements Runnable {
 		
+		private final TimerChannel channel;
 		private final Runnable callback;
 		private final long scheduledTick;
 		private boolean canceled;
 		
-		private ScheduledTask(Runnable callback, long scheduledTick) {
+		private ScheduledTask(TimerChannel channel, Runnable callback, long scheduledTick) {
+			this.channel = channel;
 			this.callback = callback;
 			this.scheduledTick = scheduledTick;
 		}
 		
 		@Override
 		public void run() {
+			if (canceled)
+				throw new IllegalStateException("Running cancelled action: "+this);
+			
 			callback.run();
 		}
 		
 		public void cancel() {
-			if (canceled)
-				System.err.println("WARNING: Cancelling already canceled action");
 			canceled = true;
 			
-			if (scheduledTick - Scheduler.this.ticks > 0)
-				Scheduler.this.schedule.get(scheduledTick).remove(this);
-			else
-				System.err.println("WARNING: Cancelling already completed action");
+			if (scheduledTick - Scheduler.this.currentTick > 0) //still running
+				Scheduler.this.schedule.remove(channel);
 		}
 		
 		public long ticksLeft() {
-			return canceled ? -1 : scheduledTick - Scheduler.this.ticks;
+			return canceled ? -1 : scheduledTick - Scheduler.this.currentTick;
 		}
 
-		/** @deprecated Meant for debugging! */
-		@Deprecated
-		public long scheduledTick() {
-			return scheduledTick;
+		@Override
+		public String toString() {
+			return "ScheduledTask[channel=" + channel + ", scheduledTick=" + scheduledTick + ", ticksLeft=" + ticksLeft() + ", canceled=" + canceled + "]";
+		}
+		
+		public String toStatusString() {
+			return "[scheduledTick=" + scheduledTick + ", ticksLeft=" + ticksLeft() + ", canceled=" + canceled + "]";
 		}
 		
 	}
 	
-	
-	private class BlankScheduledTask extends ScheduledTask {
-		
-		public BlankScheduledTask() {
-			super(()->{}, -1);
-		}
-		
-		@Override
-		public void run() {
-			
-		}
-		
-		@Override
-		public void cancel() {
-			
-		}
-		
-		@Override
-		public long ticksLeft() {
-			return -1;
-		}
-		
-	}
-
 }
