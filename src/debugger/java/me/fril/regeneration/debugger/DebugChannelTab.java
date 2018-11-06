@@ -55,7 +55,7 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 	
 	@Override
 	public String getName() {
-		return name;
+		return name == null ? "Unknown (logging in...)" : name;
 	}
 	
 	@Override
@@ -70,6 +70,17 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 		EventQueue.invokeLater(()->{
 			currentRecordingTick = tick;
 			lblTick.setText("Current tick: "+tick);
+			
+			if (name == null && capability.getPlayer().getGameProfile() != null) {
+				name = capability.getPlayer().getGameProfile().getName();
+				
+				JTabbedPane tabs = (JTabbedPane)getParent();
+				tabs.setTitleAt(tabs.getSelectedIndex(), name);
+			}
+			
+			for (Entry<TimerChannel, ScheduledTask> en : capability.getStateManager().getScheduler().getSchedule().entrySet()) {
+				timerLabels.get(en.getKey()).setText(en.getKey() + ": " + en.getValue());
+			}
 		});
 	}
 	
@@ -110,6 +121,14 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 			
 			if (scheduledTick - inTicks != currentRecordingTick)
 				console.println("WARNING: inTicks & shceduledTick don't add up with the current recording tick ("+scheduledTick+"-"+inTicks+" != "+currentRecordingTick+")");
+		});
+	}
+
+
+	@Override
+	public void warn(String msg) {
+		EventQueue.invokeLater(()->{
+			console.println("WARNING: "+msg);
 		});
 	}
 	

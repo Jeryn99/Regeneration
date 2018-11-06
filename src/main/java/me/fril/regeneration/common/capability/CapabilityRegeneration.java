@@ -41,7 +41,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private IRegenType type = RegenTypes.FIERY;
 	
 	private RegenState state = RegenState.ALIVE;
-	private final RegenerationStateManager stateManager = new RegenerationStateManager();
+	private final RegenerationStateManager stateManager;
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
@@ -60,10 +60,15 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	public CapabilityRegeneration() {
 		this.player = null;
+		this.stateManager = null;
 	}
 	
 	public CapabilityRegeneration(EntityPlayer player) {
 		this.player = player;
+		if (!player.world.isRemote)
+			this.stateManager = new RegenerationStateManager();
+		else
+			this.stateManager = null;
 	}
 	
 	
@@ -231,7 +236,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		//private IDebugChannel debugChannel;
 		
 		private RegenerationStateManager() {
-			this.scheduler = new Scheduler();
+			this.scheduler = new Scheduler(RegenDebugger.registerPlayer(CapabilityRegeneration.this));
 		}
 		
 		
@@ -289,9 +294,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void tick() {
 			if (player.world.isRemote)
 				throw new IllegalStateException("Ticking state manager on the client");
-			
-			if (!scheduler.hasDebugChannel())
-				scheduler.setDebugChannel(RegenDebugger.registerPlayer(player.getGameProfile()));
 			
 			scheduler.tick();
 			

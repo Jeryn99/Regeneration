@@ -7,18 +7,19 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
-import com.mojang.authlib.GameProfile;
-
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.common.capability.IRegeneration;
 
 public class RegenDebugger {
 	
 	private static final JFrame frame;
 	private static final JTabbedPane tabs;
-	private static final Map<GameProfile, DebugChannelTab> tabReg = new HashMap<>();
+	private static final Map<IRegeneration, DebugChannelTab> tabReg = new HashMap<>();
 	
 	static {
 		frame = new JFrame("Regeneration v"+RegenerationMod.VERSION+" DEBUGGER");
+		frame.setAutoRequestFocus(false);
+		frame.setSize(900, 600);
 		
 		tabs = new JTabbedPane();
 		frame.add(tabs, BorderLayout.CENTER);
@@ -30,30 +31,27 @@ public class RegenDebugger {
 		frame.setLocationRelativeTo(null);
 		frame.setLocation(frame.getX()+dx, frame.getY()+dy);
 		
-		frame.setAutoRequestFocus(false);
-		frame.setSize(450, 300);
 		frame.setVisible(true);
 	}
 	
 	private RegenDebugger() {}
 	
 	
-	public static IDebugChannel registerPlayer(GameProfile gameProfile) {
-		if (tabReg.containsKey(gameProfile))
-			return tabReg.get(gameProfile);
+	public static IDebugChannel registerPlayer(IRegeneration capability) {
+		if (tabReg.containsKey(capability))
+			return tabReg.get(capability);
 		
-		DebugChannelTab tab = new DebugChannelTab(gameProfile);
-		
+		DebugChannelTab tab = new DebugChannelTab(capability);
 		tabs.addTab(tab.getName(), tab);
-		tabReg.put(gameProfile, tab);
+		tabReg.put(capability, tab);
 		
 		return tab;
 	}
 
 
-	public static void unregisterPlayer(GameProfile gameProfile) {
-		tabs.remove(tabReg.get(gameProfile));
-		tabReg.remove(gameProfile);
+	public static void unregisterPlayer(IRegeneration capability) {
+		tabs.remove(tabReg.get(capability));
+		tabReg.remove(capability);
 	}
 	
 	

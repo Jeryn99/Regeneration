@@ -14,7 +14,7 @@ public class Scheduler { //TODO document why we can't instiate it with a debug c
 	
 	private long currentTick = 0;
 	
-	public void setDebugChannel(IDebugChannel debugChannel) {
+	public Scheduler(IDebugChannel debugChannel) {
 		this.debugChannel = debugChannel;
 	}
 	
@@ -71,10 +71,6 @@ public class Scheduler { //TODO document why we can't instiate it with a debug c
 		return schedule.containsKey(channel) ? schedule.get(channel).ticksLeft() : -1;
 	}
 	
-	public boolean hasDebugChannel() {
-		return debugChannel != null;
-	}
-	
 	public void reset() {
 		currentTick = 0;
 		schedule.clear();
@@ -127,5 +123,5 @@ public class Scheduler { //TODO document why we can't instiate it with a debug c
 		}
 		
 	}
-
+	
 }

@@ -18,4 +18,6 @@ public interface IDebugChannel {
 	
 	PrintStream getConsole();
 	
+	void warn(String msg);
+	
 }

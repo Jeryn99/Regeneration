@@ -78,7 +78,7 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
-		RegenDebugger.unregisterPlayer(event.player.getGameProfile());
+		RegenDebugger.unregisterPlayer(CapabilityRegeneration.getForPlayer(event.player));
 	}
 	
 	
