@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import me.fril.regeneration.debugger.IDebugChannel;
 
-public class Scheduler { //TODO document why we can't instiate it with a debug channel
+public class Scheduler {
 	
 	private final Map<TimerChannel, ScheduledTask> schedule = new ConcurrentHashMap<>();
 	private final IDebugChannel debugChannel;
@@ -109,14 +109,10 @@ public class Scheduler { //TODO document why we can't instiate it with a debug c
 		}
 		
 		public void cancel() {
-			if (canceled)
-				System.err.println("WARNING: Cancelling already canceled action"); //TODO debug channel
 			canceled = true;
 			
 			if (scheduledTick - Scheduler.this.currentTick > 0) //still running
 				Scheduler.this.schedule.remove(channel);
-			else
-				System.err.println("WARNING: Cancelling already completed action"); //TODO debug channel
 		}
 		
 		public long ticksLeft() {

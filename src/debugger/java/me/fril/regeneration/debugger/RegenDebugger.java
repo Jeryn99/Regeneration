@@ -40,17 +40,19 @@ public class RegenDebugger {
 	
 	public static IDebugChannel registerPlayer(IRegeneration capability) {
 		if (tabReg.containsKey(capability))
-			return tabReg.get(capability);
+			return tabReg.get(capability).getChannel();
 		
 		DebugChannelTab tab = new DebugChannelTab(capability);
 		EventQueue.invokeLater(()->tabs.addTab(tab.getName(), tab));
 		tabReg.put(capability, tab);
-		return tab;
+		return tab.getChannel();
 	}
-
-
+	
+	
 	public static void unregisterPlayer(IRegeneration capability) {
-		EventQueue.invokeLater(()->tabs.remove(tabReg.get(capability)));
+		EventQueue.invokeLater(()->{
+			//TODO mark "finished" session
+		});
 		tabReg.remove(capability);
 	}
 	
