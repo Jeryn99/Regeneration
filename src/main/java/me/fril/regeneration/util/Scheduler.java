@@ -77,6 +77,12 @@ public class Scheduler { //TODO document why we can't instiate it with a debug c
 	}
 	
 	
+	@Deprecated
+	public Map<TimerChannel, ScheduledTask> getSchedule() {
+		return schedule;
+	}
+	
+	
 	
 	
 	
@@ -120,6 +126,10 @@ public class Scheduler { //TODO document why we can't instiate it with a debug c
 		@Override
 		public String toString() {
 			return "ScheduledTask[channel=" + channel + ", scheduledTick=" + scheduledTick + ", ticksLeft=" + ticksLeft() + ", canceled=" + canceled + "]";
+		}
+		
+		public String toStatusString() {
+			return "[scheduledTick=" + scheduledTick + ", ticksLeft=" + ticksLeft() + ", canceled=" + canceled + "]";
 		}
 		
 	}

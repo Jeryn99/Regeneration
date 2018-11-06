@@ -431,6 +431,15 @@ public class CapabilityRegeneration implements IRegeneration {
 			scheduler.scheduleInTicks(TimerChannel.GRACE_GLOWING,        nbt.getLong(TimerChannel.GRACE_GLOWING.toString()),        this::startGlowing);
 			scheduler.scheduleInTicks(TimerChannel.GRACE_CRITICAL_DEATH, nbt.getLong(TimerChannel.GRACE_CRITICAL_DEATH.toString()), this::midSequenceKill);
 		}
+
+
+
+
+		@Override
+		@Deprecated
+		public Scheduler getScheduler() {
+			return scheduler;
+		}
 		
 	}
 	

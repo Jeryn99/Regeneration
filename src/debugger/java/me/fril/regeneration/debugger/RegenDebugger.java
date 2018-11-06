@@ -1,6 +1,7 @@
 package me.fril.regeneration.debugger;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class RegenDebugger {
 	static {
 		frame = new JFrame("Regeneration v"+RegenerationMod.VERSION+" DEBUGGER");
 		frame.setAutoRequestFocus(false);
-		frame.setSize(900, 600);
+		frame.setSize(500, 560);
 		
 		tabs = new JTabbedPane();
 		frame.add(tabs, BorderLayout.CENTER);
@@ -42,15 +43,14 @@ public class RegenDebugger {
 			return tabReg.get(capability);
 		
 		DebugChannelTab tab = new DebugChannelTab(capability);
-		tabs.addTab(tab.getName(), tab);
+		EventQueue.invokeLater(()->tabs.addTab(tab.getName(), tab));
 		tabReg.put(capability, tab);
-		
 		return tab;
 	}
 
 
 	public static void unregisterPlayer(IRegeneration capability) {
-		tabs.remove(tabReg.get(capability));
+		EventQueue.invokeLater(()->tabs.remove(tabReg.get(capability)));
 		tabReg.remove(capability);
 	}
 	

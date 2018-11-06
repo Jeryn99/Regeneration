@@ -4,29 +4,37 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 
-import com.mojang.authlib.GameProfile;
-
+import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.debugger.util.TextAreaOutputStream;
+import me.fril.regeneration.util.Scheduler.ScheduledTask;
 import me.fril.regeneration.util.TimerChannel;
 
 @SuppressWarnings("serial")
 public class DebugChannelTab extends JPanel implements IDebugChannel {
 	
-	private final String name;
+	private final IRegeneration capability;
+	private String name;
+	
 	private final PrintStream console;
-	private final JPanel topPanel;
+	//private final JPanel pnlTop, pnlTimers;
 	
 	private final JLabel lblTick;
+	private final Map<TimerChannel, JLabel> timerLabels = new HashMap<>();
 	private long currentRecordingTick;
 	
-	public DebugChannelTab(GameProfile gameProfile) {
-		name = gameProfile.getName();
+	public DebugChannelTab(IRegeneration cap) {
+		this.capability = cap;
 		
 		setLayout(new GridLayout(1, 1));
 		
@@ -37,17 +45,31 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 		
 		
 		
-		topPanel = new JPanel();
+		JPanel pnlTop = new JPanel();
 		{
-			lblTick = new JLabel("Current tick: ");
-			topPanel.add(lblTick);
+			lblTick = new JLabel("Current tick: ", SwingConstants.CENTER);
+			
+			JPanel pnlTimers = new JPanel();
+			for (TimerChannel tc : TimerChannel.values()) {
+				JLabel lblTitle = new JLabel(tc.toString());
+				pnlTimers.add(lblTitle);
+				
+				JLabel lblValue = new JLabel("undefined");
+				pnlTimers.add(lblValue);
+				timerLabels.put(tc, lblValue);
+			}
+			pnlTimers.setLayout(new GridLayout(TimerChannel.values().length, 2));
+			
+			pnlTop.add(lblTick);
+			pnlTop.add(pnlTimers);
+			pnlTop.setLayout(new GridLayout(2, 1));
 		}
 		
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		splitPane.setRightComponent(textArea);
-		splitPane.setLeftComponent(topPanel);
+		splitPane.setRightComponent(new JScrollPane(textArea));
+		splitPane.setLeftComponent(pnlTop);
 		splitPane.setDividerLocation(.75D);
 		add(splitPane);
 	}
@@ -78,8 +100,14 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 				tabs.setTitleAt(tabs.getSelectedIndex(), name);
 			}
 			
-			for (Entry<TimerChannel, ScheduledTask> en : capability.getStateManager().getScheduler().getSchedule().entrySet()) {
-				timerLabels.get(en.getKey()).setText(en.getKey() + ": " + en.getValue());
+			for (TimerChannel tc : TimerChannel.values()) {
+				ScheduledTask task = capability.getStateManager().getScheduler().getSchedule().get(tc);
+				JLabel label = timerLabels.get(tc);
+				
+				if (task == null)
+					label.setText("undefined");
+				else
+					label.setText(task.toStatusString());
 			}
 		});
 	}
@@ -87,10 +115,10 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 	@Override
 	public void notifyExecution(TimerChannel channel, long tick) { //TODO EventQueue proxy implementation?
 		EventQueue.invokeLater(()->{
-			console.println("EXECUTING "+channel+" at "+tick);
+			console.println(tickString() + "EXECUTING "+channel+" at "+tick);
 			
 			if (tick != currentRecordingTick)
-				console.println("WARNING: reported tick "+tick+" does not match recording tick "+currentRecordingTick);
+				console.println(tickString() + "WARNING: reported tick "+tick+" does not match recording tick "+currentRecordingTick);
 		});
 	}
 
@@ -98,10 +126,10 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 	@Override
 	public void notifySchedule(TimerChannel channel, long inTicks, long scheduledTick) {
 		EventQueue.invokeLater(()->{
-			console.println("SCHEDULED "+channel+" in "+inTicks+" ("+(inTicks/20F)+"s) at "+scheduledTick);
+			console.println(tickString() + "SCHEDULED "+channel+" in "+inTicks+" ("+(inTicks/20F)+"s) at "+scheduledTick);
 			
 			if (scheduledTick - inTicks != currentRecordingTick)
-				console.println("WARNING: inTicks & shceduledTick don't add up with the current recording tick ("+scheduledTick+"-"+inTicks+" != "+currentRecordingTick+")");
+				console.println(tickString() + "WARNING: inTicks & shceduledTick don't add up with the current recording tick ("+scheduledTick+"-"+inTicks+" != "+currentRecordingTick+")");
 		});
 	}
 	
@@ -109,7 +137,7 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 	@Override
 	public void notifyScheduleBlank(TimerChannel channel) {
 		EventQueue.invokeLater(()->{
-			console.println("SCHEDULED BLANK ON "+channel);
+			console.println(tickString() + "SCHEDULED BLANK ON "+channel);
 		});
 	}
 
@@ -117,10 +145,10 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 	@Override
 	public void notifyCancel(TimerChannel channel, long inTicks, long scheduledTick) {
 		EventQueue.invokeLater(()->{
-			console.println("CANCELED "+channel+", was in "+inTicks+" ("+(inTicks/20F)+"s) at "+scheduledTick);
+			console.println(tickString() + "CANCELED "+channel+", was in "+inTicks+" ("+(inTicks/20F)+"s) at "+scheduledTick);
 			
 			if (scheduledTick - inTicks != currentRecordingTick)
-				console.println("WARNING: inTicks & shceduledTick don't add up with the current recording tick ("+scheduledTick+"-"+inTicks+" != "+currentRecordingTick+")");
+				console.println(tickString() + "WARNING: inTicks & shceduledTick don't add up with the current recording tick ("+scheduledTick+"-"+inTicks+" != "+currentRecordingTick+")");
 		});
 	}
 
@@ -128,8 +156,21 @@ public class DebugChannelTab extends JPanel implements IDebugChannel {
 	@Override
 	public void warn(String msg) {
 		EventQueue.invokeLater(()->{
-			console.println("WARNING: "+msg);
+			console.println(tickString() + "WARNING: "+msg);
 		});
+	}
+	
+	
+	private long previousMessageTick = 0;
+	
+	private String tickString() {
+		String nl = "";
+		if (previousMessageTick != currentRecordingTick) {
+			nl = "\n";
+			previousMessageTick = currentRecordingTick;
+		}
+		
+		return nl + "["+currentRecordingTick+"] ";
 	}
 	
 }
