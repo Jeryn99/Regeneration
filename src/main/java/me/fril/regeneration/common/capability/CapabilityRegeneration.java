@@ -106,7 +106,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setString("state", state.toString());
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
-		nbt.setTag("stateManager", stateManager.serializeNBT());
+		if (!player.world.isRemote)
+			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
 	}
 
@@ -118,8 +119,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
-		else if (!player.world.isRemote)
-			stateManager.reset();
 	}
 	
 	
