@@ -4,7 +4,7 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
-import me.fril.regeneration.debugger.MainDebugger;
+import me.fril.regeneration.debugger.RegenDebugger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,7 +78,7 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
-		MainDebugger.unregisterPlayer(event.player.getGameProfile());
+		RegenDebugger.unregisterPlayer(event.player.getGameProfile());
 	}
 	
 	

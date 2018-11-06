@@ -11,7 +11,7 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.debugger.IDebugChannel;
-import me.fril.regeneration.debugger.MainDebugger;
+import me.fril.regeneration.debugger.RegenDebugger;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
@@ -244,11 +244,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (timers.get(channel).ticksLeft() >= 0)
 				throw new IllegalStateException("Overwriting scheduled action ("+channel+" scheduled in "+timers.get(channel).ticksLeft()+")");
 			
-			ScheduledTask task = inTicks >= 0 ? scheduler.scheduleInTicks(inTicks, callback) : scheduler.createBlankTask();
+			ScheduledTask task = inTicks >= 0 ? scheduler.schedule(inTicks, callback) : scheduler.createBlankTask();
 			timers.put(channel, task);
-			
-			/*System.out.println("SCHEDULING "+channel+" IN "+inTicks+"t ("+(inTicks/20F)+"s)"); TODO log via debug channel
-			if (inTicks < 0) System.out.println("\t(SCHEDULED BLANK)");*/
 			
 			return task;
 		}
@@ -315,7 +312,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				throw new IllegalStateException("Ticking state manager on the client");
 			
 			if (debugChannel == null)
-				debugChannel = MainDebugger.registerPlayer(player.getGameProfile());
+				debugChannel = RegenDebugger.registerPlayer(player.getGameProfile());
 			
 			scheduler.tick();
 			

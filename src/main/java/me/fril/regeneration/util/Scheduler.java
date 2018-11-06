@@ -22,11 +22,7 @@ public class Scheduler {
 		}
 	}
 	
-	public ScheduledTask scheduleInSeconds(long inSeconds, Runnable callback) {
-		return scheduleInTicks(inSeconds * 20, callback);
-	}
-	
-	public ScheduledTask scheduleInTicks(long inTicks, Runnable callback) {
+	public ScheduledTask schedule(long inTicks, Runnable callback) {
 		long scheduledTick = ticks + inTicks;
 		
 		List<ScheduledTask> list = schedule.containsKey(scheduledTick) ? schedule.get(scheduledTick) : new ArrayList<>();

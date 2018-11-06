@@ -5,29 +5,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.border.EmptyBorder;
 
 import com.mojang.authlib.GameProfile;
 
-public class MainDebugger {
+import me.fril.regeneration.RegenerationMod;
+
+public class RegenDebugger {
 	
 	private static final JFrame frame;
 	private static final JTabbedPane tabs;
 	private static final Map<GameProfile, DebugChannelTab> tabReg = new HashMap<>();
 	
 	static {
-		frame = new JFrame();
-		
-		JPanel contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		frame.setContentPane(contentPane);
+		frame = new JFrame("Regeneration v"+RegenerationMod.VERSION+" DEBUGGER");
 		
 		tabs = new JTabbedPane();
-		contentPane.add(tabs, BorderLayout.CENTER);
-		
+		frame.add(tabs, BorderLayout.CENTER);
 		
 		String optX = System.getProperty("debuggerX"),
 				optY = System.getProperty("debuggerY");
@@ -41,16 +35,19 @@ public class MainDebugger {
 		frame.setVisible(true);
 	}
 	
-	private MainDebugger() {}
+	private RegenDebugger() {}
 	
 	
 	public static IDebugChannel registerPlayer(GameProfile gameProfile) {
+		if (tabReg.containsKey(gameProfile))
+			return tabReg.get(gameProfile);
+		
 		DebugChannelTab tab = new DebugChannelTab(gameProfile);
 		
-		tabs.add(tab.getName(), tab);
+		tabs.addTab(tab.getName(), tab);
 		tabReg.put(gameProfile, tab);
 		
-		return tab.getChannel();
+		return tab;
 	}
 
 
