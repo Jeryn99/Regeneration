@@ -5,6 +5,7 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -85,9 +86,19 @@ public class RegenEventHandler {
 		if (!player.world.isRemote)
 			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchBlock();
 	}
+
+
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingHurtEvent event) {
+
+		Entity trueSource = event.getSource().getTrueSource();
+
+		if(trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving){
+			EntityPlayer player = (EntityPlayer) trueSource;
+			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event.getEntityLiving());
+		}
+
 		if (!(event.getEntity() instanceof EntityPlayer))
 			return;
 		

@@ -8,12 +8,14 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
+import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.Scheduler;
 import me.fril.regeneration.util.TimerChannel;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -293,11 +295,26 @@ public class CapabilityRegeneration implements IRegeneration {
 				synchronise();
 			}
 		}
-		
-		
-		
-		
-		
+
+		@Override
+		public void onPunchEntity(EntityLivingBase entity) {
+			//We're punching away our glow and healing mobs...
+			if (state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) { //... check if we're actually glowing
+				if (entity.getHealth() < entity.getMaxHealth() && getState() == RegenState.GRACE_GLOWING) {
+					float healthNeeded = entity.getMaxHealth() - entity.getHealth();
+					entity.heal(healthNeeded);
+					player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded);
+
+					state = state == RegenState.GRACE_GLOWING ? RegenState.GRACE_STD : RegenState.GRACE_CRIT;
+					scheduler.cancel(TimerChannel.REGENERATION_TRIGGER); //... cancel the allowed regeneration trigger
+					scheduler.scheduleInSeconds(TimerChannel.GRACE_GLOWING, RegenConfig.Grace.handGlowInterval, this::startGlowing); //... schedule the new glowing
+
+					synchronise();
+				}
+			}
+		}
+
+
 		private void tick() {
 			if (player.world.isRemote)
 				throw new IllegalStateException("Ticking state manager on the client");
