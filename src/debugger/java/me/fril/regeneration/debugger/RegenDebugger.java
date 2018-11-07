@@ -1,7 +1,5 @@
 package me.fril.regeneration.debugger;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,21 +7,26 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.common.capability.CapabilityRegeneration;
+import me.fril.regeneration.debugger.util.UnloadedPlayerTempChannelProxy;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 public class RegenDebugger {
+	private final Map<EntityPlayer, PanelPlayer> players = new HashMap<>();
 	
-	private static final JFrame frame;
-	private static final JTabbedPane tabs;
-	private static final Map<IRegeneration, DebugChannelTab> tabReg = new HashMap<>();
+	private final JFrame frame;
+	private final JTabbedPane tabs;
 	
-	static {
-		frame = new JFrame("Regeneration v"+RegenerationMod.VERSION+" DEBUGGER");
+	public RegenDebugger() {
+		frame = new JFrame("Regeneration v" + RegenerationMod.VERSION + " debugger");
+		frame.setSize(600, 600);
 		frame.setAutoRequestFocus(false);
-		frame.setSize(500, 560);
 		
 		tabs = new JTabbedPane();
-		frame.add(tabs, BorderLayout.CENTER);
+		frame.add(tabs);
 		
 		String optX = System.getProperty("debuggerX"),
 				optY = System.getProperty("debuggerY");
@@ -31,32 +34,41 @@ public class RegenDebugger {
 				dy = optY == null ? 0 : Integer.valueOf(optY);
 		frame.setLocationRelativeTo(null);
 		frame.setLocation(frame.getX()+dx, frame.getY()+dy);
-		
 		frame.setVisible(true);
 	}
 	
-	private RegenDebugger() {}
-	
-	
-	public static IDebugChannel newSession(IRegeneration capability) {
-		if (tabReg.containsKey(capability))
-			throw new IllegalStateException("Tried to start session for a capability that was already registered");
-		
-		DebugChannelTab tab = new DebugChannelTab(capability);
-		EventQueue.invokeLater(()->tabs.addTab(tab.getName(), tab));
-		tabReg.put(capability, tab);
-		return tab.getChannel();
+	public IDebugChannel getChannelFor(EntityPlayer player) {
+		return new UnloadedPlayerTempChannelProxy(() -> {
+			if (players.containsKey(player))
+				return players.get(player).getDebugChannel();
+			else
+				return null;
+		});
 	}
 	
-	
-	public static void unregisterPlayer(IRegeneration capability) {
-		EventQueue.invokeLater(()->tabs.removeTabAt(tabs.indexOfTabComponent(tabReg.get(capability))));
-		tabReg.remove(capability);
-	}
-	
-	
-	public static void open() {
+	public void open() {
 		frame.setVisible(true);
+	}
+	
+	@SubscribeEvent
+	public void onLogin(PlayerLoggedInEvent ev) {
+		String name = ev.player.getGameProfile().getName();
+		PanelPlayer panel = new PanelPlayer(CapabilityRegeneration.getForPlayer(ev.player));
+		
+		tabs.addTab(name, panel);
+		players.put(ev.player, panel);
+	}
+	
+	@SubscribeEvent
+	public void onLogout(PlayerLoggedOutEvent ev) {
+		String name = ev.player.getGameProfile().getName();
+		
+		tabs.removeTabAt(tabs.indexOfTab(name));
+		players.remove(ev.player);
+	}
+	
+	public void dispose() {
+		frame.dispose();
 	}
 	
 }
