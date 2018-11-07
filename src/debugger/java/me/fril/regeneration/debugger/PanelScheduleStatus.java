@@ -9,10 +9,12 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import me.fril.regeneration.util.Scheduler;
+import me.fril.regeneration.util.Scheduler.ScheduledTask;
 import me.fril.regeneration.util.TimerChannel;
 
 @SuppressWarnings("serial")
-public class PanelScheduleStatus extends JPanel {
+class PanelScheduleStatus extends JPanel {
 	
 	private Map<TimerChannel, JLabel[]> labelRefs = new HashMap<>();
 	
@@ -77,6 +79,17 @@ public class PanelScheduleStatus extends JPanel {
 			add(lblCanceled, gbc_lblCanceled);
 		}
 		
+	}
+
+	public void updateState(Scheduler scheduler) {
+		for (TimerChannel tc : TimerChannel.values()) {
+			ScheduledTask task = scheduler.getSchedule().get(tc);
+			JLabel[] valLabels = labelRefs.get(tc);
+			
+			valLabels[0].setText(task == null ? "?" : task.scheduledTick()+"");
+			valLabels[1].setText(task == null ? "?" : task.ticksLeft()+"");
+			valLabels[2].setText(task == null ? "?" : task.isCancelled()+"");
+		}
 	}
 	
 }

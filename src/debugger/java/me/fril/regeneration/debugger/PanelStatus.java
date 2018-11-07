@@ -7,14 +7,19 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import me.fril.regeneration.common.capability.IRegeneration;
+
 @SuppressWarnings("serial")
-public class PanelStatus extends JPanel {
-	private JLabel lblRegensLeftVal;
+class PanelStatus extends JPanel {
 	private JLabel lblState;
 	private JLabel lblStateVal;
+	
 	private JLabel lblTicks;
 	private JLabel lblTicksVal;
+	
 	private JLabel lblRegensLeft;
+	private JLabel lblRegensLeftVal;
+	
 	
 	public PanelStatus() {
 		{
@@ -89,10 +94,10 @@ public class PanelStatus extends JPanel {
 	
 	
 	
-	/*public void updateState(IRegeneration cap, long tick) {
+	public void updateState(IRegeneration cap, long currentTick) {
 		lblStateVal.setText(cap.getState().toString());
 		lblRegensLeftVal.setText(cap.getRegenerationsLeft() + "");
-		lblTicksVal.setText(tick + "");
-	}*/
+		lblTicksVal.setText(cap.getStateManager().getScheduler().getCurrentTick() + "");
+	}
 	
 }

@@ -20,6 +20,7 @@ public class Scheduler {
 	
 	public void tick() {
 		currentTick++;
+		debugChannel.update(currentTick);
 		
 		//iterator needed because we modify the collection while iterating through it
 		Iterator<Entry<TimerChannel, ScheduledTask>> it = schedule.entrySet().iterator();
@@ -33,6 +34,7 @@ public class Scheduler {
 				it.remove();
 			}
 		}
+		
 	}
 	
 	
@@ -73,12 +75,18 @@ public class Scheduler {
 	public void reset() {
 		currentTick = 0;
 		schedule.clear();
+		debugChannel.update(currentTick);
 	}
 	
 	
 	@Deprecated
 	public Map<TimerChannel, ScheduledTask> getSchedule() {
 		return schedule;
+	}
+	
+	@Deprecated
+	public long getCurrentTick() {
+		return currentTick;
 	}
 	
 	

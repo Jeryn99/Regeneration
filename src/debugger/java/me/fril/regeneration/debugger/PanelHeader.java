@@ -25,7 +25,7 @@ import javax.swing.SwingConstants;
 import com.mojang.authlib.GameProfile;
 
 @SuppressWarnings("serial")
-public class PanelHeader extends JPanel {
+class PanelHeader extends JPanel {
 	
 	private final JLabel lblSkinHead, lblPlayerName;
 	

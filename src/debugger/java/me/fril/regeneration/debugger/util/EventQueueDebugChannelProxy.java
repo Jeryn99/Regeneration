@@ -17,6 +17,13 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 	
 	
 	@Override
+	public void update(long currentTick) {
+		EventQueue.invokeLater(()-> {
+			target.update(currentTick);
+		});
+	}
+	
+	@Override
 	public void notifyExecution(TimerChannel channel, long tick) {
 		EventQueue.invokeLater(()-> {
 			target.notifyExecution(channel, tick);
@@ -50,5 +57,5 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 			target.warn(msg);
 		});
 	}
-	
+
 }

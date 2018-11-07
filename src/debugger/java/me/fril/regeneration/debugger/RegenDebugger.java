@@ -27,7 +27,9 @@ public class RegenDebugger {
 		tabs = new JTabbedPane();
 		frame.add(tabs);
 		
+		frame.setAutoRequestFocus(false);
 		frame.setLocationRelativeTo(null);
+		frame.setLocation(0, 0); //TODO do with JVM properties
 		frame.setVisible(true);
 	}
 	
