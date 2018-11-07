@@ -61,7 +61,7 @@ class PanelScheduleStatus extends JPanel {
 			add(lblScheduledTick, gbc_lblScheduledTick);
 		}
 		
-		JLabel lblTicksleft = new JLabel("TicksLeft");
+		JLabel lblTicksleft = new JLabel("Ticks left");
 		{
 			GridBagConstraints gbc_lblTicksleft = new GridBagConstraints();
 			gbc_lblTicksleft.insets = new Insets(0, 0, 5, 5);

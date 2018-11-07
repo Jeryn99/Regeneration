@@ -23,13 +23,17 @@ public class RegenDebugger {
 	public RegenDebugger() {
 		frame = new JFrame("Regeneration v" + RegenerationMod.VERSION + " debugger");
 		frame.setSize(600, 600);
+		frame.setAutoRequestFocus(false);
 		
 		tabs = new JTabbedPane();
 		frame.add(tabs);
 		
-		frame.setAutoRequestFocus(false);
+		String optX = System.getProperty("debuggerX"),
+				optY = System.getProperty("debuggerY");
+		int dx = optX == null ? 0 : Integer.valueOf(optX),
+				dy = optY == null ? 0 : Integer.valueOf(optY);
 		frame.setLocationRelativeTo(null);
-		frame.setLocation(0, 0); //TODO do with JVM properties
+		frame.setLocation(frame.getX()+dx, frame.getY()+dy);
 		frame.setVisible(true);
 	}
 	

@@ -34,8 +34,8 @@ class PanelHeader extends JPanel {
 			GridBagLayout gridBagLayout = new GridBagLayout();
 			gridBagLayout.columnWidths = new int[]{0, 72, 0, 0};
 			gridBagLayout.rowHeights = new int[]{14, 17, 0};
-			gridBagLayout.columnWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
-			gridBagLayout.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+			gridBagLayout.columnWeights = new double[]{1.0, 0.0, 1.0};
+			gridBagLayout.rowWeights = new double[]{0.0, 0.0};
 			setLayout(gridBagLayout);
 		}
 		
@@ -71,7 +71,7 @@ class PanelHeader extends JPanel {
 		
 		File skinImage = new File(skinCache, gp.getId().toString()+".png");
 		if (!skinImage.exists()) {
-			try (ReadableByteChannel readableByteChannel = Channels.newChannel(new URL("https://crafatar.com/avatars/"+gp.getId().toString()).openStream());
+			try (ReadableByteChannel readableByteChannel = Channels.newChannel(new URL("https://crafatar.com/avatars/"+gp.getId().toString()+"?size=100").openStream());
 					FileOutputStream fileOutputStream = new FileOutputStream(skinImage);
 					FileChannel fileChannel = fileOutputStream.getChannel()) {
 				fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
