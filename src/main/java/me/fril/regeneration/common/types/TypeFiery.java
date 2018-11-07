@@ -33,76 +33,77 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * on 16/09/2018.
  */
 public class TypeFiery implements IRegenType {
-	
+
 	@Override
 	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
 		player.extinguish();
-		
+
 		if (!player.world.isRemote) {
 			PlayerUtil.setPerspective((EntityPlayerMP) player, true);
 		}
-		
+
 		Random rand = player.world.rand;
 		player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
 		player.rotationYaw += (rand.nextInt(10) - 5) * 0.2;
-		
+
 		if (player.world.isRemote)
 			return;
-		
+
 		if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire)
 			player.world.setBlockToAir(player.getPosition());
-		
+
 		if (capability.getState() == RegenState.REGENERATING) {
 			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(6)-3); //TODO test if this doesn't damage too much
 		}
-		
+
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
 		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 		double z = player.posZ + player.getRNG().nextGaussian() * 2;
 		player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
-		
+
 		for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east())) {
 			if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) {
 				player.world.setBlockToAir(bs);
 			}
 		}
 	}
-	
+
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
 		player.rotationPitch = 0;
-		
+
 		if (!player.world.isRemote) {
 			PlayerUtil.setPerspective((EntityPlayerMP)player, false);
 		}
 	}
-	
-	
+
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre ev, IRegeneration cap) {
 		int headRot = 50;
-		/*if (cap.getTicksRegenerating() < 50 / 5) { TODO implement sub's animation
+		if (cap.getTicksRegenerating() < 50 / 5) {
 			headRot = cap.getTicksRegenerating() * 5;
-		}*/
-		
+		}
+
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
-		
+
 		float armRot = 85;
-		
-		/*if (cap.getTicksRegenerating() < 75 / 5) {
+
+		if (cap.getTicksRegenerating() < 75 / 5) {
 			arm_shake = 0;
 			armRot = cap.getTicksRegenerating() * 5;
-		}*/
-		
+		}
+
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);
-		
+
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-headRot, 0, 0);
-		
+
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
 	}
+
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -122,11 +123,8 @@ public class TypeFiery implements IRegenType {
 		Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 
-		/*float primaryScale = capability.getTicksRegenerating() / 5.0F; TODO reimplement scaling
-		float secondaryScale = capability.getTicksRegenerating() / 8.5F;*/
-		
-		float primaryScale = 5;
-		float secondaryScale = 8;
+		float primaryScale = capability.getTicksRegenerating() / 5.0F;
+		float secondaryScale = capability.getTicksRegenerating() / 8.5F;
 
 		// Render right cone
 		GlStateManager.pushMatrix();

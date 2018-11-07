@@ -25,8 +25,9 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	void setStyle(NBTTagCompound nbt);
 	Color getPrimaryColor();
 	Color getSecondaryColor();
-	
+
 	int getRegenerationsLeft();
+	int getTicksRegenerating();
 	
 	/** Returns if the player is currently <i>able to</i> regenerate */
 	default boolean canRegenerate() {

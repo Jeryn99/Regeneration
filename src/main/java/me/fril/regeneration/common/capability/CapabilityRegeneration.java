@@ -36,7 +36,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	private final EntityPlayer player;
-	private int regenerationsLeft;
+	private int regenerationsLeft, ticksRegenerating;
 	private IRegenType type = RegenTypes.FIERY;
 	
 	private RegenState state = RegenState.ALIVE;
@@ -44,8 +44,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
-	
-	//private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
+
+    //private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
 	
 	
 	
@@ -80,8 +80,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			stateManager.tick();
 		
 		if (state == RegenState.REGENERATING) {
+		    ticksRegenerating++;
 			type.onUpdateMidRegen(player, this);
-		}
+		} else {
+		    ticksRegenerating = 0;
+        }
 	}
 	
 	private void setState(RegenState state) {
@@ -105,6 +108,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setString("state", state.toString());
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
+        nbt.setInteger("ticks", ticksRegenerating);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -115,7 +119,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		setState(nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE); //I need to check for versions before 1.3 (TODO update this version comment)
 		regenerationsLeft = nbt.getInteger("regenerationsLeft");
 		setStyle(nbt.getCompoundTag("style"));
-		
+		ticksRegenerating = nbt.getInteger("ticks");
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
 	}
@@ -133,8 +137,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	public int getRegenerationsLeft() {
 		return regenerationsLeft;
 	}
-	
-	@Override
+
+    @Override
+    public int getTicksRegenerating() {
+        return ticksRegenerating;
+    }
+
+    @Override
 	public EntityPlayer getPlayer() {
 		return player;
 	}
