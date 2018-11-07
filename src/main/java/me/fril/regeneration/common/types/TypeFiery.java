@@ -25,6 +25,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Sub
@@ -77,16 +79,33 @@ public class TypeFiery implements IRegenType {
 	
 	
 	@Override
-	public void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre ev, IRegeneration capability) {
+	@SideOnly(Side.CLIENT)
+	public void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre ev, IRegeneration cap) {
+		int headRot = 50;
+		/*if (cap.getTicksRegenerating() < 50 / 5) { TODO implement sub's animation
+			headRot = cap.getTicksRegenerating() * 5;
+		}*/
+		
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -75 + arm_shake);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, 75 + arm_shake);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-50, 0, 0);
+		
+		float armRot = 85;
+		
+		/*if (cap.getTicksRegenerating() < 75 / 5) {
+			arm_shake = 0;
+			armRot = cap.getTicksRegenerating() * 5;
+		}*/
+		
+		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
+		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);
+		
+		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-headRot, 0, 0);
+		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void onRenderRegenerationLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 		
@@ -102,13 +121,13 @@ public class TypeFiery implements IRegenType {
 		NBTTagCompound style = capability.getStyle();
 		Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
-		
-		/*float primaryScale = capability.getTicksRegenerating() * 40f; TODO reimplement the startup animation
-		float secondaryScale = capability.getTicksRegenerating() * 70f;*/
+
+		/*float primaryScale = capability.getTicksRegenerating() / 5.0F; TODO reimplement scaling
+		float secondaryScale = capability.getTicksRegenerating() / 8.5F;*/
 		
 		float primaryScale = 5;
 		float secondaryScale = 8;
-		
+
 		// Render right cone
 		GlStateManager.pushMatrix();
 		model.postRenderArm(0.0625F, EnumHandSide.RIGHT);
@@ -155,7 +174,8 @@ public class TypeFiery implements IRegenType {
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();
 	}
-	
+
+	@SideOnly(Side.CLIENT)
 	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();

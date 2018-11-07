@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class RegenerationMod {
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
-	public static final String VERSION = "1.1.0"; //FIXME update this
+	public static final String VERSION = "1.2.1";
 	public static final String UPDATE_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/master/update.json";
 	
 	@Mod.Instance(MODID)

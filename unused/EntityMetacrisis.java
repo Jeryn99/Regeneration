@@ -1,25 +1,19 @@
 package me.fril.regeneration.common.entity;
 
-import java.util.UUID;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAIMoveTowardsTarget;
-import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.ai.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 public class EntityMetacrisis extends EntityCreature {
-	
-	private static final DataParameter<String> PLAYER_UUID = EntityDataManager.createKey(EntityZombie.class, DataSerializers.STRING);
+
+	private static final DataParameter<String> PLAYER_UUID = EntityDataManager.createKey(EntityMetacrisis.class, DataSerializers.STRING);
 	
 	public EntityMetacrisis(World worldIn) {
 		super(worldIn);
