@@ -5,8 +5,10 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
 import me.fril.regeneration.common.commands.RegenDebugCommand;
+import me.fril.regeneration.debugger.RegenDebugger;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -15,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL)
@@ -26,6 +29,7 @@ public class RegenerationMod {
 	
 	@Mod.Instance(MODID)
 	public static RegenerationMod INSTANCE;
+	public static RegenDebugger DEBUGGER;
 	
 	@SidedProxy(clientSide = "me.fril.regeneration.proxy.ClientProxy", serverSide = "me.fril.regeneration.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -44,8 +48,18 @@ public class RegenerationMod {
 	}
 	
 	@EventHandler
-	public void serverInit(FMLServerStartingEvent event) {
+	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new RegenDebugCommand());
+		
+		DEBUGGER = new RegenDebugger();
+		MinecraftForge.EVENT_BUS.register(DEBUGGER);
+	}
+	
+	@EventHandler
+	public void serverStop(FMLServerStoppingEvent event) {
+		MinecraftForge.EVENT_BUS.unregister(DEBUGGER);
+		DEBUGGER.dispose();
+		DEBUGGER = null;
 	}
 	
 	@EventHandler

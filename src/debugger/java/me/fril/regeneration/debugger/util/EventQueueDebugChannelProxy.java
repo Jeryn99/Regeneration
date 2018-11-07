@@ -17,43 +17,36 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 	
 	
 	@Override
-	public void updateCurrentTick(long tick) {
-		EventQueue.invokeLater(()->{
-			target.updateCurrentTick(tick);
-		});
-	}
-
-	@Override
 	public void notifyExecution(TimerChannel channel, long tick) {
-		EventQueue.invokeLater(()->{
+		EventQueue.invokeLater(()-> {
 			target.notifyExecution(channel, tick);
 		});
 	}
-
+	
 	@Override
 	public void notifyCancel(TimerChannel channel, long inTicks, long scheduledTick) {
-		EventQueue.invokeLater(()->{
+		EventQueue.invokeLater(()-> {
 			target.notifyCancel(channel, inTicks, scheduledTick);
 		});
 	}
-
+	
 	@Override
 	public void notifySchedule(TimerChannel channel, long inTicks, long scheduledTick) {
-		EventQueue.invokeLater(()->{
+		EventQueue.invokeLater(()-> {
 			target.notifySchedule(channel, inTicks, scheduledTick);
 		});
 	}
-
+	
 	@Override
 	public void notifyScheduleBlank(TimerChannel channel) {
-		EventQueue.invokeLater(()->{
+		EventQueue.invokeLater(()-> {
 			target.notifyScheduleBlank(channel);
 		});
 	}
-
+	
 	@Override
 	public void warn(String msg) {
-		EventQueue.invokeLater(()->{
+		EventQueue.invokeLater(()-> {
 			target.warn(msg);
 		});
 	}

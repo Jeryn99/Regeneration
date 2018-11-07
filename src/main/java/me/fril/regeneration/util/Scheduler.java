@@ -20,7 +20,6 @@ public class Scheduler {
 	
 	public void tick() {
 		currentTick++;
-		debugChannel.updateCurrentTick(currentTick);
 		
 		//iterator needed because we modify the collection while iterating through it
 		Iterator<Entry<TimerChannel, ScheduledTask>> it = schedule.entrySet().iterator();
@@ -118,15 +117,24 @@ public class Scheduler {
 		public long ticksLeft() {
 			return canceled ? -1 : scheduledTick - Scheduler.this.currentTick;
 		}
-
+		
+		
+		@Deprecated
+		public long scheduledTick() {
+			return scheduledTick;
+		}
+		
+		@Deprecated
+		public boolean isCancelled() {
+			return canceled;
+		}
+		
+		
 		@Override
 		public String toString() {
 			return "ScheduledTask[channel=" + channel + ", scheduledTick=" + scheduledTick + ", ticksLeft=" + ticksLeft() + ", canceled=" + canceled + "]";
 		}
 		
-		public String toStatusString() {
-			return "[scheduledTick=" + scheduledTick + ", ticksLeft=" + ticksLeft() + ", canceled=" + canceled + "]";
-		}
 		
 	}
 	

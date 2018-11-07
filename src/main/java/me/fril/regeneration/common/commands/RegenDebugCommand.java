@@ -5,9 +5,9 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.debugger.RegenDebugger;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -38,7 +38,7 @@ public class RegenDebugCommand extends CommandBase {
 				break;*/
 			
 			case "open":
-				RegenDebugger.open();
+				RegenerationMod.DEBUGGER.open();
 				break;
 			
 			case "regen":

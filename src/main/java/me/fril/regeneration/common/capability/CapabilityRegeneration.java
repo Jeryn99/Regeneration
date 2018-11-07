@@ -8,7 +8,6 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
-import me.fril.regeneration.debugger.RegenDebugger;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
@@ -235,7 +234,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		//private IDebugChannel debugChannel;
 		
 		private RegenerationStateManager() {
-			this.scheduler = new Scheduler(RegenDebugger.newSession(CapabilityRegeneration.this));
+			this.scheduler = new Scheduler(RegenerationMod.DEBUGGER.getChannelFor(player));
 		}
 		
 		
