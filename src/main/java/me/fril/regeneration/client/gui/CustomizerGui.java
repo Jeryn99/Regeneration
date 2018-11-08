@@ -1,5 +1,9 @@
 package me.fril.regeneration.client.gui;
 
+import java.awt.Color;
+
+import javax.annotation.Nullable;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -16,9 +20,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
-
-import javax.annotation.Nullable;
-import java.awt.*;
 
 public class CustomizerGui extends GuiContainer {
 	public static final int ID = 0;
