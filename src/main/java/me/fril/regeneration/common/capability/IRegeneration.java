@@ -6,6 +6,7 @@ import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -23,8 +24,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	NBTTagCompound getStyle();
 	void setStyle(NBTTagCompound nbt);
-	Color getPrimaryColor();
-	Color getSecondaryColor();
+	Vec3d getPrimaryColor();
+	Vec3d getSecondaryColor();
 
 	int getRegenerationsLeft();
 	int getTicksRegenerating();

@@ -63,7 +63,7 @@ public class ClientEventHandler {
 		GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
 		for (int i = 0; i < 15; i++) {
 			GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
-			Color primaryColor = cap.getPrimaryColor();
+			Vec3d primaryColor = cap.getPrimaryColor();
 			
 			Random rand = player.world.rand;
 			RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
@@ -78,7 +78,6 @@ public class ClientEventHandler {
 	public static void onClientTick(TickEvent.ClientTickEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		if (player == null || Minecraft.getMinecraft().world == null) return;
-		
 		//NOW handle onClientTick (keybinds)
 		
 		/* apparently there's no check if we're actually in a situation where we have to choose between grace/immediate regen, that happens on the server side (packet handler)

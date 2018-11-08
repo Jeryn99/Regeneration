@@ -43,8 +43,8 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	}
 	
 	private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
-		Color primaryColor = handler.getPrimaryColor();
-		Color secondaryColor = handler.getSecondaryColor();
+		Vec3d primaryColor = handler.getPrimaryColor();
+		Vec3d secondaryColor = handler.getSecondaryColor();
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		Random rand = player.world.rand;

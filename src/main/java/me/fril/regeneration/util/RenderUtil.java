@@ -54,7 +54,7 @@ public class RenderUtil {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 	
-	public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Color color, float alpha) {
+	public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Vec3d color, float alpha) {
 		if (start == null || end == null)
 			return;
 		
@@ -83,7 +83,7 @@ public class RenderUtil {
 		
 		for (int layer = 0; layer <= layers; ++layer) {
 			if (layer < layers) {
-				GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), 1.0F / layers / 2);
+				GlStateManager.color((float) color.x, (float)color.y, (float)color.z, 1.0F / layers / 2);
 				GlStateManager.depthMask(false);
 			} else {
 				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);

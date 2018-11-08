@@ -9,6 +9,7 @@ import javax.swing.JTabbedPane;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.debugger.util.UnloadedPlayerTempChannelProxy;
+import me.fril.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -28,10 +29,8 @@ public class RegenDebugger {
 		tabs = new JTabbedPane();
 		frame.add(tabs);
 		
-		String optX = System.getProperty("debuggerX"),
-				optY = System.getProperty("debuggerY");
-		int dx = optX == null ? 0 : Integer.valueOf(optX),
-				dy = optY == null ? 0 : Integer.valueOf(optY);
+		String optX = System.getProperty("debuggerX"), optY = System.getProperty("debuggerY");
+		int dx = optX == null ? 0 : Integer.valueOf(optX), dy = optY == null ? 0 : Integer.valueOf(optY);
 		frame.setLocationRelativeTo(null);
 		frame.setLocation(frame.getX()+dx, frame.getY()+dy);
 		frame.setVisible(true);
@@ -52,19 +51,23 @@ public class RegenDebugger {
 	
 	@SubscribeEvent
 	public void onLogin(PlayerLoggedInEvent ev) {
-		String name = ev.player.getGameProfile().getName();
-		PanelPlayer panel = new PanelPlayer(CapabilityRegeneration.getForPlayer(ev.player));
-		
-		tabs.addTab(name, panel);
-		players.put(ev.player, panel);
+		if(RegenerationMod.isDevEnv()) {
+			String name = ev.player.getGameProfile().getName();
+			PanelPlayer panel = new PanelPlayer(CapabilityRegeneration.getForPlayer(ev.player));
+
+			tabs.addTab(name, panel);
+			players.put(ev.player, panel);
+		}
 	}
 	
 	@SubscribeEvent
 	public void onLogout(PlayerLoggedOutEvent ev) {
-		String name = ev.player.getGameProfile().getName();
-		
-		tabs.removeTabAt(tabs.indexOfTab(name));
-		players.remove(ev.player);
+		if(RegenerationMod.isDevEnv()) {
+			String name = ev.player.getGameProfile().getName();
+
+			tabs.removeTabAt(tabs.indexOfTab(name));
+			players.remove(ev.player);
+		}
 	}
 	
 	public void dispose() {

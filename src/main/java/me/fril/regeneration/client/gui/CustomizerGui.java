@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
@@ -28,7 +29,7 @@ public class CustomizerGui extends GuiContainer {
 	private GuiButtonExt btnDefault, btnReset;
 	private GuiColorSlider slidePrimaryRed, slidePrimaryGreen, slidePrimaryBlue, slideSecondaryRed, slideSecondaryGreen, slideSecondaryBlue;
 	
-	private Color initialPrimary, initialSecondary;
+	private Vec3d initialPrimary, initialSecondary;
 
     public CustomizerGui() {
         super(new BlankContainer());
@@ -49,8 +50,8 @@ public class CustomizerGui extends GuiContainer {
 		initialPrimary = cap.getPrimaryColor();
 		initialSecondary = cap.getSecondaryColor();
 		
-		float primaryRed = initialPrimary.getRed() / 255F, primaryGreen = initialPrimary.getGreen() / 255F, primaryBlue = initialPrimary.getBlue() / 255F;
-		float secondaryRed = initialSecondary.getRed() / 255F, secondaryGreen = initialSecondary.getGreen() / 255F, secondaryBlue = initialSecondary.getBlue() / 255F;
+		float primaryRed = (float)initialPrimary.x, primaryGreen = (float)initialPrimary.y, primaryBlue = (float)initialPrimary.y;
+		float secondaryRed = (float)initialSecondary.x, secondaryGreen = (float)initialSecondary.y, secondaryBlue = (float)initialSecondary.y;
 		
 		final int btnW = 50, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
@@ -98,13 +99,13 @@ public class CustomizerGui extends GuiContainer {
     @Override
 	protected void actionPerformed(GuiButton button) {
 		if (button.id == btnReset.id) {
-			slidePrimaryRed.setValue(initialPrimary.getRed() / 255F);
-			slidePrimaryGreen.setValue(initialPrimary.getGreen() / 255F);
-			slidePrimaryBlue.setValue(initialPrimary.getBlue() / 255F);
+			slidePrimaryRed.setValue(initialPrimary.x);
+			slidePrimaryGreen.setValue(initialPrimary.y);
+			slidePrimaryBlue.setValue(initialPrimary.z);
 			
-			slideSecondaryRed.setValue(initialSecondary.getRed() / 255F);
-			slideSecondaryGreen.setValue(initialSecondary.getGreen() / 255F);
-			slideSecondaryBlue.setValue(initialSecondary.getBlue() / 255F);
+			slideSecondaryRed.setValue(initialSecondary.x);
+			slideSecondaryGreen.setValue(initialSecondary.y);
+			slideSecondaryBlue.setValue(initialSecondary.z);
 			
 			btnReset.enabled = false;
 		} else if (button.id == btnDefault.id) {

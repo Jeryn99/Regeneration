@@ -19,6 +19,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -179,13 +180,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
-	public Color getPrimaryColor() {
-		return new Color(primaryRed, primaryGreen, primaryBlue);
+	public Vec3d getPrimaryColor() {
+		return new Vec3d(primaryRed, primaryGreen, primaryBlue);
 	}
 	
 	@Override
-	public Color getSecondaryColor() {
-		return new Color(secondaryRed, secondaryGreen, secondaryBlue);
+	public Vec3d getSecondaryColor() {
+		return new Vec3d(secondaryRed, secondaryGreen, secondaryBlue);
 	}
 	
 	
