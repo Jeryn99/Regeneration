@@ -38,29 +38,29 @@ public class UnloadedPlayerTempChannelProxy implements IDebugChannel {
 		if (isLoaded())
 			this.channel.notifyCancel(channel, inTicks, scheduledTick);
 	}
-
+	
 	@Override
 	public void notifyExecution(TimerChannel channel, long tick) {
 		if (isLoaded())
 			this.channel.notifyExecution(channel, tick);
 	}
-
+	
 	@Override
 	public void notifySchedule(TimerChannel channel, long inTicks, long scheduledTick) {
 		if (isLoaded())
 			this.channel.notifySchedule(channel, inTicks, scheduledTick);
 	}
-
+	
 	@Override
 	public void notifyScheduleBlank(TimerChannel channel) {
 		if (isLoaded())
 			this.channel.notifyScheduleBlank(channel);
 	}
-
+	
 	@Override
 	public void warn(String msg) {
 		if (isLoaded())
 			this.channel.warn(msg);
 	}
-
+	
 }

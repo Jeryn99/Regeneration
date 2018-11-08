@@ -1,5 +1,7 @@
 package me.fril.regeneration.common.types;
 
+import java.util.Random;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.layers.LayerRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -26,58 +28,56 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Random;
-
 /**
  * Created by Sub
  * on 16/09/2018.
  */
 public class TypeFiery implements IRegenType {
-
+	
 	@Override
 	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
 		player.extinguish();
-
+		
 		if (!player.world.isRemote) {
 			PlayerUtil.setPerspective((EntityPlayerMP) player, true);
 		}
-
+		
 		Random rand = player.world.rand;
 		player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
 		player.rotationYaw += (rand.nextInt(10) - 5) * 0.2;
-
+		
 		if (player.world.isRemote)
 			return;
-
+		
 		if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire)
 			player.world.setBlockToAir(player.getPosition());
-
+		
 		if (capability.getState() == RegenState.REGENERATING) {
 			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(6)-3); //TODO test if this doesn't damage too much
 		}
-
+		
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
 		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 		double z = player.posZ + player.getRNG().nextGaussian() * 2;
 		player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
-
+		
 		for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east())) {
 			if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) {
 				player.world.setBlockToAir(bs);
 			}
 		}
 	}
-
+	
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
 		player.rotationPitch = 0;
-
+		
 		if (!player.world.isRemote) {
 			PlayerUtil.setPerspective((EntityPlayerMP)player, false);
 		}
 	}
-
-
+	
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre ev, IRegeneration cap) {
@@ -85,26 +85,26 @@ public class TypeFiery implements IRegenType {
 		if (cap.getTicksRegenerating() < 50 / 5) {
 			headRot = cap.getTicksRegenerating() * 5;
 		}
-
+		
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
-
+		
 		float armRot = 85;
-
+		
 		if (cap.getTicksRegenerating() < 75 / 5) {
 			arm_shake = 0;
 			armRot = cap.getTicksRegenerating() * 5;
 		}
-
+		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);
-
+		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-headRot, 0, 0);
-
+		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
 	}
-
-
+	
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onRenderRegenerationLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
@@ -122,10 +122,10 @@ public class TypeFiery implements IRegenType {
 		NBTTagCompound style = capability.getStyle();
 		Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
-
+		
 		float primaryScale = capability.getTicksRegenerating() / 5.0F;
 		float secondaryScale = capability.getTicksRegenerating() / 8.5F;
-
+		
 		// Render right cone
 		GlStateManager.pushMatrix();
 		model.postRenderArm(0.0625F, EnumHandSide.RIGHT);
@@ -172,7 +172,7 @@ public class TypeFiery implements IRegenType {
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) {
 		Tessellator tessellator = Tessellator.getInstance();

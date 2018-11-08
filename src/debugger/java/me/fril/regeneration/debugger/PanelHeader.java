@@ -90,7 +90,7 @@ class PanelHeader extends JPanel {
 			return getPlaceHolderImage();
 		}
 	}
-
+	
 	private Icon getPlaceHolderImage() {
 		BufferedImage img = new BufferedImage(160, 160, BufferedImage.TYPE_INT_RGB);
 		Graphics g = img.getGraphics();
@@ -98,5 +98,5 @@ class PanelHeader extends JPanel {
 		g.fillRect(0, 0, 160, 160);
 		return new ImageIcon(img);
 	}
-
+	
 }

@@ -1,7 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.awt.Color;
-
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +24,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	void setStyle(NBTTagCompound nbt);
 	Vec3d getPrimaryColor();
 	Vec3d getSecondaryColor();
-
+	
 	int getRegenerationsLeft();
 	int getTicksRegenerating();
 	

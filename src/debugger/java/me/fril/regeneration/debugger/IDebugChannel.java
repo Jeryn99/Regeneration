@@ -12,5 +12,5 @@ public interface IDebugChannel {
 	void notifyScheduleBlank(TimerChannel channel);
 	
 	void warn(String msg);
-
+	
 }

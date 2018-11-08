@@ -9,8 +9,8 @@ public class TextAreaOutputStream extends OutputStream {
 	private JTextArea textArea;
 	
 	public TextAreaOutputStream(JTextArea textArea) {
-        this.textArea = textArea;
-    }
+		this.textArea = textArea;
+	}
 	
 	@Override
 	public void write(int b) throws IOException {

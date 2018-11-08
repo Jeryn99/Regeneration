@@ -45,8 +45,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
-
-    //private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
+	
+	//private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
 	
 	
 	
@@ -81,11 +81,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			stateManager.tick();
 		
 		if (state == RegenState.REGENERATING) {
-		    ticksRegenerating++;
+			ticksRegenerating++;
 			type.onUpdateMidRegen(player, this);
 		} else {
-		    ticksRegenerating = 0;
-        }
+			ticksRegenerating = 0;
+		}
 	}
 	
 	private void setState(RegenState state) {
@@ -102,19 +102,19 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.removeTag("stateManager");
 		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
-
+	
 	@Override
 	public NBTTagCompound serializeNBT() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setString("state", state.toString());
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
-        nbt.setInteger("ticks", ticksRegenerating);
+		nbt.setInteger("ticks", ticksRegenerating);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
 	}
-
+	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		setState(nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE); //I need to check for versions before 1.3 (TODO update this version comment)
@@ -138,13 +138,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	public int getRegenerationsLeft() {
 		return regenerationsLeft;
 	}
-
-    @Override
-    public int getTicksRegenerating() {
-        return ticksRegenerating;
-    }
-
-    @Override
+	
+	@Override
+	public int getTicksRegenerating() {
+		return ticksRegenerating;
+	}
+	
+	@Override
 	public EntityPlayer getPlayer() {
 		return player;
 	}
@@ -294,7 +294,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				synchronise();
 			}
 		}
-
+		
 		@Override
 		public void onPunchEntity(EntityLivingBase entity) {
 			//We're punching away our glow and healing mobs...
@@ -306,8 +306,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			onPunchBlock(); //... same behavior as when we punch a block
 		}
-
-
+		
+		
 		private void tick() {
 			if (player.world.isRemote)
 				throw new IllegalStateException("Ticking state manager on the client");
@@ -438,7 +438,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				nbt.setLong(tc.toString(), scheduler.getTicksLeft(tc));
 			return nbt;
 		}
-
+		
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
 			scheduler.reset();
@@ -449,10 +449,10 @@ public class CapabilityRegeneration implements IRegeneration {
 			scheduler.scheduleInTicks(TimerChannel.GRACE_GLOWING,        nbt.getLong(TimerChannel.GRACE_GLOWING.toString()),        this::startGlowing);
 			scheduler.scheduleInTicks(TimerChannel.GRACE_CRITICAL_DEATH, nbt.getLong(TimerChannel.GRACE_CRITICAL_DEATH.toString()), this::midSequenceKill);
 		}
-
-
-
-
+		
+		
+		
+		
 		@Override
 		@Deprecated
 		public Scheduler getScheduler() {

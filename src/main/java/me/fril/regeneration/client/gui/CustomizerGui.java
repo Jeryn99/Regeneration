@@ -29,20 +29,20 @@ public class CustomizerGui extends GuiContainer {
 	private GuiColorSlider slidePrimaryRed, slidePrimaryGreen, slidePrimaryBlue, slideSecondaryRed, slideSecondaryGreen, slideSecondaryBlue;
 	
 	private Vec3d initialPrimary, initialSecondary;
-
-    public CustomizerGui() {
-        super(new BlankContainer());
-        xSize = 176;
-        ySize = 166;
-    }
-    
-    @Override
-    public void initGui() {
-    	super.initGui();
-    	TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
-        TabRegistry.addTabsToList(this.buttonList);
-        
-        int cx = (width - xSize) / 2;
+	
+	public CustomizerGui() {
+		super(new BlankContainer());
+		xSize = 176;
+		ySize = 166;
+	}
+	
+	@Override
+	public void initGui() {
+		super.initGui();
+		TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
+		TabRegistry.addTabsToList(this.buttonList);
+		
+		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(mc.player);
@@ -78,12 +78,12 @@ public class CustomizerGui extends GuiContainer {
 		buttonList.add(slideSecondaryRed);
 		buttonList.add(slideSecondaryGreen);
 		buttonList.add(slideSecondaryBlue);
-    }
-    
-    private void onChangeSliderValue(@Nullable GuiSlider slider) {
-    	btnReset.enabled = true;
-    	
-    	NBTTagCompound nbt = new NBTTagCompound();
+	}
+	
+	private void onChangeSliderValue(@Nullable GuiSlider slider) {
+		btnReset.enabled = true;
+		
+		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setFloat("PrimaryRed",   (float) slidePrimaryRed.getValue());
 		nbt.setFloat("PrimaryGreen", (float) slidePrimaryGreen.getValue());
 		nbt.setFloat("PrimaryBlue",  (float) slidePrimaryBlue.getValue());
@@ -94,8 +94,8 @@ public class CustomizerGui extends GuiContainer {
 		
 		NetworkHandler.INSTANCE.sendToServer(new MessageSaveStyle(nbt));
 	}
-    
-    @Override
+	
+	@Override
 	protected void actionPerformed(GuiButton button) {
 		if (button.id == btnReset.id) {
 			slidePrimaryRed.setValue(initialPrimary.x);
@@ -119,19 +119,19 @@ public class CustomizerGui extends GuiContainer {
 			onChangeSliderValue(null);
 		}
 	}
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(background);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-        
-        int cx = (width - xSize) / 2;
+	
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+		Minecraft.getMinecraft().getTextureManager().bindTexture(background);
+		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		
+		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
-        
+		
 		RenderUtil.drawRect(cx + 10,  cy + 44, cx + 81, cy + 61, 0.1F, 0.1F, 0.1F, 1);
-        RenderUtil.drawRect(cx + 11,  cy + 45, cx + 80, cy + 60, (float) slidePrimaryRed.getValue(),   (float) slidePrimaryGreen.getValue(),   (float) slidePrimaryBlue.getValue(), 1);
-        
-        RenderUtil.drawRect(cx + 95, cy + 44, cx + 166, cy + 61, 0.1F, 0.1F, 0.1F, 1);
+		RenderUtil.drawRect(cx + 11,  cy + 45, cx + 80, cy + 60, (float) slidePrimaryRed.getValue(),   (float) slidePrimaryGreen.getValue(),   (float) slidePrimaryBlue.getValue(), 1);
+		
+		RenderUtil.drawRect(cx + 95, cy + 44, cx + 166, cy + 61, 0.1F, 0.1F, 0.1F, 1);
 		RenderUtil.drawRect(cx + 96, cy + 45, cx + 165, cy + 60, (float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue(), 1);
 		
 		
@@ -149,13 +149,13 @@ public class CustomizerGui extends GuiContainer {
 		str = new TextComponentTranslation("regeneration.messages.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft();
 		length = mc.fontRenderer.getStringWidth(str);
 		fontRenderer.drawString(str, cx + 86 - length / 2, cy + 21, Color.DARK_GRAY.getRGB());
-    }
-    
-    @Override
+	}
+	
+	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		renderHoveredToolTip(mouseX, mouseY);
 	}
-    
+	
 }

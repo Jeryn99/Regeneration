@@ -80,7 +80,7 @@ class PanelScheduleStatus extends JPanel {
 		}
 		
 	}
-
+	
 	public void updateState(Scheduler scheduler) {
 		for (TimerChannel tc : TimerChannel.values()) {
 			ScheduledTask task = scheduler.getSchedule().get(tc);

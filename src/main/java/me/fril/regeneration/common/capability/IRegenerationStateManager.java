@@ -10,7 +10,7 @@ public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompou
 	boolean onKilled();
 	void onPunchBlock();
 	void onPunchEntity(EntityLivingBase entity);
-
+	
 	@Deprecated
 	Scheduler getScheduler();
 	

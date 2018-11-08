@@ -44,5 +44,5 @@ public class ExplosionUtil {
 	public static AxisAlignedBB getReach(BlockPos pos, int range) {
 		return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
 	}
-
+	
 }

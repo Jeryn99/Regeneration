@@ -57,5 +57,5 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 			target.warn(msg);
 		});
 	}
-
+	
 }

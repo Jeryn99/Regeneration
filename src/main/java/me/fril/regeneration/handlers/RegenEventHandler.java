@@ -86,19 +86,19 @@ public class RegenEventHandler {
 		if (!player.world.isRemote)
 			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchBlock();
 	}
-
-
+	
+	
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingHurtEvent event) {
-
+		
 		Entity trueSource = event.getSource().getTrueSource();
-
+		
 		if(trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving){
 			EntityPlayer player = (EntityPlayer) trueSource;
 			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event.getEntityLiving());
 		}
-
+		
 		if (!(event.getEntity() instanceof EntityPlayer))
 			return;
 		

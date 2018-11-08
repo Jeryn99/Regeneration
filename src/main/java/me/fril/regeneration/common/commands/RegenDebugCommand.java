@@ -40,7 +40,7 @@ public class RegenDebugCommand extends CommandBase {
 			case "open":
 				RegenerationMod.DEBUGGER.open();
 				break;
-			
+				
 			case "regen":
 				if (amount > 0) {
 					int difference = amount - cap.getRegenerationsLeft();

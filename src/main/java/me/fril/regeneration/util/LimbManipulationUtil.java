@@ -93,15 +93,14 @@ public class LimbManipulationUtil {
 	@SubscribeEvent
 	public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
 		@SuppressWarnings("rawtypes")
-		RenderLivingBase renderer = (RenderLivingBase) Minecraft
-				.getMinecraft().getRenderManager().getEntityRenderObject(event.getEntityPlayer());
+		RenderLivingBase renderer = (RenderLivingBase) Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(event.getEntityPlayer());
 		List<LayerRenderer<AbstractClientPlayer>> layerList = ReflectionHelper
 				.getPrivateValue(RenderLivingBase.class, renderer, 4);
 		try {
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
-
+					
 					//Model Biped
 					if (field.getType() == ModelBiped.class) {
 						if(((ModelBiped) field.get(layer)).boxList != null) {
@@ -111,7 +110,7 @@ public class LimbManipulationUtil {
 								}
 							}
 						}
-
+						
 						//Model Player
 					} else if (field.getType() == ModelPlayer.class) {
 						if(((ModelBiped) field.get(layer)).boxList != null) {
@@ -124,7 +123,7 @@ public class LimbManipulationUtil {
 					}
 				}
 			}
-
+			
 			if(event.getRenderer().getMainModel().boxList != null) {
 				for (ModelRenderer modelRenderer : event.getRenderer().getMainModel().boxList) {
 					if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {

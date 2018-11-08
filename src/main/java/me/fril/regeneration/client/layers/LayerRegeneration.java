@@ -1,6 +1,5 @@
 package me.fril.regeneration.client.layers;
 
-import java.awt.Color;
 import java.util.Random;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;

@@ -1,5 +1,8 @@
 package me.fril.regeneration.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.items.ItemFobWatch;
 import me.fril.regeneration.util.RegenDamageSource;
@@ -13,9 +16,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -24,10 +24,10 @@ import java.util.List;
 public class RegenObjects {
 	
 	public static List<Item> ITEMS = new ArrayList<>();
-
+	
 	public static DamageSource REGEN_SOURCE = new RegenDamageSource("regen_energy");
 	public static DamageSource REGEN_HEAL = new RegenDamageSource("regen_heal"); //The irony lmao
-
+	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		IForgeRegistry<Item> reg = e.getRegistry();
@@ -45,11 +45,13 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addSounds(RegistryEvent.Register<SoundEvent> e) {
-		e.getRegistry().registerAll(setUpSound("regeneration"),
-									setUpSound("fob_watch"),
-									setUpSound("critical_stage"),
-									setUpSound("heart_beat"),
-									setUpSound("hand_glow"));
+		e.getRegistry().registerAll(
+			setUpSound("regeneration"),
+			setUpSound("fob_watch"),
+			setUpSound("critical_stage"),
+			setUpSound("heart_beat"),
+			setUpSound("hand_glow")
+		);
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {
