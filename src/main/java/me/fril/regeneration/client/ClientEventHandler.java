@@ -77,7 +77,7 @@ public class ClientEventHandler {
 	public static void onClientTick(TickEvent.ClientTickEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		if (player == null || Minecraft.getMinecraft().world == null) return;
-		//NOW handle onClientTick (keybinds)
+		//SOON handle onClientTick (keybinds)
 		
 		/* apparently there's no check if we're actually in a situation where we have to choose between grace/immediate regen, that happens on the server side (packet handler)
 		if (RegenKeyBinds.ENTER_GRACE.isPressed()) {

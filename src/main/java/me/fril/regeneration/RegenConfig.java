@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by Sub
  * on 17/09/2018.
  */
-@Config(modid = RegenerationMod.MODID)
+@Config(modid = RegenerationMod.MODID) //TODO check language file for unused entries
 public class RegenConfig { // TODO externalize comment strings?
 	
 	public static final Loot Loot = new Loot();
@@ -89,7 +89,7 @@ public class RegenConfig { // TODO externalize comment strings?
 		
 	}
 	
-	public static class GracePeriod { //FIXME add documentation stuff here
+	public static class GracePeriod { //NOW add documentation stuff here
 		
 		@Config.LangKey("")
 		@Config.Comment("")

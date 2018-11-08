@@ -39,7 +39,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final EntityPlayer player;
 	private int regenerationsLeft;
 	//TODO move animationTicks to the type level?
-	private long animationTicks; //TODO add to debugger status panel
+	private long animationTicks; //NOW add to debugger status panel
 	private IRegenType type = RegenTypes.FIERY;
 	
 	private RegenState state = RegenState.ALIVE;
@@ -84,8 +84,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, this);
-			animationTicks++; //TODO handle in event handler for regen tick?
-		} else animationTicks = 0; //TODO handle in event handler for finished regeneration?
+			animationTicks++; //TEMP handle in event handler (client) for regen tick
+		} else animationTicks = 0; //TEMP handle in event handler (client) for finished regeneration
 	}
 	
 	private void setState(RegenState state) {
@@ -117,7 +117,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		setState(nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE); //I need to check for versions before 1.3 (TODO update this version comment)
+		setState(nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE); //I need to check for versions before the new state-ticking system
 		regenerationsLeft = nbt.getInteger("regenerationsLeft");
 		setStyle(nbt.getCompoundTag("style"));
 		animationTicks = nbt.getLong("animationTicks");
@@ -260,8 +260,8 @@ public class CapabilityRegeneration implements IRegeneration {
 				//We're entering grace period...
 				scheduler.scheduleInSeconds(TimerChannel.GRACE_CRITICAL, RegenConfig.Grace.gracePeriodLength, this::enterCriticalPhase); //... schedule the transition to critical phase
 				
-				/*if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness
-					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier); NOW move to external event handler
+				/*if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness in grace period (although maybe a bit less)
+					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier); SOON move to external event handler
 				}*/
 				
 				startGlowing();
@@ -304,7 +304,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if ((state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) && entity.getHealth() < entity.getMaxHealth()) { //... check if we're actually glowing
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
-				player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded); //TODO what happens when we're killed by doing this? Forced regen?
+				player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded); //CHECK what happens when we're killed by doing this? Forced regen?
 			}
 			
 			onPunchBlock(); //... same behavior as when we punch a block
@@ -322,18 +322,17 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 			System.out.println();*/
 			
-			/*if (player.getHealth() < player.getMaxHealth()) { TODO actually regenerate health
-				player.setHealth(player.getHealth() + 1); NOW move to external event handler
+			/*if (player.getHealth() < player.getMaxHealth()) {
+				player.setHealth(player.getHealth() + 1); SOON move to external event handler
 			}
-			player.heal(2.0F);
-			TODO random damage*/
+			player.heal(2.0F); TODO random damage in critical period*/
 		}
 		
 		
 		
-		//TODO post events to client?
+		//NOW post events to client to actually act upon the regeneration
 		//This'll only be called from tick which is serverside only TODO javadoc all these things
-		private void triggerRegeneration() { //FUTURE do animation using a ticksLeft() method on the scheduled task
+		private void triggerRegeneration() {
 			//We're actually regenerating!
 			state = RegenState.REGENERATING;
 			scheduler.cancel(TimerChannel.GRACE_CRITICAL); //... cancel the transition to critical phase
@@ -345,16 +344,16 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			synchronise();
 			
-			/*player.dismountRidingEntity(); NOW move to external event handler
+			/*player.dismountRidingEntity(); SOON move to external event handler
 			player.removePassengers();
 			player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
 			
 			extractRegeneration(1);
 			ExplosionUtil.regenerationExplosion(player);*/
 			
-			//TODO play music on client
+			//ToDO play regeneration music on client
 			//PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS);
-			//TODO toast notification
+			//TODO toast notification for entering regeneration
 		}
 		
 		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
@@ -365,26 +364,29 @@ public class CapabilityRegeneration implements IRegeneration {
 			synchronise();
 			
 			//this causes these things to happen each time the player starts to glow. It's a feature.
-			/*player.clearActivePotions(); NOW move to external event handler
+			/*player.clearActivePotions(); SOON move to external event handler
 			player.extinguish();
 			player.setArrowCountInEntity(0);*/
 			
-			//TODO play music on client
+			//ToDO play hand glow music on client
 			//PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
 		}
 		
 		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
-		private void enterCriticalPhase() {
+		private void enterCriticalPhase() { //FIXME does not cancel the GRACE_GLOWING channel
 			//We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
+			scheduler.cancel(TimerChannel.GRACE_GLOWING);
 			scheduler.scheduleInSeconds(TimerChannel.GRACE_CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength, this::midSequenceKill);
 			synchronise();
 			
-			//TODO play music on client
-			//TODO nausea
+			//SOON move to external event handler
+			//ToDO play critical music on client
+			//ToDO nausea in critical phase
 			/*PlayerUtil.playMovingSound(player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
 			player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 800, 0, false, false)); // could be removed with milk, but I think that's not that bad*/
-			//TODO toast notification
+			//TODO toast notification for entering critical phase
+			//TODO red vingette in critical phase
 		}
 		
 		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
@@ -405,7 +407,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			reset();
 			synchronise();
 			
-			/*if (RegenConfig.resetHunger) { NOW move to external event handler
+			/*if (RegenConfig.resetHunger) { SOON move to external event handler
 				FoodStats foodStats = player.getFoodStats();
 				foodStats.setFoodLevel(foodStats.getFoodLevel() + 1);
 			}
@@ -416,7 +418,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));*/
 			
-			/*if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness
+			/*if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness (also lifting it)
 				player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
 			}*/
 		}

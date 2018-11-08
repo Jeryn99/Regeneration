@@ -51,7 +51,7 @@ public class MovingSoundPlayer extends MovingSound {
 		
 		//NOTE shouldn't heartbeat be a player-only sound?
 		//I wish I could use a switch here...
-		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //FIXME heartbeat is never played
+		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //TODO play heartbeat in critical phase
 			stopCondition = cap.getState().isGraceful();
 		} else if (sound.equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
 			stopCondition = cap.getState() != RegenState.GRACE_GLOWING;

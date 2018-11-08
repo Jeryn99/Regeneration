@@ -16,7 +16,7 @@ import me.fril.regeneration.util.TimerChannel;
 
 @SuppressWarnings("serial")
 class PanelPlayer extends JPanel {
-	private final IRegeneration capability;
+	private final IRegeneration capability; //FIXME debugger stops working after death because of outdated capability reference
 	
 	private final PanelHeader pnlHeader;
 	private final PanelStatus pnlStatus;

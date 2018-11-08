@@ -30,13 +30,6 @@ public class RegenDebugCommand extends CommandBase {
 		
 		//TODO fast forward scheduler command
 		switch (args[0]) {
-			/*case "solace": TODO implement debug state change
-				if (amount > 0)
-					cap.setSolaceTicks(amount);
-				else
-					notifyCommandListener(sender, this, "Solace ticks: "+cap.getSolaceTicks());
-				break;*/
-			
 			case "open":
 				RegenerationMod.DEBUGGER.open();
 				break;

@@ -33,7 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Sub
  * on 16/09/2018.
  */
-public class TypeFiery implements IRegenType {
+public class TypeFiery implements IRegenType { //FIXME when re-logging mid-regen there's nothing rendered (including limb manipulation)
 	
 	@Override
 	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {

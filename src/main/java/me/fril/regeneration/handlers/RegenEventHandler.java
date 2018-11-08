@@ -115,7 +115,7 @@ public class RegenEventHandler {
 	//================ OTHER ==============
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {
-		//TODO handle onLogin (actually giving the player regenerations [replace startAsTimelord with initialRegenAmount])
+		//SOON handle onLogin (actually giving the player regenerations [replace startAsTimelord with initialRegenAmount])
 		
 		/*if (!RegenConfig.startAsTimelord || event.player.world.isRemote)
 			return;
