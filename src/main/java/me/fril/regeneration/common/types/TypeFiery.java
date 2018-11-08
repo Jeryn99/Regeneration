@@ -124,18 +124,13 @@ public class TypeFiery implements IRegenType {
 		Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 		
 		double x = capability.getAnimationProgress();
-		double x0 = 0.03;
-		double x1 = .1;
-		
-		double P = -1 / (Math.pow(x0, 2) - Math.pow(x1, 2)); //TODO pre-calculate & create explanation page
-		double R = P * Math.pow(x0, 2);
-		
-		double f = P * Math.pow(x, 2) - R;
+		double p = 109.89010989010987; //see the wiki for the explanation of these "magic" numbers
+		double r = 0.09890109890109888;
+		double f = p * Math.pow(x, 2) - r;
 		
 		float cf = MathHelper.clamp((float)f, 0F, 1F);
 		float primaryScale = cf * 4F;
 		float secondaryScale = cf * 6.4F;
-		
 		
 		// Render right cone
 		GlStateManager.pushMatrix();
