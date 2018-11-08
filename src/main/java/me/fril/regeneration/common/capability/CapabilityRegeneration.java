@@ -1,7 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 
 import me.fril.regeneration.RegenConfig;
@@ -289,7 +287,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public void onPunchBlock() {
 			//We're punching away our glow...
-			if (state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) { //... check if we're actually glowing
+			if (state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) { //... check if we're actually glowing (TODO enum method for this)
 				state = state == RegenState.GRACE_GLOWING ? RegenState.GRACE_STD : RegenState.GRACE_CRIT;
 				scheduler.cancel(TimerChannel.REGENERATION_TRIGGER); //... cancel the allowed regeneration trigger
 				scheduler.scheduleInSeconds(TimerChannel.GRACE_GLOWING, RegenConfig.Grace.handGlowInterval, this::startGlowing); //... schedule the new glowing
@@ -300,19 +298,13 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public void onPunchEntity(EntityLivingBase entity) {
 			//We're punching away our glow and healing mobs...
-			if (state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) { //... check if we're actually glowing
-				if (entity.getHealth() < entity.getMaxHealth() && getState() == RegenState.GRACE_GLOWING) {
-					float healthNeeded = entity.getMaxHealth() - entity.getHealth();
-					entity.heal(healthNeeded);
-					player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded);
-
-					state = state == RegenState.GRACE_GLOWING ? RegenState.GRACE_STD : RegenState.GRACE_CRIT;
-					scheduler.cancel(TimerChannel.REGENERATION_TRIGGER); //... cancel the allowed regeneration trigger
-					scheduler.scheduleInSeconds(TimerChannel.GRACE_GLOWING, RegenConfig.Grace.handGlowInterval, this::startGlowing); //... schedule the new glowing
-
-					synchronise();
-				}
+			if ((state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) && entity.getHealth() < entity.getMaxHealth()) { //... check if we're actually glowing
+				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
+				entity.heal(healthNeeded);
+				player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded); //TODO what happens when we're killed by doing this? Forced regen?
 			}
+			
+			onPunchBlock(); //... same behavior as when we punch a block
 		}
 
 
