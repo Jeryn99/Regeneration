@@ -23,6 +23,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -81,18 +82,17 @@ public class TypeFiery implements IRegenType {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre ev, IRegeneration cap) {
-		int headRot = 50;
-		if (cap.getTicksRegenerating() < 50 / 5) {
-			headRot = cap.getTicksRegenerating() * 5;
-		}
-		
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
 		
-		float armRot = 85;
+		int headRot = 50;
+		if (cap.getAnimationProgress() < 0.05) {
+			headRot = (int)((cap.getAnimationProgress() / 0.05F) * 50F); // %headRotatingPhase * maxHeadRot
+		}
 		
-		if (cap.getTicksRegenerating() < 75 / 5) {
+		float armRot = 85;
+		if (cap.getAnimationProgress() < 0.075) {
 			arm_shake = 0;
-			armRot = cap.getTicksRegenerating() * 5;
+			armRot = (int)((cap.getAnimationProgress() / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
 		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
@@ -123,8 +123,19 @@ public class TypeFiery implements IRegenType {
 		Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 		
-		float primaryScale = capability.getTicksRegenerating() / 5.0F;
-		float secondaryScale = capability.getTicksRegenerating() / 8.5F;
+		double x = capability.getAnimationProgress();
+		double x0 = 0.03;
+		double x1 = .1;
+		
+		double P = -1 / (Math.pow(x0, 2) - Math.pow(x1, 2)); //TODO pre-calculate & create explanation page
+		double R = P * Math.pow(x0, 2);
+		
+		double f = P * Math.pow(x, 2) - R;
+		
+		float cf = MathHelper.clamp((float)f, 0F, 1F);
+		float primaryScale = cf * 4F;
+		float secondaryScale = cf * 6.4F;
+		
 		
 		// Render right cone
 		GlStateManager.pushMatrix();
@@ -146,8 +157,8 @@ public class TypeFiery implements IRegenType {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0f, 0.3f, 0f);
 		GlStateManager.rotate(180, 1.0f, 0.0f, 0.0f);
-		renderCone(entityPlayer, primaryScale / 2F, primaryScale * .75F, primaryColor);
-		renderCone(entityPlayer, secondaryScale / 2F, secondaryScale / 2F, secondaryColor);
+		renderCone(entityPlayer, primaryScale / 1.6F, primaryScale * .75F, primaryColor);
+		renderCone(entityPlayer, secondaryScale / 1.6F, secondaryScale / 1.5F, secondaryColor);
 		GlStateManager.popMatrix();
 		
 		// Check which slightly larger model to use
@@ -198,6 +209,11 @@ public class TypeFiery implements IRegenType {
 	@Override
 	public String getName() {
 		return "FIERY";
+	}
+	
+	@Override
+	public int getAnimationLength() {
+		return 10 * 20; //10 seconds of 20 ticks
 	}
 	
 	/*@Override

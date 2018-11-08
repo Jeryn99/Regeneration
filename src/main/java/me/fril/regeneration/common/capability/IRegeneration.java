@@ -26,7 +26,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	Vec3d getSecondaryColor();
 	
 	int getRegenerationsLeft();
-	int getTicksRegenerating();
+	double getAnimationProgress();
 	
 	/** Returns if the player is currently <i>able to</i> regenerate */
 	default boolean canRegenerate() {

@@ -14,6 +14,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface IRegenType {
 	
 	String getName();
+	/** @return in ticks */
+	int getAnimationLength();
 	
 	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {}
 	default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {}

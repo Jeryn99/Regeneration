@@ -37,7 +37,9 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	private final EntityPlayer player;
-	private int regenerationsLeft, ticksRegenerating;
+	private int regenerationsLeft;
+	//TODO move animationTicks to the type level?
+	private long animationTicks; //TODO add to debugger status panel
 	private IRegenType type = RegenTypes.FIERY;
 	
 	private RegenState state = RegenState.ALIVE;
@@ -81,11 +83,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			stateManager.tick();
 		
 		if (state == RegenState.REGENERATING) {
-			ticksRegenerating++;
 			type.onUpdateMidRegen(player, this);
-		} else {
-			ticksRegenerating = 0;
-		}
+			animationTicks++; //TODO handle in event handler for regen tick?
+		} else animationTicks = 0; //TODO handle in event handler for finished regeneration?
 	}
 	
 	private void setState(RegenState state) {
@@ -109,7 +109,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setString("state", state.toString());
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
-		nbt.setInteger("ticks", ticksRegenerating);
+		nbt.setLong("animationTicks", animationTicks);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -120,7 +120,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		setState(nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE); //I need to check for versions before 1.3 (TODO update this version comment)
 		regenerationsLeft = nbt.getInteger("regenerationsLeft");
 		setStyle(nbt.getCompoundTag("style"));
-		ticksRegenerating = nbt.getInteger("ticks");
+		animationTicks = nbt.getLong("animationTicks");
+		
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
 	}
@@ -140,8 +141,10 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
-	public int getTicksRegenerating() {
-		return ticksRegenerating;
+	public double getAnimationProgress() {
+		if (!player.world.isRemote)
+			throw new IllegalStateException("Querying animation progress on the server");
+		return Math.min(1, animationTicks / (double)type.getAnimationLength());
 	}
 	
 	@Override
@@ -337,8 +340,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			scheduler.cancel(TimerChannel.GRACE_GLOWING); //... cancel the scheduled glowing
 			scheduler.cancel(TimerChannel.GRACE_CRITICAL_DEATH); //... cancel the scheduled critical death
 			
-			//TODO configurable regeneration length based on the type
-			scheduler.scheduleInSeconds(TimerChannel.REGENERATION_FINISH, 10, this::finishRegeneration); //... schedule the finishing of the regeneration
+			scheduler.scheduleInTicks(TimerChannel.REGENERATION_FINISH, type.getAnimationLength(), this::finishRegeneration); //... schedule the finishing of the regeneration
 			type.onStartRegeneration(player, CapabilityRegeneration.this);
 			
 			synchronise();
