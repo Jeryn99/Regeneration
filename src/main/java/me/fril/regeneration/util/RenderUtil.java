@@ -212,7 +212,7 @@ public class RenderUtil {
 	
 	/** <a href="https://stackoverflow.com/a/41491220/10434371">Source</a> */
 	public static double calculateColorBrightness(Vec3d c) {
-		float r = (float) c.x / 255F, g = (float) c.y / 255F, b = (float) c.z / 255F;
+		float r = (float) c.x, g = (float) c.y, b = (float) c.z;
 		r = r <= 0.03928 ? r / 12.92F : (float)Math.pow((r + 0.055) / 1.055, 2.4);
 		g = g <= 0.03928 ? g / 12.92F : (float)Math.pow((g + 0.055) / 1.055, 2.4);
 		b = b <= 0.03928 ? b / 12.92F : (float)Math.pow((b + 0.055) / 1.055, 2.4);
