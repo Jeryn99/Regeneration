@@ -8,7 +8,6 @@ import me.fril.regeneration.common.commands.RegenDebugCommand;
 import me.fril.regeneration.debugger.RegenDebugger;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
@@ -34,11 +33,7 @@ public class RegenerationMod {
 	
 	@SidedProxy(clientSide = "me.fril.regeneration.proxy.ClientProxy", serverSide = "me.fril.regeneration.proxy.CommonProxy")
 	public static CommonProxy proxy;
-
-	public static boolean isDevEnv() {
-		return (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
-	}
-
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		proxy.preInit();
