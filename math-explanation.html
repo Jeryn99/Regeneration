@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Regeneration animation math explanation</title>
+	<style>
+		body {
+			background-color: #333;
+			color: #fff;
+			font-family: Segoe UI Symbol;
+			font-size: 150%;
+		}
+		
+		#wrapper {
+			width: 75%;
+			margin: auto;
+		}
+		
+		.content {
+			text-align: left;
+		}
+		
+		h1 {
+			font-size: 200%;
+			text-align: center;
+		}
+		
+		h2 {
+			font-size: 150%;
+			margin-top: 60px;
+		}
+		
+		h4 {
+			font-size: 110%;
+		}
+		
+		h5 {
+			color: darkgray;
+			font-style: italic;
+			text-align: center;
+		}
+		
+		h1, h2, h3 {
+			text-decoration: underline;
+		}
+		
+		ul {
+			list-style-type: none;
+		}
+	</style>
+	
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+
+<div id="wrapper">
+	<h1>The magic animation numbers explained</h1>
+	<h5>Disclaimer: I tried to explain this as best as I could, but I'm not a math teacher. However, if you understand quadratic formulas you'll probably be fine. (There's a TL;DR at the bottom for lazy people)</h5>
+	
+	<img src="https://i.imgur.com/RGO2RnQ.gif" style="display: block; margin: auto;">
+	
+	<h2>Formulas</h2>
+	<p>
+		<ul>
+			<li><h4>\({F}(x) = {P}*{x}^{2} - R\)</h4></li>
+			<li><h4>\({P} = \frac{-1}{ x_{0}^{2} - x_{1}^{2} }\)</h4></li>
+			<li><h4>\({R} = {P}*x_{0}^2\)</h4></li>
+		</ul>
+	</p>
+	
+	
+	
+	<h2>Variables</h2>
+	<p>
+		<ul>
+			<li>\({F}\): The factor to multiply the maximum cone size with</li>
+			<li>\({x}\): The current progress percentage of the animation (0-1, a value of 1 means that the regeneration is complete)</li>
+			<li>\(x_{0}\): <i>Percentage</i> at which the cones <i>start</i> growing</li>
+			<li>\(x_{1}\): <i>Percentage</i> at which the cones are at their <i>maximum</i> size</li>
+		</ul>
+		Variables \({P}\) and \({R}\) are the equivalent of \({a}\) and \({c}\) in a standard quadratic formula (\( {a}{x}^{2} + {b}{x} + c \)) respectively. I called them \({P}\) and \({R}\) because reasons. Deal with it.
+	</p>
+	
+	
+	
+	
+	
+	<h2>Explanation for \(F(x)\) and the meaning of \(P\) and \(R\)</h2>
+	<p>
+		To determine the size of the cones at a particular point in time we need to calculate a scale factor, which is what this formula is for.
+		It's a simple quadratic formula, with parameters \({P}\) and \({R}\) for changing the properties of the growing-phase.<br>
+	</p>
+	<p>
+		Note that the <i>effective primary and secondary scales</i> are calculated using:
+		<ul>
+			<li>\(S_{1}({x}) = clamp({F}({x}), 0, 1) * 4 \) for primary.</li>
+			<li>\(S_{2}({x}) = clamp({F}({x}), 0, 1) * 6.4 \) for secondary.</li>
+		</ul>
+		Nothing exciting there. It clamps the factor from \(F(x)\) within the range of \( [0,1] \) and multiplies it with the maximum scale factor for that cone.
+	</p>
+	<p>
+		<img src="https://i.imgur.com/aBm9VNH.png" style="float: right; height: 250px;">
+		<h3>Why not use a linear formula?</h3>
+		Because it's ugly. The cones would grow way too fast at the start and too slow at the end. It just looks very weird.<br>
+		By using a quadratic formula we circumvent this, as a quadratic formula start slow but speeds up the further you go.
+	</p>
+	
+	<p>
+		<h3>So what are \(P\) and \(R\)?</h3>
+		<div style="overflow:auto; margin-bottom: 2em; vertical-align: middle;">
+			<img src="https://i.imgur.com/8F3GDca.png" style="float: left; height: 250px; margin-right: 10px;">
+			By manipulating the \(P\) parameter we can determine the steepness of the parabola, enabling us to lengthen or shorten the 'growing period' as we wish.
+			As you can see in the image to the left, the blue line (with a \(P\) of \(2\)) reaches the maximum value of \(1\) earlier than the red line.
+			This means that a higher \(P\) value in our formula corresponds to a shorter growing period.
+		</div>
+		
+		<div style="overflow:auto;">
+			<img src="https://i.imgur.com/BFSJTZv.png" style="float: right; height: 300px; margin-left: 10px;">
+			We don't want our cones to start growing immediately, because that looks very weird. With \(R\) we can shift our parabola downwards.
+			Why is this useful? Because this causes \(F(x)\) to be negative at the start of the animation.
+			By <i>clamping</i> the factor back to \(0\) when calculating the effective factors, we create a line that looks like the one to the right.
+			As you can see, if \(x &lt; 0.32\) then \(y\) = \(0\). For our purposes this means that the scale factor (and thus the cones) will start growing at \(x = 0.32\) (32% of the animation).
+		</div>
+	</p>
+	
+	
+	
+	
+	
+	<h2>Explanation for the formula of \(P\) and \(R\)</h2>
+	<p>
+		Now that we know how to manipulate our line/scale factor using \(P\) and \(R\) we of course want to know what to set these variables to.
+		We need a formula that takes
+		<ul>
+			<li>- The point where the growing starts (\(x_{0}\))</li>
+			<li>- The point where the cones are fully grown (\(x_{1}\))</li>
+		</ul>
+		as inputs, and our \(P\) and \(R\) values as output, to pop into our \(F(x)\) formula.<br>
+		This results in the following system of equations:
+		<ul>
+			<li>
+				\(
+				\left\{ 
+				\begin{array}{c}
+				F(x_{0}) = 0
+				\\ 
+				F(x_{1}) = 1
+				\end{array}
+				\right. 
+				\)
+			</li>
+		</ul>
+
+		or more usefully:
+		<ul>
+			<li>
+				\(
+				\left\{
+				\begin{array}{c}
+				0 = {P}*{x_{0}}^{2} - R
+				\\ 
+				1 = {P}*{x_{1}}^{2} - R
+				\end{array}
+				\right. 
+				\)
+			</li>
+		</ul>
+		
+		We can now solve this system:		
+		<ul>
+			<li>
+				\(
+				\left\{
+				\begin{array}{c}
+				0 = {P}*{x_{0}}^{2} - R
+				\\ 
+				1 = {P}*{x_{1}}^{2} - R
+				\end{array}
+				\right. 
+				\)
+				
+				&nbsp;&nbsp;&nbsp;&rarr;&nbsp;&nbsp;&nbsp;
+				
+				\(
+				\begin{matrix}
+				&times;1 \\
+				&times;-1 \\
+				\end{matrix}
+				\)
+				
+				&nbsp;&nbsp;&nbsp;&rarr;&nbsp;&nbsp;&nbsp;
+				
+				\(
+				\left\{
+				\begin{array}{c}
+				0 = {P}*{x_{0}}^{2} - R
+				\\ 
+				-1 = {P}*{-x_{1}}^{2} + R
+				\end{array}
+				\right. 
+				\)
+				
+				&nbsp;&nbsp;&nbsp;&rarr;&nbsp;&nbsp;&nbsp;
+				
+				\(-1 = ({x_{0}}^{2} - {x_{1}}^{2}) * P \)
+				
+				&nbsp;&nbsp;&nbsp;&rarr;&nbsp;&nbsp;&nbsp;
+				
+				\(P = \frac{-1}{ x_{0}^{2} - x_{1}^{2} }\)
+			</li>
+		</ul>
+		
+		And there is our formula for \(P\)!<br>
+		For \(R\) we simply go:
+		<ul>
+			<li>
+				\(0 = {P}*{x_{0}}^{2} - R\)
+				&nbsp;&nbsp;&nbsp;&rarr;&nbsp;&nbsp;&nbsp;
+				\(R = {P}*{x_{0}}^{2}\)
+			</li>
+		</ul>
+	</p>
+	
+	
+	
+	
+	<h2>Summary / TL;DR</h2>
+	Using the formulas for \(P\) and \(R\) we can manipulate the start and finishing point of our animation.
+	Because it's a waste to calculate these values every tick, they are pre-calculated and in the code as "magic" numbers.
+	However we have now discovered that instead of magic, it was math all along.
+	
+	
+	
+	<h2>Some useful values for \(x\)</h2>
+	<ul style="list-style-type:initial;">
+		<li>\(0.05\) when the head finishes rotating</li>
+		<li>\(0.075\) when the arms finish rotating</li>
+		<li>The formula for the rotation of the arms is \(\alpha = \frac{x}{85}*0.075\)</li>
+		<li>The formula for the rotation of the head is \(\beta = \frac{x}{50}*0.05\)</li>
+	</ul>
+</div>
+
+</body>
+</html>
