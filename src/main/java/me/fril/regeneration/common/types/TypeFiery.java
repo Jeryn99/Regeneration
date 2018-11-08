@@ -1,8 +1,5 @@
 package me.fril.regeneration.common.types;
 
-import java.awt.Color;
-import java.util.Random;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.layers.LayerRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -24,9 +21,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -120,8 +120,8 @@ public class TypeFiery implements IRegenType {
 		RenderUtil.setLightmapTextureCoords(65, 65);
 		
 		NBTTagCompound style = capability.getStyle();
-		Color primaryColor = new Color(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
-		Color secondaryColor = new Color(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
+		Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
+		Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 
 		float primaryScale = capability.getTicksRegenerating() / 5.0F;
 		float secondaryScale = capability.getTicksRegenerating() / 8.5F;
@@ -160,7 +160,7 @@ public class TypeFiery implements IRegenType {
 		playerModel.setModelAttributes(model);
 		
 		// Render glowing overlay
-		GlStateManager.color(primaryColor.getRed(), primaryColor.getGreen(), primaryColor.getBlue(), 1);
+		GlStateManager.color((float)primaryColor.x, (float)primaryColor.y, (float)primaryColor.z, 1);
 		playerModel.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 		
 		// Undo state manager changes
@@ -174,7 +174,7 @@ public class TypeFiery implements IRegenType {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Color color) {
+	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
 		for (int i = 0; i < 8; i++) {
@@ -182,11 +182,11 @@ public class TypeFiery implements IRegenType {
 			GlStateManager.rotate(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
 			GlStateManager.scale(1.0f, 1.0f, 0.65f);
 			vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
-			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-			vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-			vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
-			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color(color.getRed(), color.getGreen(), color.getBlue(), 100).endVertex();
+			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float)color.y, (float)color.z, 100).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float)color.x, (float)color.y, (float)color.z, 100).endVertex();
+			vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color((float)color.x, (float)color.y, (float)color.z, 100).endVertex();
+			vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color((float)color.x, (float)color.y, (float)color.z, 100).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float)color.x, (float)color.y, (float)color.z, 100).endVertex();
 			tessellator.draw();
 			GlStateManager.popMatrix();
 		}

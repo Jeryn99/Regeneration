@@ -1,9 +1,5 @@
 package me.fril.regeneration.client.gui;
 
-import java.awt.Color;
-
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -20,6 +16,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
+
+import javax.annotation.Nullable;
+import java.awt.*;
 
 public class CustomizerGui extends GuiContainer {
 	public static final int ID = 0;
@@ -136,8 +135,8 @@ public class CustomizerGui extends GuiContainer {
 		RenderUtil.drawRect(cx + 96, cy + 45, cx + 165, cy + 60, (float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue(), 1);
 		
 		
-		Color primaryColor = new Color((float) slidePrimaryRed.getValue(),   (float) slidePrimaryGreen.getValue(),   (float) slidePrimaryBlue.getValue()),
-				secondaryColor = new Color((float) slideSecondaryRed.getValue(),   (float) slideSecondaryGreen.getValue(),   (float) slideSecondaryBlue.getValue());
+		Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(),   (float) slidePrimaryGreen.getValue(),   (float) slidePrimaryBlue.getValue()),
+				secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(),   (float) slideSecondaryGreen.getValue(),   (float) slideSecondaryBlue.getValue());
 		
 		String str = new TextComponentTranslation("regeneration.info.primary").getFormattedText();
 		int length = mc.fontRenderer.getStringWidth(str);
