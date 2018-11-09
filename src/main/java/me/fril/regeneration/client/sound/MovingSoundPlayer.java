@@ -2,8 +2,6 @@ package me.fril.regeneration.client.sound;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.handlers.RegenObjects;
-import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -49,10 +47,12 @@ public class MovingSoundPlayer extends MovingSound {
 		ResourceLocation sound = soundCheck.getSoundName();
 		boolean stopCondition = false;
 		
+		//SOON figure out sounds
+		
 		//NOTE shouldn't heartbeat be a player-only sound?
 		//I wish I could use a switch here...
-		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //TODO play heartbeat in critical phase
-			stopCondition = cap.getState().isGraceful();
+		/*if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //TODO play heartbeat in critical phase
+			stopCondition = cap.getState().isGracefulz();
 		} else if (sound.equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
 			stopCondition = cap.getState() != RegenState.GRACE_GLOWING;
 			volume = 0.3F;
@@ -60,7 +60,7 @@ public class MovingSoundPlayer extends MovingSound {
 			stopCondition = cap.getState() != RegenState.GRACE_CRIT;
 		} else if (sound.equals(RegenObjects.Sounds.REGENERATION.getSoundName())) {
 			stopCondition = cap.getState() != RegenState.REGENERATING;
-		}
+		}*/
 		
 		if (stopCondition) donePlaying = true;
 	}

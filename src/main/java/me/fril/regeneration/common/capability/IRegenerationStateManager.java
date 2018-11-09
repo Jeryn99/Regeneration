@@ -8,7 +8,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompound> {
 	
 	boolean onKilled();
-	void onPunchBlock();
+	//void onPunchBlock();
 	void onPunchEntity(EntityLivingBase entity);
 	
 	@Deprecated

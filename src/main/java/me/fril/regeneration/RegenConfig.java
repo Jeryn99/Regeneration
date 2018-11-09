@@ -99,14 +99,6 @@ public class RegenConfig { // TODO externalize comment strings?
 		@Config.Comment("")
 		public int criticalPhaseLength = 60;
 		
-		@Config.LangKey("")
-		@Config.Comment("")
-		public int handGlowInterval = 60;
-		
-		@Config.LangKey("")
-		@Config.Comment("")
-		public int allowedRegenDelay = 20;
-		
 	}
 	
 	
