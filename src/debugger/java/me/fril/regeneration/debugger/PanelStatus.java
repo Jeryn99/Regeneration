@@ -20,14 +20,17 @@ class PanelStatus extends JPanel {
 	private JLabel lblRegensLeft;
 	private JLabel lblRegensLeftVal;
 	
+	private JLabel lblAnimationProgress;
+	private JLabel lblAnimationProgressVal;
+	
 	
 	public PanelStatus() {
 		{
 			GridBagLayout gridBagLayout = new GridBagLayout();
-			gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0, 0 };
-			gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0 };
-			gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE };
-			gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
+			gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0 };
+			gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
+			gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, 1.0 };
+			gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 			setLayout(gridBagLayout);
 		}
 		
@@ -37,7 +40,7 @@ class PanelStatus extends JPanel {
 			gbc_lblTicks.anchor = GridBagConstraints.WEST;
 			gbc_lblTicks.insets = new Insets(0, 0, 5, 5);
 			gbc_lblTicks.gridx = 1;
-			gbc_lblTicks.gridy = 0;
+			gbc_lblTicks.gridy = 1;
 			add(lblTicks, gbc_lblTicks);
 		}
 		
@@ -47,7 +50,7 @@ class PanelStatus extends JPanel {
 			gbc_lblTicksVal.anchor = GridBagConstraints.EAST;
 			gbc_lblTicksVal.insets = new Insets(0, 0, 5, 5);
 			gbc_lblTicksVal.gridx = 3;
-			gbc_lblTicksVal.gridy = 0;
+			gbc_lblTicksVal.gridy = 1;
 			add(lblTicksVal, gbc_lblTicksVal);
 		}
 		
@@ -57,7 +60,7 @@ class PanelStatus extends JPanel {
 			gbc_lblRegensLeft.anchor = GridBagConstraints.WEST;
 			gbc_lblRegensLeft.insets = new Insets(0, 0, 5, 5);
 			gbc_lblRegensLeft.gridx = 1;
-			gbc_lblRegensLeft.gridy = 1;
+			gbc_lblRegensLeft.gridy = 2;
 			add(lblRegensLeft, gbc_lblRegensLeft);
 		}
 		
@@ -67,7 +70,7 @@ class PanelStatus extends JPanel {
 			gbc_lblRegensLeftVal.anchor = GridBagConstraints.EAST;
 			gbc_lblRegensLeftVal.insets = new Insets(0, 0, 5, 5);
 			gbc_lblRegensLeftVal.gridx = 3;
-			gbc_lblRegensLeftVal.gridy = 1;
+			gbc_lblRegensLeftVal.gridy = 2;
 			add(lblRegensLeftVal, gbc_lblRegensLeftVal);
 		}
 		
@@ -77,7 +80,7 @@ class PanelStatus extends JPanel {
 			gbc_lblState.anchor = GridBagConstraints.WEST;
 			gbc_lblState.insets = new Insets(0, 0, 0, 5);
 			gbc_lblState.gridx = 1;
-			gbc_lblState.gridy = 2;
+			gbc_lblState.gridy = 3;
 			add(lblState, gbc_lblState);
 		}
 		
@@ -87,8 +90,28 @@ class PanelStatus extends JPanel {
 			gbc_lblStateVal.anchor = GridBagConstraints.EAST;
 			gbc_lblStateVal.insets = new Insets(0, 0, 0, 5);
 			gbc_lblStateVal.gridx = 3;
-			gbc_lblStateVal.gridy = 2;
+			gbc_lblStateVal.gridy = 3;
 			add(lblStateVal, gbc_lblStateVal);
+		}
+		
+		lblAnimationProgress = new JLabel("Animation progress:");
+		{
+			GridBagConstraints gbc_lblAnimationTicks = new GridBagConstraints();
+			gbc_lblAnimationTicks.anchor = GridBagConstraints.WEST;
+			gbc_lblAnimationTicks.insets = new Insets(0, 0, 0, 5);
+			gbc_lblAnimationTicks.gridx = 1;
+			gbc_lblAnimationTicks.gridy = 4;
+			add(lblAnimationProgress, gbc_lblAnimationTicks);
+		}
+		
+		lblAnimationProgressVal = new JLabel("?");
+		{
+			GridBagConstraints gbc_lblAnimationTicksVal = new GridBagConstraints();
+			gbc_lblAnimationTicksVal.anchor = GridBagConstraints.EAST;
+			gbc_lblAnimationTicksVal.insets = new Insets(0, 0, 0, 5);
+			gbc_lblAnimationTicksVal.gridx = 3;
+			gbc_lblAnimationTicksVal.gridy = 4;
+			add(lblAnimationProgressVal, gbc_lblAnimationTicksVal);
 		}
 	}
 	
@@ -98,6 +121,7 @@ class PanelStatus extends JPanel {
 		lblStateVal.setText(cap.getState().toString());
 		lblRegensLeftVal.setText(cap.getRegenerationsLeft() + "");
 		lblTicksVal.setText(cap.getStateManager().getScheduler().getCurrentTick() + "");
+		lblAnimationProgressVal.setText(Math.round(cap.getAnimationProgress()*100) + "%");
 	}
 	
 }

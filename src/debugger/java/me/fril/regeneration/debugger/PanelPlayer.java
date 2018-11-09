@@ -46,7 +46,7 @@ class PanelPlayer extends JPanel {
 		pnlStatus = new PanelStatus();
 		{
 			GridBagConstraints gbc_pnlStatus = new GridBagConstraints();
-			gbc_pnlStatus.insets = new Insets(10, 0, 5, 5);
+			gbc_pnlStatus.insets = new Insets(0, 0, 0, 25);
 			gbc_pnlStatus.fill = GridBagConstraints.HORIZONTAL;
 			gbc_pnlStatus.gridx = 1;
 			gbc_pnlStatus.gridy = 0;

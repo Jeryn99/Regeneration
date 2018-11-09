@@ -38,8 +38,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private final EntityPlayer player;
 	private int regenerationsLeft;
-	//TODO move animationTicks to the type level?
-	private long animationTicks; //NOW add to debugger status panel
+	private long animationTicks; //TODO move animationTicks to the type level?
 	private IRegenType type = RegenTypes.FIERY;
 	
 	private RegenState state = RegenState.ALIVE;
@@ -142,8 +141,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public double getAnimationProgress() {
-		if (!player.world.isRemote)
-			throw new IllegalStateException("Querying animation progress on the server");
 		return Math.min(1, animationTicks / (double)type.getAnimationLength());
 	}
 	
@@ -304,7 +301,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if ((state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) && entity.getHealth() < entity.getMaxHealth()) { //... check if we're actually glowing
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
-				player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded); //CHECK what happens when we're killed by doing this? Forced regen?
+				player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded);
 			}
 			
 			onPunchBlock(); //... same behavior as when we punch a block
