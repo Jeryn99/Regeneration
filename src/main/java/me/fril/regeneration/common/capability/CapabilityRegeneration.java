@@ -314,11 +314,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			scheduler.tick();
 			
-			/*for (TimerChannel tc : TimerChannel.values()) {
-				System.out.println(tc + ": " + timers.get(tc).ticksLeft());
-			}
-			System.out.println();*/
-			
 			/*if (player.getHealth() < player.getMaxHealth()) {
 				player.setHealth(player.getHealth() + 1); SOON move to external event handler
 			}
@@ -391,18 +386,14 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = RegenState.ALIVE;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1); //in case this method was called by the 15 minute counter
-			
 			reset();
-			synchronise();
 		}
 		
 		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
 		private void finishRegeneration() {
 			state = RegenState.ALIVE;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
-			
 			reset();
-			synchronise();
 			
 			/*if (RegenConfig.resetHunger) { SOON move to external event handler
 				FoodStats foodStats = player.getFoodStats();
@@ -428,6 +419,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			for (TimerChannel tc : TimerChannel.values())
 				scheduler.cancel(tc);
 			scheduler.reset();
+			synchronise();
 		}
 		
 		

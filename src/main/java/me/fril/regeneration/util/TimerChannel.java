@@ -1,6 +1,6 @@
 package me.fril.regeneration.util;
 
-public enum TimerChannel { //NOW move to a simpeler, 4 state (3 channel) system
+public enum TimerChannel {
 	REGENERATION_TRIGGER,
 	REGENERATION_FINISH,
 	GRACE_GLOWING,

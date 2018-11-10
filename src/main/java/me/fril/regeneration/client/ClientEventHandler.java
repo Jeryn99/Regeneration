@@ -37,7 +37,7 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public static void onRenderHand(RenderHandEvent e) {
+	public static void onRenderHand(RenderHandEvent e) { //TODO yellow vingette to make sure there's always a grace indicator? Or the heart timer?
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		float f = 0.2F;
@@ -52,7 +52,7 @@ public class ClientEventHandler {
 		
 		GlStateManager.pushMatrix();
 		
-		if (mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT)) {
+		if (mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT)) { //FIXME translate in tandem with limb swing
 			GlStateManager.translate(0.34F, -0.23F, -0.5F);
 		} else {
 			GlStateManager.translate(-0.32F, -0.23F, -0.5F);

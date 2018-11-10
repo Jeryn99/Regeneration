@@ -1,6 +1,6 @@
 package me.fril.regeneration.util;
 
-public enum RegenState { //NOW move to a simpeler, 4 state (3 channel) system
+public enum RegenState {
 	
 	ALIVE,
 	GRACE_STD, GRACE_GLOWING, GRACE_CRIT,
