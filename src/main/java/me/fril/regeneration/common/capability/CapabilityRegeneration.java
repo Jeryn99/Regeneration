@@ -256,21 +256,25 @@ public class CapabilityRegeneration implements IRegeneration {
 				
 				//We're entering grace period...
 				scheduler.scheduleInSeconds(TimerChannel.GRACE_CRITICAL, RegenConfig.Grace.gracePeriodLength, this::enterCriticalPhase); //... schedule the transition to critical phase
+				state = RegenState.GRACE;
+				synchronise();
+				return true;
 				
 				/*if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness in grace period (although maybe a bit less)
 					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier); SOON move to external event handler
-				}*/
+				}
 				
-				startGlowing();
-				return true;
+				player.clearActivePotions(); SOON move to external event handler
+				player.extinguish();
+				player.setArrowCountInEntity(0);
 				
+				ToDO play hand glow music on client
+				PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);*/
 			} else if (state.isGraceful()) {
 				
-				//we're being forced to regenerate...
-				scheduler.cancel(TimerChannel.REGENERATION_TRIGGER); //... cancel the original regeneration trigger
+				//We're being forced to regenerate...
 				scheduler.cancel(TimerChannel.GRACE_CRITICAL); //... cancel the shift to critical phase
-				scheduler.cancel(TimerChannel.GRACE_GLOWING); //... cancel the start of glowing
-				
+				scheduler.cancel(TimerChannel.GRACE_CRITICAL_DEATH); //... cancel the dying by critical
 				triggerRegeneration();
 				return true;
 				
@@ -285,26 +289,13 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		@Override
-		public void onPunchBlock() {
-			//We're punching away our glow...
-			if (state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) { //... check if we're actually glowing (TODO enum method for this)
-				state = state == RegenState.GRACE_GLOWING ? RegenState.GRACE_STD : RegenState.GRACE_CRIT;
-				scheduler.cancel(TimerChannel.REGENERATION_TRIGGER); //... cancel the allowed regeneration trigger
-				scheduler.scheduleInSeconds(TimerChannel.GRACE_GLOWING, RegenConfig.Grace.handGlowInterval, this::startGlowing); //... schedule the new glowing
-				synchronise();
-			}
-		}
-		
-		@Override
 		public void onPunchEntity(EntityLivingBase entity) {
-			//We're punching away our glow and healing mobs...
-			if ((state == RegenState.GRACE_GLOWING || state == RegenState.GRACE_CRIT) && entity.getHealth() < entity.getMaxHealth()) { //... check if we're actually glowing
+			//We're healing mobs...
+			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth()) { //... check if we're in grace and if the mob needs helath
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
 				player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded);
 			}
-			
-			onPunchBlock(); //... same behavior as when we punch a block
 		}
 		
 		
@@ -325,10 +316,9 @@ public class CapabilityRegeneration implements IRegeneration {
 		//NOW post events to client to actually act upon the regeneration
 		//This'll only be called from tick which is serverside only TODO javadoc all these things
 		private void triggerRegeneration() {
-			//We're actually regenerating!
+			//We're stating a regeneration!
 			state = RegenState.REGENERATING;
 			scheduler.cancel(TimerChannel.GRACE_CRITICAL); //... cancel the transition to critical phase
-			scheduler.cancel(TimerChannel.GRACE_GLOWING); //... cancel the scheduled glowing
 			scheduler.cancel(TimerChannel.GRACE_CRITICAL_DEATH); //... cancel the scheduled critical death
 			
 			scheduler.scheduleInTicks(TimerChannel.REGENERATION_FINISH, type.getAnimationLength(), this::finishRegeneration); //... schedule the finishing of the regeneration
@@ -349,26 +339,9 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
-		private void startGlowing() {
-			//We're starting to glow...
-			state = RegenState.GRACE_GLOWING;
-			scheduler.scheduleInSeconds(TimerChannel.REGENERATION_TRIGGER, RegenConfig.Grace.allowedRegenDelay, this::triggerRegeneration); //... schedule allowed regeneration in 20 seconds
-			synchronise();
-			
-			//this causes these things to happen each time the player starts to glow. It's a feature.
-			/*player.clearActivePotions(); SOON move to external event handler
-			player.extinguish();
-			player.setArrowCountInEntity(0);*/
-			
-			//ToDO play hand glow music on client
-			//PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
-		}
-		
-		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
-		private void enterCriticalPhase() { //FIXME does not cancel the GRACE_GLOWING channel
+		private void enterCriticalPhase() {
 			//We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduler.cancel(TimerChannel.GRACE_GLOWING);
 			scheduler.scheduleInSeconds(TimerChannel.GRACE_CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength, this::midSequenceKill);
 			synchronise();
 			
@@ -436,10 +409,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		public void deserializeNBT(NBTTagCompound nbt) {
 			scheduler.reset();
 			
-			scheduler.scheduleInTicks(TimerChannel.REGENERATION_TRIGGER, nbt.getLong(TimerChannel.REGENERATION_TRIGGER.toString()), this::triggerRegeneration);
 			scheduler.scheduleInTicks(TimerChannel.REGENERATION_FINISH,  nbt.getLong(TimerChannel.REGENERATION_FINISH.toString()),  this::finishRegeneration);
 			scheduler.scheduleInTicks(TimerChannel.GRACE_CRITICAL,       nbt.getLong(TimerChannel.GRACE_CRITICAL.toString()),       this::enterCriticalPhase);
-			scheduler.scheduleInTicks(TimerChannel.GRACE_GLOWING,        nbt.getLong(TimerChannel.GRACE_GLOWING.toString()),        this::startGlowing);
 			scheduler.scheduleInTicks(TimerChannel.GRACE_CRITICAL_DEATH, nbt.getLong(TimerChannel.GRACE_CRITICAL_DEATH.toString()), this::midSequenceKill);
 		}
 		

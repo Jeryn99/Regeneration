@@ -46,7 +46,7 @@ public class ClientEventHandler {
 			return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (cap.getState() != RegenState.GRACE_GLOWING && cap.getState() != RegenState.GRACE_CRIT)
+		if (!cap.getState().isGraceful())
 			return;
 		
 		

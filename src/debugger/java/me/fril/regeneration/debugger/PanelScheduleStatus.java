@@ -20,14 +20,14 @@ class PanelScheduleStatus extends JPanel {
 	
 	public PanelScheduleStatus() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 1.0, 1.0 };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0 };
 		setLayout(gridBagLayout);
 		
 		for (int i = 0; i < TimerChannel.values().length; i++) {
 			TimerChannel tc = TimerChannel.values()[i];
 			
-			JLabel lbl = new JLabel("<html><center>" + tc.toString().replace("_", "<br>") + "</center></html>");
+			JLabel lbl = new JLabel("<html><center>" + tc.toString()/*.replace("_", "<br>")*/ + "</center></html>");
 			{
 				GridBagConstraints gbc = new GridBagConstraints();
 				gbc.insets = new Insets(0, 0, 5, 5);
