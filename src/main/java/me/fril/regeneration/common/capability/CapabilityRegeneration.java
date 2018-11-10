@@ -1,17 +1,21 @@
 package me.fril.regeneration.common.capability;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Nonnull;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
+import me.fril.regeneration.debugger.IDebugChannel;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
+import me.fril.regeneration.util.DebuggableScheduledAction;
 import me.fril.regeneration.util.RegenState;
-import me.fril.regeneration.util.Scheduler;
-import me.fril.regeneration.util.TimerChannel;
+import me.fril.regeneration.util.RegenState.Transitions;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,7 +45,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	private long animationTicks; //TODO move animationTicks to the type level?
 	private IRegenType type = RegenTypes.FIERY;
 	
-	private RegenState state = RegenState.ALIVE;
 	private final RegenerationStateManager stateManager;
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
@@ -78,17 +81,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void tick() {
-		if (!player.world.isRemote && state != RegenState.ALIVE) //ticking only on the server for simplicity
+		if (!player.world.isRemote && stateManager.state != RegenState.ALIVE) //ticking only on the server for simplicity
 			stateManager.tick();
 		
-		if (state == RegenState.REGENERATING) {
+		if (stateManager.state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, this);
 			animationTicks++; //TEMP handle in event handler (client) for regen tick
 		} else animationTicks = 0; //TEMP handle in event handler (client) for finished regeneration
-	}
-	
-	private void setState(RegenState state) {
-		this.state = state;
 	}
 	
 	
@@ -105,7 +104,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public NBTTagCompound serializeNBT() {
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("state", state.toString());
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
 		nbt.setLong("animationTicks", animationTicks);
@@ -116,7 +114,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		setState(nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE); //I need to check for versions before the new state-ticking system
 		regenerationsLeft = nbt.getInteger("regenerationsLeft");
 		setStyle(nbt.getCompoundTag("style"));
 		animationTicks = nbt.getLong("animationTicks");
@@ -128,11 +125,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	
-	
-	@Override
-	public RegenState getState() {
-		return state;
-	}
 	
 	@Override
 	public int getRegenerationsLeft() {
@@ -240,13 +232,30 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
-		private final Scheduler scheduler;
-		//private IDebugChannel debugChannel;
+		private final IDebugChannel debugChannel;
+		private final Map<RegenState.Transitions, Runnable> callbacks;
+		
+		private RegenState state = RegenState.ALIVE;
+		private DebuggableScheduledAction nextTransition;
 		
 		private RegenerationStateManager() {
-			this.scheduler = new Scheduler(RegenerationMod.DEBUGGER.getChannelFor(player));
+			this.debugChannel = RegenerationMod.DEBUGGER.getChannelFor(player);
+			
+			this.callbacks = new HashMap<>();
+			callbacks.put(Transitions.ENTER_CRITICAL, this::enterCriticalPhase);
+			callbacks.put(Transitions.CRITICAL_DEATH, this::midSequenceKill);
+			callbacks.put(Transitions.FINISH_REGENERATION, this::finishRegeneration);
 		}
 		
+		
+		private void scheduleInTicks(Transitions transition, long inTicks) {
+			//TODO add checks for state thingies
+			nextTransition = new DebuggableScheduledAction(transition.toString(), debugChannel, callbacks.get(transition), inTicks);
+		}
+		
+		private void scheduleInSeconds(Transitions transition, long inSeconds) {
+			scheduleInTicks(transition, inSeconds*20);
+		}
 		
 		
 		
@@ -255,7 +264,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state == RegenState.ALIVE) {
 				
 				//We're entering grace period...
-				scheduler.scheduleInSeconds(TimerChannel.GRACE_CRITICAL, RegenConfig.Grace.gracePeriodLength, this::enterCriticalPhase); //... schedule the transition to critical phase
+				scheduleInSeconds(Transitions.ENTER_CRITICAL, RegenConfig.Grace.gracePeriodLength);
 				state = RegenState.GRACE;
 				synchronise();
 				return true;
@@ -273,15 +282,13 @@ public class CapabilityRegeneration implements IRegeneration {
 			} else if (state.isGraceful()) {
 				
 				//We're being forced to regenerate...
-				scheduler.cancel(TimerChannel.GRACE_CRITICAL); //... cancel the shift to critical phase
-				scheduler.cancel(TimerChannel.GRACE_CRITICAL_DEATH); //... cancel the dying by critical
 				triggerRegeneration();
 				return true;
 				
 			} else if (state == RegenState.REGENERATING) {
 				
 				//We've been killed mid regeneration!
-				scheduler.cancel(TimerChannel.REGENERATION_FINISH); //... cancel the finishing of the regeneration
+				nextTransition.cancel(); //... cancel the finishing of the regeneration
 				midSequenceKill();
 				return false;
 				
@@ -303,7 +310,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (player.world.isRemote)
 				throw new IllegalStateException("Ticking state manager on the client");
 			
-			scheduler.tick();
+			nextTransition.tick();
 			
 			/*if (player.getHealth() < player.getMaxHealth()) {
 				player.setHealth(player.getHealth() + 1); SOON move to external event handler
@@ -316,14 +323,12 @@ public class CapabilityRegeneration implements IRegeneration {
 		//NOW post events to client to actually act upon the regeneration
 		//This'll only be called from tick which is serverside only TODO javadoc all these things
 		private void triggerRegeneration() {
-			//We're stating a regeneration!
+			//We're starting a regeneration!
 			state = RegenState.REGENERATING;
-			scheduler.cancel(TimerChannel.GRACE_CRITICAL); //... cancel the transition to critical phase
-			scheduler.cancel(TimerChannel.GRACE_CRITICAL_DEATH); //... cancel the scheduled critical death
+			nextTransition.cancel(); //... cancel any state shift we had planned
+			scheduleInTicks(Transitions.FINISH_REGENERATION, type.getAnimationLength());
 			
-			scheduler.scheduleInTicks(TimerChannel.REGENERATION_FINISH, type.getAnimationLength(), this::finishRegeneration); //... schedule the finishing of the regeneration
 			type.onStartRegeneration(player, CapabilityRegeneration.this);
-			
 			synchronise();
 			
 			/*player.dismountRidingEntity(); SOON move to external event handler
@@ -338,11 +343,10 @@ public class CapabilityRegeneration implements IRegeneration {
 			//TODO toast notification for entering regeneration
 		}
 		
-		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
 		private void enterCriticalPhase() {
 			//We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduler.scheduleInSeconds(TimerChannel.GRACE_CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength, this::midSequenceKill);
+			scheduleInSeconds(Transitions.CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength);
 			synchronise();
 			
 			//SOON move to external event handler
@@ -354,19 +358,18 @@ public class CapabilityRegeneration implements IRegeneration {
 			//TODO red vingette in critical phase
 		}
 		
-		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
 		private void midSequenceKill() {
 			state = RegenState.ALIVE;
+			nextTransition = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
-			player.setHealth(-1); //in case this method was called by the 15 minute counter
-			reset();
+			player.setHealth(-1); //in case this method was called by critical death
+			synchronise();
 		}
 		
-		//@SideOnly(Side.SERVER) (not enforced because of synchronization, but this'll only be called from tick which is serverside only)
 		private void finishRegeneration() {
 			state = RegenState.ALIVE;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
-			reset();
+			synchronise();
 			
 			/*if (RegenConfig.resetHunger) { SOON move to external event handler
 				FoodStats foodStats = player.getFoodStats();
@@ -388,39 +391,29 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		
 		
-		private void reset() {
-			for (TimerChannel tc : TimerChannel.values())
-				scheduler.cancel(tc);
-			scheduler.reset();
-			synchronise();
-		}
-		
-		
-		
 		@Override
 		public NBTTagCompound serializeNBT() {
 			NBTTagCompound nbt = new NBTTagCompound();
-			for (TimerChannel tc : TimerChannel.values())
-				nbt.setLong(tc.toString(), scheduler.getTicksLeft(tc));
+			nbt.setString("state", state.toString());
+			if (nextTransition != null) {
+				nbt.setString("transitionId", nextTransition.identifier);
+				nbt.setLong("transitionInTicks", nextTransition.getTicksLeft());
+			}
 			return nbt;
 		}
 		
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
-			scheduler.reset();
+			state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
 			
-			scheduler.scheduleInTicks(TimerChannel.REGENERATION_FINISH,  nbt.getLong(TimerChannel.REGENERATION_FINISH.toString()),  this::finishRegeneration);
-			scheduler.scheduleInTicks(TimerChannel.GRACE_CRITICAL,       nbt.getLong(TimerChannel.GRACE_CRITICAL.toString()),       this::enterCriticalPhase);
-			scheduler.scheduleInTicks(TimerChannel.GRACE_CRITICAL_DEATH, nbt.getLong(TimerChannel.GRACE_CRITICAL_DEATH.toString()), this::midSequenceKill);
+			if (nbt.hasKey("transitionId"))
+				scheduleInTicks(Transitions.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
 		}
-		
-		
-		
-		
+
+
 		@Override
-		@Deprecated
-		public Scheduler getScheduler() {
-			return scheduler;
+		public RegenState getState() {
+			return state;
 		}
 		
 	}

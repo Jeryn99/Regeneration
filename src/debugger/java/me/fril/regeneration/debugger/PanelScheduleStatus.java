@@ -1,22 +1,19 @@
 package me.fril.regeneration.debugger;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.GridLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import me.fril.regeneration.util.Scheduler;
-import me.fril.regeneration.util.Scheduler.ScheduledTask;
-import me.fril.regeneration.util.TimerChannel;
-
 @SuppressWarnings("serial")
 class PanelScheduleStatus extends JPanel {
 	
-	private Map<TimerChannel, JLabel[]> labelRefs = new HashMap<>();
+	public PanelScheduleStatus() {
+		setLayout(new GridLayout(1, 1));
+		add(new JLabel("UNIMPLEMENTED")); //NOW re-implement schedule status
+	}
+	
+	/*private Map<TimerChannel, JLabel[]> labelRefs = new HashMap<>();
 	
 	public PanelScheduleStatus() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -27,7 +24,7 @@ class PanelScheduleStatus extends JPanel {
 		for (int i = 0; i < TimerChannel.values().length; i++) {
 			TimerChannel tc = TimerChannel.values()[i];
 			
-			JLabel lbl = new JLabel("<html><center>" + tc.toString()/*.replace("_", "<br>")*/ + "</center></html>");
+			JLabel lbl = new JLabel("<html><center>" + tc.toString().replace("_", "<br>") + "</center></html>");
 			{
 				GridBagConstraints gbc = new GridBagConstraints();
 				gbc.insets = new Insets(0, 0, 5, 5);
@@ -81,7 +78,7 @@ class PanelScheduleStatus extends JPanel {
 		
 	}
 	
-	public void updateState(Scheduler scheduler) {
+	public void updateState(ChanneledScheduler scheduler) {
 		for (TimerChannel tc : TimerChannel.values()) {
 			ScheduledTask task = scheduler.getSchedule().get(tc);
 			JLabel[] valLabels = labelRefs.get(tc);
@@ -90,6 +87,6 @@ class PanelScheduleStatus extends JPanel {
 			valLabels[1].setText(task == null ? "?" : task.ticksLeft()+"");
 			valLabels[2].setText(task == null ? "?" : task.isCancelled()+"");
 		}
-	}
+	}*/
 	
 }

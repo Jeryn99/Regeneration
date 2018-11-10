@@ -1,6 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,7 +13,6 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
-	RegenState getState();
 	EntityPlayer getPlayer();
 	
 	void tick();

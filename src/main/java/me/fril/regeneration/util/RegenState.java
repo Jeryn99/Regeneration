@@ -10,4 +10,8 @@ public enum RegenState {
 		return this == GRACE || this == GRACE_CRIT;
 	}
 	
+	public enum Transitions {
+		ENTER_CRITICAL, CRITICAL_DEATH, FINISH_REGENERATION
+	}
+	
 }

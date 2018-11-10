@@ -12,11 +12,10 @@ import javax.swing.JTextArea;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.debugger.util.EventQueueDebugChannelProxy;
 import me.fril.regeneration.debugger.util.TextAreaOutputStream;
-import me.fril.regeneration.util.TimerChannel;
 
 @SuppressWarnings("serial")
 class PanelPlayer extends JPanel {
-	private final IRegeneration capability; //FIXME debugger stops working after death because of outdated capability reference
+	//private final IRegeneration capability; //FIXME debugger stops working after death because of outdated capability reference
 	
 	private final PanelHeader pnlHeader;
 	private final PanelStatus pnlStatus;
@@ -77,7 +76,7 @@ class PanelPlayer extends JPanel {
 		consoleArea.setEditable(false);
 		console = new PrintStream(new TextAreaOutputStream(consoleArea));
 		
-		this.capability = cap;
+		//this.capability = cap;
 	}
 	
 	
@@ -85,67 +84,67 @@ class PanelPlayer extends JPanel {
 		class DebugChannelImpl implements IDebugChannel { //high-tech "anonymous" class
 			private long currentTick;
 			
-			@Override
-			public void update(long currentTick) {
+			/*@Override
+			public void update(long currentTick) { NOW update GUI
 				this.currentTick = currentTick;
 				pnlStatus.updateState(capability, currentTick);
 				pnlSchedule.updateState(capability.getStateManager().getScheduler());
-			}
+			}*/
 			
 			@Override
-			public void notifyExecution(TimerChannel channel, long tick) {
-				console.println(tickString() + "EXECUTING "+channel+" at "+tick);
+			public void notifyExecution(String identifier, long tick) {
+				console.println(tickString(identifier) + "EXECUTING at "+tick);
 				
 				if (tick != currentTick)
-					console.println(tickString() + "WARNING: reported tick "+tick+" does not match recording tick "+currentTick);
+					console.println(tickString(identifier) + "WARNING: reported tick "+tick+" does not match recording tick "+currentTick);
 			}
 			
 			
 			@Override
-			public void notifySchedule(TimerChannel channel, long inTicks, long scheduledTick) {
-				console.println(tickString() + "SCHEDULED "+channel+" in "+inTicks+" ("+(inTicks/20F)+"s) at "+scheduledTick);
+			public void notifySchedule(String identifier, long inTicks, long scheduledTick) {
+				console.println(tickString(identifier) + "SCHEDULED in "+inTicks+" ("+(inTicks/20F)+"s) at "+scheduledTick);
 				
 				if (scheduledTick - inTicks != currentTick)
-					console.println(tickString() + "WARNING: inTicks & shceduledTick don't add up with the current recording tick ("+scheduledTick+"-"+inTicks+" != "+currentTick+")");
+					console.println(tickString(identifier) + "WARNING: inTicks & shceduledTick don't add up with the current recording tick ("+scheduledTick+"-"+inTicks+" != "+currentTick+")");
 			}
 			
 			
 			@Override
-			public void notifyScheduleBlank(TimerChannel channel) {
-				console.println(tickString() + "SCHEDULED BLANK ON "+channel);
+			public void notifyScheduleBlank(String identifier) {
+				console.println(tickString(identifier) + "SCHEDULED BLANK");
 			}
 			
 			
 			@Override
-			public void notifyCancel(TimerChannel channel, long inTicks, long scheduledTick) {
-				console.println(tickString() + "CANCELED "+channel+", was in "+inTicks+" ("+(inTicks/20F)+"s) at "+scheduledTick);
+			public void notifyCancel(String identifier, long inTicks, long scheduledTick) {
+				console.println(tickString(identifier) + "CANCELED, was in "+inTicks+" ("+(inTicks/20F)+"s) at "+scheduledTick);
 				
 				if (inTicks == 0)
-					warn("Cancelling action "+channel+" on tick it was scheduled for");
+					warn(identifier, "Cancelling action on tick it was scheduled for");
 				else if (inTicks < 0)
-					throw new IllegalStateException("Schedule contains key for channel "+channel+" but it has already been completed or cancelled");
+					warn(identifier, "Canceled already canceled or completed action");
 				
 				if (scheduledTick - inTicks != currentTick)
-					warn("inTicks & shceduledTick don't add up with the current recording tick ("+scheduledTick+"-"+inTicks+" != "+currentTick+")");
+					warn(identifier, "inTicks & shceduledTick don't add up with the current recording tick ("+scheduledTick+"-"+inTicks+" != "+currentTick+")");
 			}
 			
 			
 			@Override
-			public void warn(String msg) {
-				console.println(tickString() + "WARNING: "+msg);
+			public void warn(String identifier, String msg) {
+				console.println(tickString(identifier) + "WARNING: "+msg);
 			}
 			
 			
 			private long previousMessageTick = -1;
 			
-			private String tickString() {
+			private String tickString(String identifier) {
 				String nl = "";
 				if (previousMessageTick != currentTick) {
 					nl = previousMessageTick >= 0 ? "\n" : "";
 					previousMessageTick = currentTick;
 				}
 				
-				return nl + "["+currentTick+"] ";
+				return nl + "["+identifier+":"+currentTick+"] ";
 			}
 			
 		}

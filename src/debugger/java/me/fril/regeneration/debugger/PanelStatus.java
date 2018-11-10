@@ -118,9 +118,9 @@ class PanelStatus extends JPanel {
 	
 	
 	public void updateState(IRegeneration cap, long currentTick) {
-		lblStateVal.setText(cap.getState().toString());
+		lblStateVal.setText(cap.getStateManager().getState().toString());
 		lblRegensLeftVal.setText(cap.getRegenerationsLeft() + "");
-		lblTicksVal.setText(cap.getStateManager().getScheduler().getCurrentTick() + "");
+		//lblTicksVal.setText(cap.getStateManager().getCurrentTick() + ""); NOW add scheduled action stuff
 		lblAnimationProgressVal.setText(Math.round(cap.getAnimationProgress()*100) + "%");
 	}
 	
