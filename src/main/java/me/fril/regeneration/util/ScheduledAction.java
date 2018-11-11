@@ -21,8 +21,10 @@ public class ScheduledAction {
 			return true;
 		} else if (currentTick > scheduledTick) {
 			throw new IllegalStateException("Task wasn't executed at "+scheduledTick+", but we're on "+currentTick);
-		} else
+		} else {
+			currentTick++;
 			return false;
+		}
 	}
 	
 	public void cancel() {

@@ -1,15 +1,20 @@
 package me.fril.regeneration.debugger.util;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.function.Supplier;
 
 import me.fril.regeneration.debugger.IDebugChannel;
+import me.fril.regeneration.util.RegenState.Transition;
 
-public class UnloadedPlayerTempChannelProxy implements IDebugChannel { //TODO queue messages when unloaded?
+public class UnloadedPlayerTempChannelProxy implements IDebugChannel {
 	private final Supplier<IDebugChannel> channelSupplier;
+	private final Queue<Runnable> unloadedBuffer;
 	private IDebugChannel channel;
 	
 	public UnloadedPlayerTempChannelProxy(Supplier<IDebugChannel> channelSupplier) {
 		this.channelSupplier = channelSupplier;
+		this.unloadedBuffer = new LinkedList<>();
 	}
 	
 	private boolean isLoaded() {
@@ -17,49 +22,50 @@ public class UnloadedPlayerTempChannelProxy implements IDebugChannel { //TODO qu
 			IDebugChannel gottenChannel = channelSupplier.get();
 			if (gottenChannel != null) {
 				channel = gottenChannel;
+				unloadedBuffer.forEach(r->r.run());
+				unloadedBuffer.clear();
 				return true;
-			} else
-				return false;
-		} else
-			return true;
-	}
-	
-	
-	
-	/*@Override
-	public void update(long currentTick) {
-		if (isLoaded())
-			this.channel.update(currentTick);
-	}*/
-	
-	@Override
-	public void notifyCancel(String identifier, long inTicks, long scheduledTick) {
-		if (isLoaded())
-			this.channel.notifyCancel(identifier, inTicks, scheduledTick);
+			} else return false;
+		} else return true;
 	}
 	
 	@Override
-	public void notifyExecution(String identifier, long tick) {
-		if (isLoaded())
-			this.channel.notifyExecution(identifier, tick);
+	public void notifyLoaded() {
+		if (!isLoaded() || unloadedBuffer.size() > 0) //will flush the buffer
+			throw new IllegalStateException("Loaded notification was a lie...");
+		this.channel.notifyLoaded();
 	}
 	
 	@Override
-	public void notifySchedule(String identifier, long inTicks, long scheduledTick) {
+	public void notifyCancel(Transition action, long inTicks) {
 		if (isLoaded())
-			this.channel.notifySchedule(identifier, inTicks, scheduledTick);
+			this.channel.notifyCancel(action, inTicks);
+		else
+			unloadedBuffer.add(()->notifyCancel(action, inTicks));
 	}
 	
 	@Override
-	public void notifyScheduleBlank(String channel) {
+	public void notifyExecution(Transition action, long tick) {
 		if (isLoaded())
-			this.channel.notifyScheduleBlank(channel);
+			this.channel.notifyExecution(action, tick);
+		else
+			unloadedBuffer.add(()->notifyExecution(action, tick));
 	}
 	
 	@Override
-	public void warn(String identifier, String msg) {
+	public void notifySchedule(Transition action, long inTicks) {
 		if (isLoaded())
-			this.channel.warn(identifier, msg);
+			this.channel.notifySchedule(action, inTicks);
+		else
+			unloadedBuffer.add(()->notifySchedule(action, inTicks));
+	}
+	
+	@Override
+	public void warn(Transition action, String msg) {
+		if (isLoaded())
+			this.channel.warn(action, msg);
+		else
+			unloadedBuffer.add(()->warn(action, msg));
 	}
 	
 }

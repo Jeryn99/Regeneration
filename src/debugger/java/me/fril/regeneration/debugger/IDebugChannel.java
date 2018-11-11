@@ -1,14 +1,14 @@
 package me.fril.regeneration.debugger;
 
+import me.fril.regeneration.util.RegenState.Transition;
+
 public interface IDebugChannel {
 	
-	//void update(String identifier, long currentTick);
+	void notifyCancel(Transition action, long wasInTicks);
+	void notifyExecution(Transition action, long atTick);
+	void notifySchedule(Transition action, long inTicks);
 	
-	void notifyCancel(String identifier, long inTicks, long scheduledTick);
-	void notifyExecution(String identifier, long tick);
-	void notifySchedule(String identifier, long inTicks, long scheduledTick);
-	void notifyScheduleBlank(String identifier);
-	
-	void warn(String identifier, String msg);
+	void warn(Transition action, String msg);
+	void notifyLoaded();
 	
 }

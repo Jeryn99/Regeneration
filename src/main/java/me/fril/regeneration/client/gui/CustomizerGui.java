@@ -21,7 +21,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
 
-public class CustomizerGui extends GuiContainer {
+public class CustomizerGui extends GuiContainer { //FIXME there's a color handled wrongly somewhere
 	public static final int ID = 0;
 	
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");

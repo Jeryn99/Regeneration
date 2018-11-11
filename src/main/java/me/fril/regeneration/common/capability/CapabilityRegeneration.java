@@ -5,17 +5,19 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.debugger.IDebugChannel;
+import me.fril.regeneration.debugger.util.DebuggableScheduledAction;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
-import me.fril.regeneration.util.DebuggableScheduledAction;
 import me.fril.regeneration.util.RegenState;
-import me.fril.regeneration.util.RegenState.Transitions;
+import me.fril.regeneration.util.RegenState.Transition;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -81,10 +83,10 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void tick() {
-		if (!player.world.isRemote && stateManager.state != RegenState.ALIVE) //ticking only on the server for simplicity
+		if (!player.world.isRemote && state != RegenState.ALIVE) //ticking only on the server for simplicity
 			stateManager.tick();
 		
-		if (stateManager.state == RegenState.REGENERATING) {
+		if (state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, this);
 			animationTicks++; //TEMP handle in event handler (client) for regen tick
 		} else animationTicks = 0; //TEMP handle in event handler (client) for finished regeneration
@@ -104,6 +106,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public NBTTagCompound serializeNBT() {
 		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setString("state", state.toString());
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
 		nbt.setLong("animationTicks", animationTicks);
@@ -117,6 +120,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		regenerationsLeft = nbt.getInteger("regenerationsLeft");
 		setStyle(nbt.getCompoundTag("style"));
 		animationTicks = nbt.getLong("animationTicks");
+		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
 		
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
@@ -224,36 +228,38 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	
+	private RegenState state = RegenState.ALIVE;
 	
-	
-	
+	@Override
+	public RegenState getState() {
+		return state;
+	}
 	
 	
 	
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
 		private final IDebugChannel debugChannel;
-		private final Map<RegenState.Transitions, Runnable> callbacks;
+		private final Map<Transition, Runnable> callbacks;
 		
-		private RegenState state = RegenState.ALIVE;
 		private DebuggableScheduledAction nextTransition;
 		
 		private RegenerationStateManager() {
 			this.debugChannel = RegenerationMod.DEBUGGER.getChannelFor(player);
 			
 			this.callbacks = new HashMap<>();
-			callbacks.put(Transitions.ENTER_CRITICAL, this::enterCriticalPhase);
-			callbacks.put(Transitions.CRITICAL_DEATH, this::midSequenceKill);
-			callbacks.put(Transitions.FINISH_REGENERATION, this::finishRegeneration);
+			callbacks.put(Transition.ENTER_CRITICAL, this::enterCriticalPhase);
+			callbacks.put(Transition.CRITICAL_DEATH, this::midSequenceKill);
+			callbacks.put(Transition.FINISH_REGENERATION, this::finishRegeneration);
 		}
 		
 		
-		private void scheduleInTicks(Transitions transition, long inTicks) {
+		private void scheduleInTicks(Transition transition, long inTicks) {
 			//TODO add checks for state thingies
-			nextTransition = new DebuggableScheduledAction(transition.toString(), debugChannel, callbacks.get(transition), inTicks);
+			nextTransition = new DebuggableScheduledAction(transition, debugChannel, callbacks.get(transition), inTicks);
 		}
 		
-		private void scheduleInSeconds(Transitions transition, long inSeconds) {
+		private void scheduleInSeconds(Transition transition, long inSeconds) {
 			scheduleInTicks(transition, inSeconds*20);
 		}
 		
@@ -264,7 +270,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state == RegenState.ALIVE) {
 				
 				//We're entering grace period...
-				scheduleInSeconds(Transitions.ENTER_CRITICAL, RegenConfig.Grace.gracePeriodLength);
+				scheduleInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePeriodLength);
 				state = RegenState.GRACE;
 				synchronise();
 				return true;
@@ -292,7 +298,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				midSequenceKill();
 				return false;
 				
-			} else throw new IllegalStateException("Unknown cap.getState(): "+state);
+			} else throw new IllegalStateException("Unknown state: "+state);
 		}
 		
 		@Override
@@ -326,7 +332,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			//We're starting a regeneration!
 			state = RegenState.REGENERATING;
 			nextTransition.cancel(); //... cancel any state shift we had planned
-			scheduleInTicks(Transitions.FINISH_REGENERATION, type.getAnimationLength());
+			scheduleInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
 			type.onStartRegeneration(player, CapabilityRegeneration.this);
 			synchronise();
@@ -346,7 +352,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void enterCriticalPhase() {
 			//We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduleInSeconds(Transitions.CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength);
+			scheduleInSeconds(Transition.CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength);
 			synchronise();
 			
 			//SOON move to external event handler
@@ -368,6 +374,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		private void finishRegeneration() {
 			state = RegenState.ALIVE;
+			nextTransition = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			synchronise();
 			
@@ -382,21 +389,27 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));*/
 			
-			/*if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness (also lifting it)
+			/*if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness (weaken it)
 				player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
 			}*/
 		}
 		
 		
 		
+		@Override
+		@Deprecated
+		/** @deprecated Debug purposes */
+		public Pair<Transition, Long> getScheduledEvent() {
+			return nextTransition == null ? null : Pair.of(nextTransition.action, nextTransition.getTicksLeft());
+		}
+		
 		
 		
 		@Override
 		public NBTTagCompound serializeNBT() {
 			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setString("state", state.toString());
 			if (nextTransition != null) {
-				nbt.setString("transitionId", nextTransition.identifier);
+				nbt.setString("transitionId", nextTransition.action.toString());
 				nbt.setLong("transitionInTicks", nextTransition.getTicksLeft());
 			}
 			return nbt;
@@ -404,16 +417,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
-			state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
-			
 			if (nbt.hasKey("transitionId"))
-				scheduleInTicks(Transitions.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
-		}
-
-
-		@Override
-		public RegenState getState() {
-			return state;
+				scheduleInTicks(Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
 		}
 		
 	}

@@ -46,7 +46,7 @@ public class ClientEventHandler {
 			return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (!cap.getStateManager().getState().isGraceful())
+		if (!cap.getState().isGraceful())
 			return;
 		
 		
@@ -112,7 +112,7 @@ public class ClientEventHandler {
 		EntityPlayer player = e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
-		if (cap.getStateManager().getState() == RegenState.REGENERATING) {
+		if (cap.getState() == RegenState.REGENERATING) {
 			cap.onRenderRegeneratingPlayerPre(e);
 		}
 	}
@@ -123,7 +123,7 @@ public class ClientEventHandler {
 		if (Minecraft.getMinecraft().player == null) return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
-		if (cap.getStateManager().getState() == RegenState.REGENERATING) { //locking user
+		if (cap.getState() == RegenState.REGENERATING) { //locking user
 			MovementInput moveType = e.getMovementInput();
 			moveType.rightKeyDown = false;
 			moveType.leftKeyDown = false;

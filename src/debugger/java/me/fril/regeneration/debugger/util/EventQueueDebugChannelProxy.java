@@ -3,6 +3,7 @@ package me.fril.regeneration.debugger.util;
 import java.awt.EventQueue;
 
 import me.fril.regeneration.debugger.IDebugChannel;
+import me.fril.regeneration.util.RegenState.Transition;
 
 /** Delegates all methods to the {@link #target} using {@link EventQueue#invokeLater(Runnable)} */
 public class EventQueueDebugChannelProxy implements IDebugChannel {
@@ -14,46 +15,38 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 	}
 	
 	
-	
-	/*@Override
-	public void update(long currentTick) {
-		EventQueue.invokeLater(()-> {
-			target.update(currentTick);
-		});
-	}*/
-	
 	@Override
-	public void notifyExecution(String identifier, long tick) {
+	public void notifyLoaded() {
 		EventQueue.invokeLater(()-> {
-			target.notifyExecution(identifier, tick);
+			target.notifyLoaded();
 		});
 	}
 	
 	@Override
-	public void notifyCancel(String identifier, long inTicks, long scheduledTick) {
+	public void notifyExecution(Transition action, long tick) {
 		EventQueue.invokeLater(()-> {
-			target.notifyCancel(identifier, inTicks, scheduledTick);
+			target.notifyExecution(action, tick);
 		});
 	}
 	
 	@Override
-	public void notifySchedule(String identifier, long inTicks, long scheduledTick) {
+	public void notifyCancel(Transition action, long wasInTicks) {
 		EventQueue.invokeLater(()-> {
-			target.notifySchedule(identifier, inTicks, scheduledTick);
+			target.notifyCancel(action, wasInTicks);
 		});
 	}
 	
 	@Override
-	public void notifyScheduleBlank(String identifier) {
+	public void notifySchedule(Transition action, long inTicks) {
 		EventQueue.invokeLater(()-> {
-			target.notifyScheduleBlank(identifier);
+			target.notifySchedule(action, inTicks);
 		});
 	}
 	
 	@Override
-	public void warn(String identifier, String msg) {
+	public void warn(Transition action, String msg) {
 		EventQueue.invokeLater(()-> {
-			target.warn(identifier, msg);
+			target.warn(action, msg);
 		});
 	}
 	

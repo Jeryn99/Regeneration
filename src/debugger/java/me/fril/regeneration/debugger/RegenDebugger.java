@@ -1,5 +1,6 @@
 package me.fril.regeneration.debugger;
 
+import java.awt.EventQueue;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,12 +12,14 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.debugger.util.UnloadedPlayerTempChannelProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 public class RegenDebugger {
-	private final Map<EntityPlayer, PanelPlayer> players = new HashMap<>();
+	private final Map<EntityPlayer, IDebugChannel> channels = new HashMap<>();
+	private final Map<EntityPlayer, PanelPlayer> playerTabs = new HashMap<>();
 	
 	private final JFrame frame;
 	private final JTabbedPane tabs;
@@ -38,17 +41,19 @@ public class RegenDebugger {
 	}
 	
 	public IDebugChannel getChannelFor(EntityPlayer player) {
-		return new UnloadedPlayerTempChannelProxy(() -> {
-			if (players.containsKey(player))
-				return players.get(player).getDebugChannel();
-			else
-				return null;
-		});
+		if (!channels.containsKey(player)) {
+			channels.put(player, new UnloadedPlayerTempChannelProxy(() -> {
+				if (playerTabs.containsKey(player))
+					return playerTabs.get(player).getDebugChannel();
+				else
+					return null;
+			}));
+		}
+		
+		return channels.get(player);
 	}
 	
-	public void open() {
-		frame.setVisible(true);
-	}
+	
 	
 	@SubscribeEvent
 	public void onLogin(PlayerLoggedInEvent ev) {
@@ -56,7 +61,9 @@ public class RegenDebugger {
 		PanelPlayer panel = new PanelPlayer(CapabilityRegeneration.getForPlayer(ev.player));
 		
 		tabs.addTab(name, panel);
-		players.put(ev.player, panel);
+		playerTabs.put(ev.player, panel);
+		
+		getChannelFor(ev.player).notifyLoaded();
 	}
 	
 	@SubscribeEvent
@@ -64,7 +71,18 @@ public class RegenDebugger {
 		String name = ev.player.getGameProfile().getName();
 		
 		tabs.removeTabAt(tabs.indexOfTab(name));
-		players.remove(ev.player);
+		playerTabs.remove(ev.player);
+	}
+	
+	@SubscribeEvent
+	public void onTick(LivingUpdateEvent ev) {
+		playerTabs.forEach((player, panel)->EventQueue.invokeLater(panel::updateState));
+	}
+	
+	
+	
+	public void open() {
+		frame.setVisible(true);
 	}
 	
 	public void dispose() {

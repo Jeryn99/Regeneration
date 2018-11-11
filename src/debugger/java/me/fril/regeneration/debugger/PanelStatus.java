@@ -1,5 +1,6 @@
 package me.fril.regeneration.debugger;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -7,15 +8,15 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.util.RegenState.Transition;
 
 @SuppressWarnings("serial")
 class PanelStatus extends JPanel {
 	private JLabel lblState;
 	private JLabel lblStateVal;
-	
-	private JLabel lblTicks;
-	private JLabel lblTicksVal;
 	
 	private JLabel lblRegensLeft;
 	private JLabel lblRegensLeftVal;
@@ -23,35 +24,16 @@ class PanelStatus extends JPanel {
 	private JLabel lblAnimationProgress;
 	private JLabel lblAnimationProgressVal;
 	
+	private JLabel lblScheduled;
+	private JLabel lblScheduledVal;
+	
 	
 	public PanelStatus() {
 		{
 			GridBagLayout gridBagLayout = new GridBagLayout();
-			gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-			gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
 			gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, 1.0 };
 			gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 			setLayout(gridBagLayout);
-		}
-		
-		lblTicks = new JLabel("Ticks:");
-		{
-			GridBagConstraints gbc_lblTicks = new GridBagConstraints();
-			gbc_lblTicks.anchor = GridBagConstraints.WEST;
-			gbc_lblTicks.insets = new Insets(0, 0, 5, 5);
-			gbc_lblTicks.gridx = 1;
-			gbc_lblTicks.gridy = 1;
-			add(lblTicks, gbc_lblTicks);
-		}
-		
-		lblTicksVal = new JLabel("?");
-		{
-			GridBagConstraints gbc_lblTicksVal = new GridBagConstraints();
-			gbc_lblTicksVal.anchor = GridBagConstraints.EAST;
-			gbc_lblTicksVal.insets = new Insets(0, 0, 5, 5);
-			gbc_lblTicksVal.gridx = 3;
-			gbc_lblTicksVal.gridy = 1;
-			add(lblTicksVal, gbc_lblTicksVal);
 		}
 		
 		lblRegensLeft = new JLabel("Regenerations:");
@@ -60,7 +42,7 @@ class PanelStatus extends JPanel {
 			gbc_lblRegensLeft.anchor = GridBagConstraints.WEST;
 			gbc_lblRegensLeft.insets = new Insets(0, 0, 5, 5);
 			gbc_lblRegensLeft.gridx = 1;
-			gbc_lblRegensLeft.gridy = 2;
+			gbc_lblRegensLeft.gridy = 1;
 			add(lblRegensLeft, gbc_lblRegensLeft);
 		}
 		
@@ -70,7 +52,7 @@ class PanelStatus extends JPanel {
 			gbc_lblRegensLeftVal.anchor = GridBagConstraints.EAST;
 			gbc_lblRegensLeftVal.insets = new Insets(0, 0, 5, 5);
 			gbc_lblRegensLeftVal.gridx = 3;
-			gbc_lblRegensLeftVal.gridy = 2;
+			gbc_lblRegensLeftVal.gridy = 1;
 			add(lblRegensLeftVal, gbc_lblRegensLeftVal);
 		}
 		
@@ -80,7 +62,7 @@ class PanelStatus extends JPanel {
 			gbc_lblState.anchor = GridBagConstraints.WEST;
 			gbc_lblState.insets = new Insets(0, 0, 0, 5);
 			gbc_lblState.gridx = 1;
-			gbc_lblState.gridy = 3;
+			gbc_lblState.gridy = 2;
 			add(lblState, gbc_lblState);
 		}
 		
@@ -90,38 +72,66 @@ class PanelStatus extends JPanel {
 			gbc_lblStateVal.anchor = GridBagConstraints.EAST;
 			gbc_lblStateVal.insets = new Insets(0, 0, 0, 5);
 			gbc_lblStateVal.gridx = 3;
-			gbc_lblStateVal.gridy = 3;
+			gbc_lblStateVal.gridy = 2;
 			add(lblStateVal, gbc_lblStateVal);
 		}
 		
 		lblAnimationProgress = new JLabel("Animation progress:");
 		{
-			GridBagConstraints gbc_lblAnimationTicks = new GridBagConstraints();
-			gbc_lblAnimationTicks.anchor = GridBagConstraints.WEST;
-			gbc_lblAnimationTicks.insets = new Insets(0, 0, 0, 5);
-			gbc_lblAnimationTicks.gridx = 1;
-			gbc_lblAnimationTicks.gridy = 4;
-			add(lblAnimationProgress, gbc_lblAnimationTicks);
+			GridBagConstraints gbc_lblAnimationProgress = new GridBagConstraints();
+			gbc_lblAnimationProgress.anchor = GridBagConstraints.WEST;
+			gbc_lblAnimationProgress.insets = new Insets(0, 0, 0, 5);
+			gbc_lblAnimationProgress.gridx = 1;
+			gbc_lblAnimationProgress.gridy = 3;
+			add(lblAnimationProgress, gbc_lblAnimationProgress);
 		}
 		
 		lblAnimationProgressVal = new JLabel("?");
 		{
-			GridBagConstraints gbc_lblAnimationTicksVal = new GridBagConstraints();
-			gbc_lblAnimationTicksVal.anchor = GridBagConstraints.EAST;
-			gbc_lblAnimationTicksVal.insets = new Insets(0, 0, 0, 5);
-			gbc_lblAnimationTicksVal.gridx = 3;
-			gbc_lblAnimationTicksVal.gridy = 4;
-			add(lblAnimationProgressVal, gbc_lblAnimationTicksVal);
+			GridBagConstraints gbc_lblAnimationProgressVal = new GridBagConstraints();
+			gbc_lblAnimationProgressVal.anchor = GridBagConstraints.EAST;
+			gbc_lblAnimationProgressVal.insets = new Insets(0, 0, 0, 5);
+			gbc_lblAnimationProgressVal.gridx = 3;
+			gbc_lblAnimationProgressVal.gridy = 3;
+			add(lblAnimationProgressVal, gbc_lblAnimationProgressVal);
+		}
+		
+		lblScheduled = new JLabel("Scheduled:");
+		{
+			GridBagConstraints gbc_lblScheduled = new GridBagConstraints();
+			gbc_lblScheduled.anchor = GridBagConstraints.WEST;
+			gbc_lblScheduled.insets = new Insets(0, 0, 0, 5);
+			gbc_lblScheduled.gridx = 1;
+			gbc_lblScheduled.gridy = 4;
+			add(lblScheduled, gbc_lblScheduled);
+		}
+		
+		lblScheduledVal = new JLabel("nothing");
+		{
+			GridBagConstraints gbc_lblScheduledVal = new GridBagConstraints();
+			gbc_lblScheduledVal.anchor = GridBagConstraints.EAST;
+			gbc_lblScheduledVal.insets = new Insets(0, 0, 0, 5);
+			gbc_lblScheduledVal.gridx = 3;
+			gbc_lblScheduledVal.gridy = 4;
+			add(lblScheduledVal, gbc_lblScheduledVal);
 		}
 	}
 	
 	
 	
-	public void updateState(IRegeneration cap, long currentTick) {
-		lblStateVal.setText(cap.getStateManager().getState().toString());
+	public void updateState(IRegeneration cap) {
+		lblStateVal.setText(cap.getState().toString());
 		lblRegensLeftVal.setText(cap.getRegenerationsLeft() + "");
-		//lblTicksVal.setText(cap.getStateManager().getCurrentTick() + ""); NOW add scheduled action stuff
 		lblAnimationProgressVal.setText(Math.round(cap.getAnimationProgress()*100) + "%");
+		
+		Pair<Transition, Long> scheduled = cap.getStateManager().getScheduledEvent();
+		lblScheduledVal.setForeground(scheduled == null ? Color.BLACK : scheduled.getLeft().color);
+		lblScheduledVal.setText(scheduled == null ? "nothing" : scheduled.getLeft() + " in " + scheduled.getRight() + " ticks ("+(round(scheduled.getRight()/20F, 1))+"s)");
+	}
+	
+	private double round(double value, int precision) {
+		int scale = (int) Math.pow(10, precision);
+		return (double) Math.round(value * scale) / scale;
 	}
 	
 }

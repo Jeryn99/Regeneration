@@ -89,7 +89,7 @@ public class RegenConfig { // TODO externalize comment strings?
 		
 	}
 	
-	public static class GracePeriod { //NOW add documentation stuff here
+	public static class GracePeriod { //FIXME add description lang keys
 		
 		@Config.LangKey("")
 		@Config.Comment("")

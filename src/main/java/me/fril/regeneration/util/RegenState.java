@@ -1,5 +1,7 @@
 package me.fril.regeneration.util;
 
+import java.awt.Color;
+
 public enum RegenState {
 	
 	ALIVE,
@@ -10,8 +12,16 @@ public enum RegenState {
 		return this == GRACE || this == GRACE_CRIT;
 	}
 	
-	public enum Transitions {
-		ENTER_CRITICAL, CRITICAL_DEATH, FINISH_REGENERATION
+	public enum Transition {
+		ENTER_CRITICAL(Color.BLUE),
+		CRITICAL_DEATH(Color.RED),
+		FINISH_REGENERATION(Color.GREEN.darker());
+		
+		public final Color color;
+		
+		private Transition(Color col) {
+			this.color = col;
+		}
 	}
 	
 }

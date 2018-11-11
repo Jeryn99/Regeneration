@@ -33,7 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Sub
  * on 16/09/2018.
  */
-public class TypeFiery implements IRegenType { //FIXME when re-logging mid-regen there's nothing rendered (including limb manipulation)
+public class TypeFiery implements IRegenType { //FIXME re-logging mid-regen isn't handled 100% correctly
 	
 	@Override
 	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
@@ -53,7 +53,7 @@ public class TypeFiery implements IRegenType { //FIXME when re-logging mid-regen
 		if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire)
 			player.world.setBlockToAir(player.getPosition());
 		
-		if (capability.getStateManager().getState() == RegenState.REGENERATING) {
+		if (capability.getState() == RegenState.REGENERATING) {
 			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(6)-3); //TODO test if this doesn't damage too much
 		}
 		
