@@ -57,11 +57,10 @@ public class ClientEventHandler {
 		
 		GlStateManager.pushMatrix();
 		
-		if (mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT)) {
-			GlStateManager.translate(0.34F, -0.23F, -0.5F);
-		} else {
-			GlStateManager.translate(-0.32F, -0.23F, -0.5F);
-		}
+		float leftHandedFactor = mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT) ? 1 : -1;
+		GlStateManager.translate(0.33F*leftHandedFactor, -0.23F, -0.5F); //move in place
+		GlStateManager.translate(-.8F*player.swingProgress*leftHandedFactor, -.8F*player.swingProgress, -.4F*player.swingProgress); //compensate for 'punching' motion
+		GlStateManager.translate(-(player.renderArmYaw - player.prevRenderArmYaw)/400F, (player.renderArmPitch - player.prevRenderArmPitch)/500F, 0); //compensate for 'swinging' motion
 		
 		RenderUtil.setupRenderLightning();
 		GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
