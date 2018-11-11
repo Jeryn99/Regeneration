@@ -103,9 +103,7 @@ public class LimbManipulationUtil {
 						if (biped.boxList != null) {
 							for (ModelRenderer modelRenderer : biped.boxList) {
 								if (modelRenderer != null && modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-									if (modelRenderer != null) {
-										((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
-									}
+									((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
 								}
 							}
 						}

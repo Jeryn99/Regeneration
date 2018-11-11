@@ -51,11 +51,13 @@ config.regeneration.loot_regex=Loot pool matcher
 config.regeneration.disable_loot=Disable Fob Watch loot
 config.regeneration.regeneration_knocksback_players=Regeneration knocks back players
 config.regeneration.regeneration_kills_players=Regeneration kills players
+config.regeneration.grace.gracePeriodLength=Grace period length
+config.regeneration.grace.criticalPhaseLength=Critical phase length
 
 regeneration.damagesrc.regen_energy=&s was blasted by Regeneration Energy!
-regeneration.damagesrc.regen_heal=&s died by donating too much Regeneration energy..
+regeneration.damagesrc.regen_heal=&s died by donating too much Regeneration energy...
 
-regeneration.commands.debug.usage=<solace|regen|open> [amount]
+regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
 
 regeneration.trait.current=Current Trait:
 regeneration.trait.messages.clumsy=Clumsy

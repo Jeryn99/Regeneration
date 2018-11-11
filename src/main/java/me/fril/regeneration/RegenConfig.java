@@ -89,14 +89,14 @@ public class RegenConfig { // TODO externalize comment strings?
 		
 	}
 	
-	public static class GracePeriod { //FIXME add description lang keys
+	public static class GracePeriod {
 		
-		@Config.LangKey("")
-		@Config.Comment("")
+		@Config.LangKey("config.regeneration.grace.gracePeriodLength")
+		@Config.Comment("The time in seconds before your grace period enters a critical phase")
 		public int gracePeriodLength = 15 * 60;
 		
-		@Config.LangKey("")
-		@Config.Comment("")
+		@Config.LangKey("config.regeneration.grace.criticalPhaseLength")
+		@Config.Comment("The time in seconds you can stay in the critical phase without dying")
 		public int criticalPhaseLength = 60;
 		
 	}

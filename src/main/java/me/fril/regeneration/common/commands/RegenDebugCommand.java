@@ -28,13 +28,16 @@ public class RegenDebugCommand extends CommandBase {
 		
 		int amount = args.length > 1 ? parseInt(args[1], 0) : -1;
 		
-		//TODO fast forward scheduler command
 		switch (args[0]) {
+			case "fastforward":
+				cap.getStateManager().fastForward();
+				break;
+			
 			case "open":
 				RegenerationMod.DEBUGGER.open();
 				break;
 				
-			case "regen":
+			case "setregens":
 				if (amount > 0) {
 					int difference = amount - cap.getRegenerationsLeft();
 					if (difference > 0)
@@ -61,7 +64,7 @@ public class RegenDebugCommand extends CommandBase {
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		if (args.length < 2)
-			return getListOfStringsMatchingLastWord(args, "solace", "regen", "open");
+			return getListOfStringsMatchingLastWord(args, "fastforward", "setregens", "open");
 		else
 			return Collections.emptyList();
 	}

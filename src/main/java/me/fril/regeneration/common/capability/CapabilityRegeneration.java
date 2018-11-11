@@ -44,7 +44,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private final EntityPlayer player;
 	private int regenerationsLeft;
-	private long animationTicks; //TODO move animationTicks to the type level?
+	private long animationTicks;
 	private IRegenType type = RegenTypes.FIERY;
 	
 	private final RegenerationStateManager stateManager;
@@ -255,7 +255,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		
 		private void scheduleInTicks(Transition transition, long inTicks) {
-			//TODO add checks for state thingies
+			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
+				throw new IllegalStateException("Overwriting non-completed/cancelled transition");
 			nextTransition = new DebuggableScheduledAction(transition, debugChannel, callbacks.get(transition), inTicks);
 		}
 		
@@ -266,7 +267,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		
 		@Override
-		public boolean onKilled() { //TODO add state-validity checkers
+		public boolean onKilled() {
 			if (state == RegenState.ALIVE) {
 				
 				//We're entering grace period...
@@ -401,6 +402,13 @@ public class CapabilityRegeneration implements IRegeneration {
 		/** @deprecated Debug purposes */
 		public Pair<Transition, Long> getScheduledEvent() {
 			return nextTransition == null ? null : Pair.of(nextTransition.action, nextTransition.getTicksLeft());
+		}
+		
+		@Override
+		@Deprecated
+		/** @deprecated Debug purposes */
+		public void fastForward() {
+			while (!nextTransition.tick());
 		}
 		
 		

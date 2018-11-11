@@ -93,18 +93,6 @@ public class ClientEventHandler {
 		}*/
 	}
 	
-	/*@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void cameraUpdate(EntityViewRenderEvent.FOVModifier e) {
-		if (Minecraft.getMinecraft().player == null) return;
-		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		if (cap.getTicksRegenerating() >= 1 && cap.getType() == RegenTypes.LAYDOWN || cap.getSolaceTicks() > 0 && cap.getSolaceTicks() < 200 && !cap.isInGracePeriod()) {
-			e.setFOV(30);
-		}
-	}*/
-	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {

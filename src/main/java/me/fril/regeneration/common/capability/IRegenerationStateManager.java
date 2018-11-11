@@ -14,6 +14,9 @@ public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompou
 	//void onPunchBlock();
 	void onPunchEntity(EntityLivingBase entity);
 	
+	@Deprecated
 	Pair<Transition, Long> getScheduledEvent();
+	@Deprecated
+	void fastForward();
 	
 }
