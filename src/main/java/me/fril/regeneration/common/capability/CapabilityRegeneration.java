@@ -45,6 +45,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final EntityPlayer player;
 	private int regenerationsLeft;
 	private long animationTicks;
+	private RegenState state = RegenState.ALIVE;
 	private IRegenType type = RegenTypes.FIERY;
 	
 	private final RegenerationStateManager stateManager;
@@ -103,6 +104,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
 	
+	
 	@Override
 	public NBTTagCompound serializeNBT() {
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -121,6 +123,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		setStyle(nbt.getCompoundTag("style"));
 		animationTicks = nbt.getLong("animationTicks");
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
+		
+		RegenerationMod.DEBUGGER.getChannelFor(player).out("DESERIALIZING INTO "+state);
 		
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
@@ -223,17 +227,13 @@ public class CapabilityRegeneration implements IRegeneration {
 		return stateManager;
 	}
 	
-	
-	
-	
-	
-	
-	private RegenState state = RegenState.ALIVE;
-	
 	@Override
 	public RegenState getState() {
 		return state;
 	}
+	
+	
+	
 	
 	
 	

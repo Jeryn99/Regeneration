@@ -13,6 +13,7 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.debugger.util.EventQueueDebugChannelProxy;
 import me.fril.regeneration.debugger.util.TextPaneLogger;
 import me.fril.regeneration.util.RegenState.Transition;
+import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings("serial")
 class PanelPlayer extends JPanel {
@@ -71,6 +72,11 @@ class PanelPlayer extends JPanel {
 	
 	public IDebugChannel getDebugChannel() {
 		class DebugChannelImpl implements IDebugChannel { //high-tech "anonymous" class
+			private final Side side;
+			
+			public DebugChannelImpl(Side side) {
+				this.side = side;
+			}
 			
 			@Override
 			public void notifyLoaded() {
@@ -104,15 +110,20 @@ class PanelPlayer extends JPanel {
 				console.println(getPrefix(action) + "WARNING: "+msg, action.color, new Color(255, 255, 153));
 			}
 			
+			@Override
+			public void out(String msg) {
+				console.println("["+side+"  out] " + msg, Color.WHITE, Color.DARK_GRAY);
+			}
+			
 			
 			
 			private String getPrefix(Transition action) {
-				return "["+action+"]    ";
+				return "["+side+"  "+action+"]    ";
 			}
 			
 		}
 		
-		return new EventQueueDebugChannelProxy(new DebugChannelImpl());
+		return new EventQueueDebugChannelProxy(new DebugChannelImpl(capability.getPlayer().world.isRemote ? Side.CLIENT : Side.SERVER));
 	}
 	
 	

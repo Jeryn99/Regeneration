@@ -68,4 +68,12 @@ public class UnloadedPlayerTempChannelProxy implements IDebugChannel {
 			unloadedBuffer.add(()->warn(action, msg));
 	}
 	
+	@Override
+	public void out(String msg) {
+		if (isLoaded())
+			this.channel.out(msg);
+		else
+			unloadedBuffer.add(()->out(msg));
+	}
+	
 }

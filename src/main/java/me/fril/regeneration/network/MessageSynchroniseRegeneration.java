@@ -3,6 +3,7 @@ package me.fril.regeneration.network;
 import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +49,10 @@ public class MessageSynchroniseRegeneration implements IMessage {
 		public IMessage onMessage(MessageSynchroniseRegeneration message, MessageContext ctx) {
 			EntityPlayer player = message.player;
 			if (player != null)
-				Minecraft.getMinecraft().addScheduledTask(()->CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
+				Minecraft.getMinecraft().addScheduledTask(()->{
+					RegenerationMod.DEBUGGER.getChannelFor(player).out("HANDLING SYNC");
+					CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data);
+				});
 			return null;
 		}
 	}

@@ -9,6 +9,7 @@ public interface IDebugChannel {
 	void notifySchedule(Transition action, long inTicks);
 	
 	void warn(Transition action, String msg);
+	void out(String msg);
 	void notifyLoaded();
 	
 }
