@@ -37,55 +37,38 @@ public class LimbManipulationUtil {
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
+					
 					if (field.getType() == ModelBiped.class) {
 						ModelBiped model = (ModelBiped) field.get(layer);
 						ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
-						manipulator.limbs.add(
-								new CustomModelRenderer(model,
-										textureOffsetXField.getInt(modelRenderer),
-										textureOffsetYField.getInt(modelRenderer), modelRenderer,
-										limb.rendererField));
+						manipulator.limbs.add(new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer), textureOffsetYField.getInt(modelRenderer), modelRenderer, limb.rendererField));
+						
 						if (limb == Limb.HEAD) {
 							modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
-							manipulator.limbs.add(
-									new CustomModelRenderer(model,
-											textureOffsetXField.getInt(modelRenderer),
-											textureOffsetYField.getInt(modelRenderer), modelRenderer,
-											limb.secondaryRendererField));
+							manipulator.limbs.add(new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer), textureOffsetYField.getInt(modelRenderer), modelRenderer, limb.secondaryRendererField));
 						}
+						
 					} else if (field.getType() == ModelPlayer.class) {
 						ModelBiped model = (ModelBiped) field.get(layer);
 						ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
-						manipulator.limbs.add(new CustomModelRenderer(model,
-								textureOffsetXField.getInt(modelRenderer),
-								textureOffsetYField.getInt(modelRenderer), modelRenderer,
-								limb.rendererField));
+						manipulator.limbs.add(new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer), textureOffsetYField.getInt(modelRenderer), modelRenderer, limb.rendererField));
 						modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
-						manipulator.limbs.add(
-								new CustomModelRenderer(model,
-										textureOffsetXField.getInt(modelRenderer),
-										textureOffsetYField.getInt(modelRenderer), modelRenderer,
-										limb.secondaryRendererField));
+						manipulator.limbs.add(new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer), textureOffsetYField.getInt(modelRenderer), modelRenderer, limb.secondaryRendererField));
 					}
 				}
 			}
 			
 			ModelPlayer model = renderPlayer.getMainModel();
-			
 			ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
 			
-			manipulator.limbs.add(
-					new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer),
-							textureOffsetYField.getInt(modelRenderer), modelRenderer, limb.rendererField));
+			manipulator.limbs.add(new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer), textureOffsetYField.getInt(modelRenderer), modelRenderer, limb.rendererField));
 			modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
-			manipulator.limbs.add(
-					new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer),
-							textureOffsetYField.getInt(modelRenderer), modelRenderer,
-							limb.secondaryRendererField));
+			manipulator.limbs.add(new CustomModelRenderer(model, textureOffsetXField.getInt(modelRenderer), textureOffsetYField.getInt(modelRenderer), modelRenderer, limb.secondaryRendererField));
 			
 			textureOffsetXField.setAccessible(false);
 			textureOffsetYField.setAccessible(false);
-		} catch (IllegalAccessException ignored) {
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 		}
 		return manipulator;
 	}
@@ -94,27 +77,45 @@ public class LimbManipulationUtil {
 	public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
 		@SuppressWarnings("rawtypes")
 		RenderLivingBase renderer = (RenderLivingBase) Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(event.getEntityPlayer());
-		List<LayerRenderer<AbstractClientPlayer>> layerList = ReflectionHelper
-				.getPrivateValue(RenderLivingBase.class, renderer, 4);
+		List<LayerRenderer<AbstractClientPlayer>> layerList = ReflectionHelper.getPrivateValue(RenderLivingBase.class, renderer, 4);
+		
+		
+		if (event.getRenderer().getMainModel().boxList != null) {
+			for (ModelRenderer modelRenderer : event.getRenderer().getMainModel().boxList) {
+				if (modelRenderer != null && modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+					((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
+				}
+			}
+		}
+		
+		
+		//TODO This entire try, could actually be ditchable? As I patch biped armor in the ClientProxy
 		try {
+			if (layerList == null) return;
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
+				
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
 					
 					//Model Biped
 					if (field.getType() == ModelBiped.class) {
-						if(((ModelBiped) field.get(layer)).boxList != null) {
-							for (ModelRenderer modelRenderer : ((ModelBiped) field.get(layer)).boxList) {
-								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-									((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
+						ModelBiped biped = (ModelBiped) field.get(layer);
+						if (biped.boxList != null) {
+							for (ModelRenderer modelRenderer : biped.boxList) {
+								if (modelRenderer != null && modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+									if (modelRenderer != null) {
+										((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
+									}
 								}
 							}
 						}
-						
-						//Model Player
-					} else if (field.getType() == ModelPlayer.class) {
-						if(((ModelBiped) field.get(layer)).boxList != null) {
-							for (ModelRenderer modelRenderer : ((ModelBiped) field.get(layer)).boxList) {
+					}
+					
+					//Model Player
+					if (field.getType() == ModelPlayer.class) {
+						ModelPlayer modelPlayer = (ModelPlayer) field.get(layer);
+						if (modelPlayer.boxList != null) {
+							for (ModelRenderer modelRenderer : modelPlayer.boxList) {
 								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
 									((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
 								}
@@ -123,15 +124,8 @@ public class LimbManipulationUtil {
 					}
 				}
 			}
-			
-			if(event.getRenderer().getMainModel().boxList != null) {
-				for (ModelRenderer modelRenderer : event.getRenderer().getMainModel().boxList) {
-					if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-						((LimbManipulationUtil.CustomModelRenderer) modelRenderer).reset();
-					}
-				}
-			}
-		} catch (IllegalAccessException ignored) {
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -179,8 +173,7 @@ public class LimbManipulationUtil {
 		private ModelRenderer old;
 		private Field f;
 		
-		private CustomModelRenderer(ModelBiped model, int texOffX, int texOffY, ModelRenderer old,
-				Field field) throws IllegalAccessException {
+		private CustomModelRenderer(ModelBiped model, int texOffX, int texOffY, ModelRenderer old, Field field) throws IllegalAccessException {
 			super(model, "");
 			modelBiped = model;
 			this.old = old;
@@ -199,8 +192,7 @@ public class LimbManipulationUtil {
 				rotateAngleZ = actualZ;
 			}
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(rotationPointX * scale, rotationPointY * scale,
-					rotationPointZ * scale);
+			GlStateManager.translate(rotationPointX * scale, rotationPointY * scale, rotationPointZ * scale);
 			GlStateManager.rotate(rotateAngleZ * 57.295776F, 0.0F, 0.0F, 1.0F);
 			GlStateManager.rotate(rotateAngleY * 57.295776F, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotate(rotateAngleX * 57.295776F, 1.0F, 0.0F, 0.0F);
@@ -208,8 +200,7 @@ public class LimbManipulationUtil {
 			GlStateManager.rotate(rotateAngleX * 57.295776F, -1.0F, 0.0F, 0.0F);
 			GlStateManager.rotate(rotateAngleY * 57.295776F, 0.0F, -1.0F, 0.0F);
 			GlStateManager.rotate(rotateAngleZ * 57.295776F, 0.0F, 0.0F, -1.0F);
-			GlStateManager.translate(-rotationPointX * scale, -rotationPointY * scale,
-					-rotationPointZ * scale);
+			GlStateManager.translate(-rotationPointX * scale, -rotationPointY * scale, -rotationPointZ * scale);
 			super.render(scale);
 			GlStateManager.popMatrix();
 		}
