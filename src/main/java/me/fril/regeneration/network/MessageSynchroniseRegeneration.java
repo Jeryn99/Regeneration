@@ -3,7 +3,6 @@ package me.fril.regeneration.network;
 import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
-import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,17 +36,7 @@ public class MessageSynchroniseRegeneration implements IMessage {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		if (Minecraft.getMinecraft().player == null) { //XXX here
-			System.out.println();
-			System.out.println("NULL PLAYER");
-			System.out.println();
-			return;
-		} else {
-			System.out.println();
-			System.out.println("NON NULL PLAYER");
-			System.out.println();
-		}
-		
+		if (Minecraft.getMinecraft().player == null) return;
 		player = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
 		data = ByteBufUtils.readTag(buf);
 	}
@@ -57,7 +46,7 @@ public class MessageSynchroniseRegeneration implements IMessage {
 		@Override
 		public IMessage onMessage(MessageSynchroniseRegeneration message, MessageContext ctx) {
 			EntityPlayer player = message.player;
-			RegenerationMod.DEBUGGER.getChannelFor(player).out("HANDLING SYNC ("+(player == null)+")");
+			//RegenerationMod.DEBUGGER.getChannelFor(player).out("HANDLING SYNC ("+(player == null)+")"); XXX debug message
 			if (player != null)
 				Minecraft.getMinecraft().addScheduledTask(()->{
 					CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data);

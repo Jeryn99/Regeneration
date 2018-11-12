@@ -33,7 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Sub
  * on 16/09/2018.
  */
-public class TypeFiery implements IRegenType { //FIXME re-logging mid-regen isn't handled 100% correctly
+public class TypeFiery implements IRegenType {
 	
 	@Override
 	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {

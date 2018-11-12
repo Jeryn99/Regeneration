@@ -80,10 +80,10 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	
-	
-	
 	@Override
 	public void tick() {
+		synchronise(); //FIXME ghetto but works I guess
+		
 		if (!player.world.isRemote && state != RegenState.ALIVE) //ticking only on the server for simplicity
 			stateManager.tick();
 		
@@ -101,7 +101,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void synchronise() {
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
-		RegenerationMod.DEBUGGER.getChannelFor(player).out("SEND SYNC");
+		//RegenerationMod.DEBUGGER.getChannelFor(player).out("SEND SYNC"); XXX debug message
 		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
 	
@@ -125,7 +125,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		animationTicks = nbt.getLong("animationTicks");
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
 		
-		RegenerationMod.DEBUGGER.getChannelFor(player).out("DESERIALIZING INTO "+state);
+		//RegenerationMod.DEBUGGER.getChannelFor(player).out("DESERIALIZING INTO "+state); XXX debug message
 		
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));

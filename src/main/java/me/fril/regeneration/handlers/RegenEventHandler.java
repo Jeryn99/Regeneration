@@ -56,6 +56,7 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void playerTracking(PlayerEvent.StartTracking event) {
+		//RegenerationMod.DEBUGGER.getChannelFor(event.getEntityPlayer()).out("TRACKING"); XXX debug message
 		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
 	}
 	
@@ -66,12 +67,6 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		CapabilityRegeneration.getForPlayer(event.player).synchronise();
-	}
-	
-	@SubscribeEvent
-	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		RegenerationMod.DEBUGGER.getChannelFor(event.player).out("LOGIN");
 		CapabilityRegeneration.getForPlayer(event.player).synchronise();
 	}
 	
