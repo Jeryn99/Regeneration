@@ -21,7 +21,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
 
-public class CustomizerGui extends GuiContainer { //FIXME there's a color handled wrongly somewhere
+public class CustomizerGui extends GuiContainer {
 	public static final int ID = 0;
 	
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
@@ -50,8 +50,8 @@ public class CustomizerGui extends GuiContainer { //FIXME there's a color handle
 		initialPrimary = cap.getPrimaryColor();
 		initialSecondary = cap.getSecondaryColor();
 		
-		float primaryRed = (float)initialPrimary.x, primaryGreen = (float)initialPrimary.y, primaryBlue = (float)initialPrimary.y;
-		float secondaryRed = (float)initialSecondary.x, secondaryGreen = (float)initialSecondary.y, secondaryBlue = (float)initialSecondary.y;
+		float primaryRed = (float)initialPrimary.x, primaryGreen = (float)initialPrimary.y, primaryBlue = (float)initialPrimary.z;
+		float secondaryRed = (float)initialSecondary.x, secondaryGreen = (float)initialSecondary.y, secondaryBlue = (float)initialSecondary.z;
 		
 		final int btnW = 50, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
