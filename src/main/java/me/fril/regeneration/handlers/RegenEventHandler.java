@@ -71,7 +71,7 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		RegenerationMod.DEBUGGER.getChannelFor(event.player).out("SEND SYNC");
+		RegenerationMod.DEBUGGER.getChannelFor(event.player).out("LOGIN");
 		CapabilityRegeneration.getForPlayer(event.player).synchronise();
 	}
 	

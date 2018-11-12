@@ -101,6 +101,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void synchronise() {
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
+		RegenerationMod.DEBUGGER.getChannelFor(player).out("SEND SYNC");
 		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
 	
