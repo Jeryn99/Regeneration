@@ -1,18 +1,13 @@
 package me.fril.regeneration.util;
 
+import me.fril.regeneration.client.gui.advancements.ToastRegeneration;
 import me.fril.regeneration.client.sound.MovingSoundPlayer;
 import me.fril.regeneration.network.MessageSetPerspective;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIAttackRanged;
-import net.minecraft.entity.ai.EntityAIAttackRangedBow;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIOwnerHurtByTarget;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.EntityAIZombieAttack;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -76,4 +71,8 @@ public class PlayerUtil {
 		}
 	}
 	
+	@SideOnly(Side.CLIENT)
+	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle, RegenState regenState) {
+		Minecraft.getMinecraft().getToastGui().add(new ToastRegeneration(title, subtitle, regenState));
+	}
 }

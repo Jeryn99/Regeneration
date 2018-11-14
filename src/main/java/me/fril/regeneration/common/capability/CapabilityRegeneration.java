@@ -1,12 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
@@ -16,18 +9,29 @@ import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageSynchronisationRequest;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
+import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenState.Transition;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Mod;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Sub
@@ -39,7 +43,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@CapabilityInject(IRegeneration.class)
 	public static final Capability<IRegeneration> CAPABILITY = null;
 	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
-	//private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
+	private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
 	
 	
 	private final EntityPlayer player;
@@ -53,7 +57,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	
-	//private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
+	private AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
 	
 	
 	
@@ -281,14 +285,18 @@ public class CapabilityRegeneration implements IRegeneration {
 				//We're entering grace period...
 				scheduleInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePeriodLength);
 				state = RegenState.GRACE;
+				PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
+				
+				
+				if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
+					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
+				}
+				
 				synchronise();
 				return true;
 				
-				/*if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) { TODO reimplement slowness in grace period (although maybe a bit less)
-					player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier); SOON move to external event handler
-				}
 				
-				player.clearActivePotions(); SOON move to external event handler
+				/*player.clearActivePotions(); SOON move to external event handler
 				player.extinguish();
 				player.setArrowCountInEntity(0);
 				
@@ -313,7 +321,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public void onPunchEntity(EntityLivingBase entity) {
 			//We're healing mobs...
-			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth()) { //... check if we're in grace and if the mob needs helath
+			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth()) { //... check if we're in grace and if the mob needs health
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
 				player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded);
@@ -343,7 +351,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			scheduleInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
 			type.onStartRegeneration(player, CapabilityRegeneration.this);
+			extractRegeneration(1);
 			synchronise();
+			
+			//TODO Make this a packet, it will crash servers otherwise, this is just for testing
+			PlayerUtil.createToast(new TextComponentTranslation("regeneration.toast.regenerations_left"), new TextComponentTranslation(getRegenerationsLeft() + ""), RegenState.REGENERATING);
 			
 			/*player.dismountRidingEntity(); SOON move to external event handler
 			player.removePassengers();

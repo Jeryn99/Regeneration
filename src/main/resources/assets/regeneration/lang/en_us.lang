@@ -70,3 +70,7 @@ regeneration.trait.messages.sentimental=Sentimental
 regeneration.trait.messages.health=Extended Health
 regeneration.trait.messages.strong=Strength
 regeneration.trait.messages.psycho=Psycho
+
+regeneration.toast.regenerations_left=Regenerations Left
+regeneration.toast.enter_grace=You are now entering Grace period!
+regeneration.toast.press_regen=Press %s to regenerate!

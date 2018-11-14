@@ -25,7 +25,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 		
 		boolean executed = super.tick();
 		if (willExecute != executed)
-			throw new IllegalStateException("Execution procpect wasn't true (prospect: "+willExecute+", result: "+executed+", cTick: "+currentTick+", scheduledTick: "+scheduledTick);
+			throw new IllegalStateException("Execution prospect wasn't true (prospect: " + willExecute + ", result: " + executed + ", cTick: " + currentTick + ", scheduledTick: " + scheduledTick);
 		
 		return executed;
 	}
