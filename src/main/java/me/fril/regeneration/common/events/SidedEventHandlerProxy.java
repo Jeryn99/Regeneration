@@ -29,7 +29,7 @@ public class SidedEventHandlerProxy {
 	}
 	
 	@SubscribeEvent
-	public void onEvent(RegenStateBaseEvent ev) throws IllegalAccessException, InvocationTargetException { //XXX debug messages
+	public void onEvent(RegenStateBaseEvent ev) throws IllegalAccessException, InvocationTargetException {
 		Map<Class<?>, Method> cache = serverTest.test(ev) ? serverMethodCache : clientMethodCache;
 		
 		if (cache.containsKey(ev.getClass())) {
@@ -52,7 +52,6 @@ public class SidedEventHandlerProxy {
 			if (cache.containsKey(m.getParameterTypes()[0]))
 				throw new IllegalStateException("Duplicate event handler for "+m.getParameterTypes()[0].getSimpleName()+" in "+handlerClass.getSimpleName());
 			
-			System.out.println("Putting on "+handlerClass.getSimpleName()+":"+m.getParameterTypes()[0].getSimpleName()+": "+m.getName());
 			cache.put(m.getParameterTypes()[0], m);
 		}
 		

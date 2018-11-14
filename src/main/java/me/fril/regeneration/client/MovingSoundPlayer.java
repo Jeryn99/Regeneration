@@ -2,6 +2,8 @@ package me.fril.regeneration.client;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.handlers.RegenObjects;
+import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -14,6 +16,8 @@ import net.minecraft.util.math.MathHelper;
  * on 20/09/2018.
  */
 public class MovingSoundPlayer extends MovingSound {
+	//NOW increasing pitch of critical sound
+	//NOW fade in hand glow
 	
 	private final EntityPlayer player;
 	private float distance = 0.0F;
@@ -47,21 +51,22 @@ public class MovingSoundPlayer extends MovingSound {
 		ResourceLocation sound = soundCheck.getSoundName();
 		boolean stopCondition = false;
 		
-		//NOW figure out sounds
-		
-		//NOTE shouldn't heartbeat be a player-only sound?
+		//SOON clean sound player
+		//FIXME ConcurrentModificationException's in subtitle renderer when ff-ing to crit, probably because we're modifying it here
+		//SOON shouldn't heartbeat be a player-only sound?
 		//I wish I could use a switch here...
-		/*if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //NOW play heartbeat in grace/crit?
-			stopCondition = cap.getState().isGracefulz();
+		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //NOW play heartbeat in grace/crit?
+			stopCondition = !cap.getState().isGraceful();
 		} else if (sound.equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
-			stopCondition = cap.getState() != RegenState.GRACE_GLOWING;
+			stopCondition = !cap.getState().isGraceful();
 			volume = 0.3F;
 		} else if (sound.equals(RegenObjects.Sounds.CRITICAL_STAGE.getSoundName())) {
 			stopCondition = cap.getState() != RegenState.GRACE_CRIT;
 		} else if (sound.equals(RegenObjects.Sounds.REGENERATION.getSoundName())) {
 			stopCondition = cap.getState() != RegenState.REGENERATING;
-		}*/
+		}
 		
-		if (stopCondition) donePlaying = true;
+		if (stopCondition)
+			donePlaying = true;
 	}
 }

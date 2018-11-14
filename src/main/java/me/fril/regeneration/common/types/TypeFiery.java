@@ -2,7 +2,6 @@ package me.fril.regeneration.common.types;
 
 import java.util.Random;
 
-import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.layers.LayerRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.LimbManipulationUtil;
@@ -54,7 +53,7 @@ public class TypeFiery implements IRegenType {
 			player.world.setBlockToAir(player.getPosition());
 		
 		if (capability.getState() == RegenState.REGENERATING) {
-			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(6)-3); //CHECK test if this doesn't damage too much
+			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(6)-3); //FIXME this damages WAY too much
 		}
 		
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
@@ -180,7 +179,7 @@ public class TypeFiery implements IRegenType {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) {
+	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) { //FIXME is there a memory leak somewhere? FPS decreases the longer the game is running
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
 		for (int i = 0; i < 8; i++) {
@@ -200,20 +199,14 @@ public class TypeFiery implements IRegenType {
 	
 	
 	
-	
 	@Override
 	public String getName() {
 		return "FIERY";
 	}
 	
 	@Override
-	public int getAnimationLength() {
+	public int getAnimationLength() { //FIXME shorten to be in line with the music (don't forget to update 'p' and 'r'!)
 		return 10 * 20; //10 seconds of 20 ticks
 	}
-	
-	/*@Override
-	public SoundEvent getSound() {
-		return RegenObjects.Sounds.REGENERATION;
-	}*/
 	
 }

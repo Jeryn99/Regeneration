@@ -33,16 +33,17 @@ public class RegenStateEventHandler {
 	
 	
 	
+	//FIXME sounds don't play when logging mid-regen
 	public static class Server {
 		
 		private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
 		private static final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
 		
 		@SubscribeEvent
-		public static void onEnterGrace(RegenEnterGraceEvent ev) {
-			//NOW some healing stuff, thoughness?
-			//NOW re-implement slowness, only in grace?
-			//NOW yellow vingette to make sure there's always a grace indicator? Or the heart timer?
+		public static void onEnterGrace(RegenEnterGraceEvent ev) { //FIXME there's a lag spike the first time this happens
+			//NOW proper health regeneration system (half heart + thoughness?)
+			//SOON re-implement slowness, only in grace?
+			//SOON yellow vingette to make sure there's always a grace indicator? Or the heart timer?
 			
 			PlayerUtil.playMovingSound(ev.player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
 		}
@@ -88,7 +89,7 @@ public class RegenStateEventHandler {
 			}
 			
 			if (RegenConfig.resetOxygen)
-				ev.player.setAir(10); //CHECK what's the max for this?
+				ev.player.setAir(10); //FIXME doesn't work apparently
 			
 			ev.player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
 			
@@ -125,7 +126,7 @@ public class RegenStateEventHandler {
 		@SubscribeEvent
 		public static void onGoCritical(RegenGoCriticalEvent ev) {
 			//NOW toast notification for entering critical phase
-			//NOW red vingette in critical phase
+			//SOON red vingette in critical phase
 		}
 		
 	}

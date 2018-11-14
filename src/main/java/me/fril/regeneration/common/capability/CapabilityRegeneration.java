@@ -47,7 +47,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private final EntityPlayer player;
 	private int regenerationsLeft;
-	private long animationTicks;
+	private long animationTicks; //NOW move to type level
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType type = RegenTypes.FIERY;
 	
@@ -94,8 +94,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, this);
-			animationTicks++; //NOW handle in event handler (client) for regen tick
-		} else animationTicks = 0; //NOW handle in event handler (client) for finished regeneration
+			animationTicks++;
+		} else animationTicks = 0;
 	}
 	
 	
@@ -277,7 +277,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		@Override
 		public boolean onKilled() {
-			if (state == RegenState.ALIVE) {
+			if (state == RegenState.ALIVE) { //FIXME check if we can regenerate
 				
 				//We're entering grace period...
 				scheduleInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePeriodLength);
@@ -302,8 +302,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			} else throw new IllegalStateException("Unknown state: "+state);
 		}
 		
-		@Override //NOW move to other event handler
-		public void onPunchEntity(EntityLivingBase entity) { //CHECK test this
+		@Override
+		public void onPunchEntity(EntityLivingBase entity) {
 			//We're healing mobs...
 			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth()) { //... check if we're in grace and if the mob needs health
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
