@@ -123,7 +123,7 @@ public class LimbManipulationUtil {
 				}
 			}
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			e.printStackTrace(); //XXX why are we ignoring this?
 		}
 	}
 	

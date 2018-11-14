@@ -39,7 +39,7 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public static void onRenderHand(RenderHandEvent e) { //TODO yellow vingette to make sure there's always a grace indicator? Or the heart timer?
+	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		float f = 0.2F;

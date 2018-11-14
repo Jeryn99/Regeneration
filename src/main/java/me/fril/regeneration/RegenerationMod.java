@@ -5,6 +5,7 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
 import me.fril.regeneration.common.commands.RegenDebugCommand;
+import me.fril.regeneration.common.events.RegenStateEventHandler;
 import me.fril.regeneration.debugger.RegenDebugger;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
@@ -45,8 +46,16 @@ public class RegenerationMod {
 	public void init(FMLInitializationEvent event) {
 		proxy.init();
 		NetworkHandler.init();
+		RegenStateEventHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 	}
+	
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent e) {
+		proxy.postInit();
+	}
+	
+	
 	
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
@@ -61,11 +70,6 @@ public class RegenerationMod {
 		MinecraftForge.EVENT_BUS.unregister(DEBUGGER);
 		DEBUGGER.dispose();
 		DEBUGGER = null;
-	}
-	
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent e) {
-		proxy.postInit();
 	}
 	
 }

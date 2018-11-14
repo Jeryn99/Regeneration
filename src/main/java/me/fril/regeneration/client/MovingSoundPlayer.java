@@ -47,11 +47,11 @@ public class MovingSoundPlayer extends MovingSound {
 		ResourceLocation sound = soundCheck.getSoundName();
 		boolean stopCondition = false;
 		
-		//SOON figure out sounds
+		//NOW figure out sounds
 		
 		//NOTE shouldn't heartbeat be a player-only sound?
 		//I wish I could use a switch here...
-		/*if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //TODO play heartbeat in critical phase
+		/*if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //NOW play heartbeat in grace/crit?
 			stopCondition = cap.getState().isGracefulz();
 		} else if (sound.equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
 			stopCondition = cap.getState() != RegenState.GRACE_GLOWING;

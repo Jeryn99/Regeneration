@@ -54,7 +54,7 @@ public class TypeFiery implements IRegenType {
 			player.world.setBlockToAir(player.getPosition());
 		
 		if (capability.getState() == RegenState.REGENERATING) {
-			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(6)-3); //TODO test if this doesn't damage too much
+			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(6)-3); //CHECK test if this doesn't damage too much
 		}
 		
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
