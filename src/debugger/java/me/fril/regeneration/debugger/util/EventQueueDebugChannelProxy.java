@@ -49,12 +49,28 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 			target.out(msg);
 		});
 	}
-
-
+	
+	
 	@Override
 	public void notifyLoaded() {
 		EventQueue.invokeLater(()-> {
 			target.notifyLoaded();
+		});
+	}
+
+
+	@Override
+	public void warn(String msg) {
+		EventQueue.invokeLater(()-> {
+			target.warn(msg);
+		});
+	}
+
+
+	@Override
+	public void out(Transition action, String msg) {
+		EventQueue.invokeLater(()-> {
+			target.out(action, msg);
 		});
 	}
 	

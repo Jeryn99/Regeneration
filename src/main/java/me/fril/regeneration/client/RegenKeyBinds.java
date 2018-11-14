@@ -16,7 +16,7 @@ public class RegenKeyBinds {
 	public static KeyBinding REGEN_NOW;
 	
 	public static void init() {
-		REGEN_NOW = new KeyBinding(I18n.translateToLocalFormatted("regeneration.keybinds.just_regen"), Keyboard.KEY_R, RegenerationMod.NAME);
+		REGEN_NOW = new KeyBinding(I18n.translateToLocalFormatted("regeneration.keybinds.regenerate"), Keyboard.KEY_R, RegenerationMod.NAME);
 		ClientRegistry.registerKeyBinding(REGEN_NOW);
 	}
 	

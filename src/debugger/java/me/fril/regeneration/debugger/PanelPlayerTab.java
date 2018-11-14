@@ -102,8 +102,19 @@ class PanelPlayerTab extends JPanel {
 			}
 			
 			@Override
+			public void warn(String msg) {
+				console.println("WARNING: "+msg, Color.BLACK, new Color(255, 255, 153));
+			}
+			
+			
+			@Override
+			public void out(Transition action, String msg) {
+				console.println(getPrefix(action)+msg, action.color, new Color(255, 255, 153));
+			}
+			
+			@Override
 			public void out(String msg) {
-				console.println("[out] " + msg, Color.WHITE, Color.DARK_GRAY);
+				console.println("[OUT]    " + msg, Color.WHITE, Color.DARK_GRAY);
 			}
 			
 			

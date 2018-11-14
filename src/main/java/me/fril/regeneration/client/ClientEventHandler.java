@@ -7,6 +7,8 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
+import me.fril.regeneration.network.MessageTriggerRegeneration;
+import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -75,22 +77,12 @@ public class ClientEventHandler {
 	@SideOnly(Side.CLIENT)
 	public static void onClientTick(TickEvent.ClientTickEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
-		if (player == null || Minecraft.getMinecraft().world == null) return;
-		//SOON handle onClientTick (keybinds)
+		if (player == null || Minecraft.getMinecraft().world == null)
+			return;
 		
-		/* apparently there's no check if we're actually in a situation where we have to choose between grace/immediate regen, that happens on the server side (packet handler)
-		if (RegenKeyBinds.ENTER_GRACE.isPressed()) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageRegenChoice(true));
-			
-			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-			if (cap.getSolaceTicks() > 0 && cap.getTicksRegenerating() == 0) { // player has chosen to enter grace period, set the perspective back to 0
-				Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-			}
+		if (RegenKeyBinds.REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
+			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration(player));
 		}
-		
-		if (RegenKeyBinds.REGEN_NOW.isPressed()) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageRegenChoice(false));
-		}*/
 	}
 	
 	@SubscribeEvent

@@ -238,6 +238,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	
+	@Override
+	public void triggerRegeneration() { //TODO message in chat?
+		if (player.world.isRemote)
+			throw new IllegalStateException("Triggering regeneration via capability instance on the client side");
+		stateManager.triggerRegeneration();
+	}
+	
+	
+	
+	
 	
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
@@ -326,7 +336,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		
 		//NOW post events to client to actually act upon the regeneration
-		//This'll only be called from tick which is serverside only TODO javadoc all these things
 		private void triggerRegeneration() {
 			//We're starting a regeneration!
 			state = RegenState.REGENERATING;

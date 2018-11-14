@@ -35,5 +35,5 @@ public class DebuggableScheduledAction extends ScheduledAction {
 		RegenerationMod.DEBUGGER.getChannelFor(player).notifyCancel(action, scheduledTick-currentTick);
 		super.cancel();
 	}
-
+	
 }

@@ -14,10 +14,12 @@ public class NetworkHandler {
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(RegenerationMod.MODID);
 	
 	public static void init() {
-		INSTANCE.registerMessage(MessageSaveStyle.Handler.class, MessageSaveStyle.class, 1, Side.SERVER);
-		INSTANCE.registerMessage(MessageSetPerspective.Handler.class, MessageSetPerspective.class, 2, Side.CLIENT);
-		INSTANCE.registerMessage(MessageSynchronisationRequest.Handler.class, MessageSynchronisationRequest.class, 3, Side.SERVER);
-		INSTANCE.registerMessage(MessageSynchroniseRegeneration.Handler.class, MessageSynchroniseRegeneration.class, 4, Side.CLIENT);
+		int discrimiator = 1;
+		INSTANCE.registerMessage(MessageSaveStyle.Handler.class, MessageSaveStyle.class, discrimiator++, Side.SERVER);
+		INSTANCE.registerMessage(MessageSetPerspective.Handler.class, MessageSetPerspective.class, discrimiator++, Side.CLIENT);
+		INSTANCE.registerMessage(MessageTriggerRegeneration.Handler.class, MessageTriggerRegeneration.class, discrimiator++, Side.SERVER);
+		INSTANCE.registerMessage(MessageSynchronisationRequest.Handler.class, MessageSynchronisationRequest.class, discrimiator++, Side.SERVER);
+		INSTANCE.registerMessage(MessageSynchroniseRegeneration.Handler.class, MessageSynchroniseRegeneration.class, discrimiator++, Side.CLIENT);
 	}
 	
 }
