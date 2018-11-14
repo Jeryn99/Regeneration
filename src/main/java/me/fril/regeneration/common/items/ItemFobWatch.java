@@ -54,9 +54,9 @@ public class ItemFobWatch extends Item {
 			if (cap.canRegenerate())
 				PlayerUtil.sendHotbarMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
 			else if (player.world.isRemote) {
-				RegenerationMod.DEBUGGER.getChannelFor(player).out(player.getName() + " is now a timelord.");
-			}
+				RegenerationMod.DEBUGGER.getChannelFor(player).out(player.getName() + " is now a timelord");
 				PlayerUtil.sendHotbarMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
+			}
 			
 			cap.receiveRegenerations(used);
 			

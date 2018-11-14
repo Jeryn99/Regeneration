@@ -1,8 +1,7 @@
-package me.fril.regeneration.client.sound;
+package me.fril.regeneration.client;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.handlers.RegenObjects;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -47,11 +46,6 @@ public class MovingSoundPlayer extends MovingSound {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		ResourceLocation sound = soundCheck.getSoundName();
 		boolean stopCondition = false;
-		
-		if (sound.toString().equals(RegenObjects.Sounds.HAND_GLOW.toString())) {
-			stopCondition = !cap.getState().isGraceful();
-			volume = 0.1F;
-		}
 		
 		//SOON figure out sounds
 		

@@ -1,6 +1,6 @@
 package me.fril.regeneration.util;
 
-import java.awt.*;
+import java.awt.Color;
 
 public enum RegenState {
 	
@@ -19,7 +19,7 @@ public enum RegenState {
 		
 		public final Color color;
 		
-		Transition(Color col) {
+		private Transition(Color col) {
 			this.color = col;
 		}
 	}

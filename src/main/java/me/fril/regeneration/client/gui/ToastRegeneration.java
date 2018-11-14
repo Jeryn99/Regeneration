@@ -1,4 +1,4 @@
-package me.fril.regeneration.client.gui.advancements;
+package me.fril.regeneration.client.gui;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
