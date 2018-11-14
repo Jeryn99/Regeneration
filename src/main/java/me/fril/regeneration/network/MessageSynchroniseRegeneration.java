@@ -46,7 +46,6 @@ public class MessageSynchroniseRegeneration implements IMessage {
 		@Override
 		public IMessage onMessage(MessageSynchroniseRegeneration message, MessageContext ctx) {
 			EntityPlayer player = message.player;
-			//RegenerationMod.DEBUGGER.getChannelFor(player).out("HANDLING SYNC ("+(player == null)+")"); XXX debug message
 			if (player != null)
 				Minecraft.getMinecraft().addScheduledTask(()->{
 					CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data);
@@ -54,4 +53,5 @@ public class MessageSynchroniseRegeneration implements IMessage {
 			return null;
 		}
 	}
+	
 }

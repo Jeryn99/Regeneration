@@ -56,7 +56,6 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void playerTracking(PlayerEvent.StartTracking event) {
-		//RegenerationMod.DEBUGGER.getChannelFor(event.getEntityPlayer()).out("TRACKING"); XXX debug message
 		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
 	}
 	

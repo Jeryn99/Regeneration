@@ -40,7 +40,7 @@ public class RegenDebugger {
 		frame.setVisible((boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"));
 	}
 	
-	public IDebugChannel getChannelFor(EntityPlayer player) {
+	public IDebugChannel getChannelFor(EntityPlayer player) { //FIXME channels are not properly sided
 		if (!channels.containsKey(player)) {
 			channels.put(player, new UnloadedPlayerTempChannelProxy(() -> {
 				if (playerTabs.containsKey(player))

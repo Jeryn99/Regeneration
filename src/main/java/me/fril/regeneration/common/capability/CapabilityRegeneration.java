@@ -14,6 +14,7 @@ import me.fril.regeneration.common.types.RegenTypes;
 import me.fril.regeneration.debugger.IDebugChannel;
 import me.fril.regeneration.debugger.util.DebuggableScheduledAction;
 import me.fril.regeneration.handlers.RegenObjects;
+import me.fril.regeneration.network.MessageSynchronisationRequest;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
@@ -79,10 +80,14 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	
+	private boolean setup = false;
 	
 	@Override
 	public void tick() {
-		synchronise(); //FIXME ghetto but works I guess
+		if (!setup && player.world.isRemote) {
+			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player));
+			setup = true;
+		}
 		
 		if (!player.world.isRemote && state != RegenState.ALIVE) //ticking only on the server for simplicity
 			stateManager.tick();
@@ -101,7 +106,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void synchronise() {
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
-		//RegenerationMod.DEBUGGER.getChannelFor(player).out("SEND SYNC"); XXX debug message
 		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
 	
@@ -124,8 +128,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		setStyle(nbt.getCompoundTag("style"));
 		animationTicks = nbt.getLong("animationTicks");
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
-		
-		//RegenerationMod.DEBUGGER.getChannelFor(player).out("DESERIALIZING INTO "+state); XXX debug message
 		
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
