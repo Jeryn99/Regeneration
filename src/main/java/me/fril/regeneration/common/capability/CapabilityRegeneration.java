@@ -11,7 +11,6 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.RegenTypes;
-import me.fril.regeneration.debugger.IDebugChannel;
 import me.fril.regeneration.debugger.util.DebuggableScheduledAction;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageSynchronisationRequest;
@@ -242,14 +241,10 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
-		private final IDebugChannel debugChannel;
 		private final Map<Transition, Runnable> callbacks;
-		
 		private DebuggableScheduledAction nextTransition;
 		
 		private RegenerationStateManager() {
-			this.debugChannel = RegenerationMod.DEBUGGER.getChannelFor(player);
-			
 			this.callbacks = new HashMap<>();
 			callbacks.put(Transition.ENTER_CRITICAL, this::enterCriticalPhase);
 			callbacks.put(Transition.CRITICAL_DEATH, this::midSequenceKill);
@@ -260,7 +255,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleInTicks(Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting non-completed/cancelled transition");
-			nextTransition = new DebuggableScheduledAction(transition, debugChannel, callbacks.get(transition), inTicks);
+			nextTransition = new DebuggableScheduledAction(transition, player, callbacks.get(transition), inTicks);
 		}
 		
 		private void scheduleInSeconds(Transition transition, long inSeconds) {

@@ -3,13 +3,16 @@ package me.fril.regeneration.debugger;
 import java.awt.EventQueue;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
+import com.mojang.authlib.GameProfile;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.debugger.util.UnloadedPlayerTempChannelProxy;
+import me.fril.regeneration.debugger.util.UnloadedPlayerBufferChannel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -18,8 +21,10 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 public class RegenDebugger {
-	private final Map<EntityPlayer, IDebugChannel> channels = new HashMap<>();
-	private final Map<EntityPlayer, PanelPlayer> playerTabs = new HashMap<>();
+	private final Map<GameProfile, IDebugChannel> channelz = new HashMap<>();
+	private final Map<GameProfile, PanelPlayerTab> playerTabz = new HashMap<>();
+	
+	private final Map<EntityPlayer, UnloadedPlayerBufferChannel> channelBuffer = new WeakHashMap<>();
 	
 	private final JFrame frame;
 	private final JTabbedPane tabs;
@@ -40,43 +45,55 @@ public class RegenDebugger {
 		frame.setVisible((boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"));
 	}
 	
-	public IDebugChannel getChannelFor(EntityPlayer player) { //FIXME channels are not properly sided
-		if (!channels.containsKey(player)) {
-			channels.put(player, new UnloadedPlayerTempChannelProxy(() -> {
-				if (playerTabs.containsKey(player))
-					return playerTabs.get(player).getDebugChannel();
-				else
-					return null;
-			}));
+	/** <B>NEVER EVER SAVE THE RESULT OF THIS IN A REFERENCE!</B> */
+	public IDebugChannel getChannelFor(EntityPlayer player) {
+		if (player.getGameProfile() != null && channelz.containsKey(player.getGameProfile())) {
+			return channelz.get(player.getGameProfile());
+		} else {
+			channelBuffer.putIfAbsent(player, new UnloadedPlayerBufferChannel());
+			return channelBuffer.get(player);
 		}
-		
-		return channels.get(player);
 	}
 	
 	
 	
 	@SubscribeEvent
 	public void onLogin(PlayerLoggedInEvent ev) {
-		String name = ev.player.getGameProfile().getName();
-		PanelPlayer panel = new PanelPlayer(CapabilityRegeneration.getForPlayer(ev.player));
+		GameProfile gp = ev.player.getGameProfile();
+		PanelPlayerTab panel = new PanelPlayerTab(gp);
 		
-		tabs.addTab(name, panel);
-		playerTabs.put(ev.player, panel);
+		tabs.addTab(gp.getName(), panel);
+		playerTabz.put(gp, panel);
 		
-		getChannelFor(ev.player).notifyLoaded();
+		IDebugChannel ch = panel.createChannel();
+		channelz.put(gp, ch);
+		if (channelBuffer.containsKey(ev.player)) {
+			channelBuffer.get(ev.player).flush(ch);
+			channelBuffer.remove(ev.player);
+		}
+		ch.notifyLoaded();
 	}
 	
 	@SubscribeEvent
 	public void onLogout(PlayerLoggedOutEvent ev) {
-		String name = ev.player.getGameProfile().getName();
+		GameProfile gp = ev.player.getGameProfile();
 		
-		tabs.removeTabAt(tabs.indexOfTab(name));
-		playerTabs.remove(ev.player);
+		tabs.removeTabAt(tabs.indexOfTab(gp.getName()));
+		playerTabz.remove(gp);
+		
+		if (channelBuffer.containsKey(ev.player))
+			throw new IllegalStateException("Logging out player's buffer has never been flushed");
 	}
 	
 	@SubscribeEvent
 	public void onTick(LivingUpdateEvent ev) {
-		playerTabs.forEach((player, panel)->EventQueue.invokeLater(panel::updateState));
+		if (ev.getEntity().world.isRemote)
+			return;
+		
+		if (ev.getEntityLiving() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) ev.getEntityLiving();
+			EventQueue.invokeLater(()->playerTabz.get(player.getGameProfile()).updateLabels(CapabilityRegeneration.getForPlayer(player)));
+		}
 	}
 	
 	

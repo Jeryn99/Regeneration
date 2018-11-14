@@ -1,26 +1,27 @@
 package me.fril.regeneration.debugger.util;
 
-import me.fril.regeneration.debugger.IDebugChannel;
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.util.RegenState.Transition;
 import me.fril.regeneration.util.ScheduledAction;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class DebuggableScheduledAction extends ScheduledAction {
 	public final Transition action;
-	private final IDebugChannel debugChannel;
+	private final EntityPlayer player;
 	
-	public DebuggableScheduledAction(Transition action, IDebugChannel debugChannel, Runnable callback, long inTicks) {
+	public DebuggableScheduledAction(Transition action, EntityPlayer player, Runnable callback, long inTicks) {
 		super(callback, inTicks);
 		this.action = action;
-		this.debugChannel = debugChannel;
+		this.player = player;
 		
-		debugChannel.notifySchedule(action, inTicks);
+		RegenerationMod.DEBUGGER.getChannelFor(player).notifySchedule(action, inTicks);
 	}
 	
 	@Override
 	public boolean tick() {
 		boolean willExecute = currentTick == scheduledTick;
 		if (willExecute)
-			debugChannel.notifyExecution(action, currentTick);
+			RegenerationMod.DEBUGGER.getChannelFor(player).notifyExecution(action, currentTick);
 		
 		boolean executed = super.tick();
 		if (willExecute != executed)
@@ -31,7 +32,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 	
 	@Override
 	public void cancel() {
-		debugChannel.notifyCancel(action, scheduledTick-currentTick);
+		RegenerationMod.DEBUGGER.getChannelFor(player).notifyCancel(action, scheduledTick-currentTick);
 		super.cancel();
 	}
 

@@ -9,23 +9,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
+import com.mojang.authlib.GameProfile;
+
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.debugger.util.EventQueueDebugChannelProxy;
 import me.fril.regeneration.debugger.util.TextPaneLogger;
 import me.fril.regeneration.util.RegenState.Transition;
-import net.minecraftforge.fml.relauncher.Side;
 
 @SuppressWarnings("serial")
-class PanelPlayer extends JPanel {
-	private final IRegeneration capability; //FIXME debugger stops working after death because of outdated capability reference
+class PanelPlayerTab extends JPanel {
 	
 	private final PanelHeader pnlHeader;
 	private final PanelStatus pnlStatus;
-	
-	private final JTextPane consoleArea;
 	private final TextPaneLogger console;
 	
-	public PanelPlayer(IRegeneration cap) {
+	public PanelPlayerTab(GameProfile gp) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0 };
@@ -33,7 +31,7 @@ class PanelPlayer extends JPanel {
 		gridBagLayout.rowWeights = new double[] { 0.0, 1.0 };
 		setLayout(gridBagLayout);
 		
-		pnlHeader = new PanelHeader(cap.getPlayer().getGameProfile());
+		pnlHeader = new PanelHeader(gp);
 		{
 			GridBagConstraints gbc_pnlHeader = new GridBagConstraints();
 			gbc_pnlHeader.insets = new Insets(10, 10, 10, 10);
@@ -53,7 +51,7 @@ class PanelPlayer extends JPanel {
 			add(pnlStatus, gbc_pnlStatus);
 		}
 		
-		consoleArea = new JTextPane();
+		JTextPane consoleArea = new JTextPane();
 		{
 			GridBagConstraints gbc_txtConsole = new GridBagConstraints();
 			gbc_txtConsole.gridwidth = 2;
@@ -65,18 +63,11 @@ class PanelPlayer extends JPanel {
 		}
 		consoleArea.setEditable(false);
 		console = new TextPaneLogger(consoleArea);
-		
-		this.capability = cap;
 	}
 	
 	
-	public IDebugChannel getDebugChannel() {
+	public IDebugChannel createChannel() {
 		class DebugChannelImpl implements IDebugChannel { //high-tech "anonymous" class
-			private final Side side;
-			
-			public DebugChannelImpl(Side side) {
-				this.side = side;
-			}
 			
 			@Override
 			public void notifyLoaded() {
@@ -112,23 +103,23 @@ class PanelPlayer extends JPanel {
 			
 			@Override
 			public void out(String msg) {
-				console.println("["+side+"  out] " + msg, Color.WHITE, Color.DARK_GRAY);
+				console.println("[out] " + msg, Color.WHITE, Color.DARK_GRAY);
 			}
 			
 			
 			
 			private String getPrefix(Transition action) {
-				return "["+side+"  "+action+"]    ";
+				return "["+action+"]    ";
 			}
 			
 		}
 		
-		return new EventQueueDebugChannelProxy(new DebugChannelImpl(capability.getPlayer().world.isRemote ? Side.CLIENT : Side.SERVER));
+		return new EventQueueDebugChannelProxy(new DebugChannelImpl());
 	}
 	
 	
-	public void updateState() {
-		pnlStatus.updateState(capability);
+	public void updateLabels(IRegeneration capability) {
+		pnlStatus.updateLabels(capability);
 	}
 	
 }

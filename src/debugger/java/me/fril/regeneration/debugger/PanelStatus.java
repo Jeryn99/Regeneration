@@ -15,28 +15,16 @@ import me.fril.regeneration.util.RegenState.Transition;
 
 @SuppressWarnings("serial")
 class PanelStatus extends JPanel {
-	private JLabel lblState;
-	private JLabel lblStateVal;
 	
-	private JLabel lblRegensLeft;
-	private JLabel lblRegensLeftVal;
-	
-	private JLabel lblAnimationProgress;
-	private JLabel lblAnimationProgressVal;
-	
-	private JLabel lblScheduled;
-	private JLabel lblScheduledVal;
-	
+	private JLabel lblStateVal, lblRegensLeftVal, lblAnimationProgressVal, lblScheduledVal;
 	
 	public PanelStatus() {
-		{
-			GridBagLayout gridBagLayout = new GridBagLayout();
-			gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, 1.0 };
-			gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
-			setLayout(gridBagLayout);
-		}
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, 1.0 };
+		gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+		setLayout(gridBagLayout);
 		
-		lblRegensLeft = new JLabel("Regenerations:");
+		JLabel lblRegensLeft = new JLabel("Regenerations:");
 		{
 			GridBagConstraints gbc_lblRegensLeft = new GridBagConstraints();
 			gbc_lblRegensLeft.anchor = GridBagConstraints.WEST;
@@ -56,7 +44,7 @@ class PanelStatus extends JPanel {
 			add(lblRegensLeftVal, gbc_lblRegensLeftVal);
 		}
 		
-		lblState = new JLabel("State:");
+		JLabel lblState = new JLabel("State:");
 		{
 			GridBagConstraints gbc_lblState = new GridBagConstraints();
 			gbc_lblState.anchor = GridBagConstraints.WEST;
@@ -76,7 +64,7 @@ class PanelStatus extends JPanel {
 			add(lblStateVal, gbc_lblStateVal);
 		}
 		
-		lblAnimationProgress = new JLabel("Animation progress:");
+		JLabel lblAnimationProgress = new JLabel("Animation progress:");
 		{
 			GridBagConstraints gbc_lblAnimationProgress = new GridBagConstraints();
 			gbc_lblAnimationProgress.anchor = GridBagConstraints.WEST;
@@ -96,7 +84,7 @@ class PanelStatus extends JPanel {
 			add(lblAnimationProgressVal, gbc_lblAnimationProgressVal);
 		}
 		
-		lblScheduled = new JLabel("Scheduled:");
+		JLabel lblScheduled = new JLabel("Scheduled:");
 		{
 			GridBagConstraints gbc_lblScheduled = new GridBagConstraints();
 			gbc_lblScheduled.anchor = GridBagConstraints.WEST;
@@ -119,7 +107,7 @@ class PanelStatus extends JPanel {
 	
 	
 	
-	public void updateState(IRegeneration cap) {
+	public void updateLabels(IRegeneration cap) {
 		lblStateVal.setText(cap.getState().toString());
 		lblRegensLeftVal.setText(cap.getRegenerationsLeft() + "");
 		lblAnimationProgressVal.setText(Math.round(cap.getAnimationProgress()*100) + "%");
@@ -128,6 +116,7 @@ class PanelStatus extends JPanel {
 		lblScheduledVal.setForeground(scheduled == null ? Color.BLACK : scheduled.getLeft().color);
 		lblScheduledVal.setText(scheduled == null ? "nothing" : scheduled.getLeft() + " in " + scheduled.getRight() + " ticks ("+(round(scheduled.getRight()/20F, 1))+"s)");
 	}
+	
 	
 	private double round(double value, int precision) {
 		int scale = (int) Math.pow(10, precision);
