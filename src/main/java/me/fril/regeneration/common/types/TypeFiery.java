@@ -43,8 +43,8 @@ public class TypeFiery implements IRegenType {
 		}
 		
 		Random rand = player.world.rand;
-		player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
-		player.rotationYaw += (rand.nextInt(10) - 5) * 0.2;
+		/*player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
+		player.rotationYaw += (rand.nextInt(10) - 5) * 0.2;*/
 		
 		if (player.world.isRemote)
 			return;
@@ -59,7 +59,7 @@ public class TypeFiery implements IRegenType {
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
 		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 		double z = player.posZ + player.getRNG().nextGaussian() * 2;
-		player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
+		//player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
 		
 		for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east())) {
 			if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) {
