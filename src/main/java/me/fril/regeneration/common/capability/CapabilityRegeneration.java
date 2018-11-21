@@ -124,8 +124,11 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		regenerationsLeft = nbt.getInteger("regenerationsLeft");
-		setStyle(nbt.getCompoundTag("style"));
+		regenerationsLeft = nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft");
+		
+		//v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
+		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
+		
 		animationTicks = nbt.getLong("animationTicks");
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
 		

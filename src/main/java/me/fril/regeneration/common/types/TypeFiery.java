@@ -2,6 +2,7 @@ package me.fril.regeneration.common.types;
 
 import java.util.Random;
 
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.layers.LayerRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.LimbManipulationUtil;
