@@ -16,19 +16,19 @@ import me.fril.regeneration.util.RegenState.Transition;
 @SuppressWarnings("serial")
 class PanelStatus extends JPanel {
 	
-	private JLabel lblStateVal, lblRegensLeftVal, lblAnimationProgressVal, lblScheduledVal;
+	private JLabel lblStateVal, lblRegensLeftVal, lblScheduledVal;//, lblAnimationProgressVal;
 	
 	public PanelStatus() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, 1.0 };
-		gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+		gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0,/* 0.0,*/ 0.0, 1.0 };
 		setLayout(gridBagLayout);
 		
 		JLabel lblRegensLeft = new JLabel("Regenerations:");
 		{
 			GridBagConstraints gbc_lblRegensLeft = new GridBagConstraints();
 			gbc_lblRegensLeft.anchor = GridBagConstraints.WEST;
-			gbc_lblRegensLeft.insets = new Insets(0, 0, 5, 5);
+			gbc_lblRegensLeft.insets = new Insets(0, 0, 0, 5);
 			gbc_lblRegensLeft.gridx = 1;
 			gbc_lblRegensLeft.gridy = 1;
 			add(lblRegensLeft, gbc_lblRegensLeft);
@@ -38,7 +38,7 @@ class PanelStatus extends JPanel {
 		{
 			GridBagConstraints gbc_lblRegensLeftVal = new GridBagConstraints();
 			gbc_lblRegensLeftVal.anchor = GridBagConstraints.EAST;
-			gbc_lblRegensLeftVal.insets = new Insets(0, 0, 5, 5);
+			gbc_lblRegensLeftVal.insets = new Insets(0, 0, 0, 5);
 			gbc_lblRegensLeftVal.gridx = 3;
 			gbc_lblRegensLeftVal.gridy = 1;
 			add(lblRegensLeftVal, gbc_lblRegensLeftVal);
@@ -64,7 +64,7 @@ class PanelStatus extends JPanel {
 			add(lblStateVal, gbc_lblStateVal);
 		}
 		
-		JLabel lblAnimationProgress = new JLabel("Animation progress:");
+		/*JLabel lblAnimationProgress = new JLabel("Animation progress:"); FUTURE possibly add type-specific metadata to debugger?
 		{
 			GridBagConstraints gbc_lblAnimationProgress = new GridBagConstraints();
 			gbc_lblAnimationProgress.anchor = GridBagConstraints.WEST;
@@ -82,7 +82,7 @@ class PanelStatus extends JPanel {
 			gbc_lblAnimationProgressVal.gridx = 3;
 			gbc_lblAnimationProgressVal.gridy = 3;
 			add(lblAnimationProgressVal, gbc_lblAnimationProgressVal);
-		}
+		}*/
 		
 		JLabel lblScheduled = new JLabel("Scheduled:");
 		{
@@ -90,7 +90,7 @@ class PanelStatus extends JPanel {
 			gbc_lblScheduled.anchor = GridBagConstraints.WEST;
 			gbc_lblScheduled.insets = new Insets(0, 0, 0, 5);
 			gbc_lblScheduled.gridx = 1;
-			gbc_lblScheduled.gridy = 4;
+			gbc_lblScheduled.gridy = 3;
 			add(lblScheduled, gbc_lblScheduled);
 		}
 		
@@ -100,7 +100,7 @@ class PanelStatus extends JPanel {
 			gbc_lblScheduledVal.anchor = GridBagConstraints.EAST;
 			gbc_lblScheduledVal.insets = new Insets(0, 0, 0, 5);
 			gbc_lblScheduledVal.gridx = 3;
-			gbc_lblScheduledVal.gridy = 4;
+			gbc_lblScheduledVal.gridy = 3;
 			add(lblScheduledVal, gbc_lblScheduledVal);
 		}
 	}
@@ -110,7 +110,7 @@ class PanelStatus extends JPanel {
 	public void updateLabels(IRegeneration cap) {
 		lblStateVal.setText(cap.getState().toString());
 		lblRegensLeftVal.setText(cap.getRegenerationsLeft() + "");
-		lblAnimationProgressVal.setText(Math.round(cap.getAnimationProgress()*100) + "%");
+		//lblAnimationProgressVal.setText(Math.round(cap.getAnimationProgress()*100) + "%");
 		
 		Pair<Transition, Long> scheduled = cap.getStateManager().getScheduledEvent();
 		lblScheduledVal.setForeground(scheduled == null ? Color.BLACK : scheduled.getLeft().color);

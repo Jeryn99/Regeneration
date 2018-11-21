@@ -3,6 +3,7 @@ package me.fril.regeneration.handlers;
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
+import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -15,6 +16,7 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.conditions.RandomChance;
+import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -50,8 +52,11 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void onPlayerClone(PlayerEvent.Clone event) {
-		NBTTagCompound nbt = (NBTTagCompound) CapabilityRegeneration.CAPABILITY.getStorage().writeNBT(CapabilityRegeneration.CAPABILITY, CapabilityRegeneration.getForPlayer(event.getEntityPlayer()), null);
-		CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, CapabilityRegeneration.getForPlayer(event.getEntityPlayer()), null, nbt);
+		IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer());
+		
+		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, cap, null);
+		storage.readNBT(CapabilityRegeneration.CAPABILITY, cap, null, nbt);
 	}
 	
 	@SubscribeEvent
@@ -61,6 +66,9 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void onPlayerRespawn(PlayerRespawnEvent event) {
+		if (!RegenConfig.firstStartGiftOnly)
+			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
+		
 		CapabilityRegeneration.getForPlayer(event.player).synchronise();
 	}
 	
@@ -89,7 +97,9 @@ public class RegenEventHandler {
 		
 		EntityPlayer player = (EntityPlayer) event.getEntity();
 		if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { //player has actually died
-			event.setCanceled(CapabilityRegeneration.getForPlayer(player).getStateManager().onKilled());
+			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+			boolean notDead = cap.getStateManager().onKilled();
+			event.setCanceled(notDead);
 		}
 	}
 	
@@ -100,17 +110,15 @@ public class RegenEventHandler {
 	//================ OTHER ==============
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {
-		//SOON handle onLogin (actually giving the player regenerations [replace startAsTimelord with initialRegenAmount])
-		
-		/*if (!RegenConfig.startAsTimelord || event.player.world.isRemote)
+		if (event.player.world.isRemote)
 			return;
 		
 		NBTTagCompound nbt = event.player.getEntityData();
 		boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
 		if (!loggedInBefore) {
-			event.player.inventory.addItemStackToInventory(new ItemStack(RegenObjects.Items.FOB_WATCH));
-			nbt.setBoolean("loggedInBefore", true);
-		}*/
+			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
+		}
+		nbt.setBoolean("loggedInBefore", true);
 	}
 	
 	@SubscribeEvent

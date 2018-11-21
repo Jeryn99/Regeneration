@@ -65,9 +65,11 @@ public class ItemFobWatch extends Item {
 			
 			world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
 		} else { //transferring player->watch
-			if (stack.getItemDamage() == 0) {
-				return msgUsageFailed(player, cap.canRegenerate() ? "regeneration.messages.transfer.full_watch" : "regeneration.messages.transfer.no_regens", stack);
-			}
+			if (!cap.canRegenerate())
+				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
+			
+			if (stack.getItemDamage() == 0)
+				return msgUsageFailed(player, "regeneration.messages.transfer.full_watch", stack);
 			
 			stack.setItemDamage(stack.getItemDamage() - 1);
 			cap.extractRegeneration(1);
