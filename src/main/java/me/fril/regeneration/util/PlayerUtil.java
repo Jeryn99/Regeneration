@@ -18,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -48,8 +49,8 @@ public class PlayerUtil {
 	}
 	
 	
-	public static void setPerspective(EntityPlayerMP player, boolean thirdperson) {
-		NetworkHandler.INSTANCE.sendTo(new MessageSetPerspective(thirdperson), player);
+	public static void setPerspective(EntityPlayerMP player, boolean thirdperson, boolean resetPitch) {
+		NetworkHandler.INSTANCE.sendTo(new MessageSetPerspective(thirdperson, resetPitch), player);
 	}
 	
 	
@@ -68,11 +69,10 @@ public class PlayerUtil {
 	
 	public static void damagePlayerArmor(EntityPlayerMP playerMP, int amount) {
 		for (EntityEquipmentSlot type : EntityEquipmentSlot.values()) {
-			if (!type.equals(EntityEquipmentSlot.MAINHAND) && !type.equals(EntityEquipmentSlot.OFFHAND)) {
-				if (playerMP.getItemStackFromSlot(type).getItem() instanceof ItemArmor) {
-					ItemArmor armor = (ItemArmor) playerMP.getItemStackFromSlot(type).getItem();
-					armor.setDamage(playerMP.getItemStackFromSlot(type), playerMP.getItemStackFromSlot(type).getItemDamage() - amount);
-				}
+			if (!type.equals(EntityEquipmentSlot.MAINHAND) && !type.equals(EntityEquipmentSlot.OFFHAND) && playerMP.getItemStackFromSlot(type).getItem() instanceof ItemArmor) {
+				ItemStack stack = playerMP.getItemStackFromSlot(type);
+				if (stack.attemptDamageItem(amount, playerMP.world.rand, playerMP))
+					stack.setCount(0); //item broke
 			}
 		}
 	}

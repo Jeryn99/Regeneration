@@ -40,7 +40,7 @@ public class TypeFiery implements IRegenType {
 		player.extinguish();
 		
 		if (!player.world.isRemote) {
-			PlayerUtil.setPerspective((EntityPlayerMP) player, true);
+			PlayerUtil.setPerspective((EntityPlayerMP) player, true, false);
 		}
 		
 		Random rand = player.world.rand;
@@ -54,7 +54,7 @@ public class TypeFiery implements IRegenType {
 			player.world.setBlockToAir(player.getPosition());
 		
 		if (capability.getState() == RegenState.REGENERATING) {
-			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(6)-3); //FIXME this damages WAY too much
+			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(2));
 		}
 		
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
@@ -71,10 +71,8 @@ public class TypeFiery implements IRegenType {
 	
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
-		player.rotationPitch = 0;
-		
-		if (!player.world.isRemote) {
-			PlayerUtil.setPerspective((EntityPlayerMP)player, false);
+		if (!player.world.isRemote) { //NOTE redundant, only called on server side
+			PlayerUtil.setPerspective((EntityPlayerMP)player, false, true);
 		}
 	}
 	

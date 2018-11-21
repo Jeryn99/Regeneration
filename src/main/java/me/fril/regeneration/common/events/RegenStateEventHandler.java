@@ -32,6 +32,8 @@ public class RegenStateEventHandler {
 	}
 	
 	
+	// REMEMBER THAT THESE EVENT HANDLERS ONLY CATCH RegenStateBaseEvent SUBCLASSES!
+	
 	
 	//FIXME sounds don't play when logging mid-regen
 	public static class Server {
@@ -89,7 +91,7 @@ public class RegenStateEventHandler {
 			}
 			
 			if (RegenConfig.resetOxygen)
-				ev.player.setAir(10); //FIXME doesn't work apparently
+				ev.player.setAir(300);
 			
 			ev.player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
 			

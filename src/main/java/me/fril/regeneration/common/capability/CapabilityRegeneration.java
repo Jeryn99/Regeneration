@@ -252,7 +252,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	
-	
+	/** ONLY EXISTS ON THE SERVER SIDE */
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
 		private final Map<Transition, Runnable> callbacks;
@@ -280,7 +280,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		@Override
 		public boolean onKilled() {
-			if (state == RegenState.ALIVE) { //FIXME check if we can regenerate
+			if (state == RegenState.ALIVE) {
+				
+				if (!canRegenerate()) //that's too bad :(
+					return false;
 				
 				//We're entering grace period...
 				scheduleInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePeriodLength);
