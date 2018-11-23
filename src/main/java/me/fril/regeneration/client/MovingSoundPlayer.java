@@ -44,7 +44,7 @@ public class MovingSoundPlayer extends MovingSound {
 		zPosF = (float) player.posZ;
 		
 		distance = MathHelper.clamp(distance + 0.0025F, 0.0F, 1.0F);
-		volume = 1.0F;
+		//volume = 1.0F;
 		
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
@@ -58,8 +58,8 @@ public class MovingSoundPlayer extends MovingSound {
 		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //SOON play heartbeat in grace/crit?
 			stopCondition = !cap.getState().isGraceful();
 		} else if (sound.equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
-			stopCondition = !cap.getState().isGraceful();
-			volume = 0.3F;
+			stopCondition = !cap.getState().isGraceful(); //SOON move to 'hand is glowing' once implemented
+			//volume = 0.3F;
 		} else if (sound.equals(RegenObjects.Sounds.CRITICAL_STAGE.getSoundName())) {
 			stopCondition = cap.getState() != RegenState.GRACE_CRIT;
 		} else if (sound.equals(RegenObjects.Sounds.REGENERATION.getSoundName())) {

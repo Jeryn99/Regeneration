@@ -20,7 +20,7 @@ public abstract class RegenStateEvents {
 	
 	
 	public static class RegenEnterGraceEvent extends RegenStateBaseEvent {
-
+		
 		public RegenEnterGraceEvent(IRegeneration capability) {
 			super(capability);
 		}
@@ -44,7 +44,7 @@ public abstract class RegenStateEvents {
 	}
 
 	public static class RegenTriggerEvent extends RegenStateBaseEvent {
-
+		
 		public RegenTriggerEvent(IRegeneration capability) {
 			super(capability);
 		}
@@ -52,7 +52,7 @@ public abstract class RegenStateEvents {
 	}
 	
 	public static class RegenFinishEvent extends RegenStateBaseEvent {
-
+		
 		public RegenFinishEvent(IRegeneration capability) {
 			super(capability);
 		}

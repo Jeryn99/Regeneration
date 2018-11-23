@@ -12,6 +12,7 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.events.RegenStateEvents.RegenEnterGraceEvent;
 import me.fril.regeneration.common.events.RegenStateEvents.RegenFinishEvent;
 import me.fril.regeneration.common.events.RegenStateEvents.RegenGoCriticalEvent;
+import me.fril.regeneration.common.events.RegenStateEvents.RegenTickEvent;
 import me.fril.regeneration.common.events.RegenStateEvents.RegenTriggerEvent;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.TypeFiery;
@@ -253,25 +254,25 @@ public class CapabilityRegeneration implements IRegeneration {
 	/** ONLY EXISTS ON THE SERVER SIDE */
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
-		private final Map<Transition, Runnable> callbacks;
+		private final Map<Transition, Runnable> transitionRunnables;
 		private DebuggableScheduledAction nextTransition;
 		
 		private RegenerationStateManager() {
-			this.callbacks = new HashMap<>();
-			callbacks.put(Transition.ENTER_CRITICAL, this::enterCriticalPhase);
-			callbacks.put(Transition.CRITICAL_DEATH, this::midSequenceKill);
-			callbacks.put(Transition.FINISH_REGENERATION, this::finishRegeneration);
+			this.transitionRunnables = new HashMap<>();
+			transitionRunnables.put(Transition.ENTER_CRITICAL, this::enterCriticalPhase);
+			transitionRunnables.put(Transition.CRITICAL_DEATH, this::midSequenceKill);
+			transitionRunnables.put(Transition.FINISH_REGENERATION, this::finishRegeneration);
 		}
 		
 		
-		private void scheduleInTicks(Transition transition, long inTicks) {
+		private void scheduleTransitionInTicks(Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting non-completed/cancelled transition");
-			nextTransition = new DebuggableScheduledAction(transition, player, callbacks.get(transition), inTicks);
+			nextTransition = new DebuggableScheduledAction(transition, player, transitionRunnables.get(transition), inTicks);
 		}
 		
-		private void scheduleInSeconds(Transition transition, long inSeconds) {
-			scheduleInTicks(transition, inSeconds*20);
+		private void scheduleTransitionInSeconds(Transition transition, long inSeconds) {
+			scheduleTransitionInTicks(transition, inSeconds*20);
 		}
 		
 		
@@ -284,7 +285,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					return false;
 				
 				//We're entering grace period...
-				scheduleInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePeriodLength);
+				scheduleTransitionInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePeriodLength);
 				state = RegenState.GRACE;
 				synchronise();
 				MinecraftForge.EVENT_BUS.post(new RegenEnterGraceEvent(CapabilityRegeneration.this));
@@ -319,8 +320,11 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		private void tick() {
 			if (player.world.isRemote)
-				throw new IllegalStateException("Ticking state manager on the client");
+				throw new IllegalStateException("Ticking state manager on the client"); //the state manager shouldn't even exist on the client
+			if (state == RegenState.ALIVE)
+				throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); //would NPE when ticking the transition, but this is a more clear message
 			
+			MinecraftForge.EVENT_BUS.post(new RegenTickEvent(CapabilityRegeneration.this));
 			nextTransition.tick();
 		}
 		
@@ -330,7 +334,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			//We're starting a regeneration!
 			state = RegenState.REGENERATING;
 			nextTransition.cancel(); //... cancel any state shift we had planned
-			scheduleInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
+			scheduleTransitionInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
 			MinecraftForge.EVENT_BUS.post(new RegenTriggerEvent(CapabilityRegeneration.this));
 			type.onStartRegeneration(player, CapabilityRegeneration.this);
@@ -340,7 +344,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void enterCriticalPhase() {
 			//We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduleInSeconds(Transition.CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength);
+			scheduleTransitionInSeconds(Transition.CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength);
 			MinecraftForge.EVENT_BUS.post(new RegenGoCriticalEvent(CapabilityRegeneration.this));
 			synchronise();
 		}
@@ -400,7 +404,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
 			if (nbt.hasKey("transitionId"))
-				scheduleInTicks(Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
+				scheduleTransitionInTicks(Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
 		}
 		
 	}
