@@ -9,6 +9,8 @@ import me.fril.regeneration.common.events.RegenStateEventHandler;
 import me.fril.regeneration.debugger.RegenDebugger;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
@@ -29,6 +31,8 @@ public class RegenerationMod {
 	public static final String VERSION = "beta-v1.3-af55921";
 	public static final String UPDATE_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/master/update.json";
 	
+	public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
+	
 	@Mod.Instance(MODID)
 	public static RegenerationMod INSTANCE;
 	public static RegenDebugger DEBUGGER;
@@ -47,6 +51,7 @@ public class RegenerationMod {
 		proxy.init();
 		NetworkHandler.init();
 		RegenStateEventHandler.init();
+		LootTableList.register(LOOT_FILE);
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 	}
 	
