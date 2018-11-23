@@ -1,16 +1,20 @@
 {
-  "homepage": "https://minecraft.curseforge.com/projects/regeneration",
-  "promos": {
-    "1.12.2-latest": "beta-v1.3-af55921",
-    "1.12.2-recommended": "1.2.2"
-  },
-  "1.12.2": {
-    "1.0.0": "Time for a full release then boys",
-    "1.1.0": "Alot of bug fixes, see github/curseforge for the full changelog",
-    "1.2.0": "Fixes, see github/curseforge for the full changelog",
-    "1.2.1": "Open to LAN fix & update checker no longer reports out of date version",
-    "1.2.2": "Fixed killing other players by regeneration",
-    "beta-v1.3-cd7386a": "Rewritten back-end, should be stable but it's not feature complete",
-	"beta-v1.3-af55921": "Bugfixes from the last beta, see github/curseforge for full list"
-  }
+	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
+	
+	"promos": {
+		"1.12.2-latest": "beta-v1.3-0bccd72",
+		"1.12.2-recommended": "1.2.3"
+	},
+	
+	"1.12.2": {
+		"1.0.0": "Time for a full release then boys",
+		"1.1.0": "Alot of bug fixes, see github/curseforge for the full changelog",
+		"1.2.0": "Fixes, see github/curseforge for the full changelog",
+		"1.2.1": "Open to LAN fix & update checker no longer reports out of date version",
+		"1.2.2": "Fixed killing other players by regeneration",
+		"beta-v1.3-cd7386a": "Rewritten back-end, should be stable but it's not feature complete",
+		"beta-v1.3-af55921": "Bugfixes from the last beta, see github/curseforge for full list",
+		"1.2.3": "Fixed loot tables and other minor issues. See github/curseforge for more details",
+		"beta-v1.3-29c2dd3": "New healing system & fixed loot tables"
+	}
 }
