@@ -12,6 +12,7 @@ import javax.swing.JTextPane;
 import com.mojang.authlib.GameProfile;
 
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.debugger.util.ConditionalDebugChannelProxy;
 import me.fril.regeneration.debugger.util.EventQueueDebugChannelProxy;
 import me.fril.regeneration.debugger.util.TextPaneLogger;
 import me.fril.regeneration.util.RegenState.Transition;
@@ -125,7 +126,7 @@ class PanelPlayerTab extends JPanel {
 			
 		}
 		
-		return new EventQueueDebugChannelProxy(new DebugChannelImpl());
+		return new ConditionalDebugChannelProxy(new EventQueueDebugChannelProxy(new DebugChannelImpl()), ()->this.getParent().getParent().getParent().getParent().getParent().isVisible()); //(this -> [a lot of parents due to the tabbed pane] -> main frame).isVisible
 	}
 	
 	

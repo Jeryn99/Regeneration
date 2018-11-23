@@ -2,7 +2,7 @@ package me.fril.regeneration.debugger;
 
 import me.fril.regeneration.util.RegenState.Transition;
 
-public interface IDebugChannel { //FIXME don't do the whole GUI thing when it's not visible to save on memory consumption
+public interface IDebugChannel {
 	
 	void notifyCancel(Transition action, long wasInTicks);
 	void notifyExecution(Transition action, long atTick);

@@ -71,7 +71,6 @@ public class RegenStateEventHandler {
 			player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
 			ev.player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
 			
-			//CHECK needed/wanted?
 			player.setHealth(1);
 			player.setAbsorptionAmount(0);
 			

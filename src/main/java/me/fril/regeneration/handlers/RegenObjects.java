@@ -25,7 +25,6 @@ public class RegenObjects {
 	
 	public static List<Item> ITEMS = new ArrayList<>();
 	
-	//TODO move?
 	public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"),
 	                           REGEN_DMG_HEALING = new RegenDamageSource("regen_heal"), //The irony lmao
 	                           REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit");
