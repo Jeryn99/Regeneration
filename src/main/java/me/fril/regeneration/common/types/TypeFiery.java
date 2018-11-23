@@ -2,6 +2,7 @@ package me.fril.regeneration.common.types;
 
 import java.util.Random;
 
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.layers.LayerRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.LimbManipulationUtil;
@@ -33,13 +34,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * on 16/09/2018.
  */
 public class TypeFiery implements IRegenType {
+	private long animationTicks;
 	
 	@Override
 	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
+		animationTicks++;
+		
 		player.extinguish();
 		
 		if (!player.world.isRemote) {
-			PlayerUtil.setPerspective((EntityPlayerMP) player, true);
+			PlayerUtil.setPerspective((EntityPlayerMP) player, true, false);
 		}
 		
 		Random rand = player.world.rand;
@@ -53,7 +57,7 @@ public class TypeFiery implements IRegenType {
 			player.world.setBlockToAir(player.getPosition());
 		
 		if (capability.getState() == RegenState.REGENERATING) {
-			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(6)-3); //FIXME this damages WAY too much
+			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(2));
 		}
 		
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
@@ -70,11 +74,11 @@ public class TypeFiery implements IRegenType {
 	
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
-		player.rotationPitch = 0;
-		
-		if (!player.world.isRemote) {
-			PlayerUtil.setPerspective((EntityPlayerMP)player, false);
+		if (!player.world.isRemote) { //NOTE redundant, only called on server side (TODO document)
+			PlayerUtil.setPerspective((EntityPlayerMP)player, false, true);
 		}
+		
+		animationTicks = 0;
 	}
 	
 	
@@ -84,14 +88,14 @@ public class TypeFiery implements IRegenType {
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
 		
 		int headRot = 50;
-		if (cap.getAnimationProgress() < 0.05) {
-			headRot = (int)((cap.getAnimationProgress() / 0.05F) * 50F); // %headRotatingPhase * maxHeadRot
+		if (getAnimationProgress() < 0.05) {
+			headRot = (int)((getAnimationProgress() / 0.05F) * 50F); // %headRotatingPhase * maxHeadRot
 		}
 		
 		float armRot = 85;
-		if (cap.getAnimationProgress() < 0.075) {
+		if (getAnimationProgress() < 0.075) {
 			arm_shake = 0;
-			armRot = (int)((cap.getAnimationProgress() / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
+			armRot = (int)((getAnimationProgress() / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
 		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
@@ -122,7 +126,7 @@ public class TypeFiery implements IRegenType {
 		Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 		
-		double x = capability.getAnimationProgress();
+		double x = getAnimationProgress();
 		double p = 109.89010989010987; //see the wiki for the explanation of these "magic" numbers
 		double r = 0.09890109890109888;
 		double f = p * Math.pow(x, 2) - r;
@@ -200,13 +204,27 @@ public class TypeFiery implements IRegenType {
 	
 	
 	@Override
-	public String getName() {
-		return "FIERY";
-	}
-	
-	@Override
 	public int getAnimationLength() { //FIXME shorten to be in line with the music (don't forget to update 'p' and 'r'!)
 		return 10 * 20; //10 seconds of 20 ticks
+	}
+	
+	
+	private double getAnimationProgress() {
+		return Math.min(1, animationTicks / (double)getAnimationLength());
+	}
+	
+	
+	@Override
+	public NBTTagCompound serializeNBT() {
+		NBTTagCompound nbt = IRegenType.super.serializeNBT();
+		nbt.setLong("animationTicks", animationTicks);
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt) {
+		IRegenType.super.deserializeNBT(nbt);
+		animationTicks = nbt.getLong("animationTicks");
 	}
 	
 }

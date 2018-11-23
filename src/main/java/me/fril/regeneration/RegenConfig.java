@@ -3,7 +3,7 @@ package me.fril.regeneration;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -21,9 +21,13 @@ public class RegenConfig { // TODO externalize comment strings?
 	@Config.RangeInt(min = 0)
 	public static int regenCapacity = 12;
 	
-	@Config.LangKey("config.regeneration.start_as_timelord")
-	@Config.Comment("If true you'll start a world with a Fob Watch in your inventory")
-	public static boolean startAsTimelord = false;
+	@Config.LangKey("config.regeneration.free_regens")
+	@Config.Comment("Every player will start with this number of regenerations. Will cause undefined behavior if bigger than the amount of regenerations per cycle.")
+	public static int freeRegenerations = 0;
+	
+	@Config.LangKey("config.regeneration.first_start_gift_only")
+	@Config.Comment("Only give new players free regenerations")
+	public static boolean firstStartGiftOnly = true;
 	
 	@Config.LangKey("config.regeneration.fiery_regen")
 	@Config.Comment("Spawn fire during regeneration")
@@ -63,9 +67,9 @@ public class RegenConfig { // TODO externalize comment strings?
 	@Config.Comment("The amount of absorption hearts you get when regenerating")
 	public static int absorbtionLevel = 10;
 	
-	@Config.LangKey("config.regeneration.lose_power_on_mid_regen_death")
+	@Config.LangKey("config.regeneration.lose_regens_on_death")
 	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration")
-	public static boolean losePowerOnMidRegenDeath = true;
+	public static boolean loseRegensOnDeath = true; //NOW unimplmented
 	
 	@Config.LangKey("config.regeneration.regeneration_knocksback_players")
 	@Config.Comment("Players can be knocked back when too close to a regeneration")
@@ -102,13 +106,15 @@ public class RegenConfig { // TODO externalize comment strings?
 	}
 	
 	
-	@Mod.EventBusSubscriber
+	@EventBusSubscriber
 	public static class EventHandler {
+		
 		@SubscribeEvent
 		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
 			if (event.getModID().equals(RegenerationMod.MODID)) {
 				ConfigManager.sync(RegenerationMod.MODID, Config.Type.INSTANCE);
 			}
 		}
+		
 	}
 }

@@ -32,6 +32,8 @@ public class RegenStateEventHandler {
 	}
 	
 	
+	// REMEMBER THAT THESE EVENT HANDLERS ONLY CATCH RegenStateBaseEvent SUBCLASSES!
+	
 	
 	//FIXME sounds don't play when logging mid-regen
 	public static class Server {
@@ -41,7 +43,7 @@ public class RegenStateEventHandler {
 		
 		@SubscribeEvent
 		public static void onEnterGrace(RegenEnterGraceEvent ev) { //FIXME there's a lag spike the first time this happens
-			//NOW proper health regeneration system (half heart + thoughness?)
+			//SOON proper health regeneration system (half heart + thoughness?)
 			//SOON re-implement slowness, only in grace?
 			//SOON yellow vingette to make sure there's always a grace indicator? Or the heart timer?
 			
@@ -56,7 +58,7 @@ public class RegenStateEventHandler {
 		
 		@SubscribeEvent
 		public static void onRegenTrigger(RegenTriggerEvent ev) {
-			//NOW message in chat?
+			//SOON message in chat?
 			IRegeneration cap = ev.capability;
 			EntityPlayer player = ev.player;
 			
@@ -74,7 +76,7 @@ public class RegenStateEventHandler {
 		
 		@SubscribeEvent
 		public static void onRegenTick(RegenTickEvent ev) {
-			//NOW random damage in critical period
+			//SOON random damage in critical period
 			
 			if (ev.capability.getState() == RegenState.REGENERATING && ev.player.getHealth() < ev.player.getMaxHealth()) {
 				ev.player.heal(1.0F);
@@ -89,7 +91,7 @@ public class RegenStateEventHandler {
 			}
 			
 			if (RegenConfig.resetOxygen)
-				ev.player.setAir(10); //FIXME doesn't work apparently
+				ev.player.setAir(300);
 			
 			ev.player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
 			
@@ -108,24 +110,24 @@ public class RegenStateEventHandler {
 		
 		@SubscribeEvent
 		public static void onEnterGrace(RegenEnterGraceEvent ev) {
-			//NOW toast notification for entering grace
+			//SOON toast notification for entering grace
 		}
 		
 		@SubscribeEvent
 		public static void onRegenFinish(RegenFinishEvent ev) {
-			//NOW toast notification for finishing regeneration
+			//SOON toast notification for finishing regeneration
 		}
 		
 		@SubscribeEvent
 		public static void onRegenTrigger(RegenTriggerEvent ev) {
-			//NOW toast notification for triggering regeneration
+			//SOON toast notification for triggering regeneration
 			PlayerUtil.sendHotbarMessage(ev.player, new TextComponentTranslation("regeneration.messages.remaining_regens.notification", ev.capability.getRegenerationsLeft()), true);
 			
 		}
 		
 		@SubscribeEvent
 		public static void onGoCritical(RegenGoCriticalEvent ev) {
-			//NOW toast notification for entering critical phase
+			//SOON toast notification for entering critical phase
 			//SOON red vingette in critical phase
 		}
 		

@@ -16,8 +16,8 @@ import net.minecraft.util.math.MathHelper;
  * on 20/09/2018.
  */
 public class MovingSoundPlayer extends MovingSound {
-	//NOW increasing pitch of critical sound
-	//NOW fade in hand glow
+	//SOON increasing pitch of critical sound
+	//SOON fade in hand-glow sound
 	
 	private final EntityPlayer player;
 	private float distance = 0.0F;
@@ -55,7 +55,7 @@ public class MovingSoundPlayer extends MovingSound {
 		//FIXME ConcurrentModificationException's in subtitle renderer when ff-ing to crit, probably because we're modifying it here
 		//SOON shouldn't heartbeat be a player-only sound?
 		//I wish I could use a switch here...
-		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //NOW play heartbeat in grace/crit?
+		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //SOON play heartbeat in grace/crit?
 			stopCondition = !cap.getState().isGraceful();
 		} else if (sound.equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
 			stopCondition = !cap.getState().isGraceful();
