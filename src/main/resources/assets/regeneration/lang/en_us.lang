@@ -54,9 +54,11 @@ config.regeneration.regeneration_knocksback_players=Regeneration knocks back pla
 config.regeneration.regeneration_kills_players=Regeneration kills players
 config.regeneration.grace.gracePeriodLength=Grace period length
 config.regeneration.grace.criticalPhaseLength=Critical phase length
+config.regeneration.grace.criticalDamageChance=Critical damage chance
 
 regeneration.damagesrc.regen_energy=&s was blasted by Regeneration Energy!
 regeneration.damagesrc.regen_heal=&s died by donating too much Regeneration energy...
+regeneration.damagesrc.regen_crit=&s died from holding in their regeneration for too long
 
 regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
 

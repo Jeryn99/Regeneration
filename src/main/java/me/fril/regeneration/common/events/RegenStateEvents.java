@@ -1,6 +1,7 @@
 package me.fril.regeneration.common.events;
 
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -28,15 +29,19 @@ public abstract class RegenStateEvents {
 	}
 	
 	public static class RegenTickEvent extends RegenStateBaseEvent {
+		public final double stateProgress;
+		public final RegenState state;
 		
 		public RegenTickEvent(IRegeneration capability) {
 			super(capability);
+			state = capability.getState();
+			stateProgress = capability.getStateManager().getStateProgress();
 		}
 		
 	}
 	
 	public static class RegenGoCriticalEvent extends RegenStateBaseEvent {
-
+		
 		public RegenGoCriticalEvent(IRegeneration capability) {
 			super(capability);
 		}

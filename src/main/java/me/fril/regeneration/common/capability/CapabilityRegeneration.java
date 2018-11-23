@@ -313,7 +313,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth()) { //... check if we're in grace and if the mob needs health
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
-				player.attackEntityFrom(RegenObjects.REGEN_HEAL, healthNeeded);
+				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
 			}
 		}
 		
@@ -387,6 +387,11 @@ public class CapabilityRegeneration implements IRegeneration {
 		/** @deprecated Debug purposes */
 		public void fastForward() {
 			while (!nextTransition.tick());
+		}
+		
+		@Override
+		public double getStateProgress() {
+			return nextTransition.getProgress();
 		}
 		
 		

@@ -11,8 +11,11 @@ public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompou
 	
 	//Event proxy methods
 	boolean onKilled();
-	//void onPunchBlock();
 	void onPunchEntity(EntityLivingBase entity);
+	//void onPunchBlock();
+	
+	//Proxy methods for timing related stuff
+	double getStateProgress();
 	
 	//Debug things
 	@Deprecated

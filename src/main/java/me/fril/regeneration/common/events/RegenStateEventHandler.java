@@ -12,14 +12,12 @@ import me.fril.regeneration.common.events.RegenStateEvents.RegenTriggerEvent;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.ExplosionUtil;
 import me.fril.regeneration.util.PlayerUtil;
-import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.FoodStats;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,14 +36,22 @@ public class RegenStateEventHandler {
 	//FIXME sounds don't play when logging mid-regen
 	public static class Server {
 		
-		private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782");
-		private static final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -0.5D, 1);
+		private static final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782"),
+		                          MAX_HEALTH_ID = UUID.fromString("5d6f0ba2-1286-46fc-b896-461c5cfd99cc");
+		
+		private static final double HEART_REDUCTION = 0.5,
+									SPEED_REDUCTION = 0.25;
+		
+		private static final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, 1),
+		                                       heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, 1);
 		
 		@SubscribeEvent
 		public static void onEnterGrace(RegenEnterGraceEvent ev) { //FIXME there's a lag spike the first time this happens
-			//SOON proper health regeneration system (half heart + thoughness?)
-			//SOON re-implement slowness, only in grace?
 			//SOON yellow vingette to make sure there's always a grace indicator? Or the heart timer?
+			
+			//Reduce number of hearts, but compensate with absorption
+			ev.player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
+			ev.player.setAbsorptionAmount(ev.player.getMaxHealth() * (float)HEART_REDUCTION * 2);
 			
 			PlayerUtil.playMovingSound(ev.player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
 		}
@@ -53,7 +59,7 @@ public class RegenStateEventHandler {
 		@SubscribeEvent
 		public static void onGoCritical(RegenGoCriticalEvent ev) {
 			PlayerUtil.playMovingSound(ev.player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
-			ev.player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 800, 0, false, false)); // could be removed with milk, but I think that's not that bad
+			ev.player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
 		}
 		
 		@SubscribeEvent
@@ -62,12 +68,24 @@ public class RegenStateEventHandler {
 			IRegeneration cap = ev.capability;
 			EntityPlayer player = ev.player;
 			
+			player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
+			ev.player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
+			
+			//CHECK needed/wanted?
+			player.setHealth(1);
+			player.setAbsorptionAmount(0);
+			
 			player.extinguish();
 			player.removePassengers();
 			player.clearActivePotions();
 			player.dismountRidingEntity();
 			player.setArrowCountInEntity(0);
-			player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
+			
+			if (RegenConfig.resetHunger)
+				ev.player.getFoodStats().setFoodLevel(20);
+			
+			if (RegenConfig.resetOxygen)
+				ev.player.setAir(300);
 			
 			cap.extractRegeneration(1);
 			ExplosionUtil.regenerationExplosion(player);
@@ -76,28 +94,39 @@ public class RegenStateEventHandler {
 		
 		@SubscribeEvent
 		public static void onRegenTick(RegenTickEvent ev) {
-			//SOON random damage in critical period
-			
-			if (ev.capability.getState() == RegenState.REGENERATING && ev.player.getHealth() < ev.player.getMaxHealth()) {
-				ev.player.heal(1.0F);
+			switch (ev.state) {
+				case REGENERATING:
+					float health = (float)ev.stateProgress * ev.player.getMaxHealth();
+					float absorption = RegenConfig.absorbtionLevel * 2 * (float)ev.stateProgress;
+					
+					ev.player.setHealth(Math.max(ev.player.getHealth(), health)); //using max because it sometimes damages the player due to rounding errors
+					ev.player.setAbsorptionAmount(Math.max(ev.player.getAbsorptionAmount(), absorption));
+					break;
+					
+				case GRACE_CRIT:
+					float nauseaPercentage = 0.5F;
+					
+					if (ev.stateProgress > nauseaPercentage &&
+					      ev.player.getActivePotionEffects().stream().noneMatch(pe->Potion.getIdFromPotion(pe.getPotion()) == 9)) //no nausea applied yet
+						ev.player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), (int)(RegenConfig.Grace.criticalPhaseLength * 20 * nauseaPercentage * 1.5F), 0, false, false)); //apply nausea
+					
+					if (ev.player.world.rand.nextDouble() < (RegenConfig.Grace.criticalDamageChance / 100F))
+						ev.player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, ev.player.world.rand.nextFloat() + .5F);
+					
+					break;
+					
+				case GRACE:
+					//TODO weakness at certain point
+					break;
+					
+				case ALIVE: break;
+				default: throw new IllegalStateException("Unknown state "+ev.state);
 			}
 		}
 		
 		@SubscribeEvent
 		public static void onRegenFinish(RegenFinishEvent ev) {
-			if (RegenConfig.resetHunger) {
-				FoodStats foodStats = ev.player.getFoodStats();
-				foodStats.setFoodLevel(foodStats.getFoodLevel() + 1);
-			}
-			
-			if (RegenConfig.resetOxygen)
-				ev.player.setAir(300);
-			
 			ev.player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
-			
-			if (ev.player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
-				ev.player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
-			}
 		}
 		
 	}

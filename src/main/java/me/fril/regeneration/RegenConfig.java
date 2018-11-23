@@ -103,6 +103,10 @@ public class RegenConfig { // TODO externalize comment strings?
 		@Config.Comment("The time in seconds you can stay in the critical phase without dying")
 		public int criticalPhaseLength = 60;
 		
+		@Config.LangKey("config.regeneration.grace.criticalDamageChance")
+		@Config.Comment("Chance that a player in critical phase gets damaged at a given tick. Higher number means more damage.")
+		public float criticalDamageChance = 1;
+		
 	}
 	
 	

@@ -25,8 +25,10 @@ public class RegenObjects {
 	
 	public static List<Item> ITEMS = new ArrayList<>();
 	
-	public static DamageSource REGEN_SOURCE = new RegenDamageSource("regen_energy");
-	public static DamageSource REGEN_HEAL = new RegenDamageSource("regen_heal"); //The irony lmao
+	//TODO move?
+	public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"),
+	                           REGEN_DMG_HEALING = new RegenDamageSource("regen_heal"), //The irony lmao
+	                           REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit");
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {

@@ -31,11 +31,17 @@ public class ScheduledAction {
 		scheduledTick = -1;
 	}
 	
+	@Deprecated
+	/** @deprecated Use with caution, tick timings can be changed! */
 	public long getTicksLeft() {
 		if (scheduledTick == -1)
 			return -1;
 		else
 			return scheduledTick - currentTick;
+	}
+	
+	public double getProgress() {
+		return currentTick / (double)scheduledTick;
 	}
 	
 }
