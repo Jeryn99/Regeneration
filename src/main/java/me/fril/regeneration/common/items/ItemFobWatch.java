@@ -5,9 +5,8 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
+import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.PlayerUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -60,7 +59,7 @@ public class ItemFobWatch extends Item {
 				PlayerUtil.sendHotbarMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 			}
 			
-			if (used < 0) //FIXME this happens sometimes, but I can't reproduce it reliably yet
+			if (used < 0) //FIXME this happens sometimes, but I can't reproduce it reliably yet (seems like this is caused by the free regens on startup)
 				RegenerationMod.DEBUGGER.getChannelFor(player).warn("Fob watch used <0 regens (supply: "+supply+", needed:"+needed+", used:"+used+", capacity:"+RegenConfig.regenCapacity+", damage:"+stack.getItemDamage()+", regens:"+cap.getRegenerationsLeft());
 			cap.receiveRegenerations(used);
 			
@@ -68,7 +67,7 @@ public class ItemFobWatch extends Item {
 				stack.setItemDamage(stack.getItemDamage() + used);
 			
 			if (world.isRemote)
-				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.FOB_WATCH, 1.0F, 2.0F));
+				ClientUtil.playPositionedSoundRecord(RegenObjects.Sounds.FOB_WATCH, 1.0F, 2.0F);
 			
 		} else { //transferring player->watch
 			if (!cap.canRegenerate())
@@ -82,7 +81,7 @@ public class ItemFobWatch extends Item {
 			PlayerUtil.sendHotbarMessage(player, "regeneration.messages.transfer.success", true);
 			
 			if (world.isRemote)
-				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 5.0F, 2.0F)); //TODO change this sound
+				ClientUtil.playPositionedSoundRecord(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 5.0F, 2.0F); //TODO change this sound
 			
 			return new ActionResult<>(EnumActionResult.PASS, stack);
 		}

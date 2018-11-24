@@ -9,43 +9,36 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ActingForwarder { //XXX feel free to rename this, I couldn't think of anything better
 	
-	private final static IActingHandler server, client;
-	
-	static {
-		server = new ActingServerHandler();
-		client = new ActingClientHandler();
-	}
-	
 	public static void onRegenTick(IRegeneration cap) {
 		//Never forwarded, as per the documentation
-		server.onRegenTick(cap);
+		ActingServerHandler.INSTANCE.onRegenTick(cap);
 	}
 	
 	public static void onEnterGrace(IRegeneration cap) {
 		checkAndForward(cap);
-		server.onEnterGrace(cap);
+		ActingServerHandler.INSTANCE.onEnterGrace(cap);
 	}
 	
 	public static void onRegenFinish(IRegeneration cap) {
 		checkAndForward(cap);
-		server.onRegenFinish(cap);
+		ActingServerHandler.INSTANCE.onRegenFinish(cap);
 	}
 	
 	public static void onRegenTrigger(IRegeneration cap) {
 		checkAndForward(cap);
-		server.onRegenTrigger(cap);
+		ActingServerHandler.INSTANCE.onRegenTrigger(cap);
 	}
 	
 	public static void onGoCritical(IRegeneration cap) {
 		checkAndForward(cap);
-		server.onGoCritical(cap);
+		ActingServerHandler.INSTANCE.onGoCritical(cap);
 	}
 	
 	
 	
 	public static void onClient(String event, IRegeneration cap) {
 		try {
-			ActingClientHandler.class.getMethod(event, IRegeneration.class).invoke(client, cap);
+			ActingClientHandler.class.getMethod(event, IRegeneration.class).invoke(ActingClientHandler.INSTANCE, cap);
 		} catch (IllegalAccessException | IllegalArgumentException e) {
 			throw new IllegalStateException("Illegal handler method on client: "+event, e);
 		} catch (InvocationTargetException e) {

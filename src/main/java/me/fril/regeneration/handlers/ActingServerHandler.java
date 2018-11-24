@@ -25,6 +25,12 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 	private final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, 1),
 	                                heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, 1);
 	
+	
+	public static final IActingHandler INSTANCE = new ActingServerHandler();
+	
+	private ActingServerHandler() {}
+	
+	
 	@Override
 	public void onRegenTick(IRegeneration cap) { //TODO add config option for fire-resistancy while regenerating
 		EntityPlayer player = cap.getPlayer();

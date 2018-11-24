@@ -1,4 +1,4 @@
-package me.fril.regeneration.client.layers;
+package me.fril.regeneration.client.rendering;
 
 import java.util.Random;
 
@@ -34,7 +34,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
 		if (cap.getState() == RegenState.REGENERATING)
-			cap.onRenderRegenerationLayer(playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		else if (cap.getState().isGraceful())
 			renderGlowingHands(player, cap, scale);
 	}

@@ -1,9 +1,7 @@
 package me.fril.regeneration.util;
 
-import me.fril.regeneration.client.gui.ToastRegeneration;
 import me.fril.regeneration.network.MessageSetPerspective;
 import me.fril.regeneration.network.NetworkHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -21,8 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Sub
@@ -69,11 +65,6 @@ public class PlayerUtil {
 					stack.setCount(0); //item broke
 			}
 		}
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle, RegenState regenState) {
-		Minecraft.getMinecraft().getToastGui().add(new ToastRegeneration(title, subtitle, regenState));
 	}
 	
 	public static boolean applyPotionIfAbsent(EntityPlayer player, int potionId, int length, int amplifier, boolean ambient, boolean showParticles) {

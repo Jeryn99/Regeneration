@@ -127,6 +127,9 @@ public class LimbManipulationUtil {
 		}
 	}
 	
+	
+	
+	
 	public enum Limb {
 		HEAD(ModelBiped.class.getDeclaredFields()[0], ModelBiped.class.getDeclaredFields()[1]),
 		BODY(ModelBiped.class.getDeclaredFields()[2], ModelPlayer.class.getDeclaredFields()[4]),
@@ -142,6 +145,9 @@ public class LimbManipulationUtil {
 			this.secondaryRendererField = secondaryRendererField;
 		}
 	}
+	
+	
+	
 	
 	public static class LimbManipulator {
 		
@@ -161,6 +167,9 @@ public class LimbManipulationUtil {
 			return this;
 		}
 	}
+	
+	
+	
 	
 	public static class CustomModelRenderer extends ModelRenderer {
 		

@@ -1,4 +1,4 @@
-package me.fril.regeneration.client.models;
+package me.fril.regeneration.client.rendering;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;

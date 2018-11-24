@@ -28,7 +28,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Sub
@@ -38,7 +37,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientEventHandler {
 	
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
 	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
@@ -74,7 +72,6 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
 	public static void onClientTick(TickEvent.ClientTickEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		if (player == null || Minecraft.getMinecraft().world == null)
@@ -86,18 +83,16 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
 	public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
 		EntityPlayer player = e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
 		if (cap.getState() == RegenState.REGENERATING) {
-			cap.onRenderRegeneratingPlayerPre(e);
+			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
 		}
 	}
 	
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
 	public static void keyInput(InputUpdateEvent e) {
 		if (Minecraft.getMinecraft().player == null) return;
 		
@@ -115,7 +110,6 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
 	public static void registerModels(ModelRegistryEvent ev) {
 		for (Item item : RegenObjects.ITEMS) {
 			RenderUtil.setItemRender(item);

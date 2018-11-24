@@ -14,7 +14,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * Created by Sub
@@ -31,8 +30,7 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
-		IForgeRegistry<Item> reg = e.getRegistry();
-		reg.registerAll(setUpItem(new ItemFobWatch(), "fob_watch"));
+		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch"));
 	}
 	
 	private static Item setUpItem(Item item, String name) {

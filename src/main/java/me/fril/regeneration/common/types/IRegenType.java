@@ -1,13 +1,10 @@
 package me.fril.regeneration.common.types;
 
+import me.fril.regeneration.client.rendering.ITypeRenderer;
 import me.fril.regeneration.common.capability.IRegeneration;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
@@ -15,19 +12,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Sub
  * on 16/09/2018.
  */
-public interface IRegenType extends INBTSerializable<NBTTagCompound> {
+public interface IRegenType<R extends ITypeRenderer<?>> extends INBTSerializable<NBTTagCompound> {
 	
 	/** @return in ticks */
 	int getAnimationLength();
+	R getRenderer();
 	
 	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {}
 	default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {}
 	default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {}
-	
-	@SideOnly(Side.CLIENT)
-	default void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre ev, IRegeneration capability) {}
-	@SideOnly(Side.CLIENT)
-	default void onRenderRegenerationLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {}
 	
 	
 	
@@ -46,9 +39,9 @@ public interface IRegenType extends INBTSerializable<NBTTagCompound> {
 	
 	
 	
-	public static IRegenType getType(NBTTagCompound nbt) {
+	public static IRegenType<?> getType(NBTTagCompound nbt) {
 		try {
-			return (IRegenType) Class.forName(nbt.getString("name")).newInstance();
+			return (IRegenType<?>) Class.forName(nbt.getString("name")).newInstance();
 		} catch (ReflectiveOperationException e) {
 			System.err.println("WARNING: Malformed type NBT, reverting to default");
 			e.printStackTrace();

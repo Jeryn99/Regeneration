@@ -19,22 +19,18 @@ import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenState.Transition;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.fml.common.Mod;
 
 /**
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class CapabilityRegeneration implements IRegeneration {
 	
 	@CapabilityInject(IRegeneration.class)
@@ -44,7 +40,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final EntityPlayer player;
 	private int regenerationsLeft;
 	private RegenState state = RegenState.ALIVE;
-	private IRegenType type = new TypeFiery();
+	private IRegenType<?> type = new TypeFiery();
 	
 	private final RegenerationStateManager stateManager;
 	
@@ -149,6 +145,11 @@ public class CapabilityRegeneration implements IRegeneration {
 		return player;
 	}
 	
+	@Override
+	public IRegenType<?> getType() {
+		return type;
+	}
+	
 	
 	
 	
@@ -202,20 +203,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void extractRegeneration(int amount) {
 		regenerationsLeft -= amount;
 		synchronise();
-	}
-	
-	
-	
-	
-	
-	@Override
-	public void onRenderRegenerationLayer(RenderPlayer playerRenderer, IRegeneration cap, EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		type.onRenderRegenerationLayer(playerRenderer, this, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-	}
-	
-	@Override
-	public void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre event) {
-		type.onRenderRegeneratingPlayerPre(event, this);
 	}
 	
 	

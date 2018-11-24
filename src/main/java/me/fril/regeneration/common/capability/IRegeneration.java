@@ -1,11 +1,10 @@
 package me.fril.regeneration.common.capability;
 
+import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.util.RegenState;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
@@ -35,10 +34,9 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	void extractRegeneration(int amount);
 	void triggerRegeneration();
 	
-	void onRenderRegenerationLayer(RenderPlayer playerRenderer, IRegeneration cap, EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
-	void onRenderRegeneratingPlayerPre(RenderPlayerEvent.Pre event);
-	
 	IRegenerationStateManager getStateManager();
 	RegenState getState();
+	
+	IRegenType<?> getType();
 	
 }

@@ -13,6 +13,10 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 class ActingClientHandler implements IActingHandler { //XXX feel free to rename this, I couldn't think of anything better
 	
+	public static IActingHandler INSTANCE = new ActingClientHandler();
+	
+	private ActingClientHandler() {}
+	
 	//FUTURE Toasts: PlayerUtil.createToast(new TextComponentTranslation("regeneration.toast.regenerations_left"), new TextComponentTranslation(getRegenerationsLeft() + ""), RegenState.REGENERATING);
 	
 	/** SOON multiplayer sound handling testing
