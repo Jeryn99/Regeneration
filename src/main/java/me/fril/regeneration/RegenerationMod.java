@@ -5,7 +5,6 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
 import me.fril.regeneration.common.commands.RegenDebugCommand;
-import me.fril.regeneration.common.events.RegenStateEventHandler;
 import me.fril.regeneration.debugger.RegenDebugger;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
@@ -50,7 +49,6 @@ public class RegenerationMod {
 	public void init(FMLInitializationEvent event) {
 		proxy.init();
 		NetworkHandler.init();
-		RegenStateEventHandler.init();
 		LootTableList.register(LOOT_FILE);
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 	}

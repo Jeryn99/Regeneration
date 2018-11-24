@@ -9,14 +9,10 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.common.events.RegenStateEvents.RegenEnterGraceEvent;
-import me.fril.regeneration.common.events.RegenStateEvents.RegenFinishEvent;
-import me.fril.regeneration.common.events.RegenStateEvents.RegenGoCriticalEvent;
-import me.fril.regeneration.common.events.RegenStateEvents.RegenTickEvent;
-import me.fril.regeneration.common.events.RegenStateEvents.RegenTriggerEvent;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.debugger.util.DebuggableScheduledAction;
+import me.fril.regeneration.handlers.ActingForwarder;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageSynchronisationRequest;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
@@ -30,7 +26,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Mod;
@@ -288,7 +283,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				scheduleTransitionInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePhaseLength);
 				state = RegenState.GRACE;
 				synchronise();
-				MinecraftForge.EVENT_BUS.post(new RegenEnterGraceEvent(CapabilityRegeneration.this));
+				ActingForwarder.onEnterGrace(CapabilityRegeneration.this);
 				return true;
 				
 			} else if (state.isGraceful()) {
@@ -324,7 +319,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state == RegenState.ALIVE)
 				throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); //would NPE when ticking the transition, but this is a more clear message
 			
-			MinecraftForge.EVENT_BUS.post(new RegenTickEvent(CapabilityRegeneration.this));
+			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
 		}
 		
@@ -336,7 +331,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			nextTransition.cancel(); //... cancel any state shift we had planned
 			scheduleTransitionInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
-			MinecraftForge.EVENT_BUS.post(new RegenTriggerEvent(CapabilityRegeneration.this));
+			ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);
 			type.onStartRegeneration(player, CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -345,7 +340,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			//We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
 			scheduleTransitionInSeconds(Transition.CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength);
-			MinecraftForge.EVENT_BUS.post(new RegenGoCriticalEvent(CapabilityRegeneration.this));
+			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
 			synchronise();
 		}
 		
@@ -369,7 +364,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = RegenState.ALIVE;
 			nextTransition = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
-			MinecraftForge.EVENT_BUS.post(new RegenFinishEvent(CapabilityRegeneration.this));
+			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
 			synchronise();
 		}
 		
