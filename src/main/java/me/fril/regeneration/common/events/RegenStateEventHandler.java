@@ -3,6 +3,8 @@ package me.fril.regeneration.common.events;
 import java.util.UUID;
 
 import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.client.sound.ConditionalSound;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.events.RegenStateEvents.RegenEnterGraceEvent;
 import me.fril.regeneration.common.events.RegenStateEvents.RegenFinishEvent;
@@ -12,11 +14,13 @@ import me.fril.regeneration.common.events.RegenStateEvents.RegenTriggerEvent;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.ExplosionUtil;
 import me.fril.regeneration.util.PlayerUtil;
+import me.fril.regeneration.util.RegenState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -58,7 +62,6 @@ public class RegenStateEventHandler {
 		
 		@SubscribeEvent
 		public static void onGoCritical(RegenGoCriticalEvent ev) {
-			PlayerUtil.playMovingSound(ev.player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
 			ev.player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
 		}
 		
@@ -71,6 +74,7 @@ public class RegenStateEventHandler {
 			player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
 			ev.player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
 			
+			//FIXME you die way too fast at the start, but it's almost impossible to die 20% in
 			player.setHealth(1);
 			player.setAbsorptionAmount(0);
 			
@@ -88,7 +92,7 @@ public class RegenStateEventHandler {
 			
 			cap.extractRegeneration(1);
 			ExplosionUtil.regenerationExplosion(player);
-			PlayerUtil.playMovingSound(ev.player, RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS);
+			PlayerUtil.playMovingSound(ev.player, RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS); //NOW regenerations don't move
 		}
 		
 		@SubscribeEvent
@@ -105,9 +109,15 @@ public class RegenStateEventHandler {
 				case GRACE_CRIT:
 					float nauseaPercentage = 0.5F;
 					
-					if (ev.stateProgress > nauseaPercentage &&
-					      ev.player.getActivePotionEffects().stream().noneMatch(pe->Potion.getIdFromPotion(pe.getPotion()) == 9)) //no nausea applied yet
-						ev.player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), (int)(RegenConfig.Grace.criticalPhaseLength * 20 * nauseaPercentage * 1.5F), 0, false, false)); //apply nausea
+					if (ev.stateProgress > nauseaPercentage) {
+						if (PlayerUtil.applyPotionIfAbsent(ev.player, 9, (int)(RegenConfig.Grace.criticalPhaseLength * 20 * (1-nauseaPercentage) * 1.5F), 0, false, false)) {
+							RegenerationMod.DEBUGGER.getChannelFor(ev.player).out("Applied nausea");
+						}
+					}
+					
+					if (PlayerUtil.applyPotionIfAbsent(ev.player, 18, (int)(RegenConfig.Grace.criticalPhaseLength * 20 * (1-ev.stateProgress)), 0, false, false)) {
+						RegenerationMod.DEBUGGER.getChannelFor(ev.player).out("Applied weakness");
+					}
 					
 					if (ev.player.world.rand.nextDouble() < (RegenConfig.Grace.criticalDamageChance / 100F))
 						ev.player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, ev.player.world.rand.nextFloat() + .5F);
@@ -115,7 +125,14 @@ public class RegenStateEventHandler {
 					break;
 					
 				case GRACE:
-					//TODO weakness at certain point
+					float weaknessPercentage = 0.5F;
+					
+					if (ev.stateProgress > weaknessPercentage) {
+						if (PlayerUtil.applyPotionIfAbsent(ev.player, 18, (int)(RegenConfig.Grace.gracePhaseLength * 20 * (1-weaknessPercentage) + RegenConfig.Grace.criticalPhaseLength * 20), 0, false, false)) {
+							RegenerationMod.DEBUGGER.getChannelFor(ev.player).out("Applied weakness");
+						}
+					}
+					
 					break;
 					
 				case ALIVE: break;
@@ -157,6 +174,10 @@ public class RegenStateEventHandler {
 		public static void onGoCritical(RegenGoCriticalEvent ev) {
 			//SOON toast notification for entering critical phase
 			//SOON red vingette in critical phase
+			
+			//PlayerUtil.playMovingSound(ev.player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS); //NOW should be a player-only sound
+			Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.CRITICAL_STAGE, 1.0F, 2.0F), ()->ev.capability.getState() != RegenState.GRACE_CRIT));
+			
 		}
 		
 	}

@@ -2,6 +2,7 @@ package me.fril.regeneration.common.types;
 
 import java.util.Random;
 
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.layers.LayerRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.LimbManipulationUtil;
@@ -46,8 +47,8 @@ public class TypeFiery implements IRegenType {
 		}
 		
 		Random rand = player.world.rand;
-		/*player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
-		player.rotationYaw += (rand.nextInt(10) - 5) * 0.2;*/
+		player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
+		player.rotationYaw += (rand.nextInt(10) - 5) * 0.2;
 		
 		if (player.world.isRemote)
 			return;
@@ -62,7 +63,7 @@ public class TypeFiery implements IRegenType {
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
 		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 		double z = player.posZ + player.getRNG().nextGaussian() * 2;
-		//player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
+		player.world.newExplosion(player, x, y, z, 1, RegenConfig.fieryRegen, false);
 		
 		for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east())) {
 			if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) {
@@ -96,6 +97,9 @@ public class TypeFiery implements IRegenType {
 			arm_shake = 0;
 			armRot = (int)((getAnimationProgress() / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
+		
+		//FIXME animation progress is reset back to 0 if you get hit by skeleton (probably something wrong in onHurt)
+		//FIXME is it possible to not render the item in hand during the regeneration?
 		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);

@@ -1,7 +1,7 @@
 package me.fril.regeneration.util;
 
-import me.fril.regeneration.client.MovingSoundPlayer;
 import me.fril.regeneration.client.gui.ToastRegeneration;
+import me.fril.regeneration.client.sound.MovingSoundPlayer;
 import me.fril.regeneration.network.MessageSetPerspective;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
@@ -19,6 +19,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -81,4 +83,12 @@ public class PlayerUtil {
 	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle, RegenState regenState) {
 		Minecraft.getMinecraft().getToastGui().add(new ToastRegeneration(title, subtitle, regenState));
 	}
+	
+	public static boolean applyPotionIfAbsent(EntityPlayer player, int potionId, int length, int amplifier, boolean ambient, boolean showParticles) {
+		if (player.getActivePotionEffects().stream().noneMatch(pe->Potion.getIdFromPotion(pe.getPotion()) == potionId)) {
+			player.addPotionEffect(new PotionEffect(Potion.getPotionById(potionId), length, amplifier, ambient, showParticles));
+			return true;
+		} else return false;
+	}
+	
 }

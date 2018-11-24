@@ -1,4 +1,4 @@
-package me.fril.regeneration.client;
+package me.fril.regeneration.client.sound;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -55,13 +55,13 @@ public class MovingSoundPlayer extends MovingSound {
 		//FIXME ConcurrentModificationException's in subtitle renderer when ff-ing to crit, probably because we're modifying it here
 		//SOON shouldn't heartbeat be a player-only sound?
 		//I wish I could use a switch here...
-		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //SOON play heartbeat in grace/crit?
+		if (sound.equals(RegenObjects.Sounds.HEART_BEAT.getSoundName())) { //NOW play heartbeat in grace
 			stopCondition = !cap.getState().isGraceful();
 		} else if (sound.equals(RegenObjects.Sounds.HAND_GLOW.getSoundName())) {
 			stopCondition = !cap.getState().isGraceful(); //SOON move to 'hand is glowing' once implemented
 			//volume = 0.3F;
 		} else if (sound.equals(RegenObjects.Sounds.CRITICAL_STAGE.getSoundName())) {
-			stopCondition = cap.getState() != RegenState.GRACE_CRIT;
+			stopCondition = cap.getState() != RegenState.GRACE_CRIT; //FIXME increase volume
 		} else if (sound.equals(RegenObjects.Sounds.REGENERATION.getSoundName())) {
 			stopCondition = cap.getState() != RegenState.REGENERATING;
 		}

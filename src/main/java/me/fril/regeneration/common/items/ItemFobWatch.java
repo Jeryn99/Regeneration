@@ -6,14 +6,16 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.PlayerUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
@@ -58,12 +60,16 @@ public class ItemFobWatch extends Item {
 				PlayerUtil.sendHotbarMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 			}
 			
+			if (used < 0) //FIXME this happens sometimes, but I can't reproduce it reliably yet
+				RegenerationMod.DEBUGGER.getChannelFor(player).warn("Fob watch used <0 regens (supply: "+supply+", needed:"+needed+", used:"+used+", capacity:"+RegenConfig.regenCapacity+", damage:"+stack.getItemDamage()+", regens:"+cap.getRegenerationsLeft());
 			cap.receiveRegenerations(used);
 			
 			if (!cap.getPlayer().isCreative())
 				stack.setItemDamage(stack.getItemDamage() + used);
 			
-			world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
+			if (world.isRemote)
+				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.FOB_WATCH, 1.0F, 2.0F));
+			
 		} else { //transferring player->watch
 			if (!cap.canRegenerate())
 				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
@@ -74,6 +80,10 @@ public class ItemFobWatch extends Item {
 			stack.setItemDamage(stack.getItemDamage() - 1);
 			cap.extractRegeneration(1);
 			PlayerUtil.sendHotbarMessage(player, "regeneration.messages.transfer.success", true);
+			
+			if (world.isRemote)
+				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 5.0F, 2.0F)); //FIXME change this sound
+			
 			return new ActionResult<>(EnumActionResult.PASS, stack);
 		}
 		

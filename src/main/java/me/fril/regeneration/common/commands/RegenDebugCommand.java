@@ -43,7 +43,7 @@ public class RegenDebugCommand extends CommandBase {
 					if (difference > 0)
 						cap.receiveRegenerations(difference);
 					else
-						cap.extractRegeneration(difference);
+						cap.extractRegeneration(-difference);
 				} else notifyCommandListener(sender, this, "Regenerations: "+cap.getRegenerationsLeft());
 				break;
 		}

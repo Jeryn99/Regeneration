@@ -285,7 +285,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					return false;
 				
 				//We're entering grace period...
-				scheduleTransitionInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePeriodLength);
+				scheduleTransitionInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePhaseLength);
 				state = RegenState.GRACE;
 				synchronise();
 				MinecraftForge.EVENT_BUS.post(new RegenEnterGraceEvent(CapabilityRegeneration.this));
