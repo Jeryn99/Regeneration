@@ -1,7 +1,6 @@
 package me.fril.regeneration.util;
 
 import me.fril.regeneration.client.gui.ToastRegeneration;
-import me.fril.regeneration.client.sound.MovingSoundPlayer;
 import me.fril.regeneration.network.MessageSetPerspective;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
@@ -21,8 +20,6 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,11 +40,6 @@ public class PlayerUtil {
 		if (!player.world.isRemote) {
 			player.sendStatusMessage(translation, hotBar);
 		}
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public static void playMovingSound(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(player, soundIn, categoryIn));
 	}
 	
 	

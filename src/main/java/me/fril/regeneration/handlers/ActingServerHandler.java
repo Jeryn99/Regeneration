@@ -13,7 +13,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.SoundCategory;
 
 class ActingServerHandler implements IActingHandler { // XXX feel free to rename this, I couldn't think of anything better
 	
@@ -27,7 +26,7 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 	                                heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, 1);
 	
 	@Override
-	public void onRegenTick(IRegeneration cap) {
+	public void onRegenTick(IRegeneration cap) { //TODO add config option for fire-resistancy while regenerating
 		EntityPlayer player = cap.getPlayer();
 		double stateProgress = cap.getStateManager().getStateProgress();
 		
@@ -86,8 +85,6 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 		// Reduce number of hearts, but compensate with absorption
 		cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
 		cap.getPlayer().setAbsorptionAmount(cap.getPlayer().getMaxHealth() * (float) HEART_REDUCTION * 2);
-		
-		PlayerUtil.playMovingSound(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
 	}
 	
 	
@@ -104,7 +101,7 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-		// SOON message in chat?
+		//TODO message in chat?
 		EntityPlayer player = cap.getPlayer();
 		
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
@@ -128,7 +125,6 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 		
 		cap.extractRegeneration(1);
 		ExplosionUtil.regenerationExplosion(player);
-		PlayerUtil.playMovingSound(player, RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS); // NOW regenerations don't move
 	}
 	
 	

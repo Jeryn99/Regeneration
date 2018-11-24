@@ -69,7 +69,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	
 	@Config.LangKey("config.regeneration.lose_regens_on_death")
 	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration")
-	public static boolean loseRegensOnDeath = true; //FIXME unimplmented
+	public static boolean loseRegensOnDeath = true; //SOON unimplemented
 	
 	@Config.LangKey("config.regeneration.regeneration_knocksback_players")
 	@Config.Comment("Players can be knocked back when too close to a regeneration")

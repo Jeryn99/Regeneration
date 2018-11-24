@@ -99,7 +99,8 @@ public class TypeFiery implements IRegenType {
 		}
 		
 		//FIXME animation progress is reset back to 0 if you get hit by skeleton (probably something wrong in onHurt)
-		//FIXME is it possible to not render the item in hand during the regeneration?
+		//FIXME the animation resets when not in testing world?!
+		//TODO is it possible to not render the item in hand during the regeneration?
 		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);
@@ -207,7 +208,7 @@ public class TypeFiery implements IRegenType {
 	
 	
 	@Override
-	public int getAnimationLength() { //FIXME shorten to be in line with the music (don't forget to update 'p' and 'r'!)
+	public int getAnimationLength() { //SOON shorten to be in line with the music (don't forget to update 'p' and 'r'!)
 		return 10 * 20; //10 seconds of 20 ticks
 	}
 	
