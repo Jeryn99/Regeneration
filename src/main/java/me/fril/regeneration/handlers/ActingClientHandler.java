@@ -15,7 +15,7 @@ class ActingClientHandler implements IActingHandler { //XXX feel free to rename 
 	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
-		
+		//never forwarded as per the documentation
 	}
 	
 	@Override

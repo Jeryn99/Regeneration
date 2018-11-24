@@ -17,6 +17,7 @@ public class NetworkHandler {
 		int discrimiator = 1;
 		INSTANCE.registerMessage(MessageSaveStyle.Handler.class, MessageSaveStyle.class, discrimiator++, Side.SERVER);
 		INSTANCE.registerMessage(MessageSetPerspective.Handler.class, MessageSetPerspective.class, discrimiator++, Side.CLIENT);
+		INSTANCE.registerMessage(MessageRegenStateEvent.Handler.class, MessageRegenStateEvent.class, discrimiator++, Side.CLIENT);
 		INSTANCE.registerMessage(MessageTriggerRegeneration.Handler.class, MessageTriggerRegeneration.class, discrimiator++, Side.SERVER);
 		INSTANCE.registerMessage(MessageSynchronisationRequest.Handler.class, MessageSynchronisationRequest.class, discrimiator++, Side.SERVER);
 		INSTANCE.registerMessage(MessageSynchroniseRegeneration.Handler.class, MessageSynchroniseRegeneration.class, discrimiator++, Side.CLIENT);
