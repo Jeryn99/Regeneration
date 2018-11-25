@@ -32,8 +32,13 @@ minecraft {
 		runDir = 'run'
 }
 
-repositories {}
-dependencies {}
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testCompile 'junit:junit:4.11'
+}
 
 processResources {
 	inputs.property 'version', project.version

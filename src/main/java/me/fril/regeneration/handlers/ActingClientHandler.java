@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 class ActingClientHandler implements IActingHandler { //XXX feel free to rename this, I couldn't think of anything better
 	
-	public static IActingHandler INSTANCE = new ActingClientHandler();
+	public static final IActingHandler INSTANCE = new ActingClientHandler();
 	
 	private ActingClientHandler() {}
 	
