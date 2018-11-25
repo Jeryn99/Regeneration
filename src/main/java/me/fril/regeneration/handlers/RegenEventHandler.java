@@ -124,6 +124,7 @@ public class RegenEventHandler {
 		if (!event.getName().toString().toLowerCase().matches(RegenConfig.Loot.lootRegex) || RegenConfig.Loot.disableLoot)
 			return;
 		
+		//TODO configurable chances? Maybe by doing a simple loottable turtorial?
 		LootEntryTable entry = new LootEntryTable(RegenerationMod.LOOT_FILE, 1, 0, new LootCondition[0], "regeneration_inject_entry");
 		LootPool pool = new LootPool(new LootEntry[] { entry }, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(1), "regeneration_inject_pool");
 		event.getTable().addPool(pool);
