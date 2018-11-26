@@ -1,5 +1,6 @@
 package me.fril.regeneration.common.capability;
 
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +28,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	/** Returns if the player is currently <i>able to</i> regenerate */
 	default boolean canRegenerate() {
-		return getRegenerationsLeft() > 0 && getPlayer().posY > 0;
+		return (RegenConfig.infiniteRegeneration || getRegenerationsLeft() > 0) && getPlayer().posY > 0;
 	}
 	
 	void receiveRegenerations(int amount);

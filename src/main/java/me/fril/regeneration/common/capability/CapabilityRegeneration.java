@@ -194,14 +194,20 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void receiveRegenerations(int amount) {
-		regenerationsLeft += amount;
+		if (RegenConfig.infiniteRegeneration)
+			regenerationsLeft = RegenConfig.regenCapacity;
+		else
+			regenerationsLeft += amount;
 		synchronise();
 	}
 	
 	
 	@Override
 	public void extractRegeneration(int amount) {
-		regenerationsLeft -= amount;
+		if (RegenConfig.infiniteRegeneration)
+			regenerationsLeft = RegenConfig.regenCapacity;
+		else
+			regenerationsLeft -= amount;
 		synchronise();
 	}
 	

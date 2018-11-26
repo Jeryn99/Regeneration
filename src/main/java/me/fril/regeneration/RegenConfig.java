@@ -24,6 +24,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	
 	@Config.LangKey("config.regeneration.free_regens")
 	@Config.Comment("Every player will start with this number of regenerations. Will cause undefined behavior if bigger than the amount of regenerations per cycle.")
+	@Config.RangeInt(min = 0)
 	public static int freeRegenerations = 0;
 	
 	@Config.LangKey("config.regeneration.first_start_gift_only")
@@ -36,7 +37,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	
 	@Config.LangKey("config.regeneration.regenerative_kill_range")
 	@Config.Comment("Upon regeneration every mob inside of this radius is immediately killed. Keep in mind that you should round up to accommodate for mobs that aren't standing in the center of a block")
-	@Config.RangeInt(max = 200, min = 0)
+	@Config.RangeInt(min = 0)
 	public static int regenerativeKillRange = 4;
 	
 	@Config.LangKey("config.regeneration.regenerative_knockback")
@@ -45,15 +46,17 @@ public class RegenConfig { // TODO externalize comment strings?
 	
 	@Config.LangKey("config.regeneration.regenerative_knockback_range")
 	@Config.Comment("Range wherein every mob is knocked back upon regeneration")
-	@Config.RangeInt(max = 300, min = 0)
+	@Config.RangeInt(min = 0)
 	public static int regenerativeKnockbackRange = 7;
 	
 	@Config.LangKey("config.regeneration.post_regen_duration")
 	@Config.Comment("Amount of seconds the post-regeneration effect lasts")
+	@Config.RangeInt(min = 0)
 	public static int postRegenerationDuration = 180;
 	
 	@Config.LangKey("config.regeneration.post_regenerationEffect_level")
 	@Config.Comment("The level of the regeneration status effect granted after you regenerate")
+	@Config.RangeInt(min = 0)
 	public static int postRegenerationLevel = 4;
 	
 	@Config.LangKey("config.regeneration.reset_hunger")
@@ -66,6 +69,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	
 	@Config.LangKey("config.regeneration.absorbtion_level")
 	@Config.Comment("The amount of absorption hearts you get when regenerating")
+	@Config.RangeInt(min = 0)
 	public static int absorbtionLevel = 10;
 	
 	@Config.LangKey("config.regeneration.lose_regens_on_death")
@@ -83,6 +87,12 @@ public class RegenConfig { // TODO externalize comment strings?
 	@Config.LangKey("config.regeneration.regeneration_fire_immunity")
 	@Config.Comment("Players are immune to fire damage while regenerating")
 	public static boolean regenFireImmune = false;
+	
+	@Config.LangKey("config.regeneration.infinite_regenerations")
+	@Config.Comment("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.")
+	public static boolean infiniteRegeneration = false;
+	
+	
 	
 	public static class Loot {
 		

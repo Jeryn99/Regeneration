@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
 public class TypeFieryRenderer extends ITypeRenderer<TypeFiery> {
@@ -27,6 +28,9 @@ public class TypeFieryRenderer extends ITypeRenderer<TypeFiery> {
 
 	@Override
 	public void renderRegeneratingPlayerPre(TypeFiery type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
+		if (MinecraftForgeClient.getRenderPass() == -1) //rendering in inventory
+			return;
+		
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
 		
 		int headRot = 50;
@@ -54,6 +58,9 @@ public class TypeFieryRenderer extends ITypeRenderer<TypeFiery> {
 	
 	@Override
 	public void renderRegenerationLayer(TypeFiery type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		if (MinecraftForgeClient.getRenderPass() == -1) //rendering in inventory
+			return;
+		
 		ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 		
 		// State manager changes

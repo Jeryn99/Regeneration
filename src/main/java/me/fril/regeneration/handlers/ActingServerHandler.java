@@ -32,7 +32,7 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 	
 	
 	@Override
-	public void onRegenTick(IRegeneration cap) { //TODO add config option for fire-resistancy while regenerating
+	public void onRegenTick(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		double stateProgress = cap.getStateManager().getStateProgress();
 		
@@ -87,6 +87,8 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 	@Override
 	public void onEnterGrace(IRegeneration cap) { // FIXME there's a lag spike the first time this happens
 		// SOON yellow vingette to make sure there's always a grace indicator? Or the heart timer?
+		
+		ExplosionUtil.explodeKnockback(cap.getPlayer(), cap.getPlayer().world, cap.getPlayer().getPosition(), RegenConfig.regenerativeKnockback/2, RegenConfig.regenerativeKnockbackRange);
 		
 		// Reduce number of hearts, but compensate with absorption
 		cap.getPlayer().setAbsorptionAmount(cap.getPlayer().getMaxHealth() * (float) HEART_REDUCTION);

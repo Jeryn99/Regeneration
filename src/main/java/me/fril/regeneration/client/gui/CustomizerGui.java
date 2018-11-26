@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.annotation.Nullable;
 
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -81,6 +82,8 @@ public class CustomizerGui extends GuiContainer {
 		buttonList.add(slideSecondaryBlue);
 	}
 	
+	
+	
 	private void onChangeSliderValue(@Nullable GuiSlider slider) {
 		btnReset.enabled = true;
 		
@@ -147,7 +150,11 @@ public class CustomizerGui extends GuiContainer {
 		length = mc.fontRenderer.getStringWidth(str);
 		fontRenderer.drawString(str, cx + 131 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(secondaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
 		
-		str = new TextComponentTranslation("regeneration.messages.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft();
+		if (RegenConfig.infiniteRegeneration)
+			str = new TextComponentTranslation("regeneration.messages.infinite_regenerations").getFormattedText();
+		else
+			str = new TextComponentTranslation("regeneration.messages.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft();
+		
 		length = mc.fontRenderer.getStringWidth(str);
 		fontRenderer.drawString(str, cx + 86 - length / 2, cy + 21, Color.DARK_GRAY.getRGB());
 	}
