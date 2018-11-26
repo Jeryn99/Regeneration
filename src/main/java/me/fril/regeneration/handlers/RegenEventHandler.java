@@ -5,6 +5,7 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
+import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -94,8 +95,11 @@ public class RegenEventHandler {
 			return;
 		
 		EntityPlayer player = (EntityPlayer) event.getEntity();
-		if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { //player has actually died
-			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		
+		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage()) {
+			event.setCanceled(true);
+		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { //player has actually died
 			boolean notDead = cap.getStateManager().onKilled();
 			event.setCanceled(notDead);
 		}

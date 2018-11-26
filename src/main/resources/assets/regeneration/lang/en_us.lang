@@ -52,6 +52,7 @@ config.regeneration.loot_regex=Loot pool matcher
 config.regeneration.disable_loot=Disable Fob Watch loot
 config.regeneration.regeneration_knocksback_players=Regeneration knocks back players
 config.regeneration.regeneration_kills_players=Regeneration kills players
+config.regeneration.regeneration_fire_immunity=Regeneration fire immunity
 config.regeneration.grace.gracePeriodLength=Grace period length
 config.regeneration.grace.criticalPhaseLength=Critical phase length
 config.regeneration.grace.criticalDamageChance=Critical damage chance

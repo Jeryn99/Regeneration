@@ -70,7 +70,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	
 	@Config.LangKey("config.regeneration.lose_regens_on_death")
 	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration")
-	public static boolean loseRegensOnDeath = true; //SOON unimplemented
+	public static boolean loseRegensOnDeath = true; //SUB unimplemented
 	
 	@Config.LangKey("config.regeneration.regeneration_knocksback_players")
 	@Config.Comment("Players can be knocked back when too close to a regeneration")
@@ -79,6 +79,10 @@ public class RegenConfig { // TODO externalize comment strings?
 	@Config.LangKey("config.regeneration.regeneration_kills_players")
 	@Config.Comment("Players can be killed when too close to a regeneration")
 	public static boolean regenerationKillsPlayers = false;
+	
+	@Config.LangKey("config.regeneration.regeneration_fire_immunity")
+	@Config.Comment("Players are immune to fire damage while regenerating")
+	public static boolean regenFireImmune = false;
 	
 	public static class Loot {
 		
