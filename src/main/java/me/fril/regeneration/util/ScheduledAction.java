@@ -44,7 +44,7 @@ public class ScheduledAction {
 			return scheduledTick - currentTick;
 	}
 	
-	public double getProgress() { //NOW CHECK if scheduledTick is set back to -1, won't this cause issues?
+	public double getProgress() {
 		return currentTick / (double)scheduledTick;
 	}
 	

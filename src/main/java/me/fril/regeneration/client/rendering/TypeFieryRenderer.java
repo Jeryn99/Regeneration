@@ -40,8 +40,6 @@ public class TypeFieryRenderer extends ITypeRenderer<TypeFiery> {
 			armRot = (int)((type.getAnimationProgress() / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
 		
-		//FIXME animation progress is reset back to 0 if you get hit by skeleton (probably something wrong in onHurt)
-		//FIXME the animation resets when not in testing world?!
 		//TODO is it possible to not render the item in hand during the regeneration?
 		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);

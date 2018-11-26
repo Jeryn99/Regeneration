@@ -33,16 +33,23 @@ public interface IRegenType<R extends ITypeRenderer<?>> extends INBTSerializable
 	
 	@Override
 	default void deserializeNBT(NBTTagCompound nbt) {
-		if (nbt.getString("name") != this.getClass().getName())
+		if (!nbt.getString("name").equals(this.getClass().getName()))
 			throw new IllegalStateException("Deserialising wrong type instance (nbt: "+nbt.getString("name")+", instance: "+this.getClass().getName());
 	}
 	
 	
 	
-	public static IRegenType<?> getType(NBTTagCompound nbt) {
+	public static IRegenType<?> getType(IRegenType<?> currentType, NBTTagCompound nbt) {
 		try {
-			return (IRegenType<?>) Class.forName(nbt.getString("name")).newInstance();
-		} catch (ReflectiveOperationException e) {
+			Class<?> nbtClass = Class.forName(nbt.getString("name"));
+			
+			if (currentType == null || currentType.getClass() != nbtClass) { //no current type OR type has changed
+				return (IRegenType<?>) nbtClass.newInstance();
+			} else {
+				currentType.deserializeNBT(nbt);
+				return currentType;
+			}
+		} catch (ReflectiveOperationException | ClassCastException e) {
 			System.err.println("WARNING: Malformed type NBT, reverting to default");
 			e.printStackTrace();
 			return new TypeFiery();

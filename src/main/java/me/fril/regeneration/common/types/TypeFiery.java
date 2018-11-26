@@ -84,11 +84,14 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		nbt.setLong("animationTicks", animationTicks);
 		return nbt;
 	}
-
+	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		IRegenType.super.deserializeNBT(nbt);
-		animationTicks = nbt.getLong("animationTicks");
+		
+		long nbtTicks = nbt.getLong("animationTicks");
+		if (nbtTicks > animationTicks)
+			animationTicks = nbtTicks;
 	}
 	
 	

@@ -39,4 +39,11 @@ public class DebuggableScheduledAction extends ScheduledAction {
 		super.cancel();
 	}
 	
+	@Override
+	public double getProgress() {
+		if (scheduledTick == -1)
+			RegenerationMod.DEBUGGER.getChannelFor(player).warn("Querying progress of canceled/finished transition");
+		return super.getProgress();
+	}
+	
 }

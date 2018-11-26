@@ -18,6 +18,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	
 	@Config.LangKey("config.regeneration.max_regens")
 	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
+	@Config.RequiresMcRestart
 	@Config.RangeInt(min = 0)
 	public static int regenCapacity = 12;
 	

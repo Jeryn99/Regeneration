@@ -120,9 +120,9 @@ public class CapabilityRegeneration implements IRegeneration {
 		//v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
 		
-		if (nbt.hasKey("type")) //v1.3+ has a type tag
-			type = IRegenType.getType(nbt.getCompoundTag("type"));
-		else //for previous versions set to default 'fiery' type
+		if (nbt.hasKey("type")) //v1.3+ saves have a type tag
+			type = IRegenType.getType(type, nbt.getCompoundTag("type"));
+		else //for previous save versions set to default 'fiery' type
 			type = new TypeFiery();
 		
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
