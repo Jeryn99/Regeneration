@@ -13,15 +13,21 @@ import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -70,6 +76,60 @@ public class ClientEventHandler {
 		
 		GlStateManager.popMatrix();
 	}
+	
+	
+	
+	@SuppressWarnings("incomplete-switch")
+	@SubscribeEvent
+	public static void onRenderGui(RenderGameOverlayEvent.Post event) {
+		if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
+			return;
+		
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
+		
+		switch (cap.getState()) {
+			case GRACE:
+				renderVignette(cap.getPrimaryColor(), 0.3F);
+				break;
+				
+			case GRACE_CRIT:
+				renderVignette(new Vec3d(1, 0, 0), 0.5F);
+				break;
+				
+			case REGENERATING:
+				renderVignette(cap.getSecondaryColor(), 0.5F);
+				break;
+		}
+	}
+	
+	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID + ":" + "textures/misc/vignette.png");
+	
+	private static void renderVignette(Vec3d color, float a) {
+		GlStateManager.color((float)color.x, (float)color.y, (float)color.z, a);
+		GlStateManager.disableAlpha();
+		GlStateManager.depthMask(false);
+		GlStateManager.enableBlend();
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		
+		Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		
+		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
+		int z = -91; //below the HUD
+		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		bufferbuilder.pos(0, scaledRes.getScaledHeight(), z).tex(0, 1).endVertex();
+		bufferbuilder.pos(scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), z).tex(1.0D, 1.0D).endVertex();
+		bufferbuilder.pos(scaledRes.getScaledWidth(), 0, z).tex(1, 0).endVertex();
+		bufferbuilder.pos(0, 0, z).tex(0, 0).endVertex();
+		tessellator.draw();
+		
+		GlStateManager.depthMask(true);
+		GlStateManager.enableAlpha();
+		GlStateManager.color(1, 1, 1, 1);
+	}
+	
+	
 	
 	@SubscribeEvent
 	public static void onClientTick(TickEvent.ClientTickEvent e) {

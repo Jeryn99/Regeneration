@@ -59,7 +59,6 @@ class ActingClientHandler implements IActingHandler { //XXX feel free to rename 
 	@Override
 	public void onGoCritical(IRegeneration cap) {
 		//SOON toast notification for entering critical phase
-		//SOON red vingette in critical phase
 		
 		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.CRITICAL_STAGE, 1.0F, 0.5F), ()->cap.getState() != RegenState.GRACE_CRIT));
 	}
