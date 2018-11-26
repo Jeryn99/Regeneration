@@ -89,8 +89,9 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 		// SOON yellow vingette to make sure there's always a grace indicator? Or the heart timer?
 		
 		// Reduce number of hearts, but compensate with absorption
+		cap.getPlayer().setAbsorptionAmount(cap.getPlayer().getMaxHealth() * (float) HEART_REDUCTION);
 		cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
-		cap.getPlayer().setAbsorptionAmount(cap.getPlayer().getMaxHealth() * (float) HEART_REDUCTION * 2);
+		cap.getPlayer().setHealth(cap.getPlayer().getMaxHealth());
 	}
 	
 	
