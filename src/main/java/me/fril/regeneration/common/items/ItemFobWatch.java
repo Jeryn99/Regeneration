@@ -59,7 +59,7 @@ public class ItemFobWatch extends Item {
 				PlayerUtil.sendHotbarMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 			}
 			
-			if (used < 0) //FIXME this happens sometimes, but I can't reproduce it reliably yet (seems like this is caused by the free regens on startup)
+			if (used < 0)
 				RegenerationMod.DEBUGGER.getChannelFor(player).warn("Fob watch used <0 regens (supply: "+supply+", needed:"+needed+", used:"+used+", capacity:"+RegenConfig.regenCapacity+", damage:"+stack.getItemDamage()+", regens:"+cap.getRegenerationsLeft());
 			cap.receiveRegenerations(used);
 			

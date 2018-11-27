@@ -83,7 +83,7 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 	
 	
 	@Override
-	public void onEnterGrace(IRegeneration cap) { //FIXME there's a lag spike the first time this happens
+	public void onEnterGrace(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		ExplosionUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback/2, RegenConfig.regenerativeKnockbackRange);
 		

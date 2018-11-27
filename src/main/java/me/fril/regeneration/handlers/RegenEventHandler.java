@@ -124,12 +124,14 @@ public class RegenEventHandler {
 		if (event.player.world.isRemote)
 			return;
 		
-		NBTTagCompound nbt = event.player.getEntityData();
-		boolean loggedInBefore = nbt.getBoolean("loggedInBefore");
-		if (!loggedInBefore) {
+		NBTTagCompound nbt = event.player.getEntityData(),
+		               persist = nbt.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+		if (!persist.getBoolean("loggedInBefore"))
 			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
-		}
-		nbt.setBoolean("loggedInBefore", true);
+		persist.setBoolean("loggedInBefore", true);
+		nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
+		
+		System.out.println(nbt);
 	}
 	
 	@SubscribeEvent

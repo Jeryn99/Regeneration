@@ -37,8 +37,8 @@ public class RegenDebugCommand extends CommandBase {
 				RegenerationMod.DEBUGGER.open();
 				break;
 				
-			case "setregens": //FIXME broken?
-				if (amount > 0) {
+			case "setregens":
+				if (amount >= 0) {
 					int difference = amount - cap.getRegenerationsLeft();
 					if (difference > 0)
 						cap.receiveRegenerations(difference);

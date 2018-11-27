@@ -24,17 +24,17 @@ public class MovingSoundPlayer extends MovingSound {
 		super.repeat = repeat;
 	}
 	
-	//FIXME ConcurrentModificationException's in subtitle renderer when ff-ing to crit, probably because we're modifying it here
+	//FIXME Sometimes ConcurrentModificationException's in subtitle renderer, probably due to a race condition because we're modifying it here and in CoditionalSound
 	@Override
 	public void update() {
-		if (player.isDead || stopCondition.get()) {
-			donePlaying = true;
-			return;
-		}
-		
 		super.xPosF = (float) player.posX;
 		super.yPosF = (float) player.posY;
 		super.zPosF = (float) player.posZ;
+	}
+	
+	@Override
+	public boolean isDonePlaying() {
+		return player.isDead || stopCondition.get();
 	}
 	
 }
