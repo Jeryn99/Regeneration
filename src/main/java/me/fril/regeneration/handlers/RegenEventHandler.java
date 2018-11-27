@@ -20,6 +20,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -83,7 +84,6 @@ public class RegenEventHandler {
 	//============ USER EVENTS ==========
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingHurtEvent event) {
-		
 		Entity trueSource = event.getSource().getTrueSource();
 		
 		if(trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving){
@@ -102,6 +102,15 @@ public class RegenEventHandler {
 		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { //player has actually died
 			boolean notDead = cap.getStateManager().onKilled();
 			event.setCanceled(notDead);
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onKnockback(LivingKnockBackEvent event) {
+		if (event.getEntityLiving() instanceof EntityPlayer) {
+			if (CapabilityRegeneration.getForPlayer((EntityPlayer)event.getEntityLiving()).getState() == RegenState.REGENERATING) {
+				event.setCanceled(true);
+			}
 		}
 	}
 	

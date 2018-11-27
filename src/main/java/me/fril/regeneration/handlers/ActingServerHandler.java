@@ -34,15 +34,13 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 	@Override
 	public void onRegenTick(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		double stateProgress = cap.getStateManager().getStateProgress();
+		float stateProgress = (float) cap.getStateManager().getStateProgress();
 		
 		switch (cap.getState()) {
 			case REGENERATING:
-				float health = (float) stateProgress * player.getMaxHealth();
-				float absorption = RegenConfig.absorbtionLevel * 2 * (float) stateProgress;
-				
-				player.setHealth(Math.max(player.getHealth(), health)); // using max because it sometimes damages the player due to rounding errors
-				player.setAbsorptionAmount(Math.max(player.getAbsorptionAmount(), absorption));
+				float dm = Math.max(1, (player.world.getDifficulty().getId()+1) / 3F); //compensating for hard difficulty
+				player.heal(stateProgress * 0.3F * dm);
+				player.setArrowCountInEntity(0);
 				break;
 			
 			case GRACE_CRIT:
@@ -85,13 +83,14 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 	
 	
 	@Override
-	public void onEnterGrace(IRegeneration cap) { // FIXME there's a lag spike the first time this happens
-		ExplosionUtil.explodeKnockback(cap.getPlayer(), cap.getPlayer().world, cap.getPlayer().getPosition(), RegenConfig.regenerativeKnockback/2, RegenConfig.regenerativeKnockbackRange);
+	public void onEnterGrace(IRegeneration cap) { //FIXME there's a lag spike the first time this happens
+		EntityPlayer player = cap.getPlayer();
+		ExplosionUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback/2, RegenConfig.regenerativeKnockbackRange);
 		
-		// Reduce number of hearts, but compensate with absorption
-		cap.getPlayer().setAbsorptionAmount(cap.getPlayer().getMaxHealth() * (float) HEART_REDUCTION);
-		cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
-		cap.getPlayer().setHealth(cap.getPlayer().getMaxHealth());
+		//Reduce number of hearts, but compensate with absorption
+		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
+		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
+		player.setHealth(player.getMaxHealth());
 	}
 	
 	
@@ -114,15 +113,13 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
 		player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
 		
-		// FIXME you die way too fast at the start, but it's almost impossible to die 20% in
-		player.setHealth(1);
+		player.setHealth(Math.max(player.getHealth(), 8));
 		player.setAbsorptionAmount(0);
 		
 		player.extinguish();
 		player.removePassengers();
 		player.clearActivePotions();
 		player.dismountRidingEntity();
-		player.setArrowCountInEntity(0);
 		
 		if (RegenConfig.resetHunger)
 			player.getFoodStats().setFoodLevel(20);
@@ -139,7 +136,10 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 	
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
-		cap.getPlayer().addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
+		EntityPlayer player = cap.getPlayer();
+		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
+		player.setHealth(player.getMaxHealth());
+		player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
 	}
 	
 }
