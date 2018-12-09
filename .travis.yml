@@ -4,3 +4,7 @@ jdk: oraclejdk8
 install: "./gradlew setupCIWorkspace"
 script: "./gradlew build"
 after_success: "./gradlew bintrayUpload"
+
+branches:
+  only:
+- /.*/
