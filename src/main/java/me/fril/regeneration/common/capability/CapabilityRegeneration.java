@@ -1,10 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.awt.Color;
-import java.util.UUID;
-
-import javax.annotation.Nonnull;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.common.types.IRegenType;
@@ -31,6 +26,10 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Mod;
+
+import javax.annotation.Nonnull;
+import java.awt.*;
+import java.util.UUID;
 
 /**
  * Created by Sub
@@ -272,7 +271,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (getSolaceTicks() == 2) {
 			setGlowing(true);
 			if (player.world.isRemote) {
-				PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
+				PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true);
 			}
 		}
 		
@@ -294,7 +293,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			if (getTicksRegenerating() == 3) {
 				if (player.world.isRemote) {
-					PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS);
+					PlayerUtil.playMovingSound(player, getType().getSound(), SoundCategory.PLAYERS, true);
 				}
 				setLivesLeft(getLivesLeft() - 1);
 				setTimesRegenerated(getTimesRegenerated() + 1);
@@ -391,7 +390,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (getSolaceTicks() % 1200 == 0) {
 				setGlowing(true);
 				if (player.world.isRemote) {
-					PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS);
+					PlayerUtil.playMovingSound(player, RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true);
 				}
 			}
 			
@@ -403,7 +402,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			// 14 Minutes - Critical stage start
 			if (getSolaceTicks() == 17100) {
 				if (player.world.isRemote) {
-					PlayerUtil.playMovingSound(player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS);
+					PlayerUtil.playMovingSound(player, RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true);
 					player.addPotionEffect(new PotionEffect(Potion.getPotionById(9), 800, 0, false, false)); // could be removed with milk, but I think that's not that bad
 				}
 			}

@@ -34,8 +34,8 @@ public class PlayerUtil {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static void playMovingSound(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(player, soundIn, categoryIn));
+	public static void playMovingSound(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat) {
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(player, soundIn, categoryIn, repeat));
 	}
 	
 	

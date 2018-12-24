@@ -65,7 +65,7 @@ public class ItemFobWatch extends Item {
 				stack.setItemDamage(stack.getItemDamage() + used);
 			
 			if (world.isRemote)
-				PlayerUtil.playMovingSound(cap.getPlayer(), RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS);
+				PlayerUtil.playMovingSound(cap.getPlayer(), RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, true);
 			
 		} else { //transferring player->watch
 			if (!cap.isCapable())
@@ -79,7 +79,7 @@ public class ItemFobWatch extends Item {
 			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
 			
 			if (world.isRemote)
-				PlayerUtil.playMovingSound(cap.getPlayer(), SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, SoundCategory.PLAYERS); //TODO change this sound
+				PlayerUtil.playMovingSound(cap.getPlayer(), SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, SoundCategory.PLAYERS, true); //TODO change this sound
 			
 			return new ActionResult<>(EnumActionResult.PASS, stack);
 		}

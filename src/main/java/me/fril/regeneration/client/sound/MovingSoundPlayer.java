@@ -19,10 +19,11 @@ public class MovingSoundPlayer extends MovingSound {
 	private float distance = 0.0F;
 	private SoundEvent soundCheck;
 	
-	public MovingSoundPlayer(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn) {
+	
+	public MovingSoundPlayer(EntityPlayer player, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat) {
 		super(soundIn, categoryIn);
 		this.player = player;
-		repeat = true;
+		this.repeat = repeat;
 		repeatDelay = 0;
 		soundCheck = soundIn;
 	}
