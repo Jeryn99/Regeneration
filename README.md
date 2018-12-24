@@ -1,5 +1,7 @@
 # Minecraft Regeneration mod
 
+[![Build Status](https://travis-ci.com/Suffril/Regeneration.svg?branch=master)](https://travis-ci.com/Suffril/Regeneration)
+
 ### What does it do?
 Inspired by a totally-not-at-all popular British television show, this mod allows you to obtain the regeneration of powers of a 'Timelord'. Once you obtain these powers, you will regenerate into a new body instead of dying. However, this process will only occur 12 times, after which you will die for real.
 
