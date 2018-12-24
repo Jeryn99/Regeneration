@@ -53,7 +53,8 @@ public class TestStateBasedSystem {
 		assertTrue("Not all states have a transition, or vice versa", RegenState.values().length-1 == Transition.values().length);
 	}
 	
-	//TODO could probably add some tests that actually verify the correctness of transition callbacks
-	//TODO add a server-booting test
+	//SOON could probably add some tests that actually verify the correctness of transition callbacks
+	//SOON add actual state-flow test?
+	//SOON add a server-booting test
 	
 }
