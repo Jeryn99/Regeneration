@@ -1,6 +1,6 @@
-import org.gradle.internal.logging.text.StyledTextOutput; //technically an internal api, but I don't really care
-import org.gradle.internal.logging.text.StyledTextOutputFactory;
-import static org.gradle.internal.logging.text.StyledTextOutput.Style;
+import org.gradle.internal.logging.text.StyledTextOutput //technically an internal api, but I don't really care
+import org.gradle.internal.logging.text.StyledTextOutputFactory
+import static org.gradle.internal.logging.text.StyledTextOutput.Style
 
 buildscript {
 	repositories {
@@ -50,33 +50,33 @@ processResources {
 }
 
 task checkUpdateJson doLast {
-	def out = services.get(StyledTextOutputFactory).create('version-check');
-	def json = new groovy.json.JsonSlurper().parseText(new File('update.json').text);
-	def thisMcVersionsVersions = json[minecraft_version];
+	def out = services.get(StyledTextOutputFactory).create('version-check')
+	def json = new groovy.json.JsonSlurper().parseText(new File('update.json').text)
+	def thisMcVersionsVersions = json[minecraft_version]
 	
 	if (thisMcVersionsVersions == null) {
-		out.withStyle(Style.Failure).println("WARNING: The current mc version '${minecraft_version}' does not exist in update.json");
+		out.withStyle(Style.Failure).println("WARNING: The current mc version '${minecraft_version}' does not exist in update.json")
 	}
 	
 	if (thisMcVersionsVersions[version] == null) {
-		out.withStyle(Style.Failure).println("WARNING: The current version '${version}' does not have a corresponding entry in update.json for mc version '${minecraft_version}'");
+		out.withStyle(Style.Failure).println("WARNING: The current version '${version}' does not have a corresponding entry in update.json for mc version '${minecraft_version}'")
 	} else {
 		for (String version : json.promos) {
-			def mcVersion = version.split('=')[0].split('-')[0];
-			def value = version.split('=')[1];
+			def mcVersion = version.split('=')[0].split('-')[0]
+			def value = version.split('=')[1]
 			
 			if (json[mcVersion][value] == null) {
-				out.withStyle(Style.FailureHeader).println("WARNING: Promo version '${mcVersion}-${value}' does not exist!");
+				out.withStyle(Style.FailureHeader).println("WARNING: Promo version '${mcVersion}-${value}' does not exist!")
 			}
 		}
 	}
 	
 	if (json.promos[minecraft_version+'-recommended'] == version) {
-		out.withStyle(Style.Info).println("Building version ${minecraft_version}-recommended");
+		out.withStyle(Style.Info).println("Building version ${minecraft_version}-recommended")
 	} else if (json.promos[minecraft_version+'-latest'] == version) {
-		out.withStyle(Style.Info).println("Building version ${minecraft_version}-latest");
+		out.withStyle(Style.Info).println("Building version ${minecraft_version}-latest")
 	} else {
-		out.withStyle(Style.FailureHeader).println("WARNING: Version '${minecraft_version}-${version}' is neither a latest nor a recommended version");
+	//	out.withStyle(Style.FailureHeader).println("WARNING: Version '${minecraft_version}-${version}' is neither a latest nor a recommended version")
 	}
 }
 project.tasks.test.dependsOn(checkUpdateJson)
