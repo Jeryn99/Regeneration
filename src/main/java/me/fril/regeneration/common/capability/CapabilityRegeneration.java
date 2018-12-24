@@ -253,6 +253,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		
+		@SuppressWarnings("deprecation")
 		private void scheduleTransitionInTicks(Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting non-completed/cancelled transition");
@@ -384,6 +385,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		
 		
+		@SuppressWarnings("deprecation")
 		@Override
 		public NBTTagCompound serializeNBT() {
 			NBTTagCompound nbt = new NBTTagCompound();

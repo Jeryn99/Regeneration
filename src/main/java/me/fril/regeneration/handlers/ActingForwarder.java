@@ -11,6 +11,9 @@ public class ActingForwarder { //XXX feel free to rename this, I couldn't think 
 	
 	public static void onRegenTick(IRegeneration cap) {
 		//Never forwarded, as per the documentation
+		if (cap.getPlayer().world.isRemote)
+			throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
+		
 		ActingServerHandler.INSTANCE.onRegenTick(cap);
 	}
 	

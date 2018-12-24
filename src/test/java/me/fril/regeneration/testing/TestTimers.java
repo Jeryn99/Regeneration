@@ -11,6 +11,7 @@ import me.fril.regeneration.util.ScheduledAction;
  * 
  * @author HoldYourWaffle
  */
+@SuppressWarnings("deprecation")
 public class TestTimers {
 	private boolean executed;
 	

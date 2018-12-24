@@ -112,6 +112,7 @@ class PanelStatus extends JPanel {
 		lblRegensLeftVal.setText(cap.getRegenerationsLeft() + "");
 		//lblAnimationProgressVal.setText(Math.round(cap.getAnimationProgress()*100) + "%");
 		
+		@SuppressWarnings("deprecation")
 		Pair<Transition, Long> scheduled = cap.getStateManager().getScheduledEvent();
 		lblScheduledVal.setForeground(scheduled == null ? Color.BLACK : scheduled.getLeft().color);
 		lblScheduledVal.setText(scheduled == null ? "nothing" : scheduled.getLeft() + " in " + scheduled.getRight() + " ticks ("+(round(scheduled.getRight()/20F, 1))+"s)");
