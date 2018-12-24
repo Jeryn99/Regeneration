@@ -7,6 +7,7 @@ import me.fril.regeneration.util.RegenConfig;
 import me.fril.regeneration.util.RegenObjects;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -41,42 +42,52 @@ public class ItemFobWatch extends Item {
 		
 		if (!player.isSneaking()) { //transferring watch->player
 			if (stack.getItemDamage() == RegenConfig.regenCapacity) {
-				return usageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
+				return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
 			} else if (cap.getLivesLeft() == RegenConfig.regenCapacity) {
-				return usageFailed(player, "regeneration.messages.transfer.max_regens", stack);
+				return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 			}
 			
 			int supply = RegenConfig.regenCapacity - stack.getItemDamage(),
-				needed = RegenConfig.regenCapacity - cap.getLivesLeft(),
-				used = Math.min(supply, needed);
+					needed = RegenConfig.regenCapacity - cap.getLivesLeft(),
+					used = Math.min(supply, needed);
 			
 			if (cap.isCapable())
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
-			else
+			else if (player.world.isRemote) {
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
+			}
 			
-			cap.setLivesLeft(cap.getLivesLeft() + used);
-			cap.sync();
+			if (used < 0) {
+				cap.setLivesLeft(used);
+			}
 			
 			if (!cap.getPlayer().isCreative())
 				stack.setItemDamage(stack.getItemDamage() + used);
 			
-			world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, 0.5F, 1.0F);
+			if (world.isRemote)
+				PlayerUtil.playMovingSound(cap.getPlayer(), RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS);
+			
 		} else { //transferring player->watch
-			if (stack.getItemDamage() == 0) {
-				return usageFailed(player, cap.isCapable() ? "regeneration.messages.transfer.full_watch" : "regeneration.messages.transfer.no_regens", stack);
-			}
+			if (!cap.isCapable())
+				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
+			
+			if (stack.getItemDamage() == 0)
+				return msgUsageFailed(player, "regeneration.messages.transfer.full_watch", stack);
 			
 			stack.setItemDamage(stack.getItemDamage() - 1);
 			cap.setLivesLeft(cap.getLivesLeft() - 1);
 			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
+			
+			if (world.isRemote)
+				PlayerUtil.playMovingSound(cap.getPlayer(), SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, SoundCategory.PLAYERS); //TODO change this sound
+			
 			return new ActionResult<>(EnumActionResult.PASS, stack);
 		}
 		
 		return super.onItemRightClick(world, player, hand);
 	}
 	
-	private ActionResult<ItemStack> usageFailed(EntityPlayer player, String message, ItemStack stack) {
+	private ActionResult<ItemStack> msgUsageFailed(EntityPlayer player, String message, ItemStack stack) {
 		PlayerUtil.sendMessage(player, message, true);
 		return ActionResult.newResult(EnumActionResult.FAIL, stack);
 	}
