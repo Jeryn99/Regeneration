@@ -10,8 +10,6 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Test;
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -19,175 +17,99 @@ import me.fril.regeneration.common.items.ItemFobWatch;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
-/**
- * Tests the correct handling of receiving/extracting regenerations using the {@link ItemFobWatch fob watch}
- * 
- * @author HoldYourWaffle
- */
 public class TestFobWatch {
 	
-	//Mocks initialised by setup(...)
-	private World world;
-	private EntityPlayer player;
-	private ItemStack watchStack;
-	private ItemFobWatch watchItem;
-	private CapabilityRegeneration capability;
+	private int currentStackDamage; //easier mocking
 	
-	//Actual state holders, used in the mocks
-	private int stackDamage, regenerationsLeft;
-	private String lastStatusKey;
-	
-	private void setup(boolean sneaking, boolean creative) {
-		Objenesis objenesis = new ObjenesisStd();
-		world = objenesis.newInstance(WorldServer.class);
+	private CapabilityRegeneration setup(boolean sneaking, boolean creative) throws ReflectiveOperationException {
+		CapabilityRegeneration cap = RegenTestUtil.setupFullMockSuite(false);
+		EntityPlayer player = cap.getPlayer();
 		
-		
-		player = mock(EntityPlayer.class);
-		player.world = world;
 		when(player.isSneaking()).thenReturn(sneaking);
 		when(player.isCreative()).thenReturn(creative);
 		
-		when(player.getHeldItem(any(EnumHand.class))).thenAnswer(a->watchStack);
-		when(player.getCapability(isNull(), isNull())).thenAnswer(a->capability);
-		when(player.hasCapability(isNull(), isNull())).thenAnswer(a->true);
+		ItemFobWatch watchItem = new ItemFobWatch();
+		ItemStack watchStack = mock(ItemStack.class);
 		
-		doAnswer(a->{
-			ITextComponent in = a.getArgument(0);
+		/*when(watchStack.getItemDamage()).thenReturn(currentStackDamage);
+		doAnswer(a->currentStackDamage = a.getArgument(0)).when(watchStack).setItemDamage(anyInt());*/
+		
+		when(watchStack.getItem()).thenReturn(watchItem);
+		doCallRealMethod().when(watchStack).useItemRightClick(any(World.class), any(EntityPlayer.class), isNull());
+		
+		when(player.getHeldItem(isNull())).thenAnswer(a->watchStack);
+		
+		/*doAnswer(a->{ //record any status messages sent
+			ITextComponent in = a.getArgument(0); //can't combine lines because generics
 			lastStatusKey = in.getUnformattedText();
 			return null;
-		}).when(player).sendStatusMessage(any(ITextComponent.class), any(Boolean.class));
+		}).when(player).sendStatusMessage(any(ITextComponent.class), any(Boolean.class));*/
 		
+		return cap;
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void test(CapabilityRegeneration cap, EnumActionResult result, /*String statusKey,*/ int regenIn, int damageIn, int expRegenOut, int expDamageOut) throws AssertionError {
+		ItemStack stack = cap.getPlayer().getHeldItem(null);
+		stack.setItemDamage(damageIn);
+		cap.setRegenerationsLeft(regenIn);
 		
-		capability = mock(CapabilityRegeneration.class);
-		when(capability.getPlayer()).thenReturn(player);
-		when(capability.getRegenerationsLeft()).thenAnswer(a->regenerationsLeft);
+		assertEquals("Incorrect ActionResult", result, stack.useItemRightClick(cap.getPlayer().world, cap.getPlayer(), null).getType());
+		//assertEquals("Incorrect status message key", "regeneration.messages.transfer."+statusKey, lastStatusKey);
 		
-		doAnswer(a->regenerationsLeft += (int) a.getArgument(0)).when(capability).receiveRegenerations(any(Integer.class));
-		doAnswer(a->regenerationsLeft -= (int) a.getArgument(0)).when(capability).extractRegeneration(any(Integer.class));
-		
-		
-		watchStack = mock(ItemStack.class);
-		when(watchStack.getItemDamage()).thenAnswer(a->stackDamage);
-		doAnswer(a->stackDamage = a.getArgument(0)).when(watchStack).setItemDamage(any(Integer.class));
+		assertEquals("Incorrect regenerations-left value", expRegenOut, cap.getRegenerationsLeft());
+		assertEquals("Incorrect stack damage value", expDamageOut, stack.getItemDamage());
 	}
 	
 	
 	
 	@Test
-	public void testReceive() {
-		setup(false, false);
+	public void testReceive() throws ReflectiveOperationException {
+		CapabilityRegeneration cap = setup(false, false);
 		
-		for (int M = 6; M < 15; M += 3) {
+		//NOW do the actual testing
+		
+		/*for (int M = 6; M < 15; M += 3) {
 			RegenConfig.regenCapacity = M;
 			int x  = M/2;
 			
-			/*test(FAIL, M, M, M, M);
-			test(SUCCESS, 0, 0, M, M);
+			test(cap, FAIL, M, M, M, M);
+			test(cap, SUCCESS, 0, 0, M, M);
 			
-			test(FAIL, M, x, M, x);
-			test(FAIL, x, M, x, M);
+			test(cap, FAIL, M, x, M, x);
+			test(cap, FAIL, x, M, x, M);
 			
-			test(FAIL, M, 0, M, 0);
-			test(FAIL, 0, M, 0, M);
+			test(cap, FAIL, M, 0, M, 0);
+			test(cap, FAIL, 0, M, 0, M);
 			
-			test(SUCCESS, x, x,   x + (M-x),  x + (M-x)  );
-			test(SUCCESS, 0, x,   M - x,      x + (M-x)  );
-			test(SUCCESS, x, 0,   M,          M - x      );*/
-			
-			//NOW x,y test with supply < needed (-> r + supply)
-			//NOW x,y test with supply > needed (-> r + needed)
-		}
-		
-		//NOW add status key parameters
-	}
-	
-	/*@Test
-	public void testTransfer() {
-		setup(true, false);
-		
-		int x = 5, y = 7;
-		for (int M = 6; M < 15; M += 3) {
-			RegenConfig.regenCapacity = M;
-			
-			test(M, M, , );
-			test(0, 0, , );
-			
-			test(M, x, , );
-			test(x, M, , );
-			
-			test(M, 0, , );
-			test(0, M, , );
-			
-			test(x, x, , );
-			test(0, x, , );
-			test(x, 0, , );
-			test(x, y, , );
-		}
-		
-		//NOW add tests expectations
+			test(cap, SUCCESS, x, x,   x + (M-x),  x + (M-x)  );
+			test(cap, SUCCESS, 0, x,   M - x,      x + (M-x)  );
+			test(cap, SUCCESS, x, 0,   M,          M - x      );
+		}*/
 	}
 	
 	@Test
-	public void testCreative() {
-		setup(false, true);
-		int x = 5, y = 7;
+	public void testTransfer() throws ReflectiveOperationException {
+		CapabilityRegeneration cap = setup(true, false);
 		
-		for (int M = 6; M < 15; M += 3) {
-			RegenConfig.regenCapacity = M;
-			
-			test(M, M, , 0);
-			test(0, 0, , 0);
-			
-			test(M, x, , 0);
-			test(x, M, , 0);
-			
-			test(M, 0, , 0);
-			test(0, M, , 0);
-			
-			test(x, x, , 0);
-			test(0, x, , 0);
-			test(x, 0, , 0);
-			test(x, y, , 0);
-		}
-		
-		setup(true, true);
-		for (int M = 6; M < 15; M += 3) {
-			RegenConfig.regenCapacity = M;
-			
-			test(M, M, , 0);
-			test(0, 0, , 0);
-			
-			test(M, x, , 0);
-			test(x, M, , 0);
-			
-			test(M, 0, , 0);
-			test(0, M, , 0);
-			
-			test(x, x, , 0);
-			test(0, x, , 0);
-			test(x, 0, , 0);
-			test(x, y, , 0);
-		}
-	}*/
-	
-	
-	
-	private void test(EnumActionResult result, String statusKey, int regenIn, int damageIn, int expRegenOut, int expDamageOut) throws AssertionError {
-		regenerationsLeft = regenIn;
-		stackDamage = damageIn;
-		
-		watchItem = new ItemFobWatch();
-		assertEquals("Incorrect ActionResult", result, watchItem.onItemRightClick(world, player, EnumHand.MAIN_HAND).getType());
-		assertEquals("Incorrect status message key", "regeneration.messages.transfer."+statusKey, lastStatusKey);
-		
-		assertEquals("Incorrect regenerations-left value", expRegenOut, regenerationsLeft);
-		assertEquals("Incorrect stack damage value", expDamageOut, stackDamage);
+		//NOW do the actual testing
 	}
+	
+	@Test
+	public void testCreative() throws ReflectiveOperationException {
+		CapabilityRegeneration cap = setup(false, true);
+		
+		//NOW do the actual testing
+		
+		
+		
+		cap = setup(true, true);
+		
+		//NOW do the actual testing
+	}
+	
 	
 	
 	
@@ -210,5 +132,4 @@ public class TestFobWatch {
 	public void cleanup() throws IOException {
 		FileUtils.forceDeleteOnExit(new File("logs"));
 	}
-	
 }

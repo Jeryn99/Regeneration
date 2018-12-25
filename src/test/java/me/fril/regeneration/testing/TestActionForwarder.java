@@ -1,9 +1,7 @@
 package me.fril.regeneration.testing;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -13,15 +11,10 @@ import java.util.stream.Collectors;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.objenesis.Objenesis;
-import org.objenesis.ObjenesisStd;
 
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.ActingForwarder;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 /**
  * Contains a test for the {@link ActionForwarder}. It's slightly pointless but I don't really care.
@@ -70,18 +63,7 @@ public class TestActionForwarder {
 	 */
 	@Test
 	public void testClientPost() throws ReflectiveOperationException {
-		Objenesis objenesis = new ObjenesisStd();
-		World world = objenesis.newInstance(WorldClient.class);
-		Field isRemote = world.getClass().getField("isRemote");
-		isRemote.setAccessible(true);
-		isRemote.set(world, true);
-		
-		EntityPlayer player = mock(EntityPlayer.class);
-		player.world = world;
-		
-		CapabilityRegeneration capability = mock(CapabilityRegeneration.class);
-		when(capability.getPlayer()).thenReturn(player);
-		
+		CapabilityRegeneration capability = RegenTestUtil.setupFullMockSuite(true);
 		
 		List<Method> interfaceMethods = Arrays.asList(Class.forName("me.fril.regeneration.handlers.ActingForwarder$IActingHandler").getDeclaredMethods());
 		List<Method> forwarderMethods = interfaceMethods.stream().map(m->{

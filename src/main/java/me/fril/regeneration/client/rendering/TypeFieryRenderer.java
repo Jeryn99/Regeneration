@@ -20,12 +20,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
-public class TypeFieryRenderer extends ITypeRenderer<TypeFiery> {
+public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	
 	public static final TypeFieryRenderer INSTANCE = new TypeFieryRenderer();
 	
 	private TypeFieryRenderer() {}
-
+	
 	@Override
 	public void renderRegeneratingPlayerPre(TypeFiery type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
 		if (MinecraftForgeClient.getRenderPass() == -1) //rendering in inventory
@@ -44,7 +44,7 @@ public class TypeFieryRenderer extends ITypeRenderer<TypeFiery> {
 			armRot = (int)((type.getAnimationProgress() / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
 		
-		//TODO is it possible to not render the item in hand during the regeneration?
+		//TODO don't render item in hand during regeneration
 		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);

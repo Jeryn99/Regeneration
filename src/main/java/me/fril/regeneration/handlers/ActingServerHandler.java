@@ -42,7 +42,7 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 				player.heal(stateProgress * 0.3F * dm);
 				player.setArrowCountInEntity(0);
 				break;
-			
+				
 			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 				
@@ -60,7 +60,7 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
 				
 				break;
-			
+				
 			case GRACE:
 				float weaknessPercentage = 0.5F;
 				
@@ -71,7 +71,7 @@ class ActingServerHandler implements IActingHandler { // XXX feel free to rename
 				}
 				
 				break;
-			
+				
 			case ALIVE:
 				break;
 			default:

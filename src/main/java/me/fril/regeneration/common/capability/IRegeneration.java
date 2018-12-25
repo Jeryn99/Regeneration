@@ -40,4 +40,9 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	IRegenType<?> getType();
 	
+	
+	/** Only for debug purposes! */
+	@Deprecated
+	void setRegenerationsLeft(int amount);
+	
 }

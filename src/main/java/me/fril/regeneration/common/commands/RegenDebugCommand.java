@@ -39,13 +39,10 @@ public class RegenDebugCommand extends CommandBase {
 				break;
 				
 			case "setregens":
-				if (amount >= 0) {
-					int difference = amount - cap.getRegenerationsLeft();
-					if (difference > 0)
-						cap.receiveRegenerations(difference);
-					else
-						cap.extractRegeneration(-difference);
-				} else notifyCommandListener(sender, this, "Regenerations: "+cap.getRegenerationsLeft());
+				if (amount >= 0)
+					cap.setRegenerationsLeft(amount);
+				else
+					notifyCommandListener(sender, this, "Regenerations: "+cap.getRegenerationsLeft());
 				break;
 		}
 		

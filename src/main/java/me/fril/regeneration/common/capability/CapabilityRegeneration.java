@@ -212,6 +212,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	
+	@Deprecated
+	@Override
+	public void setRegenerationsLeft(int amount) {
+		regenerationsLeft = amount;
+	}
+	
+	
 	
 	
 	
@@ -344,7 +351,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1); //in case this method was called by critical death
 			
-			/* XXX For re-implementing the dont-lose-regens-on-death option:
+			/* SUB For re-implementing the dont-lose-regens-on-death option:
 			 * We never explicitly reset the live count, but it still gets reset.
 			 * From my understanding this is because the capability data isn't cloned over properly when the player dies.
 			 * Soooo how should we handle it then? Save the last regen count and giving that back on respawn?

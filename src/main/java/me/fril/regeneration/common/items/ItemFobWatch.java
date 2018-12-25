@@ -82,7 +82,7 @@ public class ItemFobWatch extends Item {
 			PlayerUtil.sendHotbarMessage(player, "regeneration.messages.transfer.success", true);
 			
 			if (world.isRemote)
-				ClientUtil.playPositionedSoundRecord(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 5.0F, 2.0F); //TODO change this sound
+				ClientUtil.playPositionedSoundRecord(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 5.0F, 2.0F); //TODO there's probably a better sound for this
 			
 			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}

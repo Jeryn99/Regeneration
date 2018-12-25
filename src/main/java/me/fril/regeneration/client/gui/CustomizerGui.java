@@ -151,7 +151,7 @@ public class CustomizerGui extends GuiContainer {
 		fontRenderer.drawString(str, cx + 131 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(secondaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
 		
 		if (RegenConfig.infiniteRegeneration)
-			str = new TextComponentTranslation("regeneration.messages.infinite_regenerations").getFormattedText(); //TODO this could be optimized
+			str = new TextComponentTranslation("regeneration.messages.infinite_regenerations").getFormattedText(); //TODO this should be optimized
 		else
 			str = new TextComponentTranslation("regeneration.messages.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft();
 		

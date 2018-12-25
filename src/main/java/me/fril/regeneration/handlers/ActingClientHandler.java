@@ -19,7 +19,7 @@ class ActingClientHandler implements IActingHandler { //XXX feel free to rename 
 	
 	//FUTURE Toasts: PlayerUtil.createToast(new TextComponentTranslation("regeneration.toast.regenerations_left"), new TextComponentTranslation(getRegenerationsLeft() + ""), RegenState.REGENERATING);
 	
-	/** SOON multiplayer sound handling testing
+	/** SOON test multiplayer sound handling with hydro
 	 * 
 	 * Is opening watch heard by others?
 	 * Is transferring heard by others?

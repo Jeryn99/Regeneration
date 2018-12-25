@@ -1,6 +1,6 @@
 package me.fril.regeneration.common.types;
 
-import me.fril.regeneration.client.rendering.ITypeRenderer;
+import me.fril.regeneration.client.rendering.ATypeRenderer;
 import me.fril.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  * Created by Sub
  * on 16/09/2018.
  */
-public interface IRegenType<R extends ITypeRenderer<?>> extends INBTSerializable<NBTTagCompound> {
+public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable<NBTTagCompound> {
 	
 	/** @return in ticks */
 	int getAnimationLength();

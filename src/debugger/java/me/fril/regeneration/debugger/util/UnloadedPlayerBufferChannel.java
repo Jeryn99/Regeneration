@@ -63,8 +63,8 @@ public class UnloadedPlayerBufferChannel implements IDebugChannel {
 			throw new IllegalStateException("Unloaded player buffer has already been flushed");
 		unloadedBuffer.add(ch->ch.warn(msg));
 	}
-
-
+	
+	
 	@Override
 	public void out(Transition action, String msg) {
 		if (flushed)
@@ -77,5 +77,5 @@ public class UnloadedPlayerBufferChannel implements IDebugChannel {
 	public void notifyLoaded() {
 		throw new IllegalStateException("Notifying unloaded buffer that it's loaded");
 	}
-
+	
 }
