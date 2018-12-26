@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import me.fril.regeneration.util.PlayerUtil;
+import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.lang3.tuple.Pair;
 
 import me.fril.regeneration.RegenConfig;
@@ -329,6 +331,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void triggerRegeneration() {
 			//We're starting a regeneration!
 			state = RegenState.REGENERATING;
+			PlayerUtil.sendMessageToAll(new TextComponentTranslation("message.regeneration.isregenerating", player.getName()));
 			nextTransition.cancel(); //... cancel any state shift we had planned
 			scheduleTransitionInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
@@ -357,6 +360,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			 * Soooo how should we handle it then? Save the last regen count and giving that back on respawn?
 			 * Can we copy the data over on death (I assume so) and how?
 			 */
+			
+			/* WAFFLE Use the LivingDeathEvent and just copy the data over*/
 			
 			synchronise();
 		}

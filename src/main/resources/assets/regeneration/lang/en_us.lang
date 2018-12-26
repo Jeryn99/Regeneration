@@ -80,3 +80,5 @@ regeneration.trait.messages.psycho=Psycho
 regeneration.toast.regenerations_left=Regenerations Left
 regeneration.toast.enter_grace=You are now entering Grace period!
 regeneration.toast.press_regen=Press %s to regenerate!
+
+message.regeneration.isregenerating=%s is Regenerating...

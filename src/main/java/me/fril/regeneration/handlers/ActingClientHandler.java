@@ -50,7 +50,7 @@ class ActingClientHandler implements IActingHandler { //XXX feel free to rename 
 	public void onRegenTrigger(IRegeneration cap) {
 		//SOON toast notification for triggering regeneration
 		
-		PlayerUtil.sendHotbarMessage(cap.getPlayer(), new TextComponentTranslation("regeneration.messages.remaining_regens.notification", cap.getRegenerationsLeft()), true);
+		PlayerUtil.sendMessage(cap.getPlayer(), new TextComponentTranslation("regeneration.messages.remaining_regens.notification", cap.getRegenerationsLeft()), true);
 		
 		//PlayerUtil.playMovingSound(player, RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS);
 		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.REGENERATION, 1.0F, 0.5F), ()->cap.getState() != RegenState.REGENERATING));

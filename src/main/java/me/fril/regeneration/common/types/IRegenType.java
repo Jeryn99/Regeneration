@@ -38,8 +38,7 @@ public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable
 	}
 	
 	
-	
-	public static IRegenType<?> getType(IRegenType<?> currentType, NBTTagCompound nbt) {
+	static IRegenType<?> getType(IRegenType<?> currentType, NBTTagCompound nbt) {
 		try {
 			Class<?> nbtClass = Class.forName(nbt.getString("name"));
 			

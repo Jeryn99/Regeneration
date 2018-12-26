@@ -52,10 +52,10 @@ public class ItemFobWatch extends Item {
 				used = Math.min(supply, needed);
 			
 			if (cap.canRegenerate())
-				PlayerUtil.sendHotbarMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
+				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
 			else if (world.isRemote) {
 				RegenerationMod.DEBUGGER.getChannelFor(player).out(player.getName() + " is now a timelord");
-				PlayerUtil.sendHotbarMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
+				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 			}
 			
 			if (used < 0)
@@ -79,7 +79,7 @@ public class ItemFobWatch extends Item {
 			
 			stack.setItemDamage(stack.getItemDamage() - 1);
 			cap.extractRegeneration(1);
-			PlayerUtil.sendHotbarMessage(player, "regeneration.messages.transfer.success", true);
+			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
 			
 			if (world.isRemote)
 				ClientUtil.playPositionedSoundRecord(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 5.0F, 2.0F); //TODO there's probably a better sound for this
@@ -89,7 +89,7 @@ public class ItemFobWatch extends Item {
 	}
 	
 	private ActionResult<ItemStack> msgUsageFailed(EntityPlayer player, String message, ItemStack stack) {
-		PlayerUtil.sendHotbarMessage(player, message, true);
+		PlayerUtil.sendMessage(player, message, true);
 		return ActionResult.newResult(EnumActionResult.FAIL, stack);
 	}
 	

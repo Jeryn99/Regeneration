@@ -19,7 +19,7 @@ public enum RegenState {
 		
 		public final Color color;
 		
-		private Transition(Color col) {
+		Transition(Color col) {
 			this.color = col;
 		}
 	}

@@ -7,7 +7,7 @@ import me.fril.regeneration.network.MessageRegenStateEvent;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class ActingForwarder { //XXX feel free to rename this, I couldn't think of anything better
+public class ActingForwarder {
 	
 	public static void onRegenTick(IRegeneration cap) {
 		//Never forwarded, as per the documentation

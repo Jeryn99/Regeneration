@@ -72,6 +72,10 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		return 10 * 20; //10 seconds of 20 ticks
 	}
 	
+	@Deprecated //Should only be used rarely
+	public long getAnimationTicks() {
+		return animationTicks;
+	}
 	
 	public double getAnimationProgress() {
 		return Math.min(1, animationTicks / (double)getAnimationLength());

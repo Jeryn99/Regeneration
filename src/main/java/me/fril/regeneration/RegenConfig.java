@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by Sub
  * on 17/09/2018.
  */
-@Config(modid = RegenerationMod.MODID)
+@Config(modid = RegenerationMod.MODID, name = "Regeneration")
 public class RegenConfig { // TODO externalize comment strings?
 	
 	public static final Loot Loot = new Loot();
@@ -91,6 +91,10 @@ public class RegenConfig { // TODO externalize comment strings?
 	@Config.LangKey("config.regeneration.infinite_regenerations")
 	@Config.Comment("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.")
 	public static boolean infiniteRegeneration = false;
+	
+	@Config.LangKey("config.regeneration.regen_messages")
+	@Config.Comment("Sends a message to chat to say that a player is regenerating, and the reason for it")
+	public static boolean sendRegenDeathMessages = true;
 	
 	
 	

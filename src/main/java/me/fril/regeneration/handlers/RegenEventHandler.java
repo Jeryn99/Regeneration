@@ -37,6 +37,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 public class RegenEventHandler {
 	
 	//=========== CAPABILITY HANDLING =============
+	
 	@SubscribeEvent
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer)
@@ -82,6 +83,7 @@ public class RegenEventHandler {
 	
 	
 	//============ USER EVENTS ==========
+	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingHurtEvent event) {
 		Entity trueSource = event.getSource().getTrueSource();

@@ -1,6 +1,7 @@
 package me.fril.regeneration;
 
 import me.fril.regeneration.client.gui.GuiHandler;
+import me.fril.regeneration.combat.TardisModHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
@@ -12,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -23,7 +25,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 //TODO add language file tests
-@Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies="required:forge@[14.23.5.2768,);")
+@Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = "after:tardis")
 public class RegenerationMod {
 	
 	public static final String MODID = "regeneration";
@@ -44,6 +46,10 @@ public class RegenerationMod {
 	public void preInit(FMLPreInitializationEvent event) {
 		proxy.preInit();
 		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
+		
+		if (Loader.isModLoaded("tardis")) {
+			TardisModHandler.register();
+		}
 	}
 	
 	@EventHandler

@@ -13,12 +13,17 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAIZombieAttack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.util.List;
 
 /**
  * Created by Sub
@@ -26,18 +31,22 @@ import net.minecraft.util.text.TextComponentTranslation;
  */
 public class PlayerUtil {
 	
-	public static void sendHotbarMessage(EntityPlayer player, String message, boolean hotBar) {
+	public static void sendMessage(EntityPlayer player, String message, boolean hotBar) {
 		if (!player.world.isRemote) {
 			player.sendStatusMessage(new TextComponentTranslation(message), hotBar);
 		}
 	}
 	
-	public static void sendHotbarMessage(EntityPlayer player, TextComponentTranslation translation, boolean hotBar) {
+	public static void sendMessage(EntityPlayer player, TextComponentTranslation translation, boolean hotBar) {
 		if (!player.world.isRemote) {
 			player.sendStatusMessage(translation, hotBar);
 		}
 	}
 	
+	public static void sendMessageToAll(TextComponentTranslation translation) {
+		List<EntityPlayerMP> players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers();
+		players.forEach(playerMP -> sendMessage(playerMP, translation, false));
+	}
 	
 	public static void setPerspective(EntityPlayerMP player, boolean thirdperson, boolean resetPitch) {
 		NetworkHandler.INSTANCE.sendTo(new MessageSetPerspective(thirdperson, resetPitch), player);
@@ -69,7 +78,7 @@ public class PlayerUtil {
 	
 	public static boolean applyPotionIfAbsent(EntityPlayer player, int potionId, int length, int amplifier, boolean ambient, boolean showParticles) {
 		if (player.getActivePotionEffects().stream().noneMatch(pe->Potion.getIdFromPotion(pe.getPotion()) == potionId)) {
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(potionId), length, amplifier, ambient, showParticles));
+			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, length, amplifier, ambient, showParticles));
 			return true;
 		} else return false;
 	}
