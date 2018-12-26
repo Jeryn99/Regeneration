@@ -41,32 +41,29 @@ public class ItemFobWatch extends Item {
 		ItemStack stack = player.getHeldItem(hand);
 		
 		if (!player.isSneaking()) { //transferring watch->player
-			if (stack.getItemDamage() == RegenConfig.regenCapacity) {
+			if (stack.getItemDamage() == RegenConfig.regenCapacity)
 				return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
-			} else if (cap.getLivesLeft() == RegenConfig.regenCapacity) {
+			else if (cap.getLivesLeft() == RegenConfig.regenCapacity)
 				return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
-			}
 			
 			int supply = RegenConfig.regenCapacity - stack.getItemDamage(),
-					needed = RegenConfig.regenCapacity - cap.getLivesLeft(),
-					used = Math.min(supply, needed);
+				needed = RegenConfig.regenCapacity - cap.getLivesLeft(),
+				used = Math.min(supply, needed);
 			
 			if (cap.isCapable())
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
-			else if (player.world.isRemote) {
+			else if (world.isRemote)
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
-			}
 			
-			if (used < 0) {
-				cap.setLivesLeft(used);
-			}
+			cap.setLivesLeft(cap.getLivesLeft() + used);
 			
 			if (!cap.getPlayer().isCreative())
 				stack.setItemDamage(stack.getItemDamage() + used);
 			
 			if (world.isRemote)
-				PlayerUtil.playMovingSound(cap.getPlayer(), RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, true);
+				PlayerUtil.playMovingSound(cap.getPlayer(), RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, false);
 			
+			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		} else { //transferring player->watch
 			if (!cap.isCapable())
 				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
@@ -79,12 +76,10 @@ public class ItemFobWatch extends Item {
 			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
 			
 			if (world.isRemote)
-				PlayerUtil.playMovingSound(cap.getPlayer(), SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, SoundCategory.PLAYERS, true); //TODO change this sound
+				PlayerUtil.playMovingSound(cap.getPlayer(), SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, SoundCategory.PLAYERS, false); //TODO there's probably a better sound for this
 			
-			return new ActionResult<>(EnumActionResult.PASS, stack);
+			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}
-		
-		return super.onItemRightClick(world, player, hand);
 	}
 	
 	private ActionResult<ItemStack> msgUsageFailed(EntityPlayer player, String message, ItemStack stack) {
