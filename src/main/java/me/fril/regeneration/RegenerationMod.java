@@ -1,12 +1,13 @@
 package me.fril.regeneration;
 
 import me.fril.regeneration.client.gui.GuiHandler;
-import me.fril.regeneration.combat.TardisModHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
 import me.fril.regeneration.common.commands.RegenDebugCommand;
 import me.fril.regeneration.debugger.RegenDebugger;
+import me.fril.regeneration.handlers.ActingForwarder;
+import me.fril.regeneration.handlers.TardisModHandler;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
 import net.minecraft.util.ResourceLocation;
@@ -23,9 +24,10 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 //TODO add language file tests
-@Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = "after:tardis")
+@Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = "required:forge@[14.23.5.2768,);after:tardis")
 public class RegenerationMod {
 	
 	public static final String MODID = "regeneration";
@@ -47,8 +49,10 @@ public class RegenerationMod {
 		proxy.preInit();
 		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
 		
+		ActingForwarder.init();
+		
 		if (Loader.isModLoaded("tardis")) {
-			TardisModHandler.register();
+			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
 	}
 	

@@ -1,5 +1,7 @@
 package me.fril.regeneration.util;
 
+import java.util.List;
+
 import me.fril.regeneration.network.MessageSetPerspective;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.entity.Entity;
@@ -19,11 +21,8 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-
-import java.util.List;
 
 /**
  * Created by Sub

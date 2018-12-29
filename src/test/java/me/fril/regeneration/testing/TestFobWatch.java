@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import me.fril.regeneration.RegenConfig;
@@ -65,7 +66,7 @@ public class TestFobWatch {
 	
 	
 	
-	@Test
+	@Test @Ignore
 	public void testReceive() throws ReflectiveOperationException {
 		CapabilityRegeneration cap = setup(false, false);
 		
@@ -90,14 +91,14 @@ public class TestFobWatch {
 		}*/
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testTransfer() throws ReflectiveOperationException {
 		CapabilityRegeneration cap = setup(true, false);
 		
 		//NOW do the actual testing
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testCreative() throws ReflectiveOperationException {
 		CapabilityRegeneration cap = setup(false, true);
 		
