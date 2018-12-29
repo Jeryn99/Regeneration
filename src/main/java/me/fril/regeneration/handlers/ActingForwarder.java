@@ -8,6 +8,7 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageRegenStateEvent;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class ActingForwarder {
@@ -16,7 +17,10 @@ public class ActingForwarder {
 	
 	public static void init() {
 		register(ActingServerHandler.INSTANCE, Side.SERVER);
-		register(ActingClientHandler.INSTANCE, Side.CLIENT);
+		
+		if (FMLCommonHandler.instance().getSide() != Side.SERVER) {
+			register(ActingClientHandler.INSTANCE, Side.CLIENT);
+		}
 	}
 	
 	
