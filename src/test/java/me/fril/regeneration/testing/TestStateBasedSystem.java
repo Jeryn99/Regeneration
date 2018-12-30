@@ -55,6 +55,5 @@ public class TestStateBasedSystem {
 	
 	//SOON could probably add some tests that actually verify the correctness of transition callbacks
 	//SOON add actual state-flow test?
-	//SOON add a server-booting test
 	
 }

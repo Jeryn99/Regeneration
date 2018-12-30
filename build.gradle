@@ -55,12 +55,18 @@ repositories {
 	}
 }
 
+configurations {
+	testServer.extendsFrom runtime
+}
+
 dependencies {
 	deobfCompile 'com.github.Spectre0987:TardisMod:0.0.8-dev'
 	
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.objenesis:objenesis:3.0.1'
 	testCompile 'org.mockito:mockito-core:2.23.4'
+	
+	testServer 'com.github.HoldYourWaffle:CrashMyServer:-SNAPSHOT'
 }
 
 test { //TODO does this work? it should couse the test stdout & stderr to be passed on to the console
@@ -80,6 +86,34 @@ processResources {
 	
 	from(sourceSets.main.resources.srcDirs) {
 		exclude 'mcmod.info'
+	}
+}
+
+
+//This will probably break for future ForgeGradle versions
+task testServerBoot(type: JavaExec, dependsOn: jar) {
+	def stdOut = new ByteArrayOutputStream()
+	
+	System.out.println(Arrays.toString(runServer.dependsOn.toArray()));
+	
+	classpath = configurations.testServer + configurations.forgeGradleMcDeps + configurations.forgeGradleMc + configurations.forgeGradleGradleStart
+	main = runServer.main
+	workingDir = minecraft.runDir
+	jvmArgs = runServer.jvmArgs + [ '-Dfml.queryResult=confirm' ]
+	standardOutput = stdOut
+	args = runServer.args + [ 'nogui' ]
+	
+	doLast {
+		def output = stdOut.toString()
+		
+		if (!output.contains('Crashed the server as requested')) {
+			def cutStart = output.substring(output.indexOf('This crash report has been saved to:'))
+			def cutEnd = cutStart.substring(0, cutStart.indexOf('-server.txt')+11)
+			
+			throw new AssertionError('Server crashed, but not intentionally. '+cutEnd)
+		} else {
+			System.out.println('Crashed server as intended')
+		}
 	}
 }
 
