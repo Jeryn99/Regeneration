@@ -1,10 +1,11 @@
 package me.fril.regeneration.common.capability;
 
-import java.awt.Color;
-
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.types.IRegenType;
+import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
@@ -13,63 +14,35 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
-	// Update
-	void update();
-	
-	// Regen Ticks
-	int getTicksRegenerating();
-	void setTicksRegenerating(int ticks);
-	
-	// Returns the player
 	EntityPlayer getPlayer();
 	
-	// Lives left
-	int getLivesLeft();
-	void setLivesLeft(int left);
+	void tick();
+	void synchronise();
 	
-	// Times IN TOTAL, NOT PER CYCLE
-	int getTimesRegenerated();
-	void setTimesRegenerated(int times);
-	
-	// Style
 	NBTTagCompound getStyle();
 	void setStyle(NBTTagCompound nbt);
+	Vec3d getPrimaryColor();
+	Vec3d getSecondaryColor();
 	
-	// Sync to clients
-	void sync();
+	int getRegenerationsLeft();
 	
-	// The type of Regeneration in use
-	IRegenType getType();
-	void setType(String name);
-	
-	// Does the player have the ability to regenerate?
-	default boolean isCapable() {
-		return getLivesLeft() > 0 && getPlayer().posY > 0;
+	/** Returns if the player is currently <i>able to</i> regenerate */
+	default boolean canRegenerate() {
+		return (RegenConfig.infiniteRegeneration || getRegenerationsLeft() > 0) && getPlayer().posY > 0;
 	}
 	
-	// Regen
-	boolean isRegenerating();
-	void setRegenerating(boolean regenerating);
+	void receiveRegenerations(int amount);
+	void extractRegeneration(int amount);
+	void triggerRegeneration();
 	
-	// Grace stuff
-	boolean isGlowing();
-	void setGlowing(boolean glowing);
+	IRegenerationStateManager getStateManager();
+	RegenState getState();
 	
-	// Glowing Ticks
-	int getTicksGlowing();
-	void setTicksGlowing(int ticks);
+	IRegenType<?> getType();
 	
-	// Is the player in grace period
-	boolean isInGracePeriod();
-	void setInGracePeriod(boolean gracePeriod);
 	
-	// Solace ticks
-	int getSolaceTicks();
-	void setSolaceTicks(int ticks);
-	
-	// Just helper things
-	Color getPrimaryColor();
-	Color getSecondaryColor();
-	void reset();
+	/** Only for debug purposes! */
+	@Deprecated
+	void setRegenerationsLeft(int amount);
 	
 }

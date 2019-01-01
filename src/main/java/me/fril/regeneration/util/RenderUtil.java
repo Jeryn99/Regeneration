@@ -1,12 +1,11 @@
 package me.fril.regeneration.util;
 
-import java.awt.Color;
 import java.lang.reflect.Field;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import me.fril.regeneration.client.models.ModelArmorOverride;
+import me.fril.regeneration.client.rendering.ModelArmorOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
@@ -54,7 +53,7 @@ public class RenderUtil {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 	
-	public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Color color, float alpha) {
+	public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Vec3d color, float alpha) {
 		if (start == null || end == null)
 			return;
 		
@@ -83,10 +82,10 @@ public class RenderUtil {
 		
 		for (int layer = 0; layer <= layers; ++layer) {
 			if (layer < layers) {
-				GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), 1.0F / layers / 2);
+				GlStateManager.color((float) color.x, (float)color.y, (float)color.z, 1.0F / layers / 2);
 				GlStateManager.depthMask(false);
 			} else {
-				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
+				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha); //XXX does this actually do anything? We're always passing in an alpha of 0...
 				GlStateManager.depthMask(true);
 			}
 			double size = thickness + (layer < layers ? layer * (1.25D / layers) : 0.0D);
@@ -213,8 +212,8 @@ public class RenderUtil {
 	
 	
 	/** <a href="https://stackoverflow.com/a/41491220/10434371">Source</a> */
-	public static double calculateColorBrightness(Color c) {
-		float r = c.getRed() / 255F, g = c.getGreen() / 255F, b = c.getBlue() / 255F;
+	public static double calculateColorBrightness(Vec3d c) {
+		float r = (float) c.x, g = (float) c.y, b = (float) c.z;
 		r = r <= 0.03928 ? r / 12.92F : (float)Math.pow((r + 0.055) / 1.055, 2.4);
 		g = g <= 0.03928 ? g / 12.92F : (float)Math.pow((g + 0.055) / 1.055, 2.4);
 		b = b <= 0.03928 ? b / 12.92F : (float)Math.pow((b + 0.055) / 1.055, 2.4);

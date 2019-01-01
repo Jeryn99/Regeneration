@@ -1,31 +1,58 @@
 package me.fril.regeneration.common.types;
 
+import me.fril.regeneration.client.rendering.ATypeRenderer;
 import me.fril.regeneration.common.capability.IRegeneration;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.INBTSerializable;
 
 /**
+ * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
+ * 
  * Created by Sub
  * on 16/09/2018.
  */
-public interface IRegenType {
-	String getName();
+public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable<NBTTagCompound> {
 	
-	default void onStartRegeneration(EntityPlayer player) {}
-	default void onUpdateMidRegen(EntityPlayer player) {}
-	default void onFinishRegeneration(EntityPlayer player) {}
-
-	@SideOnly(Side.CLIENT)
-	default void onRenderPlayerPre(RenderPlayerEvent.Pre ev) {}
-
-	@SideOnly(Side.CLIENT)
-	default void onRenderLayer(RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {}
+	/** @return in ticks */
+	int getAnimationLength();
+	R getRenderer();
 	
-	SoundEvent getSound();
-	boolean blockMovement();
-	boolean isLaying();
+	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {}
+	default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {}
+	default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {}
+	
+	
+	
+	@Override
+	default NBTTagCompound serializeNBT() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setString("name", this.getClass().getName());
+		return nbt;
+	}
+	
+	@Override
+	default void deserializeNBT(NBTTagCompound nbt) {
+		if (!nbt.getString("name").equals(this.getClass().getName()))
+			throw new IllegalStateException("Deserialising wrong type instance (nbt: "+nbt.getString("name")+", instance: "+this.getClass().getName());
+	}
+	
+	
+	static IRegenType<?> getType(IRegenType<?> currentType, NBTTagCompound nbt) {
+		try {
+			Class<?> nbtClass = Class.forName(nbt.getString("name"));
+			
+			if (currentType == null || currentType.getClass() != nbtClass) { //no current type OR type has changed
+				return (IRegenType<?>) nbtClass.newInstance();
+			} else {
+				currentType.deserializeNBT(nbt);
+				return currentType;
+			}
+		} catch (ReflectiveOperationException | ClassCastException e) {
+			System.err.println("WARNING: Malformed type NBT, reverting to default");
+			e.printStackTrace();
+			return new TypeFiery();
+		}
+	}
+	
 }

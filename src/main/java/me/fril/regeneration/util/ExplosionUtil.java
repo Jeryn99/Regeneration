@@ -1,5 +1,7 @@
 package me.fril.regeneration.util;
 
+import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,7 +40,7 @@ public class ExplosionUtil {
 	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity-> {
 			if ((entity instanceof EntityCreature && entity.isNonBoss()) || (entity instanceof EntityPlayer && RegenConfig.regenerationKillsPlayers))
-				entity.attackEntityFrom(RegenObjects.REGEN_SOURCE, Float.MAX_VALUE);
+				entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
 		});
 	}
 	
@@ -46,5 +48,5 @@ public class ExplosionUtil {
 	public static AxisAlignedBB getReach(BlockPos pos, int range) {
 		return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
 	}
-
+	
 }

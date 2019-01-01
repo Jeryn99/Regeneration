@@ -1,10 +1,12 @@
 package me.fril.regeneration.common.items;
 
+import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.handlers.RegenObjects;
+import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.PlayerUtil;
-import me.fril.regeneration.util.RegenConfig;
-import me.fril.regeneration.util.RegenObjects;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -13,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
@@ -43,40 +44,45 @@ public class ItemFobWatch extends Item {
 		if (!player.isSneaking()) { //transferring watch->player
 			if (stack.getItemDamage() == RegenConfig.regenCapacity)
 				return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
-			else if (cap.getLivesLeft() == RegenConfig.regenCapacity)
+			else if (cap.getRegenerationsLeft() == RegenConfig.regenCapacity)
 				return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 			
 			int supply = RegenConfig.regenCapacity - stack.getItemDamage(),
-				needed = RegenConfig.regenCapacity - cap.getLivesLeft(),
+				needed = RegenConfig.regenCapacity - cap.getRegenerationsLeft(),
 				used = Math.min(supply, needed);
 			
-			if (cap.isCapable())
+			if (cap.canRegenerate())
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
-			else if (world.isRemote)
+			else if (world.isRemote) {
+				RegenerationMod.DEBUGGER.getChannelFor(player).out(player.getName() + " is now a timelord");
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
+			}
 			
-			cap.setLivesLeft(cap.getLivesLeft() + used);
+			if (used < 0)
+				RegenerationMod.DEBUGGER.getChannelFor(player).warn("Fob watch used <0 regens (supply: "+supply+", needed:"+needed+", used:"+used+", capacity:"+RegenConfig.regenCapacity+", damage:"+stack.getItemDamage()+", regens:"+cap.getRegenerationsLeft());
+			
+			cap.receiveRegenerations(used);
 			
 			if (!cap.getPlayer().isCreative())
 				stack.setItemDamage(stack.getItemDamage() + used);
 			
 			if (world.isRemote)
-				PlayerUtil.playMovingSound(cap.getPlayer(), RegenObjects.Sounds.FOB_WATCH, SoundCategory.PLAYERS, false);
+				ClientUtil.playPositionedSoundRecord(RegenObjects.Sounds.FOB_WATCH, 1.0F, 2.0F);
 			
 			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		} else { //transferring player->watch
-			if (!cap.isCapable())
+			if (!cap.canRegenerate())
 				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
 			
 			if (stack.getItemDamage() == 0)
 				return msgUsageFailed(player, "regeneration.messages.transfer.full_watch", stack);
 			
 			stack.setItemDamage(stack.getItemDamage() - 1);
-			cap.setLivesLeft(cap.getLivesLeft() - 1);
+			cap.extractRegeneration(1);
 			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
 			
 			if (world.isRemote)
-				PlayerUtil.playMovingSound(cap.getPlayer(), SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, SoundCategory.PLAYERS, false); //TODO there's probably a better sound for this
+				ClientUtil.playPositionedSoundRecord(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 5.0F, 2.0F); //TODO there's probably a better sound for this
 			
 			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}

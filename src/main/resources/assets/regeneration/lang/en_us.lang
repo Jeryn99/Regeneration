@@ -11,7 +11,8 @@ regeneration.info.default=Default
 regeneration.messages.now_timelord=You are now a timelord!
 regeneration.messages.regen_or_die=Regenerate now or you will die!
 regeneration.messages.remaining_regens.status=Remaining Regenerations:
-regeneration.messages.remaining_regens.notification=You're regenerating for the %s time, you have %s regenerations left.
+regeneration.messages.infinite_regenerations=Infinite Regeneration Mode
+regeneration.messages.remaining_regens.notification=You are regenerating! You have %s regenerations left.
 regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch
 regeneration.messages.grace=You have entered a grace period of 15 minutes
 regeneration.messages.choice=Press %s for grace period, %s to regenerate immediately!
@@ -33,11 +34,11 @@ regeneration.subtitles.hand_glow=Glowing hands
 regeneration.subtitles.heart_beat=Heartbeat
 regeneration.subtitles.critical_stage=Critical grace stage
 
-regeneration.keybinds.grace=Enter grace period
-regeneration.keybinds.just_regen=Regenerate immediately
+regeneration.keybinds.regenerate=Regenerate
 
 config.regeneration.max_regens=Amount of regenerations per cycle
-config.regeneration.start_as_timelord=Start a world as a timelord
+config.regeneration.free_regens=Free regenerations
+config.regeneration.first_start_gift_only=Starting gift is first-time only
 config.regeneration.fiery_regen=Fiery regeneration
 config.regeneration.regenerative_kill_range=Regeneration kill range
 config.regeneration.regenerative_knockback=Regeneration knockback
@@ -47,15 +48,22 @@ config.regeneration.post_regenerationEffect_level=Post-regeneration effect level
 config.regeneration.reset_hunger=Reset hunger
 config.regeneration.reset_oxygen=Reset oxygen
 config.regeneration.absorbtion_level=Amount of extra hearts post-regen
-config.regeneration.lose_power_on_mid_regen_death=Lose timelord if killed mid-regeneration
+config.regeneration.lose_regens_on_death=Lose your regenerations if you get killed
 config.regeneration.loot_regex=Loot pool matcher
 config.regeneration.disable_loot=Disable Fob Watch loot
 config.regeneration.regeneration_knocksback_players=Regeneration knocks back players
 config.regeneration.regeneration_kills_players=Regeneration kills players
+config.regeneration.regeneration_fire_immunity=Regeneration fire immunity
+config.regeneration.infinite_regenerations=Infinite Regenerations
+config.regeneration.grace.gracePeriodLength=Grace period length
+config.regeneration.grace.criticalPhaseLength=Critical phase length
+config.regeneration.grace.criticalDamageChance=Critical damage chance
 
 regeneration.damagesrc.regen_energy=&s was blasted by Regeneration Energy!
+regeneration.damagesrc.regen_heal=&s died by donating too much Regeneration energy...
+regeneration.damagesrc.regen_crit=&s died from holding in their regeneration for too long
 
-regeneration.commands.debug.usage=<solace|regen> [amount]
+regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
 
 regeneration.trait.current=Current Trait:
 regeneration.trait.messages.clumsy=Clumsy
@@ -68,3 +76,9 @@ regeneration.trait.messages.sentimental=Sentimental
 regeneration.trait.messages.health=Extended Health
 regeneration.trait.messages.strong=Strength
 regeneration.trait.messages.psycho=Psycho
+
+regeneration.toast.regenerations_left=Regenerations Left
+regeneration.toast.enter_grace=You are now entering Grace period!
+regeneration.toast.press_regen=Press %s to regenerate!
+
+message.regeneration.isregenerating=%s is Regenerating...

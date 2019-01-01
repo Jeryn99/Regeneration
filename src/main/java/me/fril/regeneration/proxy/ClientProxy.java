@@ -4,7 +4,7 @@ import java.util.Map;
 
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
-import me.fril.regeneration.client.layers.LayerRegeneration;
+import me.fril.regeneration.client.rendering.LayerRegeneration;
 import me.fril.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
