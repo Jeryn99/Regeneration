@@ -7,7 +7,7 @@ import me.fril.regeneration.common.capability.RegenerationStorage;
 import me.fril.regeneration.common.commands.RegenDebugCommand;
 import me.fril.regeneration.debugger.RegenDebugger;
 import me.fril.regeneration.handlers.ActingForwarder;
-import me.fril.regeneration.handlers.TardisModHandler;
+import me.fril.regeneration.handlers.TardisModIntegrationHandler;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
 import net.minecraft.util.ResourceLocation;
@@ -52,7 +52,7 @@ public class RegenerationMod {
 		ActingForwarder.init();
 		
 		if (Loader.isModLoaded("tardis")) { //SUB shouldn't this be in postInit?
-			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
+			ActingForwarder.register(TardisModIntegrationHandler.class, Side.SERVER);
 		}
 	}
 	

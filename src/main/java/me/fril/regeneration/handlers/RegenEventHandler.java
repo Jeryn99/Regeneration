@@ -18,6 +18,7 @@ import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
@@ -76,6 +77,13 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
 		CapabilityRegeneration.getForPlayer(event.player).synchronise();
+	}
+	
+	@SubscribeEvent
+	public static void onDeathEvent(LivingDeathEvent e) {
+		if (e.getEntityLiving() instanceof EntityPlayer) {
+			CapabilityRegeneration.getForPlayer((EntityPlayer)e.getEntityLiving()).synchronise(); //NOW test this
+		}
 	}
 	
 	
