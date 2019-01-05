@@ -20,7 +20,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
 	@Config.RequiresMcRestart
 	@Config.RangeInt(min = 0)
-	public static int regenCapacity = 12; //FIXME this'll glitch if set to a lower value than the current regeneration amount
+	public static int regenCapacity = 12;
 	
 	@Config.LangKey("config.regeneration.free_regens")
 	@Config.Comment("Every player will start with this number of regenerations. Will cause undefined behavior if bigger than the amount of regenerations per cycle.")

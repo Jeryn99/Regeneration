@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import me.fril.regeneration.util.PlayerUtil;
-import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.lang3.tuple.Pair;
 
 import me.fril.regeneration.RegenConfig;
@@ -19,6 +17,7 @@ import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageSynchronisationRequest;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
+import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenState.Transition;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
@@ -117,7 +117,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		regenerationsLeft = nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft");
+		regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 		
 		//v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
@@ -354,14 +354,14 @@ public class CapabilityRegeneration implements IRegeneration {
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1); //in case this method was called by critical death
 			
-			/* SUB For re-implementing the dont-lose-regens-on-death option:
+			/* SuB For re-implementing the dont-lose-regens-on-death option:
 			 * We never explicitly reset the live count, but it still gets reset.
 			 * From my understanding this is because the capability data isn't cloned over properly when the player dies.
 			 * Soooo how should we handle it then? Save the last regen count and giving that back on respawn?
 			 * Can we copy the data over on death (I assume so) and how?
+			 * 
+			 * WAFFLE Use the LivingDeathEvent and just copy the data over
 			 */
-			
-			/* WAFFLE Use the LivingDeathEvent and just copy the data over*/
 			
 			synchronise();
 		}

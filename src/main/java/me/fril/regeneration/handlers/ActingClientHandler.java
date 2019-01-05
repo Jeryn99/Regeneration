@@ -11,7 +11,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 
-class ActingClientHandler implements IActingHandler { //XXX feel free to rename this, I couldn't think of anything better
+class ActingClientHandler implements IActingHandler {
 	
 	public static final IActingHandler INSTANCE = new ActingClientHandler();
 	

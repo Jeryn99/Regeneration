@@ -24,14 +24,14 @@ public class TardisModHandler implements IActingHandler {
 			World world = cap.getPlayer().world;
 			TypeFiery fiery = (TypeFiery) cap.getType();
 			
-			if (world.provider instanceof WorldProviderTardis && fiery.getAnimationTicks() == fiery.getAnimationLength()/2) { //TODO getAnimationTicks() reference is probably not needed
+			if (world.provider instanceof WorldProviderTardis && fiery.getAnimationTicks() == fiery.getAnimationLength()/2) {
 				world.loadedTileEntityList.forEach(tileEntity -> damageTardis(tileEntity, cap.getPlayer()));
 			}
 		}
 	}
 	
 	private void damageTardis(TileEntity tileEntity, EntityPlayer player) {
-		if (!(tileEntity instanceof TileEntityTardis) || player.getDistanceSq(tileEntity.getPos()) <= 10) //SUB are you sure the second condition is correct? I don't know exactly what it's supposed to do, but why does the distance have to be exactly 10?
+		if (!(tileEntity instanceof TileEntityTardis) || player.getDistanceSq(tileEntity.getPos()) <= 10)
 			return;
 		
 		TileEntityTardis tileEntityTardis = (TileEntityTardis) tileEntity;

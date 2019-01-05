@@ -85,7 +85,7 @@ public class RenderUtil {
 				GlStateManager.color((float) color.x, (float)color.y, (float)color.z, 1.0F / layers / 2);
 				GlStateManager.depthMask(false);
 			} else {
-				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha); //XXX does this actually do anything? We're always passing in an alpha of 0...
+				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha); //SUB does this actually do anything? We're always passing in an alpha of 0...
 				GlStateManager.depthMask(true);
 			}
 			double size = thickness + (layer < layers ? layer * (1.25D / layers) : 0.0D);

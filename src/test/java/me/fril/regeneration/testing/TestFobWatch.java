@@ -70,7 +70,7 @@ public class TestFobWatch {
 	public void testReceive() throws ReflectiveOperationException {
 		CapabilityRegeneration cap = setup(false, false);
 		
-		//NOW do the actual testing
+		//TESTING do the actual watch testing
 		
 		/*for (int M = 6; M < 15; M += 3) {
 			RegenConfig.regenCapacity = M;
@@ -95,20 +95,20 @@ public class TestFobWatch {
 	public void testTransfer() throws ReflectiveOperationException {
 		CapabilityRegeneration cap = setup(true, false);
 		
-		//NOW do the actual testing
+		//TESTING do the actual watch testing
 	}
 	
 	@Test @Ignore
 	public void testCreative() throws ReflectiveOperationException {
 		CapabilityRegeneration cap = setup(false, true);
 		
-		//NOW do the actual testing
+		//TESTING do the actual watch testing
 		
 		
 		
 		cap = setup(true, true);
 		
-		//NOW do the actual testing
+		//TESTING do the actual watch testing
 	}
 	
 	

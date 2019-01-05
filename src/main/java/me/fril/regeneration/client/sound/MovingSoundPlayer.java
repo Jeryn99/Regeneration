@@ -24,7 +24,7 @@ public class MovingSoundPlayer extends MovingSound {
 		super.repeat = repeat;
 	}
 	
-	//FIXME Sometimes ConcurrentModificationException's in subtitle renderer, probably due to a race condition because we're modifying it here and in CoditionalSound
+	//FIXME Sometimes ConcurrentModificationException's in subtitle renderer, probably due to a race condition because we're modifying it here and in ConditionalSound
 	@Override
 	public void update() {
 		super.xPosF = (float) player.posX;

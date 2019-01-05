@@ -72,7 +72,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		return 10 * 20; //10 seconds of 20 ticks
 	}
 	
-	/** @deprecated No idea why you'd want to use this outside of this class, so think carefully before you do because it's probably wrong */
+	/** @deprecated No idea why you'd want to use this outside of this class, so think carefully before you do because it's probably wrong. Keep in mind that animations can change length, so <b>never</b> use this in a non-relative way */
 	@Deprecated
 	public long getAnimationTicks() {
 		return animationTicks;
