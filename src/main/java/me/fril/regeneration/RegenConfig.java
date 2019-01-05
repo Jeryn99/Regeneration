@@ -92,7 +92,7 @@ public class RegenConfig { // TODO externalize comment strings?
 	@Config.Comment("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.")
 	public static boolean infiniteRegeneration = false;
 	
-	@Config.LangKey("config.regeneration.regen_messages")
+	@Config.LangKey("config.regeneration.regen_messages") //FIXME add lang key
 	@Config.Comment("Sends a message to chat to say that a player is regenerating, and the reason for it")
 	public static boolean sendRegenDeathMessages = true;
 	

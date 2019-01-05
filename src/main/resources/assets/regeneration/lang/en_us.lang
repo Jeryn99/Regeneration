@@ -65,20 +65,13 @@ regeneration.damagesrc.regen_crit=&s died from holding in their regeneration for
 
 regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
 
-regeneration.trait.current=Current Trait:
-regeneration.trait.messages.clumsy=Clumsy
-regeneration.trait.messages.hunger=Hungry
-regeneration.trait.messages.night_vision=Night Vision
-regeneration.trait.messages.none=You have not received a trait. You are normal.
-regeneration.trait.messages.speed=Speed
-regeneration.trait.messages.pycho=Pyschopath
-regeneration.trait.messages.sentimental=Sentimental
-regeneration.trait.messages.health=Extended Health
-regeneration.trait.messages.strong=Strength
-regeneration.trait.messages.psycho=Psycho
+regeneration.toast.regenerated=You have regenerated!
+regeneration.toast.regenerations_left=You have %s regenerations left
 
-regeneration.toast.regenerations_left=Regenerations Left
-regeneration.toast.enter_grace=You are now entering Grace period!
-regeneration.toast.press_regen=Press %s to regenerate!
+regeneration.toast.enter_grace=Regeneration starting
+regeneration.toast.enter_grace.sub=Press %s to regenerate, or die in %s minutes!
 
-message.regeneration.isregenerating=%s is Regenerating...
+regeneration.toast.enter_critical=You are going critical
+regeneration.toast.enter_critical.sub=%s minutes left to regenerate before you die!
+
+message.regeneration.isregenerating=%s is regenerating...

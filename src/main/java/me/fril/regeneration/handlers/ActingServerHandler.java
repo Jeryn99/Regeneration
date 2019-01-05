@@ -46,6 +46,8 @@ class ActingServerHandler implements IActingHandler {
 			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 				
+				//FIXME weakness and nausea are never applied (although applyPotionIfAbsent returns true, it stays true)
+				
 				if (stateProgress > nauseaPercentage) {
 					if (PlayerUtil.applyPotionIfAbsent(player, 9, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied nausea");
@@ -90,6 +92,7 @@ class ActingServerHandler implements IActingHandler {
 		//Reduce number of hearts, but compensate with absorption
 		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
+		RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied health reduction");
 		player.setHealth(player.getMaxHealth());
 	}
 	
@@ -100,6 +103,7 @@ class ActingServerHandler implements IActingHandler {
 	@Override
 	public void onGoCritical(IRegeneration cap) {
 		cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
+		RegenerationMod.DEBUGGER.getChannelFor(cap.getPlayer()).out("Applied speed reduction");
 	}
 	
 	
@@ -111,7 +115,10 @@ class ActingServerHandler implements IActingHandler {
 		EntityPlayer player = cap.getPlayer();
 		
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
+		RegenerationMod.DEBUGGER.getChannelFor(player).out("Removed health reduction");
+		
 		player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
+		RegenerationMod.DEBUGGER.getChannelFor(player).out("Removed speed reduction");
 		
 		player.setHealth(Math.max(player.getHealth(), 8));
 		player.setAbsorptionAmount(0);

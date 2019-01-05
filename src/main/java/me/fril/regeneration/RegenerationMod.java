@@ -51,7 +51,7 @@ public class RegenerationMod {
 		
 		ActingForwarder.init();
 		
-		if (Loader.isModLoaded("tardis")) {
+		if (Loader.isModLoaded("tardis")) { //SUB shouldn't this be in postInit?
 			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
 	}
