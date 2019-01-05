@@ -11,7 +11,7 @@ public class ClientUtil {
 	
 	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle, RegenState regenState) {
 		//Minecraft.getMinecraft().getToastGui().add(new ToastRegeneration(title, subtitle, regenState));
-		Minecraft.getMinecraft().getToastGui().add(new SystemToast(Type.TUTORIAL_HINT, title, subtitle));
+		//Minecraft.getMinecraft().getToastGui().add(new SystemToast(Type.TUTORIAL_HINT, title, subtitle));
 	}
 	
 	public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
