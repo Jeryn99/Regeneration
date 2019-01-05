@@ -1,9 +1,7 @@
 package me.fril.regeneration.handlers;
 
-import java.util.UUID;
-
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.Regeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.ActingForwarder.IActingHandler;
 import me.fril.regeneration.util.ExplosionUtil;
@@ -13,6 +11,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+
+import java.util.UUID;
 
 class ActingServerHandler implements IActingHandler {
 	
@@ -48,12 +48,12 @@ class ActingServerHandler implements IActingHandler {
 				
 				if (stateProgress > nauseaPercentage) {
 					if (PlayerUtil.applyPotionIfAbsent(player, 9, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
-						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied nausea");
+						Regeneration.DEBUGGER.getChannelFor(player).out("Applied nausea");
 					}
 				}
 				
 				if (PlayerUtil.applyPotionIfAbsent(player, 18, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - stateProgress)), 0, false, false)) {
-					RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
+					Regeneration.DEBUGGER.getChannelFor(player).out("Applied weakness");
 				}
 				
 				if (player.world.rand.nextDouble() < (RegenConfig.Grace.criticalDamageChance / 100F))
@@ -66,7 +66,7 @@ class ActingServerHandler implements IActingHandler {
 				
 				if (stateProgress > weaknessPercentage) {
 					if (PlayerUtil.applyPotionIfAbsent(player, 18, (int) (RegenConfig.Grace.gracePhaseLength * 20 * (1 - weaknessPercentage) + RegenConfig.Grace.criticalPhaseLength * 20), 0, false, false)) {
-						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
+						Regeneration.DEBUGGER.getChannelFor(player).out("Applied weakness");
 					}
 				}
 				

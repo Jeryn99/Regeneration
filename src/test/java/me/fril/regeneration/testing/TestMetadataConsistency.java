@@ -1,6 +1,12 @@
 package me.fril.regeneration.testing;
 
-import static org.junit.Assert.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import me.fril.regeneration.Regeneration;
+import net.minecraftforge.fml.common.Mod;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,25 +14,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.junit.Test;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import me.fril.regeneration.RegenerationMod;
-import net.minecraftforge.fml.common.Mod;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
- * A class containing tests relating to the validity & consistency of <code>gradle.properties</code>, <code>mcmod.info</code>, <code>update.json</code> and the information listed in {@link RegenerationMod}
+ * A class containing tests relating to the validity & consistency of <code>gradle.properties</code>, <code>mcmod.info</code>, <code>update.json</code> and the information listed in {@link Regeneration}
  * 
  * @author HoldYourWaffle
  */
 public class TestMetadataConsistency {
 	
 	/**
-	 * Tests if the version listed in <code>gradle.properties</code> is the same as the internal version inside {@link RegenerationMod}
+     * Tests if the version listed in <code>gradle.properties</code> is the same as the internal version inside {@link Regeneration}
 	 * 
 	 * @throws IOException If there's an error reading <code>gradle.properties</code>
 	 */
@@ -34,18 +33,18 @@ public class TestMetadataConsistency {
 	public void testVersion() throws IOException {
 		Properties gradleProperties = new Properties();
 		gradleProperties.load(new FileInputStream("gradle.properties"));
-		
-		assertEquals(RegenerationMod.VERSION, gradleProperties.getProperty("mod_version"));
+
+        assertEquals(Regeneration.VERSION, gradleProperties.getProperty("mod_version"));
 	}
 	
 	/**
-	 * Tests if the forge dependency listed inside {@link RegenerationMod} is the same as the forge version we're listing in <code>gradle.properties</code>
+     * Tests if the forge dependency listed inside {@link Regeneration} is the same as the forge version we're listing in <code>gradle.properties</code>
 	 * 
 	 * @throws IOException If there's an error reading <code>gradle.properties</code>
 	 */
 	@Test
 	public void testForgeDependency() throws IOException {
-		Mod[] annotations = RegenerationMod.class.getAnnotationsByType(Mod.class);
+        Mod[] annotations = Regeneration.class.getAnnotationsByType(Mod.class);
 		assertEquals("Multiple @Mod annotations", 1, annotations.length);
 		
 		Properties gradleProperties = new Properties();
@@ -77,7 +76,7 @@ public class TestMetadataConsistency {
 		assertTrue("Missing versions for current mc version "+mcVersion, rootObj.has(mcVersion));
 		
 		JsonObject versionObj = rootObj.getAsJsonObject(mcVersion);
-		assertTrue("Missing version entry for current version "+mcVersion+"-"+RegenerationMod.VERSION, versionObj.has(RegenerationMod.VERSION));
+        assertTrue("Missing version entry for current version " + mcVersion + "-" + Regeneration.VERSION, versionObj.has(Regeneration.VERSION));
 	}
 	
 	/**
@@ -93,9 +92,9 @@ public class TestMetadataConsistency {
 		
 		JsonArray mcmodRootArr = mcmmodRoot.getAsJsonArray();
 		JsonObject mcmodRootObj = mcmodRootArr.get(0).getAsJsonObject();
-		
-		assertEquals("Inconsistent modid", mcmodRootObj.get("modid").getAsString(), RegenerationMod.MODID);
-		assertEquals("Inconsistent modname", mcmodRootObj.get("name").getAsString(), RegenerationMod.NAME);
+
+        assertEquals("Inconsistent modid", mcmodRootObj.get("modid").getAsString(), Regeneration.MODID);
+        assertEquals("Inconsistent modname", mcmodRootObj.get("name").getAsString(), Regeneration.NAME);
 		assertTrue("Logo file doesn't exist", new File("src/main/resources", mcmodRootObj.get("logoFile").getAsString()).exists());
 		
 		JsonObject updateRootObj = updateRoot.getAsJsonObject();

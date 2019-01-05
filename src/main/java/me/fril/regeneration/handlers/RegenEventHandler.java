@@ -1,7 +1,7 @@
 package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.Regeneration;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
@@ -18,6 +18,7 @@ import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
@@ -33,7 +34,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
+@Mod.EventBusSubscriber(modid = Regeneration.MODID)
 public class RegenEventHandler {
 	
 	//=========== CAPABILITY HANDLING =============
@@ -76,6 +77,13 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
 		CapabilityRegeneration.getForPlayer(event.player).synchronise();
+	}
+
+	@SubscribeEvent
+	public static void onDeathEvent(LivingDeathEvent e) {
+		if (e.getEntityLiving() instanceof EntityPlayer) {
+			CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntityLiving()).synchronise();
+		}
 	}
 	
 	
@@ -142,7 +150,7 @@ public class RegenEventHandler {
 			return;
 		
 		//TODO configurable chances? Maybe by doing a simple loot table tutorial?
-		LootEntryTable entry = new LootEntryTable(RegenerationMod.LOOT_FILE, 1, 0, new LootCondition[0], "regeneration_inject_entry");
+		LootEntryTable entry = new LootEntryTable(Regeneration.LOOT_FILE, 1, 0, new LootCondition[0], "regeneration_inject_entry");
 		LootPool pool = new LootPool(new LootEntry[] { entry }, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(1), "regeneration_inject_pool");
 		event.getTable().addPool(pool);
 	}

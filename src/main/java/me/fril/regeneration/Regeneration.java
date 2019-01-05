@@ -18,17 +18,13 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 //TODO add language file tests
-@Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = "required:forge@[14.23.5.2768,);after:tardis")
-public class RegenerationMod {
+@Mod(modid = Regeneration.MODID, name = Regeneration.NAME, version = Regeneration.VERSION, updateJSON = Regeneration.UPDATE_URL, dependencies = "required:forge@[14.23.5.2768,);after:tardis")
+public class Regeneration {
 	
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
@@ -38,7 +34,7 @@ public class RegenerationMod {
 	public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
 	
 	@Mod.Instance(MODID)
-	public static RegenerationMod INSTANCE;
+    public static Regeneration INSTANCE;
 	public static RegenDebugger DEBUGGER;
 	
 	@SidedProxy(clientSide = "me.fril.regeneration.proxy.ClientProxy", serverSide = "me.fril.regeneration.proxy.CommonProxy")
@@ -48,13 +44,13 @@ public class RegenerationMod {
 	public void preInit(FMLPreInitializationEvent event) {
 		proxy.preInit();
 		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
-		
 		ActingForwarder.init();
-		
-		if (Loader.isModLoaded("tardis")) {
+
+        if (Loader.isModLoaded("tardis")) {
 			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
-	}
+
+    }
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {

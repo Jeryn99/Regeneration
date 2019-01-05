@@ -1,16 +1,7 @@
 package me.fril.regeneration.common.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import me.fril.regeneration.util.PlayerUtil;
-import net.minecraft.util.text.TextComponentTranslation;
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.Regeneration;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.debugger.util.DebuggableScheduledAction;
@@ -19,6 +10,7 @@ import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageSynchronisationRequest;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
+import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenState.Transition;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,8 +18,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sub
@@ -37,7 +35,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@CapabilityInject(IRegeneration.class)
 	public static final Capability<IRegeneration> CAPABILITY = null;
-	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
+	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(Regeneration.MODID, "regeneration");
 	
 	private final EntityPlayer player;
 	private int regenerationsLeft;

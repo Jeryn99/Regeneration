@@ -1,7 +1,7 @@
 package me.fril.regeneration.common.items;
 
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.Regeneration;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -54,12 +54,12 @@ public class ItemFobWatch extends Item {
 			if (cap.canRegenerate())
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
 			else if (world.isRemote) {
-				RegenerationMod.DEBUGGER.getChannelFor(player).out(player.getName() + " is now a timelord");
+                Regeneration.DEBUGGER.getChannelFor(player).out(player.getName() + " is now a timelord");
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 			}
 			
 			if (used < 0)
-				RegenerationMod.DEBUGGER.getChannelFor(player).warn("Fob watch used <0 regens (supply: "+supply+", needed:"+needed+", used:"+used+", capacity:"+RegenConfig.regenCapacity+", damage:"+stack.getItemDamage()+", regens:"+cap.getRegenerationsLeft());
+                Regeneration.DEBUGGER.getChannelFor(player).warn("Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.regenCapacity + ", damage:" + stack.getItemDamage() + ", regens:" + cap.getRegenerationsLeft());
 			
 			cap.receiveRegenerations(used);
 			

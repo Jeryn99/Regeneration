@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by Sub
  * on 17/09/2018.
  */
-@Config(modid = RegenerationMod.MODID, name = "Regeneration")
+@Config(modid = Regeneration.MODID, name = "Regeneration")
 public class RegenConfig { // TODO externalize comment strings?
 	
 	public static final Loot Loot = new Loot();
@@ -134,8 +134,8 @@ public class RegenConfig { // TODO externalize comment strings?
 		
 		@SubscribeEvent
 		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-			if (event.getModID().equals(RegenerationMod.MODID)) {
-				ConfigManager.sync(RegenerationMod.MODID, Config.Type.INSTANCE);
+            if (event.getModID().equals(Regeneration.MODID)) {
+                ConfigManager.sync(Regeneration.MODID, Config.Type.INSTANCE);
 			}
 		}
 		

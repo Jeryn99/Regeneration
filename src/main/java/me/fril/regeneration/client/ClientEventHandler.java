@@ -1,9 +1,6 @@
 package me.fril.regeneration.client;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.Regeneration;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -25,21 +22,20 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 /**
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = Regeneration.MODID)
 public class ClientEventHandler {
 	
 	@SubscribeEvent
@@ -101,8 +97,8 @@ public class ClientEventHandler {
 				break;
 		}
 	}
-	
-	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID + ":" + "textures/misc/vignette.png");
+
+    private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(Regeneration.MODID + ":" + "textures/misc/vignette.png");
 	
 	private static void renderVignette(Vec3d color, float a) {
 		GlStateManager.color((float)color.x, (float)color.y, (float)color.z, a);
