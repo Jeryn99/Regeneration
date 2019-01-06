@@ -1,11 +1,15 @@
 package me.fril.regeneration;
 
+import java.awt.GraphicsEnvironment;
+
 import me.fril.regeneration.client.gui.GuiHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
 import me.fril.regeneration.common.commands.RegenDebugCommand;
-import me.fril.regeneration.debugger.RegenDebugger;
+import me.fril.regeneration.debugger.DummyRegenDebugger;
+import me.fril.regeneration.debugger.GraphicalRegenDebugger;
+import me.fril.regeneration.debugger.IRegenDebugger;
 import me.fril.regeneration.handlers.ActingForwarder;
 import me.fril.regeneration.handlers.TardisModIntegrationHandler;
 import me.fril.regeneration.network.NetworkHandler;
@@ -39,7 +43,7 @@ public class RegenerationMod {
 	
 	@Mod.Instance(MODID)
 	public static RegenerationMod INSTANCE;
-	public static RegenDebugger DEBUGGER;
+	public static IRegenDebugger DEBUGGER;
 	
 	@SidedProxy(clientSide = "me.fril.regeneration.proxy.ClientProxy", serverSide = "me.fril.regeneration.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -51,7 +55,7 @@ public class RegenerationMod {
 		
 		ActingForwarder.init();
 		
-		if (Loader.isModLoaded("tardis")) { //SUB shouldn't this be in postInit?
+		if (Loader.isModLoaded("tardis")) {
 			ActingForwarder.register(TardisModIntegrationHandler.class, Side.SERVER);
 		}
 	}
@@ -75,7 +79,7 @@ public class RegenerationMod {
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new RegenDebugCommand());
 		
-		DEBUGGER = new RegenDebugger();
+		DEBUGGER = GraphicsEnvironment.isHeadless() ? new DummyRegenDebugger() : new GraphicalRegenDebugger();
 		MinecraftForge.EVENT_BUS.register(DEBUGGER);
 	}
 	
