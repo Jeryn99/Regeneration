@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy {
 
 			layers.forEach(layerRenderer -> {
 				if (layerRenderer instanceof LayerHeldItem) {
-					layers.remove(renderPlayer);
+                    layers.remove(layerRenderer);
 				}
 			});
 
