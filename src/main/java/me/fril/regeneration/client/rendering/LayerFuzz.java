@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 //Bored this is just for me messing around
@@ -22,7 +23,11 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
     public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         mainModel = playerRenderer.getMainModel();
         GlStateManager.pushMatrix();
-        Minecraft.getMinecraft().renderEngine.bindTexture(playerRenderer.getEntityTexture((AbstractClientPlayer) entitylivingbaseIn));
+
+        ResourceLocation playerTexture = playerRenderer.getEntityTexture((AbstractClientPlayer) entitylivingbaseIn);
+        if (playerTexture != null) {
+            Minecraft.getMinecraft().renderEngine.bindTexture(playerTexture);
+        }
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(1, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
