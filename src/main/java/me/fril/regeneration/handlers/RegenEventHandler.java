@@ -137,7 +137,7 @@ public class RegenEventHandler {
 		persist.setBoolean("loggedInBefore", true);
 		nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
 		
-	//	System.out.println(nbt);
+		//System.out.println(nbt);
 	}
 	
 	@SubscribeEvent

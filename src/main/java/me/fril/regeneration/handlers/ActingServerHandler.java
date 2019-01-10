@@ -46,8 +46,6 @@ class ActingServerHandler implements IActingHandler {
 			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 				
-				//FIXME weakness and nausea are never applied (although applyPotionIfAbsent returns true, it stays true)
-				
 				if (stateProgress > nauseaPercentage) {
 					if (PlayerUtil.applyPotionIfAbsent(player, 9, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied nausea");

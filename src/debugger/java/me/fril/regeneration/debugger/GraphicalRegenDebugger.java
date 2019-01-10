@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
-public class RegenDebugger {
+public class GraphicalRegenDebugger implements IRegenDebugger {
 	private final Map<GameProfile, IDebugChannel> channelz = new HashMap<>();
 	private final Map<GameProfile, PanelPlayerTab> playerTabz = new HashMap<>();
 	
@@ -29,7 +29,7 @@ public class RegenDebugger {
 	private final JFrame frame;
 	private final JTabbedPane tabs;
 	
-	public RegenDebugger() {
+	public GraphicalRegenDebugger() {
 		frame = new JFrame("Regeneration v" + RegenerationMod.VERSION + " debugger");
 		frame.setSize(600, 600);
 		frame.setAutoRequestFocus(false);
@@ -46,6 +46,7 @@ public class RegenDebugger {
 	}
 	
 	/** <B>NEVER EVER SAVE THE RESULT OF THIS IN A REFERENCE!</B> */
+	@Override
 	public IDebugChannel getChannelFor(EntityPlayer player) {
 		if (player.getGameProfile() != null && channelz.containsKey(player.getGameProfile())) {
 			return channelz.get(player.getGameProfile());
@@ -98,10 +99,12 @@ public class RegenDebugger {
 	
 	
 	
+	@Override
 	public void open() {
 		frame.setVisible(true);
 	}
 	
+	@Override
 	public void dispose() {
 		frame.dispose();
 	}
