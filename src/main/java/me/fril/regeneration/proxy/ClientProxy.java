@@ -1,24 +1,20 @@
 package me.fril.regeneration.proxy;
 
-import java.util.List;
 import java.util.Map;
 
-import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
-import me.fril.regeneration.client.rendering.LayerFuzz;
+import me.fril.regeneration.client.overlay.combat.LucraftCoreHandler;
 import me.fril.regeneration.client.rendering.LayerItemReplace;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
 import me.fril.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.Loader;
 
 /**
  * Created by Sub
@@ -32,29 +28,25 @@ public class ClientProxy extends CommonProxy {
 		
 		// Registering the mods Keybinds
 		RegenKeyBinds.init();
-		
-		// Galacticraft API for TABS
+
+		// Galacticraft API for TABS ======================
 		if (TabRegistry.getTabList().isEmpty()) {
 			MinecraftForge.EVENT_BUS.register(new TabRegistry());
 			TabRegistry.registerTab(new InventoryTabVanilla());
 		}
 		TabRegistry.registerTab(new InventoryTabRegeneration());
-		
-		// Adding Render Layers
+
+		// LC Core
+		if (Loader.isModLoaded("lucraftcore")) {
+			LucraftCoreHandler.registerEntry();
+		}
+
+		//Render layers ===========================================
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-		skinMap.values().forEach(renderPlayer -> {
-
-			renderPlayer.addLayer(new LayerRegeneration(renderPlayer));
-			List<LayerRenderer> layers = ReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, "layerRenderers", "field_177097_h");
-
-			layers.forEach(layerRenderer -> {
-				if (layerRenderer instanceof LayerHeldItem) {
-                    layers.remove(layerRenderer);
-				}
-			});
-
-			layers.add(new LayerItemReplace(renderPlayer));
-
+		skinMap.values().forEach(renderPlayer -> { //Cycle through each Skinmap type
+			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); //Add Regeneration Layer
+			renderPlayer.layerRenderers.removeIf(layer -> layer.getClass() == LayerHeldItem.class); //Remove old held item layer
+			renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); //Add new item layer
 		});
 
 	}
@@ -63,8 +55,7 @@ public class ClientProxy extends CommonProxy {
 	public void postInit() {
 		super.postInit();
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-		skinMap.values().forEach(RenderUtil::setupArmorModelOverride);
-
+		skinMap.values().forEach(RenderUtil::setupArmorModelOverride); //Fixing armor model animations
 	}
 	
 }

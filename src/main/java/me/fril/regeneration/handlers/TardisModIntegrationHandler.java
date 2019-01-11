@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.tardis.mod.common.dimensions.WorldProviderTardis;
 import net.tardis.mod.common.entities.controls.ControlDoor;
 import net.tardis.mod.common.sounds.TSounds;
 import net.tardis.mod.common.systems.SystemDimension;
@@ -19,18 +20,17 @@ public class TardisModIntegrationHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
-		if (cap.getPlayer().ticksExisted % 60 == 0)
-			playBells(cap);
+		playBells(cap, false);
 	}
 	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
-		playBells(cap);
+		playBells(cap, true);
 	}
 
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
-		playBells(cap);
+		playBells(cap, true);
 	}
 
 	@Override
@@ -38,19 +38,20 @@ public class TardisModIntegrationHandler implements IActingHandler {
 		if (cap.getType() instanceof TypeFiery) {
 			damageTardisInRange(cap.getPlayer());
 		}
-		
-		playBells(cap);
+
+		playBells(cap, true);
 	}
 	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
-		playBells(cap);
+		playBells(cap, true);
 	}
-	
-	
-	
-	private void playBells(IRegeneration cap) {
-		cap.getPlayer().world.playSound(null, cap.getPlayer().getPosition(), TSounds.cloister_bell, SoundCategory.BLOCKS, 1, 1);
+
+
+	private void playBells(IRegeneration cap, boolean force) {
+		if (cap.getPlayer().ticksExisted % 1600 == 0 && cap.getPlayer().world.provider instanceof WorldProviderTardis || force) {
+			cap.getPlayer().world.playSound(null, cap.getPlayer().getPosition(), TSounds.cloister_bell, SoundCategory.BLOCKS, 1, 1);
+		}
 	}
 	
 	private void damageTardisInRange(EntityPlayer player) {
@@ -82,27 +83,6 @@ public class TardisModIntegrationHandler implements IActingHandler {
 			if (tileEntityTardis.isInFlight()) {
 				tileEntityTardis.crash(true);
 			}
-				
-			/*
-			SUB this was firing once for every tile entity in the world which was either:
-				- Not a tardis
-				- Outside 10 blocks of the regenerating player
-			Which means that when somebody regenerates, every tile entity in the world has a 50% chance of doing a fake explosion.
-			Are you sure that that's what you want?
-			
-			else {
-				World world = tileEntityTardis.getWorld();
-				BlockPos pos = tileEntityTardis.getPos();
-				
-				if (world.rand.nextBoolean()) {
-					world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
-					if (world.isRemote) { //SUB keep in mind that this will *never* be true in the regen tick event (although we're using it on regen trigger now)
-						for (int i = 0; i <= 12; i++) {
-							world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, pos.getX(), pos.getY(), pos.getZ(), 1.0D, 0.0D, 0.0D);
-						}
-					}
-				}
-			}*/
 		}
 	}
 	

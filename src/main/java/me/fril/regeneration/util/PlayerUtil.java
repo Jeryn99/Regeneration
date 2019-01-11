@@ -15,6 +15,7 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAIZombieAttack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -73,10 +74,10 @@ public class PlayerUtil {
 			}
 		}
 	}
-	
-	public static boolean applyPotionIfAbsent(EntityPlayer player, int potionId, int length, int amplifier, boolean ambient, boolean showParticles) {
-		if (player.getActivePotionEffects().stream().noneMatch(pe->Potion.getIdFromPotion(pe.getPotion()) == potionId)) {
-			player.addPotionEffect(new PotionEffect(Potion.getPotionById(potionId), length, amplifier, ambient, showParticles));
+
+    public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {
+        if (player.getActivePotionEffects().stream().noneMatch(pe -> pe.getPotion() == potion)) {
+            player.addPotionEffect(new PotionEffect(potion, length, amplifier, ambient, showParticles));
 			return true;
 		} else return false;
 	}

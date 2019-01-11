@@ -12,6 +12,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 class ActingServerHandler implements IActingHandler {
@@ -47,12 +48,12 @@ class ActingServerHandler implements IActingHandler {
 				float nauseaPercentage = 0.5F;
 				
 				if (stateProgress > nauseaPercentage) {
-					if (PlayerUtil.applyPotionIfAbsent(player, 9, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
+                    if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied nausea");
 					}
 				}
-				
-				if (PlayerUtil.applyPotionIfAbsent(player, 18, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - stateProgress)), 0, false, false)) {
+
+                if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - stateProgress)), 0, false, false)) {
 					RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
 				}
 				
@@ -65,7 +66,7 @@ class ActingServerHandler implements IActingHandler {
 				float weaknessPercentage = 0.5F;
 				
 				if (stateProgress > weaknessPercentage) {
-					if (PlayerUtil.applyPotionIfAbsent(player, 18, (int) (RegenConfig.Grace.gracePhaseLength * 20 * (1 - weaknessPercentage) + RegenConfig.Grace.criticalPhaseLength * 20), 0, false, false)) {
+                    if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.Grace.gracePhaseLength * 20 * (1 - weaknessPercentage) + RegenConfig.Grace.criticalPhaseLength * 20), 0, false, false)) {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
 					}
 				}
