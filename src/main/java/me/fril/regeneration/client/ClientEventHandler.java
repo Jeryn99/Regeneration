@@ -25,11 +25,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -41,7 +37,11 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
-	
+
+	@SubscribeEvent
+	public static void onRenderView(EntityViewRenderEvent e) {
+	}
+
 	@SubscribeEvent
 	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
@@ -171,9 +171,7 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent ev) {
-		for (Item item : RegenObjects.ITEMS) {
-			RenderUtil.setItemRender(item);
-		}
+		RegenObjects.ITEMS.forEach(RenderUtil::setItemRender);
 		RegenObjects.ITEMS = new ArrayList<>();
 	}
 	

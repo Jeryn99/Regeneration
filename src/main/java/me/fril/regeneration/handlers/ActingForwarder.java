@@ -91,10 +91,9 @@ public class ActingForwarder {
 		String event = Thread.currentThread().getStackTrace()[2].getMethodName();
 		NetworkHandler.INSTANCE.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP)cap.getPlayer());
 	}
-	
-	
-	
-	interface IActingHandler {
+
+
+	public interface IActingHandler {
 		/** NOT FORWARDED TO THE CLIENT! Having a packet sent every tick probably is not something we want, and it creates issues with half-loaded players */
 		void onRegenTick(IRegeneration cap);
 		void onEnterGrace(IRegeneration cap);

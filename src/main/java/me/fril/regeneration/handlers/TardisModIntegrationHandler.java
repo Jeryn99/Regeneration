@@ -49,7 +49,7 @@ public class TardisModIntegrationHandler implements IActingHandler {
 
 
 	private void playBells(IRegeneration cap, boolean force) {
-		if (cap.getPlayer().ticksExisted % 1600 == 0 && cap.getPlayer().world.provider instanceof WorldProviderTardis || force) {
+		if (cap.getPlayer().ticksExisted % 1200 == 0 && cap.getPlayer().world.provider instanceof WorldProviderTardis || force) {
 			cap.getPlayer().world.playSound(null, cap.getPlayer().getPosition(), TSounds.cloister_bell, SoundCategory.BLOCKS, 1, 1);
 		}
 	}

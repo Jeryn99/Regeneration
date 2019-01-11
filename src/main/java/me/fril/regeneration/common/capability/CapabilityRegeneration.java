@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.block.state.IBlockState;
 import org.apache.commons.lang3.tuple.Pair;
 
 import me.fril.regeneration.RegenConfig;
@@ -314,8 +315,13 @@ public class CapabilityRegeneration implements IRegeneration {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
 			}
 		}
-		
-		
+
+		@Override
+		public void onPunchBlock(IBlockState blockState) {
+
+		}
+
+
 		private void tick() {
 			if (player.world.isRemote)
 				throw new IllegalStateException("Ticking state manager on the client"); //the state manager shouldn't even exist on the client
