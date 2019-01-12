@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "beta-v1.3-29c2dd3",
-		"1.12.2-recommended": "1.2.6"
+		"1.12.2-latest": "v1.3.4",
+		"1.12.2-recommended": "v1.3.4"
 	},
 	"1.12.2": {
 		"1.0.0": "Time for a full release then boys",
@@ -16,6 +16,7 @@
 		"beta-v1.3-29c2dd3": "New healing system & fixed loot tables",
 		"1.2.4": "The loot table actually works now",
 		"1.2.5": "Fixes a exploit in the fob watch",
-		"1.2.6": "Fix Fob Watch"
+		"1.2.6": "Fix Fob Watch",
+		"v1.3.4": "A release of new changes! Read Curse Forge Desc for more info!"
 	}
 }
