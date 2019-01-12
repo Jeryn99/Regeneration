@@ -2,14 +2,22 @@ package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
+import me.fril.regeneration.network.MessageUpdateSkin;
+import me.fril.regeneration.network.NetworkHandler;
+import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryTable;
 import net.minecraft.world.storage.loot.LootPool;
@@ -26,6 +34,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Sub
@@ -57,7 +70,8 @@ public class RegenEventHandler {
 		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, cap, null);
 		storage.readNBT(CapabilityRegeneration.CAPABILITY, cap, null, nbt);
 	}
-	
+
+
 	@SubscribeEvent
 	public static void playerTracking(PlayerEvent.StartTracking event) {
 		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();

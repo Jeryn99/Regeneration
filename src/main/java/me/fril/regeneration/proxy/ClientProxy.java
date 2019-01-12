@@ -3,6 +3,7 @@ package me.fril.regeneration.proxy;
 import java.util.Map;
 
 import me.fril.regeneration.client.RegenKeyBinds;
+import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
 import me.fril.regeneration.combat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.client.rendering.LayerItemReplace;
@@ -21,7 +22,13 @@ import net.minecraftforge.fml.common.Loader;
  * on 17/09/2018.
  */
 public class ClientProxy extends CommonProxy {
-	
+
+	@Override
+	public void preInit() {
+		super.preInit();
+		SkinChangingHandler.registerResources();
+	}
+
 	@Override
 	public void init() {
 		super.init();

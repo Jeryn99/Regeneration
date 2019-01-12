@@ -1,5 +1,6 @@
 package me.fril.regeneration.client.rendering;
 
+import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.util.LimbManipulationUtil;
@@ -20,6 +21,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
+import java.io.IOException;
+
 public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	
 	public static final TypeFieryRenderer INSTANCE = new TypeFieryRenderer();
@@ -30,18 +33,27 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	public void renderRegeneratingPlayerPre(TypeFiery type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
 		if (MinecraftForgeClient.getRenderPass() == -1) //rendering in inventory
 			return;
-		
+
+		double animationProgress = type.getAnimationProgress();
+
+		try {
+			SkinChangingHandler.skinChangeRandom((AbstractClientPlayer) ev.getEntityPlayer());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
 		
 		int headRot = 50;
-		if (type.getAnimationProgress() < 0.05) {
-			headRot = (int)((type.getAnimationProgress() / 0.05F) * 50F); // %headRotatingPhase * maxHeadRot
+		if (animationProgress < 0.05) {
+			headRot = (int) ((animationProgress / 0.05F) * 50F); // %headRotatingPhase * maxHeadRot
 		}
 		
 		float armRot = 85;
-		if (type.getAnimationProgress() < 0.075) {
+		if (animationProgress < 0.075) {
 			arm_shake = 0;
-			armRot = (int)((type.getAnimationProgress() / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
+			armRot = (int) ((animationProgress / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
 		
 		//TODO don't render item in hand during regeneration
@@ -62,7 +74,8 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			return;
 		
 		ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
-		
+
+
 		// State manager changes
 		GlStateManager.pushAttrib();
 		GlStateManager.disableTexture2D();

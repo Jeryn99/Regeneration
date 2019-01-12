@@ -39,7 +39,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	@CapabilityInject(IRegeneration.class)
 	public static final Capability<IRegeneration> CAPABILITY = null;
 	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
-	
+	private static final String ENCODED_SKIN = "NONE";
+
 	private final EntityPlayer player;
 	private int regenerationsLeft;
 	private RegenState state = RegenState.ALIVE;
@@ -110,7 +111,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
 		nbt.setTag("type", type.serializeNBT());
-		
+		nbt.setString("encoded_skin", ENCODED_SKIN);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -129,7 +130,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			type = new TypeFiery();
 		
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
-		
+
+		setEncodedSkin(nbt.getString("encoded_skin"));
+
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
 	}
@@ -152,11 +155,18 @@ public class CapabilityRegeneration implements IRegeneration {
 	public IRegenType<?> getType() {
 		return type;
 	}
-	
-	
-	
-	
-	
+
+	@Override
+	public String getEncodedSkin() {
+		return ENCODED_SKIN;
+	}
+
+	@Override
+	public void setEncodedSkin(String string) {
+
+	}
+
+
 	@Override
 	public NBTTagCompound getStyle() {
 		NBTTagCompound nbt = new NBTTagCompound();

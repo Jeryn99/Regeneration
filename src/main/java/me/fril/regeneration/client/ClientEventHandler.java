@@ -1,5 +1,6 @@
 package me.fril.regeneration.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -9,9 +10,11 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageTriggerRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
+import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -39,7 +42,12 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ClientEventHandler {
 
 	@SubscribeEvent
-	public static void onRenderView(EntityViewRenderEvent e) {
+    public static void onRenderPlayer(RenderPlayerEvent.Pre e) {
+        try {
+            ClientUtil.setPlayerTexture((AbstractClientPlayer) e.getEntityLiving(), SkinChangingHandler.getSkin((AbstractClientPlayer) e.getEntityPlayer()));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
 	}
 
 	@SubscribeEvent

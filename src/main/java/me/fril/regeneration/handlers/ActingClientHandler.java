@@ -1,6 +1,8 @@
 package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.api.IActingHandler;
+import me.fril.regeneration.client.SkinChangingHandler;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import org.lwjgl.input.Keyboard;
 
 import me.fril.regeneration.RegenConfig;
@@ -14,6 +16,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import java.io.IOException;
 
 class ActingClientHandler implements IActingHandler {
 	
