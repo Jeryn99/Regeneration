@@ -4,7 +4,7 @@ import java.util.Map;
 
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
-import me.fril.regeneration.client.overlay.combat.LucraftCoreHandler;
+import me.fril.regeneration.combat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.client.rendering.LayerItemReplace;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
 import me.fril.regeneration.util.RenderUtil;

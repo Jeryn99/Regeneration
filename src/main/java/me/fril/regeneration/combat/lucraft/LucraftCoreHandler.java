@@ -1,10 +1,10 @@
-package me.fril.regeneration.client.overlay.combat;
+package me.fril.regeneration.combat.lucraft;
 
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
+import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.handlers.ActingForwarder;
 
-public class LucraftCoreHandler implements ActingForwarder.IActingHandler {
+public class LucraftCoreHandler implements IActingHandler {
 
     public static void registerEntry() {
         AbilityBarHandler.registerProvider(new LCCoreBarEntry());

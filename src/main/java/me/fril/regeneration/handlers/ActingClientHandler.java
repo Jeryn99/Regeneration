@@ -1,5 +1,6 @@
 package me.fril.regeneration.handlers;
 
+import me.fril.regeneration.api.IActingHandler;
 import org.lwjgl.input.Keyboard;
 
 import me.fril.regeneration.RegenConfig;
@@ -7,7 +8,6 @@ import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.sound.ConditionalSound;
 import me.fril.regeneration.client.sound.MovingSoundPlayer;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.handlers.ActingForwarder.IActingHandler;
 import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
@@ -29,9 +29,9 @@ class ActingClientHandler implements IActingHandler {
 	 * Is opening watch heard by others?
 	 * Is transferring heard by others?
 	 * Is critical heard by others?
-	 * Is heartbeat heard by others?
+	 * Is heartbeat heard by others? < DEAD
 	 * Make sure regeneration is heard by others
-	 * Make sure hand-glow is heard by others
+	 * Make sure hand-glow is heard by others < It is
 	 */
 	
 	@Override

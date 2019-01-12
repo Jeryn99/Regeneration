@@ -1,10 +1,8 @@
-package me.fril.regeneration.client.overlay.combat;
+package me.fril.regeneration.combat.lucraft;
 
-import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
 import lucraft.mods.lucraftcore.util.abilitybar.IAbilityBarEntry;
 import lucraft.mods.lucraftcore.util.abilitybar.IAbilityBarProvider;
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.network.MessageTriggerRegeneration;
 import me.fril.regeneration.network.NetworkHandler;

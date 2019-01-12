@@ -119,7 +119,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
-		
+
 		//v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
 		

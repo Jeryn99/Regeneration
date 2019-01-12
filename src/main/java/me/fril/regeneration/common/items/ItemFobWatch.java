@@ -6,6 +6,7 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.ClientUtil;
+import me.fril.regeneration.util.DebuggerUtil;
 import me.fril.regeneration.util.PlayerUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +18,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import scala.collection.DebugUtils;
 
 /**
  * Created by Sub
@@ -53,13 +55,13 @@ public class ItemFobWatch extends Item {
 			
 			if (cap.canRegenerate())
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
-			else if (world.isRemote) {
-				RegenerationMod.DEBUGGER.getChannelFor(player).out(player.getName() + " is now a timelord");
+			else if (!world.isRemote) {
+				DebuggerUtil.out(player, player.getName() + " is now a timelord");
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.now_timelord"), true);
 			}
 			
 			if (used < 0)
-				RegenerationMod.DEBUGGER.getChannelFor(player).warn("Fob watch used <0 regens (supply: "+supply+", needed:"+needed+", used:"+used+", capacity:"+RegenConfig.regenCapacity+", damage:"+stack.getItemDamage()+", regens:"+cap.getRegenerationsLeft());
+				DebuggerUtil.warn(player, "Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.regenCapacity + ", damage:" + stack.getItemDamage() + ", regens:" + cap.getRegenerationsLeft());
 			
 			cap.receiveRegenerations(used);
 			

@@ -60,7 +60,7 @@ configurations {
 }
 
 dependencies {
-	deobfCompile 'com.github.Spectre0987:TardisMod:0.0.8-dev'
+	deobfCompile 'com.github.Spectre0987:TardisMod:0.0.8.12.01.2019'
 	deobfCompile 'com.gitlab.lcoremodders:LucraftCore:2.3.4'
 
 	testCompile 'junit:junit:4.12'

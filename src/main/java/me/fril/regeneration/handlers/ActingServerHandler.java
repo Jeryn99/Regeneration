@@ -4,15 +4,14 @@ import java.util.UUID;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.handlers.ActingForwarder.IActingHandler;
 import me.fril.regeneration.util.ExplosionUtil;
 import me.fril.regeneration.util.PlayerUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 class ActingServerHandler implements IActingHandler {

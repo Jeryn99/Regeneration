@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageRegenStateEvent;
 import me.fril.regeneration.network.NetworkHandler;
@@ -90,16 +91,6 @@ public class ActingForwarder {
 		
 		String event = Thread.currentThread().getStackTrace()[2].getMethodName();
 		NetworkHandler.INSTANCE.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP)cap.getPlayer());
-	}
-
-
-	public interface IActingHandler {
-		/** NOT FORWARDED TO THE CLIENT! Having a packet sent every tick probably is not something we want, and it creates issues with half-loaded players */
-		void onRegenTick(IRegeneration cap);
-		void onEnterGrace(IRegeneration cap);
-		void onRegenFinish(IRegeneration cap);
-		void onRegenTrigger(IRegeneration cap);
-		void onGoCritical(IRegeneration cap);
 	}
 
 }

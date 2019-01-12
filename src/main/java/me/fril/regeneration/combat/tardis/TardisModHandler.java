@@ -1,10 +1,10 @@
-package me.fril.regeneration.handlers;
+package me.fril.regeneration.combat.tardis;
 
 import java.util.Random;
 
+import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
-import me.fril.regeneration.handlers.ActingForwarder.IActingHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
@@ -16,7 +16,7 @@ import net.tardis.mod.common.systems.SystemDimension;
 import net.tardis.mod.common.systems.TardisSystems;
 import net.tardis.mod.common.tileentity.TileEntityTardis;
 
-public class TardisModIntegrationHandler implements IActingHandler {
+public class TardisModHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
