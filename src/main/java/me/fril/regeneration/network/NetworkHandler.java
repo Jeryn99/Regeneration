@@ -22,6 +22,7 @@ public class NetworkHandler {
 		INSTANCE.registerMessage(MessageSynchronisationRequest.Handler.class, MessageSynchronisationRequest.class, discrimiator++, Side.SERVER);
 		INSTANCE.registerMessage(MessageSynchroniseRegeneration.Handler.class, MessageSynchroniseRegeneration.class, discrimiator++, Side.CLIENT);
 		INSTANCE.registerMessage(MessageUpdateSkin.Handler.class, MessageUpdateSkin.class, discrimiator++, Side.SERVER);
+		INSTANCE.registerMessage(MessageTellEveryone.Handler.class, MessageTellEveryone.class, discrimiator++, Side.CLIENT);
 	}
 	
 }

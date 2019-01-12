@@ -5,6 +5,7 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.util.LimbManipulationUtil;
 import me.fril.regeneration.util.RenderUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
@@ -36,10 +37,14 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 
 		double animationProgress = type.getAnimationProgress();
 
-		try {
-			SkinChangingHandler.skinChangeRandom((AbstractClientPlayer) ev.getEntityPlayer());
-		} catch (IOException e) {
-			e.printStackTrace();
+		System.out.println(animationProgress);
+
+		if (Minecraft.getMinecraft().player.getUniqueID() == ev.getEntityLiving().getUniqueID()) {
+			try {
+				SkinChangingHandler.skinChangeRandom((AbstractClientPlayer) ev.getEntityPlayer(), animationProgress == 1.0D);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 

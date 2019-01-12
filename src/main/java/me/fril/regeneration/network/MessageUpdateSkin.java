@@ -4,6 +4,7 @@ package me.fril.regeneration.network;
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.util.PlayerUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -41,8 +42,11 @@ public class MessageUpdateSkin implements IMessage {
             ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
                 IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
                 cap.setEncodedSkin(message.encodedSkin);
-                System.out.println("FOUND AND UPDATED");
+                System.out.println("Updated Skin for " + ctx.getServerHandler().player.getName());
                 cap.synchronise();
+
+                PlayerUtil.sendPacketToAll(new MessageTellEveryone());
+
             });
             return null;
         }

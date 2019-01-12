@@ -24,8 +24,8 @@ public class SkinChangingHandler {
 
 
     private static final FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png");
-    private static File skinDir = new File("./mods/regeneration/assets/regen/skins/");
-    private static File skinCacheDir = new File("./mods/regeneration/assets/regen/cache/");
+    private static File skinDir = new File("./mods/regeneration/skins/");
+    private static File skinCacheDir = new File("./mods/regeneration/skincache/");
 
     public static void registerResources() {
 
@@ -73,7 +73,7 @@ public class SkinChangingHandler {
 
 
     public static ResourceLocation retrieveSkin(AbstractClientPlayer player) throws IOException {
-        ResourceLocation resourceLocation = new ResourceLocation("regen", "cache/" + player.getUniqueID() + ".png");
+        ResourceLocation resourceLocation = new ResourceLocation("regen", "/player skins/" + player.getUniqueID() + ".png");
         File check = new File(resourceLocation.getPath());
         if (check.exists()) {
             return resourceLocation;
@@ -84,14 +84,16 @@ public class SkinChangingHandler {
     }
 
 
-    public static void skinChangeRandom(AbstractClientPlayer player) throws IOException {
+    public static void skinChangeRandom(AbstractClientPlayer player, boolean cache) throws IOException {
         File skin = SkinChangingHandler.getRandomSkinFile();
         String string = SkinChangingHandler.encodeFileToBase64Binary(skin);
-        BufferedImage img = ImageIO.read(SkinChangingHandler.getRandomSkinFile());
+        BufferedImage img = ImageIO.read(skin);
         ResourceLocation skinLocation = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("skin", new DynamicTexture(img));
         ClientUtil.setPlayerTexture(player, skinLocation);
         NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(string));
-        SkinChangingHandler.cacheImage(player, string);
+        if (cache) {
+            SkinChangingHandler.cacheImage(player, string);
+        }
     }
 
 
@@ -106,7 +108,11 @@ public class SkinChangingHandler {
 
     public static void cacheImage(AbstractClientPlayer player, String base64) throws IOException {
         byte[] btDataFile = new BASE64Decoder().decodeBuffer(base64);
-        File of = new File(skinCacheDir.getPath() + player.getUniqueID() + ".png");
+        File playerFile = new File(skinCacheDir.getPath() + "/player skins/");
+        if (!playerFile.exists()) {
+            playerFile.mkdirs();
+        }
+        File of = new File(playerFile.getPath() + "/" + player.getUniqueID() + ".png");
         FileOutputStream osf = new FileOutputStream(of);
         osf.write(btDataFile);
     }

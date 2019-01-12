@@ -23,13 +23,20 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * Created by Sub
  * on 20/09/2018.
  */
 public class PlayerUtil {
-	
+
+	public static void sendPacketToAll(IMessage message) {
+		FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers().forEach(entityPlayerMP -> {
+			NetworkHandler.INSTANCE.sendTo(message, entityPlayerMP);
+		});
+	}
+
 	public static void sendMessage(EntityPlayer player, String message, boolean hotBar) {
 		if (!player.world.isRemote) {
 			player.sendStatusMessage(new TextComponentTranslation(message), hotBar);
