@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Sub
@@ -30,26 +31,26 @@ public class MessageTellEveryone implements IMessage {
     public MessageTellEveryone() {
     }
 
-    public MessageTellEveryone(String string) {
+    private String uuid;
 
+    public MessageTellEveryone(String string) {
+        uuid = string;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-
+        uuid = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-
+        ByteBufUtils.writeUTF8String(buf, uuid);
     }
 
     public static class Handler implements IMessageHandler<MessageTellEveryone, IMessage> {
         @Override
         public IMessage onMessage(MessageTellEveryone message, MessageContext ctx) {
-            FMLClientHandler.instance().getClient().world.playerEntities.forEach(player -> {
-
-            });
+            SkinChangingHandler.hashMap.clear();
             return null;
         }
     }

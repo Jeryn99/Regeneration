@@ -6,37 +6,37 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageUpdateSkin;
 import me.fril.regeneration.network.NetworkHandler;
-import me.fril.regeneration.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemChorusFruit;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.codec.binary.Base64;
+import org.lwjgl.Sys;
 import sun.misc.BASE64Decoder;
-import sun.plugin.javascript.navig.Image;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
 
 
+    public static HashMap<UUID, String> hashMap = new HashMap<>();
     private static final FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png");
     private static File skinDir = new File("./mods/regeneration/skins/");
     private static File skinCacheDir = new File("./mods/regeneration/skincache/skins");
@@ -66,85 +66,104 @@ public class SkinChangingHandler {
         return encodedfile;
     }
 
-    public static void skinChangeRandom(boolean update) {
+    public static void skinChangeRandom(boolean update) throws IOException {
         File skin = SkinChangingHandler.getRandomSkinFile();
-        System.out.println(skin.getName());
         String string = SkinChangingHandler.encodeFileToBase64Binary(skin);
         if (update) {
             NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(string));
         }
     }
 
-    public static void loadPlayerResource(EntityPlayer pl, IRegeneration data) throws IOException {
+
+    public static void getSkin(EntityPlayer pl, IRegeneration data) throws IOException {
         Minecraft minecraft = Minecraft.getMinecraft();
         AbstractClientPlayer player = (AbstractClientPlayer) pl;
-        if (true) {
-            Map map = minecraft.getSkinManager().loadSkinFromCache(pl.getGameProfile());
-            if (map.isEmpty()) {
-                map = minecraft.getSessionService().getTextures(minecraft.getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
-            }
-            if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
-                File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, minecraft.getSkinManager(), 2), profile.getHash().substring(0, 2));
-                File file = new File(dir, profile.getHash());
-                if (file.exists()) {
-                    file.delete();
+
+        if (data.getEncodedSkin().equals("NONE")) {
+            hashMap.put(pl.getUniqueID(), data.getEncodedSkin());
+            setPlayerTexture((AbstractClientPlayer) pl, null);
+            return;
+        }
+        System.out.println(hashMap.containsKey(pl.getUniqueID()));
+        if (!hashMap.containsKey(pl.getUniqueID())) {
+            File file = new File(skinCacheDir, "cache-" + player.getUniqueID() + ".png");
+
+            try {
+                cacheImageForPlayer(player, data.getEncodedSkin(), file);
+            } catch (IOException e) {
+                e.printStackTrace();
                 }
-                cacheImage((AbstractClientPlayer) pl, data.getEncodedSkin(), file);
-                cacheImage((AbstractClientPlayer) pl, data.getEncodedSkin(), new File(skinCacheDir, "cache-" + pl.getUniqueID() + ".png"));
-                ResourceLocation location = new ResourceLocation("skins/" + profile.getHash());
-                //  BufferedImage image = ImageIO.read(new File(skinCacheDir, "cache-" + pl.getUniqueID() + ".png"));
-                //   location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("skin", new DynamicTexture(image));
-                loadTexture(location);
+
+            ResourceLocation location = new ResourceLocation("skins/" + player.getUniqueID());
+            //loadTexture(file, location, DefaultPlayerSkin.getDefaultSkinLegacy(), "", true);
+            BufferedImage bufferedImage = ImageIO.read(file);
+
+            if (bufferedImage == null) {
+                setPlayerTexture(player, player.getLocationSkin());
+                return;
+            }
+
+            location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("skin", new DynamicTexture(bufferedImage));
                 setPlayerTexture(player, location);
-                data.setSkinLoaded(true);
+            hashMap.put(pl.getUniqueID(), data.getEncodedSkin());
                 return;
             }
         }
-        // setPlayerTexture(player, null);
-    }
 
-    private static ITextureObject loadTexture(ResourceLocation resource) {
-        TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-        return texturemanager.getTexture(resource);
-    }
-
-    public static NetworkPlayerInfo getNetworkPlayerInfo(AbstractClientPlayer player) {
-        return ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
-    }
-
-    public static Map<MinecraftProfileTexture.Type, ResourceLocation> getSkinMap(AbstractClientPlayer player) {
-        NetworkPlayerInfo playerInfo = getNetworkPlayerInfo(player);
-        if (playerInfo == null) return null; // XXX NPE?
-        return ObfuscationReflectionHelper.getPrivateValue(NetworkPlayerInfo.class, playerInfo, 1);
-    }
-
-    public static void setPlayerTexture(AbstractClientPlayer player, ResourceLocation texture) {
-        getSkinMap(player).put(MinecraftProfileTexture.Type.SKIN, texture);
-        if (texture == null)
-            ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, getNetworkPlayerInfo(player), false, 4);
-    }
-
-
-    public static File getRandomSkinFile() {
+    public static File getRandomSkinFile() throws IOException {
         File[] files = skinDir.listFiles(IMAGE_FILTER);
+
+        if (files.length == 0) {
+            return createDummyImage("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");
+        }
+
         Random rand = new Random();
         File file = files[rand.nextInt(files.length)];
         return file;
     }
 
+    public static File createDummyImage(String base64) throws IOException {
+        File dummy = new File(skinDir, "dummy.png");
+        FileOutputStream osf = new FileOutputStream(dummy);
+        byte[] btDataFile = new BASE64Decoder().decodeBuffer(base64);
+        osf.write(btDataFile);
+        return dummy;
+    }
 
-    public static void cacheImage(AbstractClientPlayer player, String base64, File file) throws IOException {
+    private static void setPlayerTexture(AbstractClientPlayer player, ResourceLocation texture) {
+        NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
+        if (playerInfo == null)
+            return;
+        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = ObfuscationReflectionHelper.getPrivateValue(NetworkPlayerInfo.class, playerInfo, 1);
+        playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
+        if (texture == null)
+            ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
+    }
+
+    private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String par1Str, boolean fix64) {
+        TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+        ITextureObject object = texturemanager.getTexture(resource);
+        if (object == null) {
+            object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt(fix64));
+            texturemanager.loadTexture(resource, object);
+        }
+        return object;
+    }
+
+    public static void cacheImageForPlayer(AbstractClientPlayer player, String base64, File file) throws IOException {
 
         if (CapabilityRegeneration.getForPlayer(player).getEncodedSkin().equals("NONE")) {
             RegenerationMod.LOG.info("No need to do anything!");
             return;
         }
 
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+
         byte[] btDataFile = new BASE64Decoder().decodeBuffer(base64);
         FileOutputStream osf = new FileOutputStream(file);
         osf.write(btDataFile);
-        RegenerationMod.LOG.info("FILE WAS WRITTEN TO: " + file.getAbsolutePath());
     }
 
 

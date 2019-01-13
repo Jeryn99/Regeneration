@@ -41,11 +41,11 @@ public class MessageUpdateSkin implements IMessage {
         public IMessage onMessage(MessageUpdateSkin message, MessageContext ctx) {
             ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
                 IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
+                String uuid = cap.getPlayer().getUniqueID().toString();
                 cap.setEncodedSkin(message.encodedSkin);
-                System.out.println("Updated Skin for " + ctx.getServerHandler().player.getName());
+                cap.setSkinLoaded(true);
                 cap.synchronise();
-                PlayerUtil.sendPacketToAll(new MessageTellEveryone("sdfdsfsd"));
-
+                PlayerUtil.sendPacketToAll(new MessageTellEveryone(uuid));
             });
             return null;
         }

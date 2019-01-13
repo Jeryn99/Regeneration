@@ -2,6 +2,7 @@ package me.fril.regeneration.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import me.fril.regeneration.RegenerationMod;
@@ -10,11 +11,9 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageTriggerRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
-import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -23,15 +22,18 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -44,9 +46,22 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onRenderPlayer(RenderPlayerEvent.Post e) {
 		try {
-			SkinChangingHandler.loadPlayerResource(e.getEntityPlayer(), CapabilityRegeneration.getForPlayer(e.getEntityPlayer()));
+			SkinChangingHandler.getSkin(e.getEntityPlayer(), CapabilityRegeneration.getForPlayer(e.getEntityPlayer()));
 		} catch (IOException e1) {
 			e1.printStackTrace();
+		}
+	}
+
+	@SubscribeEvent
+	public static void clickDisconnects(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
+		SkinChangingHandler.hashMap.clear();
+	}
+
+	@SubscribeEvent
+	public static void onPlayerLeaveKinda(EntityJoinWorldEvent e) {
+		if (e.getEntity() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) e.getEntity();
+			SkinChangingHandler.hashMap.remove(player.getUniqueID());
 		}
 	}
 
