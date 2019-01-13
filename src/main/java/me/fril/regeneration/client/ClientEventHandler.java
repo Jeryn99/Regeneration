@@ -42,12 +42,12 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ClientEventHandler {
 
 	@SubscribeEvent
-    public static void onRenderPlayer(RenderPlayerEvent.Pre e) {
-        try {
-            ClientUtil.setPlayerTexture((AbstractClientPlayer) e.getEntityLiving(), SkinChangingHandler.getSkin((AbstractClientPlayer) e.getEntityPlayer()));
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+	public static void onRenderPlayer(RenderPlayerEvent.Post e) {
+		try {
+			SkinChangingHandler.loadPlayerResource(e.getEntityPlayer(), CapabilityRegeneration.getForPlayer(e.getEntityPlayer()));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	@SubscribeEvent

@@ -44,8 +44,7 @@ public class MessageUpdateSkin implements IMessage {
                 cap.setEncodedSkin(message.encodedSkin);
                 System.out.println("Updated Skin for " + ctx.getServerHandler().player.getName());
                 cap.synchronise();
-
-                PlayerUtil.sendPacketToAll(new MessageTellEveryone());
+                PlayerUtil.sendPacketToAll(new MessageTellEveryone("sdfdsfsd"));
 
             });
             return null;

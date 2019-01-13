@@ -36,18 +36,6 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			return;
 
 		double animationProgress = type.getAnimationProgress();
-
-		System.out.println(animationProgress);
-
-		if (Minecraft.getMinecraft().player.getUniqueID() == ev.getEntityLiving().getUniqueID()) {
-			try {
-				SkinChangingHandler.skinChangeRandom((AbstractClientPlayer) ev.getEntityPlayer(), animationProgress == 1.0D);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
 		
 		int headRot = 50;
@@ -60,8 +48,6 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			arm_shake = 0;
 			armRot = (int) ((animationProgress / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
-		
-		//TODO don't render item in hand during regeneration
 		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);

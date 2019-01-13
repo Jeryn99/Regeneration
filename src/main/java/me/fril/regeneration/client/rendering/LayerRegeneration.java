@@ -1,12 +1,16 @@
 package me.fril.regeneration.client.rendering;
 
+import java.io.IOException;
 import java.util.Random;
 
+import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -32,10 +36,10 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	@Override
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		if (cap.getState() == RegenState.REGENERATING)
+		if (cap.getState() == RegenState.REGENERATING) {
+			SkinChangingHandler.skinChangeRandom(true);
 			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-		else if (cap.getState().isGraceful())
+		} else if (cap.getState().isGraceful())
 			renderGlowingHands(player, cap, scale);
 	}
 	

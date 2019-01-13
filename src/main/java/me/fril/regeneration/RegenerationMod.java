@@ -33,6 +33,8 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 //TESTING add language file tests
 @Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = "required:forge@[14.23.5.2768,);after:tardis")
@@ -48,6 +50,8 @@ public class RegenerationMod {
 	@Mod.Instance(MODID)
 	public static RegenerationMod INSTANCE;
 	public static IRegenDebugger DEBUGGER;
+
+	public static Logger LOG = LogManager.getLogger(NAME);
 	
 	@SidedProxy(clientSide = "me.fril.regeneration.proxy.ClientProxy", serverSide = "me.fril.regeneration.proxy.CommonProxy")
 	public static CommonProxy proxy;

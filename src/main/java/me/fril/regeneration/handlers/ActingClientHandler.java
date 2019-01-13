@@ -2,6 +2,8 @@ package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.client.SkinChangingHandler;
+import me.fril.regeneration.network.MessageUpdateSkin;
+import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import org.lwjgl.input.Keyboard;
 
