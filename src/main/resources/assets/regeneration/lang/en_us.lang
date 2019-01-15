@@ -75,3 +75,6 @@ regeneration.toast.enter_critical=You are going critical
 regeneration.toast.enter_critical.sub=%s minutes left to regenerate before you die!
 
 message.regeneration.isregenerating=%s is regenerating...
+
+regeneration.messages.warning.grace=Press %s to Regenerate now!
+regeneration.messages.warning.grace=You are near death..press %s to Regenerate now!
