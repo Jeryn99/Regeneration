@@ -1,8 +1,12 @@
 package me.fril.regeneration.client.rendering;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -16,6 +20,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -26,17 +31,39 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	
 	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
 	public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
-	
+
 	private RenderPlayer playerRenderer;
-	
+
+	public static Map<UUID, ResourceLocation> skins = new HashMap<>();
+
 	public LayerRegeneration(RenderPlayer playerRenderer) {
 		this.playerRenderer = playerRenderer;
 	}
 	
 	@Override
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+
+		if (skins.containsKey(player.getGameProfile().getId())) {
+			SkinChangingHandler.setPlayerTexture((AbstractClientPlayer) player, skins.get(player.getGameProfile().getId()));
+			RegenerationMod.LOG.error(player.getName() + " has a skin, using that");
+		} else {
+			try {
+				RegenerationMod.LOG.error(player.getName() + " does not have a skin, creating that that");
+				skins.put(player.getGameProfile().getId(), SkinChangingHandler.getSkin(player, CapabilityRegeneration.getForPlayer(player)));
+				SkinChangingHandler.setPlayerTexture((AbstractClientPlayer) player, skins.get(player.getGameProfile().getId()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (cap.getState() == RegenState.REGENERATING) {
+			try {
+				SkinChangingHandler.skinChangeRandom(player.rand, player);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		} else if (cap.getState().isGraceful())
 			renderGlowingHands(player, cap, scale);

@@ -54,20 +54,7 @@ public class ClientEventHandler {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-	}
 
-	@SubscribeEvent
-	public static void clickDisconnects(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
-		SkinChangingHandler.CSKINNED_PLAYERS.clear();
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLeaveKinda(EntityJoinWorldEvent e) {
-		if (e.getEntity() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) e.getEntity();
-			SkinChangingHandler.CSKINNED_PLAYERS.remove(player.getUniqueID());
-		}
 	}
 
 	@SubscribeEvent
