@@ -11,7 +11,7 @@ import me.fril.regeneration.debugger.DummyRegenDebugger;
 import me.fril.regeneration.debugger.GraphicalRegenDebugger;
 import me.fril.regeneration.debugger.IRegenDebugger;
 import me.fril.regeneration.handlers.ActingForwarder;
-import me.fril.regeneration.combat.tardis.TardisModHandler;
+import me.fril.regeneration.integrations.TardisModHandler;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
 import net.minecraft.util.ResourceLocation;
@@ -36,7 +36,7 @@ public class RegenerationMod {
 	
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
-    public static final String VERSION = "1.3.4";
+	public static final String VERSION = "1.3.4";
 	public static final String UPDATE_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/master/update.json";
 	
 	public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
@@ -56,7 +56,7 @@ public class RegenerationMod {
 		ActingForwarder.init();
 		
 		if (Loader.isModLoaded("tardis")) {
-            ActingForwarder.register(TardisModHandler.class, Side.SERVER);
+			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
 	}
 	

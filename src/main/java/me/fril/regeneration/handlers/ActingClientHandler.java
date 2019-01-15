@@ -1,6 +1,5 @@
 package me.fril.regeneration.handlers;
 
-import me.fril.regeneration.api.IActingHandler;
 import org.lwjgl.input.Keyboard;
 
 import me.fril.regeneration.RegenConfig;

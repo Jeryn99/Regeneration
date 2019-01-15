@@ -1,10 +1,10 @@
-package me.fril.regeneration.combat.tardis;
+package me.fril.regeneration.integrations;
 
 import java.util.Random;
 
-import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
+import me.fril.regeneration.handlers.IActingHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
@@ -27,18 +27,18 @@ public class TardisModHandler implements IActingHandler {
 	public void onEnterGrace(IRegeneration cap) {
 		playBells(cap, true);
 	}
-
+	
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
 		playBells(cap, true);
 	}
-
+	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 		if (cap.getType() instanceof TypeFiery) {
 			damageTardisInRange(cap.getPlayer());
 		}
-
+		
 		playBells(cap, true);
 	}
 	
@@ -46,8 +46,8 @@ public class TardisModHandler implements IActingHandler {
 	public void onGoCritical(IRegeneration cap) {
 		playBells(cap, true);
 	}
-
-
+	
+	
 	private void playBells(IRegeneration cap, boolean force) {
 		if (cap.getPlayer().ticksExisted % 1200 == 0 && cap.getPlayer().world.provider instanceof WorldProviderTardis || force) {
 			cap.getPlayer().world.playSound(null, cap.getPlayer().getPosition(), TSounds.cloister_bell, SoundCategory.BLOCKS, 1, 1);

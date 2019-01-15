@@ -1,6 +1,6 @@
 package me.fril.regeneration.client;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,17 +18,19 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,7 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
-
+	
 	@SubscribeEvent
 	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
@@ -89,22 +91,22 @@ public class ClientEventHandler {
 		
 		switch (cap.getState()) {
 			case GRACE:
-                renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
+				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
 				break;
 				
 			case GRACE_CRIT:
-                renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
+				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
 				break;
 				
 			case REGENERATING:
-                renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
+				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;
 		}
 	}
 	
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID + ":" + "textures/misc/vignette.png");
-
-    private static void renderVignette(Vec3d color, float a, RegenState state) {
+	
+	private static void renderVignette(Vec3d color, float a, RegenState state) {
 		GlStateManager.color((float)color.x, (float)color.y, (float)color.z, a);
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
@@ -123,24 +125,24 @@ public class ClientEventHandler {
 		bufferbuilder.pos(scaledRes.getScaledWidth(), 0, z).tex(1, 0).endVertex();
 		bufferbuilder.pos(0, 0, z).tex(0, 0).endVertex();
 		tessellator.draw();
-
-        if (!Loader.isModLoaded("lucraftcore")) {
-            String warning = "";
-            switch (state) {
-                case GRACE:
-                    warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
-                    break;
-                case GRACE_CRIT:
-                    warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
-                    break;
-                case ALIVE:
-                    break;
-                case REGENERATING:
-                    break;
-            }
-            Minecraft.getMinecraft().fontRenderer.drawString(warning, scaledRes.getScaledWidth() / 2 - 135, scaledRes.getScaledHeight() / 2 - 115, Color.WHITE.getRGB());
-        }
-
+		
+		if (!Loader.isModLoaded("lucraftcore")) {
+			String warning = "";
+			switch (state) {
+				case GRACE:
+					warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
+					break;
+				case GRACE_CRIT:
+					warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
+					break;
+				case ALIVE:
+					break;
+				case REGENERATING:
+					break;
+			}
+			Minecraft.getMinecraft().fontRenderer.drawString(warning, scaledRes.getScaledWidth() / 2 - 135, scaledRes.getScaledHeight() / 2 - 115, Color.WHITE.getRGB());
+		}
+		
 		GlStateManager.depthMask(true);
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1, 1, 1, 1);

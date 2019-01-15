@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.state.IBlockState;
 import org.apache.commons.lang3.tuple.Pair;
 
 import me.fril.regeneration.RegenConfig;
@@ -21,6 +20,7 @@ import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenState.Transition;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -119,7 +119,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
-
+		
 		//v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
 		
@@ -315,13 +315,13 @@ public class CapabilityRegeneration implements IRegeneration {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
 			}
 		}
-
+		
 		@Override
 		public void onPunchBlock(IBlockState blockState) {
-
+			
 		}
-
-
+		
+		
 		private void tick() {
 			if (player.world.isRemote)
 				throw new IllegalStateException("Ticking state manager on the client"); //the state manager shouldn't even exist on the client

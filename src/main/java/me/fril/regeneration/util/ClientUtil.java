@@ -1,13 +1,11 @@
 package me.fril.regeneration.util;
 
+import java.util.UUID;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.toasts.SystemToast;
-import net.minecraft.client.gui.toasts.SystemToast.Type;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
-
-import java.util.UUID;
 
 public class ClientUtil {
 	
@@ -19,7 +17,7 @@ public class ClientUtil {
 	public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(sound, pitch, volume));
 	}
-
+	
 	/**
 	 * Checks if a players skin model is slim or the default. The Alex model is slime while the Steve model is default.
 	 */

@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.ExplosionUtil;
 import me.fril.regeneration.util.PlayerUtil;
@@ -47,12 +46,12 @@ class ActingServerHandler implements IActingHandler {
 				float nauseaPercentage = 0.5F;
 				
 				if (stateProgress > nauseaPercentage) {
-                    if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
+					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied nausea");
 					}
 				}
-
-                if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - stateProgress)), 0, false, false)) {
+				
+				if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.Grace.criticalPhaseLength * 20 * (1 - stateProgress)), 0, false, false)) {
 					RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
 				}
 				
@@ -65,7 +64,7 @@ class ActingServerHandler implements IActingHandler {
 				float weaknessPercentage = 0.5F;
 				
 				if (stateProgress > weaknessPercentage) {
-                    if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.Grace.gracePhaseLength * 20 * (1 - weaknessPercentage) + RegenConfig.Grace.criticalPhaseLength * 20), 0, false, false)) {
+					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.Grace.gracePhaseLength * 20 * (1 - weaknessPercentage) + RegenConfig.Grace.criticalPhaseLength * 20), 0, false, false)) {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
 					}
 				}

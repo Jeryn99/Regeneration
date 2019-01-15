@@ -101,8 +101,6 @@ jar {
 task testServerBoot(type: JavaExec, dependsOn: jar) {
 	def stdOut = new ByteArrayOutputStream()
 	
-	System.out.println(Arrays.toString(runServer.dependsOn.toArray()))
-	
 	classpath = configurations.testServer + configurations.forgeGradleMcDeps + configurations.forgeGradleMc + configurations.forgeGradleGradleStart
 	main = runServer.main
 	workingDir = minecraft.runDir

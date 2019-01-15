@@ -18,7 +18,10 @@ import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -120,7 +123,7 @@ public class RegenEventHandler {
 			}
 		}
 	}
-
+	
 	//================ OTHER ==============
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {

@@ -208,8 +208,8 @@ public class RenderUtil {
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
 	}
-
-    /** <a href="https://stackoverflow.com/a/41491220/10434371">Source</a> */
+	
+	/** <a href="https://stackoverflow.com/a/41491220/10434371">Source</a> */
 	public static double calculateColorBrightness(Vec3d c) {
 		float r = (float) c.x, g = (float) c.y, b = (float) c.z;
 		r = r <= 0.03928 ? r / 12.92F : (float)Math.pow((r + 0.055) / 1.055, 2.4);

@@ -15,6 +15,7 @@ import org.junit.Test;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.ActingForwarder;
+import me.fril.regeneration.handlers.IActingHandler;
 
 /**
  * Contains a test for the {@link ActionForwarder}. It's slightly pointless but I don't really care.
@@ -30,13 +31,11 @@ public class TestActionForwarder {
 	 * @throws ReflectiveOperationException
 	 */
 	@Test
-	public void testForwarderImplementation() throws ClassNotFoundException {
-		Class<?> actingInterface = Class.forName("me.fril.regeneration.handlers.ActingForwarder$IActingHandler");
-		
+	public void testForwarderImplementation() {
 		List<Method> implementedMethods = Arrays.asList(ActingForwarder.class.getDeclaredMethods());
 		List<String> implementedMethodNames = implementedMethods.stream().map(m->m.getName()).collect(Collectors.toList());
 		
-		for (Method m : actingInterface.getDeclaredMethods()) {
+		for (Method m : IActingHandler.class.getDeclaredMethods()) {
 			assertTrue("Missing forwarding method for "+m.getName(), implementedMethodNames.contains(m.getName()));
 		}
 		
@@ -65,7 +64,7 @@ public class TestActionForwarder {
 	public void testClientPost() throws ReflectiveOperationException {
 		CapabilityRegeneration capability = RegenTestUtil.setupFullMockSuite(true);
 		
-		List<Method> interfaceMethods = Arrays.asList(Class.forName("me.fril.regeneration.handlers.ActingForwarder$IActingHandler").getDeclaredMethods());
+		List<Method> interfaceMethods = Arrays.asList(IActingHandler.class.getDeclaredMethods());
 		List<Method> forwarderMethods = interfaceMethods.stream().map(m->{
 			try {
 				return ActingForwarder.class.getMethod(m.getName(), IRegeneration.class);

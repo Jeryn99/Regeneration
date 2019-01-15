@@ -4,9 +4,9 @@ import java.util.Map;
 
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
-import me.fril.regeneration.combat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.client.rendering.LayerItemReplace;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
+import me.fril.regeneration.integrations.LucraftCoreHandler;
 import me.fril.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
@@ -28,19 +28,19 @@ public class ClientProxy extends CommonProxy {
 		
 		// Registering the mods Keybinds
 		RegenKeyBinds.init();
-
+		
 		// Galacticraft API for TABS ======================
 		if (TabRegistry.getTabList().isEmpty()) {
 			MinecraftForge.EVENT_BUS.register(new TabRegistry());
 			TabRegistry.registerTab(new InventoryTabVanilla());
 		}
 		TabRegistry.registerTab(new InventoryTabRegeneration());
-
+		
 		// LC Core
 		if (Loader.isModLoaded("lucraftcore")) {
 			LucraftCoreHandler.registerEntry();
 		}
-
+		
 		//Render layers ===========================================
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		skinMap.values().forEach(renderPlayer -> { //Cycle through each Skinmap type
@@ -48,7 +48,7 @@ public class ClientProxy extends CommonProxy {
 			renderPlayer.layerRenderers.removeIf(layer -> layer.getClass() == LayerHeldItem.class); //Remove old held item layer
 			renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); //Add new item layer
 		});
-
+		
 	}
 	
 	@Override
