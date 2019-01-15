@@ -48,7 +48,4 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	@Deprecated
 	void setRegenerationsLeft(int amount);
 
-	boolean isSkinLoaded();
-
-	void setSkinLoaded(boolean b);
 }

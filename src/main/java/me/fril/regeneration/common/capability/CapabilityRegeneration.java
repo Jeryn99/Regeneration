@@ -50,7 +50,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
-	private boolean skinLoaded = false;
 
 
 	@Nonnull
@@ -91,11 +90,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			type.onUpdateMidRegen(player, this);
 		}
 	}
-	
-	
-	
-	
-	
+
+
 	@Override
 	public void synchronise() {
 		NBTTagCompound nbt = serializeNBT();
@@ -112,7 +108,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setTag("style", getStyle());
 		nbt.setTag("type", type.serializeNBT());
 		nbt.setString("encoded_skin", ENCODED_SKIN);
-		nbt.setBoolean("skinLoaded", skinLoaded);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -131,7 +126,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			type = new TypeFiery();
 		
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
-		setSkinLoaded(nbt.getBoolean("skinLoaded"));
 		setEncodedSkin(nbt.getString("encoded_skin"));
 
 		if (nbt.hasKey("stateManager"))
@@ -231,17 +225,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void setRegenerationsLeft(int amount) {
 		regenerationsLeft = amount;
 	}
-
-	@Override
-	public boolean isSkinLoaded() {
-		return skinLoaded;
-	}
-
-	@Override
-	public void setSkinLoaded(boolean b) {
-		skinLoaded = b;
-	}
-
 
 	@Override
 	public IRegenerationStateManager getStateManager() {

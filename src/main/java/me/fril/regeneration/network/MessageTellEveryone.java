@@ -3,6 +3,7 @@ package me.fril.regeneration.network;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import io.netty.buffer.ByteBuf;
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -50,7 +51,8 @@ public class MessageTellEveryone implements IMessage {
     public static class Handler implements IMessageHandler<MessageTellEveryone, IMessage> {
         @Override
         public IMessage onMessage(MessageTellEveryone message, MessageContext ctx) {
-            SkinChangingHandler.CSKINNED_PLAYERS.clear();
+            SkinChangingHandler.CSKINNED_PLAYERS.remove(UUID.fromString(message.uuid));
+            RegenerationMod.LOG.warn("REMOVED A PLAYER FROM HASHMAP");
             return null;
         }
     }

@@ -37,15 +37,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (cap.getState() == RegenState.REGENERATING) {
-
-			SkinChangingHandler.CSKINNED_PLAYERS.remove(player.entityUniqueID);
-
-			try {
-				SkinChangingHandler.skinChangeRandom(true, player.world.rand, player);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
 			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		} else if (cap.getState().isGraceful())
 			renderGlowingHands(player, cap, scale);

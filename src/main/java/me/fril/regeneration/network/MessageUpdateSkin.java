@@ -43,9 +43,9 @@ public class MessageUpdateSkin implements IMessage {
                 IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
                 String uuid = cap.getPlayer().getUniqueID().toString();
                 cap.setEncodedSkin(message.encodedSkin);
-                cap.setSkinLoaded(true);
+                cap.setSkinLoaded(false);
                 cap.synchronise();
-                PlayerUtil.sendPacketToAll(new MessageTellEveryone(uuid));
+                //PlayerUtil.sendPacketToAll(new MessageTellEveryone(uuid));
             });
             return null;
         }

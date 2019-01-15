@@ -57,6 +57,12 @@ class ActingClientHandler implements IActingHandler {
 	public void onRegenFinish(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.regenerated"), new TextComponentTranslation("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()), cap.getState());
 		//FUTURE toast for traits
+
+		try {
+			SkinChangingHandler.skinChangeRandom(cap.getPlayer().world.rand);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

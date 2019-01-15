@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
@@ -29,6 +30,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -52,6 +54,7 @@ public class ClientEventHandler {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		
 	}
 
 	@SubscribeEvent
@@ -170,9 +173,8 @@ public class ClientEventHandler {
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1, 1, 1, 1);
 	}
-	
-	
-	
+
+
 	@SubscribeEvent
 	public static void onClientTick(TickEvent.ClientTickEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
