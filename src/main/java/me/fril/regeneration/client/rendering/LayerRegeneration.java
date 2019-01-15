@@ -38,10 +38,10 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (cap.getState() == RegenState.REGENERATING) {
 
-			SkinChangingHandler.hashMap.remove(player.entityUniqueID);
+			SkinChangingHandler.CSKINNED_PLAYERS.remove(player.entityUniqueID);
 
 			try {
-				SkinChangingHandler.skinChangeRandom(true);
+				SkinChangingHandler.skinChangeRandom(true, player.world.rand, player);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

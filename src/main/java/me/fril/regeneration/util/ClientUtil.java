@@ -20,6 +20,8 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import java.io.File;
 import java.util.Map;
 
+import java.util.UUID;
+
 public class ClientUtil {
 	
 	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle, RegenState regenState) {
@@ -30,4 +32,12 @@ public class ClientUtil {
 	public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(sound, pitch, volume));
 	}
+
+	/**
+	 * Checks if a players skin model is slim or the default. The Alex model is slime while the Steve model is default.
+	 */
+	public static boolean isSlimSkin(UUID playerUUID) {
+		return (playerUUID.hashCode() & 1) == 1;
+	}
+
 }

@@ -50,7 +50,7 @@ public class MessageTellEveryone implements IMessage {
     public static class Handler implements IMessageHandler<MessageTellEveryone, IMessage> {
         @Override
         public IMessage onMessage(MessageTellEveryone message, MessageContext ctx) {
-            SkinChangingHandler.hashMap.clear();
+            SkinChangingHandler.CSKINNED_PLAYERS.clear();
             return null;
         }
     }

@@ -36,10 +36,10 @@ import java.util.UUID;
 public class SkinChangingHandler {
 
 
-    public static HashMap<UUID, String> hashMap = new HashMap<>();
+    public static HashMap<UUID, String> CSKINNED_PLAYERS = new HashMap<>();
     private static final FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png");
     private static File skinDir = new File("./mods/regeneration/skins/");
-    private static File skinCacheDir = new File("./mods/regeneration/skincache/skins");
+    private static File skinCacheDir = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
 
     public static void registerResources() {
 
@@ -66,11 +66,19 @@ public class SkinChangingHandler {
         return encodedfile;
     }
 
-    public static void skinChangeRandom(boolean update) throws IOException {
-        File skin = SkinChangingHandler.getRandomSkinFile();
+    public static void skinChangeRandom(boolean update, Random random, EntityPlayer player) throws IOException {
+        File skin = SkinChangingHandler.getRandomSkinFile(random);
         String string = SkinChangingHandler.encodeFileToBase64Binary(skin);
         if (update) {
             NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(string));
+        }
+
+        File file = new File(skinCacheDir, "cache-" + player.getUniqueID() + ".png");
+
+        try {
+            cacheImageForPlayer((AbstractClientPlayer) player, CapabilityRegeneration.getForPlayer(player).getEncodedSkin(), file);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -80,22 +88,15 @@ public class SkinChangingHandler {
         AbstractClientPlayer player = (AbstractClientPlayer) pl;
 
         if (data.getEncodedSkin().equals("NONE")) {
-            hashMap.put(pl.getUniqueID(), data.getEncodedSkin());
+            CSKINNED_PLAYERS.put(pl.getUniqueID(), data.getEncodedSkin());
             setPlayerTexture((AbstractClientPlayer) pl, null);
             return;
         }
-        System.out.println(hashMap.containsKey(pl.getUniqueID()));
-        if (!hashMap.containsKey(pl.getUniqueID())) {
-            File file = new File(skinCacheDir, "cache-" + player.getUniqueID() + ".png");
 
-            try {
-                cacheImageForPlayer(player, data.getEncodedSkin(), file);
-            } catch (IOException e) {
-                e.printStackTrace();
-                }
-
+        if (!CSKINNED_PLAYERS.containsKey(pl.getUniqueID())) {
             ResourceLocation location = new ResourceLocation("skins/" + player.getUniqueID());
             //loadTexture(file, location, DefaultPlayerSkin.getDefaultSkinLegacy(), "", true);
+            File file = new File(skinCacheDir, "cache-" + player.getUniqueID() + ".png");
             BufferedImage bufferedImage = ImageIO.read(file);
 
             if (bufferedImage == null) {
@@ -104,20 +105,18 @@ public class SkinChangingHandler {
             }
 
             location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("skin", new DynamicTexture(bufferedImage));
-                setPlayerTexture(player, location);
-            hashMap.put(pl.getUniqueID(), data.getEncodedSkin());
-                return;
+            setPlayerTexture(player, location);
+            CSKINNED_PLAYERS.put(pl.getUniqueID(), data.getEncodedSkin());
             }
         }
 
-    public static File getRandomSkinFile() throws IOException {
+    public static File getRandomSkinFile(Random rand) throws IOException {
         File[] files = skinDir.listFiles(IMAGE_FILTER);
 
         if (files.length == 0) {
             return createDummyImage("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");
         }
 
-        Random rand = new Random();
         File file = files[rand.nextInt(files.length)];
         return file;
     }

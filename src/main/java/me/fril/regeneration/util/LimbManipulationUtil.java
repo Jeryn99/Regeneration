@@ -26,23 +26,32 @@ public class LimbManipulationUtil {
 
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb) {
 		LimbManipulator manipulator = new LimbManipulator();
+		List<LayerRenderer<AbstractClientPlayer>> layerList = renderPlayer.layerRenderers;
+		layerList.forEach(abstractClientPlayerLayerRenderer -> {
+
+			for (Field declaredField : abstractClientPlayerLayerRenderer.getClass().getDeclaredFields()) {
+				declaredField.setAccessible(true);
+
+			}
+
+		});
+
 		try {
 
-			List<LayerRenderer<AbstractClientPlayer>> layerList = renderPlayer.layerRenderers;
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
-					
+
 					if (field.getType() == ModelBiped.class) {
 						ModelBiped model = (ModelBiped) field.get(layer);
 						ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
 						manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.rendererField));
-						
+
 						if (limb == Limb.HEAD) {
 							modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
 							manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.secondaryRendererField));
 						}
-						
+
 					} else if (field.getType() == ModelPlayer.class) {
 						ModelBiped model = (ModelBiped) field.get(layer);
 						ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
@@ -52,10 +61,10 @@ public class LimbManipulationUtil {
 					}
 				}
 			}
-			
+
+			//This here, handles the rotation of PLAYER limbs
 			ModelPlayer model = renderPlayer.getMainModel();
 			ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
-
 			manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.rendererField));
 			modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
 			manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.secondaryRendererField));

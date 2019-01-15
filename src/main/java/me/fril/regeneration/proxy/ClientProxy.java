@@ -26,7 +26,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		SkinChangingHandler.registerResources();
 	}
 
 	@Override
@@ -63,6 +62,9 @@ public class ClientProxy extends CommonProxy {
 		super.postInit();
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		skinMap.values().forEach(RenderUtil::setupArmorModelOverride); //Fixing armor model animations
+		SkinChangingHandler.registerResources();
 	}
+
+
 	
 }
