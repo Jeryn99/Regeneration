@@ -1,0 +1,80 @@
+item.fob_watch.name=Montre gousset
+
+regeneration.info.red=Rouge
+regeneration.info.green=Vert
+regeneration.info.blue=Bleu
+regeneration.info.primary=Primaire
+regeneration.info.secondary=Secondaire
+regeneration.info.undo=Retour
+regeneration.info.default=Défaut
+
+regeneration.messages.now_timelord=Vous êtes maintenant un Seigneur du Temps !
+regeneration.messages.regen_or_die=Regénerez maintenant ou vous mourrez !
+regeneration.messages.remaining_regens.status=Regénérations restantes:
+regeneration.messages.infinite_regenerations=Mode de regénérations infinie
+regeneration.messages.remaining_regens.notification=Vous vous regénérez ! Il vous reste %s regénérations.
+regeneration.messages.gained_regens=Vous recevez %s regénérations depuis la Montre Gousset
+regeneration.messages.grace=Vous enterez dans une période de grâce de 15 minutes
+regeneration.messages.choice=Pressez %s pour la période de grâce, %s pour regénérez immédiatement !
+
+regeneration.messages.numsuffix.1=er
+regeneration.messages.numsuffix.2=ème
+regeneration.messages.numsuffix.3=ème
+regeneration.messages.numsuffix.ext=ème
+
+regeneration.messages.transfer.success=Vous transférez une de vos regénération dans la montre
+regeneration.messages.transfer.full_watch=Vous ne pouvez plus stocker de regénérations dans la montre !
+regeneration.messages.transfer.empty_watch=Cette montre est vide !
+regeneration.messages.transfer.max_regens=Vous avez déjà le nombre de regénérations
+regeneration.messages.transfer.no_regens=Vous n'avez plus de regénérations à transférer
+
+regeneration.subtitles.fob_watch=Ouverture de la Montre Gousset
+regeneration.subtitles.regeneration=Énergie de regénération
+regeneration.subtitles.hand_glow=Mains brillantes
+regeneration.subtitles.heart_beat=Battement de coeurs
+regeneration.subtitles.critical_stage=Stade de grâce critique
+
+regeneration.keybinds.regenerate=Regénérer
+
+config.regeneration.max_regens=Montant de regénérations par cycle
+config.regeneration.free_regens=Regénérations gratuites
+config.regeneration.first_start_gift_only=Le cadeau de départ n'est que pour la première fois
+config.regeneration.fiery_regen=Régénération ardente
+config.regeneration.regenerative_kill_range=Champs d'élimination de la régénération
+config.regeneration.regenerative_knockback=Contrecoup de la régénération
+config.regeneration.regenerative_knockback_range=Champs du contrecoup
+config.regeneration.post_regen_duration=Durée de l'effet post-régénération
+config.regeneration.post_regenerationEffect_level=Concentration de l'effet post-régénération
+config.regeneration.reset_hunger=Rétablir la faim ?
+config.regeneration.reset_oxygen=Rétablir l'oxygène
+config.regeneration.absorbtion_level=Nombre de cœurs supplémentaires après le régéneration
+config.regeneration.lose_regens_on_death=Perdre vos régénérations si vous vous faites tuer ?
+config.regeneration.loot_regex=Matcheur de butin
+config.regeneration.disable_loot=Désactiver le butin Montre Gousset
+config.regeneration.regeneration_knocksback_players=La régénération assomme les joueurs ?
+config.regeneration.regeneration_kills_players=La régénération tue les joueurs ?
+config.regeneration.regeneration_fire_immunity=La regénération donne résistance au feu
+config.regeneration.infinite_regenerations=Régénérations infinies
+config.regeneration.grace.gracePeriodLength=Durée du délai de grâce
+config.regeneration.grace.criticalPhaseLength=Longueur de phase critique
+config.regeneration.grace.criticalDamageChance=Risque de dommages critiques
+
+regeneration.damagesrc.regen_energy=&s a été détruit par l'énergie de régénération !
+regeneration.damagesrc.regen_heal=&s est mort en donnant trop d'énergie de régénération...
+regeneration.damagesrc.regen_crit=&s sont morts parce qu'ils étaient trop longtemps restés dans leur régénération.
+
+regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
+
+regeneration.toast.regenerated=Vous vous êtes régénérés !
+regeneration.toast.regenerations_left=Il you reste %s regénérations
+
+regeneration.toast.enter_grace=Démarrage de la régénération
+regeneration.toast.enter_grace.sub=Pressez %s pour regénérer, ou mourir dans %s minutes!
+
+regeneration.toast.enter_critical=Vous devenez critique
+regeneration.toast.enter_critical.sub=%s minutes pour se régénérer avant de mourir!
+
+message.regeneration.isregenerating=%s se régénère...
+
+regeneration.messages.warning.grace=Presser %s pour vous regénérer!
+regeneration.messages.warning.grace=Vous êtes proche de la mort... pressez %s pour vous regénérer !
