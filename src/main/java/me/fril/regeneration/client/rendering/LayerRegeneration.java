@@ -34,30 +34,20 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
 	private RenderPlayer playerRenderer;
 
-	public static Map<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
-
 	public LayerRegeneration(RenderPlayer playerRenderer) {
 		this.playerRenderer = playerRenderer;
 	}
 	
 	@Override
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+        if (cap.getState() == RegenState.REGENERATING) {
+            try {
+                SkinChangingHandler.skinChangeRandom(player.world.rand, player);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-		if (RegenState.ALIVE == CapabilityRegeneration.getForPlayer(player).getState()) {
-			if (PLAYER_SKINS.containsKey(player.getGameProfile().getId())) {
-				SkinChangingHandler.setPlayerTexture((AbstractClientPlayer) player, PLAYER_SKINS.get(player.getGameProfile().getId()));
-			} else {
-				try {
-					PLAYER_SKINS.put(player.getGameProfile().getId(), SkinChangingHandler.getSkin(player, CapabilityRegeneration.getForPlayer(player)));
-					SkinChangingHandler.setPlayerTexture((AbstractClientPlayer) player, SkinChangingHandler.getSkin(player, CapabilityRegeneration.getForPlayer(player)));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		} else if (cap.getState().isGraceful())
 			renderGlowingHands(player, cap, scale);

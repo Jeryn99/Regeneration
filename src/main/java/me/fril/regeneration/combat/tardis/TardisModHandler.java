@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.WorldProvider;
 import net.tardis.mod.common.dimensions.WorldProviderTardis;
 import net.tardis.mod.common.entities.controls.ControlDoor;
 import net.tardis.mod.common.sounds.TSounds;
@@ -25,12 +26,16 @@ public class TardisModHandler implements IActingHandler {
 	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
-		playBells(cap, true);
+		if (cap.getPlayer().world.provider instanceof WorldProviderTardis) {
+			playBells(cap, true);
+		}
 	}
 
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
-		playBells(cap, true);
+		if (cap.getPlayer().world.provider instanceof WorldProviderTardis) {
+			playBells(cap, true);
+		}
 	}
 
 	@Override
@@ -39,12 +44,16 @@ public class TardisModHandler implements IActingHandler {
 			damageTardisInRange(cap.getPlayer());
 		}
 
-		playBells(cap, true);
+		if (cap.getPlayer().world.provider instanceof WorldProviderTardis) {
+			playBells(cap, true);
+		}
 	}
 	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
-		playBells(cap, true);
+		if (cap.getPlayer().world.provider instanceof WorldProviderTardis) {
+			playBells(cap, true);
+		}
 	}
 
 

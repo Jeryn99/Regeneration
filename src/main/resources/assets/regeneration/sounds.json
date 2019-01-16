@@ -5,10 +5,21 @@
     "sounds": [
       {
         "name": "regeneration:regeneration",
-        "stream": false
+        "stream": true
       }
     ]
   },
+  "regeneration_2": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration_2",
+        "stream": true
+      }
+    ]
+  },
+  
   "critical_stage": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.critical_stage",

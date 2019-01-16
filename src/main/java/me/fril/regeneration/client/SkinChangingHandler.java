@@ -17,6 +17,8 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,18 +40,26 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
 
-    private static final FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png");
+    public static String currentSkin = "banana.png";
+
+    private static final FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(currentSkin);
     public static File skinDir = new File("./mods/regeneration/skins/");
     public static File skinCacheDir = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
 
     public static void registerResources() {
 
+        if (!skinCacheDir.exists()) {
+            skinCacheDir.mkdirs();
+        }
+
         if (!skinDir.exists()) {
             skinDir.mkdirs();
         }
 
-        if (!skinCacheDir.exists()) {
-            skinCacheDir.mkdirs();
+        try {
+            createDefaultImages();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -74,6 +84,7 @@ public class SkinChangingHandler {
             file.delete();
         }
 
+
         ImageIO.write(img, "png", file);
 
         return img;
@@ -83,6 +94,7 @@ public class SkinChangingHandler {
         if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID()) return;
         File skin = SkinChangingHandler.getRandomSkinFile(random);
         BufferedImage image = ImageIO.read(skin);
+        currentSkin = skin.getName();
         byte[] pixelData = SkinChangingHandler.encodeToPixelData(image);
         CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
         NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData));
@@ -94,33 +106,45 @@ public class SkinChangingHandler {
         byte[] encodedSkin = CapabilityRegeneration.getForPlayer(pl).getEncodedSkin();
 
         if (Arrays.equals(data.getEncodedSkin(), new byte[0])) {
-            RegenerationMod.LOG.warn("Resetting " + pl.getName() + " " + Arrays.toString(data.getEncodedSkin()));
-            setPlayerTexture((AbstractClientPlayer) pl, null);
-            return player.getLocationSkin();
+            return fallBackOnMojang(player);
         }
+
+        if (encodedSkin.length < 16383) {
+            return fallBackOnMojang(player);
+        }
+
         BufferedImage bufferedImage = toImage(pl, encodedSkin);
         return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(pl.getName() + "_skin", new DynamicTexture(bufferedImage));
     }
 
-    public static File getRandomSkinFile(Random rand) throws IOException {
-        File[] files = skinDir.listFiles(IMAGE_FILTER);
-
-        if (files.length == 0) {
-            return createDummyImage("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");
+    private static ResourceLocation fallBackOnMojang(AbstractClientPlayer player) {
+        Minecraft minecraft = Minecraft.getMinecraft();
+        Map map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
+        if (map.isEmpty()) {
+            map = minecraft.getSessionService().getTextures(minecraft.getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
         }
+        if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+            MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
+            return new ResourceLocation("skins/" + profile.getHash());
+        }
+        return null;
+    }
 
+    public static File getRandomSkinFile(Random rand) {
+        File[] files = skinDir.listFiles(IMAGE_FILTER);
         File file = files[rand.nextInt(files.length)];
         return file;
     }
 
 
-    public static File createDummyImage(String base64) throws IOException {
-        RegenerationMod.LOG.error("No skins exist in the Skins folder, creating a placeholder");
-        File dummy = new File(skinDir, "dummy.png");
-        FileOutputStream osf = new FileOutputStream(dummy);
-        byte[] btDataFile = new BASE64Decoder().decodeBuffer(base64);
-        osf.write(btDataFile);
-        return dummy;
+    public static void createDefaultImages() throws IOException {
+        RegenerationMod.LOG.error("No skins exist in the Skins folder, creating placeholders");
+        for (DefaultSkins value : DefaultSkins.values()) {
+            File dummy = new File(skinDir, value.name().toLowerCase() + ".png");
+            FileOutputStream osf = new FileOutputStream(dummy);
+            byte[] btDataFile = new BASE64Decoder().decodeBuffer(value.getSkinCode());
+            osf.write(btDataFile);
+        }
     }
 
     public static void setPlayerTexture(AbstractClientPlayer player, ResourceLocation texture) {

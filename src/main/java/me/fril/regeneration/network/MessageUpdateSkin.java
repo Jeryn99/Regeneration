@@ -56,7 +56,7 @@ public class MessageUpdateSkin implements IMessage {
                 IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
                 cap.setEncodedSkin(message.encodedSkin);
                 cap.synchronise();
-                PlayerUtil.sendPacketToAll(new MessageTellEveryone(player));
+                NetworkHandler.INSTANCE.sendToAll(new MessageTellEveryone());
             });
             return null;
         }

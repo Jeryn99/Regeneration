@@ -2,8 +2,7 @@ package me.fril.regeneration.client;
 
 import java.io.IOException;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -14,6 +13,9 @@ import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -22,13 +24,12 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -47,19 +48,55 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
 
+	public static Map<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
+
+	@SubscribeEvent
+	public static void onRenderPlayer(RenderPlayerEvent.Pre e) {
+		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
+		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+
+		if (RegenState.ALIVE == data.getState()) {
+			if (PLAYER_SKINS.containsKey(player.getGameProfile().getId())) {
+				SkinChangingHandler.setPlayerTexture(player, PLAYER_SKINS.get(player.getGameProfile().getId()));
+			} else {
+				try {
+					PLAYER_SKINS.put(player.getGameProfile().getId(), SkinChangingHandler.getSkin(player, data));
+					SkinChangingHandler.setPlayerTexture(player, PLAYER_SKINS.get(player.getGameProfile().getId()));
+				} catch (IOException error) {
+					error.printStackTrace();
+				}
+			}
+		}
+	}
+
 	@SubscribeEvent
 	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		float f = 0.2F;
-		
+
+		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+
 		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
 			return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (!cap.getState().isGraceful())
 			return;
-		
+
+		if (RegenState.ALIVE == data.getState()) {
+			if (PLAYER_SKINS.containsKey(player.getGameProfile().getId())) {
+				SkinChangingHandler.setPlayerTexture(player, PLAYER_SKINS.get(player.getGameProfile().getId()));
+			} else {
+				try {
+					PLAYER_SKINS.put(player.getGameProfile().getId(), SkinChangingHandler.getSkin(player, data));
+					SkinChangingHandler.setPlayerTexture(player, PLAYER_SKINS.get(player.getGameProfile().getId()));
+				} catch (IOException error) {
+					error.printStackTrace();
+				}
+			}
+		}
+
 		
 		GlStateManager.pushMatrix();
 		
@@ -108,6 +145,14 @@ public class ClientEventHandler {
 	}
 	
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID + ":" + "textures/misc/vignette.png");
+
+	@SubscribeEvent
+	public static void onPlaySound(PlaySoundEvent e) {
+		if (e.getName().equals("entity.generic.explode")) {
+			ISound sound = PositionedSoundRecord.getMasterRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F);
+			e.setResultSound(sound);
+		}
+	}
 
 	private static void renderVignette(Vec3d color, float a, RegenState state) {
 		GlStateManager.color((float)color.x, (float)color.y, (float)color.z, a);

@@ -4,6 +4,7 @@ package me.fril.regeneration.network;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.client.ClientEventHandler;
 import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -35,31 +36,20 @@ public class MessageTellEveryone implements IMessage {
     public MessageTellEveryone() {
     }
 
-    private EntityPlayer player;
-
-    public MessageTellEveryone(EntityPlayer player) {
-        this.player = player;
-    }
-
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
+
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        //player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+
     }
 
     public static class Handler implements IMessageHandler<MessageTellEveryone, IMessage> {
         @Override
         public IMessage onMessage(MessageTellEveryone message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> {
-                // if(message.player == null) return;
-                // if (LayerRegeneration.PLAYER_SKINS.containsKey(message.player.getUniqueID())) {
-                LayerRegeneration.PLAYER_SKINS.clear();
-                //  }
-            });
+            Minecraft.getMinecraft().addScheduledTask(() -> ClientEventHandler.PLAYER_SKINS.clear());
             return null;
         }
     }

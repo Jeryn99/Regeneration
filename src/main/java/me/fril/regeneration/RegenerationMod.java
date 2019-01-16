@@ -5,6 +5,7 @@ import java.io.*;
 
 import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.client.gui.GuiHandler;
+import me.fril.regeneration.combat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
@@ -66,6 +67,10 @@ public class RegenerationMod {
 		if (Loader.isModLoaded("tardis")) {
             ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
+
+        if (Loader.isModLoaded("lucraftcore")) {
+            ActingForwarder.register(LucraftCoreHandler.class, Side.SERVER);
+        }
 	}
 	
 	@EventHandler

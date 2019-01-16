@@ -23,7 +23,8 @@ import net.minecraftforge.fml.common.Loader;
  */
 public class ClientProxy extends CommonProxy {
 
-	@Override
+
+    @Override
 	public void preInit() {
 		super.preInit();
 	}

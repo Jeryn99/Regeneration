@@ -27,17 +27,8 @@ public class LimbManipulationUtil {
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb) {
 		LimbManipulator manipulator = new LimbManipulator();
 		List<LayerRenderer<AbstractClientPlayer>> layerList = renderPlayer.layerRenderers;
-		layerList.forEach(abstractClientPlayerLayerRenderer -> {
-
-			for (Field declaredField : abstractClientPlayerLayerRenderer.getClass().getDeclaredFields()) {
-				declaredField.setAccessible(true);
-
-			}
-
-		});
 
 		try {
-
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
@@ -86,7 +77,42 @@ public class LimbManipulationUtil {
 					customMr.reset();
 				}
 			});
+		}
 
+		//Reset layers
+		List<LayerRenderer<AbstractClientPlayer>> layerList = renderer.layerRenderers;
+		try {
+			if (layerList == null) return;
+			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
+
+				for (Field field : layer.getClass().getDeclaredFields()) {
+					field.setAccessible(true);
+
+					//Model Biped
+					if (field.getType() == ModelBiped.class) {
+						ModelBiped biped = (ModelBiped) field.get(layer);
+						biped.boxList.forEach(modelRenderer -> {
+							if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+								CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
+								customMr.reset();
+							}
+						});
+					}
+
+					//Model Player
+					if (field.getType() == ModelPlayer.class) {
+						ModelPlayer modelPlayer = (ModelPlayer) field.get(layer);
+						modelPlayer.boxList.forEach(modelRenderer -> {
+							if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+								CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
+								customMr.reset();
+							}
+						});
+					}
+				}
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 		}
 	}
 	

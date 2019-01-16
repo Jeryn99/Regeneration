@@ -39,7 +39,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@CapabilityInject(IRegeneration.class)
 	public static final Capability<IRegeneration> CAPABILITY = null;
 	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
-    private static byte[] ENCODED_SKIN = new byte[0];
+    private byte[] ENCODED_SKIN = new byte[0];
 
 	private final EntityPlayer player;
 	private int regenerationsLeft;

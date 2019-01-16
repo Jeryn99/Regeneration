@@ -49,7 +49,8 @@ public class RegenObjects {
 			setUpSound("fob_watch"),
 			setUpSound("critical_stage"),
 			setUpSound("heart_beat"),
-			setUpSound("hand_glow")
+                setUpSound("hand_glow"),
+                setUpSound("regeneration_2")
 		);
 	}
 	
@@ -68,6 +69,7 @@ public class RegenObjects {
 	public static class Sounds {
 		public static final SoundEvent FOB_WATCH = null;
 		public static final SoundEvent REGENERATION = null;
+        public static final SoundEvent REGENERATION_2 = null;
 		public static final SoundEvent CRITICAL_STAGE = null;
 		public static final SoundEvent HEART_BEAT = null;
 		public static final SoundEvent HAND_GLOW = null;

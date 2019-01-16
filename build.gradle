@@ -90,8 +90,12 @@ processResources {
 	}
 }
 
+def core_plugin = "me.fril.regeneration.client.sound.echo.RegenerationPlugin"
+
 jar {
 	manifest {
+		attributes "FMLCorePlugin": core_plugin
+		attributes "FMLCorePluginContainsFMLMod": "true"
 		attributes 'FMLAT': 'regeneration_at.cfg'
 	}
 }

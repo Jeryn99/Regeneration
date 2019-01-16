@@ -12,7 +12,10 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemBow;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.SoundCategory;
 
 class ActingServerHandler implements IActingHandler {
 	
@@ -109,7 +112,6 @@ class ActingServerHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-		//TODO message in chat?
 		EntityPlayer player = cap.getPlayer();
 		
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
@@ -125,7 +127,9 @@ class ActingServerHandler implements IActingHandler {
 		player.removePassengers();
 		player.clearActivePotions();
 		player.dismountRidingEntity();
-		
+
+        player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.REGENERATION_2, SoundCategory.PLAYERS, 1.0F, 1.0F);
+
 		if (RegenConfig.resetHunger)
 			player.getFoodStats().setFoodLevel(20);
 		

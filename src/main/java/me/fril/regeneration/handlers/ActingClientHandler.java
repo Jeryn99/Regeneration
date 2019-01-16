@@ -2,8 +2,10 @@ package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.client.SkinChangingHandler;
+import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.network.MessageUpdateSkin;
 import me.fril.regeneration.network.NetworkHandler;
+import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import org.lwjgl.input.Keyboard;
 
@@ -57,17 +59,11 @@ class ActingClientHandler implements IActingHandler {
 	public void onRegenFinish(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.regenerated"), new TextComponentTranslation("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()), cap.getState());
 		//FUTURE toast for traits
-
-		try {
-			SkinChangingHandler.skinChangeRandom(cap.getPlayer().rand, cap.getPlayer());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.REGENERATION, 1.0F, 0.5F), ()->cap.getState() != RegenState.REGENERATING));
+
 	}
 	
 	@Override
