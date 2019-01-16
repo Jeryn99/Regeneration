@@ -6,7 +6,8 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketAdvancementInfo;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -21,37 +22,41 @@ import java.util.UUID;
  */
 public class MessageUpdateSkin implements IMessage {
 
-    private String encodedSkin, uuid;
+    private byte[] encodedSkin;
 
     public MessageUpdateSkin() {
     }
 
-    public MessageUpdateSkin(String skin, String playerUUID) {
+    public MessageUpdateSkin(byte[] skin) {
         encodedSkin = skin;
-        uuid = playerUUID;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        encodedSkin = ByteBufUtils.readUTF8String(buf);
-        uuid = ByteBufUtils.readUTF8String(buf);
+        int length = buf.readInt();
+        this.encodedSkin = new byte[length];
+        for (int i = 0; i < length; i++) {
+            this.encodedSkin[i] = buf.readByte();
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, encodedSkin);
-        ByteBufUtils.writeUTF8String(buf, uuid);
+        buf.writeInt(this.encodedSkin.length);
+        for (int i = 0; i < this.encodedSkin.length; i++) {
+            buf.writeByte(this.encodedSkin[i]);
+        }
     }
 
     public static class Handler implements IMessageHandler<MessageUpdateSkin, IMessage> {
         @Override
         public IMessage onMessage(MessageUpdateSkin message, MessageContext ctx) {
             ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-                EntityPlayer player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(UUID.fromString(message.uuid));
+                EntityPlayerMP player = ctx.getServerHandler().player;
                 IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
                 cap.setEncodedSkin(message.encodedSkin);
                 cap.synchronise();
-                PlayerUtil.sendPacketToAll(new MessageTellEveryone(message.uuid));
+                PlayerUtil.sendPacketToAll(new MessageTellEveryone(player));
             });
             return null;
         }

@@ -2,6 +2,7 @@ package me.fril.regeneration.client;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.client.rendering.LayerRegeneration;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageUpdateSkin;
@@ -22,22 +23,23 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.codec.binary.Base64;
 import org.lwjgl.Sys;
+import sun.awt.image.ToolkitImage;
 import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.color.ColorSpace;
+import java.awt.image.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
 
     private static final FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png");
-    private static File skinDir = new File("./mods/regeneration/skins/");
+    public static File skinDir = new File("./mods/regeneration/skins/");
     public static File skinCacheDir = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
 
     public static void registerResources() {
@@ -52,46 +54,53 @@ public class SkinChangingHandler {
     }
 
 
-    public static String encodeFileToBase64Binary(File file) {
-        String encodedfile = null;
-        try {
-            FileInputStream fileInputStreamReader = new FileInputStream(file);
-            byte[] bytes = new byte[(int) file.length()];
-            fileInputStreamReader.read(bytes);
-            encodedfile = new String(Base64.encodeBase64(bytes), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
+    //Convert buffered image to Pixel data
+    public static byte[] encodeToPixelData(BufferedImage bufferedImage) {
+        WritableRaster raster = bufferedImage.getRaster();
+        DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
+        return buffer.getData();
+    }
+
+    //Convert Pixel data to BufferedImage
+    private static BufferedImage toImage(EntityPlayer player, byte[] imageData) throws IOException {
+        BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_4BYTE_ABGR);
+        img.setData(Raster.createRaster(img.getSampleModel(), new DataBufferByte(imageData, imageData.length), new Point()));
+        File file = new File(skinCacheDir, "cache-" + player.getUniqueID() + ".png");
+
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
         }
-        return encodedfile;
+        if (file.exists()) {
+            file.delete();
+        }
+
+        ImageIO.write(img, "png", file);
+
+        return img;
     }
 
     public static void skinChangeRandom(Random random, EntityPlayer player) throws IOException {
+        if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID()) return;
         File skin = SkinChangingHandler.getRandomSkinFile(random);
-        String string = SkinChangingHandler.encodeFileToBase64Binary(skin);
-        if (Minecraft.getMinecraft().player.getUniqueID() == player.getUniqueID()) {
-            NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(string, player.getUniqueID().toString()));
-            RegenerationMod.LOG.error("MESSAGE WAS SENT");
-        }
+        BufferedImage image = ImageIO.read(skin);
+        byte[] pixelData = SkinChangingHandler.encodeToPixelData(image);
+        CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
+        NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData));
     }
 
 
     public static ResourceLocation getSkin(EntityPlayer pl, IRegeneration data) throws IOException {
         AbstractClientPlayer player = (AbstractClientPlayer) pl;
+        byte[] encodedSkin = CapabilityRegeneration.getForPlayer(pl).getEncodedSkin();
 
-        if (data.getEncodedSkin().equals("NONE")) {
+        if (Arrays.equals(data.getEncodedSkin(), new byte[0])) {
+            RegenerationMod.LOG.warn("Resetting " + pl.getName() + " " + Arrays.toString(data.getEncodedSkin()));
             setPlayerTexture((AbstractClientPlayer) pl, null);
-            return null;
+            return player.getLocationSkin();
         }
-
-            ResourceLocation location = null;
-            File file = new File(skinCacheDir, "cache-" + player.getUniqueID() + ".png");
-        BufferedImage bufferedImage = ImageIO.read(cacheImageForPlayer(player, CapabilityRegeneration.getForPlayer(pl).getEncodedSkin(), file));
-            if (bufferedImage == null) {
-                return player.getLocationSkin();
-            }
-
-        return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("skin", new DynamicTexture(bufferedImage));
-        }
+        BufferedImage bufferedImage = toImage(pl, encodedSkin);
+        return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(pl.getName() + "_skin", new DynamicTexture(bufferedImage));
+    }
 
     public static File getRandomSkinFile(Random rand) throws IOException {
         File[] files = skinDir.listFiles(IMAGE_FILTER);
@@ -104,7 +113,9 @@ public class SkinChangingHandler {
         return file;
     }
 
+
     public static File createDummyImage(String base64) throws IOException {
+        RegenerationMod.LOG.error("No skins exist in the Skins folder, creating a placeholder");
         File dummy = new File(skinDir, "dummy.png");
         FileOutputStream osf = new FileOutputStream(dummy);
         byte[] btDataFile = new BASE64Decoder().decodeBuffer(base64);
@@ -122,22 +133,6 @@ public class SkinChangingHandler {
             ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
     }
 
-
-    public static File cacheImageForPlayer(AbstractClientPlayer player, String base64, File file) throws IOException {
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-
-        if (file.exists()) {
-            file.delete();
-        }
-
-        byte[] btDataFile = new BASE64Decoder().decodeBuffer(base64);
-        FileOutputStream osf = new FileOutputStream(file);
-        osf.write(btDataFile);
-
-        return file;
-    }
 
 
 }

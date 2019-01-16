@@ -78,12 +78,12 @@ public class GraphicalRegenDebugger implements IRegenDebugger {
 	@SubscribeEvent
 	public void onLogout(PlayerLoggedOutEvent ev) {
 		GameProfile gp = ev.player.getGameProfile();
-		
-		tabs.removeTabAt(tabs.indexOfTab(gp.getName()));
-		playerTabz.remove(gp);
-		
-		if (channelBuffer.containsKey(ev.player))
-			throw new IllegalStateException("Logging out player's buffer has never been flushed");
+
+//		tabs.removeTabAt(tabs.indexOfTab(gp.getName()));
+//		playerTabz.remove(gp);
+
+		//	if (channelBuffer.containsKey(ev.player))
+		//		throw new IllegalStateException("Logging out player's buffer has never been flushed");
 	}
 	
 	@SubscribeEvent

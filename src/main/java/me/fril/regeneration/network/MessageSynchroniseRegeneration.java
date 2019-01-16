@@ -47,9 +47,7 @@ public class MessageSynchroniseRegeneration implements IMessage {
 		public IMessage onMessage(MessageSynchroniseRegeneration message, MessageContext ctx) {
 			EntityPlayer player = message.player;
 			if (player != null)
-				Minecraft.getMinecraft().addScheduledTask(()->{
-					CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data);
-				});
+				Minecraft.getMinecraft().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
 			return null;
 		}
 	}

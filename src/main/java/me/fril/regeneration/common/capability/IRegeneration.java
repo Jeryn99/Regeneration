@@ -40,9 +40,9 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	IRegenType<?> getType();
 
-	String getEncodedSkin();
+    byte[] getEncodedSkin();
 
-	void setEncodedSkin(String string);
+    void setEncodedSkin(byte[] string);
 
 	/** Only for debug purposes! */
 	@Deprecated

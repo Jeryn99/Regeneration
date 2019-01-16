@@ -48,16 +48,6 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ClientEventHandler {
 
 	@SubscribeEvent
-	public static void onRenderPlayer(RenderPlayerEvent.Post e) {
-		try {
-			SkinChangingHandler.getSkin(e.getEntityPlayer(), CapabilityRegeneration.getForPlayer(e.getEntityPlayer()));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
-	}
-
-	@SubscribeEvent
 	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
