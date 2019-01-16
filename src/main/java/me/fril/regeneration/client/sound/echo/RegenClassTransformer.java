@@ -47,7 +47,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
                     instructions.add(new FieldInsnNode(GETFIELD, CHANNEL_LWJGL_NAME, "ALSource", "Ljava/nio/IntBuffer;"));
                     instructions.add(new InsnNode(ICONST_0));
                     instructions.add(new MethodInsnNode(INVOKEVIRTUAL, "java/nio/IntBuffer", "get", "(I)I", false));
-                    instructions.add(new MethodInsnNode(INVOKESTATIC, "me/fril/regeneration/client/SoundReverbHandler", "onPlaySound", "(I)V", false));
+                    instructions.add(new MethodInsnNode(INVOKESTATIC, "me/fril/regeneration/client/sound/echo/SoundReverbHandler", "onPlaySound", "(I)V", false));
                     return instructions;
                 });
                 return true;
