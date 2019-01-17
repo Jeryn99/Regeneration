@@ -4,6 +4,7 @@ import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -52,9 +53,11 @@ public class LucraftCoreHandler implements IActingHandler {
 
     @Override
     public void onRegenTrigger(IRegeneration cap) {
-        EntityPlayer player = cap.getPlayer();
-        ISizeChanging sizeCap = player.getCapability(CapabilitySizeChanging.SIZE_CHANGING_CAP, null);
-        sizeCap.setSize(randFloat(0.796544F, 1F));
+        if (RegenConfig.lucraftcore.lucraftcoreSizeChanging) {
+            EntityPlayer player = cap.getPlayer();
+            ISizeChanging sizeCap = player.getCapability(CapabilitySizeChanging.SIZE_CHANGING_CAP, null);
+            sizeCap.setSize(randFloat(RegenConfig.lucraftcore.SizeChangingMin, RegenConfig.lucraftcore.SizeChangingMax));
+        }
     }
 
     @Override
@@ -67,7 +70,7 @@ public class LucraftCoreHandler implements IActingHandler {
         if (e.getEntityLiving() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) e.getEntityLiving();
             IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-            boolean flag = data.canRegenerate() && e.getSource() == PotionRadiation.RADIATION;
+            boolean flag = data.canRegenerate() && e.getSource() == PotionRadiation.RADIATION && RegenConfig.lucraftcore.immuneToRadiation;
             e.setCanceled(flag);
         }
     }

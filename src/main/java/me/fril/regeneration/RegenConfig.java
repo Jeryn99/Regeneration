@@ -10,12 +10,18 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by Sub
  * on 17/09/2018.
  */
-@Config(modid = RegenerationMod.MODID, name = "Regeneration")
-public class RegenConfig { // TODO externalize comment strings?
-	
-	public static final Loot Loot = new Loot();
-	public static final GracePeriod Grace = new GracePeriod();
-	
+@Config(modid = RegenerationMod.MODID, name = "Regeneration Mod")
+public class RegenConfig {
+
+	@Config.Name("config.category.regeneration.loot")
+	public static final Loot loot = new Loot();
+
+	@Config.Name("config.category.regeneration.grace")
+	public static final GracePeriod grace = new GracePeriod();
+
+	@Config.Name("Lucraft Core")
+	public static final LucraftCore lucraftcore = new LucraftCore();
+
 	@Config.LangKey("config.regeneration.max_regens")
 	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
 	@Config.RequiresMcRestart
@@ -127,7 +133,25 @@ public class RegenConfig { // TODO externalize comment strings?
 		public float criticalDamageChance = 1;
 		
 	}
-	
+
+	public static class LucraftCore {
+
+		@Config.LangKey("config.regeneration.size_changing")
+		@Config.Comment("If this is true and LCCore is installed, you will change size on regeneration")
+		public boolean lucraftcoreSizeChanging = true;
+
+		@Config.LangKey("config.regeneration.size_changing_min")
+		@Config.Comment("Minimum Size Change value")
+		public float SizeChangingMin = 0.796544F;
+
+		@Config.LangKey("config.regeneration.size_changing_max")
+		@Config.Comment("Maximum Size Change value")
+		public float SizeChangingMax = 1F;
+
+		@Config.LangKey("config.regeneration.radiation_immunity")
+		@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")
+		public boolean immuneToRadiation = true;
+	}
 	
 	@EventBusSubscriber
 	public static class EventHandler {
@@ -140,4 +164,5 @@ public class RegenConfig { // TODO externalize comment strings?
 		}
 		
 	}
+
 }

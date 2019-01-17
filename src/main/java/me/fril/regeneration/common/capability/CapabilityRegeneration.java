@@ -285,7 +285,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					return false;
 				
 				//We're entering grace period...
-				scheduleTransitionInSeconds(Transition.ENTER_CRITICAL, RegenConfig.Grace.gracePhaseLength);
+				scheduleTransitionInSeconds(Transition.ENTER_CRITICAL, RegenConfig.grace.gracePhaseLength);
 				state = RegenState.GRACE;
 				synchronise();
 				ActingForwarder.onEnterGrace(CapabilityRegeneration.this);
@@ -350,7 +350,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void enterCriticalPhase() {
 			//We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduleTransitionInSeconds(Transition.CRITICAL_DEATH, RegenConfig.Grace.criticalPhaseLength);
+			scheduleTransitionInSeconds(Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
 			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
 			synchronise();
 		}

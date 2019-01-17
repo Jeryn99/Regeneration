@@ -147,13 +147,12 @@ public class RegenEventHandler {
 			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
 		persist.setBoolean("loggedInBefore", true);
 		nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
-		
-		//System.out.println(nbt);
+
 	}
 	
 	@SubscribeEvent
 	public static void registerLoot(LootTableLoadEvent event) {
-		if (!event.getName().toString().toLowerCase().matches(RegenConfig.Loot.lootRegex) || RegenConfig.Loot.disableLoot)
+		if (!event.getName().toString().toLowerCase().matches(RegenConfig.loot.lootRegex) || RegenConfig.loot.disableLoot)
 			return;
 		
 		//TODO configurable chances? Maybe by doing a simple loot table tutorial?
