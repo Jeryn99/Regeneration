@@ -104,8 +104,14 @@ public class RegenConfig {
 	@Config.LangKey("config.regeneration.regen_messages")
 	@Config.Comment("Sends a message to chat to say that a player is regenerating, and the reason for it")
 	public static boolean sendRegenDeathMessages = true;
-	
-	
+
+	@Config.Comment("The URL skins are downloaded from when you reset back to Mojangs skin")
+	//TODO Actually use mojang instead
+	public static String downloadUrl = "http://skins.minecraft.net/MinecraftSkins/%s";
+
+	@Config.LangKey("config,regeneration.changemyskin")
+	@Config.Comment("Disabling this will disable skin changing for you and you will retain your Mojang one")
+	public static boolean changeMySkin = true;
 
 	public static class Loot {
 		

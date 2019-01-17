@@ -376,7 +376,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			nextTransition = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1); //in case this method was called by critical death
-			
+
+
 			/* SuB For re-implementing the dont-lose-regens-on-death option:
 			 * We never explicitly reset the live count, but it still gets reset.
 			 * From my understanding this is because the capability data isn't cloned over properly when the player dies.
