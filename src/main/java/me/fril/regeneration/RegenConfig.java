@@ -107,7 +107,7 @@ public class RegenConfig {
 
 	@Config.Comment("The URL skins are downloaded from when you reset back to Mojangs skin")
 	//TODO Actually use mojang instead
-	public static String downloadUrl = "http://skins.minecraft.net/MinecraftSkins/%s";
+    public static String downloadUrl = "https://crafatar.com/skins/%s";
 
 	@Config.LangKey("config,regeneration.changemyskin")
 	@Config.Comment("Disabling this will disable skin changing for you and you will retain your Mojang one")
@@ -155,7 +155,7 @@ public class RegenConfig {
 
 		@Config.LangKey("config.regeneration.size_changing_max")
 		@Config.Comment("Maximum Size Change value")
-		public float sizeChangingMax = 1F;
+        public float sizeChangingMax = 1.1F;
 
 		@Config.LangKey("config.regeneration.radiation_immunity")
 		@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")

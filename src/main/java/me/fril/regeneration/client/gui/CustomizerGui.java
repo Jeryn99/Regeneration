@@ -64,8 +64,8 @@ public class CustomizerGui extends GuiContainer {
 		//WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
 		btnReset = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.info.undo").getFormattedText());
 		btnDefault = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.info.default").getFormattedText());
-		btnResetSkin = new GuiButtonExt(8, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.reset_skin").getFormattedText());
-		btnOpenFolder = new GuiButtonExt(9, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.open_folder").getFormattedText());
+        btnResetSkin = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.reset_skin").getFormattedText());
+        btnOpenFolder = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.open_folder").getFormattedText());
 
 		btnReset.enabled = false;
 		buttonList.add(btnReset);

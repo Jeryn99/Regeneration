@@ -1,9 +1,5 @@
 package me.fril.regeneration.util;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 import me.fril.regeneration.RegenerationMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -18,8 +14,11 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class LimbManipulationUtil {
@@ -71,19 +70,16 @@ public class LimbManipulationUtil {
 		RenderLivingBase renderer = (RenderLivingBase) Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(event.getEntityPlayer());
 		ModelBase playerModel = renderer.getMainModel();
 		if (playerModel != null && playerModel.boxList != null) {
-			playerModel.boxList.forEach(modelRenderer -> {
+			for (ModelRenderer modelRenderer : playerModel.boxList) {
 				if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
 					CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
 					customMr.reset();
 				}
-			});
+			}
 		}
 
-		//Reset layers
-		List<LayerRenderer<AbstractClientPlayer>> layerList = renderer.layerRenderers;
 		try {
-			if (layerList == null) return;
-			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
+			for (Object layer : renderer.layerRenderers) {
 
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
@@ -91,23 +87,23 @@ public class LimbManipulationUtil {
 					//Model Biped
 					if (field.getType() == ModelBiped.class) {
 						ModelBiped biped = (ModelBiped) field.get(layer);
-						biped.boxList.forEach(modelRenderer -> {
+						for (ModelRenderer modelRenderer : biped.boxList) {
 							if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
 								CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
 								customMr.reset();
 							}
-						});
+						}
 					}
 
 					//Model Player
 					if (field.getType() == ModelPlayer.class) {
 						ModelPlayer modelPlayer = (ModelPlayer) field.get(layer);
-						modelPlayer.boxList.forEach(modelRenderer -> {
+						for (ModelRenderer modelRenderer : modelPlayer.boxList) {
 							if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
 								CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
 								customMr.reset();
 							}
-						});
+						}
 					}
 				}
 			}

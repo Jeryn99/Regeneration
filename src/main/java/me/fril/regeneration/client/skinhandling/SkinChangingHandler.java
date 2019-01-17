@@ -144,6 +144,7 @@ public class SkinChangingHandler {
         Minecraft minecraft = Minecraft.getMinecraft();
         URL url = new URL(String.format(RegenConfig.downloadUrl, StringUtils.stripControlCodes(player.getUniqueID().toString())));
         BufferedImage img = ImageIO.read(url);
+        RegenerationMod.LOG.info("Downloading Skin from:" + url.toString());
         ImageIO.write(img, "png", new File(skinCacheDir, "cache-" + player.getUniqueID() + ".png"));
         return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(img));
     }
@@ -202,25 +203,24 @@ public class SkinChangingHandler {
     public void onRenderPlayer(RenderPlayerEvent.Pre e) {
         AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
         IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-        UUID uuid = player.getGameProfile().getId();
-        ModelBase model;
 
-        if (RegenState.ALIVE == data.getState()) {
+        if (RegenState.ALIVE == data.getState() && !PLAYER_SKINS.containsKey(player.getUniqueID())) {
+            SkinInfo skinInfo = null;
+
             try {
-                if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
-                    PLAYER_SKINS.put(player.getGameProfile().getId(), SkinChangingHandler.getSkin(player, data));
-                    SkinChangingHandler.setPlayerTexture(player, PLAYER_SKINS.get(uuid).getTextureLocation());
-
-                    if (PLAYER_SKINS.get(uuid).getSkintype() == SkinInfo.SkinType.ALEX) {
-                        model = alex;
-                    } else {
-                        model = steve;
-                    }
-                    SkinChangingHandler.setPlayerModel(e.getRenderer(), model);
-                }
-            } catch (IOException error) {
-                error.printStackTrace();
+                skinInfo = SkinChangingHandler.getSkin(player, data);
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
+
+            SkinChangingHandler.setPlayerTexture(player, skinInfo.getTextureLocation());
+
+            if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
+                SkinChangingHandler.setPlayerModel(e.getRenderer(), alex);
+            } else {
+                SkinChangingHandler.setPlayerModel(e.getRenderer(), steve);
+            }
+            PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
         }
     }
 

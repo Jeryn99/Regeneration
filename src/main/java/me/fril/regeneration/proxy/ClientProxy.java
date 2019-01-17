@@ -51,19 +51,20 @@ public class ClientProxy extends CommonProxy {
 
 		//Render layers ===========================================
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-		skinMap.values().forEach(renderPlayer -> { //Cycle through each Skinmap type
+		for (RenderPlayer renderPlayer : skinMap.values()) {
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); //Add Regeneration Layer
 			renderPlayer.layerRenderers.removeIf(layer -> layer.getClass() == LayerHeldItem.class); //Remove old held item layer
 			renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); //Add new item layer
-		});
-
+		}
 	}
 	
 	@Override
 	public void postInit() {
 		super.postInit();
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-		skinMap.values().forEach(RenderUtil::setupArmorModelOverride); //Fixing armor model animations
+		for (RenderPlayer renderPlayer : skinMap.values()) {
+			RenderUtil.setupArmorModelOverride(renderPlayer);
+		}
 		SkinChangingHandler.registerResources();
 	}
 
