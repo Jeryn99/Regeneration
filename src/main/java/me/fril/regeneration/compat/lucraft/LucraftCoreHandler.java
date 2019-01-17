@@ -11,12 +11,10 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Random;
 
-@Mod.EventBusSubscriber
 public class LucraftCoreHandler implements IActingHandler {
 
     public static void registerEntry() {
