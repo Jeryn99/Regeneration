@@ -1,31 +1,12 @@
 package me.fril.regeneration.network;
 
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import io.netty.buffer.ByteBuf;
-import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.client.ClientEventHandler;
-import me.fril.regeneration.client.SkinChangingHandler;
-import me.fril.regeneration.client.rendering.LayerRegeneration;
-import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.resources.SkinManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by Sub
@@ -49,7 +30,7 @@ public class MessageTellEveryone implements IMessage {
     public static class Handler implements IMessageHandler<MessageTellEveryone, IMessage> {
         @Override
         public IMessage onMessage(MessageTellEveryone message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> ClientEventHandler.PLAYER_SKINS.clear());
+            Minecraft.getMinecraft().addScheduledTask(() -> SkinChangingHandler.PLAYER_SKINS.clear());
             return null;
         }
     }

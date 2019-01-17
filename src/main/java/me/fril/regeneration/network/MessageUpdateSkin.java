@@ -2,19 +2,13 @@ package me.fril.regeneration.network;
 
 
 import io.netty.buffer.ByteBuf;
+import me.fril.regeneration.client.skinhandling.SkinInfo;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.util.PlayerUtil;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.SPacketAdvancementInfo;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.util.UUID;
 
 /**
  * Created by Sub
@@ -22,13 +16,15 @@ import java.util.UUID;
  */
 public class MessageUpdateSkin implements IMessage {
 
+    private boolean isAlex;
     private byte[] encodedSkin;
 
     public MessageUpdateSkin() {
     }
 
-    public MessageUpdateSkin(byte[] skin) {
-        encodedSkin = skin;
+    public MessageUpdateSkin(byte[] pixelData, boolean isAlex) {
+        encodedSkin = pixelData;
+        this.isAlex = isAlex;
     }
 
     @Override
@@ -38,6 +34,8 @@ public class MessageUpdateSkin implements IMessage {
         for (int i = 0; i < length; i++) {
             this.encodedSkin[i] = buf.readByte();
         }
+
+        isAlex = buf.readBoolean();
     }
 
     @Override
@@ -46,6 +44,7 @@ public class MessageUpdateSkin implements IMessage {
         for (int i = 0; i < this.encodedSkin.length; i++) {
             buf.writeByte(this.encodedSkin[i]);
         }
+        buf.writeBoolean(isAlex);
     }
 
     public static class Handler implements IMessageHandler<MessageUpdateSkin, IMessage> {
@@ -55,6 +54,11 @@ public class MessageUpdateSkin implements IMessage {
                 EntityPlayerMP player = ctx.getServerHandler().player;
                 IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
                 cap.setEncodedSkin(message.encodedSkin);
+                if (message.isAlex) {
+                    cap.setSkinType(SkinInfo.SkinType.ALEX.name());
+                } else {
+                    cap.setSkinType(SkinInfo.SkinType.STEVE.name());
+                }
                 cap.synchronise();
                 NetworkHandler.INSTANCE.sendToAll(new MessageTellEveryone());
             });

@@ -1,34 +1,27 @@
 package me.fril.regeneration.client.rendering;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-
-import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.client.SkinChangingHandler;
+import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+
+import java.io.IOException;
+import java.util.Random;
 
 /**
  * Created by Sub
  * on 16/09/2018.
  */
 public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
-	
+
 	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
 	public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
 
@@ -40,19 +33,22 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	
 	@Override
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
         if (cap.getState() == RegenState.REGENERATING) {
-            try {
-                SkinChangingHandler.skinChangeRandom(player.world.rand, player);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+			if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
+				try {
+					SkinChangingHandler.skinChangeRandom(cap.getPlayer().world.rand, cap.getPlayer());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 
 			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		} else if (cap.getState().isGraceful())
 			renderGlowingHands(player, cap, scale);
 	}
-	
+
 	private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
 		Vec3d primaryColor = handler.getPrimaryColor();
 		Vec3d secondaryColor = handler.getSecondaryColor();

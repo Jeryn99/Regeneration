@@ -1,4 +1,4 @@
-package me.fril.regeneration.combat.lucraft;
+package me.fril.regeneration.compat.lucraft;
 
 import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
@@ -8,17 +8,12 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-import javax.imageio.ImageIO;
 import java.util.Random;
 
 @Mod.EventBusSubscriber
@@ -56,7 +51,7 @@ public class LucraftCoreHandler implements IActingHandler {
         if (RegenConfig.lucraftcore.lucraftcoreSizeChanging) {
             EntityPlayer player = cap.getPlayer();
             ISizeChanging sizeCap = player.getCapability(CapabilitySizeChanging.SIZE_CHANGING_CAP, null);
-            sizeCap.setSize(randFloat(RegenConfig.lucraftcore.SizeChangingMin, RegenConfig.lucraftcore.SizeChangingMax));
+            sizeCap.setSize(randFloat(RegenConfig.lucraftcore.sizeChangingMin, RegenConfig.lucraftcore.sizeChangingMax));
         }
     }
 

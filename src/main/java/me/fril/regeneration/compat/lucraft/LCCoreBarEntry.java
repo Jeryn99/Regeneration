@@ -1,4 +1,4 @@
-package me.fril.regeneration.combat.lucraft;
+package me.fril.regeneration.compat.lucraft;
 
 import lucraft.mods.lucraftcore.util.abilitybar.IAbilityBarEntry;
 import lucraft.mods.lucraftcore.util.abilitybar.IAbilityBarProvider;

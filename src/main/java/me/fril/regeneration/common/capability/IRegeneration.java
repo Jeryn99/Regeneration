@@ -1,6 +1,7 @@
 package me.fril.regeneration.common.capability;
 
 import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.client.skinhandling.SkinInfo;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,4 +49,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	@Deprecated
 	void setRegenerationsLeft(int amount);
 
+	SkinInfo.SkinType getSkinType();
+
+	void setSkinType(String skinType);
 }

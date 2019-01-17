@@ -1,15 +1,7 @@
 package me.fril.regeneration.handlers;
 
-import me.fril.regeneration.api.IActingHandler;
-import me.fril.regeneration.client.SkinChangingHandler;
-import me.fril.regeneration.common.types.TypeFiery;
-import me.fril.regeneration.network.MessageUpdateSkin;
-import me.fril.regeneration.network.NetworkHandler;
-import net.minecraft.client.audio.PositionedSound;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import org.lwjgl.input.Keyboard;
-
 import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.sound.ConditionalSound;
 import me.fril.regeneration.client.sound.MovingSoundPlayer;
@@ -20,8 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
-
-import java.io.IOException;
+import org.lwjgl.input.Keyboard;
 
 class ActingClientHandler implements IActingHandler {
 	
@@ -33,12 +24,10 @@ class ActingClientHandler implements IActingHandler {
 	private ActingClientHandler() {}
 	
 	/** SOON test multiplayer sound handling with hydro
-	 * 
-	 * Is opening watch heard by others?
+	 *
 	 * Is transferring heard by others?
 	 * Is critical heard by others?
 	 * Is heartbeat heard by others? < DEAD
-	 * Make sure regeneration is heard by others
 	 * Make sure hand-glow is heard by others < It is
 	 */
 	
@@ -61,7 +50,6 @@ class ActingClientHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-
 	}
 	
 	@Override

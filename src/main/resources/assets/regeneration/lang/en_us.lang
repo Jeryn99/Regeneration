@@ -8,6 +8,9 @@ regeneration.info.secondary=Secondary
 regeneration.info.undo=Undo
 regeneration.info.default=Default
 
+regeneration.info.open_folder=Skins
+regeneration.info.reset_skin=Reset Skin
+
 regeneration.messages.now_timelord=You are now a timelord!
 regeneration.messages.regen_or_die=Regenerate now or you will die!
 regeneration.messages.remaining_regens.status=Remaining Regenerations:
@@ -58,6 +61,18 @@ config.regeneration.infinite_regenerations=Infinite Regenerations
 config.regeneration.grace.gracePeriodLength=Grace period length
 config.regeneration.grace.criticalPhaseLength=Critical phase length
 config.regeneration.grace.criticalDamageChance=Critical damage chance
+config.regeneration.size_changing=LucraftCore Size Changing
+config.regeneration.size_changing_min=Size Change Minimum
+config.regeneration.size_changing_max=Size Change Maximum
+config.regeneration.radiation_immunity=Timelords immune to Radiation
+config.regeneration.tardis_damage=Damage Tardis on Regeneration
+config.regeneration.regen_messages=Regeneraton death messages
+
+config.regeneration.category.tardis=Tardis Mod Intergration
+config.regeneration.category.lccore=Lucraft Core Intergration
+config.regeneration.category.grace_period=Grace Period
+config.regeneration.category.loot=Loot Settings
+
 
 regeneration.damagesrc.regen_energy=&s was blasted by Regeneration Energy!
 regeneration.damagesrc.regen_heal=&s died by donating too much Regeneration energy...
@@ -77,4 +92,4 @@ regeneration.toast.enter_critical.sub=%s minutes left to regenerate before you d
 message.regeneration.isregenerating=%s is regenerating...
 
 regeneration.messages.warning.grace=Press %s to Regenerate now!
-regeneration.messages.warning.grace=You are near death..press %s to Regenerate now!
+regeneration.messages.warning.grace_critical=You are near death || press %s to Regenerate now!

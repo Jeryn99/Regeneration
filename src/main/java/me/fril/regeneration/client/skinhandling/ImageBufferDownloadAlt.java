@@ -1,12 +1,10 @@
-package me.fril.regeneration.client;
-
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.awt.image.ImageObserver;
+package me.fril.regeneration.client.skinhandling;
 
 import net.minecraft.client.renderer.ImageBufferDownload;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 public class ImageBufferDownloadAlt extends ImageBufferDownload {
     private int[] imageData;

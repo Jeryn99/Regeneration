@@ -1,15 +1,8 @@
 package me.fril.regeneration.common.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import net.minecraft.block.state.IBlockState;
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.client.skinhandling.SkinInfo;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.debugger.util.DebuggableScheduledAction;
@@ -21,6 +14,7 @@ import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenState.Transition;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,6 +23,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sub
@@ -50,6 +49,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
+	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 
 
 	@Nonnull
@@ -108,6 +108,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setTag("style", getStyle());
 		nbt.setTag("type", type.serializeNBT());
         nbt.setByteArray("encoded_skin", ENCODED_SKIN);
+		nbt.setString("skinType", skinType.name());
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -117,6 +118,11 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void deserializeNBT(NBTTagCompound nbt) {
 		regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 
+		if (nbt.hasKey("skinType")) {
+			setSkinType(nbt.getString("skinType"));
+		} else {
+			setSkinType("ALEX");
+		}
 		//v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
 		
@@ -224,6 +230,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setRegenerationsLeft(int amount) {
 		regenerationsLeft = amount;
+	}
+
+	@Override
+	public SkinInfo.SkinType getSkinType() {
+		return skinType;
+	}
+
+	@Override
+	public void setSkinType(String skinType) {
+		this.skinType = SkinInfo.SkinType.valueOf(skinType);
 	}
 
 	@Override

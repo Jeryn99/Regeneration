@@ -1,13 +1,11 @@
 package me.fril.regeneration.proxy;
 
-import java.util.Map;
-
 import me.fril.regeneration.client.RegenKeyBinds;
-import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
-import me.fril.regeneration.combat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.client.rendering.LayerItemReplace;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
+import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
+import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
@@ -16,6 +14,8 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
+
+import java.util.Map;
 
 /**
  * Created by Sub
@@ -27,6 +27,7 @@ public class ClientProxy extends CommonProxy {
     @Override
 	public void preInit() {
 		super.preInit();
+        MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
 	}
 
 	@Override

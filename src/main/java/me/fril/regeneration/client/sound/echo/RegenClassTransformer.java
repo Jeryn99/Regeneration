@@ -2,19 +2,10 @@ package me.fril.regeneration.client.sound.echo;
 
 import me.fril.regeneration.RegenerationMod;
 import net.minecraft.launchwrapper.IClassTransformer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.tree.*;
 
 import javax.annotation.Nullable;
 import java.util.ListIterator;
@@ -76,16 +67,6 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         AbstractInsnNode node = this.selectNode(instructions, predicate);
         if (node != null) {
             instructions.insertBefore(node, insert.get());
-        } else {
-            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-            RegenerationMod.LOG.warn("Failed to find location to insert for {}", stackTrace[1].getMethodName());
-        }
-    }
-
-    private void insertAfter(InsnList instructions, Predicate<AbstractInsnNode> predicate, Supplier<InsnList> insert) {
-        AbstractInsnNode node = this.selectNode(instructions, predicate);
-        if (node != null) {
-            instructions.insert(node, insert.get());
         } else {
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
             RegenerationMod.LOG.warn("Failed to find location to insert for {}", stackTrace[1].getMethodName());

@@ -1,21 +1,18 @@
 package me.fril.regeneration.client;
 
-import java.io.IOException;
-import java.awt.*;
-import java.util.*;
-
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageTriggerRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
+import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -25,21 +22,23 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -48,35 +47,11 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
 
-	public static Map<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
-
-	@SubscribeEvent
-	public static void onRenderPlayer(RenderPlayerEvent.Pre e) {
-		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
-		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-
-		if (RegenState.ALIVE == data.getState()) {
-			if (PLAYER_SKINS.containsKey(player.getGameProfile().getId())) {
-				SkinChangingHandler.setPlayerTexture(player, PLAYER_SKINS.get(player.getGameProfile().getId()));
-			} else {
-				try {
-					PLAYER_SKINS.put(player.getGameProfile().getId(), SkinChangingHandler.getSkin(player, data));
-					SkinChangingHandler.setPlayerTexture(player, PLAYER_SKINS.get(player.getGameProfile().getId()));
-				} catch (IOException error) {
-					error.printStackTrace();
-				}
-			}
-		}
-	}
-
 	@SubscribeEvent
 	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		float f = 0.2F;
-
-		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-
 		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
 			return;
 		
@@ -84,20 +59,6 @@ public class ClientEventHandler {
 		if (!cap.getState().isGraceful())
 			return;
 
-		if (RegenState.ALIVE == data.getState()) {
-			if (PLAYER_SKINS.containsKey(player.getGameProfile().getId())) {
-				SkinChangingHandler.setPlayerTexture(player, PLAYER_SKINS.get(player.getGameProfile().getId()));
-			} else {
-				try {
-					PLAYER_SKINS.put(player.getGameProfile().getId(), SkinChangingHandler.getSkin(player, data));
-					SkinChangingHandler.setPlayerTexture(player, PLAYER_SKINS.get(player.getGameProfile().getId()));
-				} catch (IOException error) {
-					error.printStackTrace();
-				}
-			}
-		}
-
-		
 		GlStateManager.pushMatrix();
 		
 		float leftHandedFactor = mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT) ? 1 : -1;
@@ -148,9 +109,13 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void onPlaySound(PlaySoundEvent e) {
-		if (e.getName().equals("entity.generic.explode")) {
-			ISound sound = PositionedSoundRecord.getMasterRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F);
-			e.setResultSound(sound);
+		Minecraft mc = Minecraft.getMinecraft();
+		if (mc.player == null || mc.world == null) return;
+		if (CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getState() == RegenState.REGENERATING) {
+			if (e.getName().equals("entity.generic.explode")) {
+				ISound sound = PositionedSoundRecord.getMasterRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F);
+				e.setResultSound(sound);
+			}
 		}
 	}
 
@@ -160,7 +125,6 @@ public class ClientEventHandler {
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -175,7 +139,7 @@ public class ClientEventHandler {
 		tessellator.draw();
 
 		if (!Loader.isModLoaded("lucraftcore")) {
-			String warning = "";
+			String warning = "   ";
 			switch (state) {
 				case GRACE:
 					warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
@@ -188,7 +152,7 @@ public class ClientEventHandler {
 				case REGENERATING:
 					break;
 			}
-			Minecraft.getMinecraft().fontRenderer.drawString(warning, scaledRes.getScaledWidth() / 2 - 135, scaledRes.getScaledHeight() / 2 - 115, Color.WHITE.getRGB());
+			Minecraft.getMinecraft().fontRenderer.drawString(warning, scaledRes.getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
 		}
 
 		GlStateManager.depthMask(true);
@@ -239,6 +203,23 @@ public class ClientEventHandler {
 	public static void registerModels(ModelRegistryEvent ev) {
 		RegenObjects.ITEMS.forEach(RenderUtil::setItemRender);
 		RegenObjects.ITEMS = new ArrayList<>();
+	}
+
+	@SubscribeEvent
+	public static void onDeath(LivingDeathEvent e) {
+		if (e.getEntityLiving() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+			SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
+
+			if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) {
+				ClientUtil.sendResetPacket();
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
+		SkinChangingHandler.PLAYER_SKINS.clear();
 	}
 	
 }

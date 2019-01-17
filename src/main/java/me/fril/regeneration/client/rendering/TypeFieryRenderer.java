@@ -1,11 +1,9 @@
 package me.fril.regeneration.client.rendering;
 
-import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.util.LimbManipulationUtil;
 import me.fril.regeneration.util.RenderUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
@@ -21,8 +19,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-
-import java.io.IOException;
 
 public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	

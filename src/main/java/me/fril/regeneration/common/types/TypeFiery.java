@@ -1,7 +1,5 @@
 package me.fril.regeneration.common.types;
 
-import java.util.Random;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.rendering.TypeFieryRenderer;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -12,6 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -69,7 +69,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	
 	@Override
 	public int getAnimationLength() { //TODO shorten to be in line with the music (don't forget to update 'p' and 'r'!)
-		return 10 * 20; //10 seconds of 20 ticks
+        return 14 * 20; //14 seconds of 20 ticks
 	}
 	
 	/** @deprecated No idea why you'd want to use this outside of this class, so think carefully before you do because it's probably wrong. Keep in mind that animations can change length, so <b>never</b> use this in a non-relative way */

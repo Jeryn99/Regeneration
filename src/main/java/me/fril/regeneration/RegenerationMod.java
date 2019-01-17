@@ -1,23 +1,18 @@
 package me.fril.regeneration;
 
-import java.awt.GraphicsEnvironment;
-import java.io.*;
-
-import me.fril.regeneration.client.SkinChangingHandler;
 import me.fril.regeneration.client.gui.GuiHandler;
-import me.fril.regeneration.combat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
 import me.fril.regeneration.common.commands.RegenDebugCommand;
+import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
+import me.fril.regeneration.compat.tardis.TardisModHandler;
 import me.fril.regeneration.debugger.DummyRegenDebugger;
 import me.fril.regeneration.debugger.GraphicalRegenDebugger;
 import me.fril.regeneration.debugger.IRegenDebugger;
 import me.fril.regeneration.handlers.ActingForwarder;
-import me.fril.regeneration.combat.tardis.TardisModHandler;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,16 +21,13 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.awt.*;
 
 //TESTING add language file tests
 @Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = "required:forge@[14.23.5.2768,);after:tardis")
