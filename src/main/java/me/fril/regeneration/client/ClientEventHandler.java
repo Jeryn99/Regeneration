@@ -56,9 +56,11 @@ public class ClientEventHandler {
 	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		
 		float f = 0.2F;
 		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
 			return;
+		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (!cap.areHandsGlowing())
 			return;
@@ -202,7 +204,7 @@ public class ClientEventHandler {
 			EntityPlayer player = (EntityPlayer) e.getEntityLiving();
 			SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
 			
-			if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) {
+			if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) { //SUB this crashed once while I tested but I don't know why. I'm 70% sure I didn't even die
 				ClientUtil.sendResetPacket();
 			}
 		}

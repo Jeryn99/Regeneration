@@ -61,13 +61,14 @@ public class ItemFobWatch extends Item {
 			if (used < 0)
 				DebuggerUtil.warn(player, "Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.regenCapacity + ", damage:" + stack.getItemDamage() + ", regens:" + cap.getRegenerationsLeft());
 			
-			cap.receiveRegenerations(used);
 			
 			if (!cap.getPlayer().isCreative())
 				stack.setItemDamage(stack.getItemDamage() + used);
 			
 			if (world.isRemote)
 				ClientUtil.playPositionedSoundRecord(RegenObjects.Sounds.FOB_WATCH, 1.0F, 2.0F);
+			else
+				cap.receiveRegenerations(used);
 			
 			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		} else { // transferring player->watch
@@ -78,11 +79,12 @@ public class ItemFobWatch extends Item {
 				return msgUsageFailed(player, "regeneration.messages.transfer.full_watch", stack);
 			
 			stack.setItemDamage(stack.getItemDamage() - 1);
-			cap.extractRegeneration(1);
 			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
 			
 			if (world.isRemote)
 				ClientUtil.playPositionedSoundRecord(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 5.0F, 2.0F);
+			else
+				cap.extractRegeneration(1);
 			
 			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 		}

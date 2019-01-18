@@ -58,6 +58,12 @@ public class CapabilityRegeneration implements IRegeneration {
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	
+	/**
+	 * WHY THIS IS A SEPERATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
+	 * This property is synced over to the client to solve this
+	 */
+	private boolean handsAreGlowingClient;
+	
 	
 	
 	public CapabilityRegeneration() {
@@ -101,8 +107,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void synchronise() {
+		if (player.world.isRemote)
+			throw new IllegalStateException("Don't sync client -> server");
+		
+		handsAreGlowingClient = state == RegenState.ALIVE ? false : stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
+		
 		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
 	
@@ -117,8 +128,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setTag("type", type.serializeNBT());
 		nbt.setByteArray("encoded_skin", ENCODED_SKIN);
 		nbt.setString("skinType", skinType.name());
-		//nbt.setBoolean("handsGlowing", handsGlowing);
-		//nbt.setInteger("ticksGlowing", ticksGlowing);
+		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -134,9 +144,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			setSkinType("ALEX");
 		}
 		
-		/*if (nbt.hasKey("handsGlowing")) {
-			handsGlowing = nbt.getBoolean("handsGlowing");
-		}*/
+		if (nbt.hasKey("handsAreGlowing")) {
+			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
+		}
 		
 		/*if (nbt.hasKey("ticksGlowing")) {
 			nbt.setInteger("ticksGlowing", ticksGlowing);
@@ -263,33 +273,11 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	
-	
-	/*@Override
-	@Deprecated
-	public int getTicksGlowing() {
-		return ticksGlowing;
-	}
-	
-	@Override
-	@Deprecated
-	public void setTicksGlowing(int ticksGlowing) {
-		this.ticksGlowing = ticksGlowing;
-	}*/
-	
-	
-	
 	@Override
 	public boolean areHandsGlowing() {
-		return stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
+		return handsAreGlowingClient;
 		//return handsGlowing;
 	}
-	
-	/*@Override
-	public void setGlowing(boolean glowing) {
-		handsGlowing = glowing;
-		synchronise();
-	}*/
-	
 	
 	
 	@Override
@@ -358,14 +346,16 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleNextHandGlow() {
 			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, 2400); //TODO make hand glow interval
+			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, 400); //TODO make hand glow interval configurable
+			synchronise();
 		}
 		
 		@SuppressWarnings("deprecation")
 		private void scheduleHandGlowTrigger() {
 			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, 2400); //TODO make hand glow interval
+			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, 400); //TODO make hand glow interval configurable
+			synchronise();
 		}
 		
 		
@@ -379,10 +369,11 @@ public class CapabilityRegeneration implements IRegeneration {
 				
 				// We're entering grace period...
 				scheduleTransitionInSeconds(Transition.ENTER_CRITICAL, RegenConfig.grace.gracePhaseLength);
+				scheduleHandGlowTrigger();
+				
 				state = RegenState.GRACE;
 				synchronise();
 				ActingForwarder.onEnterGrace(CapabilityRegeneration.this);
-				scheduleHandGlowTrigger();
 				return true;
 				
 			} else if (state.isGraceful()) {
@@ -426,30 +417,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state == RegenState.ALIVE)
 				throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
 			
-			/*if (state.isGraceful()) { NOW remove this mess
-				if (isGlowing()) {
-					ticksGlowing++;
-				} else {
-					ticksGlowing = 0;
-					if (player.ticksExisted % 6000 == 0) {
-						setGlowing(true);
-					}
-				}
-				
-				if (ticksGlowing >= 2400) {
-					ticksGlowing = 0;
-					setGlowing(false);
-					triggerRegeneration();
-				}
-			} else if (player.world.isRemote) {
-				//handsGlowing = false;
-				ticksGlowing = 0;
-			}*/
+			if (state.isGraceful())
+				handGlowTimer.tick();
 			
 			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
-			//NOW check if states changing causes issues here
-			handGlowTimer.tick();
 		}
 		
 		private void triggerRegeneration() {
@@ -542,6 +514,11 @@ public class CapabilityRegeneration implements IRegeneration {
 				nbt.setString("transitionId", nextTransition.transition.toString());
 				nbt.setLong("transitionInTicks", nextTransition.getTicksLeft());
 			}
+			
+			if (handGlowTimer != null) {
+				nbt.setString("handGlowState", handGlowTimer.transition.toString());
+				nbt.setLong("handGlowScheduledTicks", handGlowTimer.getTicksLeft());
+			}
 			return nbt;
 		}
 		
@@ -549,6 +526,20 @@ public class CapabilityRegeneration implements IRegeneration {
 		public void deserializeNBT(NBTTagCompound nbt) {
 			if (nbt.hasKey("transitionId"))
 				scheduleTransitionInTicks(Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
+			
+			if (nbt.hasKey("handGlowState")) {
+				Transition transition = Transition.valueOf(nbt.getString("handGlowState"));
+				
+				Runnable callback;
+				if (transition == Transition.HAND_GLOW_START)
+					callback = this::scheduleHandGlowTrigger;
+				else if (transition == Transition.HAND_GLOW_TRIGGER)
+					callback = this::triggerRegeneration;
+				else
+					throw new IllegalStateException("Illegal hand glow timer transition");
+				
+				handGlowTimer = new DebuggableScheduledAction(transition, player, callback, nbt.getLong("handGlowScheduledTicks"));
+			}
 		}
 		
 	}
