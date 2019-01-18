@@ -17,9 +17,10 @@ public enum RegenState {
 	}*/
 	
 	public enum Transition {
+		HAND_GLOW_START(Color.YELLOW.darker()), HAND_GLOW_TRIGGER(Color.ORANGE),
 		ENTER_CRITICAL(Color.BLUE),
 		CRITICAL_DEATH(Color.RED),
-		FINISH_REGENERATION(Color.GREEN.darker()), GRACE_GLOW(Color.PINK.darker());
+		FINISH_REGENERATION(Color.GREEN.darker());
 		
 		public final Color color;
 		

@@ -31,12 +31,9 @@ public class RegenDebugCommand extends CommandBase {
 		
 		switch (args[0]) {
 			case "fast-forward-glow":
-				if (cap.getState().isGraceful()) {
-					//cap.setGlowing(true);
-					cap.setTicksGlowing(2300); //FIXME magic number
-				} else
-					throw new CommandException("You must be in a Grace period for this.");
+				cap.getStateManager().fastForwardHandGlow();
 				break;
+				
 			case "fastforward":
 				cap.getStateManager().fastForward();
 				break;

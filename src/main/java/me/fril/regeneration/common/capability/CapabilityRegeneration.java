@@ -46,9 +46,9 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
 	
-	private boolean didSetup = false;//, handIsGlowing = false; NOW could this be inferred by ticksGlowing > 0?
+	private boolean didSetup = false;
 	public String deathSource = null;
-	private int regenerationsLeft, ticksGlowing = 0;
+	private int regenerationsLeft;
 	
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType<?> type = new TypeFiery();
@@ -118,7 +118,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setByteArray("encoded_skin", ENCODED_SKIN);
 		nbt.setString("skinType", skinType.name());
 		//nbt.setBoolean("handsGlowing", handsGlowing);
-		nbt.setInteger("ticksGlowing", ticksGlowing);
+		//nbt.setInteger("ticksGlowing", ticksGlowing);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -138,9 +138,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			handsGlowing = nbt.getBoolean("handsGlowing");
 		}*/
 		
-		if (nbt.hasKey("ticksGlowing")) {
+		/*if (nbt.hasKey("ticksGlowing")) {
 			nbt.setInteger("ticksGlowing", ticksGlowing);
-		}
+		}*/
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
@@ -264,7 +264,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	
-	@Override
+	/*@Override
 	@Deprecated
 	public int getTicksGlowing() {
 		return ticksGlowing;
@@ -274,13 +274,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Deprecated
 	public void setTicksGlowing(int ticksGlowing) {
 		this.ticksGlowing = ticksGlowing;
-	}
+	}*/
 	
 	
 	
 	@Override
 	public boolean areHandsGlowing() {
-		return ticksGlowing > 0;
+		return stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
 		//return handsGlowing;
 	}
 	
@@ -330,15 +330,14 @@ public class CapabilityRegeneration implements IRegeneration {
 	 */
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
-		private final Map<Transition, Runnable> transitionRunnables;
-		private DebuggableScheduledAction nextTransition;
-		
+		private final Map<Transition, Runnable> transitionCallbacks;
+		private DebuggableScheduledAction nextTransition, handGlowTimer;
 		
 		private RegenerationStateManager() {
-			this.transitionRunnables = new HashMap<>();
-			transitionRunnables.put(Transition.ENTER_CRITICAL, this::enterCriticalPhase);
-			transitionRunnables.put(Transition.CRITICAL_DEATH, this::midSequenceKill);
-			transitionRunnables.put(Transition.FINISH_REGENERATION, this::finishRegeneration);
+			this.transitionCallbacks = new HashMap<>();
+			transitionCallbacks.put(Transition.ENTER_CRITICAL, this::enterCriticalPhase);
+			transitionCallbacks.put(Transition.CRITICAL_DEATH, this::midSequenceKill);
+			transitionCallbacks.put(Transition.FINISH_REGENERATION, this::finishRegeneration);
 			//FIXME 'corrupt' transition isn't handled properly, causing tests to fail. I assume it's just not implemented yet apart from the enum?
 		}
 		
@@ -346,12 +345,30 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleTransitionInTicks(Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting non-completed/cancelled transition");
-			nextTransition = new DebuggableScheduledAction(transition, player, transitionRunnables.get(transition), inTicks);
+			nextTransition = new DebuggableScheduledAction(transition, player, transitionCallbacks.get(transition), inTicks);
 		}
 		
 		private void scheduleTransitionInSeconds(Transition transition, long inSeconds) {
 			scheduleTransitionInTicks(transition, inSeconds * 20);
 		}
+		
+		
+		
+		@SuppressWarnings("deprecation")
+		private void scheduleNextHandGlow() {
+			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
+				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
+			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, 2400); //TODO make hand glow interval
+		}
+		
+		@SuppressWarnings("deprecation")
+		private void scheduleHandGlowTrigger() {
+			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
+				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
+			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, 2400); //TODO make hand glow interval
+		}
+		
+		
 		
 		@Override
 		public boolean onKilled() {
@@ -365,7 +382,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				state = RegenState.GRACE;
 				synchronise();
 				ActingForwarder.onEnterGrace(CapabilityRegeneration.this);
-				//NOW start glowing
+				scheduleHandGlowTrigger();
 				return true;
 				
 			} else if (state.isGraceful()) {
@@ -398,8 +415,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
 			if (getState().isGraceful() && areHandsGlowing()) {
-				ticksGlowing = 0;
-				//handsGlowing = false;
+				handGlowTimer.cancel();
+				scheduleNextHandGlow();
 			}
 		}
 		
@@ -409,7 +426,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state == RegenState.ALIVE)
 				throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
 			
-			/*if (state.isGraceful()) { //NOW this needs to be timer based
+			/*if (state.isGraceful()) { NOW remove this mess
 				if (isGlowing()) {
 					ticksGlowing++;
 				} else {
@@ -431,6 +448,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
+			//NOW check if states changing causes issues here
+			handGlowTimer.tick();
 		}
 		
 		private void triggerRegeneration() {
@@ -442,6 +461,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			PlayerUtil.sendMessageToAll(text);
 			
 			nextTransition.cancel(); // ... cancel any state shift we had planned
+			handGlowTimer.cancel();
 			scheduleTransitionInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
 			ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);
@@ -460,6 +480,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void midSequenceKill() {
 			state = RegenState.ALIVE;
 			nextTransition = null;
+			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1); // in case this method was called by critical death
 			
@@ -479,6 +500,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void finishRegeneration() {
 			state = RegenState.ALIVE;
 			nextTransition = null;
+			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
 			synchronise();
@@ -488,7 +510,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public Pair<Transition, Long> getScheduledEvent() {
-			return nextTransition == null ? null : Pair.of(nextTransition.action, nextTransition.getTicksLeft());
+			return nextTransition == null ? null : Pair.of(nextTransition.transition, nextTransition.getTicksLeft());
 		}
 		
 		@Override
@@ -496,6 +518,14 @@ public class CapabilityRegeneration implements IRegeneration {
 		/** @deprecated Debug purposes */
 		public void fastForward() {
 			while (!nextTransition.tick())
+				;
+		}
+		
+		@Override
+		@Deprecated
+		/** @deprecated Debug purposes */
+		public void fastForwardHandGlow() {
+			while (!handGlowTimer.tick())
 				;
 		}
 		
@@ -509,7 +539,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		public NBTTagCompound serializeNBT() {
 			NBTTagCompound nbt = new NBTTagCompound();
 			if (nextTransition != null) {
-				nbt.setString("transitionId", nextTransition.action.toString());
+				nbt.setString("transitionId", nextTransition.transition.toString());
 				nbt.setLong("transitionInTicks", nextTransition.getTicksLeft());
 			}
 			return nbt;

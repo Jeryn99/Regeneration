@@ -6,25 +6,25 @@ import me.fril.regeneration.util.ScheduledAction;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class DebuggableScheduledAction extends ScheduledAction {
-	public final Transition action;
+	public final Transition transition;
 	private final EntityPlayer player;
 	
-	public DebuggableScheduledAction(Transition action, EntityPlayer player, Runnable callback, long inTicks) {
+	public DebuggableScheduledAction(Transition transition, EntityPlayer player, Runnable callback, long inTicks) {
 		super(callback, inTicks);
-		this.action = action;
+		this.transition = transition;
 		this.player = player;
 		
-		RegenerationMod.DEBUGGER.getChannelFor(player).notifySchedule(action, inTicks);
+		RegenerationMod.DEBUGGER.getChannelFor(player).notifySchedule(transition, inTicks);
 	}
 	
 	@Override
 	public boolean tick() {
 		if (scheduledTick == -1)
-			RegenerationMod.DEBUGGER.getChannelFor(player).warn("Ticking finsished/canceled ScheduledAction (" + action + ")");
+			RegenerationMod.DEBUGGER.getChannelFor(player).warn("Ticking finsished/canceled ScheduledAction (" + transition + ")");
 		
 		boolean willExecute = currentTick == scheduledTick;
 		if (willExecute)
-			RegenerationMod.DEBUGGER.getChannelFor(player).notifyExecution(action, currentTick);
+			RegenerationMod.DEBUGGER.getChannelFor(player).notifyExecution(transition, currentTick);
 		
 		boolean executed = super.tick();
 		if (willExecute != executed)
@@ -35,7 +35,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 	
 	@Override
 	public void cancel() {
-		RegenerationMod.DEBUGGER.getChannelFor(player).notifyCancel(action, scheduledTick - currentTick);
+		RegenerationMod.DEBUGGER.getChannelFor(player).notifyCancel(transition, scheduledTick - currentTick);
 		super.cancel();
 	}
 	
@@ -44,6 +44,10 @@ public class DebuggableScheduledAction extends ScheduledAction {
 		if (scheduledTick == -1)
 			RegenerationMod.DEBUGGER.getChannelFor(player).warn("Querying progress of canceled/finished transition");
 		return super.getProgress();
+	}
+
+	public Transition getTransition() {
+		return transition;
 	}
 	
 }

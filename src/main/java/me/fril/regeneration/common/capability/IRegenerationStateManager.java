@@ -26,5 +26,7 @@ public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompou
 	
 	@Deprecated
 	void fastForward();
+	@Deprecated
+	void fastForwardHandGlow();
 	
 }

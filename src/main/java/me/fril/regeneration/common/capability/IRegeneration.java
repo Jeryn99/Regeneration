@@ -50,14 +50,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	SkinInfo.SkinType getSkinType();
 	void setSkinType(String skinType);
 	
-	/** Only for debug purposes! */ //TODO add to debugger
-	@Deprecated
-	int getTicksGlowing();
-	
-	/** Only for debug purposes! */
-	@Deprecated
-	void setTicksGlowing(int ticksGlowing);
-	
 	boolean areHandsGlowing();
 	//void setGlowing(boolean glowing);
 	
