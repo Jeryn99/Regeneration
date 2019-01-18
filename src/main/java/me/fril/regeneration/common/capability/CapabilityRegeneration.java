@@ -73,6 +73,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void tick() {
+		
+		
 		if (!didSetup && player.world.isRemote) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player));
 			didSetup = true;
@@ -86,25 +88,25 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		if (!player.world.isRemote) {
-			System.out.println(ticksGlowing);
 			if (state.isGraceful()) {
 				
-				if (ticksGlowing >= 2400) {
-					ticksGlowing = 0;
-					handsGlowing = false;
-					triggerRegeneration();
-				}
-				
-				if (handsGlowing) {
+				if (isGlowing()) {
 					ticksGlowing++;
 				} else {
 					ticksGlowing = 0;
 					if (player.ticksExisted % 6000 == 0) {
-						handsGlowing = true;
+						setGlowing(true);
 					}
 				}
+				
+				if (ticksGlowing >= 2400) {
+					ticksGlowing = 0;
+					setGlowing(false);
+					triggerRegeneration();
+				}
 			} else {
-				handsGlowing = false;
+				setGlowing(false);
+				ticksGlowing = 0;
 			}
 			
 		}
@@ -281,6 +283,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setGlowing(boolean glowing) {
 		handsGlowing = glowing;
+		synchronise();
 	}
 	
 	@Override

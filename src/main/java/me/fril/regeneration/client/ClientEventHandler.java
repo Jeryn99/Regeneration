@@ -57,9 +57,7 @@ public class ClientEventHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		float f = 0.2F;
-		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
-			return;
-		
+		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0) return;
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (!cap.isGlowing())
 			return;
