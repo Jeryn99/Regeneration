@@ -49,19 +49,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
 	
-	//TODO move the 'containskey' check in setSkinFromData
-	//TODO most of these can and should be final
-	public static File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
-	public static Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
+	public static final File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
+	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	private static String CURRENT_SKIN = "banana.png";
-	private static File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
-	private static File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
-	private static File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
+	
+	private static final File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
+	private static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
+	private static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
+	
 	private static FilenameFilter IMAGE_FILTER = (dir, name)->name.endsWith(".png") && !name.equals(CURRENT_SKIN);
-	private static Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class);
-	private static Random RAND = new Random();
-	private ModelBase STEVE_MODEL = new ModelPlayer(0.1F, false);
-	private ModelBase ALEX_MODEL = new ModelPlayer(0.1F, true);
+	private static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
+	private static final Random RAND = new Random();
+	
+	private static final ModelBase STEVE_MODEL = new ModelPlayer(0.1F, false);
+	private static final ModelBase ALEX_MODEL = new ModelPlayer(0.1F, true);
 	
 	public static void registerResources() {
 		
@@ -223,28 +224,26 @@ public class SkinChangingHandler {
 		
 		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap); //SUB where was this before?
-		} else if (cap.getState() == RegenState.ALIVE) {
+		} else if (cap.getState() == RegenState.ALIVE && !PLAYER_SKINS.containsKey(player.getUniqueID())) {
 			setSkinFromData(player, cap, e.getRenderer());
 		}
 	}
 	
 	private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap, RenderPlayer renderPlayer) {
-		if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
-			SkinInfo skinInfo = null;
-			try {
-				skinInfo = SkinChangingHandler.getSkin(player, cap);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			SkinChangingHandler.setPlayerTexture(player, skinInfo.getTextureLocation());
-			
-			if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
-				SkinChangingHandler.setPlayerModel(renderPlayer, ALEX_MODEL);
-			} else {
-				SkinChangingHandler.setPlayerModel(renderPlayer, STEVE_MODEL);
-			}
-			PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
+		SkinInfo skinInfo = null;
+		try {
+			skinInfo = SkinChangingHandler.getSkin(player, cap);
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
+		SkinChangingHandler.setPlayerTexture(player, skinInfo.getTextureLocation());
+		
+		if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
+			SkinChangingHandler.setPlayerModel(renderPlayer, ALEX_MODEL);
+		} else {
+			SkinChangingHandler.setPlayerModel(renderPlayer, STEVE_MODEL);
+		}
+		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 	}
 	
 	public enum EnumChoices {

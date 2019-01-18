@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

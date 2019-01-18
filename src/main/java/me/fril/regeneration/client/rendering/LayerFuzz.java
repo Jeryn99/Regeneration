@@ -24,10 +24,13 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 		this.playerRenderer = playerRenderer;
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		/*if (!CapabilityRegeneration.getForPlayer(entitylivingbaseIn).getState() == RegenState.CORRUPT)
 			return;*/
+		if (true)
+			return;
 		
 		mainModel = playerRenderer.getMainModel();
 		
