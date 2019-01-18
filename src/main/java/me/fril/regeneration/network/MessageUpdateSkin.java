@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -53,14 +54,16 @@ public class MessageUpdateSkin implements IMessage {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
 				EntityPlayerMP player = ctx.getServerHandler().player;
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-				cap.setEncodedSkin(message.encodedSkin);
-				if (message.isAlex) {
-					cap.setSkinType(SkinInfo.SkinType.ALEX.name());
-				} else {
-					cap.setSkinType(SkinInfo.SkinType.STEVE.name());
+				if (cap.getState().equals(RegenState.REGENERATING)) {
+					cap.setEncodedSkin(message.encodedSkin);
+					if (message.isAlex) {
+						cap.setSkinType(SkinInfo.SkinType.ALEX.name());
+					} else {
+						cap.setSkinType(SkinInfo.SkinType.STEVE.name());
+					}
+					cap.synchronise();
+					NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID().toString()));
 				}
-				cap.synchronise();
-				NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID().toString()));
 			});
 			return null;
 		}

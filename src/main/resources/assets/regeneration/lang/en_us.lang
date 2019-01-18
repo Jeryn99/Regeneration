@@ -67,6 +67,8 @@ config.regeneration.size_changing_max=Size Change Maximum
 config.regeneration.radiation_immunity=Timelords immune to Radiation
 config.regeneration.tardis_damage=Damage Tardis on Regeneration
 config.regeneration.regen_messages=Regeneraton death messages
+config.regeneration.choices=Preferred Model
+config,regeneration.changemyskin=I want my skin to change
 
 config.regeneration.category.tardis=Tardis Mod Intergration
 config.regeneration.category.lccore=Lucraft Core Intergration

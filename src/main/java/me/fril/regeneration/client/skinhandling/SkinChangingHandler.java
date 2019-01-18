@@ -48,8 +48,9 @@ public class SkinChangingHandler {
 	private static File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	private static FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(CURRENT_SKIN);
 	private static Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class);
-	private ModelBase steve = new ModelPlayer(0.1F, false);
-	private ModelBase alex = new ModelPlayer(0.1F, true);
+	private static Random RAND = new Random();
+	private ModelBase STEVE_MODEL = new ModelPlayer(0.1F, false);
+	private ModelBase ALEX_MODEL = new ModelPlayer(0.1F, true);
 	
 	public static void registerResources() {
 		
@@ -102,7 +103,9 @@ public class SkinChangingHandler {
 	public static void skinChangeRandom(Random random, EntityPlayer player) throws IOException {
 		if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID()) return;
 		if (RegenConfig.changeMySkin) {
-			boolean isAlex = random.nextBoolean();
+			
+			boolean isAlex = RegenConfig.preffedModel.isAlex();
+			
 			File skin = SkinChangingHandler.getRandomSkinFile(random, isAlex);
 			BufferedImage image = ImageIO.read(skin);
 			CURRENT_SKIN = skin.getName();
@@ -226,12 +229,31 @@ public class SkinChangingHandler {
 			SkinChangingHandler.setPlayerTexture(player, skinInfo.getTextureLocation());
 			
 			if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
-				SkinChangingHandler.setPlayerModel(renderPlayer, alex);
+				SkinChangingHandler.setPlayerModel(renderPlayer, ALEX_MODEL);
 			} else {
-				SkinChangingHandler.setPlayerModel(renderPlayer, steve);
+				SkinChangingHandler.setPlayerModel(renderPlayer, STEVE_MODEL);
 			}
 			PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 		}
 	}
+	
+	
+	public enum EnumChoices {
+		ALEX(true), STEVE(false), EITHER(true);
+		
+		private boolean isAlex;
+		
+		EnumChoices(boolean b) {
+			this.isAlex = b;
+		}
+		
+		public boolean isAlex() {
+			if (this == EITHER) {
+				return RAND.nextBoolean();
+			}
+			return isAlex;
+		}
+	}
+	
 	
 }

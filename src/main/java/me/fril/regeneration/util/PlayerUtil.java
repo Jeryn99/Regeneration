@@ -7,9 +7,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -57,16 +54,6 @@ public class PlayerUtil {
 		return false;
 	}
 	
-	
-	public static void damagePlayerArmor(EntityPlayerMP playerMP, int amount) {
-		for (EntityEquipmentSlot type : EntityEquipmentSlot.values()) {
-			if (!type.equals(EntityEquipmentSlot.MAINHAND) && !type.equals(EntityEquipmentSlot.OFFHAND) && playerMP.getItemStackFromSlot(type).getItem() instanceof ItemArmor) {
-				ItemStack stack = playerMP.getItemStackFromSlot(type);
-				if (stack.attemptDamageItem(amount, playerMP.world.rand, playerMP))
-					stack.setCount(0); //item broke
-			}
-		}
-	}
 	
 	public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {
 		if (player.getActivePotionEffects().stream().noneMatch(pe -> pe.getPotion() == potion)) {

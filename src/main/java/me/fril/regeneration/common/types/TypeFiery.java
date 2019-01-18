@@ -4,7 +4,6 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.rendering.TypeFieryRenderer;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.PlayerUtil;
-import me.fril.regeneration.util.RegenState;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,10 +38,6 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		
 		if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire)
 			player.world.setBlockToAir(player.getPosition());
-		
-		if (capability.getState() == RegenState.REGENERATING) {
-			PlayerUtil.damagePlayerArmor((EntityPlayerMP) player, player.world.rand.nextInt(2));
-		}
 		
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
 		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
