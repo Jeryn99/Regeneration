@@ -29,6 +29,7 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageUpdateSkin;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.ClientUtil;
+import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -48,6 +49,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
 	
+	//TODO move the 'containskey' check in setSkinFromData
+	//TODO most of these can and should be final
 	public static File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
 	public static Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	private static String CURRENT_SKIN = "banana.png";
@@ -217,15 +220,12 @@ public class SkinChangingHandler {
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
-		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
-		switch (data.getState()) {
-			case REGENERATING:
-				data.getType().getRenderer().onRenderRegeneratingPlayerPre(data.getType(), e, data);
-				break;
-			case ALIVE:
-				setSkinFromData(player, data, e.getRenderer());
-				break;
+		if (cap.getState() == RegenState.REGENERATING) {
+			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap); //SUB where was this before?
+		} else if (cap.getState() == RegenState.ALIVE) {
+			setSkinFromData(player, cap, e.getRenderer());
 		}
 	}
 	

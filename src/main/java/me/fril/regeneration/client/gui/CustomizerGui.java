@@ -61,6 +61,7 @@ public class CustomizerGui extends GuiContainer {
 		final int btnW = 60, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
 		
+		//SUB you added this but it isn't used
 		int length = Minecraft.getMinecraft().fontRenderer.getStringWidth(new TextComponentTranslation("regeneration.info.reset_skin").getUnformattedText() + 4);
 		
 		// WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS

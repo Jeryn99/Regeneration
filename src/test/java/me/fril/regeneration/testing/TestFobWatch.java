@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 
 public class TestFobWatch {
 	
+	@SuppressWarnings("unused")
 	private int currentStackDamage; // easier mocking
 	
 	private CapabilityRegeneration setup(boolean sneaking, boolean creative) throws ReflectiveOperationException {
@@ -55,7 +56,7 @@ public class TestFobWatch {
 		return cap;
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unused" })
 	private void test(CapabilityRegeneration cap, EnumActionResult result, /* String statusKey, */ int regenIn, int damageIn, int expRegenOut, int expDamageOut) throws AssertionError {
 		ItemStack stack = cap.getPlayer().getHeldItem(null);
 		stack.setItemDamage(damageIn);
@@ -71,6 +72,7 @@ public class TestFobWatch {
 	@Test
 	@Ignore
 	public void testReceive() throws ReflectiveOperationException {
+		@SuppressWarnings("unused")
 		CapabilityRegeneration cap = setup(false, false);
 		
 		// TESTING do the actual watch testing
@@ -99,6 +101,7 @@ public class TestFobWatch {
 	@Test
 	@Ignore
 	public void testTransfer() throws ReflectiveOperationException {
+		@SuppressWarnings("unused")
 		CapabilityRegeneration cap = setup(true, false);
 		
 		// TESTING do the actual watch testing
@@ -107,6 +110,7 @@ public class TestFobWatch {
 	@Test
 	@Ignore
 	public void testCreative() throws ReflectiveOperationException {
+		@SuppressWarnings("unused")
 		CapabilityRegeneration cap = setup(false, true);
 		
 		// TESTING do the actual watch testing

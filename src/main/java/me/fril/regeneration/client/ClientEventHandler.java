@@ -60,7 +60,7 @@ public class ClientEventHandler {
 		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
 			return;
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (!cap.isGlowing())
+		if (!cap.areHandsGlowing())
 			return;
 		
 		GlStateManager.pushMatrix();

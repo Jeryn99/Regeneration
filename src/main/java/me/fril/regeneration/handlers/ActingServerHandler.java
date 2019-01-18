@@ -86,7 +86,7 @@ class ActingServerHandler implements IActingHandler {
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
 		RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied health reduction");
 		player.setHealth(player.getMaxHealth());
-		cap.setGlowing(true);
+		//cap.setGlowing(true); NOW handle in state manager
 	}
 	
 	@Override
@@ -122,6 +122,7 @@ class ActingServerHandler implements IActingHandler {
 			player.setAir(300);
 		
 		cap.extractRegeneration(1);
+		//cap.setGlowing(true); NOW probably wrong
 	}
 	
 	@Override
@@ -130,6 +131,8 @@ class ActingServerHandler implements IActingHandler {
 		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
 		player.setHealth(player.getMaxHealth());
 		player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
+		
+		//cap.setGlowing(false); NOW make sure tick is set back to 0 in state manager
 	}
 	
 }

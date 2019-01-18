@@ -3,8 +3,6 @@ package me.fril.regeneration.client.rendering;
 import org.lwjgl.opengl.GL11;
 
 import me.fril.regeneration.client.rendering.model.ModelSkeleton;
-import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
@@ -28,8 +26,8 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 	
 	@Override
 	public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (!CapabilityRegeneration.getForPlayer(entitylivingbaseIn).getState().equals(RegenState.CORRUPT))
-			return;
+		/*if (!CapabilityRegeneration.getForPlayer(entitylivingbaseIn).getState() == RegenState.CORRUPT)
+			return;*/
 		
 		mainModel = playerRenderer.getMainModel();
 		
