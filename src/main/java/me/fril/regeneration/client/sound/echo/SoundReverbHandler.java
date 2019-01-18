@@ -1,10 +1,14 @@
 package me.fril.regeneration.client.sound.echo;
 
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.EFX10;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.openal.*;
-
 
 //CREDIT: https://raw.githubusercontent.com/Cryptic-Mushroom/The-Midnight/master/src/main/java/com/mushroom/midnight/client/SoundReverbHandler.java
 public class SoundReverbHandler {
@@ -78,7 +82,8 @@ public class SoundReverbHandler {
 	}
 	
 	private static boolean shouldEcho() {
-		if (MC.player == null) return false;
+		if (MC.player == null)
+			return false;
 		return CapabilityRegeneration.getForPlayer(MC.player).getState().name().contains("GRACE");
 	}
 }

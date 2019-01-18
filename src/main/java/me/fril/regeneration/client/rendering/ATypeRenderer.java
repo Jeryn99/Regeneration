@@ -14,8 +14,7 @@ public abstract class ATypeRenderer<T> {
 	
 	protected abstract void renderRegenerationLayer(T type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
 	
-	
-	//Generic casting convenience methods:
+	// Generic casting convenience methods:
 	
 	@SuppressWarnings("unchecked")
 	public final void onRenderRegeneratingPlayerPre(IRegenType<?> type, Pre event, IRegeneration capability) {

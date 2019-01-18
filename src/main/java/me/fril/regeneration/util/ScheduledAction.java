@@ -3,7 +3,7 @@ package me.fril.regeneration.util;
 public class ScheduledAction {
 	
 	private final Runnable callback;
-	//These are separate fields instead of a single countdown so we can have a progress indication
+	// These are separate fields instead of a single countdown so we can have a progress indication
 	protected long currentTick, scheduledTick;
 	
 	public ScheduledAction(Runnable callback, long inTicks) {

@@ -16,63 +16,51 @@ import net.minecraftforge.common.util.INBTSerializable;
 public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	EntityPlayer getPlayer();
+	int getRegenerationsLeft();
+	void triggerRegeneration();
 	
 	void tick();
-	
 	void synchronise();
 	
 	NBTTagCompound getStyle();
-	
 	void setStyle(NBTTagCompound nbt);
 	
 	Vec3d getPrimaryColor();
-	
 	Vec3d getSecondaryColor();
 	
-	int getRegenerationsLeft();
-	
-	/**
-	 * Only for debug purposes!
-	 */
+	/** Only for debug purposes! */
 	@Deprecated
 	void setRegenerationsLeft(int amount);
 	
-	/**
-	 * Returns if the player is currently <i>able to</i> regenerate
-	 */
+	/** Returns if the player is currently <i>able to</i> regenerate */
 	default boolean canRegenerate() {
 		return (RegenConfig.infiniteRegeneration || getRegenerationsLeft() > 0) && getPlayer().posY > 0;
 	}
 	
 	void receiveRegenerations(int amount);
-	
 	void extractRegeneration(int amount);
 	
-	void triggerRegeneration();
-	
+	RegenState getState();
+	IRegenType<?> getType();
 	IRegenerationStateManager getStateManager();
 	
-	RegenState getState();
-	
-	IRegenType<?> getType();
-	
 	byte[] getEncodedSkin();
-	
 	void setEncodedSkin(byte[] string);
 	
 	SkinInfo.SkinType getSkinType();
-	
 	void setSkinType(String skinType);
 	
+	/** Only for debug purposes! */ //TODO add to debugger
+	@Deprecated
 	int getTicksGlowing();
 	
+	/** Only for debug purposes! */
+	@Deprecated
 	void setTicksGlowing(int ticksGlowing);
 	
-	boolean isGlowing();
+	boolean areHandsGlowing();
+	//void setGlowing(boolean glowing);
 	
-	void setGlowing(boolean glowing);
-	
-	String getSource();
-	
-	void setSound(String source);
+	String getDeathSource();
+	void setDeathSource(String source);
 }

@@ -1,5 +1,10 @@
 package me.fril.regeneration.util;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+
 import me.fril.regeneration.client.rendering.ModelArmorOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -23,10 +28,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import org.lwjgl.opengl.GL11;
-
-import java.lang.reflect.Field;
-import java.util.List;
 
 /**
  * Created by Sub
@@ -84,7 +85,7 @@ public class RenderUtil {
 				GlStateManager.color((float) color.x, (float) color.y, (float) color.z, 1.0F / layers / 2);
 				GlStateManager.depthMask(false);
 			} else {
-				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha); //SUB does this actually do anything? We're always passing in an alpha of 0...
+				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha); // SUB does this actually do anything? We're always passing in an alpha of 0...
 				GlStateManager.depthMask(true);
 			}
 			double size = thickness + (layer < layers ? layer * (1.25D / layers) : 0.0D);
@@ -162,7 +163,7 @@ public class RenderUtil {
 	public static void setupArmorModelOverride(RenderPlayer renderPlayer) {
 		List<LayerRenderer<EntityLivingBase>> layers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, "field_177097_h");
 		if (layers != null) {
-			LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer -> layer instanceof LayerBipedArmor).findFirst().orElse(null);
+			LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer->layer instanceof LayerBipedArmor).findFirst().orElse(null);
 			if (armorLayer != null) {
 				Field mainModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177186_d"));
 				Field legModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177189_c"));

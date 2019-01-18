@@ -1,4 +1,4 @@
-package me.fril.regeneration.api;
+package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.common.capability.IRegeneration;
 

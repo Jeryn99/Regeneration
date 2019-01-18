@@ -18,7 +18,7 @@ public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable
 		try {
 			Class<?> nbtClass = Class.forName(nbt.getString("name"));
 			
-			if (currentType == null || currentType.getClass() != nbtClass) { //no current type OR type has changed
+			if (currentType == null || currentType.getClass() != nbtClass) { // no current type OR type has changed
 				return (IRegenType<?>) nbtClass.newInstance();
 			} else {
 				currentType.deserializeNBT(nbt);

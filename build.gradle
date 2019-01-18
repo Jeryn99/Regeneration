@@ -14,6 +14,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+//TODO add classifier for builds not on the master branch
 version = project.mod_version
 group = project.maven_group
 archivesBaseName = "${project.jar_name}-${minecraft_version}"

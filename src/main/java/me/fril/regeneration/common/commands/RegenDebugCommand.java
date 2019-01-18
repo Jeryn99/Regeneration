@@ -1,5 +1,10 @@
 package me.fril.regeneration.common.commands;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -10,10 +15,6 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
 
 public class RegenDebugCommand extends CommandBase {
 	
@@ -31,9 +32,10 @@ public class RegenDebugCommand extends CommandBase {
 		switch (args[0]) {
 			case "fast-forward-glow":
 				if (cap.getState().isGraceful()) {
-					cap.setGlowing(true);
-					cap.setTicksGlowing(2300);
-				} else throw new CommandException("You must be in a Grace period for this.");
+					//cap.setGlowing(true);
+					cap.setTicksGlowing(2300); //FIXME magic number
+				} else
+					throw new CommandException("You must be in a Grace period for this.");
 				break;
 			case "fastforward":
 				cap.getStateManager().fastForward();

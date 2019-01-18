@@ -1,8 +1,9 @@
 package me.fril.regeneration.handlers;
 
+import java.util.UUID;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.ExplosionUtil;
 import me.fril.regeneration.util.PlayerUtil;
@@ -12,8 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
-
-import java.util.UUID;
 
 class ActingServerHandler implements IActingHandler {
 	
@@ -28,7 +27,6 @@ class ActingServerHandler implements IActingHandler {
 	public ActingServerHandler() {
 	}
 	
-	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
@@ -36,7 +34,7 @@ class ActingServerHandler implements IActingHandler {
 		
 		switch (cap.getState()) {
 			case REGENERATING:
-				float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); //compensating for hard difficulty
+				float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
 				player.heal(stateProgress * 0.3F * dm);
 				player.setArrowCountInEntity(0);
 				ExplosionUtil.regenerationExplosion(player);
@@ -78,27 +76,24 @@ class ActingServerHandler implements IActingHandler {
 		}
 	}
 	
-	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		ExplosionUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback / 2, RegenConfig.regenerativeKnockbackRange);
 		
-		//Reduce number of hearts, but compensate with absorption
+		// Reduce number of hearts, but compensate with absorption
 		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
 		RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied health reduction");
 		player.setHealth(player.getMaxHealth());
-		cap.setGlowing(true);
+		//cap.setGlowing(true); NOW handle in state manager
 	}
-	
 	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
 		cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
 		RegenerationMod.DEBUGGER.getChannelFor(cap.getPlayer()).out("Applied speed reduction");
 	}
-	
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
@@ -127,8 +122,8 @@ class ActingServerHandler implements IActingHandler {
 			player.setAir(300);
 		
 		cap.extractRegeneration(1);
+		//cap.setGlowing(true); NOW probably wrong
 	}
-	
 	
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
@@ -136,6 +131,8 @@ class ActingServerHandler implements IActingHandler {
 		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
 		player.setHealth(player.getMaxHealth());
 		player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
+		
+		//cap.setGlowing(false); NOW make sure tick is set back to 0 in state manager
 	}
 	
 }

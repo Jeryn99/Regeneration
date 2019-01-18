@@ -71,7 +71,6 @@ public abstract class AbstractTab extends GuiButton {
 		return inWindow;
 	}
 	
-	
 	public abstract void onTabClicked();
 	
 	public abstract boolean shouldAddToList();

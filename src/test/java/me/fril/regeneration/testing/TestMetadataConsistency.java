@@ -54,7 +54,7 @@ public class TestMetadataConsistency {
 		Mod mod = annotations[0];
 		String forgeBuildDep = gradleProperties.getProperty("forge_version").replace(".", "\\.");
 		
-		assertTrue(mod.dependencies().matches(".*required:forge@\\["+forgeBuildDep+",\\);.*"));
+		assertTrue(mod.dependencies().matches(".*required:forge@\\[" + forgeBuildDep + ",\\);.*"));
 	}
 	
 	/**
@@ -74,10 +74,10 @@ public class TestMetadataConsistency {
 		JsonObject rootObj = element.getAsJsonObject();
 		
 		assertTrue("Invalid update.json", rootObj.has("homepage") && rootObj.has("promos"));
-		assertTrue("Missing versions for current mc version "+mcVersion, rootObj.has(mcVersion));
+		assertTrue("Missing versions for current mc version " + mcVersion, rootObj.has(mcVersion));
 		
 		JsonObject versionObj = rootObj.getAsJsonObject(mcVersion);
-		assertTrue("Missing version entry for current version "+mcVersion+"-"+RegenerationMod.VERSION, versionObj.has(RegenerationMod.VERSION));
+		assertTrue("Missing version entry for current version " + mcVersion + "-" + RegenerationMod.VERSION, versionObj.has(RegenerationMod.VERSION));
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public class TestMetadataConsistency {
 	public void consistentModinfo() throws IOException {
 		JsonParser parser = new JsonParser();
 		JsonElement mcmmodRoot = parser.parse(new FileReader("src/main/resources/mcmod.info")),
-		            updateRoot = parser.parse(new FileReader("update.json"));
+				updateRoot = parser.parse(new FileReader("update.json"));
 		
 		JsonArray mcmodRootArr = mcmmodRoot.getAsJsonArray();
 		JsonObject mcmodRootObj = mcmodRootArr.get(0).getAsJsonObject();

@@ -1,5 +1,7 @@
 package me.fril.regeneration.network;
 
+import java.util.UUID;
+
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.client.Minecraft;
@@ -9,8 +11,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.util.UUID;
 
 /**
  * Created by Sub
@@ -37,7 +37,8 @@ public class MessageSynchroniseRegeneration implements IMessage {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		if (Minecraft.getMinecraft().player == null) return;
+		if (Minecraft.getMinecraft().player == null)
+			return;
 		player = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
 		data = ByteBufUtils.readTag(buf);
 	}
@@ -48,7 +49,7 @@ public class MessageSynchroniseRegeneration implements IMessage {
 		public IMessage onMessage(MessageSynchroniseRegeneration message, MessageContext ctx) {
 			EntityPlayer player = message.player;
 			if (player != null)
-				Minecraft.getMinecraft().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
+				Minecraft.getMinecraft().addScheduledTask(()->CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
 			return null;
 		}
 	}

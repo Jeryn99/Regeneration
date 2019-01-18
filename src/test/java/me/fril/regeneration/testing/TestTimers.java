@@ -23,15 +23,15 @@ public class TestTimers {
 		ScheduledAction timer = new ScheduledAction(this::runnableMethod, 10);
 		
 		for (int i = 0; i < 10; i++) {
-			assertTrue("Ticksleft is not correct (at tick "+i+", ticksleft="+timer.getTicksLeft()+")", timer.getTicksLeft() == 10-i);
-			assertFalse("Executed too soon ("+i+")", timer.tick());
+			assertTrue("Ticksleft is not correct (at tick " + i + ", ticksleft=" + timer.getTicksLeft() + ")", timer.getTicksLeft() == 10 - i);
+			assertFalse("Executed too soon (" + i + ")", timer.tick());
 		}
 		
 		assertTrue("There's still a tick left", timer.getTicksLeft() == 0);
 		assertFalse("Flag set without execution?", executed);
 		assertTrue("Timer didn't tick", timer.tick());
 		assertTrue("Never executed method", executed);
-		assertTrue("Timer didn't reset properly"+timer.getTicksLeft(), timer.getTicksLeft() == -1);
+		assertTrue("Timer didn't reset properly" + timer.getTicksLeft(), timer.getTicksLeft() == -1);
 	}
 	
 	/*
@@ -42,7 +42,7 @@ public class TestTimers {
 		ScheduledAction timer = new ScheduledAction(this::runnableMethod, 10);
 		
 		for (int i = 0; i < 5; i++) {
-			assertFalse("Executed too soon ("+i+")", timer.tick());
+			assertFalse("Executed too soon (" + i + ")", timer.tick());
 		}
 		
 		timer.cancel();
@@ -50,7 +50,6 @@ public class TestTimers {
 		assertFalse("Executed flag set without execution?", executed);
 		assertFalse("Timer ticked when canceled", timer.tick());
 	}
-	
 	
 	private void runnableMethod() {
 		executed = true;

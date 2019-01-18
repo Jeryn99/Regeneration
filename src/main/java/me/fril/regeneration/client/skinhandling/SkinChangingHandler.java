@@ -1,12 +1,35 @@
 package me.fril.regeneration.client.skinhandling;
 
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
+
+import javax.imageio.ImageIO;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageUpdateSkin;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.ClientUtil;
+import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -22,31 +45,19 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
 	
+	//TODO move the 'containskey' check in setSkinFromData
+	//TODO most of these can and should be final
 	public static File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
 	public static Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	private static String CURRENT_SKIN = "banana.png";
 	private static File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
 	private static File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	private static File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-	private static FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(CURRENT_SKIN);
+	private static FilenameFilter IMAGE_FILTER = (dir, name)->name.endsWith(".png") && !name.equals(CURRENT_SKIN);
 	private static Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class);
 	private static Random RAND = new Random();
 	private ModelBase STEVE_MODEL = new ModelPlayer(0.1F, false);
@@ -65,7 +76,6 @@ public class SkinChangingHandler {
 		SKIN_DIRECTORY_ALEX.mkdirs();
 		SKIN_DIRECTORY_STEVE.mkdirs();
 		
-		
 		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.listFiles()).length < 1 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.listFiles()).length < 1) {
 			try {
 				createDefaultImages();
@@ -75,14 +85,14 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	//Convert buffered image to Pixel data
+	// Convert buffered image to Pixel data
 	private static byte[] encodeToPixelData(BufferedImage bufferedImage) {
 		WritableRaster raster = bufferedImage.getRaster();
 		DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
 		return buffer.getData();
 	}
 	
-	//Convert Pixel data to BufferedImage
+	// Convert Pixel data to BufferedImage
 	private static BufferedImage toImage(EntityPlayer player, byte[] imageData) throws IOException {
 		BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_4BYTE_ABGR);
 		img.setData(Raster.createRaster(img.getSampleModel(), new DataBufferByte(imageData, imageData.length), new Point()));
@@ -101,15 +111,16 @@ public class SkinChangingHandler {
 	}
 	
 	public static void skinChangeRandom(Random random, EntityPlayer player) throws IOException {
-		if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID()) return;
+		if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID())
+			return;
 		if (RegenConfig.changeMySkin) {
 			
-			boolean isAlex = RegenConfig.preffedModel.isAlex();
+			boolean isAlex = RegenConfig.prefferedModel.isAlex();
 			
 			File skin = SkinChangingHandler.getRandomSkinFile(random, isAlex);
 			BufferedImage image = ImageIO.read(skin);
 			CURRENT_SKIN = skin.getName();
-			IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(CURRENT_SKIN);
+			IMAGE_FILTER = (dir, name)->name.endsWith(".png") && !name.equals(CURRENT_SKIN);
 			byte[] pixelData = SkinChangingHandler.encodeToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
 			if (pixelData.length >= 32767) {
@@ -208,18 +219,14 @@ public class SkinChangingHandler {
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
-		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
-		switch (data.getState()) {
-			case REGENERATING:
-				data.getType().getRenderer().onRenderRegeneratingPlayerPre(data.getType(), e, data);
-				break;
-			case ALIVE:
-				setSkinFromData(player, data, e.getRenderer());
-				break;
+		if (cap.getState() == RegenState.REGENERATING) {
+			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap); //SUB where was this before?
+		} else if (cap.getState() == RegenState.ALIVE) {
+			setSkinFromData(player, cap, e.getRenderer());
 		}
 	}
-	
 	
 	private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap, RenderPlayer renderPlayer) {
 		if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
@@ -240,7 +247,6 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	
 	public enum EnumChoices {
 		ALEX(true), STEVE(false), EITHER(true);
 		
@@ -257,6 +263,5 @@ public class SkinChangingHandler {
 			return isAlex;
 		}
 	}
-	
 	
 }

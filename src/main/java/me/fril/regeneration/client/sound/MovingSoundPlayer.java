@@ -1,11 +1,11 @@
 package me.fril.regeneration.client.sound;
 
+import java.util.function.Supplier;
+
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-
-import java.util.function.Supplier;
 
 /**
  * Created by Sub
@@ -24,7 +24,7 @@ public class MovingSoundPlayer extends MovingSound {
 		super.repeat = repeat;
 	}
 	
-	//FIXME Sometimes ConcurrentModificationException's in subtitle renderer, probably due to a race condition because we're modifying it here and in ConditionalSound
+	// FIXME Sometimes ConcurrentModificationException's in subtitle renderer, probably due to a race condition because we're modifying it here and in ConditionalSound
 	@Override
 	public void update() {
 		super.xPosF = (float) player.posX;

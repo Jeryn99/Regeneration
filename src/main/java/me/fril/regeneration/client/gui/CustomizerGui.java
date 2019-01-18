@@ -1,5 +1,11 @@
 package me.fril.regeneration.client.gui;
 
+import java.awt.Color;
+import java.awt.Desktop;
+import java.io.IOException;
+
+import javax.annotation.Nullable;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
@@ -19,10 +25,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
-
-import javax.annotation.Nullable;
-import java.awt.*;
-import java.io.IOException;
 
 public class CustomizerGui extends GuiContainer {
 	public static final int ID = 0;
@@ -59,9 +61,10 @@ public class CustomizerGui extends GuiContainer {
 		final int btnW = 60, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
 		
+		//SUB you added this but it isn't used
 		int length = Minecraft.getMinecraft().fontRenderer.getStringWidth(new TextComponentTranslation("regeneration.info.reset_skin").getUnformattedText() + 4);
 		
-		//WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
+		// WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
 		btnReset = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.info.undo").getFormattedText());
 		btnDefault = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.info.default").getFormattedText());
 		btnResetSkin = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.reset_skin").getFormattedText());
@@ -90,7 +93,6 @@ public class CustomizerGui extends GuiContainer {
 		buttonList.add(slideSecondaryBlue);
 		
 	}
-	
 	
 	private void onChangeSliderValue(@Nullable GuiSlider slider) {
 		btnReset.enabled = true;
@@ -156,7 +158,6 @@ public class CustomizerGui extends GuiContainer {
 		RenderUtil.drawRect(cx + 95, cy + 44, cx + 166, cy + 61, 0.1F, 0.1F, 0.1F, 1);
 		RenderUtil.drawRect(cx + 96, cy + 45, cx + 165, cy + 60, (float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue(), 1);
 		
-		
 		Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue()),
 				secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue());
 		
@@ -169,7 +170,7 @@ public class CustomizerGui extends GuiContainer {
 		fontRenderer.drawString(str, cx + 131 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(secondaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
 		
 		if (RegenConfig.infiniteRegeneration)
-			str = new TextComponentTranslation("regeneration.messages.infinite_regenerations").getFormattedText(); //TODO this should be optimized
+			str = new TextComponentTranslation("regeneration.messages.infinite_regenerations").getFormattedText(); // TODO this should be optimized
 		else
 			str = new TextComponentTranslation("regeneration.messages.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft();
 		

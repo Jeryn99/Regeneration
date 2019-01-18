@@ -26,6 +26,8 @@ public class RegenConfig {
 	@Config.Name("Tardis Mod")
 	public static final TardisMod tardisMod = new TardisMod();
 	
+	
+	
 	@Config.LangKey("config.regeneration.max_regens")
 	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
 	@Config.RequiresMcRestart
@@ -84,7 +86,7 @@ public class RegenConfig {
 	
 	@Config.LangKey("config.regeneration.lose_regens_on_death")
 	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration")
-	public static boolean loseRegensOnDeath = true; //SUB unimplemented
+	public static boolean loseRegensOnDeath = true; // SUB unimplemented
 	
 	@Config.LangKey("config.regeneration.regeneration_knocksback_players")
 	@Config.Comment("Players can be knocked back when too close to a regeneration")
@@ -106,8 +108,9 @@ public class RegenConfig {
 	@Config.Comment("Sends a message to chat to say that a player is regenerating, and the reason for it")
 	public static boolean sendRegenDeathMessages = true;
 	
+	
 	@Config.Comment("The URL skins are downloaded from when you reset back to Mojangs skin")
-	//TODO Actually use mojang instead
+	// TODO Actually use mojang instead
 	public static String downloadUrl = "https://crafatar.com/skins/%s";
 	
 	@Config.LangKey("config,regeneration.changemyskin")
@@ -116,7 +119,10 @@ public class RegenConfig {
 	
 	@Config.LangKey("config.regeneration.choices")
 	@Config.Comment("ALEX = 'Give me Alex Skins only', STEVE = 'Give me Steve Skins only', EITHER = 'Give me either!!'")
-	public static SkinChangingHandler.EnumChoices preffedModel = SkinChangingHandler.EnumChoices.EITHER;
+	public static SkinChangingHandler.EnumChoices prefferedModel = SkinChangingHandler.EnumChoices.EITHER;
+	
+	
+	
 	
 	public static class Loot {
 		

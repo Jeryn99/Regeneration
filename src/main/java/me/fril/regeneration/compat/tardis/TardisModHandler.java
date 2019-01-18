@@ -1,9 +1,11 @@
 package me.fril.regeneration.compat.tardis;
 
+import java.util.Random;
+
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
+import me.fril.regeneration.handlers.IActingHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
@@ -14,8 +16,6 @@ import net.tardis.mod.common.sounds.TSounds;
 import net.tardis.mod.common.systems.SystemDimension;
 import net.tardis.mod.common.systems.TardisSystems;
 import net.tardis.mod.common.tileentity.TileEntityTardis;
-
-import java.util.Random;
 
 public class TardisModHandler implements IActingHandler {
 	
@@ -56,7 +56,6 @@ public class TardisModHandler implements IActingHandler {
 		}
 	}
 	
-	
 	private void playBells(IRegeneration cap, boolean force) {
 		if (cap.getPlayer().ticksExisted % 1200 == 0 && cap.getPlayer().world.provider instanceof WorldProviderTardis || force) {
 			cap.getPlayer().world.playSound(null, cap.getPlayer().getPosition(), TSounds.cloister_bell, SoundCategory.BLOCKS, 1, 1);
@@ -64,7 +63,8 @@ public class TardisModHandler implements IActingHandler {
 	}
 	
 	private void damageTardisInRange(EntityPlayer player) {
-		if (!RegenConfig.tardisMod.damageTardis) return;
+		if (!RegenConfig.tardisMod.damageTardis)
+			return;
 		for (TileEntity te : player.world.loadedTileEntityList) {
 			if (!(te instanceof TileEntityTardis) || player.getDistanceSq(te.getPos()) > 10)
 				continue;
@@ -95,6 +95,5 @@ public class TardisModHandler implements IActingHandler {
 			}
 		}
 	}
-	
 	
 }

@@ -1,16 +1,25 @@
 package me.fril.regeneration.client.sound.echo;
 
-import me.fril.regeneration.RegenerationMod;
-import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
-
-import javax.annotation.Nullable;
 import java.util.ListIterator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import javax.annotation.Nullable;
+
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
+
+import me.fril.regeneration.RegenerationMod;
+import net.minecraft.launchwrapper.IClassTransformer;
 
 //CREDIT https://raw.githubusercontent.com/Cryptic-Mushroom/The-Midnight/13ffab9ab0d78b0d030c2b3b55252e0e8fd2864e/src/main/java/com/mushroom/midnight/core/transformer/MidnightClassTransformer.java
 public class RegenClassTransformer implements IClassTransformer, Opcodes {
@@ -31,7 +40,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 	private boolean transformSoundSource(ClassNode node) {
 		for (MethodNode method : node.methods) {
 			if (method.name.equals("play")) {
-				this.insertBefore(method.instructions, this.invoke(SOURCE_LWJGL_NAME, "checkPitch"::equals), () -> {
+				this.insertBefore(method.instructions, this.invoke(SOURCE_LWJGL_NAME, "checkPitch"::equals), ()-> {
 					InsnList instructions = new InsnList();
 					instructions.add(new VarInsnNode(ALOAD, 0));
 					instructions.add(new FieldInsnNode(GETFIELD, SOURCE_LWJGL_NAME, "channelOpenAL", "L" + CHANNEL_LWJGL_NAME + ";"));
@@ -86,6 +95,6 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 	}
 	
 	private Predicate<AbstractInsnNode> invoke(String owner, Predicate<String> name) {
-		return n -> n instanceof MethodInsnNode && ((MethodInsnNode) n).owner.equals(owner) && name.test(((MethodInsnNode) n).name);
+		return n->n instanceof MethodInsnNode && ((MethodInsnNode) n).owner.equals(owner) && name.test(((MethodInsnNode) n).name);
 	}
 }

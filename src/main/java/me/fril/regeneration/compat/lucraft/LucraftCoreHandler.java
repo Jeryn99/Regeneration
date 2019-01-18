@@ -1,19 +1,19 @@
 package me.fril.regeneration.compat.lucraft;
 
+import java.util.Random;
+
 import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.api.IActingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.handlers.IActingHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.Random;
 
 public class LucraftCoreHandler implements IActingHandler {
 	
@@ -30,17 +30,17 @@ public class LucraftCoreHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
-	
+		
 	}
 	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
-	
+		
 	}
 	
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
-	
+		
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class LucraftCoreHandler implements IActingHandler {
 	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
-	
+		
 	}
 	
 	@SubscribeEvent

@@ -1,6 +1,5 @@
 package me.fril.regeneration.network;
 
-
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -51,7 +50,7 @@ public class MessageUpdateSkin implements IMessage {
 	public static class Handler implements IMessageHandler<MessageUpdateSkin, IMessage> {
 		@Override
 		public IMessage onMessage(MessageUpdateSkin message, MessageContext ctx) {
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
+			ctx.getServerHandler().player.getServerWorld().addScheduledTask(()-> {
 				EntityPlayerMP player = ctx.getServerHandler().player;
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 					cap.setEncodedSkin(message.encodedSkin);
@@ -67,4 +66,3 @@ public class MessageUpdateSkin implements IMessage {
 		}
 	}
 }
-
