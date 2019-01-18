@@ -112,7 +112,11 @@ public class SkinChangingHandler {
 			IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(CURRENT_SKIN);
 			byte[] pixelData = SkinChangingHandler.encodeToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
-			NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+			if (pixelData.length >= 32767) {
+				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], isAlex));
+			} else {
+				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+			}
 		} else {
 			ClientUtil.sendResetPacket();
 		}

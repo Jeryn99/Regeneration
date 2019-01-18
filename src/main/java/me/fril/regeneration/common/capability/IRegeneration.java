@@ -71,4 +71,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	boolean isGlowing();
 	
 	void setGlowing(boolean glowing);
+	
+	String getSource();
+	
+	void setSound(String source);
 }

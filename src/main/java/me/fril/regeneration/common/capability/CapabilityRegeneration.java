@@ -19,7 +19,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -40,6 +42,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
+	public String deathSource = "";
 	private byte[] ENCODED_SKIN = new byte[0];
 	private int regenerationsLeft;
 	private RegenState state = RegenState.ALIVE;
@@ -105,7 +108,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					triggerRegeneration();
 				}
 			} else {
-				setGlowing(false);
+				handsGlowing = false;
 				ticksGlowing = 0;
 			}
 			
@@ -287,6 +290,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
+	public String getSource() {
+		return deathSource;
+	}
+	
+	@Override
+	public void setSound(String source) {
+		deathSource = source;
+	}
+	
+	@Override
 	public IRegenerationStateManager getStateManager() {
 		return stateManager;
 	}
@@ -396,7 +409,9 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void triggerRegeneration() {
 			//We're starting a regeneration!
 			state = RegenState.REGENERATING;
-			PlayerUtil.sendMessageToAll(new TextComponentTranslation("message.regeneration.isregenerating", player.getName()));
+			TextComponentTranslation text = new TextComponentTranslation("message.regeneration.isregenerating", player.getName());
+			text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(getSource())));
+			PlayerUtil.sendMessageToAll(text);
 			nextTransition.cancel(); //... cancel any state shift we had planned
 			scheduleTransitionInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
