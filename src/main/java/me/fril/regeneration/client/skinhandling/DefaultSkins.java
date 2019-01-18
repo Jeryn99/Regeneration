@@ -1,7 +1,7 @@
 package me.fril.regeneration.client.skinhandling;
 
 public enum DefaultSkins {
-	SIXTH(true, "https://github.com/Suffril/Regeneration/blob/skins/skins/alex/six_doctor.png?raw=true"),
+	SIXTH(true, "https://github.com/Suffril/Regeneration/blob/skins/alex/six_doctor.png?raw=true"),
 	ELEVENTH(true, "https://github.com/Suffril/Regeneration/blob/skins/alex/eleventh_doctor.png?raw=true"),
 	GORILLAZ(true, "https://github.com/Suffril/Regeneration/blob/skins/alex/gorillaz.png?raw=true"),
 	JERRY(false, "https://github.com/Suffril/Regeneration/blob/skins/steve/jerry.png?raw=true"),
@@ -12,7 +12,7 @@ public enum DefaultSkins {
 	MARTY(false, "https://github.com/Suffril/Regeneration/blob/skins/steve/marty.png?raw=true"),
 	THATGUY(false, "https://github.com/Suffril/Regeneration/blob/skins/steve/thatguy.png?raw=true"),
 	ANCIENT_EMO(false, "https://github.com/Suffril/Regeneration/blob/skins/steve/ancient_emo.png?raw=true"),
-	HEROBRINE(false, "https://github.com/Suffril/Regeneration/blob/skins/skins/steve/herobrine.png?raw=true");
+	HEROBRINE(false, "https://github.com/Suffril/Regeneration/blob/skins/steve/herobrine.png?raw=true");
 	
 	private final String url;
 	private final boolean alexDir;
