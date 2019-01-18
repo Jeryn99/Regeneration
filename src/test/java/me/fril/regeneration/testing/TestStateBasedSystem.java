@@ -36,7 +36,7 @@ public class TestStateBasedSystem {
 		con.setAccessible(true);
 		RegenerationStateManager stateManager = con.newInstance(cap);
 		
-		Field field = stateManager.getClass().getDeclaredField("transitionRunnables");
+		Field field = stateManager.getClass().getDeclaredField("transitionCallbacks");
 		field.setAccessible(true);
 		
 		Map<Transition, Runnable> transitionRunnables = (Map<Transition, Runnable>) field.get(stateManager);
@@ -44,12 +44,13 @@ public class TestStateBasedSystem {
 	}
 	
 	/**
-	 * All states should have a corresponding transition, except for <b>ALIVE</b> (hence the <code>-1</code>).
+	 * All states should have a corresponding transition, except for <b>ALIVE</b>, hence the -1.
+	 * <b>HAND_GLOW_START</b> and <b>HAND_GLOW_TRIGGER</b> don't have corresponding states, hence the -2.
 	 * This <i>may</i> change in the future, but that's probably a red flag, because the system assumes this paradigm in multiple places.
 	 */
 	@Test
 	public void transitionStateCountMatch() {
-		assertTrue("Not all states have a transition, or vice versa", RegenState.values().length - 1 == Transition.values().length);
+		assertTrue("Not all states have a transition, or vice versa", RegenState.values().length - 1 == Transition.values().length - 2);
 	}
 	
 	// TESTING could probably add some tests that actually verify the correctness of transition callbacks

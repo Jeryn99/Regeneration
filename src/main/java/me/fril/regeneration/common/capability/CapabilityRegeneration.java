@@ -326,6 +326,10 @@ public class CapabilityRegeneration implements IRegeneration {
 			transitionCallbacks.put(Transition.ENTER_CRITICAL, this::enterCriticalPhase);
 			transitionCallbacks.put(Transition.CRITICAL_DEATH, this::midSequenceKill);
 			transitionCallbacks.put(Transition.FINISH_REGENERATION, this::finishRegeneration);
+			
+			Runnable err = ()->{ throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions"); };
+			transitionCallbacks.put(Transition.HAND_GLOW_START, err);
+			transitionCallbacks.put(Transition.HAND_GLOW_TRIGGER, err);
 			//FIXME 'corrupt' transition isn't handled properly, causing tests to fail. I assume it's just not implemented yet apart from the enum?
 		}
 		
@@ -333,6 +337,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleTransitionInTicks(Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting non-completed/cancelled transition");
+			
+			if (transition == Transition.HAND_GLOW_START || transition == Transition.HAND_GLOW_TRIGGER)
+				throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
+			
 			nextTransition = new DebuggableScheduledAction(transition, player, transitionCallbacks.get(transition), inTicks);
 		}
 		
