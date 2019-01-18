@@ -61,7 +61,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	}
 	
 	@Override
-	public int getAnimationLength() { // TODO shorten to be in line with the music (don't forget to update 'p' and 'r'!)
+	public int getAnimationLength() { // TODO shorten to be in line with the music (don't forget to update 'p' and 'r'!) (CHECK is this still an issue?)
 		return 14 * 20; // 14 seconds of 20 ticks
 	}
 	

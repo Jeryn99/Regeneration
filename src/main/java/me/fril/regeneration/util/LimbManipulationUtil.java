@@ -79,7 +79,7 @@ public class LimbManipulationUtil {
 		}
 		
 		try {
-			for (LayerRenderer layer : layerList) {
+			for (LayerRenderer<?> layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
 					
