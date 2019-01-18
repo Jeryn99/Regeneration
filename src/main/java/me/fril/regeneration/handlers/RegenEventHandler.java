@@ -23,6 +23,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -90,6 +91,14 @@ public class RegenEventHandler {
 	
 	
 	//============ USER EVENTS ==========
+	
+	@SubscribeEvent
+	public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
+		if (e.getEntityPlayer().world.isRemote) return;
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(e.getEntityPlayer());
+		cap.getStateManager().onPunchBlock(e);
+	}
+	
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingDamageEvent event) {

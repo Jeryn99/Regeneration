@@ -89,6 +89,7 @@ class ActingServerHandler implements IActingHandler {
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
 		RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied health reduction");
 		player.setHealth(player.getMaxHealth());
+		cap.setGlowing(true);
 	}
 	
 	

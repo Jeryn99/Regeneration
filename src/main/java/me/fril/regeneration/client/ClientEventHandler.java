@@ -61,7 +61,7 @@ public class ClientEventHandler {
 			return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (!cap.getState().isGraceful())
+		if (!cap.isGlowing())
 			return;
 		
 		GlStateManager.pushMatrix();

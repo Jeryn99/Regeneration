@@ -19,7 +19,7 @@ public enum RegenState {
 	public enum Transition {
 		ENTER_CRITICAL(Color.BLUE),
 		CRITICAL_DEATH(Color.RED),
-		FINISH_REGENERATION(Color.GREEN.darker());
+		FINISH_REGENERATION(Color.GREEN.darker()), GRACE_GLOW(Color.PINK.darker());
 		
 		public final Color color;
 		

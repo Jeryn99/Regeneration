@@ -1,10 +1,10 @@
 package me.fril.regeneration.common.capability;
 
 import me.fril.regeneration.util.RegenState.Transition;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompound> {
@@ -14,7 +14,7 @@ public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompou
 	
 	void onPunchEntity(EntityLivingBase entity);
 	
-	void onPunchBlock(IBlockState blockState);
+	void onPunchBlock(PlayerInteractEvent.LeftClickBlock e);
 	
 	//Proxy methods for timing related stuff
 	double getStateProgress();

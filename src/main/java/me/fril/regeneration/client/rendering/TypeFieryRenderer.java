@@ -55,6 +55,11 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
 	}
 	
+	@Override
+	protected void renderRegeneratingPlayerPost(TypeFiery type, RenderPlayerEvent.Pre event, IRegeneration capability) {
+	
+	}
+	
 	
 	@Override
 	public void renderRegenerationLayer(TypeFiery type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {

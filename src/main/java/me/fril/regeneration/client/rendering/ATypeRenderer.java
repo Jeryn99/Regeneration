@@ -10,6 +10,8 @@ public abstract class ATypeRenderer<T> {
 	
 	protected abstract void renderRegeneratingPlayerPre(T type, Pre event, IRegeneration capability);
 	
+	protected abstract void renderRegeneratingPlayerPost(T type, Pre event, IRegeneration capability);
+	
 	protected abstract void renderRegenerationLayer(T type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
 	
 	

@@ -34,7 +34,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-		} else if (cap.getState().isGraceful())
+		} else if (cap.isGlowing())
 			renderGlowingHands(player, cap, scale);
 	}
 	

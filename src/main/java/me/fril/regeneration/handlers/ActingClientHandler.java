@@ -48,17 +48,19 @@ class ActingClientHandler implements IActingHandler {
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_grace"), new TextComponentTranslation("regeneration.toast.enter_grace.sub", Keyboard.getKeyName(RegenKeyBinds.REGEN_NOW.getKeyCode()), (RegenConfig.grace.criticalPhaseLength + RegenConfig.grace.gracePhaseLength) / 60), cap.getState());
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful()));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.isGlowing()));
 	}
 	
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.regenerated"), new TextComponentTranslation("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()), cap.getState());
+		cap.setGlowing(false);
 		//FUTURE toast for traits
 	}
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
+		cap.setGlowing(true);
 		if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
 			try {
 				SkinChangingHandler.skinChangeRandom(cap.getPlayer().world.rand, cap.getPlayer());

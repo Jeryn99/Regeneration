@@ -29,6 +29,12 @@ public class RegenDebugCommand extends CommandBase {
 		int amount = args.length > 1 ? parseInt(args[1], 0) : -1;
 		
 		switch (args[0]) {
+			case "fast-forward-glow":
+				if (cap.getState().isGraceful()) {
+					cap.setGlowing(true);
+					cap.setTicksGlowing(2300);
+				} else throw new CommandException("You must be in a Grace period for this.");
+				break;
 			case "fastforward":
 				cap.getStateManager().fastForward();
 				break;
@@ -61,7 +67,7 @@ public class RegenDebugCommand extends CommandBase {
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		if (args.length < 2)
-			return getListOfStringsMatchingLastWord(args, "fastforward", "setregens", "open");
+			return getListOfStringsMatchingLastWord(args, "fastforward", "setregens", "open", "fast-forward-glow");
 		else
 			return Collections.emptyList();
 	}

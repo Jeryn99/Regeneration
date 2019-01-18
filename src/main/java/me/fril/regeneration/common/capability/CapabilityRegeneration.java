@@ -14,7 +14,6 @@ import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenState.Transition;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +22,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -47,7 +47,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
-	private boolean didSetup = false;
+	private boolean didSetup = false, handsGlowing = false;
+	private int ticksGlowing = 0;
 	
 	public CapabilityRegeneration() {
 		this.player = null;
@@ -83,6 +84,31 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, this);
 		}
+		
+		if (!player.world.isRemote) {
+			System.out.println(ticksGlowing);
+			if (state.isGraceful()) {
+				
+				if (ticksGlowing >= 2400) {
+					ticksGlowing = 0;
+					handsGlowing = false;
+					triggerRegeneration();
+				}
+				
+				if (handsGlowing) {
+					ticksGlowing++;
+				} else {
+					ticksGlowing = 0;
+					if (player.ticksExisted % 6000 == 0) {
+						handsGlowing = true;
+					}
+				}
+			} else {
+				handsGlowing = false;
+			}
+			
+		}
+		
 	}
 	
 	
@@ -103,6 +129,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setTag("type", type.serializeNBT());
 		nbt.setByteArray("encoded_skin", ENCODED_SKIN);
 		nbt.setString("skinType", skinType.name());
+		nbt.setBoolean("handsGlowing", handsGlowing);
+		nbt.setInteger("ticksGlowing", ticksGlowing);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -111,11 +139,21 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
+		
 		if (nbt.hasKey("skinType")) {
 			setSkinType(nbt.getString("skinType"));
 		} else {
 			setSkinType("ALEX");
 		}
+		
+		if (nbt.hasKey("handsGlowing")) {
+			handsGlowing = nbt.getBoolean("handsGlowing");
+		}
+		
+		if (nbt.hasKey("ticksGlowing")) {
+			nbt.setInteger("ticksGlowing", ticksGlowing);
+		}
+		
 		//v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
 		
@@ -226,6 +264,26 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
+	public int getTicksGlowing() {
+		return ticksGlowing;
+	}
+	
+	@Override
+	public void setTicksGlowing(int ticksGlowing) {
+		this.ticksGlowing = ticksGlowing;
+	}
+	
+	@Override
+	public boolean isGlowing() {
+		return handsGlowing;
+	}
+	
+	@Override
+	public void setGlowing(boolean glowing) {
+		handsGlowing = glowing;
+	}
+	
+	@Override
 	public IRegenerationStateManager getStateManager() {
 		return stateManager;
 	}
@@ -313,8 +371,11 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		@Override
-		public void onPunchBlock(IBlockState blockState) {
-		
+		public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
+			if (getState().isGraceful() && handsGlowing) {
+				ticksGlowing = 0;
+				handsGlowing = false;
+			}
 		}
 		
 		
