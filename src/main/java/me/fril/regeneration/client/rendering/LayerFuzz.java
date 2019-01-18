@@ -1,5 +1,7 @@
 package me.fril.regeneration.client.rendering;
 
+import org.lwjgl.opengl.GL11;
+
 import me.fril.regeneration.client.rendering.model.ModelSkeleton;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.util.RegenState;
@@ -12,7 +14,6 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 	
@@ -27,7 +28,8 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 	
 	@Override
 	public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (!CapabilityRegeneration.getForPlayer(entitylivingbaseIn).getState().equals(RegenState.CORRUPT)) return;
+		if (!CapabilityRegeneration.getForPlayer(entitylivingbaseIn).getState().equals(RegenState.CORRUPT))
+			return;
 		
 		mainModel = playerRenderer.getMainModel();
 		
@@ -62,7 +64,6 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 		GlStateManager.blendFunc(1, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
 		GlStateManager.color(0.2f, 0.2f, 1, 0.3f);
-		
 		
 		if (entitylivingbaseIn.world.rand.nextInt(3) == 1) {
 			GlStateManager.translate(0, entitylivingbaseIn.world.rand.nextInt(6) / 100.0f, 0);

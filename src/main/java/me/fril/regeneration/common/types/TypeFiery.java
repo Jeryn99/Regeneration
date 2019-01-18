@@ -1,5 +1,7 @@
 package me.fril.regeneration.common.types;
 
+import java.util.Random;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.rendering.TypeFieryRenderer;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -9,8 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Random;
 
 /**
  * Created by Sub
@@ -53,17 +53,16 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
-		if (!player.world.isRemote) { //NOTE redundant, only called on server side (TODO document)
+		if (!player.world.isRemote) { // NOTE redundant, only called on server side (TODO document)
 			PlayerUtil.setPerspective((EntityPlayerMP) player, false, true);
 		}
 		
 		animationTicks = 0;
 	}
 	
-	
 	@Override
-	public int getAnimationLength() { //TODO shorten to be in line with the music (don't forget to update 'p' and 'r'!)
-		return 14 * 20; //14 seconds of 20 ticks
+	public int getAnimationLength() { // TODO shorten to be in line with the music (don't forget to update 'p' and 'r'!)
+		return 14 * 20; // 14 seconds of 20 ticks
 	}
 	
 	/**
@@ -77,7 +76,6 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	public double getAnimationProgress() {
 		return Math.min(1, animationTicks / (double) getAnimationLength());
 	}
-	
 	
 	@Override
 	public NBTTagCompound serializeNBT() {
@@ -94,7 +92,6 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		if (nbtTicks > animationTicks)
 			animationTicks = nbtTicks;
 	}
-	
 	
 	@Override
 	public TypeFieryRenderer getRenderer() {

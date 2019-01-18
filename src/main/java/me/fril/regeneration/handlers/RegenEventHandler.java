@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class RegenEventHandler {
 	
-	//=========== CAPABILITY HANDLING =============
+	// =========== CAPABILITY HANDLING =============
 	
 	@SubscribeEvent
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
@@ -63,7 +63,6 @@ public class RegenEventHandler {
 		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
 	}
 	
-	
 	@SubscribeEvent
 	public static void playerTracking(PlayerEvent.StartTracking event) {
 		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
@@ -85,20 +84,19 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
-			CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntityLiving()).synchronise(); //NOW test this
+			CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntityLiving()).synchronise(); // NOW test this
 		}
 	}
 	
-	
-	//============ USER EVENTS ==========
+	// ============ USER EVENTS ==========
 	
 	@SubscribeEvent
 	public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-		if (e.getEntityPlayer().world.isRemote) return;
+		if (e.getEntityPlayer().world.isRemote)
+			return;
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(e.getEntityPlayer());
 		cap.getStateManager().onPunchBlock(e);
 	}
-	
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingDamageEvent event) {
@@ -116,8 +114,8 @@ public class RegenEventHandler {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		cap.setSound(event.getSource().getDeathMessage(player).getUnformattedText());
 		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage()) {
-			event.setCanceled(true); //TODO still "hurts" the client view
-		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { //player has actually died
+			event.setCanceled(true); // TODO still "hurts" the client view
+		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 			boolean notDead = cap.getStateManager().onKilled();
 			event.setCanceled(notDead);
 		}
@@ -132,7 +130,7 @@ public class RegenEventHandler {
 		}
 	}
 	
-	//================ OTHER ==============
+	// ================ OTHER ==============
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {
 		if (event.player.world.isRemote)
@@ -152,9 +150,9 @@ public class RegenEventHandler {
 		if (!event.getName().toString().toLowerCase().matches(RegenConfig.loot.lootRegex) || RegenConfig.loot.disableLoot)
 			return;
 		
-		//TODO configurable chances? Maybe by doing a simple loot table tutorial?
+		// TODO configurable chances? Maybe by doing a simple loot table tutorial?
 		LootEntryTable entry = new LootEntryTable(RegenerationMod.LOOT_FILE, 1, 0, new LootCondition[0], "regeneration_inject_entry");
-		LootPool pool = new LootPool(new LootEntry[]{entry}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(1), "regeneration_inject_pool");
+		LootPool pool = new LootPool(new LootEntry[] { entry }, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(1), "regeneration_inject_pool");
 		event.getTable().addPool(pool);
 	}
 	

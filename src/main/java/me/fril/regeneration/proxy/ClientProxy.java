@@ -1,5 +1,7 @@
 package me.fril.regeneration.proxy;
 
+import java.util.Map;
+
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
 import me.fril.regeneration.client.rendering.LayerFuzz;
@@ -16,14 +18,11 @@ import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 
-import java.util.Map;
-
 /**
  * Created by Sub
  * on 17/09/2018.
  */
 public class ClientProxy extends CommonProxy {
-	
 	
 	@Override
 	public void preInit() {
@@ -50,12 +49,12 @@ public class ClientProxy extends CommonProxy {
 			LucraftCoreHandler.registerEntry();
 		}
 		
-		//Render layers ===========================================
+		// Render layers ===========================================
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		for (RenderPlayer renderPlayer : skinMap.values()) {
-			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); //Add Regeneration Layer
-			renderPlayer.layerRenderers.removeIf(layer -> layer.getClass() == LayerHeldItem.class); //Remove old held item layer
-			renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); //Add new item layer
+			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
+			renderPlayer.layerRenderers.removeIf(layer->layer.getClass() == LayerHeldItem.class); // Remove old held item layer
+			renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); // Add new item layer
 			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
 		}
 		
@@ -70,6 +69,5 @@ public class ClientProxy extends CommonProxy {
 		}
 		SkinChangingHandler.registerResources();
 	}
-	
 	
 }

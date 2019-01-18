@@ -31,7 +31,7 @@ public class TestStateBasedSystem {
 	public void allTransitionsHaveCallback() throws ReflectiveOperationException {
 		IRegeneration cap = new CapabilityRegeneration();
 		
-		//Reflection stuff to circumvent encapsulation
+		// Reflection stuff to circumvent encapsulation
 		Constructor<RegenerationStateManager> con = CapabilityRegeneration.RegenerationStateManager.class.getDeclaredConstructor(CapabilityRegeneration.class);
 		con.setAccessible(true);
 		RegenerationStateManager stateManager = con.newInstance(cap);
@@ -43,17 +43,16 @@ public class TestStateBasedSystem {
 		assertTrue("Missing or duplicate transition callback", transitionRunnables.size() == Transition.values().length);
 	}
 	
-	
 	/**
 	 * All states should have a corresponding transition, except for <b>ALIVE</b> (hence the <code>-1</code>).
 	 * This <i>may</i> change in the future, but that's probably a red flag, because the system assumes this paradigm in multiple places.
 	 */
 	@Test
 	public void transitionStateCountMatch() {
-		assertTrue("Not all states have a transition, or vice versa", RegenState.values().length-1 == Transition.values().length);
+		assertTrue("Not all states have a transition, or vice versa", RegenState.values().length - 1 == Transition.values().length);
 	}
 	
-	//TESTING could probably add some tests that actually verify the correctness of transition callbacks
-	//TESTING add actual state-flow test?
+	// TESTING could probably add some tests that actually verify the correctness of transition callbacks
+	// TESTING add actual state-flow test?
 	
 }

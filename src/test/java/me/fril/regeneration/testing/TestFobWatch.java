@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 
 public class TestFobWatch {
 	
-	private int currentStackDamage; //easier mocking
+	private int currentStackDamage; // easier mocking
 	
 	private CapabilityRegeneration setup(boolean sneaking, boolean creative) throws ReflectiveOperationException {
 		CapabilityRegeneration cap = RegenTestUtil.setupFullMockSuite(false);
@@ -34,85 +34,87 @@ public class TestFobWatch {
 		ItemFobWatch watchItem = new ItemFobWatch();
 		ItemStack watchStack = mock(ItemStack.class);
 		
-		/*when(watchStack.getItemDamage()).thenReturn(currentStackDamage);
-		doAnswer(a->currentStackDamage = a.getArgument(0)).when(watchStack).setItemDamage(anyInt());*/
+		/*
+		 * when(watchStack.getItemDamage()).thenReturn(currentStackDamage);
+		 * doAnswer(a->currentStackDamage = a.getArgument(0)).when(watchStack).setItemDamage(anyInt());
+		 */
 		
 		when(watchStack.getItem()).thenReturn(watchItem);
 		doCallRealMethod().when(watchStack).useItemRightClick(any(World.class), any(EntityPlayer.class), isNull());
 		
 		when(player.getHeldItem(isNull())).thenAnswer(a->watchStack);
 		
-		/*doAnswer(a->{ //record any status messages sent
-			ITextComponent in = a.getArgument(0); //can't combine lines because generics
-			lastStatusKey = in.getUnformattedText();
-			return null;
-		}).when(player).sendStatusMessage(any(ITextComponent.class), any(Boolean.class));*/
+		/*
+		 * doAnswer(a->{ //record any status messages sent
+		 * ITextComponent in = a.getArgument(0); //can't combine lines because generics
+		 * lastStatusKey = in.getUnformattedText();
+		 * return null;
+		 * }).when(player).sendStatusMessage(any(ITextComponent.class), any(Boolean.class));
+		 */
 		
 		return cap;
 	}
 	
 	@SuppressWarnings("deprecation")
-	private void test(CapabilityRegeneration cap, EnumActionResult result, /*String statusKey,*/ int regenIn, int damageIn, int expRegenOut, int expDamageOut) throws AssertionError {
+	private void test(CapabilityRegeneration cap, EnumActionResult result, /* String statusKey, */ int regenIn, int damageIn, int expRegenOut, int expDamageOut) throws AssertionError {
 		ItemStack stack = cap.getPlayer().getHeldItem(null);
 		stack.setItemDamage(damageIn);
 		cap.setRegenerationsLeft(regenIn);
 		
 		assertEquals("Incorrect ActionResult", result, stack.useItemRightClick(cap.getPlayer().world, cap.getPlayer(), null).getType());
-		//assertEquals("Incorrect status message key", "regeneration.messages.transfer."+statusKey, lastStatusKey);
+		// assertEquals("Incorrect status message key", "regeneration.messages.transfer."+statusKey, lastStatusKey);
 		
 		assertEquals("Incorrect regenerations-left value", expRegenOut, cap.getRegenerationsLeft());
 		assertEquals("Incorrect stack damage value", expDamageOut, stack.getItemDamage());
 	}
 	
-	
-	
-	@Test @Ignore
+	@Test
+	@Ignore
 	public void testReceive() throws ReflectiveOperationException {
 		CapabilityRegeneration cap = setup(false, false);
 		
-		//TESTING do the actual watch testing
+		// TESTING do the actual watch testing
 		
-		/*for (int M = 6; M < 15; M += 3) {
-			RegenConfig.regenCapacity = M;
-			int x  = M/2;
-			
-			test(cap, FAIL, M, M, M, M);
-			test(cap, SUCCESS, 0, 0, M, M);
-			
-			test(cap, FAIL, M, x, M, x);
-			test(cap, FAIL, x, M, x, M);
-			
-			test(cap, FAIL, M, 0, M, 0);
-			test(cap, FAIL, 0, M, 0, M);
-			
-			test(cap, SUCCESS, x, x,   x + (M-x),  x + (M-x)  );
-			test(cap, SUCCESS, 0, x,   M - x,      x + (M-x)  );
-			test(cap, SUCCESS, x, 0,   M,          M - x      );
-		}*/
+		/*
+		 * for (int M = 6; M < 15; M += 3) {
+		 * RegenConfig.regenCapacity = M;
+		 * int x = M/2;
+		 * 
+		 * test(cap, FAIL, M, M, M, M);
+		 * test(cap, SUCCESS, 0, 0, M, M);
+		 * 
+		 * test(cap, FAIL, M, x, M, x);
+		 * test(cap, FAIL, x, M, x, M);
+		 * 
+		 * test(cap, FAIL, M, 0, M, 0);
+		 * test(cap, FAIL, 0, M, 0, M);
+		 * 
+		 * test(cap, SUCCESS, x, x, x + (M-x), x + (M-x) );
+		 * test(cap, SUCCESS, 0, x, M - x, x + (M-x) );
+		 * test(cap, SUCCESS, x, 0, M, M - x );
+		 * }
+		 */
 	}
 	
-	@Test @Ignore
+	@Test
+	@Ignore
 	public void testTransfer() throws ReflectiveOperationException {
 		CapabilityRegeneration cap = setup(true, false);
 		
-		//TESTING do the actual watch testing
+		// TESTING do the actual watch testing
 	}
 	
-	@Test @Ignore
+	@Test
+	@Ignore
 	public void testCreative() throws ReflectiveOperationException {
 		CapabilityRegeneration cap = setup(false, true);
 		
-		//TESTING do the actual watch testing
-		
-		
+		// TESTING do the actual watch testing
 		
 		cap = setup(true, true);
 		
-		//TESTING do the actual watch testing
+		// TESTING do the actual watch testing
 	}
-	
-	
-	
 	
 	@SuppressWarnings("deprecation")
 	@Test
@@ -126,8 +128,6 @@ public class TestFobWatch {
 		RegenConfig.regenCapacity = 999999999;
 		assertEquals(RegenConfig.regenCapacity, new ItemFobWatch().getMaxDamage());
 	}
-	
-	
 	
 	@After
 	public void cleanup() throws IOException {

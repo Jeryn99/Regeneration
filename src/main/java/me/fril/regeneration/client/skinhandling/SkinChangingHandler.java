@@ -1,6 +1,28 @@
 package me.fril.regeneration.client.skinhandling;
 
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
+
+import javax.imageio.ImageIO;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -22,20 +44,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
@@ -46,7 +54,7 @@ public class SkinChangingHandler {
 	private static File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
 	private static File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	private static File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-	private static FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(CURRENT_SKIN);
+	private static FilenameFilter IMAGE_FILTER = (dir, name)->name.endsWith(".png") && !name.equals(CURRENT_SKIN);
 	private static Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class);
 	private static Random RAND = new Random();
 	private ModelBase STEVE_MODEL = new ModelPlayer(0.1F, false);
@@ -65,7 +73,6 @@ public class SkinChangingHandler {
 		SKIN_DIRECTORY_ALEX.mkdirs();
 		SKIN_DIRECTORY_STEVE.mkdirs();
 		
-		
 		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.listFiles()).length < 1 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.listFiles()).length < 1) {
 			try {
 				createDefaultImages();
@@ -75,14 +82,14 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	//Convert buffered image to Pixel data
+	// Convert buffered image to Pixel data
 	private static byte[] encodeToPixelData(BufferedImage bufferedImage) {
 		WritableRaster raster = bufferedImage.getRaster();
 		DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
 		return buffer.getData();
 	}
 	
-	//Convert Pixel data to BufferedImage
+	// Convert Pixel data to BufferedImage
 	private static BufferedImage toImage(EntityPlayer player, byte[] imageData) throws IOException {
 		BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_4BYTE_ABGR);
 		img.setData(Raster.createRaster(img.getSampleModel(), new DataBufferByte(imageData, imageData.length), new Point()));
@@ -101,15 +108,16 @@ public class SkinChangingHandler {
 	}
 	
 	public static void skinChangeRandom(Random random, EntityPlayer player) throws IOException {
-		if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID()) return;
+		if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID())
+			return;
 		if (RegenConfig.changeMySkin) {
 			
-			boolean isAlex = RegenConfig.preffedModel.isAlex();
+			boolean isAlex = RegenConfig.prefferedModel.isAlex();
 			
 			File skin = SkinChangingHandler.getRandomSkinFile(random, isAlex);
 			BufferedImage image = ImageIO.read(skin);
 			CURRENT_SKIN = skin.getName();
-			IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(CURRENT_SKIN);
+			IMAGE_FILTER = (dir, name)->name.endsWith(".png") && !name.equals(CURRENT_SKIN);
 			byte[] pixelData = SkinChangingHandler.encodeToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
 			if (pixelData.length >= 32767) {
@@ -221,7 +229,6 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	
 	private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap, RenderPlayer renderPlayer) {
 		if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
 			SkinInfo skinInfo = null;
@@ -241,7 +248,6 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	
 	public enum EnumChoices {
 		ALEX(true), STEVE(false), EITHER(true);
 		
@@ -258,6 +264,5 @@ public class SkinChangingHandler {
 			return isAlex;
 		}
 	}
-	
 	
 }

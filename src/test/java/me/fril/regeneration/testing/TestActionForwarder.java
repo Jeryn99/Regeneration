@@ -1,11 +1,6 @@
 package me.fril.regeneration.testing;
 
-import me.fril.regeneration.api.IActingHandler;
-import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.handlers.ActingForwarder;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,7 +9,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import me.fril.regeneration.common.capability.CapabilityRegeneration;
+import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.handlers.ActingForwarder;
+import me.fril.regeneration.handlers.IActingHandler;
 
 /**
  * Contains a test for the {@link ActionForwarder}. It's slightly pointless but I don't really care.
@@ -35,7 +36,7 @@ public class TestActionForwarder {
 		List<String> implementedMethodNames = implementedMethods.stream().map(m->m.getName()).collect(Collectors.toList());
 		
 		for (Method m : IActingHandler.class.getDeclaredMethods()) {
-			assertTrue("Missing forwarding method for "+m.getName(), implementedMethodNames.contains(m.getName()));
+			assertTrue("Missing forwarding method for " + m.getName(), implementedMethodNames.contains(m.getName()));
 		}
 		
 		assertTrue("There's a non-static forwarding method", implementedMethods.stream().allMatch(m->Modifier.isStatic(m.getModifiers())));
@@ -47,12 +48,11 @@ public class TestActionForwarder {
 	 * 
 	 * @throws ReflectiveOperationException
 	 */
-	@Test @Ignore
+	@Test
+	@Ignore
 	public void testTickNotForwarded() throws ReflectiveOperationException {
-		//FUTURE should probably add a test for this, no idea how though since I can't mock static methods without the possiblity of ruining other stuff
+		// FUTURE should probably add a test for this, no idea how though since I can't mock static methods without the possiblity of ruining other stuff
 	}
-	
-	
 	
 	/**
 	 * Tests if the {@link ActingForwarder} throws an {@link IllegalStateException} when posting from the client.
@@ -64,14 +64,13 @@ public class TestActionForwarder {
 		CapabilityRegeneration capability = RegenTestUtil.setupFullMockSuite(true);
 		
 		List<Method> interfaceMethods = Arrays.asList(IActingHandler.class.getDeclaredMethods());
-		List<Method> forwarderMethods = interfaceMethods.stream().map(m->{
+		List<Method> forwarderMethods = interfaceMethods.stream().map(m-> {
 			try {
 				return ActingForwarder.class.getMethod(m.getName(), IRegeneration.class);
 			} catch (NoSuchMethodException e) {
-				throw new Error("Could not get implementation method for "+m.getName(), e);
+				throw new Error("Could not get implementation method for " + m.getName(), e);
 			}
 		}).collect(Collectors.toList());
-		
 		
 		for (Method m : forwarderMethods) {
 			boolean thrown = false;
@@ -85,7 +84,7 @@ public class TestActionForwarder {
 					throw new AssertionError("Forwarding throwed an exception other than IllegalStateException", e);
 			}
 			
-			assertTrue("Client action posting did not throw IllegalStateException "+m.getName(), thrown);
+			assertTrue("Client action posting did not throw IllegalStateException " + m.getName(), thrown);
 		}
 	}
 	

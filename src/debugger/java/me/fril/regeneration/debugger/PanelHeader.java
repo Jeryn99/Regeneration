@@ -1,10 +1,11 @@
 package me.fril.regeneration.debugger;
 
-import com.mojang.authlib.GameProfile;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,6 +15,15 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import com.mojang.authlib.GameProfile;
+
 @SuppressWarnings("serial")
 class PanelHeader extends JPanel {
 	
@@ -22,10 +32,10 @@ class PanelHeader extends JPanel {
 	public PanelHeader(GameProfile gp) {
 		{
 			GridBagLayout gridBagLayout = new GridBagLayout();
-			gridBagLayout.columnWidths = new int[]{0, 72, 0, 0};
-			gridBagLayout.rowHeights = new int[]{14, 17, 0};
-			gridBagLayout.columnWeights = new double[]{1.0, 0.0, 1.0};
-			gridBagLayout.rowWeights = new double[]{0.0, 0.0};
+			gridBagLayout.columnWidths = new int[] { 0, 72, 0, 0 };
+			gridBagLayout.rowHeights = new int[] { 14, 17, 0 };
+			gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 1.0 };
+			gridBagLayout.rowWeights = new double[] { 0.0, 0.0 };
 			setLayout(gridBagLayout);
 		}
 		
@@ -52,7 +62,6 @@ class PanelHeader extends JPanel {
 		}
 	}
 	
-	
 	private Icon getSkinIconFor(GameProfile gp) {
 		File skinCache = new File("mods/regeneration/skincache");
 		if (!skinCache.exists())
@@ -61,8 +70,8 @@ class PanelHeader extends JPanel {
 		File skinImage = new File(skinCache, gp.getId().toString() + ".png");
 		if (!skinImage.exists()) {
 			try (ReadableByteChannel readableByteChannel = Channels.newChannel(new URL("https://crafatar.com/avatars/" + gp.getId().toString() + "?size=100").openStream());
-			     FileOutputStream fileOutputStream = new FileOutputStream(skinImage);
-			     FileChannel fileChannel = fileOutputStream.getChannel()) {
+					FileOutputStream fileOutputStream = new FileOutputStream(skinImage);
+					FileChannel fileChannel = fileOutputStream.getChannel()) {
 				fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
 			} catch (IOException e) {
 				System.err.println("Could not retrieve skin for " + gp.getName());

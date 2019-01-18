@@ -29,7 +29,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	
 	@Override
 	public void renderRegeneratingPlayerPre(TypeFiery type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
-		if (MinecraftForgeClient.getRenderPass() == -1) //rendering in inventory
+		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
 			return;
 		
 		double animationProgress = type.getAnimationProgress();
@@ -57,17 +57,15 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	
 	@Override
 	protected void renderRegeneratingPlayerPost(TypeFiery type, RenderPlayerEvent.Pre event, IRegeneration capability) {
-	
+		
 	}
-	
 	
 	@Override
 	public void renderRegenerationLayer(TypeFiery type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (MinecraftForgeClient.getRenderPass() == -1) //rendering in inventory
+		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
 			return;
 		
 		ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
-		
 		
 		// State manager changes
 		GlStateManager.pushAttrib();
@@ -83,7 +81,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 		
 		double x = type.getAnimationProgress();
-		double p = 109.89010989010987; //see the wiki for the explanation of these "magic" numbers
+		double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
 		double r = 0.09890109890109888;
 		double f = p * Math.pow(x, 2) - r;
 		

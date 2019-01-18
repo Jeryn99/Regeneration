@@ -1,5 +1,9 @@
 package me.fril.regeneration.util;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import me.fril.regeneration.RegenerationMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -15,10 +19,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class LimbManipulationUtil {
@@ -52,7 +52,7 @@ public class LimbManipulationUtil {
 				}
 			}
 			
-			//This here, handles the rotation of PLAYER limbs
+			// This here, handles the rotation of PLAYER limbs
 			ModelPlayer model = renderPlayer.getMainModel();
 			ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
 			manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.rendererField));
@@ -84,7 +84,7 @@ public class LimbManipulationUtil {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
 					
-					//Model Biped
+					// Model Biped
 					if (field.getType() == ModelBiped.class) {
 						ModelBiped biped = (ModelBiped) field.get(layer);
 						for (ModelRenderer modelRenderer : biped.boxList) {
@@ -95,7 +95,7 @@ public class LimbManipulationUtil {
 						}
 					}
 					
-					//Model Player
+					// Model Player
 					if (field.getType() == ModelPlayer.class) {
 						ModelPlayer modelPlayer = (ModelPlayer) field.get(layer);
 						for (ModelRenderer modelRenderer : modelPlayer.boxList) {
@@ -112,7 +112,6 @@ public class LimbManipulationUtil {
 		}
 	}
 	
-	
 	public enum Limb {
 		HEAD(ModelBiped.class.getDeclaredFields()[0], ModelBiped.class.getDeclaredFields()[1]),
 		BODY(ModelBiped.class.getDeclaredFields()[2], ModelPlayer.class.getDeclaredFields()[4]),
@@ -128,7 +127,6 @@ public class LimbManipulationUtil {
 			this.secondaryRendererField = secondaryRendererField;
 		}
 	}
-	
 	
 	public static class LimbManipulator {
 		
@@ -148,7 +146,6 @@ public class LimbManipulationUtil {
 			return this;
 		}
 	}
-	
 	
 	public static class CustomModelRenderer extends ModelRenderer {
 		

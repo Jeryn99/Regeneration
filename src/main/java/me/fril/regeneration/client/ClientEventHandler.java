@@ -1,5 +1,8 @@
 package me.fril.regeneration.client;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -40,9 +43,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -57,7 +57,8 @@ public class ClientEventHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		float f = 0.2F;
-		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0) return;
+		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
+			return;
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (!cap.isGlowing())
 			return;
@@ -65,9 +66,9 @@ public class ClientEventHandler {
 		GlStateManager.pushMatrix();
 		
 		float leftHandedFactor = mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT) ? 1 : -1;
-		GlStateManager.translate(0.33F * leftHandedFactor, -0.23F, -0.5F); //move in place
-		GlStateManager.translate(-.8F * player.swingProgress * leftHandedFactor, -.8F * player.swingProgress, -.4F * player.swingProgress); //compensate for 'punching' motion
-		GlStateManager.translate(-(player.renderArmYaw - player.prevRenderArmYaw) / 400F, (player.renderArmPitch - player.prevRenderArmPitch) / 500F, 0); //compensate for 'swinging' motion
+		GlStateManager.translate(0.33F * leftHandedFactor, -0.23F, -0.5F); // move in place
+		GlStateManager.translate(-.8F * player.swingProgress * leftHandedFactor, -.8F * player.swingProgress, -.4F * player.swingProgress); // compensate for 'punching' motion
+		GlStateManager.translate(-(player.renderArmYaw - player.prevRenderArmYaw) / 400F, (player.renderArmPitch - player.prevRenderArmPitch) / 500F, 0); // compensate for 'swinging' motion
 		
 		RenderUtil.setupRenderLightning();
 		GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
@@ -109,7 +110,8 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onPlaySound(PlaySoundEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
-		if (mc.player == null || mc.world == null) return;
+		if (mc.player == null || mc.world == null)
+			return;
 		if (CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getState() == RegenState.REGENERATING) {
 			if (e.getName().equals("entity.generic.explode")) {
 				ISound sound = PositionedSoundRecord.getMasterRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F);
@@ -129,7 +131,7 @@ public class ClientEventHandler {
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		
 		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
-		int z = -91; //below the HUD
+		int z = -91; // below the HUD
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 		bufferbuilder.pos(0, scaledRes.getScaledHeight(), z).tex(0, 1).endVertex();
 		bufferbuilder.pos(scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), z).tex(1.0D, 1.0D).endVertex();
@@ -159,7 +161,6 @@ public class ClientEventHandler {
 		GlStateManager.color(1, 1, 1, 1);
 	}
 	
-	
 	@SubscribeEvent
 	public static void onClientTick(TickEvent.ClientTickEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
@@ -171,13 +172,13 @@ public class ClientEventHandler {
 		}
 	}
 	
-	
 	@SubscribeEvent
 	public static void keyInput(InputUpdateEvent e) {
-		if (Minecraft.getMinecraft().player == null) return;
+		if (Minecraft.getMinecraft().player == null)
+			return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
-		if (cap.getState() == RegenState.REGENERATING) { //locking user
+		if (cap.getState() == RegenState.REGENERATING) { // locking user
 			MovementInput moveType = e.getMovementInput();
 			moveType.rightKeyDown = false;
 			moveType.leftKeyDown = false;

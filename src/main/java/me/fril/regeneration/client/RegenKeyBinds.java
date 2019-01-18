@@ -1,9 +1,10 @@
 package me.fril.regeneration.client;
 
+import org.lwjgl.input.Keyboard;
+
 import me.fril.regeneration.RegenerationMod;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import org.lwjgl.input.Keyboard;
 
 /**
  * Created by Sub

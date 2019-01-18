@@ -1,6 +1,6 @@
 package me.fril.regeneration.util;
 
-import java.awt.*;
+import java.awt.Color;
 
 public enum RegenState {
 	

@@ -1,5 +1,12 @@
 package me.fril.regeneration.common.capability;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
@@ -25,11 +32,6 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Sub
@@ -77,13 +79,12 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void tick() {
 		
-		
 		if (!didSetup && player.world.isRemote) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player));
 			didSetup = true;
 		}
 		
-		if (!player.world.isRemote && state != RegenState.ALIVE) //ticking only on the server for simplicity
+		if (!player.world.isRemote && state != RegenState.ALIVE) // ticking only on the server for simplicity
 			stateManager.tick();
 		
 		if (state == RegenState.REGENERATING) {
@@ -116,14 +117,12 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 	}
 	
-	
 	@Override
 	public void synchronise() {
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
 		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
-	
 	
 	@Override
 	public NBTTagCompound serializeNBT() {
@@ -159,21 +158,20 @@ public class CapabilityRegeneration implements IRegeneration {
 			nbt.setInteger("ticksGlowing", ticksGlowing);
 		}
 		
-		//v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
+		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
 		
-		if (nbt.hasKey("type")) //v1.3+ saves have a type tag
+		if (nbt.hasKey("type")) // v1.3+ saves have a type tag
 			type = IRegenType.getType(type, nbt.getCompoundTag("type"));
-		else //for previous save versions set to default 'fiery' type
+		else // for previous save versions set to default 'fiery' type
 			type = new TypeFiery();
 		
-		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; //I need to check for versions before the new state-ticking system
+		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; // I need to check for versions before the new state-ticking system
 		setEncodedSkin(nbt.getByteArray("encoded_skin"));
 		
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
 	}
-	
 	
 	@Override
 	public int getRegenerationsLeft() {
@@ -309,14 +307,12 @@ public class CapabilityRegeneration implements IRegeneration {
 		return state;
 	}
 	
-	
 	@Override
 	public void triggerRegeneration() {
 		if (player.world.isRemote)
 			throw new IllegalStateException("Triggering regeneration via capability instance on the client side");
 		stateManager.triggerRegeneration();
 	}
-	
 	
 	/**
 	 * ONLY EXISTS ON THE SERVER SIDE
@@ -333,7 +329,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			transitionRunnables.put(Transition.FINISH_REGENERATION, this::finishRegeneration);
 		}
 		
-		
 		@SuppressWarnings("deprecation")
 		private void scheduleTransitionInTicks(Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
@@ -345,15 +340,14 @@ public class CapabilityRegeneration implements IRegeneration {
 			scheduleTransitionInTicks(transition, inSeconds * 20);
 		}
 		
-		
 		@Override
 		public boolean onKilled() {
 			if (state == RegenState.ALIVE) {
 				
-				if (!canRegenerate()) //that's too bad :(
+				if (!canRegenerate()) // that's too bad :(
 					return false;
 				
-				//We're entering grace period...
+				// We're entering grace period...
 				scheduleTransitionInSeconds(Transition.ENTER_CRITICAL, RegenConfig.grace.gracePhaseLength);
 				state = RegenState.GRACE;
 				synchronise();
@@ -362,24 +356,25 @@ public class CapabilityRegeneration implements IRegeneration {
 				
 			} else if (state.isGraceful()) {
 				
-				//We're being forced to regenerate...
+				// We're being forced to regenerate...
 				triggerRegeneration();
 				return true;
 				
 			} else if (state == RegenState.REGENERATING) {
 				
-				//We've been killed mid regeneration!
-				nextTransition.cancel(); //... cancel the finishing of the regeneration
+				// We've been killed mid regeneration!
+				nextTransition.cancel(); // ... cancel the finishing of the regeneration
 				midSequenceKill();
 				return false;
 				
-			} else throw new IllegalStateException("Unknown state: " + state);
+			} else
+				throw new IllegalStateException("Unknown state: " + state);
 		}
 		
 		@Override
 		public void onPunchEntity(EntityLivingBase entity) {
-			//We're healing mobs...
-			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth()) { //... check if we're in grace and if the mob needs health
+			// We're healing mobs...
+			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth()) { // ... check if we're in grace and if the mob needs health
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
@@ -394,25 +389,23 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 		}
 		
-		
 		private void tick() {
 			if (player.world.isRemote)
-				throw new IllegalStateException("Ticking state manager on the client"); //the state manager shouldn't even exist on the client
+				throw new IllegalStateException("Ticking state manager on the client"); // the state manager shouldn't even exist on the client
 			if (state == RegenState.ALIVE)
-				throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); //would NPE when ticking the transition, but this is a more clear message
-			
+				throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
+				
 			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
 		}
 		
-		
 		private void triggerRegeneration() {
-			//We're starting a regeneration!
+			// We're starting a regeneration!
 			state = RegenState.REGENERATING;
 			TextComponentTranslation text = new TextComponentTranslation("message.regeneration.isregenerating", player.getName());
 			text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(getSource())));
 			PlayerUtil.sendMessageToAll(text);
-			nextTransition.cancel(); //... cancel any state shift we had planned
+			nextTransition.cancel(); // ... cancel any state shift we had planned
 			scheduleTransitionInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
 			ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);
@@ -421,7 +414,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		private void enterCriticalPhase() {
-			//We're entering critical phase...
+			// We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
 			scheduleTransitionInSeconds(Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
 			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
@@ -432,10 +425,10 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = RegenState.ALIVE;
 			nextTransition = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
-			player.setHealth(-1); //in case this method was called by critical death
+			player.setHealth(-1); // in case this method was called by critical death
 			
-			
-			/* SuB For re-implementing the dont-lose-regens-on-death option:
+			/*
+			 * SuB For re-implementing the dont-lose-regens-on-death option:
 			 * We never explicitly reset the live count, but it still gets reset.
 			 * From my understanding this is because the capability data isn't cloned over properly when the player dies.
 			 * Soooo how should we handle it then? Save the last regen count and giving that back on respawn?
@@ -455,7 +448,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			synchronise();
 		}
 		
-		
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */
@@ -467,14 +459,14 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForward() {
-			while (!nextTransition.tick()) ;
+			while (!nextTransition.tick())
+				;
 		}
 		
 		@Override
 		public double getStateProgress() {
 			return nextTransition.getProgress();
 		}
-		
 		
 		@SuppressWarnings("deprecation")
 		@Override

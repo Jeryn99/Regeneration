@@ -41,7 +41,7 @@ public class ItemFobWatch extends Item {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		ItemStack stack = player.getHeldItem(hand);
 		
-		if (!player.isSneaking()) { //transferring watch->player
+		if (!player.isSneaking()) { // transferring watch->player
 			if (stack.getItemDamage() == RegenConfig.regenCapacity)
 				return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
 			else if (cap.getRegenerationsLeft() == RegenConfig.regenCapacity)
@@ -70,7 +70,7 @@ public class ItemFobWatch extends Item {
 				ClientUtil.playPositionedSoundRecord(RegenObjects.Sounds.FOB_WATCH, 1.0F, 2.0F);
 			
 			return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-		} else { //transferring player->watch
+		} else { // transferring player->watch
 			if (!cap.canRegenerate())
 				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
 			

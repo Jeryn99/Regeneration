@@ -1,9 +1,10 @@
 package me.fril.regeneration.client.sound.echo;
 
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import java.util.Map;
 
 import javax.annotation.Nullable;
-import java.util.Map;
+
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.Name("regeneration")
 @IFMLLoadingPlugin.SortingIndex(1001)
@@ -11,7 +12,7 @@ import java.util.Map;
 public class RegenerationPlugin implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[]{"me.fril.regeneration.client.sound.echo.RegenClassTransformer"};
+		return new String[] { "me.fril.regeneration.client.sound.echo.RegenClassTransformer" };
 	}
 	
 	@Override
