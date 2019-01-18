@@ -1,13 +1,8 @@
 package me.fril.regeneration.debugger.util;
 
-import java.awt.Color;
-
-import javax.swing.JTextPane;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
 
 public class TextPaneLogger {
 	private final JTextPane pane;
@@ -22,7 +17,7 @@ public class TextPaneLogger {
 		aset = sc.addAttribute(aset, StyleConstants.Background, bg);
 		
 		try {
-			pane.getDocument().insertString(pane.getDocument().getLength(), str+"\n", aset);
+			pane.getDocument().insertString(pane.getDocument().getLength(), str + "\n", aset);
 		} catch (BadLocationException e) {
 			throw new RuntimeException("Logger crashed", e);
 		}

@@ -19,12 +19,12 @@ import java.util.Random;
  * on 16/09/2018.
  */
 public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
-
+	
 	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
 	public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
-
+	
 	private RenderPlayer playerRenderer;
-
+	
 	public LayerRegeneration(RenderPlayer playerRenderer) {
 		this.playerRenderer = playerRenderer;
 	}
@@ -32,12 +32,12 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	@Override
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-        if (cap.getState() == RegenState.REGENERATING) {
+		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		} else if (cap.getState().isGraceful())
 			renderGlowingHands(player, cap, scale);
 	}
-
+	
 	private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
 		Vec3d primaryColor = handler.getPrimaryColor();
 		Vec3d secondaryColor = handler.getSecondaryColor();

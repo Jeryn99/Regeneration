@@ -27,7 +27,10 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -46,7 +49,9 @@ import java.util.Random;
  */
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
-
+	
+	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID + ":" + "textures/misc/vignette.png");
+	
 	@SubscribeEvent
 	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
@@ -58,13 +63,13 @@ public class ClientEventHandler {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (!cap.getState().isGraceful())
 			return;
-
+		
 		GlStateManager.pushMatrix();
 		
 		float leftHandedFactor = mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT) ? 1 : -1;
-		GlStateManager.translate(0.33F*leftHandedFactor, -0.23F, -0.5F); //move in place
-		GlStateManager.translate(-.8F*player.swingProgress*leftHandedFactor, -.8F*player.swingProgress, -.4F*player.swingProgress); //compensate for 'punching' motion
-		GlStateManager.translate(-(player.renderArmYaw - player.prevRenderArmYaw)/400F, (player.renderArmPitch - player.prevRenderArmPitch)/500F, 0); //compensate for 'swinging' motion
+		GlStateManager.translate(0.33F * leftHandedFactor, -0.23F, -0.5F); //move in place
+		GlStateManager.translate(-.8F * player.swingProgress * leftHandedFactor, -.8F * player.swingProgress, -.4F * player.swingProgress); //compensate for 'punching' motion
+		GlStateManager.translate(-(player.renderArmYaw - player.prevRenderArmYaw) / 400F, (player.renderArmPitch - player.prevRenderArmPitch) / 500F, 0); //compensate for 'swinging' motion
 		
 		RenderUtil.setupRenderLightning();
 		GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
@@ -80,8 +85,6 @@ public class ClientEventHandler {
 		GlStateManager.popMatrix();
 	}
 	
-	
-	
 	@SuppressWarnings("incomplete-switch")
 	@SubscribeEvent
 	public static void onRenderGui(RenderGameOverlayEvent.Post event) {
@@ -94,19 +97,17 @@ public class ClientEventHandler {
 			case GRACE:
 				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
 				break;
-				
+			
 			case GRACE_CRIT:
 				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
 				break;
-				
+			
 			case REGENERATING:
 				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;
 		}
 	}
 	
-	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID + ":" + "textures/misc/vignette.png");
-
 	@SubscribeEvent
 	public static void onPlaySound(PlaySoundEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
@@ -118,9 +119,9 @@ public class ClientEventHandler {
 			}
 		}
 	}
-
+	
 	private static void renderVignette(Vec3d color, float a, RegenState state) {
-		GlStateManager.color((float)color.x, (float)color.y, (float)color.z, a);
+		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
@@ -137,7 +138,7 @@ public class ClientEventHandler {
 		bufferbuilder.pos(scaledRes.getScaledWidth(), 0, z).tex(1, 0).endVertex();
 		bufferbuilder.pos(0, 0, z).tex(0, 0).endVertex();
 		tessellator.draw();
-
+		
 		if (!Loader.isModLoaded("lucraftcore")) {
 			String warning = "   ";
 			switch (state) {
@@ -154,13 +155,13 @@ public class ClientEventHandler {
 			}
 			Minecraft.getMinecraft().fontRenderer.drawString(warning, scaledRes.getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
 		}
-
+		
 		GlStateManager.depthMask(true);
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1, 1, 1, 1);
 	}
-
-
+	
+	
 	@SubscribeEvent
 	public static void onClientTick(TickEvent.ClientTickEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
@@ -172,15 +173,6 @@ public class ClientEventHandler {
 		}
 	}
 	
-	@SubscribeEvent
-	public static void onRenderPlayerPre(RenderPlayerEvent.Pre e) {
-		EntityPlayer player = e.getEntityPlayer();
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		if (cap.getState() == RegenState.REGENERATING) {
-			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
-		}
-	}
 	
 	@SubscribeEvent
 	public static void keyInput(InputUpdateEvent e) {
@@ -204,19 +196,19 @@ public class ClientEventHandler {
 		RegenObjects.ITEMS.forEach(RenderUtil::setItemRender);
 		RegenObjects.ITEMS = new ArrayList<>();
 	}
-
+	
 	@SubscribeEvent
 	public static void onDeath(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntityLiving();
 			SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
-
+			
 			if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) {
 				ClientUtil.sendResetPacket();
 			}
 		}
 	}
-
+	
 	@SubscribeEvent
 	public static void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
 		SkinChangingHandler.PLAYER_SKINS.clear();

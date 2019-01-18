@@ -1,7 +1,5 @@
 package me.fril.regeneration.handlers;
 
-import java.util.UUID;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.api.IActingHandler;
@@ -12,26 +10,23 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemBow;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 
+import java.util.UUID;
+
 class ActingServerHandler implements IActingHandler {
 	
-	private final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782"),
-	                   MAX_HEALTH_ID = UUID.fromString("5d6f0ba2-1286-46fc-b896-461c5cfd99cc");
-	
-	private final double HEART_REDUCTION = 0.5,
-	                     SPEED_REDUCTION = 0.25;
-	
-	private final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, 1),
-	                                heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, 1);
-	
-	
 	public static final IActingHandler INSTANCE = new ActingServerHandler();
+	private final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782"),
+			MAX_HEALTH_ID = UUID.fromString("5d6f0ba2-1286-46fc-b896-461c5cfd99cc");
+	private final double HEART_REDUCTION = 0.5,
+			SPEED_REDUCTION = 0.25;
+	private final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, 1),
+			heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, 1);
 	
-	private ActingServerHandler() {}
+	private ActingServerHandler() {
+	}
 	
 	
 	@Override
@@ -41,11 +36,12 @@ class ActingServerHandler implements IActingHandler {
 		
 		switch (cap.getState()) {
 			case REGENERATING:
-				float dm = Math.max(1, (player.world.getDifficulty().getId()+1) / 3F); //compensating for hard difficulty
+				float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); //compensating for hard difficulty
 				player.heal(stateProgress * 0.3F * dm);
 				player.setArrowCountInEntity(0);
+				ExplosionUtil.regenerationExplosion(player);
 				break;
-				
+			
 			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 				
@@ -54,16 +50,16 @@ class ActingServerHandler implements IActingHandler {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied nausea");
 					}
 				}
-
+				
 				if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.grace.criticalPhaseLength * 20 * (1 - stateProgress)), 0, false, false)) {
 					RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
 				}
-
+				
 				if (player.world.rand.nextDouble() < (RegenConfig.grace.criticalDamageChance / 100F))
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
 				
 				break;
-				
+			
 			case GRACE:
 				float weaknessPercentage = 0.5F;
 				
@@ -74,7 +70,7 @@ class ActingServerHandler implements IActingHandler {
 				}
 				
 				break;
-				
+			
 			case ALIVE:
 				break;
 			default:
@@ -83,12 +79,10 @@ class ActingServerHandler implements IActingHandler {
 	}
 	
 	
-	
-	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		ExplosionUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback/2, RegenConfig.regenerativeKnockbackRange);
+		ExplosionUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback / 2, RegenConfig.regenerativeKnockbackRange);
 		
 		//Reduce number of hearts, but compensate with absorption
 		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
@@ -98,16 +92,11 @@ class ActingServerHandler implements IActingHandler {
 	}
 	
 	
-	
-	
-	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
 		cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
 		RegenerationMod.DEBUGGER.getChannelFor(cap.getPlayer()).out("Applied speed reduction");
 	}
-	
-	
 	
 	
 	@Override
@@ -127,9 +116,9 @@ class ActingServerHandler implements IActingHandler {
 		player.removePassengers();
 		player.clearActivePotions();
 		player.dismountRidingEntity();
-
-        player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.REGENERATION_2, SoundCategory.PLAYERS, 1.0F, 1.0F);
-
+		
+		player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.REGENERATION_2, SoundCategory.PLAYERS, 1.0F, 1.0F);
+		
 		if (RegenConfig.resetHunger)
 			player.getFoodStats().setFoodLevel(20);
 		
@@ -137,10 +126,8 @@ class ActingServerHandler implements IActingHandler {
 			player.setAir(300);
 		
 		cap.extractRegeneration(1);
-		ExplosionUtil.regenerationExplosion(player);
+		;
 	}
-	
-	
 	
 	
 	@Override

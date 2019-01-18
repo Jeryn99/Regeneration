@@ -12,19 +12,19 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 @Config(modid = RegenerationMod.MODID, name = "Regeneration Mod")
 public class RegenConfig {
-
+	
 	@Config.LangKey("Loot")
 	public static final Loot loot = new Loot();
-
+	
 	@Config.Name("Grace Period")
 	public static final GracePeriod grace = new GracePeriod();
-
+	
 	@Config.Name("Lucraft Core")
 	public static final LucraftCore lucraftcore = new LucraftCore();
-
+	
 	@Config.Name("Tardis Mod")
 	public static final TardisMod tardisMod = new TardisMod();
-
+	
 	@Config.LangKey("config.regeneration.max_regens")
 	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
 	@Config.RequiresMcRestart
@@ -100,19 +100,19 @@ public class RegenConfig {
 	@Config.LangKey("config.regeneration.infinite_regenerations")
 	@Config.Comment("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.")
 	public static boolean infiniteRegeneration = false;
-
+	
 	@Config.LangKey("config.regeneration.regen_messages")
 	@Config.Comment("Sends a message to chat to say that a player is regenerating, and the reason for it")
 	public static boolean sendRegenDeathMessages = true;
-
+	
 	@Config.Comment("The URL skins are downloaded from when you reset back to Mojangs skin")
 	//TODO Actually use mojang instead
-    public static String downloadUrl = "https://crafatar.com/skins/%s";
-
+	public static String downloadUrl = "https://crafatar.com/skins/%s";
+	
 	@Config.LangKey("config,regeneration.changemyskin")
 	@Config.Comment("Disabling this will disable skin changing for you and you will retain your Mojang one")
 	public static boolean changeMySkin = true;
-
+	
 	public static class Loot {
 		
 		@Config.LangKey("config.regeneration.loot_regex")
@@ -142,26 +142,26 @@ public class RegenConfig {
 		public float criticalDamageChance = 1;
 		
 	}
-
+	
 	public static class LucraftCore {
-
+		
 		@Config.LangKey("config.regeneration.size_changing")
 		@Config.Comment("If this is true and LCCore is installed, you will change size on regeneration")
 		public boolean lucraftcoreSizeChanging = true;
-
+		
 		@Config.LangKey("config.regeneration.size_changing_min")
 		@Config.Comment("Minimum Size Change value")
 		public float sizeChangingMin = 0.796544F;
-
+		
 		@Config.LangKey("config.regeneration.size_changing_max")
 		@Config.Comment("Maximum Size Change value")
-        public float sizeChangingMax = 1.1F;
-
+		public float sizeChangingMax = 1.1F;
+		
 		@Config.LangKey("config.regeneration.radiation_immunity")
 		@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")
 		public boolean immuneToRadiation = true;
 	}
-
+	
 	public static class TardisMod {
 		@Config.LangKey("config.regeneration.tardis_damage")
 		@Config.Comment("If this is true and The Tardis mod is installed, it's systems will be slightly damaged")

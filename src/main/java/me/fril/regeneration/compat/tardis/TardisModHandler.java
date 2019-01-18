@@ -30,20 +30,20 @@ public class TardisModHandler implements IActingHandler {
 			playBells(cap, true);
 		}
 	}
-
+	
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
 		if (cap.getPlayer().world.provider instanceof WorldProviderTardis) {
 			playBells(cap, true);
 		}
 	}
-
+	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 		if (cap.getType() instanceof TypeFiery) {
 			damageTardisInRange(cap.getPlayer());
 		}
-
+		
 		if (cap.getPlayer().world.provider instanceof WorldProviderTardis) {
 			playBells(cap, true);
 		}
@@ -55,8 +55,8 @@ public class TardisModHandler implements IActingHandler {
 			playBells(cap, true);
 		}
 	}
-
-
+	
+	
 	private void playBells(IRegeneration cap, boolean force) {
 		if (cap.getPlayer().ticksExisted % 1200 == 0 && cap.getPlayer().world.provider instanceof WorldProviderTardis || force) {
 			cap.getPlayer().world.playSound(null, cap.getPlayer().getPosition(), TSounds.cloister_bell, SoundCategory.BLOCKS, 1, 1);
@@ -64,7 +64,7 @@ public class TardisModHandler implements IActingHandler {
 	}
 	
 	private void damageTardisInRange(EntityPlayer player) {
-        if (!RegenConfig.tardisMod.damageTardis) return;
+		if (!RegenConfig.tardisMod.damageTardis) return;
 		for (TileEntity te : player.world.loadedTileEntityList) {
 			if (!(te instanceof TileEntityTardis) || player.getDistanceSq(te.getPos()) > 10)
 				continue;

@@ -18,38 +18,49 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	EntityPlayer getPlayer();
 	
 	void tick();
+	
 	void synchronise();
 	
 	NBTTagCompound getStyle();
+	
 	void setStyle(NBTTagCompound nbt);
+	
 	Vec3d getPrimaryColor();
+	
 	Vec3d getSecondaryColor();
 	
 	int getRegenerationsLeft();
 	
-	/** Returns if the player is currently <i>able to</i> regenerate */
+	/**
+	 * Only for debug purposes!
+	 */
+	@Deprecated
+	void setRegenerationsLeft(int amount);
+	
+	/**
+	 * Returns if the player is currently <i>able to</i> regenerate
+	 */
 	default boolean canRegenerate() {
 		return (RegenConfig.infiniteRegeneration || getRegenerationsLeft() > 0) && getPlayer().posY > 0;
 	}
 	
 	void receiveRegenerations(int amount);
+	
 	void extractRegeneration(int amount);
+	
 	void triggerRegeneration();
 	
 	IRegenerationStateManager getStateManager();
+	
 	RegenState getState();
 	
 	IRegenType<?> getType();
-
-    byte[] getEncodedSkin();
-
-    void setEncodedSkin(byte[] string);
-
-	/** Only for debug purposes! */
-	@Deprecated
-	void setRegenerationsLeft(int amount);
-
+	
+	byte[] getEncodedSkin();
+	
+	void setEncodedSkin(byte[] string);
+	
 	SkinInfo.SkinType getSkinType();
-
+	
 	void setSkinType(String skinType);
 }

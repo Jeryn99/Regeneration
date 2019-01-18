@@ -14,13 +14,13 @@ import net.minecraft.world.World;
 public class ExplosionUtil {
 	
 	public static void regenerationExplosion(EntityPlayer player) {
-		explodeKill(player, player.world, player.getPosition(), RegenConfig.regenerativeKillRange);
 		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback, RegenConfig.regenerativeKnockbackRange);
+		explodeKill(player, player.world, player.getPosition(), RegenConfig.regenerativeKillRange);
 	}
 	
 	
 	public static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {
-		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity-> {
+		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
 			if (entity instanceof EntityLivingBase && !exploder.isDead) {
 				EntityLivingBase victim = (EntityLivingBase) entity;
 				
@@ -38,7 +38,7 @@ public class ExplosionUtil {
 	}
 	
 	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
-		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity-> {
+		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
 			if ((entity instanceof EntityCreature && entity.isNonBoss()) || (entity instanceof EntityPlayer && RegenConfig.regenerationKillsPlayers))
 				entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
 		});

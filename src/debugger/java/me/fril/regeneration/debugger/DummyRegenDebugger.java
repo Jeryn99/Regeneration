@@ -3,7 +3,9 @@ package me.fril.regeneration.debugger;
 import me.fril.regeneration.util.RegenState.Transition;
 import net.minecraft.entity.player.EntityPlayer;
 
-/** Used in headless environments */
+/**
+ * Used in headless environments
+ */
 public class DummyRegenDebugger implements IRegenDebugger {
 	
 	@Override

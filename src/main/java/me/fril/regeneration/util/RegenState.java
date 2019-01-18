@@ -1,15 +1,19 @@
 package me.fril.regeneration.util;
 
-import java.awt.Color;
+import java.awt.*;
 
 public enum RegenState {
 	
 	ALIVE,
 	GRACE, GRACE_CRIT,
-	REGENERATING;
+	REGENERATING, CORRUPT;
 	
 	public boolean isGraceful() {
 		return this == GRACE || this == GRACE_CRIT;
+	}
+	
+	public boolean isCorrupt() {
+		return this == CORRUPT;
 	}
 	
 	public enum Transition {

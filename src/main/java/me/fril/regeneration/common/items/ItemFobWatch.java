@@ -1,7 +1,6 @@
 package me.fril.regeneration.common.items;
 
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -18,7 +17,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import scala.collection.DebugUtils;
 
 /**
  * Created by Sub
@@ -50,8 +48,8 @@ public class ItemFobWatch extends Item {
 				return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 			
 			int supply = RegenConfig.regenCapacity - stack.getItemDamage(),
-				needed = RegenConfig.regenCapacity - cap.getRegenerationsLeft(),
-				used = Math.min(supply, needed);
+					needed = RegenConfig.regenCapacity - cap.getRegenerationsLeft(),
+					used = Math.min(supply, needed);
 			
 			if (cap.canRegenerate())
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);

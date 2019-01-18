@@ -1,11 +1,13 @@
 package me.fril.regeneration.debugger.util;
 
-import java.awt.EventQueue;
-
 import me.fril.regeneration.debugger.IDebugChannel;
 import me.fril.regeneration.util.RegenState.Transition;
 
-/** Delegates all methods to the {@link #target} using {@link EventQueue#invokeLater(Runnable)} */
+import java.awt.*;
+
+/**
+ * Delegates all methods to the {@link #target} using {@link EventQueue#invokeLater(Runnable)}
+ */
 public class EventQueueDebugChannelProxy implements IDebugChannel {
 	
 	private final IDebugChannel target;
@@ -17,35 +19,35 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 	
 	@Override
 	public void notifyExecution(Transition action, long tick) {
-		EventQueue.invokeLater(()-> {
+		EventQueue.invokeLater(() -> {
 			target.notifyExecution(action, tick);
 		});
 	}
 	
 	@Override
 	public void notifyCancel(Transition action, long wasInTicks) {
-		EventQueue.invokeLater(()-> {
+		EventQueue.invokeLater(() -> {
 			target.notifyCancel(action, wasInTicks);
 		});
 	}
 	
 	@Override
 	public void notifySchedule(Transition action, long inTicks) {
-		EventQueue.invokeLater(()-> {
+		EventQueue.invokeLater(() -> {
 			target.notifySchedule(action, inTicks);
 		});
 	}
 	
 	@Override
 	public void warn(Transition action, String msg) {
-		EventQueue.invokeLater(()-> {
+		EventQueue.invokeLater(() -> {
 			target.warn(action, msg);
 		});
 	}
 	
 	@Override
 	public void out(String msg) {
-		EventQueue.invokeLater(()-> {
+		EventQueue.invokeLater(() -> {
 			target.out(msg);
 		});
 	}
@@ -53,7 +55,7 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 	
 	@Override
 	public void notifyLoaded() {
-		EventQueue.invokeLater(()-> {
+		EventQueue.invokeLater(() -> {
 			target.notifyLoaded();
 		});
 	}
@@ -61,7 +63,7 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 	
 	@Override
 	public void warn(String msg) {
-		EventQueue.invokeLater(()-> {
+		EventQueue.invokeLater(() -> {
 			target.warn(msg);
 		});
 	}
@@ -69,7 +71,7 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 	
 	@Override
 	public void out(Transition action, String msg) {
-		EventQueue.invokeLater(()-> {
+		EventQueue.invokeLater(() -> {
 			target.out(action, msg);
 		});
 	}

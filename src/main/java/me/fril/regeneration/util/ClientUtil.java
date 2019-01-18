@@ -19,16 +19,16 @@ public class ClientUtil {
 	public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(sound, pitch, volume));
 	}
-
+	
 	/**
 	 * Checks if a players skin model is slim or the default. The Alex model is slime while the Steve model is default.
 	 */
 	public static boolean isSlimSkin(UUID playerUUID) {
 		return (playerUUID.hashCode() & 1) == 1;
 	}
-
-    public static void sendResetPacket() {
-        NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], isSlimSkin(Minecraft.getMinecraft().player.getUniqueID())));
-    }
-
+	
+	public static void sendResetPacket() {
+		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], isSlimSkin(Minecraft.getMinecraft().player.getUniqueID())));
+	}
+	
 }

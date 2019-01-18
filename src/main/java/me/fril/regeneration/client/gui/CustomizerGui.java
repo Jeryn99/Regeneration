@@ -13,6 +13,7 @@ import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -22,13 +23,12 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.io.IOException;
 
 public class CustomizerGui extends GuiContainer {
 	public static final int ID = 0;
 	
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
-
+	
 	private GuiButtonExt btnDefault, btnReset, btnOpenFolder, btnResetSkin;
 	private GuiColorSlider slidePrimaryRed, slidePrimaryGreen, slidePrimaryBlue, slideSecondaryRed, slideSecondaryGreen, slideSecondaryBlue;
 	
@@ -53,33 +53,31 @@ public class CustomizerGui extends GuiContainer {
 		initialPrimary = cap.getPrimaryColor();
 		initialSecondary = cap.getSecondaryColor();
 		
-		float primaryRed = (float)initialPrimary.x, primaryGreen = (float)initialPrimary.y, primaryBlue = (float)initialPrimary.z;
-		float secondaryRed = (float)initialSecondary.x, secondaryGreen = (float)initialSecondary.y, secondaryBlue = (float)initialSecondary.z;
-
+		float primaryRed = (float) initialPrimary.x, primaryGreen = (float) initialPrimary.y, primaryBlue = (float) initialPrimary.z;
+		float secondaryRed = (float) initialSecondary.x, secondaryGreen = (float) initialSecondary.y, secondaryBlue = (float) initialSecondary.z;
+		
 		final int btnW = 60, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
-
-		int length = Minecraft.getMinecraft().fontRenderer.getStringWidth(new TextComponentTranslation("regeneration.info.reset_skin").getUnformattedText() + 4);
-
+		
 		//WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
 		btnReset = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.info.undo").getFormattedText());
 		btnDefault = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.info.default").getFormattedText());
-        btnResetSkin = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.reset_skin").getFormattedText());
-        btnOpenFolder = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.open_folder").getFormattedText());
-
+		btnResetSkin = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.reset_skin").getFormattedText());
+		btnOpenFolder = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.open_folder").getFormattedText());
+		
 		btnReset.enabled = false;
 		buttonList.add(btnReset);
 		buttonList.add(btnDefault);
 		buttonList.add(btnOpenFolder);
 		buttonList.add(btnResetSkin);
 		
-		slidePrimaryRed     = new GuiColorSlider(5, cx + 10, cy + 65,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
-		slidePrimaryGreen   = new GuiColorSlider(6, cx + 10, cy + 84,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
-		slidePrimaryBlue    = new GuiColorSlider(7, cx + 10, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this::onChangeSliderValue);
+		slidePrimaryRed = new GuiColorSlider(5, cx + 10, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
+		slidePrimaryGreen = new GuiColorSlider(6, cx + 10, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
+		slidePrimaryBlue = new GuiColorSlider(7, cx + 10, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this::onChangeSliderValue);
 		
-		slideSecondaryRed   = new GuiColorSlider(8, cx + 96, cy + 65,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, this::onChangeSliderValue);
-		slideSecondaryGreen = new GuiColorSlider(9, cx + 96, cy + 84,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this::onChangeSliderValue);
-		slideSecondaryBlue  = new GuiColorSlider(10, cx + 96, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this::onChangeSliderValue);
+		slideSecondaryRed = new GuiColorSlider(8, cx + 96, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, this::onChangeSliderValue);
+		slideSecondaryGreen = new GuiColorSlider(9, cx + 96, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this::onChangeSliderValue);
+		slideSecondaryBlue = new GuiColorSlider(10, cx + 96, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this::onChangeSliderValue);
 		
 		buttonList.add(slidePrimaryRed);
 		buttonList.add(slidePrimaryGreen);
@@ -88,22 +86,21 @@ public class CustomizerGui extends GuiContainer {
 		buttonList.add(slideSecondaryRed);
 		buttonList.add(slideSecondaryGreen);
 		buttonList.add(slideSecondaryBlue);
-
+		
 	}
-	
 	
 	
 	private void onChangeSliderValue(@Nullable GuiSlider slider) {
 		btnReset.enabled = true;
 		
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setFloat("PrimaryRed",   (float) slidePrimaryRed.getValue());
+		nbt.setFloat("PrimaryRed", (float) slidePrimaryRed.getValue());
 		nbt.setFloat("PrimaryGreen", (float) slidePrimaryGreen.getValue());
-		nbt.setFloat("PrimaryBlue",  (float) slidePrimaryBlue.getValue());
+		nbt.setFloat("PrimaryBlue", (float) slidePrimaryBlue.getValue());
 		
-		nbt.setFloat("SecondaryRed",   (float) slideSecondaryRed.getValue());
+		nbt.setFloat("SecondaryRed", (float) slideSecondaryRed.getValue());
 		nbt.setFloat("SecondaryGreen", (float) slideSecondaryGreen.getValue());
-		nbt.setFloat("SecondaryBlue",  (float) slideSecondaryBlue.getValue());
+		nbt.setFloat("SecondaryBlue", (float) slideSecondaryBlue.getValue());
 		
 		NetworkHandler.INSTANCE.sendToServer(new MessageSaveStyle(nbt));
 	}
@@ -124,20 +121,14 @@ public class CustomizerGui extends GuiContainer {
 			slidePrimaryRed.setValue(0.93F);
 			slidePrimaryGreen.setValue(0.61F);
 			slidePrimaryBlue.setValue(0F);
-
+			
 			slideSecondaryRed.setValue(1F);
 			slideSecondaryGreen.setValue(0.5F);
 			slideSecondaryBlue.setValue(0.18F);
-
+			
 			onChangeSliderValue(null);
 		} else if (button.id == btnOpenFolder.id) {
-
-			try {
-				Desktop.getDesktop().open(SkinChangingHandler.skinDir);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			OpenGlHelper.openFile(SkinChangingHandler.SKIN_DIRECTORY);
 		} else if (button.id == btnResetSkin.id) {
 			ClientUtil.sendResetPacket();
 		}
@@ -151,15 +142,15 @@ public class CustomizerGui extends GuiContainer {
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
 		
-		RenderUtil.drawRect(cx + 10,  cy + 44, cx + 81, cy + 61, 0.1F, 0.1F, 0.1F, 1);
-		RenderUtil.drawRect(cx + 11,  cy + 45, cx + 80, cy + 60, (float) slidePrimaryRed.getValue(),   (float) slidePrimaryGreen.getValue(),   (float) slidePrimaryBlue.getValue(), 1);
+		RenderUtil.drawRect(cx + 10, cy + 44, cx + 81, cy + 61, 0.1F, 0.1F, 0.1F, 1);
+		RenderUtil.drawRect(cx + 11, cy + 45, cx + 80, cy + 60, (float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue(), 1);
 		
 		RenderUtil.drawRect(cx + 95, cy + 44, cx + 166, cy + 61, 0.1F, 0.1F, 0.1F, 1);
 		RenderUtil.drawRect(cx + 96, cy + 45, cx + 165, cy + 60, (float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue(), 1);
 		
 		
-		Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(),   (float) slidePrimaryGreen.getValue(),   (float) slidePrimaryBlue.getValue()),
-				secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(),   (float) slideSecondaryGreen.getValue(),   (float) slideSecondaryBlue.getValue());
+		Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue()),
+				secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue());
 		
 		String str = new TextComponentTranslation("regeneration.info.primary").getFormattedText();
 		int length = mc.fontRenderer.getStringWidth(str);

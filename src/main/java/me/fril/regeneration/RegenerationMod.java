@@ -35,7 +35,7 @@ public class RegenerationMod {
 	
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
-    public static final String VERSION = "1.3.5";
+	public static final String VERSION = "1.3.5";
 	public static final String UPDATE_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/master/update.json";
 	
 	public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
@@ -43,7 +43,7 @@ public class RegenerationMod {
 	@Mod.Instance(MODID)
 	public static RegenerationMod INSTANCE;
 	public static IRegenDebugger DEBUGGER;
-
+	
 	public static Logger LOG = LogManager.getLogger(NAME);
 	
 	@SidedProxy(clientSide = "me.fril.regeneration.proxy.ClientProxy", serverSide = "me.fril.regeneration.proxy.CommonProxy")
@@ -55,14 +55,14 @@ public class RegenerationMod {
 		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
 		
 		ActingForwarder.init();
-
+		
 		if (Loader.isModLoaded("tardis")) {
-            ActingForwarder.register(TardisModHandler.class, Side.SERVER);
+			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
-
-        if (Loader.isModLoaded("lucraftcore")) {
-            ActingForwarder.register(LucraftCoreHandler.class, Side.SERVER);
-        }
+		
+		if (Loader.isModLoaded("lucraftcore")) {
+			ActingForwarder.register(LucraftCoreHandler.class, Side.SERVER);
+		}
 	}
 	
 	@EventHandler
@@ -77,7 +77,6 @@ public class RegenerationMod {
 	public void postInit(FMLPostInitializationEvent e) {
 		proxy.postInit();
 	}
-	
 	
 	
 	@EventHandler

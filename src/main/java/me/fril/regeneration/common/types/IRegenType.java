@@ -8,35 +8,11 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
- * 
+ * <p>
  * Created by Sub
  * on 16/09/2018.
  */
 public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable<NBTTagCompound> {
-	
-	/** @return in ticks */
-	int getAnimationLength();
-	R getRenderer();
-	
-	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {}
-	default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {}
-	default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {}
-	
-	
-	
-	@Override
-	default NBTTagCompound serializeNBT() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("name", this.getClass().getName());
-		return nbt;
-	}
-	
-	@Override
-	default void deserializeNBT(NBTTagCompound nbt) {
-		if (!nbt.getString("name").equals(this.getClass().getName()))
-			throw new IllegalStateException("Deserialising wrong type instance (nbt: "+nbt.getString("name")+", instance: "+this.getClass().getName());
-	}
-	
 	
 	static IRegenType<?> getType(IRegenType<?> currentType, NBTTagCompound nbt) {
 		try {
@@ -53,6 +29,35 @@ public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable
 			e.printStackTrace();
 			return new TypeFiery();
 		}
+	}
+	
+	/**
+	 * @return in ticks
+	 */
+	int getAnimationLength();
+	
+	R getRenderer();
+	
+	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {
+	}
+	
+	default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
+	}
+	
+	default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
+	}
+	
+	@Override
+	default NBTTagCompound serializeNBT() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setString("name", this.getClass().getName());
+		return nbt;
+	}
+	
+	@Override
+	default void deserializeNBT(NBTTagCompound nbt) {
+		if (!nbt.getString("name").equals(this.getClass().getName()))
+			throw new IllegalStateException("Deserialising wrong type instance (nbt: " + nbt.getString("name") + ", instance: " + this.getClass().getName());
 	}
 	
 }

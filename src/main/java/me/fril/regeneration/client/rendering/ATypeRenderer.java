@@ -9,6 +9,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent.Pre;
 public abstract class ATypeRenderer<T> {
 	
 	protected abstract void renderRegeneratingPlayerPre(T type, Pre event, IRegeneration capability);
+	
 	protected abstract void renderRegenerationLayer(T type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
 	
 	
@@ -17,7 +18,7 @@ public abstract class ATypeRenderer<T> {
 	@SuppressWarnings("unchecked")
 	public final void onRenderRegeneratingPlayerPre(IRegenType<?> type, Pre event, IRegeneration capability) {
 		try {
-			renderRegeneratingPlayerPre((T)type, event, capability);
+			renderRegeneratingPlayerPre((T) type, event, capability);
 		} catch (ClassCastException e) {
 			throw new IllegalStateException("RegenType <-> RegenRenderType mismatch", e);
 		}
@@ -26,7 +27,7 @@ public abstract class ATypeRenderer<T> {
 	@SuppressWarnings("unchecked")
 	public final void onRenderRegenerationLayer(IRegenType<?> type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		try {
-			renderRegenerationLayer((T)type, renderLivingBase, capability, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+			renderRegenerationLayer((T) type, renderLivingBase, capability, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		} catch (ClassCastException e) {
 			throw new IllegalStateException("RegenType <-> RegenRenderType mismatch", e);
 		}

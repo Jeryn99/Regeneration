@@ -1,38 +1,28 @@
 package me.fril.regeneration.util;
 
-import java.util.List;
-
 import me.fril.regeneration.network.MessageSetPerspective;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIAttackRanged;
-import net.minecraft.entity.ai.EntityAIAttackRangedBow;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIOwnerHurtByTarget;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.EntityAIZombieAttack;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+
+import java.util.List;
 
 /**
  * Created by Sub
  * on 20/09/2018.
  */
 public class PlayerUtil {
-
+	
 	public static void sendMessage(EntityPlayer player, String message, boolean hotBar) {
 		if (!player.world.isRemote) {
 			player.sendStatusMessage(new TextComponentTranslation(message), hotBar);
@@ -77,10 +67,10 @@ public class PlayerUtil {
 			}
 		}
 	}
-
-    public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {
-        if (player.getActivePotionEffects().stream().noneMatch(pe -> pe.getPotion() == potion)) {
-            player.addPotionEffect(new PotionEffect(potion, length, amplifier, ambient, showParticles));
+	
+	public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {
+		if (player.getActivePotionEffects().stream().noneMatch(pe -> pe.getPotion() == potion)) {
+			player.addPotionEffect(new PotionEffect(potion, length, amplifier, ambient, showParticles));
 			return true;
 		} else return false;
 	}

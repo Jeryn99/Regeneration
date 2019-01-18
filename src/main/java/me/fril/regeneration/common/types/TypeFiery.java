@@ -47,7 +47,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
 		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 		double z = player.posZ + player.getRNG().nextGaussian() * 2;
-        player.world.newExplosion(player, x, y, z, 0.1F, RegenConfig.fieryRegen, false);
+		player.world.newExplosion(player, x, y, z, 0.1F, RegenConfig.fieryRegen, false);
 		
 		for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east())) {
 			if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) {
@@ -59,27 +59,28 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
 		if (!player.world.isRemote) { //NOTE redundant, only called on server side (TODO document)
-			PlayerUtil.setPerspective((EntityPlayerMP)player, false, true);
+			PlayerUtil.setPerspective((EntityPlayerMP) player, false, true);
 		}
 		
 		animationTicks = 0;
 	}
 	
 	
-	
 	@Override
 	public int getAnimationLength() { //TODO shorten to be in line with the music (don't forget to update 'p' and 'r'!)
-        return 14 * 20; //14 seconds of 20 ticks
+		return 14 * 20; //14 seconds of 20 ticks
 	}
 	
-	/** @deprecated No idea why you'd want to use this outside of this class, so think carefully before you do because it's probably wrong. Keep in mind that animations can change length, so <b>never</b> use this in a non-relative way */
+	/**
+	 * @deprecated No idea why you'd want to use this outside of this class, so think carefully before you do because it's probably wrong. Keep in mind that animations can change length, so <b>never</b> use this in a non-relative way
+	 */
 	@Deprecated
 	public long getAnimationTicks() {
 		return animationTicks;
 	}
 	
 	public double getAnimationProgress() {
-		return Math.min(1, animationTicks / (double)getAnimationLength());
+		return Math.min(1, animationTicks / (double) getAnimationLength());
 	}
 	
 	
@@ -98,7 +99,6 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		if (nbtTicks > animationTicks)
 			animationTicks = nbtTicks;
 	}
-	
 	
 	
 	@Override

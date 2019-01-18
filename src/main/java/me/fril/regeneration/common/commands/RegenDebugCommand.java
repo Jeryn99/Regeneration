@@ -1,10 +1,5 @@
 package me.fril.regeneration.common.commands;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -15,6 +10,10 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class RegenDebugCommand extends CommandBase {
 	
@@ -33,16 +32,16 @@ public class RegenDebugCommand extends CommandBase {
 			case "fastforward":
 				cap.getStateManager().fastForward();
 				break;
-				
+			
 			case "open":
 				RegenerationMod.DEBUGGER.open();
 				break;
-				
+			
 			case "setregens":
 				if (amount >= 0)
 					cap.setRegenerationsLeft(amount);
 				else
-					notifyCommandListener(sender, this, "Regenerations: "+cap.getRegenerationsLeft());
+					notifyCommandListener(sender, this, "Regenerations: " + cap.getRegenerationsLeft());
 				break;
 		}
 		

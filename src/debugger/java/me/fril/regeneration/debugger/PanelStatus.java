@@ -1,17 +1,11 @@
 package me.fril.regeneration.debugger;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.RegenState.Transition;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.swing.*;
+import java.awt.*;
 
 @SuppressWarnings("serial")
 class PanelStatus extends JPanel {
@@ -20,8 +14,8 @@ class PanelStatus extends JPanel {
 	
 	public PanelStatus() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, 1.0 };
-		gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0,/* 0.0,*/ 0.0, 1.0 };
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 1.0, 0.0, 1.0};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0,/* 0.0,*/ 0.0, 1.0};
 		setLayout(gridBagLayout);
 		
 		JLabel lblRegensLeft = new JLabel("Regenerations:");
@@ -106,7 +100,6 @@ class PanelStatus extends JPanel {
 	}
 	
 	
-	
 	public void updateLabels(IRegeneration cap) {
 		lblStateVal.setText(cap.getState().toString());
 		lblRegensLeftVal.setText(cap.getRegenerationsLeft() + "");
@@ -115,7 +108,7 @@ class PanelStatus extends JPanel {
 		@SuppressWarnings("deprecation")
 		Pair<Transition, Long> scheduled = cap.getStateManager().getScheduledEvent();
 		lblScheduledVal.setForeground(scheduled == null ? Color.BLACK : scheduled.getLeft().color);
-		lblScheduledVal.setText(scheduled == null ? "nothing" : scheduled.getLeft() + " in " + scheduled.getRight() + " ticks ("+(round(scheduled.getRight()/20F, 1))+"s)");
+		lblScheduledVal.setText(scheduled == null ? "nothing" : scheduled.getLeft() + " in " + scheduled.getRight() + " ticks (" + (round(scheduled.getRight() / 20F, 1)) + "s)");
 	}
 	
 	
