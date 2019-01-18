@@ -13,7 +13,6 @@ import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -23,6 +22,7 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.io.IOException;
 
 public class CustomizerGui extends GuiContainer {
 	public static final int ID = 0;
@@ -58,6 +58,8 @@ public class CustomizerGui extends GuiContainer {
 		
 		final int btnW = 60, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
+		
+		int length = Minecraft.getMinecraft().fontRenderer.getStringWidth(new TextComponentTranslation("regeneration.info.reset_skin").getUnformattedText() + 4);
 		
 		//WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
 		btnReset = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.info.undo").getFormattedText());
@@ -128,7 +130,13 @@ public class CustomizerGui extends GuiContainer {
 			
 			onChangeSliderValue(null);
 		} else if (button.id == btnOpenFolder.id) {
-			OpenGlHelper.openFile(SkinChangingHandler.SKIN_DIRECTORY);
+			
+			try {
+				Desktop.getDesktop().open(SkinChangingHandler.SKIN_DIRECTORY);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 		} else if (button.id == btnResetSkin.id) {
 			ClientUtil.sendResetPacket();
 		}

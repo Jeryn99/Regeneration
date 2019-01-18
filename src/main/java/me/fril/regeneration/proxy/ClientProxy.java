@@ -58,6 +58,7 @@ public class ClientProxy extends CommonProxy {
 			renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); //Add new item layer
 			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
 		}
+		
 	}
 	
 	@Override

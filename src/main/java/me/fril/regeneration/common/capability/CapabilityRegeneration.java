@@ -111,7 +111,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
-		
 		if (nbt.hasKey("skinType")) {
 			setSkinType(nbt.getString("skinType"));
 		} else {

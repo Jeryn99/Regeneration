@@ -26,8 +26,8 @@ public class LimbManipulationUtil {
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb) {
 		LimbManipulator manipulator = new LimbManipulator();
 		List<LayerRenderer<AbstractClientPlayer>> layerList = renderPlayer.layerRenderers;
-		
 		try {
+			
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
@@ -67,7 +67,7 @@ public class LimbManipulationUtil {
 	
 	@SubscribeEvent
 	public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-		RenderLivingBase renderer = (RenderLivingBase) Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(event.getEntityPlayer());
+		RenderLivingBase<?> renderer = (RenderLivingBase<?>) Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(event.getEntityPlayer());
 		ModelBase playerModel = renderer.getMainModel();
 		if (playerModel != null && playerModel.boxList != null) {
 			for (ModelRenderer modelRenderer : playerModel.boxList) {

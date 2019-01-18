@@ -25,7 +25,7 @@ class ActingServerHandler implements IActingHandler {
 	private final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, 1),
 			heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, 1);
 	
-	private ActingServerHandler() {
+	public ActingServerHandler() {
 	}
 	
 	
@@ -126,7 +126,6 @@ class ActingServerHandler implements IActingHandler {
 			player.setAir(300);
 		
 		cap.extractRegeneration(1);
-		;
 	}
 	
 	

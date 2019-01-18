@@ -30,6 +30,10 @@ class ActingClientHandler implements IActingHandler {
 	/**
 	 * SOON test multiplayer sound handling with hydro
 	 * <p>
+	 * <<<<<<< HEAD
+	 * =======
+	 * Is opening watch heard by others?
+	 * >>>>>>> master
 	 * Is transferring heard by others?
 	 * Is critical heard by others?
 	 * Is heartbeat heard by others? < DEAD

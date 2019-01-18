@@ -27,7 +27,6 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 	
 	@Override
 	public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		
 		if (!CapabilityRegeneration.getForPlayer(entitylivingbaseIn).getState().equals(RegenState.CORRUPT)) return;
 		
 		mainModel = playerRenderer.getMainModel();
@@ -47,6 +46,9 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 		GlStateManager.popMatrix();
 		
 		GlStateManager.pushMatrix();
+		mainModel = playerRenderer.getMainModel();
+		GlStateManager.pushMatrix();
+		
 		ResourceLocation playerTexture = playerRenderer.getEntityTexture((AbstractClientPlayer) entitylivingbaseIn);
 		if (playerTexture != null) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(playerTexture);
@@ -60,6 +62,7 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 		GlStateManager.blendFunc(1, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
 		GlStateManager.color(0.2f, 0.2f, 1, 0.3f);
+		
 		
 		if (entitylivingbaseIn.world.rand.nextInt(3) == 1) {
 			GlStateManager.translate(0, entitylivingbaseIn.world.rand.nextInt(6) / 100.0f, 0);
@@ -78,6 +81,13 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 		GlStateManager.enableCull();
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disableCull();
+		GlStateManager.scale(1, 1, 1);
+		mainModel.isChild = false;
+		mainModel.isSneak = entitylivingbaseIn.isSneaking();
+		mainModel.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		
+		GlStateManager.disableCull();
+		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.popMatrix();
 	}
 	

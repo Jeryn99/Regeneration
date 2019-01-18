@@ -17,7 +17,7 @@ public class ActingForwarder {
 	private static List<IActingHandler> serverHandlers = new ArrayList<>(), clientHandlers = new ArrayList<>();
 	
 	public static void init() {
-		register(ActingServerHandler.INSTANCE, Side.SERVER);
+		register(ActingServerHandler.class, Side.SERVER);
 		
 		if (FMLCommonHandler.instance().getSide() != Side.SERVER) {
 			register(ActingClientHandler.INSTANCE, Side.CLIENT);
