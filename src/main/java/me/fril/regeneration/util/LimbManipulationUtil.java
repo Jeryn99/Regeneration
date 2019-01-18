@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.fril.regeneration.RegenerationMod;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -67,8 +65,10 @@ public class LimbManipulationUtil {
 	
 	@SubscribeEvent
 	public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-		RenderLivingBase<?> renderer = (RenderLivingBase<?>) Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(event.getEntityPlayer());
+		RenderPlayer renderer = event.getRenderer();
 		ModelBase playerModel = renderer.getMainModel();
+		List<LayerRenderer<AbstractClientPlayer>> layerList = renderer.layerRenderers;
+		
 		if (playerModel != null && playerModel.boxList != null) {
 			for (ModelRenderer modelRenderer : playerModel.boxList) {
 				if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
@@ -79,8 +79,7 @@ public class LimbManipulationUtil {
 		}
 		
 		try {
-			for (Object layer : renderer.layerRenderers) {
-				
+			for (LayerRenderer layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
 					

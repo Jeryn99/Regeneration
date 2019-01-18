@@ -214,7 +214,6 @@ public class SkinChangingHandler {
 	
 	private static void setPlayerModel(RenderPlayer renderer, ModelBase model) {
 		renderer.mainModel = model;
-		// ObfuscationReflectionHelper.setPrivateValue(RenderLivingBase.class, renderer, model, 2);
 	}
 	
 	@SubscribeEvent
