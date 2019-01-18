@@ -1,8 +1,9 @@
 package me.fril.regeneration.client.skinhandling;
 
 public enum DefaultSkins {
-	FIFTH(true, "https://i.imgur.com/KY3uHvR.png"),
-	HEROBRINE(false, "https://i.imgur.com/I0EzTrk.png");
+	SIXTH(true, "https://github.com/Suffril/Regeneration/blob/skins/skins/alex/six_doctor.png?raw=true"),
+	ELEVENTH(true, "https://github.com/Suffril/Regeneration/blob/skins/alex/eleventh_doctor.png?raw=true"),
+	HEROBRINE(false, "https://github.com/Suffril/Regeneration/blob/skins/skins/steve/herobrine.png?raw=true");
 	
 	private final String url;
 	private final boolean alexDir;
