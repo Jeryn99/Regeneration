@@ -1,9 +1,5 @@
 package me.fril.regeneration.client;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Random;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -26,16 +22,16 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -43,6 +39,8 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
+	
+	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID + ":" + "textures/misc/vignette.png");
 	
 	@SubscribeEvent
 	public static void onRenderHand(RenderHandEvent e) {
@@ -61,9 +59,9 @@ public class ClientEventHandler {
 		GlStateManager.pushMatrix();
 		
 		float leftHandedFactor = mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT) ? 1 : -1;
-		GlStateManager.translate(0.33F*leftHandedFactor, -0.23F, -0.5F); //move in place
-		GlStateManager.translate(-.8F*player.swingProgress*leftHandedFactor, -.8F*player.swingProgress, -.4F*player.swingProgress); //compensate for 'punching' motion
-		GlStateManager.translate(-(player.renderArmYaw - player.prevRenderArmYaw)/400F, (player.renderArmPitch - player.prevRenderArmPitch)/500F, 0); //compensate for 'swinging' motion
+		GlStateManager.translate(0.33F * leftHandedFactor, -0.23F, -0.5F); //move in place
+		GlStateManager.translate(-.8F * player.swingProgress * leftHandedFactor, -.8F * player.swingProgress, -.4F * player.swingProgress); //compensate for 'punching' motion
+		GlStateManager.translate(-(player.renderArmYaw - player.prevRenderArmYaw) / 400F, (player.renderArmPitch - player.prevRenderArmPitch) / 500F, 0); //compensate for 'swinging' motion
 		
 		RenderUtil.setupRenderLightning();
 		GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
@@ -79,8 +77,6 @@ public class ClientEventHandler {
 		GlStateManager.popMatrix();
 	}
 	
-	
-	
 	@SuppressWarnings("incomplete-switch")
 	@SubscribeEvent
 	public static void onRenderGui(RenderGameOverlayEvent.Post event) {
@@ -93,21 +89,19 @@ public class ClientEventHandler {
 			case GRACE:
 				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
 				break;
-				
+			
 			case GRACE_CRIT:
 				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
 				break;
-				
+			
 			case REGENERATING:
 				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;
 		}
 	}
 	
-	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID + ":" + "textures/misc/vignette.png");
-	
 	private static void renderVignette(Vec3d color, float a, RegenState state) {
-		GlStateManager.color((float)color.x, (float)color.y, (float)color.z, a);
+		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
@@ -147,7 +141,6 @@ public class ClientEventHandler {
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1, 1, 1, 1);
 	}
-	
 	
 	
 	@SubscribeEvent

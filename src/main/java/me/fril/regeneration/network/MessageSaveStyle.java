@@ -17,7 +17,8 @@ public class MessageSaveStyle implements IMessage {
 	
 	private NBTTagCompound style;
 	
-	public MessageSaveStyle() {}
+	public MessageSaveStyle() {
+	}
 	
 	public MessageSaveStyle(NBTTagCompound nbtTagCompound) {
 		style = nbtTagCompound;
@@ -36,7 +37,7 @@ public class MessageSaveStyle implements IMessage {
 	public static class Handler implements IMessageHandler<MessageSaveStyle, IMessage> {
 		@Override
 		public IMessage onMessage(MessageSaveStyle message, MessageContext ctx) {
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(()-> {
+			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
 				cap.setStyle(message.style);
 				cap.synchronise();

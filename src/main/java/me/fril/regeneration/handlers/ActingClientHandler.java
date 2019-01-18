@@ -1,7 +1,5 @@
 package me.fril.regeneration.handlers;
 
-import org.lwjgl.input.Keyboard;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.sound.ConditionalSound;
@@ -13,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
+import org.lwjgl.input.Keyboard;
 
 class ActingClientHandler implements IActingHandler {
 	
@@ -21,10 +20,12 @@ class ActingClientHandler implements IActingHandler {
 	//TODO 'now a timelord' into toast
 	//TODO check message lang keys
 	
-	private ActingClientHandler() {}
+	private ActingClientHandler() {
+	}
 	
-	/** SOON test multiplayer sound handling with hydro
-	 * 
+	/**
+	 * SOON test multiplayer sound handling with hydro
+	 * <p>
 	 * Is opening watch heard by others?
 	 * Is transferring heard by others?
 	 * Is critical heard by others?
@@ -41,9 +42,9 @@ class ActingClientHandler implements IActingHandler {
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_grace"),
-								new TextComponentTranslation("regeneration.toast.enter_grace.sub", Keyboard.getKeyName(RegenKeyBinds.REGEN_NOW.getKeyCode()), (RegenConfig.Grace.criticalPhaseLength + RegenConfig.Grace.gracePhaseLength)/60 ), cap.getState());
-		System.out.println((RegenConfig.Grace.criticalPhaseLength + RegenConfig.Grace.gracePhaseLength)/60 );
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, ()->!cap.getState().isGraceful()));
+				new TextComponentTranslation("regeneration.toast.enter_grace.sub", Keyboard.getKeyName(RegenKeyBinds.REGEN_NOW.getKeyCode()), (RegenConfig.Grace.criticalPhaseLength + RegenConfig.Grace.gracePhaseLength) / 60), cap.getState());
+		System.out.println((RegenConfig.Grace.criticalPhaseLength + RegenConfig.Grace.gracePhaseLength) / 60);
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful()));
 	}
 	
 	@Override
@@ -54,13 +55,13 @@ class ActingClientHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.REGENERATION, 1.0F, 0.5F), ()->cap.getState() != RegenState.REGENERATING));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.REGENERATION, 1.0F, 0.5F), () -> cap.getState() != RegenState.REGENERATING));
 	}
 	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
-		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_critical"), new TextComponentTranslation("regeneration.toast.enter_critical.sub", RegenConfig.Grace.criticalPhaseLength/60), cap.getState());
-		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.CRITICAL_STAGE, 1.0F, 0.5F), ()->cap.getState() != RegenState.GRACE_CRIT));
+		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_critical"), new TextComponentTranslation("regeneration.toast.enter_critical.sub", RegenConfig.Grace.criticalPhaseLength / 60), cap.getState());
+		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.CRITICAL_STAGE, 1.0F, 0.5F), () -> cap.getState() != RegenState.GRACE_CRIT));
 	}
 	
 }

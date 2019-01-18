@@ -97,7 +97,6 @@ public class RegenConfig { // TODO externalize comment strings?
 	public static boolean sendRegenDeathMessages = true;
 	
 	
-	
 	public static class Loot {
 		
 		@Config.LangKey("config.regeneration.loot_regex")

@@ -20,7 +20,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 	@Override
 	public boolean tick() {
 		if (scheduledTick == -1)
-			RegenerationMod.DEBUGGER.getChannelFor(player).warn("Ticking finsished/canceled ScheduledAction ("+action+")");
+			RegenerationMod.DEBUGGER.getChannelFor(player).warn("Ticking finsished/canceled ScheduledAction (" + action + ")");
 		
 		boolean willExecute = currentTick == scheduledTick;
 		if (willExecute)
@@ -35,7 +35,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 	
 	@Override
 	public void cancel() {
-		RegenerationMod.DEBUGGER.getChannelFor(player).notifyCancel(action, scheduledTick-currentTick);
+		RegenerationMod.DEBUGGER.getChannelFor(player).notifyCancel(action, scheduledTick - currentTick);
 		super.cancel();
 	}
 	

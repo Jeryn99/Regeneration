@@ -82,12 +82,9 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
-			CapabilityRegeneration.getForPlayer((EntityPlayer)e.getEntityLiving()).synchronise(); //NOW test this
+			CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntityLiving()).synchronise(); //NOW test this
 		}
 	}
-	
-	
-	
 	
 	
 	//============ USER EVENTS ==========
@@ -96,7 +93,7 @@ public class RegenEventHandler {
 	public static void onHurt(LivingDamageEvent event) {
 		Entity trueSource = event.getSource().getTrueSource();
 		
-		if(trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving){
+		if (trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {
 			EntityPlayer player = (EntityPlayer) trueSource;
 			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event.getEntityLiving());
 		}
@@ -118,7 +115,7 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onKnockback(LivingKnockBackEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
-			if (CapabilityRegeneration.getForPlayer((EntityPlayer)event.getEntityLiving()).getState() == RegenState.REGENERATING) {
+			if (CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).getState() == RegenState.REGENERATING) {
 				event.setCanceled(true);
 			}
 		}
@@ -131,7 +128,7 @@ public class RegenEventHandler {
 			return;
 		
 		NBTTagCompound nbt = event.player.getEntityData(),
-		               persist = nbt.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+				persist = nbt.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
 		if (!persist.getBoolean("loggedInBefore"))
 			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
 		persist.setBoolean("loggedInBefore", true);
@@ -147,7 +144,7 @@ public class RegenEventHandler {
 		
 		//TODO configurable chances? Maybe by doing a simple loot table tutorial?
 		LootEntryTable entry = new LootEntryTable(RegenerationMod.LOOT_FILE, 1, 0, new LootCondition[0], "regeneration_inject_entry");
-		LootPool pool = new LootPool(new LootEntry[] { entry }, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(1), "regeneration_inject_pool");
+		LootPool pool = new LootPool(new LootEntry[]{entry}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(1), "regeneration_inject_pool");
 		event.getTable().addPool(pool);
 	}
 	

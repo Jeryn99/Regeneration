@@ -1,15 +1,15 @@
 package me.fril.regeneration.handlers;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageRegenStateEvent;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActingForwarder {
 	
@@ -66,30 +66,30 @@ public class ActingForwarder {
 	}
 	
 	
-	
 	public static void onClient(String event, IRegeneration cap) {
 		try {
 			for (IActingHandler handler : clientHandlers) {
 				handler.getClass().getMethod(event, IRegeneration.class).invoke(handler, cap); //TODO this can definitely be optimized
 			}
 		} catch (IllegalAccessException | IllegalArgumentException e) {
-			throw new IllegalStateException("Illegal handler method on client: "+event, e);
+			throw new IllegalStateException("Illegal handler method on client: " + event, e);
 		} catch (InvocationTargetException e) {
-			throw new RuntimeException("Error while forwarding event to client ("+event+")", e);
+			throw new RuntimeException("Error while forwarding event to client (" + event + ")", e);
 		} catch (NoSuchMethodException e) {
-			throw new RuntimeException("Unknown method was forwarded '"+event+"'", e);
+			throw new RuntimeException("Unknown method was forwarded '" + event + "'", e);
 		}
 	}
 	
 	
-	
-	/** Knows what to forward by reflection magic */
+	/**
+	 * Knows what to forward by reflection magic
+	 */
 	private static void checkAndForward(IRegeneration cap) {
 		if (cap.getPlayer().world.isRemote)
 			throw new IllegalStateException("'Posting' \"acting\" `event` from client");
 		
 		String event = Thread.currentThread().getStackTrace()[2].getMethodName();
-		NetworkHandler.INSTANCE.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP)cap.getPlayer());
+		NetworkHandler.INSTANCE.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP) cap.getPlayer());
 	}
 	
 }

@@ -48,8 +48,8 @@ public class ItemFobWatch extends Item {
 				return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 			
 			int supply = RegenConfig.regenCapacity - stack.getItemDamage(),
-				needed = RegenConfig.regenCapacity - cap.getRegenerationsLeft(),
-				used = Math.min(supply, needed);
+					needed = RegenConfig.regenCapacity - cap.getRegenerationsLeft(),
+					used = Math.min(supply, needed);
 			
 			if (cap.canRegenerate())
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);

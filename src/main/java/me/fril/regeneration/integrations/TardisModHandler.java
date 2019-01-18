@@ -1,7 +1,5 @@
 package me.fril.regeneration.integrations;
 
-import java.util.Random;
-
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.handlers.IActingHandler;
@@ -15,6 +13,8 @@ import net.tardis.mod.common.sounds.TSounds;
 import net.tardis.mod.common.systems.SystemDimension;
 import net.tardis.mod.common.systems.TardisSystems;
 import net.tardis.mod.common.tileentity.TileEntityTardis;
+
+import java.util.Random;
 
 public class TardisModHandler implements IActingHandler {
 	

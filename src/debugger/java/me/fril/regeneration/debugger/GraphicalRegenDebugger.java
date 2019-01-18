@@ -1,15 +1,6 @@
 package me.fril.regeneration.debugger;
 
-import java.awt.EventQueue;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-
 import com.mojang.authlib.GameProfile;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.debugger.util.UnloadedPlayerBufferChannel;
@@ -19,6 +10,12 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public class GraphicalRegenDebugger implements IRegenDebugger {
 	private final Map<GameProfile, IDebugChannel> channelz = new HashMap<>();
@@ -40,12 +37,14 @@ public class GraphicalRegenDebugger implements IRegenDebugger {
 		String optX = System.getProperty("debuggerX"), optY = System.getProperty("debuggerY");
 		int dx = optX == null ? 0 : Integer.valueOf(optX), dy = optY == null ? 0 : Integer.valueOf(optY);
 		frame.setLocationRelativeTo(null);
-		frame.setLocation(frame.getX()+dx, frame.getY()+dy);
+		frame.setLocation(frame.getX() + dx, frame.getY() + dy);
 		
-		frame.setVisible((boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"));
+		frame.setVisible((boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment"));
 	}
 	
-	/** <B>NEVER EVER SAVE THE RESULT OF THIS IN A REFERENCE!</B> */
+	/**
+	 * <B>NEVER EVER SAVE THE RESULT OF THIS IN A REFERENCE!</B>
+	 */
 	@Override
 	public IDebugChannel getChannelFor(EntityPlayer player) {
 		if (player.getGameProfile() != null && channelz.containsKey(player.getGameProfile())) {
@@ -55,7 +54,6 @@ public class GraphicalRegenDebugger implements IRegenDebugger {
 			return channelBuffer.get(player);
 		}
 	}
-	
 	
 	
 	@SubscribeEvent
@@ -93,10 +91,9 @@ public class GraphicalRegenDebugger implements IRegenDebugger {
 		
 		if (ev.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) ev.getEntityLiving();
-			EventQueue.invokeLater(()->playerTabz.get(player.getGameProfile()).updateLabels(CapabilityRegeneration.getForPlayer(player)));
+			EventQueue.invokeLater(() -> playerTabz.get(player.getGameProfile()).updateLabels(CapabilityRegeneration.getForPlayer(player)));
 		}
 	}
-	
 	
 	
 	@Override

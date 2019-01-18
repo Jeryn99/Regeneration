@@ -1,7 +1,5 @@
 package me.fril.regeneration.client.rendering;
 
-import java.util.Random;
-
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.RegenState;
@@ -13,6 +11,8 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.Random;
 
 /**
  * Created by Sub

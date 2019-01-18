@@ -1,7 +1,5 @@
 package me.fril.regeneration.common.types;
 
-import java.util.Random;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.rendering.TypeFieryRenderer;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -12,6 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -59,12 +59,11 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
 		if (!player.world.isRemote) { //NOTE redundant, only called on server side (TODO document)
-			PlayerUtil.setPerspective((EntityPlayerMP)player, false, true);
+			PlayerUtil.setPerspective((EntityPlayerMP) player, false, true);
 		}
 		
 		animationTicks = 0;
 	}
-	
 	
 	
 	@Override
@@ -72,14 +71,16 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		return 10 * 20; //10 seconds of 20 ticks
 	}
 	
-	/** @deprecated No idea why you'd want to use this outside of this class, so think carefully before you do because it's probably wrong. Keep in mind that animations can change length, so <b>never</b> use this in a non-relative way */
+	/**
+	 * @deprecated No idea why you'd want to use this outside of this class, so think carefully before you do because it's probably wrong. Keep in mind that animations can change length, so <b>never</b> use this in a non-relative way
+	 */
 	@Deprecated
 	public long getAnimationTicks() {
 		return animationTicks;
 	}
 	
 	public double getAnimationProgress() {
-		return Math.min(1, animationTicks / (double)getAnimationLength());
+		return Math.min(1, animationTicks / (double) getAnimationLength());
 	}
 	
 	
@@ -98,7 +99,6 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		if (nbtTicks > animationTicks)
 			animationTicks = nbtTicks;
 	}
-	
 	
 	
 	@Override

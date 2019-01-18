@@ -1,9 +1,5 @@
 package me.fril.regeneration.client.gui;
 
-import java.awt.Color;
-
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -21,6 +17,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
+
+import javax.annotation.Nullable;
+import java.awt.*;
 
 public class CustomizerGui extends GuiContainer {
 	public static final int ID = 0;
@@ -51,27 +50,27 @@ public class CustomizerGui extends GuiContainer {
 		initialPrimary = cap.getPrimaryColor();
 		initialSecondary = cap.getSecondaryColor();
 		
-		float primaryRed = (float)initialPrimary.x, primaryGreen = (float)initialPrimary.y, primaryBlue = (float)initialPrimary.z;
-		float secondaryRed = (float)initialSecondary.x, secondaryGreen = (float)initialSecondary.y, secondaryBlue = (float)initialSecondary.z;
+		float primaryRed = (float) initialPrimary.x, primaryGreen = (float) initialPrimary.y, primaryBlue = (float) initialPrimary.z;
+		float secondaryRed = (float) initialSecondary.x, secondaryGreen = (float) initialSecondary.y, secondaryBlue = (float) initialSecondary.z;
 		
 		final int btnW = 50, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
 		
 		//WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
-		btnReset   = new GuiButtonExt(1, cx + 34, cy + 135, btnW, btnH, new TextComponentTranslation("regeneration.info.undo").getFormattedText());
+		btnReset = new GuiButtonExt(1, cx + 34, cy + 135, btnW, btnH, new TextComponentTranslation("regeneration.info.undo").getFormattedText());
 		btnDefault = new GuiButtonExt(4, cx + 90, cy + 135, btnW, btnH, new TextComponentTranslation("regeneration.info.default").getFormattedText());
 		
 		btnReset.enabled = false;
 		buttonList.add(btnReset);
 		buttonList.add(btnDefault);
 		
-		slidePrimaryRed     = new GuiColorSlider(5, cx + 10, cy + 65,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
-		slidePrimaryGreen   = new GuiColorSlider(6, cx + 10, cy + 84,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
-		slidePrimaryBlue    = new GuiColorSlider(7, cx + 10, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this::onChangeSliderValue);
+		slidePrimaryRed = new GuiColorSlider(5, cx + 10, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
+		slidePrimaryGreen = new GuiColorSlider(6, cx + 10, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
+		slidePrimaryBlue = new GuiColorSlider(7, cx + 10, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this::onChangeSliderValue);
 		
-		slideSecondaryRed   = new GuiColorSlider(8, cx + 96, cy + 65,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, this::onChangeSliderValue);
-		slideSecondaryGreen = new GuiColorSlider(9, cx + 96, cy + 84,  sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this::onChangeSliderValue);
-		slideSecondaryBlue  = new GuiColorSlider(10, cx + 96, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this::onChangeSliderValue);
+		slideSecondaryRed = new GuiColorSlider(8, cx + 96, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, this::onChangeSliderValue);
+		slideSecondaryGreen = new GuiColorSlider(9, cx + 96, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this::onChangeSliderValue);
+		slideSecondaryBlue = new GuiColorSlider(10, cx + 96, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this::onChangeSliderValue);
 		
 		buttonList.add(slidePrimaryRed);
 		buttonList.add(slidePrimaryGreen);
@@ -83,18 +82,17 @@ public class CustomizerGui extends GuiContainer {
 	}
 	
 	
-	
 	private void onChangeSliderValue(@Nullable GuiSlider slider) {
 		btnReset.enabled = true;
 		
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setFloat("PrimaryRed",   (float) slidePrimaryRed.getValue());
+		nbt.setFloat("PrimaryRed", (float) slidePrimaryRed.getValue());
 		nbt.setFloat("PrimaryGreen", (float) slidePrimaryGreen.getValue());
-		nbt.setFloat("PrimaryBlue",  (float) slidePrimaryBlue.getValue());
+		nbt.setFloat("PrimaryBlue", (float) slidePrimaryBlue.getValue());
 		
-		nbt.setFloat("SecondaryRed",   (float) slideSecondaryRed.getValue());
+		nbt.setFloat("SecondaryRed", (float) slideSecondaryRed.getValue());
 		nbt.setFloat("SecondaryGreen", (float) slideSecondaryGreen.getValue());
-		nbt.setFloat("SecondaryBlue",  (float) slideSecondaryBlue.getValue());
+		nbt.setFloat("SecondaryBlue", (float) slideSecondaryBlue.getValue());
 		
 		NetworkHandler.INSTANCE.sendToServer(new MessageSaveStyle(nbt));
 	}
@@ -132,15 +130,15 @@ public class CustomizerGui extends GuiContainer {
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
 		
-		RenderUtil.drawRect(cx + 10,  cy + 44, cx + 81, cy + 61, 0.1F, 0.1F, 0.1F, 1);
-		RenderUtil.drawRect(cx + 11,  cy + 45, cx + 80, cy + 60, (float) slidePrimaryRed.getValue(),   (float) slidePrimaryGreen.getValue(),   (float) slidePrimaryBlue.getValue(), 1);
+		RenderUtil.drawRect(cx + 10, cy + 44, cx + 81, cy + 61, 0.1F, 0.1F, 0.1F, 1);
+		RenderUtil.drawRect(cx + 11, cy + 45, cx + 80, cy + 60, (float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue(), 1);
 		
 		RenderUtil.drawRect(cx + 95, cy + 44, cx + 166, cy + 61, 0.1F, 0.1F, 0.1F, 1);
 		RenderUtil.drawRect(cx + 96, cy + 45, cx + 165, cy + 60, (float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue(), 1);
 		
 		
-		Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(),   (float) slidePrimaryGreen.getValue(),   (float) slidePrimaryBlue.getValue()),
-				secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(),   (float) slideSecondaryGreen.getValue(),   (float) slideSecondaryBlue.getValue());
+		Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue()),
+				secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue());
 		
 		String str = new TextComponentTranslation("regeneration.info.primary").getFormattedText();
 		int length = mc.fontRenderer.getStringWidth(str);

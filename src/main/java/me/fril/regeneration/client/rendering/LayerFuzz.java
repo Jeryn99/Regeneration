@@ -1,7 +1,5 @@
 package me.fril.regeneration.client.rendering;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
@@ -10,12 +8,14 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 //Bored this is just for me messing around
 public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 	
 	public static ModelPlayer mainModel = new ModelPlayer(0.1F, true);
 	private RenderPlayer playerRenderer;
+	
 	public LayerFuzz(RenderPlayer playerRenderer) {
 		this.playerRenderer = playerRenderer;
 	}
@@ -42,7 +42,7 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 		}
 		
 		GL11.glDisable(GL11.GL_CULL_FACE);
-		GlStateManager.scale(1,1,1);
+		GlStateManager.scale(1, 1, 1);
 		mainModel.isChild = false;
 		mainModel.isSneak = entitylivingbaseIn.isSneaking();
 		mainModel.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);

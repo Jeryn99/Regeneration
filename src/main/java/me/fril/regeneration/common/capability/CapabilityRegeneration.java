@@ -1,12 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.types.IRegenType;
@@ -29,6 +22,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sub
@@ -41,24 +39,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
 	
 	private final EntityPlayer player;
+	private final RegenerationStateManager stateManager;
 	private int regenerationsLeft;
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType<?> type = new TypeFiery();
-	
-	private final RegenerationStateManager stateManager;
-	
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
-	
-	
-	
-	@Nonnull
-	public static IRegeneration getForPlayer(EntityPlayer player) {
-		if (player.hasCapability(CAPABILITY, null)) {
-			return player.getCapability(CAPABILITY, null);
-		}
-		throw new IllegalStateException("Missing Regeneration capability: " + player + ", please report this to the issue tracker");
-	}
+	private boolean didSetup = false;
 	
 	public CapabilityRegeneration() {
 		this.player = null;
@@ -73,8 +60,13 @@ public class CapabilityRegeneration implements IRegeneration {
 			this.stateManager = null;
 	}
 	
-	
-	private boolean didSetup = false;
+	@Nonnull
+	public static IRegeneration getForPlayer(EntityPlayer player) {
+		if (player.hasCapability(CAPABILITY, null)) {
+			return player.getCapability(CAPABILITY, null);
+		}
+		throw new IllegalStateException("Missing Regeneration capability: " + player + ", please report this to the issue tracker");
+	}
 	
 	@Override
 	public void tick() {
@@ -90,9 +82,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			type.onUpdateMidRegen(player, this);
 		}
 	}
-	
-	
-	
 	
 	
 	@Override
@@ -135,12 +124,15 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	
-	
-	
-	
 	@Override
 	public int getRegenerationsLeft() {
 		return regenerationsLeft;
+	}
+	
+	@Deprecated
+	@Override
+	public void setRegenerationsLeft(int amount) {
+		regenerationsLeft = amount;
 	}
 	
 	@Override
@@ -152,10 +144,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	public IRegenType<?> getType() {
 		return type;
 	}
-	
-	
-	
-	
 	
 	@Override
 	public NBTTagCompound getStyle() {
@@ -191,10 +179,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		return new Vec3d(secondaryRed, secondaryGreen, secondaryBlue);
 	}
 	
-	
-	
-	
-	
 	@Override
 	public void receiveRegenerations(int amount) {
 		if (RegenConfig.infiniteRegeneration)
@@ -204,7 +188,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		synchronise();
 	}
 	
-	
 	@Override
 	public void extractRegeneration(int amount) {
 		if (RegenConfig.infiniteRegeneration)
@@ -213,17 +196,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			regenerationsLeft -= amount;
 		synchronise();
 	}
-	
-	
-	@Deprecated
-	@Override
-	public void setRegenerationsLeft(int amount) {
-		regenerationsLeft = amount;
-	}
-	
-	
-	
-	
 	
 	@Override
 	public IRegenerationStateManager getStateManager() {
@@ -236,9 +208,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	
-	
-	
-	
 	@Override
 	public void triggerRegeneration() {
 		if (player.world.isRemote)
@@ -247,9 +216,9 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	
-	
-	
-	/** ONLY EXISTS ON THE SERVER SIDE */
+	/**
+	 * ONLY EXISTS ON THE SERVER SIDE
+	 */
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
 		private final Map<Transition, Runnable> transitionRunnables;
@@ -271,9 +240,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		private void scheduleTransitionInSeconds(Transition transition, long inSeconds) {
-			scheduleTransitionInTicks(transition, inSeconds*20);
+			scheduleTransitionInTicks(transition, inSeconds * 20);
 		}
-		
 		
 		
 		@Override
@@ -303,7 +271,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				midSequenceKill();
 				return false;
 				
-			} else throw new IllegalStateException("Unknown state: "+state);
+			} else throw new IllegalStateException("Unknown state: " + state);
 		}
 		
 		@Override
@@ -331,7 +299,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
 		}
-		
 		
 		
 		private void triggerRegeneration() {
@@ -365,7 +332,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			 * From my understanding this is because the capability data isn't cloned over properly when the player dies.
 			 * Soooo how should we handle it then? Save the last regen count and giving that back on respawn?
 			 * Can we copy the data over on death (I assume so) and how?
-			 * 
+			 *
 			 * WAFFLE Use the LivingDeathEvent and just copy the data over
 			 */
 			
@@ -381,7 +348,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		
-		
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */
@@ -393,14 +359,13 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForward() {
-			while (!nextTransition.tick());
+			while (!nextTransition.tick()) ;
 		}
 		
 		@Override
 		public double getStateProgress() {
 			return nextTransition.getProgress();
 		}
-		
 		
 		
 		@SuppressWarnings("deprecation")

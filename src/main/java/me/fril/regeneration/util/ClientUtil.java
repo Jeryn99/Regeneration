@@ -1,11 +1,11 @@
 package me.fril.regeneration.util;
 
-import java.util.UUID;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import java.util.UUID;
 
 public class ClientUtil {
 	

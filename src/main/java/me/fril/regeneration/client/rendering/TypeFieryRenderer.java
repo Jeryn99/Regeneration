@@ -24,7 +24,8 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	
 	public static final TypeFieryRenderer INSTANCE = new TypeFieryRenderer();
 	
-	private TypeFieryRenderer() {}
+	private TypeFieryRenderer() {
+	}
 	
 	@Override
 	public void renderRegeneratingPlayerPre(TypeFiery type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
@@ -35,13 +36,13 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		
 		int headRot = 50;
 		if (type.getAnimationProgress() < 0.05) {
-			headRot = (int)((type.getAnimationProgress() / 0.05F) * 50F); // %headRotatingPhase * maxHeadRot
+			headRot = (int) ((type.getAnimationProgress() / 0.05F) * 50F); // %headRotatingPhase * maxHeadRot
 		}
 		
 		float armRot = 85;
 		if (type.getAnimationProgress() < 0.075) {
 			arm_shake = 0;
-			armRot = (int)((type.getAnimationProgress() / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
+			armRot = (int) ((type.getAnimationProgress() / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
 		
 		//TODO don't render item in hand during regeneration
@@ -81,7 +82,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		double r = 0.09890109890109888;
 		double f = p * Math.pow(x, 2) - r;
 		
-		float cf = MathHelper.clamp((float)f, 0F, 1F);
+		float cf = MathHelper.clamp((float) f, 0F, 1F);
 		float primaryScale = cf * 4F;
 		float secondaryScale = cf * 6.4F;
 		
@@ -119,7 +120,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		playerModel.setModelAttributes(model);
 		
 		// Render glowing overlay
-		GlStateManager.color((float)primaryColor.x, (float)primaryColor.y, (float)primaryColor.z, 1);
+		GlStateManager.color((float) primaryColor.x, (float) primaryColor.y, (float) primaryColor.z, 1);
 		playerModel.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 		
 		// Undo state manager changes
@@ -141,11 +142,11 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			GlStateManager.rotate(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
 			GlStateManager.scale(1.0f, 1.0f, 0.65f);
 			vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
-			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float)color.y, (float)color.z, 100).endVertex();
-			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float)color.x, (float)color.y, (float)color.z, 100).endVertex();
-			vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color((float)color.x, (float)color.y, (float)color.z, 100).endVertex();
-			vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color((float)color.x, (float)color.y, (float)color.z, 100).endVertex();
-			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float)color.x, (float)color.y, (float)color.z, 100).endVertex();
+			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
+			vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
+			vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
 			tessellator.draw();
 			GlStateManager.popMatrix();
 		}

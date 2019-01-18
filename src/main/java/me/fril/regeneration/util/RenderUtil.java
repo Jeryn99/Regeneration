@@ -1,10 +1,5 @@
 package me.fril.regeneration.util;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import me.fril.regeneration.client.rendering.ModelArmorOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -28,6 +23,10 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.lwjgl.opengl.GL11;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * Created by Sub
@@ -82,7 +81,7 @@ public class RenderUtil {
 		
 		for (int layer = 0; layer <= layers; ++layer) {
 			if (layer < layers) {
-				GlStateManager.color((float) color.x, (float)color.y, (float)color.z, 1.0F / layers / 2);
+				GlStateManager.color((float) color.x, (float) color.y, (float) color.z, 1.0F / layers / 2);
 				GlStateManager.depthMask(false);
 			} else {
 				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha); //SUB does this actually do anything? We're always passing in an alpha of 0...
@@ -163,7 +162,7 @@ public class RenderUtil {
 	public static void setupArmorModelOverride(RenderPlayer renderPlayer) {
 		List<LayerRenderer<EntityLivingBase>> layers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, "field_177097_h");
 		if (layers != null) {
-			LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer->layer instanceof LayerBipedArmor).findFirst().orElse(null);
+			LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer -> layer instanceof LayerBipedArmor).findFirst().orElse(null);
 			if (armorLayer != null) {
 				Field mainModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177186_d"));
 				Field legModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177189_c"));
@@ -209,12 +208,14 @@ public class RenderUtil {
 		GlStateManager.disableBlend();
 	}
 	
-	/** <a href="https://stackoverflow.com/a/41491220/10434371">Source</a> */
+	/**
+	 * <a href="https://stackoverflow.com/a/41491220/10434371">Source</a>
+	 */
 	public static double calculateColorBrightness(Vec3d c) {
 		float r = (float) c.x, g = (float) c.y, b = (float) c.z;
-		r = r <= 0.03928 ? r / 12.92F : (float)Math.pow((r + 0.055) / 1.055, 2.4);
-		g = g <= 0.03928 ? g / 12.92F : (float)Math.pow((g + 0.055) / 1.055, 2.4);
-		b = b <= 0.03928 ? b / 12.92F : (float)Math.pow((b + 0.055) / 1.055, 2.4);
+		r = r <= 0.03928 ? r / 12.92F : (float) Math.pow((r + 0.055) / 1.055, 2.4);
+		g = g <= 0.03928 ? g / 12.92F : (float) Math.pow((g + 0.055) / 1.055, 2.4);
+		b = b <= 0.03928 ? b / 12.92F : (float) Math.pow((b + 0.055) / 1.055, 2.4);
 		
 		return (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
 	}
