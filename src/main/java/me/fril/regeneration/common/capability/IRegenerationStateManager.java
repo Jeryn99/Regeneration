@@ -3,6 +3,7 @@ package me.fril.regeneration.common.capability;
 import me.fril.regeneration.util.RegenState.Transition;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.tuple.Pair;
@@ -10,7 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompound> {
 
 	// Event proxy methods
-	boolean onKilled();
+	boolean onKilled(DamageSource source);
 
 	void onPunchEntity(EntityLivingBase entity);
 

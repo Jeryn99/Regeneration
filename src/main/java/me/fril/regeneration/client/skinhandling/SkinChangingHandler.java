@@ -15,6 +15,7 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
@@ -210,6 +211,10 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		BufferedImage img = ImageIO.read(url);
 		SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		ImageIO.write(img, "png", new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png"));
+
+		if (img == null) {
+			return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
+		}
 		return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(img));
 	}
 

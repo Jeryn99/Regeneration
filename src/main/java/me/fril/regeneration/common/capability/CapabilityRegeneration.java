@@ -17,6 +17,7 @@ import me.fril.regeneration.util.RegenState.Transition;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
@@ -353,9 +354,8 @@ public class CapabilityRegeneration implements IRegeneration {
 
 
 		@Override
-		public boolean onKilled() {
+		public boolean onKilled(DamageSource source) {
 			if (state == RegenState.ALIVE) {
-
 				if (!canRegenerate()) // that's too bad :(
 					return false;
 
@@ -448,8 +448,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			nextTransition = null;
 			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
-			player.setHealth(-1); // in case this method was called by critical death
-
+			if (player.getLastDamageSource() != null) {
+				player.attackEntityFrom(player.getLastDamageSource(), Integer.MAX_VALUE);
+			} else {
+				player.setHealth(-1);
+			}
 			/*
 			 * SuB For re-implementing the dont-lose-regens-on-death option:
 			 * We never explicitly reset the live count, but it still gets reset.

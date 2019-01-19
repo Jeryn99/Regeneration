@@ -109,6 +109,10 @@ public class RegenEventHandler {
 		if (!(event.getEntity() instanceof EntityPlayer))
 			return;
 
+		if (event.getSource() == RegenObjects.REGEN_DMG_CRITICAL) {
+			return;
+		}
+
 		EntityPlayer player = (EntityPlayer) event.getEntity();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (event.getSource() != RegenObjects.REGEN_DMG_CRITICAL) {
@@ -117,7 +121,7 @@ public class RegenEventHandler {
 		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage()) {
 			event.setCanceled(true); // TODO still "hurts" the client view
 		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
-			boolean notDead = cap.getStateManager().onKilled();
+			boolean notDead = cap.getStateManager().onKilled(event.getSource());
 			event.setCanceled(notDead);
 		}
 	}
