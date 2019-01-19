@@ -168,13 +168,13 @@ public class RegenConfig { //NOW going to re-organize the config because it's a 
 	
 	
 	
-	public static class ModIntegrations { //SUB this doesn't work, do you know of a way to have multiple levels of sub categories?
+	public static class ModIntegrations {
 		
 		@Config.LangKey("config.regeneration.category.compat.lccore")
-		public static final LucraftCore lucraftcore = new LucraftCore();
+		public final LucraftCore lucraftcore = new LucraftCore();
 		
 		@Config.LangKey("config.regeneration.category.compat.tardis")
-		public static final TardisMod tardisMod = new TardisMod();
+		public final TardisMod tardisMod = new TardisMod();
 		
 		
 		

@@ -54,10 +54,10 @@ public class LucraftCoreHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-		if (RegenConfig.ModIntegrations.lucraftcore.lucraftcoreSizeChanging) {
+		if (RegenConfig.modIntegrations.lucraftcore.lucraftcoreSizeChanging) {
 			EntityPlayer player = cap.getPlayer();
 			ISizeChanging sizeCap = player.getCapability(CapabilitySizeChanging.SIZE_CHANGING_CAP, null);
-			sizeCap.setSize(randFloat(RegenConfig.ModIntegrations.lucraftcore.sizeChangingMin, RegenConfig.ModIntegrations.lucraftcore.sizeChangingMax));
+			sizeCap.setSize(randFloat(RegenConfig.modIntegrations.lucraftcore.sizeChangingMin, RegenConfig.modIntegrations.lucraftcore.sizeChangingMax));
 		}
 	}
 	
@@ -71,21 +71,21 @@ public class LucraftCoreHandler implements IActingHandler {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntityLiving();
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-			boolean flag = data.canRegenerate() && e.getSource() == PotionRadiation.RADIATION && RegenConfig.ModIntegrations.lucraftcore.immuneToRadiation;
+			boolean flag = data.canRegenerate() && e.getSource() == PotionRadiation.RADIATION && RegenConfig.modIntegrations.lucraftcore.immuneToRadiation;
 			e.setCanceled(flag);
 		}
 	}
 	
 	@SubscribeEvent
 	public void onRegisterSuperpowers(RegistryEvent.Register<Superpower> e) {
-		if (RegenConfig.ModIntegrations.lucraftcore.superpower)
+		if (RegenConfig.modIntegrations.lucraftcore.superpower)
 			e.getRegistry().register(TIMELORD);
 	}
 	
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent e) {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(e.player);
-		if (!e.player.world.isRemote && e.phase == TickEvent.Phase.END && RegenConfig.ModIntegrations.lucraftcore.superpower) {
+		if (!e.player.world.isRemote && e.phase == TickEvent.Phase.END && RegenConfig.modIntegrations.lucraftcore.superpower) {
 			boolean hasPower = SuperpowerHandler.hasSuperpower(e.player, TIMELORD);
 			
 			if (!hasPower && cap.getRegenerationsLeft() > 0) {

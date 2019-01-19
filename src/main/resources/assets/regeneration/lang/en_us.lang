@@ -109,7 +109,7 @@ config.regeneration.skins.download_url=Download url
 
 ----- CATEGORIES ------
 config.regeneration.category.compat=Mod integrations
-config.regeneration.category.compat.tardis=Tardis Mod Intergration
-config.regeneration.category.compat.lccore=Lucraft Core Integration
+config.regeneration.category.compat.tardis=Tardis Mod
+config.regeneration.category.compat.lccore=Lucraft Core
 config.regeneration.category.grace=Grace Period
 config.regeneration.category.loot=Loot Settings
