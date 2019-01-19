@@ -1,5 +1,6 @@
 package me.fril.regeneration.common.capability;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType<?> type = new TypeFiery();
 	
-	private byte[] ENCODED_SKIN = new byte[0];
+	private byte[] ENCODED_SKIN = null;
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
@@ -91,7 +92,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void tick() {
-		
 		if (!didSetup && player.world.isRemote) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player));
 			didSetup = true;
@@ -436,9 +436,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			// We're starting a regeneration!
 			state = RegenState.REGENERATING;
 			
-			TextComponentTranslation text = new TextComponentTranslation("message.regeneration.isregenerating", player.getName());
-			text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(getDeathSource())));
-			PlayerUtil.sendMessageToAll(text);
+			if(RegenConfig.sendRegenDeathMessages) {
+				TextComponentTranslation text = new TextComponentTranslation("message.regeneration.isregenerating", player.getName());
+				text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(getDeathSource())));
+				PlayerUtil.sendMessageToAll(text);
+			}
 			
 			nextTransition.cancel(); // ... cancel any state shift we had planned
 			handGlowTimer.cancel();

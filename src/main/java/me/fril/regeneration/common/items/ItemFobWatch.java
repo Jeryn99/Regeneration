@@ -1,6 +1,7 @@
 package me.fril.regeneration.common.items;
 
 import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -8,6 +9,7 @@ import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.DebuggerUtil;
 import me.fril.regeneration.util.PlayerUtil;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -17,6 +19,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by Sub
@@ -95,4 +99,16 @@ public class ItemFobWatch extends Item {
 		return ActionResult.newResult(EnumActionResult.FAIL, stack);
 	}
 	
+	@Override
+	public boolean hasCustomEntity(ItemStack stack) {
+		return true;
+	}
+	
+	@Nullable
+	@Override
+	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
+		EntityFobWatch fobWatch = new EntityFobWatch(world, location.posX, location.posY, location.posZ, itemstack);
+		fobWatch.setLocationAndAngles(location.posX, location.posY + -3F + location.getEyeHeight(), location.posZ, 0, 0); //Just incase
+		return fobWatch;
+	}
 }

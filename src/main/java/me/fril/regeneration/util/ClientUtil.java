@@ -27,6 +27,7 @@ public class ClientUtil {
 		return (playerUUID.hashCode() & 1) == 1;
 	}
 	
+	
 	public static void sendResetPacket() {
 		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], isSlimSkin(Minecraft.getMinecraft().player.getUniqueID())));
 	}
