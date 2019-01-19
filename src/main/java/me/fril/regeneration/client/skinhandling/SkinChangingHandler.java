@@ -1,6 +1,28 @@
 package me.fril.regeneration.client.skinhandling;
 
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
+
+import javax.imageio.ImageIO;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -11,6 +33,7 @@ import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -23,23 +46,9 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-
-@SideOnly(Side.CLIENT)
-public class SkinChangingHandler {
+@SideOnly(Side.CLIENT) //SUB as far as I know this is bad practice and shouldn't be used
+public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes? Haven't seen it working but I assume it did
 	
 	public static final File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
@@ -53,8 +62,8 @@ public class SkinChangingHandler {
 	private static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
 	private static final Random RAND = new Random();
 	
-	private static final ModelBase STEVE_MODEL = new ModelPlayer(0.1F, false);
-	private static final ModelBase ALEX_MODEL = new ModelPlayer(0.1F, true);
+	private static final ModelBiped STEVE_MODEL = new ModelPlayer(0.1F, false);
+	private static final ModelBiped ALEX_MODEL = new ModelPlayer(0.1F, true);
 	
 	/**
 	 * Creates skin folders
@@ -139,7 +148,7 @@ public class SkinChangingHandler {
 			byte[] pixelData = SkinChangingHandler.encodeToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
 			if (pixelData.length >= 32767) {
-				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], isAlex));
+				ClientUtil.sendResetPacket();
 			} else {
 				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
 			}
@@ -263,7 +272,7 @@ public class SkinChangingHandler {
 	 * @param renderer
 	 * @param model
 	 */
-	private static void setPlayerModel(RenderPlayer renderer, ModelBase model) {
+	private static void setPlayerModel(RenderPlayer renderer, ModelBiped model) {
 		renderer.mainModel = model;
 	}
 	

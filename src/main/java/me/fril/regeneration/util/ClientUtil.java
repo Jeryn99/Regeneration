@@ -12,6 +12,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 public class ClientUtil {
 	
 	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle, RegenState regenState) {
+		//FIXME where ma toast at
 		// Minecraft.getMinecraft().getToastGui().add(new ToastRegeneration(title, subtitle, regenState));
 		// Minecraft.getMinecraft().getToastGui().add(new SystemToast(Type.TUTORIAL_HINT, title, subtitle));
 	}
@@ -26,6 +27,7 @@ public class ClientUtil {
 	public static boolean isSlimSkin(UUID playerUUID) {
 		return (playerUUID.hashCode() & 1) == 1;
 	}
+	
 	
 	public static void sendResetPacket() {
 		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], isSlimSkin(Minecraft.getMinecraft().player.getUniqueID())));

@@ -1,12 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
@@ -32,6 +25,11 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sub
@@ -47,7 +45,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final RegenerationStateManager stateManager;
 	
 	private boolean didSetup = false;
-	public String deathSource = null;
+	public String deathSource = ""; //FIXME I'm not sure if this is handled correctly. When I let myself die of critical, then /kill'ed with a new cycle en then regenerated normally the hover text said: "&s died from hold in their regeneration too long..."
 	private int regenerationsLeft;
 	
 	private RegenState state = RegenState.ALIVE;
@@ -91,7 +89,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void tick() {
-		
 		if (!didSetup && player.world.isRemote) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player));
 			didSetup = true;
@@ -110,7 +107,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (player.world.isRemote)
 			throw new IllegalStateException("Don't sync client -> server");
 		
-		handsAreGlowingClient = state == RegenState.ALIVE ? false : stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
+		handsAreGlowingClient = state != RegenState.ALIVE && stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
 		
@@ -354,7 +351,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleNextHandGlow() {
 			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, 400); //TODO make hand glow interval configurable
+			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.grace.handGlowInterval * 20);
 			synchronise();
 		}
 		
@@ -362,7 +359,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleHandGlowTrigger() {
 			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, 400); //TODO make hand glow interval configurable
+			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.grace.handGlowTriggerDelay * 20);
 			synchronise();
 		}
 		
@@ -436,9 +433,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			// We're starting a regeneration!
 			state = RegenState.REGENERATING;
 			
-			TextComponentTranslation text = new TextComponentTranslation("message.regeneration.isregenerating", player.getName());
-			text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(getDeathSource())));
-			PlayerUtil.sendMessageToAll(text);
+			if(RegenConfig.sendRegenDeathMessages) {
+				TextComponentTranslation text = new TextComponentTranslation("message.regeneration.isregenerating", player.getName());
+				text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(getDeathSource())));
+				PlayerUtil.sendMessageToAll(text);
+			}
 			
 			nextTransition.cancel(); // ... cancel any state shift we had planned
 			handGlowTimer.cancel();
@@ -518,12 +517,12 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public NBTTagCompound serializeNBT() {
 			NBTTagCompound nbt = new NBTTagCompound();
-			if (nextTransition != null) {
+			if (nextTransition != null && nextTransition.getTicksLeft() >= 0) {
 				nbt.setString("transitionId", nextTransition.transition.toString());
 				nbt.setLong("transitionInTicks", nextTransition.getTicksLeft());
 			}
 			
-			if (handGlowTimer != null) {
+			if (handGlowTimer != null && handGlowTimer.getTicksLeft() >= 0) {
 				nbt.setString("handGlowState", handGlowTimer.transition.toString());
 				nbt.setLong("handGlowScheduledTicks", handGlowTimer.getTicksLeft());
 			}

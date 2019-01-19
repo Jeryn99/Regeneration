@@ -6,15 +6,19 @@ import me.fril.regeneration.client.rendering.LayerFuzz;
 import me.fril.regeneration.client.rendering.LayerItemReplace;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
-import me.fril.regeneration.compat.EnumModids;
+import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
+import me.fril.regeneration.util.EnumCompatModids;
 import me.fril.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderEntityItem;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Loader;
 
 import java.util.Map;
@@ -29,6 +33,7 @@ public class ClientProxy extends CommonProxy {
 	public void preInit() {
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
+		RenderingRegistry.registerEntityRenderingHandler(EntityFobWatch.class, (RenderManager renderManagerIn) -> new RenderEntityItem(renderManagerIn, Minecraft.getMinecraft().getRenderItem()));
 	}
 	
 	@Override
@@ -46,7 +51,7 @@ public class ClientProxy extends CommonProxy {
 		TabRegistry.registerTab(new InventoryTabRegeneration());
 		
 		// LC Core
-		if (Loader.isModLoaded(EnumModids.LCCORE.getModid())) {
+		if (Loader.isModLoaded(EnumCompatModids.LCCORE.getModid())) {
 			LucraftCoreHandler.registerEntry();
 		}
 		

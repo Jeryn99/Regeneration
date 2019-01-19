@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.common.items.ItemFobWatch;
 import me.fril.regeneration.util.RegenDamageSource;
 import net.minecraft.item.Item;
@@ -13,6 +14,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -38,6 +41,11 @@ public class RegenObjects {
 		item.setTranslationKey(name);
 		ITEMS.add(item);
 		return item;
+	}
+	
+	@SubscribeEvent
+	public static void addEntities(RegistryEvent.Register<EntityEntry> e) {
+		e.getRegistry().registerAll(EntityEntries.ENTITY_FOB);
 	}
 	
 	@SubscribeEvent
@@ -68,5 +76,9 @@ public class RegenObjects {
 		public static final SoundEvent CRITICAL_STAGE = null;
 		public static final SoundEvent HEART_BEAT = null;
 		public static final SoundEvent HAND_GLOW = null;
+	}
+	
+	public static class EntityEntries {
+		public static final EntityEntry ENTITY_FOB = EntityEntryBuilder.create().entity(EntityFobWatch.class).id(new ResourceLocation(RegenerationMod.MODID, "fob_watch"), 0).name("fob").tracker(80, 3, false).build();
 	}
 }
