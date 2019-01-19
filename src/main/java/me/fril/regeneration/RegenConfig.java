@@ -11,21 +11,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by Sub
  * on 17/09/2018.
  */
-@Config(modid = RegenerationMod.MODID, name = "Regeneration Mod")
-public class RegenConfig {
+@Config(modid = RegenerationMod.MODID, name = "Regeneration")
+public class RegenConfig { //NOW going to re-organize the config because it's a mess
 	
-	@Config.LangKey("Loot")
+	@Config.LangKey("config.regeneration.category.loot")
 	public static final Loot loot = new Loot();
 	
-	@Config.Name("Grace Period")
+	@Config.LangKey("config.regeneration.category.grace")
 	public static final GracePeriod grace = new GracePeriod();
 	
-	@Config.Name("Lucraft Core")
-	public static final LucraftCore lucraftcore = new LucraftCore();
-	
-	@Config.Name("Tardis Mod")
-	public static final TardisMod tardisMod = new TardisMod();
-	
+	@Config.LangKey("config.regeneration.category.compat")
+	public static final ModIntegrations modIntegrations = new ModIntegrations();
 	
 	
 	@Config.LangKey("config.regeneration.max_regens")
@@ -85,7 +81,7 @@ public class RegenConfig {
 	public static int absorbtionLevel = 10;
 	
 	@Config.LangKey("config.regeneration.lose_regens_on_death")
-	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration")
+	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration (UNIMPLEMENTED)")
 	public static boolean loseRegensOnDeath = true; // SUB unimplemented
 	
 	@Config.LangKey("config.regeneration.regeneration_knocksback_players")
@@ -109,15 +105,18 @@ public class RegenConfig {
 	public static boolean sendRegenDeathMessages = true;
 	
 	
+	//TODO sub category for skins?
+	
+	@Config.LangKey("config.regeneration.skins.download_url")
 	@Config.Comment("The URL skins are downloaded from when you reset back to Mojangs skin")
 	// TODO Actually use mojang instead
 	public static String downloadUrl = "https://crafatar.com/skins/%s";
 	
-	@Config.LangKey("config,regeneration.changemyskin")
+	@Config.LangKey("config.regeneration.skins.changemyskin")
 	@Config.Comment("Disabling this will disable skin changing for you and you will retain your Mojang one")
 	public static boolean changeMySkin = true;
 	
-	@Config.LangKey("config.regeneration.choices")
+	@Config.LangKey("config.regeneration.skins.model_preference")
 	@Config.Comment("ALEX = 'Give me Alex Skins only', STEVE = 'Give me Steve Skins only', EITHER = 'Give me either!!'")
 	public static SkinChangingHandler.EnumChoices prefferedModel = SkinChangingHandler.EnumChoices.EITHER;
 	
@@ -142,41 +141,68 @@ public class RegenConfig {
 		
 		@Config.LangKey("config.regeneration.grace.gracePeriodLength")
 		@Config.Comment("The time in seconds before your grace period enters a critical phase")
+		@Config.RangeInt(min = 0)
 		public int gracePhaseLength = 15 * 60;
 		
 		@Config.LangKey("config.regeneration.grace.criticalPhaseLength")
 		@Config.Comment("The time in seconds you can stay in the critical phase without dying")
+		@Config.RangeInt(min = 0)
 		public int criticalPhaseLength = 60;
 		
 		@Config.LangKey("config.regeneration.grace.criticalDamageChance")
 		@Config.Comment("Chance that a player in critical phase gets damaged at a given tick. Higher number means more damage.")
+		@Config.RangeInt(min = 0)
 		public float criticalDamageChance = 1;
 		
+		@Config.LangKey("config.regeneration.grace.handGlowInterval")
+		@Config.Comment("Interval (in seconds) at which your hands start to glow")
+		@Config.RangeInt(min = 0)
+		public int handGlowInterval = 120;
+		
+		@Config.LangKey("config.regeneration.grace.handGlowTriggerDelay")
+		@Config.Comment("Amount of time (in seconds) you have when your hands start glowing before you start to regenerate") //SUB this could probably we worded better
+		@Config.RangeInt(min = 0)
+		public int handGlowTriggerDelay = 30;
+		
 	}
 	
-	public static class LucraftCore {
-		
-		@Config.LangKey("config.regeneration.size_changing")
-		@Config.Comment("If this is true and LCCore is installed, you will change size on regeneration")
-		public boolean lucraftcoreSizeChanging = true;
-		
-		@Config.LangKey("config.regeneration.size_changing_min")
-		@Config.Comment("Minimum Size Change value")
-		public float sizeChangingMin = 0.796544F;
-		
-		@Config.LangKey("config.regeneration.size_changing_max")
-		@Config.Comment("Maximum Size Change value")
-		public float sizeChangingMax = 1.1F;
-		
-		@Config.LangKey("config.regeneration.radiation_immunity")
-		@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")
-		public boolean immuneToRadiation = true;
-	}
 	
-	public static class TardisMod {
-		@Config.LangKey("config.regeneration.tardis_damage")
-		@Config.Comment("If this is true and The Tardis mod is installed, it's systems will be slightly damaged")
-		public boolean damageTardis = true;
+	
+	public static class ModIntegrations { //SUB this doesn't work, do you know of a way to have multiple levels of sub categories?
+		
+		@Config.LangKey("config.regeneration.category.compat.lccore")
+		public static final LucraftCore lucraftcore = new LucraftCore();
+		
+		@Config.LangKey("config.regeneration.category.compat.tardis")
+		public static final TardisMod tardisMod = new TardisMod();
+		
+		
+		
+		public static class LucraftCore {
+			
+			@Config.LangKey("config.regeneration.compat.lccore.size_changing")
+			@Config.Comment("If this is true and LCCore is installed, you will change size on regeneration")
+			public boolean lucraftcoreSizeChanging = true;
+			
+			@Config.LangKey("config.regeneration.compat.lccore.size_changing_min")
+			@Config.Comment("Minimum Size Change value")
+			public float sizeChangingMin = 0.796544F;
+			
+			@Config.LangKey("config.regeneration.compat.lccore.size_changing_max")
+			@Config.Comment("Maximum Size Change value")
+			public float sizeChangingMax = 1.1F;
+			
+			@Config.LangKey("config.regeneration.compat.lccore.radiation_immunity")
+			@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")
+			public boolean immuneToRadiation = true;
+		}
+		
+		public static class TardisMod {
+			@Config.LangKey("config.regeneration.compat.tardis.tardis_damage")
+			@Config.Comment("If this is true and The Tardis mod is installed, it's systems will be slightly damaged")
+			public boolean damageTardis = true;
+		}
+		
 	}
 	
 	@EventBusSubscriber

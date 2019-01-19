@@ -1,6 +1,6 @@
 package me.fril.regeneration.client.skinhandling;
 
-public enum DefaultSkins {
+public enum DefaultSkins { //WAFFLE do this as external json file thingy
 	SIXTH(true, "https://github.com/Suffril/Regeneration/blob/skins/alex/six_doctor.png?raw=true"),
 	ELEVENTH(true, "https://github.com/Suffril/Regeneration/blob/skins/alex/eleventh_doctor.png?raw=true"),
 	GORILLAZ(true, "https://github.com/Suffril/Regeneration/blob/skins/alex/gorillaz.png?raw=true"),

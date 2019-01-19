@@ -93,20 +93,26 @@ public class ClientEventHandler {
 			return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
+		String warning = null;
 		
 		switch (cap.getState()) {
 			case GRACE:
 				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
+				warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
 				break;
 			
 			case GRACE_CRIT:
 				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
+				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
 				break;
 			
 			case REGENERATING:
 				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;
 		}
+		
+		if (warning != null && !Loader.isModLoaded("lucraftcore")) //SUB why do we check for lccore here?
+			Minecraft.getMinecraft().fontRenderer.drawString(warning, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
 	}
 	
 	@SubscribeEvent
@@ -122,7 +128,7 @@ public class ClientEventHandler {
 		}
 	}
 	
-	private static void renderVignette(Vec3d color, float a, RegenState state) {
+	private static void renderVignette(Vec3d color, float a, RegenState state) { //WAFFLE here's the depth thingy I need to fix somewhere
 		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
@@ -140,23 +146,6 @@ public class ClientEventHandler {
 		bufferbuilder.pos(scaledRes.getScaledWidth(), 0, z).tex(1, 0).endVertex();
 		bufferbuilder.pos(0, 0, z).tex(0, 0).endVertex();
 		tessellator.draw();
-		
-		if (!Loader.isModLoaded("lucraftcore")) {
-			String warning = "   ";
-			switch (state) {
-				case GRACE:
-					warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
-					break;
-				case GRACE_CRIT:
-					warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
-					break;
-				case ALIVE:
-					break;
-				case REGENERATING:
-					break;
-			}
-			Minecraft.getMinecraft().fontRenderer.drawString(warning, scaledRes.getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
-		}
 		
 		GlStateManager.depthMask(true);
 		GlStateManager.enableAlpha();

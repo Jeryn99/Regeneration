@@ -2,7 +2,7 @@ package me.fril.regeneration.compat.tardis;
 
 import java.util.Random;
 
-import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.RegenConfig.ModIntegrations;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.handlers.IActingHandler;
@@ -63,7 +63,7 @@ public class TardisModHandler implements IActingHandler {
 	}
 	
 	private void damageTardisInRange(EntityPlayer player) {
-		if (!RegenConfig.tardisMod.damageTardis)
+		if (!ModIntegrations.tardisMod.damageTardis)
 			return;
 		for (TileEntity te : player.world.loadedTileEntityList) {
 			if (!(te instanceof TileEntityTardis) || player.getDistanceSq(te.getPos()) > 10)

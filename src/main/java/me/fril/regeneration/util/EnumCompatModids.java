@@ -1,11 +1,11 @@
-package me.fril.regeneration.compat;
+package me.fril.regeneration.util;
 
-public enum EnumModids {
+public enum EnumCompatModids {
 	TARDIS("tardis"), LCCORE("lucraftcore");
 	
 	private final String modid;
 	
-	EnumModids(String modid) {
+	EnumCompatModids(String modid) {
 		this.modid = modid;
 	}
 	

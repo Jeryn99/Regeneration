@@ -48,7 +48,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final RegenerationStateManager stateManager;
 	
 	private boolean didSetup = false;
-	public String deathSource = null;
+	public String deathSource = null; //FIXME I'm not sure if this is handled correctly. When I let myself die of critical, then /kill'ed with a new cycle en then regenerated normally the hover text said: "&s died from hold in their regeneration too long..."
 	private int regenerationsLeft;
 	
 	private RegenState state = RegenState.ALIVE;
@@ -354,7 +354,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleNextHandGlow() {
 			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, 400); //TODO make hand glow interval configurable
+			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.grace.handGlowInterval * 20);
 			synchronise();
 		}
 		
@@ -362,7 +362,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleHandGlowTrigger() {
 			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, 400); //TODO make hand glow interval configurable
+			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.grace.handGlowTriggerDelay * 20);
 			synchronise();
 		}
 		
@@ -520,12 +520,12 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public NBTTagCompound serializeNBT() {
 			NBTTagCompound nbt = new NBTTagCompound();
-			if (nextTransition != null) {
+			if (nextTransition != null && nextTransition.getTicksLeft() >= 0) {
 				nbt.setString("transitionId", nextTransition.transition.toString());
 				nbt.setLong("transitionInTicks", nextTransition.getTicksLeft());
 			}
 			
-			if (handGlowTimer != null) {
+			if (handGlowTimer != null && handGlowTimer.getTicksLeft() >= 0) {
 				nbt.setString("handGlowState", handGlowTimer.transition.toString());
 				nbt.setLong("handGlowScheduledTicks", handGlowTimer.getTicksLeft());
 			}

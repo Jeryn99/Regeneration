@@ -6,9 +6,13 @@ import me.fril.regeneration.client.rendering.LayerFuzz;
 import me.fril.regeneration.client.rendering.LayerItemReplace;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
+<<<<<<< HEAD
 import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.compat.EnumModids;
+=======
+>>>>>>> 96186d55bece12e4d4c8d633de8d2e8e6921a6ab
 import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
+import me.fril.regeneration.util.EnumCompatModids;
 import me.fril.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
@@ -51,7 +55,7 @@ public class ClientProxy extends CommonProxy {
 		TabRegistry.registerTab(new InventoryTabRegeneration());
 		
 		// LC Core
-		if (Loader.isModLoaded(EnumModids.LCCORE.getModid())) {
+		if (Loader.isModLoaded(EnumCompatModids.LCCORE.getModid())) {
 			LucraftCoreHandler.registerEntry();
 		}
 		
