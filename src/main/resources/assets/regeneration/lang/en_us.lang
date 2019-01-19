@@ -100,6 +100,7 @@ config.regeneration.compat.lccore.size_changing_min=Size Change Minimum
 config.regeneration.compat.lccore.size_changing_max=Size Change Maximum
 config.regeneration.compat.lccore.radiation_immunity=Timelords immune to Radiation
 config.regeneration.compat.tardis.tardis_damage=Damage Tardis on Regeneration
+superpower.timelord.name=Timelord
 
 ------ SKINS -----
 config.regeneration.skins.model_preference=Preferred skin model

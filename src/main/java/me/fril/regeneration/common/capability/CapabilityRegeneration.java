@@ -47,7 +47,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final RegenerationStateManager stateManager;
 	
 	private boolean didSetup = false;
-	public String deathSource = ""; //FIXME I'm not sure if this is handled correctly. When I let myself die of critical, then /kill'ed with a new cycle en then regenerated normally the hover text said: "&s died from hold in their regeneration too long..."
+	public String deathSource = "";
 	private int regenerationsLeft;
 	
 	private RegenState state = RegenState.ALIVE;
