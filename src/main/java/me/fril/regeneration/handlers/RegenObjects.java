@@ -5,7 +5,7 @@ import java.util.List;
 
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.EntityFobWatch;
-import me.fril.regeneration.common.items.ItemFobWatch;
+import me.fril.regeneration.common.ItemFobWatch;
 import me.fril.regeneration.util.RegenDamageSource;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;

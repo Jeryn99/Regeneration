@@ -29,7 +29,7 @@ public class ClientUtil {
 	}
 	
 	
-	public static void sendResetPacket() {
+	public static void sendSkinResetPacket() {
 		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], isSlimSkin(Minecraft.getMinecraft().player.getUniqueID())));
 	}
 	

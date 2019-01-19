@@ -13,8 +13,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.common.ItemFobWatch;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.common.items.ItemFobWatch;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;

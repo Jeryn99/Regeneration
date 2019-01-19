@@ -61,9 +61,6 @@ public class CustomizerGui extends GuiContainer {
 		final int btnW = 60, btnH = 18;
 		final int sliderW = 70, sliderH = 20;
 		
-		//SUB you added this but it isn't used
-		int length = Minecraft.getMinecraft().fontRenderer.getStringWidth(new TextComponentTranslation("regeneration.gui.reset_skin").getUnformattedText() + 4);
-		
 		// WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
 		btnReset = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.undo").getFormattedText());
 		btnDefault = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.default").getFormattedText());
@@ -140,7 +137,7 @@ public class CustomizerGui extends GuiContainer {
 			}
 			
 		} else if (button.id == btnResetSkin.id) {
-			ClientUtil.sendResetPacket();
+			ClientUtil.sendSkinResetPacket();
 		}
 	}
 	

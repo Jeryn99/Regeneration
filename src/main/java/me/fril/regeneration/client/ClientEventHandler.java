@@ -194,7 +194,7 @@ public class ClientEventHandler {
 			SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
 			
 			if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) { //SUB this crashed once while I tested but I don't know why. I'm 70% sure I didn't even die
-				ClientUtil.sendResetPacket();
+				ClientUtil.sendSkinResetPacket();
 			}
 		}
 	}

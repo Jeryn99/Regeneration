@@ -1,7 +1,6 @@
-package me.fril.regeneration.common.items;
+package me.fril.regeneration.common;
 
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;

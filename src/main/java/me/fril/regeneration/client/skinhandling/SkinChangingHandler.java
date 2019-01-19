@@ -148,12 +148,12 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			byte[] pixelData = SkinChangingHandler.encodeToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
 			if (pixelData.length >= 32767) {
-				ClientUtil.sendResetPacket();
+				ClientUtil.sendSkinResetPacket();
 			} else {
 				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
 			}
 		} else {
-			ClientUtil.sendResetPacket();
+			ClientUtil.sendSkinResetPacket();
 		}
 	}
 	
