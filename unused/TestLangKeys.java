@@ -38,6 +38,7 @@ import scala.actors.threadpool.Arrays;
 @RunWith(Parameterized.class)
 public class TestLangKeys {
 	
+	//TODO test with regex for malformed lang keys (only chars and '.')
 	//TODO test language keys used in code
 	//TODO check for unused language keys
 	

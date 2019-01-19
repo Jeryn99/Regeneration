@@ -5,7 +5,6 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
 import me.fril.regeneration.common.commands.RegenDebugCommand;
-import me.fril.regeneration.compat.EnumModids;
 import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.compat.tardis.TardisModHandler;
 import me.fril.regeneration.debugger.DummyRegenDebugger;
@@ -14,6 +13,7 @@ import me.fril.regeneration.debugger.IRegenDebugger;
 import me.fril.regeneration.handlers.ActingForwarder;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.proxy.CommonProxy;
+import me.fril.regeneration.util.EnumCompatModids;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
@@ -57,11 +57,11 @@ public class RegenerationMod {
 		
 		ActingForwarder.init();
 		
-		if (Loader.isModLoaded(EnumModids.TARDIS.getModid())) {
+		if (Loader.isModLoaded(EnumCompatModids.TARDIS.getModid())) {
 			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
 		
-		if (Loader.isModLoaded(EnumModids.LCCORE.getModid())) {
+		if (Loader.isModLoaded(EnumCompatModids.LCCORE.getModid())) {
 			ActingForwarder.register(LucraftCoreHandler.class, Side.SERVER);
 			LucraftCoreHandler.registerEventBus();
 		}

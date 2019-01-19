@@ -62,13 +62,13 @@ public class CustomizerGui extends GuiContainer {
 		final int sliderW = 70, sliderH = 20;
 		
 		//SUB you added this but it isn't used
-		int length = Minecraft.getMinecraft().fontRenderer.getStringWidth(new TextComponentTranslation("regeneration.info.reset_skin").getUnformattedText() + 4);
+		int length = Minecraft.getMinecraft().fontRenderer.getStringWidth(new TextComponentTranslation("regeneration.gui.reset_skin").getUnformattedText() + 4);
 		
 		// WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
-		btnReset = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.info.undo").getFormattedText());
-		btnDefault = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.info.default").getFormattedText());
-		btnResetSkin = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.reset_skin").getFormattedText());
-		btnOpenFolder = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.info.open_folder").getFormattedText());
+		btnReset = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.undo").getFormattedText());
+		btnDefault = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.default").getFormattedText());
+		btnResetSkin = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.reset_skin").getFormattedText());
+		btnOpenFolder = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.open_folder").getFormattedText());
 		
 		btnReset.enabled = false;
 		buttonList.add(btnReset);
@@ -76,13 +76,13 @@ public class CustomizerGui extends GuiContainer {
 		buttonList.add(btnOpenFolder);
 		buttonList.add(btnResetSkin);
 		
-		slidePrimaryRed = new GuiColorSlider(5, cx + 10, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
-		slidePrimaryGreen = new GuiColorSlider(6, cx + 10, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
-		slidePrimaryBlue = new GuiColorSlider(7, cx + 10, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this::onChangeSliderValue);
+		slidePrimaryRed = new GuiColorSlider(5, cx + 10, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
+		slidePrimaryGreen = new GuiColorSlider(6, cx + 10, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
+		slidePrimaryBlue = new GuiColorSlider(7, cx + 10, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this::onChangeSliderValue);
 		
-		slideSecondaryRed = new GuiColorSlider(8, cx + 96, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.info.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, this::onChangeSliderValue);
-		slideSecondaryGreen = new GuiColorSlider(9, cx + 96, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.info.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this::onChangeSliderValue);
-		slideSecondaryBlue = new GuiColorSlider(10, cx + 96, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.info.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this::onChangeSliderValue);
+		slideSecondaryRed = new GuiColorSlider(8, cx + 96, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, this::onChangeSliderValue);
+		slideSecondaryGreen = new GuiColorSlider(9, cx + 96, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this::onChangeSliderValue);
+		slideSecondaryBlue = new GuiColorSlider(10, cx + 96, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this::onChangeSliderValue);
 		
 		buttonList.add(slidePrimaryRed);
 		buttonList.add(slidePrimaryGreen);
@@ -161,18 +161,18 @@ public class CustomizerGui extends GuiContainer {
 		Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue()),
 				secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue());
 		
-		String str = new TextComponentTranslation("regeneration.info.primary").getFormattedText();
+		String str = new TextComponentTranslation("regeneration.gui.primary").getFormattedText();
 		int length = mc.fontRenderer.getStringWidth(str);
 		fontRenderer.drawString(str, cx + 45 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(primaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
 		
-		str = new TextComponentTranslation("regeneration.info.secondary").getFormattedText();
+		str = new TextComponentTranslation("regeneration.gui.secondary").getFormattedText();
 		length = mc.fontRenderer.getStringWidth(str);
 		fontRenderer.drawString(str, cx + 131 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(secondaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
 		
 		if (RegenConfig.infiniteRegeneration)
-			str = new TextComponentTranslation("regeneration.messages.infinite_regenerations").getFormattedText(); // TODO this should be optimized
+			str = new TextComponentTranslation("regeneration.gui.infinite_regenerations").getFormattedText(); // TODO this should be optimized
 		else
-			str = new TextComponentTranslation("regeneration.messages.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft();
+			str = new TextComponentTranslation("regeneration.gui.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft();
 		
 		length = mc.fontRenderer.getStringWidth(str);
 		fontRenderer.drawString(str, cx + 86 - length / 2, cy + 21, Color.DARK_GRAY.getRGB());

@@ -1,10 +1,12 @@
 package me.fril.regeneration.compat.lucraft;
 
+import java.util.Random;
+
 import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
-import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.RegenConfig.ModIntegrations;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.IActingHandler;
@@ -12,8 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.Random;
 
 public class LucraftCoreHandler implements IActingHandler {
 	
@@ -48,10 +48,10 @@ public class LucraftCoreHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-		if (RegenConfig.lucraftcore.lucraftcoreSizeChanging) {
+		if (ModIntegrations.lucraftcore.lucraftcoreSizeChanging) {
 			EntityPlayer player = cap.getPlayer();
 			ISizeChanging sizeCap = player.getCapability(CapabilitySizeChanging.SIZE_CHANGING_CAP, null);
-			sizeCap.setSize(randFloat(RegenConfig.lucraftcore.sizeChangingMin, RegenConfig.lucraftcore.sizeChangingMax));
+			sizeCap.setSize(randFloat(ModIntegrations.lucraftcore.sizeChangingMin, ModIntegrations.lucraftcore.sizeChangingMax));
 		}
 	}
 	
@@ -65,7 +65,7 @@ public class LucraftCoreHandler implements IActingHandler {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntityLiving();
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-			boolean flag = data.canRegenerate() && e.getSource() == PotionRadiation.RADIATION && RegenConfig.lucraftcore.immuneToRadiation;
+			boolean flag = data.canRegenerate() && e.getSource() == PotionRadiation.RADIATION && ModIntegrations.lucraftcore.immuneToRadiation;
 			e.setCanceled(flag);
 		}
 	}

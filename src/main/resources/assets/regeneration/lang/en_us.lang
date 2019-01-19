@@ -1,29 +1,19 @@
 item.fob_watch.name=Fob Watch
 
-regeneration.info.red=Red
-regeneration.info.green=Green
-regeneration.info.blue=Blue
-regeneration.info.primary=Primary
-regeneration.info.secondary=Secondary
-regeneration.info.undo=Undo
-regeneration.info.default=Default
-
-regeneration.info.open_folder=Skins
-regeneration.info.reset_skin=Reset Skin
+regeneration.gui.red=Red
+regeneration.gui.green=Green
+regeneration.gui.blue=Blue
+regeneration.gui.primary=Primary
+regeneration.gui.secondary=Secondary
+regeneration.gui.undo=Undo
+regeneration.gui.default=Default
+regeneration.gui.open_folder=Skins
+regeneration.gui.reset_skin=Reset Skin
+regeneration.gui.infinite_regenerations=Infinite Regeneration Mode
+regeneration.gui.remaining_regens.status=Remaining Regenerations:
 
 regeneration.messages.now_timelord=You are now a timelord!
-regeneration.messages.regen_or_die=Regenerate now or you will die!
-regeneration.messages.remaining_regens.status=Remaining Regenerations:
-regeneration.messages.infinite_regenerations=Infinite Regeneration Mode
-regeneration.messages.remaining_regens.notification=You are regenerating! You have %s regenerations left.
 regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch
-regeneration.messages.grace=You have entered a grace period of 15 minutes
-regeneration.messages.choice=Press %s for grace period, %s to regenerate immediately!
-
-regeneration.messages.numsuffix.1=st
-regeneration.messages.numsuffix.2=nd
-regeneration.messages.numsuffix.3=rd
-regeneration.messages.numsuffix.ext=th
 
 regeneration.messages.transfer.success=You've transferred one of your regenerations into the watch
 regeneration.messages.transfer.full_watch=You can't store anymore regenerations in this watch!
@@ -38,60 +28,87 @@ regeneration.subtitles.heart_beat=Heartbeat
 regeneration.subtitles.critical_stage=Critical grace stage
 
 regeneration.keybinds.regenerate=Regenerate
-
-config.regeneration.max_regens=Amount of regenerations per cycle
-config.regeneration.free_regens=Free regenerations
-config.regeneration.first_start_gift_only=Starting gift is first-time only
-config.regeneration.fiery_regen=Fiery regeneration
-config.regeneration.regenerative_kill_range=Regeneration kill range
-config.regeneration.regenerative_knockback=Regeneration knockback
-config.regeneration.regenerative_knockback_range=Regeneration knockback range
-config.regeneration.post_regen_duration=Post-regeneration effect duration
-config.regeneration.post_regenerationEffect_level=Post-regeneration effect level
-config.regeneration.reset_hunger=Reset hunger
-config.regeneration.reset_oxygen=Reset oxygen
-config.regeneration.absorbtion_level=Amount of extra hearts post-regen
-config.regeneration.lose_regens_on_death=Lose your regenerations if you get killed
-config.regeneration.loot_regex=Loot pool matcher
-config.regeneration.disable_loot=Disable Fob Watch loot
-config.regeneration.regeneration_knocksback_players=Regeneration knocks back players
-config.regeneration.regeneration_kills_players=Regeneration kills players
-config.regeneration.regeneration_fire_immunity=Regeneration fire immunity
-config.regeneration.infinite_regenerations=Infinite Regenerations
-config.regeneration.grace.gracePeriodLength=Grace period length
-config.regeneration.grace.criticalPhaseLength=Critical phase length
-config.regeneration.grace.criticalDamageChance=Critical damage chance
-config.regeneration.size_changing=LucraftCore Size Changing
-config.regeneration.size_changing_min=Size Change Minimum
-config.regeneration.size_changing_max=Size Change Maximum
-config.regeneration.radiation_immunity=Timelords immune to Radiation
-config.regeneration.tardis_damage=Damage Tardis on Regeneration
-config.regeneration.regen_messages=Regeneraton death messages
-config.regeneration.choices=Preferred Model
-config,regeneration.changemyskin=I want my skin to change
-
-config.regeneration.category.tardis=Tardis Mod Intergration
-config.regeneration.category.lccore=Lucraft Core Intergration
-config.regeneration.category.grace_period=Grace Period
-config.regeneration.category.loot=Loot Settings
-
+regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
 
 regeneration.damagesrc.regen_energy=&s was blasted by Regeneration Energy!
 regeneration.damagesrc.regen_heal=&s died by donating too much Regeneration energy...
 regeneration.damagesrc.regen_crit=&s died from holding in their regeneration for too long
 
-regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
-
 regeneration.toast.regenerated=You have regenerated!
 regeneration.toast.regenerations_left=You have %s regenerations left
-
 regeneration.toast.enter_grace=Regeneration starting
 regeneration.toast.enter_grace.sub=Press %s to regenerate, or die in %s minutes!
-
 regeneration.toast.enter_critical=You are going critical
 regeneration.toast.enter_critical.sub=%s minutes left to regenerate before you die!
 
-message.regeneration.isregenerating=%s is regenerating...
+regeneration.messages.regen_chat_message=%s is regenerating...
+regeneration.messages.warning.grace=You have entered your grace period, press %s to Regenerate!
+regeneration.messages.warning.grace_critical=You are near death, press %s to regenerate!
 
-regeneration.messages.warning.grace=Press %s to Regenerate now!
-regeneration.messages.warning.grace_critical=You are near death || press %s to Regenerate now!
+
+
+-------------- UNUSED -----------
+regeneration.messages.remaining_regens.notification=You are regenerating! You have %s regenerations left.
+regeneration.messages.grace=You have entered a grace period of 15 minutes
+regeneration.messages.choice=Press %s for grace period, %s to regenerate immediately!
+regeneration.messages.regen_or_die=Regenerate now or you will die!
+---------------------------------
+
+
+
+
+---- GENERAL ----
+config.regeneration.max_regens=Amount of regenerations per cycle
+config.regeneration.free_regens=Free regenerations
+config.regeneration.first_start_gift_only=Starting gift is first-time only
+config.regeneration.lose_regens_on_death=Lose your regenerations if you get killed
+config.regeneration.infinite_regenerations=Infinite Regenerations
+config.regeneration.regen_messages=Send 'regenerating' death messages
+
+---- DURING ----
+config.regeneration.fiery_regen=Fiery regeneration
+config.regeneration.regeneration_knocksback_players=Regeneration knocks back players
+config.regeneration.regeneration_kills_players=Regeneration kills players
+config.regeneration.regeneration_fire_immunity=Regeneration fire immunity
+
+---- TRIGGER ----
+config.regeneration.regenerative_kill_range=Regeneration kill range
+config.regeneration.regenerative_knockback=Regeneration knockback
+config.regeneration.regenerative_knockback_range=Regeneration knockback range
+
+----- POST -----
+config.regeneration.post_regen_duration=Post-regeneration effect duration
+config.regeneration.post_regenerationEffect_level=Post-regeneration effect level
+config.regeneration.reset_hunger=Reset hunger
+config.regeneration.reset_oxygen=Reset oxygen
+config.regeneration.absorbtion_level=Amount of extra hearts post-regen
+
+----- LOOT -----
+config.regeneration.loot_regex=Loot pool matcher
+config.regeneration.disable_loot=Disable Fob Watch loot
+
+----- GRACE -----
+config.regeneration.grace.gracePeriodLength=Grace period length
+config.regeneration.grace.criticalPhaseLength=Critical phase length
+config.regeneration.grace.criticalDamageChance=Critical damage chance
+config.regeneration.grace.handGlowTriggerDelay=Hand glow trigger delay
+config.regeneration.grace.handGlowInterval=Hand glow interval
+
+----- COMPAT -------
+config.regeneration.compat.lccore.size_changing=LucraftCore Size Changing
+config.regeneration.compat.lccore.size_changing_min=Size Change Minimum
+config.regeneration.compat.lccore.size_changing_max=Size Change Maximum
+config.regeneration.compat.lccore.radiation_immunity=Timelords immune to Radiation
+config.regeneration.compat.tardis.tardis_damage=Damage Tardis on Regeneration
+
+------ SKINS -----
+config.regeneration.skins.model_preference=Preferred skin model
+config.regeneration.skins.changemyskin=Skin changing
+config.regeneration.skins.download_url=Download url
+
+----- CATEGORIES ------
+config.regeneration.category.compat=Mod integrations
+config.regeneration.category.compat.tardis=Tardis Mod Intergration
+config.regeneration.category.compat.lccore=Lucraft Core Integration
+config.regeneration.category.grace=Grace Period
+config.regeneration.category.loot=Loot Settings
