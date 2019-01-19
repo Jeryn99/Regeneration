@@ -10,33 +10,33 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * Maybe a bit overkill, but at least it'll be stable & clear
  */
 public class MessageSetPerspective implements IMessage {
-	
+
 	private boolean thirdperson, resetPitch;
-	
+
 	public MessageSetPerspective() {
 	}
-	
+
 	public MessageSetPerspective(boolean thirdperson, boolean resetPitch) {
 		this.thirdperson = thirdperson;
 		this.resetPitch = resetPitch;
 	}
-	
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		thirdperson = buf.readBoolean();
 		resetPitch = buf.readBoolean();
 	}
-	
+
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeBoolean(thirdperson);
 		buf.writeBoolean(resetPitch);
 	}
-	
+
 	public static class Handler implements IMessageHandler<MessageSetPerspective, IMessage> {
 		@Override
 		public IMessage onMessage(MessageSetPerspective message, MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(()-> {
+			Minecraft.getMinecraft().addScheduledTask(() -> {
 				if (message.resetPitch)
 					Minecraft.getMinecraft().player.rotationPitch = 0;
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = message.thirdperson ? 2 : 0;

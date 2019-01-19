@@ -10,9 +10,9 @@ import net.minecraftforge.fml.relauncher.Side;
  * on 16/09/2018.
  */
 public class NetworkHandler {
-	
+
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(RegenerationMod.MODID);
-	
+
 	public static void init() {
 		INSTANCE.registerMessage(MessageSaveStyle.Handler.class, MessageSaveStyle.class, 0, Side.SERVER);
 		INSTANCE.registerMessage(MessageSetPerspective.Handler.class, MessageSetPerspective.class, 1, Side.CLIENT);
@@ -23,5 +23,5 @@ public class NetworkHandler {
 		INSTANCE.registerMessage(MessageUpdateSkin.Handler.class, MessageUpdateSkin.class, 6, Side.SERVER);
 		INSTANCE.registerMessage(MessageRemovePlayer.Handler.class, MessageRemovePlayer.class, 7, Side.CLIENT);
 	}
-	
+
 }

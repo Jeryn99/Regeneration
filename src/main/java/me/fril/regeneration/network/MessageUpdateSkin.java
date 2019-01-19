@@ -14,18 +14,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * on 20/09/2018.
  */
 public class MessageUpdateSkin implements IMessage {
-	
+
 	private boolean isAlex;
 	private byte[] encodedSkin;
-	
+
 	public MessageUpdateSkin() {
 	}
-	
+
 	public MessageUpdateSkin(byte[] pixelData, boolean isAlex) {
 		encodedSkin = pixelData;
 		this.isAlex = isAlex;
 	}
-	
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		int length = buf.readInt();
@@ -33,10 +33,10 @@ public class MessageUpdateSkin implements IMessage {
 		for (int i = 0; i < length; i++) {
 			this.encodedSkin[i] = buf.readByte();
 		}
-		
+
 		isAlex = buf.readBoolean();
 	}
-	
+
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(this.encodedSkin.length);
@@ -45,11 +45,11 @@ public class MessageUpdateSkin implements IMessage {
 		}
 		buf.writeBoolean(isAlex);
 	}
-	
+
 	public static class Handler implements IMessageHandler<MessageUpdateSkin, IMessage> {
 		@Override
 		public IMessage onMessage(MessageUpdateSkin message, MessageContext ctx) {
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(()-> {
+			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
 				EntityPlayerMP player = ctx.getServerHandler().player;
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 				cap.setEncodedSkin(message.encodedSkin);

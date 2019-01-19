@@ -5,5 +5,5 @@ package me.fril.regeneration.proxy;
  * on 17/09/2018.
  */
 public class CommonProxy implements IProxy {
-	
+
 }

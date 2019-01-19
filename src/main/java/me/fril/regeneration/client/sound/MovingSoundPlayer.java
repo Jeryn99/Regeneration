@@ -1,11 +1,11 @@
 package me.fril.regeneration.client.sound;
 
-import java.util.function.Supplier;
-
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Created by Sub
@@ -17,18 +17,18 @@ import net.minecraft.util.SoundEvent;
 //FIXME sometimes the hand glow sound never starts at all for a second interval
 //TODO add heartbeat sound in grace (or just critical?)
 public class MovingSoundPlayer extends MovingSound {
-	
+
 	private final EntityPlayer player;
 	private final Supplier<Boolean> stopCondition;
-	
+
 	public MovingSoundPlayer(EntityPlayer playerIn, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier<Boolean> stopCondition) {
 		super(soundIn, categoryIn);
-		
+
 		this.player = playerIn;
 		this.stopCondition = stopCondition;
 		super.repeat = repeat;
 	}
-	
+
 	// FIXME Sometimes ConcurrentModificationException's in subtitle renderer, probably due to a race condition because we're modifying it here and in ConditionalSound
 	@Override
 	public void update() {
@@ -36,10 +36,10 @@ public class MovingSoundPlayer extends MovingSound {
 		super.yPosF = (float) player.posY;
 		super.zPosF = (float) player.posZ;
 	}
-	
+
 	@Override
 	public boolean isDonePlaying() {
 		return player.isDead || stopCondition.get();
 	}
-	
+
 }

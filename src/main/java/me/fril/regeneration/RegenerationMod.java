@@ -1,10 +1,5 @@
 package me.fril.regeneration;
 
-import java.awt.GraphicsEnvironment;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import me.fril.regeneration.client.gui.GuiHandler;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -27,51 +22,51 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.awt.*;
 
 //TESTING add language file tests
 @Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = "required:forge@[14.23.5.2768,);after:tardis")
 public class RegenerationMod {
-	
+
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
 	public static final String VERSION = "1.3.5";
 	public static final String UPDATE_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/master/update.json";
-	
+
 	public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
-	
+
 	@Mod.Instance(MODID)
 	public static RegenerationMod INSTANCE;
 	public static IRegenDebugger DEBUGGER;
-	
+
 	public static Logger LOG = LogManager.getLogger(NAME);
-	
+
 	@SidedProxy(clientSide = "me.fril.regeneration.proxy.ClientProxy", serverSide = "me.fril.regeneration.proxy.CommonProxy")
 	public static CommonProxy proxy;
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		proxy.preInit();
 		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
-		
+
 		ActingForwarder.init();
-		
+
 		if (Loader.isModLoaded(EnumCompatModids.TARDIS.getModid())) {
 			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
-		
+
 		if (Loader.isModLoaded(EnumCompatModids.LCCORE.getModid())) {
 			ActingForwarder.register(LucraftCoreHandler.class, Side.SERVER);
 			LucraftCoreHandler.registerEventBus();
 		}
 	}
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.init();
@@ -79,25 +74,25 @@ public class RegenerationMod {
 		LootTableList.register(LOOT_FILE);
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 	}
-	
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		proxy.postInit();
 	}
-	
+
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new RegenDebugCommand());
-		
+
 		DEBUGGER = GraphicsEnvironment.isHeadless() ? new DummyRegenDebugger() : new GraphicalRegenDebugger();
 		MinecraftForge.EVENT_BUS.register(DEBUGGER);
 	}
-	
+
 	@EventHandler
 	public void serverStop(FMLServerStoppingEvent event) {
 		MinecraftForge.EVENT_BUS.unregister(DEBUGGER);
 		DEBUGGER.dispose();
 		DEBUGGER = null;
 	}
-	
+
 }
