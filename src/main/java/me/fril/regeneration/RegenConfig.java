@@ -167,7 +167,12 @@ public class RegenConfig {
 		@Config.LangKey("config.regeneration.size_changing_max")
 		@Config.Comment("Maximum Size Change value")
 		public float sizeChangingMax = 1.1F;
-		
+
+		@Config.LangKey("config.regeneration.superpower")
+		@Config.Comment("If this is true and LCCore is installed, regeneration will be a superpower")
+		@Config.RequiresMcRestart
+		public boolean superpower = true;
+
 		@Config.LangKey("config.regeneration.radiation_immunity")
 		@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")
 		public boolean immuneToRadiation = true;
