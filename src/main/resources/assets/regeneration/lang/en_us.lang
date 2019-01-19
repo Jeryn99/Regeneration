@@ -57,44 +57,36 @@ regeneration.messages.regen_or_die=Regenerate now or you will die!
 
 
 
----- GENERAL ----
 config.regeneration.max_regens=Amount of regenerations per cycle
 config.regeneration.free_regens=Free regenerations
 config.regeneration.first_start_gift_only=Starting gift is first-time only
 config.regeneration.lose_regens_on_death=Lose your regenerations if you get killed
 config.regeneration.infinite_regenerations=Infinite Regenerations
 config.regeneration.regen_messages=Send 'regenerating' death messages
-
----- DURING ----
 config.regeneration.fiery_regen=Fiery regeneration
-config.regeneration.regeneration_knocksback_players=Regeneration knocks back players
-config.regeneration.regeneration_kills_players=Regeneration kills players
 config.regeneration.regeneration_fire_immunity=Regeneration fire immunity
 
----- TRIGGER ----
+config.regeneration.regeneration_kills_players=Regeneration kills players
+config.regeneration.regeneration_knocksback_players=Regeneration knocks back players
 config.regeneration.regenerative_kill_range=Regeneration kill range
 config.regeneration.regenerative_knockback=Regeneration knockback
 config.regeneration.regenerative_knockback_range=Regeneration knockback range
 
------ POST -----
 config.regeneration.post_regen_duration=Post-regeneration effect duration
 config.regeneration.post_regenerationEffect_level=Post-regeneration effect level
 config.regeneration.reset_hunger=Reset hunger
 config.regeneration.reset_oxygen=Reset oxygen
 config.regeneration.absorbtion_level=Amount of extra hearts post-regen
 
------ LOOT -----
 config.regeneration.loot_regex=Loot pool matcher
 config.regeneration.disable_loot=Disable Fob Watch loot
 
------ GRACE -----
 config.regeneration.grace.gracePeriodLength=Grace period length
 config.regeneration.grace.criticalPhaseLength=Critical phase length
 config.regeneration.grace.criticalDamageChance=Critical damage chance
 config.regeneration.grace.handGlowTriggerDelay=Hand glow trigger delay
 config.regeneration.grace.handGlowInterval=Hand glow interval
 
------ COMPAT -------
 config.regeneration.compat.lccore.size_changing=LucraftCore Size Changing
 config.regeneration.compat.lccore.size_changing_min=Size Change Minimum
 config.regeneration.compat.lccore.size_changing_max=Size Change Maximum
@@ -102,14 +94,15 @@ config.regeneration.compat.lccore.radiation_immunity=Timelords immune to Radiati
 config.regeneration.compat.tardis.tardis_damage=Damage Tardis on Regeneration
 superpower.timelord.name=Timelord
 
------- SKINS -----
 config.regeneration.skins.model_preference=Preferred skin model
 config.regeneration.skins.changemyskin=Skin changing
 config.regeneration.skins.download_url=Download url
 
------ CATEGORIES ------
 config.regeneration.category.compat=Mod integrations
 config.regeneration.category.compat.tardis=Tardis Mod
 config.regeneration.category.compat.lccore=Lucraft Core
 config.regeneration.category.grace=Grace Period
 config.regeneration.category.loot=Loot Settings
+config.regeneration.category.skins=Skin changing
+config.regeneration.category.on_regen=When Regenerating
+config.regeneration.category.post_regen=Post regeneration

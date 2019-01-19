@@ -1,5 +1,7 @@
 package me.fril.regeneration.handlers;
 
+import java.util.UUID;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -11,8 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
-
-import java.util.UUID;
 
 class ActingServerHandler implements IActingHandler {
 
@@ -79,7 +79,7 @@ class ActingServerHandler implements IActingHandler {
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		ExplosionUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.regenerativeKnockback / 2, RegenConfig.regenerativeKnockbackRange);
+		ExplosionUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKnockback / 2, RegenConfig.onRegen.regenerativeKnockbackRange);
 
 		// Reduce number of hearts, but compensate with absorption
 		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
@@ -114,10 +114,10 @@ class ActingServerHandler implements IActingHandler {
 
 		player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.REGENERATION_2, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
-		if (RegenConfig.resetHunger)
+		if (RegenConfig.postRegen.resetHunger)
 			player.getFoodStats().setFoodLevel(20);
 
-		if (RegenConfig.resetOxygen)
+		if (RegenConfig.postRegen.resetOxygen)
 			player.setAir(300);
 
 		cap.extractRegeneration(1);
@@ -126,9 +126,9 @@ class ActingServerHandler implements IActingHandler {
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegenerationDuration * 2, RegenConfig.postRegenerationLevel - 1, false, false));
+		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegen.postRegenerationDuration * 2, RegenConfig.postRegen.postRegenerationLevel - 1, false, false));
 		player.setHealth(player.getMaxHealth());
-		player.setAbsorptionAmount(RegenConfig.absorbtionLevel * 2);
+		player.setAbsorptionAmount(RegenConfig.postRegen.absorbtionLevel * 2);
 	}
 
 }
