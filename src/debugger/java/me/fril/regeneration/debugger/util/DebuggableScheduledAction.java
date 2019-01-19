@@ -45,7 +45,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 			RegenerationMod.DEBUGGER.getChannelFor(player).warn("Querying progress of canceled/finished transition");
 		return super.getProgress();
 	}
-
+	
 	public Transition getTransition() {
 		return transition;
 	}

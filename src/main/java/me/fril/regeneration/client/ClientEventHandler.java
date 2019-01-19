@@ -100,12 +100,12 @@ public class ClientEventHandler {
 				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
 				break;
-			
+				
 			case GRACE_CRIT:
 				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
 				break;
-			
+				
 			case REGENERATING:
 				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;

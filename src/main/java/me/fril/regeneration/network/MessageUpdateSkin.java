@@ -52,14 +52,14 @@ public class MessageUpdateSkin implements IMessage {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(()-> {
 				EntityPlayerMP player = ctx.getServerHandler().player;
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-					cap.setEncodedSkin(message.encodedSkin);
-					if (message.isAlex) {
-						cap.setSkinType(SkinInfo.SkinType.ALEX.name());
-					} else {
-						cap.setSkinType(SkinInfo.SkinType.STEVE.name());
-					}
-					cap.synchronise();
-					NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID().toString()));
+				cap.setEncodedSkin(message.encodedSkin);
+				if (message.isAlex) {
+					cap.setSkinType(SkinInfo.SkinType.ALEX.name());
+				} else {
+					cap.setSkinType(SkinInfo.SkinType.STEVE.name());
+				}
+				cap.synchronise();
+				NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID().toString()));
 			});
 			return null;
 		}

@@ -39,7 +39,7 @@ class ActingServerHandler implements IActingHandler {
 				player.setArrowCountInEntity(0);
 				ExplosionUtil.regenerationExplosion(player);
 				break;
-			
+				
 			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 				
@@ -57,7 +57,7 @@ class ActingServerHandler implements IActingHandler {
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
 				
 				break;
-			
+				
 			case GRACE:
 				float weaknessPercentage = 0.5F;
 				
@@ -68,7 +68,7 @@ class ActingServerHandler implements IActingHandler {
 				}
 				
 				break;
-			
+				
 			case ALIVE:
 				break;
 			default:

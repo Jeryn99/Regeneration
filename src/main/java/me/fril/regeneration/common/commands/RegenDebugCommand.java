@@ -37,11 +37,11 @@ public class RegenDebugCommand extends CommandBase {
 			case "fastforward":
 				cap.getStateManager().fastForward();
 				break;
-			
+				
 			case "open":
 				RegenerationMod.DEBUGGER.open();
 				break;
-			
+				
 			case "setregens":
 				if (amount >= 0)
 					cap.setRegenerationsLeft(amount);
