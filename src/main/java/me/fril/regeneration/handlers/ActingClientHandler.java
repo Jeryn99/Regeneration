@@ -54,6 +54,9 @@ class ActingClientHandler implements IActingHandler {
 
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
+
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.REGENERATION_2, SoundCategory.PLAYERS, true, () -> cap.getState().equals(RegenState.REGENERATING)));
+
 		if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
 			try {
 				SkinChangingHandler.skinChangeRandom(cap.getPlayer().world.rand, cap.getPlayer());

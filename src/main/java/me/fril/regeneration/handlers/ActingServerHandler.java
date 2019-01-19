@@ -1,7 +1,5 @@
 package me.fril.regeneration.handlers;
 
-import java.util.UUID;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -12,7 +10,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.SoundCategory;
+
+import java.util.UUID;
 
 class ActingServerHandler implements IActingHandler {
 
@@ -111,8 +110,6 @@ class ActingServerHandler implements IActingHandler {
 		player.removePassengers();
 		player.clearActivePotions();
 		player.dismountRidingEntity();
-
-		player.world.playSound(null, player.posX, player.posY, player.posZ, RegenObjects.Sounds.REGENERATION_2, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
 		if (RegenConfig.postRegen.resetHunger)
 			player.getFoodStats().setFoodLevel(20);

@@ -30,9 +30,9 @@ regeneration.subtitles.critical_stage=Critical grace stage
 regeneration.keybinds.regenerate=Regenerate
 regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
 
-regeneration.damagesrc.regen_energy=&s was blasted by Regeneration Energy!
-regeneration.damagesrc.regen_heal=&s died by donating too much Regeneration energy...
-regeneration.damagesrc.regen_crit=&s died from holding in their regeneration for too long
+regeneration.damagesrc.regen_energy=%s was blasted by Regeneration Energy!
+regeneration.damagesrc.regen_heal=%s died by donating too much Regeneration energy...
+regeneration.damagesrc.regen_crit=%s died from holding in their regeneration for too long
 
 regeneration.toast.regenerated=You have regenerated!
 regeneration.toast.regenerations_left=You have %s regenerations left

@@ -50,7 +50,7 @@ import java.util.Random;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
 
-	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID + ":" + "textures/misc/vignette.png");
+	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
 
 	@SubscribeEvent
 	public static void onRenderHand(RenderHandEvent e) {
@@ -111,7 +111,7 @@ public class ClientEventHandler {
 				break;
 		}
 
-		if (warning != null && !Loader.isModLoaded("lucraftcore")) //SUB why do we check for lccore here?
+		if (warning != null && !Loader.isModLoaded("lucraftcore"))
 			Minecraft.getMinecraft().fontRenderer.drawString(warning, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
 	}
 
@@ -128,7 +128,7 @@ public class ClientEventHandler {
 		}
 	}
 
-	private static void renderVignette(Vec3d color, float a, RegenState state) { //WAFFLE here's the depth thingy I need to fix somewhere
+	private static void renderVignette(Vec3d color, float a, RegenState state) {
 		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
@@ -139,7 +139,7 @@ public class ClientEventHandler {
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 
 		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
-		int z = -91; // below the HUD
+		int z = -89; // below the HUD
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 		bufferbuilder.pos(0, scaledRes.getScaledHeight(), z).tex(0, 1).endVertex();
 		bufferbuilder.pos(scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), z).tex(1.0D, 1.0D).endVertex();
