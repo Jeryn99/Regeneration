@@ -1,6 +1,28 @@
 package me.fril.regeneration.client.skinhandling;
 
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
+
+import javax.imageio.ImageIO;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -23,20 +45,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
 
 @SideOnly(Side.CLIENT) //SUB as far as I know this is bad practice and shouldn't be used
 public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes? Haven't seen it working but I assume it did
@@ -130,8 +138,8 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID())
 			return;
 
-		if (RegenConfig.changeMySkin) {
-			boolean isAlex = RegenConfig.prefferedModel.isAlex();
+		if (RegenConfig.skins.changeMySkin) {
+			boolean isAlex = RegenConfig.skins.prefferedModel.isAlex();
 			File skin = SkinChangingHandler.getRandomSkinFile(random, isAlex);
 			BufferedImage image = ImageIO.read(skin);
 			CURRENT_SKIN = skin.getName();
@@ -206,7 +214,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	private static ResourceLocation getSkinFromMojang(AbstractClientPlayer player) throws IOException {
 		setPlayerTexture(player, null);
 		Minecraft minecraft = Minecraft.getMinecraft();
-		URL url = new URL(String.format(RegenConfig.downloadUrl, StringUtils.stripControlCodes(player.getUniqueID().toString())));
+		URL url = new URL(String.format(RegenConfig.skins.downloadUrl, StringUtils.stripControlCodes(player.getUniqueID().toString())));
 		BufferedImage img = ImageIO.read(url);
 		SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		ImageIO.write(img, "png", new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png"));
