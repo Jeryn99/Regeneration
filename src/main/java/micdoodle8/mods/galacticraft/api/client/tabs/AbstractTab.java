@@ -16,13 +16,13 @@ public abstract class AbstractTab extends GuiButton {
 	protected RenderItem itemRender;
 	ResourceLocation texture = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
 	ItemStack renderStack;
-
+	
 	public AbstractTab(int id, int posX, int posY, ItemStack renderStack) {
 		super(id, posX, posY, 28, 32, "");
 		this.renderStack = renderStack;
 		itemRender = FMLClientHandler.instance().getClient().getRenderItem();
 	}
-
+	
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		int newPotionOffset = TabRegistry.getPotionOffsetNEI();
@@ -36,15 +36,15 @@ public abstract class AbstractTab extends GuiButton {
 		}
 		if (visible) {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
+			
 			int yTexPos = enabled ? 3 : 32;
 			int ySize = enabled ? 25 : 32;
 			int xOffset = id == 2 ? 0 : 1;
 			int yPos = y + (enabled ? 3 : 0);
-
+			
 			mc.renderEngine.bindTexture(texture);
 			this.drawTexturedModalRect(x, yPos, xOffset * 28, yTexPos, 28, ySize);
-
+			
 			RenderHelper.enableGUIStandardItemLighting();
 			zLevel = 100.0F;
 			itemRender.zLevel = 100.0F;
@@ -59,20 +59,20 @@ public abstract class AbstractTab extends GuiButton {
 			RenderHelper.disableStandardItemLighting();
 		}
 	}
-
+	
 	@Override
 	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
 		boolean inWindow = enabled && visible && mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-
+		
 		if (inWindow) {
 			onTabClicked();
 		}
-
+		
 		return inWindow;
 	}
-
+	
 	public abstract void onTabClicked();
-
+	
 	public abstract boolean shouldAddToList();
-
+	
 }

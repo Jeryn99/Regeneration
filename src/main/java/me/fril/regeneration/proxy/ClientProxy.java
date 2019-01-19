@@ -1,5 +1,7 @@
 package me.fril.regeneration.proxy;
 
+import java.util.Map;
+
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
 import me.fril.regeneration.client.rendering.LayerFuzz;
@@ -21,40 +23,38 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Loader;
 
-import java.util.Map;
-
 /**
  * Created by Sub
  * on 17/09/2018.
  */
 public class ClientProxy extends CommonProxy {
-
+	
 	@Override
 	public void preInit() {
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFobWatch.class, (RenderManager renderManagerIn) -> new RenderEntityItem(renderManagerIn, Minecraft.getMinecraft().getRenderItem()));
 	}
-
+	
 	@Override
 	public void init() {
 		super.init();
-
+		
 		// Registering the mods Keybinds
 		RegenKeyBinds.init();
-
+		
 		// Galacticraft API for TABS ======================
 		if (TabRegistry.getTabList().isEmpty()) {
 			MinecraftForge.EVENT_BUS.register(new TabRegistry());
 			TabRegistry.registerTab(new InventoryTabVanilla());
 		}
 		TabRegistry.registerTab(new InventoryTabRegeneration());
-
+		
 		// LC Core
 		if (Loader.isModLoaded(EnumCompatModids.LCCORE.getModid())) {
 			LucraftCoreHandler.registerEntry();
 		}
-
+		
 		// Render layers ===========================================
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		for (RenderPlayer renderPlayer : skinMap.values()) {
@@ -63,9 +63,9 @@ public class ClientProxy extends CommonProxy {
 			renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); // Add new item layer
 			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
 		}
-
+		
 	}
-
+	
 	@Override
 	public void postInit() {
 		super.postInit();
@@ -75,5 +75,5 @@ public class ClientProxy extends CommonProxy {
 		}
 		SkinChangingHandler.registerResources();
 	}
-
+	
 }

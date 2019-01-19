@@ -1,26 +1,26 @@
 package me.fril.regeneration.util;
 
 public class ScheduledAction {
-
+	
 	private final Runnable callback;
 	// These are separate fields instead of a single countdown so we can have a progress indication
 	protected long currentTick, scheduledTick;
-
+	
 	public ScheduledAction(Runnable callback, long inTicks) {
 		if (inTicks < 0)
 			throw new IllegalArgumentException("Can't schedule an action in the past (would be in " + inTicks + ")");
-
+		
 		this.callback = callback;
 		this.scheduledTick = inTicks;
 	}
-
+	
 	/**
 	 * @return If the callback was executed
 	 */
 	public boolean tick() {
 		if (scheduledTick == -1)
 			return false;
-
+		
 		if (currentTick == scheduledTick) {
 			callback.run();
 			scheduledTick = -1;
@@ -32,11 +32,11 @@ public class ScheduledAction {
 			return false;
 		}
 	}
-
+	
 	public void cancel() {
 		scheduledTick = -1;
 	}
-
+	
 	@Deprecated
 	/** @deprecated Use with caution, tick timings can be changed! */
 	public long getTicksLeft() {
@@ -45,9 +45,9 @@ public class ScheduledAction {
 		else
 			return scheduledTick - currentTick;
 	}
-
+	
 	public double getProgress() {
 		return currentTick / (double) scheduledTick;
 	}
-
+	
 }

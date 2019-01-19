@@ -49,7 +49,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT) //SUB as far as I know this is bad practice and shouldn't be used
 public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes? Haven't seen it working but I assume it did
-
+	
 	public static final File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	private static final File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
@@ -61,25 +61,25 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	private static final ModelBiped ALEX_MODEL = new ModelPlayer(0.1F, true);
 	private static String CURRENT_SKIN = "banana.png";
 	private static FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(CURRENT_SKIN);
-
+	
 	/**
 	 * Creates skin folders
 	 * Proceeds to download skins to the folders if they are empty
 	 * If the download doesn't happen, NPEs will occur later on
 	 */
 	public static void registerResources() {
-
+		
 		if (!SKIN_CACHE_DIRECTORY.exists()) {
 			SKIN_CACHE_DIRECTORY.mkdirs();
 		}
-
+		
 		if (!SKIN_DIRECTORY.exists()) {
 			SKIN_DIRECTORY.mkdirs();
 		}
-
+		
 		SKIN_DIRECTORY_ALEX.mkdirs();
 		SKIN_DIRECTORY_STEVE.mkdirs();
-
+		
 		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.listFiles()).length < 1 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.listFiles()).length < 1) {
 			try {
 				createDefaultImages();
@@ -88,8 +88,8 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			}
 		}
 	}
-
-
+	
+	
 	/**
 	 * Converts a buffered image to Pixel data
 	 *
@@ -100,7 +100,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
 		return buffer.getData();
 	}
-
+	
 	/**
 	 * Converts a array of Bytes into a Buffered Image and caches to the cache directory
 	 * with the file name of "cache-%PLAYERUUID%.png"
@@ -113,19 +113,19 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_4BYTE_ABGR);
 		img.setData(Raster.createRaster(img.getSampleModel(), new DataBufferByte(imageData, imageData.length), new Point()));
 		File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
-
+		
 		if (!file.getParentFile().exists()) {
 			file.getParentFile().mkdirs();
 		}
 		if (file.exists()) {
 			file.delete();
 		}
-
+		
 		ImageIO.write(img, "png", file);
-
+		
 		return img;
 	}
-
+	
 	/**
 	 * Choosens a random png file from Steve/Alex Directory (This really depends on the Clients preference)
 	 * It also checks image size of the select file, if it's too large, we'll just reset the player back to their Mojang skin,
@@ -138,7 +138,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	public static void skinChangeRandom(Random random, EntityPlayer player) throws IOException {
 		if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID())
 			return;
-
+		
 		if (RegenConfig.skins.changeMySkin) {
 			boolean isAlex = RegenConfig.skins.prefferedModel.isAlex();
 			File skin = SkinChangingHandler.getRandomSkinFile(random, isAlex);
@@ -156,7 +156,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			ClientUtil.sendSkinResetPacket();
 		}
 	}
-
+	
 	private static File getRandomSkinFile(Random rand, boolean isAlex) throws IOException {
 		File skins = null;
 		if (isAlex) {
@@ -165,15 +165,15 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			skins = SKIN_DIRECTORY_STEVE;
 		}
 		File[] files = skins.listFiles(IMAGE_FILTER);
-
+		
 		if (files.length == 0) {
 			createDefaultImages();
 		}
-
+		
 		File file = files[rand.nextInt(files.length)];
 		return file;
 	}
-
+	
 	/**
 	 * Creates a SkinInfo object for later use
 	 *
@@ -186,10 +186,10 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		byte[] encodedSkin = CapabilityRegeneration.getForPlayer(player).getEncodedSkin();
 		ResourceLocation resourceLocation = null;
 		SkinInfo.SkinType skinType = null;
-
+		
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
 			resourceLocation = getSkinFromMojang(player);
-
+			
 			if (player.getSkinType().equals("slim")) {
 				skinType = SkinInfo.SkinType.ALEX;
 			} else {
@@ -197,7 +197,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			}
 		} else {
 			BufferedImage bufferedImage = toImage(player, encodedSkin);
-
+			
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
@@ -205,10 +205,10 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 				skinType = CapabilityRegeneration.getForPlayer(player).getSkinType();
 			}
 		}
-
+		
 		return new SkinInfo(resourceLocation, skinType);
 	}
-
+	
 	/**
 	 * This is used when the clients skin is reset
 	 *
@@ -224,13 +224,13 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		BufferedImage img = ImageIO.read(url);
 		SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		ImageIO.write(img, "png", new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png"));
-
+		
 		if (img == null) {
 			return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 		}
 		return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(img));
 	}
-
+	
 	/**
 	 * @param url      - URL to download image from
 	 * @param file     - Directory of where to save the image to [SHOULD NOT CONTAIN THE FILES NAME]
@@ -242,7 +242,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		BufferedImage img = ImageIO.read(url);
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
-
+	
 	/**
 	 * Downloads a set of default images to their correct directories
 	 *
@@ -256,11 +256,11 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			} else {
 				dummy = SKIN_DIRECTORY_STEVE;
 			}
-
+			
 			downloadImages(new URL(value.getURL()), dummy, value.name().toLowerCase());
 		}
 	}
-
+	
 	/**
 	 * Changes the ResourceLocation of a Players skin
 	 *
@@ -276,7 +276,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		if (texture == null)
 			ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
 	}
-
+	
 	/**
 	 * Set's a players Player Model
 	 * WARNING: MUST EXTEND MODEL BIPED AND YOU SHOULD USE CACHED MODELS
@@ -287,7 +287,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	private static void setPlayerModel(RenderPlayer renderer, ModelBiped model) {
 		renderer.mainModel = model;
 	}
-
+	
 	/**
 	 * Subscription to RenderPlayerEvent.Pre to set players model and texture from hashmap
 	 *
@@ -297,14 +297,14 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-
+		
 		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
 		} else if (cap.getState() == RegenState.ALIVE && !PLAYER_SKINS.containsKey(player.getUniqueID())) {
 			setSkinFromData(player, cap, e.getRenderer());
 		}
 	}
-
+	
 	/**
 	 * Called by onRenderPlayer, sets model, sets texture, adds player and SkinInfo to map
 	 *
@@ -320,7 +320,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			e1.printStackTrace();
 		}
 		SkinChangingHandler.setPlayerTexture(player, skinInfo.getTextureLocation());
-
+		
 		if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
 			SkinChangingHandler.setPlayerModel(renderPlayer, ALEX_MODEL);
 		} else {
@@ -328,16 +328,16 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		}
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 	}
-
+	
 	public enum EnumChoices {
 		ALEX(true), STEVE(false), EITHER(true);
-
+		
 		private boolean isAlex;
-
+		
 		EnumChoices(boolean b) {
 			this.isAlex = b;
 		}
-
+		
 		public boolean isAlex() {
 			if (this == EITHER) {
 				return RAND.nextBoolean();
@@ -345,5 +345,5 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			return isAlex;
 		}
 	}
-
+	
 }

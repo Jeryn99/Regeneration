@@ -13,19 +13,19 @@ public enum DefaultSkins { //WAFFLE do this as external json file thingy
 	THATGUY(false, "https://github.com/Suffril/Regeneration/blob/skins/steve/thatguy.png?raw=true"),
 	ANCIENT_EMO(false, "https://github.com/Suffril/Regeneration/blob/skins/steve/ancient_emo.png?raw=true"),
 	HEROBRINE(false, "https://github.com/Suffril/Regeneration/blob/skins/steve/herobrine.png?raw=true");
-
+	
 	private final String url;
 	private final boolean alexDir;
-
+	
 	DefaultSkins(boolean alexDir, String base64) {
 		this.url = base64;
 		this.alexDir = alexDir;
 	}
-
+	
 	public String getURL() {
 		return url;
 	}
-
+	
 	public boolean isAlexDir() {
 		return alexDir;
 	}

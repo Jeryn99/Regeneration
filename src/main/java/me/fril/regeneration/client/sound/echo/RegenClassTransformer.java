@@ -1,22 +1,31 @@
 package me.fril.regeneration.client.sound.echo;
 
-import me.fril.regeneration.RegenerationMod;
-import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
-
-import javax.annotation.Nullable;
 import java.util.ListIterator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import javax.annotation.Nullable;
+
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
+
+import me.fril.regeneration.RegenerationMod;
+import net.minecraft.launchwrapper.IClassTransformer;
 
 //CREDIT https://raw.githubusercontent.com/Cryptic-Mushroom/The-Midnight/13ffab9ab0d78b0d030c2b3b55252e0e8fd2864e/src/main/java/com/mushroom/midnight/core/transformer/MidnightClassTransformer.java
 public class RegenClassTransformer implements IClassTransformer, Opcodes {
 	private static final String SOURCE_LWJGL_NAME = "paulscode/sound/libraries/SourceLWJGLOpenAL";
 	private static final String CHANNEL_LWJGL_NAME = "paulscode/sound/libraries/ChannelLWJGLOpenAL";
-
+	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] data) {
 		if (data == null) {
@@ -27,7 +36,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 		}
 		return data;
 	}
-
+	
 	private boolean transformSoundSource(ClassNode node) {
 		for (MethodNode method : node.methods) {
 			if (method.name.equals("play")) {
@@ -46,23 +55,23 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 		}
 		return false;
 	}
-
+	
 	private byte[] applyTransform(String name, byte[] data, Predicate<ClassNode> transformer) {
 		ClassNode node = new ClassNode();
 		ClassReader reader = new ClassReader(data);
 		reader.accept(node, 0);
-
+		
 		if (transformer.test(node)) {
 			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			node.accept(writer);
-
+			
 			return writer.toByteArray();
 		} else {
 			RegenerationMod.LOG.warn("Unable to patch class {}", name);
 			return data;
 		}
 	}
-
+	
 	private void insertBefore(InsnList instructions, Predicate<AbstractInsnNode> predicate, Supplier<InsnList> insert) {
 		AbstractInsnNode node = this.selectNode(instructions, predicate);
 		if (node != null) {
@@ -72,7 +81,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 			RegenerationMod.LOG.warn("Failed to find location to insert for {}", stackTrace[1].getMethodName());
 		}
 	}
-
+	
 	@Nullable
 	private AbstractInsnNode selectNode(InsnList instructions, Predicate<AbstractInsnNode> predicate) {
 		ListIterator<AbstractInsnNode> iterator = instructions.iterator();
@@ -84,7 +93,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 		}
 		return null;
 	}
-
+	
 	private Predicate<AbstractInsnNode> invoke(String owner, Predicate<String> name) {
 		return n -> n instanceof MethodInsnNode && ((MethodInsnNode) n).owner.equals(owner) && name.test(((MethodInsnNode) n).name);
 	}

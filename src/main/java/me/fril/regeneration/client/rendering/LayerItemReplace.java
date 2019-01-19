@@ -8,11 +8,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class LayerItemReplace extends LayerHeldItem {
-
+	
 	public LayerItemReplace(RenderLivingBase<?> livingEntityRendererIn) {
 		super(livingEntityRendererIn);
 	}
-
+	
 	@Override
 	public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		if (entitylivingbaseIn instanceof EntityPlayer) {
@@ -20,7 +20,7 @@ public class LayerItemReplace extends LayerHeldItem {
 			if (CapabilityRegeneration.getForPlayer(entityPlayer).getState() != RegenState.REGENERATING) {
 				super.doRenderLayer(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 			}
-
+			
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package me.fril.regeneration.compat.lucraft;
 
+import static me.fril.regeneration.compat.lucraft.LCCoreBarEntry.*;
+
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
@@ -11,20 +13,18 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static me.fril.regeneration.compat.lucraft.LCCoreBarEntry.ICON_TEX;
-
 public class SuperpowerTimelord extends Superpower {
-
+	
 	public SuperpowerTimelord(String name) {
 		super(name);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getCapsuleColor() {
 		return 16745472;
 	}
-
+	
 	@Override
 	public void renderIcon(Minecraft mc, Gui gui, int x, int y) {
 		GlStateManager.pushMatrix();
@@ -34,11 +34,11 @@ public class SuperpowerTimelord extends Superpower {
 		gui.drawTexturedModalRect(0, 0, 9 * 16, 16, 16, 16);
 		GlStateManager.popMatrix();
 	}
-
+	
 	@Override
 	public SuperpowerPlayerHandler getNewSuperpowerHandler(ISuperpowerCapability cap) {
 		return new SuperpowerPlayerHandler(cap, this) {
-
+			
 			@Override
 			public void onApplyPower() {
 				super.onApplyPower();
@@ -46,7 +46,7 @@ public class SuperpowerTimelord extends Superpower {
 					CapabilityRegeneration.getForPlayer(getPlayer()).receiveRegenerations(RegenConfig.regenCapacity);
 				}
 			}
-
+			
 			// When superpower gets removed, remove all left regenerations
 			@Override
 			public void onRemove() {
