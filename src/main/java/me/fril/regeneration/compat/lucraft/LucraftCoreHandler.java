@@ -1,7 +1,5 @@
 package me.fril.regeneration.compat.lucraft;
 
-import java.util.Random;
-
 import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
@@ -15,10 +13,15 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.Random;
+
 public class LucraftCoreHandler implements IActingHandler {
 	
 	public static void registerEntry() {
 		AbilityBarHandler.registerProvider(new LCCoreBarEntry());
+	}
+	
+	public static void registerEventBus() {
 		MinecraftForge.EVENT_BUS.register(new LucraftCoreHandler());
 	}
 	

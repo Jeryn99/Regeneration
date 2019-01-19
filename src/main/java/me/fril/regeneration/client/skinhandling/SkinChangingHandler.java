@@ -148,7 +148,7 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	private static File getRandomSkinFile(Random rand, boolean isAlex) {
+	private static File getRandomSkinFile(Random rand, boolean isAlex) throws IOException {
 		File skins = null;
 		if (isAlex) {
 			skins = SKIN_DIRECTORY_ALEX;
@@ -157,8 +157,8 @@ public class SkinChangingHandler {
 		}
 		File[] files = skins.listFiles(IMAGE_FILTER);
 		
-		if (files.length <= 1) {
-			files = skins.listFiles();
+		if (files.length == 0) {
+			createDefaultImages();
 		}
 		
 		File file = files[rand.nextInt(files.length)];
@@ -208,7 +208,7 @@ public class SkinChangingHandler {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		URL url = new URL(String.format(RegenConfig.downloadUrl, StringUtils.stripControlCodes(player.getUniqueID().toString())));
 		BufferedImage img = ImageIO.read(url);
-		SKIN_LOG.info("Downloading Skin from: " + url.toString());
+		SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		ImageIO.write(img, "png", new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png"));
 		return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(img));
 	}
@@ -216,11 +216,11 @@ public class SkinChangingHandler {
 	/**
 	 * @param url - URL to download image from
 	 * @param file - Directory of where to save the image to [SHOULD NOT CONTAIN THE FILES NAME]
-	 * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS PREFIXED FOR YOU]
+	 * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
 	 * @throws IOException
 	 */
 	private static void downloadImages(URL url, File file, String filename) throws IOException {
-		SKIN_LOG.info("Downloading Skin from: " + url.toString());
+		SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(url);
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
