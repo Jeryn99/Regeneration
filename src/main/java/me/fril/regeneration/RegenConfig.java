@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * on 17/09/2018.
  */
 @Config(modid = RegenerationMod.MODID, name = "Regeneration")
-public class RegenConfig { //NOW going to re-organize the config because it's a mess
+public class RegenConfig {
 	
 	@Config.LangKey("config.regeneration.category.loot")
 	public static final Loot loot = new Loot();
@@ -227,7 +227,7 @@ public class RegenConfig { //NOW going to re-organize the config because it's a 
 			@Config.Comment("Maximum Size Change value")
 			public float sizeChangingMax = 1.1F;
 			
-			@Config.LangKey("config.regeneration.superpower")
+			@Config.LangKey("config.regeneration.compat.lccore.superpower")
 			@Config.Comment("If this is true and LCCore is installed, regeneration will be a superpower")
 			@Config.RequiresMcRestart
 			public boolean superpower = true;
