@@ -1,4 +1,5 @@
 item.fob_watch.name=Fob Watch
+superpower.timelord.name=Timelord
 
 regeneration.gui.red=Red
 regeneration.gui.green=Green
@@ -87,12 +88,12 @@ config.regeneration.grace.criticalDamageChance=Critical damage chance
 config.regeneration.grace.handGlowTriggerDelay=Hand glow trigger delay
 config.regeneration.grace.handGlowInterval=Hand glow interval
 
+config.regeneration.compat.lccore.superpower=Treat Regeneration as superpower
 config.regeneration.compat.lccore.size_changing=LucraftCore Size Changing
 config.regeneration.compat.lccore.size_changing_min=Size Change Minimum
 config.regeneration.compat.lccore.size_changing_max=Size Change Maximum
 config.regeneration.compat.lccore.radiation_immunity=Timelords immune to Radiation
 config.regeneration.compat.tardis.tardis_damage=Damage Tardis on Regeneration
-superpower.timelord.name=Timelord
 
 config.regeneration.skins.model_preference=Preferred skin model
 config.regeneration.skins.changemyskin=Skin changing
