@@ -105,7 +105,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (player.world.isRemote)
 			throw new IllegalStateException("Don't sync client -> server");
 
-		handsAreGlowingClient = state != RegenState.ALIVE && stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
+		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
 

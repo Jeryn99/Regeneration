@@ -59,7 +59,7 @@ class PanelHeader extends JPanel {
 
 		File skinImage = new File(skinCache, gp.getId().toString() + ".png");
 		if (!skinImage.exists()) {
-			try (ReadableByteChannel readableByteChannel = Channels.newChannel(new URL("https://crafatar.com/avatars/" + gp.getId().toString() + "?size=100").openStream());
+			try (ReadableByteChannel readableByteChannel = Channels.newChannel(new URL("https://crafatar.com/renders/head/" + gp.getId().toString() + "?size=100").openStream());
 			     FileOutputStream fileOutputStream = new FileOutputStream(skinImage);
 			     FileChannel fileChannel = fileOutputStream.getChannel()) {
 				fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
