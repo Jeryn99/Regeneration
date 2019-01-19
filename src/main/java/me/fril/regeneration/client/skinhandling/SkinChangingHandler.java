@@ -189,8 +189,13 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			}
 		} else {
 			BufferedImage bufferedImage = toImage(player, encodedSkin);
-			resourceLocation = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(bufferedImage));
-			skinType = CapabilityRegeneration.getForPlayer(player).getSkinType();
+
+			if (bufferedImage == null) {
+				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
+			} else {
+				resourceLocation = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(bufferedImage));
+				skinType = CapabilityRegeneration.getForPlayer(player).getSkinType();
+			}
 		}
 
 		return new SkinInfo(resourceLocation, skinType);
