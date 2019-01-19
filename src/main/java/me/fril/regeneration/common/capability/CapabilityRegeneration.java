@@ -1,13 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
@@ -33,6 +25,11 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sub
@@ -48,13 +45,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final RegenerationStateManager stateManager;
 	
 	private boolean didSetup = false;
-	public String deathSource = null; //FIXME I'm not sure if this is handled correctly. When I let myself die of critical, then /kill'ed with a new cycle en then regenerated normally the hover text said: "&s died from hold in their regeneration too long..."
+	public String deathSource = ""; //FIXME I'm not sure if this is handled correctly. When I let myself die of critical, then /kill'ed with a new cycle en then regenerated normally the hover text said: "&s died from hold in their regeneration too long..."
 	private int regenerationsLeft;
 	
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType<?> type = new TypeFiery();
 	
-	private byte[] ENCODED_SKIN = null;
+	private byte[] ENCODED_SKIN = new byte[0];
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
@@ -110,7 +107,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (player.world.isRemote)
 			throw new IllegalStateException("Don't sync client -> server");
 		
-		handsAreGlowingClient = state == RegenState.ALIVE ? false : stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
+		handsAreGlowingClient = state != RegenState.ALIVE && stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
 		
