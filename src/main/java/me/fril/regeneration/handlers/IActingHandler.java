@@ -10,9 +10,12 @@ public interface IActingHandler {
 	
 	void onEnterGrace(IRegeneration cap);
 	
-	void onRegenFinish(IRegeneration cap);
+	void onHandsStartGlowing(IRegeneration cap);
+	
+	void onGoCritical(IRegeneration cap);
 	
 	void onRegenTrigger(IRegeneration cap);
 	
-	void onGoCritical(IRegeneration cap);
+	void onRegenFinish(IRegeneration cap);
+	
 }

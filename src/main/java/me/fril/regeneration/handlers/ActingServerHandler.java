@@ -88,6 +88,12 @@ class ActingServerHandler implements IActingHandler {
 	}
 	
 	@Override
+	public void onHandsStartGlowing(IRegeneration cap) {
+		//SUB For server
+		
+	}
+	
+	@Override
 	public void onGoCritical(IRegeneration cap) {
 		cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
 		RegenerationMod.DEBUGGER.getChannelFor(cap.getPlayer()).out("Applied speed reduction");
