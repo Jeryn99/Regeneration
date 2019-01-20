@@ -32,6 +32,11 @@ public class TardisModHandler implements IActingHandler {
 	}
 	
 	@Override
+	public void onHandsStartGlowing(IRegeneration cap) {
+		//SUB play bells?
+	}
+	
+	@Override
 	public void onRegenFinish(IRegeneration cap) {
 		if (cap.getPlayer().world.provider instanceof WorldProviderTardis) {
 			playBells(cap, true);

@@ -48,6 +48,11 @@ public class LucraftCoreHandler implements IActingHandler {
 	}
 	
 	@Override
+	public void onHandsStartGlowing(IRegeneration cap) {
+		
+	}
+	
+	@Override
 	public void onRegenFinish(IRegeneration cap) {
 		
 	}

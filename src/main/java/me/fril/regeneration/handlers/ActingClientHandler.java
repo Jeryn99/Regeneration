@@ -48,6 +48,12 @@ class ActingClientHandler implements IActingHandler {
 	}
 	
 	@Override
+	public void onHandsStartGlowing(IRegeneration cap) {
+		//SUB For client
+		
+	}
+	
+	@Override
 	public void onRegenFinish(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.regenerated"), new TextComponentTranslation("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()), cap.getState());
 		// FUTURE toast for traits
@@ -72,5 +78,5 @@ class ActingClientHandler implements IActingHandler {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_critical"), new TextComponentTranslation("regeneration.toast.enter_critical.sub", RegenConfig.grace.criticalPhaseLength / 60), cap.getState());
 		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.CRITICAL_STAGE, 1.0F, 0.5F), () -> cap.getState() != RegenState.GRACE_CRIT));
 	}
-	
+
 }

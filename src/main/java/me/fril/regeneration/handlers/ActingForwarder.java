@@ -63,6 +63,11 @@ public class ActingForwarder {
 		serverHandlers.forEach(handler -> handler.onGoCritical(cap));
 	}
 	
+	public static void onHandsStartGlowing(IRegeneration cap) {
+		checkAndForward(cap);
+		serverHandlers.forEach(handler -> handler.onHandsStartGlowing(cap));
+	}
+	
 	public static void onClient(String event, IRegeneration cap) {
 		try {
 			for (IActingHandler handler : clientHandlers) {
