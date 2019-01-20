@@ -5,6 +5,7 @@ import java.util.UUID;
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -16,29 +17,31 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class MessageRemovePlayer implements IMessage {
 	
-	private String playerUUID;
+	private UUID playerUUID;
 	
 	public MessageRemovePlayer() {
 	}
 	
-	public MessageRemovePlayer(String uuid) {
+	public MessageRemovePlayer(UUID uuid) {
 		this.playerUUID = uuid;
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeUTF8String(buf, playerUUID);
+		PacketBuffer pBuf = new PacketBuffer(buf);
+		pBuf.writeUniqueId(playerUUID);
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		playerUUID = ByteBufUtils.readUTF8String(buf);
+		PacketBuffer pBuf = new PacketBuffer(buf);
+		playerUUID = pBuf.readUniqueId();
 	}
 	
 	public static class Handler implements IMessageHandler<MessageRemovePlayer, IMessage> {
 		@Override
 		public IMessage onMessage(MessageRemovePlayer message, MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(() -> SkinChangingHandler.PLAYER_SKINS.remove(UUID.fromString(message.playerUUID)));
+			Minecraft.getMinecraft().addScheduledTask(() -> SkinChangingHandler.PLAYER_SKINS.remove(message.playerUUID));
 			return null;
 		}
 	}

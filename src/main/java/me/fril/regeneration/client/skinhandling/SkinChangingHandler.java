@@ -166,6 +166,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		
 		if (files.length == 0) {
 			createDefaultImages();
+			files = skins.listFiles(IMAGE_FILTER);
 		}
 		
 		File file = files[rand.nextInt(files.length)];
@@ -298,7 +299,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		
 		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
-		} else if (cap.getState() != RegenState.REGENERATING && !PLAYER_SKINS.containsKey(player.getUniqueID())) {
+		} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
 			setSkinFromData(player, cap, e.getRenderer());
 		}
 	}

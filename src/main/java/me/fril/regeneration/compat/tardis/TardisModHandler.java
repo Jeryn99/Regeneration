@@ -33,7 +33,7 @@ public class TardisModHandler implements IActingHandler {
 	
 	@Override
 	public void onHandsStartGlowing(IRegeneration cap) {
-		//SUB play bells?
+	
 	}
 	
 	@Override

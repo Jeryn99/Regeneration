@@ -167,6 +167,7 @@ public class ClientEventHandler {
 		GlStateManager.color(1, 1, 1, 1);
 	}
 	
+	
 	@SubscribeEvent
 	public static void onClientTick(TickEvent.ClientTickEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;

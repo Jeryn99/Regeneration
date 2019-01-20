@@ -59,7 +59,8 @@ public class MessageUpdateSkin implements IMessage {
 					cap.setSkinType(SkinInfo.SkinType.STEVE.name());
 				}
 				cap.synchronise();
-				NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID().toString()));
+				
+				NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID()));
 			});
 			return null;
 		}
