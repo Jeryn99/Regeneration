@@ -298,7 +298,7 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 		
 		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
-		} else if (cap.getState() == RegenState.ALIVE && !PLAYER_SKINS.containsKey(player.getUniqueID())) {
+		} else if (cap.getState() != RegenState.REGENERATING && !PLAYER_SKINS.containsKey(player.getUniqueID())) {
 			setSkinFromData(player, cap, e.getRenderer());
 		}
 	}
