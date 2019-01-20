@@ -1,12 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
@@ -33,6 +26,11 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sub
@@ -46,7 +44,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
-	public String deathSource = "";
+	public String deathSource = "", soundName = RegenObjects.Sounds.REGENERATION_2.getRegistryName().toString();
 	private boolean didSetup = false;
 	private int regenerationsLeft;
 	
@@ -57,6 +55,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
+	
 	
 	/**
 	 * WHY THIS IS A SEPERATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
@@ -279,7 +278,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void setDeathSource(String source) {
 		deathSource = source;
 	}
-	
 	
 	@Override
 	public IRegenerationStateManager getStateManager() {

@@ -1,10 +1,10 @@
 package me.fril.regeneration.handlers;
 
-import java.util.UUID;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.network.MessagePlayRegenerationSound;
+import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.ExplosionUtil;
 import me.fril.regeneration.util.PlayerUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -12,6 +12,12 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+import java.util.Random;
+import java.util.UUID;
 
 class ActingServerHandler implements IActingHandler {
 	
@@ -22,6 +28,7 @@ class ActingServerHandler implements IActingHandler {
 			SPEED_REDUCTION = 0.25;
 	private final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, 1),
 			heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, 1);
+	
 	
 	public ActingServerHandler() {
 	}
@@ -75,6 +82,11 @@ class ActingServerHandler implements IActingHandler {
 		}
 	}
 	
+	public static SoundEvent getRandomSound(Random random) {
+		SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION, RegenObjects.Sounds.REGENERATION_2};
+		return SOUNDS[random.nextInt(SOUNDS.length)];
+	}
+	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
@@ -82,26 +94,43 @@ class ActingServerHandler implements IActingHandler {
 		
 		// Reduce number of hearts, but compensate with absorption
 		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
-		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
+		
+		if (!player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).hasModifier(heartModifier)) {
+			player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
+		}
+		
 		RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied health reduction");
 		player.setHealth(player.getMaxHealth());
 	}
 	
 	@Override
 	public void onHandsStartGlowing(IRegeneration cap) {
-		//SUB For server
-		
+		if (!cap.getPlayer().world.isRemote) {
+			PlayerUtil.sendMessage(cap.getPlayer(), new TextComponentTranslation("regeneration.messages.regen_warning"), true);
+		}
 	}
 	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
-		cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
+		if (cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
+			cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
+		}
 		RegenerationMod.DEBUGGER.getChannelFor(cap.getPlayer()).out("Applied speed reduction");
+	}
+	
+	@Override
+	public void onRegenFinish(IRegeneration cap) {
+		EntityPlayer player = cap.getPlayer();
+		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegen.postRegenerationDuration * 2, RegenConfig.postRegen.postRegenerationLevel - 1, false, false));
+		player.setHealth(player.getMaxHealth());
+		player.setAbsorptionAmount(RegenConfig.postRegen.absorbtionLevel * 2);
 	}
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
+		
+		NetworkHandler.INSTANCE.sendToAllAround(new MessagePlayRegenerationSound(getRandomSound(player.world.rand), player.getUniqueID().toString()), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 40));
 		
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
 		RegenerationMod.DEBUGGER.getChannelFor(player).out("Removed health reduction");
@@ -124,14 +153,6 @@ class ActingServerHandler implements IActingHandler {
 			player.setAir(300);
 		
 		cap.extractRegeneration(1);
-	}
-	
-	@Override
-	public void onRegenFinish(IRegeneration cap) {
-		EntityPlayer player = cap.getPlayer();
-		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegen.postRegenerationDuration * 2, RegenConfig.postRegen.postRegenerationLevel - 1, false, false));
-		player.setHealth(player.getMaxHealth());
-		player.setAbsorptionAmount(RegenConfig.postRegen.absorbtionLevel * 2);
 	}
 	
 }

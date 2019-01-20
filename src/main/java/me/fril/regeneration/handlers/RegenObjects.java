@@ -1,8 +1,5 @@
 package me.fril.regeneration.handlers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.common.ItemFobWatch;
@@ -17,6 +14,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sub
@@ -56,7 +56,8 @@ public class RegenObjects {
 				setUpSound("critical_stage"),
 				setUpSound("heart_beat"),
 				setUpSound("hand_glow"),
-				setUpSound("regeneration_2"));
+				setUpSound("regeneration_2")
+		);
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {

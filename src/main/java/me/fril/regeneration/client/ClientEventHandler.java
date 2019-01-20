@@ -61,10 +61,6 @@ public class ClientEventHandler {
 			EntityPlayer player = (EntityPlayer) e.getEntity();
 			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 			
-			if(cap.getState().equals(RegenState.REGENERATING)) {
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.REGENERATION_2, SoundCategory.PLAYERS, true, () -> cap.getState().equals(RegenState.REGENERATING)));
-			}
-			
 			if(cap.areHandsGlowing()){
 				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
 			}
