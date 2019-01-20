@@ -1,14 +1,11 @@
 package me.fril.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
-import me.fril.regeneration.client.sound.MovingSoundPlayer;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.util.RegenState;
+import me.fril.regeneration.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -49,11 +46,12 @@ public class MessagePlayRegenerationSound implements IMessage {
 	public static class Handler implements IMessageHandler<MessagePlayRegenerationSound, IMessage> {
 		@Override
 		public IMessage onMessage(MessagePlayRegenerationSound message, MessageContext ctx) {
+			
 			Minecraft.getMinecraft().addScheduledTask(() -> {
 				EntityPlayer player = Minecraft.getMinecraft().world.getPlayerEntityByUUID(UUID.fromString(message.playerUUID));
 				if (player != null) {
 					IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-					Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(player, new SoundEvent(new ResourceLocation(message.sound)), SoundCategory.PLAYERS, true, () -> !data.getState().equals(RegenState.REGENERATING)));
+					ClientUtil.playSound(message.sound, data);
 				}
 			});
 			return null;

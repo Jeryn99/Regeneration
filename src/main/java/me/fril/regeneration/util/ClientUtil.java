@@ -1,11 +1,17 @@
 package me.fril.regeneration.util;
 
+import me.fril.regeneration.client.sound.MovingSoundPlayer;
+import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageUpdateSkin;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
@@ -31,6 +37,11 @@ public class ClientUtil {
 	
 	public static void sendSkinResetPacket() {
 		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], isSlimSkin(Minecraft.getMinecraft().player.getUniqueID())));
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static void playSound(String soundName, IRegeneration cap) {
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), new SoundEvent(new ResourceLocation(soundName)), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING)));
 	}
 	
 	
