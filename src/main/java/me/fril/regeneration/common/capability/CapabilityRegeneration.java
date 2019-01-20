@@ -402,6 +402,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (getState().isGraceful() && areHandsGlowing()) {
 				handGlowTimer.cancel();
 				scheduleNextHandGlow();
+				if(!player.world.isRemote){
+					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.regen_delayed"), true);
+				}
 			}
 		}
 		

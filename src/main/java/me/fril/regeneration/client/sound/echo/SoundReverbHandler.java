@@ -84,6 +84,6 @@ public class SoundReverbHandler {
 	private static boolean shouldEcho() {
 		if (MC.player == null)
 			return false;
-		return CapabilityRegeneration.getForPlayer(MC.player).getState().name().contains("GRACE");
+		return CapabilityRegeneration.getForPlayer(MC.player).getState().isGraceful();
 	}
 }

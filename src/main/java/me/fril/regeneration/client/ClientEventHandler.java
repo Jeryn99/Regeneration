@@ -1,10 +1,8 @@
 package me.fril.regeneration.client;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
+import me.fril.regeneration.client.sound.MovingSoundPlayer;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -28,6 +26,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.InputUpdateEvent;
@@ -35,6 +34,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -42,6 +42,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -51,6 +54,22 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ClientEventHandler {
 	
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
+	
+	@SubscribeEvent
+	public static void onWorldJoin(EntityJoinWorldEvent e) {
+		if (e.getEntity() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) e.getEntity();
+			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+			
+			if(cap.getState().equals(RegenState.REGENERATING)) {
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.REGENERATION_2, SoundCategory.PLAYERS, true, () -> cap.getState().equals(RegenState.REGENERATING)));
+			}
+			
+			if(cap.areHandsGlowing()){
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
+			}
+		}
+	}
 	
 	@SubscribeEvent
 	public static void onRenderHand(RenderHandEvent e) {
@@ -100,12 +119,12 @@ public class ClientEventHandler {
 				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
 				break;
-				
+			
 			case GRACE_CRIT:
 				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
 				break;
-				
+			
 			case REGENERATING:
 				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;
