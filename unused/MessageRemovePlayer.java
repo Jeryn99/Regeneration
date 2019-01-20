@@ -3,7 +3,7 @@ package me.fril.regeneration.network;
 import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
-import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
+import me.fril.regeneration.client.skinhandling.SkinChangingHandlerOLD;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -38,7 +38,7 @@ public class MessageRemovePlayer implements IMessage {
 	public static class Handler implements IMessageHandler<MessageRemovePlayer, IMessage> {
 		@Override
 		public IMessage onMessage(MessageRemovePlayer message, MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(() -> SkinChangingHandler.PLAYER_SKINS.remove(UUID.fromString(message.playerUUID)));
+			Minecraft.getMinecraft().addScheduledTask(() -> SkinChangingHandlerOLD.PLAYER_SKINS.remove(UUID.fromString(message.playerUUID)));
 			return null;
 		}
 	}

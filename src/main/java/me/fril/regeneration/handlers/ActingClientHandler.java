@@ -1,9 +1,9 @@
 package me.fril.regeneration.handlers;
 
+import org.lwjgl.input.Keyboard;
+
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.RegenKeyBinds;
-import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.sound.ConditionalSound;
 import me.fril.regeneration.client.sound.MovingSoundPlayer;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -13,16 +13,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
-import org.lwjgl.input.Keyboard;
-
-import java.io.IOException;
 
 class ActingClientHandler implements IActingHandler {
 	
 	public static final IActingHandler INSTANCE = new ActingClientHandler();
 	
 	// TODO 'now a timelord' into toast
-	// TODO check message lang keys
 	
 	private ActingClientHandler() {
 	}
@@ -58,13 +54,8 @@ class ActingClientHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-		if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
-			try {
-				SkinChangingHandler.skinChangeRandom(cap.getPlayer().world.rand, cap.getPlayer());
-			} catch (IOException e) {
-				RegenerationMod.LOG.error(e.getMessage());
-			}
-		}
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.REGENERATION_2, SoundCategory.PLAYERS, true, () -> cap.getState().equals(RegenState.REGENERATING)));
+		cap.getSkinHandler().randomizeSkin(cap.getPlayer().world.rand);
 	}
 	
 	@Override

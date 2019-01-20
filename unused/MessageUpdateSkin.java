@@ -47,21 +47,25 @@ public class MessageUpdateSkin implements IMessage {
 	}
 	
 	public static class Handler implements IMessageHandler<MessageUpdateSkin, IMessage> {
+		
 		@Override
 		public IMessage onMessage(MessageUpdateSkin message, MessageContext ctx) {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
 				EntityPlayerMP player = ctx.getServerHandler().player;
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 				cap.setEncodedSkin(message.encodedSkin);
+				
 				if (message.isAlex) {
 					cap.setSkinType(SkinInfo.SkinType.ALEX.name());
 				} else {
 					cap.setSkinType(SkinInfo.SkinType.STEVE.name());
 				}
+				
 				cap.synchronise();
 				NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID().toString()));
 			});
 			return null;
 		}
+		
 	}
 }

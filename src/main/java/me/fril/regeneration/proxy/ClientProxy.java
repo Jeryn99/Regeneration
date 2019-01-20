@@ -7,7 +7,6 @@ import me.fril.regeneration.client.gui.InventoryTabRegeneration;
 import me.fril.regeneration.client.rendering.LayerFuzz;
 import me.fril.regeneration.client.rendering.LayerItemReplace;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
-import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.util.EnumCompatModids;
@@ -32,7 +31,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFobWatch.class, (RenderManager renderManagerIn) -> new RenderEntityItem(renderManagerIn, Minecraft.getMinecraft().getRenderItem()));
 	}
 	
@@ -73,7 +71,8 @@ public class ClientProxy extends CommonProxy {
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			RenderUtil.setupArmorModelOverride(renderPlayer);
 		}
-		SkinChangingHandler.registerResources();
+		
+		//SkinChangingHandlerOLD.init(); NOW do initialisation somewhere else
 	}
 	
 }

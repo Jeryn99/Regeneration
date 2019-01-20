@@ -1,6 +1,6 @@
 package me.fril.regeneration;
 
-import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
+import me.fril.regeneration.client.skinhandling.SkinUtil;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -153,7 +153,7 @@ public class RegenConfig {
 		
 		@Config.LangKey("config.regeneration.skins.model_preference")
 		@Config.Comment("ALEX = 'Give me Alex Skins only', STEVE = 'Give me Steve Skins only', EITHER = 'Give me either!!'")
-		public SkinChangingHandler.EnumChoices prefferedModel = SkinChangingHandler.EnumChoices.EITHER;
+		public SkinUtil.ModelPreference prefferedModel = SkinUtil.ModelPreference.EITHER; //NOW this probably has to be a capability-level setting (server)
 		
 	}
 	

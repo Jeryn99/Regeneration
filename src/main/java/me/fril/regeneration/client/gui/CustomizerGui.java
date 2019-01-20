@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
+import me.fril.regeneration.client.skinhandling.SkinUtil;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageSaveStyle;
@@ -131,7 +131,7 @@ public class CustomizerGui extends GuiContainer {
 		} else if (button.id == btnOpenFolder.id) {
 			
 			try {
-				Desktop.getDesktop().open(SkinChangingHandler.SKIN_DIRECTORY);
+				Desktop.getDesktop().open(SkinUtil.SKIN_DIRECTORY);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
