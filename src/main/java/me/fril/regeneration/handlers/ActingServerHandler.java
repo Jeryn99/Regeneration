@@ -33,6 +33,11 @@ class ActingServerHandler implements IActingHandler {
 	public ActingServerHandler() {
 	}
 	
+	public static SoundEvent getRandomSound(Random random) {
+		SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION, RegenObjects.Sounds.REGENERATION_2};
+		return SOUNDS[random.nextInt(SOUNDS.length)];
+	}
+	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
@@ -45,7 +50,7 @@ class ActingServerHandler implements IActingHandler {
 				player.setArrowCountInEntity(0);
 				ExplosionUtil.regenerationExplosion(player);
 				break;
-				
+			
 			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 				
@@ -63,7 +68,7 @@ class ActingServerHandler implements IActingHandler {
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
 				
 				break;
-				
+			
 			case GRACE:
 				float weaknessPercentage = 0.5F;
 				
@@ -74,17 +79,12 @@ class ActingServerHandler implements IActingHandler {
 				}
 				
 				break;
-				
+			
 			case ALIVE:
 				break;
 			default:
 				throw new IllegalStateException("Unknown state " + cap.getState());
 		}
-	}
-	
-	public static SoundEvent getRandomSound(Random random) {
-		SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION, RegenObjects.Sounds.REGENERATION_2};
-		return SOUNDS[random.nextInt(SOUNDS.length)];
 	}
 	
 	@Override

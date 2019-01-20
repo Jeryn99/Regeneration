@@ -1,6 +1,7 @@
 package me.fril.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
+import me.fril.regeneration.RegenConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -37,7 +38,7 @@ public class MessageSetPerspective implements IMessage {
 		@Override
 		public IMessage onMessage(MessageSetPerspective message, MessageContext ctx) {
 			Minecraft.getMinecraft().addScheduledTask(() -> {
-				if (message.resetPitch)
+				if (message.resetPitch && RegenConfig.changePerspective)
 					Minecraft.getMinecraft().player.rotationPitch = 0;
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = message.thirdperson ? 2 : 0;
 			});

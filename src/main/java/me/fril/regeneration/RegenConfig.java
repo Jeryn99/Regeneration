@@ -70,6 +70,9 @@ public class RegenConfig {
 	@Config.Comment("Sends a message to chat to say that a player is regenerating, and the reason for it")
 	public static boolean sendRegenDeathMessages = true;
 	
+	@Config.LangKey("config.regeneration.perspective")
+	@Config.Comment("Changes the players perspective on regeneration")
+	public static boolean changePerspective = true;
 	
 	
 	
