@@ -267,6 +267,10 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	 * @param texture - ResourceLocation of intended texture
 	 */
 	private static void setPlayerTexture(AbstractClientPlayer player, ResourceLocation texture) {
+		if (player.getLocationSkin() == texture) {
+			//SKIN_LOG.warn("Not changing this texture location because it is already that texture location and that's just gonna make a mess");
+			return;
+		}
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
 		if (playerInfo == null)
 			return;
@@ -284,7 +288,11 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	 * @param model
 	 */
 	private static void setPlayerModel(RenderPlayer renderer, ModelBiped model) {
-		renderer.mainModel = model;
+		if (renderer.mainModel != model) {
+			renderer.mainModel = model;
+		} else {
+			//SKIN_LOG.warn("Not changing this model because it is already that model and that's just gonna make a mess");
+		}
 	}
 	
 	/**
@@ -301,6 +309,10 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
 		} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
 			setSkinFromData(player, cap, e.getRenderer());
+		} else {
+			SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
+			setPlayerTexture(player, skin.getTextureLocation());
+			setPlayerModel(e.getRenderer(), skin.getSkintype() == SkinInfo.SkinType.ALEX ? ALEX_MODEL : STEVE_MODEL);
 		}
 	}
 	
