@@ -1,11 +1,11 @@
 package me.fril.regeneration.util;
 
-import me.fril.regeneration.client.sound.MovingSoundPlayer;
-import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.client.sound.MovingSoundEntity;
 import me.fril.regeneration.network.MessageUpdateSkin;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class ClientUtil {
 	
@@ -40,8 +41,8 @@ public class ClientUtil {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static void playSound(String soundName, IRegeneration cap) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), new SoundEvent(new ResourceLocation(soundName)), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING)));
+	public static void playSound(Entity entity, String soundName, Supplier<Boolean> stopCondition, boolean repeat) {
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(entity, new SoundEvent(new ResourceLocation(soundName)), SoundCategory.PLAYERS, repeat, stopCondition));
 	}
 	
 	

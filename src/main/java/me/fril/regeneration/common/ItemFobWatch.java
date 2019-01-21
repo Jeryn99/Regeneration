@@ -1,7 +1,5 @@
 package me.fril.regeneration.common;
 
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -20,6 +18,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by Sub
@@ -107,6 +107,7 @@ public class ItemFobWatch extends Item {
 	@Override
 	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
 		EntityFobWatch item = new EntityFobWatch(world, location.posX, location.posY, location.posZ, itemstack);
+		item.setEntitySize(item.getHeight(), item.getWidth());
 		item.motionX = location.motionX;
 		item.motionY = location.motionY;
 		item.motionZ = location.motionZ;

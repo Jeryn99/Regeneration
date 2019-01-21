@@ -56,7 +56,8 @@ public class RegenObjects {
 				setUpSound("critical_stage"),
 				setUpSound("heart_beat"),
 				setUpSound("hand_glow"),
-				setUpSound("regeneration_2")
+				setUpSound("regeneration_2"),
+				setUpSound("fob_watch_dialogue")
 		);
 	}
 	
@@ -72,6 +73,7 @@ public class RegenObjects {
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class Sounds {
 		public static final SoundEvent FOB_WATCH = null;
+		public static final SoundEvent FOB_WATCH_DIALOGUE = null;
 		public static final SoundEvent REGENERATION = null;
 		public static final SoundEvent REGENERATION_2 = null;
 		public static final SoundEvent CRITICAL_STAGE = null;

@@ -2,7 +2,7 @@ package me.fril.regeneration.client;
 
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
-import me.fril.regeneration.client.sound.MovingSoundPlayer;
+import me.fril.regeneration.client.sound.MovingSoundEntity;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -62,7 +62,7 @@ public class ClientEventHandler {
 			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 			
 			if(cap.areHandsGlowing()){
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
 			}
 		}
 	}

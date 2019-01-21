@@ -5,7 +5,7 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.sound.ConditionalSound;
-import me.fril.regeneration.client.sound.MovingSoundPlayer;
+import me.fril.regeneration.client.sound.MovingSoundEntity;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
@@ -48,7 +48,7 @@ class ActingClientHandler implements IActingHandler {
 	
 	@Override
 	public void onHandsStartGlowing(IRegeneration cap) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundPlayer(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
 	}
 	
 	@Override

@@ -44,7 +44,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
-	public String deathSource = "", soundName = RegenObjects.Sounds.REGENERATION_2.getRegistryName().toString();
+	public String deathSource = "";
 	private boolean didSetup = false;
 	private int regenerationsLeft;
 	

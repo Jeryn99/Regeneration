@@ -19,6 +19,16 @@
       }
     ]
   },
+  "fob_watch_dialogue": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.fob_watch_dialogue",
+    "sounds": [
+      {
+        "name": "regeneration:fob_watch_dialogue",
+        "stream": false
+      }
+    ]
+  },
   "critical_stage": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.critical_stage",
