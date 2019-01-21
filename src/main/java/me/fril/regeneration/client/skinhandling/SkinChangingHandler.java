@@ -14,6 +14,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
@@ -21,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -268,7 +270,6 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	 */
 	private static void setPlayerTexture(AbstractClientPlayer player, ResourceLocation texture) {
 		if (player.getLocationSkin() == texture) {
-			//SKIN_LOG.warn("Not changing this texture location because it is already that texture location and that's just gonna make a mess");
 			return;
 		}
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
@@ -283,15 +284,12 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	/**
 	 * Set's a players Player Model
 	 * WARNING: MUST EXTEND MODEL BIPED AND YOU SHOULD USE CACHED MODELS
-	 *
 	 * @param renderer
 	 * @param model
 	 */
 	private static void setPlayerModel(RenderPlayer renderer, ModelBiped model) {
 		if (renderer.mainModel != model) {
 			renderer.mainModel = model;
-		} else {
-			//SKIN_LOG.warn("Not changing this model because it is already that model and that's just gonna make a mess");
 		}
 	}
 	
@@ -302,8 +300,13 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 	 */
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
+		
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		
+		if(player.ticksExisted < 20){
+			PLAYER_SKINS.remove(player.getUniqueID());
+		}
 		
 		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
@@ -313,6 +316,13 @@ public class SkinChangingHandler { //FIXME resetting skin doesn't work sometimes
 			SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
 			setPlayerTexture(player, skin.getTextureLocation());
 			setPlayerModel(e.getRenderer(), skin.getSkintype() == SkinInfo.SkinType.ALEX ? ALEX_MODEL : STEVE_MODEL);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onRelog(EntityJoinWorldEvent e){
+		if(e.getEntity() instanceof EntityPlayer){
+			PLAYER_SKINS.remove(e.getEntity().getUniqueID());
 		}
 	}
 	
