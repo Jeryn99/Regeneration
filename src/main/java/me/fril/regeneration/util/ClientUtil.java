@@ -1,10 +1,9 @@
 package me.fril.regeneration.util;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 import me.fril.regeneration.client.sound.MovingSoundEntity;
-import me.fril.regeneration.network.MessageUpdateSkin;
+import me.fril.regeneration.network.MessageSkinChange;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -28,16 +27,8 @@ public class ClientUtil {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(sound, pitch, volume));
 	}
 	
-	/**
-	 * Checks if a players skin model is slim or the default. The Alex model is slime while the Steve model is default.
-	 */
-	public static boolean isSlimSkin(UUID playerUUID) {
-		return (playerUUID.hashCode() & 1) == 1;
-	}
-	
-	
 	public static void sendSkinResetPacket() {
-		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], isSlimSkin(Minecraft.getMinecraft().player.getUniqueID())));
+		NetworkHandler.INSTANCE.sendToServer(new MessageSkinChange(new byte[0], Minecraft.getMinecraft().player.getSkinType().equals("slim")));
 	}
 	
 	@SideOnly(Side.CLIENT)

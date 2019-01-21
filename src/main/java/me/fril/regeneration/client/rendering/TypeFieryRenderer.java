@@ -1,6 +1,6 @@
 package me.fril.regeneration.client.rendering;
 
-import me.fril.regeneration.client.skinhandling.SkinInfo;
+import me.fril.regeneration.client.skins.SkinUtil.SkinType;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.util.LimbManipulationUtil;
@@ -114,7 +114,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.popMatrix();
 		
 		// Check which slightly larger model to use
-		ModelPlayer playerModel = capability.getSkinType().equals(SkinInfo.SkinType.ALEX) ? LayerRegeneration.playerModelAlex : LayerRegeneration.playerModelSteve;
+		ModelPlayer playerModel = capability.getSkinHandler().getSkinType() == SkinType.ALEX ? LayerRegeneration.playerModelAlex : LayerRegeneration.playerModelSteve;
 		
 		// Define which parts are glowing
 		playerModel.bipedBody.isHidden = playerModel.bipedLeftLeg.isHidden = playerModel.bipedRightLeg.isHidden = playerModel.bipedBodyWear.isHidden = playerModel.bipedHeadwear.isHidden = playerModel.bipedLeftLegwear.isHidden = playerModel.bipedRightLegwear.isHidden = false;

@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.sound.MovingSoundEntity;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
-import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -39,7 +37,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -192,17 +189,15 @@ public class ClientEventHandler {
 	public static void onDeath(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-			SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
+			
+			//NOW handle death
+			
+			/*SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
 			
 			if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) { //SUB this crashed once while I tested but I don't know why. I'm 70% sure I didn't even die
 				ClientUtil.sendSkinResetPacket();
-			}
+			}*/
 		}
-	}
-	
-	@SubscribeEvent
-	public static void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
-		SkinChangingHandler.PLAYER_SKINS.clear();
 	}
 	
 }

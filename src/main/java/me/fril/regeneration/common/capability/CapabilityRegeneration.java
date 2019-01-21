@@ -9,7 +9,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.client.skinhandling.SkinInfo;
+import me.fril.regeneration.client.skins.SkinChangeHandler;
+import me.fril.regeneration.client.skins.SkinUtil;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.debugger.util.DebuggableScheduledAction;
@@ -18,9 +19,11 @@ import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.network.MessageSynchronisationRequest;
 import me.fril.regeneration.network.MessageSynchroniseRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
+import me.fril.regeneration.util.DebuggerUtil;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenState.Transition;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,6 +41,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
  * Created by Sub
  * on 16/09/2018.
  */
+//FIXME death while regenerating/grace which is not /kill restarts grace
 public class CapabilityRegeneration implements IRegeneration {
 	
 	@CapabilityInject(IRegeneration.class)
@@ -46,6 +50,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
+	private final SkinChangeHandler skinChangingHandler;
+	
 	public String deathSource = "";
 	private boolean didSetup = false;
 	private int regenerationsLeft;
@@ -53,8 +59,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType<?> type = new TypeFiery();
 	
-	private byte[] ENCODED_SKIN = new byte[0];
-	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	
@@ -69,14 +73,19 @@ public class CapabilityRegeneration implements IRegeneration {
 	public CapabilityRegeneration() {
 		this.player = null;
 		this.stateManager = null;
+		this.skinChangingHandler = null;
 	}
 	
 	public CapabilityRegeneration(EntityPlayer player) {
 		this.player = player;
-		if (!player.world.isRemote)
+		
+		if (!player.world.isRemote) { //server
+			this.skinChangingHandler = new SkinChangeHandler(this, null);
 			this.stateManager = new RegenerationStateManager();
-		else
+		} else { //client
+			this.skinChangingHandler = new SkinChangeHandler(this, SkinUtil.getPlayerTexture((AbstractClientPlayer)player));
 			this.stateManager = null;
+		}
 	}
 	
 	@Nonnull
@@ -108,6 +117,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (player.world.isRemote)
 			throw new IllegalStateException("Don't sync client -> server");
 		
+		DebuggerUtil.out(player, "Synchronizing");
+		
 		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER;
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
@@ -123,11 +134,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
 		nbt.setTag("type", type.serializeNBT());
-		nbt.setByteArray("encoded_skin", ENCODED_SKIN);
-		nbt.setString("skinType", skinType.name());
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
+		nbt.setTag("skinHandler", skinChangingHandler.serializeNBT());
 		return nbt;
 	}
 	
@@ -135,19 +145,9 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void deserializeNBT(NBTTagCompound nbt) {
 		regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 		
-		if (nbt.hasKey("skinType")) {
-			setSkinType(nbt.getString("skinType"));
-		} else {
-			setSkinType("ALEX");
-		}
-		
 		if (nbt.hasKey("handsAreGlowing")) {
 			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
 		}
-		
-		/*if (nbt.hasKey("ticksGlowing")) {
-			nbt.setInteger("ticksGlowing", ticksGlowing);
-		}*/
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
@@ -158,10 +158,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			type = new TypeFiery();
 		
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; // I need to check for versions before the new state-ticking system
-		setEncodedSkin(nbt.getByteArray("encoded_skin"));
 		
 		if (nbt.hasKey("stateManager"))
 			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
+		if (nbt.hasKey("skinHandler"))
+			skinChangingHandler.deserializeNBT(nbt.getCompoundTag("skinHandler"));
 	}
 	
 	
@@ -187,16 +188,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		return type;
 	}
 	
-	
-	@Override
-	public byte[] getEncodedSkin() {
-		return ENCODED_SKIN;
-	}
-	
-	@Override
-	public void setEncodedSkin(byte[] string) {
-		ENCODED_SKIN = string;
-	}
 	
 	
 	@Override
@@ -253,21 +244,10 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	
-	@Override
-	public SkinInfo.SkinType getSkinType() {
-		return skinType;
-	}
-	
-	@Override
-	public void setSkinType(String skinType) {
-		this.skinType = SkinInfo.SkinType.valueOf(skinType);
-	}
-	
 	
 	@Override
 	public boolean areHandsGlowing() {
 		return handsAreGlowingClient;
-		//return handsGlowing;
 	}
 	
 	
@@ -284,6 +264,11 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public IRegenerationStateManager getStateManager() {
 		return stateManager;
+	}
+	
+	@Override
+	public SkinChangeHandler getSkinHandler() {
+		return skinChangingHandler;
 	}
 	
 	@Override

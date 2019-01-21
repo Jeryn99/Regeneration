@@ -1,7 +1,7 @@
 package me.fril.regeneration.common.capability;
 
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.client.skinhandling.SkinInfo;
+import me.fril.regeneration.client.skins.SkinChangeHandler;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,18 +54,11 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	IRegenType<?> getType();
 	
+	SkinChangeHandler getSkinHandler();
+	
 	IRegenerationStateManager getStateManager();
 	
-	byte[] getEncodedSkin();
-	
-	void setEncodedSkin(byte[] string);
-	
-	SkinInfo.SkinType getSkinType();
-	
-	void setSkinType(String skinType);
-	
 	boolean areHandsGlowing();
-	//void setGlowing(boolean glowing);
 	
 	String getDeathSource();
 	
