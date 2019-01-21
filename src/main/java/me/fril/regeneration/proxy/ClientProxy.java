@@ -1,5 +1,7 @@
 package me.fril.regeneration.proxy;
 
+import java.util.Map;
+
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
 import me.fril.regeneration.client.rendering.LayerFuzz;
@@ -18,9 +20,6 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.Loader;
-
-import java.util.Map;
 
 /**
  * Created by Sub
@@ -39,9 +38,6 @@ public class ClientProxy extends CommonProxy {
 	public void init() {
 		super.init();
 		
-		// Registering the mods Keybinds
-		RegenKeyBinds.init();
-		
 		// Galacticraft API for TABS ======================
 		if (TabRegistry.getTabList().isEmpty()) {
 			MinecraftForge.EVENT_BUS.register(new TabRegistry());
@@ -50,7 +46,7 @@ public class ClientProxy extends CommonProxy {
 		TabRegistry.registerTab(new InventoryTabRegeneration());
 		
 		// LC Core
-		if (Loader.isModLoaded(EnumCompatModids.LCCORE.getModid())) {
+		if (EnumCompatModids.LCCORE.isLoaded()) {
 			LucraftCoreHandler.registerEntry();
 		}
 		
@@ -68,6 +64,8 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void postInit() {
 		super.postInit();
+		RegenKeyBinds.init();
+		
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			RenderUtil.setupArmorModelOverride(renderPlayer);

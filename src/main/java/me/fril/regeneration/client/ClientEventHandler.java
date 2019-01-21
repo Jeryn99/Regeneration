@@ -1,13 +1,14 @@
 package me.fril.regeneration.client;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.sound.MovingSoundEntity;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
-import me.fril.regeneration.network.MessageTriggerRegeneration;
-import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
@@ -36,15 +37,10 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Sub
@@ -113,20 +109,20 @@ public class ClientEventHandler {
 		switch (cap.getState()) {
 			case GRACE:
 				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
-				warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
+				warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.getRegenerateNowDisplayName()).getUnformattedText();
 				break;
-			
+				
 			case GRACE_CRIT:
 				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
-				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", RegenKeyBinds.REGEN_NOW.getDisplayName()).getUnformattedText();
+				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", RegenKeyBinds.getRegenerateNowDisplayName()).getUnformattedText();
 				break;
-			
+				
 			case REGENERATING:
 				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;
 		}
 		
-		if (warning != null && !Loader.isModLoaded("lucraftcore"))
+		if (warning != null)// && !Loader.isModLoaded("lucraftcore"))
 			Minecraft.getMinecraft().fontRenderer.drawString(warning, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
 	}
 	
@@ -167,17 +163,6 @@ public class ClientEventHandler {
 		GlStateManager.color(1, 1, 1, 1);
 	}
 	
-	
-	@SubscribeEvent
-	public static void onClientTick(TickEvent.ClientTickEvent e) {
-		EntityPlayer player = Minecraft.getMinecraft().player;
-		if (player == null || Minecraft.getMinecraft().world == null)
-			return;
-		
-		if (RegenKeyBinds.REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration(player));
-		}
-	}
 	
 	@SubscribeEvent
 	public static void keyInput(InputUpdateEvent e) {

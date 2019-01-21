@@ -1,5 +1,8 @@
 package me.fril.regeneration.handlers;
 
+import java.util.Random;
+import java.util.UUID;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -15,9 +18,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-
-import java.util.Random;
-import java.util.UUID;
 
 class ActingServerHandler implements IActingHandler {
 	
@@ -50,7 +50,7 @@ class ActingServerHandler implements IActingHandler {
 				player.setArrowCountInEntity(0);
 				ExplosionUtil.regenerationExplosion(player);
 				break;
-			
+				
 			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 				
@@ -68,7 +68,7 @@ class ActingServerHandler implements IActingHandler {
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
 				
 				break;
-			
+				
 			case GRACE:
 				float weaknessPercentage = 0.5F;
 				
@@ -79,7 +79,7 @@ class ActingServerHandler implements IActingHandler {
 				}
 				
 				break;
-			
+				
 			case ALIVE:
 				break;
 			default:

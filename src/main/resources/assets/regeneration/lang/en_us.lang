@@ -43,10 +43,10 @@ regeneration.toast.enter_critical=You are going critical
 regeneration.toast.enter_critical.sub=%s minutes left to regenerate before you die!
 
 regeneration.messages.regen_chat_message=%s is regenerating...
-regeneration.messages.warning.grace=You have entered your grace period, press %s to Regenerate!
+regeneration.messages.warning.grace=You are in a state of grace, press %s to regenerate!
 regeneration.messages.warning.grace_critical=You are near death, press %s to regenerate!
 regeneration.messages.regen_delayed=Regeneration delayed!
-regeneration.messages.regen_warning=Punch the ground now to delay your Regeneration!!
+regeneration.messages.regen_warning=Punch a block to delay your regeneration further
 
 -------------- UNUSED -----------
 regeneration.messages.remaining_regens.notification=You are regenerating! You have %s regenerations left.

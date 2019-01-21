@@ -21,8 +21,7 @@ public class LCCoreBarEntry implements IAbilityBarProvider, IAbilityBarEntry {
 	
 	@Override
 	public boolean isActive() {
-		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		return CapabilityRegeneration.getForPlayer(player).getRegenerationsLeft() > 0 && CapabilityRegeneration.getForPlayer(player).getState().isGraceful();
+		return CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getState().isGraceful();
 	}
 	
 	@Override

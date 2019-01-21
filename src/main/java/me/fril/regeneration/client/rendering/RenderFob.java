@@ -1,5 +1,9 @@
 package me.fril.regeneration.client.rendering;
 
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.util.RenderUtil;
@@ -10,9 +14,6 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-
-import javax.annotation.Nullable;
-import java.util.Random;
 
 public class RenderFob extends Render<EntityFobWatch> {
 	

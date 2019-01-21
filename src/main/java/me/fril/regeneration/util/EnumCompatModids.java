@@ -1,5 +1,7 @@
 package me.fril.regeneration.util;
 
+import net.minecraftforge.fml.common.Loader;
+
 public enum EnumCompatModids {
 	TARDIS("tardis"), LCCORE("lucraftcore");
 	
@@ -11,5 +13,9 @@ public enum EnumCompatModids {
 	
 	public String getModid() {
 		return modid;
+	}
+	
+	public boolean isLoaded() {
+		return Loader.isModLoaded(getModid());
 	}
 }

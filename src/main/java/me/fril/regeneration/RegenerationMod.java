@@ -23,7 +23,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -62,11 +61,11 @@ public class RegenerationMod {
 		
 		ActingForwarder.init();
 		
-		if (Loader.isModLoaded(EnumCompatModids.TARDIS.getModid())) {
+		if (EnumCompatModids.TARDIS.isLoaded()) {
 			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
 		
-		if (Loader.isModLoaded(EnumCompatModids.LCCORE.getModid())) {
+		if (EnumCompatModids.LCCORE.isLoaded()) {
 			ActingForwarder.register(LucraftCoreHandler.class, Side.SERVER);
 			LucraftCoreHandler.registerEventBus();
 		}
