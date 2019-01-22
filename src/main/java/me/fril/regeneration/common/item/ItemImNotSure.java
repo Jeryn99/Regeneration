@@ -1,6 +1,5 @@
 package me.fril.regeneration.common.item;
 
-import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -14,10 +13,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
+//@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class ItemImNotSure extends Item {
 	
 	@SubscribeEvent
@@ -28,7 +26,7 @@ public class ItemImNotSure extends Item {
 			IRegeneration dataVictim = CapabilityRegeneration.getForPlayer(victim);
 			EntityPlayer attacker = (EntityPlayer) e.getSource().getTrueSource();
 			
-			if (!dataVictim.canRegenerate() && attacker.getHeldItemMainhand().getItem() == RegenObjects.Items.IDKYET) {
+			//	if (!dataVictim.canRegenerate() && attacker.getHeldItemMainhand().getItem() == RegenObjects.Items.IDKYET) {
 				if (attacker != null) {
 					IRegeneration dataAttacker = CapabilityRegeneration.getForPlayer(attacker);
 					
@@ -42,7 +40,7 @@ public class ItemImNotSure extends Item {
 						attacker.world.playSound(null, attacker.getPosition(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1, 1);
 					}
 				}
-			}
+			//	}
 		}
 	}
 	

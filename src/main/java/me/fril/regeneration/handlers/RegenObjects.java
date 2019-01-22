@@ -70,7 +70,7 @@ public class RegenObjects {
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class Items {
 		public static final Item FOB_WATCH = null;
-		public static final Item IDKYET = null;
+		//public static final Item IDKYET = null;
 	}
 	
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
