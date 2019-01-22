@@ -75,7 +75,7 @@ public class RegenConfig {
 	public static boolean changePerspective = true;
 	
 	
-	
+	public static boolean enableUpdateChecker = true;
 	
 	
 	public static class OnRegen {
