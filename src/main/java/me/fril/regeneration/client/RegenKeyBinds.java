@@ -1,10 +1,10 @@
 package me.fril.regeneration.client;
 
-import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
-import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarKeys;
+import org.lwjgl.input.Keyboard;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.compat.lucraft.LCCoreBarEntry;
+import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.network.MessageTriggerRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.EnumCompatModids;
@@ -15,7 +15,6 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.input.Keyboard;
 
 /**
  * Created by Sub
@@ -23,9 +22,6 @@ import org.lwjgl.input.Keyboard;
  */
 @EventBusSubscriber
 public class RegenKeyBinds {
-	//CHECK will this cause ClassCastException's when LucraftCore is not loaded
-	//SUB: Yes, it will
-	
 	private static KeyBinding REGEN_NOW;
 	
 	public static void init() {
@@ -51,12 +47,7 @@ public class RegenKeyBinds {
 		if (!EnumCompatModids.LCCORE.isLoaded()) {
 			return REGEN_NOW.getDisplayName();
 		} else {
-			for (int i = 0; i < AbilityBarHandler.ENTRY_SHOW_AMOUNT; i++) {
-				if (AbilityBarHandler.getEntryFromKey(i) instanceof LCCoreBarEntry) {
-					return AbilityBarKeys.KEYS.get(i).getDisplayName();
-				}
-			}
-			return "???";
+			return LucraftCoreHandler.getKeyBindDisplayName();
 		}
 		
 	}

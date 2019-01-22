@@ -55,7 +55,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	
 	@Override
 	protected void renderRegeneratingPlayerPost(TypeFiery type, RenderPlayerEvent.Post event, IRegeneration capability) {
-	
+		
 	}
 	
 	@Override

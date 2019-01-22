@@ -1,5 +1,8 @@
 package me.fril.regeneration.client;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.sound.MovingSoundEntity;
@@ -38,9 +41,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Sub
@@ -155,7 +155,7 @@ public class ClientEventHandler {
 		}
 		
 	}
-		
+	
 	
 	private static void renderVignette(Vec3d color, float a, RegenState state) {
 		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);

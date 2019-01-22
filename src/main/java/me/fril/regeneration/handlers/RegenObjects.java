@@ -1,5 +1,8 @@
 package me.fril.regeneration.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.common.item.ItemFobWatch;
@@ -14,9 +17,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Sub
@@ -35,7 +35,7 @@ public class RegenObjects {
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch")
 				//,setUpItem(new ItemImNotSure(), "idkyet")
-		);
+				);
 	}
 	
 	private static Item setUpItem(Item item, String name) {
@@ -60,7 +60,7 @@ public class RegenObjects {
 				setUpSound("hand_glow"),
 				setUpSound("regeneration_2"),
 				setUpSound("fob_watch_dialogue")
-		);
+				);
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {

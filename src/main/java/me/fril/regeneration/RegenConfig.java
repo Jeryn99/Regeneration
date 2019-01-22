@@ -74,7 +74,8 @@ public class RegenConfig {
 	@Config.Comment("Changes the players perspective on regeneration")
 	public static boolean changePerspective = true;
 	
-	
+	@Config.LangKey("config.regeneration.update_checker")
+	@Config.Comment("Display a notification in chat when there's an update to the mod")
 	public static boolean enableUpdateChecker = true;
 	
 	

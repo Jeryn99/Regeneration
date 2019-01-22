@@ -1,11 +1,14 @@
 package me.fril.regeneration.compat.lucraft;
 
+import static me.fril.regeneration.util.RegenUtil.*;
+
 import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
+import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarKeys;
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -16,8 +19,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import static me.fril.regeneration.util.RegenUtil.randFloat;
 
 public class LucraftCoreHandler implements IActingHandler {
 	
@@ -100,5 +101,14 @@ public class LucraftCoreHandler implements IActingHandler {
 				SuperpowerHandler.removeSuperpower(e.player);
 			}
 		}
+	}
+	
+	public static String getKeyBindDisplayName() {
+		for (int i = 0; i < AbilityBarHandler.ENTRY_SHOW_AMOUNT; i++) {
+			if (AbilityBarHandler.getEntryFromKey(i) instanceof LCCoreBarEntry) {
+				return AbilityBarKeys.KEYS.get(i).getDisplayName();
+			}
+		}
+		return "???";
 	}
 }

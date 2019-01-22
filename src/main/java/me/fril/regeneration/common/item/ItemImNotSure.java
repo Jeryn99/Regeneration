@@ -27,19 +27,19 @@ public class ItemImNotSure extends Item {
 			EntityPlayer attacker = (EntityPlayer) e.getSource().getTrueSource();
 			
 			//	if (!dataVictim.canRegenerate() && attacker.getHeldItemMainhand().getItem() == RegenObjects.Items.IDKYET) {
-				if (attacker != null) {
-					IRegeneration dataAttacker = CapabilityRegeneration.getForPlayer(attacker);
-					
-					if (!dataAttacker.canRegenerate()) {
-						PlayerUtil.sendMessage(attacker, new TextComponentTranslation("regeneration.messages.theft", victim.getName()), true);
-						dataAttacker.receiveRegenerations(1);
-						attacker.getHeldItemMainhand().setCount(0);
-						dataAttacker.setEncodedSkin(dataVictim.getEncodedSkin());
-						dataAttacker.setSkinType(dataVictim.getSkinType().name());
-						NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(attacker.getUniqueID()));
-						attacker.world.playSound(null, attacker.getPosition(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1, 1);
-					}
+			if (attacker != null) {
+				IRegeneration dataAttacker = CapabilityRegeneration.getForPlayer(attacker);
+				
+				if (!dataAttacker.canRegenerate()) {
+					PlayerUtil.sendMessage(attacker, new TextComponentTranslation("regeneration.messages.theft", victim.getName()), true);
+					dataAttacker.receiveRegenerations(1);
+					attacker.getHeldItemMainhand().setCount(0);
+					dataAttacker.setEncodedSkin(dataVictim.getEncodedSkin());
+					dataAttacker.setSkinType(dataVictim.getSkinType().name());
+					NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(attacker.getUniqueID()));
+					attacker.world.playSound(null, attacker.getPosition(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1, 1);
 				}
+			}
 			//	}
 		}
 	}

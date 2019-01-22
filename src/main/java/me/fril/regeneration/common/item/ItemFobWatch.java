@@ -1,5 +1,7 @@
 package me.fril.regeneration.common.item;
 
+import javax.annotation.Nullable;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -19,8 +21,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by Sub

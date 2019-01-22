@@ -70,6 +70,7 @@ config.regeneration.regen_messages=Send 'regenerating' death messages
 config.regeneration.fiery_regen=Fiery regeneration
 config.regeneration.regeneration_fire_immunity=Regeneration fire immunity
 config.regeneration.perspective=Change perspective
+config.regeneration.update_checker=Enable update checker
 
 config.regeneration.regeneration_kills_players=Regeneration kills players
 config.regeneration.regeneration_knocksback_players=Regeneration knocks back players
