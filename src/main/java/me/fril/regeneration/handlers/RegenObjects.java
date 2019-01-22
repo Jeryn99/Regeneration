@@ -1,11 +1,8 @@
 package me.fril.regeneration.handlers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.EntityFobWatch;
-import me.fril.regeneration.common.ItemFobWatch;
+import me.fril.regeneration.common.item.ItemFobWatch;
 import me.fril.regeneration.util.RegenDamageSource;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
@@ -18,6 +15,9 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -29,11 +29,13 @@ public class RegenObjects {
 	
 	public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"),
 			REGEN_DMG_HEALING = new RegenDamageSource("regen_heal"), // The irony lmao
-			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit");
+			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit"), REGEN_DMG_THEFT = new RegenDamageSource("theft");
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
-		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch"));
+		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch")
+				//,setUpItem(new ItemImNotSure(), "idkyet")
+		);
 	}
 	
 	private static Item setUpItem(Item item, String name) {
@@ -58,7 +60,7 @@ public class RegenObjects {
 				setUpSound("hand_glow"),
 				setUpSound("regeneration_2"),
 				setUpSound("fob_watch_dialogue")
-				);
+		);
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {
@@ -68,6 +70,7 @@ public class RegenObjects {
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class Items {
 		public static final Item FOB_WATCH = null;
+		public static final Item IDKYET = null;
 	}
 	
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)

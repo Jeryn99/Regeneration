@@ -5,8 +5,8 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessagePlayRegenerationSound;
 import me.fril.regeneration.network.NetworkHandler;
-import me.fril.regeneration.util.ExplosionUtil;
 import me.fril.regeneration.util.PlayerUtil;
+import me.fril.regeneration.util.RegenUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +48,7 @@ class ActingServerHandler implements IActingHandler {
 				float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
 				player.heal(stateProgress * 0.3F * dm);
 				player.setArrowCountInEntity(0);
-				ExplosionUtil.regenerationExplosion(player);
+				RegenUtil.regenerationExplosion(player);
 				break;
 				
 			case GRACE_CRIT:
@@ -90,7 +90,7 @@ class ActingServerHandler implements IActingHandler {
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		ExplosionUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKnockback / 2, RegenConfig.onRegen.regenerativeKnockbackRange);
+		RegenUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKnockback / 2, RegenConfig.onRegen.regenerativeKnockbackRange);
 		
 		// Reduce number of hearts, but compensate with absorption
 		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);

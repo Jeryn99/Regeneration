@@ -1,7 +1,5 @@
 package me.fril.regeneration.compat.lucraft;
 
-import java.util.Random;
-
 import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
@@ -19,6 +17,8 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import static me.fril.regeneration.util.RegenUtil.randFloat;
+
 public class LucraftCoreHandler implements IActingHandler {
 	
 	public static final Superpower TIMELORD = new SuperpowerTimelord("timelord").setRegistryName("timelord");
@@ -31,11 +31,6 @@ public class LucraftCoreHandler implements IActingHandler {
 		MinecraftForge.EVENT_BUS.register(new LucraftCoreHandler());
 	}
 	
-	public static float randFloat(float min, float max) {
-		Random rand = new Random();
-		float result = rand.nextFloat() * (max - min) + min;
-		return result;
-	}
 	
 	@Override
 	public void onRegenTick(IRegeneration cap) {

@@ -1,24 +1,24 @@
 package me.fril.regeneration.testing;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
-import java.io.File;
-import java.io.IOException;
-
+import me.fril.regeneration.RegenConfig;
+import me.fril.regeneration.common.capability.CapabilityRegeneration;
+import me.fril.regeneration.common.item.ItemFobWatch;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.world.World;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.common.ItemFobWatch;
-import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.world.World;
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.*;
 
 public class TestFobWatch {
 	

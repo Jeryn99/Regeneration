@@ -35,6 +35,7 @@ regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
 regeneration.damagesrc.regen_energy=%s was blasted by Regeneration Energy!
 regeneration.damagesrc.regen_heal=%s died by donating too much Regeneration energy...
 regeneration.damagesrc.regen_crit=%s died from holding in their regeneration for too long
+regeneration.damagesrc.theft=%s had their body stolen!
 
 regeneration.toast.regenerated=You have regenerated!
 regeneration.toast.regenerations_left=%s regenerations left!
@@ -48,6 +49,7 @@ regeneration.messages.warning.grace=You are in a state of grace, press %s to reg
 regeneration.messages.warning.grace_critical=You are near death, press %s to regenerate!
 regeneration.messages.regen_delayed=Regeneration delayed!
 regeneration.messages.regen_warning=Punch a block to delay your regeneration further
+regeneration.messages.theft=You stole the body of %s!
 
 -------------- UNUSED -----------
 regeneration.messages.remaining_regens.notification=You are regenerating! You have %s regenerations left.

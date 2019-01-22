@@ -11,7 +11,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ExplosionUtil {
+import java.util.Random;
+
+public class RegenUtil {
+	
+	public static float randFloat(float min, float max) {
+		Random rand = new Random();
+		float result = rand.nextFloat() * (max - min) + min;
+		return result;
+	}
 	
 	public static void regenerationExplosion(EntityPlayer player) {
 		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKnockback, RegenConfig.onRegen.regenerativeKnockbackRange);
