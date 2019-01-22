@@ -20,7 +20,6 @@ class ActingClientHandler implements IActingHandler {
 	public static final IActingHandler INSTANCE = new ActingClientHandler();
 	
 	// TODO 'now a timelord' into toast
-	// TODO check message lang keys
 	
 	private ActingClientHandler() {
 	}

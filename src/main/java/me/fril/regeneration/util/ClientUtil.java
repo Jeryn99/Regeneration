@@ -23,7 +23,6 @@ public class ClientUtil {
 	public static String keyBind = "???";
 	
 	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle, RegenState regenState) {
-		//FIXME where ma toast at
 		Minecraft.getMinecraft().getToastGui().add(new ToastRegeneration(title, subtitle, regenState));
 		Minecraft.getMinecraft().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
 	}
