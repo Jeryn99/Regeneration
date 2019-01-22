@@ -1,7 +1,5 @@
 package me.fril.regeneration.client;
 
-import org.lwjgl.input.Keyboard;
-
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarKeys;
 import me.fril.regeneration.RegenerationMod;
@@ -17,13 +15,16 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.input.Keyboard;
 
 /**
  * Created by Sub
  * on 17/09/2018.
  */
 @EventBusSubscriber
-public class RegenKeyBinds { //CHECK will this cause ClassCastException's when LucraftCore is not loaded
+public class RegenKeyBinds {
+	//CHECK will this cause ClassCastException's when LucraftCore is not loaded
+	//SUB: Yes, it will
 	
 	private static KeyBinding REGEN_NOW;
 	

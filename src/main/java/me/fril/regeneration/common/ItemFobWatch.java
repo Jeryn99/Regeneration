@@ -1,7 +1,5 @@
 package me.fril.regeneration.common;
 
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -20,6 +18,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by Sub
@@ -85,7 +85,7 @@ public class ItemFobWatch extends Item {
 			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
 			
 			if (world.isRemote)
-				ClientUtil.playPositionedSoundRecord(SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 5.0F, 2.0F);
+				ClientUtil.playPositionedSoundRecord(SoundEvents.BLOCK_FIRE_EXTINGUISH, 5.0F, 2.0F);
 			else
 				cap.extractRegeneration(1);
 			

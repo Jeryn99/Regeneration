@@ -48,16 +48,14 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);
-		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-headRot, 0, 0);
-		
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
 		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
 	}
 	
 	@Override
-	protected void renderRegeneratingPlayerPost(TypeFiery type, RenderPlayerEvent.Pre event, IRegeneration capability) {
-		
+	protected void renderRegeneratingPlayerPost(TypeFiery type, RenderPlayerEvent.Post event, IRegeneration capability) {
+	
 	}
 	
 	@Override

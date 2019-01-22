@@ -1,10 +1,5 @@
 package me.fril.regeneration.common.commands;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -15,6 +10,10 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class RegenDebugCommand extends CommandBase {
 	
@@ -30,7 +29,7 @@ public class RegenDebugCommand extends CommandBase {
 		int amount = args.length > 1 ? parseInt(args[1], 0) : -1;
 		
 		switch (args[0]) {
-			case "fast-forward-glow":
+			case "glow":
 				cap.getStateManager().fastForwardHandGlow();
 				break;
 				
@@ -66,7 +65,7 @@ public class RegenDebugCommand extends CommandBase {
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		if (args.length < 2)
-			return getListOfStringsMatchingLastWord(args, "fastforward", "setregens", "open", "fast-forward-glow");
+			return getListOfStringsMatchingLastWord(args, "fastforward", "setregens", "open", "glow");
 		else
 			return Collections.emptyList();
 	}

@@ -299,13 +299,14 @@ public class SkinChangingHandler {
 	 */
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
-		
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
 		if (player.ticksExisted == 20) {
 			SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());
-			Minecraft.getMinecraft().getTextureManager().deleteTexture(oldSkinInfo.getTextureLocation());
+			if (oldSkinInfo != null) {
+				Minecraft.getMinecraft().getTextureManager().deleteTexture(oldSkinInfo.getTextureLocation());
+			}
 			PLAYER_SKINS.remove(player.getUniqueID());
 		}
 		
@@ -319,6 +320,18 @@ public class SkinChangingHandler {
 			setPlayerModel(e.getRenderer(), skin.getSkintype() == SkinInfo.SkinType.ALEX ? ALEX_MODEL : STEVE_MODEL);
 		}
 	}
+	
+	@SubscribeEvent
+	public void onRenderPlayer(RenderPlayerEvent.Post e) {
+		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		
+		if (cap.getState() == RegenState.REGENERATING) {
+			cap.getType().getRenderer().onRenderRegeneratingPlayerPost(cap.getType(), e, cap);
+		}
+		
+	}
+	
 	
 	@SubscribeEvent
 	public void onRelog(EntityJoinWorldEvent e){

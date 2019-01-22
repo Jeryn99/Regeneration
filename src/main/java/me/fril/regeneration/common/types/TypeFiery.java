@@ -1,7 +1,5 @@
 package me.fril.regeneration.common.types;
 
-import java.util.Random;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.client.rendering.TypeFieryRenderer;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -11,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.Random;
 
 /**
  * Created by Sub
@@ -53,10 +53,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
-		if (!player.world.isRemote) { // NOTE redundant, only called on server side (TODO document)
-			PlayerUtil.setPerspective((EntityPlayerMP) player, false, true);
-		}
-		
+		PlayerUtil.setPerspective((EntityPlayerMP) player, false, true);
 		animationTicks = 0;
 	}
 	

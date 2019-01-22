@@ -1,11 +1,11 @@
 package me.fril.regeneration.client.sound;
 
-import java.util.function.Supplier;
-
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Created by Sub
@@ -23,7 +23,6 @@ public class MovingSoundEntity extends MovingSound {
 	
 	public MovingSoundEntity(Entity playerIn, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier<Boolean> stopCondition) {
 		super(soundIn, categoryIn);
-		
 		this.player = playerIn;
 		this.stopCondition = stopCondition;
 		super.repeat = repeat;

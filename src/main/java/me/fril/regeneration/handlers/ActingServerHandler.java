@@ -1,8 +1,5 @@
 package me.fril.regeneration.handlers;
 
-import java.util.Random;
-import java.util.UUID;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -18,6 +15,9 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+import java.util.Random;
+import java.util.UUID;
 
 class ActingServerHandler implements IActingHandler {
 	
@@ -112,7 +112,7 @@ class ActingServerHandler implements IActingHandler {
 	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
-		if (cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
+		if (!cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
 			cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
 		}
 		RegenerationMod.DEBUGGER.getChannelFor(cap.getPlayer()).out("Applied speed reduction");

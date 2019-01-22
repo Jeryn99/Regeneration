@@ -27,6 +27,7 @@ regeneration.subtitles.regeneration=Regeneration energy
 regeneration.subtitles.hand_glow=Glowing hands
 regeneration.subtitles.heart_beat=Heartbeat
 regeneration.subtitles.critical_stage=Critical grace stage
+regeneration.subtitles.fob_watch_dialogue=Fob Watch Dialogue
 
 regeneration.keybinds.regenerate=Regenerate
 regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
@@ -36,11 +37,11 @@ regeneration.damagesrc.regen_heal=%s died by donating too much Regeneration ener
 regeneration.damagesrc.regen_crit=%s died from holding in their regeneration for too long
 
 regeneration.toast.regenerated=You have regenerated!
-regeneration.toast.regenerations_left=You have %s regenerations left
-regeneration.toast.enter_grace=Regeneration starting
-regeneration.toast.enter_grace.sub=Press %s to regenerate, or die in %s minutes!
+regeneration.toast.regenerations_left=%s regenerations left!
+regeneration.toast.enter_grace=Regeneration!
+regeneration.toast.enter_grace.sub=Press %s to regenerate!
 regeneration.toast.enter_critical=You are going critical
-regeneration.toast.enter_critical.sub=%s minutes left to regenerate before you die!
+regeneration.toast.enter_critical.sub=%s minutes left...
 
 regeneration.messages.regen_chat_message=%s is regenerating...
 regeneration.messages.warning.grace=You are in a state of grace, press %s to regenerate!

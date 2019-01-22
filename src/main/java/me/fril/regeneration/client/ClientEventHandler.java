@@ -1,8 +1,5 @@
 package me.fril.regeneration.client;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.sound.MovingSoundEntity;
@@ -42,6 +39,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -50,6 +50,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ClientEventHandler {
 	
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
+	
 	
 	@SubscribeEvent
 	public static void onWorldJoin(EntityJoinWorldEvent e) {
@@ -131,13 +132,24 @@ public class ClientEventHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		if (mc.player == null || mc.world == null)
 			return;
-		if (CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getState() == RegenState.REGENERATING) {
-			if (e.getName().equals("entity.generic.explode")) {
-				ISound sound = PositionedSoundRecord.getMasterRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F);
+		
+		if (e.getName().equals("entity.generic.explode")) {
+			ISound sound = PositionedSoundRecord.getRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.5F);
+			mc.world.playerEntities.forEach(player -> {
+				if (mc.player != player && mc.player.getDistance(player) < 40) {
+					if (CapabilityRegeneration.getForPlayer(player).getState().equals(RegenState.REGENERATING)) {
+						e.setResultSound(sound);
+					}
+				}
+			});
+			
+			if (CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getState() == RegenState.REGENERATING) {
 				e.setResultSound(sound);
 			}
 		}
+		
 	}
+		
 	
 	private static void renderVignette(Vec3d color, float a, RegenState state) {
 		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
