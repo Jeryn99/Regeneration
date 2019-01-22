@@ -1,10 +1,7 @@
 package me.fril.regeneration.client;
 
-import org.lwjgl.input.Keyboard;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
-import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.network.MessageTriggerRegeneration;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.EnumCompatModids;
@@ -15,6 +12,7 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.input.Keyboard;
 
 /**
  * Created by Sub
@@ -44,12 +42,7 @@ public class RegenKeyBinds {
 	
 	/** Handles LCCore compatibility */
 	public static String getRegenerateNowDisplayName() {
-		if (!EnumCompatModids.LCCORE.isLoaded()) {
 			return REGEN_NOW.getDisplayName();
-		} else {
-			return LucraftCoreHandler.getKeyBindDisplayName();
-		}
-		
 	}
 	
 }

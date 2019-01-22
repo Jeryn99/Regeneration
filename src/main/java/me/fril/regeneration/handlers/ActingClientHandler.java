@@ -1,10 +1,7 @@
 package me.fril.regeneration.handlers;
 
-import java.io.IOException;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.sound.ConditionalSound;
 import me.fril.regeneration.client.sound.MovingSoundEntity;
@@ -15,6 +12,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import java.io.IOException;
 
 class ActingClientHandler implements IActingHandler {
 	
@@ -42,7 +41,7 @@ class ActingClientHandler implements IActingHandler {
 	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
-		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_grace"), new TextComponentTranslation("regeneration.toast.enter_grace.sub", RegenKeyBinds.getRegenerateNowDisplayName(), (RegenConfig.grace.criticalPhaseLength + RegenConfig.grace.gracePhaseLength) / 60), cap.getState());
+		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_grace"), new TextComponentTranslation("regeneration.toast.enter_grace.sub", ClientUtil.keyBind, (RegenConfig.grace.criticalPhaseLength + RegenConfig.grace.gracePhaseLength) / 60), cap.getState());
 	}
 	
 	@Override

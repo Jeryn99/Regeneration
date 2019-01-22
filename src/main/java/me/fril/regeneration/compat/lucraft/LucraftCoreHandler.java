@@ -1,7 +1,5 @@
 package me.fril.regeneration.compat.lucraft;
 
-import static me.fril.regeneration.util.RegenUtil.*;
-
 import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
@@ -13,12 +11,17 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.IActingHandler;
+import me.fril.regeneration.util.ClientUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import static me.fril.regeneration.util.RegenUtil.randFloat;
 
 public class LucraftCoreHandler implements IActingHandler {
 	
@@ -32,6 +35,22 @@ public class LucraftCoreHandler implements IActingHandler {
 		MinecraftForge.EVENT_BUS.register(new LucraftCoreHandler());
 	}
 	
+	public static String getKeyBindDisplayName() {
+		for (int i = 0; i < AbilityBarHandler.ENTRY_SHOW_AMOUNT; i++) {
+			if (AbilityBarHandler.getEntryFromKey(i) instanceof LCCoreBarEntry) {
+				return AbilityBarKeys.KEYS.get(i).getDisplayName();
+			}
+		}
+		return "???";
+	}
+	
+	@SubscribeEvent
+	public void onGui(InputUpdateEvent tickEvent) {
+		Minecraft minecraft = Minecraft.getMinecraft();
+		if (minecraft.currentScreen == null && minecraft.player != null) {
+			ClientUtil.keyBind = getKeyBindDisplayName();
+		}
+	}
 	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
@@ -103,12 +122,4 @@ public class LucraftCoreHandler implements IActingHandler {
 		}
 	}
 	
-	public static String getKeyBindDisplayName() {
-		for (int i = 0; i < AbilityBarHandler.ENTRY_SHOW_AMOUNT; i++) {
-			if (AbilityBarHandler.getEntryFromKey(i) instanceof LCCoreBarEntry) {
-				return AbilityBarKeys.KEYS.get(i).getDisplayName();
-			}
-		}
-		return "???";
-	}
 }

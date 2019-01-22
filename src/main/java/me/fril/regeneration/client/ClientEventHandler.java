@@ -1,8 +1,5 @@
 package me.fril.regeneration.client;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.sound.MovingSoundEntity;
@@ -10,6 +7,7 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.ClientUtil;
+import me.fril.regeneration.util.EnumCompatModids;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -42,6 +40,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -51,6 +52,14 @@ public class ClientEventHandler {
 	
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
 	
+	@SubscribeEvent
+	public static void onGui(InputUpdateEvent tickEvent) {
+		if (EnumCompatModids.LCCORE.isLoaded()) return;
+		Minecraft minecraft = Minecraft.getMinecraft();
+		if (minecraft.currentScreen == null && minecraft.player != null) {
+			ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
+		}
+	}
 	
 	@SubscribeEvent
 	public static void onWorldJoin(LivingEvent.LivingUpdateEvent e) {
@@ -116,12 +125,12 @@ public class ClientEventHandler {
 		switch (cap.getState()) {
 			case GRACE:
 				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
-				warning = new TextComponentTranslation("regeneration.messages.warning.grace", RegenKeyBinds.getRegenerateNowDisplayName()).getUnformattedText();
+				warning = new TextComponentTranslation("regeneration.messages.warning.grace", ClientUtil.keyBind).getUnformattedText();
 				break;
 				
 			case GRACE_CRIT:
 				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
-				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", RegenKeyBinds.getRegenerateNowDisplayName()).getUnformattedText();
+				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", ClientUtil.keyBind).getUnformattedText();
 				break;
 				
 			case REGENERATING:
