@@ -12,7 +12,6 @@ import net.minecraft.util.SoundEvent;
  * on 20/09/2018.
  */
 //FIXME sound doesn't stop when dying mid-regen
-//FIXME I'm not sure, but it's possible that the hand-glow sound continues when the regen is triggered
 public class MovingSoundEntity extends MovingSound {
 	
 	private final Entity player;

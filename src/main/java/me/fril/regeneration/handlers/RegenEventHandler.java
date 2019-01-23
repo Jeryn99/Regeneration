@@ -149,7 +149,13 @@ public class RegenEventHandler {
 			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
 		persist.setBoolean("loggedInBefore", true);
 		nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
-		
+	}
+	
+	@SubscribeEvent
+	public static void onCrafted(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event){
+		if(event.crafting.getItem() == RegenObjects.Items.FOB_WATCH){
+			event.setCanceled(!RegenConfig.allowFobWatchCrafting);
+		}
 	}
 	
 	@SubscribeEvent

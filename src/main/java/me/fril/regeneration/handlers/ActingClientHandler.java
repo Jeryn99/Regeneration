@@ -24,15 +24,6 @@ class ActingClientHandler implements IActingHandler {
 	private ActingClientHandler() {
 	}
 	
-	/**
-	 * SOON test multiplayer sound handling with hydro
-	 * Is opening watch heard by others?
-	 * Is transferring heard by others?
-	 * Is critical heard by others?
-	 * Is heartbeat heard by others? < DEAD
-	 * Make sure hand-glow is heard by others < It is
-	 */
-	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
 		// never forwarded as per the documentation
