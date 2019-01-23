@@ -40,7 +40,8 @@ class ActingClientHandler implements IActingHandler {
 	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
-		
+		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.CRITICAL_STAGE, 1.0F, 0.5F), () -> cap.getState() != RegenState.GRACE_CRIT));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful()));
 	}
 	
 	@Override
@@ -67,8 +68,6 @@ class ActingClientHandler implements IActingHandler {
 	@Override
 	public void onGoCritical(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_critical"), new TextComponentTranslation("regeneration.toast.enter_critical.sub", RegenConfig.grace.criticalPhaseLength / 60), cap.getState());
-		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.CRITICAL_STAGE, 1.0F, 0.5F), () -> cap.getState() != RegenState.GRACE_CRIT));
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT))); //FIXME shouldn't this be all through grace? (see trello)
 	}
 	
 }

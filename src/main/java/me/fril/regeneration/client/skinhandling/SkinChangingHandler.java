@@ -270,7 +270,7 @@ public class SkinChangingHandler {
 	 * @param player  - Player instance involved
 	 * @param texture - ResourceLocation of intended texture
 	 */
-	private static void setPlayerTexture(AbstractClientPlayer player, ResourceLocation texture) {
+	public static void setPlayerTexture(AbstractClientPlayer player, ResourceLocation texture) {
 		if (player.getLocationSkin() == texture) {
 			return;
 		}

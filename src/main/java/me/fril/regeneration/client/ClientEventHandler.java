@@ -2,9 +2,11 @@ package me.fril.regeneration.client;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
+import me.fril.regeneration.client.skinhandling.SkinInfo;
 import me.fril.regeneration.client.sound.MovingSoundEntity;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -43,6 +45,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import static me.fril.regeneration.client.skinhandling.SkinChangingHandler.PLAYER_SKINS;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -66,6 +70,8 @@ public class ClientEventHandler {
 		if (!(e.getEntity() instanceof EntityPlayer) || e.getEntity().ticksExisted != 20)
 			return;
 		
+		UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
+		
 		EntityPlayer player = (EntityPlayer) e.getEntity();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
@@ -77,12 +83,9 @@ public class ClientEventHandler {
 			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING)));
 		}
 		
-		if (cap.getState().equals(RegenState.GRACE_CRIT)) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT)));
-		}
-		
-		if (cap.getState().equals(RegenState.GRACE_CRIT)) { //FIXME shouldn't this be all through grace?
-			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT))); //CHECK is this one heard by others?
+		if (cap.getState().isGraceful() && clientUUID == player.getUniqueID()) {
+			//Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT)));
+			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful()));
 		}
 	}
 	
@@ -90,6 +93,12 @@ public class ClientEventHandler {
 	public static void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		
+		SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
+		
+		if(skin != null) {
+			SkinChangingHandler.setPlayerTexture(player, skin.getTextureLocation());
+		}
 		
 		float f = 0.2F;
 		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
@@ -226,7 +235,7 @@ public class ClientEventHandler {
 	public static void onDeath(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-			SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
+			PLAYER_SKINS.remove(player.getUniqueID());
 			
 			if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) { //SUB this crashed once while I tested but I don't know why. I'm 70% sure I didn't even die
 				ClientUtil.sendSkinResetPacket();
@@ -236,7 +245,7 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	public static void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
-		SkinChangingHandler.PLAYER_SKINS.clear();
+		PLAYER_SKINS.clear();
 	}
 	
 }
