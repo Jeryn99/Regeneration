@@ -20,6 +20,8 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static me.fril.regeneration.util.RegenUtil.randFloat;
 
@@ -45,6 +47,7 @@ public class LucraftCoreHandler implements IActingHandler {
 	}
 	
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void onGui(InputUpdateEvent tickEvent) {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		if (minecraft.currentScreen == null && minecraft.player != null) {

@@ -12,13 +12,14 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 
 /**
  * Created by Sub
  * on 17/09/2018.
  */
-@EventBusSubscriber
+@EventBusSubscriber(Side.CLIENT)
 public class RegenKeyBinds {
 	private static KeyBinding REGEN_NOW;
 	
