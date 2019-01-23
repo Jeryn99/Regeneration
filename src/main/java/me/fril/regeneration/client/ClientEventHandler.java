@@ -1,5 +1,8 @@
 package me.fril.regeneration.client;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.sound.MovingSoundEntity;
@@ -18,7 +21,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.chunk.RenderChunk;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -41,9 +43,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -63,20 +62,27 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onWorldJoin(LivingEvent.LivingUpdateEvent e) {
-		if (e.getEntity() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) e.getEntity();
-			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-			
-			if (player.ticksExisted == 20) {
-				if (cap.areHandsGlowing()) {
-					Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
-				}
-				
-				if (cap.getState().equals(RegenState.REGENERATING)) {
-					Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING)));
-				}
-			}
+	public static void onSortofWorldJoin(LivingEvent.LivingUpdateEvent e) {
+		if (!(e.getEntity() instanceof EntityPlayer) || e.getEntity().ticksExisted != 20)
+			return;
+		
+		EntityPlayer player = (EntityPlayer) e.getEntity();
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		
+		if (cap.areHandsGlowing()) {
+			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
+		}
+		
+		if (cap.getState().equals(RegenState.REGENERATING)) {
+			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING)));
+		}
+		
+		if (cap.getState().equals(RegenState.GRACE_CRIT)) {
+			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT)));
+		}
+		
+		if (cap.getState().equals(RegenState.GRACE_CRIT)) { //FIXME shouldn't this be all through grace?
+			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT))); //CHECK is this one heard by others?
 		}
 	}
 	

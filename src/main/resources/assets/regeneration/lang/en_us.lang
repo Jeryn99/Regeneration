@@ -38,9 +38,7 @@ regeneration.damagesrc.regen_crit=%s died from holding in their regeneration for
 regeneration.damagesrc.theft=%s had their body stolen!
 
 regeneration.toast.regenerated=You have regenerated!
-regeneration.toast.regenerations_left=%s regenerations left!
-regeneration.toast.enter_grace=Regeneration!
-regeneration.toast.enter_grace.sub=Press %s to regenerate!
+regeneration.toast.regenerations_left=%s regenerations left
 regeneration.toast.enter_critical=You are going critical
 regeneration.toast.enter_critical.sub=%s minutes left...
 

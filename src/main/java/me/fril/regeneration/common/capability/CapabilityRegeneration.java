@@ -459,6 +459,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			} else {
 				player.setHealth(-1);
 			}
+			
 			/*
 			 * SuB For re-implementing the dont-lose-regens-on-death option:
 			 * We never explicitly reset the live count, but it still gets reset.

@@ -104,26 +104,22 @@ public class RegenEventHandler {
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onHurt(LivingDamageEvent event) {
+	public static void onHurt(LivingDamageEvent event) { //FIXME getting killed mid-regen by something other than /kill restarts grace
 		Entity trueSource = event.getSource().getTrueSource();
 		
 		if (trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {
 			EntityPlayer player = (EntityPlayer) trueSource;
 			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event.getEntityLiving());
-		}
-		
-		if (!(event.getEntity() instanceof EntityPlayer))
-			return;
-		
-		if (event.getSource() == RegenObjects.REGEN_DMG_CRITICAL) {
 			return;
 		}
+		
+		if (!(event.getEntity() instanceof EntityPlayer) || event.getSource() == RegenObjects.REGEN_DMG_CRITICAL)
+			return;
 		
 		EntityPlayer player = (EntityPlayer) event.getEntity();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (event.getSource() != RegenObjects.REGEN_DMG_CRITICAL) {
-			cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedText());
-		}
+		cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedText());
+		
 		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage()) {
 			event.setCanceled(true); // TODO still "hurts" the client view
 		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
