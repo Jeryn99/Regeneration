@@ -2,6 +2,7 @@ package me.fril.regeneration;
 
 import java.awt.GraphicsEnvironment;
 
+import me.fril.regeneration.common.dna.DnaHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -76,6 +77,7 @@ public class RegenerationMod {
 		proxy.init();
 		NetworkHandler.init();
 		LootTableList.register(LOOT_FILE);
+		DnaHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 	}
 	

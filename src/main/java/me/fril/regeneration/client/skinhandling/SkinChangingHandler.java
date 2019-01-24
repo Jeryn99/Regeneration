@@ -18,6 +18,8 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
+import com.mojang.util.UUIDTypeAdapter;
+import net.minecraft.client.resources.SkinManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -214,24 +216,25 @@ public class SkinChangingHandler {
 	
 	/**
 	 * This is used when the clients skin is reset
-	 *
-	 * @param player - Player to get the skin of
-	 * @return ResourceLocation consisting of a DynamicTexture that is the players real skin
+	 * @param player - Player to get the skin of themselves
+	 * @return ResourceLocation from Mojang
 	 * @throws IOException
 	 */
-	//TODO Actually get the skin from Mojang instead of a API website
 	private static ResourceLocation getSkinFromMojang(AbstractClientPlayer player) throws IOException {
 		setPlayerTexture(player, null);
 		Minecraft minecraft = Minecraft.getMinecraft();
-		URL url = new URL(String.format(RegenConfig.skins.downloadUrl, StringUtils.stripControlCodes(player.getUniqueID().toString())));
-		BufferedImage img = ImageIO.read(url);
-		SKIN_LOG.info("Downloading Skin from: {}", url.toString());
-		ImageIO.write(img, "png", new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png"));
+		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
 		
-		if (img == null) {
-			return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
+		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
+			File dir = new File((File)ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, minecraft.getSkinManager(), 2), profile.getHash().substring(0, 2));
+			File file = new File(dir, profile.getHash());
+			if(file.exists()) {
+				file.delete();
+			}
+			return minecraft.getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
 		}
-		return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(img));
+		return player.getLocationSkin();
 	}
 	
 	/**

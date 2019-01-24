@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import me.fril.regeneration.common.dna.DnaHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import me.fril.regeneration.RegenConfig;
@@ -47,7 +48,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
 	public String deathSource = "";
-	private boolean didSetup = false;
+	private boolean didSetup = false, traitActive = true;
 	private int regenerationsLeft;
 	
 	private RegenState state = RegenState.ALIVE;
@@ -57,13 +58,14 @@ public class CapabilityRegeneration implements IRegeneration {
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
-	
+	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
 	
 	/**
 	 * WHY THIS IS A SEPERATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
 	 * This property is synced over to the client to solve this
 	 */
 	private boolean handsAreGlowingClient;
+
 	
 	
 	public CapabilityRegeneration() {
@@ -126,6 +128,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setByteArray("encoded_skin", ENCODED_SKIN);
 		nbt.setString("skinType", skinType.name());
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
+		nbt.setString("regen_dna", traitLocation.toString());
+		nbt.setBoolean("traitActive", traitActive);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -141,13 +145,25 @@ public class CapabilityRegeneration implements IRegeneration {
 			setSkinType("ALEX");
 		}
 		
+		if(nbt.hasKey("regenerationsLeft")){
+			regenerationsLeft = nbt.getInteger("regenerationsLeft");
+		}
+		
+		if(nbt.hasKey("traitActive")){
+			setDnaAlive(nbt.getBoolean("traitAlive"));
+		} else {
+			setDnaAlive(true);
+		}
+		
+		if(nbt.hasKey("regen_dna")){
+			setRegistryName(new ResourceLocation(nbt.getString("regen_dna")));
+		} else {
+			setRegistryName(DnaHandler.DNA_BORING.getRegistryName());
+		}
+		
 		if (nbt.hasKey("handsAreGlowing")) {
 			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
 		}
-		
-		/*if (nbt.hasKey("ticksGlowing")) {
-			nbt.setInteger("ticksGlowing", ticksGlowing);
-		}*/
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
@@ -279,6 +295,26 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setDeathSource(String source) {
 		deathSource = source;
+	}
+	
+	@Override
+	public ResourceLocation getDnaType() {
+		return traitLocation;
+	}
+	
+	@Override
+	public void setRegistryName(ResourceLocation resgitryName) {
+		this.traitLocation = resgitryName;
+	}
+	
+	@Override
+	public boolean dnaAlive() {
+		return traitActive;
+	}
+	
+	@Override
+	public void setDnaAlive(boolean alive) {
+		traitActive = alive;
 	}
 	
 	@Override

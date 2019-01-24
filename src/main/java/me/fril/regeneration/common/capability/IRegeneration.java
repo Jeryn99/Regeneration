@@ -6,6 +6,7 @@ import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -70,4 +71,10 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	String getDeathSource();
 	
 	void setDeathSource(String source);
+	
+	ResourceLocation getDnaType();
+	void setRegistryName(ResourceLocation resgitryName);
+	
+	boolean dnaAlive();
+	void setDnaAlive(boolean alive);
 }

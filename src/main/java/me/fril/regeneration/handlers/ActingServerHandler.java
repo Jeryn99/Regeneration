@@ -3,10 +3,12 @@ package me.fril.regeneration.handlers;
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.common.dna.DnaHandler;
 import me.fril.regeneration.network.MessagePlayRegenerationSound;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenUtil;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,10 +24,8 @@ import java.util.UUID;
 class ActingServerHandler implements IActingHandler {
 	
 	public static final IActingHandler INSTANCE = new ActingServerHandler();
-	private final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782"),
-			MAX_HEALTH_ID = UUID.fromString("5d6f0ba2-1286-46fc-b896-461c5cfd99cc");
-	private final double HEART_REDUCTION = 0.5,
-			SPEED_REDUCTION = 0.25;
+	private final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782"), MAX_HEALTH_ID = UUID.fromString("5d6f0ba2-1286-46fc-b896-461c5cfd99cc");
+	private final double HEART_REDUCTION = 0.5, SPEED_REDUCTION = 0.25;
 	private final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, 1),
 			heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, 1);
 	
@@ -99,6 +99,9 @@ class ActingServerHandler implements IActingHandler {
 			player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
 		}
 		
+		DnaHandler.IDna dna = DnaHandler.getDnaEntry(cap.getDnaType());
+		dna.onRemoved(cap);
+		cap.setDnaAlive(false);
 		RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied health reduction");
 		player.setHealth(player.getMaxHealth());
 	}
@@ -110,9 +113,11 @@ class ActingServerHandler implements IActingHandler {
 	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
+		
 		if (!cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
 			cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
 		}
+		
 		RegenerationMod.DEBUGGER.getChannelFor(cap.getPlayer()).out("Applied speed reduction");
 	}
 	
@@ -122,6 +127,12 @@ class ActingServerHandler implements IActingHandler {
 		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegen.postRegenerationDuration * 2, RegenConfig.postRegen.postRegenerationLevel - 1, false, false));
 		player.setHealth(player.getMaxHealth());
 		player.setAbsorptionAmount(RegenConfig.postRegen.absorbtionLevel * 2);
+		
+		cap.setRegistryName(DnaHandler.getRandomDna(player.world.rand).getRegistryName());
+		DnaHandler.IDna newDna = DnaHandler.getDnaEntry(cap.getDnaType());
+		newDna.onAdded(cap);
+		cap.setDnaAlive(true);
+		PlayerUtil.sendMessage(player, new TextComponentTranslation(newDna.getLangKey()), true);
 	}
 	
 	@Override
