@@ -493,11 +493,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			nextTransition = null;
 			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
-			if (player.getLastDamageSource() != null) {
-				player.attackEntityFrom(player.getLastDamageSource(), Integer.MAX_VALUE);
-			} else {
-				player.setHealth(-1);
-			}
+			player.setHealth(-1);
 			
 			/*
 			 * SuB For re-implementing the dont-lose-regens-on-death option:

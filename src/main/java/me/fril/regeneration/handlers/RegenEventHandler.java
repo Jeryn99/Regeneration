@@ -122,6 +122,7 @@ public class RegenEventHandler {
 		
 		EntityPlayer player = (EntityPlayer) event.getEntity();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		
 		cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedText());
 		
 		if(cap.getState() == RegenState.POST){
