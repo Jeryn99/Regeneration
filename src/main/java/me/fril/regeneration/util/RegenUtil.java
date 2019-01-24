@@ -1,17 +1,18 @@
 package me.fril.regeneration.util;
 
-import java.util.Random;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class RegenUtil {
 	
@@ -19,6 +20,19 @@ public class RegenUtil {
 		Random rand = new Random();
 		float result = rand.nextFloat() * (max - min) + min;
 		return result;
+	}
+	
+	public static void genCrater(World world, BlockPos pos, int radius) {
+		for (int x = pos.getX() - radius; x < pos.getX() + radius; ++x) {
+			for (int y = pos.getY() - radius; y < pos.getY() + radius; ++y) {
+				for (int z = pos.getZ() - radius; z < pos.getZ() + radius; ++z) {
+					double squareDistance = Math.pow(x - pos.getX(), 2) + Math.pow(y - pos.getY(), 2) + Math.pow(z - pos.getZ(), 2);
+					if (squareDistance <= Math.pow(radius, 2)) {
+						world.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
+					}
+				}
+			}
+		}
 	}
 	
 	public static void regenerationExplosion(EntityPlayer player) {

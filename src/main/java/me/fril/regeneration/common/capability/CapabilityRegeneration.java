@@ -1,16 +1,9 @@
 package me.fril.regeneration.common.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import me.fril.regeneration.common.dna.DnaHandler;
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
+import me.fril.regeneration.common.dna.DnaHandler;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.debugger.util.DebuggableScheduledAction;
@@ -34,6 +27,11 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sub
@@ -351,6 +349,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			transitionCallbacks.put(Transition.ENTER_CRITICAL, this::enterCriticalPhase);
 			transitionCallbacks.put(Transition.CRITICAL_DEATH, this::midSequenceKill);
 			transitionCallbacks.put(Transition.FINISH_REGENERATION, this::finishRegeneration);
+			transitionCallbacks.put(Transition.POST, this::endPost);
 			
 			Runnable err = () -> {
 				throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
@@ -359,6 +358,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			transitionCallbacks.put(Transition.HAND_GLOW_TRIGGER, err);
 			//FIXME 'corrupt' transition isn't handled properly, causing tests to fail. I assume it's just not implemented yet apart from the enum?
 		}
+		
 		
 		@SuppressWarnings("deprecation")
 		private void scheduleTransitionInTicks(Transition transition, long inTicks) {
@@ -483,6 +483,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			// We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
 			scheduleTransitionInSeconds(Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
+			scheduleTransitionInSeconds(Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
 			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -511,9 +512,15 @@ public class CapabilityRegeneration implements IRegeneration {
 			synchronise();
 		}
 		
-		private void finishRegeneration() {
+		private void endPost() {
 			state = RegenState.ALIVE;
+			synchronise();
 			nextTransition = null;
+		}
+		
+		private void finishRegeneration() {
+			state = RegenState.POST;
+			scheduleTransitionInSeconds(Transition.POST, player.world.rand.nextInt(600));
 			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);

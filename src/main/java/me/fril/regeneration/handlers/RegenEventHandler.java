@@ -5,11 +5,15 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
+import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
+import me.fril.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -119,6 +123,21 @@ public class RegenEventHandler {
 		EntityPlayer player = (EntityPlayer) event.getEntity();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedText());
+		
+		if(cap.getState() == RegenState.POST){
+			
+			if(event.getSource() == DamageSource.FALL) {
+				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
+					if(player.world.getGameRules().getBoolean("mobGriefing") && event.getAmount() > 5.0F) {
+						RegenUtil.genCrater(player.world, player.getPosition(), 2);
+						event.setAmount(0.5F);
+						return;
+				}
+			} else {
+				event.setAmount(0.5F);
+			}
+			return;
+		}
 		
 		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage()) {
 			event.setCanceled(true); // TODO still "hurts" the client view

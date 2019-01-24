@@ -43,6 +43,8 @@ class ActingServerHandler implements IActingHandler {
 		float stateProgress = (float) cap.getStateManager().getStateProgress();
 		
 		switch (cap.getState()) {
+			case POST:
+				break;
 			case REGENERATING:
 				float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
 				player.heal(stateProgress * 0.3F * dm);

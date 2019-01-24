@@ -29,7 +29,6 @@ public class DnaVampire implements DnaHandler.IDna {
 		if(cap.dnaAlive()){
 			if(player.world.canSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ)) && cap.getPlayer().world.isDaytime()){
 				cap.getPlayer().setFire(1);
-				cap.dnaAlive();
 			}
 		}
 		

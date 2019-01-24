@@ -3,15 +3,16 @@ package me.fril.regeneration.common.dna;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -28,8 +29,11 @@ public class DnaHandler {
 	public static IDna DNA_BORING = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "boring"));
 	public static IDna DNA_DUMB = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "dumb"));
 	public static IDna DNA_SNEAK = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "sneak"));
-	public static IDna DNA_VAMPIRE = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "vampire"));
-	public static IDna DNA_TOUGH = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "tough"));
+	public static IDna DNA_VAMPIRE = new DnaVampire();
+	public static IDna DNA_TOUGH = new DnaTough();
+	public static IDna DNA_LUCKY = new DnaLucky();
+	public static IDna DNA_ALCHOHOLISM = new DnaAlcoholism();
+	public static IDna DNA_WORKER = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "worker"));
 	
 	public static void init(){
 		register(DNA_ATHLETE);
@@ -38,6 +42,8 @@ public class DnaHandler {
 		register(DNA_SNEAK);
 		register(DNA_VAMPIRE);
 		register(DNA_TOUGH);
+		register(DNA_LUCKY);
+		//register(DNA_ALCHOHOLISM);
 	}
 	
 	public static void register(IDna dna){
@@ -81,6 +87,18 @@ public class DnaHandler {
 			e.modifyVisibility(0.5);
 		}
 	}
+	
+	@SubscribeEvent
+	public static void onTrample(BlockEvent.FarmlandTrampleEvent e){
+		if(e.getEntity() instanceof EntityPlayer) {
+			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntity());
+			IDna dna = DnaHandler.getDnaEntry(data.getDnaType());
+			if(dna.getRegistryName().equals(DNA_SNEAK.getRegistryName())){
+				e.setCanceled(true);
+			}
+		}
+	}
+	
 	
 	
 }

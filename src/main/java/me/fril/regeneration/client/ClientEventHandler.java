@@ -1,9 +1,5 @@
 package me.fril.regeneration.client;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.UUID;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
@@ -32,11 +28,11 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -44,6 +40,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 import static me.fril.regeneration.client.skinhandling.SkinChangingHandler.PLAYER_SKINS;
 
@@ -67,25 +68,27 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	public static void onSortofWorldJoin(LivingEvent.LivingUpdateEvent e) {
-		if (!(e.getEntity() instanceof EntityPlayer) || e.getEntity().ticksExisted != 20)
+		if (!(e.getEntity() instanceof EntityPlayer) || Minecraft.getMinecraft().player == null)
 			return;
 		
-		UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
-		
 		EntityPlayer player = (EntityPlayer) e.getEntity();
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		if (cap.areHandsGlowing()) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
-		}
-		
-		if (cap.getState().equals(RegenState.REGENERATING)) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING)));
-		}
-		
-		if (cap.getState().isGraceful() && clientUUID == player.getUniqueID()) {
-			//Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT)));
-			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful()));
+		if(player.ticksExisted == 20) {
+			
+			UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
+			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+			
+			if (cap.areHandsGlowing()) {
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
+			}
+			
+			if (cap.getState().equals(RegenState.REGENERATING)) {
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING)));
+			}
+			
+			if (cap.getState().isGraceful() && clientUUID == player.getUniqueID()) {
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT)));
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful()));
+			}
 		}
 	}
 	
@@ -96,7 +99,7 @@ public class ClientEventHandler {
 		
 		SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
 		
-		if(skin != null) {
+		if (skin != null) {
 			SkinChangingHandler.setPlayerTexture(player, skin.getTextureLocation());
 		}
 		
@@ -143,12 +146,12 @@ public class ClientEventHandler {
 				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace", ClientUtil.keyBind).getUnformattedText();
 				break;
-				
+			
 			case GRACE_CRIT:
 				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", ClientUtil.keyBind).getUnformattedText();
 				break;
-				
+			
 			case REGENERATING:
 				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;
@@ -179,6 +182,39 @@ public class ClientEventHandler {
 			}
 		}
 		
+	}
+	
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public static void onClientChatRecieved(ClientChatReceivedEvent e) {
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		if(e.getType() != ChatType.CHAT) return;
+		if(CapabilityRegeneration.getForPlayer(player).getState() != RegenState.POST) return;
+		
+		String message = e.getMessage().getUnformattedText();
+		TextComponentString newMessage = new TextComponentString("");
+		String[] words = message.split(" ");
+		for (String word : words) {
+			if(word.equals(words[0])) {
+				TextComponentString name = new TextComponentString(word + " ");
+				newMessage.appendSibling(name);
+				continue;
+			}
+			if(player.world.rand.nextBoolean()){
+				TextComponentString txtComp = new TextComponentString(getColoredText("&k"+word+"&r "));
+				txtComp.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(word)));
+				newMessage.appendSibling(txtComp);
+			} else {
+				TextComponentString txtComp = new TextComponentString(word + " ");
+				newMessage.appendSibling(txtComp);
+			}
+		}
+		e.setMessage(newMessage);
+	}
+	
+	public static String getColoredText(String msg){
+		return msg.replaceAll("&", String.valueOf('\u00a7'));
 	}
 	
 	
