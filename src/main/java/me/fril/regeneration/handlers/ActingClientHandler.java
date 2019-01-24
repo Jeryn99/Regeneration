@@ -1,19 +1,17 @@
 package me.fril.regeneration.handlers;
 
-import java.io.IOException;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
-import me.fril.regeneration.client.sound.ConditionalSound;
 import me.fril.regeneration.client.sound.MovingSoundEntity;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import java.io.IOException;
 
 class ActingClientHandler implements IActingHandler {
 	
@@ -31,7 +29,6 @@ class ActingClientHandler implements IActingHandler {
 	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new ConditionalSound(PositionedSoundRecord.getRecord(RegenObjects.Sounds.CRITICAL_STAGE, 1.0F, 0.5F), () -> cap.getState() != RegenState.GRACE_CRIT));
 		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful()));
 	}
 	
@@ -59,6 +56,7 @@ class ActingClientHandler implements IActingHandler {
 	@Override
 	public void onGoCritical(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_critical"), new TextComponentTranslation("regeneration.toast.enter_critical.sub", RegenConfig.grace.criticalPhaseLength / 60), cap.getState());
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> cap.getState() != RegenState.GRACE_CRIT));
 	}
 	
 }

@@ -2,7 +2,6 @@ package me.fril.regeneration.common.dna;
 
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
-import me.fril.regeneration.common.dna.DnaHandler;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +28,7 @@ public class DnaAthlete implements DnaHandler.IDna {
 	public void onUpdate(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		if(player.isJumping) {
-			player.motionY += 1.0D;
+			player.motionY += 0.3D;
 			player.velocityChanged = true;
 		}
 	}
