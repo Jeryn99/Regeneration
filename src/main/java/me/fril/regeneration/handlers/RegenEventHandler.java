@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextComponentString;
@@ -27,6 +28,7 @@ import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -105,6 +107,18 @@ public class RegenEventHandler {
 		if (e.getEntityPlayer().world.isRemote)
 			return;
 		CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).getStateManager().onPunchBlock(e);
+	}
+	
+	@SubscribeEvent
+	public static void itemTossEvent(ItemTossEvent event){
+		NBTTagCompound tag = event.getEntityItem().getItem().getTagCompound();
+		ItemStack stack = event.getEntityItem().getItem();
+		
+		if(tag == null || !tag.hasKey("die")){
+			if(stack.getItem() == RegenObjects.Items.FOB_WATCH){
+				event.setCanceled(true);
+			}
+		}
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)

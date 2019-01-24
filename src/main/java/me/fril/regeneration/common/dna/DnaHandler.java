@@ -28,7 +28,7 @@ public class DnaHandler {
 	public static IDna DNA_ATHLETE = new DnaAthlete();
 	public static IDna DNA_BORING = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "boring"));
 	public static IDna DNA_DUMB = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "dumb"));
-	public static IDna DNA_SNEAK = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "sneak"));
+	public static IDna DNA_SNEAK = new DnaSneak();
 	public static IDna DNA_VAMPIRE = new DnaVampire();
 	public static IDna DNA_TOUGH = new DnaTough();
 	public static IDna DNA_LUCKY = new DnaLucky();

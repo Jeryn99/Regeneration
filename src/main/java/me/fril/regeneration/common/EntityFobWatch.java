@@ -188,11 +188,20 @@ public class EntityFobWatch extends Entity {
 		if (world.isRemote) {
 			if (getItem().getItem() == RegenObjects.Items.FOB_WATCH) {
 				ItemStack itemStack = getItem();
+				
+				if(getItem().getTagCompound() == null || !getItem().getTagCompound().hasKey("die")){
+					setDead();
+				}
+				
 				if (itemStack.getItemDamage() != RegenConfig.regenCapacity) {
 					if (ticksExisted == 5000 || ticksExisted == 2) {
 						ClientUtil.playSound(this, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.getRegistryName().toString(), () -> this.isDead, false);
 					}
 				}
+			}
+		} else {
+			if(getItem().getTagCompound() == null || !getItem().getTagCompound().hasKey("die")){
+				setDead();
 			}
 		}
 		

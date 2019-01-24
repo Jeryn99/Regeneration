@@ -1,7 +1,5 @@
 package me.fril.regeneration.common.item;
 
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.EntityFobWatch;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -16,11 +14,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by Sub
@@ -38,6 +39,17 @@ public class ItemFobWatch extends Item {
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
 		super.onCreated(stack, worldIn, playerIn);
 		stack.setItemDamage(RegenConfig.regenCapacity);
+	}
+	
+	@Override
+	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+		
+		if(stack.getTagCompound() == null){
+			stack.setTagCompound(new NBTTagCompound());
+			stack.getTagCompound().setBoolean("die", false);
+		}
+		
+		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 	}
 	
 	@Override

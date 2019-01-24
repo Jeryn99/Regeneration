@@ -28,7 +28,7 @@ public class DnaAthlete implements DnaHandler.IDna {
 	public void onUpdate(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		if(player.isJumping) {
-			player.motionY += 0.3D;
+			player.motionY += 0.1D;
 			player.velocityChanged = true;
 		}
 	}
