@@ -28,12 +28,16 @@ public class DnaHandler {
 	public static IDna DNA_BORING = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "boring"));
 	public static IDna DNA_DUMB = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "dumb"));
 	public static IDna DNA_SNEAK = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "sneak"));
+	public static IDna DNA_VAMPIRE = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "vampire"));
+	public static IDna DNA_TOUGH = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "tough"));
 	
 	public static void init(){
 		register(DNA_ATHLETE);
 		register(DNA_BORING);
 		register(DNA_DUMB);
 		register(DNA_SNEAK);
+		register(DNA_VAMPIRE);
+		register(DNA_TOUGH);
 	}
 	
 	public static void register(IDna dna){

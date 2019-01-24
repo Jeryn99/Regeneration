@@ -8,7 +8,6 @@ import me.fril.regeneration.network.MessagePlayRegenerationSound;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenUtil;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -128,7 +127,7 @@ class ActingServerHandler implements IActingHandler {
 		player.setHealth(player.getMaxHealth());
 		player.setAbsorptionAmount(RegenConfig.postRegen.absorbtionLevel * 2);
 		
-		cap.setRegistryName(DnaHandler.getRandomDna(player.world.rand).getRegistryName());
+		cap.setDnaType(DnaHandler.getRandomDna(player.world.rand).getRegistryName());
 		DnaHandler.IDna newDna = DnaHandler.getDnaEntry(cap.getDnaType());
 		newDna.onAdded(cap);
 		cap.setDnaAlive(true);

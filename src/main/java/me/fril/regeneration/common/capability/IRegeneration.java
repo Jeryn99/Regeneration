@@ -73,7 +73,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	void setDeathSource(String source);
 	
 	ResourceLocation getDnaType();
-	void setRegistryName(ResourceLocation resgitryName);
+	void setDnaType(ResourceLocation resgitryName);
 	
 	boolean dnaAlive();
 	void setDnaAlive(boolean alive);

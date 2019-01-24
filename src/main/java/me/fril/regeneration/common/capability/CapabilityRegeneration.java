@@ -97,6 +97,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			didSetup = true;
 		}
 		
+		DnaHandler.getDnaEntry(getDnaType()).onUpdate(this);
+		
 		if (!player.world.isRemote && state != RegenState.ALIVE) // ticking only on the server for simplicity
 			stateManager.tick();
 		
@@ -156,9 +158,9 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		if(nbt.hasKey("regen_dna")){
-			setRegistryName(new ResourceLocation(nbt.getString("regen_dna")));
+			setDnaType(new ResourceLocation(nbt.getString("regen_dna")));
 		} else {
-			setRegistryName(DnaHandler.DNA_BORING.getRegistryName());
+			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
 		}
 		
 		if (nbt.hasKey("handsAreGlowing")) {
@@ -303,7 +305,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
-	public void setRegistryName(ResourceLocation resgitryName) {
+	public void setDnaType(ResourceLocation resgitryName) {
 		this.traitLocation = resgitryName;
 	}
 	
