@@ -9,5 +9,5 @@ public class EntityLindos extends EntityFlying {
         super(worldIn);
     }
 
-    
+
 }
