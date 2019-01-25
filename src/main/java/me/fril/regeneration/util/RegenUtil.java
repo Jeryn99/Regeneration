@@ -2,11 +2,16 @@ package me.fril.regeneration.util;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.handlers.RegenObjects;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -28,7 +33,24 @@ public class RegenUtil {
 				for (int z = pos.getZ() - radius; z < pos.getZ() + radius; ++z) {
 					double squareDistance = Math.pow(x - pos.getX(), 2) + Math.pow(y - pos.getY(), 2) + Math.pow(z - pos.getZ(), 2);
 					if (squareDistance <= Math.pow(radius, 2)) {
-						world.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
+						IBlockState block = world.getBlockState(new BlockPos(x, y, z));
+						
+						if (block.getBlock() != Blocks.BEDROCK && block.getBlockHardness(world, new BlockPos(x, y, z)) < 3.0F) {
+							
+							if(!world.isRemote){
+								
+								if(world.getTileEntity(new BlockPos(x, y, z)) != null){
+									TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
+									if (tileEntity instanceof IInventory) {
+										InventoryHelper.dropInventoryItems(world, pos, (IInventory)tileEntity);
+										world.updateComparatorOutputLevel(pos, block.getBlock());
+									}
+								}
+								
+								InventoryHelper.spawnItemStack(world, x,y, z, new ItemStack(block.getBlock()));
+							}
+							world.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
+						}
 					}
 				}
 			}

@@ -1,4 +1,4 @@
-package me.fril.regeneration.common;
+package me.fril.regeneration.common.entity;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -22,20 +22,20 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class EntityFobWatch extends Entity {
+public class EntityItemOverride extends Entity {
 	
-	private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityFobWatch.class, DataSerializers.ITEM_STACK);
-	private static final DataParameter<Float> HEIGHT = EntityDataManager.createKey(EntityFobWatch.class, DataSerializers.FLOAT);
-	private static final DataParameter<Float> WIDTH = EntityDataManager.createKey(EntityFobWatch.class, DataSerializers.FLOAT);
+	private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.ITEM_STACK);
+	private static final DataParameter<Float> HEIGHT = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> WIDTH = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.FLOAT);
 	
-	public EntityFobWatch(World worldIn, double x, double y, double z, ItemStack stack) {
+	public EntityItemOverride(World worldIn, double x, double y, double z, ItemStack stack) {
 		this(worldIn);
 		this.setPosition(x, y, z);
 		this.setItem(stack);
 		this.rotationYaw = (float) (Math.random() * 360.0D);
 	}
 	
-	public EntityFobWatch(World worldIn, double x, double y, double z, ItemStack stack, float height, float width) {
+	public EntityItemOverride(World worldIn, double x, double y, double z, ItemStack stack, float height, float width) {
 		this(worldIn);
 		this.setEntitySize(height, width);
 		this.setPosition(x, y, z);
@@ -43,7 +43,7 @@ public class EntityFobWatch extends Entity {
 		this.rotationYaw = (float) (Math.random() * 360.0D);
 	}
 	
-	public EntityFobWatch(World worldIn) {
+	public EntityItemOverride(World worldIn) {
 		super(worldIn);
 		this.setSize(getWidth(), getHeight());
 		this.isImmuneToFire = true;
@@ -186,21 +186,29 @@ public class EntityFobWatch extends Entity {
 		double d2 = this.motionZ;
 		
 		if (world.isRemote) {
-			if (getItem().getItem() == RegenObjects.Items.FOB_WATCH) {
+			if (getItem().getItem() instanceof IEntityOverride) {
 				ItemStack itemStack = getItem();
 				
-				if(getItem().getTagCompound() == null || !getItem().getTagCompound().hasKey("die")){
+				if (getItem().getTagCompound() == null || !getItem().getTagCompound().hasKey("die")) {
 					setDead();
 				}
+
+				if(itemStack.getItem() == RegenObjects.Items.LINDOS_VIAL){
+					if(isInWater()){
+						if(itemStack.getTagCompound() != null){
+							itemStack.getTagCompound().setBoolean("water", true);
+						}
+					}
+				}
 				
-				if (itemStack.getItemDamage() != RegenConfig.regenCapacity) {
-					if (ticksExisted == 5000 || ticksExisted == 2) {
+				if (itemStack.getItem() == RegenObjects.Items.FOB_WATCH && itemStack.getItemDamage() != RegenConfig.regenCapacity) {
+					if (ticksExisted % 5000 == 0 || ticksExisted == 2) {
 						ClientUtil.playSound(this, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.getRegistryName().toString(), () -> this.isDead, false);
 					}
 				}
 			}
 		} else {
-			if(getItem().getTagCompound() == null || !getItem().getTagCompound().hasKey("die")){
+			if (getItem().getTagCompound() == null || !getItem().getTagCompound().hasKey("die")) {
 				setDead();
 			}
 		}

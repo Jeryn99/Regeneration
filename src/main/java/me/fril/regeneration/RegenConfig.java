@@ -33,8 +33,6 @@ public class RegenConfig {
 	public static final Skins skins = new Skins();
 	
 	
-	
-	
 	@Config.LangKey("config.regeneration.max_regens")
 	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
 	@Config.RequiresMcRestart
@@ -110,9 +108,6 @@ public class RegenConfig {
 	}
 	
 	
-	
-	
-	
 	public static class PostRegen {
 		
 		@Config.LangKey("config.regeneration.post_regen_duration")
@@ -141,10 +136,6 @@ public class RegenConfig {
 	}
 	
 	
-	
-	
-	
-	
 	public static class Skins {
 		
 		@Config.LangKey("config.regeneration.skins.download_url")
@@ -161,10 +152,6 @@ public class RegenConfig {
 		public SkinChangingHandler.EnumChoices prefferedModel = SkinChangingHandler.EnumChoices.EITHER;
 		
 	}
-	
-	
-	
-	
 	
 	
 	public static class Loot {
@@ -252,7 +239,6 @@ public class RegenConfig {
 		}
 		
 	}
-	
 	
 	
 	@EventBusSubscriber

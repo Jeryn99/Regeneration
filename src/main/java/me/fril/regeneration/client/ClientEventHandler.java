@@ -72,7 +72,7 @@ public class ClientEventHandler {
 			return;
 		
 		EntityPlayer player = (EntityPlayer) e.getEntity();
-		if(player.ticksExisted == 20) {
+		if (player.ticksExisted == 20) {
 			
 			UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
 			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
@@ -103,7 +103,7 @@ public class ClientEventHandler {
 			SkinChangingHandler.setPlayerTexture(player, skin.getTextureLocation());
 		}
 		
-		float f = 0.2F;
+		float factor = 0.2F;
 		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
 			return;
 		
@@ -125,7 +125,7 @@ public class ClientEventHandler {
 			Vec3d primaryColor = cap.getPrimaryColor();
 			
 			Random rand = player.world.rand;
-			RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
+			RenderUtil.drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, primaryColor, 0);
 		}
 		RenderUtil.finishRenderLightning();
 		
@@ -189,20 +189,20 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onClientChatRecieved(ClientChatReceivedEvent e) {
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		if(e.getType() != ChatType.CHAT) return;
-		if(CapabilityRegeneration.getForPlayer(player).getState() != RegenState.POST) return;
+		if (e.getType() != ChatType.CHAT) return;
+		if (CapabilityRegeneration.getForPlayer(player).getState() != RegenState.POST) return;
 		
 		String message = e.getMessage().getUnformattedText();
 		TextComponentString newMessage = new TextComponentString("");
 		String[] words = message.split(" ");
 		for (String word : words) {
-			if(word.equals(words[0])) {
+			if (word.equals(words[0])) {
 				TextComponentString name = new TextComponentString(word + " ");
 				newMessage.appendSibling(name);
 				continue;
 			}
-			if(player.world.rand.nextBoolean()){
-				TextComponentString txtComp = new TextComponentString(getColoredText("&k"+word+"&r "));
+			if (player.world.rand.nextBoolean()) {
+				TextComponentString txtComp = new TextComponentString(getColoredText("&k" + word + "&r "));
 				txtComp.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(word)));
 				newMessage.appendSibling(txtComp);
 			} else {
@@ -213,7 +213,7 @@ public class ClientEventHandler {
 		e.setMessage(newMessage);
 	}
 	
-	public static String getColoredText(String msg){
+	public static String getColoredText(String msg) {
 		return msg.replaceAll("&", String.valueOf('\u00a7'));
 	}
 	

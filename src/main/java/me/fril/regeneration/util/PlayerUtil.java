@@ -1,24 +1,18 @@
 package me.fril.regeneration.util;
 
-import java.util.List;
-
 import me.fril.regeneration.network.MessageSetPerspective;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIAttackRanged;
-import net.minecraft.entity.ai.EntityAIAttackRangedBow;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIOwnerHurtByTarget;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.EntityAIZombieAttack;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.util.List;
 
 /**
  * Created by Sub

@@ -1,7 +1,5 @@
 package me.fril.regeneration.proxy;
 
-import java.util.Map;
-
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
 import me.fril.regeneration.client.rendering.LayerFuzz;
@@ -9,7 +7,7 @@ import me.fril.regeneration.client.rendering.LayerItemReplace;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
 import me.fril.regeneration.client.rendering.RenderFob;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
-import me.fril.regeneration.common.EntityFobWatch;
+import me.fril.regeneration.common.entity.EntityItemOverride;
 import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.util.EnumCompatModids;
 import me.fril.regeneration.util.RenderUtil;
@@ -21,6 +19,8 @@ import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
+import java.util.Map;
+
 /**
  * Created by Sub
  * on 17/09/2018.
@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy {
 	public void preInit() {
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
-		RenderingRegistry.registerEntityRenderingHandler(EntityFobWatch.class, RenderFob::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderFob::new);
 	}
 	
 	@Override

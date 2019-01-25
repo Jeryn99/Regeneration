@@ -1,11 +1,11 @@
 package me.fril.regeneration.debugger.util;
 
+import me.fril.regeneration.debugger.IDebugChannel;
+import me.fril.regeneration.util.RegenState.Transition;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.Consumer;
-
-import me.fril.regeneration.debugger.IDebugChannel;
-import me.fril.regeneration.util.RegenState.Transition;
 
 public class UnloadedPlayerBufferChannel implements IDebugChannel {
 	private final Queue<Consumer<IDebugChannel>> unloadedBuffer;

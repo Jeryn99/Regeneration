@@ -16,6 +16,8 @@ regeneration.gui.remaining_regens.status=Remaining Regenerations:
 regeneration.messages.now_timelord=You are now a timelord!
 regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch
 
+regeneration.messages.empty_vial=This vial does not have enough Lindos to trigger a regeneration!
+
 regeneration.messages.transfer.success=You've transferred one of your regenerations into the watch
 regeneration.messages.transfer.full_watch=You can't store anymore regenerations in this watch!
 regeneration.messages.transfer.empty_watch=This watch is empty!
@@ -118,3 +120,6 @@ dna.dumb.name=Your DNA consists of Genes no-one wants!
 dna.sneak.name=Your DNA consists of Sneaky genes!
 dna.vampire.name=Your DNA consists of Vampire Genes....ah dear...
 dna.lucky.name=Your DNA consists of Lucky genes!
+
+nbt.item.lindos=Lindos Energy: %s
+regeneration.messages.no_water=This Vial has no water...

@@ -41,9 +41,11 @@ public class RegenKeyBinds {
 		}
 	}
 	
-	/** Handles LCCore compatibility */
+	/**
+	 * Handles LCCore compatibility
+	 */
 	public static String getRegenerateNowDisplayName() {
-			return REGEN_NOW.getDisplayName();
+		return REGEN_NOW.getDisplayName();
 	}
 	
 }

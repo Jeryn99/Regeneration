@@ -1,7 +1,8 @@
 package me.fril.regeneration.common.item;
 
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.common.EntityFobWatch;
+import me.fril.regeneration.common.entity.EntityItemOverride;
+import me.fril.regeneration.common.entity.IEntityOverride;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -27,7 +28,7 @@ import javax.annotation.Nullable;
  * Created by Sub
  * on 16/09/2018.
  */
-public class ItemFobWatch extends Item {
+public class ItemFobWatch extends Item implements IEntityOverride {
 	
 	public ItemFobWatch() {
 		setMaxDamage(RegenConfig.regenCapacity);
@@ -44,7 +45,7 @@ public class ItemFobWatch extends Item {
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		
-		if(stack.getTagCompound() == null){
+		if (stack.getTagCompound() == null) {
 			stack.setTagCompound(new NBTTagCompound());
 			stack.getTagCompound().setBoolean("die", false);
 		}
@@ -119,7 +120,7 @@ public class ItemFobWatch extends Item {
 	@Nullable
 	@Override
 	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
-		EntityFobWatch item = new EntityFobWatch(world, location.posX, location.posY, location.posZ, itemstack);
+		EntityItemOverride item = new EntityItemOverride(world, location.posX, location.posY, location.posZ, itemstack);
 		item.setEntitySize(item.getHeight(), item.getWidth());
 		item.motionX = location.motionX;
 		item.motionY = location.motionY;

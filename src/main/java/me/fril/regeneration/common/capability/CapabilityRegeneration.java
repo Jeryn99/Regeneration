@@ -63,7 +63,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	 * This property is synced over to the client to solve this
 	 */
 	private boolean handsAreGlowingClient;
-
 	
 	
 	public CapabilityRegeneration() {
@@ -145,17 +144,17 @@ public class CapabilityRegeneration implements IRegeneration {
 			setSkinType("ALEX");
 		}
 		
-		if(nbt.hasKey("regenerationsLeft")){
+		if (nbt.hasKey("regenerationsLeft")) {
 			regenerationsLeft = nbt.getInteger("regenerationsLeft");
 		}
 		
-		if(nbt.hasKey("traitActive")){
+		if (nbt.hasKey("traitActive")) {
 			setDnaAlive(nbt.getBoolean("traitAlive"));
 		} else {
 			setDnaAlive(true);
 		}
 		
-		if(nbt.hasKey("regen_dna")){
+		if (nbt.hasKey("regen_dna")) {
 			setDnaType(new ResourceLocation(nbt.getString("regen_dna")));
 		} else {
 			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
@@ -422,6 +421,8 @@ public class CapabilityRegeneration implements IRegeneration {
 				midSequenceKill();
 				return false;
 				
+			} else if (state == RegenState.POST){
+				return false;
 			} else
 				throw new IllegalStateException("Unknown state: " + state);
 		}
@@ -441,7 +442,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (getState().isGraceful() && areHandsGlowing()) {
 				handGlowTimer.cancel();
 				scheduleNextHandGlow();
-				if(!player.world.isRemote){
+				if (!player.world.isRemote) {
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.regen_delayed"), true);
 				}
 			}
@@ -471,7 +472,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 			
 			nextTransition.cancel(); // ... cancel any state shift we had planned
-			handGlowTimer.cancel();
+			if(handGlowTimer != null) {
+				handGlowTimer.cancel();
+			}
 			scheduleTransitionInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
 			ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);

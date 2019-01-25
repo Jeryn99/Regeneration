@@ -1,8 +1,8 @@
-package me.fril.regeneration.common.dna;
+package me.fril.regeneration.common.dna.positive;
 
-import lucraft.mods.lucraftcore.superpowers.abilities.AbilityAttributeModifier;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.common.dna.DnaHandler;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +45,7 @@ public class DnaLucky implements DnaHandler.IDna {
 	
 	@Override
 	public String getLangKey() {
-		return "dna."+ID.getPath()+".name";
+		return "dna." + ID.getPath() + ".name";
 	}
 	
 	@Override

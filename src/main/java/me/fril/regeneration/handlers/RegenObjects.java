@@ -1,8 +1,9 @@
 package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.RegenerationMod;
-import me.fril.regeneration.common.EntityFobWatch;
+import me.fril.regeneration.common.entity.EntityItemOverride;
 import me.fril.regeneration.common.item.ItemFobWatch;
+import me.fril.regeneration.common.item.ItemLindos;
 import me.fril.regeneration.util.RegenDamageSource;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
@@ -33,9 +34,8 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
-		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch")
-				//,setUpItem(new ItemImNotSure(), "idkyet")
-				);
+		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch") ,setUpItem(new ItemLindos(), "lindos_vial")
+		);
 	}
 	
 	private static Item setUpItem(Item item, String name) {
@@ -70,7 +70,7 @@ public class RegenObjects {
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
 	public static class Items {
 		public static final Item FOB_WATCH = null;
-		//public static final Item IDKYET = null;
+		public static final Item LINDOS_VIAL = null;
 	}
 	
 	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
@@ -85,6 +85,6 @@ public class RegenObjects {
 	}
 	
 	public static class EntityEntries {
-		public static final EntityEntry ENTITY_FOB = EntityEntryBuilder.create().entity(EntityFobWatch.class).id(new ResourceLocation(RegenerationMod.MODID, "fob_watch"), 0).name("fob").tracker(80, 3, false).build();
+		public static final EntityEntry ENTITY_FOB = EntityEntryBuilder.create().entity(EntityItemOverride.class).id(new ResourceLocation(RegenerationMod.MODID, "fob_watch"), 0).name("fob").tracker(80, 3, false).build();
 	}
 }

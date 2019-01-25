@@ -1,7 +1,5 @@
 package me.fril.regeneration.client.gui;
 
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.RegenState;
@@ -12,6 +10,8 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import javax.annotation.Nullable;
 
 public class ToastRegeneration implements IToast {
 	

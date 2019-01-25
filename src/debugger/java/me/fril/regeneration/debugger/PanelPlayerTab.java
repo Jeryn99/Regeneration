@@ -1,21 +1,14 @@
 package me.fril.regeneration.debugger;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-
 import com.mojang.authlib.GameProfile;
-
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.debugger.util.ConditionalDebugChannelProxy;
 import me.fril.regeneration.debugger.util.EventQueueDebugChannelProxy;
 import me.fril.regeneration.debugger.util.TextPaneLogger;
 import me.fril.regeneration.util.RegenState.Transition;
+
+import javax.swing.*;
+import java.awt.*;
 
 @SuppressWarnings("serial")
 class PanelPlayerTab extends JPanel {

@@ -1,7 +1,8 @@
-package me.fril.regeneration.common.dna;
+package me.fril.regeneration.common.dna.positive;
 
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.common.dna.DnaHandler;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +22,7 @@ public class DnaTough implements DnaHandler.IDna {
 	private final AttributeModifier TOUGH_MODIFIER = new AttributeModifier(TOUGH_ID, "TOUGH", 0.95, 1);
 	
 	private final UUID ATTACK_ID = UUID.fromString("e9e9b6a4-1f41-4569-88a4-34a4b06693bb");
-	private final AttributeModifier ATTACK_MODIFIER = new AttributeModifier(ATTACK_ID, "ATTACK", 0.95, 1);
+	private final AttributeModifier ATTACK_MODIFIER = new AttributeModifier(ATTACK_ID, "ATTACK", 1, 1);
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {
@@ -54,7 +55,7 @@ public class DnaTough implements DnaHandler.IDna {
 	
 	@Override
 	public String getLangKey() {
-		return "dna."+LOCATION.getPath()+".name";
+		return "dna." + LOCATION.getPath() + ".name";
 	}
 	
 	@Override

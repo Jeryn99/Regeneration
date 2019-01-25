@@ -78,3 +78,6 @@ message.regeneration.isregenerating=%s se régénère...
 
 regeneration.messages.warning.grace=Presser %s pour vous regénérer!
 regeneration.messages.warning.grace=Vous êtes proche de la mort... pressez %s pour vous regénérer !
+
+nbt.item.lindos=Lindos Energy: %s
+regeneration.messages.no_water=This Vial has no water...

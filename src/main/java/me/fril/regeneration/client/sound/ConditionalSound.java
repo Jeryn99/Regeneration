@@ -1,14 +1,10 @@
 package me.fril.regeneration.client.sound;
 
-import java.util.function.Supplier;
-
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.ITickableSound;
-import net.minecraft.client.audio.Sound;
-import net.minecraft.client.audio.SoundEventAccessor;
-import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.audio.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+
+import java.util.function.Supplier;
 
 public class ConditionalSound implements ITickableSound {
 	

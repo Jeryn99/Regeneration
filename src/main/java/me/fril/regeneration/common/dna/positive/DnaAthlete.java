@@ -1,13 +1,12 @@
-package me.fril.regeneration.common.dna;
+package me.fril.regeneration.common.dna.positive;
 
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.common.dna.DnaHandler;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -15,29 +14,22 @@ import java.util.UUID;
  * Created by Suffril
  * on 24/01/2019.
  */
-public class DnaVampire implements DnaHandler.IDna {
-	
-	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "vampire");
+public class DnaAthlete implements DnaHandler.IDna {
 	
 	private final UUID SPEED_ID = UUID.fromString("a22a9515-90d7-479d-9153-07268f2a1714");
 	private final AttributeModifier SPEED_MODIFIER = new AttributeModifier(SPEED_ID, "SANIC_FAST", 0.95, 1);
+	private final UUID KNOCKBACK_ID = UUID.fromString("49906f69-7b9d-4967-aba8-901621ee76a5");
+	private final AttributeModifier KNOCKBACK_MODIFIER = new AttributeModifier(KNOCKBACK_ID, "JUMPY", 0.95, 1);
+	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "athlete");
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {
-		World world = cap.getPlayer().world;
 		EntityPlayer player = cap.getPlayer();
-		if(cap.dnaAlive()){
-			if(player.world.canSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ)) && cap.getPlayer().world.isDaytime()){
-				cap.getPlayer().setFire(1);
-			}
-		}
-		
-		if(world.isDaytime()){
-			onRemoved(cap);
-		} else {
+		if (player.isSprinting()) {
 			onAdded(cap);
+		} else {
+			onRemoved(cap);
 		}
-		
 	}
 	
 	@Override
@@ -45,6 +37,10 @@ public class DnaVampire implements DnaHandler.IDna {
 		EntityPlayer player = cap.getPlayer();
 		if (!player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(SPEED_MODIFIER)) {
 			player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(SPEED_MODIFIER);
+		}
+		
+		if (!player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(KNOCKBACK_MODIFIER)) {
+			player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(KNOCKBACK_MODIFIER);
 		}
 	}
 	
@@ -54,11 +50,15 @@ public class DnaVampire implements DnaHandler.IDna {
 		if (player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(SPEED_MODIFIER)) {
 			player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SPEED_MODIFIER);
 		}
+		
+		if (player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(KNOCKBACK_MODIFIER)) {
+			player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(KNOCKBACK_MODIFIER);
+		}
 	}
 	
 	@Override
 	public String getLangKey() {
-		return "dna."+getRegistryName().getPath()+".name";
+		return "dna." + ID.getPath() + ".name";
 	}
 	
 	@Override

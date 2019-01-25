@@ -1,19 +1,17 @@
-package me.fril.regeneration.common.dna;
+package me.fril.regeneration.common.dna.negative;
 
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.common.dna.DnaHandler;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Suffril
  * on 24/01/2019.
  */
-public class DnaSimple implements DnaHandler.IDna {
+public class DnaAlcoholism implements DnaHandler.IDna {
 	
-	private ResourceLocation location;
-	
-	public DnaSimple(ResourceLocation location){
-		this.location =location;
-	}
+	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "alcoholism");
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {
@@ -32,12 +30,11 @@ public class DnaSimple implements DnaHandler.IDna {
 	
 	@Override
 	public String getLangKey() {
-		return "dna."+location.getPath()+".name";
+		return "dna." + ID.getPath() + ".name";
 	}
-	
 	
 	@Override
 	public ResourceLocation getRegistryName() {
-		return location;
+		return ID;
 	}
 }

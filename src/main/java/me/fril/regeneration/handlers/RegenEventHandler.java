@@ -2,6 +2,7 @@ package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.common.entity.IEntityOverride;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
@@ -110,19 +111,19 @@ public class RegenEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void itemTossEvent(ItemTossEvent event){
+	public static void itemTossEvent(ItemTossEvent event) {
 		NBTTagCompound tag = event.getEntityItem().getItem().getTagCompound();
 		ItemStack stack = event.getEntityItem().getItem();
 		
-		if(tag == null || !tag.hasKey("die")){
-			if(stack.getItem() == RegenObjects.Items.FOB_WATCH){
+		if (tag == null || !tag.hasKey("die")) {
+			if (stack.getItem() instanceof IEntityOverride) {
 				event.setCanceled(true);
 			}
 		}
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onHurt(LivingDamageEvent event) { //FIXME getting killed mid-regen by something other than /kill restarts grace
+	public static void onHurt(LivingDamageEvent event) {
 		Entity trueSource = event.getSource().getTrueSource();
 		
 		if (trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {
@@ -139,14 +140,14 @@ public class RegenEventHandler {
 		
 		cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedText());
 		
-		if(cap.getState() == RegenState.POST){
+		if (cap.getState() == RegenState.POST && player.posY > 0) {
 			
-			if(event.getSource() == DamageSource.FALL) {
+			if (event.getSource() == DamageSource.FALL) {
 				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
-					if(player.world.getGameRules().getBoolean("mobGriefing") && event.getAmount() > 5.0F) {
-						RegenUtil.genCrater(player.world, player.getPosition(), 2);
-						event.setAmount(0.5F);
-						return;
+				if (player.world.getGameRules().getBoolean("mobGriefing") && event.getAmount() > 8.0F) {
+					RegenUtil.genCrater(player.world, player.getPosition(), 6);
+					event.setAmount(0.5F);
+					return;
 				}
 			} else {
 				event.setAmount(0.5F);
@@ -186,8 +187,8 @@ public class RegenEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onCrafted(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event){
-		if(event.crafting.getItem() == RegenObjects.Items.FOB_WATCH){
+	public static void onCrafted(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
+		if (event.crafting.getItem() == RegenObjects.Items.FOB_WATCH) {
 			event.setCanceled(!RegenConfig.allowFobWatchCrafting);
 		}
 	}
