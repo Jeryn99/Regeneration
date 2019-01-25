@@ -421,7 +421,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				midSequenceKill();
 				return false;
 				
-			} else if (state == RegenState.POST){
+			} else if (state == RegenState.POST) {
 				return false;
 			} else
 				throw new IllegalStateException("Unknown state: " + state);
@@ -472,7 +472,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 			
 			nextTransition.cancel(); // ... cancel any state shift we had planned
-			if(handGlowTimer != null) {
+			if (handGlowTimer != null) {
 				handGlowTimer.cancel();
 			}
 			scheduleTransitionInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
@@ -537,16 +537,14 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForward() {
-			while (!nextTransition.tick())
-				;
+			while (!nextTransition.tick()) ;
 		}
 		
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForwardHandGlow() {
-			while (!handGlowTimer.tick())
-				;
+			while (!handGlowTimer.tick()) ;
 		}
 		
 		@Override

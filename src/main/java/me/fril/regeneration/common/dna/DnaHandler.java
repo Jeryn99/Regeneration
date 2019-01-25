@@ -5,7 +5,12 @@ import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.dna.negative.DnaHydrophobic;
 import me.fril.regeneration.common.dna.negative.DnaVampire;
-import me.fril.regeneration.common.dna.positive.*;
+import me.fril.regeneration.common.dna.positive.DnaAthlete;
+import me.fril.regeneration.common.dna.positive.DnaLucky;
+import me.fril.regeneration.common.dna.positive.DnaSimple;
+import me.fril.regeneration.common.dna.positive.DnaSneak;
+import me.fril.regeneration.common.dna.positive.DnaSwimmer;
+import me.fril.regeneration.common.dna.positive.DnaTough;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -26,9 +31,6 @@ import java.util.Random;
 @Mod.EventBusSubscriber
 public class DnaHandler {
 	
-	private static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
-	private static ArrayList<IDna> DNA_LIST = new ArrayList<>();
-	
 	public static IDna DNA_ATHLETE = new DnaAthlete();
 	public static IDna DNA_BORING = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "boring"));
 	public static IDna DNA_DUMB = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "dumb"));
@@ -38,6 +40,8 @@ public class DnaHandler {
 	public static IDna DNA_LUCKY = new DnaLucky();
 	public static IDna DNA_SWIMMER = new DnaSwimmer();
 	public static IDna DNA_SCARED_OF_WATER = new DnaHydrophobic();
+	private static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
+	private static ArrayList<IDna> DNA_LIST = new ArrayList<>();
 	//public static IDna DNA_ALCHOHOLISM = new DnaAlcoholism();
 	//public static IDna DNA_WORKER = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "worker"));
 	
@@ -68,18 +72,6 @@ public class DnaHandler {
 	
 	public static IDna getRandomDna(Random random) {
 		return DNA_LIST.get(random.nextInt(DNA_LIST.size()));
-	}
-	
-	public interface IDna {
-		void onUpdate(IRegeneration cap);
-		
-		void onAdded(IRegeneration cap);
-		
-		void onRemoved(IRegeneration cap);
-		
-		String getLangKey();
-		
-		ResourceLocation getRegistryName();
 	}
 	
 	@SubscribeEvent
@@ -121,6 +113,18 @@ public class DnaHandler {
 				e.setCanceled(true);
 			}
 		}
+	}
+	
+	public interface IDna {
+		void onUpdate(IRegeneration cap);
+		
+		void onAdded(IRegeneration cap);
+		
+		void onRemoved(IRegeneration cap);
+		
+		String getLangKey();
+		
+		ResourceLocation getRegistryName();
 	}
 	
 	

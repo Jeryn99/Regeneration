@@ -18,10 +18,9 @@ import java.util.UUID;
  */
 public class DnaVampire implements DnaHandler.IDna {
 	
-	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "vampire");
-	
 	private final UUID SPEED_ID = UUID.fromString("a22a9515-90d7-479d-9153-07268f2a1714");
 	private final AttributeModifier SPEED_MODIFIER = new AttributeModifier(SPEED_ID, "SANIC_FAST", 0.95, 1);
+	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "vampire");
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {

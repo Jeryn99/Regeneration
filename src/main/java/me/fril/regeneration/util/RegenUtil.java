@@ -37,17 +37,17 @@ public class RegenUtil {
 						
 						if (block.getBlock() != Blocks.BEDROCK && block.getBlockHardness(world, new BlockPos(x, y, z)) < 3.0F) {
 							
-							if(!world.isRemote){
+							if (!world.isRemote) {
 								
-								if(world.getTileEntity(new BlockPos(x, y, z)) != null){
+								if (world.getTileEntity(new BlockPos(x, y, z)) != null) {
 									TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 									if (tileEntity instanceof IInventory) {
-										InventoryHelper.dropInventoryItems(world, pos, (IInventory)tileEntity);
+										InventoryHelper.dropInventoryItems(world, pos, (IInventory) tileEntity);
 										world.updateComparatorOutputLevel(pos, block.getBlock());
 									}
 								}
 								
-								InventoryHelper.spawnItemStack(world, x,y, z, new ItemStack(block.getBlock()));
+								InventoryHelper.spawnItemStack(world, x, y, z, new ItemStack(block.getBlock()));
 							}
 							world.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
 						}

@@ -1,6 +1,6 @@
 package me.fril.regeneration.util;
 
-import me.fril.regeneration.client.rendering.ModelArmorOverride;
+import me.fril.regeneration.client.rendering.model.ModelArmorOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;

@@ -16,11 +16,9 @@ import java.util.UUID;
  */
 public class DnaLucky implements DnaHandler.IDna {
 	
-	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "lucky");
-	
 	private final UUID LUCKY_ID = UUID.fromString("9aaf3f7c-264e-4c19-8485-49503b6940b7");
 	private final AttributeModifier LUCKY_MODIFIER = new AttributeModifier(LUCKY_ID, "LUCK", 0.95, 2);
-	
+	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "lucky");
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {

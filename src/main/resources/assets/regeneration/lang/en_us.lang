@@ -1,4 +1,5 @@
 item.fob_watch.name=Fob Watch
+item.lindos_vial.name=Lindos Vial
 superpower.timelord.name=Timelord
 
 regeneration.gui.red=Red
@@ -50,16 +51,6 @@ regeneration.messages.warning.grace_critical=You are near death, press %s to reg
 regeneration.messages.regen_delayed=Regeneration delayed!
 regeneration.messages.regen_warning=Punch a block to delay your regeneration further
 regeneration.messages.theft=You stole the body of %s!
-
--------------- UNUSED -----------
-regeneration.messages.remaining_regens.notification=You are regenerating! You have %s regenerations left.
-regeneration.messages.grace=You have entered a grace period of 15 minutes
-regeneration.messages.choice=Press %s for grace period, %s to regenerate immediately!
-regeneration.messages.regen_or_die=Regenerate now or you will die!
----------------------------------
-
-
-
 
 config.regeneration.max_regens=Amount of regenerations per cycle
 config.regeneration.free_regens=Free regenerations

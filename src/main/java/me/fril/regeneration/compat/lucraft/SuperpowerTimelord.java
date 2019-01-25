@@ -34,12 +34,12 @@ public class SuperpowerTimelord extends Superpower {
 		gui.drawTexturedModalRect(0, 0, 9 * 16, 16, 16, 16);
 		GlStateManager.popMatrix();
 	}
-
+	
 	@Override
 	public boolean shouldAppearInHeroGuideBook() {
 		return false;
 	}
-
+	
 	@Override
 	public SuperpowerPlayerHandler getNewSuperpowerHandler(ISuperpowerCapability cap) {
 		return new SuperpowerPlayerHandler(cap, this) {

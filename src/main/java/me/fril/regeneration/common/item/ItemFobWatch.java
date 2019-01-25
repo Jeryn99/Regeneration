@@ -1,10 +1,10 @@
 package me.fril.regeneration.common.item;
 
 import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.common.entity.EntityItemOverride;
-import me.fril.regeneration.common.entity.IEntityOverride;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.common.entity.EntityItemOverride;
+import me.fril.regeneration.common.entity.IEntityOverride;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.DebuggerUtil;

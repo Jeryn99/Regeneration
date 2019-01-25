@@ -2,6 +2,7 @@ package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.entity.EntityItemOverride;
+import me.fril.regeneration.common.entity.EntityLindos;
 import me.fril.regeneration.common.item.ItemFobWatch;
 import me.fril.regeneration.common.item.ItemLindos;
 import me.fril.regeneration.util.RegenDamageSource;
@@ -34,7 +35,7 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
-		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch") ,setUpItem(new ItemLindos(), "lindos_vial")
+		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch"), setUpItem(new ItemLindos(), "lindos_vial")
 		);
 	}
 	
@@ -47,7 +48,7 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addEntities(RegistryEvent.Register<EntityEntry> e) {
-		e.getRegistry().registerAll(EntityEntries.ENTITY_FOB);
+		e.getRegistry().registerAll(EntityEntries.ENTITY_ITEM, EntityEntries.ENTITY_LINDOS);
 	}
 	
 	@SubscribeEvent
@@ -85,6 +86,7 @@ public class RegenObjects {
 	}
 	
 	public static class EntityEntries {
-		public static final EntityEntry ENTITY_FOB = EntityEntryBuilder.create().entity(EntityItemOverride.class).id(new ResourceLocation(RegenerationMod.MODID, "fob_watch"), 0).name("fob").tracker(80, 3, false).build();
+		public static final EntityEntry ENTITY_ITEM = EntityEntryBuilder.create().entity(EntityItemOverride.class).id(new ResourceLocation(RegenerationMod.MODID, "fob_watch"), 0).name("fob").tracker(80, 3, false).build();
+		public static final EntityEntry ENTITY_LINDOS = EntityEntryBuilder.create().entity(EntityLindos.class).id(new ResourceLocation(RegenerationMod.MODID, "lindos"), 1).name("lindos").tracker(80, 3, false).build();
 	}
 }

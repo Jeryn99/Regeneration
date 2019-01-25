@@ -1,4 +1,4 @@
-package me.fril.regeneration.client.rendering;
+package me.fril.regeneration.client.rendering.entity;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.entity.EntityItemOverride;
@@ -40,7 +40,7 @@ public class RenderFob extends Render<EntityItemOverride> {
 		Minecraft mc = Minecraft.getMinecraft();
 		float f = 0.2f;
 		Random rand = entity.world.rand;
-
+		
 		GlStateManager.pushMatrix();
 		if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH && entity.getItem().getItemDamage() != RegenConfig.regenCapacity) {
 			for (int j = 0; j < 2; j++) {

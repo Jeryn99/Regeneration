@@ -106,6 +106,11 @@ public class EntityItemOverride extends Entity {
 		this.getDataManager().setDirty(ITEM);
 	}
 	
+	@Override
+	public void setDead() {
+		super.setDead();
+	}
+	
 	public float getHeight() {
 		return this.getDataManager().get(HEIGHT);
 	}
@@ -127,6 +132,19 @@ public class EntityItemOverride extends Entity {
 	 */
 	@Override
 	public boolean isEntityInvulnerable(DamageSource source) {
+		
+		if (source == DamageSource.FALL) {
+			if (getItem().getItem() == RegenObjects.Items.LINDOS_VIAL) {
+				if (!world.isRemote) {
+					EntityLindos lindos = new EntityLindos(world);
+					lindos.setLocationAndAngles(posX, posY, posZ, 0, 0);
+					lindos.setAmount(getItem().getTagCompound().getInteger("amount"));
+					world.spawnEntity(lindos);
+					setDead();
+				}
+			}
+		}
+		
 		return true;
 	}
 	
@@ -192,10 +210,10 @@ public class EntityItemOverride extends Entity {
 				if (getItem().getTagCompound() == null || !getItem().getTagCompound().hasKey("die")) {
 					setDead();
 				}
-
-				if(itemStack.getItem() == RegenObjects.Items.LINDOS_VIAL){
-					if(isInWater()){
-						if(itemStack.getTagCompound() != null){
+				
+				if (itemStack.getItem() == RegenObjects.Items.LINDOS_VIAL) {
+					if (isInWater()) {
+						if (itemStack.getTagCompound() != null) {
 							itemStack.getTagCompound().setBoolean("water", true);
 						}
 					}

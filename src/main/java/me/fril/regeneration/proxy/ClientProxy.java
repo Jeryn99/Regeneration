@@ -5,9 +5,11 @@ import me.fril.regeneration.client.gui.InventoryTabRegeneration;
 import me.fril.regeneration.client.rendering.LayerFuzz;
 import me.fril.regeneration.client.rendering.LayerItemReplace;
 import me.fril.regeneration.client.rendering.LayerRegeneration;
-import me.fril.regeneration.client.rendering.RenderFob;
+import me.fril.regeneration.client.rendering.entity.RenderFob;
+import me.fril.regeneration.client.rendering.entity.RenderLindos;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.common.entity.EntityItemOverride;
+import me.fril.regeneration.common.entity.EntityLindos;
 import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.util.EnumCompatModids;
 import me.fril.regeneration.util.RenderUtil;
@@ -32,6 +34,7 @@ public class ClientProxy extends CommonProxy {
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
 		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderFob::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
 	}
 	
 	@Override
