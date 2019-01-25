@@ -43,7 +43,7 @@ public class ClientUtil {
 	
 	@SideOnly(Side.CLIENT)
 	public static void playSound(Entity entity, String soundName, Supplier<Boolean> stopCondition, boolean repeat) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(entity, new SoundEvent(new ResourceLocation(soundName)), SoundCategory.PLAYERS, repeat, stopCondition));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(entity, new SoundEvent(new ResourceLocation(soundName)), SoundCategory.PLAYERS, repeat, stopCondition, 1.5F));
 	}
 	
 	

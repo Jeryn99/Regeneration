@@ -60,7 +60,9 @@ public class RegenObjects {
 				setUpSound("heart_beat"),
 				setUpSound("hand_glow"),
 				setUpSound("regeneration_2"),
-				setUpSound("fob_watch_dialogue")
+				setUpSound("fob_watch_dialogue"),
+				setUpSound("regeneration_3"),
+				setUpSound("g_hum")
 		);
 	}
 	
@@ -83,6 +85,8 @@ public class RegenObjects {
 		public static final SoundEvent CRITICAL_STAGE = null;
 		public static final SoundEvent HEART_BEAT = null;
 		public static final SoundEvent HAND_GLOW = null;
+		public static final SoundEvent REGENERATION_3 = null;
+		public static final SoundEvent G_HUM = null;
 	}
 	
 	public static class EntityEntries {

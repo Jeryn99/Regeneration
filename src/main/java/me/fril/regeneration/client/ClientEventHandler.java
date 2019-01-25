@@ -76,22 +76,23 @@ public class ClientEventHandler {
 			return;
 		
 		EntityPlayer player = (EntityPlayer) e.getEntity();
-		if (player.ticksExisted == 20) {
+		if (player.ticksExisted == 50) {
 			
 			UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
 			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 			
 			if (cap.areHandsGlowing()) {
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 0.5F));
 			}
 			
 			if (cap.getState().equals(RegenState.REGENERATING)) {
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING)));
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING), 1.0F));
 			}
 			
 			if (cap.getState().isGraceful() && clientUUID == player.getUniqueID()) {
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT)));
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful()));
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT), 1F));
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F));
+				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.G_HUM, SoundCategory.AMBIENT, true, () -> cap.getState() != RegenState.GRACE, 1.5F));
 			}
 		}
 	}

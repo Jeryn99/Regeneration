@@ -9,12 +9,44 @@
       }
     ]
   },
+  "g_hum": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.hum",
+    "sounds": [
+      {
+        "name": "regeneration:hum/g_hum_1",
+        "stream": false
+      },
+      {
+        "name": "regeneration:hum/g_hum_2",
+        "stream": false
+      },
+      {
+        "name": "regeneration:hum/g_hum_3",
+        "stream": false
+      },
+      {
+        "name": "regeneration:hum/g_hum_4",
+        "stream": false
+      }
+    ]
+  },
   "regeneration_2": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.regeneration",
     "sounds": [
       {
         "name": "regeneration:regeneration_2",
+        "stream": true
+      }
+    ]
+  },
+  "regeneration_3": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration_3",
         "stream": true
       }
     ]

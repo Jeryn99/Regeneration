@@ -62,6 +62,10 @@ public class EntityLindos extends EntityFlying {
 			ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName().toString(), () -> isDead, true);
 		}
 		
+		if (ticksExisted < 60) {
+			motionX *= 0.3D;
+		}
+		
 		if (ticksExisted % 100 == 0) {
 			jump();
 		}

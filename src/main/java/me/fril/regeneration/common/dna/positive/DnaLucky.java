@@ -22,7 +22,7 @@ public class DnaLucky implements DnaHandler.IDna {
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {
-	
+
 	}
 	
 	@Override

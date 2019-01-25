@@ -140,7 +140,9 @@ public class EntityItemOverride extends Entity {
 					lindos.setLocationAndAngles(posX, posY, posZ, 0, 0);
 					lindos.setAmount(getItem().getTagCompound().getInteger("amount"));
 					world.spawnEntity(lindos);
+					lindos.playSound(SoundEvents.BLOCK_GLASS_BREAK, 1, 1);
 					setDead();
+					return false;
 				}
 			}
 		}

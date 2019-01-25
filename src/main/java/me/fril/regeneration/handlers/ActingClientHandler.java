@@ -29,12 +29,13 @@ class ActingClientHandler implements IActingHandler {
 	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful()));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.G_HUM, SoundCategory.AMBIENT, true, () -> cap.getState() != RegenState.GRACE, 1.5F));
 	}
 	
 	@Override
 	public void onHandsStartGlowing(IRegeneration cap) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing()));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 1.0F));
 	}
 	
 	@Override
@@ -56,7 +57,7 @@ class ActingClientHandler implements IActingHandler {
 	@Override
 	public void onGoCritical(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_critical"), new TextComponentTranslation("regeneration.toast.enter_critical.sub", RegenConfig.grace.criticalPhaseLength / 60), cap.getState());
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> cap.getState() != RegenState.GRACE_CRIT));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> cap.getState() != RegenState.GRACE_CRIT, 1.0F));
 	}
 	
 }

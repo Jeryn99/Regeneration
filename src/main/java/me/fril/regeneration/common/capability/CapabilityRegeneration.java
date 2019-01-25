@@ -94,7 +94,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			didSetup = true;
 		}
 		
-		if(getRegenerationsLeft() > RegenConfig.regenCapacity && !RegenConfig.infiniteRegeneration){
+		if (getRegenerationsLeft() > RegenConfig.regenCapacity && !RegenConfig.infiniteRegeneration) {
 			regenerationsLeft = RegenConfig.regenCapacity;
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
 		}
@@ -435,7 +435,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public void onPunchEntity(EntityLivingBase entity) {
 			// We're healing mobs...
-			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth()) { // ... check if we're in grace and if the mob needs health
+			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing()) { // ... check if we're in grace and if the mob needs health
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);

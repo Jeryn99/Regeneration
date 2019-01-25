@@ -1,5 +1,7 @@
 package me.fril.regeneration.client.sound;
 
+import me.fril.regeneration.handlers.RegenObjects;
+import me.fril.regeneration.util.RegenUtil;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.SoundCategory;
@@ -16,17 +18,28 @@ public class MovingSoundEntity extends MovingSound {
 	
 	private final Entity player;
 	private final Supplier<Boolean> stopCondition;
+	protected boolean donePlaying = false;
 	
-	public MovingSoundEntity(Entity playerIn, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier<Boolean> stopCondition) {
+	public MovingSoundEntity(Entity playerIn, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier<Boolean> stopCondition, float volumeSfx) {
 		super(soundIn, categoryIn);
 		this.player = playerIn;
 		this.stopCondition = stopCondition;
 		super.repeat = repeat;
+		volume = volumeSfx;
 	}
 	
-	// FIXME Sometimes ConcurrentModificationException's in subtitle renderer, probably due to a race condition because we're modifying it here and in ConditionalSound
 	@Override
 	public void update() {
+		
+		if (stopCondition.get() || player.isDead) {
+			donePlaying = true;
+		}
+		
+		//I promise this is the only case specific thing I am putting in here ~ Sub
+		if (sound.getSoundLocation().equals(RegenObjects.Sounds.G_HUM.getRegistryName())) {
+			volume = RegenUtil.randFloat(1.5F, 6F);
+		}
+		
 		super.xPosF = (float) player.posX;
 		super.yPosF = (float) player.posY;
 		super.zPosF = (float) player.posZ;
@@ -35,7 +48,7 @@ public class MovingSoundEntity extends MovingSound {
 	
 	@Override
 	public boolean isDonePlaying() {
-		return player.isDead || stopCondition.get();
+		return donePlaying;
 	}
 	
 }

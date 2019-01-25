@@ -15,17 +15,17 @@ public class DnaAlcoholism implements DnaHandler.IDna {
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {
-	
+
 	}
 	
 	@Override
 	public void onAdded(IRegeneration cap) {
-	
+
 	}
 	
 	@Override
 	public void onRemoved(IRegeneration cap) {
-	
+
 	}
 	
 	@Override
