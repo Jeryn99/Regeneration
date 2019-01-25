@@ -49,7 +49,6 @@ public class ItemFobWatch extends Item implements IEntityOverride {
 			stack.setTagCompound(new NBTTagCompound());
 			stack.getTagCompound().setBoolean("die", false);
 		}
-		
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 	}
 	

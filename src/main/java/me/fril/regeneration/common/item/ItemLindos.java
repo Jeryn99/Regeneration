@@ -31,8 +31,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-//WAFFLE - Some times when drinking/using, I get a next transition crash
-//Could you look into that for me? I don't have a 100 understanding
 public class ItemLindos extends Item implements IEntityOverride {
 	
 	public ItemLindos() {
@@ -131,13 +129,20 @@ public class ItemLindos extends Item implements IEntityOverride {
 		if (!worldIn.isRemote) {
 			ItemStack stack = player.getHeldItem(handIn);
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+			
+			if(data.getState() == RegenState.POST || data.getState() == RegenState.REGENERATING){
+				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
+			}
+			
 			if (hasWater(stack)) {
 				if (getAmount(stack) == 100) {
 					if (data.canRegenerate()) {
-						CapabilityRegeneration.getForPlayer(player).triggerRegeneration();
+						player.attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
+						setAmount(stack, 0);
 					} else {
 						data.receiveRegenerations(1);
-						CapabilityRegeneration.getForPlayer(player).triggerRegeneration();
+						player.attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
+						setAmount(stack, 0);
 					}
 				} else {
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.empty_vial"), true);

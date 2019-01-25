@@ -31,7 +31,7 @@ public class RegenObjects {
 	
 	public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"),
 			REGEN_DMG_HEALING = new RegenDamageSource("regen_heal"), // The irony lmao
-			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit"), REGEN_DMG_THEFT = new RegenDamageSource("theft");
+			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit"), REGEN_DMG_THEFT = new RegenDamageSource("theft"), REGEN_DMG_LINDOS = new RegenDamageSource("lindos");
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {

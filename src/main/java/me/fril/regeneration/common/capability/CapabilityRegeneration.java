@@ -94,6 +94,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			didSetup = true;
 		}
 		
+		if(getRegenerationsLeft() > RegenConfig.regenCapacity && !RegenConfig.infiniteRegeneration){
+			regenerationsLeft = RegenConfig.regenCapacity;
+			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
+		}
+		
 		DnaHandler.getDnaEntry(getDnaType()).onUpdate(this);
 		
 		if (!player.world.isRemote && state != RegenState.ALIVE) // ticking only on the server for simplicity

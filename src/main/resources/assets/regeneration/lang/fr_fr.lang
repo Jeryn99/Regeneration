@@ -81,3 +81,4 @@ regeneration.messages.warning.grace=Vous êtes proche de la mort... pressez %s p
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...
+regeneration.messages.cannot_use=You cannot use this right now!

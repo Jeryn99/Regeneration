@@ -39,6 +39,7 @@ regeneration.damagesrc.regen_energy=%s was blasted by Regeneration Energy!
 regeneration.damagesrc.regen_heal=%s died by donating too much Regeneration energy...
 regeneration.damagesrc.regen_crit=%s died from holding in their regeneration for too long
 regeneration.damagesrc.theft=%s had their body stolen!
+regeneration.damagesrc.lindos=%s consumed lindos hormones! They are reborn!
 
 regeneration.toast.regenerated=You have regenerated!
 regeneration.toast.regenerations_left=%s regenerations left
@@ -51,6 +52,7 @@ regeneration.messages.warning.grace_critical=You are near death, press %s to reg
 regeneration.messages.regen_delayed=Regeneration delayed!
 regeneration.messages.regen_warning=Punch a block to delay your regeneration further
 regeneration.messages.theft=You stole the body of %s!
+
 
 config.regeneration.max_regens=Amount of regenerations per cycle
 config.regeneration.free_regens=Free regenerations
@@ -114,3 +116,4 @@ dna.lucky.name=Your DNA consists of Lucky genes!
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...
+regeneration.messages.cannot_use=You cannot use this right now!

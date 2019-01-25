@@ -194,7 +194,7 @@ public class RegenConfig {
 		@Config.Comment("Amount of time (in seconds) you have when your hands start glowing before you start to regenerate")
 		//SUB this could probably we worded better
 		@Config.RangeInt(min = 0)
-		public int handGlowTriggerDelay = 10;
+		public int handGlowTriggerDelay = 30;
 		
 	}
 	

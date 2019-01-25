@@ -57,6 +57,7 @@ public class RegenEventHandler {
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer)
 			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).tick();
+		
 	}
 	
 	@SubscribeEvent
@@ -145,7 +146,7 @@ public class RegenEventHandler {
 			if (event.getSource() == DamageSource.FALL) {
 				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
 				if (player.world.getGameRules().getBoolean("mobGriefing") && event.getAmount() > 8.0F) {
-					RegenUtil.genCrater(player.world, player.getPosition(), 6);
+					RegenUtil.genCrater(player.world, player.getPosition(), 3);
 					event.setAmount(0.5F);
 					return;
 				}
