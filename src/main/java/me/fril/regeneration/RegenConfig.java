@@ -49,8 +49,8 @@ public class RegenConfig {
 	public static boolean firstStartGiftOnly = true;
 	
 	@Config.LangKey("config.regeneration.lose_regens_on_death")
-	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration (UNIMPLEMENTED)")
-	public static boolean loseRegensOnDeath = true; // SUB unimplemented
+	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration")
+	public static boolean loseRegensOnDeath = false;
 	
 	@Config.LangKey("config.regeneration.fiery_regen")
 	@Config.Comment("Spawn fire during regeneration")

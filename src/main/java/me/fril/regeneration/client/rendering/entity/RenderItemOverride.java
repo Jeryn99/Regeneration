@@ -1,9 +1,5 @@
 package me.fril.regeneration.client.rendering.entity;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.entity.EntityItemOverride;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -16,12 +12,15 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
-public class RenderFob extends Render<EntityItemOverride> {
+import javax.annotation.Nullable;
+import java.util.Random;
+
+public class RenderItemOverride extends Render<EntityItemOverride> {
 	
 	private Vec3d primaryColor = new Vec3d(0.93F, 0.61F, 0.0F);
 	private Vec3d secondaryColor = new Vec3d(1F, 0.5F, 0.18F);
 	
-	public RenderFob(RenderManager rm) {
+	public RenderItemOverride(RenderManager rm) {
 		super(rm);
 	}
 	

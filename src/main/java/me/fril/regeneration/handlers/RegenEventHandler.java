@@ -27,7 +27,6 @@ import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -55,7 +54,6 @@ public class RegenEventHandler {
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer)
 			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).tick();
-		
 	}
 	
 	@SubscribeEvent
@@ -68,10 +66,12 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onPlayerClone(PlayerEvent.Clone event) {
 		IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer());
 		
-		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, cap, null);
-		storage.readNBT(CapabilityRegeneration.CAPABILITY, cap, null, nbt);
+		IRegeneration oldCap = CapabilityRegeneration.getForPlayer(event.getOriginal());
+		IRegeneration newCap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer());
+		
+		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, oldCap, null);
+		storage.readNBT(CapabilityRegeneration.CAPABILITY, newCap, null, nbt);
 		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
 	}
 	
@@ -109,18 +109,6 @@ public class RegenEventHandler {
 		CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).getStateManager().onPunchBlock(e);
 	}
 	
-	@SubscribeEvent
-	public static void itemTossEvent(ItemTossEvent event) {
-		/*NBTTagCompound tag = event.getEntityItem().getItem().getTagCompound();
-		ItemStack stack = event.getEntityItem().getItem();
-		
-		if (tag == null || !tag.hasKey("live")) {
-			if (stack.getItem() instanceof IEntityOverride) {
-				System.out.println(tag);
-				event.setCanceled(true);
-			}
-		}*/
-	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onHurt(LivingDamageEvent event) {

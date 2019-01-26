@@ -122,3 +122,6 @@ regeneration.messages.no_water=Cette fiole n'a pas d'eau...
 regeneration.messages.cannot_use=You cannot use this right now!
 message.regeneration.healed=You have given %s some of your Regeneration Energy!
 nbt.item.water=Has Water: %s
+
+nbt.item.water_filled=You have now filled this Vial with Water
+nbt.item.water_already_filled=This Vial already has water in it

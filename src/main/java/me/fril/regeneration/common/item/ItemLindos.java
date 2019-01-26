@@ -6,6 +6,7 @@ import me.fril.regeneration.common.entity.EntityItemOverride;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,8 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -124,6 +127,22 @@ public class ItemLindos extends ItemOverrideBase {
 			}
 		}
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+	}
+	
+	@Override
+	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (!worldIn.isRemote) {
+			ItemStack itemStack = player.getHeldItem(hand);
+			if (worldIn.getBlockState(pos).getMaterial().equals(Material.WATER) && itemStack.getItem() == this) {
+				if (!hasWater(itemStack)) {
+					setWater(itemStack, true);
+					PlayerUtil.sendMessage(player, new TextComponentTranslation("nbt.item.water_filled"), true);
+				} else {
+					PlayerUtil.sendMessage(player, new TextComponentTranslation("nbt.item.water_already_filled"), true);
+				}
+			}
+		}
+		return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
 	
 	@Override

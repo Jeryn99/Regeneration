@@ -1,12 +1,5 @@
 package me.fril.regeneration.common.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
@@ -39,6 +32,11 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sub
@@ -141,9 +139,15 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setByteArray("encoded_skin", ENCODED_SKIN);
 		nbt.setString("skinType", skinType.name());
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
-		nbt.setString("regen_dna", traitLocation.toString());
+		if (traitLocation != null) {
+			nbt.setString("regen_dna", traitLocation.toString());
+		} else {
+			nbt.setString("regen_dna", DnaHandler.DNA_BORING.getRegistryName().toString());
+		}
 		nbt.setBoolean("traitActive", traitActive);
 		nbt.setInteger("lc_regen", lcCoreReserve);
+		
+		
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -183,6 +187,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if(nbt.hasKey("lc_regen")){
 			lcCoreReserve = nbt.getInteger("lc_regen");
 		}
+		
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
@@ -533,15 +538,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1);
 			
-			/*
-			 * SuB For re-implementing the dont-lose-regens-on-death option:
-			 * We never explicitly reset the live count, but it still gets reset.
-			 * From my understanding this is because the capability data isn't cloned over properly when the player dies.
-			 * Soooo how should we handle it then? Save the last regen count and giving that back on respawn?
-			 * Can we copy the data over on death (I assume so) and how?
-			 *
-			 * WAFFLE Use the LivingDeathEvent and just copy the data over
-			 */
+			if (RegenConfig.loseRegensOnDeath) {
+				extractRegeneration(getRegenerationsLeft());
+			}
 			
 			synchronise();
 		}
