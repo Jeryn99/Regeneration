@@ -9,24 +9,24 @@
       }
     ]
   },
-  "g_hum": {
+  "grace_hum": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.hum",
     "sounds": [
       {
-        "name": "regeneration:hum/g_hum_1",
+        "name": "regeneration:hum/grace_hum_1",
         "stream": false
       },
       {
-        "name": "regeneration:hum/g_hum_2",
+        "name": "regeneration:hum/grace_hum_2",
         "stream": false
       },
       {
-        "name": "regeneration:hum/g_hum_3",
+        "name": "regeneration:hum/grace_hum_3",
         "stream": false
       },
       {
-        "name": "regeneration:hum/g_hum_4",
+        "name": "regeneration:hum/grace_hum_4",
         "stream": false
       }
     ]

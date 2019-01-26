@@ -1,9 +1,12 @@
 package me.fril.regeneration.common.item;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.entity.EntityItemOverride;
-import me.fril.regeneration.common.entity.IEntityOverride;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
@@ -15,6 +18,7 @@ import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -23,14 +27,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
-public class ItemLindos extends ItemOverrideBase implements IEntityOverride {
+public class ItemLindos extends ItemOverrideBase {
 	
 	public ItemLindos() {
 		setMaxStackSize(1);
 		addPropertyOverride(new ResourceLocation("amount"), new IItemPropertyGetter() {
+			@Override
 			@SideOnly(Side.CLIENT)
 			public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entityIn) {
 				
@@ -122,34 +124,32 @@ public class ItemLindos extends ItemOverrideBase implements IEntityOverride {
 		if (worldIn.isRemote) super.onItemRightClick(worldIn, player, handIn);
 		
 		ItemStack stack = player.getHeldItem(handIn);
-		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
-		//If the player is in POST or Regenerating, drinking this is going to be Lethal!
-		if (data.getState() == RegenState.POST || data.getState() == RegenState.REGENERATING || player.isCreative()) {
+		//If the player is in POST or Regenerating, stop them from drinking it
+		if (cap.getState() == RegenState.POST || cap.getState() == RegenState.REGENERATING || player.isCreative()) {
 			PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
+			return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(handIn));
 		}
 		
 		if (hasWater(stack)) {
 			//If the stack has enough, basically kill them
 			if (getAmount(stack) == 100) {
-				if (data.canRegenerate()) {
-					player.attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
-					setAmount(stack, 0);
-					setWater(stack, false);
-				} else {
-					data.receiveRegenerations(1);
-					player.attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
-					setAmount(stack, 0);
-					setWater(stack, false);
-				}
+				if (cap.getRegenerationsLeft() < 1)
+					cap.receiveRegenerations(1);
+				
+				player.attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
+				setAmount(stack, 0);
+				setWater(stack, false);
+				return super.onItemRightClick(worldIn, player, handIn);
 			} else {
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.empty_vial"), true);
+				return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(handIn));
 			}
 		} else {
 			PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.no_water"), true);
+			return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(handIn));
 		}
-		
-		return super.onItemRightClick(worldIn, player, handIn);
 	}
 	
 	@Override

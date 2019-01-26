@@ -1,5 +1,7 @@
 package me.fril.regeneration.client;
 
+import org.lwjgl.input.Keyboard;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.network.MessageTriggerRegeneration;
@@ -13,7 +15,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import org.lwjgl.input.Keyboard;
 
 /**
  * Created by Sub

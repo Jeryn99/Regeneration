@@ -1,5 +1,7 @@
 package me.fril.regeneration.proxy;
 
+import java.util.Map;
+
 import me.fril.regeneration.client.RegenKeyBinds;
 import me.fril.regeneration.client.gui.InventoryTabRegeneration;
 import me.fril.regeneration.client.rendering.LayerFuzz;
@@ -20,8 +22,6 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-
-import java.util.Map;
 
 /**
  * Created by Sub

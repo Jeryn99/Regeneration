@@ -1,5 +1,7 @@
 package me.fril.regeneration.compat.lucraft;
 
+import static me.fril.regeneration.util.RegenUtil.*;
+
 import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
 import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
@@ -22,8 +24,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import static me.fril.regeneration.util.RegenUtil.randFloat;
 
 public class LucraftCoreHandler implements IActingHandler {
 	

@@ -12,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextComponentString;
@@ -112,15 +111,15 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void itemTossEvent(ItemTossEvent event) {
-		NBTTagCompound tag = event.getEntityItem().getItem().getTagCompound();
+		/*NBTTagCompound tag = event.getEntityItem().getItem().getTagCompound();
 		ItemStack stack = event.getEntityItem().getItem();
 		
-		//if (tag == null || !tag.hasKey("live")) {
-		//		if (stack.getItem() instanceof IEntityOverride) {
-		//			System.out.println(tag);
-		//			event.setCanceled(true);
-		///		}
-		//	}
+		if (tag == null || !tag.hasKey("live")) {
+			if (stack.getItem() instanceof IEntityOverride) {
+				System.out.println(tag);
+				event.setCanceled(true);
+			}
+		}*/
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)

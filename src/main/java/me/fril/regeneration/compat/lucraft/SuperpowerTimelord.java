@@ -1,5 +1,7 @@
 package me.fril.regeneration.compat.lucraft;
 
+import static me.fril.regeneration.compat.lucraft.LCCoreBarEntry.*;
+
 import lucraft.mods.lucraftcore.superpowers.Superpower;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
@@ -12,8 +14,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import static me.fril.regeneration.compat.lucraft.LCCoreBarEntry.ICON_TEX;
 
 public class SuperpowerTimelord extends Superpower {
 	

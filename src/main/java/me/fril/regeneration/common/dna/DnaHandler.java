@@ -1,5 +1,9 @@
 package me.fril.regeneration.common.dna;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -19,10 +23,6 @@ import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
 
 /**
  * Created by Suffril
@@ -84,7 +84,7 @@ public class DnaHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onJumo(LivingEvent.LivingJumpEvent event) {
+	public static void onJump(LivingEvent.LivingJumpEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);

@@ -1,5 +1,9 @@
 package me.fril.regeneration.client.rendering.entity;
 
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,10 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
-import javax.annotation.Nullable;
-import java.util.Random;
-
-public class RenderLindos extends Render {
+public class RenderLindos extends Render<Entity> {
 	
 	private Vec3d primaryColor = new Vec3d(0.93F, 0.61F, 0.0F);
 	private Vec3d secondaryColor = new Vec3d(1F, 0.5F, 0.18F);

@@ -1,5 +1,8 @@
 package me.fril.regeneration.util;
 
+import java.util.UUID;
+import java.util.function.Supplier;
+
 import me.fril.regeneration.client.sound.MovingSoundEntity;
 import me.fril.regeneration.network.MessageUpdateSkin;
 import me.fril.regeneration.network.NetworkHandler;
@@ -13,9 +16,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.UUID;
-import java.util.function.Supplier;
 
 public class ClientUtil {
 	

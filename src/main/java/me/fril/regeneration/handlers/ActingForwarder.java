@@ -1,15 +1,15 @@
 package me.fril.regeneration.handlers;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageRegenStateEvent;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ActingForwarder {
 	
