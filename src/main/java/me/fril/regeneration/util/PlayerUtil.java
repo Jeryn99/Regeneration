@@ -29,17 +29,16 @@ import java.util.List;
  */
 public class PlayerUtil {
 	
-	private static ArrayList<Potion> POTIONS = new ArrayList<>();
+	public static ArrayList<Potion> POTIONS = new ArrayList<>();
 	
 	public static void createPostList() {
-		POTIONS.addAll(ForgeRegistries.POTIONS.getValuesCollection());
-		for (Potion potion : POTIONS) {
+		ForgeRegistries.POTIONS.getValuesCollection().forEach(potion -> {
 			for (String s : RegenConfig.postRegen.potions) {
-				if (s.matches(potion.getRegistryName().toString())) {
-					POTIONS.remove(potion);
+				if (!potion.getRegistryName().equals(s)) {
+					POTIONS.add(potion);
 				}
 			}
-		}
+		});
 	}
 	
 	public static void sendMessage(EntityPlayer player, String message, boolean hotBar) {
@@ -76,10 +75,10 @@ public class PlayerUtil {
 	}
 	
 	public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {
-		if (player.getActivePotionEffects().stream().noneMatch(pe -> pe.getPotion() == potion)) {
+		if (player.getActivePotionEffect(potion) == null) {
 			player.addPotionEffect(new PotionEffect(potion, length, amplifier, ambient, showParticles));
 			return true;
-		} else
+		}
 			return false;
 	}
 	

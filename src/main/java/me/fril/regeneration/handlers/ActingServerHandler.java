@@ -1,8 +1,5 @@
 package me.fril.regeneration.handlers;
 
-import java.util.Random;
-import java.util.UUID;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
@@ -15,11 +12,13 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+import java.util.Random;
+import java.util.UUID;
 
 class ActingServerHandler implements IActingHandler {
 	
@@ -45,8 +44,8 @@ class ActingServerHandler implements IActingHandler {
 		
 		switch (cap.getState()) {
 			case POST:
-				if (player.ticksExisted % 110 == 0) { //TODO Make a bit safer, some potions can kill the player
-					PlayerUtil.applyPotionIfAbsent(player, Potion.getPotionById(player.rand.nextInt(Potion.REGISTRY.getKeys().size())), player.rand.nextInt(400), 1, false, false);
+				if (player.ticksExisted % 110 == 0) {
+					PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
 				}
 				break;
 			case REGENERATING:
