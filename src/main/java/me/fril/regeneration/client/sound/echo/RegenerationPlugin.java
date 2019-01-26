@@ -1,9 +1,10 @@
 package me.fril.regeneration.client.sound.echo;
 
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import java.util.Map;
 
 import javax.annotation.Nullable;
-import java.util.Map;
+
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.Name("regeneration")
 @IFMLLoadingPlugin.SortingIndex(1001)

@@ -1,13 +1,13 @@
 package me.fril.regeneration.client.sound;
 
+import java.util.function.Supplier;
+
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.RegenUtil;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-
-import java.util.function.Supplier;
 
 /**
  * Created by Sub
@@ -36,7 +36,7 @@ public class MovingSoundEntity extends MovingSound {
 		}
 		
 		//I promise this is the only case specific thing I am putting in here ~ Sub
-		if (sound.getSoundLocation().equals(RegenObjects.Sounds.G_HUM.getRegistryName())) {
+		if (sound.getSoundLocation().equals(RegenObjects.Sounds.GRACE_HUM.getRegistryName())) {
 			volume = RegenUtil.randFloat(1.5F, 6F);
 		}
 		

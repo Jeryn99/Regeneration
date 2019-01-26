@@ -4,7 +4,6 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.entity.EntityItemOverride;
-import me.fril.regeneration.common.entity.IEntityOverride;
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.DebuggerUtil;
@@ -26,7 +25,7 @@ import net.minecraft.world.World;
  * Created by Sub
  * on 16/09/2018.
  */
-public class ItemFobWatch extends ItemOverrideBase implements IEntityOverride {
+public class ItemFobWatch extends ItemOverrideBase {
 	
 	public ItemFobWatch() {
 		setMaxDamage(RegenConfig.regenCapacity);

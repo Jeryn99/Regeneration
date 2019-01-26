@@ -1,5 +1,7 @@
 package me.fril.regeneration.handlers;
 
+import java.io.IOException;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
@@ -9,8 +11,6 @@ import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
-
-import java.io.IOException;
 
 class ActingClientHandler implements IActingHandler {
 	
@@ -28,10 +28,8 @@ class ActingClientHandler implements IActingHandler {
 	
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
-		if (cap.getPlayer().world.isRemote) {
-			ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
-			ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.G_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != RegenState.GRACE, 1.5F);
-		}
+		ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
+		ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.GRACE_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != RegenState.GRACE, 1.5F);
 	}
 	
 	@Override

@@ -1,9 +1,9 @@
 package me.fril.regeneration.debugger.util;
 
+import java.util.function.Supplier;
+
 import me.fril.regeneration.debugger.IDebugChannel;
 import me.fril.regeneration.util.RegenState.Transition;
-
-import java.util.function.Supplier;
 
 public class ConditionalDebugChannelProxy implements IDebugChannel {
 	

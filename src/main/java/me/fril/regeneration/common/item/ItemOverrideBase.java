@@ -1,5 +1,7 @@
 package me.fril.regeneration.common.item;
 
+import javax.annotation.Nullable;
+
 import me.fril.regeneration.common.entity.EntityItemOverride;
 import me.fril.regeneration.common.entity.IEntityOverride;
 import net.minecraft.entity.Entity;
@@ -7,12 +9,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 public class ItemOverrideBase extends Item implements IEntityOverride {
 	@Override
 	public void update(EntityItemOverride itemOverride) {
-	
+		
 	}
 	
 	@Override

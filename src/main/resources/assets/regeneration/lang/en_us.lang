@@ -107,13 +107,13 @@ config.regeneration.category.skins=Skin changing
 config.regeneration.category.on_regen=When Regenerating
 config.regeneration.category.post_regen=Post regeneration
 
-dna.athlete.name=Your DNA consists of Atheltic Genes!
-dna.boring.name=Your DNA consists of Lazy Genes! (You're useless!)
-dna.dumb.name=Your DNA consists of Genes no-one wants!
+dna.athlete.name=Your DNA consists of Atheltic genes!
+dna.boring.name=Your DNA consists of Lazy genes! (You're useless!)
+dna.dumb.name=Your DNA consists of Dumb genes!
 dna.sneak.name=Your DNA consists of Sneaky genes!
-dna.vampire.name=Your DNA consists of Vampire Genes....ah dear...
+dna.vampire.name=Your DNA consists of Vampire genes....ah dear...
 dna.lucky.name=Your DNA consists of Lucky genes!
-dna.swimmer.name=Your DNA consists of swimming genes!!
+dna.swimmer.name=Your DNA consists of Swimming genes!
 dna.hydrophobic.name=Your DNA consists of Hydrophobic genes!
 dna.tough.name=Your DNA consists of Strong genes!
 

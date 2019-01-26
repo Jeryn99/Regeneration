@@ -1,5 +1,11 @@
 package me.fril.regeneration.client;
 
+import static me.fril.regeneration.client.skinhandling.SkinChangingHandler.*;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
@@ -45,12 +51,6 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.UUID;
-
-import static me.fril.regeneration.client.skinhandling.SkinChangingHandler.PLAYER_SKINS;
-
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -91,7 +91,7 @@ public class ClientEventHandler {
 			if (cap.getState().isGraceful() && clientUUID == player.getUniqueID()) {
 				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT), 1F);
 				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
-				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.G_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != RegenState.GRACE, 1.5F);
+				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.GRACE_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != RegenState.GRACE, 1.5F);
 			}
 		}
 	}
@@ -150,12 +150,12 @@ public class ClientEventHandler {
 				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace", ClientUtil.keyBind).getUnformattedText();
 				break;
-			
+				
 			case GRACE_CRIT:
 				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", ClientUtil.keyBind).getUnformattedText();
 				break;
-			
+				
 			case REGENERATING:
 				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;

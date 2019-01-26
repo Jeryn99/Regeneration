@@ -1,9 +1,9 @@
 package me.fril.regeneration.debugger.util;
 
+import java.awt.EventQueue;
+
 import me.fril.regeneration.debugger.IDebugChannel;
 import me.fril.regeneration.util.RegenState.Transition;
-
-import java.awt.*;
 
 /**
  * Delegates all methods to the {@link #target} using {@link EventQueue#invokeLater(Runnable)}

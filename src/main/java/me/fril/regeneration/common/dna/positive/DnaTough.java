@@ -1,5 +1,7 @@
 package me.fril.regeneration.common.dna.positive;
 
+import java.util.UUID;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.dna.DnaHandler;
@@ -7,8 +9,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.UUID;
 
 /**
  * Created by Suffril

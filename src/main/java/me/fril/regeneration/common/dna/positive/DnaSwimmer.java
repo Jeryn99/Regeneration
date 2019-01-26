@@ -27,12 +27,12 @@ public class DnaSwimmer implements DnaHandler.IDna {
 	
 	@Override
 	public void onAdded(IRegeneration cap) {
-
+		
 	}
 	
 	@Override
 	public void onRemoved(IRegeneration cap) {
-
+		
 	}
 	
 	@Override

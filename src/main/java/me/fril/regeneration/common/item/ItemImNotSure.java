@@ -51,9 +51,7 @@ public class ItemImNotSure extends Item {
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
 		if (target instanceof EntityPlayer) {
-			EntityPlayer targetPlayer = (EntityPlayer) target;
-			IRegeneration data = CapabilityRegeneration.getForPlayer(targetPlayer);
-			targetPlayer.attackEntityFrom(RegenObjects.REGEN_DMG_THEFT, 1F);
+			target.attackEntityFrom(RegenObjects.REGEN_DMG_THEFT, 1F);
 			stack.damageItem(1, attacker);
 			return true;
 		}

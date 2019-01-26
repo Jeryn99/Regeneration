@@ -1,5 +1,8 @@
 package me.fril.regeneration.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.entity.EntityItemOverride;
 import me.fril.regeneration.common.entity.EntityLindos;
@@ -17,9 +20,6 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -36,7 +36,7 @@ public class RegenObjects {
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch"), setUpItem(new ItemLindos(), "lindos_vial")
-		);
+				);
 	}
 	
 	private static Item setUpItem(Item item, String name) {
@@ -62,8 +62,8 @@ public class RegenObjects {
 				setUpSound("regeneration_2"),
 				setUpSound("fob_watch_dialogue"),
 				setUpSound("regeneration_3"),
-				setUpSound("g_hum")
-		);
+				setUpSound("grace_hum")
+				);
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {
@@ -86,7 +86,7 @@ public class RegenObjects {
 		public static final SoundEvent HEART_BEAT = null;
 		public static final SoundEvent HAND_GLOW = null;
 		public static final SoundEvent REGENERATION_3 = null;
-		public static final SoundEvent G_HUM = null;
+		public static final SoundEvent GRACE_HUM = null;
 	}
 	
 	public static class EntityEntries {

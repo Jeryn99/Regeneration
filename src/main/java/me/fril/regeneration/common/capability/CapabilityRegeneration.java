@@ -1,5 +1,12 @@
 package me.fril.regeneration.common.capability;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
@@ -22,7 +29,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -33,11 +39,6 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Sub
@@ -109,14 +110,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		DnaHandler.getDnaEntry(getDnaType()).onUpdate(this);
 		
-		if (state == RegenState.POST) {
-			if (player != null && !player.world.isRemote) {
-				if (player.ticksExisted % 110 == 0) { //TODO Make a bit safer, some potions can kill the player
-					PlayerUtil.applyPotionIfAbsent(player, Potion.getPotionById(player.rand.nextInt(Potion.REGISTRY.getKeys().size())), player.rand.nextInt(400), 1, false, false);
-				}
-			}
-		}
-		
 		if (!player.world.isRemote && state != RegenState.ALIVE) // ticking only on the server for simplicity
 			stateManager.tick();
 		
@@ -160,6 +153,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void deserializeNBT(NBTTagCompound nbt) {
 		regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 		
+		//TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
 		if (nbt.hasKey("skinType")) {
 			setSkinType(nbt.getString("skinType"));
 		} else {
@@ -383,7 +377,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			transitionCallbacks.put(Transition.ENTER_CRITICAL, this::enterCriticalPhase);
 			transitionCallbacks.put(Transition.CRITICAL_DEATH, this::midSequenceKill);
 			transitionCallbacks.put(Transition.FINISH_REGENERATION, this::finishRegeneration);
-			transitionCallbacks.put(Transition.POST, this::endPost);
+			transitionCallbacks.put(Transition.END_POST, this::endPost);
 			
 			Runnable err = () -> {
 				throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
@@ -514,9 +508,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 			
 			nextTransition.cancel(); // ... cancel any state shift we had planned
-			if (handGlowTimer != null) {
+			if (state.isGraceful())
 				handGlowTimer.cancel();
-			}
 			scheduleTransitionInTicks(Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
 			ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);
@@ -558,18 +551,16 @@ public class CapabilityRegeneration implements IRegeneration {
 			synchronise();
 			nextTransition = null;
 			
-			if (!player.world.isRemote) {
-				if (player.rand.nextBoolean()) {
-					EntityLindos lindos = new EntityLindos(player.world);
-					lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
-					player.world.spawnEntity(lindos);
-				}
+			if (player.rand.nextBoolean()) {
+				EntityLindos lindos = new EntityLindos(player.world);
+				lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
+				player.world.spawnEntity(lindos);
 			}
 		}
 		
 		private void finishRegeneration() {
 			state = RegenState.POST;
-			scheduleTransitionInSeconds(Transition.POST, player.world.rand.nextInt(600));
+			scheduleTransitionInSeconds(Transition.END_POST, player.world.rand.nextInt(600));
 			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);

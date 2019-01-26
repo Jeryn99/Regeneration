@@ -1,10 +1,11 @@
 package me.fril.regeneration.debugger;
 
-import com.mojang.authlib.GameProfile;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,6 +14,15 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import com.mojang.authlib.GameProfile;
 
 @SuppressWarnings("serial")
 class PanelHeader extends JPanel {
@@ -60,8 +70,8 @@ class PanelHeader extends JPanel {
 		File skinImage = new File(skinCache, gp.getId().toString() + ".png");
 		if (!skinImage.exists()) {
 			try (ReadableByteChannel readableByteChannel = Channels.newChannel(new URL("https://crafatar.com/renders/head/" + gp.getId().toString() + "?size=100").openStream());
-				 FileOutputStream fileOutputStream = new FileOutputStream(skinImage);
-				 FileChannel fileChannel = fileOutputStream.getChannel()) {
+					FileOutputStream fileOutputStream = new FileOutputStream(skinImage);
+					FileChannel fileChannel = fileOutputStream.getChannel()) {
 				fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
 			} catch (IOException e) {
 				System.err.println("Could not retrieve skin for " + gp.getName());

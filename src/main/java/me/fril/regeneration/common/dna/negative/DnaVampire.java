@@ -1,5 +1,7 @@
 package me.fril.regeneration.common.dna.negative;
 
+import java.util.UUID;
+
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.dna.DnaHandler;
@@ -9,8 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.UUID;
 
 /**
  * Created by Suffril
@@ -27,7 +27,7 @@ public class DnaVampire implements DnaHandler.IDna {
 		World world = cap.getPlayer().world;
 		EntityPlayer player = cap.getPlayer();
 		if (cap.dnaAlive()) {
-			if (player.world.canSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ)) && cap.getPlayer().world.isDaytime()) {
+			if (player.world.canSeeSky(new BlockPos(player.posX, player.posY + player.getEyeHeight(), player.posZ)) && cap.getPlayer().world.isDaytime()) {
 				cap.getPlayer().setFire(1);
 			}
 		}
