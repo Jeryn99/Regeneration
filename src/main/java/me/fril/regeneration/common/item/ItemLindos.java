@@ -45,12 +45,20 @@ public class ItemLindos extends ItemOverrideBase implements IEntityOverride {
 						return 2F;
 					}
 					
-					if (amount >= 90) {
+					if(amount == 100){
 						return 1.0F;
+					}
+					
+					if (amount >= 90) {
+						return 0.2F;
 					}
 					
 					if (amount >= 50) {
 						return 0.5F;
+					}
+					
+					if(amount >= 10){
+						return 0.1F;
 					}
 				}
 				

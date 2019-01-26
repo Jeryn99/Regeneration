@@ -6,6 +6,7 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.dna.negative.DnaHydrophobic;
 import me.fril.regeneration.common.dna.negative.DnaVampire;
 import me.fril.regeneration.common.dna.positive.DnaAthlete;
+import me.fril.regeneration.common.dna.positive.DnaFireResistant;
 import me.fril.regeneration.common.dna.positive.DnaLucky;
 import me.fril.regeneration.common.dna.positive.DnaSimple;
 import me.fril.regeneration.common.dna.positive.DnaSneak;
@@ -40,6 +41,7 @@ public class DnaHandler {
 	public static IDna DNA_LUCKY = new DnaLucky();
 	public static IDna DNA_SWIMMER = new DnaSwimmer();
 	public static IDna DNA_SCARED_OF_WATER = new DnaHydrophobic();
+	public static IDna DNA_FIRE_RESISTANT = new DnaFireResistant();
 	private static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
 	private static ArrayList<IDna> DNA_LIST = new ArrayList<>();
 	//public static IDna DNA_ALCHOHOLISM = new DnaAlcoholism();
@@ -55,6 +57,7 @@ public class DnaHandler {
 		register(DNA_LUCKY);
 		register(DNA_SWIMMER);
 		register(DNA_SCARED_OF_WATER);
+		register(DNA_FIRE_RESISTANT);
 		//register(DNA_ALCHOHOLISM);
 	}
 	
@@ -109,21 +112,15 @@ public class DnaHandler {
 		if (e.getEntity() instanceof EntityPlayer) {
 			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntity());
 			IDna dna = DnaHandler.getDnaEntry(data.getDnaType());
-			if (dna.getRegistryName().equals(DNA_SNEAK.getRegistryName())) {
-				e.setCanceled(true);
-			}
+			e.setCanceled(dna.getRegistryName().equals(DNA_SNEAK.getRegistryName()));
 		}
 	}
 	
 	public interface IDna {
 		void onUpdate(IRegeneration cap);
-		
 		void onAdded(IRegeneration cap);
-		
 		void onRemoved(IRegeneration cap);
-		
 		String getLangKey();
-		
 		ResourceLocation getRegistryName();
 	}
 	

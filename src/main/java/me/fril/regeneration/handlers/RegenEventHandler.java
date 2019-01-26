@@ -130,6 +130,7 @@ public class RegenEventHandler {
 		if (trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {
 			EntityPlayer player = (EntityPlayer) trueSource;
 			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event.getEntityLiving());
+			event.setCanceled(true);
 			return;
 		}
 		

@@ -115,7 +115,9 @@ dna.vampire.name=Your DNA consists of Vampire Genes....ah dear...
 dna.lucky.name=Your DNA consists of Lucky genes!
 dna.swimmer.name=Your DNA consists of swimming genes!!
 dna.hydrophobic.name=Your DNA consists of Hydrophobic genes!
+dna.tough.name=Your DNA consists of Strong genes!
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...
 regeneration.messages.cannot_use=You cannot use this right now!
+message.regeneration.healed=You have given %s some of your Regeneration Energy!

@@ -7,6 +7,7 @@ import me.fril.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Created by Suffril
@@ -19,9 +20,14 @@ public class DnaHydrophobic implements DnaHandler.IDna {
 	@Override
 	public void onUpdate(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		if (player.isInWater() || player.world.isRaining()) {
-			PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 300, 0, false, false);
+		
+		if (player.world.canSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ))){
+			if (player.isInWater() || player.world.isRaining()) {
+				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 300, 2, false, false);
+				PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, 300, 2, false, false);
+			}
 		}
+		
 	}
 	
 	@Override

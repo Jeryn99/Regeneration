@@ -327,6 +327,18 @@
     },
     {
       "predicate": {
+        "amount": 0.1
+      },
+      "model": "regeneration:item/vial_little_yellow"
+    },
+    {
+      "predicate": {
+        "amount": 0.2
+      },
+      "model": "regeneration:item/vial_nearly_full_yellow"
+    },
+    {
+      "predicate": {
         "amount": 0.5
       },
       "model": "regeneration:item/vial_half_yellow"

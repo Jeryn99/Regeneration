@@ -464,9 +464,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public void onPunchEntity(EntityLivingBase entity) {
 			// We're healing mobs...
-			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing()) { // ... check if we're in grace and if the mob needs health
+			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && player.isSneaking()) { // ... check if we're in grace and if the mob needs health
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
+				PlayerUtil.sendMessage(player, new TextComponentTranslation("message.regeneration.healed", entity.getName()), true);
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
 			}
 		}
@@ -573,8 +574,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
 			synchronise();
-			
-			
 		}
 		
 		@Override
