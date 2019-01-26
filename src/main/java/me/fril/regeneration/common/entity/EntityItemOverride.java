@@ -1,8 +1,5 @@
 package me.fril.regeneration.common.entity;
 
-import me.fril.regeneration.RegenConfig;
-import me.fril.regeneration.handlers.RegenObjects;
-import me.fril.regeneration.util.ClientUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -132,22 +129,6 @@ public class EntityItemOverride extends Entity {
 	 */
 	@Override
 	public boolean isEntityInvulnerable(DamageSource source) {
-		
-		if (source == DamageSource.FALL) {
-			System.out.println("SAFSAFAFAFSAFSAFAS");
-			if (getItem().getItem() == RegenObjects.Items.LINDOS_VIAL) {
-				if (!world.isRemote) {
-					EntityLindos lindos = new EntityLindos(world);
-					lindos.setLocationAndAngles(posX, posY, posZ, 0, 0);
-					lindos.setAmount(getItem().getTagCompound().getInteger("amount"));
-					world.spawnEntity(lindos);
-					lindos.playSound(SoundEvents.BLOCK_GLASS_BREAK, 1, 1);
-					setDead();
-					return false;
-				}
-			}
-		}
-		
 		return true;
 	}
 	
@@ -206,31 +187,14 @@ public class EntityItemOverride extends Entity {
 		double d1 = this.motionY;
 		double d2 = this.motionZ;
 		
-		if (world.isRemote) {
-			if (getItem().getItem() instanceof IEntityOverride) {
-				ItemStack itemStack = getItem();
-				if (itemStack.getItem() == RegenObjects.Items.FOB_WATCH && itemStack.getItemDamage() != RegenConfig.regenCapacity) {
-					if (ticksExisted % 5000 == 0 || ticksExisted == 2) {
-						ClientUtil.playSound(this, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.getRegistryName().toString(), () -> this.isDead, false);
-					}
-				}
-			}
-		} else {
-			
-			ItemStack itemStack = getItem();
-			
-			if (itemStack.getTagCompound() == null || !itemStack.getTagCompound().hasKey("die")) {
-				System.out.println(itemStack.getTagCompound());
+		ItemStack itemStack = getItem();
+		
+		if (itemStack.getItem() instanceof IEntityOverride) {
+			IEntityOverride iEntityOverride = (IEntityOverride) itemStack.getItem();
+			if (iEntityOverride.shouldDie(itemStack)) {
 				setDead();
 			}
-			
-			if (itemStack.getItem() == RegenObjects.Items.LINDOS_VIAL) {
-				if (isInWater()) {
-					if (itemStack.getTagCompound() != null) {
-						itemStack.getTagCompound().setBoolean("water", true);
-					}
-				}
-			}
+			iEntityOverride.update(this);
 		}
 		
 		this.setSize(getWidth(), getHeight());

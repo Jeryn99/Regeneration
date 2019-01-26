@@ -3,7 +3,6 @@ package me.fril.regeneration.client;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
-import me.fril.regeneration.client.sound.MovingSoundEntity;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.handlers.RegenObjects;
@@ -82,17 +81,17 @@ public class ClientEventHandler {
 			IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 			
 			if (cap.areHandsGlowing()) {
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 0.5F));
+				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 0.5F);
 			}
 			
 			if (cap.getState().equals(RegenState.REGENERATING)) {
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.REGENERATION, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING), 1.0F));
+				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.REGENERATION.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.REGENERATING), 1.0F);
 			}
 			
 			if (cap.getState().isGraceful() && clientUUID == player.getUniqueID()) {
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE, SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT), 1F));
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT, SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F));
-				Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(cap.getPlayer(), RegenObjects.Sounds.G_HUM, SoundCategory.AMBIENT, true, () -> cap.getState() != RegenState.GRACE, 1.5F));
+				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(RegenState.GRACE_CRIT), 1F);
+				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
+				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.G_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != RegenState.GRACE, 1.5F);
 			}
 		}
 	}

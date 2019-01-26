@@ -42,8 +42,10 @@ public class ClientUtil {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static void playSound(Entity entity, String soundName, Supplier<Boolean> stopCondition, boolean repeat) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(entity, new SoundEvent(new ResourceLocation(soundName)), SoundCategory.PLAYERS, repeat, stopCondition, 1.5F));
+	public static void playSound(Entity entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
+		if (entity.world.isRemote) {
+			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
+		}
 	}
 	
 	

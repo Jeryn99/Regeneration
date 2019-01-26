@@ -321,12 +321,6 @@
   "overrides": [
     {
       "predicate": {
-        "amount": 1
-      },
-      "model": "regeneration:item/vial_yellow"
-    },
-    {
-      "predicate": {
         "amount": 0
       },
       "model": "regeneration:item/vial"
@@ -336,6 +330,18 @@
         "amount": 0.5
       },
       "model": "regeneration:item/vial_half_yellow"
+    },
+    {
+      "predicate": {
+        "amount": 1
+      },
+      "model": "regeneration:item/vial_yellow"
+    },
+    {
+      "predicate": {
+        "amount": 2
+      },
+      "model": "regeneration:item/vial_blue"
     }
   ]
 }

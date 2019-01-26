@@ -13,22 +13,20 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by Sub
  * on 16/09/2018.
  */
-public class ItemFobWatch extends Item implements IEntityOverride {
+public class ItemFobWatch extends ItemOverrideBase implements IEntityOverride {
 	
 	public ItemFobWatch() {
 		setMaxDamage(RegenConfig.regenCapacity);
@@ -44,10 +42,11 @@ public class ItemFobWatch extends Item implements IEntityOverride {
 	
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-		
 		if (stack.getTagCompound() == null) {
 			stack.setTagCompound(new NBTTagCompound());
-			stack.getTagCompound().setBoolean("die", false);
+			stack.getTagCompound().setBoolean("live", false);
+		} else {
+			stack.getTagCompound().setBoolean("live", false);
 		}
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 	}
@@ -112,18 +111,13 @@ public class ItemFobWatch extends Item implements IEntityOverride {
 	}
 	
 	@Override
-	public boolean hasCustomEntity(ItemStack stack) {
-		return true;
-	}
-	
-	@Nullable
-	@Override
-	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
-		EntityItemOverride item = new EntityItemOverride(world, location.posX, location.posY, location.posZ, itemstack);
-		item.setEntitySize(item.getHeight(), item.getWidth());
-		item.motionX = location.motionX;
-		item.motionY = location.motionY;
-		item.motionZ = location.motionZ;
-		return item;
+	public void update(EntityItemOverride itemOverride) {
+		if (!itemOverride.world.isRemote) return;
+		ItemStack itemStack = itemOverride.getItem();
+		if (itemStack.getItem() == this && itemStack.getItemDamage() != RegenConfig.regenCapacity) {
+			if (itemOverride.ticksExisted % 5000 == 0 || itemOverride.ticksExisted == 2) {
+				ClientUtil.playSound(itemOverride, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.getRegistryName(), SoundCategory.AMBIENT, false, () -> itemOverride.isDead, 1.5F);
+			}
+		}
 	}
 }

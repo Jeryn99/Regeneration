@@ -4,6 +4,7 @@ import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
 import me.fril.regeneration.common.dna.DnaHandler;
+import me.fril.regeneration.common.entity.EntityLindos;
 import me.fril.regeneration.common.types.IRegenType;
 import me.fril.regeneration.common.types.TypeFiery;
 import me.fril.regeneration.debugger.util.DebuggableScheduledAction;
@@ -555,6 +556,14 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = RegenState.ALIVE;
 			synchronise();
 			nextTransition = null;
+			
+			if (!player.world.isRemote) {
+				if (player.rand.nextBoolean()) {
+					EntityLindos lindos = new EntityLindos(player.world);
+					lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
+					player.world.spawnEntity(lindos);
+				}
+			}
 		}
 		
 		private void finishRegeneration() {
@@ -564,6 +573,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
 			synchronise();
+			
+			
 		}
 		
 		@Override

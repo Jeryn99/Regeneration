@@ -16,6 +16,7 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateFlying;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -59,7 +60,7 @@ public class EntityLindos extends EntityFlying {
 		super.onUpdate();
 		
 		if (world.isRemote && ticksExisted == 2) {
-			ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName().toString(), () -> isDead, true);
+			ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.AMBIENT, true, () -> isDead, 1.0F);
 		}
 		
 		if (ticksExisted < 60) {

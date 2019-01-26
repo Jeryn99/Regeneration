@@ -12,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -27,16 +26,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemLindos extends Item implements IEntityOverride {
+public class ItemLindos extends ItemOverrideBase implements IEntityOverride {
 	
 	public ItemLindos() {
-		this.addPropertyOverride(new ResourceLocation("amount"), new IItemPropertyGetter() {
+		setMaxStackSize(1);
+		addPropertyOverride(new ResourceLocation("amount"), new IItemPropertyGetter() {
 			@SideOnly(Side.CLIENT)
 			public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entityIn) {
-				if (stack.getTagCompound() == null) {
-					return 0.0F;
-				} else {
+				
+				if (stack.getTagCompound() != null) {
 					int amount = getAmount(stack);
+					
+					if (!hasWater(stack)) {
+						return 0.0F;
+					}
+					
+					if (hasWater(stack) && getAmount(stack) <= 0) {
+						return 2F;
+					}
 					
 					if (amount >= 90) {
 						return 1.0F;
@@ -45,9 +52,9 @@ public class ItemLindos extends Item implements IEntityOverride {
 					if (amount >= 50) {
 						return 0.5F;
 					}
-					
-					return 0.0F;
 				}
+				
+				return 2F;
 			}
 		});
 	}
@@ -68,18 +75,25 @@ public class ItemLindos extends Item implements IEntityOverride {
 		getStackTag(stack).setInteger("amount", MathHelper.clamp(amount, 0, 100));
 	}
 	
+	public static boolean hasWater(ItemStack stack) {
+		return getStackTag(stack).getBoolean("water");
+	}
+	
+	public static void setWater(ItemStack stack, boolean water) {
+		getStackTag(stack).setBoolean("water", water);
+	}
+	
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		
 		if (stack.getTagCompound() == null) {
 			stack.setTagCompound(new NBTTagCompound());
-			stack.getTagCompound().setBoolean("die", false);
+			stack.getTagCompound().setBoolean("live", true);
+		} else {
+			stack.getTagCompound().setBoolean("live", true);
 		}
 		
-		stack.getTagCompound().setBoolean("die", false);
-		
 		if (!worldIn.isRemote) {
-			
 			//Entiies around
 			worldIn.getEntitiesWithinAABB(EntityPlayer.class, entityIn.getEntityBoundingBox().expand(10, 10, 10)).forEach(player -> {
 				IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) entityIn);
@@ -100,28 +114,33 @@ public class ItemLindos extends Item implements IEntityOverride {
 				}
 			}
 		}
-		
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 	}
 	
-	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn) {
-		if (!worldIn.isRemote) {
-			ItemStack stack = player.getHeldItem(handIn);
-			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-			
-			if (data.getState() == RegenState.POST || data.getState() == RegenState.REGENERATING) {
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
-			}
+		if (worldIn.isRemote) super.onItemRightClick(worldIn, player, handIn);
+		
+		ItemStack stack = player.getHeldItem(handIn);
+		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+		
+		//If the player is in POST or Regenerating, drinking this is going to be Lethal!
+		if (data.getState() == RegenState.POST || data.getState() == RegenState.REGENERATING || player.isCreative()) {
+			PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
+		}
+		
+		if (hasWater(stack)) {
+			//If the stack has enough, basically kill them
 			if (getAmount(stack) == 100) {
 				if (data.canRegenerate()) {
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
 					setAmount(stack, 0);
+					setWater(stack, false);
 				} else {
 					data.receiveRegenerations(1);
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
 					setAmount(stack, 0);
+					setWater(stack, false);
 				}
 			} else {
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.empty_vial"), true);
@@ -140,18 +159,17 @@ public class ItemLindos extends Item implements IEntityOverride {
 	}
 	
 	@Override
-	public boolean hasCustomEntity(ItemStack stack) {
-		return true;
+	public void update(EntityItemOverride itemOverride) {
+		if (itemOverride.world.isRemote) return;
+		ItemStack itemStack = itemOverride.getItem();
+		if (itemStack.getItem() == this) {
+			if (itemOverride.isInWater()) {
+				if (itemStack.getTagCompound() != null) {
+					setWater(itemStack, true);
+				}
+			}
+		}
 	}
 	
-	@Nullable
-	@Override
-	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
-		EntityItemOverride item = new EntityItemOverride(world, location.posX, location.posY, location.posZ, itemstack);
-		item.setEntitySize(item.getHeight(), item.getWidth());
-		item.motionX = location.motionX;
-		item.motionY = location.motionY;
-		item.motionZ = location.motionZ;
-		return item;
-	}
+	
 }

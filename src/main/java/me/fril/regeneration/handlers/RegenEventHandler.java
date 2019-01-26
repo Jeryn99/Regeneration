@@ -5,7 +5,6 @@ import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationProvider;
-import me.fril.regeneration.common.entity.IEntityOverride;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenUtil;
@@ -116,12 +115,12 @@ public class RegenEventHandler {
 		NBTTagCompound tag = event.getEntityItem().getItem().getTagCompound();
 		ItemStack stack = event.getEntityItem().getItem();
 		
-		if (tag == null || !tag.hasKey("die")) {
-			if (stack.getItem() instanceof IEntityOverride) {
-				System.out.println(tag);
-				event.setCanceled(true);
-			}
-		}
+		//if (tag == null || !tag.hasKey("live")) {
+		//		if (stack.getItem() instanceof IEntityOverride) {
+		//			System.out.println(tag);
+		//			event.setCanceled(true);
+		///		}
+		//	}
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)

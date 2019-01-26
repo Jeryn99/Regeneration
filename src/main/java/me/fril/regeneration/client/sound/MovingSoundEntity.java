@@ -53,9 +53,35 @@ public class MovingSoundEntity extends MovingSound {
 		this.repeatDelay = 0;
 	}
 	
+	
+	@Override
+	public boolean canRepeat() {
+		return this.repeat;
+	}
+	
+	@Override
+	public float getVolume() {
+		return this.volume;
+	}
+	
+	@Override
+	public float getPitch() {
+		return this.pitch;
+	}
+	
 	@Override
 	public boolean isDonePlaying() {
 		return donePlaying;
 	}
 	
+	
+	@Override
+	public int getRepeatDelay() {
+		return this.repeatDelay;
+	}
+	
+	@Override
+	public AttenuationType getAttenuationType() {
+		return AttenuationType.LINEAR;
+	}
 }
