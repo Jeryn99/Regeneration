@@ -134,6 +134,7 @@ public class EntityItemOverride extends Entity {
 	public boolean isEntityInvulnerable(DamageSource source) {
 		
 		if (source == DamageSource.FALL) {
+			System.out.println("SAFSAFAFAFSAFSAFAS");
 			if (getItem().getItem() == RegenObjects.Items.LINDOS_VIAL) {
 				if (!world.isRemote) {
 					EntityLindos lindos = new EntityLindos(world);
@@ -208,19 +209,6 @@ public class EntityItemOverride extends Entity {
 		if (world.isRemote) {
 			if (getItem().getItem() instanceof IEntityOverride) {
 				ItemStack itemStack = getItem();
-				
-				if (getItem().getTagCompound() == null || !getItem().getTagCompound().hasKey("die")) {
-					setDead();
-				}
-				
-				if (itemStack.getItem() == RegenObjects.Items.LINDOS_VIAL) {
-					if (isInWater()) {
-						if (itemStack.getTagCompound() != null) {
-							itemStack.getTagCompound().setBoolean("water", true);
-						}
-					}
-				}
-				
 				if (itemStack.getItem() == RegenObjects.Items.FOB_WATCH && itemStack.getItemDamage() != RegenConfig.regenCapacity) {
 					if (ticksExisted % 5000 == 0 || ticksExisted == 2) {
 						ClientUtil.playSound(this, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.getRegistryName().toString(), () -> this.isDead, false);
@@ -228,8 +216,20 @@ public class EntityItemOverride extends Entity {
 				}
 			}
 		} else {
-			if (getItem().getTagCompound() == null || !getItem().getTagCompound().hasKey("die")) {
+			
+			ItemStack itemStack = getItem();
+			
+			if (itemStack.getTagCompound() == null || !itemStack.getTagCompound().hasKey("die")) {
+				System.out.println(itemStack.getTagCompound());
 				setDead();
+			}
+			
+			if (itemStack.getItem() == RegenObjects.Items.LINDOS_VIAL) {
+				if (isInWater()) {
+					if (itemStack.getTagCompound() != null) {
+						itemStack.getTagCompound().setBoolean("water", true);
+					}
+				}
 			}
 		}
 		

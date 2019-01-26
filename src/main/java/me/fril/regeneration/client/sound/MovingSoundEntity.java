@@ -16,13 +16,13 @@ import java.util.function.Supplier;
 //FIXME sound doesn't stop when dying mid-regen
 public class MovingSoundEntity extends MovingSound {
 	
-	private final Entity player;
+	private final Entity entity;
 	private final Supplier<Boolean> stopCondition;
-	protected boolean donePlaying = false;
+	private boolean donePlaying = false;
 	
 	public MovingSoundEntity(Entity playerIn, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier<Boolean> stopCondition, float volumeSfx) {
 		super(soundIn, categoryIn);
-		this.player = playerIn;
+		this.entity = playerIn;
 		this.stopCondition = stopCondition;
 		super.repeat = repeat;
 		volume = volumeSfx;
@@ -31,8 +31,8 @@ public class MovingSoundEntity extends MovingSound {
 	@Override
 	public void update() {
 		
-		if (stopCondition.get() || player.isDead) {
-			donePlaying = true;
+		if (stopCondition.get() || entity.isDead) {
+			setDonePlaying();
 		}
 		
 		//I promise this is the only case specific thing I am putting in here ~ Sub
@@ -40,10 +40,17 @@ public class MovingSoundEntity extends MovingSound {
 			volume = RegenUtil.randFloat(1.5F, 6F);
 		}
 		
-		super.xPosF = (float) player.posX;
-		super.yPosF = (float) player.posY;
-		super.zPosF = (float) player.posZ;
+		super.xPosF = (float) entity.posX;
+		super.yPosF = (float) entity.posY;
+		super.zPosF = (float) entity.posZ;
 		
+	}
+	
+	//Explanation: http://www.minecraftforge.net/forum/topic/26645-solvedmovingsound-itickablesound-and-soundmanager-starting-stopping-sounds/
+	public void setDonePlaying() {
+		this.repeat = false;
+		this.donePlaying = true;
+		this.repeatDelay = 0;
 	}
 	
 	@Override

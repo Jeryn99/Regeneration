@@ -76,6 +76,8 @@ public class ItemLindos extends Item implements IEntityOverride {
 			stack.getTagCompound().setBoolean("die", false);
 		}
 		
+		stack.getTagCompound().setBoolean("die", false);
+		
 		if (!worldIn.isRemote) {
 			
 			//Entiies around

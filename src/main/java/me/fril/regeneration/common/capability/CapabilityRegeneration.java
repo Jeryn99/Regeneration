@@ -15,11 +15,16 @@ import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import me.fril.regeneration.util.RegenState.Transition;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -48,6 +53,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	public String deathSource = "";
 	private boolean didSetup = false, traitActive = true;
 	private int regenerationsLeft;
+	
+	public int lcCoreReserve = 0;
 	
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType<?> type = new TypeFiery();
@@ -101,6 +108,14 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		DnaHandler.getDnaEntry(getDnaType()).onUpdate(this);
 		
+		if (state == RegenState.POST) {
+			if (player != null && !player.world.isRemote) {
+				if (player.ticksExisted % 110 == 0) { //TODO Make a bit safer, some potions can kill the player
+					PlayerUtil.applyPotionIfAbsent(player, Potion.getPotionById(player.rand.nextInt(Potion.REGISTRY.getKeys().size())), player.rand.nextInt(400), 1, false, false);
+				}
+			}
+		}
+		
 		if (!player.world.isRemote && state != RegenState.ALIVE) // ticking only on the server for simplicity
 			stateManager.tick();
 		
@@ -134,6 +149,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
 		nbt.setString("regen_dna", traitLocation.toString());
 		nbt.setBoolean("traitActive", traitActive);
+		nbt.setInteger("lc_regen", lcCoreReserve);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
 		return nbt;
@@ -167,6 +183,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (nbt.hasKey("handsAreGlowing")) {
 			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
+		}
+		
+		if(nbt.hasKey("lc_regen")){
+			lcCoreReserve = nbt.getInteger("lc_regen");
 		}
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
@@ -287,7 +307,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public boolean areHandsGlowing() {
 		return handsAreGlowingClient;
-		//return handsGlowing;
 	}
 	
 	
@@ -319,6 +338,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setDnaAlive(boolean alive) {
 		traitActive = alive;
+	}
+	
+	@Override
+	public int getReserve() {
+		return lcCoreReserve;
+	}
+	
+	@Override
+	public void setReserve(int reserve) {
+		lcCoreReserve = reserve;
 	}
 	
 	@Override
@@ -360,7 +389,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			};
 			transitionCallbacks.put(Transition.HAND_GLOW_START, err);
 			transitionCallbacks.put(Transition.HAND_GLOW_TRIGGER, err);
-			//FIXME 'corrupt' transition isn't handled properly, causing tests to fail. I assume it's just not implemented yet apart from the enum?
 		}
 		
 		
@@ -445,6 +473,13 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
 			if (getState().isGraceful() && areHandsGlowing()) {
+				
+				IBlockState block = e.getWorld().getBlockState(e.getPos());
+				
+				if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_LAYER) {
+					e.getWorld().playSound(null, e.getPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
+				}
+				
 				handGlowTimer.cancel();
 				scheduleNextHandGlow();
 				if (!player.world.isRemote) {

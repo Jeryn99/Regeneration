@@ -5,9 +5,11 @@ import lucraft.mods.lucraftcore.superpowers.SuperpowerPlayerHandler;
 import lucraft.mods.lucraftcore.superpowers.capabilities.ISuperpowerCapability;
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
+import me.fril.regeneration.common.capability.IRegeneration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,22 +43,38 @@ public class SuperpowerTimelord extends Superpower {
 	}
 	
 	@Override
+	public NBTTagCompound getData() {
+		return super.getData();
+	}
+	
+	
+	@Override
 	public SuperpowerPlayerHandler getNewSuperpowerHandler(ISuperpowerCapability cap) {
 		return new SuperpowerPlayerHandler(cap, this) {
+			
 			
 			@Override
 			public void onApplyPower() {
 				super.onApplyPower();
+				IRegeneration data = CapabilityRegeneration.getForPlayer(getPlayer());
 				if (!getPlayer().world.isRemote) {
-					CapabilityRegeneration.getForPlayer(getPlayer()).receiveRegenerations(RegenConfig.regenCapacity);
+					if(data.getReserve() <= 0) {
+						CapabilityRegeneration.getForPlayer(getPlayer()).receiveRegenerations(RegenConfig.regenCapacity);
+					} else {
+						CapabilityRegeneration.getForPlayer(getPlayer()).receiveRegenerations(data.getReserve());
+						data.setReserve(0);
+					}
 				}
 			}
 			
 			// When superpower gets removed, remove all left regenerations
 			@Override
 			public void onRemove() {
-				if (!getPlayer().world.isRemote)
-					CapabilityRegeneration.getForPlayer(getPlayer()).extractRegeneration(CapabilityRegeneration.getForPlayer(getPlayer()).getRegenerationsLeft());
+				IRegeneration data = CapabilityRegeneration.getForPlayer(getPlayer());
+				if (!getPlayer().world.isRemote) {
+					data.setReserve(data.getRegenerationsLeft());
+					data.extractRegeneration(CapabilityRegeneration.getForPlayer(getPlayer()).getRegenerationsLeft());
+				}
 			}
 		};
 	}

@@ -19,7 +19,7 @@ public class DnaSwimmer implements DnaHandler.IDna {
 	public void onUpdate(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		if (player.isInWater()) {
-			if (player.ticksExisted % 7 * 20 == 0 && cap.dnaAlive()) {
+			if (player.ticksExisted % 20 == 0 && cap.dnaAlive()) {
 				player.setAir(player.getAir() + 1);
 			}
 		}
@@ -27,12 +27,12 @@ public class DnaSwimmer implements DnaHandler.IDna {
 	
 	@Override
 	public void onAdded(IRegeneration cap) {
-	
+
 	}
 	
 	@Override
 	public void onRemoved(IRegeneration cap) {
-	
+
 	}
 	
 	@Override

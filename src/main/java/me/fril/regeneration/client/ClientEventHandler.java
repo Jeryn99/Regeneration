@@ -173,7 +173,7 @@ public class ClientEventHandler {
 			return;
 		
 		if (e.getName().equals("entity.generic.explode")) {
-			ISound sound = PositionedSoundRecord.getRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.5F);
+			ISound sound = PositionedSoundRecord.getRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
 			mc.world.playerEntities.forEach(player -> {
 				if (mc.player != player && mc.player.getDistance(player) < 40) {
 					if (CapabilityRegeneration.getForPlayer(player).getState().equals(RegenState.REGENERATING)) {

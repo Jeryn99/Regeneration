@@ -113,6 +113,8 @@ dna.dumb.name=Your DNA consists of Genes no-one wants!
 dna.sneak.name=Your DNA consists of Sneaky genes!
 dna.vampire.name=Your DNA consists of Vampire Genes....ah dear...
 dna.lucky.name=Your DNA consists of Lucky genes!
+dna.swimmer.name=Your DNA consists of swimming genes!!
+dna.hydrophobic.name=Your DNA consists of Hydrophobic genes!
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...

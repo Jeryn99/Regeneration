@@ -118,6 +118,7 @@ public class RegenEventHandler {
 		
 		if (tag == null || !tag.hasKey("die")) {
 			if (stack.getItem() instanceof IEntityOverride) {
+				System.out.println(tag);
 				event.setCanceled(true);
 			}
 		}

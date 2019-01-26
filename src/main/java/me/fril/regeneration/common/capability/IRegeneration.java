@@ -79,4 +79,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	boolean dnaAlive();
 	
 	void setDnaAlive(boolean alive);
+	
+	//ONLY USED IN LCCORE
+	int getReserve();
+	void setReserve(int reserve);
 }
