@@ -1,7 +1,6 @@
 package me.fril.regeneration.util;
 
-import java.util.List;
-
+import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.network.MessageSetPerspective;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.entity.Entity;
@@ -19,12 +18,29 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sub
  * on 20/09/2018.
  */
 public class PlayerUtil {
+	
+	private static ArrayList<Potion> POTIONS = new ArrayList<>();
+	
+	public static void createPostList() {
+		POTIONS.addAll(ForgeRegistries.POTIONS.getValuesCollection());
+		for (Potion potion : POTIONS) {
+			for (String s : RegenConfig.postRegen.potions) {
+				if (s.matches(potion.getRegistryName().toString())) {
+					POTIONS.remove(potion);
+				}
+			}
+		}
+	}
 	
 	public static void sendMessage(EntityPlayer player, String message, boolean hotBar) {
 		if (!player.world.isRemote) {

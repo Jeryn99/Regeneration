@@ -133,6 +133,22 @@ public class RegenConfig {
 		@Config.RangeInt(min = 0)
 		public int absorbtionLevel = 10;
 		
+		@Config.LangKey("config.regeneration.post_postions")
+		@Config.Comment("Potions that the player should NOT get randomly in POST")
+		public String[] potions = new String[]{
+				"minecraft:instant_damage",
+				"minecraft:invisibility",
+				"minecraft:weakness",
+				"minecraft:poison",
+				"minecraft:wither",
+				"minecraft:glowing",
+				"minecraft:levitation",
+				"minecraft:unluck",
+				"ic2:radiation",
+				"lucraftcore:knock_out",
+				"lucraftcore:radiation"
+		};
+		
 	}
 	
 	

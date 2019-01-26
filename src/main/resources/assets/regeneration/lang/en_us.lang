@@ -121,3 +121,4 @@ nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...
 regeneration.messages.cannot_use=You cannot use this right now!
 message.regeneration.healed=You have given %s some of your Regeneration Energy!
+nbt.item.water=Has Water: %s
