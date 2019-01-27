@@ -96,7 +96,7 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
-			CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntityLiving()).synchronise(); // NOW test this
+			CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntityLiving()).synchronise();
 		}
 	}
 	

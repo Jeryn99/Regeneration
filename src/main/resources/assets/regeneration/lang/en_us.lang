@@ -31,6 +31,7 @@ regeneration.subtitles.hand_glow=Glowing hands
 regeneration.subtitles.heart_beat=Heartbeat
 regeneration.subtitles.critical_stage=Critical grace stage
 regeneration.subtitles.fob_watch_dialogue=Fob Watch Dialogue
+regeneration.subtitles.regeneration_breath=Regeneration Breath
 
 regeneration.keybinds.regenerate=Regenerate
 regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]

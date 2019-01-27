@@ -1,5 +1,6 @@
 package me.fril.regeneration.client.skinhandling;
 
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 
 public class SkinInfo {
@@ -13,11 +14,17 @@ public class SkinInfo {
 	}
 	
 	public ResourceLocation getTextureLocation() {
-		return textureLocation;
+		if (textureLocation != null) {
+			return textureLocation;
+		}
+		return DefaultPlayerSkin.getDefaultSkinLegacy();
 	}
 	
 	public SkinType getSkintype() {
-		return skintype;
+		if (skintype != null) {
+			return skintype;
+		}
+		return SkinType.ALEX;
 	}
 	
 	public enum SkinType {

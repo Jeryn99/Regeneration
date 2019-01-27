@@ -1,28 +1,6 @@
 package me.fril.regeneration.client.skinhandling;
 
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
-
-import javax.imageio.ImageIO;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -38,16 +16,38 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
@@ -212,6 +212,20 @@ public class SkinChangingHandler {
 		return new SkinInfo(resourceLocation, skinType);
 	}
 	
+	private static ResourceLocation getSkinFromMojang(AbstractClientPlayer player) throws IOException {
+		setPlayerTexture(player, null);
+		Minecraft minecraft = Minecraft.getMinecraft();
+		URL url = new URL(String.format(RegenConfig.skins.downloadUrl, StringUtils.stripControlCodes(player.getUniqueID().toString())));
+		BufferedImage img = ImageIO.read(url);
+		SKIN_LOG.info("Downloading Skin from: {}", url.toString());
+		ImageIO.write(img, "png", new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png"));
+		
+		if (img == null) {
+			return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
+		}
+		return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(img));
+	}
+	
 	/**
 	 * This is used when the clients skin is reset
 	 *
@@ -219,21 +233,25 @@ public class SkinChangingHandler {
 	 * @return ResourceLocation from Mojang
 	 * @throws IOException
 	 */
-	private static ResourceLocation getSkinFromMojang(AbstractClientPlayer player) throws IOException {
-		setPlayerTexture(player, null);
+	//FIXING Apprantly makes everyone steve/alex on multiplayer
+	private static ResourceLocation getSkinFromMojangNew(AbstractClientPlayer player) {
 		Minecraft minecraft = Minecraft.getMinecraft();
-		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
-		
+		Map map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
+		if (map.isEmpty()) {
+			map = minecraft.getSessionService().getTextures(minecraft.getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
+		}
 		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-			MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
+			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
 			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, minecraft.getSkinManager(), 2), profile.getHash().substring(0, 2));
 			File file = new File(dir, profile.getHash());
-			if (file.exists()) {
+			if (file.exists())
 				file.delete();
-			}
-			return minecraft.getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+			ResourceLocation location = new ResourceLocation("skins/" + profile.getHash());
+			loadTexture(file, location, DefaultPlayerSkin.getDefaultSkinLegacy(), profile.getUrl(), true);
+			return location;
 		}
-		return player.getLocationSkin();
+		
+		return DefaultPlayerSkin.getDefaultSkinLegacy();
 	}
 	
 	/**
@@ -346,28 +364,14 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	/**
-	 * Called by onRenderPlayer, sets model, sets texture, adds player and SkinInfo to map
-	 *
-	 * @param player       - Player instance
-	 * @param cap          - Players Regen capability instance
-	 * @param renderPlayer - Player instances renderer
-	 */
-	private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap, RenderPlayer renderPlayer) {
-		SkinInfo skinInfo = null;
-		try {
-			skinInfo = SkinChangingHandler.getSkin(player, cap);
-		} catch (IOException e1) {
-			RegenerationMod.LOG.error(e1.getMessage());
+	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String par1Str, boolean fix64) {
+		TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+		ITextureObject object = texturemanager.getTexture(resource);
+		if (object == null) {
+			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt(fix64));
+			texturemanager.loadTexture(resource, object);
 		}
-		SkinChangingHandler.setPlayerTexture(player, skinInfo.getTextureLocation());
-		
-		if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
-			SkinChangingHandler.setPlayerModel(renderPlayer, ALEX_MODEL);
-		} else {
-			SkinChangingHandler.setPlayerModel(renderPlayer, STEVE_MODEL);
-		}
-		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
+		return object;
 	}
 	
 	public enum EnumChoices {
@@ -387,4 +391,31 @@ public class SkinChangingHandler {
 		}
 	}
 	
+	/**
+	 * Called by onRenderPlayer, sets model, sets texture, adds player and SkinInfo to map
+	 *
+	 * @param player       - Player instance
+	 * @param cap          - Players Regen capability instance
+	 * @param renderPlayer - Player instances renderer
+	 */
+	private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap, RenderPlayer renderPlayer) {
+		SkinInfo skinInfo = null;
+		try {
+			skinInfo = SkinChangingHandler.getSkin(player, cap);
+		} catch (IOException e1) {
+			RegenerationMod.LOG.error("Error creating skin for: " + player.getName() + " " + e1.getMessage());
+		}
+		if (skinInfo != null) {
+			SkinChangingHandler.setPlayerTexture(player, skinInfo.getTextureLocation());
+		}
+		
+		if (skinInfo != null) {
+			if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
+				SkinChangingHandler.setPlayerModel(renderPlayer, ALEX_MODEL);
+			} else {
+				SkinChangingHandler.setPlayerModel(renderPlayer, STEVE_MODEL);
+			}
+		}
+		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
+	}
 }

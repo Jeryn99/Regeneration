@@ -59,6 +59,8 @@ public class EntityLindos extends EntityFlying {
 	public void onUpdate() {
 		super.onUpdate();
 		
+		setNoGravity(true);
+		
 		if (world.isRemote && ticksExisted == 2) {
 			ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.AMBIENT, true, () -> isDead, 1.0F);
 		}

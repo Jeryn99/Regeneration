@@ -31,6 +31,7 @@ regeneration.subtitles.hand_glow=Mains brillantes
 regeneration.subtitles.heart_beat=Battement de coeurs
 regeneration.subtitles.critical_stage=Stade de grâce critique
 regeneration.subtitles.fob_watch_dialogue=Dialogue de la Montre Gousset
+regeneration.subtitles.regeneration_breath=Regeneration Breath
 
 regeneration.keybinds.regenerate=Regénérer
 regeneration.commands.debug.usage=<fastforward|setregens|open> [montant]
@@ -122,6 +123,5 @@ regeneration.messages.no_water=Cette fiole n'a pas d'eau...
 regeneration.messages.cannot_use=You cannot use this right now!
 message.regeneration.healed=You have given %s some of your Regeneration Energy!
 nbt.item.water=Has Water: %s
-
 nbt.item.water_filled=You have now filled this Vial with Water
 nbt.item.water_already_filled=This Vial already has water in it

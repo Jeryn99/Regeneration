@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Sub
@@ -34,8 +35,11 @@ public class PlayerUtil {
 	public static void createPostList() {
 		ForgeRegistries.POTIONS.getValuesCollection().forEach(potion -> {
 			for (String s : RegenConfig.postRegen.potions) {
-				if (!potion.getRegistryName().equals(s)) {
+				if (!Objects.requireNonNull(potion.getRegistryName()).toString().equals(s)) {
 					POTIONS.add(potion);
+					System.out.println(potion.getRegistryName() + " has been added");
+				} else {
+					System.out.println(potion.getRegistryName() + " has been removed");
 				}
 			}
 		});
@@ -75,6 +79,7 @@ public class PlayerUtil {
 	}
 	
 	public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {
+		if (potion == null) return false;
 		if (player.getActivePotionEffect(potion) == null) {
 			player.addPotionEffect(new PotionEffect(potion, length, amplifier, ambient, showParticles));
 			return true;

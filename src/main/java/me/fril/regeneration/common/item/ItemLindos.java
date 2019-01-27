@@ -110,7 +110,7 @@ public class ItemLindos extends ItemOverrideBase {
 			worldIn.getEntitiesWithinAABB(EntityPlayer.class, entityIn.getEntityBoundingBox().expand(10, 10, 10)).forEach(player -> {
 				IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) entityIn);
 				if (data.getState() == RegenState.REGENERATING) {
-					if (worldIn.rand.nextBoolean() && isSelected) {
+					if (worldIn.rand.nextInt(100) > 50 && isSelected) {
 						setAmount(stack, getAmount(stack) + 1);
 					}
 				}

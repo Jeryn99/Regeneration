@@ -144,6 +144,7 @@ public class RegenConfig {
 				"minecraft:glowing",
 				"minecraft:levitation",
 				"minecraft:unluck",
+				"minecraft:levitation",
 				"ic2:radiation",
 				"lucraftcore:knock_out",
 				"lucraftcore:radiation"
