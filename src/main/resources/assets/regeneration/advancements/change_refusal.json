@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+          "item": "regeneration:fob_watch"
+        },
+        "title": {
+            "translate": "regeneration.advancement.change_refusual"
+        },
+        "description": {
+            "translate": "regeneration.advancement.change_refusual.desc"
+        }
+    },
+
+    "parent": "regeneration:main",
+    "criteria": {
+        "change_refusal": {
+            "trigger": "change_refusal"
+        }
+    }
+}

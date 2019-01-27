@@ -12,6 +12,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.tardis.mod.common.dimensions.WorldProviderTardis;
 import net.tardis.mod.common.entities.controls.ControlDoor;
 import net.tardis.mod.common.sounds.TSounds;
@@ -90,17 +91,18 @@ public class TardisModHandler implements IActingHandler {
 			TardisSystems.BaseSystem[] systems = tileEntityTardis.systems;
 			for (TardisSystems.BaseSystem system : systems) {
 				if (rand.nextInt(5) < 2 && !(system instanceof SystemDimension)) {
-					int times = rand.nextInt(3) + 1;
-					for (int i = 0; i <= times; i++) {
-						system.damage();
-						tileEntityTardis.getWorld().getEntitiesWithinAABB(EntityPlayer.class, player.getEntityBoundingBox().expand(45, 45, 45)).forEach(player1 -> {
-							if (player1 instanceof EntityPlayerMP) {
-								EntityPlayerMP entityPlayerMP = (EntityPlayerMP) player1;
-								BlockPos tilePos = tileEntityTardis.getPos();
-								entityPlayerMP.connection.sendPacket(new SPacketParticles(EnumParticleTypes.FLAME, true, tilePos.getX(), tilePos.getY(), tilePos.getZ(), 3, 3, 3, 2, 10));
+					system.damage();
+					tileEntityTardis.getWorld().getEntitiesWithinAABB(EntityPlayer.class, player.getEntityBoundingBox().expand(45, 45, 45)).forEach(player1 -> {
+						if (player1 instanceof EntityPlayerMP) {
+							EntityPlayerMP entityPlayerMP = (EntityPlayerMP) player1;
+							BlockPos tilePos = tileEntityTardis.getPos();
+							Vec3d look = new Vec3d(0.1, 0, 0.1);
+							for (int particle = 0; particle < 300; ++particle) {
+								entityPlayerMP.connection.sendPacket(new SPacketParticles(EnumParticleTypes.EXPLOSION_NORMAL, true, tilePos.getX(), tilePos.getY(), tilePos.getZ(), (float) look.x, (float) look.y, (float) look.z, 2, 25));
+								look = look.rotateYaw(0.003F);
 							}
-						});
-					}
+						}
+					});
 				}
 			}
 			

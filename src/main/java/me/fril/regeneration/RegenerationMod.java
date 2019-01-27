@@ -1,6 +1,7 @@
 package me.fril.regeneration;
 
 import me.fril.regeneration.client.gui.GuiHandler;
+import me.fril.regeneration.common.advancements.RegenTriggers;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.capability.RegenerationStorage;
@@ -61,7 +62,7 @@ public class RegenerationMod {
 		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
 		
 		ActingForwarder.init();
-		
+		RegenTriggers.init();
 		if (EnumCompatModids.TARDIS.isLoaded()) {
 			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}

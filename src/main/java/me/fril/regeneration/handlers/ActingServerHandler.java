@@ -2,6 +2,7 @@ package me.fril.regeneration.handlers;
 
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
+import me.fril.regeneration.common.advancements.RegenTriggers;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.dna.DnaHandler;
 import me.fril.regeneration.network.MessagePlayRegenerationSound;
@@ -11,6 +12,7 @@ import me.fril.regeneration.util.RegenUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
@@ -128,6 +130,7 @@ class ActingServerHandler implements IActingHandler {
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
+		RegenTriggers.FIRST_REGENERATION.trigger((EntityPlayerMP) cap.getPlayer());
 		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegen.postRegenerationDuration * 2, RegenConfig.postRegen.postRegenerationLevel - 1, false, false));
 		player.setHealth(player.getMaxHealth());
 		player.setAbsorptionAmount(RegenConfig.postRegen.absorbtionLevel * 2);

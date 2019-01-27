@@ -91,6 +91,7 @@ public class DnaHandler {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+			if (player.world.isRemote) return;
 			if (data.dnaAlive() && data.getDnaType().equals(DNA_ATHLETE.getRegistryName())) {
 				player.motionY += 0.1D;
 				player.velocityChanged = true;

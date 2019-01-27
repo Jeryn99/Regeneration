@@ -1,11 +1,5 @@
 package me.fril.regeneration.client;
 
-import static me.fril.regeneration.client.skinhandling.SkinChangingHandler.*;
-
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.UUID;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
@@ -50,6 +44,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
+
+import static me.fril.regeneration.client.skinhandling.SkinChangingHandler.PLAYER_SKINS;
 
 /**
  * Created by Sub
@@ -287,5 +287,6 @@ public class ClientEventHandler {
 	public static void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
 		PLAYER_SKINS.clear();
 	}
+	
 	
 }

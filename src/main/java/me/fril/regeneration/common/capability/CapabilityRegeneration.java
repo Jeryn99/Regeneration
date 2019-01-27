@@ -3,6 +3,7 @@ package me.fril.regeneration.common.capability;
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
+import me.fril.regeneration.common.advancements.RegenTriggers;
 import me.fril.regeneration.common.dna.DnaHandler;
 import me.fril.regeneration.common.entity.EntityLindos;
 import me.fril.regeneration.common.types.IRegenType;
@@ -19,6 +20,7 @@ import me.fril.regeneration.util.RegenState.Transition;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -484,6 +486,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				handGlowTimer.cancel();
 				scheduleNextHandGlow();
 				if (!player.world.isRemote) {
+					RegenTriggers.CHANGE_REFUSAL.trigger((EntityPlayerMP) player);
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.regen_delayed"), true);
 				}
 			}
