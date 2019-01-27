@@ -7,10 +7,13 @@ import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.PlayerUtil;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +24,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,7 +53,7 @@ public class ItemLindos extends ItemOverrideBase {
 						return 2F;
 					}
 					
-					if(amount == 100){
+					if (amount == 100) {
 						return 1.0F;
 					}
 					
@@ -61,7 +65,7 @@ public class ItemLindos extends ItemOverrideBase {
 						return 0.5F;
 					}
 					
-					if(amount >= 10){
+					if (amount >= 10) {
 						return 0.1F;
 					}
 				}
@@ -133,13 +137,28 @@ public class ItemLindos extends ItemOverrideBase {
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			ItemStack itemStack = player.getHeldItem(hand);
-			if (worldIn.getBlockState(pos).getMaterial().equals(Material.WATER) && itemStack.getItem() == this) {
+			RayTraceResult raytraceresult = this.rayTrace(worldIn, player, true);
+			
+			if (raytraceresult == null) {
+				return EnumActionResult.FAIL;
+			}
+			
+			BlockPos blockPos = raytraceresult.getBlockPos();
+			IBlockState iblockstate = worldIn.getBlockState(blockPos);
+			Material material = iblockstate.getMaterial();
+			
+			if (material == Material.WATER) {
+				worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 11);
+				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+				
 				if (!hasWater(itemStack)) {
 					setWater(itemStack, true);
+					player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("nbt.item.water_filled"), true);
 				} else {
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("nbt.item.water_already_filled"), true);
 				}
+				return EnumActionResult.SUCCESS;
 			}
 		}
 		return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);

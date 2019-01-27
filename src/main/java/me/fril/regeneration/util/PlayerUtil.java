@@ -37,9 +37,6 @@ public class PlayerUtil {
 			for (String s : RegenConfig.postRegen.potions) {
 				if (!Objects.requireNonNull(potion.getRegistryName()).toString().equals(s)) {
 					POTIONS.add(potion);
-					System.out.println(potion.getRegistryName() + " has been added");
-				} else {
-					System.out.println(potion.getRegistryName() + " has been removed");
 				}
 			}
 		});
