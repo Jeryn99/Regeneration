@@ -1,7 +1,7 @@
 {
     "display": {
         "icon": {
-          "item": "regeneration:fob_watch"
+            "item": "regeneration:fob_watch"
         },
         "title": {
             "translate": "regeneration.advancement.change_refusual"
@@ -10,11 +10,10 @@
             "translate": "regeneration.advancement.change_refusual.desc"
         }
     },
-
-    "parent": "regeneration:main",
-    "criteria": {
-        "change_refusal": {
-            "trigger": "change_refusal"
-        }
-    }
+    "parent": "regeneration:first_regen",
+     "criteria": {
+       "change_refusal": {
+         "trigger": "change_refusal"
+       }
+     }
 }

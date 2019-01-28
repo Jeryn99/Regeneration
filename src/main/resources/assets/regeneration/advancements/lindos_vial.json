@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "regeneration:lindos_vial"
+    },
+    "title": {
+      "translate": "regeneration.advancement.lindos_vial"
+    },
+    "description": {
+      "translate": "regeneration.advancement.lindos_vial.desc"
+    }
+  },
+  "parent": "regeneration:first_regen",
+  "criteria": {
+    "lindos_vial": {
+      "trigger": "lindos_vial"
+    }
+  }
+}

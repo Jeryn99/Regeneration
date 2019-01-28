@@ -1,8 +1,7 @@
 {
   "display": {
     "description": {
-      "traslate": "regeneration.advancement.regeneration.desc",
-      "color": "gray"
+      "translate": "regeneration.advancement.regeneration.desc"
     },
     "title": {
       "translate": "regeneration.advancement.regeneration"

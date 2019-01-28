@@ -1,5 +1,6 @@
 package me.fril.regeneration.common.item;
 
+import me.fril.regeneration.common.advancements.RegenTriggers;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.entity.EntityItemOverride;
@@ -12,6 +13,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.IItemPropertyGetter;
@@ -81,6 +83,14 @@ public class ItemLindos extends ItemOverrideBase {
 			stack.getTagCompound().setInteger("amount", 0);
 		}
 		return stack.getTagCompound();
+	}
+	
+	@Override
+	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+		super.onCreated(stack, worldIn, playerIn);
+		if (!playerIn.world.isRemote) {
+			RegenTriggers.LINDOS_VIAL.trigger((EntityPlayerMP) playerIn);
+		}
 	}
 	
 	public static int getAmount(ItemStack stack) {

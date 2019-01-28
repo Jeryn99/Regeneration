@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "regeneration:fob_watch"
+    },
+    "title": {
+      "translate": "regeneration.advancement.critical"
+    },
+    "description": {
+      "translate": "regeneration.advancement.critical.desc"
+    }
+  },
+  "parent": "regeneration:change_refusal",
+  "criteria": {
+    "critical_period": {
+      "trigger": "critical_period"
+    }
+  }
+}

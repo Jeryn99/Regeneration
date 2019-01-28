@@ -46,7 +46,7 @@ class ActingServerHandler implements IActingHandler {
 		
 		switch (cap.getState()) {
 			case POST:
-				if (player.ticksExisted % 110 == 0) {
+				if (player.ticksExisted % 310 == 0) {
 					PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
 				}
 				break;
@@ -56,7 +56,7 @@ class ActingServerHandler implements IActingHandler {
 				player.setArrowCountInEntity(0);
 				RegenUtil.regenerationExplosion(player);
 				break;
-				
+			
 			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 				
@@ -74,7 +74,7 @@ class ActingServerHandler implements IActingHandler {
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
 				
 				break;
-				
+			
 			case GRACE:
 				float weaknessPercentage = 0.5F;
 				
@@ -85,7 +85,7 @@ class ActingServerHandler implements IActingHandler {
 				}
 				
 				break;
-				
+			
 			case ALIVE:
 				break;
 			default:
@@ -119,6 +119,8 @@ class ActingServerHandler implements IActingHandler {
 	
 	@Override
 	public void onGoCritical(IRegeneration cap) {
+		
+		RegenTriggers.CRITICAL.trigger((EntityPlayerMP) cap.getPlayer());
 		
 		if (!cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
 			cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);

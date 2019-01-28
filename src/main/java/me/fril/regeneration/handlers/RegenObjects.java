@@ -35,8 +35,10 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
-		e.getRegistry().registerAll(setUpItem(new ItemFobWatch(), "fob_watch"), setUpItem(new ItemLindos(), "lindos_vial")
-				);
+		e.getRegistry().registerAll(
+				setUpItem(new ItemFobWatch(), "fob_watch"),
+				setUpItem(new ItemLindos(), "lindos_vial")
+		);
 	}
 	
 	private static Item setUpItem(Item item, String name) {

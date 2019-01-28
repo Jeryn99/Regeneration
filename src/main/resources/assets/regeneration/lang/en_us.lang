@@ -126,7 +126,11 @@ nbt.item.water=Has Water: %s
 nbt.item.water_filled=You have now filled this Vial with Water
 nbt.item.water_already_filled=This Vial already has water in it
 
-regeneration.advancement.regeneration=Regeneration!
+regeneration.advancement.regeneration=Change my dear...
 regeneration.advancement.regeneration.desc=Regenerate for the First time!
 regeneration.advancement.change_refusual=I. WILL. NOT. CHANGE!
 regeneration.advancement.change_refusual.desc=Punch a block to delay your regeneration!
+regeneration.advancement.critical=Your song is ending...
+regeneration.advancement.critical.desc=Refuse to Regenerate up till the point of near death...
+regeneration.advancement.lindos_vial=Lindos!
+regeneration.advancement.lindos_vial.desc=Craft a Lindos Vial!
