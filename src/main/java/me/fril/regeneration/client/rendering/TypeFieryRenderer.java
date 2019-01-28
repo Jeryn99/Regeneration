@@ -3,7 +3,7 @@ package me.fril.regeneration.client.rendering;
 import me.fril.regeneration.client.skinhandling.SkinInfo;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.types.TypeFiery;
-import me.fril.regeneration.util.LimbManipulationUtil;
+import me.fril.regeneration.util.LimbHelper;
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,6 +33,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
 			return;
 		
+		RenderPlayer renderPlayer = ev.getRenderer();
 		double animationProgress = type.getAnimationProgress();
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
 		
@@ -46,11 +48,11 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			armRot = (int) ((animationProgress / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
 		
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_ARM).setAngles(0, 0, -armRot + arm_shake);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_ARM).setAngles(0, 0, armRot + arm_shake);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.HEAD).setAngles(-headRot, 0, 0);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.LEFT_LEG).setAngles(0, 0, -10);
-		LimbManipulationUtil.getLimbManipulator(ev.getRenderer(), LimbManipulationUtil.Limb.RIGHT_LEG).setAngles(0, 0, 10);
+		LimbHelper.rotateHead(renderPlayer, -headRot, 0, 0);
+		LimbHelper.rotateLeftArm(renderPlayer, 0, 0, -armRot + arm_shake);
+		LimbHelper.rotateRightArm(renderPlayer, 0, 0, armRot + arm_shake);
+		LimbHelper.rotateRightLeg(renderPlayer, 0, 0, 10);
+		LimbHelper.rotateLeftLeg(renderPlayer, 0, 0, -10);
 	}
 	
 	@Override
