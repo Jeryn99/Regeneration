@@ -2,7 +2,7 @@
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
 		"1.12.2-latest": "1.3.9",
-		"1.12.2-recommended": "1.3.9"
+		"1.12.2-recommended": "1.4.0"
 	},
 	"1.12.2": {
 		"1.0.0": "Time for a full release then boys",
@@ -22,6 +22,7 @@
 		"1.3.6": "Fixed crashes & bugs, improved LucraftCore integration and a new config layout",
 		"1.3.7": "Fixed teleportation resetting skins, fob watch noises and glow and some other minor fixes",
 		"1.3.8": "Fixed server crash",
-		"1.3.9": "Fixed skin related crash, added lindos vials, fixed sound crashes, a start on traits (Trait Ideas would be loved)"
+		"1.3.9": "Fixed skin related crash, added lindos vials, fixed sound crashes, a start on traits (Trait Ideas would be loved)",
+		"1.4.0": "Fixed mobs not taking damage when hit"
 	}
 }
