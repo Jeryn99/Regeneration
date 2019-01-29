@@ -1,7 +1,5 @@
 package me.fril.regeneration.network;
 
-import java.util.UUID;
-
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
@@ -12,6 +10,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import java.util.UUID;
 
 public class MessageTriggerRegeneration implements IMessage {
 	
@@ -40,15 +40,17 @@ public class MessageTriggerRegeneration implements IMessage {
 		
 		@Override
 		public IMessage onMessage(MessageTriggerRegeneration message, MessageContext ctx) {
-			RegenerationMod.DEBUGGER.getChannelFor(message.player).out("Regeneration keybind pressed");
-			IRegeneration regen = CapabilityRegeneration.getForPlayer(message.player);
+			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
+				RegenerationMod.DEBUGGER.getChannelFor(message.player).out("Regeneration keybind pressed");
+				IRegeneration regen = CapabilityRegeneration.getForPlayer(message.player);
+				
+				if (!regen.getState().isGraceful()) {
+					RegenerationMod.DEBUGGER.getChannelFor(message.player).warn("Trigger packet was sent when not in a graceful period");
+					return;
+				}
+				regen.triggerRegeneration();
+			});
 			
-			if (!regen.getState().isGraceful()) {
-				RegenerationMod.DEBUGGER.getChannelFor(message.player).warn("Trigger packet was sent when not in a graceful period");
-				return null;
-			}
-			
-			regen.triggerRegeneration();
 			return null;
 		}
 	}

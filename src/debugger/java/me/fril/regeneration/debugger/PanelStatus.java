@@ -1,17 +1,11 @@
 package me.fril.regeneration.debugger;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.RegenState.Transition;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.swing.*;
+import java.awt.*;
 
 @SuppressWarnings("serial")
 class PanelStatus extends JPanel {

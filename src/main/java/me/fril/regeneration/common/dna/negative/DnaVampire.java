@@ -1,7 +1,5 @@
 package me.fril.regeneration.common.dna.negative;
 
-import java.util.UUID;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.dna.DnaHandler;
@@ -11,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 /**
  * Created by Suffril

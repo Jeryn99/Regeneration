@@ -1,10 +1,5 @@
 package me.fril.regeneration.util;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import me.fril.regeneration.client.rendering.model.ModelArmorOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -28,6 +23,10 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.lwjgl.opengl.GL11;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * Created by Sub

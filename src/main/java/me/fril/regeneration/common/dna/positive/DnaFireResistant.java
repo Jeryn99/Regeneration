@@ -10,7 +10,7 @@ public class DnaFireResistant implements DnaHandler.IDna {
 	@Override
 	public void onUpdate(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		if(player.isBurning() && cap.dnaAlive()){
+		if (player.isBurning() && cap.dnaAlive()) {
 			player.extinguish();
 		}
 	}

@@ -53,11 +53,9 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
 	public String deathSource = "";
+	public int lcCoreReserve = 0;
 	private boolean didSetup = false, traitActive = true;
 	private int regenerationsLeft;
-	
-	public int lcCoreReserve = 0;
-	
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType<?> type = new TypeFiery();
 	
@@ -186,7 +184,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
 		}
 		
-		if(nbt.hasKey("lc_regen")){
+		if (nbt.hasKey("lc_regen")) {
 			lcCoreReserve = nbt.getInteger("lc_regen");
 		}
 		

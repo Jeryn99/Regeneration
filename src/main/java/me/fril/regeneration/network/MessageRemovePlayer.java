@@ -1,7 +1,5 @@
 package me.fril.regeneration.network;
 
-import java.util.UUID;
-
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import net.minecraft.client.Minecraft;
@@ -9,6 +7,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import java.util.UUID;
 
 /**
  * Created by Sub

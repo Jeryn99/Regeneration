@@ -1,7 +1,5 @@
 package me.fril.regeneration.handlers;
 
-import java.io.IOException;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
@@ -11,6 +9,8 @@ import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import java.io.IOException;
 
 class ActingClientHandler implements IActingHandler {
 	

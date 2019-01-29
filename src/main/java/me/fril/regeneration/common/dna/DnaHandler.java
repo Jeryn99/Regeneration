@@ -52,7 +52,7 @@ public class DnaHandler {
 		register(DNA_BORING);
 		register(DNA_DUMB);
 		register(DNA_SNEAK);
-	//	register(DNA_VAMPIRE);
+		//	register(DNA_VAMPIRE);
 		register(DNA_TOUGH);
 		register(DNA_LUCKY);
 		register(DNA_SWIMMER);
@@ -119,9 +119,13 @@ public class DnaHandler {
 	
 	public interface IDna {
 		void onUpdate(IRegeneration cap);
+		
 		void onAdded(IRegeneration cap);
+		
 		void onRemoved(IRegeneration cap);
+		
 		String getLangKey();
+		
 		ResourceLocation getRegistryName();
 	}
 	

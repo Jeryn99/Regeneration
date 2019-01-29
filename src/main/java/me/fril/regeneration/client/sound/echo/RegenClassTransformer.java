@@ -1,11 +1,7 @@
 package me.fril.regeneration.client.sound.echo;
 
-import java.util.ListIterator;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import javax.annotation.Nullable;
-
+import me.fril.regeneration.RegenerationMod;
+import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -18,8 +14,10 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import me.fril.regeneration.RegenerationMod;
-import net.minecraft.launchwrapper.IClassTransformer;
+import javax.annotation.Nullable;
+import java.util.ListIterator;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 //CREDIT https://raw.githubusercontent.com/Cryptic-Mushroom/The-Midnight/13ffab9ab0d78b0d030c2b3b55252e0e8fd2864e/src/main/java/com/mushroom/midnight/core/transformer/MidnightClassTransformer.java
 public class RegenClassTransformer implements IClassTransformer, Opcodes {

@@ -85,14 +85,6 @@ public class ItemLindos extends ItemOverrideBase {
 		return stack.getTagCompound();
 	}
 	
-	@Override
-	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-		super.onCreated(stack, worldIn, playerIn);
-		if (!playerIn.world.isRemote) {
-			RegenTriggers.LINDOS_VIAL.trigger((EntityPlayerMP) playerIn);
-		}
-	}
-	
 	public static int getAmount(ItemStack stack) {
 		return getStackTag(stack).getInteger("amount");
 	}
@@ -107,6 +99,14 @@ public class ItemLindos extends ItemOverrideBase {
 	
 	public static void setWater(ItemStack stack, boolean water) {
 		getStackTag(stack).setBoolean("water", water);
+	}
+	
+	@Override
+	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+		super.onCreated(stack, worldIn, playerIn);
+		if (!playerIn.world.isRemote) {
+			RegenTriggers.LINDOS_VIAL.trigger((EntityPlayerMP) playerIn);
+		}
 	}
 	
 	@Override

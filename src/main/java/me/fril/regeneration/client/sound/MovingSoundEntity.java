@@ -1,13 +1,13 @@
 package me.fril.regeneration.client.sound;
 
-import java.util.function.Supplier;
-
 import me.fril.regeneration.handlers.RegenObjects;
 import me.fril.regeneration.util.RegenUtil;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Created by Sub

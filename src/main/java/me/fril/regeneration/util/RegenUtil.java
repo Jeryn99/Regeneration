@@ -1,7 +1,5 @@
 package me.fril.regeneration.util;
 
-import java.util.Random;
-
 import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.handlers.RegenObjects;
 import net.minecraft.block.state.IBlockState;
@@ -18,6 +16,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class RegenUtil {
 	

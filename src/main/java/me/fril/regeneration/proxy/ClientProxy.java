@@ -16,11 +16,14 @@ import me.fril.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,7 +60,10 @@ public class ClientProxy extends CommonProxy {
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
-			renderPlayer.layerRenderers.removeIf(layer -> layer.getClass() == LayerHeldItem.class); // Remove old held item layer
+			
+			List<LayerRenderer<AbstractClientPlayer>> list = renderPlayer.layerRenderers;
+			list.removeIf(layer -> layer.getClass() == LayerHeldItem.class);
+			
 			renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); // Add new item layer
 			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
 		}

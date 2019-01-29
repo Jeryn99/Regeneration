@@ -304,6 +304,17 @@ public class SkinChangingHandler {
 		}
 	}
 	
+	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String
+			par1Str, boolean fix64) {
+		TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+		ITextureObject object = texturemanager.getTexture(resource);
+		if (object == null) {
+			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt(fix64));
+			texturemanager.loadTexture(resource, object);
+		}
+		return object;
+	}
+	
 	/**
 	 * Subscription to RenderPlayerEvent.Pre to set players model and texture from hashmap
 	 *
@@ -344,39 +355,10 @@ public class SkinChangingHandler {
 		
 	}
 	
-	
 	@SubscribeEvent
 	public void onRelog(EntityJoinWorldEvent e) {
 		if (e.getEntity() instanceof EntityPlayer) {
 			PLAYER_SKINS.remove(e.getEntity().getUniqueID());
-		}
-	}
-	
-	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String
-			par1Str, boolean fix64) {
-		TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-		ITextureObject object = texturemanager.getTexture(resource);
-		if (object == null) {
-			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt(fix64));
-			texturemanager.loadTexture(resource, object);
-		}
-		return object;
-	}
-	
-	public enum EnumChoices {
-		ALEX(true), STEVE(false), EITHER(true);
-		
-		private boolean isAlex;
-		
-		EnumChoices(boolean b) {
-			this.isAlex = b;
-		}
-		
-		public boolean isAlex() {
-			if (this == EITHER) {
-				return RAND.nextBoolean();
-			}
-			return isAlex;
 		}
 	}
 	
@@ -406,5 +388,22 @@ public class SkinChangingHandler {
 			}
 		}
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
+	}
+	
+	public enum EnumChoices {
+		ALEX(true), STEVE(false), EITHER(true);
+		
+		private boolean isAlex;
+		
+		EnumChoices(boolean b) {
+			this.isAlex = b;
+		}
+		
+		public boolean isAlex() {
+			if (this == EITHER) {
+				return RAND.nextBoolean();
+			}
+			return isAlex;
+		}
 	}
 }

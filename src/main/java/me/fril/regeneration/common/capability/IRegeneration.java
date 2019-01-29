@@ -82,5 +82,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	//ONLY USED IN LCCORE
 	int getReserve();
+	
 	void setReserve(int reserve);
 }

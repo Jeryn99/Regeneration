@@ -1,7 +1,5 @@
 package me.fril.regeneration.network;
 
-import java.util.UUID;
-
 import io.netty.buffer.ByteBuf;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.handlers.ActingForwarder;
@@ -11,6 +9,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import java.util.UUID;
 
 public class MessageRegenStateEvent implements IMessage {
 	
@@ -43,7 +43,7 @@ public class MessageRegenStateEvent implements IMessage {
 		
 		@Override
 		public IMessage onMessage(MessageRegenStateEvent message, MessageContext ctx) {
-			ActingForwarder.onClient(message.event, CapabilityRegeneration.getForPlayer(message.player));
+			Minecraft.getMinecraft().addScheduledTask(() -> ActingForwarder.onClient(message.event, CapabilityRegeneration.getForPlayer(message.player)));
 			return null;
 		}
 	}

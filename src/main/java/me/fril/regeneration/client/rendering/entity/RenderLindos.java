@@ -1,9 +1,5 @@
 package me.fril.regeneration.client.rendering.entity;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
 import me.fril.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,6 +8,9 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+
+import javax.annotation.Nullable;
+import java.util.Random;
 
 public class RenderLindos extends Render<Entity> {
 	

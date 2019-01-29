@@ -1,15 +1,6 @@
 package me.fril.regeneration.debugger;
 
-import java.awt.EventQueue;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-
 import com.mojang.authlib.GameProfile;
-
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.debugger.util.UnloadedPlayerBufferChannel;
@@ -19,6 +10,12 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public class GraphicalRegenDebugger implements IRegenDebugger {
 	private final Map<GameProfile, IDebugChannel> channelz = new HashMap<>();

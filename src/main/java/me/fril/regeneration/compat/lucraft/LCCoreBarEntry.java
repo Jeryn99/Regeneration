@@ -1,8 +1,5 @@
 package me.fril.regeneration.compat.lucraft;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lucraft.mods.lucraftcore.util.abilitybar.IAbilityBarEntry;
 import lucraft.mods.lucraftcore.util.abilitybar.IAbilityBarProvider;
 import me.fril.regeneration.RegenerationMod;
@@ -14,6 +11,9 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LCCoreBarEntry implements IAbilityBarProvider, IAbilityBarEntry {
 	

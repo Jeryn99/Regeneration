@@ -66,7 +66,7 @@ public class RegenObjects {
 				setUpSound("regeneration_3"),
 				setUpSound("grace_hum"),
 				setUpSound("regen_breath")
-				);
+		);
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {

@@ -1,9 +1,5 @@
 package me.fril.regeneration.util;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 import me.fril.regeneration.RegenerationMod;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -17,6 +13,10 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class LimbManipulationUtil {

@@ -80,7 +80,7 @@ public class PlayerUtil {
 			player.addPotionEffect(new PotionEffect(potion, length, amplifier, ambient, showParticles));
 			return true;
 		}
-			return false;
+		return false;
 	}
 	
 }
