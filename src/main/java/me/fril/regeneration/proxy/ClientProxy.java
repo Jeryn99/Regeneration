@@ -12,6 +12,7 @@ import me.fril.regeneration.common.entity.EntityItemOverride;
 import me.fril.regeneration.common.entity.EntityLindos;
 import me.fril.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.fril.regeneration.util.EnumCompatModids;
+import me.fril.regeneration.util.FileUtil;
 import me.fril.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
@@ -79,7 +80,7 @@ public class ClientProxy extends CommonProxy {
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			RenderUtil.setupArmorModelOverride(renderPlayer);
 		}
-		SkinChangingHandler.registerResources();
+		FileUtil.createDefaultFolders();
 	}
 	
 }

@@ -8,6 +8,7 @@ import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.network.MessageUpdateSkin;
 import me.fril.regeneration.network.NetworkHandler;
 import me.fril.regeneration.util.ClientUtil;
+import me.fril.regeneration.util.FileUtil;
 import me.fril.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -16,8 +17,6 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +26,8 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,13 +38,12 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -52,50 +52,20 @@ public class SkinChangingHandler {
 	
 	public static final File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
-	private static final File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
-	private static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
-	private static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-	private static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
+	public static final File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
+	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
+	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
+	public static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
 	private static final Random RAND = new Random();
-	private static final ModelBiped STEVE_MODEL = new ModelPlayer(0.1F, false);
-	private static final ModelBiped ALEX_MODEL = new ModelPlayer(0.1F, true);
-	private static String CURRENT_SKIN = "banana.png";
-	private static FilenameFilter IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(CURRENT_SKIN);
-	
-	/**
-	 * Creates skin folders
-	 * Proceeds to download skins to the folders if they are empty
-	 * If the download doesn't happen, NPEs will occur later on
-	 */
-	public static void registerResources() {
-		
-		if (!SKIN_CACHE_DIRECTORY.exists()) {
-			SKIN_CACHE_DIRECTORY.mkdirs();
-		}
-		
-		if (!SKIN_DIRECTORY.exists()) {
-			SKIN_DIRECTORY.mkdirs();
-		}
-		
-		SKIN_DIRECTORY_ALEX.mkdirs();
-		SKIN_DIRECTORY_STEVE.mkdirs();
-		
-		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.listFiles()).length < 1 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.listFiles()).length < 1) {
-			try {
-				createDefaultImages();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
+	private static final ModelBiped STEVE_MODEL = new ModelPlayer(0.0F, false);
+	private static final ModelBiped ALEX_MODEL = new ModelPlayer(0.0F, true);
 	
 	/**
 	 * Converts a buffered image to Pixel data
 	 *
 	 * @param bufferedImage - Buffered image to be converted to Pixel data
 	 */
-	private static byte[] encodeToPixelData(BufferedImage bufferedImage) {
+	private static byte[] imageToPixelData(BufferedImage bufferedImage) {
 		WritableRaster raster = bufferedImage.getRaster();
 		DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
 		return buffer.getData();
@@ -135,17 +105,15 @@ public class SkinChangingHandler {
 	 * @param player - Player instance, used to check UUID to ensure it is the client player being involved in the scenario
 	 * @throws IOException
 	 */
-	public static void skinChangeRandom(Random random, EntityPlayer player) throws IOException {
+	public static void sendSkinUpdate(Random random, EntityPlayer player) throws IOException {
 		if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID())
 			return;
 		
 		if (RegenConfig.skins.changeMySkin) {
 			boolean isAlex = RegenConfig.skins.prefferedModel.isAlex();
-			File skin = SkinChangingHandler.getRandomSkinFile(random, isAlex);
+			File skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
 			BufferedImage image = ImageIO.read(skin);
-			CURRENT_SKIN = skin.getName();
-			IMAGE_FILTER = (dir, name) -> name.endsWith(".png") && !name.equals(CURRENT_SKIN);
-			byte[] pixelData = SkinChangingHandler.encodeToPixelData(image);
+			byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
 			if (pixelData.length >= 32767) {
 				ClientUtil.sendSkinResetPacket();
@@ -157,22 +125,22 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	private static File getRandomSkinFile(Random rand, boolean isAlex) throws IOException {
-		File skins = null;
+	private static File chooseRandomSkin(Random rand, boolean isAlex) throws IOException {
+		File skins;
 		if (isAlex) {
 			skins = SKIN_DIRECTORY_ALEX;
 		} else {
 			skins = SKIN_DIRECTORY_STEVE;
 		}
-		File[] files = skins.listFiles(IMAGE_FILTER);
-		
-		if (files.length == 0) {
+		Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+		if (folderFiles.isEmpty()) {
 			createDefaultImages();
-			files = skins.listFiles(IMAGE_FILTER);
+			folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		}
 		
-		File file = files[rand.nextInt(files.length)];
-		return file;
+		folderFiles.forEach(System.out::println);
+		
+		return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
 	}
 	
 	/**
@@ -189,7 +157,7 @@ public class SkinChangingHandler {
 		SkinInfo.SkinType skinType = null;
 		
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
-			resourceLocation = getSkinFromMojang(player);
+			resourceLocation = retrieveSkinFromMojang(player);
 			
 			if (player.getSkinType().equals("slim")) {
 				skinType = SkinInfo.SkinType.ALEX;
@@ -217,7 +185,7 @@ public class SkinChangingHandler {
 	 * @return ResourceLocation from Mojang
 	 * @throws IOException
 	 */
-	private static ResourceLocation getSkinFromMojang(AbstractClientPlayer player) throws IOException {
+	private static ResourceLocation retrieveSkinFromMojang(AbstractClientPlayer player) throws IOException {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		Map map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
 		if (map.isEmpty()) {
@@ -227,8 +195,6 @@ public class SkinChangingHandler {
 			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
 			
 			BufferedImage image = ImageIO.read(new URL(profile.getUrl()));
-			
-			System.out.println(profile.getUrl());
 			
 			if (image == null) {
 				return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
@@ -243,23 +209,11 @@ public class SkinChangingHandler {
 	}
 	
 	/**
-	 * @param url      - URL to download image from
-	 * @param file     - Directory of where to save the image to [SHOULD NOT CONTAIN THE FILES NAME]
-	 * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
-	 * @throws IOException
-	 */
-	private static void downloadImages(URL url, File file, String filename) throws IOException {
-		SKIN_LOG.info("Downloading Skin from: {}", url.toString());
-		BufferedImage img = ImageIO.read(url);
-		ImageIO.write(img, "png", new File(file, filename + ".png"));
-	}
-	
-	/**
 	 * Downloads a set of default images to their correct directories
 	 *
 	 * @throws IOException
 	 */
-	private static void createDefaultImages() throws IOException {
+	public static void createDefaultImages() throws IOException {
 		for (DefaultSkins value : DefaultSkins.values()) {
 			File dummy;
 			if (value.isAlexDir()) {
@@ -268,7 +222,7 @@ public class SkinChangingHandler {
 				dummy = SKIN_DIRECTORY_STEVE;
 			}
 			
-			downloadImages(new URL(value.getURL()), dummy, value.name().toLowerCase());
+			FileUtil.downloadImage(new URL(value.getURL()), dummy, value.name().toLowerCase());
 		}
 	}
 	
@@ -302,17 +256,6 @@ public class SkinChangingHandler {
 		if (renderer.mainModel != model) {
 			renderer.mainModel = model;
 		}
-	}
-	
-	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String
-			par1Str, boolean fix64) {
-		TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-		ITextureObject object = texturemanager.getTexture(resource);
-		if (object == null) {
-			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt(fix64));
-			texturemanager.loadTexture(resource, object);
-		}
-		return object;
 	}
 	
 	/**
@@ -406,4 +349,5 @@ public class SkinChangingHandler {
 			return isAlex;
 		}
 	}
+	
 }

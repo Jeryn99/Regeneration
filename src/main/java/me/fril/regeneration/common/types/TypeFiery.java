@@ -10,8 +10,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Random;
-
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -28,10 +26,6 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		if (!player.world.isRemote) {
 			PlayerUtil.setPerspective((EntityPlayerMP) player, true, false);
 		}
-		
-		Random rand = player.world.rand;
-		player.rotationPitch += (rand.nextInt(10) - 5) * 0.2;
-		player.rotationYaw += (rand.nextInt(10) - 5) * 0.2;
 		
 		if (player.world.isRemote)
 			return;
