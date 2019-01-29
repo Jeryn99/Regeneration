@@ -137,11 +137,6 @@ public class RegenConfig {
 	
 	public static class Skins {
 		
-		@Config.LangKey("config.regeneration.skins.download_url")
-		@Config.Comment("The URL skins are downloaded from when you reset back to Mojangs skin")
-		// TODO Actually use mojang instead
-		public String downloadUrl = "https://minotar.net/skin/%s";
-		
 		@Config.LangKey("config.regeneration.skins.changemyskin")
 		@Config.Comment("Disabling this will disable skin changing for you and you will retain your Mojang one")
 		public boolean changeMySkin = true;

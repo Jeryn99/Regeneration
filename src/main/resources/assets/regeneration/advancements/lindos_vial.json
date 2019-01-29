@@ -4,10 +4,10 @@
       "item": "regeneration:lindos_vial"
     },
     "title": {
-      "translate": "regeneration.advancement.lindos_vial"
+      "text": "Lindos!"
     },
     "description": {
-      "translate": "regeneration.advancement.lindos_vial.desc"
+      "text": "Craft a Lindos vial"
     }
   },
   "parent": "regeneration:first_regen",

@@ -1,10 +1,10 @@
 {
   "display": {
     "description": {
-      "translate": "regeneration.advancement.regeneration.desc"
+      "text": "Regenerate for the First time!"
     },
     "title": {
-      "translate": "regeneration.advancement.regeneration"
+      "text": "Change my dear..."
     },
     "icon": {
       "item": "regeneration:fob_watch",

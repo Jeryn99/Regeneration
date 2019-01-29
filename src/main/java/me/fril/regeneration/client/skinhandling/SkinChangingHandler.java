@@ -112,6 +112,7 @@ public class SkinChangingHandler {
 		if (RegenConfig.skins.changeMySkin) {
 			boolean isAlex = RegenConfig.skins.prefferedModel.isAlex();
 			File skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
+			RegenerationMod.LOG.info(skin.getName() + " was choosen");
 			BufferedImage image = ImageIO.read(skin);
 			byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
@@ -137,8 +138,6 @@ public class SkinChangingHandler {
 			createDefaultImages();
 			folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		}
-		
-		folderFiles.forEach(System.out::println);
 		
 		return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
 	}

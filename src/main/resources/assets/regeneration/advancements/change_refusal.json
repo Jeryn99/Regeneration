@@ -4,10 +4,10 @@
             "item": "regeneration:fob_watch"
         },
         "title": {
-            "translate": "regeneration.advancement.change_refusual"
+            "text": "I. WILL. NOT. CHANGE!"
         },
         "description": {
-            "translate": "regeneration.advancement.change_refusual.desc"
+            "text": "Delay your Regeneration!"
         }
     },
     "parent": "regeneration:first_regen",

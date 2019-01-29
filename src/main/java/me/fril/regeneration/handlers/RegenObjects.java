@@ -6,6 +6,7 @@ import me.fril.regeneration.common.entity.EntityLindos;
 import me.fril.regeneration.common.item.ItemFobWatch;
 import me.fril.regeneration.common.item.ItemLindos;
 import me.fril.regeneration.util.RegenDamageSource;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -37,7 +38,7 @@ public class RegenObjects {
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		e.getRegistry().registerAll(
 				setUpItem(new ItemFobWatch(), "fob_watch"),
-				setUpItem(new ItemLindos(), "lindos_vial")
+				setUpItem(new ItemLindos(), "lindos_vial").setCreativeTab(CreativeTabs.BREWING)
 		);
 	}
 	

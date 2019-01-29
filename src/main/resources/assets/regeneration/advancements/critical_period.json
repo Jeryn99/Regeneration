@@ -4,10 +4,10 @@
       "item": "regeneration:fob_watch"
     },
     "title": {
-      "translate": "regeneration.advancement.critical"
+      "text": "Your song is ending..."
     },
     "description": {
-      "translate": "regeneration.advancement.critical.desc"
+      "text": "Refuse to Regenerate up till the point of near death..."
     }
   },
   "parent": "regeneration:change_refusal",
