@@ -117,6 +117,7 @@ dna.lucky.name=Your DNA consists of Lucky genes!
 dna.swimmer.name=Your DNA consists of Swimming genes!
 dna.hydrophobic.name=Your DNA consists of Hydrophobic genes!
 dna.tough.name=Your DNA consists of Strong genes!
+dna.fire.name=Your DNA consists of non-flammable genes!
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...

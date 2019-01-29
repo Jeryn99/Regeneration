@@ -1,11 +1,14 @@
 package me.fril.regeneration.common.dna.positive;
 
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.common.dna.DnaHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 public class DnaFireResistant implements DnaHandler.IDna {
+	
+	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "fire");
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {
@@ -27,11 +30,11 @@ public class DnaFireResistant implements DnaHandler.IDna {
 	
 	@Override
 	public String getLangKey() {
-		return null;
+		return "dna." + ID.getPath() + ".name";
 	}
 	
 	@Override
 	public ResourceLocation getRegistryName() {
-		return null;
+		return ID;
 	}
 }
