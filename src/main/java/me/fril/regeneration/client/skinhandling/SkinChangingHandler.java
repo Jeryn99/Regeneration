@@ -19,10 +19,8 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -212,20 +210,6 @@ public class SkinChangingHandler {
 		return new SkinInfo(resourceLocation, skinType);
 	}
 	
-	private static ResourceLocation getSkinFromMojang(AbstractClientPlayer player) throws IOException {
-		setPlayerTexture(player, null);
-		Minecraft minecraft = Minecraft.getMinecraft();
-		URL url = new URL(String.format(RegenConfig.skins.downloadUrl, StringUtils.stripControlCodes(player.getUniqueID().toString())));
-		BufferedImage img = ImageIO.read(url);
-		SKIN_LOG.info("Downloading Skin from: {}", url.toString());
-		ImageIO.write(img, "png", new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png"));
-		
-		if (img == null) {
-			return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
-		}
-		return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(img));
-	}
-	
 	/**
 	 * This is used when the clients skin is reset
 	 *
@@ -233,8 +217,7 @@ public class SkinChangingHandler {
 	 * @return ResourceLocation from Mojang
 	 * @throws IOException
 	 */
-	//FIXING Apprantly makes everyone steve/alex on multiplayer
-	private static ResourceLocation getSkinFromMojangNew(AbstractClientPlayer player) {
+	private static ResourceLocation getSkinFromMojang(AbstractClientPlayer player) throws IOException {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		Map map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
 		if (map.isEmpty()) {
@@ -242,13 +225,18 @@ public class SkinChangingHandler {
 		}
 		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
 			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
-			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, minecraft.getSkinManager(), 2), profile.getHash().substring(0, 2));
-			File file = new File(dir, profile.getHash());
-			if (file.exists())
-				file.delete();
-			ResourceLocation location = new ResourceLocation("skins/" + profile.getHash());
-			loadTexture(file, location, DefaultPlayerSkin.getDefaultSkinLegacy(), profile.getUrl(), true);
-			return location;
+			
+			BufferedImage image = ImageIO.read(new URL(profile.getUrl()));
+			
+			System.out.println(profile.getUrl());
+			
+			if (image == null) {
+				return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
+			}
+			
+			File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
+			ImageIO.write(image, "png", file);
+			return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(image));
 		}
 		
 		return DefaultPlayerSkin.getDefaultSkinLegacy();
@@ -364,7 +352,8 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String par1Str, boolean fix64) {
+	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String
+			par1Str, boolean fix64) {
 		TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
 		ITextureObject object = texturemanager.getTexture(resource);
 		if (object == null) {

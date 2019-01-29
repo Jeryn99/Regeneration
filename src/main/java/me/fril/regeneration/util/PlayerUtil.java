@@ -1,6 +1,5 @@
 package me.fril.regeneration.util;
 
-import me.fril.regeneration.RegenConfig;
 import me.fril.regeneration.network.MessageSetPerspective;
 import me.fril.regeneration.network.NetworkHandler;
 import net.minecraft.entity.Entity;
@@ -14,15 +13,14 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAIZombieAttack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Sub
@@ -33,13 +31,14 @@ public class PlayerUtil {
 	public static ArrayList<Potion> POTIONS = new ArrayList<>();
 	
 	public static void createPostList() {
-		ForgeRegistries.POTIONS.getValuesCollection().forEach(potion -> {
-			for (String s : RegenConfig.postRegen.potions) {
-				if (!Objects.requireNonNull(potion.getRegistryName()).toString().equals(s)) {
-					POTIONS.add(potion);
-				}
-			}
-		});
+		POTIONS.add(MobEffects.WEAKNESS);
+		POTIONS.add(MobEffects.BLINDNESS);
+		POTIONS.add(MobEffects.MINING_FATIGUE);
+		POTIONS.add(MobEffects.RESISTANCE);
+		POTIONS.add(MobEffects.HEALTH_BOOST);
+		POTIONS.add(MobEffects.HUNGER);
+		POTIONS.add(MobEffects.WATER_BREATHING);
+		POTIONS.add(MobEffects.HASTE);
 	}
 	
 	public static void sendMessage(EntityPlayer player, String message, boolean hotBar) {

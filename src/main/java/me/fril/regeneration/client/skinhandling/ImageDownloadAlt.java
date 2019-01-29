@@ -134,4 +134,8 @@ public class ImageDownloadAlt extends SimpleTexture {
 		this.imageThread.setDaemon(true);
 		this.imageThread.start();
 	}
+	
+	public File getCacheFile() {
+		return cacheFile;
+	}
 }

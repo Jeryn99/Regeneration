@@ -132,24 +132,6 @@ public class RegenConfig {
 		@Config.Comment("The amount of absorption hearts you get when regenerating")
 		@Config.RangeInt(min = 0)
 		public int absorbtionLevel = 10;
-		
-		@Config.LangKey("config.regeneration.post_postions")
-		@Config.Comment("Potions that the player should NOT get randomly in POST")
-		public String[] potions = new String[]{
-				"minecraft:instant_damage",
-				"minecraft:invisibility",
-				"minecraft:weakness",
-				"minecraft:poison",
-				"minecraft:wither",
-				"minecraft:glowing",
-				"minecraft:levitation",
-				"minecraft:unluck",
-				"minecraft:levitation",
-				"ic2:radiation",
-				"lucraftcore:knock_out",
-				"lucraftcore:radiation"
-		};
-		
 	}
 	
 	
@@ -158,7 +140,7 @@ public class RegenConfig {
 		@Config.LangKey("config.regeneration.skins.download_url")
 		@Config.Comment("The URL skins are downloaded from when you reset back to Mojangs skin")
 		// TODO Actually use mojang instead
-		public String downloadUrl = "https://crafatar.com/skins/%s";
+		public String downloadUrl = "https://minotar.net/skin/%s";
 		
 		@Config.LangKey("config.regeneration.skins.changemyskin")
 		@Config.Comment("Disabling this will disable skin changing for you and you will retain your Mojang one")
