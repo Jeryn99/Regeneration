@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "1.4.1",
-		"1.12.2-recommended": "1.4.1"
+		"1.12.2-latest": "1.4.2",
+		"1.12.2-recommended": "1.4.2"
 	},
 	"1.12.2": {
 		"1.0.0": "Time for a full release then boys",
@@ -24,5 +24,6 @@
 		"1.3.8": "Fixed server crash",
 		"1.4.0": "Fixed bugs, added lindos vials and started on traits (we love new trait ideas!)",
 		"1.4.1": "Fixed potions issue, fixed Mojang skin issue, Folders are now recursive (You can make sub folders in alex & steve), Fixed sounds crash, Fixed stupid 64x32 skins"
+		"1.4.2": "Fixed overlapping events crash & added post hotbar messages"
 	}
 }
