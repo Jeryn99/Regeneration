@@ -410,7 +410,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		@SuppressWarnings("deprecation")
 		private void scheduleNextHandGlow() {
-			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
+			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
 			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.grace.handGlowInterval * 20);
 			synchronise();
@@ -418,7 +418,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		@SuppressWarnings("deprecation")
 		private void scheduleHandGlowTrigger() {
-			if (handGlowTimer != null && handGlowTimer.getTicksLeft() > 0)
+			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
 			handGlowTimer = new DebuggableScheduledAction(Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.grace.handGlowTriggerDelay * 20);
 			ActingForwarder.onHandsStartGlowing(CapabilityRegeneration.this);
