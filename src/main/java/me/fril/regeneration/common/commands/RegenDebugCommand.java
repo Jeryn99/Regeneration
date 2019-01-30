@@ -3,6 +3,7 @@ package me.fril.regeneration.common.commands;
 import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.common.capability.CapabilityRegeneration;
 import me.fril.regeneration.common.capability.IRegeneration;
+import me.fril.regeneration.util.RegenState;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -34,6 +35,9 @@ public class RegenDebugCommand extends CommandBase {
 				break;
 			
 			case "fastforward":
+				if (cap.getState() == RegenState.ALIVE) {
+					throw new CommandException("regeneration.messages.fast_forward_cmd_fail");
+				}
 				cap.getStateManager().fastForward();
 				break;
 			

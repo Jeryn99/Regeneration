@@ -135,3 +135,7 @@ regeneration.advancement.critical=Your song is ending...
 regeneration.advancement.critical.desc=Refuse to Regenerate up till the point of near death...
 regeneration.advancement.lindos_vial=Lindos!
 regeneration.advancement.lindos_vial.desc=Craft a Lindos Vial!
+regeneration.messages.reduced_dmg=Reduced Damage due to Post Regen State!
+regeneration.messages.fall_dmg=Fall damage reduced due to post regen state! Although you're gonna feel sick..
+regeneration.messages.post_ended=Your Regeneration process is now entirely completed!
+regeneration.messages.fast_forward_cmd_fail=Nothing to fast forward to.

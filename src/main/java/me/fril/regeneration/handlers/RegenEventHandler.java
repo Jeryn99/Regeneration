@@ -15,6 +15,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -129,22 +130,24 @@ public class RegenEventHandler {
 		cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedText());
 		
 		if (cap.getState() == RegenState.POST && player.posY > 0) {
-			
 			if (event.getSource() == DamageSource.FALL) {
 				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
 				if (player.world.getGameRules().getBoolean("mobGriefing") && event.getAmount() > 8.0F) {
 					RegenUtil.genCrater(player.world, player.getPosition(), 3);
 					event.setAmount(0.5F);
+					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.fall_dmg"), true);
 					return;
 				}
 			} else {
 				event.setAmount(0.5F);
+				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.reduced_dmg"), true);
 			}
 			return;
 		}
 		
 		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage()) {
 			event.setCanceled(true); // TODO still "hurts" the client view
+			
 		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 			boolean notDead = cap.getStateManager().onKilled(event.getSource());
 			event.setCanceled(notDead);

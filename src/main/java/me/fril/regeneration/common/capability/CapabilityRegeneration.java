@@ -395,7 +395,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		@SuppressWarnings("deprecation")
 		private void scheduleTransitionInTicks(Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
-				throw new IllegalStateException("Overwriting non-completed/cancelled transition");
+				throw new IllegalStateException("Overwriting non-completed/cancelled transition: \n Attempted Transition" + transition.name() + "\n Current: " + nextTransition + "\n Affected Player: " + player.getName());
 			
 			if (transition == Transition.HAND_GLOW_START || transition == Transition.HAND_GLOW_TRIGGER)
 				throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
@@ -455,7 +455,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				return false;
 				
 			} else if (state == RegenState.POST) {
-				return false;
+				return true;
 			} else
 				throw new IllegalStateException("Unknown state: " + state);
 		}
@@ -527,7 +527,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			// We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
 			scheduleTransitionInSeconds(Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
-			scheduleTransitionInSeconds(Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
 			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -550,6 +549,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = RegenState.ALIVE;
 			synchronise();
 			nextTransition = null;
+			
+			PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.post_ended"), true);
 			
 			if (player.rand.nextBoolean()) {
 				EntityLindos lindos = new EntityLindos(player.world);

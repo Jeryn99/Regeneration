@@ -125,3 +125,8 @@ message.regeneration.healed=You have given %s some of your Regeneration Energy!
 nbt.item.water=Has Water: %s
 nbt.item.water_filled=You have now filled this Vial with Water
 nbt.item.water_already_filled=This Vial already has water in it
+
+regeneration.messages.reduced_dmg=Reduced Damage due to Post Regen State!
+regeneration.messages.fall_dmg=Fall damage reduced due to post regen state! Although you're gonna feel sick..
+regeneration.messages.post_ended=Your Regeneration process is now entirely completed!
+regeneration.messages.fast_forward_cmd_fail=Nothing to fast forward to.
