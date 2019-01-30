@@ -6,7 +6,9 @@ import me.fril.regeneration.client.skinhandling.SkinChangingHandler;
 import me.fril.regeneration.common.capability.IRegeneration;
 import me.fril.regeneration.util.ClientUtil;
 import me.fril.regeneration.util.RegenState;
+import me.fril.regeneration.util.RegenUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 
@@ -40,6 +42,12 @@ class ActingClientHandler implements IActingHandler {
 	@Override
 	public void onRegenFinish(IRegeneration cap) {
 		ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.regenerated"), new TextComponentTranslation("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()), cap.getState());
+		
+		if (RegenConfig.changeHand && cap.getPlayer().getUniqueID() == Minecraft.getMinecraft().player.getUniqueID()) {
+			Minecraft.getMinecraft().gameSettings.mainHand = RegenUtil.randomEnum(EnumHandSide.class);
+			Minecraft.getMinecraft().gameSettings.sendSettingsToServer();
+		}
+		
 	}
 	
 	@Override

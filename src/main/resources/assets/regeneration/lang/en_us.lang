@@ -66,6 +66,7 @@ config.regeneration.regeneration_fire_immunity=Regeneration fire immunity
 config.regeneration.perspective=Change perspective
 config.regeneration.update_checker=Enable update checker
 config.regeneration.fob_recipe=Fob Watch crafting
+config.regeneration.hand_change=Change hand
 
 config.regeneration.regeneration_kills_players=Regeneration kills players
 config.regeneration.regeneration_knocksback_players=Regeneration knocks back players

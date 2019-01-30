@@ -1,8 +1,10 @@
 package me.fril.regeneration.util;
 
+import me.fril.regeneration.RegenerationMod;
 import me.fril.regeneration.client.rendering.model.ModelArmorOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,6 +19,7 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -206,6 +209,32 @@ public class RenderUtil {
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
+	}
+	
+	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
+	
+	public static void renderVignette(Vec3d color, float a, RegenState state) {
+		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
+		GlStateManager.disableAlpha();
+		GlStateManager.depthMask(false);
+		GlStateManager.enableBlend();
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		
+		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
+		int z = -89; // below the HUD
+		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+		bufferbuilder.pos(0, scaledRes.getScaledHeight(), z).tex(0, 1).endVertex();
+		bufferbuilder.pos(scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), z).tex(1.0D, 1.0D).endVertex();
+		bufferbuilder.pos(scaledRes.getScaledWidth(), 0, z).tex(1, 0).endVertex();
+		bufferbuilder.pos(0, 0, z).tex(0, 0).endVertex();
+		tessellator.draw();
+		
+		GlStateManager.depthMask(true);
+		GlStateManager.enableAlpha();
+		GlStateManager.color(1, 1, 1, 1);
 	}
 	
 	/**

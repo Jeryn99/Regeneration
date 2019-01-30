@@ -21,10 +21,15 @@ import java.util.Random;
 
 public class RegenUtil {
 	
+	static Random rand = new Random();
+	
+	public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
+		int x = rand.nextInt(clazz.getEnumConstants().length);
+		return clazz.getEnumConstants()[x];
+	}
+	
 	public static float randFloat(float min, float max) {
-		Random rand = new Random();
-		float result = rand.nextFloat() * (max - min) + min;
-		return result;
+		return rand.nextFloat() * (max - min) + min;
 	}
 	
 	public static void genCrater(World world, BlockPos pos, int radius) {

@@ -15,16 +15,12 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ChatType;
@@ -58,7 +54,6 @@ import static me.fril.regeneration.client.skinhandling.SkinChangingHandler.PLAYE
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
 	
-	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
 	
 	@SubscribeEvent
 	public static void onGui(InputUpdateEvent tickEvent) {
@@ -147,21 +142,21 @@ public class ClientEventHandler {
 		
 		switch (cap.getState()) {
 			case GRACE:
-				renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
+				RenderUtil.renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace", ClientUtil.keyBind).getUnformattedText();
 				break;
 			
 			case GRACE_CRIT:
-				renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
+				RenderUtil.renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
 				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", ClientUtil.keyBind).getUnformattedText();
 				break;
 			
 			case REGENERATING:
-				renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
+				RenderUtil.renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;
 		}
 		
-		if (warning != null)// && !Loader.isModLoaded("lucraftcore"))
+		if (warning != null)
 			Minecraft.getMinecraft().fontRenderer.drawString(warning, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
 	}
 	
@@ -220,32 +215,6 @@ public class ClientEventHandler {
 	public static String getColoredText(String msg) {
 		return msg.replaceAll("&", String.valueOf('\u00a7'));
 	}
-	
-	
-	private static void renderVignette(Vec3d color, float a, RegenState state) {
-		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
-		GlStateManager.disableAlpha();
-		GlStateManager.depthMask(false);
-		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuffer();
-		
-		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
-		int z = -89; // below the HUD
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-		bufferbuilder.pos(0, scaledRes.getScaledHeight(), z).tex(0, 1).endVertex();
-		bufferbuilder.pos(scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), z).tex(1.0D, 1.0D).endVertex();
-		bufferbuilder.pos(scaledRes.getScaledWidth(), 0, z).tex(1, 0).endVertex();
-		bufferbuilder.pos(0, 0, z).tex(0, 0).endVertex();
-		tessellator.draw();
-		
-		GlStateManager.depthMask(true);
-		GlStateManager.enableAlpha();
-		GlStateManager.color(1, 1, 1, 1);
-	}
-	
 	
 	@SubscribeEvent
 	public static void keyInput(InputUpdateEvent e) {
