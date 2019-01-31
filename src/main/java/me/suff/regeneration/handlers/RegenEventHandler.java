@@ -118,7 +118,7 @@ public class RegenEventHandler {
 		
 		if (trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {
 			EntityPlayer player = (EntityPlayer) trueSource;
-			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event.getEntityLiving());
+			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event);
 			return;
 		}
 		
@@ -133,8 +133,10 @@ public class RegenEventHandler {
 		if (cap.getState() == RegenState.POST && player.posY > 0) {
 			if (event.getSource() == DamageSource.FALL) {
 				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
-				if (player.world.getGameRules().getBoolean("mobGriefing") && event.getAmount() > 8.0F) {
-					RegenUtil.genCrater(player.world, player.getPosition(), 3);
+				if (event.getAmount() > 8.0F) {
+					if (player.world.getGameRules().getBoolean("mobGriefing")) {
+						RegenUtil.genCrater(player.world, player.getPosition(), 3);
+					}
 					event.setAmount(0.5F);
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.fall_dmg"), true);
 					return;
@@ -148,7 +150,6 @@ public class RegenEventHandler {
 		
 		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage()) {
 			event.setCanceled(true); // TODO still "hurts" the client view
-			
 		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 			boolean notDead = cap.getStateManager().onKilled(event.getSource());
 			event.setCanceled(notDead);

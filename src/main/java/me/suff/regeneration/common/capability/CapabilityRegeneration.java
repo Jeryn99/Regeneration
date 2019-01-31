@@ -32,6 +32,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -390,7 +391,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			transitionCallbacks.put(RegenState.Transition.HAND_GLOW_TRIGGER, err);
 		}
 		
-		
 		@SuppressWarnings("deprecation")
 		private void scheduleTransitionInTicks(RegenState.Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
@@ -457,18 +457,23 @@ public class CapabilityRegeneration implements IRegeneration {
 				return false;
 				
 			} else if (state == RegenState.POST) {
-				return true;
+				state = RegenState.ALIVE;
+				nextTransition.cancel();
+				midSequenceKill();
+				return false;
 			} else
 				throw new IllegalStateException("Unknown state: " + state);
 		}
 		
 		@Override
-		public void onPunchEntity(EntityLivingBase entity) {
+		public void onPunchEntity(LivingDamageEvent event) {
+			EntityLivingBase entity = event.getEntityLiving();
 			// We're healing mobs...
 			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && player.isSneaking()) { // ... check if we're in grace and if the mob needs health
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("message.regeneration.healed", entity.getName()), true);
+				event.setAmount(0.0F);
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
 			}
 		}

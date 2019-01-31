@@ -31,7 +31,9 @@ public class RegenDebugCommand extends CommandBase {
 		
 		switch (args[0]) {
 			case "glow":
-				cap.getStateManager().fastForwardHandGlow();
+				if (cap.getState().isGraceful()) {
+					cap.getStateManager().fastForwardHandGlow();
+				} else throw new CommandException("regeneration.messages.cant_glow");
 				break;
 			
 			case "fastforward":

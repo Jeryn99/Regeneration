@@ -11,7 +11,7 @@ import java.util.Map;
 public class RegenerationPlugin implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[]{"RegenClassTransformer"};
+		return new String[]{"me.suff.regeneration.client.sound.echo.RegenClassTransformer"};
 	}
 	
 	@Override

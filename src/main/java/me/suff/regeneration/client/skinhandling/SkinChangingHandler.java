@@ -10,10 +10,9 @@ import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.FileUtil;
 import me.suff.regeneration.util.RegenState;
+import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -57,8 +56,6 @@ public class SkinChangingHandler {
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	public static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
 	private static final Random RAND = new Random();
-	private static final ModelBiped STEVE_MODEL = new ModelPlayer(0.0F, false);
-	private static final ModelBiped ALEX_MODEL = new ModelPlayer(0.0F, true);
 	
 	/**
 	 * Converts a buffered image to Pixel data
@@ -158,11 +155,8 @@ public class SkinChangingHandler {
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
 			resourceLocation = retrieveSkinFromMojang(player);
 			
-			if (player.getSkinType().equals("slim")) {
-				skinType = SkinInfo.SkinType.ALEX;
-			} else {
-				skinType = SkinInfo.SkinType.STEVE;
-			}
+			skinType = RenderUtil.isSlimSkin(player.getUniqueID()) ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE;
+			
 		} else {
 			BufferedImage bufferedImage = toImage(player, encodedSkin);
 			
@@ -244,17 +238,10 @@ public class SkinChangingHandler {
 			ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
 	}
 	
-	/**
-	 * Set's a players Player Model
-	 * WARNING: MUST EXTEND MODEL BIPED AND YOU SHOULD USE CACHED MODELS
-	 *
-	 * @param renderer
-	 * @param model
-	 */
-	private static void setPlayerModel(RenderPlayer renderer, ModelBiped model) {
-		if (renderer.mainModel != model) {
-			renderer.mainModel = model;
-		}
+	public static void setPlayerSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
+		if (skinType.getMojangType().equals(player.getSkinType())) return;
+		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
+		ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), 5);
 	}
 	
 	/**
@@ -282,7 +269,8 @@ public class SkinChangingHandler {
 		} else {
 			SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
 			setPlayerTexture(player, skin.getTextureLocation());
-			setPlayerModel(e.getRenderer(), skin.getSkintype() == SkinInfo.SkinType.ALEX ? ALEX_MODEL : STEVE_MODEL);
+			//setPlayerModel(e.getRenderer(), skin.getSkintype() == SkinInfo.SkinType.ALEX ? ALEX_MODEL : STEVE_MODEL);
+			setPlayerSkinType(player, skin.getSkintype());
 		}
 	}
 	
@@ -324,9 +312,11 @@ public class SkinChangingHandler {
 		
 		if (skinInfo != null) {
 			if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
-				SkinChangingHandler.setPlayerModel(renderPlayer, ALEX_MODEL);
+				//SkinChangingHandler.setPlayerModel(renderPlayer, ALEX_MODEL);
+				SkinChangingHandler.setPlayerSkinType(player, SkinInfo.SkinType.ALEX);
 			} else {
-				SkinChangingHandler.setPlayerModel(renderPlayer, STEVE_MODEL);
+				//SkinChangingHandler.setPlayerModel(renderPlayer, STEVE_MODEL);
+				SkinChangingHandler.setPlayerSkinType(player, SkinInfo.SkinType.STEVE);
 			}
 		}
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);

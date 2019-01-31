@@ -30,6 +30,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Sub
@@ -37,6 +38,7 @@ import java.util.List;
  */
 public class RenderUtil {
 	
+	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
 	public static float renderTick = Minecraft.getMinecraft().getRenderPartialTicks();
 	private static float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 	private static float lastBrightnessY = OpenGlHelper.lastBrightnessY;
@@ -211,8 +213,6 @@ public class RenderUtil {
 		GlStateManager.disableBlend();
 	}
 	
-	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
-	
 	public static void renderVignette(Vec3d color, float a, RegenState state) {
 		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
 		GlStateManager.disableAlpha();
@@ -247,6 +247,13 @@ public class RenderUtil {
 		b = b <= 0.03928 ? b / 12.92F : (float) Math.pow((b + 0.055) / 1.055, 2.4);
 		
 		return (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
+	}
+	
+	/**
+	 * Checks if a players skin model is slim or the default. The Alex model is slime while the Steve model is default.
+	 */
+	public static boolean isSlimSkin(UUID playerUUID) {
+		return (playerUUID.hashCode() & 1) == 1;
 	}
 	
 }

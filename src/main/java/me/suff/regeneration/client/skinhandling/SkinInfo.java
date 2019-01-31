@@ -28,7 +28,17 @@ public class SkinInfo {
 	}
 	
 	public enum SkinType {
-		ALEX, STEVE
+		ALEX("slim"), STEVE("default");
+		
+		private final String type;
+		
+		SkinType(String type) {
+			this.type = type;
+		}
+		
+		public String getMojangType() {
+			return type;
+		}
 	}
 	
 }
