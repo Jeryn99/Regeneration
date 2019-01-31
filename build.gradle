@@ -91,7 +91,7 @@ processResources {
 	}
 }
 
-def core_plugin = "me.fril.regeneration.client.sound.echo.RegenerationPlugin"
+def core_plugin = "me.suff.regeneration.client.sound.echo.RegenerationPlugin"
 
 jar {
 	manifest {
