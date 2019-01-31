@@ -54,7 +54,7 @@ public class RegenerationMod {
 	
 	public static Logger LOG = LogManager.getLogger(NAME);
 	
-	@SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy")
+	@SidedProxy(clientSide = "me.suff.regeneration.proxy.ClientProxy", serverSide = "me.suff.regeneration.proxy.CommonProxy")
 	public static CommonProxy proxy;
 	
 	@EventHandler

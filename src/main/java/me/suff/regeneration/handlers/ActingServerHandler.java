@@ -9,7 +9,6 @@ import me.suff.regeneration.network.MessagePlayRegenerationSound;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.PlayerUtil;
 import me.suff.regeneration.util.RegenUtil;
-import me.suff.regeneration.util.RegenState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,19 +45,19 @@ class ActingServerHandler implements IActingHandler {
 		float stateProgress = (float) cap.getStateManager().getStateProgress();
 		
 		switch (cap.getState()) {
-			case RegenState.POST:
+			case POST:
 				if (player.ticksExisted % 210 == 0) {
 					PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
 				}
 				break;
-			case RegenState.REGENERATING:
+			case REGENERATING:
 				float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
 				player.heal(stateProgress * 0.3F * dm);
 				player.setArrowCountInEntity(0);
 				RegenUtil.regenerationExplosion(player);
 				break;
 			
-			case RegenState.GRACE_CRIT:
+			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 				
 				if (stateProgress > nauseaPercentage) {
@@ -76,7 +75,7 @@ class ActingServerHandler implements IActingHandler {
 				
 				break;
 			
-			case RegenState.GRACE:
+			case GRACE:
 				float weaknessPercentage = 0.5F;
 				
 				if (stateProgress > weaknessPercentage) {
@@ -87,7 +86,7 @@ class ActingServerHandler implements IActingHandler {
 				
 				break;
 			
-			case RegenState.ALIVE:
+			case ALIVE:
 				break;
 			default:
 				throw new IllegalStateException("Unknown state " + cap.getState());
