@@ -82,29 +82,35 @@ public class GuiSkinCustomizer extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(background);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		
 		GlStateManager.pushMatrix();
+		playerModelAlex.isChild = false;
+		playerModelSteve.isChild = false;
 		switch (choices) {
 			case ALEX:
-				playerModelAlex.isChild = false;
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_ALEX);
 				drawModelToGui(playerModelAlex, width / 2, height / 2 - 40, 1.0f, rotation);
 				break;
 			case STEVE:
-				playerModelSteve.isChild = false;
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_STEVE);
 				drawModelToGui(playerModelSteve, width / 2, height / 2 - 40, 1.0f, rotation);
 				break;
 			case EITHER:
+				Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_ALEX);
+				drawModelToGui(playerModelAlex, width / 2 - 40, height / 2 - 40, 1.0f, rotation);
+				Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_STEVE);
+				drawModelToGui(playerModelSteve, width / 2 + 40, height / 2 - 40, 1.0f, rotation);
 				break;
 		}
 		GlStateManager.popMatrix();
+		
+		drawCenteredString(Minecraft.getMinecraft().fontRenderer, new TextComponentTranslation("regeneration.gui.preference_model", choices.name()).getUnformattedText(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
 		
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
-		
 		switch (button.id) {
 			case 98:
 				Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiCustomizer.ID, Minecraft.getMinecraft().world, 0, 0, 0);
@@ -140,9 +146,11 @@ public class GuiSkinCustomizer extends GuiContainer {
 		}
 	}
 	
+	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawScreen(mouseX, mouseY, partialTicks);
+		
 		GlStateManager.pushMatrix();
 		rotation++;
 		if (rotation > 360) {

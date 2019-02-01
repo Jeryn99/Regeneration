@@ -135,3 +135,4 @@ regeneration.gui.back=Back
 regeneration.gui.previous=Previous
 regeneration.gui.next=Next
 regeneration.gui.customize=Customize
+regeneration.gui.preference_model=Current preferred skin type: %s

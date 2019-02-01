@@ -1,6 +1,5 @@
 package me.suff.regeneration.client.rendering;
 
-import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.TypeFiery;
 import me.suff.regeneration.util.LimbHelper;
@@ -53,6 +52,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		LimbHelper.rotateRightArm(renderPlayer, 0, 0, armRot + arm_shake);
 		LimbHelper.rotateRightLeg(renderPlayer, 0, 0, 10);
 		LimbHelper.rotateLeftLeg(renderPlayer, 0, 0, -10);
+		LimbHelper.rotateBody(renderPlayer, 0, 0, 0);
 	}
 	
 	@Override
@@ -114,7 +114,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.popMatrix();
 		
 		// Check which slightly larger model to use
-		ModelPlayer playerModel = capability.getSkinType().equals(SkinInfo.SkinType.ALEX) ? LayerRegeneration.playerModelAlex : LayerRegeneration.playerModelSteve;
+		ModelPlayer playerModel = LayerRegeneration.playerModelSteve;
 		
 		// Define which parts are glowing
 		playerModel.bipedBody.isHidden = playerModel.bipedLeftLeg.isHidden = playerModel.bipedRightLeg.isHidden = playerModel.bipedBodyWear.isHidden = playerModel.bipedHeadwear.isHidden = playerModel.bipedLeftLegwear.isHidden = playerModel.bipedRightLegwear.isHidden = false;
