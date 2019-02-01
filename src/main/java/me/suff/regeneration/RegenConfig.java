@@ -1,6 +1,5 @@
 package me.suff.regeneration;
 
-import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -140,15 +139,9 @@ public class RegenConfig {
 	
 	
 	public static class Skins {
-		
 		@Config.LangKey("config.regeneration.skins.changemyskin")
 		@Config.Comment("Disabling this will disable skin changing for you and you will retain your Mojang one")
 		public boolean changeMySkin = true;
-		
-		@Config.LangKey("config.regeneration.skins.model_preference")
-		@Config.Comment("ALEX = 'Give me Alex Skins only', STEVE = 'Give me Steve Skins only', EITHER = 'Give me either!!'")
-		public SkinChangingHandler.EnumChoices prefferedModel = SkinChangingHandler.EnumChoices.EITHER;
-		
 	}
 	
 	

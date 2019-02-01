@@ -1,6 +1,8 @@
 package me.suff.regeneration.util;
 
+import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.network.MessageSetPerspective;
+import me.suff.regeneration.network.MessageUpdateModel;
 import me.suff.regeneration.network.NetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -72,6 +74,10 @@ public class PlayerUtil {
 			}
 		}
 		return false;
+	}
+	
+	public static void updateModel(SkinChangingHandler.EnumChoices choice) {
+		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateModel(choice.name()));
 	}
 	
 	public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {

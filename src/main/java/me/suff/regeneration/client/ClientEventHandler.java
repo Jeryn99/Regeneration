@@ -204,25 +204,27 @@ public class ClientEventHandler {
 		if (e.getType() != ChatType.CHAT) return;
 		if (CapabilityRegeneration.getForPlayer(player).getState() != POST) return;
 		
-		String message = e.getMessage().getUnformattedText();
-		TextComponentString newMessage = new TextComponentString("");
-		String[] words = message.split(" ");
-		for (String word : words) {
-			if (word.equals(words[0])) {
-				TextComponentString name = new TextComponentString(word + " ");
-				newMessage.appendSibling(name);
-				continue;
+		if (player.world.rand.nextBoolean()) {
+			String message = e.getMessage().getUnformattedText();
+			TextComponentString newMessage = new TextComponentString("");
+			String[] words = message.split(" ");
+			for (String word : words) {
+				if (word.equals(words[0])) {
+					TextComponentString name = new TextComponentString(word + " ");
+					newMessage.appendSibling(name);
+					continue;
+				}
+				if (player.world.rand.nextBoolean()) {
+					TextComponentString txtComp = new TextComponentString(getColoredText("&k" + word + "&r "));
+					txtComp.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(word)));
+					newMessage.appendSibling(txtComp);
+				} else {
+					TextComponentString txtComp = new TextComponentString(word + " ");
+					newMessage.appendSibling(txtComp);
+				}
 			}
-			if (player.world.rand.nextBoolean()) {
-				TextComponentString txtComp = new TextComponentString(getColoredText("&k" + word + "&r "));
-				txtComp.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(word)));
-				newMessage.appendSibling(txtComp);
-			} else {
-				TextComponentString txtComp = new TextComponentString(word + " ");
-				newMessage.appendSibling(txtComp);
-			}
+			e.setMessage(newMessage);
 		}
-		e.setMessage(newMessage);
 	}
 	
 	public static String getColoredText(String msg) {

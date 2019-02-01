@@ -2,6 +2,7 @@ package me.suff.regeneration.common.capability;
 
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
+import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.advancements.RegenTriggers;
 import me.suff.regeneration.common.dna.DnaHandler;
@@ -61,6 +62,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private byte[] ENCODED_SKIN = new byte[0];
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
+	private SkinChangingHandler.EnumChoices preferredModel = SkinChangingHandler.EnumChoices.EITHER;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
@@ -138,6 +140,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setTag("type", type.serializeNBT());
 		nbt.setByteArray("encoded_skin", ENCODED_SKIN);
 		nbt.setString("skinType", skinType.name());
+		nbt.setString("preferredModel", preferredModel.name());
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
 		if (traitLocation != null) {
 			nbt.setString("regen_dna", traitLocation.toString());
@@ -162,6 +165,12 @@ public class CapabilityRegeneration implements IRegeneration {
 			setSkinType(nbt.getString("skinType"));
 		} else {
 			setSkinType("ALEX");
+		}
+		
+		if (nbt.hasKey("preferredModel")) {
+			setPreferredModel(nbt.getString("preferredModel"));
+		} else {
+			setPreferredModel("ALEX");
 		}
 		
 		if (nbt.hasKey("regenerationsLeft")) {
@@ -301,6 +310,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setSkinType(String skinType) {
 		this.skinType = SkinInfo.SkinType.valueOf(skinType);
+	}
+	
+	@Override
+	public SkinChangingHandler.EnumChoices getPreferredModel() {
+		return preferredModel;
+	}
+	
+	@Override
+	public void setPreferredModel(String skinType) {
+		this.preferredModel = SkinChangingHandler.EnumChoices.valueOf(skinType);
 	}
 	
 	

@@ -2,7 +2,6 @@ package me.suff.regeneration.client.gui;
 
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
-import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.network.MessageSaveStyle;
@@ -22,19 +21,18 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.io.IOException;
 
-public class CustomizerGui extends GuiContainer {
+public class GuiCustomizer extends GuiContainer {
 	public static final int ID = 0;
 	
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
 	
-	private GuiButtonExt btnDefault, btnReset, btnOpenFolder, btnResetSkin;
+	private GuiButtonExt btnDefault, btnReset, btnCust, btnResetSkin;
 	private GuiColorSlider slidePrimaryRed, slidePrimaryGreen, slidePrimaryBlue, slideSecondaryRed, slideSecondaryGreen, slideSecondaryBlue;
 	
 	private Vec3d initialPrimary, initialSecondary;
 	
-	public CustomizerGui() {
+	public GuiCustomizer() {
 		super(new BlankContainer());
 		xSize = 176;
 		ySize = 186;
@@ -63,12 +61,12 @@ public class CustomizerGui extends GuiContainer {
 		btnReset = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.undo").getFormattedText());
 		btnDefault = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.default").getFormattedText());
 		btnResetSkin = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.reset_skin").getFormattedText());
-		btnOpenFolder = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.open_folder").getFormattedText());
+		btnCust = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.customize").getFormattedText());
 		
 		btnReset.enabled = false;
 		buttonList.add(btnReset);
 		buttonList.add(btnDefault);
-		buttonList.add(btnOpenFolder);
+		buttonList.add(btnCust);
 		buttonList.add(btnResetSkin);
 		
 		slidePrimaryRed = new GuiColorSlider(5, cx + 10, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
@@ -126,14 +124,8 @@ public class CustomizerGui extends GuiContainer {
 			slideSecondaryBlue.setValue(0.18F);
 			
 			onChangeSliderValue(null);
-		} else if (button.id == btnOpenFolder.id) {
-			
-			try {
-				Desktop.getDesktop().open(SkinChangingHandler.SKIN_DIRECTORY);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
+		} else if (button.id == btnCust.id) {
+			Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiSkinCustomizer.ID, Minecraft.getMinecraft().world, 0, 0, 0);
 		} else if (button.id == btnResetSkin.id) {
 			ClientUtil.sendSkinResetPacket();
 		}

@@ -9,6 +9,7 @@ import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.FileUtil;
+import me.suff.regeneration.util.IEnum;
 import me.suff.regeneration.util.RegenState;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -107,7 +108,7 @@ public class SkinChangingHandler {
 			return;
 		
 		if (RegenConfig.skins.changeMySkin) {
-			boolean isAlex = RegenConfig.skins.prefferedModel.isAlex();
+			boolean isAlex = CapabilityRegeneration.getForPlayer(player).getPreferredModel().isAlex();
 			File skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
 			RegenerationMod.LOG.info(skin.getName() + " was choosen");
 			BufferedImage image = ImageIO.read(skin);
@@ -322,7 +323,7 @@ public class SkinChangingHandler {
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 	}
 	
-	public enum EnumChoices {
+	public enum EnumChoices implements IEnum {
 		ALEX(true), STEVE(false), EITHER(true);
 		
 		private boolean isAlex;

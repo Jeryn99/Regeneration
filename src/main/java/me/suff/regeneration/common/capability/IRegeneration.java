@@ -1,6 +1,7 @@
 package me.suff.regeneration.common.capability;
 
 import me.suff.regeneration.RegenConfig;
+import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.types.IRegenType;
 import me.suff.regeneration.util.RegenState;
@@ -64,6 +65,10 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	SkinInfo.SkinType getSkinType();
 	
 	void setSkinType(String skinType);
+	
+	SkinChangingHandler.EnumChoices getPreferredModel();
+	
+	void setPreferredModel(String skinType);
 	
 	boolean areHandsGlowing();
 	//void setGlowing(boolean glowing);

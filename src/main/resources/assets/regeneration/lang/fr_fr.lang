@@ -131,3 +131,7 @@ regeneration.messages.fall_dmg=Fall damage reduced due to post regen state! Alth
 regeneration.messages.post_ended=Your Regeneration process is now entirely completed!
 regeneration.messages.fast_forward_cmd_fail=Nothing to fast forward to.
 regeneration.messages.cant_glow=You cannot activate a glowing hand without being in a grace period
+regeneration.gui.back=Back
+regeneration.gui.previous=Previous
+regeneration.gui.next=Next
+regeneration.gui.customize=Customize

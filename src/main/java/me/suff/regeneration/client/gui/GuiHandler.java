@@ -12,8 +12,10 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		switch (id) {
-			case CustomizerGui.ID:
+			case GuiCustomizer.ID:
 				return new BlankContainer();
+			case GuiSkinCustomizer.ID:
+				return new GuiSkinCustomizer();
 			default:
 				return null;
 		}
@@ -23,8 +25,10 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		switch (id) {
-			case CustomizerGui.ID:
-				return new CustomizerGui();
+			case GuiCustomizer.ID:
+				return new GuiCustomizer();
+			case GuiSkinCustomizer.ID:
+				return new GuiSkinCustomizer();
 			default:
 				return null;
 		}
