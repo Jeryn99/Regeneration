@@ -180,13 +180,6 @@ public class RegenEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onCrafted(net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent event) {
-		if (event.crafting.getItem() == RegenObjects.Items.FOB_WATCH) {
-			event.setCanceled(!RegenConfig.allowFobWatchCrafting);
-		}
-	}
-	
-	@SubscribeEvent
 	public static void registerLoot(LootTableLoadEvent event) {
 		if (!event.getName().toString().toLowerCase().matches(RegenConfig.loot.lootRegex) || RegenConfig.loot.disableLoot)
 			return;

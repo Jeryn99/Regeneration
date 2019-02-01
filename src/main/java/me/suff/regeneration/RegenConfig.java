@@ -75,10 +75,6 @@ public class RegenConfig {
 	@Config.Comment("Display a notification in chat when there's an update to the mod")
 	public static boolean enableUpdateChecker = true;
 	
-	@Config.LangKey("config.regeneration.fob_recipe")
-	@Config.Comment("Toggle whether the Fob Watch is craftable")
-	public static boolean allowFobWatchCrafting = true;
-	
 	@Config.LangKey("config.regeneration.hand_change")
 	@Config.Comment("Toggle whether your hand has the chance of inverting after a regen")
 	public static boolean changeHand = true;
