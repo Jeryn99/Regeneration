@@ -6727,5 +6727,19 @@
         0.75
       ]
     }
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "open": 0
+      },
+      "model": "regeneration:item/fob_watch"
+    },
+    {
+      "predicate": {
+        "open": 1
+      },
+      "model": "regeneration:item/fob_watch_open"
+    }
+  ]
 }
