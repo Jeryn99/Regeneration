@@ -10,10 +10,8 @@ import me.suff.regeneration.util.DebuggerUtil;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -24,13 +22,23 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 /**
  * Created by Sub
  * on 16/09/2018.
  */
 public class ItemFobWatch extends ItemOverrideBase {
+	
+	public ItemFobWatch() {
+		setMaxDamage(RegenConfig.regenCapacity);
+		setCreativeTab(CreativeTabs.MISC);
+		setMaxStackSize(1);
+		addPropertyOverride(new ResourceLocation("open"), (stack, worldIn, entityIn) -> {
+			if (getStackTag(stack) == null || !getStackTag(stack).hasKey("open")) {
+				return 0F; //Closed
+			}
+			return getOpen(stack);
+		});
+	}
 	
 	public static NBTTagCompound getStackTag(ItemStack stack) {
 		if (stack.getTagCompound() == null) {
@@ -48,21 +56,6 @@ public class ItemFobWatch extends ItemOverrideBase {
 		getStackTag(stack).setInteger("open", amount);
 	}
 	
-	public ItemFobWatch() {
-		setMaxDamage(RegenConfig.regenCapacity);
-		setCreativeTab(CreativeTabs.MISC);
-		setMaxStackSize(1);
-		addPropertyOverride(new ResourceLocation("open"), new IItemPropertyGetter() {
-			@Override
-			public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entityIn) {
-				if(getStackTag(stack) == null || !getStackTag(stack).hasKey("open")) {
-					return 0F; //Closed
-				}
-				return getOpen(stack);
-			}
-		});
-	}
-	
 	@Override
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
 		super.onCreated(stack, worldIn, playerIn);
@@ -78,8 +71,8 @@ public class ItemFobWatch extends ItemOverrideBase {
 			stack.getTagCompound().setBoolean("live", false);
 		}
 		
-		if(getOpen(stack) == 1){
-			if(entityIn.ticksExisted % 600 == 0){
+		if (getOpen(stack) == 1) {
+			if (entityIn.ticksExisted % 600 == 0) {
 				setOpen(stack, 0);
 			}
 		}

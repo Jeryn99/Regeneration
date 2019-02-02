@@ -9,6 +9,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,29 +24,38 @@ public class LimbManipulationUtil {
 	
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb) {
 		LimbManipulator manipulator = new LimbManipulator();
+		if (MinecraftForgeClient.getRenderPass() == -1) {
+			// rendering in inventory
+			return manipulator;
+		}
+		
 		List<LayerRenderer<AbstractClientPlayer>> layerList = renderPlayer.layerRenderers;
 		try {
-			
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {
 					field.setAccessible(true);
 					
 					if (field.getType() == ModelBiped.class) {
 						ModelBiped model = (ModelBiped) field.get(layer);
-						ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
-						manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.rendererField));
 						
-						if (limb == Limb.HEAD) {
-							modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
-							manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.secondaryRendererField));
+						if (model != null) {
+							ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
+							manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.rendererField));
+							
+							if (limb == Limb.HEAD) {
+								modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
+								manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.secondaryRendererField));
+							}
 						}
 						
 					} else if (field.getType() == ModelPlayer.class) {
 						ModelBiped model = (ModelBiped) field.get(layer);
-						ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
-						manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.rendererField));
-						modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
-						manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.secondaryRendererField));
+						if (model != null) {
+							ModelRenderer modelRenderer = (ModelRenderer) limb.rendererField.get(model);
+							manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.rendererField));
+							modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
+							manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.secondaryRendererField));
+						}
 					}
 				}
 			}
@@ -56,7 +66,6 @@ public class LimbManipulationUtil {
 			manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.rendererField));
 			modelRenderer = (ModelRenderer) limb.secondaryRendererField.get(model);
 			manipulator.limbs.add(new CustomModelRenderer(model, modelRenderer.textureOffsetX, modelRenderer.textureOffsetY, modelRenderer, limb.secondaryRendererField));
-			
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
@@ -65,6 +74,9 @@ public class LimbManipulationUtil {
 	
 	@SubscribeEvent
 	public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
+			return;
+		
 		RenderPlayer renderer = event.getRenderer();
 		ModelBase playerModel = renderer.getMainModel();
 		List<LayerRenderer<AbstractClientPlayer>> layerList = renderer.layerRenderers;
@@ -86,10 +98,12 @@ public class LimbManipulationUtil {
 					// Model Biped
 					if (field.getType() == ModelBiped.class) {
 						ModelBiped biped = (ModelBiped) field.get(layer);
-						for (ModelRenderer modelRenderer : biped.boxList) {
-							if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-								CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
-								customMr.reset();
+						if (biped != null && biped.boxList != null) {
+							for (ModelRenderer modelRenderer : biped.boxList) {
+								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+									CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
+									customMr.reset();
+								}
 							}
 						}
 					}
@@ -97,10 +111,12 @@ public class LimbManipulationUtil {
 					// Model Player
 					if (field.getType() == ModelPlayer.class) {
 						ModelPlayer modelPlayer = (ModelPlayer) field.get(layer);
-						for (ModelRenderer modelRenderer : modelPlayer.boxList) {
-							if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-								CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
-								customMr.reset();
+						if (modelPlayer != null && modelPlayer.boxList != null) {
+							for (ModelRenderer modelRenderer : modelPlayer.boxList) {
+								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+									CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
+									customMr.reset();
+								}
 							}
 						}
 					}
