@@ -578,7 +578,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.post_ended"), true);
 			
-			if (player.rand.nextBoolean()) {
+			if (player.world.rand.nextBoolean()) {
 				EntityLindos lindos = new EntityLindos(player.world);
 				lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
 				player.world.spawnEntity(lindos);
@@ -588,7 +588,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		private void finishRegeneration() {
 			state = RegenState.POST;
-			scheduleTransitionInSeconds(RegenState.Transition.END_POST, player.world.rand.nextInt(600));
+			scheduleTransitionInSeconds(RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);

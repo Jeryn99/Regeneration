@@ -30,12 +30,12 @@ public class RegenKeyBinds {
 		}
 	}
 	
+	
 	@SubscribeEvent
 	public static void keyInput(InputUpdateEvent e) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		if (player == null || EnumCompatModids.LCCORE.isLoaded())
 			return;
-		
 		if (REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration(player));
 		}

@@ -15,7 +15,6 @@ import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
@@ -116,6 +115,7 @@ public class SkinChangingHandler {
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
 			if (pixelData.length >= 32767) {
 				ClientUtil.sendSkinResetPacket();
+				RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
 			} else {
 				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
 			}
@@ -266,11 +266,10 @@ public class SkinChangingHandler {
 		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
 		} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
-			setSkinFromData(player, cap, e.getRenderer());
+			setSkinFromData(player, cap);
 		} else {
 			SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
 			setPlayerTexture(player, skin.getTextureLocation());
-			//setPlayerModel(e.getRenderer(), skin.getSkintype() == SkinInfo.SkinType.ALEX ? ALEX_MODEL : STEVE_MODEL);
 			setPlayerSkinType(player, skin.getSkintype());
 		}
 	}
@@ -298,9 +297,8 @@ public class SkinChangingHandler {
 	 *
 	 * @param player       - Player instance
 	 * @param cap          - Players Regen capability instance
-	 * @param renderPlayer - Player instances renderer
 	 */
-	private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap, RenderPlayer renderPlayer) {
+	private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap) {
 		SkinInfo skinInfo = null;
 		try {
 			skinInfo = SkinChangingHandler.getSkin(player, cap);
@@ -313,10 +311,8 @@ public class SkinChangingHandler {
 		
 		if (skinInfo != null) {
 			if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
-				//SkinChangingHandler.setPlayerModel(renderPlayer, ALEX_MODEL);
 				SkinChangingHandler.setPlayerSkinType(player, SkinInfo.SkinType.ALEX);
 			} else {
-				//SkinChangingHandler.setPlayerModel(renderPlayer, STEVE_MODEL);
 				SkinChangingHandler.setPlayerSkinType(player, SkinInfo.SkinType.STEVE);
 			}
 		}
