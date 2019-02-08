@@ -59,7 +59,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 	@Override
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
 		super.onCreated(stack, worldIn, playerIn);
-		stack.setItemDamage(RegenConfig.regenCapacity);
+		stack.setItemDamage(0);
 	}
 	
 	@Override

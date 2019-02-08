@@ -136,3 +136,4 @@ regeneration.gui.previous=Previous
 regeneration.gui.next=Next
 regeneration.gui.customize=Customize
 regeneration.gui.preference_model=Current preferred skin type: %s
+regeneration.messages.info_trait=Your current trait is:
