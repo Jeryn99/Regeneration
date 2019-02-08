@@ -156,6 +156,7 @@ public class RegenEventHandler {
 		}
 	}
 	
+	
 	@SubscribeEvent
 	public static void onKnockback(LivingKnockBackEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {

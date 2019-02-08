@@ -11,7 +11,6 @@ import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.FileUtil;
 import me.suff.regeneration.util.IEnum;
 import me.suff.regeneration.util.RegenState;
-import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -155,9 +154,7 @@ public class SkinChangingHandler {
 		
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
 			resourceLocation = retrieveSkinFromMojang(player);
-			
-			skinType = RenderUtil.isSlimSkin(player.getUniqueID()) ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE;
-			
+			skinType = null;
 		} else {
 			BufferedImage bufferedImage = toImage(player, encodedSkin);
 			
@@ -240,7 +237,7 @@ public class SkinChangingHandler {
 	}
 	
 	public static void setPlayerSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
-		if (skinType.getMojangType().equals(player.getSkinType())) return;
+		//if (skinType.getMojangType().equals(player.getSkinType())) return;
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
 		ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), 5);
 	}
@@ -295,8 +292,8 @@ public class SkinChangingHandler {
 	/**
 	 * Called by onRenderPlayer, sets model, sets texture, adds player and SkinInfo to map
 	 *
-	 * @param player       - Player instance
-	 * @param cap          - Players Regen capability instance
+	 * @param player - Player instance
+	 * @param cap    - Players Regen capability instance
 	 */
 	private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap) {
 		SkinInfo skinInfo = null;
@@ -310,11 +307,7 @@ public class SkinChangingHandler {
 		}
 		
 		if (skinInfo != null) {
-			if (skinInfo.getSkintype() == SkinInfo.SkinType.ALEX) {
-				SkinChangingHandler.setPlayerSkinType(player, SkinInfo.SkinType.ALEX);
-			} else {
-				SkinChangingHandler.setPlayerSkinType(player, SkinInfo.SkinType.STEVE);
-			}
+			SkinChangingHandler.setPlayerSkinType(player, skinInfo.getSkintype());
 		}
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 	}

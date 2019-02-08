@@ -149,7 +149,7 @@ public class ItemLindos extends ItemOverrideBase {
 			ItemStack itemStack = player.getHeldItem(hand);
 			RayTraceResult raytraceresult = this.rayTrace(worldIn, player, true);
 			
-			if (raytraceresult == null) {
+			if (raytraceresult == null || raytraceresult.getBlockPos() == null) {
 				return EnumActionResult.FAIL;
 			}
 			
@@ -176,11 +176,10 @@ public class ItemLindos extends ItemOverrideBase {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn) {
-		
-		
 		ItemStack stack = player.getHeldItem(handIn);
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (!worldIn.isRemote) {
+			
 			//If the player is in POST or Regenerating, stop them from drinking it
 			if (cap.getState() == RegenState.POST || cap.getState() == RegenState.REGENERATING || player.isCreative()) {
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);

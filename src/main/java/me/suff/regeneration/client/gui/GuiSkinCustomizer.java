@@ -8,17 +8,16 @@ import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.io.IOException;
+
+import static me.suff.regeneration.util.RenderUtil.drawModelToGui;
 
 public class GuiSkinCustomizer extends GuiContainer {
 	
@@ -35,27 +34,6 @@ public class GuiSkinCustomizer extends GuiContainer {
 		super(new BlankContainer());
 		xSize = 176;
 		ySize = 186;
-	}
-	
-	public static void drawModelToGui(ModelBase model, int xPos, int yPos, float par2, float rotation) {
-		GlStateManager.pushMatrix();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		GlStateManager.translate(xPos, yPos, 100);
-		GlStateManager.rotate(-25, 1, 0, 0);
-		GlStateManager.rotate(rotation, 0, 1, 0);
-		RenderHelper.enableGUIStandardItemLighting();
-		
-		GlStateManager.glLightModel(2899, RenderHelper.setColorBuffer(0.75F, 0.75F, 0.75F, 1F));
-		GlStateManager.scale(38 * par2, 34 * par2, 38 * par2);
-		GlStateManager.scale(-1, 1, 1);
-		model.render(Minecraft.getMinecraft().player, 0, 0, Minecraft.getMinecraft().player.ticksExisted, 0, 0, 0.0625f);
-		RenderHelper.disableStandardItemLighting();
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GlStateManager.popMatrix();
 	}
 	
 	@Override
@@ -149,14 +127,12 @@ public class GuiSkinCustomizer extends GuiContainer {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		
-		GlStateManager.pushMatrix();
 		rotation++;
 		if (rotation > 360) {
 			rotation = 0;
 		}
-		GlStateManager.popMatrix();
 	}
 	
 }

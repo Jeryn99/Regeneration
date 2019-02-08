@@ -5,10 +5,12 @@ import me.suff.regeneration.client.rendering.model.ModelArmorOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -254,6 +256,27 @@ public class RenderUtil {
 	 */
 	public static boolean isSlimSkin(UUID playerUUID) {
 		return (playerUUID.hashCode() & 1) == 1;
+	}
+	
+	public static void drawModelToGui(ModelBase model, int xPos, int yPos, float scale, float rotation) {
+		GlStateManager.pushMatrix();
+		GlStateManager.enableDepth();
+		GlStateManager.enableBlend();
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		
+		GlStateManager.translate(xPos, yPos, 100);
+		GlStateManager.rotate(-25, 1, 0, 0);
+		GlStateManager.rotate(rotation, 0, 1, 0);
+		RenderHelper.enableGUIStandardItemLighting();
+		
+		GlStateManager.glLightModel(2899, RenderHelper.setColorBuffer(0.75F, 0.75F, 0.75F, 1F));
+		GlStateManager.scale(38 * scale, 34 * scale, 38 * scale);
+		GlStateManager.scale(-1, 1, 1);
+		model.render(Minecraft.getMinecraft().player, 0, 0, Minecraft.getMinecraft().player.ticksExisted, 0, 0, 0.0625f);
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableBlend();
+		GlStateManager.disableDepth();
+		GlStateManager.popMatrix();
 	}
 	
 }

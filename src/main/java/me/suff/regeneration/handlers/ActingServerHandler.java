@@ -47,7 +47,7 @@ class ActingServerHandler implements IActingHandler {
 		switch (cap.getState()) {
 			case POST:
 				if (player.ticksExisted % 210 == 0) {
-					PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
+					PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.world.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
 				}
 				break;
 			case REGENERATING:
