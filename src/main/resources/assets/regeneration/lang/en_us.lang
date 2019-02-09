@@ -109,16 +109,16 @@ config.regeneration.category.skins=Skin changing
 config.regeneration.category.on_regen=When Regenerating
 config.regeneration.category.post_regen=Post regeneration
 
-dna.athlete.name=Your DNA consists of Atheltic genes!
-dna.boring.name=Your DNA consists of Lazy genes! (You're useless!)
-dna.dumb.name=Your DNA consists of Dumb genes!
-dna.sneak.name=Your DNA consists of Sneaky genes!
-dna.vampire.name=Your DNA consists of Vampire genes....ah dear...
-dna.lucky.name=Your DNA consists of Lucky genes!
-dna.swimmer.name=Your DNA consists of Swimming genes!
-dna.hydrophobic.name=Your DNA consists of Hydrophobic genes!
-dna.tough.name=Your DNA consists of Strong genes!
-dna.fire.name=Your DNA consists of non-flammable genes!
+dna.athlete.name=Atheltic genes!
+dna.boring.name=Lazy genes! (You're useless!)
+dna.dumb.name=Dumb genes!
+dna.sneak.name=Sneaky genes!
+dna.vampire.name=Vampire genes....ah dear...
+dna.lucky.name=Lucky genes!
+dna.swimmer.name=Swimming genes!
+dna.hydrophobic.name=Hydrophobic genes!
+dna.tough.name=Strong genes!
+dna.fire.name=non-flammable genes!
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...
