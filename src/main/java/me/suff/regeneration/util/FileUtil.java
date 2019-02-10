@@ -23,6 +23,8 @@ import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static me.suff.regeneration.client.skinhandling.SkinChangingHandler.*;
+
 public class FileUtil {
 	
 	
@@ -30,7 +32,7 @@ public class FileUtil {
 		String PACKS_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/skins/index.json";
 		String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
 		for (String link : links) {
-			unzipPack(link);
+			unzipSkinPack(link);
 		}
 	}
 	
@@ -39,20 +41,27 @@ public class FileUtil {
 	 * Proceeds to download skins to the folders if they are empty
 	 * If the download doesn't happen, NPEs will occur later on
 	 */
-	public static void createDefaultFolders() {
+	public static void createDefaultFolders() throws IOException {
 		
-		if (!SkinChangingHandler.SKIN_CACHE_DIRECTORY.exists()) {
-			SkinChangingHandler.SKIN_CACHE_DIRECTORY.mkdirs();
+		if (!SKIN_CACHE_DIRECTORY.exists()) {
+			FileUtils.forceMkdir(SKIN_CACHE_DIRECTORY);
 		}
 		
-		if (!SkinChangingHandler.SKIN_DIRECTORY.exists()) {
-			SkinChangingHandler.SKIN_DIRECTORY.mkdirs();
+		if (!SKIN_DIRECTORY.exists()) {
+			FileUtils.forceMkdir(SKIN_DIRECTORY);
 		}
 		
-		SkinChangingHandler.SKIN_DIRECTORY_ALEX.mkdirs();
-		SkinChangingHandler.SKIN_DIRECTORY_STEVE.mkdirs();
+		if (!SKIN_DIRECTORY_ALEX.exists()) {
+			FileUtils.forceMkdir(SKIN_DIRECTORY_ALEX);
+		}
 		
-		if (Objects.requireNonNull(SkinChangingHandler.SKIN_DIRECTORY_ALEX.listFiles()).length < 1 || Objects.requireNonNull(SkinChangingHandler.SKIN_DIRECTORY_STEVE.listFiles()).length < 1) {
+		if (!SKIN_DIRECTORY_STEVE.exists()) {
+			FileUtils.forceMkdir(SKIN_DIRECTORY_STEVE);
+		}
+		
+		
+		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.list()).length == 0 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.list()).length == 0) {
+			RegenerationMod.LOG.warn("One of the skin directories is empty, so we're going to fill both.");
 			try {
 				handleDownloads();
 			} catch (IOException e) {
@@ -74,8 +83,8 @@ public class FileUtil {
 	}
 	
 	
-	public static void unzipPack(String url) throws IOException {
-		File f = new File(SkinChangingHandler.SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
+	public static void unzipSkinPack(String url) throws IOException {
+		File f = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
 		FileUtils.copyURLToFile(new URL(url), f);
 		try (ZipFile file = new ZipFile(f)) {
 			FileSystem fileSystem = FileSystems.getDefault();
@@ -83,11 +92,11 @@ public class FileUtil {
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
 				if (entry.isDirectory()) {
-					Files.createDirectories(fileSystem.getPath(SkinChangingHandler.SKIN_DIRECTORY + File.separator + entry.getName()));
+					Files.createDirectories(fileSystem.getPath(SKIN_DIRECTORY + File.separator + entry.getName()));
 				} else {
 					InputStream is = file.getInputStream(entry);
 					BufferedInputStream bis = new BufferedInputStream(is);
-					String uncompressedFileName = SkinChangingHandler.SKIN_DIRECTORY + File.separator + entry.getName();
+					String uncompressedFileName = SKIN_DIRECTORY + File.separator + entry.getName();
 					Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
 					Files.createFile(uncompressedFilePath);
 					FileOutputStream fileOutput = new FileOutputStream(uncompressedFileName);

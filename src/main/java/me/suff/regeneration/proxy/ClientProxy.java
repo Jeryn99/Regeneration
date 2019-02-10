@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +81,11 @@ public class ClientProxy extends CommonProxy {
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			RenderUtil.setupArmorModelOverride(renderPlayer);
 		}
-		FileUtil.createDefaultFolders();
+		try {
+			FileUtil.createDefaultFolders();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
