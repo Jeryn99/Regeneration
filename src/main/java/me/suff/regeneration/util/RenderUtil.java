@@ -167,7 +167,7 @@ public class RenderUtil {
 	}
 	
 	public static void setupArmorModelOverride(RenderPlayer renderPlayer) {
-		List<LayerRenderer<EntityLivingBase>> layers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, "field_177097_h");
+		List<LayerRenderer<EntityLivingBase>> layers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, 4);
 		if (layers != null) {
 			LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer -> layer instanceof LayerBipedArmor).findFirst().orElse(null);
 			if (armorLayer != null) {
