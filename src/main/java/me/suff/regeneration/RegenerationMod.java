@@ -1,5 +1,7 @@
 package me.suff.regeneration;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import me.suff.regeneration.client.gui.GuiHandler;
 import me.suff.regeneration.common.advancements.RegenTriggers;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
@@ -47,6 +49,8 @@ public class RegenerationMod {
 	public static final String DEPS = "required:forge@[14.23.5.2768,);after:tardis@[0.0.7,]";
 	
 	public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
+	
+	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	
 	@Mod.Instance(MODID)
 	public static RegenerationMod INSTANCE;
