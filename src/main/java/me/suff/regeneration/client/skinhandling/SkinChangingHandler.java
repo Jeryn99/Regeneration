@@ -42,6 +42,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -154,7 +155,18 @@ public class SkinChangingHandler {
 		
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
 			resourceLocation = retrieveSkinFromMojang(player);
-			skinType = null;
+			
+			Minecraft minecraft = Minecraft.getMinecraft();
+			Map map = minecraft.getSessionService().getTextures(minecraft.getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
+			if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+				MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
+				if (Objects.equals(profile.getMetadata("model"), "skim")) {
+					skinType = SkinInfo.SkinType.ALEX;
+				} else {
+					skinType = SkinInfo.SkinType.STEVE;
+				}
+			}
+			
 		} else {
 			BufferedImage bufferedImage = toImage(player, encodedSkin);
 			
@@ -237,7 +249,7 @@ public class SkinChangingHandler {
 	}
 	
 	public static void setPlayerSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
-		//if (skinType.getMojangType().equals(player.getSkinType())) return;
+		if (skinType.getMojangType().equals(player.getSkinType())) return;
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
 		ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), 5);
 	}

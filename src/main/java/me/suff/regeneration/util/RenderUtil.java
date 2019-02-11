@@ -32,7 +32,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Sub
@@ -249,13 +248,6 @@ public class RenderUtil {
 		b = b <= 0.03928 ? b / 12.92F : (float) Math.pow((b + 0.055) / 1.055, 2.4);
 		
 		return (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
-	}
-	
-	/**
-	 * Checks if a players skin model is slim or the default. The Alex model is slime while the Steve model is default.
-	 */
-	public static boolean isSlimSkin(UUID playerUUID) {
-		return (playerUUID.hashCode() & 1) == 1;
 	}
 	
 	public static void drawModelToGui(ModelBase model, int xPos, int yPos, float scale, float rotation) {
