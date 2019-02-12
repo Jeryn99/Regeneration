@@ -7,9 +7,10 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class TabRegistry {
 	public static int recipeBookOffset;
 	private static ArrayList<AbstractTab> tabList = new ArrayList<>();
 	private static Class<?> clazzJEIConfig = null;
-	private static Minecraft mc = FMLClientHandler.instance().getClient();
+	private static Minecraft mc = Minecraft.getInstance();
 	private static boolean initWithPotion;
 	
 	static {

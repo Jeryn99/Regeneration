@@ -1,16 +1,16 @@
 package me.suff.regeneration.network;
 
-import io.netty.buffer.ByteBuf;
 import me.suff.regeneration.RegenConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Maybe a bit overkill, but at least it'll be stable & clear
  */
-public class MessageSetPerspective implements IMessage {
+public class MessageSetPerspective {
 	
 	private boolean thirdperson, resetPitch;
 	
@@ -22,21 +22,18 @@ public class MessageSetPerspective implements IMessage {
 		this.resetPitch = resetPitch;
 	}
 	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		thirdperson = buf.readBoolean();
-		resetPitch = buf.readBoolean();
+	public static void encode(MessageSetPerspective messageSetPerspective, PacketBuffer buffer) {
+		buffer.writeBoolean(messageSetPerspective.resetPitch);
+		buffer.writeBoolean(messageSetPerspective.thirdperson);
 	}
 	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeBoolean(thirdperson);
-		buf.writeBoolean(resetPitch);
+	public static MessageSetPerspective decode(PacketBuffer buffer) {
+		return new MessageSetPerspective(buffer.readBoolean(), buffer.readBoolean());
 	}
 	
-	public static class Handler implements IMessageHandler<MessageSetPerspective, IMessage> {
-		@Override
-		public IMessage onMessage(MessageSetPerspective message, MessageContext ctx) {
+	public static class Handler {
+		
+		public static void handle(MessageSetPerspective message, Supplier<NetworkEvent.Context> ctx) {
 			Minecraft.getInstance().addScheduledTask(() -> {
 				if (message.resetPitch)
 					Minecraft.getInstance().player.rotationPitch = 0;
@@ -44,7 +41,7 @@ public class MessageSetPerspective implements IMessage {
 					Minecraft.getInstance().gameSettings.thirdPersonView = message.thirdperson ? 2 : 0;
 				}
 			});
-			return null;
+			
 		}
 	}
 }

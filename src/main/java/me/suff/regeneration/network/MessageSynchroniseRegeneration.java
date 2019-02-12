@@ -6,9 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.UUID;
 
@@ -16,10 +13,21 @@ import java.util.UUID;
  * Created by Sub
  * on 16/09/2018.
  */
-public class MessageSynchroniseRegeneration implements IMessage {
+public class MessageSynchroniseRegeneration {
 	
 	private EntityPlayer player;
 	private NBTTagCompound data;
+	
+	<MessageSynchroniseRegeneration, IMessage> {
+		
+		@Override
+		public static void handle (MessageSynchroniseRegeneration message, Supplier < NetworkEvent.Context > ctx){
+			EntityPlayer player = message.player;
+			if (player != null)
+				Minecraft.getInstance().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
+			return null;
+		}
+	}
 	
 	public MessageSynchroniseRegeneration() {
 	}
@@ -43,15 +51,6 @@ public class MessageSynchroniseRegeneration implements IMessage {
 		data = ByteBufUtils.readTag(buf);
 	}
 	
-	public static class Handler implements IMessageHandler<MessageSynchroniseRegeneration, IMessage> {
-		
-		@Override
-		public IMessage onMessage(MessageSynchroniseRegeneration message, MessageContext ctx) {
-			EntityPlayer player = message.player;
-			if (player != null)
-				Minecraft.getInstance().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
-			return null;
-		}
-	}
+	public static class Handler Handler
 	
 }

@@ -5,15 +5,16 @@ import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
+
+import javax.naming.Context;
+import java.util.function.Supplier;
 
 /**
  * Created by Sub
  * on 20/09/2018.
  */
-public class MessageUpdateSkin implements IMessage {
+public class MessageUpdateSkin {
 	
 	private boolean isAlex;
 	private byte[] encodedSkin;
@@ -24,6 +25,14 @@ public class MessageUpdateSkin implements IMessage {
 	public MessageUpdateSkin(byte[] pixelData, boolean isAlex) {
 		encodedSkin = pixelData;
 		this.isAlex = isAlex;
+	}
+	
+	public static void encode(MessageUpdateSkin skin, ByteBuf buf) {
+		buf.writeInt(skin.encodedSkin.length);
+		for (int i = 0; i < skin.encodedSkin.length; i++) {
+			buf.writeByte(skin.encodedSkin[i]);
+		}
+		buf.writeBoolean(skin.isAlex);
 	}
 	
 	@Override
@@ -37,20 +46,10 @@ public class MessageUpdateSkin implements IMessage {
 		isAlex = buf.readBoolean();
 	}
 	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(this.encodedSkin.length);
-		for (int i = 0; i < this.encodedSkin.length; i++) {
-			buf.writeByte(this.encodedSkin[i]);
-		}
-		buf.writeBoolean(isAlex);
-	}
-	
-	public static class Handler implements IMessageHandler<MessageUpdateSkin, IMessage> {
-		@Override
-		public IMessage onMessage(MessageUpdateSkin message, MessageContext ctx) {
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-				EntityPlayerMP player = ctx.getServerHandler().player;
+	public static class Handler {
+		public static void handle(MessageUpdateSkin message, Supplier<NetworkEvent.Context> ctx){
+			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
+				EntityPlayerMP player = ctx.get().getSender();
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 				cap.setEncodedSkin(message.encodedSkin);
 				if (message.isAlex) {
@@ -60,9 +59,8 @@ public class MessageUpdateSkin implements IMessage {
 				}
 				cap.synchronise();
 				
-				NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID()));
+				NetworkHandler.sendPacketToAll(new MessageRemovePlayer(player.getUniqueID()));
 			});
-			return null;
 		}
 	}
 }

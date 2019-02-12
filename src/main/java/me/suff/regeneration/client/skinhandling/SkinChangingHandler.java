@@ -8,7 +8,6 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
-import me.suff.regeneration.util.FileUtil;
 import me.suff.regeneration.util.IEnum;
 import me.suff.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
@@ -117,7 +116,7 @@ public class SkinChangingHandler {
 				ClientUtil.sendSkinResetPacket();
 				RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
 			} else {
-				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+				NetworkHandler.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
 			}
 		} else {
 			ClientUtil.sendSkinResetPacket();
@@ -214,24 +213,6 @@ public class SkinChangingHandler {
 		}
 		
 		return DefaultPlayerSkin.getDefaultSkinLegacy();
-	}
-	
-	/**
-	 * Downloads a set of default images to their correct directories
-	 *
-	 * @throws IOException
-	 */
-	public static void createDefaultImages() throws IOException {
-		for (DefaultSkins value : DefaultSkins.values()) {
-			File dummy;
-			if (value.isAlexDir()) {
-				dummy = SKIN_DIRECTORY_ALEX;
-			} else {
-				dummy = SKIN_DIRECTORY_STEVE;
-			}
-			
-			FileUtil.downloadImage(new URL(value.getURL()), dummy, value.name().toLowerCase());
-		}
 	}
 	
 	/**

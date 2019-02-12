@@ -6,14 +6,13 @@ import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.common.item.ItemFobWatch;
 import me.suff.regeneration.common.item.ItemLindos;
 import me.suff.regeneration.util.RegenDamageSource;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -38,13 +37,12 @@ public class RegenObjects {
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		e.getRegistry().registerAll(
 				setUpItem(new ItemFobWatch(), "fob_watch"),
-				setUpItem(new ItemLindos(), "lindos_vial").setCreativeTab(CreativeTabs.BREWING)
+				setUpItem(new ItemLindos(), "lindos_vial")
 		);
 	}
 	
 	private static Item setUpItem(Item item, String name) {
 		item.setRegistryName(RegenerationMod.MODID, name);
-		item.setTranslationKey(name);
 		ITEMS.add(item);
 		return item;
 	}

@@ -11,17 +11,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Created by Suffril
  * on 20/01/2019.
  */
-public class MessagePlayRegenerationSound implements IMessage {
+public class MessagePlayRegenerationSound {
 	
 	private String sound;
 	private String playerUUID;
@@ -46,10 +45,9 @@ public class MessagePlayRegenerationSound implements IMessage {
 		ByteBufUtils.writeUTF8String(buf, sound);
 	}
 	
-	public static class Handler implements IMessageHandler<MessagePlayRegenerationSound, IMessage> {
-		@Override
-		public IMessage onMessage(MessagePlayRegenerationSound message, MessageContext ctx) {
-			
+	public static class Handler {
+		
+		public static void handle(MessagePlayRegenerationSound message, Supplier<NetworkEvent.Context> ctx) {
 			Minecraft.getInstance().addScheduledTask(() -> {
 				EntityPlayer player = Minecraft.getInstance().world.getPlayerEntityByUUID(UUID.fromString(message.playerUUID));
 				if (player != null) {
@@ -57,7 +55,6 @@ public class MessagePlayRegenerationSound implements IMessage {
 					ClientUtil.playSound(player, new ResourceLocation(message.sound), SoundCategory.PLAYERS, true, () -> !data.getState().equals(RegenState.REGENERATING), 1.0F);
 				}
 			});
-			return null;
 		}
 	}
 }

@@ -2,9 +2,9 @@ package me.suff.regeneration.client.rendering.model;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.model.ModelBiped;
+import net.minecraft.client.renderer.entity.model.ModelPlayer;
 import net.minecraft.entity.Entity;
 
 public class ModelArmorOverride extends ModelBiped {

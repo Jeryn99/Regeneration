@@ -5,7 +5,6 @@ import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.model.ModelPlayer;
@@ -42,15 +41,48 @@ public class GuiSkinCustomizer extends GuiContainer {
 		int cy = (height - ySize) / 2;
 		final int btnW = 60, btnH = 18;
 		rotation = 0;
-		GuiButtonExt btnNext = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.previous").getFormattedText());
-		GuiButtonExt btnPrevious = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.next").getFormattedText());
-		GuiButtonExt btnBack = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText());
-		GuiButtonExt btnOpenFolder = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.open_folder").getFormattedText());
 		
-		buttonList.add(btnNext);
-		buttonList.add(btnPrevious);
-		buttonList.add(btnOpenFolder);
-		buttonList.add(btnBack);
+		this.addButton(new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.previous").getFormattedText()) {
+			@Override
+			public void onClick(double mouseX, double mouseY) {
+				if (choices.previous() != null) {
+					choices = (SkinChangingHandler.EnumChoices) choices.previous();
+				} else {
+					choices = SkinChangingHandler.EnumChoices.EITHER;
+				}
+				PlayerUtil.updateModel(choices);
+			}
+		});
+		
+		this.addButton(new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.next").getFormattedText()) {
+			@Override
+			public void onClick(double mouseX, double mouseY) {
+				if (choices.next() != null) {
+					choices = (SkinChangingHandler.EnumChoices) choices.next();
+				} else {
+					choices = SkinChangingHandler.EnumChoices.ALEX;
+				}
+				PlayerUtil.updateModel(choices);
+			}
+		});
+		
+		this.addButton(new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText()) {
+			@Override
+			public void onClick(double mouseX, double mouseY) {
+				//TODO Display Regen GUI
+			}
+		});
+		
+		this.addButton(new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.open_folder").getFormattedText()) {
+			@Override
+			public void onClick(double mouseX, double mouseY) {
+				try {
+					Desktop.getDesktop().open(SkinChangingHandler.SKIN_DIRECTORY);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		choices = CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player).getPreferredModel();
 	}
@@ -80,58 +112,15 @@ public class GuiSkinCustomizer extends GuiContainer {
 				break;
 		}
 		GlStateManager.popMatrix();
-		
 		drawCenteredString(Minecraft.getInstance().fontRenderer, new TextComponentTranslation("regeneration.gui.preference_model", choices.name()).getUnformattedComponentText(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
-		
 	}
 	
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		super.actionPerformed(button);
-		switch (button.id) {
-			case 98:
-				Minecraft.getInstance().player.openGui(RegenerationMod.INSTANCE, GuiCustomizer.ID, Minecraft.getInstance().world, 0, 0, 0);
-				break;
-			
-			case 4:
-				//Next
-				if (choices.previous() != null) {
-					choices = (SkinChangingHandler.EnumChoices) choices.previous();
-				} else {
-					choices = SkinChangingHandler.EnumChoices.EITHER;
-				}
-				PlayerUtil.updateModel(choices);
-				break;
-			
-			case 1:
-				//Previous
-				if (choices.next() != null) {
-					choices = (SkinChangingHandler.EnumChoices) choices.next();
-				} else {
-					choices = SkinChangingHandler.EnumChoices.ALEX;
-				}
-				PlayerUtil.updateModel(choices);
-				break;
-			
-			case 99:
-				try {
-					Desktop.getDesktop().open(SkinChangingHandler.SKIN_DIRECTORY);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-		}
-	}
-	
-	
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	public void tick() {
+		super.tick();
 		rotation++;
 		if (rotation > 360) {
 			rotation = 0;
 		}
 	}
-	
 }

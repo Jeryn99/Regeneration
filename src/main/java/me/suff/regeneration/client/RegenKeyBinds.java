@@ -13,7 +13,6 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import org.lwjgl.input.Keyboard;
 
 /**
  * Created by Sub
@@ -25,7 +24,7 @@ public class RegenKeyBinds {
 	
 	public static void init() {
 		if (!EnumCompatModids.LCCORE.isLoaded()) {
-			REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", Keyboard.KEY_R, RegenerationMod.NAME);
+			REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", 88, RegenerationMod.NAME);
 			ClientRegistry.registerKeyBinding(REGEN_NOW);
 		}
 	}
@@ -37,7 +36,7 @@ public class RegenKeyBinds {
 		if (player == null || EnumCompatModids.LCCORE.isLoaded())
 			return;
 		if (REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration(player));
+			NetworkHandler.sendToServer(new MessageTriggerRegeneration(player));
 		}
 	}
 	
@@ -45,7 +44,7 @@ public class RegenKeyBinds {
 	 * Handles LCCore compatibility
 	 */
 	public static String getRegenerateNowDisplayName() {
-		return REGEN_NOW.getDisplayName();
+		return REGEN_NOW.getTranslationKey();
 	}
 	
 }

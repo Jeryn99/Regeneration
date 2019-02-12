@@ -5,27 +5,24 @@ import me.suff.regeneration.client.rendering.model.ModelArmorOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.scalefdResolution;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.ModelBase;
+import net.minecraft.client.renderer.entity.model.ModelPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.opengl.GL11;
@@ -54,10 +51,6 @@ public class RenderUtil {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
 	}
 	
-	public static void setItemRender(Item item) {
-		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-	}
-	
 	public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Vec3d color, float alpha) {
 		if (start == null || end == null)
 			return;
@@ -68,9 +61,9 @@ public class RenderUtil {
 		int layers = 10 + smoothFactor * 20;
 		
 		GlStateManager.pushMatrix();
-		start = start.scalef(-1D);
-		end = end.scalef(-1D);
-		GlStateManager.translatef(-start.x, -start.y, -start.z);
+		start = start.scale(-1D);
+		end = end.scale(-1D);
+		GlStateManager.translated(-start.x, -start.y, -start.z);
 		start = end.subtract(start);
 		end = end.subtract(end);
 		
@@ -87,10 +80,10 @@ public class RenderUtil {
 		
 		for (int layer = 0; layer <= layers; ++layer) {
 			if (layer < layers) {
-				GlStateManager.color((float) color.x, (float) color.y, (float) color.z, 1.0F / layers / 2);
+				GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, 1.0F / layers / 2);
 				GlStateManager.depthMask(false);
 			} else {
-				GlStateManager.color(1.0F, 1.0F, 1.0F, alpha); // SUB does this actually do anything? We're always passing in an alpha of 0...
+				GlStateManager.color4f(1.0F, 1.0F, 1.0F, alpha); // SUB does this actually do anything? We're always passing in an alpha of 0...
 				GlStateManager.depthMask(true);
 			}
 			double size = thickness + (layer < layers ? layer * (1.25D / layers) : 0.0D);
@@ -159,7 +152,7 @@ public class RenderUtil {
 		e.setCanceled(cancelEvent);
 		
 		GlStateManager.pushMatrix();
-		Minecraft.getInstance().renderEngine.bindTexture(player.getLocationSkin());
+		Minecraft.getInstance().getTextureManager().bindTexture(player.getLocationSkin());
 		model.render(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, player.rotationYawHead, player.cameraPitch, 0.0625f);
 		GlStateManager.popMatrix();
 		GlStateManager.popMatrix();
@@ -203,7 +196,7 @@ public class RenderUtil {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.color(red, green, blue, alpha);
+		GlStateManager.color4f(red, green, blue, alpha);
 		worldrenderer.begin(7, DefaultVertexFormats.POSITION);
 		worldrenderer.pos(left, bottom, 0.0D).endVertex();
 		worldrenderer.pos(right, bottom, 0.0D).endVertex();
@@ -215,7 +208,7 @@ public class RenderUtil {
 	}
 	
 	public static void renderVignette(Vec3d color, float a, RegenState state) {
-		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
+		GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, a);
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
@@ -234,8 +227,8 @@ public class RenderUtil {
 		tessellator.draw();
 		
 		GlStateManager.depthMask(true);
-		GlStateManager.enableAlpha();
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.enableAlphaTest();
+		GlStateManager.color4f(1, 1, 1, 1);
 	}
 	
 	/**
@@ -252,7 +245,7 @@ public class RenderUtil {
 	
 	public static void drawModelToGui(ModelBase model, int xPos, int yPos, float scalef, float rotation) {
 		GlStateManager.pushMatrix();
-		GlStateManager.enableDepth();
+		GlStateManager.enableDepthTest();
 		GlStateManager.enableBlend();
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
@@ -267,7 +260,7 @@ public class RenderUtil {
 		model.render(Minecraft.getInstance().player, 0, 0, Minecraft.getInstance().player.ticksExisted, 0, 0, 0.0625f);
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableBlend();
-		GlStateManager.disableDepth();
+		GlStateManager.disableDepthTest();
 		GlStateManager.popMatrix();
 	}
 	

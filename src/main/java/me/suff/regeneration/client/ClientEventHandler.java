@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.scalefdResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -32,7 +31,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
@@ -41,7 +39,6 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
@@ -157,7 +154,7 @@ public class ClientEventHandler {
 		}
 		
 		if (warning != null)
-			Minecraft.getInstance().fontRenderer.drawString(warning, new scalefdResolution(Minecraft.getInstance()).getscalefdWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
+			Minecraft.getInstance().fontRenderer.drawString(warning, new ScaledResoultion(Minecraft.getInstance()).getscalefdWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
 	}
 	
 	@SubscribeEvent
@@ -246,12 +243,6 @@ public class ClientEventHandler {
 			moveType.sneak = false;
 			moveType.moveStrafe = 0.0F;
 		}
-	}
-	
-	@SubscribeEvent
-	public static void registerModels(ModelRegistryEvent ev) {
-		RegenObjects.ITEMS.forEach(RenderUtil::setItemRender);
-		RegenObjects.ITEMS = new ArrayList<>();
 	}
 	
 	@SubscribeEvent

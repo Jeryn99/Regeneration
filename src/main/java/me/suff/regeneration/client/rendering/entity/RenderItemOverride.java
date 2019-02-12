@@ -42,10 +42,10 @@ public class RenderItemOverride extends Render<EntityItemOverride> {
 		Random rand = entity.world.rand;
 		
 		GlStateManager.pushMatrix();
-		if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH && entity.getItem().getItemDamage() != RegenConfig.regenCapacity) {
+		if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH && entity.getItem().getDamage() != RegenConfig.regenCapacity) {
 			for (int j = 0; j < 2; j++) {
 				RenderUtil.setupRenderLightning();
-				GlStateManager.translatef(x, y + 0.20, z);
+				GlStateManager.translated(x, y + 0.20, z);
 				GlStateManager.scalef(0.7F, 0.7F, 0.7F);
 				GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
 				
@@ -58,9 +58,9 @@ public class RenderItemOverride extends Render<EntityItemOverride> {
 			}
 		}
 		
-		GlStateManager.translatef(x, y + 0.17F, z);
+		GlStateManager.translated(x, y + 0.17F, z);
 		GlStateManager.rotatef(-entity.rotationYaw, 0, 1, 0);
-		Minecraft.getInstance().getRenderItem().renderItem(entity.getItem(), ItemCameraTransforms.TransformType.GROUND);
+		Minecraft.getInstance().getItemRenderer().renderItem(entity.getItem(), ItemCameraTransforms.TransformType.GROUND);
 		GlStateManager.popMatrix();
 	}
 	

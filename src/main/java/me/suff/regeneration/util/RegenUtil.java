@@ -69,13 +69,13 @@ public class RegenUtil {
 	
 	public static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-			if (entity instanceof EntityLivingBase && !exploder.isDead) {
+			if (entity instanceof EntityLivingBase && exploder.isAlive()) {
 				EntityLivingBase victim = (EntityLivingBase) entity;
 				
 				if (entity instanceof EntityPlayer && !RegenConfig.onRegen.regenerationKnocksbackPlayers)
 					return;
 				
-				float densMod = world.getBlockDensity(new Vec3d(pos), entity.getEntityBoundingBox());
+				float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
 				
 				int xr, zr;
 				xr = (int) -(victim.posX - exploder.posX);

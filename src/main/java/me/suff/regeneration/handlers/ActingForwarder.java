@@ -6,6 +6,7 @@ import me.suff.regeneration.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +90,7 @@ public class ActingForwarder {
 			throw new IllegalStateException("'Posting' \"acting\" `event` from client");
 		
 		String event = Thread.currentThread().getStackTrace()[2].getMethodName();
-		NetworkHandler.INSTANCE.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP) cap.getPlayer());
+		NetworkHandler.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP) cap.getPlayer());
 	}
 	
 }

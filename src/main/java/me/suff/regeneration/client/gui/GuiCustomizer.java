@@ -43,7 +43,7 @@ public class GuiCustomizer extends GuiContainer {
 	public void initGui() {
 		super.initGui();
 		TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
-		TabRegistry.addTabsToList(this.buttonList);
+		TabRegistry.addTabsToList(buttons);
 		
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
@@ -65,10 +65,10 @@ public class GuiCustomizer extends GuiContainer {
 		btnCust = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.customize").getFormattedText());
 		
 		btnReset.enabled = false;
-		buttonList.add(btnReset);
-		buttonList.add(btnDefault);
-		buttonList.add(btnCust);
-		buttonList.add(btnResetSkin);
+		addButton(btnReset);
+		addButton(btnDefault);
+		addButton(btnCust);
+		addButton(btnResetSkin);
 		
 		slidePrimaryRed = new GuiColorSlider(5, cx + 10, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
 		slidePrimaryGreen = new GuiColorSlider(6, cx + 10, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
@@ -78,13 +78,13 @@ public class GuiCustomizer extends GuiContainer {
 		slideSecondaryGreen = new GuiColorSlider(9, cx + 96, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, this::onChangeSliderValue);
 		slideSecondaryBlue = new GuiColorSlider(10, cx + 96, cy + 103, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, this::onChangeSliderValue);
 		
-		buttonList.add(slidePrimaryRed);
-		buttonList.add(slidePrimaryGreen);
-		buttonList.add(slidePrimaryBlue);
+		addButton(slidePrimaryRed);
+		addButton(slidePrimaryGreen);
+		addButton(slidePrimaryBlue);
 		
-		buttonList.add(slideSecondaryRed);
-		buttonList.add(slideSecondaryGreen);
-		buttonList.add(slideSecondaryBlue);
+		addButton(slideSecondaryRed);
+		addButton(slideSecondaryGreen);
+		addButton(slideSecondaryBlue);
 		
 	}
 	
@@ -100,10 +100,10 @@ public class GuiCustomizer extends GuiContainer {
 		nbt.setFloat("SecondaryGreen", (float) slideSecondaryGreen.getValue());
 		nbt.setFloat("SecondaryBlue", (float) slideSecondaryBlue.getValue());
 		
-		NetworkHandler.INSTANCE.sendToServer(new MessageSaveStyle(nbt));
+		NetworkHandler.sendToServer(new MessageSaveStyle(nbt));
 	}
 	
-	@Override
+	
 	protected void actionPerformed(GuiButton button) {
 		if (button.id == btnReset.id) {
 			slidePrimaryRed.setValue(initialPrimary.x);
@@ -167,14 +167,7 @@ public class GuiCustomizer extends GuiContainer {
 		
 		TextComponentTranslation traitLang = new TextComponentTranslation(DnaHandler.getDnaEntry(CapabilityRegeneration.getForPlayer(mc.player).getDnaType()).getLangKey());
 		fontRenderer.drawString(traitLang.getUnformattedComponentText(), cx + 86 - length / 2, cy + 30, Color.DARK_GRAY.getRGB());
-		
 	}
 	
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		renderHoveredToolTip(mouseX, mouseY);
-	}
 	
 }

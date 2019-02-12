@@ -25,9 +25,6 @@ public class ConditionalSound implements ITickableSound {
 		return test.get();
 	}
 	
-	@Override
-	public void update() {
-	}
 	
 	@Override
 	public ResourceLocation getSoundLocation() {
@@ -55,6 +52,11 @@ public class ConditionalSound implements ITickableSound {
 	}
 	
 	@Override
+	public boolean isPriority() {
+		return false;
+	}
+	
+	@Override
 	public int getRepeatDelay() {
 		return sound.getRepeatDelay();
 	}
@@ -70,18 +72,18 @@ public class ConditionalSound implements ITickableSound {
 	}
 	
 	@Override
-	public float getXPosF() {
-		return sound.getXPosF();
+	public float getX() {
+		return 0;
 	}
 	
 	@Override
-	public float getYPosF() {
-		return sound.getYPosF();
+	public float getY() {
+		return 0;
 	}
 	
 	@Override
-	public float getZPosF() {
-		return sound.getZPosF();
+	public float getZ() {
+		return 0;
 	}
 	
 	@Override
@@ -89,4 +91,8 @@ public class ConditionalSound implements ITickableSound {
 		return sound.getAttenuationType();
 	}
 	
+	@Override
+	public void tick() {
+	
+	}
 }

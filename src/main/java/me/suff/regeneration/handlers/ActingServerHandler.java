@@ -17,7 +17,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.network.NetworkRegistry;
 
 import java.util.Random;
 import java.util.UUID;
@@ -161,8 +161,7 @@ class ActingServerHandler implements IActingHandler {
 		
 		player.extinguish();
 		player.removePassengers();
-		player.clearActivePotions();
-		player.dismountRidingEntity();
+		player.stopRiding();
 		
 		if (RegenConfig.postRegen.resetHunger)
 			player.getFoodStats().setFoodLevel(20);

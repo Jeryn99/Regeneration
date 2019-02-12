@@ -5,14 +5,14 @@ import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.handlers.ActingForwarder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
-public class MessageRegenStateEvent implements IMessage {
+public class MessageRegenStateEvent {
 	
 	private EntityPlayer player;
 	private String event;
@@ -25,10 +25,13 @@ public class MessageRegenStateEvent implements IMessage {
 		this.event = event;
 	}
 	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
-		ByteBufUtils.writeUTF8String(buf, event);
+	public static void encode(MessageRegenStateEvent event, PacketBuffer packetBuffer) {
+		packetBuffer.writeString(event.event);
+		packetBuffer.writeString(event.player.getGameProfile().getId().toString());
+	}
+	
+	public static MessageRegenStateEvent decode(PacketBuffer buffer) {
+		return new MessageRegenStateEvent(buffer.readString())
 	}
 	
 	@Override
@@ -39,12 +42,9 @@ public class MessageRegenStateEvent implements IMessage {
 		event = ByteBufUtils.readUTF8String(buf);
 	}
 	
-	public static class Handler implements IMessageHandler<MessageRegenStateEvent, IMessage> {
-		
-		@Override
-		public IMessage onMessage(MessageRegenStateEvent message, MessageContext ctx) {
+	public static class Handler {
+		public static void handle(MessageRegenStateEvent message, Supplier<NetworkEvent.Context> ctx) {
 			Minecraft.getInstance().addScheduledTask(() -> ActingForwarder.onClient(message.event, CapabilityRegeneration.getForPlayer(message.player)));
-			return null;
 		}
 	}
 	

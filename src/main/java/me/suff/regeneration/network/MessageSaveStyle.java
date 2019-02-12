@@ -1,19 +1,18 @@
 package me.suff.regeneration.network;
 
-import io.netty.buffer.ByteBuf;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Created by Sub
  * on 20/09/2018.
  */
-public class MessageSaveStyle implements IMessage {
+public class MessageSaveStyle {
 	
 	private NBTTagCompound style;
 	
@@ -24,25 +23,21 @@ public class MessageSaveStyle implements IMessage {
 		style = nbtTagCompound;
 	}
 	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		style = ByteBufUtils.readTag(buf);
+	public static void encode(MessageSaveStyle saveStyle, PacketBuffer buf) {
+		buf.writeCompoundTag(saveStyle.style);
 	}
 	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeTag(buf, style);
+	public static MessageSaveStyle decode(PacketBuffer buffer) {
+		return new MessageSaveStyle(buffer.readCompoundTag());
 	}
 	
-	public static class Handler implements IMessageHandler<MessageSaveStyle, IMessage> {
-		@Override
-		public IMessage onMessage(MessageSaveStyle message, MessageContext ctx) {
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
+	public static class Handler {
+		public static void handle(MessageSaveStyle message, Supplier<NetworkEvent.Context> ctx) {
+			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
+				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.get().getSender());
 				cap.setStyle(message.style);
 				cap.synchronise();
 			});
-			return null;
 		}
 	}
 }

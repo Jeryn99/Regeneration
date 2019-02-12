@@ -19,7 +19,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,12 +56,12 @@ public class PlayerUtil {
 	}
 	
 	public static void sendMessageToAll(TextComponentTranslation translation) {
-		List<EntityPlayerMP> players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers();
+		List<EntityPlayerMP> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
 		players.forEach(playerMP -> sendMessage(playerMP, translation, false));
 	}
 	
 	public static void setPerspective(EntityPlayerMP player, boolean thirdperson, boolean resetPitch) {
-		NetworkHandler.INSTANCE.sendTo(new MessageSetPerspective(thirdperson, resetPitch), player);
+		NetworkHandler.sendTo(new MessageSetPerspective(thirdperson, resetPitch), player);
 	}
 	
 	public static boolean canEntityAttack(Entity entity) { // NOTE unused
@@ -77,7 +77,7 @@ public class PlayerUtil {
 	}
 	
 	public static void updateModel(SkinChangingHandler.EnumChoices choice) {
-		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateModel(choice.name()));
+		NetworkHandler.sendToServer(new MessageUpdateModel(choice.name()));
 	}
 	
 	public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {

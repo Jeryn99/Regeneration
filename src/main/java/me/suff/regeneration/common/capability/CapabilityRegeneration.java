@@ -89,17 +89,14 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Nonnull
 	public static IRegeneration getForPlayer(EntityPlayer player) {
-		if (player.getCapability(CAPABILITY, null)) {
-			return player.getCapability(CAPABILITY, null);
-		}
-		throw new IllegalStateException("Missing Regeneration capability: " + player + ", please report this to the issue tracker");
+		return (IRegeneration) player.getCapability(CAPABILITY);
 	}
 	
 	
 	@Override
 	public void tick() {
 		if (!didSetup && player.world.isRemote) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player));
+			NetworkHandler.sendToServer(new MessageSynchronisationRequest(player));
 			didSetup = true;
 		}
 		
@@ -127,7 +124,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
 		
-		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
+		NetworkHandler.sendPacketToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
 	
 	

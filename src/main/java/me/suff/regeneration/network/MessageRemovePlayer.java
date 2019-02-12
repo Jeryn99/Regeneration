@@ -4,17 +4,16 @@ import io.netty.buffer.ByteBuf;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Created by Sub
  * on 20/09/2018.
  */
-public class MessageRemovePlayer implements IMessage {
+public class MessageRemovePlayer {
 	
 	private UUID playerUUID;
 	
@@ -37,11 +36,9 @@ public class MessageRemovePlayer implements IMessage {
 		playerUUID = pBuf.readUniqueId();
 	}
 	
-	public static class Handler implements IMessageHandler<MessageRemovePlayer, IMessage> {
-		@Override
-		public IMessage onMessage(MessageRemovePlayer message, MessageContext ctx) {
+	public static class Handler {
+		public static void handle(MessageRemovePlayer message, Supplier<NetworkEvent.Context> ctx) {
 			Minecraft.getInstance().addScheduledTask(() -> SkinChangingHandler.PLAYER_SKINS.remove(message.playerUUID));
-			return null;
 		}
 	}
 }

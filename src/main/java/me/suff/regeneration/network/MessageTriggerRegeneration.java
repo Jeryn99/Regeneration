@@ -7,13 +7,12 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
-public class MessageTriggerRegeneration implements IMessage {
+public class MessageTriggerRegeneration {
 	
 	private EntityPlayer player;
 	
@@ -36,11 +35,10 @@ public class MessageTriggerRegeneration implements IMessage {
 		player = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim).getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
 	}
 	
-	public static class Handler implements IMessageHandler<MessageTriggerRegeneration, IMessage> {
+	public static class Handler{
 		
-		@Override
-		public IMessage onMessage(MessageTriggerRegeneration message, MessageContext ctx) {
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
+		public static void handle(MessageTriggerRegeneration message, Supplier<NetworkEvent.Context > ctx){
+			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
 				RegenerationMod.DEBUGGER.getChannelFor(message.player).out("Regeneration keybind pressed");
 				IRegeneration regen = CapabilityRegeneration.getForPlayer(message.player);
 				
@@ -50,8 +48,6 @@ public class MessageTriggerRegeneration implements IMessage {
 				}
 				regen.triggerRegeneration();
 			});
-			
-			return null;
 		}
 	}
 	
