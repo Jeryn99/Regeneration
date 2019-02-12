@@ -28,6 +28,7 @@
 		"1.4.3": "Performance fixes! MorePlayerModels Compat! Customisation changes!",
 		"1.4.4": "Fixes crashes with mods like Galaticraft & other player rendering changing mods",
 		"1.4.5": "Fixes people crashing on startup when armor model is being altered",
-		"1.4.6": "Internal code changes to allow for downloading default skins"
+		"1.4.6": "Internal code changes to allow for downloading default skins",
+		"1.4.7": "Fixes player model reverting to alex on new world"
 	}
 }
