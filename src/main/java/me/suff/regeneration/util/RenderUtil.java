@@ -2,6 +2,7 @@ package me.suff.regeneration.util;
 
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.rendering.model.ModelArmorOverride;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.scalefdResolution;
@@ -209,7 +210,7 @@ public class RenderUtil {
 	
 	public static void renderVignette(Vec3d color, float a, RegenState state) {
 		GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, a);
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -217,12 +218,12 @@ public class RenderUtil {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		
-		scalefdResolution scalefdRes = new scalefdResolution(Minecraft.getInstance());
+		MainWindow scalefdRes = Minecraft.getInstance().mainWindow;
 		int z = -89; // below the HUD
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-		bufferbuilder.pos(0, scalefdRes.getscalefdHeight(), z).tex(0, 1).endVertex();
-		bufferbuilder.pos(scalefdRes.getscalefdWidth(), scalefdRes.getscalefdHeight(), z).tex(1.0D, 1.0D).endVertex();
-		bufferbuilder.pos(scalefdRes.getscalefdWidth(), 0, z).tex(1, 0).endVertex();
+		bufferbuilder.pos(0, scalefdRes.getHeight(), z).tex(0, 1).endVertex();
+		bufferbuilder.pos(scalefdRes.getWidth(), scalefdRes.getHeight(), z).tex(1.0D, 1.0D).endVertex();
+		bufferbuilder.pos(scalefdRes.getWidth(), 0, z).tex(1, 0).endVertex();
 		bufferbuilder.pos(0, 0, z).tex(0, 0).endVertex();
 		tessellator.draw();
 		

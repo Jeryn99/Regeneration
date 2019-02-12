@@ -31,7 +31,7 @@ public class MessageRegenStateEvent {
 	}
 	
 	public static MessageRegenStateEvent decode(PacketBuffer buffer) {
-		return new MessageRegenStateEvent(buffer.readString())
+		//return new MessageRegenStateEvent(buffer.readString())
 	}
 	
 	@Override

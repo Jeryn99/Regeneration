@@ -34,6 +34,7 @@ public class MessageSynchronisationRequest {
 	}
 	
 	public static class Handler {
+		
 		public static void handle(MessageSynchronisationRequest message, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().getSender().getServerWorld().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(message.player).synchronise());
 		}

@@ -30,6 +30,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -258,8 +259,10 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onClientLeaveServer(ClientDisconnectionFromServerEvent e) {
-		SkinChangingHandler.PLAYER_SKINS.clear();
+	public static void onClientLeaveServer(GuiScreenEvent.InitGuiEvent e) {
+		if(Minecraft.getInstance().world == null) {
+			SkinChangingHandler.PLAYER_SKINS.clear();
+		}
 	}
 	
 	

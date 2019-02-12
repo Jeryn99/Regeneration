@@ -30,14 +30,14 @@ public class NetworkHandler {
 		int id = 0;
 		INSTANCE.registerMessage(id++, MessageSaveStyle.class, MessageSaveStyle::encode, MessageSaveStyle::decode, MessageSaveStyle.Handler::handle);
 		INSTANCE.registerMessage(id++, MessageSetPerspective.class, MessageSetPerspective::encode, MessageSetPerspective::decode, MessageSetPerspective.Handler::handle);
-		INSTANCE.registerMessage(MessageRegenStateEvent.Handler.class, MessageRegenStateEvent.class, 2, Dist.CLIENT);
-		INSTANCE.registerMessage(MessageTriggerRegeneration.Handler.class, MessageTriggerRegeneration.class, 3, Side.SERVER);
-		INSTANCE.registerMessage(MessageSynchronisationRequest.Handler.class, MessageSynchronisationRequest.class, 4, Side.SERVER);
-		INSTANCE.registerMessage(MessageSynchroniseRegeneration.Handler.class, MessageSynchroniseRegeneration.class, 5, Dist.CLIENT);
-		INSTANCE.registerMessage(MessageUpdateSkin.Handler.class, MessageUpdateSkin.class, 6, Side.SERVER);
-		INSTANCE.registerMessage(MessageRemovePlayer.Handler.class, MessageRemovePlayer.class, 7, Dist.CLIENT);
-		INSTANCE.registerMessage(MessagePlayRegenerationSound.Handler.class, MessagePlayRegenerationSound.class, 8, Dist.CLIENT);
-		INSTANCE.registerMessage(MessageUpdateModel.Handler.class, MessageUpdateModel.class, 9, Side.SERVER);
+		INSTANCE.registerMessage(id++, MessageRegenStateEvent.class, MessageRegenStateEvent::encode, MessageRegenStateEvent::decode, MessageRegenStateEvent.Handler::handle);
+		INSTANCE.registerMessage(id++, MessageTriggerRegeneration.class, MessageTriggerRegeneration::encode, MessageTriggerRegeneration::decode, MessageTriggerRegeneration.Handler::handle);
+		INSTANCE.registerMessage(id++,MessageSynchronisationRequest.class, MessageSynchronisationRequest::encode, MessageSynchronisationRequest::decode, MessageSynchronisationRequest.Handler::handle);
+		INSTANCE.registerMessage(id++,MessageSynchroniseRegeneration.class, MessageSynchroniseRegeneration::encode, MessageSynchroniseRegeneration::decode, MessageSynchroniseRegeneration.Handler::handle);
+		INSTANCE.registerMessage(id++,MessageUpdateSkin.class, MessageUpdateSkin::encode, MessageUpdateSkin::decode, MessageUpdateSkin.Handler::handle);
+		INSTANCE.registerMessage(id++,MessageRemovePlayer.class, MessageRemovePlayer::encode, MessageRemovePlayer::decode, MessageRemovePlayer.Handler::handle);
+		INSTANCE.registerMessage(id++,MessagePlayRegenerationSound.class, MessagePlayRegenerationSound::encode, MessagePlayRegenerationSound::decode, MessagePlayRegenerationSound.Handler::handle);
+		INSTANCE.registerMessage(id++,MessageUpdateModel.class, MessageUpdateModel::encode, MessageUpdateModel::decode, MessageUpdateModel.Handler::handle);
 	}
 	
 	/**

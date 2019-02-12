@@ -1,6 +1,6 @@
 package me.suff.regeneration.util;
 
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.ModList;
 
 public enum EnumCompatModids {
 	TARDIS("tardis"), LCCORE("lucraftcore");
@@ -16,6 +16,6 @@ public enum EnumCompatModids {
 	}
 	
 	public boolean isLoaded() {
-		return Loader.isModLoaded(getModid());
+		return ModList.get().isLoaded(getModid());
 	}
 }

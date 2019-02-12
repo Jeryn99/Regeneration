@@ -1,5 +1,8 @@
 package me.suff.regeneration.common.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
@@ -8,6 +11,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.command.impl.GameModeCommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +20,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class RegenDebugCommand extends CommandBase {
+public class RegenDebugCommand implements Command {
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -81,4 +85,9 @@ public class RegenDebugCommand extends CommandBase {
 		return 2;
 	}
 	
+	@Override
+	public int run(CommandContext context) throws CommandSyntaxException {
+		
+		return 0;
+	}
 }

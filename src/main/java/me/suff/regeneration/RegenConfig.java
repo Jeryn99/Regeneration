@@ -1,5 +1,6 @@
 package me.suff.regeneration;
 
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -10,11 +11,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Created by Sub
  * on 17/09/2018.
  */
-@Config(modid = RegenerationMod.MODID, name = "Regeneration")
 public class RegenConfig {
 	
 	@Config.LangKey("config.regeneration.category.loot")
-	public static final Loot loot = new Loot();
+	public static final Loot loot = new Loot(); ForgeConfig
 	
 	@Config.LangKey("config.regeneration.category.grace")
 	public static final GracePeriod grace = new GracePeriod();
@@ -31,17 +31,6 @@ public class RegenConfig {
 	@Config.LangKey("config.regeneration.category.skins")
 	public static final Skins skins = new Skins();
 	
-	
-	@Config.LangKey("config.regeneration.max_regens")
-	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
-	@Config.RequiresMcRestart
-	@Config.RangeInt(min = 0)
-	public static int regenCapacity = 12;
-	
-	@Config.LangKey("config.regeneration.free_regens")
-	@Config.Comment("Every player will start with this number of regenerations. Will cause undefined behavior if bigger than the amount of regenerations per cycle.")
-	@Config.RangeInt(min = 0)
-	public static int freeRegenerations = 0;
 	
 	@Config.LangKey("config.regeneration.first_start_gift_only")
 	@Config.Comment("Only give new players free regenerations")

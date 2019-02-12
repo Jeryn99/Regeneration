@@ -10,10 +10,15 @@ import me.suff.regeneration.common.dna.DnaHandler;
 import me.suff.regeneration.debugger.IRegenDebugger;
 import me.suff.regeneration.handlers.ActingForwarder;
 import me.suff.regeneration.network.NetworkHandler;
+import me.suff.regeneration.proxy.ClientProxy;
+import me.suff.regeneration.proxy.CommonProxy;
+import me.suff.regeneration.proxy.IProxy;
+import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLModLoadingContext;
@@ -32,9 +37,10 @@ public class RegenerationMod {
 	public static IRegenDebugger DEBUGGER;
 	public static Logger LOG = LogManager.getLogger(NAME);
 	
+	public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+	
 	public RegenerationMod() {
 		FMLModLoadingContext.get().getModEventBus().addListener(this::setup);
-		
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
@@ -42,17 +48,12 @@ public class RegenerationMod {
 		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
 		ActingForwarder.init();
 		RegenTriggers.init();
-		
 		NetworkHandler.init();
 		LootTableList.register(LOOT_FILE);
 		DnaHandler.init();
+		PlayerUtil.createPostList();
 	}
 	
-	//@EventHandler
-	//public void postInit(FMLPostInitializationEvent e) {
-	//	proxy.postInit();
-	//	PlayerUtil.createPostList();
-	//}
 	
 	
 }

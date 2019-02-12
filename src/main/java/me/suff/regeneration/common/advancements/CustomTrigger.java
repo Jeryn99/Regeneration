@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.critereon.AbstractCriterionInstance;
+import net.minecraft.advancements.criterion.AbstractCriterionInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance> {
+public class CustomTrigger implements ICriterionTrigger {
 	private final ResourceLocation RL;
 	private final Map<PlayerAdvancements, CustomTrigger.Listeners> listeners = Maps.newHashMap();
 	
@@ -47,11 +48,8 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance> 
 		return RL;
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
-	 */
 	@Override
-	public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<CustomTrigger.Instance> listener) {
+	public void addListener(PlayerAdvancements playerAdvancementsIn, Listener listener) {
 		CustomTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
 		
 		if (myCustomTrigger$listeners == null) {
@@ -62,11 +60,8 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance> 
 		myCustomTrigger$listeners.add(listener);
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
-	 */
 	@Override
-	public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<CustomTrigger.Instance> listener) {
+	public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener listener) {
 		CustomTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
 		
 		if (tameanimaltrigger$listeners != null) {

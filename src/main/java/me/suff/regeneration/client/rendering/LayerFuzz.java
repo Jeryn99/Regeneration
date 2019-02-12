@@ -42,7 +42,7 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 			modelSkeleton.bipedHead.isHidden = false;
 		}
 		modelSkeleton.isSneak = player.isSneaking();
-		modelSkeleton.isRiding = player.isRiding();
+		//modelSkeleton.isRiding = player.isRiding();
 		Minecraft.getInstance().getTextureManager().bindTexture(SKELETON_TEXTURES);
 		modelSkeleton.render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scalef);
 		GlStateManager.popMatrix();
@@ -76,7 +76,7 @@ public class LayerFuzz implements LayerRenderer<EntityPlayer> {
 		GlStateManager.scalef(1, 1, 1);
 		mainModel.isChild = false;
 		mainModel.isSneak = player.isSneaking();
-		mainModel.isRiding = player.isRiding();
+		//mainModel.isRiding = player.isRiding();
 		mainModel.render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scalef);
 		
 		GlStateManager.enableCull();

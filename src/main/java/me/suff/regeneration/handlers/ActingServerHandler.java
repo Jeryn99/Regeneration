@@ -148,7 +148,10 @@ class ActingServerHandler implements IActingHandler {
 	public void onRegenTrigger(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		
-		NetworkHandler.INSTANCE.sendToAllAround(new MessagePlayRegenerationSound(getRandomSound(player.world.rand), player.getUniqueID().toString()), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 40));
+		for (EntityPlayerMP netPlayer : player.world.getEntitiesWithinAABB(EntityPlayerMP.class, player.getBoundingBox().expand(45, 45, 45))) {
+			NetworkHandler.sendTo(new MessagePlayRegenerationSound(getRandomSound(player.world.rand), player.getUniqueID().toString()), netPlayer);
+		}
+		
 		
 		player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
 		RegenerationMod.DEBUGGER.getChannelFor(player).out("Removed health reduction");
