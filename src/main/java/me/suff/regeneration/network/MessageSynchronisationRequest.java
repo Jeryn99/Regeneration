@@ -4,9 +4,11 @@ import io.netty.buffer.ByteBuf;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class MessageSynchronisationRequest {
 	
@@ -33,8 +35,7 @@ public class MessageSynchronisationRequest {
 	
 	public static class Handler {
 		public static void handle(MessageSynchronisationRequest message, Supplier<NetworkEvent.Context> ctx) {
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(message.player).synchronise());
-			
+			ctx.get().getSender().getServerWorld().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(message.player).synchronise());
 		}
 	}
 	
