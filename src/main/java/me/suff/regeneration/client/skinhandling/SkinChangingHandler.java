@@ -156,15 +156,10 @@ public class SkinChangingHandler {
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
 			resourceLocation = retrieveSkinFromMojang(player);
 			
-			Minecraft minecraft = Minecraft.getMinecraft();
-			Map map = minecraft.getSessionService().getTextures(minecraft.getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
-			if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-				MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
-				if (Objects.equals(profile.getMetadata("model"), "skim")) {
-					skinType = SkinInfo.SkinType.ALEX;
-				} else {
-					skinType = SkinInfo.SkinType.STEVE;
-				}
+			if (isPlayersDefaultAlex(player)) {
+				skinType = SkinInfo.SkinType.ALEX;
+			} else {
+				skinType = SkinInfo.SkinType.STEVE;
 			}
 			
 		} else {
@@ -179,6 +174,16 @@ public class SkinChangingHandler {
 		}
 		
 		return new SkinInfo(resourceLocation, skinType);
+	}
+	
+	public static boolean isPlayersDefaultAlex(EntityPlayer player) {
+		Minecraft minecraft = Minecraft.getMinecraft();
+		Map map = minecraft.getSessionService().getTextures(minecraft.getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
+		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
+			return (Objects.equals(profile.getMetadata("model"), "skim"));
+		}
+		return true;
 	}
 	
 	/**

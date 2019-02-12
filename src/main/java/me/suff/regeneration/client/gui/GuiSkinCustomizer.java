@@ -3,7 +3,6 @@ package me.suff.regeneration.client.gui;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
-import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -27,7 +26,7 @@ public class GuiSkinCustomizer extends GuiContainer {
 	private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
 	private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
-	private static SkinChangingHandler.EnumChoices choices = ClientUtil.isSlimSkin(Minecraft.getMinecraft().player.getUniqueID()) ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
+	private static SkinChangingHandler.EnumChoices choices = SkinChangingHandler.isPlayersDefaultAlex(Minecraft.getMinecraft().player) ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
 	private float rotation = 0;
 	
 	public GuiSkinCustomizer() {
