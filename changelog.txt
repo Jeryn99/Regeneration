@@ -1,0 +1,432 @@
+Build: 1.13-24.0.184-1.13-pre - Mon Feb 11 18:51:31 GMT 2019
+	cpw: Fix JKS to be stored as binary
+=========
+Build: 1.13-24.0.183-1.13-pre - Mon Feb 11 04:41:57 GMT 2019
+	cpw: Enable https to Let's Encrypt endpoints by using an SSL factory with the
+=========
+Build: 1.13-24.0.182-1.13-pre - Mon Feb 11 02:01:47 GMT 2019
+	cpw: Its 2019. Update licence headers to match.
+=========
+Build: 1.13-24.0.181-1.13-pre - Sun Feb 10 22:51:40 GMT 2019
+	cpw: Fix Terminal Handler and GUI logging on dediserver, hopefully..
+=========
+Build: 1.13-24.0.180-1.13-pre - Sun Feb 10 21:38:41 GMT 2019
+	cpw: Fix up accidental newline removal that broke the console...
+	cpw: Fix config to use new system properly, without exploding the server.
+=========
+Build: 1.13-24.0.178-1.13-pre - Sun Feb 10 20:59:46 GMT 2019
+	cpw: Revert "Make sure to create entire path for directory, fixes #5429"
+	cpw: Use a configuration value for the thread count, make it default to
+	cpw: Tidy up modcontainer building and discovery..
+	cpw: Make a second logger with colour highlighting and control it with a
+	cpw: Move to using Minecrell's terminal logger directly, for better ANSI
+	cpw: Fix #5429 properly, without breaking symlinks on linux..
+=========
+Build: 1.13-24.0.172-1.13-pre - Sat Feb 09 01:49:51 GMT 2019
+	36201707+m00nl1ght-dev: Port CommandEvent and custom entity selectors to 1.13 (#5411)
+=========
+Build: 1.13-24.0.171-1.13-pre - Sat Feb 09 01:41:06 GMT 2019
+	lex: Finish off most old patches, fix issue for mounted entities.
+=========
+Build: 1.13-24.0.170-1.13-pre - Fri Feb 08 03:11:56 GMT 2019
+	williewillus: Patch direct accesses to Entity.type to use getter instead (#5308)
+=========
+Build: 1.13-24.0.169-1.13-pre - Thu Feb 07 22:20:58 GMT 2019
+	tterrag1098: Add IExtensibleEnum, fix DimensionType create method
+	tterrag1098: Add synchronized modifier to runtime enhanced enum methods
+=========
+Build: 1.13-24.0.167-1.13-pre - Thu Feb 07 20:06:20 GMT 2019
+	lex: Change IRenderHandler to an interface Closes #4640
+=========
+Build: 1.13-24.0.166-1.13-pre - Thu Feb 07 07:18:55 GMT 2019
+	goto.minecraft: Made functional interface IChunkGeneratorFactory public (#5395)
+=========
+Build: 1.13-24.0.165-1.13-pre - Thu Feb 07 07:03:48 GMT 2019
+	Barteks2x: Fix leaking unclosed InputStream in Scanner.fileVisitor (#5432)
+=========
+Build: 1.13-24.0.164-1.13-pre - Thu Feb 07 06:56:18 GMT 2019
+	lex: Reintroduce ObfuscationReflestionHelper closes #5373
+	lex: 'Fix' Specific y-levels in water behaving like you're in air. Closes
+	lex: Invalidate capabilities that we attach to vanilla entities and
+=========
+Build:  - Thu Feb 07 02:59:57 GMT 2019
+	lex: Fixed Crosshair attack indicator texture issue Closes #5442 Add
+=========
+Build: 1.13-24.0.160-1.13-pre - Thu Feb 07 00:30:50 GMT 2019
+	vrtl: Let ItemGroup provide it's own tabs image resource location (#5330)
+=========
+Build: 1.13-24.0.159-1.13-pre - Wed Feb 06 23:29:19 GMT 2019
+	vrtl: Allow GuiContainer and ItemGroup to specify slot hover colors (#5332)
+	contact: Port Minecraft client patch for 'ClientTickEvent' (#5397)
+	vrtl: Fix statistics gui crashing when handling input events (#5435)
+=========
+Build: 1.13-24.0.156-1.13-pre - Wed Feb 06 06:42:42 GMT 2019
+	lex: Properly set context classloader in mod loading threads.
+=========
+Build: 1.13-24.0.155-1.13-pre - Tue Feb 05 02:24:20 GMT 2019
+	lex: Rework server launching at runtime to include needed default arguments
+	vrtl: Fix redstone power calculation (#5433)
+	girafi0: Added 'create'-method for EnumCreatureType (#5400)
+=========
+Build: 1.13-24.0.152-1.13-pre - Mon Feb 04 19:38:09 GMT 2019
+	vrtl: Fix wrong grass block being used for comparisons (#5434)
+=========
+Build: 1.13-24.0.151-1.13-pre - Mon Feb 04 17:32:08 GMT 2019
+	tterrag1098: Make sure to create entire path for directory, fixes #5429
+=========
+Build: 1.13-24.0.150-1.13-pre - Sat Feb 02 01:37:34 GMT 2019
+	cpw: Put the FMLModContainer back in it's cage. Delete the ClasspathLocator.
+=========
+Build: 1.13-24.0.149-1.13-pre - Fri Feb 01 21:55:56 GMT 2019
+	cpw: Use the resource pack directly in the GuiModList, skip the
+=========
+Build: 1.13-24.0.148-1.13-pre - Fri Feb 01 18:42:11 GMT 2019
+	lex: Fix inventory items not properly being synced to client. Closes ##5421 &
+=========
+Build: 1.13-24.0.147-1.13-pre - Fri Feb 01 04:10:00 GMT 2019
+	cpw: Expose the ModFile in the scan data, so languages can read it and make
+=========
+Build: 1.13-24.0.146-1.13-pre - Wed Jan 30 20:51:22 GMT 2019
+	JDLogic: Fix RuntimeEnumExtender creating new enums with incorrect ordinal value
+=========
+Build: 1.13-24.0.145-1.13-pre - Tue Jan 29 20:43:14 GMT 2019
+	cpw: Config watching and config events now actually work! Also fixed small
+=========
+Build: 1.13-24.0.144-1.13-pre - Tue Jan 29 03:42:52 GMT 2019
+	cpw: ConfigEvents - the beginning.
+=========
+Build: 1.13-24.0.143-1.13-pre - Tue Jan 29 02:02:50 GMT 2019
+	tobias.hotz: Bring back the forge beta warning. Use a check to see if the forge minor
+	tobias.hotz: Update for ForgeSPI change, revert back to VersionStatus checking
+	tobias.hotz: Reimplement update checker
+	tobias.hotz: Config option implemented
+=========
+Build: 1.13-24.0.138-1.13-pre - Tue Jan 29 01:40:24 GMT 2019
+	cpw: Fix 5408 by making Paths from the default provider (not inside jars)
+=========
+Build: 1.13-24.0.137-1.13-pre - Tue Jan 29 00:26:15 GMT 2019
+	lex: More old patch work, cleaned up static methods added to ItemStack, and
+=========
+Build: 1.13-24.0.136-1.13-pre - Sun Jan 27 16:48:43 GMT 2019
+	gurreja: Fixed missed OptionalCapabilityInstance to LazyOptional refactors in
+	cpw: Fix mdk properties - now the mdk offers default console debug logging
+	cpw: Use recommended approach to applying version data to mdk.
+	tterrag1098: Refactor OptionalCapabilityInstance to LazyOptional; clean up
+=========
+Build: 1.13-24.0.131-1.13-pre - Sun Jan 27 05:07:17 GMT 2019
+	cpw: More logging tweaks, including some aimed at userdev.
+=========
+Build: 1.13-24.0.130-1.13-pre - Sun Jan 27 03:18:51 GMT 2019
+	mezz: Cherry pick mezz's logging improvements..
+	cpw: Big cleanup of logging. Might do some tweaks of the userdev logging, but
+=========
+Build: 1.13-24.0.128-1.13-pre - Sat Jan 26 22:39:21 GMT 2019
+	tobias.hotz: Fix some of minecraft's resources loading twice, as minecraft is on the
+	cpw: Update to 0.9.0 of modlauncher..
+=========
+Build: 1.13-24.0.125-1.13-pre - Sat Jan 26 22:07:56 GMT 2019
+	cpw: Fix modsorter to not crash on soft dependencies that don't exist.
+=========
+Build: 1.13-24.0.124-1.13-pre - Sat Jan 26 21:56:26 GMT 2019
+	cpw: Fix resource pack info generator - use the first modid as part of the
+=========
+Build: 1.13-24.0.123-1.13-pre - Sat Jan 26 18:07:46 GMT 2019
+	cpw: Make MOD_CLASSES available to the forge development environment as well.
+=========
+Build: 1.13-24.0.122-1.13-pre - Sat Jan 26 17:30:18 GMT 2019
+	cpw: Change MOD_CLASSES to support %% separated paths, that are grouped into
+=========
+Build: 1.13-24.0.121-1.13-pre - Sat Jan 26 16:24:20 GMT 2019
+	vincent.lee: Readd modded entity spawning/tracking support
+	vincent.lee: Clean up patch a bit, check for net.minecraft.
+	vincent.lee: Add license header
+	vincent.lee: Send head yaw, use setPositionAndRotation
+	cpw: Fix handing the "minecraft" dependency properly by adding it to the list
+=========
+Build: 1.13-24.0.116-1.13-pre - Sat Jan 26 03:40:10 GMT 2019
+	mariaum: Fix first call to ToolType.get always returning null (#5396)
+=========
+Build: 1.13-24.0.115-1.13-pre - Sat Jan 26 00:08:04 GMT 2019
+	tterrag1098: Fix NPE in ItemGroup concurrency patch
+=========
+Build: 1.13-24.0.114-1.13-pre - Fri Jan 25 21:44:22 GMT 2019
+	bonzoweb: A couple of minor improvements and fixes to ForgeConfigSpec (#5394)
+=========
+Build: 1.13-24.0.113-1.13-pre - Fri Jan 25 21:36:46 GMT 2019
+	williewillus: [1.13] A sweep through deprecations (#5345)
+	mezz: Add RecipesUpdatedEvent, fired when recipes are downloaded from the
+=========
+Build: 1.13-24.0.111-1.13-pre - Fri Jan 25 21:29:15 GMT 2019
+	ShetiPhian: Add a RayTraceResult method to Block that can be can be overridden
+=========
+Build: 1.13-24.0.110-1.13-pre - Fri Jan 25 21:18:57 GMT 2019
+	Adubbz: [1.13] Check canSustainPlant for valid ground in BlockBush (#5362)
+	williewillus: [1.13] Make Caps, TESR, Entity renderers, and keybinds thread safe to
+=========
+Build: 1.13-24.0.108-1.13-pre - Fri Jan 25 21:11:31 GMT 2019
+	lex: Repatch missed hasTileEntity redirects. And cleanup related patches.
+=========
+Build: 1.13-24.0.107-1.13-pre - Fri Jan 25 19:26:32 GMT 2019
+	mariaum: Fix #5365: Some chat messages lose their formatting (#5386)
+	mariaum: Fix item interaction in creative mode. (#5385)
+	goto.minecraft: Make ItemGroup constructor threadsafe (#5384)
+	goto.minecraft: Make ChunkGeneratorType.Settings accessible for modders (#5376)
+	vrtl: Fixed fence and iron bars block placement (#5372)
+=========
+Build: 1.13-24.0.102-1.13-pre - Fri Jan 25 19:18:51 GMT 2019
+	lex: Fix vanilla trying to load the constants json as an recipe. Closes #5388
+=========
+Build: 1.13-24.0.101-1.13-pre - Fri Jan 25 18:22:55 GMT 2019
+	Bward7864: Add recipe types for faster runtime iteration. (#5312)
+=========
+Build: 1.13-24.0.100-1.13-pre - Fri Jan 25 02:06:21 GMT 2019
+	tterrag1098: Fix capability attach event not firing with base type
+=========
+Build: 1.13-24.0.99-1.13-pre - Thu Jan 24 20:35:03 GMT 2019
+	contact: Port Minecraft client patch for 'RenderTickEvent' (#5329)
+=========
+Build: 1.13-24.0.98-1.13-pre - Thu Jan 24 20:27:13 GMT 2019
+	bonzoweb: Add back several missing patches for FML events (#5390)
+=========
+Build: 1.13-24.0.97-1.13-pre - Thu Jan 24 01:11:57 GMT 2019
+	noreply: Missing =
+	noreply: Only use build numbers when no version is specified.
+	noreply: Prevent recursion, and filter builds with no changes.
+	tterrag1098: Fix dependents not being loaded into mod sorter
+=========
+Build: 1.13-24.0.96-1.13-pre - Mon Jan 21 03:06:35 GMT 2019
+	liach: Improves topological sort
+=========
+Build: 1.13-24.0.95-1.13-pre - Mon Jan 21 02:26:48 GMT 2019
+	cpw: Expose a couple of mods.toml properties properly. Half-implemented
+=========
+Build: 1.13-24.0.94-1.13-pre - Sun Jan 20 17:39:43 GMT 2019
+	bonzoweb: Use the reply logical side when enqueing work
+=========
+Build: 1.13-24.0.93-1.13-pre - Sun Jan 20 17:30:13 GMT 2019
+	tobias.hotz: Validate mod ids
+	tobias.hotz: Use minecraft's util class to open files
+=========
+Build: 1.13-24.0.91-1.13-pre - Sun Jan 20 17:20:42 GMT 2019
+	cpw: Fix classcast in autoeventsubscriber, also actually make progression
+	traincrazyb: Fix recipe constants being overridden by a blank map. Closes #5380
+=========
+Build: 1.13-24.0.89-1.13-pre - Sun Jan 20 05:33:09 GMT 2019
+	cpw: Fix case error in AutomaticEventSubscriber
+=========
+Build: 1.13-24.0.88-1.13-pre - Sun Jan 20 04:35:45 GMT 2019
+	cpw: Tell travis to skip 1.13 builds - they don't work there.
+=========
+Build: 1.13-24.0.87-1.13-pre - Sun Jan 20 04:27:38 GMT 2019
+	cpw: Move Registry Events to the mod event bus. Add infrastructure to allow
+=========
+Build: 1.13-24.0.86-1.13-pre - Sat Jan 19 02:10:30 GMT 2019
+	tterrag1098: Greatly improve DeferredWorkQueue API (#5357)
+=========
+Build: 1.13-24.0.85-1.13-pre - Thu Jan 17 23:41:08 GMT 2019
+	tterrag1098: Add utilities that RuntimeEnumExtender expects to exist
+=========
+Build: 1.13-24.0.84-1.13-pre - Wed Jan 16 20:28:49 GMT 2019
+	lex: Re-introduce patch for injecting registry mappings during world loading.
+=========
+Build: 1.13-24.0.83-1.13-pre - Wed Jan 16 04:57:31 GMT 2019
+	tterrag1098: Implement ConfigValue as a wrapper around ForgeConfigSpec results
+=========
+Build: 1.13-24.0.82-1.13-pre - Wed Jan 16 03:14:41 GMT 2019
+	cpw: Fix exploded directory locator to actually scan all paths for a file.
+=========
+Build: 1.13-24.0.81-1.13-pre - Tue Jan 15 03:43:27 GMT 2019
+	cpw: Fix up event naming, move them to sensible packages and document
+	cpw: Update MDK for new naming scheme
+=========
+Build: 1.13-24.0.79-1.13-pre - Tue Jan 15 03:23:43 GMT 2019
+	williewillus: [1.13] Expand tag deserializer to add optional values and remove values
+=========
+Build: 1.13-24.0.78-1.13-pre - Mon Jan 14 22:10:37 GMT 2019
+	mezz: Fix mod lifecycle event names
+=========
+Build: 1.13-24.0.77-1.13-pre - Mon Jan 14 05:40:53 GMT 2019
+	cpw: Update a bunch of libs, rename some of the mod events to more meaningful
+=========
+Build: 1.13-24.0.76-1.13-pre - Sat Jan 12 07:01:41 GMT 2019
+	lex: Add list support to ForgeConfigSpec. Fix incorrect Supplier used in
+=========
+Build: 1.13-24.0.75-1.13-pre - Fri Jan 11 23:33:04 GMT 2019
+	tterrag1098: Fix MC-136995 - Chunk loading and unloading issue with entities placed
+	mezz: Update github stale so issues can be Assigned
+	bs2609: Patch PotionHelper to use registry delegates (#5142)
+	4258783+dargonforce: Fix Mesa biome entry tags in the BiomeDictionary (#5177)
+	XCompWiz: Allow providing a BufferedImage for banner render generation (#5041)
+	admin: Add CreativeTabs#getLabelColor
+	tterrag1098: Add list of so-far skipped 1.12 commits
+=========
+Build: 1.13-24.0.68-1.13-pre - Fri Jan 11 22:52:37 GMT 2019
+	lex: Move @EventBusSubscriber application to just after construction instead
+	gigaherz: Fix blockstate id map calculation. (#5279)
+=========
+Build: 1.13-24.0.66-1.13-pre - Fri Jan 11 19:55:04 GMT 2019
+	williewillus: Make Block.Builder methods accessible. Closes #5310 (#5313)
+=========
+Build: 1.13-24.0.65-1.13-pre - Fri Jan 11 19:47:44 GMT 2019
+	williewillus: Fix exception mismatch for entity types (#5344)
+=========
+Build: 1.13-24.0.64-1.13-pre - Thu Jan 10 05:07:15 GMT 2019
+	williewillus: Fix datapack walking not working for mod datapacks. Closes #5334 (#5335)
+=========
+Build: 1.13-24.0.63-1.13-pre - Thu Jan 10 04:58:43 GMT 2019
+	williewillus: Add missing setSeed calls to ForgeBlockModelRenderer (#5338)
+	lex: Reimplement @ObjectHolder scanning, and expose system for others to add
+=========
+Build: 1.13-24.0.61-1.13-pre - Tue Jan 08 13:52:46 GMT 2019
+	lex: Fix reference to IForgeDimension.SleepResult being through Dimension,
+=========
+Build: 1.13-24.0.60-1.13-pre - Tue Jan 08 08:29:54 GMT 2019
+	lex: Update userdev and runconfigs for ForgeGradle changes.
+=========
+Build: 1.13-24.0.59-1.13-pre - Mon Jan 07 02:02:24 GMT 2019
+	cpw: Fix some translation strings. Will pull a big string update from crowdin
+=========
+Build: 1.13-24.0.58-1.13-pre - Sun Jan 06 22:19:36 GMT 2019
+	cpw: Fire registry events before preinit and after construct.
+=========
+Build: 1.13-24.0.57-1.13-pre - Sun Jan 06 21:34:49 GMT 2019
+	cpw: Fix classloading properly. ModLoadingClassLoader doesn't work with the
+	cpw: Update to 0.4.0 of modlauncher
+=========
+Build: 1.13-24.0.55-1.13-pre - Sat Jan 05 15:20:02 GMT 2019
+	cpw: Fix up some stuff with resource packs, so the guilist works properly.
+=========
+Build: 1.13-24.0.54-1.13-pre - Sat Jan 05 05:14:32 GMT 2019
+	cpw: Update mdk with some tweaks for building
+=========
+Build: 1.13-24.0.53-1.13-pre - Sat Jan 05 04:56:36 GMT 2019
+	cpw: Finish up classloading system. Use ModJARURL to locate resources and
+=========
+Build: 1.13-24.0.52-1.13-pre - Wed Jan 02 22:14:21 GMT 2019
+	cpw: fix up some discovery code, and make regular runtime _mostly_ work.
+	cpw: client and server work standalone and in forge dev. Next up userdev.
+=========
+Build: 1.13-24.0.50-1.13-pre - Tue Jan 01 00:48:46 GMT 2019
+	lex: Fix new launcher jar packaging. Run license checker over new code.
+=========
+Build: 1.13-24.0.49-1.13-pre - Mon Dec 31 21:34:45 GMT 2018
+	cpw: ResourceLocation Utils for doing things..
+	cpw: separated fmllauncher code from main forge mod code. This enables much
+=========
+Build: 1.13-24.0.47-1.13-pre - Sat Dec 29 17:19:21 GMT 2018
+	tterrag1098: Fix patch mistake in IForgeWorldType: CUSTOMIZED -> BUFFET
+	tterrag1098: Better documentation for IForgeWorldType, TERFast, TERAnimation
+=========
+Build: 1.13-24.0.45-1.13-pre - Sat Dec 29 02:05:12 GMT 2018
+	mezz: Clean progress bar code and fix TextureMap patch (#5304)
+=========
+Build: 1.13-24.0.44-1.13-pre - Mon Dec 24 07:46:50 GMT 2018
+	mezz: Implement GuiScreen events for mouse and keyboard (#5297)
+=========
+Build: 1.13-24.0.43-1.13-pre - Sun Dec 23 07:24:18 GMT 2018
+	mezz: Add the sender to NetworkEvent.Context for server-side event handlers
+=========
+Build: 1.13-24.0.42-1.13-pre - Sat Dec 22 18:31:25 GMT 2018
+	tterrag1098: Port most of the world patches (#5294)
+=========
+Build: 1.13-24.0.41-1.13-pre - Sat Dec 22 00:07:56 GMT 2018
+	lex: Change how Forge itself is located to be loaded similar to a real mod.
+=========
+Build: 1.13-24.0.40-1.13-pre - Fri Dec 21 22:53:14 GMT 2018
+	tterrag1098: FastTESR -> TileEntityRendererFast
+=========
+Build: 1.13-24.0.39-1.13-pre - Fri Dec 21 22:45:43 GMT 2018
+	tterrag1098: Rendering patches (#5262)
+=========
+Build: 1.13-24.0.38-1.13-pre - Thu Dec 20 20:09:42 GMT 2018
+	goto.minecraft: Added JVM argument so lwjgl dll extraction works with unicode os
+=========
+Build: 1.13-24.0.37-1.13-pre - Wed Dec 19 00:11:25 GMT 2018
+	lex: Change getWorld function name to prevent inheritance change in Chunk
+=========
+Build: 1.13-24.0.36-1.13-pre - Tue Dec 18 20:48:49 GMT 2018
+	gigaherz: Fix the path handling for mod jar resource packs. (#5228)
+=========
+Build: 1.13-24.0.35-1.13-pre - Sun Dec 16 20:47:23 GMT 2018
+	gigaherz: Add raytrace logic to the GuiOverlayDebugForge, so that the debug
+=========
+Build: 1.13-24.0.34-1.13-pre - Sun Dec 16 19:04:45 GMT 2018
+	gigaherz: Fix typo in patch, that was preventing the key assigned to the chat
+	lex: Fix classloading issues in userdev (and possibly also for things like
+=========
+Build: 1.13-24.0.32-1.13-pre - Thu Dec 13 09:16:11 GMT 2018
+	lex: World and TileEntity patch work. TerrtainGen events are removed, 1.13's
+=========
+Build: 1.13-24.0.31-1.13-pre - Wed Dec 12 04:04:30 GMT 2018
+	lex: Create a userdev-specific main, and include it as an injected file in
+=========
+Build: 1.13-24.0.30-1.13-pre - Tue Dec 11 06:20:00 GMT 2018
+	lex: More entity patch work. ISpecialArmor deleted.
+=========
+Build: 1.13-24.0.29-1.13-pre - Mon Dec 10 20:37:23 GMT 2018
+	lex: Port some patches to 1.13 (#5267)
+=========
+Build: 1.13-24.0.28-1.13-pre - Mon Dec 10 20:05:43 GMT 2018
+	lex: Fix vanilla exception mismatch: DataFixerUpper throws
+=========
+Build: 1.13-24.0.27-1.13-pre - Mon Dec 10 19:08:00 GMT 2018
+	lex: Use getRawSchemeSpecificPart to preserve escape characters in uri, fix
+=========
+Build: 1.13-24.0.26-1.13-pre - Fri Dec 07 02:10:02 GMT 2018
+	lex: world.gen.feature patches, worldgen should be stable with vanilla. In
+=========
+Build: 1.13-24.0.25-1.13-pre - Thu Dec 06 02:08:44 GMT 2018
+	lex: More patch work, our async chunk loading doesn't appear to be viable for
+=========
+Build: 1.13-24.0.24-1.13-pre - Wed Dec 05 09:16:52 GMT 2018
+	lex: Entity patches progress.
+=========
+Build: 1.13-24.0.23-1.13-pre - Tue Dec 04 20:22:09 GMT 2018
+	lex: Fix race condition causing the FML handshake to hang (#5222)
+=========
+Build: 1.13-24.0.22-1.13-pre - Tue Dec 04 19:56:09 GMT 2018
+	lex: Include project group in ForgeVersion and determine path to patched jar.
+=========
+Build: 1.13-24.0.21-1.13-pre - Tue Dec 04 02:04:52 GMT 2018
+	lex: Item and NBT patches, IShearable blocks are responsible for setting
+=========
+Build: 1.13-24.0.20-1.13-pre - Thu Nov 29 06:15:32 GMT 2018
+	lex: Most client patches done except the render pipeline. Someone who has
+=========
+Build: 1.13-24.0.19-1.13-pre - Thu Nov 22 21:43:38 GMT 2018
+	lex: Add my 'patches_old' directory, so that people can see my "progress".
+=========
+Build: 1.13-24.0.18-1.13-pre - Thu Nov 22 05:23:43 GMT 2018
+	lex: GUI Patches
+=========
+Build: 1.13-24.0.17-1.13-pre - Tue Nov 20 03:56:04 GMT 2018
+	lex: More patchwork.
+=========
+Build: 1.13-24.0.16-1.13-pre - Sat Nov 17 07:29:19 GMT 2018
+	lex: Fix imports, remember to re-run gen patches!
+=========
+Build: 1.13-24.0.15-1.13-pre - Sat Nov 17 07:15:56 GMT 2018
+	lex: Patch work, most of block classes, and fix eclipse run configs.
+=========
+Build: 1.13-24.0.14-1.13-pre - Thu Nov 15 22:08:52 GMT 2018
+	lex: Add a a test publish stage to jenkins file for PRs. Should allow for
+=========
+Build: 1.13-24.0.13-1.13-pre - Thu Nov 15 21:55:25 GMT 2018
+	lex: Fix crash when placing furnaces or brewing stands in 1.13 (#5225)
+=========
+Build: 1.13-24.0.12-1.13-pre - Thu Nov 15 20:40:49 GMT 2018
+	lex: Fix changelog classifier, and prevent jenkins from running concurrent
+	lex: Make Forge group/name dynamic in MDK as well.
+=========
+Build: 1.13-24.0.10-1.13-pre - Wed Nov 14 21:40:09 GMT 2018
+	lex: Include changelog in published artifacts.
+=========
+Build: 1.13-24.0.9-1.13-pre - Wed Nov 14 04:29:59 GMT 2018
+	lex: Fix jenkinsfile version detection and attempt caching rangemap again.
+=========
+Build: unspecified - Wed Nov 14 00:49:19 GMT 2018
+	lex: Fix version number not having MC prefix, and build artifacts.
+	lex: Workaround for gradle issue with jar signing.
+	lex: Setup instead of build.
+	lex: Change checkout process.
+	lex: Disable tests until we re-make them.

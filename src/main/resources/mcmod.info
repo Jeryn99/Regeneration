@@ -1,0 +1,17 @@
+[
+  {
+    "modid": "regeneration",
+    "name": "Regeneration",
+    "description": "The mod that brings a Doctor Who regeneration experience to Minecraft!",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://minecraft.curseforge.com/projects/regeneration",
+    "authorList": [
+      "Suffril, Lucraft, Nictogen, HoldYourWaffle"
+    ],
+    "credits": "",
+    "logoFile": "/assets/regeneration/logo.png",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
