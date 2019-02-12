@@ -73,7 +73,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-		GlStateManager.depthMask(false);
+		GlStateManager.depthMask(true);
 		RenderUtil.setLightmapTextureCoords(65, 65);
 		
 		NBTTagCompound style = capability.getStyle();
@@ -128,7 +128,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		
 		// Undo state manager changes
 		RenderUtil.restoreLightMap();
-		GlStateManager.depthMask(true);
+		GlStateManager.depthMask(false);
 		GlStateManager.disableBlend();
 		GlStateManager.disableAlpha();
 		GlStateManager.color(255, 255, 255, 255);
