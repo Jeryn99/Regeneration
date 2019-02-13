@@ -89,13 +89,7 @@ public class FileUtil {
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
 			}
-			
 		}, RegenerationMod.NAME + " Download Daemon").start();
 	}
 	
@@ -114,8 +108,8 @@ public class FileUtil {
 					InputStream is = file.getInputStream(entry);
 					BufferedInputStream bis = new BufferedInputStream(is);
 					String uncompressedFileName = SKIN_DIRECTORY + File.separator + entry.getName();
-					RegenerationMod.LOG.info("Extracting: " + uncompressedFileName);
 					Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
+					RegenerationMod.LOG.info("Extracting file: " + uncompressedFilePath);
 					Files.createFile(uncompressedFilePath);
 					FileOutputStream fileOutput = new FileOutputStream(uncompressedFileName);
 					while (bis.available() > 0) {
