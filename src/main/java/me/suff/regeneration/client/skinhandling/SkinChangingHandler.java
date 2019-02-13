@@ -42,7 +42,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -50,11 +49,12 @@ import java.util.UUID;
 public class SkinChangingHandler {
 	
 	public static final File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
-	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	public static final File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-	public static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
+	public static final Logger SKIN_LOG = LogManager.getLogger("Regeneration Skin Handler"); //TODO move to debugger
+	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
+	public static final Map<UUID, SkinInfo.SkinType> TYPE_BACKUPS = new HashMap<>();
 	private static final Random RAND = new Random();
 	
 	/**
@@ -177,11 +177,8 @@ public class SkinChangingHandler {
 	}
 	
 	public static boolean isPlayersDefaultAlex(EntityPlayer player) {
-		Minecraft minecraft = Minecraft.getMinecraft();
-		Map map = minecraft.getSessionService().getTextures(minecraft.getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
-		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
-			return (Objects.equals(profile.getMetadata("model"), "skim"));
+		if (TYPE_BACKUPS.containsKey(player.getUniqueID())) {
+			return TYPE_BACKUPS.get(player.getUniqueID()).getMojangType().equals("slim");
 		}
 		return true;
 	}
@@ -255,6 +252,9 @@ public class SkinChangingHandler {
 	
 	public static void setPlayerSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
 		if (skinType.getMojangType().equals(player.getSkinType())) return;
+		if (!TYPE_BACKUPS.containsKey(player.getUniqueID())) {
+			TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
+		}
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
 		ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), 5);
 	}
@@ -301,8 +301,11 @@ public class SkinChangingHandler {
 	
 	@SubscribeEvent
 	public void onRelog(EntityJoinWorldEvent e) {
-		if (e.getEntity() instanceof EntityPlayer) {
-			PLAYER_SKINS.remove(e.getEntity().getUniqueID());
+		if (e.getEntity() instanceof AbstractClientPlayer) {
+			AbstractClientPlayer clientPlayer = (AbstractClientPlayer) e.getEntity();
+			PLAYER_SKINS.remove(clientPlayer.getUniqueID());
+			TYPE_BACKUPS.remove(clientPlayer.getUniqueID());
+			TYPE_BACKUPS.put(clientPlayer.getUniqueID(), clientPlayer.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
 		}
 	}
 	

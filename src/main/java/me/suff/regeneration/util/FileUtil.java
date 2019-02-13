@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -62,11 +63,7 @@ public class FileUtil {
 		
 		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.list()).length == 0 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.list()).length == 0) {
 			RegenerationMod.LOG.warn("One of the skin directories is empty, so we're going to fill both.");
-			try {
-				handleDownloads();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			doDownloadsOnThread();
 		}
 	}
 	
@@ -82,11 +79,31 @@ public class FileUtil {
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
 	
+	private static void doDownloadsOnThread() {
+		AtomicBoolean notDownloaded = new AtomicBoolean(true);
+		new Thread(() -> {
+			while (notDownloaded.get()) {
+				try {
+					handleDownloads();
+					notDownloaded.set(false);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+			
+		}, RegenerationMod.NAME + " Download Daemon").start();
+	}
 	
 	public static void unzipSkinPack(String url) throws IOException {
-		File f = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
-		FileUtils.copyURLToFile(new URL(url), f);
-		try (ZipFile file = new ZipFile(f)) {
+		File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
+		RegenerationMod.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
+		FileUtils.copyURLToFile(new URL(url), tempZip);
+		try (ZipFile file = new ZipFile(tempZip)) {
 			FileSystem fileSystem = FileSystems.getDefault();
 			Enumeration<? extends ZipEntry> entries = file.entries();
 			while (entries.hasMoreElements()) {
@@ -97,6 +114,7 @@ public class FileUtil {
 					InputStream is = file.getInputStream(entry);
 					BufferedInputStream bis = new BufferedInputStream(is);
 					String uncompressedFileName = SKIN_DIRECTORY + File.separator + entry.getName();
+					RegenerationMod.LOG.info("Extracting: " + uncompressedFileName);
 					Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
 					Files.createFile(uncompressedFilePath);
 					FileOutputStream fileOutput = new FileOutputStream(uncompressedFileName);
@@ -110,8 +128,8 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 		
-		if (f.exists()) {
-			FileUtils.forceDelete(f.getParentFile());
+		if (tempZip.exists()) {
+			FileUtils.forceDelete(tempZip.getParentFile());
 		}
 	}
 	
