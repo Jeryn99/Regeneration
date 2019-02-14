@@ -3,6 +3,7 @@ package me.suff.regeneration.network;
 import io.netty.buffer.ByteBuf;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -12,31 +13,30 @@ import java.util.function.Supplier;
 
 public class MessageSynchronisationRequest {
 	
-	private EntityPlayer player;
+	private int dim;
+	private UUID player;
 	
 	public MessageSynchronisationRequest() {
 	}
 	
-	public MessageSynchronisationRequest(EntityPlayer player) {
+	public MessageSynchronisationRequest(UUID player, int dim) {
 		this.player = player;
+		this.dim = dim;
 	}
 	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(player.dimension);
-		ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
+	public static void encode(MessageSynchronisationRequest message, PacketBuffer packetBuffer){
+		packetBuffer.writeUniqueId(message.player);
+		packetBuffer.writeInt(message.dim);
 	}
 	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		int dim = buf.readInt();
-		player = ServerLifecycleHooks.getCurrentServer().getWorld(dim).getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+	public static MessageSynchronisationRequest decode(PacketBuffer buffer){
+		return new MessageSynchronisationRequest(buffer.readUniqueId(), buffer.readInt());
 	}
 	
 	public static class Handler {
-		
 		public static void handle(MessageSynchronisationRequest message, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().getSender().getServerWorld().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(message.player).synchronise());
+			EntityPlayer player = ServerLifecycleHooks.getCurrentServer().getWorld(message.dim).getPlayerEntityByUUID(message.player);
+			ctx.get().getSender().getServerWorld().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(player).synchronise());
 		}
 	}
 	

@@ -36,7 +36,7 @@ public class RegenKeyBinds {
 		if (player == null || EnumCompatModids.LCCORE.isLoaded())
 			return;
 		if (REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
-			NetworkHandler.sendToServer(new MessageTriggerRegeneration(player));
+			NetworkHandler.sendToServer(new MessageTriggerRegeneration(player.getUniqueID(), player.dimension));
 		}
 	}
 	

@@ -24,16 +24,12 @@ public class MessageRemovePlayer {
 		this.playerUUID = uuid;
 	}
 	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		PacketBuffer pBuf = new PacketBuffer(buf);
-		pBuf.writeUniqueId(playerUUID);
+	public static void encode(MessageRemovePlayer messageRemovePlayer, PacketBuffer buffer){
+		buffer.writeUniqueId(messageRemovePlayer.playerUUID);
 	}
 	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		PacketBuffer pBuf = new PacketBuffer(buf);
-		playerUUID = pBuf.readUniqueId();
+	public static MessageRemovePlayer decode(PacketBuffer buffer){
+		return new MessageRemovePlayer(buffer.readUniqueId());
 	}
 	
 	public static class Handler {

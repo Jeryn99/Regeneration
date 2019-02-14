@@ -5,45 +5,47 @@ import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
 public class MessageTriggerRegeneration {
 	
-	private EntityPlayer player;
+	private UUID player;
+	private int dim;
 	
 	public MessageTriggerRegeneration() {
 	}
 	
-	public MessageTriggerRegeneration(EntityPlayer player) {
+	public MessageTriggerRegeneration(UUID player, int dim) {
 		this.player = player;
+		this.dim = dim;
 	}
 	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(player.dimension);
-		ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
+	public static void encode(MessageTriggerRegeneration msg, PacketBuffer buffer){
+		buffer.writeUniqueId(msg.player);
+		buffer.writeInt(msg.dim);
 	}
 	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		int dim = buf.readInt();
-		player = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim).getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+	public static MessageTriggerRegeneration decode(PacketBuffer buffer){
+		return new MessageTriggerRegeneration(buffer.readUniqueId(), buffer.readInt());
 	}
+	
 	
 	public static class Handler{
 		
 		public static void handle(MessageTriggerRegeneration message, Supplier<NetworkEvent.Context > ctx){
 			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
-				RegenerationMod.DEBUGGER.getChannelFor(message.player).out("Regeneration keybind pressed");
-				IRegeneration regen = CapabilityRegeneration.getForPlayer(message.player);
+				EntityPlayerMP player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByUUID(message.player);
+				RegenerationMod.DEBUGGER.getChannelFor(player).out("Regeneration keybind pressed");
+				IRegeneration regen = CapabilityRegeneration.getForPlayer(player);
 				
 				if (!regen.getState().isGraceful()) {
-					RegenerationMod.DEBUGGER.getChannelFor(message.player).warn("Trigger packet was sent when not in a graceful period");
+					RegenerationMod.DEBUGGER.getChannelFor(player).warn("Trigger packet was sent when not in a graceful period");
 					return;
 				}
 				regen.triggerRegeneration();

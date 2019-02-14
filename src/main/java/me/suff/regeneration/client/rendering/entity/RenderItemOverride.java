@@ -3,6 +3,7 @@ package me.suff.regeneration.client.rendering.entity;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.common.entity.EntityItemOverride;
 import me.suff.regeneration.handlers.RegenObjects;
+import me.suff.regeneration.util.RegenConfigNew;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -42,7 +43,7 @@ public class RenderItemOverride extends Render<EntityItemOverride> {
 		Random rand = entity.world.rand;
 		
 		GlStateManager.pushMatrix();
-		if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH && entity.getItem().getDamage() != RegenConfig.regenCapacity) {
+		if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH && entity.getItem().getDamage() != RegenConfigNew.COMMON.regenCapacity.get()) {
 			for (int j = 0; j < 2; j++) {
 				RenderUtil.setupRenderLightning();
 				GlStateManager.translated(x, y + 0.20, z);

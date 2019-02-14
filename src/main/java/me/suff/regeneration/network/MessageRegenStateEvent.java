@@ -1,12 +1,10 @@
 package me.suff.regeneration.network;
 
-import io.netty.buffer.ByteBuf;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.handlers.ActingForwarder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
@@ -31,16 +29,11 @@ public class MessageRegenStateEvent {
 	}
 	
 	public static MessageRegenStateEvent decode(PacketBuffer buffer) {
-		//return new MessageRegenStateEvent(buffer.readString())
+		if (Minecraft.getInstance().player == null)
+			return null;
+		return new MessageRegenStateEvent(Minecraft.getInstance().player.world.getPlayerEntityByUUID(UUID.fromString(buffer.readString(600))), buffer.readString(600));
 	}
 	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		if (Minecraft.getInstance().player == null)
-			return;
-		player = Minecraft.getInstance().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
-		event = ByteBufUtils.readUTF8String(buf);
-	}
 	
 	public static class Handler {
 		public static void handle(MessageRegenStateEvent message, Supplier<NetworkEvent.Context> ctx) {

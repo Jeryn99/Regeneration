@@ -3,12 +3,10 @@ package me.suff.regeneration.network;
 import me.suff.regeneration.RegenerationMod;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 /**

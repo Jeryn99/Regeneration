@@ -196,7 +196,7 @@ public class RenderUtil {
 		BufferBuilder worldrenderer = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
-		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color4f(red, green, blue, alpha);
 		worldrenderer.begin(7, DefaultVertexFormats.POSITION);
 		worldrenderer.pos(left, bottom, 0.0D).endVertex();
@@ -213,7 +213,7 @@ public class RenderUtil {
 		GlStateManager.disableAlphaTest();
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		Minecraft.getInstance().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -255,7 +255,7 @@ public class RenderUtil {
 		GlStateManager.rotatef(rotation, 0, 1, 0);
 		RenderHelper.enableGUIStandardItemLighting();
 		
-		GlStateManager.glLightModel(2899, RenderHelper.setColorBuffer(0.75F, 0.75F, 0.75F, 1F));
+		GlStateManager.lightModelfv(2899, RenderHelper.setColorBuffer(0.75F, 0.75F, 0.75F, 1F));
 		GlStateManager.scalef(38 * scalef, 34 * scalef, 38 * scalef);
 		GlStateManager.scalef(-1, 1, 1);
 		model.render(Minecraft.getInstance().player, 0, 0, Minecraft.getInstance().player.ticksExisted, 0, 0, 0.0625f);

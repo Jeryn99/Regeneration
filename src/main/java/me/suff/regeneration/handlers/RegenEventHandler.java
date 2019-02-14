@@ -8,6 +8,7 @@ import me.suff.regeneration.common.capability.RegenerationProvider;
 import me.suff.regeneration.debugger.DummyRegenDebugger;
 import me.suff.regeneration.debugger.GraphicalRegenDebugger;
 import me.suff.regeneration.util.PlayerUtil;
+import me.suff.regeneration.util.RegenConfigNew;
 import me.suff.regeneration.util.RegenState;
 import me.suff.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
@@ -103,7 +104,7 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onPlayerRespawn(PlayerRespawnEvent event) {
 		if (!RegenConfig.firstStartGiftOnly)
-			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
+			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfigNew.COMMON.freeRegenerations.get());
 		
 		CapabilityRegeneration.getForPlayer(event.player).synchronise();
 	}
@@ -192,7 +193,7 @@ public class RegenEventHandler {
 		
 		NBTTagCompound nbt = event.player.getEntityData(), persist = (NBTTagCompound) nbt.getTag(EntityPlayer.PERSISTED_NBT_TAG);
 		if (!persist.getBoolean("loggedInBefore"))
-			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
+			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfigNew.COMMON.freeRegenerations.get());
 		persist.setBoolean("loggedInBefore", true);
 		nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
 	}

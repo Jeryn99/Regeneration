@@ -1,17 +1,17 @@
 package me.suff.regeneration.network;
 
-import io.netty.buffer.ByteBuf;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -28,21 +28,18 @@ public class MessagePlayRegenerationSound {
 	public MessagePlayRegenerationSound() {
 	}
 	
-	public MessagePlayRegenerationSound(SoundEvent sound, String playerUUID) {
+	public MessagePlayRegenerationSound(ResourceLocation sound, String playerUUID) {
 		this.playerUUID = playerUUID;
-		this.sound = sound.getRegistryName().toString();
+		this.sound = sound.toString();
 	}
 	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		playerUUID = ByteBufUtils.readUTF8String(buf);
-		this.sound = ByteBufUtils.readUTF8String(buf);
+	public static void encode(MessagePlayRegenerationSound message, PacketBuffer buffer){
+		buffer.writeString(message.playerUUID);
+		buffer.writeString(message.sound);
 	}
 	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeUTF8String(buf, playerUUID);
-		ByteBufUtils.writeUTF8String(buf, sound);
+	public static MessagePlayRegenerationSound decode(PacketBuffer buffer){
+		return new MessagePlayRegenerationSound((new ResourceLocation(buffer.readString(600))), buffer.readString(600));
 	}
 	
 	public static class Handler {
@@ -57,4 +54,5 @@ public class MessagePlayRegenerationSound {
 			});
 		}
 	}
+	
 }

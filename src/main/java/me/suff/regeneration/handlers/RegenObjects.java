@@ -93,7 +93,7 @@ public class RegenObjects {
 		public static final SoundEvent REGEN_BREATH = null;
 	}
 	
-	public static class EntityEntries { ForgeConfig
+	public static class EntityEntries {
 		public static final EntityEntry ENTITY_ITEM = EntityEntryBuilder.create().entity(EntityItemOverride.class).id(new ResourceLocation(RegenerationMod.MODID, "fob_watch"), 0).name("fob").tracker(80, 3, false).build();
 		public static final EntityEntry ENTITY_LINDOS = EntityEntryBuilder.create().entity(EntityLindos.class).id(new ResourceLocation(RegenerationMod.MODID, "lindos"), 1).name("lindos").tracker(80, 3, false).build();
 	}

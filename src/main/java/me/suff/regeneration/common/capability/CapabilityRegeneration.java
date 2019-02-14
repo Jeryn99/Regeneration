@@ -16,6 +16,7 @@ import me.suff.regeneration.network.MessageSynchronisationRequest;
 import me.suff.regeneration.network.MessageSynchroniseRegeneration;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.PlayerUtil;
+import me.suff.regeneration.util.RegenConfigNew;
 import me.suff.regeneration.util.RegenState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -96,12 +97,12 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void tick() {
 		if (!didSetup && player.world.isRemote) {
-			NetworkHandler.sendToServer(new MessageSynchronisationRequest(player));
+			NetworkHandler.sendToServer(new MessageSynchronisationRequest(player.getUniqueID(), player.dimension));
 			didSetup = true;
 		}
 		
-		if (getRegenerationsLeft() > RegenConfig.regenCapacity && !RegenConfig.infiniteRegeneration) {
-			regenerationsLeft = RegenConfig.regenCapacity;
+		if (getRegenerationsLeft() > RegenConfigNew.COMMON.regenCapacity.get() && !RegenConfig.infiniteRegeneration) {
+			regenerationsLeft = RegenConfigNew.COMMON.regenCapacity.get();
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
 		}
 		
@@ -124,7 +125,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
 		
-		NetworkHandler.sendPacketToAll(new MessageSynchroniseRegeneration(player, nbt));
+		NetworkHandler.sendPacketToAll(new MessageSynchroniseRegeneration(player.getUniqueID(), nbt));
 	}
 	
 	
@@ -155,7 +156,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInt(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
+		regenerationsLeft = Math.min(RegenConfigNew.COMMON.regenCapacity.get(), nbt.getInt(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 		
 		//TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
 		if (nbt.hasKey("skinType")) {
@@ -283,7 +284,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void receiveRegenerations(int amount) {
 		if (RegenConfig.infiniteRegeneration)
-			regenerationsLeft = RegenConfig.regenCapacity;
+			regenerationsLeft = RegenConfigNew.COMMON.regenCapacity.get();
 		else
 			regenerationsLeft += amount;
 		synchronise();
@@ -292,7 +293,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void extractRegeneration(int amount) {
 		if (RegenConfig.infiniteRegeneration)
-			regenerationsLeft = RegenConfig.regenCapacity;
+			regenerationsLeft = RegenConfigNew.COMMON.regenCapacity.get();
 		else
 			regenerationsLeft -= amount;
 		synchronise();

@@ -1,10 +1,12 @@
 package me.suff.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import javax.naming.Context;
@@ -17,33 +19,24 @@ import java.util.function.Supplier;
 public class MessageUpdateSkin {
 	
 	private boolean isAlex;
-	private byte[] encodedSkin;
+	private PacketBuffer encodedSkin;
 	
 	public MessageUpdateSkin() {
 	}
 	
-	public MessageUpdateSkin(byte[] pixelData, boolean isAlex) {
+	public MessageUpdateSkin(PacketBuffer pixelData, boolean isAlex) {
 		encodedSkin = pixelData;
 		this.isAlex = isAlex;
 	}
 	
-	public static void encode(MessageUpdateSkin skin, ByteBuf buf) {
-		buf.writeInt(skin.encodedSkin.length);
-		for (int i = 0; i < skin.encodedSkin.length; i++) {
-			buf.writeByte(skin.encodedSkin[i]);
-		}
+	public static void encode(MessageUpdateSkin skin, PacketBuffer buf) {
+		buf.writeByteArray(skin.encodedSkin.readByteArray());
 		buf.writeBoolean(skin.isAlex);
 	}
 	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		int length = buf.readInt();
-		this.encodedSkin = new byte[length];
-		for (int i = 0; i < length; i++) {
-			this.encodedSkin[i] = buf.readByte();
-		}
-		
-		isAlex = buf.readBoolean();
+
+	public static MessageUpdateSkin decode(PacketBuffer buf) {
+		return new MessageUpdateSkin(new PacketBuffer(Unpooled.wrappedBuffer(buf.readByteArray(32600))), buf.readBoolean());
 	}
 	
 	public static class Handler {
@@ -51,7 +44,7 @@ public class MessageUpdateSkin {
 			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
 				EntityPlayerMP player = ctx.get().getSender();
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-				cap.setEncodedSkin(message.encodedSkin);
+				cap.setEncodedSkin(message.encodedSkin.readByteArray());
 				if (message.isAlex) {
 					cap.setSkinType(SkinInfo.SkinType.ALEX.name());
 				} else {

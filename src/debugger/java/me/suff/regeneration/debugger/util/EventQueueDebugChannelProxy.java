@@ -25,16 +25,12 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 	
 	@Override
 	public void notifyCancel(RegenState.Transition action, long wasInTicks) {
-		EventQueue.invokeLater(() -> {
-			target.notifyCancel(action, wasInTicks);
-		});
+		EventQueue.invokeLater(() -> target.notifyCancel(action, wasInTicks));
 	}
 	
 	@Override
 	public void notifySchedule(RegenState.Transition action, long inTicks) {
-		EventQueue.invokeLater(() -> {
-			target.notifySchedule(action, inTicks);
-		});
+		EventQueue.invokeLater(() -> target.notifySchedule(action, inTicks));
 	}
 	
 	@Override

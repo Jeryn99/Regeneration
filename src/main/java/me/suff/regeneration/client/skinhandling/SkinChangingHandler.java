@@ -1,6 +1,7 @@
 package me.suff.regeneration.client.skinhandling;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import io.netty.buffer.Unpooled;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
@@ -16,6 +17,7 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -116,7 +118,7 @@ public class SkinChangingHandler {
 				ClientUtil.sendSkinResetPacket();
 				RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
 			} else {
-				NetworkHandler.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+				NetworkHandler.sendToServer(new MessageUpdateSkin(new PacketBuffer(Unpooled.wrappedBuffer(pixelData)), isAlex));
 			}
 		} else {
 			ClientUtil.sendSkinResetPacket();
@@ -132,7 +134,6 @@ public class SkinChangingHandler {
 		}
 		Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		if (folderFiles.isEmpty()) {
-			createDefaultImages();
 			folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		}
 		
