@@ -103,7 +103,7 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void onPlayerRespawn(PlayerRespawnEvent event) {
-		if (!RegenConfig.firstStartGiftOnly)
+		if (!RegenConfigNew.COMMON.firstStartGiftOnly.get())
 			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfigNew.COMMON.freeRegenerations.get());
 		
 		CapabilityRegeneration.getForPlayer(event.player).synchronise();

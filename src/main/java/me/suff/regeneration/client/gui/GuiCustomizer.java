@@ -103,7 +103,6 @@ public class GuiCustomizer extends GuiContainer {
 		NetworkHandler.sendToServer(new MessageSaveStyle(nbt));
 	}
 	
-	
 	protected void actionPerformed(GuiButton button) {
 		if (button.id == btnReset.id) {
 			slidePrimaryRed.setValue(initialPrimary.x);

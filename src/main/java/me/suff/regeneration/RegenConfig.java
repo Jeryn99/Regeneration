@@ -1,5 +1,7 @@
 package me.suff.regeneration;
 
+import com.electronwill.nightconfig.core.Config;
+import me.suff.regeneration.util.RegenConfigNew;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -30,11 +32,6 @@ public class RegenConfig {
 	
 	@Config.LangKey("config.regeneration.category.skins")
 	public static final Skins skins = new Skins();
-	
-	
-	@Config.LangKey("config.regeneration.first_start_gift_only")
-	@Config.Comment("Only give new players free regenerations")
-	public static boolean firstStartGiftOnly = true;
 	
 	@Config.LangKey("config.regeneration.lose_regens_on_death")
 	@Config.Comment("If this is false you won't lose your regenerations if you get killed during regeneration")
@@ -170,59 +167,6 @@ public class RegenConfig {
 		@Config.Comment("Amount of time (in seconds) you have when your hands start glowing before you start to regenerate")
 		@Config.RangeInt(min = 0)
 		public int handGlowTriggerDelay = 10;
-		
 	}
 	
-	
-	public static class ModIntegrations {
-		
-		@Config.LangKey("config.regeneration.category.compat.lccore")
-		public final LucraftCore lucraftcore = new LucraftCore();
-		
-		@Config.LangKey("config.regeneration.category.compat.tardis")
-		public final TardisMod tardisMod = new TardisMod();
-		
-		
-		public static class LucraftCore {
-			
-			@Config.LangKey("config.regeneration.compat.lccore.size_changing")
-			@Config.Comment("If this is true and LCCore is installed, you will change size on regeneration")
-			public boolean lucraftcoreSizeChanging = true;
-			
-			@Config.LangKey("config.regeneration.compat.lccore.size_changing_min")
-			@Config.Comment("Minimum Size Change value")
-			public float sizeChangingMin = 0.796544F;
-			
-			@Config.LangKey("config.regeneration.compat.lccore.size_changing_max")
-			@Config.Comment("Maximum Size Change value")
-			public float sizeChangingMax = 1.1F;
-			
-			@Config.LangKey("config.regeneration.compat.lccore.superpower")
-			@Config.Comment("If this is true and LCCore is installed, regeneration will be a superpower")
-			@Config.RequiresMcRestart
-			public boolean superpower = true;
-			
-			@Config.LangKey("config.regeneration.compat.lccore.radiation_immunity")
-			@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")
-			public boolean immuneToRadiation = true;
-		}
-		
-		public static class TardisMod {
-			@Config.LangKey("config.regeneration.compat.tardis.tardis_damage")
-			@Config.Comment("If this is true and The Tardis mod is installed, it's systems will be slightly damaged")
-			public boolean damageTardis = true;
-		}
-		
-	}
-	
-	
-	@EventBusSubscriber
-	public static class EventHandler {
-		@SubscribeEvent
-		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-			if (event.getModID().equals(RegenerationMod.MODID)) {
-				ConfigManager.sync(RegenerationMod.MODID, Config.Type.INSTANCE);
-			}
-		}
-	}
 }
