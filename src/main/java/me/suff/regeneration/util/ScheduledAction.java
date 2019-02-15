@@ -1,5 +1,7 @@
 package me.suff.regeneration.util;
 
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+
 public class ScheduledAction {
 	
 	private final Runnable callback;

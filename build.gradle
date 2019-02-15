@@ -13,8 +13,8 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
 version = '1.0'
-group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'modid'
+group = 'me.suff.Regeneration' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'regeneration'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -61,24 +61,19 @@ sourceSets.main {
 	}
 }
 
-
 dependencies {
-    minecraft 'net.minecraftforge.test:forge:1.13-24.0.184-1.13-pre'
-
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.10'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
-        attributes 'FMLAT': 'regeneration_at.cfg'
         attributes(["Specification-Title": "regeneration",
-                    "Specification-Vendor": "regeneration-vendor",
-                    "Specification-Version": "24.0", // We are version 1 of the modlauncher specification
+                    "Specification-Vendor": "regen-fril",
+                    "Specification-Version": "25.0", // We are version 1 of the modlauncher specification
                     "Implementation-Title": project.name,
                     "Implementation-Version": "${version}",
-                    "Implementation-Vendor" :"regeneration-vendor",
+                    "Implementation-Vendor" :"regen-fril",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
     }
-    
-    
 }
