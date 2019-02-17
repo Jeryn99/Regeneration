@@ -23,7 +23,8 @@ public abstract class AbstractTab extends GuiButton {
 	}
 	
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
+		Minecraft mc = Minecraft.getInstance();
 		int newPotionOffset = TabRegistry.getPotionOffsetNEI();
 		GuiScreen screen = Minecraft.getInstance().currentScreen;
 		if (screen instanceof GuiInventory) {
@@ -60,12 +61,7 @@ public abstract class AbstractTab extends GuiButton {
 	}
 	
 	@Override
-	public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-		return super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_3_, p_mouseClicked_5_);
-	}
-	
-	@Override
-	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+	public boolean mouseClicked(double mouseX, double mouseY, int p_mouseClicked_5_) {
 		boolean inWindow = enabled && visible && mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 		
 		if (inWindow) {
@@ -74,6 +70,7 @@ public abstract class AbstractTab extends GuiButton {
 		
 		return inWindow;
 	}
+	
 	
 	public abstract void onTabClicked();
 	

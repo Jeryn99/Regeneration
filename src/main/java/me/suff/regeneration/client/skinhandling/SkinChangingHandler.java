@@ -107,7 +107,7 @@ public class SkinChangingHandler {
 		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID())
 			return;
 		
-		if (RegenConfig.skins.changeMySkin) {
+		if (RegenConfig.COMMON.changeMySkin.get()) {
 			boolean isAlex = CapabilityRegeneration.getForPlayer(player).getPreferredModel().isAlex();
 			File skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
 			RegenerationMod.LOG.info(skin.getName() + " was choosen");
@@ -168,7 +168,9 @@ public class SkinChangingHandler {
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
-				resourceLocation = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(bufferedImage));
+				//TODO TEMP
+				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
+				//resourceLocation = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(bufferedImage));
 				skinType = CapabilityRegeneration.getForPlayer(player).getSkinType();
 			}
 		}
@@ -210,7 +212,8 @@ public class SkinChangingHandler {
 			
 			File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
 			ImageIO.write(image, "png", file);
-			return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(image));
+			//TODO TEMP
+			//return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(image));
 		}
 		
 		return DefaultPlayerSkin.getDefaultSkinLegacy();

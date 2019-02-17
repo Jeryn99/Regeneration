@@ -9,9 +9,10 @@ import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.EnumCompatModids;
 import me.suff.regeneration.util.RenderUtil;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -155,7 +156,7 @@ public class ClientEventHandler {
 		}
 		
 		if (warning != null)
-			Minecraft.getInstance().fontRenderer.drawString(warning, new ScaledResoultion(Minecraft.getInstance()).getscalefdWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
+			Minecraft.getInstance().fontRenderer.drawString(warning, Minecraft.getInstance().mainWindow.getWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
 	}
 	
 	@SubscribeEvent
@@ -165,7 +166,7 @@ public class ClientEventHandler {
 			return;
 		
 		if (e.getName().equals("entity.generic.explode")) {
-			ISound sound = PositionedSoundRecord.getRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
+			ISound sound = SimpleSound.getRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
 			mc.world.playerEntities.forEach(player -> {
 				if (mc.player != player && mc.player.getDistance(player) < 40) {
 					if (CapabilityRegeneration.getForPlayer(player).getState().equals(REGENERATING)) {

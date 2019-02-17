@@ -18,7 +18,7 @@ public class ActingForwarder {
 	public static void init() {
 		register(ActingServerHandler.INSTANCE, Dist.DEDICATED_SERVER);
 		
-		if (FMLEnvironment.dist.isDedicatedServer()) {
+		if (!FMLEnvironment.dist.isClient()) {
 			register(ActingClientHandler.INSTANCE, Dist.CLIENT);
 		}
 	}

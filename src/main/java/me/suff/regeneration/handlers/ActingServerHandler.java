@@ -17,7 +17,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.network.NetworkRegistry;
 
 import java.util.Random;
 import java.util.UUID;
@@ -61,16 +60,16 @@ class ActingServerHandler implements IActingHandler {
 				float nauseaPercentage = 0.5F;
 				
 				if (stateProgress > nauseaPercentage) {
-					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, (int) (RegenConfig.grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
+					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied nausea");
 					}
 				}
 				
-				if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.grace.criticalPhaseLength * 20 * (1 - stateProgress)), 0, false, false)) {
+				if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false)) {
 					RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
 				}
 				
-				if (player.world.rand.nextDouble() < (RegenConfig.grace.criticalDamageChance / 100F))
+				if (player.world.rand.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F))
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
 				
 				break;
@@ -79,7 +78,7 @@ class ActingServerHandler implements IActingHandler {
 				float weaknessPercentage = 0.5F;
 				
 				if (stateProgress > weaknessPercentage) {
-					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.grace.gracePhaseLength * 20 * (1 - weaknessPercentage) + RegenConfig.grace.criticalPhaseLength * 20), 0, false, false)) {
+					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false)) {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
 					}
 				}
@@ -96,7 +95,7 @@ class ActingServerHandler implements IActingHandler {
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		RegenUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKnockback / 2, RegenConfig.onRegen.regenerativeKnockbackRange);
+		RegenUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
 		
 		// Reduce number of hearts, but compensate with absorption
 		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
@@ -133,9 +132,9 @@ class ActingServerHandler implements IActingHandler {
 	public void onRegenFinish(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		RegenTriggers.FIRST_REGENERATION.trigger((EntityPlayerMP) cap.getPlayer());
-		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegen.postRegenerationDuration * 2, RegenConfig.postRegen.postRegenerationLevel - 1, false, false));
+		player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
 		player.setHealth(player.getMaxHealth());
-		player.setAbsorptionAmount(RegenConfig.postRegen.absorbtionLevel * 2);
+		player.setAbsorptionAmount(RegenConfig.COMMON.absorbtionLevel.get() * 2);
 		
 		cap.setDnaType(DnaHandler.getRandomDna(player.world.rand).getRegistryName());
 		DnaHandler.IDna newDna = DnaHandler.getDnaEntry(cap.getDnaType());
@@ -166,10 +165,10 @@ class ActingServerHandler implements IActingHandler {
 		player.removePassengers();
 		player.stopRiding();
 		
-		if (RegenConfig.postRegen.resetHunger)
+		if (RegenConfig.COMMON.resetHunger.get())
 			player.getFoodStats().setFoodLevel(20);
 		
-		if (RegenConfig.postRegen.resetOxygen)
+		if (RegenConfig.COMMON.resetOxygen.get())
 			player.setAir(300);
 		
 		cap.extractRegeneration(1);

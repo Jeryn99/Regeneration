@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.IOException;
 
-import me.suff.regeneration.RegenConfig;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Ignore;

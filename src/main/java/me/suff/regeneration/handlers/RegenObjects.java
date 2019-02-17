@@ -1,31 +1,31 @@
 package me.suff.regeneration.handlers;
 
-import me.suff.regeneration.RegenerationMod;
+import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.common.entity.EntityItemOverride;
 import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.common.item.ItemFobWatch;
 import me.suff.regeneration.common.item.ItemLindos;
 import me.suff.regeneration.util.RegenDamageSource;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.suff.regeneration.RegenerationMod.MODID;
 
 /**
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
+@Mod.EventBusSubscriber(modid = MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
 public class RegenObjects {
 	
 	public static List<Item> ITEMS = new ArrayList<>();
@@ -36,6 +36,7 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
+		RegenConfig.init();
 		e.getRegistry().registerAll(
 				setUpItem(new ItemFobWatch(), "fob_watch"),
 				setUpItem(new ItemLindos(), "lindos_vial")
@@ -43,14 +44,9 @@ public class RegenObjects {
 	}
 	
 	private static Item setUpItem(Item item, String name) {
-		item.setRegistryName(RegenerationMod.MODID, name);
+		item.setRegistryName(MODID, name);
 		ITEMS.add(item);
 		return item;
-	}
-	
-	@SubscribeEvent
-	public static void addEntities(RegistryEvent.Register<EntityEntry> e) {
-		e.getRegistry().registerAll(EntityEntries.ENTITY_ITEM, EntityEntries.ENTITY_LINDOS);
 	}
 	
 	@SubscribeEvent
@@ -70,16 +66,16 @@ public class RegenObjects {
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {
-		return new SoundEvent(new ResourceLocation(RegenerationMod.MODID, soundName)).setRegistryName(soundName);
+		return new SoundEvent(new ResourceLocation(MODID, soundName)).setRegistryName(soundName);
 	}
 	
-	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
+	@ObjectHolder(MODID)
 	public static class Items {
 		public static final Item FOB_WATCH = null;
 		public static final Item LINDOS_VIAL = null;
 	}
 	
-	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
+	@ObjectHolder(MODID)
 	public static class Sounds {
 		public static final SoundEvent FOB_WATCH = null;
 		public static final SoundEvent FOB_WATCH_DIALOGUE = null;
@@ -94,7 +90,12 @@ public class RegenObjects {
 	}
 	
 	public static class EntityEntries {
-		public static final EntityEntry ENTITY_ITEM = EntityEntryBuilder.create().entity(EntityItemOverride.class).id(new ResourceLocation(RegenerationMod.MODID, "fob_watch"), 0).name("fob").tracker(80, 3, false).build();
-		public static final EntityEntry ENTITY_LINDOS = EntityEntryBuilder.create().entity(EntityLindos.class).id(new ResourceLocation(RegenerationMod.MODID, "lindos"), 1).name("lindos").tracker(80, 3, false).build();
+		public static EntityType ITEM_OVERRIDE_ENTITY_TYPE = null;
+		public static EntityType ITEM_LINDOS_TYPE = null;
+		
+		public static void init() {
+			ITEM_OVERRIDE_ENTITY_TYPE = EntityType.register(MODID + ":item_override", EntityType.Builder.create(EntityItemOverride.class, EntityItemOverride::new).tracker(256, 20, false));
+			ITEM_LINDOS_TYPE = EntityType.register(MODID + ":lindos", EntityType.Builder.create(EntityLindos.class, EntityLindos::new).tracker(256, 20, false));
+		}
 	}
 }

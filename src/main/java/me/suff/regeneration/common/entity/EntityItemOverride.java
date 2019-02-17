@@ -1,5 +1,6 @@
 package me.suff.regeneration.common.entity;
 
+import me.suff.regeneration.handlers.RegenObjects;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -11,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -41,7 +41,7 @@ public class EntityItemOverride extends Entity {
 	}
 	
 	public EntityItemOverride(World worldIn) {
-		super(worldIn);
+		super(RegenObjects.EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE, worldIn);
 		this.setSize(getWidth(), getHeight());
 		this.isImmuneToFire = true;
 	}
@@ -61,7 +61,7 @@ public class EntityItemOverride extends Entity {
 	}
 	
 	@Override
-	protected void entityInit() {
+	protected void registerData() {
 		this.getDataManager().register(ITEM, ItemStack.EMPTY);
 		this.getDataManager().register(HEIGHT, 0.25F);
 		this.getDataManager().register(WIDTH, 0.25F);
@@ -71,13 +71,12 @@ public class EntityItemOverride extends Entity {
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound) {
-		NBTTagCompound nbttagcompound = compound.getTag("Item");
-		this.setItem(new ItemStack(nbttagcompound));
+	public void readAdditional(NBTTagCompound compound) {
+		NBTTagCompound itemCompound = (NBTTagCompound) compound.getTag("Item");
+		this.setItem(ItemStack.read(itemCompound));
 		
 		if (this.getItem().isEmpty())
 			this.onKillCommand();
-		
 		this.setHeight(compound.getFloat("Height"));
 		this.setWidth(compound.getFloat("Width"));
 	}
@@ -86,7 +85,7 @@ public class EntityItemOverride extends Entity {
 	 * (abstract) Protected helper method to write subclass entity data to NBT.
 	 */
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound compound) {
+	public void writeAdditional(NBTTagCompound compound) {
 		if (!this.getItem().isEmpty())
 			compound.setTag("Item", this.getItem().write(new NBTTagCompound()));
 		
@@ -100,7 +99,6 @@ public class EntityItemOverride extends Entity {
 	
 	public void setItem(ItemStack stack) {
 		this.getDataManager().set(ITEM, stack);
-		this.getDataManager().setDirty(ITEM);
 	}
 	
 	public float getHeight() {
@@ -119,11 +117,8 @@ public class EntityItemOverride extends Entity {
 		this.getDataManager().set(WIDTH, width);
 	}
 	
-	/**
-	 * Returns whether this Entity is invulnerable to the given DamageSource.
-	 */
 	@Override
-	public boolean isEntityInvulnerable(DamageSource source) {
+	public boolean isInvulnerable() {
 		return true;
 	}
 	
@@ -132,11 +127,6 @@ public class EntityItemOverride extends Entity {
 	 */
 	@Override
 	protected void dealFireDamage(int amount) {
-	}
-	
-	@Override
-	protected void registerData() {
-	
 	}
 	
 	/**
@@ -156,16 +146,6 @@ public class EntityItemOverride extends Entity {
 		return false;
 	}
 	
-	@Override
-	protected void readAdditional(NBTTagCompound compound) {
-	
-	}
-	
-	@Override
-	protected void writeAdditional(NBTTagCompound compound) {
-	
-	}
-	
 	/**
 	 * Returns true if other Entities should be prevented from moving through this Entity.
 	 */
@@ -180,7 +160,7 @@ public class EntityItemOverride extends Entity {
 	@Override
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
 		givePlayerItemStack(player, this.getItem());
-		this.setDead();
+		this.remove();
 		return EnumActionResult.SUCCESS;
 	}
 	
@@ -188,8 +168,8 @@ public class EntityItemOverride extends Entity {
 	 * Gets called every tick from main Entity class
 	 */
 	@Override
-	public void onEntityUpdate() {
-		super.onEntityUpdate();
+	public void tick() {
+		super.tick();
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
@@ -202,7 +182,7 @@ public class EntityItemOverride extends Entity {
 		if (itemStack.getItem() instanceof IEntityOverride) {
 			IEntityOverride iEntityOverride = (IEntityOverride) itemStack.getItem();
 			if (iEntityOverride.shouldDie(itemStack)) {
-				setDead();
+				remove();
 			}
 			iEntityOverride.update(this);
 		}

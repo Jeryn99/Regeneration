@@ -69,7 +69,7 @@ public class GuiSkinCustomizer extends GuiContainer {
 		this.addButton(new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText()) {
 			@Override
 			public void onClick(double mouseX, double mouseY) {
-				//TODO Display Regen GUI
+				Minecraft.getInstance().displayGuiScreen(new GuiCustomizer());
 			}
 		});
 		

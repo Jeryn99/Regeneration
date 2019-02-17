@@ -37,7 +37,7 @@ import java.util.List;
 public class ItemLindos extends ItemOverrideBase {
 	
 	public ItemLindos() {
-		super(new Item.Builder().group(ItemGroup.MISC).maxStackSize(1));
+		super(new Item.Properties().group(ItemGroup.MISC).maxStackSize(1));
 		addPropertyOverride(new ResourceLocation("amount"), (stack, world, entityLivingBase) -> {
 			if (stack.getTag() != null) {
 				int amount = getAmount(stack);

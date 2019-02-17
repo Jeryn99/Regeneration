@@ -19,7 +19,7 @@ public class InventoryTabRegeneration extends AbstractTab {
 	
 	@Override
 	public void onTabClicked() {
-		Minecraft.getInstance().player.openGui(RegenerationMod.INSTANCE, GuiCustomizer.ID, Minecraft.getInstance().world, 0, 0, 0);
+		Minecraft.getInstance().displayGuiScreen(new GuiCustomizer());
 	}
 	
 	@Override

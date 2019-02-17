@@ -1,6 +1,5 @@
 package me.suff.regeneration.common.item;
 
-import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.entity.EntityItemOverride;
@@ -8,7 +7,7 @@ import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.DebuggerUtil;
 import me.suff.regeneration.util.PlayerUtil;
-import me.suff.regeneration.util.RegenConfigNew;
+import me.suff.regeneration.RegenConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -31,7 +30,7 @@ import net.minecraft.world.World;
 public class ItemFobWatch extends ItemOverrideBase {
 	
 	public ItemFobWatch() {
-		super(new Item.Builder().defaultMaxDamage(RegenConfigNew.COMMON.regenCapacity.get()).maxStackSize(1).group(ItemGroup.MISC));
+		super(new Item.Properties().defaultMaxDamage(RegenConfig.COMMON.regenCapacity.get()).maxStackSize(1).group(ItemGroup.MISC));
 		addPropertyOverride(new ResourceLocation("open"), (stack, worldIn, entityIn) -> {
 			if (getStackTag(stack) == null || !getStackTag(stack).hasKey("open")) {
 				return 0F; //Closed
@@ -86,12 +85,12 @@ public class ItemFobWatch extends ItemOverrideBase {
 		ItemStack stack = player.getHeldItem(hand);
 		
 		if (!player.isSneaking()) { // transferring watch->player
-			if (stack.getDamage() == RegenConfigNew.COMMON.regenCapacity.get())
+			if (stack.getDamage() == RegenConfig.COMMON.regenCapacity.get())
 				return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
-			else if (cap.getRegenerationsLeft() == RegenConfigNew.COMMON.regenCapacity.get())
+			else if (cap.getRegenerationsLeft() == RegenConfig.COMMON.regenCapacity.get())
 				return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 			
-			int supply = RegenConfigNew.COMMON.regenCapacity.get() - stack.getDamage(), needed = RegenConfigNew.COMMON.regenCapacity.get() - cap.getRegenerationsLeft(), used = Math.min(supply, needed);
+			int supply = RegenConfig.COMMON.regenCapacity.get() - stack.getDamage(), needed = RegenConfig.COMMON.regenCapacity.get() - cap.getRegenerationsLeft(), used = Math.min(supply, needed);
 			
 			if (cap.canRegenerate()) {
 				setOpen(stack, 1);
@@ -103,7 +102,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 			}
 			
 			if (used < 0)
-				DebuggerUtil.warn(player, "Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfigNew.COMMON.regenCapacity.get() + ", damage:" + stack.getDamage() + ", regens:" + cap.getRegenerationsLeft());
+				DebuggerUtil.warn(player, "Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + stack.getDamage() + ", regens:" + cap.getRegenerationsLeft());
 			
 			
 			if (!cap.getPlayer().isCreative()) {
@@ -148,7 +147,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 	public void update(EntityItemOverride itemOverride) {
 		if (!itemOverride.world.isRemote) return;
 		ItemStack itemStack = itemOverride.getItem();
-		if (itemStack.getItem() == this && itemStack.getDamage() != RegenConfigNew.COMMON.regenCapacity.get()) {
+		if (itemStack.getItem() == this && itemStack.getDamage() != RegenConfig.COMMON.regenCapacity.get()) {
 			if (itemOverride.ticksExisted % 5000 == 0 || itemOverride.ticksExisted == 2) {
 				ClientUtil.playSound(itemOverride, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.getRegistryName(), SoundCategory.AMBIENT, false, () -> !itemOverride.isAlive(), 1.5F);
 			}

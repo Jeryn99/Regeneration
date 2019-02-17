@@ -26,15 +26,14 @@ public class EntityLindos extends EntityFlying {
 	
 	
 	public EntityLindos(World worldIn) {
-		super(worldIn);
+		super(RegenObjects.EntityEntries.ITEM_LINDOS_TYPE, worldIn);
 		setSize(0.5F, 0.5F);
 		this.moveHelper = new EntityFlyHelper(this);
 	}
 	
-	
 	@Override
-	protected void entityInit() {
-		super.entityInit();
+	protected void registerData() {
+		super.registerData();
 		getDataManager().register(AMOUNT, rand.nextInt(100));
 	}
 	

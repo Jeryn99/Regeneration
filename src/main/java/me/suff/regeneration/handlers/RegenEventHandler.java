@@ -1,6 +1,5 @@
 package me.suff.regeneration.handlers;
 
-import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
@@ -8,7 +7,7 @@ import me.suff.regeneration.common.capability.RegenerationProvider;
 import me.suff.regeneration.debugger.DummyRegenDebugger;
 import me.suff.regeneration.debugger.GraphicalRegenDebugger;
 import me.suff.regeneration.util.PlayerUtil;
-import me.suff.regeneration.util.RegenConfigNew;
+import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.util.RegenState;
 import me.suff.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
@@ -50,13 +49,11 @@ import static me.suff.regeneration.RegenerationMod.DEBUGGER;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
+@Mod.EventBusSubscriber(modid = RegenerationMod.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
 public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void serverStart(FMLServerStartingEvent event) {
-		//	event.registerServerCommand(new RegenDebugCommand());
-		
 		DEBUGGER = GraphicsEnvironment.isHeadless() ? new DummyRegenDebugger() : new GraphicalRegenDebugger();
 		MinecraftForge.EVENT_BUS.register(DEBUGGER);
 	}
@@ -68,50 +65,24 @@ public class RegenEventHandler {
 		DEBUGGER = null;
 	}
 	
-	
-	// =========== CAPABILITY HANDLING =============
-	
 	@SubscribeEvent
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer)
 			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).tick();
 	}
 	
-	@SubscribeEvent
-	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		if (event.getObject() instanceof EntityPlayer) {
-			event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new RegenerationProvider(new CapabilityRegeneration((EntityPlayer) event.getObject())));
-		}
-	}
-	
-	@SubscribeEvent
-	public static void onPlayerClone(PlayerEvent.Clone event) {
-		IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
-		
-		IRegeneration oldCap = CapabilityRegeneration.getForPlayer(event.getOriginal());
-		IRegeneration newCap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer());
-		
-		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, oldCap, null);
-		storage.readNBT(CapabilityRegeneration.CAPABILITY, newCap, null, nbt);
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
-	}
-	
-	@SubscribeEvent
-	public static void playerTracking(PlayerEvent.StartTracking event) {
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
-	}
 	
 	@SubscribeEvent
 	public static void onPlayerRespawn(PlayerRespawnEvent event) {
-		if (!RegenConfigNew.COMMON.firstStartGiftOnly.get())
-			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfigNew.COMMON.freeRegenerations.get());
+		if (!RegenConfig.COMMON.firstStartGiftOnly.get())
+			CapabilityRegeneration.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.COMMON.freeRegenerations.get());
 		
-		CapabilityRegeneration.getForPlayer(event.player).synchronise();
+		CapabilityRegeneration.getForPlayer(event.getPlayer()).synchronise();
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		CapabilityRegeneration.getForPlayer(event.player).synchronise();
+		CapabilityRegeneration.getForPlayer(event.getPlayer()).synchronise();
 	}
 	
 	@SubscribeEvent
@@ -167,7 +138,7 @@ public class RegenEventHandler {
 			return;
 		}
 		
-		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage()) {
+		if (cap.getState() == RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage()) {
 			event.setCanceled(true); // TODO still "hurts" the client view
 		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 			boolean notDead = cap.getStateManager().onKilled(event.getSource());
@@ -188,19 +159,20 @@ public class RegenEventHandler {
 	// ================ OTHER ==============
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {
-		if (event.player.world.isRemote)
+		EntityPlayer player = event.getPlayer();
+		if (player.world.isRemote)
 			return;
 		
-		NBTTagCompound nbt = event.player.getEntityData(), persist = (NBTTagCompound) nbt.getTag(EntityPlayer.PERSISTED_NBT_TAG);
+		NBTTagCompound nbt = player.getEntityData(), persist = (NBTTagCompound) nbt.getTag(EntityPlayer.PERSISTED_NBT_TAG);
 		if (!persist.getBoolean("loggedInBefore"))
-			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfigNew.COMMON.freeRegenerations.get());
+			CapabilityRegeneration.getForPlayer(player).receiveRegenerations(RegenConfig.COMMON.freeRegenerations.get());
 		persist.setBoolean("loggedInBefore", true);
 		nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
 	}
 	
 	@SubscribeEvent
 	public static void registerLoot(LootTableLoadEvent event) {
-		if (!event.getName().toString().toLowerCase().matches(RegenConfig.loot.lootRegex) || RegenConfig.loot.disableLoot)
+		if (!event.getName().toString().toLowerCase().matches(RegenConfig.COMMON.lootRegex.get()) || RegenConfig.COMMON.disableLoot.get())
 			return;
 		
 		// TODO configurable chances? Maybe by doing a simple loot table tutorial?

@@ -5,7 +5,6 @@ import me.suff.regeneration.client.rendering.model.ModelArmorOverride;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.scalefdResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -25,7 +24,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
@@ -45,11 +43,11 @@ public class RenderUtil {
 	public static void setLightmapTextureCoords(float x, float y) {
 		lastBrightnessX = OpenGlHelper.lastBrightnessX;
 		lastBrightnessY = OpenGlHelper.lastBrightnessY;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, x, y);
+		OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, x, y);
 	}
 	
 	public static void restoreLightMap() {
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+		OpenGlHelper.glMultiTexCoord2f(OpenGlHelper.GL_TEXTURE1, lastBrightnessX, lastBrightnessY);
 	}
 	
 	public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Vec3d color, float alpha) {
@@ -130,7 +128,7 @@ public class RenderUtil {
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA);
+	//	GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA);
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
 		setLightmapTextureCoords(240, 240);
 	}
@@ -159,25 +157,25 @@ public class RenderUtil {
 		GlStateManager.popMatrix();
 	}
 	
-	public static void setupArmorModelOverride(RenderPlayer renderPlayer) {
-		List<LayerRenderer<EntityLivingBase>> layers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, 4);
-		if (layers != null) {
-			LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer -> layer instanceof LayerBipedArmor).findFirst().orElse(null);
-			if (armorLayer != null) {
-				Field mainModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177186_d"));
-				Field legModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177189_c"));
-				mainModel.setAccessible(true);
-				legModel.setAccessible(true);
-				try {
-					ModelArmorOverride model = new ModelArmorOverride();
-					mainModel.set(armorLayer, model);
-					legModel.set(armorLayer, model);
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+	//public static void setupArmorModelOverride(RenderPlayer renderPlayer) {
+	//	List<LayerRenderer<EntityLivingBase>> layers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, 4);
+	//	if (layers != null) {
+		//	LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer -> layer instanceof LayerBipedArmor).findFirst().orElse(null);
+		//	if (armorLayer != null) {
+		//		Field mainModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapNames(LayerArmorBase.class.getName(), "field_177186_d"));
+		//		Field legModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapNames(LayerArmorBase.class.getName(), "field_177189_c"));
+		//		mainModel.setAccessible(true);
+		//		legModel.setAccessible(true);
+		//		try {
+		//			ModelArmorOverride model = new ModelArmorOverride();
+		//			mainModel.set(armorLayer, model);
+		//			legModel.set(armorLayer, model);
+		//		} catch (IllegalAccessException e) {
+		//			e.printStackTrace();
+		//		}
+	//		}
+	//	}
+//	}
 	
 	public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
 		if (left < right) {

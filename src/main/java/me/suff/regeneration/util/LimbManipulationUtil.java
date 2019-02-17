@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = RegenerationMod.MODID)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = RegenerationMod.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
 public class LimbManipulationUtil {
 	
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb) {

@@ -6,7 +6,7 @@ import me.suff.regeneration.client.sound.MovingSoundEntity;
 import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.toasts.SystemToast;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
@@ -28,7 +28,7 @@ public class ClientUtil {
 	}
 	
 	public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
-		Minecraft.getInstance().getSoundHandler().play(PositionedSoundRecord.getRecord(sound, pitch, volume));
+		Minecraft.getInstance().getSoundHandler().play(SimpleSound.getRecord(sound, pitch, volume));
 	}
 	
 	

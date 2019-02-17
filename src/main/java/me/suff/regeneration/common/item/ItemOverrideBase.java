@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 
 public class ItemOverrideBase extends Item implements IEntityOverride {
 	
-	public ItemOverrideBase(Builder p_i48487_1_) {
+	public ItemOverrideBase(Properties p_i48487_1_) {
 		super(p_i48487_1_);
 	}
 	

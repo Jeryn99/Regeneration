@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,21 +15,12 @@ import javax.annotation.Nullable;
  */
 public class RegenerationProvider implements ICapabilitySerializable<NBTTagCompound> {
 	
+	private final LazyOptional<IRegeneration> lazyOptional;
 	private IRegeneration capability;
 	
-	public RegenerationProvider(IRegeneration capability) {
+	public RegenerationProvider(IRegeneration capability, LazyOptional<IRegeneration> lazyOptional) {
 		this.capability = capability;
-	}
-	
-	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-		return CapabilityRegeneration.CAPABILITY != null && capability == CapabilityRegeneration.CAPABILITY;
-	}
-	
-	@Nullable
-	@Override
-	public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-		return capability == CapabilityRegeneration.CAPABILITY ? CapabilityRegeneration.CAPABILITY.cast(this.capability) : null;
+		this.lazyOptional = lazyOptional;
 	}
 	
 	@Override
@@ -41,4 +33,16 @@ public class RegenerationProvider implements ICapabilitySerializable<NBTTagCompo
 		CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, capability, null, nbt);
 	}
 	
+	
+	@Override
+	@Nonnull
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+		return CapabilityRegeneration.CAPABILITY.orEmpty(capability, lazyOptional);
+	}
+	
+	@Nonnull
+	@Override
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
+		return getCapability(cap, null);
+	}
 }

@@ -2,7 +2,6 @@ package me.suff.regeneration.testing;
 
 import static org.junit.Assert.*;
 
-import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.common.commands.RegenDebugCommand;
 import org.junit.Test;
 

@@ -63,16 +63,16 @@ public class RegenUtil {
 	}
 	
 	public static void regenerationExplosion(EntityPlayer player) {
-		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKnockback, RegenConfig.onRegen.regenerativeKnockbackRange);
-		explodeKill(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKillRange);
+		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
+		explodeKill(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
 	}
 	
-	public static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {
+	public static void explodeKnockback(Entity exploder, World world, BlockPos pos, Double knockback, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
 			if (entity instanceof EntityLivingBase && exploder.isAlive()) {
 				EntityLivingBase victim = (EntityLivingBase) entity;
 				
-				if (entity instanceof EntityPlayer && !RegenConfig.onRegen.regenerationKnocksbackPlayers)
+				if (entity instanceof EntityPlayer && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get())
 					return;
 				
 				float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
@@ -81,14 +81,14 @@ public class RegenUtil {
 				xr = (int) -(victim.posX - exploder.posX);
 				zr = (int) -(victim.posZ - exploder.posZ);
 				
-				victim.knockBack(exploder, knockback * densMod, xr, zr);
+				victim.knockBack(exploder, (float) (knockback * densMod), xr, zr);
 			}
 		});
 	}
 	
 	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-			if ((entity instanceof EntityCreature && entity.isNonBoss()) || (entity instanceof EntityPlayer && RegenConfig.onRegen.regenerationKillsPlayers))
+			if ((entity instanceof EntityCreature && entity.isNonBoss()) || (entity instanceof EntityPlayer && RegenConfig.COMMON.regenKillsPlayers.get()))
 				entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
 		});
 	}
