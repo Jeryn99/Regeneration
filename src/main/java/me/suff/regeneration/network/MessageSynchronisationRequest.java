@@ -37,6 +37,7 @@ public class MessageSynchronisationRequest {
 		public static void handle(MessageSynchronisationRequest message, Supplier<NetworkEvent.Context> ctx) {
 			EntityPlayer player = ServerLifecycleHooks.getCurrentServer().getWorld(ctx.get().getSender().dimension).getPlayerEntityByUUID(message.player);
 			ctx.get().getSender().getServerWorld().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(player).synchronise());
+			ctx.get().setPacketHandled(true);
 		}
 	}
 	

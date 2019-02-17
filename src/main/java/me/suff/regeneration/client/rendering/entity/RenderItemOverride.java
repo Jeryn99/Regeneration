@@ -42,7 +42,7 @@ public class RenderItemOverride extends Render<EntityItemOverride> {
 		Random rand = entity.world.rand;
 		
 		GlStateManager.pushMatrix();
-		if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH && entity.getItem().getDamage() != RegenConfig.COMMON.regenCapacity.get()) {
+		if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH && entity.getItem().getDamage() != RegenConfig.CONFIG.regenCapacity.get()) {
 			for (int j = 0; j < 2; j++) {
 				RenderUtil.setupRenderLightning();
 				GlStateManager.translated(x, y + 0.20, z);

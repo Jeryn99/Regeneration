@@ -37,6 +37,7 @@ public class MessageSaveStyle {
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.get().getSender());
 				cap.setStyle(message.style);
 				cap.synchronise();
+				ctx.get().setPacketHandled(true);
 			});
 		}
 	}

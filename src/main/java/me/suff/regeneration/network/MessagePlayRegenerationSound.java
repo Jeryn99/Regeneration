@@ -50,6 +50,7 @@ public class MessagePlayRegenerationSound {
 				if (player != null) {
 					IRegeneration data = CapabilityRegeneration.getForPlayer(player);
 					ClientUtil.playSound(player, new ResourceLocation(message.sound), SoundCategory.PLAYERS, true, () -> !data.getState().equals(RegenState.REGENERATING), 1.0F);
+					ctx.get().setPacketHandled(true);
 				}
 			});
 		}

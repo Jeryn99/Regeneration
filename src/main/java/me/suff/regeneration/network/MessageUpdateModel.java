@@ -36,6 +36,7 @@ public class MessageUpdateModel {
 				data.setPreferredModel(message.preferred);
 				data.synchronise();
 			});
+			ctx.get().setPacketHandled(true);
 		}
 	}
 }

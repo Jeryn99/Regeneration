@@ -37,11 +37,11 @@ public class MessageSetPerspective {
 			Minecraft.getInstance().addScheduledTask(() -> {
 				if (message.resetPitch)
 					Minecraft.getInstance().player.rotationPitch = 0;
-				if (RegenConfig.COMMON.changePerspective.get()) {
+				if (RegenConfig.CONFIG.changePerspective.get()) {
 					Minecraft.getInstance().gameSettings.thirdPersonView = message.thirdperson ? 2 : 0;
 				}
 			});
-			
+			ctx.get().setPacketHandled(true);
 		}
 	}
 }

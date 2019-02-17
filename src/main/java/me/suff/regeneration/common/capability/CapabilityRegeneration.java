@@ -42,14 +42,12 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by Sub
@@ -97,21 +95,23 @@ public class CapabilityRegeneration implements IRegeneration {
 			this.stateManager = null;
 	}
 	
+	@Nonnull
 	public static IRegeneration getForPlayer(EntityPlayer player) {
-		AtomicReference<IRegeneration> regenCap = null;
-		player.getCapability(CAPABILITY).ifPresent(regenCap::set);
-		return regenCap.get();
+		return player.getCapability(CapabilityRegeneration.CAPABILITY).orElseThrow(() -> new RuntimeException("well, I've fucked up somewhere"));
 	}
 	
 	@Override
 	public void tick() {
+		
+	
+		
 		if (!didSetup && player.world.isRemote) {
 			NetworkHandler.sendToServer(new MessageSynchronisationRequest(player.getUniqueID(), player.dimension.getId()));
 			didSetup = true;
 		}
 		
-		if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
-			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
+		if (getRegenerationsLeft() > RegenConfig.CONFIG.regenCapacity.get() && !RegenConfig.CONFIG.infiniteRegeneration.get()) {
+			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
 		}
 		
@@ -166,7 +166,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		regenerationsLeft = Math.min(RegenConfig.COMMON.regenCapacity.get(), nbt.getInt(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
+		regenerationsLeft = Math.min(RegenConfig.CONFIG.regenCapacity.get(), nbt.getInt(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 		
 		//TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
 		if (nbt.hasKey("skinType")) {
@@ -293,8 +293,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void receiveRegenerations(int amount) {
-		if (RegenConfig.COMMON.infiniteRegeneration.get())
-			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
+		if (RegenConfig.CONFIG.infiniteRegeneration.get())
+			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
 		else
 			regenerationsLeft += amount;
 		synchronise();
@@ -302,8 +302,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void extractRegeneration(int amount) {
-		if (RegenConfig.COMMON.infiniteRegeneration.get())
-			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
+		if (RegenConfig.CONFIG.infiniteRegeneration.get())
+			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
 		else
 			regenerationsLeft -= amount;
 		synchronise();
@@ -441,7 +441,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleNextHandGlow() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.COMMON.handGlowInterval.get() * 20);
+			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.CONFIG.handGlowInterval.get() * 20);
 			synchronise();
 		}
 		
@@ -449,7 +449,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleHandGlowTrigger() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
+			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.CONFIG.handGlowTriggerDelay.get() * 20);
 			ActingForwarder.onHandsStartGlowing(CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -462,7 +462,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					return false;
 				
 				// We're entering grace period...
-				scheduleTransitionInSeconds(RegenState.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
+				scheduleTransitionInSeconds(RegenState.Transition.ENTER_CRITICAL, RegenConfig.CONFIG.gracePhaseLength.get());
 				scheduleHandGlowTrigger();
 				
 				state = RegenState.GRACE;
@@ -541,7 +541,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			// We're starting a regeneration!
 			state = RegenState.REGENERATING;
 			
-			if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
+			if (RegenConfig.CONFIG.sendRegenDeathMessages.get()) {
 				TextComponentTranslation text = new TextComponentTranslation("regeneration.messages.regen_chat_message", player.getName());
 				text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(getDeathSource())));
 				PlayerUtil.sendMessageToAll(text);
@@ -560,7 +560,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void enterCriticalPhase() {
 			// We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduleTransitionInSeconds(RegenState.Transition.CRITICAL_DEATH, RegenConfig.COMMON.criticalPhaseLength.get());
+			scheduleTransitionInSeconds(RegenState.Transition.CRITICAL_DEATH, RegenConfig.CONFIG.criticalPhaseLength.get());
 			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -572,7 +572,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1);
 			
-			if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
+			if (RegenConfig.CONFIG.loseRegensOnDeath.get()) {
 				extractRegeneration(getRegenerationsLeft());
 			}
 			
@@ -669,7 +669,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof EntityPlayer) {
-			System.out.println("ATTEMPTED TO REGISTER ON:" + FMLEnvironment.dist);
+			System.out.println("ATTEMPTED TO REGISTER ON: " + FMLEnvironment.dist);
 			event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new ICapabilitySerializable<NBTTagCompound>() {
 				final CapabilityRegeneration regenCap = new CapabilityRegeneration((EntityPlayer) event.getObject());
 				
