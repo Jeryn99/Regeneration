@@ -100,13 +100,11 @@ public class RegenConfig {
 		}
 	}
 	
-	private static ForgeConfigSpec commonSpec;
+	public static ForgeConfigSpec commonSpec;
 	public static Common COMMON;
-	
-	public static void init(){
+	static {
 		final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
 		commonSpec = specPair.getRight();
 		COMMON = specPair.getLeft();
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, RegenConfig.commonSpec);
 	}
 }

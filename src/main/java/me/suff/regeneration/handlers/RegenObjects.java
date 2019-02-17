@@ -3,6 +3,7 @@ package me.suff.regeneration.handlers;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.common.entity.EntityItemOverride;
 import me.suff.regeneration.common.entity.EntityLindos;
+import me.suff.regeneration.common.item.ItemFobWatch;
 import me.suff.regeneration.common.item.ItemLindos;
 import me.suff.regeneration.util.RegenDamageSource;
 import net.minecraft.entity.EntityType;
@@ -36,9 +37,8 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
-		RegenConfig.init();
 		e.getRegistry().registerAll(
-				//setUpItem(new ItemFobWatch(), "fob_watch"),
+				setUpItem(new ItemFobWatch(), "fob_watch"),
 				setUpItem(new ItemLindos(), "lindos_vial")
 		);
 	}
