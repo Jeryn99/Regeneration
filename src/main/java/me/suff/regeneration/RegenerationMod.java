@@ -17,6 +17,9 @@ import me.suff.regeneration.debugger.IRegenDebugger;
 import me.suff.regeneration.handlers.ActingForwarder;
 import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.network.NetworkHandler;
+import me.suff.regeneration.proxy.ClientProxy;
+import me.suff.regeneration.proxy.CommonProxy;
+import me.suff.regeneration.proxy.IProxy;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -24,13 +27,19 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.stream.Collectors;
 
 //TESTING add language file tests
 @Mod(RegenerationMod.MODID)
@@ -45,10 +54,15 @@ public class RegenerationMod {
 	public static IRegenDebugger DEBUGGER;
 	public static Logger LOG = LogManager.getLogger(NAME);
 	
+	public static final IProxy PROXY = DistExecutor.runForDist( () -> ClientProxy::new, () -> CommonProxy::new );
+	
 	public RegenerationMod() {
 		INSTANCE = this;
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+		
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+		
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new CapabilityRegeneration());
 	}
@@ -61,16 +75,15 @@ public class RegenerationMod {
 		LootTableList.register(LOOT_FILE);
 		DnaHandler.init();
 		PlayerUtil.createPostList();
-		RegenObjects.EntityEntries.init();
+		PROXY.preInit();
 	}
 	
-	@OnlyIn(Dist.CLIENT) //Not sure if this annotation needs to exist with this
-	private void doClientStuff(final FMLClientSetupEvent event) {
-		RegenKeyBinds.init();
-		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
-		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
+	private void enqueueIMC(final InterModEnqueueEvent event) {
+		PROXY.init();
 	}
 	
+	private void processIMC(final InterModProcessEvent event) {
+		PROXY.postInit();
+	}
 	
 }

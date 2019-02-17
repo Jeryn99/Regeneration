@@ -15,6 +15,7 @@ import me.suff.regeneration.util.FileUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
@@ -25,7 +26,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +38,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
+	//	MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
 		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
 	}
@@ -64,25 +65,21 @@ public class ClientProxy extends CommonProxy {
 		Map<String, RenderPlayer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			
-			Iterator<? extends LayerRenderer> ita = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, 4);
-			if (ita.hasNext()) { //TODO THIS DOESNT WORK AS INTENDED, LOOK INTO IT TOMORROW
-				LayerRenderer layer = ita.next();
+			//List<LayerRenderer<AbstractClientPlayer>> ita = renderPlayer.layerRenderers;
+		//	for (LayerRenderer layer : ita) {
+		//		if (layer instanceof LayerArmorBase) { //Armor Layer
+		//			LayerArmorBase l = (LayerArmorBase) layer;
+		//			ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, l, new ModelArmorOverride(), 1);
+		//			ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, l, new ModelArmorOverride(), 2);
+		//		}
 				
-				if (layer instanceof LayerArmorBase) { //Armor Layer
-					LayerArmorBase l = (LayerArmorBase) layer;
-					ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, l, new ModelArmorOverride(), 1);
-					ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, l, new ModelArmorOverride(), 2);
-				}
-				
-				if (layer instanceof LayerHeldItem) {
-					ita.remove();
-					renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); // Add new item layer
-				}
-				
-				renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
-				renderPlayer.addLayer(new LayerFuzz(renderPlayer));
-			}
+	//			if (layer instanceof LayerHeldItem) {
+	//				renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); // Add new item layer
+	//			}
+	//		}
 			
+			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
+			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
 		}
 		
 		try {

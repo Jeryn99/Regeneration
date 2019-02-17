@@ -26,7 +26,7 @@ version="${file.jarVersion}" #mandatory
  # A display name for the mod
 displayName="Regeneration" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="http://myurl.me/" #optional
+updateJSONURL="https://github.com/Suffril/Regeneration/blob/master/update.json" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 This is a long form description of the mod. You can write whatever you want here

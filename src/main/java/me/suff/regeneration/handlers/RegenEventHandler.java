@@ -3,7 +3,6 @@ package me.suff.regeneration.handlers;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.capability.RegenerationProvider;
 import me.suff.regeneration.debugger.DummyRegenDebugger;
 import me.suff.regeneration.debugger.GraphicalRegenDebugger;
 import me.suff.regeneration.util.PlayerUtil;
@@ -16,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryTable;
@@ -23,7 +23,9 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability.IStorage;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -41,6 +43,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 import static me.suff.regeneration.RegenerationMod.DEBUGGER;
@@ -181,5 +185,23 @@ public class RegenEventHandler {
 		event.getTable().addPool(pool);
 	}
 	
+	
+	
+	@SubscribeEvent
+	public static void onPlayerClone(PlayerEvent.Clone event) {
+		Capability.IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
+		
+		IRegeneration oldCap = CapabilityRegeneration.getForPlayer(event.getOriginal());
+		IRegeneration newCap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer());
+		
+		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, oldCap, null);
+		storage.readNBT(CapabilityRegeneration.CAPABILITY, newCap, null, nbt);
+		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
+	}
+	
+	@SubscribeEvent
+	public static void playerTracking(PlayerEvent.StartTracking event) {
+		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
+	}
 	
 }
