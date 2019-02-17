@@ -102,8 +102,8 @@ public class RegenConfig {
 		regenKnockbackRange = builder.comment("Range wherein every mob is knocked back upon regeneration").translation("config.regeneration.regenerative_knockback_range").defineInRange("regenerativeKnockbackRange", 7, 0, Integer.MAX_VALUE);
 		regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);
 		builder.pop();
-	}
-
+  }
+  
 	//For example, more example here : https://github.com/LotuxPunk/OpenBackup/blob/26fff2d7e5934b282d52ea005e0bef601db8539d/src/main/java/com/vandendaelen/openbackup/configs/OBConfig.java#L78
 	public static int getRegenCapacity() {
 		return CONFIG.regenCapacity.get();

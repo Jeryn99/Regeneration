@@ -50,7 +50,6 @@ import static me.suff.regeneration.util.RegenState.*;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
 	
 	
@@ -186,6 +185,7 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
 		IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player);
+		if(data == null) return;
 		if (data.getState() == GRACE_CRIT) {
 			GlStateManager.fogMode(GlStateManager.FogMode.EXP);
 			event.setCanceled(true);

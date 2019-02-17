@@ -1,5 +1,6 @@
 package me.suff.regeneration.common.capability;
 
+import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
@@ -15,7 +16,6 @@ import me.suff.regeneration.network.MessageSynchronisationRequest;
 import me.suff.regeneration.network.MessageSynchroniseRegeneration;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.PlayerUtil;
-import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.util.RegenState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -26,6 +26,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
@@ -34,17 +35,21 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by Sub
@@ -72,9 +77,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
 	
-	public final LazyOptional<IRegeneration> holder = LazyOptional.of(() -> this);
-	
-	
 	/**
 	 * WHY THIS IS A SEPERATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
 	 * This property is synced over to the client to solve this
@@ -95,11 +97,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			this.stateManager = null;
 	}
 	
-	@Nonnull
 	public static IRegeneration getForPlayer(EntityPlayer player) {
-		return player.getCapability(CapabilityRegeneration.CAPABILITY).orElse(null);
+		AtomicReference<IRegeneration> regenCap = null;
+		player.getCapability(CAPABILITY).ifPresent(regenCap::set);
+		return regenCap.get();
 	}
-	
 	
 	@Override
 	public void tick() {
@@ -125,7 +127,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void synchronise() {
-		if(player == null || player.world == null) return;
+		if (player == null || player.world == null) return;
 		if (player.world.isRemote)
 			throw new IllegalStateException("Don't sync client -> server");
 		
@@ -665,27 +667,33 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@SubscribeEvent
-	public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof EntityPlayer) {
-			event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new RegenerationProvider(new CapabilityRegeneration((EntityPlayer) event.getObject()), holder));
+			System.out.println("ATTEMPTED TO REGISTER ON:" + FMLEnvironment.dist);
+			event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new ICapabilitySerializable<NBTTagCompound>() {
+				final CapabilityRegeneration regenCap = new CapabilityRegeneration((EntityPlayer) event.getObject());
+				
+				final LazyOptional<CapabilityRegeneration> regenCapInstance = LazyOptional.of(() -> regenCap);
+				
+				@Override
+				public NBTTagCompound serializeNBT() {
+					return regenCap.serializeNBT();
+				}
+				
+				@Override
+				public void deserializeNBT(NBTTagCompound nbt) {
+					regenCap.deserializeNBT(nbt);
+				}
+				
+				@Nullable
+				@SuppressWarnings("unchecked")
+				@Override
+				public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+					if (capability == CapabilityRegeneration.CAPABILITY)
+						return (LazyOptional<T>) regenCapInstance;
+					return LazyOptional.empty();
+				}
+			});
 		}
 	}
-	
-	@SubscribeEvent
-	public void onPlayerClone(PlayerEvent.Clone event) {
-		Capability.IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
-		
-		IRegeneration oldCap = CapabilityRegeneration.getForPlayer(event.getOriginal());
-		IRegeneration newCap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer());
-		
-		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, oldCap, null);
-		storage.readNBT(CapabilityRegeneration.CAPABILITY, newCap, null, nbt);
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
-	}
-	
-	@SubscribeEvent
-	public void playerTracking(PlayerEvent.StartTracking event) {
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
-	}
-	
 }

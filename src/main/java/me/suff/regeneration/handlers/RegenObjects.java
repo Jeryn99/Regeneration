@@ -14,6 +14,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import static me.suff.regeneration.RegenerationMod.MODID;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RegenObjects {
 	
 	public static List<Item> ITEMS = new ArrayList<>();
@@ -36,7 +37,6 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
-		RegenConfig.init();
 		e.getRegistry().registerAll(
 				setUpItem(new ItemFobWatch(), "fob_watch"),
 				setUpItem(new ItemLindos(), "lindos_vial")
@@ -65,6 +65,13 @@ public class RegenObjects {
 		);
 	}
 	
+	@SubscribeEvent
+	public static void addEntities(final RegistryEvent.Register<EntityType<?>> event) {
+		IForgeRegistry<EntityType<?>> reg = event.getRegistry();
+		reg.register(EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE);
+		reg.register(EntityEntries.ITEM_LINDOS_TYPE);
+	}
+	
 	private static SoundEvent setUpSound(String soundName) {
 		return new SoundEvent(new ResourceLocation(MODID, soundName)).setRegistryName(soundName);
 	}
@@ -90,12 +97,7 @@ public class RegenObjects {
 	}
 	
 	public static class EntityEntries {
-		public static EntityType ITEM_OVERRIDE_ENTITY_TYPE = null;
-		public static EntityType ITEM_LINDOS_TYPE = null;
-		
-		public static void init() {
-			ITEM_OVERRIDE_ENTITY_TYPE = EntityType.register(MODID + ":item_override", EntityType.Builder.create(EntityItemOverride.class, EntityItemOverride::new).tracker(256, 20, false));
-			ITEM_LINDOS_TYPE = EntityType.register(MODID + ":lindos", EntityType.Builder.create(EntityLindos.class, EntityLindos::new).tracker(256, 20, false));
-		}
+		public static EntityType ITEM_OVERRIDE_ENTITY_TYPE = EntityType.register(MODID + ":item_override", EntityType.Builder.create(EntityItemOverride.class, EntityItemOverride::new).tracker(256, 20, false)).setRegistryName(new ResourceLocation(MODID , "item_override"));
+		public static EntityType ITEM_LINDOS_TYPE = EntityType.register(MODID + ":lindos", EntityType.Builder.create(EntityLindos.class, EntityLindos::new).tracker(256, 20, false)).setRegistryName(new ResourceLocation(MODID , "lindos"));
 	}
 }
