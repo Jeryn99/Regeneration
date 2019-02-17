@@ -51,6 +51,7 @@ public class RegenerationMod {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new CapabilityRegeneration());
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.CONFIG_SPEC);
 	}
 	
 	private void setup(final FMLCommonSetupEvent event) {
