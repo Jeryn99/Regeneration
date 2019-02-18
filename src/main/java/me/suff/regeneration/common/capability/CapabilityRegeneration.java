@@ -503,6 +503,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					RegenTriggers.CHANGE_REFUSAL.trigger((EntityPlayerMP) player);
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.regen_delayed"), true);
 				}
+				e.setCanceled(true); //It got annoying in creative to break something
 			}
 		}
 		
