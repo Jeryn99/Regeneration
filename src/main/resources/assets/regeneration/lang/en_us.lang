@@ -89,7 +89,7 @@ config.regeneration.grace.criticalDamageChance=Critical damage chance
 config.regeneration.grace.handGlowTriggerDelay=Hand glow trigger delay
 config.regeneration.grace.handGlowInterval=Hand glow interval
 
-config.regeneration.compat.lccore.superpower=Treat Regeneration as superpower
+config.regeneration.compat.lccore.disable_superpower=Disable regeneration while superpowered
 config.regeneration.compat.lccore.size_changing=LucraftCore Size Changing
 config.regeneration.compat.lccore.size_changing_min=Size Change Minimum
 config.regeneration.compat.lccore.size_changing_max=Size Change Maximum

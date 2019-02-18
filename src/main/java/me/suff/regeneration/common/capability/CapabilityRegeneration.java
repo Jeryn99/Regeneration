@@ -358,17 +358,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void setDnaActive(boolean alive) {
 		traitActive = alive;
 	}
-	
-	@Override
-	public int getReserve() {
-		return lcCoreReserve;
-	}
-	
-	@Override
-	public void setReserve(int reserve) {
-		lcCoreReserve = reserve;
-	}
-	
+
 	@Override
 	public IRegenerationStateManager getStateManager() {
 		return stateManager;

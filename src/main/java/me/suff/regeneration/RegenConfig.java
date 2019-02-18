@@ -208,14 +208,13 @@ public class RegenConfig {
 			@Config.Comment("Maximum Size Change value")
 			public float sizeChangingMax = 1.1F;
 			
-			@Config.LangKey("config.regeneration.compat.lccore.superpower")
-			@Config.Comment("If this is true and LCCore is installed, regeneration will be a superpower")
-			@Config.RequiresMcRestart
-			public boolean superpower = true;
-			
 			@Config.LangKey("config.regeneration.compat.lccore.radiation_immunity")
 			@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")
 			public boolean immuneToRadiation = true;
+
+			@Config.LangKey("config.regeneration.compat.lccore.superpower_disable")
+			@Config.Comment("If this is true and LCCore is installed, you cannot regenerate while you have a superpower")
+			public boolean superpowerDisable = true;
 		}
 		
 		public static class TardisMod {
