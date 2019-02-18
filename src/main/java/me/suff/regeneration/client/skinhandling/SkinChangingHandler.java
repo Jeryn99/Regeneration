@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -238,7 +239,10 @@ public class SkinChangingHandler {
 	 * @param texture - ResourceLocation of intended texture
 	 */
 	public static void setPlayerTexture(AbstractClientPlayer player, ResourceLocation texture) {
-		if (player.getLocationSkin() == texture) {
+		if (player.getLocationSkin() == texture || texture == null) {
+			if (texture == null) {
+				RegenerationMod.LOG.error("Skin data for " + player.getName() + "was null");
+			}
 			return;
 		}
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
@@ -266,6 +270,7 @@ public class SkinChangingHandler {
 	 */
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
+		if (MinecraftForgeClient.getRenderPass() == -1) return; //Don't do this hacky skin shit in inventory
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
