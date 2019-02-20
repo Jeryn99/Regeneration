@@ -50,6 +50,7 @@ public class MessageTriggerRegeneration {
 				}
 				regen.triggerRegeneration();
 			});
+			ctx.get().setPacketHandled(true);
 		}
 	}
 	

@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -42,9 +43,10 @@ public class MessageSynchroniseRegeneration {
 	
 	public static class Handler {
 		public static void handle(MessageSynchroniseRegeneration message, Supplier<NetworkEvent.Context> ctx) {
-			EntityPlayer player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByUUID(message.player);
+			EntityPlayer player = Minecraft.getInstance().world.getPlayerEntityByUUID(message.player);
 			if (player != null)
 				Minecraft.getInstance().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(player).deserializeNBT(message.data));
+			ctx.get().setPacketHandled(true);
 		}
 	}
 	

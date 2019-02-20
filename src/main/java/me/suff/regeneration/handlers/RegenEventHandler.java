@@ -3,7 +3,6 @@ package me.suff.regeneration.handlers;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.capability.RegenerationProvider;
 import me.suff.regeneration.debugger.DummyRegenDebugger;
 import me.suff.regeneration.debugger.GraphicalRegenDebugger;
 import me.suff.regeneration.util.PlayerUtil;
@@ -16,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryTable;
@@ -23,7 +23,9 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability.IStorage;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -41,6 +43,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 
 import static me.suff.regeneration.RegenerationMod.DEBUGGER;
@@ -49,44 +53,43 @@ import static me.suff.regeneration.RegenerationMod.DEBUGGER;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = RegenerationMod.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
 public class RegenEventHandler {
 	
 	@SubscribeEvent
-	public static void serverStart(FMLServerStartingEvent event) {
+	public void serverStart(FMLServerStartingEvent event) {
 		DEBUGGER = GraphicsEnvironment.isHeadless() ? new DummyRegenDebugger() : new GraphicalRegenDebugger();
 		MinecraftForge.EVENT_BUS.register(DEBUGGER);
 	}
 	
 	@SubscribeEvent
-	public static void serverStop(FMLServerStoppingEvent event) {
+	public void serverStop(FMLServerStoppingEvent event) {
 		MinecraftForge.EVENT_BUS.unregister(DEBUGGER);
 		DEBUGGER.dispose();
 		DEBUGGER = null;
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
+	public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer)
 			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).tick();
 	}
 	
 	
 	@SubscribeEvent
-	public static void onPlayerRespawn(PlayerRespawnEvent event) {
-		if (!RegenConfig.COMMON.firstStartGiftOnly.get())
-			CapabilityRegeneration.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.COMMON.freeRegenerations.get());
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
+		if (!RegenConfig.CONFIG.firstStartGiftOnly.get())
+			CapabilityRegeneration.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.CONFIG.freeRegenerations.get());
 		
 		CapabilityRegeneration.getForPlayer(event.getPlayer()).synchronise();
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
+	public void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
 		CapabilityRegeneration.getForPlayer(event.getPlayer()).synchronise();
 	}
 	
 	@SubscribeEvent
-	public static void onDeathEvent(LivingDeathEvent e) {
+	public void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
 			CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntityLiving()).synchronise();
 		}
@@ -95,17 +98,18 @@ public class RegenEventHandler {
 	// ============ USER EVENTS ==========
 	
 	@SubscribeEvent
-	public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
+	public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
 		if (e.getEntityPlayer().world.isRemote)
 			return;
 		CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).getStateManager().onPunchBlock(e);
+		System.out.println("ASFSDFDSFSDFSDFSD");
 	}
 	
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onHurt(LivingDamageEvent event) {
+	public void onHurt(LivingDamageEvent event) {
 		Entity trueSource = event.getSource().getTrueSource();
-		
+		System.out.println(trueSource);
 		if (trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {
 			EntityPlayer player = (EntityPlayer) trueSource;
 			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event);
@@ -138,7 +142,7 @@ public class RegenEventHandler {
 			return;
 		}
 		
-		if (cap.getState() == RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage()) {
+		if (cap.getState() == RegenState.REGENERATING && RegenConfig.CONFIG.regenFireImmune.get() && event.getSource().isFireDamage()) {
 			event.setCanceled(true); // TODO still "hurts" the client view
 		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 			boolean notDead = cap.getStateManager().onKilled(event.getSource());
@@ -148,7 +152,7 @@ public class RegenEventHandler {
 	
 	
 	@SubscribeEvent
-	public static void onKnockback(LivingKnockBackEvent event) {
+	public void onKnockback(LivingKnockBackEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
 			if (CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).getState() == RegenState.REGENERATING) {
 				event.setCanceled(true);
@@ -158,21 +162,21 @@ public class RegenEventHandler {
 	
 	// ================ OTHER ==============
 	@SubscribeEvent
-	public static void onLogin(PlayerLoggedInEvent event) {
+	public void onLogin(PlayerLoggedInEvent event) {
 		EntityPlayer player = event.getPlayer();
 		if (player.world.isRemote)
 			return;
 		
-		NBTTagCompound nbt = player.getEntityData(), persist = (NBTTagCompound) nbt.getTag(EntityPlayer.PERSISTED_NBT_TAG);
-		if (!persist.getBoolean("loggedInBefore"))
-			CapabilityRegeneration.getForPlayer(player).receiveRegenerations(RegenConfig.COMMON.freeRegenerations.get());
-		persist.setBoolean("loggedInBefore", true);
-		nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
+		//NBTTagCompound nbt = player.getEntityData(), persist = (NBTTagCompound) nbt.getTag(EntityPlayer.PERSISTED_NBT_TAG);
+	//	if (!persist.getBoolean("loggedInBefore"))
+		//	CapabilityRegeneration.getForPlayer(player).receiveRegenerations(RegenConfig.CONFIG.freeRegenerations.get());
+	//	persist.setBoolean("loggedInBefore", true);
+	//	nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
 	}
 	
 	@SubscribeEvent
-	public static void registerLoot(LootTableLoadEvent event) {
-		if (!event.getName().toString().toLowerCase().matches(RegenConfig.COMMON.lootRegex.get()) || RegenConfig.COMMON.disableLoot.get())
+	public void registerLoot(LootTableLoadEvent event) {
+		if (!event.getName().toString().toLowerCase().matches(RegenConfig.CONFIG.lootRegex.get()) || RegenConfig.CONFIG.disableLoot.get())
 			return;
 		
 		// TODO configurable chances? Maybe by doing a simple loot table tutorial?
@@ -181,5 +185,23 @@ public class RegenEventHandler {
 		event.getTable().addPool(pool);
 	}
 	
+	
+	
+	@SubscribeEvent
+	public void onPlayerClone(PlayerEvent.Clone event) {
+		Capability.IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
+		
+		IRegeneration oldCap = CapabilityRegeneration.getForPlayer(event.getOriginal());
+		IRegeneration newCap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer());
+		
+		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, oldCap, null);
+		storage.readNBT(CapabilityRegeneration.CAPABILITY, newCap, null, nbt);
+		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
+	}
+	
+	@SubscribeEvent
+	public void playerTracking(PlayerEvent.StartTracking event) {
+		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
+	}
 	
 }

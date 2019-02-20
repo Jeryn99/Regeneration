@@ -54,6 +54,7 @@ public class MessageUpdateSkin {
 				
 				NetworkHandler.sendPacketToAll(new MessageRemovePlayer(player.getUniqueID()));
 			});
+			ctx.get().setPacketHandled(true);
 		}
 	}
 }

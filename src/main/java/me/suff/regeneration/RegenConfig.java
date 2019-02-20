@@ -1,13 +1,23 @@
 package me.suff.regeneration;
 
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class RegenConfig {
+	public static MyConfig CONFIG;
+	public static ForgeConfigSpec CONFIG_SPEC;
 	
-	public static class Common {
+	static {
+		Pair<MyConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(MyConfig::new);
+		CONFIG_SPEC = specPair.getRight();
+		CONFIG = specPair.getLeft();
+	}
+	
+	public static class MyConfig {
+		
 		public final ForgeConfigSpec.IntValue regenCapacity;
 		public final ForgeConfigSpec.IntValue freeRegenerations;
 		public final ForgeConfigSpec.BooleanValue firstStartGiftOnly;
@@ -37,10 +47,9 @@ public class RegenConfig {
 		public final ForgeConfigSpec.ConfigValue<String> lootRegex;
 		public final ForgeConfigSpec.BooleanValue disableLoot;
 		
-		
-		Common(ForgeConfigSpec.Builder builder) {
+		MyConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment("General Regeneration Settings").push("common");
-			
+			System.out.println("L:iterallyt just saagssgwseed");
 			regenCapacity = builder.comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.").translation("config.regeneration.max_regens").defineInRange("regenCapacity", 12, 0, Integer.MAX_VALUE);
 			
 			freeRegenerations = builder.comment("Every player will start with this number of regenerations. Will cause undefined behavior if bigger than the amount of regenerations per cycle.").translation("config.regeneration.free_regens").defineInRange("freeRegenerations", 0, 0, Integer.MAX_VALUE);
@@ -82,7 +91,7 @@ public class RegenConfig {
 			builder.pop();
 			
 			builder.comment("Grace Settings").push("grace");
-			gracePhaseLength = builder.comment("The time in seconds before your grace period enters a critical phase").translation("config.regeneration.grace.gracePeriodLength").define("gracePhaseLength",15 * 60);
+			gracePhaseLength = builder.comment("The time in seconds before your grace period enters a critical phase").translation("config.regeneration.grace.gracePeriodLength").define("gracePhaseLength", 15 * 60);
 			criticalDamageChance = builder.comment("Chance that a player in critical phase gets damaged at a given tick. Higher number means more damage.").translation("config.regeneration.grace.criticalDamageChance").defineInRange("criticalDamageChance", 1, 0, Integer.MAX_VALUE);
 			criticalPhaseLength = builder.comment("The time in seconds you can stay in the critical phase without dying").translation("config.regeneration.grace.criticalPhaseLength").define("criticalPhaseLength", 60);
 			handGlowInterval = builder.comment("Interval (in seconds) at which your hands start to glow").translation("config.regeneration.grace.handGlowInterval").defineInRange("criticalPhaseLength", 120, 0, Integer.MAX_VALUE);
@@ -96,17 +105,7 @@ public class RegenConfig {
 			regenKnockbackRange = builder.comment("Range wherein every mob is knocked back upon regeneration").translation("config.regeneration.regenerative_knockback_range").defineInRange("regenerativeKnockbackRange", 7, 0, Integer.MAX_VALUE);
 			regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);
 			builder.pop();
-			
 		}
 	}
 	
-	private static ForgeConfigSpec commonSpec;
-	public static Common COMMON;
-	
-	public static void init(){
-		final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
-		commonSpec = specPair.getRight();
-		COMMON = specPair.getLeft();
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, RegenConfig.commonSpec);
-	}
 }

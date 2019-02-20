@@ -1,6 +1,6 @@
 {
-    "item.fob_watch": "Fob Watch",
-    "item.lindos_vial": "Lindos Vial",
+    "item.regeneration.fob_watch": "Fob Watch",
+    "item.regeneration.lindos_vial": "Lindos Vial",
     "superpower.timelord": "Timelord",
 
     "regeneration.gui.red": "Red",

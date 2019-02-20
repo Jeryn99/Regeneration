@@ -107,7 +107,7 @@ public class SkinChangingHandler {
 		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID())
 			return;
 		
-		if (RegenConfig.COMMON.changeMySkin.get()) {
+		if (RegenConfig.CONFIG.changeMySkin.get()) {
 			boolean isAlex = CapabilityRegeneration.getForPlayer(player).getPreferredModel().isAlex();
 			File skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
 			RegenerationMod.LOG.info(skin.getName() + " was choosen");

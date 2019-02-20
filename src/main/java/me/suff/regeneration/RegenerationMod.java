@@ -10,30 +10,38 @@ import me.suff.regeneration.common.CommandRegen;
 import me.suff.regeneration.common.advancements.RegenTriggers;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.capability.RegenerationStorage;
 import me.suff.regeneration.common.dna.DnaHandler;
-import me.suff.regeneration.common.entity.EntityItemOverride;
-import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.debugger.IRegenDebugger;
 import me.suff.regeneration.handlers.ActingForwarder;
-import me.suff.regeneration.handlers.RegenObjects;
+import me.suff.regeneration.handlers.RegenEventHandler;
 import me.suff.regeneration.network.NetworkHandler;
+import me.suff.regeneration.proxy.ClientProxy;
+import me.suff.regeneration.proxy.CommonProxy;
+import me.suff.regeneration.proxy.IProxy;
 import me.suff.regeneration.util.PlayerUtil;
+import net.minecraft.nbt.INBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 
 //TESTING add language file tests
 @Mod(RegenerationMod.MODID)
@@ -48,35 +56,57 @@ public class RegenerationMod {
 	public static IRegenDebugger DEBUGGER;
 	public static Logger LOG = LogManager.getLogger(NAME);
 	
+	public static final IProxy PROXY = DistExecutor.runForDist( () -> ClientProxy::new, () -> CommonProxy::new );
+	
 	public RegenerationMod() {
+		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, RegenConfig.CONFIG_SPEC);
 		INSTANCE = this;
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+		
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+		
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new CapabilityRegeneration());
+		MinecraftForge.EVENT_BUS.register(new RegenEventHandler());
 	}
 	
 	private void setup(final FMLCommonSetupEvent event) {
-		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
+		
+		CapabilityManager.INSTANCE.register(IRegeneration.class, new Capability.IStorage<IRegeneration>() {
+			@Nullable
+			@Override
+			public INBTBase writeNBT(Capability<IRegeneration> capability, IRegeneration instance, EnumFacing side) {
+				return instance.serializeNBT();
+			}
+			
+			@Override
+			public void readNBT(Capability<IRegeneration> capability, IRegeneration instance, EnumFacing side, INBTBase nbt) {
+				instance.deserializeNBT(nbt instanceof NBTTagCompound ? (NBTTagCompound) nbt : new NBTTagCompound());
+			}
+		}, CapabilityRegeneration::new);
+		
+		
 		ActingForwarder.init();
 		RegenTriggers.init();
 		NetworkHandler.init();
 		LootTableList.register(LOOT_FILE);
 		DnaHandler.init();
 		PlayerUtil.createPostList();
-		RegenObjects.EntityEntries.init();
+		PROXY.preInit();
 	}
 	
-	@OnlyIn(Dist.CLIENT) //Not sure if this annotation needs to exist with this
-	private void doClientStuff(final FMLClientSetupEvent event) {
-		RegenKeyBinds.init();
-		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
-		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
+	private void enqueueIMC(final InterModEnqueueEvent event) {
+		PROXY.init();
 	}
 	
 	@SubscribeEvent
 	public void onServerStarting(FMLServerStartingEvent event) {
 		CommandRegen.register(event.getCommandDispatcher());
 	}
+  
+	private void processIMC(final InterModProcessEvent event) {
+		PROXY.postInit();
+	}
+	
 }

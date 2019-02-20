@@ -35,6 +35,7 @@ public class MessageRemovePlayer {
 	public static class Handler {
 		public static void handle(MessageRemovePlayer message, Supplier<NetworkEvent.Context> ctx) {
 			Minecraft.getInstance().addScheduledTask(() -> SkinChangingHandler.PLAYER_SKINS.remove(message.playerUUID));
+			ctx.get().setPacketHandled(true);
 		}
 	}
 }

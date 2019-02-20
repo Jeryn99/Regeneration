@@ -78,7 +78,7 @@ public class TabRegistry {
 	public static void addTabsToList(List<GuiButton> buttonList) {
 		for (AbstractTab tab : TabRegistry.tabList) {
 			if (tab.shouldAddToList()) {
-				buttonList.add(tab);
+///				buttonList.add(tab);
 			}
 		}
 	}
@@ -163,7 +163,7 @@ public class TabRegistry {
 		if (event.getGui() instanceof GuiInventory) {
 			int guiLeft = (event.getGui().width - 176) / 2;
 			int guiTop = (event.getGui().height - 166) / 2;
-			recipeBookOffset = getRecipeBookOffset((GuiInventory) event.getGui());
+//			recipeBookOffset = getRecipeBookOffset((GuiInventory) event.getGui());
 			guiLeft += getPotionOffset() + recipeBookOffset;
 			
 			TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabVanilla.class);
