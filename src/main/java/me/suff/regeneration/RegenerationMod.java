@@ -6,6 +6,7 @@ import me.suff.regeneration.client.RegenKeyBinds;
 import me.suff.regeneration.client.rendering.entity.RenderItemOverride;
 import me.suff.regeneration.client.rendering.entity.RenderLindos;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
+import me.suff.regeneration.common.CommandRegen;
 import me.suff.regeneration.common.advancements.RegenTriggers;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
@@ -24,10 +25,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -72,5 +75,8 @@ public class RegenerationMod {
 		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
 	}
 	
-	
+	@SubscribeEvent
+	public void onServerStarting(FMLServerStartingEvent event) {
+		CommandRegen.register(event.getCommandDispatcher());
+	}
 }
