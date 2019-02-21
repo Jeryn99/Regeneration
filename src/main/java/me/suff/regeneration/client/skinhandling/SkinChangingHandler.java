@@ -162,18 +162,18 @@ public class SkinChangingHandler {
 			} else {
 				skinType = SkinInfo.SkinType.STEVE;
 			}
-			
 		} else {
 			BufferedImage bufferedImage = toImage(player, encodedSkin);
 			
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
-				resourceLocation = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(bufferedImage));
+				ResourceLocation tempLocation = new ResourceLocation(player.getName()+"_skin_"+System.currentTimeMillis());
+				Minecraft.getMinecraft().getTextureManager().loadTexture(tempLocation, new DynamicTexture(bufferedImage));
+				resourceLocation = tempLocation;
 				skinType = CapabilityRegeneration.getForPlayer(player).getSkinType();
 			}
 		}
-		
 		return new SkinInfo(resourceLocation, skinType);
 	}
 	
@@ -208,7 +208,9 @@ public class SkinChangingHandler {
 			
 			File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
 			ImageIO.write(image, "png", file);
-			return minecraft.getTextureManager().getDynamicTextureLocation(player.getName() + "_skin", new DynamicTexture(image));
+			ResourceLocation tempLocation = new ResourceLocation(player.getName()+"_skin_"+System.currentTimeMillis());
+			minecraft.getTextureManager().loadTexture(tempLocation, new DynamicTexture(image));
+			return tempLocation;
 		}
 		
 		return DefaultPlayerSkin.getDefaultSkinLegacy();
@@ -275,10 +277,6 @@ public class SkinChangingHandler {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
 		if (player.ticksExisted == 20) {
-			SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());
-			if (oldSkinInfo != null) {
-				Minecraft.getMinecraft().getTextureManager().deleteTexture(oldSkinInfo.getTextureLocation());
-			}
 			PLAYER_SKINS.remove(player.getUniqueID());
 		}
 		

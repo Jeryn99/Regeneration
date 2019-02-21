@@ -270,6 +270,7 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
 		SkinChangingHandler.PLAYER_SKINS.clear();
+		SkinChangingHandler.TYPE_BACKUPS.clear();
 	}
 	
 	
