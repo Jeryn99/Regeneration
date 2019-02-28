@@ -6,6 +6,8 @@ import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.handlers.RegenObjects;
+import me.suff.regeneration.network.MessageTriggerForcedRegen;
+import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.EnumCompatModids;
 import me.suff.regeneration.util.RenderUtil;
@@ -137,6 +139,10 @@ public class ClientEventHandler {
 	public static void onRenderGui(RenderGameOverlayEvent.Post event) {
 		if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
 			return;
+		
+		if(RegenKeyBinds.REGEN_FORCEFULLY.isPressed()){
+			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
+		}
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
 		String warning = null;

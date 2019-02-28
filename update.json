@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "1.4.9",
-		"1.12.2-recommended": "1.4.9"
+		"1.12.2-latest": "1.5.0",
+		"1.12.2-recommended": "1.5.0"
 	},
 	"1.12.2": {
 		"1.0.0": "Time for a full release then boys",
@@ -31,6 +31,7 @@
 		"1.4.6": "Internal code changes to allow for downloading default skins",
 		"1.4.7": "Fixes player model reverting to alex on new world",
 		"1.4.8": "Fixes player model reverting to alex on new world (Again), Game also boots faster now",
-		"1.4.9": "Skin null crash fix (Hopefully), changed LCcore compat extremely"
+		"1.4.9": "Skin null crash fix (Hopefully), changed LCcore compat extremely",
+		"1.5.0": "Skin null crash fix (Hopefully), changed LCcore compat extremely"
 	}
 }

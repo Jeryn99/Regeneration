@@ -21,13 +21,18 @@ import org.lwjgl.input.Keyboard;
  */
 @EventBusSubscriber(Side.CLIENT)
 public class RegenKeyBinds {
-	private static KeyBinding REGEN_NOW;
+	public static KeyBinding REGEN_NOW;
+	public static KeyBinding REGEN_FORCEFULLY;
 	
 	public static void init() {
+		
 		if (!EnumCompatModids.LCCORE.isLoaded()) {
 			REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", Keyboard.KEY_R, RegenerationMod.NAME);
 			ClientRegistry.registerKeyBinding(REGEN_NOW);
 		}
+		
+		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", Keyboard.KEY_L, RegenerationMod.NAME);
+		ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
 	}
 	
 	
@@ -36,6 +41,7 @@ public class RegenKeyBinds {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		if (player == null || EnumCompatModids.LCCORE.isLoaded())
 			return;
+	
 		if (REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration(player));
 		}

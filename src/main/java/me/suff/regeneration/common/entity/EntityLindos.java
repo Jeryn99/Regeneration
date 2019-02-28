@@ -29,6 +29,7 @@ public class EntityLindos extends EntityFlying {
 		super(worldIn);
 		setSize(0.5F, 0.5F);
 		this.moveHelper = new EntityFlyHelper(this);
+		noClip = true;
 	}
 	
 	
