@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "regeneration:lindos_vial"
+    },
+    "title": {
+      "text": "Lindos!"
+    },
+    "description": {
+      "text": "Craft a Lindos vial"
+    }
+  },
+  "parent": "regeneration:first_regen",
+  "criteria": {
+    "lindos_vial": {
+      "trigger": "lindos_vial"
+    }
+  }
+}

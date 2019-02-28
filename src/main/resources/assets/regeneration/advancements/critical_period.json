@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "regeneration:fob_watch"
+    },
+    "title": {
+      "text": "Your song is ending..."
+    },
+    "description": {
+      "text": "Refuse to Regenerate up till the point of near death..."
+    }
+  },
+  "parent": "regeneration:change_refusal",
+  "criteria": {
+    "critical_period": {
+      "trigger": "critical_period"
+    }
+  }
+}
