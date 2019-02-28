@@ -13,7 +13,7 @@ public class SkinInfo {
 		this.textureLocation = resourceLocation;
 	}
 	
-	public ResourceLocation getTextureLocation() {
+	public ResourceLocation getSkinTextureLocation() {
 		if (textureLocation != null) {
 			return textureLocation;
 		}

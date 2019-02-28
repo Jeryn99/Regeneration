@@ -26,7 +26,7 @@ public class GuiSkinCustomizer extends GuiContainer {
 	private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
 	private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
-	private static SkinChangingHandler.EnumChoices choices = SkinChangingHandler.isPlayersDefaultAlex(Minecraft.getMinecraft().player) ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
+	private static SkinChangingHandler.EnumChoices choices = SkinChangingHandler.wasAlex(Minecraft.getMinecraft().player) ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
 	private float rotation = 0;
 	
 	public GuiSkinCustomizer() {

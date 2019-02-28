@@ -211,7 +211,7 @@ public class RegenConfig {
 			@Config.LangKey("config.regeneration.compat.lccore.radiation_immunity")
 			@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")
 			public boolean immuneToRadiation = true;
-
+			
 			@Config.LangKey("config.regeneration.compat.lccore.superpower_disable")
 			@Config.Comment("If this is true and LCCore is installed, you cannot regenerate while you have a superpower")
 			public boolean superpowerDisable = true;

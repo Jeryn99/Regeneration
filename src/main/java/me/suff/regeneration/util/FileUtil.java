@@ -79,7 +79,7 @@ public class FileUtil {
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
 	
-	private static void doDownloadsOnThread() {
+	public static void doDownloadsOnThread() {
 		AtomicBoolean notDownloaded = new AtomicBoolean(true);
 		new Thread(() -> {
 			while (notDownloaded.get()) {
@@ -92,6 +92,7 @@ public class FileUtil {
 			}
 		}, RegenerationMod.NAME + " Download Daemon").start();
 	}
+	
 	
 	public static void unzipSkinPack(String url) throws IOException {
 		File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
@@ -156,4 +157,5 @@ public class FileUtil {
 		
 		return builder.toString();
 	}
+	
 }

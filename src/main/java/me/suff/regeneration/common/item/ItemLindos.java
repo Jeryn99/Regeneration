@@ -181,7 +181,7 @@ public class ItemLindos extends ItemOverrideBase {
 		if (!worldIn.isRemote) {
 			
 			//If the player is in POST or Regenerating, stop them from drinking it
-			if(getAmount(stack) > 100) {
+			if (getAmount(stack) > 100) {
 				if (cap.getState() == RegenState.POST || cap.getState() == RegenState.REGENERATING || player.isCreative()) {
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
 					return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(handIn));

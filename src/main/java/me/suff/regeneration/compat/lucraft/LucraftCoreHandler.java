@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import static me.suff.regeneration.util.RegenUtil.randFloat;
 
 public class LucraftCoreHandler implements IActingHandler {
-
+	
 	public static void registerEntry() {
 		AbilityBarHandler.registerProvider(new LCCoreBarEntry());
 	}
@@ -52,7 +52,7 @@ public class LucraftCoreHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
-
+	
 	}
 	
 	@Override
@@ -95,10 +95,10 @@ public class LucraftCoreHandler implements IActingHandler {
 			e.setCanceled(flag);
 		}
 	}
-
+	
 	@SubscribeEvent
 	public void onCanRegen(PlayerCanRegenEvent e) {
-		if(RegenConfig.modIntegrations.lucraftcore.superpowerDisable && SuperpowerHandler.hasSuperpower(e.getEntityPlayer()))
+		if (RegenConfig.modIntegrations.lucraftcore.superpowerDisable && SuperpowerHandler.hasSuperpower(e.getEntityPlayer()))
 			e.setCanceled(true);
 	}
 }

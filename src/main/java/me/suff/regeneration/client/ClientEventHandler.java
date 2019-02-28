@@ -100,7 +100,7 @@ public class ClientEventHandler {
 		SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
 		
 		if (skin != null) {
-			SkinChangingHandler.setPlayerTexture(player, skin.getTextureLocation());
+			SkinChangingHandler.setPlayerSkin(player, skin.getSkinTextureLocation());
 		}
 		
 		float factor = 0.2F;

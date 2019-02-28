@@ -3,11 +3,9 @@ package me.suff.regeneration.proxy;
 import me.suff.regeneration.client.RegenKeyBinds;
 import me.suff.regeneration.client.gui.InventoryTabRegeneration;
 import me.suff.regeneration.client.rendering.LayerFuzz;
-import me.suff.regeneration.client.rendering.LayerItemReplace;
 import me.suff.regeneration.client.rendering.LayerRegeneration;
 import me.suff.regeneration.client.rendering.entity.RenderItemOverride;
 import me.suff.regeneration.client.rendering.entity.RenderLindos;
-import me.suff.regeneration.client.rendering.model.ModelArmorOverride;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.common.entity.EntityItemOverride;
 import me.suff.regeneration.common.entity.EntityLindos;
@@ -18,15 +16,10 @@ import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
-import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -68,27 +61,10 @@ public class ClientProxy extends CommonProxy {
 		// Render layers ===========================================
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		for (RenderPlayer renderPlayer : skinMap.values()) {
-			
-			Iterator<? extends LayerRenderer> ita = renderPlayer.layerRenderers.iterator();
-			if (ita.hasNext()) { //TODO THIS DOESNT WORK AS INTENDED, LOOK INTO IT TOMORROW
-				LayerRenderer layer = ita.next();
-				
-				if (layer instanceof LayerArmorBase) { //Armor Layer
-					LayerArmorBase l = (LayerArmorBase) layer;
-					ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, l, new ModelArmorOverride(), 1);
-					ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, l, new ModelArmorOverride(), 2);
-				}
-				
-				if (layer instanceof LayerHeldItem) {
-					ita.remove();
-					renderPlayer.addLayer(new LayerItemReplace(renderPlayer)); // Add new item layer
-				}
-				
-				renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
-				renderPlayer.addLayer(new LayerFuzz(renderPlayer));
-			}
-			
+			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
+			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
 		}
+		
 		
 		try {
 			FileUtil.createDefaultFolders();

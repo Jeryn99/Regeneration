@@ -210,7 +210,9 @@ public class CapabilityRegeneration implements IRegeneration {
 		setEncodedSkin(nbt.getByteArray("encoded_skin"));
 		
 		if (nbt.hasKey("stateManager"))
-			stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
+			if (stateManager != null) {
+				stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
+			}
 	}
 	
 	
@@ -358,7 +360,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void setDnaActive(boolean alive) {
 		traitActive = alive;
 	}
-
+	
 	@Override
 	public IRegenerationStateManager getStateManager() {
 		return stateManager;
@@ -439,6 +441,11 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		@Override
 		public boolean onKilled(DamageSource source) {
+			
+			if (source == DamageSource.IN_WALL || source == DamageSource.CRAMMING) {
+				return false;
+			}
+			
 			if (state == RegenState.ALIVE) {
 				if (!canRegenerate()) // that's too bad :(
 					return false;
@@ -554,7 +561,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1);
-			
+			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
 			if (RegenConfig.loseRegensOnDeath) {
 				extractRegeneration(getRegenerationsLeft());
 			}

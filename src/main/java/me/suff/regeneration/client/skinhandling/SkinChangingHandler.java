@@ -53,7 +53,7 @@ public class SkinChangingHandler {
 	public static final File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-	public static final Logger SKIN_LOG = LogManager.getLogger("Regeneration Skin Handler"); //TODO move to debugger
+	public static final Logger SKIN_LOG = LogManager.getLogger("Regeneration Skin Handler");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	public static final Map<UUID, SkinInfo.SkinType> TYPE_BACKUPS = new HashMap<>();
 	private static final Random RAND = new Random();
@@ -109,7 +109,7 @@ public class SkinChangingHandler {
 		
 		if (RegenConfig.skins.changeMySkin) {
 			boolean isAlex = CapabilityRegeneration.getForPlayer(player).getPreferredModel().isAlex();
-			File skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
+			File skin = SkinChangingHandler.getRandomSkin(random, isAlex);
 			RegenerationMod.LOG.info(skin.getName() + " was choosen");
 			BufferedImage image = ImageIO.read(skin);
 			byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
@@ -125,7 +125,7 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	private static File chooseRandomSkin(Random rand, boolean isAlex) throws IOException {
+	private static File getRandomSkin(Random rand, boolean isAlex) throws IOException {
 		File skins;
 		if (isAlex) {
 			skins = SKIN_DIRECTORY_ALEX;
@@ -134,7 +134,7 @@ public class SkinChangingHandler {
 		}
 		Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		if (folderFiles.isEmpty()) {
-			createDefaultImages();
+			FileUtil.doDownloadsOnThread();
 			folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		}
 		
@@ -149,26 +149,27 @@ public class SkinChangingHandler {
 	 * @return SkinInfo - A class that contains the SkinType and the resource location to use as a skin
 	 * @throws IOException
 	 */
-	private static SkinInfo getSkin(AbstractClientPlayer player, IRegeneration data) throws IOException {
+	private static SkinInfo getSkinInfo(AbstractClientPlayer player, IRegeneration data) throws IOException {
 		byte[] encodedSkin = CapabilityRegeneration.getForPlayer(player).getEncodedSkin();
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 		
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
-			resourceLocation = retrieveSkinFromMojang(player);
+			resourceLocation = getMojangSkin(player);
 			
-			if (isPlayersDefaultAlex(player)) {
+			if (wasAlex(player)) {
 				skinType = SkinInfo.SkinType.ALEX;
 			} else {
 				skinType = SkinInfo.SkinType.STEVE;
 			}
 		} else {
 			BufferedImage bufferedImage = toImage(player, encodedSkin);
+			bufferedImage = ImageFixer.convertSkinTo64x64(bufferedImage);
 			
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
-				ResourceLocation tempLocation = new ResourceLocation(player.getName()+"_skin_"+System.currentTimeMillis());
+				ResourceLocation tempLocation = new ResourceLocation(player.getName() + "_skin_" + System.currentTimeMillis());
 				Minecraft.getMinecraft().getTextureManager().loadTexture(tempLocation, new DynamicTexture(bufferedImage));
 				resourceLocation = tempLocation;
 				skinType = CapabilityRegeneration.getForPlayer(player).getSkinType();
@@ -177,7 +178,7 @@ public class SkinChangingHandler {
 		return new SkinInfo(resourceLocation, skinType);
 	}
 	
-	public static boolean isPlayersDefaultAlex(EntityPlayer player) {
+	public static boolean wasAlex(EntityPlayer player) {
 		if (TYPE_BACKUPS.containsKey(player.getUniqueID())) {
 			return TYPE_BACKUPS.get(player.getUniqueID()).getMojangType().equals("slim");
 		}
@@ -191,7 +192,7 @@ public class SkinChangingHandler {
 	 * @return ResourceLocation from Mojang
 	 * @throws IOException
 	 */
-	private static ResourceLocation retrieveSkinFromMojang(AbstractClientPlayer player) throws IOException {
+	private static ResourceLocation getMojangSkin(AbstractClientPlayer player) throws IOException {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		Map map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
 		if (map.isEmpty()) {
@@ -201,6 +202,7 @@ public class SkinChangingHandler {
 			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
 			
 			BufferedImage image = ImageIO.read(new URL(profile.getUrl()));
+			image = ImageFixer.convertSkinTo64x64(image);
 			
 			if (image == null) {
 				return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
@@ -208,7 +210,7 @@ public class SkinChangingHandler {
 			
 			File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
 			ImageIO.write(image, "png", file);
-			ResourceLocation tempLocation = new ResourceLocation(player.getName()+"_skin_"+System.currentTimeMillis());
+			ResourceLocation tempLocation = new ResourceLocation(player.getName() + "_skin_" + System.currentTimeMillis());
 			minecraft.getTextureManager().loadTexture(tempLocation, new DynamicTexture(image));
 			return tempLocation;
 		}
@@ -217,30 +219,11 @@ public class SkinChangingHandler {
 	}
 	
 	/**
-	 * Downloads a set of default images to their correct directories
-	 *
-	 * @throws IOException
-	 */
-	public static void createDefaultImages() throws IOException {
-		for (DefaultSkins value : DefaultSkins.values()) {
-			File dummy;
-			if (value.isAlexDir()) {
-				dummy = SKIN_DIRECTORY_ALEX;
-			} else {
-				dummy = SKIN_DIRECTORY_STEVE;
-			}
-			
-			FileUtil.downloadImage(new URL(value.getURL()), dummy, value.name().toLowerCase());
-		}
-	}
-	
-	/**
 	 * Changes the ResourceLocation of a Players skin
-	 *
-	 * @param player  - Player instance involved
+	 *  @param player  - Player instance involved
 	 * @param texture - ResourceLocation of intended texture
 	 */
-	public static void setPlayerTexture(AbstractClientPlayer player, ResourceLocation texture) {
+	public static void setPlayerSkin(AbstractClientPlayer player, ResourceLocation texture) {
 		if (player.getLocationSkin() == texture || texture == null) {
 			if (texture == null) {
 				RegenerationMod.LOG.error("Skin data for " + player.getName() + "was null");
@@ -256,7 +239,7 @@ public class SkinChangingHandler {
 			ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
 	}
 	
-	public static void setPlayerSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
+	public static void setSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
 		if (skinType.getMojangType().equals(player.getSkinType())) return;
 		if (!TYPE_BACKUPS.containsKey(player.getUniqueID())) {
 			TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
@@ -286,8 +269,14 @@ public class SkinChangingHandler {
 			setSkinFromData(player, cap);
 		} else {
 			SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
-			setPlayerTexture(player, skin.getTextureLocation());
-			setPlayerSkinType(player, skin.getSkintype());
+			if (skin != null) {
+				if (skin.getSkinTextureLocation() == null) {
+					setPlayerSkin(player, skin.getSkinTextureLocation());
+				}
+				if (skin != null) {
+					setSkinType(player, skin.getSkintype());
+				}
+			}
 		}
 	}
 	
@@ -321,16 +310,16 @@ public class SkinChangingHandler {
 	private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap) {
 		SkinInfo skinInfo = null;
 		try {
-			skinInfo = SkinChangingHandler.getSkin(player, cap);
+			skinInfo = SkinChangingHandler.getSkinInfo(player, cap);
 		} catch (IOException e1) {
 			RegenerationMod.LOG.error("Error creating skin for: " + player.getName() + " " + e1.getMessage());
 		}
 		if (skinInfo != null) {
-			SkinChangingHandler.setPlayerTexture(player, skinInfo.getTextureLocation());
+			SkinChangingHandler.setPlayerSkin(player, skinInfo.getSkinTextureLocation());
 		}
 		
 		if (skinInfo != null) {
-			SkinChangingHandler.setPlayerSkinType(player, skinInfo.getSkintype());
+			SkinChangingHandler.setSkinType(player, skinInfo.getSkintype());
 		}
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 	}
