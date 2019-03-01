@@ -45,7 +45,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -58,8 +57,8 @@ public class SkinChangingHandler {
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	public static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
-	private static final Random RAND = new Random();
 	public static final Map<UUID, SkinInfo.SkinType> TYPE_BACKUPS = new HashMap<>();
+	private static final Random RAND = new Random();
 	
 	/**
 	 * Converts a buffered image to Pixel data
@@ -106,26 +105,36 @@ public class SkinChangingHandler {
 	 * @param player - Player instance, used to check UUID to ensure it is the client player being involved in the scenario
 	 * @throws IOException
 	 */
-	public static void sendSkinUpdate(Random random, EntityPlayer player) throws IOException {
+	public static void sendSkinUpdate(Random random, EntityPlayer player) {
 		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID())
 			return;
 		
-		if (RegenConfig.CONFIG.changeMySkin.get()) {
-			boolean isAlex = CapabilityRegeneration.getForPlayer(player).getPreferredModel().isAlex();
-			File skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
-			RegenerationMod.LOG.info(skin.getName() + " was choosen");
-			BufferedImage image = ImageIO.read(skin);
-			byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
-			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
-			if (pixelData.length >= 32767) {
-				ClientUtil.sendSkinResetPacket();
-				RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
+		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+			if (RegenConfig.CONFIG.changeMySkin.get()) {
+				boolean isAlex = cap.getPreferredModel().isAlex();
+				
+				File skin = null;
+				BufferedImage image = null;
+				try {
+					skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
+					RegenerationMod.LOG.info(skin.getName() + " was choosen");
+					image = ImageIO.read(skin);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
+				cap.setEncodedSkin(pixelData);
+				if (pixelData.length >= 32767) {
+					ClientUtil.sendSkinResetPacket();
+					RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
+				} else {
+					NetworkHandler.sendToServer(new MessageUpdateSkin(new PacketBuffer(Unpooled.wrappedBuffer(pixelData)), isAlex));
+				}
 			} else {
-				NetworkHandler.sendToServer(new MessageUpdateSkin(new PacketBuffer(Unpooled.wrappedBuffer(pixelData)), isAlex));
+				ClientUtil.sendSkinResetPacket();
 			}
-		} else {
-			ClientUtil.sendSkinResetPacket();
-		}
+		});
 	}
 	
 	private static File chooseRandomSkin(Random rand, boolean isAlex) throws IOException {
@@ -152,7 +161,7 @@ public class SkinChangingHandler {
 	 * @throws IOException
 	 */
 	private static SkinInfo getSkinInfo(AbstractClientPlayer player, IRegeneration data) throws IOException {
-		byte[] encodedSkin = CapabilityRegeneration.getForPlayer(player).getEncodedSkin();
+		byte[] encodedSkin = data.getEncodedSkin();
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 		
@@ -175,7 +184,7 @@ public class SkinChangingHandler {
 				ResourceLocation tempLocation = new ResourceLocation(player.getName() + "_skin_" + System.currentTimeMillis());
 				Minecraft.getInstance().getTextureManager().loadTexture(tempLocation, new DynamicTexture(NativeImage.read(new FileInputStream(file))));
 				resourceLocation = tempLocation;
-				skinType = CapabilityRegeneration.getForPlayer(player).getSkinType();
+				skinType = data.getSkinType();
 			}
 		}
 		return new SkinInfo(resourceLocation, skinType);
@@ -257,46 +266,45 @@ public class SkinChangingHandler {
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		if (player.ticksExisted == 20) {
-			SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());
-			if (oldSkinInfo != null) {
-				Minecraft.getInstance().getTextureManager().deleteTexture(oldSkinInfo.getSkinTextureLocation());
-			}
-			PLAYER_SKINS.remove(player.getUniqueID());
-		}
-		
-		if (cap.getState() == RegenState.REGENERATING) {
-			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
-		} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
-			setSkinFromData(player, cap);
-		} else {
-			SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
-			
-			if(skin == null){
-				return;
+		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+			if (player.ticksExisted == 20) {
+				SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());
+				if (oldSkinInfo != null) {
+					Minecraft.getInstance().getTextureManager().deleteTexture(oldSkinInfo.getSkinTextureLocation());
+				}
+				PLAYER_SKINS.remove(player.getUniqueID());
 			}
 			
-			if(skin.getSkinTextureLocation() != null) {
-				setPlayerSkin(player, skin.getSkinTextureLocation());
+			if (cap.getState() == RegenState.REGENERATING) {
+				cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
+			} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
+				setSkinFromData(player, cap);
+			} else {
+				SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
+				
+				if (skin == null) {
+					return;
+				}
+				
+				if (skin.getSkinTextureLocation() != null) {
+					setPlayerSkin(player, skin.getSkinTextureLocation());
+				}
+				
+				if (skin.getSkintype() != null) {
+					setPlayerSkinType(player, skin.getSkintype());
+				}
 			}
-			
-			if(skin.getSkintype() != null) {
-				setPlayerSkinType(player, skin.getSkintype());
-			}
-		}
+		});
 	}
 	
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Post e) {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		if (cap.getState() == RegenState.REGENERATING) {
-			cap.getType().getRenderer().onRenderRegeneratingPlayerPost(cap.getType(), e, cap);
-		}
-		
+		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+			if (cap.getState() == RegenState.REGENERATING) {
+				cap.getType().getRenderer().onRenderRegeneratingPlayerPost(cap.getType(), e, cap);
+			}
+		});
 	}
 	
 	@SubscribeEvent

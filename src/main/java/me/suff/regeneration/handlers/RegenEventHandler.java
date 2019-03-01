@@ -12,6 +12,7 @@ import me.suff.regeneration.util.RegenState;
 import me.suff.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.INBTBase;
@@ -39,20 +40,17 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
 import static me.suff.regeneration.RegenerationMod.DEBUGGER;
-import static me.suff.regeneration.RegenerationMod.LOG;
 
 /**
  * Created by Sub
@@ -64,89 +62,58 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
-		if (event.getEntityLiving() instanceof EntityPlayer)
-			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).tick();
-	}
-	
-	public static class WHYGOD {
-		@SubscribeEvent
-		public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-			if (event.getObject() instanceof EntityPlayer) {
-				LOG.error("ATTTACHING ON " + FMLEnvironment.dist);
-				event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new ICapabilitySerializable<NBTTagCompound>() {
-					final CapabilityRegeneration regen = new CapabilityRegeneration((EntityPlayer) event.getObject());
-					
-					final LazyOptional<IRegeneration> regenInstance = LazyOptional.of(() -> regen);
-					
-					@Override
-					public NBTTagCompound serializeNBT() {
-						return regen.serializeNBT();
-					}
-					
-					@Override
-					public void deserializeNBT(NBTTagCompound nbt) {
-						regen.deserializeNBT(nbt);
-					}
-					
-					@Nullable
-					@SuppressWarnings("unchecked")
-					@Override
-					public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-						if (capability == CapabilityRegeneration.CAPABILITY)
-							return (LazyOptional<T>) regenInstance;
-						return LazyOptional.empty();
-					}
-				});
-			}
-		}
+		EntityLivingBase living = event.getEntityLiving();
+		if (living instanceof EntityPlayer && living.isAlive())
+			CapabilityRegeneration.getForPlayer((EntityPlayer) living).ifPresent(IRegeneration::tick);
 	}
 	
 	@SubscribeEvent
 	public void onPlayerClone(PlayerEvent.Clone event) {
 		IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
 		
-		IRegeneration oldCap = CapabilityRegeneration.getForPlayer(event.getOriginal());
-		IRegeneration newCap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer());
+		IRegeneration oldCap = CapabilityRegeneration.getForPlayer(event.getOriginal()).orElse(null);
+		IRegeneration newCap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).orElse(null);
 		
 		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, oldCap, null);
 		storage.readNBT(CapabilityRegeneration.CAPABILITY, newCap, null, nbt);
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
+		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).ifPresent(IRegeneration::sync);
 	}
 	
 	@SubscribeEvent
 	public void playerTracking(PlayerEvent.StartTracking event) {
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
+		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).ifPresent(IRegeneration::sync);
 	}
 	
 	@SubscribeEvent
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		if (!RegenConfig.CONFIG.firstStartGiftOnly.get())
-			CapabilityRegeneration.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.CONFIG.freeRegenerations.get());
-		
-		CapabilityRegeneration.getForPlayer(event.getPlayer()).synchronise();
+			CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent((cap) -> {
+				cap.receiveRegenerations(RegenConfig.CONFIG.freeRegenerations.get());
+			});
+		CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent(IRegeneration::sync);
 	}
 	
 	@SubscribeEvent
 	public void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		CapabilityRegeneration.getForPlayer(event.getPlayer()).synchronise();
+		CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent(IRegeneration::sync);
 	}
 	
 	@SubscribeEvent
 	public void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
-			CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntityLiving()).synchronise();
+			CapabilityRegeneration.getForPlayer((EntityPlayer) e.getEntityLiving()).ifPresent(IRegeneration::sync);
 		}
 	}
-	
-	// ============ USER EVENTS ==========
 	
 	@SubscribeEvent
 	public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
 		if (e.getEntityPlayer().world.isRemote)
 			return;
-		CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).getStateManager().onPunchBlock(e);
+		CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).ifPresent((cap) -> cap.getStateManager().onPunchBlock(e));
+		
 	}
 	
+	// ============ USER EVENTS ==========
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onHurt(LivingDamageEvent event) {
@@ -154,7 +121,9 @@ public class RegenEventHandler {
 		
 		if (trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {
 			EntityPlayer player = (EntityPlayer) trueSource;
-			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event);
+			CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+				cap.getStateManager().onPunchEntity(event);
+			});
 			return;
 		}
 		
@@ -162,43 +131,45 @@ public class RegenEventHandler {
 			return;
 		
 		EntityPlayer player = (EntityPlayer) event.getEntity();
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
-		
-		if (cap.getState() == RegenState.POST && player.posY > 0) {
-			if (event.getSource() == DamageSource.FALL) {
-				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
-				if (event.getAmount() > 8.0F) {
-					if (player.world.getGameRules().getBoolean("mobGriefing")) {
-						RegenUtil.genCrater(player.world, player.getPosition(), 3);
+		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+			cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
+			if (cap.getState() == RegenState.POST && player.posY > 0) {
+				if (event.getSource() == DamageSource.FALL) {
+					PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
+					if (event.getAmount() > 8.0F) {
+						if (player.world.getGameRules().getBoolean("mobGriefing")) {
+							RegenUtil.genCrater(player.world, player.getPosition(), 3);
+						}
+						event.setAmount(0.5F);
+						PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.fall_dmg"), true);
+						return;
 					}
+				} else {
 					event.setAmount(0.5F);
-					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.fall_dmg"), true);
-					return;
+					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.reduced_dmg"), true);
 				}
-			} else {
-				event.setAmount(0.5F);
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.reduced_dmg"), true);
+				return;
 			}
-			return;
-		}
+			
+			if (cap.getState() == RegenState.REGENERATING && RegenConfig.CONFIG.regenFireImmune.get() && event.getSource().isFireDamage()) {
+				event.setCanceled(true); // TODO still "hurts" the client view
+			} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
+				boolean notDead = cap.getStateManager().onKilled(event.getSource());
+				event.setCanceled(notDead);
+			}
+			
+		});
 		
-		if (cap.getState() == RegenState.REGENERATING && RegenConfig.CONFIG.regenFireImmune.get() && event.getSource().isFireDamage()) {
-			event.setCanceled(true); // TODO still "hurts" the client view
-		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
-			boolean notDead = cap.getStateManager().onKilled(event.getSource());
-			event.setCanceled(notDead);
-		}
 	}
-	
 	
 	@SubscribeEvent
 	public void onKnockback(LivingKnockBackEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
-			if (CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).getState() == RegenState.REGENERATING) {
-				event.setCanceled(true);
-			}
+			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).ifPresent((cap) -> {
+				if (cap.getState() == RegenState.REGENERATING) {
+					event.setCanceled(true);
+				}
+			});
 		}
 	}
 	
@@ -211,7 +182,7 @@ public class RegenEventHandler {
 		NBTTagCompound nbt = event.getPlayer().getEntityData();
 		INBTBase persist = nbt.getTag(EntityPlayer.PERSISTED_NBT_TAG);
 		if (!nbt.getBoolean("loggedInBefore"))
-			CapabilityRegeneration.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.CONFIG.freeRegenerations.get());
+			CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent((cap) -> cap.receiveRegenerations(RegenConfig.CONFIG.freeRegenerations.get()));
 		nbt.setBoolean("loggedInBefore", true);
 		nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
 	}
@@ -240,6 +211,38 @@ public class RegenEventHandler {
 		MinecraftForge.EVENT_BUS.unregister(DEBUGGER);
 		DEBUGGER.dispose();
 		DEBUGGER = null;
+	}
+	
+	public static class WHYGOD {
+		@SubscribeEvent
+		public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+			if (event.getObject() instanceof EntityPlayer) {
+				event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new ICapabilitySerializable<NBTTagCompound>() {
+					final CapabilityRegeneration regen = new CapabilityRegeneration((EntityPlayer) event.getObject());
+					
+					final LazyOptional<IRegeneration> regenInstance = LazyOptional.of(() -> regen);
+					
+					@Override
+					public NBTTagCompound serializeNBT() {
+						return regen.serializeNBT();
+					}
+					
+					@Override
+					public void deserializeNBT(NBTTagCompound nbt) {
+						regen.deserializeNBT(nbt);
+					}
+					
+					@Nullable
+					@SuppressWarnings("unchecked")
+					@Override
+					public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+						if (capability == CapabilityRegeneration.CAPABILITY)
+							return (LazyOptional<T>) regenInstance;
+						return LazyOptional.empty();
+					}
+				});
+			}
+		}
 	}
 	
 	

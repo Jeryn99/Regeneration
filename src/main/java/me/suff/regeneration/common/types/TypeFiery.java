@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * Created by Sub
@@ -18,7 +19,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	private long animationTicks;
 	
 	@Override
-	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
+	public void onUpdateMidRegen(EntityPlayer player, LazyOptional<IRegeneration> capability) {
 		animationTicks++;
 		
 		player.extinguish();
@@ -46,7 +47,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	}
 	
 	@Override
-	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
+	public void onFinishRegeneration(EntityPlayer player, LazyOptional<IRegeneration> capability) {
 		PlayerUtil.setPerspective((EntityPlayerMP) player, false, true);
 		animationTicks = 0;
 	}

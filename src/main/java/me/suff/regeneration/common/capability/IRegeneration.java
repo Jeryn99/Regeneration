@@ -32,7 +32,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	void tick();
 	
-	void synchronise();
+	void sync();
 	
 	NBTTagCompound getStyle();
 	

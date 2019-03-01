@@ -1,6 +1,5 @@
 package me.suff.regeneration.util;
 
-import me.suff.regeneration.RegenerationMod;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -9,11 +8,9 @@ import net.minecraft.client.renderer.entity.model.ModelBase;
 import net.minecraft.client.renderer.entity.model.ModelBiped;
 import net.minecraft.client.renderer.entity.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.model.ModelRenderer;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -86,6 +83,62 @@ public class LimbManipulationUtil {
 			this.secondaryRendererField = secondaryRendererField;
 		}
 	}
+	
+	@SubscribeEvent
+	public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
+			return;
+		
+		RenderPlayer renderer = event.getRenderer();
+		ModelBase playerModel = renderer.getMainModel();
+		List<LayerRenderer<AbstractClientPlayer>> layerList = renderer.layerRenderers;
+		
+		if (playerModel != null && playerModel.boxList != null) {
+			for (ModelRenderer modelRenderer : playerModel.boxList) {
+				if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+					LimbManipulationUtil.CustomModelRenderer customMr = (LimbManipulationUtil.CustomModelRenderer) modelRenderer;
+					customMr.reset();
+				}
+			}
+		}
+		
+		try {
+			for (LayerRenderer<?> layer : layerList) {
+				for (Field field : layer.getClass().getDeclaredFields()) {
+					field.setAccessible(true);
+					
+					// Model Biped
+					if (field.getType() == ModelBiped.class) {
+						ModelBiped biped = (ModelBiped) field.get(layer);
+						if (biped != null && biped.boxList != null) {
+							for (ModelRenderer modelRenderer : biped.boxList) {
+								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+									LimbManipulationUtil.CustomModelRenderer customMr = (LimbManipulationUtil.CustomModelRenderer) modelRenderer;
+									customMr.reset();
+								}
+							}
+						}
+					}
+					
+					// Model Player
+					if (field.getType() == ModelPlayer.class) {
+						ModelPlayer modelPlayer = (ModelPlayer) field.get(layer);
+						if (modelPlayer != null && modelPlayer.boxList != null) {
+							for (ModelRenderer modelRenderer : modelPlayer.boxList) {
+								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+									LimbManipulationUtil.CustomModelRenderer customMr = (LimbManipulationUtil.CustomModelRenderer) modelRenderer;
+									customMr.reset();
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public static class LimbManipulator {
 		

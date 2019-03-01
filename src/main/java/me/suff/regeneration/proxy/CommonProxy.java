@@ -9,7 +9,6 @@ import me.suff.regeneration.common.dna.DnaHandler;
 public class CommonProxy implements IProxy {
 	
 	
-	
 	@Override
 	public void postInit() {
 		DnaHandler.init();

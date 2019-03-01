@@ -1,6 +1,5 @@
 package me.suff.regeneration.handlers;
 
-import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.common.entity.EntityItemOverride;
 import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.common.item.ItemFobWatch;

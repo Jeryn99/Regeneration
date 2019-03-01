@@ -14,8 +14,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,23 +68,25 @@ public class DnaHandler {
 	
 	@SubscribeEvent
 	public static void onXpPickup(PlayerPickupXpEvent e) {
-		IRegeneration data = CapabilityRegeneration.getForPlayer(e.getEntityPlayer());
-		IDna dna = DnaHandler.getDnaEntry(data.getDnaType());
-		if (dna.getRegistryName().equals(DnaHandler.DNA_DUMB.getRegistryName()) && data.isDnaActive()) {
-			e.getOrb().xpValue *= 0.5;
-		}
+		CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).ifPresent((data) -> {
+			IDna dna = DnaHandler.getDnaEntry(data.getDnaType());
+			if (dna.getRegistryName().equals(DnaHandler.DNA_DUMB.getRegistryName()) && data.isDnaActive()) {
+				e.getOrb().xpValue *= 0.5;
+			}
+		});
 	}
 	
 	@SubscribeEvent
 	public static void onJump(LivingEvent.LivingJumpEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-			if (player.world.isRemote) return;
-			if (data.isDnaActive() && data.getDnaType().equals(DNA_ATHLETE.getRegistryName())) {
-				player.motionY += 0.1D;
-				player.velocityChanged = true;
-			}
+			CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+				if (player.world.isRemote) return;
+				if (cap.isDnaActive() && cap.getDnaType().equals(DNA_ATHLETE.getRegistryName())) {
+					player.motionY += 0.1D;
+					player.velocityChanged = true;
+				}
+			});
 		}
 	}
 	

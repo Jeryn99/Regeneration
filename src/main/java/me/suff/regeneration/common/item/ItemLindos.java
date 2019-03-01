@@ -11,7 +11,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -112,22 +111,25 @@ public class ItemLindos extends ItemOverrideBase {
 		if (!worldIn.isRemote) {
 			//Entiies around
 			worldIn.getEntitiesWithinAABB(EntityPlayer.class, entityIn.getBoundingBox().expand(10, 10, 10)).forEach(player -> {
-				IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) entityIn);
-				if (data.getState() == RegenState.REGENERATING) {
-					if (worldIn.rand.nextInt(100) > 50 && isSelected) {
-						setAmount(stack, getAmount(stack) + 1);
+				CapabilityRegeneration.getForPlayer((EntityPlayer) entityIn).ifPresent((data) -> {
+					if (data.getState() == RegenState.REGENERATING) {
+						if (worldIn.rand.nextInt(100) > 50 && isSelected) {
+							setAmount(stack, getAmount(stack) + 1);
+						}
 					}
-				}
+				});
 			});
 			
 			//Player glowing
 			if (entityIn instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer) entityIn;
-				if (isSelected) {
-					if (CapabilityRegeneration.getForPlayer(player).areHandsGlowing() && player.ticksExisted % 40 == 0) {
-						setAmount(stack, getAmount(stack) + 2);
+				CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+					if (isSelected) {
+						if (data.areHandsGlowing() && player.ticksExisted % 40 == 0) {
+							setAmount(stack, getAmount(stack) + 2);
+						}
 					}
-				}
+				});
 			}
 		}
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
@@ -170,7 +172,7 @@ public class ItemLindos extends ItemOverrideBase {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn) {
 		ItemStack stack = player.getHeldItem(handIn);
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player).orElse(null);
 		if (!worldIn.isRemote) {
 			
 			//If the player is in POST or Regenerating, stop them from drinking it

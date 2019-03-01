@@ -1,16 +1,9 @@
 package me.suff.regeneration.client;
 
 import me.suff.regeneration.RegenerationMod;
-import me.suff.regeneration.common.capability.CapabilityRegeneration;
-import me.suff.regeneration.network.MessageTriggerRegeneration;
-import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.EnumCompatModids;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import org.lwjgl.glfw.GLFW;
@@ -33,18 +26,6 @@ public class RegenKeyBinds {
 		
 		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", GLFW.GLFW_KEY_L, RegenerationMod.NAME);
 		ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
-	}
-	
-	
-	@SubscribeEvent
-	public static void keyInput(InputUpdateEvent e) {
-		EntityPlayer player = Minecraft.getInstance().player;
-		if (player == null || EnumCompatModids.LCCORE.isLoaded())
-			return;
-		
-		if (REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration());
-		}
 	}
 	
 	/**

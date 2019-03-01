@@ -30,12 +30,12 @@ public class NetworkHandler {
 		INSTANCE.registerMessage(id++, MessageSetPerspective.class, MessageSetPerspective::encode, MessageSetPerspective::decode, MessageSetPerspective.Handler::handle);
 		INSTANCE.registerMessage(id++, MessageRegenStateEvent.class, MessageRegenStateEvent::encode, MessageRegenStateEvent::decode, MessageRegenStateEvent.Handler::handle);
 		INSTANCE.registerMessage(id++, MessageTriggerRegeneration.class, MessageTriggerRegeneration::encode, MessageTriggerRegeneration::decode, MessageTriggerRegeneration.Handler::handle);
-		INSTANCE.registerMessage(id++,MessageSynchronisationRequest.class, MessageSynchronisationRequest::encode, MessageSynchronisationRequest::decode, MessageSynchronisationRequest.Handler::handle);
-		INSTANCE.registerMessage(id++,MessageSynchroniseRegeneration.class, MessageSynchroniseRegeneration::encode, MessageSynchroniseRegeneration::decode, MessageSynchroniseRegeneration.Handler::handle);
-		INSTANCE.registerMessage(id++,MessageUpdateSkin.class, MessageUpdateSkin::encode, MessageUpdateSkin::decode, MessageUpdateSkin.Handler::handle);
-		INSTANCE.registerMessage(id++,MessageRemovePlayer.class, MessageRemovePlayer::encode, MessageRemovePlayer::decode, MessageRemovePlayer.Handler::handle);
-		INSTANCE.registerMessage(id++,MessagePlayRegenerationSound.class, MessagePlayRegenerationSound::encode, MessagePlayRegenerationSound::decode, MessagePlayRegenerationSound.Handler::handle);
-		INSTANCE.registerMessage(id++,MessageUpdateModel.class, MessageUpdateModel::encode, MessageUpdateModel::decode, MessageUpdateModel.Handler::handle);
+		INSTANCE.registerMessage(id++, MessageSynchronisationRequest.class, MessageSynchronisationRequest::encode, MessageSynchronisationRequest::decode, MessageSynchronisationRequest.Handler::handle);
+		INSTANCE.registerMessage(id++, MessageSynchroniseRegeneration.class, MessageSynchroniseRegeneration::encode, MessageSynchroniseRegeneration::decode, MessageSynchroniseRegeneration.Handler::handle);
+		INSTANCE.registerMessage(id++, MessageUpdateSkin.class, MessageUpdateSkin::encode, MessageUpdateSkin::decode, MessageUpdateSkin.Handler::handle);
+		INSTANCE.registerMessage(id++, MessageRemovePlayer.class, MessageRemovePlayer::encode, MessageRemovePlayer::decode, MessageRemovePlayer.Handler::handle);
+		INSTANCE.registerMessage(id++, MessagePlayRegenerationSound.class, MessagePlayRegenerationSound::encode, MessagePlayRegenerationSound::decode, MessagePlayRegenerationSound.Handler::handle);
+		INSTANCE.registerMessage(id++, MessageUpdateModel.class, MessageUpdateModel::encode, MessageUpdateModel::decode, MessageUpdateModel.Handler::handle);
 	}
 	
 	/**

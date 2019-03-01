@@ -4,9 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.suff.regeneration.client.ClientEventHandler;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
-import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.dna.DnaHandler;
 import me.suff.regeneration.debugger.IRegenDebugger;
 import me.suff.regeneration.handlers.ActingForwarder;
 import me.suff.regeneration.handlers.RegenEventHandler;
@@ -14,6 +12,7 @@ import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.proxy.ClientProxy;
 import me.suff.regeneration.proxy.CommonProxy;
 import me.suff.regeneration.proxy.IProxy;
+import me.suff.regeneration.util.LimbManipulationUtil;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.util.EnumFacing;
@@ -73,7 +72,8 @@ public class RegenerationMod {
 	
 	private void doClientStuff(final FMLClientSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
-		//MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
+		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
+		MinecraftForge.EVENT_BUS.register(new LimbManipulationUtil());
 	}
 	
 	private void setup(final FMLCommonSetupEvent event) {

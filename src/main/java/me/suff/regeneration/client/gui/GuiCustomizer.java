@@ -3,7 +3,6 @@ package me.suff.regeneration.client.gui;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
-import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.dna.DnaHandler;
 import me.suff.regeneration.network.MessageSaveStyle;
 import me.suff.regeneration.network.NetworkHandler;
@@ -45,9 +44,10 @@ public class GuiCustomizer extends GuiContainer {
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
 		
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(mc.player);
-		initialPrimary = cap.getPrimaryColor();
-		initialSecondary = cap.getSecondaryColor();
+		CapabilityRegeneration.getForPlayer(mc.player).ifPresent((data) -> {
+			initialPrimary = data.getPrimaryColor();
+			initialSecondary = data.getSecondaryColor();
+		});
 		
 		float primaryRed = (float) initialPrimary.x, primaryGreen = (float) initialPrimary.y, primaryBlue = (float) initialPrimary.z;
 		float secondaryRed = (float) initialSecondary.x, secondaryGreen = (float) initialSecondary.y, secondaryBlue = (float) initialSecondary.z;
@@ -149,24 +149,26 @@ public class GuiCustomizer extends GuiContainer {
 		Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue()),
 				secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue());
 		
-		String str = new TextComponentTranslation("regeneration.gui.primary").getFormattedText();
-		int length = mc.fontRenderer.getStringWidth(str);
-		fontRenderer.drawString(str, cx + 45 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(primaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
-		
-		str = new TextComponentTranslation("regeneration.gui.secondary").getFormattedText();
-		length = mc.fontRenderer.getStringWidth(str);
-		fontRenderer.drawString(str, cx + 131 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(secondaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
-		
-		if (RegenConfig.CONFIG.infiniteRegeneration.get())
-			str = new TextComponentTranslation("regeneration.gui.infinite_regenerations").getFormattedText(); // TODO this should be optimized
-		else
-			str = new TextComponentTranslation("regeneration.gui.remaining_regens.status").getFormattedText() + " " + CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player).getRegenerationsLeft();
-		
-		length = mc.fontRenderer.getStringWidth(str);
-		fontRenderer.drawString(str, cx + 86 - length / 2, cy + 21, Color.DARK_GRAY.getRGB());
-		
-		TextComponentTranslation traitLang = new TextComponentTranslation(DnaHandler.getDnaEntry(CapabilityRegeneration.getForPlayer(mc.player).getDnaType()).getLangKey());
-		fontRenderer.drawString(traitLang.getUnformattedComponentText(), cx + 86 - length / 2, cy + 30, Color.DARK_GRAY.getRGB());
+		CapabilityRegeneration.getForPlayer(mc.player).ifPresent((cap) -> {
+			String str = new TextComponentTranslation("regeneration.gui.primary").getFormattedText();
+			int length = mc.fontRenderer.getStringWidth(str);
+			fontRenderer.drawString(str, cx + 45 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(primaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
+			
+			str = new TextComponentTranslation("regeneration.gui.secondary").getFormattedText();
+			length = mc.fontRenderer.getStringWidth(str);
+			fontRenderer.drawString(str, cx + 131 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(secondaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
+			
+			if (RegenConfig.CONFIG.infiniteRegeneration.get())
+				str = new TextComponentTranslation("regeneration.gui.infinite_regenerations").getFormattedText(); // TODO this should be optimized
+			else
+				str = new TextComponentTranslation("regeneration.gui.remaining_regens.status").getFormattedText() + " " + cap.getRegenerationsLeft();
+			length = mc.fontRenderer.getStringWidth(str);
+			fontRenderer.drawString(str, cx + 86 - length / 2, cy + 21, Color.DARK_GRAY.getRGB());
+			
+			TextComponentTranslation traitLang = new TextComponentTranslation(DnaHandler.getDnaEntry(cap.getDnaType()).getLangKey());
+			fontRenderer.drawString(traitLang.getUnformattedComponentText(), cx + 86 - length / 2, cy + 30, Color.DARK_GRAY.getRGB());
+			
+		});
 	}
 	
 	

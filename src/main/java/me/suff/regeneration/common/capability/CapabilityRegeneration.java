@@ -31,6 +31,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.tuple.Pair;
@@ -86,14 +87,14 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Nonnull
-	public static IRegeneration getForPlayer(EntityPlayer player) {
-		return player.getCapability(CapabilityRegeneration.CAPABILITY, null).orElseThrow(() -> new RuntimeException("Capability missing, can not continue"));
+	public static LazyOptional<IRegeneration> getForPlayer(EntityPlayer player) {
+		return player.getCapability(CapabilityRegeneration.CAPABILITY, null);
 	}
 	
 	@Override
 	public void tick() {
 		if (!didSetup && player.world.isRemote) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player.getUniqueID(), player.dimension.getId()));
+			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player.getUniqueID()));
 			didSetup = true;
 		}
 		
@@ -108,12 +109,12 @@ public class CapabilityRegeneration implements IRegeneration {
 			stateManager.tick();
 		
 		if (state == RegenState.REGENERATING) {
-			type.onUpdateMidRegen(player, this);
+			type.onUpdateMidRegen(player, CapabilityRegeneration.getForPlayer(player));
 		}
 	}
 	
 	@Override
-	public void synchronise() {
+	public void sync() {
 		if (player.world.isRemote)
 			throw new IllegalStateException("Don't sync client -> server");
 		
@@ -285,7 +286,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
 		else
 			regenerationsLeft += amount;
-		synchronise();
+		sync();
 	}
 	
 	@Override
@@ -294,7 +295,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
 		else
 			regenerationsLeft -= amount;
-		synchronise();
+		sync();
 	}
 	
 	
@@ -420,7 +421,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
 			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.CONFIG.handGlowInterval.get() * 20);
-			synchronise();
+			sync();
 		}
 		
 		@SuppressWarnings("deprecation")
@@ -428,8 +429,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
 			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.CONFIG.handGlowTriggerDelay.get() * 20);
-			ActingForwarder.onHandsStartGlowing(CapabilityRegeneration.this);
-			synchronise();
+			ActingForwarder.onHandsStartGlowing(CapabilityRegeneration.getForPlayer(player));
+			sync();
 		}
 		
 		
@@ -449,8 +450,8 @@ public class CapabilityRegeneration implements IRegeneration {
 				scheduleHandGlowTrigger();
 				
 				state = RegenState.GRACE;
-				synchronise();
-				ActingForwarder.onEnterGrace(CapabilityRegeneration.this);
+				sync();
+				ActingForwarder.onEnterGrace(CapabilityRegeneration.getForPlayer(player));
 				return true;
 				
 			} else if (state.isGraceful()) {
@@ -516,7 +517,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state.isGraceful())
 				handGlowTimer.tick();
 			
-			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
+			ActingForwarder.onRegenTick(CapabilityRegeneration.getForPlayer(player));
 			nextTransition.tick();
 		}
 		
@@ -535,36 +536,36 @@ public class CapabilityRegeneration implements IRegeneration {
 				handGlowTimer.cancel();
 			scheduleTransitionInTicks(RegenState.Transition.FINISH_REGENERATION, type.getAnimationLength());
 			
-			ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);
-			type.onStartRegeneration(player, CapabilityRegeneration.this);
-			synchronise();
+			ActingForwarder.onRegenTrigger(CapabilityRegeneration.getForPlayer(player));
+			type.onStartRegeneration(player, CapabilityRegeneration.getForPlayer(player));
+			sync();
 		}
 		
 		private void enterCriticalPhase() {
 			// We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
 			scheduleTransitionInSeconds(RegenState.Transition.CRITICAL_DEATH, RegenConfig.CONFIG.criticalPhaseLength.get());
-			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
-			synchronise();
+			ActingForwarder.onGoCritical(CapabilityRegeneration.getForPlayer(player));
+			sync();
 		}
 		
 		private void midSequenceKill() {
 			state = RegenState.ALIVE;
 			nextTransition = null;
 			handGlowTimer = null;
-			type.onFinishRegeneration(player, CapabilityRegeneration.this);
+			type.onFinishRegeneration(player, CapabilityRegeneration.getForPlayer(player));
 			player.setHealth(-1);
 			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
 			if (RegenConfig.CONFIG.loseRegensOnDeath.get()) {
 				extractRegeneration(getRegenerationsLeft());
 			}
 			
-			synchronise();
+			sync();
 		}
 		
 		private void endPost() {
 			state = RegenState.ALIVE;
-			synchronise();
+			sync();
 			nextTransition = null;
 			
 			PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.post_ended"), true);
@@ -581,9 +582,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = RegenState.POST;
 			scheduleTransitionInSeconds(RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;
-			type.onFinishRegeneration(player, CapabilityRegeneration.this);
-			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
-			synchronise();
+			type.onFinishRegeneration(player, CapabilityRegeneration.getForPlayer(player));
+			ActingForwarder.onRegenFinish(CapabilityRegeneration.getForPlayer(player));
+			sync();
 		}
 		
 		@Override

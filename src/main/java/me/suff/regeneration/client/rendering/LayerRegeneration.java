@@ -36,16 +36,16 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	
 	@Override
 	public void render(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (cap.getState() == RegenState.REGENERATING) {
-			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-		} else if (cap.areHandsGlowing()) {
-			renderGlowingHands(player, cap, scale);
-		}
-		
-		if (cap.getState() == RegenState.POST && player.hurtTime > 0) {
-			renderPost(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-		}
+		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+			if (cap.getState() == RegenState.REGENERATING) {
+				cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+			} else if (cap.areHandsGlowing()) {
+				renderGlowingHands(player, cap, scale);
+			}
+			if (cap.getState() == RegenState.POST && player.hurtTime > 0) {
+				renderPost(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+			}
+		});
 	}
 	
 	private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {

@@ -1,7 +1,6 @@
 package me.suff.regeneration.network;
 
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
-import me.suff.regeneration.common.capability.IRegeneration;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -34,9 +33,10 @@ public class MessageSaveStyle {
 	public static class Handler {
 		public static void handle(MessageSaveStyle message, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
-				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.get().getSender());
-				cap.setStyle(message.style);
-				cap.synchronise();
+				CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
+					cap.setStyle(message.style);
+					cap.sync();
+				});
 				ctx.get().setPacketHandled(true);
 			});
 		}

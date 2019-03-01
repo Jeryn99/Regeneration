@@ -5,6 +5,7 @@ import me.suff.regeneration.network.MessageRegenStateEvent;
 import me.suff.regeneration.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,40 +36,42 @@ public class ActingForwarder {
 		(side == Dist.CLIENT ? clientHandlers : serverHandlers).add(handler);
 	}
 	
-	public static void onRegenTick(IRegeneration cap) {
-		// Never forwarded, as per the documentation
-		if (cap.getPlayer().world.isRemote)
-			throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
-		
-		serverHandlers.forEach(handler -> handler.onRegenTick(cap));
+	public static void onRegenTick(LazyOptional<IRegeneration> data) {
+		data.ifPresent((cap) -> {
+			// Never forwarded, as per the documentation
+			if (cap.getPlayer().world.isRemote)
+				throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
+			
+			serverHandlers.forEach(handler -> handler.onRegenTick(data));
+		});
 	}
 	
-	public static void onEnterGrace(IRegeneration cap) {
+	public static void onEnterGrace(LazyOptional<IRegeneration> cap) {
 		checkAndForward(cap);
 		serverHandlers.forEach(handler -> handler.onEnterGrace(cap));
 	}
 	
-	public static void onRegenFinish(IRegeneration cap) {
+	public static void onRegenFinish(LazyOptional<IRegeneration> cap) {
 		checkAndForward(cap);
 		serverHandlers.forEach(handler -> handler.onRegenFinish(cap));
 	}
 	
-	public static void onRegenTrigger(IRegeneration cap) {
+	public static void onRegenTrigger(LazyOptional<IRegeneration> cap) {
 		checkAndForward(cap);
 		serverHandlers.forEach(handler -> handler.onRegenTrigger(cap));
 	}
 	
-	public static void onGoCritical(IRegeneration cap) {
+	public static void onGoCritical(LazyOptional<IRegeneration> cap) {
 		checkAndForward(cap);
 		serverHandlers.forEach(handler -> handler.onGoCritical(cap));
 	}
 	
-	public static void onHandsStartGlowing(IRegeneration cap) {
+	public static void onHandsStartGlowing(LazyOptional<IRegeneration> cap) {
 		checkAndForward(cap);
 		serverHandlers.forEach(handler -> handler.onHandsStartGlowing(cap));
 	}
 	
-	public static void onClient(String event, IRegeneration cap) {
+	public static void onClient(String event, LazyOptional<IRegeneration> cap) {
 		try {
 			for (IActingHandler handler : clientHandlers) {
 				handler.getClass().getMethod(event, IRegeneration.class).invoke(handler, cap); // TODO this can definitely be optimized
@@ -85,12 +88,14 @@ public class ActingForwarder {
 	/**
 	 * Knows what to forward by reflection magic
 	 */
-	private static void checkAndForward(IRegeneration cap) {
-		if (cap.getPlayer().world.isRemote)
-			throw new IllegalStateException("'Posting' \"acting\" `event` from client");
-		
-		String event = Thread.currentThread().getStackTrace()[2].getMethodName();
-		NetworkHandler.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP) cap.getPlayer());
+	private static void checkAndForward(LazyOptional<IRegeneration> data) {
+		data.ifPresent((cap) -> {
+			if (cap.getPlayer().world.isRemote)
+				throw new IllegalStateException("'Posting' \"acting\" `event` from client");
+			
+			String event = Thread.currentThread().getStackTrace()[2].getMethodName();
+			NetworkHandler.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP) cap.getPlayer());
+		});
 	}
 	
 }

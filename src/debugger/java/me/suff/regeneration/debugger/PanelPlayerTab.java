@@ -6,6 +6,7 @@ import me.suff.regeneration.debugger.util.ConditionalDebugChannelProxy;
 import me.suff.regeneration.debugger.util.EventQueueDebugChannelProxy;
 import me.suff.regeneration.debugger.util.TextPaneLogger;
 import me.suff.regeneration.util.RegenState.Transition;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,7 +117,7 @@ class PanelPlayerTab extends JPanel {
 		return new ConditionalDebugChannelProxy(new EventQueueDebugChannelProxy(new DebugChannelImpl()), () -> this.getParent().getParent().getParent().getParent().getParent().isVisible()); // (this -> [a lot of parents due to the tabbed pane] -> main frame).isVisible
 	}
 	
-	public void updateLabels(IRegeneration capability) {
+	public void updateLabels(LazyOptional<IRegeneration> capability) {
 		pnlStatus.updateLabels(capability);
 	}
 	

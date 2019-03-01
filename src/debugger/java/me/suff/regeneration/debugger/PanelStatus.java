@@ -2,6 +2,7 @@ package me.suff.regeneration.debugger;
 
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.util.RegenState.Transition;
+import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.swing.*;
@@ -101,15 +102,17 @@ class PanelStatus extends JPanel {
 		}
 	}
 	
-	public void updateLabels(IRegeneration cap) {
-		lblStateVal.setText(cap.getState().toString());
-		lblRegensLeftVal.setText(cap.getRegenerationsLeft() + "");
-		// lblAnimationProgressVal.setText(Math.round(cap.getAnimationProgress()*100) + "%");
-		
-		@SuppressWarnings("deprecation")
-		Pair<Transition, Long> scheduled = cap.getStateManager().getScheduledEvent();
-		lblScheduledVal.setForeground(scheduled == null ? Color.BLACK : scheduled.getLeft().color);
-		lblScheduledVal.setText(scheduled == null ? "nothing" : scheduled.getLeft() + " in " + scheduled.getRight() + " ticks (" + (round(scheduled.getRight() / 20F, 1)) + "s)");
+	public void updateLabels(LazyOptional<IRegeneration> cap) {
+		cap.ifPresent((data) -> {
+			lblStateVal.setText(data.getState().toString());
+			lblRegensLeftVal.setText(data.getRegenerationsLeft() + "");
+			// lblAnimationProgressVal.setText(Math.round(cap.getAnimationProgress()*100) + "%");
+			@SuppressWarnings("deprecation")
+			Pair<Transition, Long> scheduled = data.getStateManager().getScheduledEvent();
+			lblScheduledVal.setForeground(scheduled == null ? Color.BLACK : scheduled.getLeft().color);
+			lblScheduledVal.setText(scheduled == null ? "nothing" : scheduled.getLeft() + " in " + scheduled.getRight() + " ticks (" + (round(scheduled.getRight() / 20F, 1)) + "s)");
+			
+		});
 	}
 	
 	private double round(double value, int precision) {

@@ -1,5 +1,6 @@
 package me.suff.regeneration.common.item;
 
+import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.entity.EntityItemOverride;
@@ -7,7 +8,6 @@ import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.DebuggerUtil;
 import me.suff.regeneration.util.PlayerUtil;
-import me.suff.regeneration.RegenConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -81,7 +81,9 @@ public class ItemFobWatch extends ItemOverrideBase {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player).orElse(null);
+		
 		ItemStack stack = player.getHeldItem(hand);
 		
 		if (!player.isSneaking()) { // transferring watch->player

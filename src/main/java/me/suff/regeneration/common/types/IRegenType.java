@@ -5,6 +5,7 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
@@ -38,13 +39,13 @@ public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable
 	
 	R getRenderer();
 	
-	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {
+	default void onStartRegeneration(EntityPlayer player, LazyOptional<IRegeneration> capability) {
 	}
 	
-	default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
+	default void onUpdateMidRegen(EntityPlayer player, LazyOptional<IRegeneration> capability) {
 	}
 	
-	default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
+	default void onFinishRegeneration(EntityPlayer player, LazyOptional<IRegeneration> capability) {
 	}
 	
 	@Override

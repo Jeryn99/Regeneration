@@ -6,7 +6,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
-import me.suff.regeneration.common.capability.IRegeneration;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -34,8 +33,9 @@ public class CommandRegen {
 	
 	private static int fastForward(CommandSource source) {
 		try {
-			IRegeneration cap = CapabilityRegeneration.getForPlayer(source.asPlayer());
-			cap.getStateManager().fastForward();
+			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) -> {
+				cap.getStateManager().fastForward();
+			});
 		} catch (CommandSyntaxException e) {
 			e.printStackTrace();
 		}

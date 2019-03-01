@@ -1,6 +1,5 @@
 package me.suff.regeneration.network;
 
-import io.netty.buffer.ByteBuf;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -24,11 +23,11 @@ public class MessageRemovePlayer {
 		this.playerUUID = uuid;
 	}
 	
-	public static void encode(MessageRemovePlayer messageRemovePlayer, PacketBuffer buffer){
+	public static void encode(MessageRemovePlayer messageRemovePlayer, PacketBuffer buffer) {
 		buffer.writeUniqueId(messageRemovePlayer.playerUUID);
 	}
 	
-	public static MessageRemovePlayer decode(PacketBuffer buffer){
+	public static MessageRemovePlayer decode(PacketBuffer buffer) {
 		return new MessageRemovePlayer(buffer.readUniqueId());
 	}
 	
