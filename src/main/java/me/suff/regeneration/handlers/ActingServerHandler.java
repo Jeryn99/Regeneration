@@ -94,7 +94,7 @@ class ActingServerHandler implements IActingHandler {
 	@Override
 	public void onEnterGrace(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		RegenUtil.explodeKnockback(player, player.world, player.getPosition(), (float) (RegenConfig.CONFIG.regenerativeKnockback.get() / 2), RegenConfig.CONFIG.regenKnockbackRange.get());
+		RegenUtil.explodeKnockback(player, player.world, player.getPosition(), (RegenConfig.CONFIG.regenerativeKnockback.get() / 2), RegenConfig.CONFIG.regenKnockbackRange.get());
 		
 		// Reduce number of hearts, but compensate with absorption
 		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);

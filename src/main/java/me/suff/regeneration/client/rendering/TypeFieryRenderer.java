@@ -4,13 +4,13 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.TypeFiery;
 import me.suff.regeneration.util.LimbManipulationUtil;
 import me.suff.regeneration.util.RenderUtil;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.model.ModelBiped;
+import net.minecraft.client.renderer.entity.model.ModelPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -68,12 +68,10 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 		
 		// State manager changes
-		GlStateManager.pushAttrib();
 		GlStateManager.disableTexture2D();
-		GlStateManager.enableAlpha();
+		GlStateManager.enableAlphaTest();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-		GlStateManager.depthMask(true);
 		RenderUtil.setLightmapTextureCoords(65, 65);
 		
 		NBTTagCompound style = capability.getStyle();
@@ -128,9 +126,8 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		
 		// Undo state manager changes
 		RenderUtil.restoreLightMap();
-		GlStateManager.depthMask(false);
 		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 		GlStateManager.color4f(255, 255, 255, 255);
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();
@@ -143,7 +140,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		for (int i = 0; i < 8; i++) {
 			GlStateManager.pushMatrix();
 			GlStateManager.rotatef(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
-			GlStateManager.scale(1.0f, 1.0f, 0.65f);
+			GlStateManager.scalef(1.0f, 1.0f, 0.65f);
 			vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
 			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
 			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();

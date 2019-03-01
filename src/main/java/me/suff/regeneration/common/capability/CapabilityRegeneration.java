@@ -4,7 +4,6 @@ import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
-import me.suff.regeneration.common.advancements.RegenTriggers;
 import me.suff.regeneration.common.dna.DnaHandler;
 import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.common.types.IRegenType;
@@ -20,7 +19,6 @@ import me.suff.regeneration.util.RegenState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -89,22 +87,18 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Nonnull
 	public static IRegeneration getForPlayer(EntityPlayer player) {
-		if (player.hasCapability(CAPABILITY, null)) {
-			return player.getCapability(CAPABILITY, null);
-		}
-		throw new IllegalStateException("Missing Regeneration capability: " + player + ", please report this to the issue tracker");
+		return player.getCapability(CapabilityRegeneration.CAPABILITY, null).orElseThrow(() -> new RuntimeException("Capability missing, can not continue"));
 	}
-	
 	
 	@Override
 	public void tick() {
 		if (!didSetup && player.world.isRemote) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player));
+			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player.getUniqueID(), player.dimension.getId()));
 			didSetup = true;
 		}
 		
-		if (getRegenerationsLeft() > RegenConfig.regenCapacity && !RegenConfig.infiniteRegeneration) {
-			regenerationsLeft = RegenConfig.regenCapacity;
+		if (getRegenerationsLeft() > RegenConfig.CONFIG.regenCapacity.get() && !RegenConfig.CONFIG.infiniteRegeneration.get()) {
+			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
 		}
 		
@@ -127,7 +121,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
 		
-		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
+		NetworkHandler.sendPacketToAll(new MessageSynchroniseRegeneration(player.getUniqueID(), nbt));
 	}
 	
 	
@@ -199,10 +193,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
-		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
+		setStyle(nbt.hasKey("style") ? (NBTTagCompound) nbt.getTag("style") : nbt);
 		
 		if (nbt.hasKey("type")) // v1.3+ saves have a type tag
-			type = IRegenType.getType(type, nbt.getCompoundTag("type"));
+			type = IRegenType.getType(type, (NBTTagCompound) nbt.getTag("type"));
 		else // for previous save versions set to default 'fiery' type
 			type = new TypeFiery();
 		
@@ -211,7 +205,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (nbt.hasKey("stateManager"))
 			if (stateManager != null) {
-				stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
+				stateManager.deserializeNBT((NBTTagCompound) nbt.getTag("stateManager"));
 			}
 	}
 	
@@ -287,8 +281,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void receiveRegenerations(int amount) {
-		if (RegenConfig.infiniteRegeneration)
-			regenerationsLeft = RegenConfig.regenCapacity;
+		if (RegenConfig.CONFIG.infiniteRegeneration.get())
+			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
 		else
 			regenerationsLeft += amount;
 		synchronise();
@@ -296,8 +290,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void extractRegeneration(int amount) {
-		if (RegenConfig.infiniteRegeneration)
-			regenerationsLeft = RegenConfig.regenCapacity;
+		if (RegenConfig.CONFIG.infiniteRegeneration.get())
+			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
 		else
 			regenerationsLeft -= amount;
 		synchronise();
@@ -425,7 +419,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleNextHandGlow() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.grace.handGlowInterval * 20);
+			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.CONFIG.handGlowInterval.get() * 20);
 			synchronise();
 		}
 		
@@ -433,7 +427,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleHandGlowTrigger() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.grace.handGlowTriggerDelay * 20);
+			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.CONFIG.handGlowTriggerDelay.get() * 20);
 			ActingForwarder.onHandsStartGlowing(CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -451,7 +445,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					return false;
 				
 				// We're entering grace period...
-				scheduleTransitionInSeconds(RegenState.Transition.ENTER_CRITICAL, RegenConfig.grace.gracePhaseLength);
+				scheduleTransitionInSeconds(RegenState.Transition.ENTER_CRITICAL, RegenConfig.CONFIG.gracePhaseLength.get());
 				scheduleHandGlowTrigger();
 				
 				state = RegenState.GRACE;
@@ -500,14 +494,13 @@ public class CapabilityRegeneration implements IRegeneration {
 				
 				IBlockState block = e.getWorld().getBlockState(e.getPos());
 				
-				if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_LAYER) {
+				if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_BLOCK) {
 					e.getWorld().playSound(null, e.getPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
 				}
 				
 				handGlowTimer.cancel();
 				scheduleNextHandGlow();
 				if (!player.world.isRemote) {
-					RegenTriggers.CHANGE_REFUSAL.trigger((EntityPlayerMP) player);
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.regen_delayed"), true);
 				}
 				e.setCanceled(true); //It got annoying in creative to break something
@@ -531,7 +524,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			// We're starting a regeneration!
 			state = RegenState.REGENERATING;
 			
-			if (RegenConfig.sendRegenDeathMessages) {
+			if (RegenConfig.CONFIG.sendRegenDeathMessages.get()) {
 				TextComponentTranslation text = new TextComponentTranslation("regeneration.messages.regen_chat_message", player.getName());
 				text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(getDeathSource())));
 				PlayerUtil.sendMessageToAll(text);
@@ -550,7 +543,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void enterCriticalPhase() {
 			// We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduleTransitionInSeconds(RegenState.Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
+			scheduleTransitionInSeconds(RegenState.Transition.CRITICAL_DEATH, RegenConfig.CONFIG.criticalPhaseLength.get());
 			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -562,7 +555,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			type.onFinishRegeneration(player, CapabilityRegeneration.this);
 			player.setHealth(-1);
 			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
-			if (RegenConfig.loseRegensOnDeath) {
+			if (RegenConfig.CONFIG.loseRegensOnDeath.get()) {
 				extractRegeneration(getRegenerationsLeft());
 			}
 			

@@ -1,6 +1,7 @@
 package me.suff.regeneration.client.skinhandling;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import io.netty.buffer.Unpooled;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
@@ -8,23 +9,23 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
-import me.suff.regeneration.util.FileUtil;
 import me.suff.regeneration.util.IEnum;
 import me.suff.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.logging.log4j.LogManager;
@@ -37,12 +38,14 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -50,13 +53,13 @@ import java.util.UUID;
 public class SkinChangingHandler {
 	
 	public static final File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
+	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	public static final File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getInstance().getSession().getProfile().getId() + "/skins");
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-	public static final Logger SKIN_LOG = LogManager.getLogger("Regeneration Skin Handler");
-	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
-	public static final Map<UUID, SkinInfo.SkinType> TYPE_BACKUPS = new HashMap<>();
+	public static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
 	private static final Random RAND = new Random();
+	public static final Map<UUID, SkinInfo.SkinType> TYPE_BACKUPS = new HashMap<>();
 	
 	/**
 	 * Converts a buffered image to Pixel data
@@ -107,9 +110,9 @@ public class SkinChangingHandler {
 		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID())
 			return;
 		
-		if (RegenConfig.skins.changeMySkin) {
+		if (RegenConfig.CONFIG.changeMySkin.get()) {
 			boolean isAlex = CapabilityRegeneration.getForPlayer(player).getPreferredModel().isAlex();
-			File skin = SkinChangingHandler.getRandomSkin(random, isAlex);
+			File skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
 			RegenerationMod.LOG.info(skin.getName() + " was choosen");
 			BufferedImage image = ImageIO.read(skin);
 			byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
@@ -118,14 +121,14 @@ public class SkinChangingHandler {
 				ClientUtil.sendSkinResetPacket();
 				RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
 			} else {
-				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+				NetworkHandler.sendToServer(new MessageUpdateSkin(new PacketBuffer(Unpooled.wrappedBuffer(pixelData)), isAlex));
 			}
 		} else {
 			ClientUtil.sendSkinResetPacket();
 		}
 	}
 	
-	private static File getRandomSkin(Random rand, boolean isAlex) throws IOException {
+	private static File chooseRandomSkin(Random rand, boolean isAlex) throws IOException {
 		File skins;
 		if (isAlex) {
 			skins = SKIN_DIRECTORY_ALEX;
@@ -134,7 +137,6 @@ public class SkinChangingHandler {
 		}
 		Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		if (folderFiles.isEmpty()) {
-			FileUtil.doDownloadsOnThread();
 			folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		}
 		
@@ -169,8 +171,9 @@ public class SkinChangingHandler {
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
+				File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
 				ResourceLocation tempLocation = new ResourceLocation(player.getName() + "_skin_" + System.currentTimeMillis());
-				Minecraft.getInstance().getTextureManager().loadTexture(tempLocation, new DynamicTexture(bufferedImage));
+				Minecraft.getInstance().getTextureManager().loadTexture(tempLocation, new DynamicTexture(NativeImage.read(new FileInputStream(file))));
 				resourceLocation = tempLocation;
 				skinType = CapabilityRegeneration.getForPlayer(player).getSkinType();
 			}
@@ -211,7 +214,7 @@ public class SkinChangingHandler {
 			File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
 			ImageIO.write(image, "png", file);
 			ResourceLocation tempLocation = new ResourceLocation(player.getName() + "_skin_" + System.currentTimeMillis());
-			minecraft.getTextureManager().loadTexture(tempLocation, new DynamicTexture(image));
+			minecraft.getTextureManager().loadTexture(tempLocation, new DynamicTexture(NativeImage.read(new FileInputStream(file))));
 			return tempLocation;
 		}
 		
@@ -220,7 +223,8 @@ public class SkinChangingHandler {
 	
 	/**
 	 * Changes the ResourceLocation of a Players skin
-	 *  @param player  - Player instance involved
+	 *
+	 * @param player  - Player instance involved
 	 * @param texture - ResourceLocation of intended texture
 	 */
 	public static void setPlayerSkin(AbstractClientPlayer player, ResourceLocation texture) {
@@ -239,11 +243,8 @@ public class SkinChangingHandler {
 			ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
 	}
 	
-	public static void setSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
+	public static void setPlayerSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
 		if (skinType.getMojangType().equals(player.getSkinType())) return;
-		if (!TYPE_BACKUPS.containsKey(player.getUniqueID())) {
-			TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
-		}
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
 		ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), 5);
 	}
@@ -255,11 +256,14 @@ public class SkinChangingHandler {
 	 */
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
-		if (MinecraftForgeClient.getRenderPass() == -1) return; //Don't do this hacky skin shit in inventory
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
 		if (player.ticksExisted == 20) {
+			SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());
+			if (oldSkinInfo != null) {
+				Minecraft.getInstance().getTextureManager().deleteTexture(oldSkinInfo.getSkinTextureLocation());
+			}
 			PLAYER_SKINS.remove(player.getUniqueID());
 		}
 		
@@ -269,13 +273,17 @@ public class SkinChangingHandler {
 			setSkinFromData(player, cap);
 		} else {
 			SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
-			if (skin != null) {
-				if (skin.getSkinTextureLocation() == null) {
-					setPlayerSkin(player, skin.getSkinTextureLocation());
-				}
-				if (skin != null) {
-					setSkinType(player, skin.getSkintype());
-				}
+			
+			if(skin == null){
+				return;
+			}
+			
+			if(skin.getSkinTextureLocation() != null) {
+				setPlayerSkin(player, skin.getSkinTextureLocation());
+			}
+			
+			if(skin.getSkintype() != null) {
+				setPlayerSkinType(player, skin.getSkintype());
 			}
 		}
 	}
@@ -293,11 +301,8 @@ public class SkinChangingHandler {
 	
 	@SubscribeEvent
 	public void onRelog(EntityJoinWorldEvent e) {
-		if (e.getEntity() instanceof AbstractClientPlayer) {
-			AbstractClientPlayer clientPlayer = (AbstractClientPlayer) e.getEntity();
-			PLAYER_SKINS.remove(clientPlayer.getUniqueID());
-			TYPE_BACKUPS.remove(clientPlayer.getUniqueID());
-			TYPE_BACKUPS.put(clientPlayer.getUniqueID(), clientPlayer.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
+		if (e.getEntity() instanceof EntityPlayer) {
+			PLAYER_SKINS.remove(e.getEntity().getUniqueID());
 		}
 	}
 	
@@ -319,7 +324,7 @@ public class SkinChangingHandler {
 		}
 		
 		if (skinInfo != null) {
-			SkinChangingHandler.setSkinType(player, skinInfo.getSkintype());
+			SkinChangingHandler.setPlayerSkinType(player, skinInfo.getSkintype());
 		}
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 	}

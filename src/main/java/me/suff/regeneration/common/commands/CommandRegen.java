@@ -3,7 +3,10 @@ package me.suff.regeneration.common.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.regeneration.RegenerationMod;
+import me.suff.regeneration.common.capability.CapabilityRegeneration;
+import me.suff.regeneration.common.capability.IRegeneration;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -21,7 +24,7 @@ public class CommandRegen {
 						.executes(ctx -> open(ctx.getSource())))
 				.then(Commands.literal("setregens")
 						.then(Commands.argument("amount", IntegerArgumentType.integer(1)) //minimal regen to set is 1
-								.executes(ctx -> setRegens(ctx.getSource(), IntegerArgumentType.getInt(ctx, "amount"))))));
+								.executes(ctx -> setRegens(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "amount"))))));
 	}
 	
 	private static int glow(CommandSource source) {
@@ -30,7 +33,12 @@ public class CommandRegen {
 	}
 	
 	private static int fastForward(CommandSource source) {
-		//TODO : FastForward action on Command
+		try {
+			IRegeneration cap = CapabilityRegeneration.getForPlayer(source.asPlayer());
+			cap.getStateManager().fastForward();
+		} catch (CommandSyntaxException e) {
+			e.printStackTrace();
+		}
 		return Command.SINGLE_SUCCESS;
 	}
 	

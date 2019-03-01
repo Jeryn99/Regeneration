@@ -1,6 +1,5 @@
 package me.suff.regeneration.common.item;
 
-import me.suff.regeneration.common.advancements.RegenTriggers;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.entity.EntityItemOverride;
@@ -98,9 +97,6 @@ public class ItemLindos extends ItemOverrideBase {
 	@Override
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
 		super.onCreated(stack, worldIn, playerIn);
-		if (!playerIn.world.isRemote) {
-			RegenTriggers.LINDOS_VIAL.trigger((EntityPlayerMP) playerIn);
-		}
 	}
 	
 	@Override

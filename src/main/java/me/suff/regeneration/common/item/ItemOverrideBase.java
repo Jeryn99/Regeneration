@@ -1,7 +1,6 @@
 package me.suff.regeneration.common.item;
 
 import me.suff.regeneration.common.entity.EntityItemOverride;
-import me.suff.regeneration.common.entity.IEntityOverride;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,7 +8,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class ItemOverrideBase extends Item implements IEntityOverride {
+public class ItemOverrideBase extends Item implements EntityItemOverride.IEntityOverride {
 	
 	public ItemOverrideBase(Properties p_i48487_1_) {
 		super(p_i48487_1_);

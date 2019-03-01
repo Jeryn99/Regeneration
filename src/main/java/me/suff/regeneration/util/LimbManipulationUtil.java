@@ -19,7 +19,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = RegenerationMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class LimbManipulationUtil {
 	
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb) {
@@ -70,61 +69,6 @@ public class LimbManipulationUtil {
 			e.printStackTrace();
 		}
 		return manipulator;
-	}
-	
-	@SubscribeEvent
-	public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
-			return;
-		
-		RenderPlayer renderer = event.getRenderer();
-		ModelBase playerModel = renderer.getMainModel();
-		List<LayerRenderer<AbstractClientPlayer>> layerList = renderer.layerRenderers;
-		
-		if (playerModel != null && playerModel.boxList != null) {
-			for (ModelRenderer modelRenderer : playerModel.boxList) {
-				if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-					CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
-					customMr.reset();
-				}
-			}
-		}
-		
-		try {
-			for (LayerRenderer<?> layer : layerList) {
-				for (Field field : layer.getClass().getDeclaredFields()) {
-					field.setAccessible(true);
-					
-					// Model Biped
-					if (field.getType() == ModelBiped.class) {
-						ModelBiped biped = (ModelBiped) field.get(layer);
-						if (biped != null && biped.boxList != null) {
-							for (ModelRenderer modelRenderer : biped.boxList) {
-								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-									CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
-									customMr.reset();
-								}
-							}
-						}
-					}
-					
-					// Model Player
-					if (field.getType() == ModelPlayer.class) {
-						ModelPlayer modelPlayer = (ModelPlayer) field.get(layer);
-						if (modelPlayer != null && modelPlayer.boxList != null) {
-							for (ModelRenderer modelRenderer : modelPlayer.boxList) {
-								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-									CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
-									customMr.reset();
-								}
-							}
-						}
-					}
-				}
-			}
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public enum Limb {

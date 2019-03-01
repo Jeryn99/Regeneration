@@ -5,9 +5,8 @@ import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.debugger.util.UnloadedPlayerBufferChannel;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
@@ -39,7 +38,7 @@ public class GraphicalRegenDebugger implements IRegenDebugger {
 		frame.setLocationRelativeTo(null);
 		frame.setLocation(frame.getX() + dx, frame.getY() + dy);
 		
-		frame.setVisible((boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment"));
+		frame.setVisible(true);
 	}
 	
 	/**
@@ -57,7 +56,7 @@ public class GraphicalRegenDebugger implements IRegenDebugger {
 	
 	@SubscribeEvent
 	public void onLogin(PlayerLoggedInEvent ev) {
-		GameProfile gp = ev.player.getGameProfile();
+		GameProfile gp = ev.getPlayer().getGameProfile();
 		PanelPlayerTab panel = new PanelPlayerTab(gp);
 		
 		tabs.addTab(gp.getName(), panel);
@@ -65,16 +64,16 @@ public class GraphicalRegenDebugger implements IRegenDebugger {
 		
 		IDebugChannel ch = panel.createChannel();
 		channelz.put(gp, ch);
-		if (channelBuffer.containsKey(ev.player)) {
-			channelBuffer.get(ev.player).flush(ch);
-			channelBuffer.remove(ev.player);
+		if (channelBuffer.containsKey(ev.getPlayer())) {
+			channelBuffer.get(ev.getPlayer()).flush(ch);
+			channelBuffer.remove(ev.getPlayer());
 		}
 		ch.notifyLoaded();
 	}
 	
 	@SubscribeEvent
 	public void onLogout(PlayerLoggedOutEvent ev) {
-		GameProfile gp = ev.player.getGameProfile();
+		GameProfile gp = ev.getPlayer().getGameProfile();
 		tabs.removeTabAt(tabs.indexOfTab(gp.getName()));
 		playerTabz.remove(gp);
 	}

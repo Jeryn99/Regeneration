@@ -6,11 +6,11 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.util.RegenState;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.ModelBase;
+import net.minecraft.client.renderer.entity.model.ModelPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
@@ -35,7 +35,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	}
 	
 	@Override
-	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public void render(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		if (cap.getState() == RegenState.REGENERATING) {
 			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
@@ -64,7 +64,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 			else
 				playerRenderer.getMainModel().bipedLeftArm.postRender(scale);
 			
-			GlStateManager.scale(1.5F, 1.5F, 1.5F);
+			GlStateManager.scalef(1.5F, 1.5F, 1.5F);
 			
 			if (player.isSneaking()) {
 				GlStateManager.translatef(0.0F, 0.2F, 0.0F);

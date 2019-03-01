@@ -97,7 +97,7 @@ public class RegenObjects {
 	}
 	
 	public static class EntityEntries {
-		public static EntityType ITEM_OVERRIDE_ENTITY_TYPE = EntityType.register(MODID + ":item_override", EntityType.Builder.create(EntityItemOverride.class, EntityItemOverride::new).tracker(256, 20, false)).setRegistryName(new ResourceLocation(MODID , "item_override"));
-		public static EntityType ITEM_LINDOS_TYPE = EntityType.register(MODID + ":lindos", EntityType.Builder.create(EntityLindos.class, EntityLindos::new).tracker(256, 20, false)).setRegistryName(new ResourceLocation(MODID , "lindos"));
+		public static EntityType ITEM_OVERRIDE_ENTITY_TYPE = EntityType.register(MODID + ":item_override", EntityType.Builder.create(EntityItemOverride.class, EntityItemOverride::new).tracker(256, 20, false));
+		public static EntityType ITEM_LINDOS_TYPE = EntityType.register(MODID + ":lindos", EntityType.Builder.create(EntityLindos.class, EntityLindos::new).tracker(256, 20, false));
 	}
 }

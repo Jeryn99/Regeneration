@@ -6,17 +6,23 @@ import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.handlers.RegenObjects;
-import me.suff.regeneration.network.MessageTriggerForcedRegen;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.EnumCompatModids;
+import me.suff.regeneration.util.LimbManipulationUtil;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.ModelBase;
+import net.minecraft.client.renderer.entity.model.ModelBiped;
+import net.minecraft.client.renderer.entity.model.ModelPlayer;
+import net.minecraft.client.renderer.entity.model.ModelRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -29,22 +35,23 @@ import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -54,12 +61,66 @@ import static me.suff.regeneration.util.RegenState.*;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
+	
+	@SubscribeEvent
+	public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
+			return;
+		
+		RenderPlayer renderer = event.getRenderer();
+		ModelBase playerModel = renderer.getMainModel();
+		List<LayerRenderer<AbstractClientPlayer>> layerList = renderer.layerRenderers;
+		
+		if (playerModel != null && playerModel.boxList != null) {
+			for (ModelRenderer modelRenderer : playerModel.boxList) {
+				if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+					LimbManipulationUtil.CustomModelRenderer customMr = (LimbManipulationUtil.CustomModelRenderer) modelRenderer;
+					customMr.reset();
+				}
+			}
+		}
+		
+		try {
+			for (LayerRenderer<?> layer : layerList) {
+				for (Field field : layer.getClass().getDeclaredFields()) {
+					field.setAccessible(true);
+					
+					// Model Biped
+					if (field.getType() == ModelBiped.class) {
+						ModelBiped biped = (ModelBiped) field.get(layer);
+						if (biped != null && biped.boxList != null) {
+							for (ModelRenderer modelRenderer : biped.boxList) {
+								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+									LimbManipulationUtil.CustomModelRenderer customMr = (LimbManipulationUtil.CustomModelRenderer) modelRenderer;
+									customMr.reset();
+								}
+							}
+						}
+					}
+					
+					// Model Player
+					if (field.getType() == ModelPlayer.class) {
+						ModelPlayer modelPlayer = (ModelPlayer) field.get(layer);
+						if (modelPlayer != null && modelPlayer.boxList != null) {
+							for (ModelRenderer modelRenderer : modelPlayer.boxList) {
+								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
+									LimbManipulationUtil.CustomModelRenderer customMr = (LimbManipulationUtil.CustomModelRenderer) modelRenderer;
+									customMr.reset();
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	@SubscribeEvent
-	public static void onGui(InputUpdateEvent tickEvent) {
+	public void onGui(InputUpdateEvent tickEvent) {
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
 		Minecraft minecraft = Minecraft.getInstance();
 		if (minecraft.currentScreen == null && minecraft.player != null) {
@@ -68,7 +129,7 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onSortofWorldJoin(LivingEvent.LivingUpdateEvent e) {
+	public void onSortofWorldJoin(LivingEvent.LivingUpdateEvent e) {
 		if (!(e.getEntity() instanceof EntityPlayer) || Minecraft.getInstance().player == null)
 			return;
 		
@@ -95,7 +156,7 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onRenderHand(RenderHandEvent e) {
+	public void onRenderHand(RenderHandEvent e) {
 		Minecraft mc = Minecraft.getInstance();
 		EntityPlayerSP player = Minecraft.getInstance().player;
 		
@@ -136,13 +197,9 @@ public class ClientEventHandler {
 	
 	@SuppressWarnings("incomplete-switch")
 	@SubscribeEvent
-	public static void onRenderGui(RenderGameOverlayEvent.Post event) {
+	public void onRenderGui(RenderGameOverlayEvent.Post event) {
 		if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
 			return;
-		
-		if(RegenKeyBinds.REGEN_FORCEFULLY.isPressed()){
-			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
-		}
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player);
 		String warning = null;
@@ -150,12 +207,12 @@ public class ClientEventHandler {
 		switch (cap.getState()) {
 			case GRACE:
 				RenderUtil.renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
-				warning = new TextComponentTranslation("regeneration.messages.warning.grace", ClientUtil.keyBind).getUnformattedText();
+				warning = new TextComponentTranslation("regeneration.messages.warning.grace", ClientUtil.keyBind).getUnformattedComponentText();
 				break;
 			
 			case GRACE_CRIT:
 				RenderUtil.renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
-				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", ClientUtil.keyBind).getUnformattedText();
+				warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", ClientUtil.keyBind).getUnformattedComponentText();
 				break;
 			
 			case REGENERATING:
@@ -164,17 +221,17 @@ public class ClientEventHandler {
 		}
 		
 		if (warning != null)
-			Minecraft.getInstance().fontRenderer.drawString(warning, new ScaledResolution(Minecraft.getInstance()).getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
+			Minecraft.getInstance().fontRenderer.drawString(warning, Minecraft.getInstance().mainWindow.getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
 	}
 	
 	@SubscribeEvent
-	public static void onPlaySound(PlaySoundEvent e) {
+	public void onPlaySound(PlaySoundEvent e) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player == null || mc.world == null)
 			return;
 		
 		if (e.getName().equals("entity.generic.explode")) {
-			ISound sound = PositionedSoundRecord.getRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
+			ISound sound = SimpleSound.getRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
 			mc.world.playerEntities.forEach(player -> {
 				if (mc.player != player && mc.player.getDistance(player) < 40) {
 					if (CapabilityRegeneration.getForPlayer(player).getState().equals(REGENERATING)) {
@@ -192,10 +249,10 @@ public class ClientEventHandler {
 	
 	
 	@SubscribeEvent
-	public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
+	public void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
 		IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player);
 		if (data.getState() == GRACE_CRIT) {
-			GlStateManager.setFog(GlStateManager.FogMode.EXP);
+			GlStateManager.fogMode(GlStateManager.FogMode.EXP);
 			event.setCanceled(true);
 			float amount = MathHelper.cos(data.getPlayer().ticksExisted * 0.06F) * -0.09F;
 			event.setDensity(amount);
@@ -205,13 +262,13 @@ public class ClientEventHandler {
 	
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
-	public static void onClientChatRecieved(ClientChatReceivedEvent e) {
+	public void onClientChatRecieved(ClientChatReceivedEvent e) {
 		EntityPlayerSP player = Minecraft.getInstance().player;
 		if (e.getType() != ChatType.CHAT) return;
 		if (CapabilityRegeneration.getForPlayer(player).getState() != POST) return;
 		
 		if (player.world.rand.nextBoolean()) {
-			String message = e.getMessage().getUnformattedText();
+			String message = e.getMessage().getUnformattedComponentText();
 			TextComponentString newMessage = new TextComponentString("");
 			String[] words = message.split(" ");
 			for (String word : words) {
@@ -233,12 +290,12 @@ public class ClientEventHandler {
 		}
 	}
 	
-	public static String getColoredText(String msg) {
+	public String getColoredText(String msg) {
 		return msg.replaceAll("&", String.valueOf('\u00a7'));
 	}
 	
-	@SubscribeEvent
-	public static void keyInput(InputUpdateEvent e) {
+	//@SubscribeEvent
+	public void keyInput(InputUpdateEvent e) {
 		if (Minecraft.getInstance().player == null)
 			return;
 		
@@ -256,13 +313,7 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void registerModels(ModelRegistryEvent ev) {
-		RegenObjects.ITEMS.forEach(RenderUtil::setItemRender);
-		RegenObjects.ITEMS = new ArrayList<>();
-	}
-	
-	@SubscribeEvent
-	public static void onDeath(LivingDeathEvent e) {
+	public void onDeath(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) e.getEntityLiving();
 			SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
@@ -273,11 +324,12 @@ public class ClientEventHandler {
 		}
 	}
 	
-	@SubscribeEvent
-	public static void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
-		SkinChangingHandler.PLAYER_SKINS.clear();
-		SkinChangingHandler.TYPE_BACKUPS.clear();
-	}
+	//TODO find out when the client logs out
+	//@SubscribeEvent
+	//public void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
+	//	SkinChangingHandler.PLAYER_SKINS.clear();
+	//	SkinChangingHandler.TYPE_BACKUPS.clear();
+	//}
 	
 	
 }

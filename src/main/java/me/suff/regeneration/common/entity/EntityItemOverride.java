@@ -240,4 +240,11 @@ public class EntityItemOverride extends Entity {
 			}
 		}
 	}
+	
+	public static interface IEntityOverride {
+		
+		void update(EntityItemOverride itemOverride);
+		
+		boolean shouldDie(ItemStack stack);
+	}
 }

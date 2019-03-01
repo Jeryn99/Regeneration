@@ -1,6 +1,5 @@
 package me.suff.regeneration.client.gui;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.config.GuiSlider;
 
 public class GuiColorSlider extends GuiSlider {
@@ -20,10 +19,10 @@ public class GuiColorSlider extends GuiSlider {
 	}
 	
 	@Override
-	protected void mouseDragged(Minecraft mc, int x, int y) {
-		super.mouseDragged(mc, x, y);
+	public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
 		sliderValue = round(sliderValue, 2);
 		displayString = dispString + ": " + sliderValue;
+		return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
 	}
 	
 }

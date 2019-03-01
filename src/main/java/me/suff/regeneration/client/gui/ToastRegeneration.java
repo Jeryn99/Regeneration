@@ -35,21 +35,21 @@ public class ToastRegeneration implements IToast {
 	
 	@Override
 	public IToast.Visibility draw(GuiToast toastGui, long delta) {
-		toastGui.getInstance().getTextureManager().bindTexture(TEXTURE_TOASTS);
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F);
+		toastGui.getMinecraft().getTextureManager().bindTexture(TEXTURE_TOASTS);
+		GlStateManager.color3f(1.0F, 1.0F, 1.0F);
 		toastGui.drawTexturedModalRect(0, 0, 0, 96, 160, 32);
 		
 		if (this.subtitle == null) {
-			toastGui.getInstance().fontRenderer.drawString(this.title, 30, 12, -11534256);
+			toastGui.getMinecraft().fontRenderer.drawString(this.title, 30, 12, -11534256);
 		} else {
-			toastGui.getInstance().fontRenderer.drawString(this.title, 30, 7, -11534256);
-			toastGui.getInstance().fontRenderer.drawString(this.subtitle, 30, 18, -16777216);
+			toastGui.getMinecraft().fontRenderer.drawString(this.title, 30, 7, -11534256);
+			toastGui.getMinecraft().fontRenderer.drawString(this.subtitle, 30, 18, -16777216);
 		}
 		
-		boolean visible = CapabilityRegeneration.getForPlayer(toastGui.getInstance().player).getState() == visibility;
+		boolean visible = CapabilityRegeneration.getForPlayer(toastGui.getMinecraft().player).getState() == visibility;
 		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.scale(1, 1, 1);
-		toastGui.getInstance().getRenderItem().renderItemAndEffectIntoGUI(null, itemStack, 8, 8);
+		GlStateManager.scalef(1, 1, 1);
+		toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(null, itemStack, 8, 8);
 		return visible ? Visibility.SHOW : Visibility.HIDE;
 	}
 	

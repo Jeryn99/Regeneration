@@ -9,20 +9,17 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 
 version = '1.0'
-group = 'me.suff.regeneration' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = 'me.suff.regeneration'
 archivesBaseName = 'regeneration'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
     mappings channel: 'snapshot', version: '20180921-1.13'
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    
-    accessTransformer = file('build/resources/main/META-INF/regeneration_at.cfg')
+    accessTransformer = file('src/main/resources/META-INF/regeneration_at.cfg')
 
     runs {
         client {
@@ -73,7 +70,6 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.13.2-25.0.63'
 }
 
-// Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([

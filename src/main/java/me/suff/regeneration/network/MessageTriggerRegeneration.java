@@ -15,24 +15,14 @@ import java.util.function.Supplier;
 
 public class MessageTriggerRegeneration {
 	
-	private UUID player;
-	private int dim;
-	
 	public MessageTriggerRegeneration() {
 	}
 	
-	public MessageTriggerRegeneration(UUID player, int dim) {
-		this.player = player;
-		this.dim = dim;
-	}
-	
 	public static void encode(MessageTriggerRegeneration msg, PacketBuffer buffer){
-		buffer.writeUniqueId(msg.player);
-		buffer.writeInt(msg.dim);
 	}
 	
 	public static MessageTriggerRegeneration decode(PacketBuffer buffer){
-		return new MessageTriggerRegeneration(buffer.readUniqueId(), buffer.readInt());
+		return new MessageTriggerRegeneration();
 	}
 	
 	
@@ -40,7 +30,7 @@ public class MessageTriggerRegeneration {
 		
 		public static void handle(MessageTriggerRegeneration message, Supplier<NetworkEvent.Context > ctx){
 			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
-				EntityPlayerMP player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByUUID(message.player);
+				EntityPlayerMP player = ctx.get().getSender();
 				RegenerationMod.DEBUGGER.getChannelFor(player).out("Regeneration keybind pressed");
 				IRegeneration regen = CapabilityRegeneration.getForPlayer(player);
 				

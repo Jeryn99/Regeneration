@@ -28,8 +28,8 @@ public class RenderLindos extends Render<Entity> {
 		float f = 0.1F;
 		for (int j = 0; j < 2; j++) {
 			RenderUtil.setupRenderLightning();
-			GlStateManager.translatef(x, y + 0.20, z);
-			GlStateManager.scale(0.9F, 0.9F, 0.9F);
+			GlStateManager.translated(x, y + 0.20, z);
+			GlStateManager.scalef(0.9F, 0.9F, 0.9F);
 			GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
 			
 			for (int i = 0; i < 3; i++) {

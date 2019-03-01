@@ -24,8 +24,8 @@ public class MessageRegenStateEvent {
 	}
 	
 	public static void encode(MessageRegenStateEvent event, PacketBuffer packetBuffer) {
-		packetBuffer.writeString(event.event);
 		packetBuffer.writeString(event.player.getGameProfile().getId().toString());
+		packetBuffer.writeString(event.event);
 	}
 	
 	public static MessageRegenStateEvent decode(PacketBuffer buffer) {
