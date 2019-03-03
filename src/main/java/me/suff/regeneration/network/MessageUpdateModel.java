@@ -28,12 +28,10 @@ public class MessageUpdateModel {
 	
 	public static class Handler {
 		public static void handle(MessageUpdateModel message, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
-				CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
-					cap.setPreferredModel(message.preferred);
-					cap.sync();
-				});
-			});
+			ctx.get().getSender().getServerWorld().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
+				cap.setPreferredModel(message.preferred);
+				cap.sync();
+			}));
 			ctx.get().setPacketHandled(true);
 		}
 	}

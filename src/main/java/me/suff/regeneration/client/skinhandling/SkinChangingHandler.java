@@ -108,7 +108,6 @@ public class SkinChangingHandler {
 	public static void sendSkinUpdate(Random random, EntityPlayer player) {
 		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID())
 			return;
-		
 		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
 			if (RegenConfig.CONFIG.changeMySkin.get()) {
 				boolean isAlex = cap.getPreferredModel().isAlex();
@@ -254,6 +253,9 @@ public class SkinChangingHandler {
 	
 	public static void setPlayerSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
 		if (skinType.getMojangType().equals(player.getSkinType())) return;
+		if(!TYPE_BACKUPS.containsKey(player.getUniqueID())){
+			TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
+		}
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);
 		ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), 5);
 	}
@@ -266,6 +268,7 @@ public class SkinChangingHandler {
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
+		PLAYER_SKINS.clear();
 		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
 			if (player.ticksExisted == 20) {
 				SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());
@@ -285,7 +288,6 @@ public class SkinChangingHandler {
 				if (skin == null) {
 					return;
 				}
-				
 				if (skin.getSkinTextureLocation() != null) {
 					setPlayerSkin(player, skin.getSkinTextureLocation());
 				}

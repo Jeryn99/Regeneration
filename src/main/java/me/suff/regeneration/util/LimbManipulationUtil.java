@@ -20,10 +20,6 @@ public class LimbManipulationUtil {
 	
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb) {
 		LimbManipulator manipulator = new LimbManipulator();
-		if (MinecraftForgeClient.getRenderPass() == -1) {
-			// rendering in inventory
-			return manipulator;
-		}
 		
 		List<LayerRenderer<AbstractClientPlayer>> layerList = renderPlayer.layerRenderers;
 		try {
@@ -86,9 +82,6 @@ public class LimbManipulationUtil {
 	
 	@SubscribeEvent
 	public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
-		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
-			return;
-		
 		RenderPlayer renderer = event.getRenderer();
 		ModelBase playerModel = renderer.getMainModel();
 		List<LayerRenderer<AbstractClientPlayer>> layerList = renderer.layerRenderers;
@@ -166,14 +159,14 @@ public class LimbManipulationUtil {
 		private boolean changeAngles = false;
 		private ModelBiped modelBiped;
 		private ModelRenderer old;
-		private Field f;
+		private Field oldModel;
 		
 		private CustomModelRenderer(ModelBiped model, int texOffX, int texOffY, ModelRenderer old, Field field) throws IllegalAccessException {
 			super(model, "");
 			modelBiped = model;
 			this.old = old;
 			setTextureOffset(texOffX, texOffY);
-			f = field;
+			oldModel = field;
 			cubeList = old.cubeList;
 			setRotationPoint(old.rotationPointX, old.rotationPointY, old.rotationPointZ);
 			field.set(model, this);
@@ -201,9 +194,9 @@ public class LimbManipulationUtil {
 		}
 		
 		public void reset() {
-			if (f != null) {
+			if (oldModel != null) {
 				try {
-					f.set(modelBiped, old);
+					oldModel.set(modelBiped, old);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}

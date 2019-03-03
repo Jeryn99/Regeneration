@@ -8,7 +8,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,16 +71,26 @@ public class ActingForwarder {
 	}
 	
 	public static void onClient(String event, LazyOptional<IRegeneration> cap) {
-		try {
-			for (IActingHandler handler : clientHandlers) {
-				handler.getClass().getMethod(event, IRegeneration.class).invoke(handler, cap); // TODO this can definitely be optimized
+		for (IActingHandler handler : clientHandlers) {
+			switch (event) {
+				case "onEnterGrace":
+					handler.onEnterGrace(cap);
+					break;
+				case "onRegenFinish":
+					handler.onRegenFinish(cap);
+					break;
+				case "onRegenTrigger":
+					handler.onRegenTrigger(cap);
+					break;
+				case "onGoCritical":
+					handler.onGoCritical(cap);
+					break;
+				case "onHandsStartGlowing":
+					handler.onHandsStartGlowing(cap);
+					break;
+				default:
+					break;
 			}
-		} catch (IllegalAccessException | IllegalArgumentException e) {
-			throw new IllegalStateException("Illegal handler method on client: " + event, e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException("Error while forwarding event to client (" + event + ")", e);
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException("Unknown method was forwarded '" + event + "'", e);
 		}
 	}
 	
@@ -89,11 +98,10 @@ public class ActingForwarder {
 	 * Knows what to forward by reflection magic
 	 */
 	private static void checkAndForward(LazyOptional<IRegeneration> data) {
+		String event = Thread.currentThread().getStackTrace()[2].getMethodName();
 		data.ifPresent((cap) -> {
 			if (cap.getPlayer().world.isRemote)
 				throw new IllegalStateException("'Posting' \"acting\" `event` from client");
-			
-			String event = Thread.currentThread().getStackTrace()[2].getMethodName();
 			NetworkHandler.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP) cap.getPlayer());
 		});
 	}

@@ -20,30 +20,30 @@ import java.util.function.Supplier;
 public class MessagePlayRegenerationSound {
 	
 	private String sound;
-	private String playerUUID;
+	private UUID playerUUID;
 	
 	public MessagePlayRegenerationSound() {
 	}
 	
-	public MessagePlayRegenerationSound(ResourceLocation sound, String playerUUID) {
+	public MessagePlayRegenerationSound(ResourceLocation sound, UUID playerUUID) {
 		this.playerUUID = playerUUID;
 		this.sound = sound.toString();
 	}
 	
 	public static void encode(MessagePlayRegenerationSound message, PacketBuffer buffer) {
-		buffer.writeString(message.playerUUID);
+		buffer.writeUniqueId(message.playerUUID);
 		buffer.writeString(message.sound);
 	}
 	
 	public static MessagePlayRegenerationSound decode(PacketBuffer buffer) {
-		return new MessagePlayRegenerationSound((new ResourceLocation(buffer.readString(600))), buffer.readString(600));
+		return new MessagePlayRegenerationSound((new ResourceLocation(buffer.readString(600))), buffer.readUniqueId());
 	}
 	
 	public static class Handler {
 		
 		public static void handle(MessagePlayRegenerationSound message, Supplier<NetworkEvent.Context> ctx) {
 			Minecraft.getInstance().addScheduledTask(() -> {
-				EntityPlayer player = Minecraft.getInstance().world.getPlayerEntityByUUID(UUID.fromString(message.playerUUID));
+				EntityPlayer player = Minecraft.getInstance().world.getPlayerEntityByUUID(message.playerUUID);
 				if (player != null) {
 					CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> ClientUtil.playSound(player, new ResourceLocation(message.sound), SoundCategory.PLAYERS, true, () -> !data.getState().equals(RegenState.REGENERATING), 1.0F));
 				}
