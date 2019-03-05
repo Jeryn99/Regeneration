@@ -1,5 +1,6 @@
 package me.suff.regeneration.util;
 
+import me.suff.regeneration.RegenerationMod;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -8,18 +9,25 @@ import net.minecraft.client.renderer.entity.model.ModelBase;
 import net.minecraft.client.renderer.entity.model.ModelBiped;
 import net.minecraft.client.renderer.entity.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = RegenerationMod.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
 public class LimbManipulationUtil {
 	
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb) {
 		LimbManipulator manipulator = new LimbManipulator();
+		if (MinecraftForgeClient.getRenderPass() == -1) {
+			// rendering in inventory
+			return manipulator;
+		}
 		
 		List<LayerRenderer<AbstractClientPlayer>> layerList = renderPlayer.layerRenderers;
 		try {
@@ -64,24 +72,11 @@ public class LimbManipulationUtil {
 		return manipulator;
 	}
 	
-	public enum Limb {
-		HEAD(ModelBiped.class.getDeclaredFields()[0], ModelBiped.class.getDeclaredFields()[1]),
-		BODY(ModelBiped.class.getDeclaredFields()[2], ModelPlayer.class.getDeclaredFields()[4]),
-		LEFT_ARM(ModelBiped.class.getDeclaredFields()[4], ModelPlayer.class.getDeclaredFields()[0]),
-		RIGHT_ARM(ModelBiped.class.getDeclaredFields()[3], ModelPlayer.class.getDeclaredFields()[1]),
-		LEFT_LEG(ModelBiped.class.getDeclaredFields()[6], ModelPlayer.class.getDeclaredFields()[2]),
-		RIGHT_LEG(ModelBiped.class.getDeclaredFields()[5], ModelPlayer.class.getDeclaredFields()[3]);
-		
-		public Field rendererField, secondaryRendererField;
-		
-		Limb(Field rendererField, Field secondaryRendererField) {
-			this.rendererField = rendererField;
-			this.secondaryRendererField = secondaryRendererField;
-		}
-	}
-	
 	@SubscribeEvent
-	public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+	public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
+			return;
+		
 		RenderPlayer renderer = event.getRenderer();
 		ModelBase playerModel = renderer.getMainModel();
 		List<LayerRenderer<AbstractClientPlayer>> layerList = renderer.layerRenderers;
@@ -89,7 +84,7 @@ public class LimbManipulationUtil {
 		if (playerModel != null && playerModel.boxList != null) {
 			for (ModelRenderer modelRenderer : playerModel.boxList) {
 				if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-					LimbManipulationUtil.CustomModelRenderer customMr = (LimbManipulationUtil.CustomModelRenderer) modelRenderer;
+					CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
 					customMr.reset();
 				}
 			}
@@ -106,7 +101,7 @@ public class LimbManipulationUtil {
 						if (biped != null && biped.boxList != null) {
 							for (ModelRenderer modelRenderer : biped.boxList) {
 								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-									LimbManipulationUtil.CustomModelRenderer customMr = (LimbManipulationUtil.CustomModelRenderer) modelRenderer;
+									CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
 									customMr.reset();
 								}
 							}
@@ -119,7 +114,7 @@ public class LimbManipulationUtil {
 						if (modelPlayer != null && modelPlayer.boxList != null) {
 							for (ModelRenderer modelRenderer : modelPlayer.boxList) {
 								if (modelRenderer instanceof LimbManipulationUtil.CustomModelRenderer) {
-									LimbManipulationUtil.CustomModelRenderer customMr = (LimbManipulationUtil.CustomModelRenderer) modelRenderer;
+									CustomModelRenderer customMr = (CustomModelRenderer) modelRenderer;
 									customMr.reset();
 								}
 							}
@@ -132,6 +127,21 @@ public class LimbManipulationUtil {
 		}
 	}
 	
+	public enum Limb {
+		HEAD(ModelBiped.class.getDeclaredFields()[0], ModelBiped.class.getDeclaredFields()[1]),
+		BODY(ModelBiped.class.getDeclaredFields()[2], ModelPlayer.class.getDeclaredFields()[4]),
+		LEFT_ARM(ModelBiped.class.getDeclaredFields()[4], ModelPlayer.class.getDeclaredFields()[0]),
+		RIGHT_ARM(ModelBiped.class.getDeclaredFields()[3], ModelPlayer.class.getDeclaredFields()[1]),
+		LEFT_LEG(ModelBiped.class.getDeclaredFields()[6], ModelPlayer.class.getDeclaredFields()[2]),
+		RIGHT_LEG(ModelBiped.class.getDeclaredFields()[5], ModelPlayer.class.getDeclaredFields()[3]);
+		
+		public Field rendererField, secondaryRendererField;
+		
+		Limb(Field rendererField, Field secondaryRendererField) {
+			this.rendererField = rendererField;
+			this.secondaryRendererField = secondaryRendererField;
+		}
+	}
 	
 	public static class LimbManipulator {
 		
@@ -159,28 +169,28 @@ public class LimbManipulationUtil {
 		private boolean changeAngles = false;
 		private ModelBiped modelBiped;
 		private ModelRenderer old;
-		private Field oldModel;
+		private Field f;
 		
 		private CustomModelRenderer(ModelBiped model, int texOffX, int texOffY, ModelRenderer old, Field field) throws IllegalAccessException {
 			super(model, "");
 			modelBiped = model;
 			this.old = old;
 			setTextureOffset(texOffX, texOffY);
-			oldModel = field;
+			f = field;
 			cubeList = old.cubeList;
 			setRotationPoint(old.rotationPointX, old.rotationPointY, old.rotationPointZ);
 			field.set(model, this);
 		}
 		
 		@Override
-		public void render(float scale) {
+		public void render(float scalef) {
 			if (changeAngles) {
 				rotateAngleX = actualX;
 				rotateAngleY = actualY;
 				rotateAngleZ = actualZ;
 			}
 			GlStateManager.pushMatrix();
-			GlStateManager.translatef(rotationPointX * scale, rotationPointY * scale, rotationPointZ * scale);
+			GlStateManager.translatef(rotationPointX * scalef, rotationPointY * scalef, rotationPointZ * scalef);
 			GlStateManager.rotatef(rotateAngleZ * 57.295776F, 0.0F, 0.0F, 1.0F);
 			GlStateManager.rotatef(rotateAngleY * 57.295776F, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotatef(rotateAngleX * 57.295776F, 1.0F, 0.0F, 0.0F);
@@ -188,15 +198,15 @@ public class LimbManipulationUtil {
 			GlStateManager.rotatef(rotateAngleX * 57.295776F, -1.0F, 0.0F, 0.0F);
 			GlStateManager.rotatef(rotateAngleY * 57.295776F, 0.0F, -1.0F, 0.0F);
 			GlStateManager.rotatef(rotateAngleZ * 57.295776F, 0.0F, 0.0F, -1.0F);
-			GlStateManager.translatef(-rotationPointX * scale, -rotationPointY * scale, -rotationPointZ * scale);
-			super.render(scale);
+			GlStateManager.translatef(-rotationPointX * scalef, -rotationPointY * scalef, -rotationPointZ * scalef);
+			super.render(scalef);
 			GlStateManager.popMatrix();
 		}
 		
 		public void reset() {
-			if (oldModel != null) {
+			if (f != null) {
 				try {
-					oldModel.set(modelBiped, old);
+					f.set(modelBiped, old);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}
@@ -218,37 +228,6 @@ public class LimbManipulationUtil {
 			offX = x;
 			offY = y;
 			offZ = z;
-		}
-	}
-	
-	public static class LimbHelper {
-		
-		//Head
-		public static void rotateHead(RenderPlayer render, float x, float y, float z) {
-			getLimbManipulator(render, Limb.HEAD).setAngles(x, y, z);
-		}
-		
-		//Arms
-		public static void rotateLeftArm(RenderPlayer render, float x, float y, float z) {
-			getLimbManipulator(render, Limb.LEFT_ARM).setAngles(x, y, z);
-		}
-		
-		public static void rotateRightArm(RenderPlayer render, float x, float y, float z) {
-			getLimbManipulator(render, Limb.RIGHT_ARM).setAngles(x, y, z);
-		}
-		
-		//Legs
-		public static void rotateLeftLeg(RenderPlayer render, float x, float y, float z) {
-			getLimbManipulator(render, Limb.LEFT_LEG).setAngles(x, y, z);
-		}
-		
-		public static void rotateRightLeg(RenderPlayer render, float x, float y, float z) {
-			getLimbManipulator(render, Limb.RIGHT_LEG).setAngles(x, y, z);
-		}
-		
-		//Body
-		public static void rotateBody(RenderPlayer render, float x, float y, float z) {
-			getLimbManipulator(render, Limb.BODY).setAngles(x, y, z);
 		}
 	}
 }

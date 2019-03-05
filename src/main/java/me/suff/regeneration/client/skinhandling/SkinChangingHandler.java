@@ -128,7 +128,12 @@ public class SkinChangingHandler {
 					ClientUtil.sendSkinResetPacket();
 					RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
 				} else {
-					NetworkHandler.sendToServer(new MessageUpdateSkin(new PacketBuffer(Unpooled.wrappedBuffer(pixelData)), isAlex));
+					System.out.println("CLIENT " + Arrays.toString(pixelData));
+					
+					PacketBuffer output = new PacketBuffer(Unpooled.buffer());
+					output.writeBytes(pixelData);
+					
+					NetworkHandler.sendToServer(new MessageUpdateSkin(output, isAlex));
 				}
 			} else {
 				ClientUtil.sendSkinResetPacket();
@@ -166,7 +171,6 @@ public class SkinChangingHandler {
 		
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
 			resourceLocation = getMojangSkin(player);
-			
 			if (wasAlex(player)) {
 				skinType = SkinInfo.SkinType.ALEX;
 			} else {

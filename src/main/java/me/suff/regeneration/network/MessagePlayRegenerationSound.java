@@ -6,6 +6,7 @@ import me.suff.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.server.SPacketSoundEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -19,7 +20,7 @@ import java.util.function.Supplier;
  */
 public class MessagePlayRegenerationSound {
 	
-	private String sound;
+	private ResourceLocation sound;
 	private UUID playerUUID;
 	
 	public MessagePlayRegenerationSound() {
@@ -27,16 +28,16 @@ public class MessagePlayRegenerationSound {
 	
 	public MessagePlayRegenerationSound(ResourceLocation sound, UUID playerUUID) {
 		this.playerUUID = playerUUID;
-		this.sound = sound.toString();
+		this.sound = sound;
 	}
 	
 	public static void encode(MessagePlayRegenerationSound message, PacketBuffer buffer) {
+		buffer.writeResourceLocation(message.sound);
 		buffer.writeUniqueId(message.playerUUID);
-		buffer.writeString(message.sound);
 	}
 	
 	public static MessagePlayRegenerationSound decode(PacketBuffer buffer) {
-		return new MessagePlayRegenerationSound((new ResourceLocation(buffer.readString(600))), buffer.readUniqueId());
+		return new MessagePlayRegenerationSound(buffer.readResourceLocation(), buffer.readUniqueId());
 	}
 	
 	public static class Handler {
@@ -45,7 +46,7 @@ public class MessagePlayRegenerationSound {
 			Minecraft.getInstance().addScheduledTask(() -> {
 				EntityPlayer player = Minecraft.getInstance().world.getPlayerEntityByUUID(message.playerUUID);
 				if (player != null) {
-					CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> ClientUtil.playSound(player, new ResourceLocation(message.sound), SoundCategory.PLAYERS, true, () -> !data.getState().equals(RegenState.REGENERATING), 1.0F));
+					CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.getState().equals(RegenState.REGENERATING), 1.0F));
 				}
 			});
 			ctx.get().setPacketHandled(true);

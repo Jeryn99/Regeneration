@@ -2,6 +2,7 @@ package me.suff.regeneration.client.rendering;
 
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.TypeFiery;
+import me.suff.regeneration.util.LimbHelper;
 import me.suff.regeneration.util.LimbManipulationUtil;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -47,12 +48,12 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			armRot = (int) ((animationProgress / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
 		}
 		
-		LimbManipulationUtil.LimbHelper.rotateHead(renderPlayer, -headRot, 0, 0);
-		LimbManipulationUtil.LimbHelper.rotateLeftArm(renderPlayer, 0, 0, -armRot + arm_shake);
-		LimbManipulationUtil.LimbHelper.rotateRightArm(renderPlayer, 0, 0, armRot + arm_shake);
-		LimbManipulationUtil.LimbHelper.rotateRightLeg(renderPlayer, 0, 0, 10);
-		LimbManipulationUtil.LimbHelper.rotateLeftLeg(renderPlayer, 0, 0, -10);
-		LimbManipulationUtil.LimbHelper.rotateBody(renderPlayer, 0, 0, 0);
+		LimbHelper.rotateHead(renderPlayer, -headRot, 0, 0);
+		LimbHelper.rotateLeftArm(renderPlayer, 0, 0, -armRot + arm_shake);
+		LimbHelper.rotateRightArm(renderPlayer, 0, 0, armRot + arm_shake);
+		LimbHelper.rotateRightLeg(renderPlayer, 0, 0, 10);
+		LimbHelper.rotateLeftLeg(renderPlayer, 0, 0, -10);
+		LimbHelper.rotateBody(renderPlayer, 0, 0, 0);
 	}
 	
 	@Override

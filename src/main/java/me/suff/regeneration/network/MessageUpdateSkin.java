@@ -42,6 +42,7 @@ public class MessageUpdateSkin {
 				EntityPlayerMP player = ctx.get().getSender();
 				CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
 					cap.setEncodedSkin(message.encodedSkin.readByteArray());
+					System.out.println("SERVER SKIN " + cap.getEncodedSkin());
 					if (message.isAlex) {
 						cap.setSkinType(SkinInfo.SkinType.ALEX.name());
 					} else {
