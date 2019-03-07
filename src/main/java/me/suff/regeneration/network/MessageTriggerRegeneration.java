@@ -10,9 +10,6 @@ import java.util.function.Supplier;
 
 public class MessageTriggerRegeneration {
 	
-	public MessageTriggerRegeneration() {
-	}
-	
 	public static void encode(MessageTriggerRegeneration msg, PacketBuffer buffer) {
 	}
 	

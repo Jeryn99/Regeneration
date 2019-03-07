@@ -18,9 +18,6 @@ public class MessageUpdateSkin {
 	private boolean isAlex;
 	private PacketBuffer encodedSkin;
 	
-	public MessageUpdateSkin() {
-	}
-	
 	public MessageUpdateSkin(PacketBuffer pixelData, boolean isAlex) {
 		encodedSkin = pixelData;
 		this.isAlex = isAlex;
@@ -33,14 +30,13 @@ public class MessageUpdateSkin {
 	
 	
 	public static MessageUpdateSkin decode(PacketBuffer buf) {
-		return new MessageUpdateSkin(new PacketBuffer(Unpooled.wrappedBuffer(buf.readByteArray(32600))), buf.readBoolean());
+		return new MessageUpdateSkin(buf, buf.readBoolean());
 	}
 	
 	public static class Handler {
 		public static void handle(MessageUpdateSkin message, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
-				EntityPlayerMP player = ctx.get().getSender();
-				CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+				CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
 					cap.setEncodedSkin(message.encodedSkin.readByteArray());
 					System.out.println("SERVER SKIN " + cap.getEncodedSkin());
 					if (message.isAlex) {
@@ -50,8 +46,9 @@ public class MessageUpdateSkin {
 					}
 					cap.sync();
 					
-					NetworkHandler.sendPacketToAll(new MessageRemovePlayer(player.getUniqueID()));
+					NetworkHandler.sendPacketToAll(new MessageRemovePlayer(ctx.get().getSender().getUniqueID()));
 				});
+				
 			});
 			ctx.get().setPacketHandled(true);
 		}

@@ -13,9 +13,6 @@ public class MessageSynchronisationRequest {
 	
 	private UUID player;
 	
-	public MessageSynchronisationRequest() {
-	}
-	
 	public MessageSynchronisationRequest(UUID player) {
 		this.player = player;
 	}

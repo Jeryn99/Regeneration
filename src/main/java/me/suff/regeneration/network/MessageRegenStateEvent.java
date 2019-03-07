@@ -18,9 +18,6 @@ public class MessageRegenStateEvent {
 	private EntityPlayer player;
 	private String event;
 	
-	public MessageRegenStateEvent() {
-	}
-	
 	public MessageRegenStateEvent(EntityPlayer player, String event) {
 		this.player = player;
 		this.event = event;

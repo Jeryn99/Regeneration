@@ -66,6 +66,7 @@ public class ClientEventHandler {
 	public void onGui(InputUpdateEvent tickEvent) {
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
 		Minecraft minecraft = Minecraft.getInstance();
+		
 		if (minecraft.currentScreen == null && minecraft.player != null) {
 			ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
 		}

@@ -128,11 +128,9 @@ public class SkinChangingHandler {
 					ClientUtil.sendSkinResetPacket();
 					RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
 				} else {
-					System.out.println("CLIENT " + Arrays.toString(pixelData));
-					
 					PacketBuffer output = new PacketBuffer(Unpooled.buffer());
 					output.writeBytes(pixelData);
-					
+					System.out.println(output.readByteArray());
 					NetworkHandler.sendToServer(new MessageUpdateSkin(output, isAlex));
 				}
 			} else {
@@ -167,6 +165,7 @@ public class SkinChangingHandler {
 	private static SkinInfo getSkinInfo(AbstractClientPlayer player, IRegeneration data) throws IOException {
 		byte[] encodedSkin = data.getEncodedSkin();
 		ResourceLocation resourceLocation;
+		System.out.println(encodedSkin);
 		SkinInfo.SkinType skinType = null;
 		
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
@@ -184,7 +183,7 @@ public class SkinChangingHandler {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
 				File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
-				ResourceLocation tempLocation = new ResourceLocation(player.getName() + "_skin_" + System.currentTimeMillis());
+				ResourceLocation tempLocation = new ResourceLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis());
 				Minecraft.getInstance().getTextureManager().loadTexture(tempLocation, new DynamicTexture(NativeImage.read(new FileInputStream(file))));
 				resourceLocation = tempLocation;
 				skinType = data.getSkinType();
@@ -225,7 +224,7 @@ public class SkinChangingHandler {
 			
 			File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
 			ImageIO.write(image, "png", file);
-			ResourceLocation tempLocation = new ResourceLocation(player.getName() + "_skin_" + System.currentTimeMillis());
+			ResourceLocation tempLocation = new ResourceLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis());
 			minecraft.getTextureManager().loadTexture(tempLocation, new DynamicTexture(NativeImage.read(new FileInputStream(file))));
 			return tempLocation;
 		}
@@ -272,7 +271,6 @@ public class SkinChangingHandler {
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
-		PLAYER_SKINS.clear();
 		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
 			if (player.ticksExisted == 20) {
 				SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());

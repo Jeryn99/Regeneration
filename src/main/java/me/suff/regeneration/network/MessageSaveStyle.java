@@ -15,9 +15,6 @@ public class MessageSaveStyle {
 	
 	private NBTTagCompound style;
 	
-	public MessageSaveStyle() {
-	}
-	
 	public MessageSaveStyle(NBTTagCompound nbtTagCompound) {
 		style = nbtTagCompound;
 	}

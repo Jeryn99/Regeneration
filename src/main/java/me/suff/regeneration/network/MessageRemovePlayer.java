@@ -16,9 +16,6 @@ public class MessageRemovePlayer {
 	
 	private UUID playerUUID;
 	
-	public MessageRemovePlayer() {
-	}
-	
 	public MessageRemovePlayer(UUID uuid) {
 		this.playerUUID = uuid;
 	}

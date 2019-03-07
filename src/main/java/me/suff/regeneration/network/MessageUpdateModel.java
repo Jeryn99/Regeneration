@@ -10,10 +10,6 @@ public class MessageUpdateModel {
 	
 	private String preferred;
 	
-	
-	public MessageUpdateModel() {
-	}
-	
 	public MessageUpdateModel(String preferred) {
 		this.preferred = preferred;
 	}

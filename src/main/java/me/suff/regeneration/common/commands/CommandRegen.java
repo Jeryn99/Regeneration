@@ -6,6 +6,10 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
+import me.suff.regeneration.util.ClientUtil;
+import net.minecraft.client.gui.GuiScreenServerList;
+import net.minecraft.client.gui.GuiWorldSelection;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -27,7 +31,6 @@ public class CommandRegen {
 	}
 	
 	private static int glow(CommandSource source) {
-		//TODO : Glow action on Command
 		return Command.SINGLE_SUCCESS;
 	}
 	

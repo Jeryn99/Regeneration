@@ -23,9 +23,6 @@ public class MessagePlayRegenerationSound {
 	private ResourceLocation sound;
 	private UUID playerUUID;
 	
-	public MessagePlayRegenerationSound() {
-	}
-	
 	public MessagePlayRegenerationSound(ResourceLocation sound, UUID playerUUID) {
 		this.playerUUID = playerUUID;
 		this.sound = sound;

@@ -14,9 +14,6 @@ public class MessageSetPerspective {
 	
 	private boolean resetPitch, thirdperson;
 	
-	public MessageSetPerspective() {
-	}
-	
 	public MessageSetPerspective(boolean thirdperson, boolean resetPitch) {
 		this.resetPitch = resetPitch;
 		this.thirdperson = thirdperson;
