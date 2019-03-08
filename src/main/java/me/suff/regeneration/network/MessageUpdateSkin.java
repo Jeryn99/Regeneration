@@ -5,7 +5,6 @@ import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.Arrays;
 import java.util.function.Supplier;
 
 /**
@@ -37,14 +36,12 @@ public class MessageUpdateSkin {
 			ctx.get().getSender().getServerWorld().addScheduledTask(() ->
 					CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
 						cap.setEncodedSkin(message.encodedSkin);
-						System.out.println("SERVER SKIN " + cap.getEncodedSkin());
 						if (message.isAlex) {
 							cap.setSkinType(SkinInfo.SkinType.ALEX.name());
 						} else {
 							cap.setSkinType(SkinInfo.SkinType.STEVE.name());
 						}
 						cap.sync();
-						
 						NetworkHandler.sendPacketToAll(new MessageRemovePlayer(ctx.get().getSender().getUniqueID()));
 					}));
 			ctx.get().setPacketHandled(true);

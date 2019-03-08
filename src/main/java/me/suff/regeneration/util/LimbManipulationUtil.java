@@ -1,6 +1,5 @@
 package me.suff.regeneration.util;
 
-import me.suff.regeneration.RegenerationMod;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -9,17 +8,14 @@ import net.minecraft.client.renderer.entity.model.ModelBase;
 import net.minecraft.client.renderer.entity.model.ModelBiped;
 import net.minecraft.client.renderer.entity.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.model.ModelRenderer;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = RegenerationMod.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
 public class LimbManipulationUtil {
 	
 	public static LimbManipulator getLimbManipulator(RenderPlayer renderPlayer, Limb limb) {
@@ -73,7 +69,7 @@ public class LimbManipulationUtil {
 	}
 	
 	@SubscribeEvent
-	public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+	public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
 		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
 			return;
 		
@@ -168,29 +164,29 @@ public class LimbManipulationUtil {
 		private float offX, offY, offZ;
 		private boolean changeAngles = false;
 		private ModelBiped modelBiped;
-		private ModelRenderer old;
-		private Field f;
+		private ModelRenderer oldModelRenderer;
+		private Field renderField;
 		
-		private CustomModelRenderer(ModelBiped model, int texOffX, int texOffY, ModelRenderer old, Field field) throws IllegalAccessException {
+		private CustomModelRenderer(ModelBiped model, int texOffX, int texOffY, ModelRenderer oldModelRenderer, Field field) throws IllegalAccessException {
 			super(model, "");
 			modelBiped = model;
-			this.old = old;
+			this.oldModelRenderer = oldModelRenderer;
 			setTextureOffset(texOffX, texOffY);
-			f = field;
-			cubeList = old.cubeList;
-			setRotationPoint(old.rotationPointX, old.rotationPointY, old.rotationPointZ);
+			renderField = field;
+			cubeList = oldModelRenderer.cubeList;
+			setRotationPoint(oldModelRenderer.rotationPointX, oldModelRenderer.rotationPointY, oldModelRenderer.rotationPointZ);
 			field.set(model, this);
 		}
 		
 		@Override
-		public void render(float scalef) {
+		public void render(float scale) {
 			if (changeAngles) {
 				rotateAngleX = actualX;
 				rotateAngleY = actualY;
 				rotateAngleZ = actualZ;
 			}
 			GlStateManager.pushMatrix();
-			GlStateManager.translatef(rotationPointX * scalef, rotationPointY * scalef, rotationPointZ * scalef);
+			GlStateManager.translatef(rotationPointX * scale, rotationPointY * scale, rotationPointZ * scale);
 			GlStateManager.rotatef(rotateAngleZ * 57.295776F, 0.0F, 0.0F, 1.0F);
 			GlStateManager.rotatef(rotateAngleY * 57.295776F, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotatef(rotateAngleX * 57.295776F, 1.0F, 0.0F, 0.0F);
@@ -198,18 +194,16 @@ public class LimbManipulationUtil {
 			GlStateManager.rotatef(rotateAngleX * 57.295776F, -1.0F, 0.0F, 0.0F);
 			GlStateManager.rotatef(rotateAngleY * 57.295776F, 0.0F, -1.0F, 0.0F);
 			GlStateManager.rotatef(rotateAngleZ * 57.295776F, 0.0F, 0.0F, -1.0F);
-			GlStateManager.translatef(-rotationPointX * scalef, -rotationPointY * scalef, -rotationPointZ * scalef);
-			super.render(scalef);
+			GlStateManager.translatef(-rotationPointX * scale, -rotationPointY * scale, -rotationPointZ * scale);
+			super.render(scale);
 			GlStateManager.popMatrix();
 		}
 		
 		public void reset() {
-			if (f != null) {
-				try {
-					f.set(modelBiped, old);
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
+			try {
+				renderField.set(modelBiped, oldModelRenderer);
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
 			}
 		}
 		

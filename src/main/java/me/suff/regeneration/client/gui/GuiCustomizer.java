@@ -3,7 +3,6 @@ package me.suff.regeneration.client.gui;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
-import me.suff.regeneration.common.dna.DnaHandler;
 import me.suff.regeneration.network.MessageSaveStyle;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
@@ -164,10 +163,6 @@ public class GuiCustomizer extends GuiContainer {
 				str = new TextComponentTranslation("regeneration.gui.remaining_regens.status").getFormattedText() + " " + cap.getRegenerationsLeft();
 			length = mc.fontRenderer.getStringWidth(str);
 			fontRenderer.drawString(str, cx + 86 - length / 2, cy + 21, Color.DARK_GRAY.getRGB());
-			
-			TextComponentTranslation traitLang = new TextComponentTranslation(DnaHandler.getDnaEntry(cap.getDnaType()).getLangKey());
-			fontRenderer.drawString(traitLang.getUnformattedComponentText(), cx + 86 - length / 2, cy + 30, Color.DARK_GRAY.getRGB());
-			
 		});
 	}
 	

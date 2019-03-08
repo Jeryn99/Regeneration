@@ -70,27 +70,15 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public void onPlayerClone(PlayerEvent.Clone event) {
 		IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
-		
-		IRegeneration oldCap = CapabilityRegeneration.getForPlayer(event.getOriginal()).orElse(null);
-		IRegeneration newCap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).orElse(null);
-		
-		NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, oldCap, null);
-		storage.readNBT(CapabilityRegeneration.CAPABILITY, newCap, null, nbt);
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).ifPresent(IRegeneration::sync);
+		CapabilityRegeneration.getForPlayer(event.getOriginal()).ifPresent((old) -> CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).ifPresent((data) -> {
+			NBTTagCompound nbt = (NBTTagCompound) storage.writeNBT(CapabilityRegeneration.CAPABILITY, old, null);
+			storage.readNBT(CapabilityRegeneration.CAPABILITY, data, null, nbt);
+		}));
 	}
 	
 	@SubscribeEvent
 	public void playerTracking(PlayerEvent.StartTracking event) {
 		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).ifPresent(IRegeneration::sync);
-	}
-	
-	@SubscribeEvent
-	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		if (!RegenConfig.CONFIG.firstStartGiftOnly.get())
-			CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent((cap) -> {
-				cap.receiveRegenerations(RegenConfig.CONFIG.freeRegenerations.get());
-			});
-		CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent(IRegeneration::sync);
 	}
 	
 	@SubscribeEvent
@@ -171,20 +159,6 @@ public class RegenEventHandler {
 				}
 			});
 		}
-	}
-	
-	// ================ OTHER ==============
-	@SubscribeEvent
-	public void onLogin(PlayerLoggedInEvent event) {
-		if (event.getPlayer().world.isRemote)
-			return;
-		//TODO : Does this work?
-		NBTTagCompound nbt = event.getPlayer().getEntityData();
-		INBTBase persist = nbt.getTag(EntityPlayer.PERSISTED_NBT_TAG);
-		if (!nbt.getBoolean("loggedInBefore"))
-			CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent((cap) -> cap.receiveRegenerations(RegenConfig.CONFIG.freeRegenerations.get()));
-		nbt.setBoolean("loggedInBefore", true);
-		nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
 	}
 	
 	@SubscribeEvent

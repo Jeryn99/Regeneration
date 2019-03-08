@@ -3,7 +3,6 @@ package me.suff.regeneration.client.rendering;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.TypeFiery;
 import me.suff.regeneration.util.LimbHelper;
-import me.suff.regeneration.util.LimbManipulationUtil;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

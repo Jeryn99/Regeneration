@@ -16,8 +16,6 @@ public class RegenConfig {
 	public static class MyConfig {
 		
 		public final ForgeConfigSpec.IntValue regenCapacity;
-		public final ForgeConfigSpec.IntValue freeRegenerations;
-		public final ForgeConfigSpec.BooleanValue firstStartGiftOnly;
 		public final ForgeConfigSpec.BooleanValue loseRegensOnDeath;
 		public final ForgeConfigSpec.BooleanValue fieryRegen;
 		public final ForgeConfigSpec.BooleanValue regenFireImmune;
@@ -46,12 +44,7 @@ public class RegenConfig {
 		
 		MyConfig(ForgeConfigSpec.Builder builder) {
 			builder.comment("General Regeneration Settings").push("common");
-			System.out.println("L:iterallyt just saagssgwseed");
 			regenCapacity = builder.comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.").translation("config.regeneration.max_regens").defineInRange("regenCapacity", 12, 0, Integer.MAX_VALUE);
-			
-			freeRegenerations = builder.comment("Every player will start with this number of regenerations. Will cause undefined behavior if bigger than the amount of regenerations per cycle.").translation("config.regeneration.free_regens").defineInRange("freeRegenerations", 0, 0, Integer.MAX_VALUE);
-			
-			firstStartGiftOnly = builder.comment("Only give new players free regenerations").translation("config.regeneration.first_start_gift_only").define("firstStartGiftOnly", true);
 			
 			loseRegensOnDeath = builder.comment("If this is false you won't lose your regenerations if you get killed during regeneration").translation("config.regeneration.lose_regens_on_death").define("loseRegensOnDeath", false);
 			

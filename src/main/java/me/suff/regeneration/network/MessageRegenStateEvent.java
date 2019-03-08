@@ -1,16 +1,12 @@
 package me.suff.regeneration.network;
 
-import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
-import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.handlers.ActingForwarder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public class MessageRegenStateEvent {

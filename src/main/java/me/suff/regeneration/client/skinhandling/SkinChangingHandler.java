@@ -31,14 +31,12 @@ import org.apache.logging.log4j.Logger;
 import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.HashMap;
@@ -123,22 +121,21 @@ public class SkinChangingHandler {
 					e.printStackTrace();
 				}
 				
-				String pixelData = String.valueOf("none");
+				String pixelData = "none";
 				try {
 					pixelData = SkinChangingHandler.imageToPixelData(skin);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				cap.setEncodedSkin(pixelData);
-				System.out.println(pixelData);
-					NetworkHandler.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
-				} else {
+				NetworkHandler.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+			} else {
 				ClientUtil.sendSkinResetPacket();
 			}
 		});
 	}
 	
-	private static File chooseRandomSkin(Random rand, boolean isAlex) throws IOException {
+	private static File chooseRandomSkin(Random rand, boolean isAlex)  {
 		File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
 		Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		if (folderFiles.isEmpty()) {
@@ -169,7 +166,6 @@ public class SkinChangingHandler {
 		} else {
 			BufferedImage bufferedImage = toImage(player, data.getEncodedSkin());
 			bufferedImage = ImageFixer.convertSkinTo64x64(bufferedImage);
-			System.out.println("CLIENT " + data.getEncodedSkin());
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
@@ -248,7 +244,7 @@ public class SkinChangingHandler {
 	
 	public static void setPlayerSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
 		if (skinType.getMojangType().equals(player.getSkinType())) return;
-		if(!TYPE_BACKUPS.containsKey(player.getUniqueID())){
+		if (!TYPE_BACKUPS.containsKey(player.getUniqueID())) {
 			TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
 		}
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);

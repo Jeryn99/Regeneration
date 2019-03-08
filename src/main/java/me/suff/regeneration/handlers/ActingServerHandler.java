@@ -3,7 +3,6 @@ package me.suff.regeneration.handlers;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.dna.DnaHandler;
 import me.suff.regeneration.network.MessagePlayRegenerationSound;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.PlayerUtil;
@@ -107,8 +106,6 @@ class ActingServerHandler implements IActingHandler {
 				player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
 			}
 			
-			DnaHandler.IDna dna = DnaHandler.getDnaEntry(cap.getDnaType());
-			dna.onRemoved(cap);
 			cap.setDnaActive(false);
 			RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied health reduction");
 			player.setHealth(player.getMaxHealth());
@@ -137,12 +134,6 @@ class ActingServerHandler implements IActingHandler {
 			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.CONFIG.postRegenerationDuration.get() * 2, RegenConfig.CONFIG.postRegenerationLevel.get() - 1, false, false));
 			player.setHealth(player.getMaxHealth());
 			player.setAbsorptionAmount(RegenConfig.CONFIG.absorbtionLevel.get() * 2);
-			
-			cap.setDnaType(DnaHandler.getRandomDna(player.world.rand).getRegistryName());
-			DnaHandler.IDna newDna = DnaHandler.getDnaEntry(cap.getDnaType());
-			newDna.onAdded(cap);
-			cap.setDnaActive(true);
-			PlayerUtil.sendMessage(player, new TextComponentTranslation(newDna.getLangKey()), true);
 		});
 	}
 	

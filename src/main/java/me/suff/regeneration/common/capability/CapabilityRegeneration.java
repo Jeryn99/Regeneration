@@ -4,7 +4,6 @@ import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
-import me.suff.regeneration.common.dna.DnaHandler;
 import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.common.types.IRegenType;
 import me.suff.regeneration.common.types.TypeFiery;
@@ -103,8 +102,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
 		}
 		
-		DnaHandler.getDnaEntry(getDnaType()).onUpdate(this);
-		
 		if (!player.world.isRemote && state != RegenState.ALIVE) // ticking only on the server for simplicity
 			stateManager.tick();
 		
@@ -137,14 +134,16 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setString("skinType", skinType.name());
 		nbt.setString("preferredModel", preferredModel.name());
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
-		if (traitLocation != null) {
-			nbt.setString("regen_dna", traitLocation.toString());
-		} else {
-			nbt.setString("regen_dna", DnaHandler.DNA_BORING.getRegistryName().toString());
-		}
 		nbt.setBoolean("traitActive", traitActive);
 		nbt.setInt("lc_regen", lcCoreReserve);
 		
+		nbt.setFloat("PrimaryRed", primaryRed);
+		nbt.setFloat("PrimaryGreen", primaryGreen);
+		nbt.setFloat("PrimaryBlue", primaryBlue);
+		
+		nbt.setFloat("SecondaryRed", secondaryRed);
+		nbt.setFloat("SecondaryGreen", secondaryGreen);
+		nbt.setFloat("SecondaryBlue", secondaryBlue);
 		
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
@@ -178,12 +177,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			setDnaActive(true);
 		}
 		
-		if (nbt.hasKey("regen_dna")) {
-			setDnaType(new ResourceLocation(nbt.getString("regen_dna")));
-		} else {
-			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
-		}
-		
 		if (nbt.hasKey("handsAreGlowing")) {
 			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
 		}
@@ -192,10 +185,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			lcCoreReserve = nbt.getInt("lc_regen");
 		}
 		
-		
-		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
-		setStyle(nbt.hasKey("style") ? (NBTTagCompound) nbt.getTag("style") : nbt);
-		
 		if (nbt.hasKey("type")) // v1.3+ saves have a type tag
 			type = IRegenType.getType(type, (NBTTagCompound) nbt.getTag("type"));
 		else // for previous save versions set to default 'fiery' type
@@ -203,6 +192,13 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; // I need to check for versions before the new state-ticking system
 		setEncodedSkin(nbt.getString("encoded_skin"));
+		
+		primaryRed = nbt.getFloat("PrimaryRed");
+		primaryGreen = nbt.getFloat("PrimaryGreen");
+		primaryBlue = nbt.getFloat("PrimaryBlue");
+		secondaryRed = nbt.getFloat("SecondaryRed");
+		secondaryGreen = nbt.getFloat("SecondaryGreen");
+		secondaryBlue = nbt.getFloat("SecondaryBlue");
 		
 		if (nbt.hasKey("stateManager"))
 			if (stateManager != null) {
@@ -263,7 +259,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		primaryRed = nbt.getFloat("PrimaryRed");
 		primaryGreen = nbt.getFloat("PrimaryGreen");
 		primaryBlue = nbt.getFloat("PrimaryBlue");
-		
 		secondaryRed = nbt.getFloat("SecondaryRed");
 		secondaryGreen = nbt.getFloat("SecondaryGreen");
 		secondaryBlue = nbt.getFloat("SecondaryBlue");
@@ -555,7 +550,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.getForPlayer(player));
 			player.setHealth(-1);
-			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
 			if (RegenConfig.CONFIG.loseRegensOnDeath.get()) {
 				extractRegeneration(getRegenerationsLeft());
 			}
