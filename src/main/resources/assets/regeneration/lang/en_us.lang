@@ -108,6 +108,7 @@ config.regeneration.category.loot=Loot Settings
 config.regeneration.category.skins=Skin changing
 config.regeneration.category.on_regen=When Regenerating
 config.regeneration.category.post_regen=Post regeneration
+config.regeneration.skins.folder=Skin Regeneration folder
 
 dna.athlete.name=Atheltic genes!
 dna.boring.name=Lazy genes! (You're useless!)

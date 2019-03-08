@@ -28,12 +28,10 @@ public class MessageTriggerForcedRegen implements IMessage {
 		public IMessage onMessage(MessageTriggerForcedRegen message, MessageContext ctx) {
 			
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-				System.out.println("sdfsdfdsf");
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
-				if(cap.canRegenerate()) {
+				if (cap.canRegenerate() && !cap.getState().isGraceful()) {
 					cap.getPlayer().attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
 				}
-				
 			});
 			
 			return null;

@@ -138,6 +138,11 @@ public class RegenConfig {
 		@Config.LangKey("config.regeneration.skins.changemyskin")
 		@Config.Comment("Disabling this will disable skin changing for you and you will retain your Mojang one")
 		public boolean changeMySkin = true;
+		
+		@Config.LangKey("config.regeneration.skins.folder")
+		@Config.Comment("This is where the regeneration skin folder will be generated, the default is './mods/', the path MUST NOT end in /")
+		@Config.RequiresMcRestart
+		public String skinDir = "./mods";
 	}
 	
 	

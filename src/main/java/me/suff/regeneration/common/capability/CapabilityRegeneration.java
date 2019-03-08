@@ -17,6 +17,7 @@ import me.suff.regeneration.network.MessageSynchroniseRegeneration;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.PlayerUtil;
 import me.suff.regeneration.util.RegenState;
+import me.suff.regeneration.util.RegenUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -164,7 +165,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (nbt.hasKey("skinType")) {
 			setSkinType(nbt.getString("skinType"));
 		} else {
-			setSkinType("ALEX");
+			setSkinType(RegenUtil.isSlimSkin(player.getUniqueID()) ? "ALEX" : "STEVE");
 		}
 		
 		if (nbt.hasKey("preferredModel")) {

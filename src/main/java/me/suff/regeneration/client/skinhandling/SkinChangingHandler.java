@@ -49,8 +49,8 @@ import java.util.UUID;
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
 	
-	public static final File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
-	public static final File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
+	public static final File SKIN_DIRECTORY = new File(RegenConfig.skins.skinDir + "/regeneration/skins/");
+	public static final File SKIN_CACHE_DIRECTORY = new File(RegenConfig.skins.skinDir + "/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	public static final Logger SKIN_LOG = LogManager.getLogger("Regeneration Skin Handler");
@@ -296,8 +296,6 @@ public class SkinChangingHandler {
 		if (e.getEntity() instanceof AbstractClientPlayer) {
 			AbstractClientPlayer clientPlayer = (AbstractClientPlayer) e.getEntity();
 			PLAYER_SKINS.remove(clientPlayer.getUniqueID());
-			TYPE_BACKUPS.remove(clientPlayer.getUniqueID());
-			TYPE_BACKUPS.put(clientPlayer.getUniqueID(), clientPlayer.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
 		}
 	}
 	

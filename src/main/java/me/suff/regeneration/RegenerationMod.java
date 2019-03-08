@@ -38,7 +38,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 
-//TESTING add language file tests
 @Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = RegenerationMod.DEPS)
 public class RegenerationMod {
 	
@@ -70,10 +69,12 @@ public class RegenerationMod {
 		RegenTriggers.init();
 		
 		if (EnumCompatModids.TARDIS.isLoaded()) {
+			LOG.info("Tardis mod Detected - Enabling Compat");
 			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 		}
 		
 		if (EnumCompatModids.LCCORE.isLoaded()) {
+			LOG.info("Lucraft Core Detected - Enabling Compat");
 			ActingForwarder.register(LucraftCoreHandler.class, Side.SERVER);
 			LucraftCoreHandler.registerEventBus();
 		}

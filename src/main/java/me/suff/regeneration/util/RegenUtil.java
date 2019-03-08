@@ -18,10 +18,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class RegenUtil {
 	
 	static Random rand = new Random();
+	
+	public static boolean isSlimSkin(UUID playerUUID) {
+		return (playerUUID.hashCode() & 1) == 1;
+	}
 	
 	public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
 		int x = rand.nextInt(clazz.getEnumConstants().length);
