@@ -1,9 +1,9 @@
 {
   "item.regeneration.fob_watch": "Fob Watch",
   "item.regeneration.lindos_vial": "Lindos Vial",
-  "regeneration.gui.red": "Rouge",
-  "regeneration.gui.green": "Vert",
-  "regeneration.gui.blue": "Bleu",
+  "regeneration.gui.red": "Rouge ",
+  "regeneration.gui.green": "Vert ",
+  "regeneration.gui.blue": "Bleu ",
   "regeneration.gui.primary": "Primaire",
   "regeneration.gui.secondary": "Secondaire",
   "regeneration.gui.undo": "Retour",

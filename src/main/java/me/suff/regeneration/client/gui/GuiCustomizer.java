@@ -37,8 +37,6 @@ public class GuiCustomizer extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		//	TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
-		//	TabRegistry.addTabsToList(buttons);
 		
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
@@ -133,6 +131,7 @@ public class GuiCustomizer extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+		this.drawDefaultBackground();
 		Minecraft.getInstance().getTextureManager().bindTexture(background);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		

@@ -212,8 +212,6 @@ public class SkinChangingHandler {
 			File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
 			ImageIO.write(image, "png", file);
 			DynamicTexture tex = new DynamicTexture(NativeImage.read(new FileInputStream(file)));
-			System.out.println(tex);
-			System.out.println(NativeImage.read(new FileInputStream(file)));
 			return minecraft.getTextureManager().getDynamicTextureLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
 		}
 		

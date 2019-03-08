@@ -13,9 +13,11 @@ import me.suff.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.nbt.INBTBase;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
@@ -32,6 +34,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -41,8 +44,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
@@ -185,6 +186,23 @@ public class RegenEventHandler {
 		MinecraftForge.EVENT_BUS.unregister(DEBUGGER);
 		DEBUGGER.dispose();
 		DEBUGGER = null;
+	}
+	
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		Entity entity = event.getEntity();
+		if (entity.getClass().equals(EntityItem.class)) {
+			ItemStack stack = ((EntityItem) entity).getItem();
+			Item item = stack.getItem();
+			if (item.hasCustomEntity(stack)) {
+				Entity newEntity = item.createEntity(event.getWorld(), entity, stack);
+				if (newEntity != null) {
+					entity.remove();
+					event.setCanceled(true);
+					event.getWorld().spawnEntity(newEntity);
+				}
+			}
+		}
 	}
 	
 	public static class WHYGOD {

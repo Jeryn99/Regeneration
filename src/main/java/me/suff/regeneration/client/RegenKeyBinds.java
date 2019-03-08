@@ -16,6 +16,7 @@ import org.lwjgl.glfw.GLFW;
 public class RegenKeyBinds {
 	public static KeyBinding REGEN_NOW;
 	public static KeyBinding REGEN_FORCEFULLY;
+	public static KeyBinding REGEN_CUSTOMISE;
 	
 	public static void init() {
 		
@@ -26,6 +27,10 @@ public class RegenKeyBinds {
 		
 		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", GLFW.GLFW_KEY_L, RegenerationMod.NAME);
 		ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
+		
+		REGEN_CUSTOMISE = new KeyBinding("regeneration.keybinds.customize", GLFW.GLFW_KEY_F10, RegenerationMod.NAME);
+		ClientRegistry.registerKeyBinding(REGEN_CUSTOMISE);
+		
 	}
 	
 	/**

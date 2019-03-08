@@ -2,6 +2,7 @@ package me.suff.regeneration.util;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.ModelBase;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.entity.model.ModelRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class LimbManipulationUtil {
 			return manipulator;
 		}
 		
-		List<LayerRenderer<AbstractClientPlayer>> layerList = renderPlayer.layerRenderers;
+		List<LayerRenderer<AbstractClientPlayer>> layerList = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, 4);
 		try {
 			for (LayerRenderer<AbstractClientPlayer> layer : layerList) {
 				for (Field field : layer.getClass().getDeclaredFields()) {

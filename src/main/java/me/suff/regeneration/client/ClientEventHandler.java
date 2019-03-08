@@ -1,5 +1,6 @@
 package me.suff.regeneration.client;
 
+import me.suff.regeneration.client.gui.GuiCustomizer;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
@@ -13,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -26,6 +28,7 @@ import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -34,6 +37,7 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -63,7 +67,13 @@ public class ClientEventHandler {
 			if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
 				NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration());
 			}
+			
+			if(RegenKeyBinds.REGEN_CUSTOMISE.isPressed()){
+				Minecraft.getInstance().displayGuiScreen(null);
+				Minecraft.getInstance().displayGuiScreen(new GuiCustomizer());
+			}
 		});
+		
 	}
 	
 	

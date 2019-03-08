@@ -48,6 +48,8 @@ public class ClientProxy extends CommonProxy {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 	
 }

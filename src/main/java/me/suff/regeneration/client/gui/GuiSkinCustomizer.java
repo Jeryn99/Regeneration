@@ -5,10 +5,13 @@ import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiResourcePackList;
+import net.minecraft.client.gui.GuiScreenResourcePacks;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.model.ModelPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
@@ -21,7 +24,6 @@ public class GuiSkinCustomizer extends GuiContainer {
 	
 	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
 	public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
-	public static final int ID = 1;
 	private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
 	private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
@@ -76,11 +78,7 @@ public class GuiSkinCustomizer extends GuiContainer {
 		this.addButton(new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.open_folder").getFormattedText()) {
 			@Override
 			public void onClick(double mouseX, double mouseY) {
-				try {
-					Desktop.getDesktop().open(SkinChangingHandler.SKIN_DIRECTORY);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				Util.getOSType().openFile(SkinChangingHandler.SKIN_DIRECTORY);
 			}
 		});
 		
@@ -89,6 +87,7 @@ public class GuiSkinCustomizer extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+		this.drawDefaultBackground();
 		Minecraft.getInstance().getTextureManager().bindTexture(background);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
