@@ -1,8 +1,6 @@
 package me.suff.regeneration.client.skinhandling;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
@@ -14,19 +12,15 @@ import me.suff.regeneration.util.IEnum;
 import me.suff.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.ServerListEntryNormal;
-import net.minecraft.client.gui.ServerSelectionList;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -34,20 +28,18 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
-import java.awt.image.Raster;
-import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,15 +58,9 @@ public class SkinChangingHandler {
 	public static final Map<UUID, SkinInfo.SkinType> TYPE_BACKUPS = new HashMap<>();
 	private static final Random RAND = new Random();
 	
-	/**
-	 * Converts a buffered image to Pixel data
-	 *
-	 * @param bufferedImage - Buffered image to be converted to Pixel data
-	 */
-	private static byte[] imageToPixelData(BufferedImage bufferedImage) {
-		WritableRaster raster = bufferedImage.getRaster();
-		DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
-		return buffer.getData();
+	private static String imageToPixelData(File file) throws IOException {
+		byte[] fileContent = FileUtils.readFileToByteArray(file);
+		return Base64.getEncoder().encodeToString(fileContent);
 	}
 	
 	/**
@@ -85,9 +71,8 @@ public class SkinChangingHandler {
 	 * @param imageData - Pixel data to be converted to a Buffered Image
 	 * @return Buffered image that will later be converted to a Dynamic texture
 	 */
-	private static BufferedImage toImage(EntityPlayer player, byte[] imageData) throws IOException {
-		BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_4BYTE_ABGR);
-		img.setData(Raster.createRaster(img.getSampleModel(), new DataBufferByte(imageData, imageData.length), new Point()));
+	private static BufferedImage toImage(EntityPlayer player, String imageData) throws IOException {
+		BufferedImage img = decodeToImage(imageData);
 		File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
 		
 		if (!file.getParentFile().exists()) {
@@ -99,6 +84,18 @@ public class SkinChangingHandler {
 		ImageIO.write(img, "png", file);
 		return img;
 	}
+	
+	public static BufferedImage decodeToImage(String imageString) throws IOException {
+		BufferedImage image = null;
+		byte[] imageByte;
+		BASE64Decoder decoder = new BASE64Decoder();
+		imageByte = decoder.decodeBuffer(imageString);
+		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+		image = ImageIO.read(bis);
+		bis.close();
+		return image;
+	}
+	
 	
 	/**
 	 * Choosens a random png file from Steve/Alex Directory (This really depends on the Clients preference)
@@ -126,18 +123,16 @@ public class SkinChangingHandler {
 					e.printStackTrace();
 				}
 				
-				byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
-				cap.setEncodedSkin(pixelData);
-				if (pixelData.length >= 32767) {
-					ClientUtil.sendSkinResetPacket();
-					RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
-				} else {
-					PacketBuffer output = new PacketBuffer(Unpooled.buffer());
-					output.writeVarInt(pixelData.length);
-					output.writeBytes(pixelData);
-					NetworkHandler.sendToServer(new MessageUpdateSkin(output, isAlex));
+				String pixelData = String.valueOf("none");
+				try {
+					pixelData = SkinChangingHandler.imageToPixelData(skin);
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} else {
+				cap.setEncodedSkin(pixelData);
+				System.out.println(pixelData);
+					NetworkHandler.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+				} else {
 				ClientUtil.sendSkinResetPacket();
 			}
 		});
@@ -164,7 +159,7 @@ public class SkinChangingHandler {
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 		
-		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) ) {
+		if (data.getEncodedSkin().equals("none")) {
 			resourceLocation = getMojangSkin(player);
 			if (wasAlex(player)) {
 				skinType = SkinInfo.SkinType.ALEX;
@@ -173,8 +168,8 @@ public class SkinChangingHandler {
 			}
 		} else {
 			BufferedImage bufferedImage = toImage(player, data.getEncodedSkin());
-			//bufferedImage = ImageFixer.convertSkinTo64x64(bufferedImage);
-	
+			bufferedImage = ImageFixer.convertSkinTo64x64(bufferedImage);
+			System.out.println("CLIENT " + data.getEncodedSkin());
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {

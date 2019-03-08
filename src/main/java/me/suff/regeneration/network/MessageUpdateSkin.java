@@ -15,38 +15,38 @@ import java.util.function.Supplier;
 public class MessageUpdateSkin {
 	
 	private boolean isAlex;
-	private PacketBuffer encodedSkin;
+	private String encodedSkin;
 	
-	public MessageUpdateSkin(PacketBuffer pixelData, boolean isAlex) {
+	public MessageUpdateSkin(String pixelData, boolean isAlex) {
 		this.isAlex = isAlex;
 		encodedSkin = pixelData;
 	}
 	
 	public static void encode(MessageUpdateSkin skin, PacketBuffer buf) {
-		buf.writeByteArray(skin.encodedSkin.readByteArray());
+		buf.writeString(skin.encodedSkin);
 		buf.writeBoolean(skin.isAlex);
 	}
 	
 	
 	public static MessageUpdateSkin decode(PacketBuffer buf) {
-		return new MessageUpdateSkin(buf, buf.readBoolean());
+		return new MessageUpdateSkin(buf.readString(32767), buf.readBoolean());
 	}
 	
 	public static class Handler {
 		public static void handle(MessageUpdateSkin message, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().getSender().getServerWorld().addScheduledTask(() ->
 					CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
-				cap.setEncodedSkin(message.encodedSkin.readByteArray());
-				System.out.println("SERVER SKIN " + Arrays.toString(cap.getEncodedSkin()));
-				if (message.isAlex) {
-					cap.setSkinType(SkinInfo.SkinType.ALEX.name());
-				} else {
-					cap.setSkinType(SkinInfo.SkinType.STEVE.name());
-				}
-				cap.sync();
-				
-				NetworkHandler.sendPacketToAll(new MessageRemovePlayer(ctx.get().getSender().getUniqueID()));
-			}));
+						cap.setEncodedSkin(message.encodedSkin);
+						System.out.println("SERVER SKIN " + cap.getEncodedSkin());
+						if (message.isAlex) {
+							cap.setSkinType(SkinInfo.SkinType.ALEX.name());
+						} else {
+							cap.setSkinType(SkinInfo.SkinType.STEVE.name());
+						}
+						cap.sync();
+						
+						NetworkHandler.sendPacketToAll(new MessageRemovePlayer(ctx.get().getSender().getUniqueID()));
+					}));
 			ctx.get().setPacketHandled(true);
 		}
 	}
