@@ -94,7 +94,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 		GlStateManager.translatef(f * 0.01F, f * 0.01F, 0.0F);
 		GlStateManager.matrixMode(5888);
 		GlStateManager.enableBlend();
-		float f1 = 0.5F;
 		GlStateManager.color4f(0.5F, 0.5F, 0.5F, 1.0F);
 		GlStateManager.disableLighting();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);

@@ -31,6 +31,7 @@ public class CommandRegen {
 	}
 	
 	private static int glow(CommandSource source) {
+		
 		return Command.SINGLE_SUCCESS;
 	}
 	
@@ -51,7 +52,13 @@ public class CommandRegen {
 	}
 	
 	private static int setRegens(CommandSource source, int amount) {
-		//TODO : Set regens action
+		try {
+			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) -> {
+				cap.setRegenerationsLeft(amount);
+			});
+		} catch (CommandSyntaxException e) {
+			e.printStackTrace();
+		}
 		return Command.SINGLE_SUCCESS;
 	}
 }

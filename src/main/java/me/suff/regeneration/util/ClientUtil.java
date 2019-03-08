@@ -35,7 +35,7 @@ public class ClientUtil {
 	public static void sendSkinResetPacket() {
 		PacketBuffer output = new PacketBuffer(Unpooled.buffer());
 		output.writeBytes(new byte[0]);
-		NetworkHandler.sendToServer(new MessageUpdateSkin(new PacketBuffer(Unpooled.wrappedBuffer(new byte[0])), SkinChangingHandler.wasAlex(Minecraft.getInstance().player)));
+		NetworkHandler.sendToServer(new MessageUpdateSkin(output, SkinChangingHandler.wasAlex(Minecraft.getInstance().player)));
 	}
 	
 	@OnlyIn(Dist.CLIENT)
