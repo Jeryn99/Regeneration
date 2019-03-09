@@ -163,8 +163,12 @@ public class SkinChangingHandler {
 				skinType = SkinInfo.SkinType.STEVE;
 			}
 		} else {
-			BufferedImage bufferedImage = toImage(player, encodedSkin);
-			bufferedImage = ImageFixer.convertSkinTo64x64(bufferedImage);
+			
+			BufferedImage bufferedImage = null;
+			if (player != null) {
+				bufferedImage = toImage(player, encodedSkin);
+				bufferedImage = ClientUtil.ImageFixer.convertSkinTo64x64(bufferedImage);
+			}
 			
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
@@ -201,8 +205,17 @@ public class SkinChangingHandler {
 		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
 			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
 			
-			BufferedImage image = ImageIO.read(new URL(profile.getUrl()));
-			image = ImageFixer.convertSkinTo64x64(image);
+			BufferedImage image = null;
+			try {
+				image = ImageIO.read(new URL(profile.getUrl()));
+				image = ClientUtil.ImageFixer.convertSkinTo64x64(image);
+				RegenerationMod.LOG.info("Grabbing Mojang skin from: " + profile.getUrl());
+			} catch (Exception e) {
+				RegenerationMod.LOG.error("Error creating skin from Mojang Servers, attempting to bring it in from elsewhere: " + e);
+				RegenerationMod.LOG.info("Attempting to grab skin from: https://minotar.net/download/" + player.getUniqueID());
+				image = ImageIO.read(new URL("https://minotar.net/download/" + player.getUniqueID()));
+				image = ClientUtil.ImageFixer.convertSkinTo64x64(image);
+			}
 			
 			if (image == null) {
 				return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
@@ -220,7 +233,8 @@ public class SkinChangingHandler {
 	
 	/**
 	 * Changes the ResourceLocation of a Players skin
-	 *  @param player  - Player instance involved
+	 *
+	 * @param player  - Player instance involved
 	 * @param texture - ResourceLocation of intended texture
 	 */
 	public static void setPlayerSkin(AbstractClientPlayer player, ResourceLocation texture) {

@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "1.5.0b",
-		"1.12.2-recommended": "1.5.0b"
+		"1.12.2-latest": "1.5.1",
+		"1.12.2-recommended": "1.5.1"
 	},
 	"1.12.2": {
 		"1.0.0": "Time for a full release then boys",
@@ -33,6 +33,7 @@
 		"1.4.8": "Fixes player model reverting to alex on new world (Again), Game also boots faster now",
 		"1.4.9": "Skin null crash fix (Hopefully), changed LCcore compat extremely",
 		"1.5.0": "Skin null crash fix (Hopefully), changed LCcore compat extremely",
-		"1.5.0b": "Added config to allow custom Skin folder directory || Maybe fixed Alex bug, again"
+		"1.5.0b": "Added config to allow custom Skin folder directory || Maybe fixed Alex bug, again",
+		"1.5.1": "Fixed apparent crash in F5?"
 	}
 }

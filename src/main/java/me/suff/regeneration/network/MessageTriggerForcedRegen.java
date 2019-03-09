@@ -10,7 +10,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageTriggerForcedRegen implements IMessage {
 	
-	public MessageTriggerForcedRegen(){}
+	public MessageTriggerForcedRegen() {
+	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {

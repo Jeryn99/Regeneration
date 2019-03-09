@@ -141,7 +141,7 @@ public class ClientEventHandler {
 		if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
 			return;
 		
-		if(RegenKeyBinds.REGEN_FORCEFULLY.isPressed()){
+		if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
 		}
 		
