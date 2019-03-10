@@ -140,7 +140,7 @@ public class RegenEventHandler {
 				return;
 			}
 			
-			if (cap.getState() == RegenState.REGENERATING && RegenConfig.CONFIG.regenFireImmune.get() && event.getSource().isFireDamage()) {
+			if (cap.getState() == RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage()) {
 				event.setCanceled(true); // TODO still "hurts" the client view
 			} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 				boolean notDead = cap.getStateManager().onKilled(event.getSource());
@@ -164,7 +164,7 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public void registerLoot(LootTableLoadEvent event) {
-		if (!event.getName().toString().toLowerCase().matches(RegenConfig.CONFIG.lootRegex.get()) || RegenConfig.CONFIG.disableLoot.get())
+		if (!event.getName().toString().toLowerCase().matches(RegenConfig.COMMON.lootRegex.get()) || RegenConfig.COMMON.disableLoot.get())
 			return;
 		
 		// TODO configurable chances? Maybe by doing a simple loot table tutorial?

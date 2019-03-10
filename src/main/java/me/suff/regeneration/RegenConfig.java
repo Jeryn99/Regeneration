@@ -4,16 +4,44 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class RegenConfig {
-	public static MyConfig CONFIG;
-	public static ForgeConfigSpec CONFIG_SPEC;
+	public static Common COMMON;
+	public static ForgeConfigSpec COMMON_SPEC;
+	public static Client CLIENT;
+	public static ForgeConfigSpec CLIENT_SPEC;
 	
 	static {
-		Pair<MyConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(MyConfig::new);
-		CONFIG_SPEC = specPair.getRight();
-		CONFIG = specPair.getLeft();
+		Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+		COMMON_SPEC = specPair.getRight();
+		COMMON = specPair.getLeft();
+		
+		Pair<Client, ForgeConfigSpec> specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
+		CLIENT_SPEC = specClientPair.getRight();
+		CLIENT = specClientPair.getLeft();
 	}
 	
-	public static class MyConfig {
+	public static class Client {
+		
+		public final ForgeConfigSpec.BooleanValue changeMySkin;
+		public final ForgeConfigSpec.ConfigValue<String> skinDir;
+		public final ForgeConfigSpec.BooleanValue changePerspective;
+		public final ForgeConfigSpec.BooleanValue changeHand;
+		
+		Client(ForgeConfigSpec.Builder builder) {
+			
+			builder.comment("Client Regeneration Settings").push("client");
+			builder.comment("Skin Settings").push("skin");
+			changeMySkin = builder.comment("Disabling this will disable skin changing for you and you will retain your Mojang one").translation("config.regeneration.skins.changemyskin").define("changeMySkin", true);
+			skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './mods/', the path MUST NOT end in /").translation("config.regeneration.skins.skindir").define("skinDir", "./mods");
+			changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
+			changeHand = builder.comment("Toggle whether your hand has the chance of inverting after a regen").translation("config.regeneration.hand_change").define("changeHand", true);
+			builder.pop();
+		}
+		
+		
+	}
+	
+	
+	public static class Common {
 		
 		public final ForgeConfigSpec.IntValue regenCapacity;
 		public final ForgeConfigSpec.BooleanValue loseRegensOnDeath;
@@ -21,8 +49,6 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue regenFireImmune;
 		public final ForgeConfigSpec.BooleanValue infiniteRegeneration;
 		public final ForgeConfigSpec.BooleanValue sendRegenDeathMessages;
-		public final ForgeConfigSpec.BooleanValue changePerspective;
-		public final ForgeConfigSpec.BooleanValue changeHand;
 		public final ForgeConfigSpec.IntValue regenerativeKillRange;
 		public final ForgeConfigSpec.BooleanValue regenKillsPlayers;
 		public final ForgeConfigSpec.ConfigValue<Double> regenerativeKnockback;
@@ -38,11 +64,10 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue resetHunger;
 		public final ForgeConfigSpec.BooleanValue resetOxygen;
 		public final ForgeConfigSpec.IntValue absorbtionLevel;
-		public final ForgeConfigSpec.BooleanValue changeMySkin;
 		public final ForgeConfigSpec.ConfigValue<String> lootRegex;
 		public final ForgeConfigSpec.BooleanValue disableLoot;
 		
-		MyConfig(ForgeConfigSpec.Builder builder) {
+		Common(ForgeConfigSpec.Builder builder) {
 			builder.comment("General Regeneration Settings").push("common");
 			regenCapacity = builder.comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.").translation("config.regeneration.max_regens").defineInRange("regenCapacity", 12, 0, Integer.MAX_VALUE);
 			
@@ -56,9 +81,6 @@ public class RegenConfig {
 			
 			sendRegenDeathMessages = builder.comment("Sends a message to chat to say that a player is regenerating, and the reason for it").translation("config.regeneration.regen_messages").define("sendRegenDeathMessages", true);
 			
-			changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
-			
-			changeHand = builder.comment("Toggle whether your hand has the chance of inverting after a regen").translation("config.regeneration.hand_change").define("changeHand", true);
 			builder.pop();
 			
 			
@@ -74,10 +96,6 @@ public class RegenConfig {
 			builder.comment("Loot Settings").push("loot");
 			lootRegex = builder.worldRestart().comment("The loot pool for chameleon arch's will only be added to loot tables whose name matches this regular expression").translation("config.regeneration.loot_regex").define("lootRegex", "minecraft:chests\\/.*");
 			disableLoot = builder.comment("If this is true there won't be any Fob Watches spawned naturally").translation("config.regeneration.disable_loot").define("disableLoot", false);
-			builder.pop();
-			
-			builder.comment("Skin Settings").push("skin");
-			changeMySkin = builder.comment("Disabling this will disable skin changing for you and you will retain your Mojang one").translation("config.regeneration.skins.changemyskin").define("changeMySkin", true);
 			builder.pop();
 			
 			builder.comment("Grace Settings").push("grace");

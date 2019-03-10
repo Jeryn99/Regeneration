@@ -46,7 +46,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	 * Returns if the player is currently <i>able to</i> regenerate
 	 */
 	default boolean canRegenerate() {
-		return (RegenConfig.CONFIG.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getPlayer().posY > 0 && !MinecraftForge.EVENT_BUS.post(new PlayerCanRegenEvent(getPlayer()));
+		return (RegenConfig.COMMON.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getPlayer().posY > 0 && !MinecraftForge.EVENT_BUS.post(new PlayerCanRegenEvent(getPlayer()));
 	}
 	
 	void receiveRegenerations(int amount);

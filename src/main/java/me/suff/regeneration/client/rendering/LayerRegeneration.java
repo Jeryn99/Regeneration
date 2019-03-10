@@ -85,7 +85,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	
 	public void renderPost(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		boolean flag = player.isInvisible();
-		ModelBase playerModel = playerRenderer.mainModel;
+		ModelBase playerModel = playerRenderer.getMainModel();
 		GlStateManager.depthMask(!flag);
 		this.playerRenderer.bindTexture(GLOW_TEXTURE);
 		GlStateManager.matrixMode(5890);

@@ -87,12 +87,12 @@ public class ItemFobWatch extends ItemOverrideBase {
 		ItemStack stack = player.getHeldItem(hand);
 		
 		if (!player.isSneaking()) { // transferring watch->player
-			if (stack.getDamage() == RegenConfig.CONFIG.regenCapacity.get())
+			if (stack.getDamage() == RegenConfig.COMMON.regenCapacity.get())
 				return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
-			else if (cap.getRegenerationsLeft() == RegenConfig.CONFIG.regenCapacity.get())
+			else if (cap.getRegenerationsLeft() == RegenConfig.COMMON.regenCapacity.get())
 				return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 			
-			int supply = RegenConfig.CONFIG.regenCapacity.get() - stack.getDamage(), needed = RegenConfig.CONFIG.regenCapacity.get() - cap.getRegenerationsLeft(), used = Math.min(supply, needed);
+			int supply = RegenConfig.COMMON.regenCapacity.get() - stack.getDamage(), needed = RegenConfig.COMMON.regenCapacity.get() - cap.getRegenerationsLeft(), used = Math.min(supply, needed);
 			
 			if (cap.canRegenerate()) {
 				setOpen(stack, 1);
@@ -104,7 +104,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 			}
 			
 			if (used < 0)
-				DebuggerUtil.warn(player, "Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.CONFIG.regenCapacity.get() + ", damage:" + stack.getDamage() + ", regens:" + cap.getRegenerationsLeft());
+				DebuggerUtil.warn(player, "Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + stack.getDamage() + ", regens:" + cap.getRegenerationsLeft());
 			
 			
 			if (!cap.getPlayer().isCreative()) {
@@ -149,7 +149,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 	public void update(EntityItemOverride itemOverride) {
 		if (!itemOverride.world.isRemote) return;
 		ItemStack itemStack = itemOverride.getItem();
-		if (itemStack.getItem() == this && itemStack.getDamage() != RegenConfig.CONFIG.regenCapacity.get()) {
+		if (itemStack.getItem() == this && itemStack.getDamage() != RegenConfig.COMMON.regenCapacity.get()) {
 			if (itemOverride.ticksExisted % 5000 == 0 || itemOverride.ticksExisted == 2) {
 				ClientUtil.playSound(itemOverride, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.getRegistryName(), SoundCategory.AMBIENT, false, () -> !itemOverride.isAlive(), 1.5F);
 			}

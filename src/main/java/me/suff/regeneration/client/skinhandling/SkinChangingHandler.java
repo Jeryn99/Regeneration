@@ -47,9 +47,9 @@ import java.util.UUID;
 @OnlyIn(Dist.CLIENT)
 public class SkinChangingHandler {
 	
-	public static final File SKIN_DIRECTORY = new File("./mods/regeneration/skins/");
+	public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get()+"/regeneration/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
-	public static final File SKIN_CACHE_DIRECTORY = new File("./mods/regeneration/skincache/" + Minecraft.getInstance().getSession().getProfile().getId() + "/skins");
+	public static final File SKIN_CACHE_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get()+"/mods/regeneration/skincache/" + Minecraft.getInstance().getSession().getProfile().getId() + "/skins");
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	public static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
@@ -108,7 +108,7 @@ public class SkinChangingHandler {
 		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID())
 			return;
 		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
-			if (RegenConfig.CONFIG.changeMySkin.get()) {
+			if (RegenConfig.CLIENT.changeMySkin.get()) {
 				boolean isAlex = cap.getPreferredModel().isAlex();
 				
 				File skin = null;
@@ -295,13 +295,6 @@ public class SkinChangingHandler {
 				cap.getType().getRenderer().onRenderRegeneratingPlayerPost(cap.getType(), e, cap);
 			}
 		});
-	}
-	
-	@SubscribeEvent
-	public void onRelog(EntityJoinWorldEvent e) {
-		if (e.getEntity() instanceof EntityPlayer) {
-			PLAYER_SKINS.remove(e.getEntity().getUniqueID());
-		}
 	}
 	
 	/**

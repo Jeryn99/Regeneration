@@ -54,7 +54,8 @@ public class RegenerationMod {
 	public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 	
 	public RegenerationMod() {
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.CONFIG_SPEC);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
 		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		// Register the enqueueIMC method for modloading

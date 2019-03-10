@@ -5,6 +5,7 @@ import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.handlers.RegenObjects;
+import me.suff.regeneration.network.MessageForceRegen;
 import me.suff.regeneration.network.MessageTriggerRegeneration;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
@@ -45,6 +46,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.Random;
 import java.util.UUID;
 
+import static me.suff.regeneration.client.RegenKeyBinds.REGEN_FORCEFULLY;
 import static me.suff.regeneration.client.RegenKeyBinds.REGEN_NOW;
 import static me.suff.regeneration.util.RegenState.*;
 
@@ -55,7 +57,7 @@ import static me.suff.regeneration.util.RegenState.*;
 public class ClientEventHandler {
 	
 	@SubscribeEvent
-	public void onGui(InputUpdateEvent tickEvent) {
+	public void onKeyPress(InputUpdateEvent e) {
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
 		Minecraft minecraft = Minecraft.getInstance();
 		
@@ -64,8 +66,13 @@ public class ClientEventHandler {
 		}
 		
 		CapabilityRegeneration.getForPlayer(minecraft.player).ifPresent((data) -> {
+			
 			if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
 				NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration());
+			}
+			
+			if(REGEN_FORCEFULLY.isPressed() && !data.getState().isGraceful()){
+				NetworkHandler.INSTANCE.sendToServer(new MessageForceRegen());
 			}
 			
 			if(RegenKeyBinds.REGEN_CUSTOMISE.isPressed()){

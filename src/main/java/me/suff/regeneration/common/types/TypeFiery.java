@@ -37,7 +37,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		double x = player.posX + player.getRNG().nextGaussian() * 2;
 		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 		double z = player.posZ + player.getRNG().nextGaussian() * 2;
-		player.world.newExplosion(player, x, y, z, 0.1F, RegenConfig.CONFIG.fieryRegen.get(), false);
+		player.world.newExplosion(player, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), false);
 		
 		for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east())) {
 			if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) {

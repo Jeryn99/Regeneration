@@ -97,8 +97,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			didSetup = true;
 		}
 		
-		if (getRegenerationsLeft() > RegenConfig.CONFIG.regenCapacity.get() && !RegenConfig.CONFIG.infiniteRegeneration.get()) {
-			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
+		if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
+			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
 		}
 		
@@ -152,7 +152,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		regenerationsLeft = Math.min(RegenConfig.CONFIG.regenCapacity.get(), nbt.getInt(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
+		regenerationsLeft = Math.min(RegenConfig.COMMON.regenCapacity.get(), nbt.getInt(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 		
 		//TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
 		if (nbt.hasKey("skinType")) {
@@ -277,8 +277,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void receiveRegenerations(int amount) {
-		if (RegenConfig.CONFIG.infiniteRegeneration.get())
-			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
+		if (RegenConfig.COMMON.infiniteRegeneration.get())
+			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
 		else
 			regenerationsLeft += amount;
 		sync();
@@ -286,8 +286,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void extractRegeneration(int amount) {
-		if (RegenConfig.CONFIG.infiniteRegeneration.get())
-			regenerationsLeft = RegenConfig.CONFIG.regenCapacity.get();
+		if (RegenConfig.COMMON.infiniteRegeneration.get())
+			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
 		else
 			regenerationsLeft -= amount;
 		sync();
@@ -415,7 +415,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleNextHandGlow() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.CONFIG.handGlowInterval.get() * 20);
+			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.COMMON.handGlowInterval.get() * 20);
 			sync();
 		}
 		
@@ -423,7 +423,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleHandGlowTrigger() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.CONFIG.handGlowTriggerDelay.get() * 20);
+			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
 			ActingForwarder.onHandsStartGlowing(CapabilityRegeneration.getForPlayer(player));
 			sync();
 		}
@@ -441,7 +441,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					return false;
 				
 				// We're entering grace period...
-				scheduleTransitionInSeconds(RegenState.Transition.ENTER_CRITICAL, RegenConfig.CONFIG.gracePhaseLength.get());
+				scheduleTransitionInSeconds(RegenState.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
 				scheduleHandGlowTrigger();
 				
 				state = RegenState.GRACE;
@@ -520,7 +520,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			// We're starting a regeneration!
 			state = RegenState.REGENERATING;
 			
-			if (RegenConfig.CONFIG.sendRegenDeathMessages.get()) {
+			if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
 				TextComponentTranslation text = new TextComponentTranslation("regeneration.messages.regen_chat_message", player.getName());
 				text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(getDeathSource())));
 				PlayerUtil.sendMessageToAll(text);
@@ -539,7 +539,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void enterCriticalPhase() {
 			// We're entering critical phase...
 			state = RegenState.GRACE_CRIT;
-			scheduleTransitionInSeconds(RegenState.Transition.CRITICAL_DEATH, RegenConfig.CONFIG.criticalPhaseLength.get());
+			scheduleTransitionInSeconds(RegenState.Transition.CRITICAL_DEATH, RegenConfig.COMMON.criticalPhaseLength.get());
 			ActingForwarder.onGoCritical(CapabilityRegeneration.getForPlayer(player));
 			sync();
 		}
@@ -550,7 +550,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			handGlowTimer = null;
 			type.onFinishRegeneration(player, CapabilityRegeneration.getForPlayer(player));
 			player.setHealth(-1);
-			if (RegenConfig.CONFIG.loseRegensOnDeath.get()) {
+			if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
 				extractRegeneration(getRegenerationsLeft());
 			}
 			

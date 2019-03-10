@@ -16,8 +16,6 @@ class ActingClientHandler implements IActingHandler {
 	
 	public static final IActingHandler INSTANCE = new ActingClientHandler();
 	
-	// TODO 'now a timelord' into toast
-	
 	private ActingClientHandler() {
 	}
 	
@@ -43,7 +41,7 @@ class ActingClientHandler implements IActingHandler {
 	public void onRegenFinish(LazyOptional<IRegeneration> data) {
 		data.ifPresent((cap) -> {
 			ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.regenerated"), new TextComponentTranslation("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()));
-			if (RegenConfig.CONFIG.changeHand.get() && cap.getPlayer().getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
+			if (RegenConfig.CLIENT.changeHand.get() && cap.getPlayer().getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
 				Minecraft.getInstance().gameSettings.mainHand = RegenUtil.randomEnum(EnumHandSide.class);
 				Minecraft.getInstance().gameSettings.sendSettingsToServer();
 			}
@@ -62,7 +60,7 @@ class ActingClientHandler implements IActingHandler {
 	@Override
 	public void onGoCritical(LazyOptional<IRegeneration> data) {
 		data.ifPresent((cap) -> {
-			ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_critical"), new TextComponentTranslation("regeneration.toast.enter_critical.sub", RegenConfig.CONFIG.criticalPhaseLength.get() / 60));
+			ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.enter_critical"), new TextComponentTranslation("regeneration.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
 			ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != RegenState.GRACE_CRIT, 1.0F);
 		});
 	}

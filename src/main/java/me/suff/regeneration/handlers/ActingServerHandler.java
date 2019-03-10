@@ -60,16 +60,16 @@ class ActingServerHandler implements IActingHandler {
 					float nauseaPercentage = 0.5F;
 					
 					if (stateProgress > nauseaPercentage) {
-						if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, (int) (RegenConfig.CONFIG.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
+						if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
 							RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied nausea");
 						}
 					}
 					
-					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.CONFIG.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false)) {
+					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false)) {
 						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
 					}
 					
-					if (player.world.rand.nextDouble() < (RegenConfig.CONFIG.criticalDamageChance.get() / 100F))
+					if (player.world.rand.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F))
 						player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
 					
 					break;
@@ -78,7 +78,7 @@ class ActingServerHandler implements IActingHandler {
 					float weaknessPercentage = 0.5F;
 					
 					if (stateProgress > weaknessPercentage) {
-						if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.CONFIG.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.CONFIG.criticalPhaseLength.get() * 20), 0, false, false)) {
+						if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false)) {
 							RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
 						}
 					}
@@ -97,7 +97,7 @@ class ActingServerHandler implements IActingHandler {
 	public void onEnterGrace(LazyOptional<IRegeneration> data) {
 		data.ifPresent((cap) -> {
 			EntityPlayer player = cap.getPlayer();
-			RegenUtil.explodeKnockback(player, player.world, player.getPosition(), (RegenConfig.CONFIG.regenerativeKnockback.get() / 2), RegenConfig.CONFIG.regenKnockbackRange.get());
+			RegenUtil.explodeKnockback(player, player.world, player.getPosition(), (RegenConfig.COMMON.regenerativeKnockback.get() / 2), RegenConfig.COMMON.regenKnockbackRange.get());
 			
 			// Reduce number of hearts, but compensate with absorption
 			player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
@@ -131,9 +131,9 @@ class ActingServerHandler implements IActingHandler {
 	public void onRegenFinish(LazyOptional<IRegeneration> data) {
 		data.ifPresent((cap) -> {
 			EntityPlayer player = cap.getPlayer();
-			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.CONFIG.postRegenerationDuration.get() * 2, RegenConfig.CONFIG.postRegenerationLevel.get() - 1, false, false));
+			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
 			player.setHealth(player.getMaxHealth());
-			player.setAbsorptionAmount(RegenConfig.CONFIG.absorbtionLevel.get() * 2);
+			player.setAbsorptionAmount(RegenConfig.COMMON.absorbtionLevel.get() * 2);
 		});
 	}
 	
@@ -159,10 +159,10 @@ class ActingServerHandler implements IActingHandler {
 			player.removePassengers();
 			player.stopRiding();
 			
-			if (RegenConfig.CONFIG.resetHunger.get())
+			if (RegenConfig.COMMON.resetHunger.get())
 				player.getFoodStats().setFoodLevel(20);
 			
-			if (RegenConfig.CONFIG.resetOxygen.get())
+			if (RegenConfig.COMMON.resetOxygen.get())
 				player.setAir(300);
 			
 			cap.extractRegeneration(1);
