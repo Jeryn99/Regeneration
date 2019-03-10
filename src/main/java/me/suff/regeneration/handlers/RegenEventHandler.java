@@ -2,6 +2,7 @@ package me.suff.regeneration.handlers;
 
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
+import me.suff.regeneration.client.RegenKeyBinds;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.commands.CommandRegen;
@@ -200,9 +201,10 @@ public class RegenEventHandler {
 	 * Update checker thing, tells the player that the mods out of date if they're on a old build
 	 */
 	@SubscribeEvent
-	public static void onPlayerLogin(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e) {
+	public void onPlayerLogin(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e) {
 		EntityPlayer player = e.getPlayer();
 		if (!player.world.isRemote) {
+			player.sendMessage(new TextComponentString(TextFormatting.GOLD + "NOTE: " + TextFormatting.BLUE + "Since Galaticraft have not yet updated their TAB Api system, I cannot add the Regeneration tab back to the inventory until they do. Until they do, I have added a keybind that will open up the GUI."));
 			VersionChecker.CheckResult version = VersionChecker.getResult(ModList.get().getModFileById(RegenerationMod.MODID).getMods().get(0));
 			if (version.status.equals(VersionChecker.Status.OUTDATED)) {
 				TextComponentString url = new TextComponentString(TextFormatting.AQUA + TextFormatting.BOLD.toString() + "UPDATE");

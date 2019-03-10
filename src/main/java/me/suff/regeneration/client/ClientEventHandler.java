@@ -10,6 +10,7 @@ import me.suff.regeneration.network.MessageTriggerRegeneration;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.EnumCompatModids;
+import me.suff.regeneration.util.RegenState;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
@@ -72,7 +73,7 @@ public class ClientEventHandler {
 				NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration());
 			}
 			
-			if(REGEN_FORCEFULLY.isPressed() && !data.getState().isGraceful()){
+			if(REGEN_FORCEFULLY.isPressed() && data.getState() == ALIVE){
 				NetworkHandler.INSTANCE.sendToServer(new MessageForceRegen());
 			}
 			

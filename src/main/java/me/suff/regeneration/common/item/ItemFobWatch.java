@@ -8,6 +8,7 @@ import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.DebuggerUtil;
 import me.suff.regeneration.util.PlayerUtil;
+import me.suff.regeneration.util.RegenState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -122,6 +123,10 @@ public class ItemFobWatch extends ItemOverrideBase {
 		} else { // transferring player->watch
 			if (!cap.canRegenerate())
 				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
+			
+			if(cap.getState() != RegenState.ALIVE){
+				return msgUsageFailed(player, "regeneration.messages.transfer.not_alive", stack);
+			}
 			
 			if (stack.getDamage() == 0)
 				return msgUsageFailed(player, "regeneration.messages.transfer.full_watch", stack);

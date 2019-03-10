@@ -40,6 +40,7 @@
   "regeneration.toast.enter_critical": "You are going critical",
   "regeneration.toast.enter_critical.sub": "%s minutes left...",
   "regeneration.messages.regen_chat_message": "%s is regenerating...",
+  "regeneration.messages.transfer.not_alive": "You cannot transfer regenerations while not in a living state..",
   "regeneration.messages.warning.grace": "You are in a state of grace, press %s to regenerate!",
   "regeneration.messages.warning.grace_critical": "You are near death, press %s to regenerate!",
   "regeneration.messages.regen_delayed": "Regeneration delayed!",
