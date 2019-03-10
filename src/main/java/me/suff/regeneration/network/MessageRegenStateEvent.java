@@ -43,7 +43,7 @@ public class MessageRegenStateEvent implements IMessage {
 		
 		@Override
 		public IMessage onMessage(MessageRegenStateEvent message, MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(() -> ActingForwarder.onClient(message.event, CapabilityRegeneration.getForPlayer(message.player)));
+			Minecraft.getMinecraft().addScheduledTask(() -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), CapabilityRegeneration.getForPlayer(message.player)));
 			return null;
 		}
 	}

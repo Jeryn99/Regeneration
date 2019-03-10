@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class ActingForwarder {
 	public static void init() {
 		register(ActingServerHandler.INSTANCE, Side.SERVER);
 		
-		if (FMLCommonHandler.instance().getSide() != Side.SERVER) {
+		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
 			register(ActingClientHandler.INSTANCE, Side.CLIENT);
 		}
 	}
@@ -40,57 +39,81 @@ public class ActingForwarder {
 		if (cap.getPlayer().world.isRemote)
 			throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
 		
-		serverHandlers.forEach(handler -> handler.onRegenTick(cap));
+		for (IActingHandler handler : serverHandlers) {
+			handler.onRegenTick(cap);
+		}
 	}
 	
 	public static void onEnterGrace(IRegeneration cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onEnterGrace(cap));
+		checkAndForward(cap, RegenEvent.ENTER_GRACE);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onEnterGrace(cap);
+		}
 	}
 	
 	public static void onRegenFinish(IRegeneration cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onRegenFinish(cap));
+		checkAndForward(cap, RegenEvent.REGEN_FINISH);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onRegenFinish(cap);
+		}
 	}
 	
 	public static void onRegenTrigger(IRegeneration cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onRegenTrigger(cap));
+		checkAndForward(cap, RegenEvent.REGEN_TRIGGER);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onRegenTrigger(cap);
+		}
 	}
 	
 	public static void onGoCritical(IRegeneration cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onGoCritical(cap));
+		checkAndForward(cap, RegenEvent.CRITICAL_START);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onGoCritical(cap);
+		}
 	}
 	
 	public static void onHandsStartGlowing(IRegeneration cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onHandsStartGlowing(cap));
+		checkAndForward(cap, RegenEvent.HAND_GLOW_START);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onHandsStartGlowing(cap);
+		}
 	}
 	
-	public static void onClient(String event, IRegeneration cap) {
-		try {
-			for (IActingHandler handler : clientHandlers) {
-				handler.getClass().getMethod(event, IRegeneration.class).invoke(handler, cap); // TODO this can definitely be optimized
+	public static void onClient(RegenEvent event, IRegeneration cap) {
+		for (IActingHandler handler : clientHandlers) {
+			switch (event) {
+				case ENTER_GRACE:
+					handler.onEnterGrace(cap);
+					break;
+				case REGEN_FINISH:
+					handler.onRegenFinish(cap);
+					break;
+				case REGEN_TRIGGER:
+					handler.onRegenTrigger(cap);
+					break;
+				case CRITICAL_START:
+					handler.onGoCritical(cap);
+					break;
+				case HAND_GLOW_START:
+					handler.onHandsStartGlowing(cap);
+					break;
+				default:
+					break;
 			}
-		} catch (IllegalAccessException | IllegalArgumentException e) {
-			throw new IllegalStateException("Illegal handler method on client: " + event, e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException("Error while forwarding event to client (" + event + ")", e);
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException("Unknown method was forwarded '" + event + "'", e);
 		}
 	}
 	
 	/**
 	 * Knows what to forward by reflection magic
 	 */
-	private static void checkAndForward(IRegeneration cap) {
+	private static void checkAndForward(IRegeneration cap, RegenEvent event) {
 		if (cap.getPlayer().world.isRemote)
 			throw new IllegalStateException("'Posting' \"acting\" `event` from client");
-		
-		String event = Thread.currentThread().getStackTrace()[2].getMethodName();
-		NetworkHandler.INSTANCE.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP) cap.getPlayer());
+		NetworkHandler.INSTANCE.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event.name()), (EntityPlayerMP) cap.getPlayer());
+	}
+	
+	public enum RegenEvent {
+		ENTER_GRACE, REGEN_FINISH, REGEN_TRIGGER, CRITICAL_START, HAND_GLOW_START
 	}
 	
 }

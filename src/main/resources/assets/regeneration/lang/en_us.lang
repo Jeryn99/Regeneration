@@ -99,7 +99,7 @@ config.regeneration.compat.tardis.tardis_damage=Damage Tardis on Regeneration
 config.regeneration.skins.model_preference=Preferred skin model
 config.regeneration.skins.changemyskin=Skin changing
 config.regeneration.skins.download_url=Download url
-
+regeneration.messages.not_alive=You cannot transfer regens in this state!
 config.regeneration.category.compat=Mod integrations
 config.regeneration.category.compat.tardis=Tardis Mod
 config.regeneration.category.compat.lccore=Lucraft Core
