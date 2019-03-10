@@ -52,7 +52,7 @@ public class SkinChangingHandler {
 	public static final File SKIN_CACHE_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get()+"/mods/regeneration/skincache/" + Minecraft.getInstance().getSession().getProfile().getId() + "/skins");
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-	public static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class); //TODO move to debugger
+	public static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class);
 	public static final Map<UUID, SkinInfo.SkinType> TYPE_BACKUPS = new HashMap<>();
 	private static final Random RAND = new Random();
 	

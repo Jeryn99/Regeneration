@@ -37,6 +37,9 @@ public class RegenKeyBinds {
 	 * Handles LCCore compatibility
 	 */
 	public static String getRegenerateNowDisplayName() {
+		if(REGEN_NOW == null){
+			return "WHY";
+		}
 		return REGEN_NOW.getTranslationKey();
 	}
 	

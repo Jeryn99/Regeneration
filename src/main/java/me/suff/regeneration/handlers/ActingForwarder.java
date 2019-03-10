@@ -41,51 +41,63 @@ public class ActingForwarder {
 			if (cap.getPlayer().world.isRemote)
 				throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
 			
-			serverHandlers.forEach(handler -> handler.onRegenTick(data));
+			for (IActingHandler handler : serverHandlers) {
+				handler.onRegenTick(data);
+			}
 		});
 	}
 	
 	public static void onEnterGrace(LazyOptional<IRegeneration> cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onEnterGrace(cap));
+		checkAndForward(cap, RegenEvent.ENTER_GRACE);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onEnterGrace(cap);
+		}
 	}
 	
 	public static void onRegenFinish(LazyOptional<IRegeneration> cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onRegenFinish(cap));
+		checkAndForward(cap, RegenEvent.REGEN_FINISH);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onRegenFinish(cap);
+		}
 	}
 	
 	public static void onRegenTrigger(LazyOptional<IRegeneration> cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onRegenTrigger(cap));
+		checkAndForward(cap, RegenEvent.REGEN_TRIGGER);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onRegenTrigger(cap);
+		}
 	}
 	
 	public static void onGoCritical(LazyOptional<IRegeneration> cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onGoCritical(cap));
+		checkAndForward(cap, RegenEvent.CRITICAL_START);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onGoCritical(cap);
+		}
 	}
 	
 	public static void onHandsStartGlowing(LazyOptional<IRegeneration> cap) {
-		checkAndForward(cap);
-		serverHandlers.forEach(handler -> handler.onHandsStartGlowing(cap));
+		checkAndForward(cap, RegenEvent.HAND_GLOW_START);
+		for (IActingHandler handler : serverHandlers) {
+			handler.onHandsStartGlowing(cap);
+		}
 	}
 	
-	public static void onClient(String event, LazyOptional<IRegeneration> cap) {
+	public static void onClient(RegenEvent event, LazyOptional<IRegeneration> cap) {
 		for (IActingHandler handler : clientHandlers) {
 			switch (event) {
-				case "onEnterGrace":
+				case ENTER_GRACE:
 					handler.onEnterGrace(cap);
 					break;
-				case "onRegenFinish":
+				case REGEN_FINISH:
 					handler.onRegenFinish(cap);
 					break;
-				case "onRegenTrigger":
+				case REGEN_TRIGGER:
 					handler.onRegenTrigger(cap);
 					break;
-				case "onGoCritical":
+				case CRITICAL_START:
 					handler.onGoCritical(cap);
 					break;
-				case "onHandsStartGlowing":
+				case HAND_GLOW_START:
 					handler.onHandsStartGlowing(cap);
 					break;
 				default:
@@ -94,15 +106,18 @@ public class ActingForwarder {
 		}
 	}
 	
+	public enum RegenEvent{
+		ENTER_GRACE, REGEN_FINISH, REGEN_TRIGGER, CRITICAL_START, HAND_GLOW_START
+	}
+	
 	/**
 	 * Knows what to forward by reflection magic
 	 */
-	private static void checkAndForward(LazyOptional<IRegeneration> data) {
-		String event = Thread.currentThread().getStackTrace()[2].getMethodName();
+	private static void checkAndForward(LazyOptional<IRegeneration> data, RegenEvent event) {
 		data.ifPresent((cap) -> {
 			if (cap.getPlayer().world.isRemote)
 				throw new IllegalStateException("'Posting' \"acting\" `event` from client");
-			NetworkHandler.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event), (EntityPlayerMP) cap.getPlayer());
+			NetworkHandler.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event.name()), (EntityPlayerMP) cap.getPlayer());
 		});
 	}
 	

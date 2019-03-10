@@ -42,6 +42,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.Random;
 import java.util.UUID;
@@ -290,12 +291,13 @@ public class ClientEventHandler {
 		}
 	}
 	
-	//TODO find out when the client logs out
-	//@SubscribeEvent
-	//public void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
-	//	SkinChangingHandler.PLAYER_SKINS.clear();
-	//	SkinChangingHandler.TYPE_BACKUPS.clear();
-	//}
+	@SubscribeEvent
+	public void onClientLeaveServer(TickEvent.ClientTickEvent e) {
+		if(Minecraft.getInstance().world == null && Minecraft.getInstance().player == null) {
+			SkinChangingHandler.PLAYER_SKINS.clear();
+			SkinChangingHandler.TYPE_BACKUPS.clear();
+		}
+	}
 	
 	
 }

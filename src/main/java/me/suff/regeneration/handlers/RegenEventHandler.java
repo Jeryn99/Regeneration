@@ -21,7 +21,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.storage.loot.LootEntry;
 import net.minecraft.world.storage.loot.LootEntryTable;
 import net.minecraft.world.storage.loot.LootPool;
@@ -43,9 +47,13 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.VersionChecker;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
+import net.minecraftforge.forgespi.language.IModInfo;
+import net.minecraftforge.versions.forge.ForgeVersion;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -186,6 +194,25 @@ public class RegenEventHandler {
 		MinecraftForge.EVENT_BUS.unregister(DEBUGGER);
 		DEBUGGER.dispose();
 		DEBUGGER = null;
+	}
+	
+	/**
+	 * Update checker thing, tells the player that the mods out of date if they're on a old build
+	 */
+	@SubscribeEvent
+	public static void onPlayerLogin(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e) {
+		EntityPlayer player = e.getPlayer();
+		if (!player.world.isRemote) {
+			VersionChecker.CheckResult version = VersionChecker.getResult(ModList.get().getModFileById(RegenerationMod.MODID).getMods().get(0));
+			if (version.status.equals(VersionChecker.Status.OUTDATED)) {
+				TextComponentString url = new TextComponentString(TextFormatting.AQUA + TextFormatting.BOLD.toString() + "UPDATE");
+				url.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minecraft.curseforge.com/projects/regeneration"));
+				url.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Open URL")));
+				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "[Regeneration] : ").appendSibling(url));
+				String changes = version.changes.get(version.target);
+				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Changes: " + TextFormatting.BLUE + changes));
+			}
+		}
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
