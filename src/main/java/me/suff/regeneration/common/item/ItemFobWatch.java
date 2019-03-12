@@ -160,4 +160,9 @@ public class ItemFobWatch extends ItemOverrideBase {
 			}
 		}
 	}
+	
+	@Override
+	public int getMaxDamage(ItemStack stack) {
+		return RegenConfig.COMMON.regenCapacity.get();
+	}
 }

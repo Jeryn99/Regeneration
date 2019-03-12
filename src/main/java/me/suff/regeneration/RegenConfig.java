@@ -70,22 +70,15 @@ public class RegenConfig {
 		Common(ForgeConfigSpec.Builder builder) {
 			builder.comment("General Regeneration Settings").push("common");
 			regenCapacity = builder.comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.").translation("config.regeneration.max_regens").defineInRange("regenCapacity", 12, 0, Integer.MAX_VALUE);
-			
 			loseRegensOnDeath = builder.comment("If this is false you won't lose your regenerations if you get killed during regeneration").translation("config.regeneration.lose_regens_on_death").define("loseRegensOnDeath", false);
-			
 			fieryRegen = builder.comment("Spawn fire during regeneration").translation("config.regeneration.fiery_regen").define("fieryRegen", true);
-			
 			regenFireImmune = builder.comment("Players are immune to fire damage while regenerating").translation("config.regeneration.regeneration_fire_immunity").define("fireImmunity", false);
-			
 			infiniteRegeneration = builder.comment("config.regeneration.infinite_regenerations").translation("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.").define("infiniteRegeneration", false);
-			
 			sendRegenDeathMessages = builder.comment("Sends a message to chat to say that a player is regenerating, and the reason for it").translation("config.regeneration.regen_messages").define("sendRegenDeathMessages", true);
-			
 			builder.pop();
 			
 			
 			builder.comment("Post Regen Settings").push("post");
-			
 			postRegenerationDuration = builder.comment("Amount of seconds the post-regeneration effect lasts").translation("config.regeneration.post_regen_duration").defineInRange("postRegenDuration", 180, 0, Integer.MAX_VALUE);
 			postRegenerationLevel = builder.comment("The level of the regeneration status effect granted after you regenerate").translation("config.regeneration.post_regenerationEffect_level").defineInRange("postRegenLevel", 4, 0, Integer.MAX_VALUE);
 			resetHunger = builder.comment("Regenerate hunger bars").translation("config.regeneration.reset_hunger").define("resetHunger", true);
