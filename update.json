@@ -1,13 +1,14 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "1.5.3",
-		"1.12.2-recommended": "1.5.3",
+		"1.12.2-latest": "1.5.4",
+		"1.12.2-recommended": "1.5.4",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
 	"1.12.2": {
-		"1.5.3": "1.13.2 Release it out now! || I will still be maintaining 1.12.2 for a while! || Fix to Fob watch bug and some performance stuff"
+		"1.5.3": "1.13.2 Release it out now! || I will still be maintaining 1.12.2 for a while! || Fix to Fob watch bug and some performance stuff",
+		"1.5.4": "Better Skin grabbing handling for mojang skins. Should not longer randomly crash."
 	},
 	"1.13.2": {
 		"0.0.2": "Ported to 1.13.2 + Fixed Force Regen Crash"
