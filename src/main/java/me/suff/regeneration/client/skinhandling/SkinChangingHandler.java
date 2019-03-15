@@ -14,14 +14,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.commons.io.FileUtils;
@@ -36,7 +38,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,9 +48,9 @@ import java.util.UUID;
 @OnlyIn(Dist.CLIENT)
 public class SkinChangingHandler {
 	
-	public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get()+"/regeneration/skins/");
+	public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "/regeneration/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
-	public static final File SKIN_CACHE_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get()+"/mods/regeneration/skincache/" + Minecraft.getInstance().getSession().getProfile().getId() + "/skins");
+	public static final File SKIN_CACHE_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "/regeneration/skincache/" + Minecraft.getInstance().getSession().getProfile().getId() + "/skins");
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	public static final Logger SKIN_LOG = LogManager.getLogger(SkinChangingHandler.class);
@@ -65,7 +66,7 @@ public class SkinChangingHandler {
 	 * Converts a array of Bytes into a Buffered Image and caches to the cache directory
 	 * with the file name of "cache-%PLAYERUUID%.png"
 	 *
-	 * @param player    - Player to be invovled
+	 * @param player    - Player to be involved
 	 * @param imageData - Pixel data to be converted to a Buffered Image
 	 * @return Buffered image that will later be converted to a Dynamic texture
 	 */
@@ -135,7 +136,7 @@ public class SkinChangingHandler {
 		});
 	}
 	
-	private static File chooseRandomSkin(Random rand, boolean isAlex)  {
+	private static File chooseRandomSkin(Random rand, boolean isAlex) {
 		File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
 		Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		if (folderFiles.isEmpty()) {
@@ -194,29 +195,34 @@ public class SkinChangingHandler {
 	 * @throws IOException
 	 */
 	private static ResourceLocation getMojangSkin(AbstractClientPlayer player) throws IOException {
-		Minecraft minecraft = Minecraft.getInstance();
-		Map map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
+		Map map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
 		if (map.isEmpty()) {
-			map = minecraft.getSessionService().getTextures(minecraft.getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
+			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
 		}
 		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
 			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
-			
-			BufferedImage image = ImageIO.read(new URL(profile.getUrl()));
-			image = ImageFixer.convertSkinTo64x64(image);
-			
-			if (image == null) {
-				return DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
-			}
-			
-			File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
-			ImageIO.write(image, "png", file);
-			DynamicTexture tex = new DynamicTexture(NativeImage.read(new FileInputStream(file)));
-			return minecraft.getTextureManager().getDynamicTextureLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
+			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, Minecraft.getInstance().getSkinManager(), 2), profile.getHash().substring(0, 2));
+			File file = new File(dir, profile.getHash());
+			if (file.exists())
+				file.delete();
+			ResourceLocation location = new ResourceLocation("skins/" + profile.getHash());
+			loadTexture(file, location, DefaultPlayerSkin.getDefaultSkinLegacy(), profile.getUrl(), player);
+			setPlayerSkin(player, location);
+			return player.getLocationSkin();
 		}
-		
 		return DefaultPlayerSkin.getDefaultSkinLegacy();
 	}
+	
+	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String par1Str, AbstractClientPlayer player) {
+		TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
+		ITextureObject object = texturemanager.getTexture(resource);
+		if (object == null) {
+			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt(), player);
+			texturemanager.loadTexture(resource, object);
+		}
+		return object;
+	}
+	
 	
 	/**
 	 * Changes the ResourceLocation of a Players skin
@@ -225,10 +231,7 @@ public class SkinChangingHandler {
 	 * @param texture - ResourceLocation of intended texture
 	 */
 	public static void setPlayerSkin(AbstractClientPlayer player, ResourceLocation texture) {
-		if (player.getLocationSkin() == texture || texture == null) {
-			if (texture == null) {
-				RegenerationMod.LOG.error("Skin data for " + player.getName() + "was null");
-			}
+		if (player.getLocationSkin() == texture) {
 			return;
 		}
 		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, 0);

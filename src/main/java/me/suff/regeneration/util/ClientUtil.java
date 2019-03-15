@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class ClientUtil {
 	
-	public static String keyBind = "???"; //WAFFLE there was a weird thing with this somewhere that I still need to fix
+	public static String keyBind = "???";
 	
 	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle) {
 		Minecraft.getInstance().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
