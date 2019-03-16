@@ -2,7 +2,6 @@ package me.suff.regeneration.client.skinhandling;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.suff.regeneration.RegenConfig;
-import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.network.MessageUpdateSkin;
@@ -79,7 +78,7 @@ public class SkinChangingHandler {
 	 * @param imageData - Pixel data to be converted to a Buffered Image
 	 * @return Buffered image that will later be converted to a Dynamic texture
 	 */
-	private static BufferedImage toImage(EntityPlayer player, byte[] imageData) throws IOException {
+	public static BufferedImage toImage(EntityPlayer player, byte[] imageData) throws IOException {
 		BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_4BYTE_ABGR);
 		img.setData(Raster.createRaster(img.getSampleModel(), new DataBufferByte(imageData, imageData.length), new Point()));
 		File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
@@ -97,7 +96,7 @@ public class SkinChangingHandler {
 	}
 	
 	/**
-	 * Choosens a random png file from Steve/Alex Directory (This really depends on the Clients preference)
+	 * Chooses a random png file from Steve/Alex Directory (This really depends on the Clients preference)
 	 * It also checks image size of the select file, if it's too large, we'll just reset the player back to their Mojang skin,
 	 * else they will be kicked from their server. If the player has disabled skin changing on the client, it will just send a reset packet
 	 *
@@ -112,13 +111,13 @@ public class SkinChangingHandler {
 		if (RegenConfig.skins.changeMySkin) {
 			boolean isAlex = CapabilityRegeneration.getForPlayer(player).getPreferredModel().isAlex();
 			File skin = SkinChangingHandler.getRandomSkin(random, isAlex);
-			RegenerationMod.LOG.info(skin.getName() + " was choosen");
+			SKIN_LOG.info(skin.getName() + " was choosen");
 			BufferedImage image = ImageIO.read(skin);
 			byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
 			if (pixelData.length >= 32767) {
 				ClientUtil.sendSkinResetPacket();
-				RegenerationMod.LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
+				SKIN_LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
 			} else {
 				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
 			}
@@ -317,7 +316,7 @@ public class SkinChangingHandler {
 		try {
 			skinInfo = SkinChangingHandler.getSkinInfo(player, cap);
 		} catch (IOException e1) {
-			RegenerationMod.LOG.error("Error creating skin for: " + player.getName() + " " + e1.getMessage());
+			SKIN_LOG.error("Error creating skin for: " + player.getName() + " " + e1.getMessage());
 		}
 		if (skinInfo != null) {
 			SkinChangingHandler.setPlayerSkin(player, skinInfo.getSkinTextureLocation());
@@ -327,6 +326,7 @@ public class SkinChangingHandler {
 			SkinChangingHandler.setSkinType(player, skinInfo.getSkintype());
 		}
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
+		
 	}
 	
 	public enum EnumChoices implements IEnum {

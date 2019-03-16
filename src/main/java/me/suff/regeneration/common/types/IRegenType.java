@@ -38,6 +38,8 @@ public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable
 	
 	R getRenderer();
 	
+	int getAnimationTicks();
+	
 	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {
 	}
 	
