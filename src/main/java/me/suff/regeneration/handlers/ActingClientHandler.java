@@ -32,15 +32,6 @@ class ActingClientHandler implements IActingHandler {
 	public void onEnterGrace(IRegeneration cap) {
 		ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
 		ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.GRACE_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != RegenState.GRACE, 1.5F);
-		
-		if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
-			try {
-				SkinChangingHandler.sendSkinUpdate(cap.getPlayer().world.rand, cap.getPlayer());
-			} catch (IOException e) {
-				RegenerationMod.LOG.error(e.getMessage());
-			}
-		}
-	
 	}
 	
 	@Override
@@ -55,6 +46,14 @@ class ActingClientHandler implements IActingHandler {
 		if (RegenConfig.changeHand && cap.getPlayer().getUniqueID() == Minecraft.getMinecraft().player.getUniqueID()) {
 			Minecraft.getMinecraft().gameSettings.mainHand = RegenUtil.randomEnum(EnumHandSide.class);
 			Minecraft.getMinecraft().gameSettings.sendSettingsToServer();
+		}
+		
+		if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
+			try {
+				SkinChangingHandler.sendSkinUpdate(cap.getPlayer().world.rand, cap.getPlayer());
+			} catch (IOException e) {
+				RegenerationMod.LOG.error(e.getMessage());
+			}
 		}
 		
 	}

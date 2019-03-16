@@ -126,19 +126,15 @@ public class SkinChangingHandler {
 		}
 	}
 	
-	private static File getRandomSkin(Random rand, boolean isAlex) throws IOException {
-		File skins;
-		if (isAlex) {
-			skins = SKIN_DIRECTORY_ALEX;
-		} else {
-			skins = SKIN_DIRECTORY_STEVE;
-		}
+	private static File getRandomSkin(Random rand, boolean isAlex) {
+		File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
 		Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		if (folderFiles.isEmpty()) {
+			SKIN_LOG.info("The Skin folder was empty....Downloading some skins...");
 			FileUtil.doDownloadsOnThread();
 			folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 		}
-		
+		SKIN_LOG.info("There were " + folderFiles.size() + " to chose from");
 		return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
 	}
 	
@@ -158,11 +154,7 @@ public class SkinChangingHandler {
 		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
 			resourceLocation = getMojangSkin(player);
 			
-			if (wasAlex(player)) {
-				skinType = SkinInfo.SkinType.ALEX;
-			} else {
-				skinType = SkinInfo.SkinType.STEVE;
-			}
+			skinType = wasAlex(player) ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE;
 		} else {
 			
 			BufferedImage bufferedImage = null;
