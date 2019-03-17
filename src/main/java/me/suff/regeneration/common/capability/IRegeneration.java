@@ -60,9 +60,9 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	IRegenerationStateManager getStateManager();
 	
-	byte[] getEncodedSkin();
+	String getEncodedSkin();
 	
-	void setEncodedSkin(byte[] string);
+	void setEncodedSkin(String string);
 	
 	SkinInfo.SkinType getSkinType();
 	

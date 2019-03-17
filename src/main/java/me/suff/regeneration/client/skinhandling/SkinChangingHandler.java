@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.suff.regeneration.RegenConfig;
+import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.network.MessageUpdateSkin;
@@ -122,12 +123,7 @@ public class SkinChangingHandler {
 			BufferedImage image = ImageIO.read(skin);
 			byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
-			if (pixelData.length >= 32767) {
-				ClientUtil.sendSkinResetPacket();
-				SKIN_LOG.error("CLIENT TRIED TO SEND IMAGE THAT EXCEEDS PERMITTED REQUIREMENTS");
-			} else {
-				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
-			}
+			NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
 		} else {
 			ClientUtil.sendSkinResetPacket();
 		}
