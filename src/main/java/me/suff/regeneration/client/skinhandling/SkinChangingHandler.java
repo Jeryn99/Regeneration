@@ -1,5 +1,8 @@
 package me.suff.regeneration.client.skinhandling;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
@@ -32,6 +35,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -41,6 +47,7 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -112,7 +119,7 @@ public class SkinChangingHandler {
 		if (RegenConfig.skins.changeMySkin) {
 			boolean isAlex = CapabilityRegeneration.getForPlayer(player).getPreferredModel().isAlex();
 			File skin = SkinChangingHandler.getRandomSkin(random, isAlex);
-			RegenerationMod.LOG.info(skin.getName() + " was choosen");
+			RegenerationMod.LOG.info(skin + " was choosen");
 			BufferedImage image = ImageIO.read(skin);
 			byte[] pixelData = SkinChangingHandler.imageToPixelData(image);
 			CapabilityRegeneration.getForPlayer(player).setEncodedSkin(pixelData);
@@ -156,7 +163,7 @@ public class SkinChangingHandler {
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 		
-		if (Arrays.equals(data.getEncodedSkin(), new byte[0]) || encodedSkin.length < 16383) {
+		if (Arrays.equals(data.getEncodedSkin(), new byte[0])) {
 			resourceLocation = getMojangSkin(player);
 			
 			if (wasAlex(player)) {
@@ -328,6 +335,31 @@ public class SkinChangingHandler {
 		}
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 	}
+	
+	public static void test() {
+		try {
+			String url = "https://namemc.com/minecraft-skins";
+			Document doc = Jsoup.connect(url).get();
+			Elements scripts = doc.getElementsByTag("script");
+			String jsonText = scripts.get(2).data();
+			
+			JsonParser parser = new JsonParser();
+			JsonObject rootObj = parser.parse(jsonText).getAsJsonObject();
+			JsonObject locObj = rootObj.getAsJsonObject("mainEntityOfPage");
+			JsonArray imagesUrl = locObj.getAsJsonArray("image");
+			
+			imagesUrl.iterator().forEachRemaining(jsonElement -> {
+				try {
+					FileUtil.downloadImage(new URL(jsonElement.getAsJsonObject().get("sameAs").getAsString().replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), new File(SkinChangingHandler.SKIN_DIRECTORY_ALEX.toPath().toString() + "/namemc_trending/"), "namemc_"+System.currentTimeMillis());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
 	
 	public enum EnumChoices implements IEnum {
 		ALEX(true), STEVE(false), EITHER(true);

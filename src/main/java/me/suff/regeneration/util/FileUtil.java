@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -34,6 +35,7 @@ public class FileUtil {
 		String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
 		for (String link : links) {
 			unzipSkinPack(link);
+			SkinChangingHandler.test();
 		}
 	}
 	
@@ -74,8 +76,17 @@ public class FileUtil {
 	 * @throws IOException
 	 */
 	public static void downloadImage(URL url, File file, String filename) throws IOException {
+		
+		URLConnection uc;
+		uc = url.openConnection();
+		uc.connect();
+		uc = url.openConnection();
+		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
 		SkinChangingHandler.SKIN_LOG.info("Downloading Skin from: {}", url.toString());
-		BufferedImage img = ImageIO.read(url);
+		BufferedImage img = ImageIO.read(uc.getInputStream());
+		if(!file.exists()){
+			file.mkdirs();
+		}
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
 	

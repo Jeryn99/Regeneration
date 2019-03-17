@@ -69,6 +69,7 @@ dependencies {
 	testCompile 'org.mockito:mockito-core:2.23.4'
 	
 	testServer 'com.github.HoldYourWaffle:CrashMyServer:-SNAPSHOT'
+	compile 'org.jsoup:jsoup:1.11.3'
 }
 
 test { //TODO does this work? it should couse the test stdout & stderr to be passed on to the console
