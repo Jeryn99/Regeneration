@@ -143,6 +143,10 @@ public class RegenConfig {
 		@Config.Comment("This is where the regeneration skin folder will be generated, the default is './mods/', the path MUST NOT end in /")
 		@Config.RequiresMcRestart
 		public String skinDir = "./mods";
+		
+		@Config.LangKey("config.regeneration.skins.trending")
+		@Config.Comment("Toggle whether trending skins are downloaded once per day from namemc")
+		public boolean downloadTrendingSkins = true;
 	}
 	
 	

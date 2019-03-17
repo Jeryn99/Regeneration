@@ -61,7 +61,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType<?> type = new TypeFiery();
 	
-	private byte[] ENCODED_SKIN = new byte[0];
+	private String BASE64_SKIN = "NONE";
+	
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 	private SkinChangingHandler.EnumChoices preferredModel = SkinChangingHandler.EnumChoices.EITHER;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
@@ -139,7 +140,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
 		nbt.setTag("type", type.serializeNBT());
-		nbt.setByteArray("encoded_skin", ENCODED_SKIN);
+		nbt.setString("base64_skin", BASE64_SKIN);
 		nbt.setString("skinType", skinType.name());
 		nbt.setString("preferredModel", preferredModel.name());
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
@@ -208,7 +209,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			type = new TypeFiery();
 		
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; // I need to check for versions before the new state-ticking system
-		setEncodedSkin(nbt.getByteArray("encoded_skin"));
+		setEncodedSkin(nbt.getString("base64_skin"));
 		
 		if (nbt.hasKey("stateManager"))
 			if (stateManager != null) {
@@ -241,13 +242,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	@Override
-	public byte[] getEncodedSkin() {
-		return ENCODED_SKIN;
+	public String getEncodedSkin() {
+		return BASE64_SKIN;
 	}
 	
 	@Override
-	public void setEncodedSkin(byte[] string) {
-		ENCODED_SKIN = string;
+	public void setEncodedSkin(String string) {
+		BASE64_SKIN = string;
 	}
 	
 	

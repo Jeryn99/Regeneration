@@ -162,6 +162,8 @@ public class RenderUtil {
 		Minecraft.getMinecraft().renderEngine.bindTexture(player.getLocationSkin());
 		model.render(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, player.rotationYawHead, player.cameraPitch, 0.0625f);
 		GlStateManager.popMatrix();
+		
+		
 		GlStateManager.popMatrix();
 	}
 	

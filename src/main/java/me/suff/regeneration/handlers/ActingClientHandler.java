@@ -1,7 +1,6 @@
 package me.suff.regeneration.handlers;
 
 import me.suff.regeneration.RegenConfig;
-import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.util.ClientUtil;
@@ -11,8 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
-
-import java.io.IOException;
 
 class ActingClientHandler implements IActingHandler {
 	
@@ -49,11 +46,7 @@ class ActingClientHandler implements IActingHandler {
 		}
 		
 		if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
-			try {
-				SkinChangingHandler.sendSkinUpdate(cap.getPlayer().world.rand, cap.getPlayer());
-			} catch (IOException e) {
-				RegenerationMod.LOG.error(e.getMessage());
-			}
+			SkinChangingHandler.sendSkinUpdate(cap.getPlayer().world.rand, cap.getPlayer());
 		}
 		
 	}
