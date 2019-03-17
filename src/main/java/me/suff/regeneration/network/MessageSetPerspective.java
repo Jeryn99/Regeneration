@@ -12,14 +12,14 @@ import java.util.function.Supplier;
  */
 public class MessageSetPerspective {
 	
-	private boolean thirdperson;
+	private boolean thirdPerson;
 	
-	public MessageSetPerspective(boolean thirdperson) {
-		this.thirdperson = thirdperson;
+	public MessageSetPerspective(boolean thirdPerson) {
+		this.thirdPerson = thirdPerson;
 	}
 	
 	public static void encode(MessageSetPerspective messageSetPerspective, PacketBuffer buffer) {
-		buffer.writeBoolean(messageSetPerspective.thirdperson);
+		buffer.writeBoolean(messageSetPerspective.thirdPerson);
 	}
 	
 	public static MessageSetPerspective decode(PacketBuffer buffer) {
@@ -31,7 +31,7 @@ public class MessageSetPerspective {
 		public static void handle(MessageSetPerspective message, Supplier<NetworkEvent.Context> ctx) {
 			Minecraft.getInstance().addScheduledTask(() -> {
 				if (RegenConfig.CLIENT.changePerspective.get()) {
-					Minecraft.getInstance().gameSettings.thirdPersonView = message.thirdperson ? 0 : 2;
+					Minecraft.getInstance().gameSettings.thirdPersonView = message.thirdPerson ? 0 : 2;
 				}
 			});
 			ctx.get().setPacketHandled(true);

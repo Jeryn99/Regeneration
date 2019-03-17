@@ -2,6 +2,7 @@ package me.suff.regeneration.util;
 
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.handlers.RegenObjects;
+import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -43,7 +44,6 @@ public class RegenUtil {
 						if (block.getBlock() != Blocks.BEDROCK && block.getBlockHardness(world, new BlockPos(x, y, z)) < 3.0F) {
 							
 							if (!world.isRemote) {
-								
 								if (world.getTileEntity(new BlockPos(x, y, z)) != null) {
 									TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 									if (tileEntity instanceof IInventory) {
@@ -51,7 +51,6 @@ public class RegenUtil {
 										world.updateComparatorOutputLevel(pos, block.getBlock());
 									}
 								}
-								
 								InventoryHelper.spawnItemStack(world, x, y, z, new ItemStack(block.getBlock()));
 							}
 							world.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
