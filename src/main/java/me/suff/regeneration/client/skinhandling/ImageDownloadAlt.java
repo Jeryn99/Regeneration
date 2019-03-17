@@ -96,8 +96,6 @@ public class ImageDownloadAlt extends SimpleTexture {
 	
 	protected void loadTextureFromServer() {
 		this.imageThread = new Thread("Texture Downloader #" + threadDownloadCounter.incrementAndGet()) {
-			private static final String __OBFID = "CL_00001050";
-			
 			public void run() {
 				HttpURLConnection connection = null;
 				ImageDownloadAlt.logger.debug("Downloading http texture from {} to {}", new Object[]{ImageDownloadAlt.this.imageUrl, ImageDownloadAlt.this.cacheFile});
@@ -128,6 +126,9 @@ public class ImageDownloadAlt extends SimpleTexture {
 					
 					ImageDownloadAlt.this.setBufferedImage(bufferedimage);
 					File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
+					if (file.exists()) {
+						file.delete();
+					}
 					ImageIO.write(bufferedimage, "png", file);
 				} catch (Exception exception) {
 					ImageDownloadAlt.logger.error("Couldn\'t download http texture", exception);

@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.ImageBufferDownload;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.awt.image.ImageObserver;
 
 public class ImageBufferDownloadAlt extends ImageBufferDownload {
 	private int[] imageData;
@@ -78,7 +77,6 @@ public class ImageBufferDownloadAlt extends ImageBufferDownload {
 				}
 			}
 		}
-		
 		return false;
 	}
 }

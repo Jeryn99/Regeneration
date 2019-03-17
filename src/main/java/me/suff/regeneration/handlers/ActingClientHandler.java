@@ -48,10 +48,6 @@ class ActingClientHandler implements IActingHandler {
 			Minecraft.getMinecraft().gameSettings.sendSettingsToServer();
 		}
 		
-	}
-	
-	@Override
-	public void onRegenTrigger(IRegeneration cap) {
 		if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
 			try {
 				SkinChangingHandler.sendSkinUpdate(cap.getPlayer().world.rand, cap.getPlayer());
@@ -59,6 +55,12 @@ class ActingClientHandler implements IActingHandler {
 				RegenerationMod.LOG.error(e.getMessage());
 			}
 		}
+		
+	}
+	
+	@Override
+	public void onRegenTrigger(IRegeneration cap) {
+	
 	}
 	
 	@Override

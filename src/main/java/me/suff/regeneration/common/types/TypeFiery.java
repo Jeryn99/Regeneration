@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
  * on 16/09/2018.
  */
 public class TypeFiery implements IRegenType<TypeFieryRenderer> {
-	private long animationTicks;
+	private int animationTicks;
 	
 	@Override
 	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
@@ -60,7 +60,8 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	 * @deprecated No idea why you'd want to use this outside of this class, so think carefully before you do because it's probably wrong. Keep in mind that animations can change length, so <b>never</b> use this in a non-relative way
 	 */
 	@Deprecated
-	public long getAnimationTicks() {
+	@Override
+	public int getAnimationTicks() {
 		return animationTicks;
 	}
 	
@@ -79,7 +80,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	public void deserializeNBT(NBTTagCompound nbt) {
 		IRegenType.super.deserializeNBT(nbt);
 		
-		long nbtTicks = nbt.getLong("animationTicks");
+		int nbtTicks = nbt.getInteger("animationTicks");
 		if (nbtTicks > animationTicks)
 			animationTicks = nbtTicks;
 	}
