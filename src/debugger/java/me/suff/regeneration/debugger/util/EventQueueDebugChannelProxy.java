@@ -18,58 +18,42 @@ public class EventQueueDebugChannelProxy implements IDebugChannel {
 	
 	@Override
 	public void notifyExecution(RegenState.Transition action, long tick) {
-		EventQueue.invokeLater(() -> {
-			target.notifyExecution(action, tick);
-		});
+		EventQueue.invokeLater(() -> target.notifyExecution(action, tick));
 	}
 	
 	@Override
 	public void notifyCancel(RegenState.Transition action, long wasInTicks) {
-		EventQueue.invokeLater(() -> {
-			target.notifyCancel(action, wasInTicks);
-		});
+		EventQueue.invokeLater(() -> target.notifyCancel(action, wasInTicks));
 	}
 	
 	@Override
 	public void notifySchedule(RegenState.Transition action, long inTicks) {
-		EventQueue.invokeLater(() -> {
-			target.notifySchedule(action, inTicks);
-		});
+		EventQueue.invokeLater(() -> target.notifySchedule(action, inTicks));
 	}
 	
 	@Override
 	public void warn(RegenState.Transition action, String msg) {
-		EventQueue.invokeLater(() -> {
-			target.warn(action, msg);
-		});
+		EventQueue.invokeLater(() -> target.warn(action, msg));
 	}
 	
 	@Override
 	public void out(String msg) {
-		EventQueue.invokeLater(() -> {
-			target.out(msg);
-		});
+		EventQueue.invokeLater(() -> target.out(msg));
 	}
 	
 	@Override
 	public void notifyLoaded() {
-		EventQueue.invokeLater(() -> {
-			target.notifyLoaded();
-		});
+		EventQueue.invokeLater(target::notifyLoaded);
 	}
 	
 	@Override
 	public void warn(String msg) {
-		EventQueue.invokeLater(() -> {
-			target.warn(msg);
-		});
+		EventQueue.invokeLater(() -> target.warn(msg));
 	}
 	
 	@Override
 	public void out(RegenState.Transition action, String msg) {
-		EventQueue.invokeLater(() -> {
-			target.out(action, msg);
-		});
+		EventQueue.invokeLater(() -> target.out(action, msg));
 	}
 	
 }

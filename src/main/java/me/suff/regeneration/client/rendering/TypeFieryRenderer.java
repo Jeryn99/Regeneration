@@ -136,17 +136,18 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
+		float alpha = 55;
 		
 		for (int i = 0; i < 8; i++) {
 			GlStateManager.pushMatrix();
 			GlStateManager.rotatef(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
 			GlStateManager.scalef(1.0f, 1.0f, 0.65f);
 			vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
-			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
-			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
-			vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
-			vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
-			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
+			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, alpha).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, alpha).endVertex();
+			vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, alpha).endVertex();
+			vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color((float) color.x, (float) color.y, (float) color.z, alpha).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, alpha).endVertex();
 			tessellator.draw();
 			GlStateManager.popMatrix();
 		}

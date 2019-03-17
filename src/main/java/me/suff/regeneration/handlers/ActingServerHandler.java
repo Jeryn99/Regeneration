@@ -32,6 +32,7 @@ class ActingServerHandler implements IActingHandler {
 	public ActingServerHandler() {
 	}
 	
+	
 	public static SoundEvent getRandomSound(Random random) {
 		SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION, RegenObjects.Sounds.REGENERATION_2, RegenObjects.Sounds.REGENERATION_3};
 		return SOUNDS[random.nextInt(SOUNDS.length)];

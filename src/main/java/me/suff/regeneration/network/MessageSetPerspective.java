@@ -31,7 +31,7 @@ public class MessageSetPerspective {
 		public static void handle(MessageSetPerspective message, Supplier<NetworkEvent.Context> ctx) {
 			Minecraft.getInstance().addScheduledTask(() -> {
 				if (RegenConfig.CLIENT.changePerspective.get()) {
-					Minecraft.getInstance().gameSettings.thirdPersonView = message.thirdPerson ? 0 : 2;
+					Minecraft.getInstance().gameSettings.thirdPersonView = message.thirdPerson ? 2 : 0;
 				}
 			});
 			ctx.get().setPacketHandled(true);

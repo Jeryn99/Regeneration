@@ -6,8 +6,12 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
+import me.suff.regeneration.util.RegenState;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class CommandRegen {
@@ -39,9 +43,15 @@ public class CommandRegen {
 	
 	private static int fastForward(CommandSource source) {
 		try {
-			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) -> {
-				cap.getStateManager().fastForward();
+			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) ->
+			{
+				if(cap.getState() != RegenState.ALIVE) {
+					cap.getStateManager().fastForward();
+				} else {
+					throw new CommandException(new TextComponentTranslation("regeneration.messages.fast_forward_cmd_fail"));
+				}
 			});
+			
 		} catch (CommandSyntaxException e) {
 			e.printStackTrace();
 		}
@@ -55,9 +65,7 @@ public class CommandRegen {
 	
 	private static int setRegens(CommandSource source, int amount) {
 		try {
-			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) -> {
-				cap.setRegenerationsLeft(amount);
-			});
+			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) -> cap.setRegenerationsLeft(amount));
 		} catch (CommandSyntaxException e) {
 			e.printStackTrace();
 		}
