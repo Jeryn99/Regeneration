@@ -34,7 +34,7 @@ public class ClientUtil {
 	
 	
 	public static void sendSkinResetPacket() {
-		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(new byte[0], SkinChangingHandler.wasAlex(Minecraft.getMinecraft().player)));
+		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin("none", SkinChangingHandler.wasAlex(Minecraft.getMinecraft().player)));
 	}
 	
 	@SideOnly(Side.CLIENT)
