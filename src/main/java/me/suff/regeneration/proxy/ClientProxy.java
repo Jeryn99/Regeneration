@@ -1,5 +1,6 @@
 package me.suff.regeneration.proxy;
 
+import me.suff.regeneration.Trending;
 import me.suff.regeneration.client.RegenKeyBinds;
 import me.suff.regeneration.client.rendering.LayerRegeneration;
 import me.suff.regeneration.client.rendering.entity.RenderItemOverride;
@@ -25,6 +26,11 @@ public class ClientProxy extends CommonProxy {
 		super.preInit();
 		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
+		try {
+			Trending.downloadTrendingSkins();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
