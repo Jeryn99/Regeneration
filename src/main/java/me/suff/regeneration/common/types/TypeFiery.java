@@ -25,7 +25,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		player.extinguish();
 		
 		if (!player.world.isRemote) {
-			PlayerUtil.setPerspective((EntityPlayerMP) player, true, false);
+			PlayerUtil.setPerspective((EntityPlayerMP) player, true);
 		}
 		
 		if (player.world.isRemote)
@@ -48,7 +48,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, LazyOptional<IRegeneration> capability) {
-		PlayerUtil.setPerspective((EntityPlayerMP) player, false, true);
+		PlayerUtil.setPerspective((EntityPlayerMP) player, false);
 		animationTicks = 0;
 	}
 	
