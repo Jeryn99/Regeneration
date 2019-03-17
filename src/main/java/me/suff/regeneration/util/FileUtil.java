@@ -35,7 +35,6 @@ public class FileUtil {
 		String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
 		for (String link : links) {
 			unzipSkinPack(link);
-			SkinChangingHandler.test();
 		}
 	}
 	
@@ -65,7 +64,7 @@ public class FileUtil {
 		
 		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.list()).length == 0 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.list()).length == 0) {
 			RegenerationMod.LOG.warn("One of the skin directories is empty, so we're going to fill both.");
-			doDownloadsOnThread();
+			handleDownloads();
 		}
 	}
 	
@@ -90,12 +89,13 @@ public class FileUtil {
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
 	
-	public static void doDownloadsOnThread() {
+	public static void doSetupOnThread() {
 		AtomicBoolean notDownloaded = new AtomicBoolean(true);
 		new Thread(() -> {
 			while (notDownloaded.get()) {
 				try {
-					handleDownloads();
+					createDefaultFolders();
+					Trending.downloadTrendingSkins();
 					notDownloaded.set(false);
 				} catch (Exception e) {
 					throw new RuntimeException(e);

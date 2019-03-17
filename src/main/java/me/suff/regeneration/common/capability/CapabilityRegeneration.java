@@ -39,8 +39,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,10 +61,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private RegenState state = RegenState.ALIVE;
 	private IRegenType<?> type = new TypeFiery();
 	
-	@Deprecated
-	private byte[] ENCODED_SKIN = new byte[0];
-	
-	public String BASE64_SKIN = "none";
+	private String BASE64_SKIN = "NONE";
 	
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 	private SkinChangingHandler.EnumChoices preferredModel = SkinChangingHandler.EnumChoices.EITHER;
@@ -145,7 +140,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setInteger("regenerationsLeft", regenerationsLeft);
 		nbt.setTag("style", getStyle());
 		nbt.setTag("type", type.serializeNBT());
-		nbt.setByteArray("encoded_skin", ENCODED_SKIN);
+		nbt.setString("base64_skin", BASE64_SKIN);
 		nbt.setString("skinType", skinType.name());
 		nbt.setString("preferredModel", preferredModel.name());
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
@@ -214,7 +209,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			type = new TypeFiery();
 		
 		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; // I need to check for versions before the new state-ticking system
-		setEncodedSkin(nbt.getString("encoded_skin"));
+		setEncodedSkin(nbt.getString("base64_skin"));
 		
 		if (nbt.hasKey("stateManager"))
 			if (stateManager != null) {
@@ -248,11 +243,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public String getEncodedSkin() {
-		if (!Arrays.equals(ENCODED_SKIN, new byte[0])) {
-			byte[] old = ENCODED_SKIN;
-			ENCODED_SKIN = new byte[0];
-			BASE64_SKIN = Base64.getEncoder().encodeToString(old);
-		}
 		return BASE64_SKIN;
 	}
 	

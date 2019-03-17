@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -64,13 +63,7 @@ public class ClientProxy extends CommonProxy {
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
 			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
 		}
-		
-		
-		try {
-			FileUtil.createDefaultFolders();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		FileUtil.doSetupOnThread();
 	}
 	
 }
