@@ -1,6 +1,7 @@
 package me.suff.regeneration.util;
 
 import me.suff.regeneration.RegenerationMod;
+import me.suff.regeneration.Trending;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import org.apache.commons.io.FileUtils;
 
@@ -38,6 +39,15 @@ public class FileUtil {
 		}
 	}
 	
+	public static void createDirAndSkins(){
+		try {
+			createDefaultFolders();
+			Trending.downloadTrendingSkins();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Creates skin folders
 	 * Proceeds to download skins to the folders if they are empty
@@ -64,7 +74,7 @@ public class FileUtil {
 		
 		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.list()).length == 0 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.list()).length == 0) {
 			RegenerationMod.LOG.warn("One of the skin directories is empty, so we're going to fill both.");
-			doDownloadsOnThread();
+			handleDownloads();
 		}
 	}
 	
@@ -88,13 +98,13 @@ public class FileUtil {
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
 	
-	public static void doDownloadsOnThread() {
-		AtomicBoolean notDownloaded = new AtomicBoolean(true);
+	public static void doThreadStuff() {
+		AtomicBoolean setUp = new AtomicBoolean(true);
 		new Thread(() -> {
-			while (notDownloaded.get()) {
+			while (setUp.get()) {
 				try {
-					handleDownloads();
-					notDownloaded.set(false);
+					createDirAndSkins();
+					setUp.set(false);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

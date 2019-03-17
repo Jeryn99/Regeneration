@@ -82,7 +82,7 @@ public class GraphicalRegenDebugger implements IRegenDebugger {
 	public void onTick(LivingUpdateEvent ev) {
 		if (ev.getEntity().world.isRemote)
 			return;
-		
+		System.out.println("sdfsdfdsfd");
 		if (ev.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) ev.getEntityLiving();
 			EventQueue.invokeLater(() -> playerTabz.get(player.getGameProfile()).updateLabels(CapabilityRegeneration.getForPlayer(player)));

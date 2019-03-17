@@ -1,7 +1,14 @@
 package me.suff.regeneration;
 
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+
+import static net.minecraftforge.fml.Logging.CORE;
+import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;
 
 public class RegenConfig {
 	public static Common COMMON;
@@ -25,6 +32,7 @@ public class RegenConfig {
 		public final ForgeConfigSpec.ConfigValue<String> skinDir;
 		public final ForgeConfigSpec.BooleanValue changePerspective;
 		public final ForgeConfigSpec.BooleanValue changeHand;
+		public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
 		
 		Client(ForgeConfigSpec.Builder builder) {
 			
@@ -34,6 +42,7 @@ public class RegenConfig {
 			skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './mods/', the path MUST NOT end in /").translation("config.regeneration.skins.skindir").define("skinDir", "./mods");
 			changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
 			changeHand = builder.comment("Toggle whether your hand has the chance of inverting after a regen").translation("config.regeneration.hand_change").define("changeHand", true);
+			downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
 			builder.pop();
 		}
 		
@@ -108,5 +117,6 @@ public class RegenConfig {
 			builder.pop();
 		}
 	}
+	
 	
 }

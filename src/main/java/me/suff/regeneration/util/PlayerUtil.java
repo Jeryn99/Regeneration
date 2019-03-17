@@ -60,8 +60,8 @@ public class PlayerUtil {
 		players.forEach(playerMP -> sendMessage(playerMP, translation, false));
 	}
 	
-	public static void setPerspective(EntityPlayerMP player, boolean thirdperson, boolean resetPitch) {
-		NetworkHandler.sendTo(new MessageSetPerspective(thirdperson, resetPitch), player);
+	public static void setPerspective(EntityPlayerMP player, boolean thirdperson) {
+		NetworkHandler.sendTo(new MessageSetPerspective(thirdperson), player);
 	}
 	
 	public static boolean canEntityAttack(Entity entity) { // NOTE unused

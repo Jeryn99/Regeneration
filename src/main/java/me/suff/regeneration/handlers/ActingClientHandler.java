@@ -44,6 +44,7 @@ class ActingClientHandler implements IActingHandler {
 			if (RegenConfig.CLIENT.changeHand.get() && cap.getPlayer().getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
 				Minecraft.getInstance().gameSettings.mainHand = RegenUtil.randomEnum(EnumHandSide.class);
 				Minecraft.getInstance().gameSettings.sendSettingsToServer();
+				Minecraft.getInstance().player.rotationPitch = 0;
 			}
 		});
 	}

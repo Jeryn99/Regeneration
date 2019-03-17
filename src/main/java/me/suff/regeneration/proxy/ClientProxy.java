@@ -26,11 +26,6 @@ public class ClientProxy extends CommonProxy {
 		super.preInit();
 		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
-		try {
-			Trending.downloadTrendingSkins();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@Override
@@ -48,14 +43,7 @@ public class ClientProxy extends CommonProxy {
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
 		}
-		
-		try {
-			FileUtil.createDefaultFolders();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		
+		FileUtil.doThreadStuff();
 	}
 	
 }
