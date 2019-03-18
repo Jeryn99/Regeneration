@@ -41,7 +41,7 @@ public class RegenerationMod {
 	
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
-	public static final String VERSION = "0.0.2";
+	public static final String VERSION = "0.0.4";
 	
 	public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
 	
@@ -57,13 +57,9 @@ public class RegenerationMod {
 	public RegenerationMod() {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
-		// Register the setup method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		// Register the enqueueIMC method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-		// Register the processIMC method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-		// Register the doClientStuff method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 		
 		INSTANCE = this;
