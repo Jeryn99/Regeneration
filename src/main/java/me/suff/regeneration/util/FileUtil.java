@@ -83,6 +83,7 @@ public class FileUtil {
 		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
 		SkinChangingHandler.SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
+		img = ClientUtil.ImageFixer.convertSkinTo64x64(img);
 		if(!file.exists()){
 			file.mkdirs();
 		}
@@ -169,4 +170,23 @@ public class FileUtil {
 		return builder.toString();
 	}
 	
+	public static interface IEnum<E extends Enum<E>> {
+		
+		int ordinal();
+		
+		default E next() {
+			E[] ies = this.getAllValues();
+			return this.ordinal() != ies.length - 1 ? ies[this.ordinal() + 1] : null;
+		}
+		
+		default E previous() {
+			return this.ordinal() != 0 ? this.getAllValues()[this.ordinal() - 1] : null;
+		}
+		
+		@SuppressWarnings("unchecked")
+		default E[] getAllValues() {
+			IEnum[] ies = this.getClass().getEnumConstants();
+			return (E[]) ies;
+		}
+	}
 }

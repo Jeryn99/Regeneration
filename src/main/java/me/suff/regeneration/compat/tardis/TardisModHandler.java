@@ -87,7 +87,7 @@ public class TardisModHandler implements IActingHandler {
 				controlDoor.processInitialInteract(player, EnumHand.MAIN_HAND);
 			}
 			
-			// Lets damage some shit
+			// Lets damage some systems
 			TardisSystems.BaseSystem[] systems = tileEntityTardis.systems;
 			for (TardisSystems.BaseSystem system : systems) {
 				if (rand.nextInt(5) < 2 && !(system instanceof SystemDimension)) {

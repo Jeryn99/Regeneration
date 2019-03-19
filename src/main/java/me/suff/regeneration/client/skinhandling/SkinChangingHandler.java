@@ -9,7 +9,6 @@ import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.FileUtil;
-import me.suff.regeneration.util.IEnum;
 import me.suff.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -324,7 +323,7 @@ public class SkinChangingHandler {
 		
 	}
 	
-	public enum EnumChoices implements IEnum {
+	public enum EnumChoices implements FileUtil.IEnum {
 		ALEX(true), STEVE(false), EITHER(true);
 		
 		private boolean isAlex;
