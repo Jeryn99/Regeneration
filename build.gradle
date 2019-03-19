@@ -75,12 +75,6 @@ dependencies {
 	compile 'org.jsoup:jsoup:1.11.3'
 }
 
-test { //TODO does this work? it should couse the test stdout & stderr to be passed on to the console
-	testLogging {
-		events "passed", "skipped", "failed", "standardOut", "standardError"
-	}
-}
-
 processResources {
 	inputs.property 'version', project.version
 	inputs.property 'mcversion', project.minecraft.version
