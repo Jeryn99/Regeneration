@@ -234,7 +234,7 @@ public class RegenEventHandler {
 		}
 	}
 	
-	public static class WHYGOD {
+	public static class AddCapabilities {
 		@SubscribeEvent
 		public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 			if (event.getObject() instanceof EntityPlayer) {

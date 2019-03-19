@@ -64,7 +64,7 @@ public class RegenerationMod {
 		
 		INSTANCE = this;
 		
-		MinecraftForge.EVENT_BUS.register(new RegenEventHandler.WHYGOD());
+		MinecraftForge.EVENT_BUS.register(new RegenEventHandler.AddCapabilities());
 		MinecraftForge.EVENT_BUS.register(new RegenEventHandler());
 	}
 	

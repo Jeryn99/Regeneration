@@ -18,13 +18,13 @@ version="0.0.4" #mandatory
  # A display name for the mod
 displayName="Regeneration" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="https://raw.githubusercontent.com/Suffril/Regeneration/master/update.json" #optional
+updateJSONURL="https://raw.githubusercontent.com/Suffril/Regeneration/skins/update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://minecraft.curseforge.com/projects/regeneration" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="regen_logo.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks to all listed Authors + Hydro and CommadrMoose for ideas" #optional
+credits="Thanks to all listed Authors + Hydro and CommandrMoose for ideas" #optional
 # A text field displayed in the mod UI
 authors="Suffril, HoldYourWaffle, Nictogen" #optional
 # The description text for the mod (multi line!) (#mandatory)
