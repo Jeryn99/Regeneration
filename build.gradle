@@ -12,6 +12,11 @@ buildscript {
 		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 	}
 }
+
+plugins {
+	id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 //TODO add classifier for builds not on the master branch
@@ -100,6 +105,20 @@ jar {
 		attributes "FMLCorePluginContainsFMLMod": "true"
 		attributes 'FMLAT': 'regeneration_at.cfg'
 	}
+}
+
+shadowJar {
+	dependencies {
+		include(dependency('org.jsoup:.*'))
+	}
+
+	relocate 'org.jsoup', 'me.suff.regeneration.util.jsoup'
+
+	classifier '' // Replace the default JAR
+}
+
+reobf {
+	shadowJar {} // Reobfuscate the shadowed JAR
 }
 
 

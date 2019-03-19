@@ -7,7 +7,6 @@ import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import org.apache.commons.io.FileUtils;
-import org.codehaus.plexus.util.NioFiles;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -15,6 +14,7 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 
 
 public class Trending {
@@ -26,9 +26,9 @@ public class Trending {
 			trendingDir.mkdirs();
 		}
 		
-		long attr = NioFiles.getLastModified(trendingDir);
+		long attr = trendingDir.lastModified();
 		
-		if (System.currentTimeMillis() - attr >= 86400000) {
+		if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
 			FileUtils.deleteDirectory(trendingDir);
 			RegenerationMod.LOG.warn("Refreshing Trending skins");
 			try {
