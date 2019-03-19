@@ -2,7 +2,6 @@ package me.suff.regeneration.util;
 
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.handlers.RegenObjects;
-import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -96,4 +95,23 @@ public class RegenUtil {
 		return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
 	}
 	
+	public interface IEnum<E extends Enum<E>> {
+		
+		int ordinal();
+		
+		default E next() {
+			E[] ies = this.getAllValues();
+			return this.ordinal() != ies.length - 1 ? ies[this.ordinal() + 1] : null;
+		}
+		
+		default E previous() {
+			return this.ordinal() != 0 ? this.getAllValues()[this.ordinal() - 1] : null;
+		}
+		
+		@SuppressWarnings("unchecked")
+		default E[] getAllValues() {
+			IEnum[] ies = this.getClass().getEnumConstants();
+			return (E[]) ies;
+		}
+	}
 }

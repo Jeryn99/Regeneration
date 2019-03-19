@@ -2,6 +2,7 @@ package me.suff.regeneration.util;
 
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.Trending;
+import me.suff.regeneration.client.skinhandling.ImageFixer;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import org.apache.commons.io.FileUtils;
 
@@ -84,7 +85,7 @@ public class FileUtil {
 	 * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
 	 * @throws IOException
 	 */
-	public static void downloadImage(URL url, File file, String filename) throws IOException {
+	public static void downloadSkinImage(URL url, File file, String filename) throws IOException {
 		URLConnection uc;
 		uc = url.openConnection();
 		uc.connect();
@@ -92,6 +93,7 @@ public class FileUtil {
 		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
 		SkinChangingHandler.SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
+		ImageFixer.convertSkinTo64x64(img);
 		if (!file.exists()) {
 			file.mkdirs();
 		}

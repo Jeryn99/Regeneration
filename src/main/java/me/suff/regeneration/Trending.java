@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.util.FileUtil;
 import org.apache.commons.io.FileUtils;
-import org.codehaus.plexus.util.NioFiles;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -45,7 +44,7 @@ public class Trending {
 				
 				imagesUrl.iterator().forEachRemaining(jsonElement -> {
 					try {
-						FileUtil.downloadImage(new URL(jsonElement.getAsJsonObject().get("sameAs").getAsString().replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), trendingDir, "namemc_" + System.currentTimeMillis());
+						FileUtil.downloadSkinImage(new URL(jsonElement.getAsJsonObject().get("sameAs").getAsString().replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), trendingDir, "namemc_" + System.currentTimeMillis());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

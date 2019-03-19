@@ -8,8 +8,8 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
-import me.suff.regeneration.util.IEnum;
 import me.suff.regeneration.util.RegenState;
+import me.suff.regeneration.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -314,7 +314,7 @@ public class SkinChangingHandler {
 		PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 	}
 	
-	public enum EnumChoices implements IEnum {
+	public enum EnumChoices implements RegenUtil.IEnum {
 		ALEX(true), STEVE(false), EITHER(true);
 		
 		private boolean isAlex;
