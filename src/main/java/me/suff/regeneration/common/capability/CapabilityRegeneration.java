@@ -52,7 +52,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
 	public String deathSource = "";
-	public int lcCoreReserve = 0;
 	private boolean didSetup = false, traitActive = true;
 	private int regenerationsLeft;
 	private RegenState state = RegenState.ALIVE;
@@ -135,7 +134,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setString("preferredModel", preferredModel.name());
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
 		nbt.setBoolean("traitActive", traitActive);
-		nbt.setInt("lc_regen", lcCoreReserve);
 		
 		nbt.setFloat("PrimaryRed", primaryRed);
 		nbt.setFloat("PrimaryGreen", primaryGreen);
@@ -179,10 +177,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (nbt.hasKey("handsAreGlowing")) {
 			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
-		}
-		
-		if (nbt.hasKey("lc_regen")) {
-			lcCoreReserve = nbt.getInt("lc_regen");
 		}
 		
 		if (nbt.hasKey("type")) // v1.3+ saves have a type tag

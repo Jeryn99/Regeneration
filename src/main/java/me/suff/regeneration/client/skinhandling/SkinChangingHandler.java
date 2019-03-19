@@ -112,16 +112,8 @@ public class SkinChangingHandler {
 			if (RegenConfig.CLIENT.changeMySkin.get()) {
 				boolean isAlex = cap.getPreferredModel().isAlex();
 				
-				File skin = null;
-				BufferedImage image = null;
-				try {
-					skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
-					RegenerationMod.LOG.info(skin.getName() + " was choosen");
-					image = ImageIO.read(skin);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
+				File skin = SkinChangingHandler.chooseRandomSkin(random, isAlex);
+				RegenerationMod.LOG.info(skin + " was choosen");
 				String pixelData = "none";
 				try {
 					pixelData = SkinChangingHandler.imageToPixelData(skin);
@@ -192,9 +184,8 @@ public class SkinChangingHandler {
 	 *
 	 * @param player - Player to get the skin of themselves
 	 * @return ResourceLocation from Mojang
-	 * @throws IOException
 	 */
-	private static ResourceLocation getMojangSkin(AbstractClientPlayer player) throws IOException {
+	private static ResourceLocation getMojangSkin(AbstractClientPlayer player) {
 		Map map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
 		if (map.isEmpty()) {
 			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
