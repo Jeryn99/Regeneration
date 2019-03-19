@@ -8,6 +8,12 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
@@ -83,6 +89,20 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+}
+
+shadowJar {
+    dependencies {
+        include(dependency('org.jsoup:.*'))
+    }
+
+    relocate 'org.jsoup', 'me.suff.regeneration.util.jsoup'
+
+    classifier '' // Replace the default JAR
+}
+
+reobf {
+    shadowJar {} // Reobfuscate the shadowed JAR
 }
 
 
