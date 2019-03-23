@@ -72,15 +72,14 @@ public class SkinChangingHandler {
 	 */
 	private static BufferedImage toImage(EntityPlayer player, String imageData) throws IOException {
 		BufferedImage img = decodeToImage(imageData);
-		File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
-		
-		if (!file.getParentFile().exists()) {
-			file.getParentFile().mkdirs();
+		File cacheFile = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
+		if (!SKIN_CACHE_DIRECTORY.exists()) {
+			SKIN_CACHE_DIRECTORY.mkdirs();
 		}
-		if (file.exists()) {
-			file.delete();
+		if (cacheFile.exists()) {
+			cacheFile.delete();
 		}
-		ImageIO.write(img, "png", file);
+		ImageIO.write(img, "png", cacheFile);
 		return img;
 	}
 	
@@ -151,16 +150,17 @@ public class SkinChangingHandler {
 	 * @throws IOException
 	 */
 	private static SkinInfo getSkinInfo(AbstractClientPlayer player, IRegeneration data) throws IOException {
+	
+		if(player == null || data == null || player.getName() == null || player.getUniqueID() == null) {
+			return new SkinInfo(null, SkinInfo.SkinType.ALEX);
+		}
+		
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 		
 		if (data.getEncodedSkin().equals("NONE")) {
 			resourceLocation = getMojangSkin(player);
-			if (wasAlex(player)) {
-				skinType = SkinInfo.SkinType.ALEX;
-			} else {
-				skinType = SkinInfo.SkinType.STEVE;
-			}
+			skinType = wasAlex(player) ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE;
 		} else {
 			BufferedImage bufferedImage = toImage(player, data.getEncodedSkin());
 			bufferedImage = ClientUtil.ImageFixer.convertSkinTo64x64(bufferedImage);
@@ -184,6 +184,11 @@ public class SkinChangingHandler {
 		return true;
 	}
 	
+	public static void addType(AbstractClientPlayer player){
+		if(player == null || TYPE_BACKUPS.containsKey(player.getUniqueID())) return;
+		TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
+	}
+	
 	/**
 	 * This is used when the clients skin is reset
 	 *
@@ -191,7 +196,7 @@ public class SkinChangingHandler {
 	 * @return ResourceLocation from Mojang
 	 * @throws IOException
 	 */
-	private static ResourceLocation getMojangSkin(AbstractClientPlayer player) throws IOException {
+	private static ResourceLocation getMojangSkin(AbstractClientPlayer player) {
 		Map map = Minecraft.getMinecraft().getSkinManager().loadSkinFromCache(player.getGameProfile());
 		if (map.isEmpty()) {
 			map = Minecraft.getMinecraft().getSessionService().getTextures(Minecraft.getMinecraft().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
@@ -258,6 +263,8 @@ public class SkinChangingHandler {
 		if (MinecraftForgeClient.getRenderPass() == -1) return; //Don't do this hacky skin shit in inventory
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		
+		addType(player);
 		
 		if (player.ticksExisted == 20) {
 			PLAYER_SKINS.remove(player.getUniqueID());

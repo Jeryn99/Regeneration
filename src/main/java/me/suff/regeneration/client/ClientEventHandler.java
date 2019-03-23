@@ -19,6 +19,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
@@ -35,6 +36,7 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -100,12 +102,6 @@ public class ClientEventHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		
-		SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
-		
-		if (skin != null) {
-			SkinChangingHandler.setPlayerSkin(player, skin.getSkinTextureLocation());
-		}
-		
 		float factor = 0.2F;
 		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
 			return;
@@ -141,11 +137,18 @@ public class ClientEventHandler {
 		if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
 			return;
 		
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		if(player == null) return;
+		SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
+		if (skin != null) {
+			SkinChangingHandler.setPlayerSkin(player, skin.getSkinTextureLocation());
+		}
+		
 		if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
 		}
 		
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		String warning = null;
 		
 		switch (cap.getState()) {
@@ -161,6 +164,12 @@ public class ClientEventHandler {
 			
 			case REGENERATING:
 				RenderUtil.renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
+				break;
+				
+			case POST:
+				if(player.hurtTime > 0 || player.getActivePotionEffect(MobEffects.NAUSEA) != null){
+					RenderUtil.renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
+				}
 				break;
 		}
 		
@@ -283,6 +292,11 @@ public class ClientEventHandler {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+	}
+	
+	@SubscribeEvent
+	public static void onRenderWorld(RenderWorldLastEvent event){
+	
 	}
 	
 	
