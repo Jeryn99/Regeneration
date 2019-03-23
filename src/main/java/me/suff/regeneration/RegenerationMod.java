@@ -71,6 +71,8 @@ public class RegenerationMod {
 		if (EnumCompatModids.TARDIS.isLoaded()) {
 			LOG.info("Tardis mod Detected - Enabling Compat");
 			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
+			TardisModHandler.registerEventBus();
+			
 		}
 		
 		if (EnumCompatModids.LCCORE.isLoaded()) {

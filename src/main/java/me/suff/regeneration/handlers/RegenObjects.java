@@ -66,7 +66,8 @@ public class RegenObjects {
 				setUpSound("fob_watch_dialogue"),
 				setUpSound("regeneration_3"),
 				setUpSound("grace_hum"),
-				setUpSound("regen_breath")
+				setUpSound("regen_breath"),
+				setUpSound("alarm")
 		);
 	}
 	
@@ -92,6 +93,7 @@ public class RegenObjects {
 		public static final SoundEvent REGENERATION_3 = null;
 		public static final SoundEvent GRACE_HUM = null;
 		public static final SoundEvent REGEN_BREATH = null;
+		public static final SoundEvent ALARM = null;
 	}
 	
 	public static class EntityEntries {

@@ -1,9 +1,11 @@
 package me.suff.regeneration.compat.tardis;
 
 import me.suff.regeneration.RegenConfig;
+import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.TypeFiery;
 import me.suff.regeneration.handlers.IActingHandler;
+import me.suff.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketParticles;
@@ -13,6 +15,10 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.tardis.mod.common.dimensions.TDimensions;
 import net.tardis.mod.common.dimensions.WorldProviderTardis;
 import net.tardis.mod.common.entities.controls.ControlDoor;
 import net.tardis.mod.common.sounds.TSounds;
@@ -24,6 +30,10 @@ import java.util.Random;
 
 public class TardisModHandler implements IActingHandler {
 	
+	public static void registerEventBus() {
+		MinecraftForge.EVENT_BUS.register(new TardisModHandler());
+	}
+	
 	@Override
 	public void onRegenTick(IRegeneration cap) {
 		playBells(cap, false);
@@ -34,6 +44,7 @@ public class TardisModHandler implements IActingHandler {
 		if (cap.getPlayer().world.provider instanceof WorldProviderTardis) {
 			playBells(cap, true);
 		}
+		
 	}
 	
 	@Override
@@ -111,4 +122,22 @@ public class TardisModHandler implements IActingHandler {
 			}
 		}
 	}
+	
+	@SubscribeEvent
+	public void onLivingUpdate(LivingEvent.LivingUpdateEvent event){
+		if(event.getEntityLiving() instanceof EntityPlayer){
+			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+			if(player.dimension == TDimensions.TARDIS_ID){
+				if(data.getState().isGraceful()){
+					for (TileEntity tileEntity : player.world.loadedTileEntityList) {
+						if(player.getDistanceSq(tileEntity.getPos()) < 40 && tileEntity instanceof TileEntityTardis && data.getPlayer().ticksExisted % 25 == 0){
+							tileEntity.getWorld().playSound(null, tileEntity.getPos(), RegenObjects.Sounds.ALARM, SoundCategory.BLOCKS, 1.0F, 1.0F);
+						}
+					}
+				}
+			}
+		}
+	}
+	
 }
