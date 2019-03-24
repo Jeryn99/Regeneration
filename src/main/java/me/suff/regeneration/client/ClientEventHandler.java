@@ -63,6 +63,11 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	public static void onGui(InputUpdateEvent tickEvent) {
+		
+		if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
+			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
+		}
+		
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
 		Minecraft minecraft = Minecraft.getMinecraft();
 		if (minecraft.currentScreen == null && minecraft.player != null) {
@@ -142,10 +147,6 @@ public class ClientEventHandler {
 		SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
 		if (skin != null) {
 			SkinChangingHandler.setPlayerSkin(player, skin.getSkinTextureLocation());
-		}
-		
-		if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
 		}
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);

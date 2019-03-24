@@ -31,7 +31,7 @@ public class RegenKeyBinds {
 			ClientRegistry.registerKeyBinding(REGEN_NOW);
 		}
 		
-		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", Keyboard.KEY_L, RegenerationMod.NAME);
+		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", Keyboard.KEY_Y, RegenerationMod.NAME);
 		ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
 	}
 	
@@ -45,6 +45,7 @@ public class RegenKeyBinds {
 		if (REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration(player));
 		}
+		
 	}
 	
 	/**

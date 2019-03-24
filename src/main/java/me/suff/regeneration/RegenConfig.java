@@ -147,6 +147,8 @@ public class RegenConfig {
 		@Config.LangKey("config.regeneration.skins.trending")
 		@Config.Comment("Toggle whether trending skins are downloaded once per day from namemc")
 		public boolean downloadTrendingSkins = true;
+		
+		public boolean fixArmor = true;
 	}
 	
 	

@@ -1,5 +1,6 @@
 package me.suff.regeneration.proxy;
 
+import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.client.RegenKeyBinds;
 import me.suff.regeneration.client.gui.InventoryTabRegeneration;
 import me.suff.regeneration.client.rendering.LayerFuzz;
@@ -12,6 +13,7 @@ import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.suff.regeneration.util.EnumCompatModids;
 import me.suff.regeneration.util.FileUtil;
+import me.suff.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
@@ -62,6 +64,9 @@ public class ClientProxy extends CommonProxy {
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
 			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
+			if(RegenConfig.skins.fixArmor) {
+				RenderUtil.setupArmorModelOverride(renderPlayer);
+			}
 		}
 		FileUtil.doSetupOnThread();
 	}
