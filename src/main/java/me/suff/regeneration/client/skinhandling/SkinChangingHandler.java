@@ -113,7 +113,7 @@ public class SkinChangingHandler {
 			
 			File skin = null;
 			skin = SkinChangingHandler.getRandomSkin(random, isAlex);
-			RegenerationMod.LOG.info(skin.getName() + " was choosen");
+			RegenerationMod.LOG.info(skin + " was choosen");
 			
 			String pixelData = "none";
 			try {
@@ -270,7 +270,15 @@ public class SkinChangingHandler {
 			PLAYER_SKINS.remove(player.getUniqueID());
 		}
 		
+		
 		if (cap.getState() == RegenState.REGENERATING) {
+			
+			//
+			if(cap.getType().getAnimationProgress() > 0.5){
+				setSkinFromData(player, cap);
+			}
+			
+			
 			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
 		} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
 			setSkinFromData(player, cap);

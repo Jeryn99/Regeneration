@@ -38,8 +38,6 @@ public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable
 	
 	R getRenderer();
 	
-	int getAnimationTicks();
-	
 	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {
 	}
 	
@@ -48,6 +46,8 @@ public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable
 	
 	default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
 	}
+	
+	double getAnimationProgress();
 	
 	@Override
 	default NBTTagCompound serializeNBT() {

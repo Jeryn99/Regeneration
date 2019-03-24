@@ -71,6 +71,11 @@ public class LucraftCoreHandler implements IActingHandler {
 	}
 	
 	@Override
+	public void onPerformingPost(IRegeneration cap) {
+	
+	}
+	
+	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 		if (RegenConfig.modIntegrations.lucraftcore.lucraftcoreSizeChanging) {
 			EntityPlayer player = cap.getPlayer();

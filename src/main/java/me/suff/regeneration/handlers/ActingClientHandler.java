@@ -45,15 +45,19 @@ class ActingClientHandler implements IActingHandler {
 			Minecraft.getMinecraft().gameSettings.sendSettingsToServer();
 		}
 		
-		if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
-			SkinChangingHandler.sendSkinUpdate(cap.getPlayer().world.rand, cap.getPlayer());
-		}
 		
 	}
 	
 	@Override
-	public void onRegenTrigger(IRegeneration cap) {
+	public void onPerformingPost(IRegeneration cap) {
 	
+	}
+	
+	@Override
+	public void onRegenTrigger(IRegeneration cap) {
+		if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
+			SkinChangingHandler.sendSkinUpdate(cap.getPlayer().world.rand, cap.getPlayer());
+		}
 	}
 	
 	@Override

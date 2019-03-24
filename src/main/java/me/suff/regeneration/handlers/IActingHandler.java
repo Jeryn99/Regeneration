@@ -36,4 +36,6 @@ public interface IActingHandler {
 	 */
 	void onRegenFinish(IRegeneration cap);
 	
+	void onPerformingPost(IRegeneration cap);
+	
 }

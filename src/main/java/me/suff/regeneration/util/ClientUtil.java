@@ -1,7 +1,7 @@
 package me.suff.regeneration.util;
 
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
-import me.suff.regeneration.client.sound.MovingSoundEntity;
+import me.suff.regeneration.client.sound.MovingSoundBase;
 import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class ClientUtil {
 	@SideOnly(Side.CLIENT)
 	public static void playSound(Entity entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
 		if (entity.world.isRemote) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
+			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundBase(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
 		}
 	}
 	

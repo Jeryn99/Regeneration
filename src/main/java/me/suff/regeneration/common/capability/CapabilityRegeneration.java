@@ -527,6 +527,10 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
+			
+			if(state == RegenState.POST){
+				ActingForwarder.onPerformingPost(CapabilityRegeneration.this);
+			}
 		}
 		
 		private void triggerRegeneration() {

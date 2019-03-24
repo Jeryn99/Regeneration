@@ -62,6 +62,11 @@ public class TardisModHandler implements IActingHandler {
 	}
 	
 	@Override
+	public void onPerformingPost(IRegeneration cap) {
+	
+	}
+	
+	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 		if (cap.getType() instanceof TypeFiery) {
 			damageTardisInRange(cap.getPlayer());

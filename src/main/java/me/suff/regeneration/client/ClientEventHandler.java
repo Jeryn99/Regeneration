@@ -85,7 +85,7 @@ public class ClientEventHandler {
 				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 0.5F);
 			}
 			
-			if (cap.getState().equals(REGENERATING)) {
+			if (cap.getState() == REGENERATING) {
 				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.REGENERATION.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(REGENERATING), 1.0F);
 			}
 			
