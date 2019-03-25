@@ -22,7 +22,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static me.suff.regeneration.client.skinhandling.SkinChangingHandler.SKIN_CACHE_DIRECTORY;
 
 @SideOnly(Side.CLIENT)
 public class ImageDownloadAlt extends SimpleTexture {
@@ -125,11 +124,6 @@ public class ImageDownloadAlt extends SimpleTexture {
 					}
 					
 					ImageDownloadAlt.this.setBufferedImage(bufferedimage);
-					File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
-					if (file.exists()) {
-						file.delete();
-					}
-					ImageIO.write(bufferedimage, "png", file);
 				} catch (Exception exception) {
 					ImageDownloadAlt.logger.error("Couldn\'t download http texture", exception);
 				} finally {

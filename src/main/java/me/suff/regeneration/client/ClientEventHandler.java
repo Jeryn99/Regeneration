@@ -45,9 +45,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.io.FileUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
@@ -288,11 +286,6 @@ public class ClientEventHandler {
 	public static void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
 		SkinChangingHandler.PLAYER_SKINS.clear();
 		SkinChangingHandler.TYPE_BACKUPS.clear();
-		try {
-			FileUtils.deleteDirectory(SkinChangingHandler.SKIN_CACHE_DIRECTORY);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 	}
 	
 	@SubscribeEvent

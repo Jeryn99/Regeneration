@@ -148,7 +148,7 @@ public class RegenEventHandler {
 			return;
 		}
 		
-		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage()) {
+		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage() || cap.getState() == RegenState.REGENERATING && event.getSource().isExplosion()) {
 			event.setCanceled(true); // TODO still "hurts" the client view
 		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 			boolean notDead = cap.getStateManager().onKilled(event.getSource());

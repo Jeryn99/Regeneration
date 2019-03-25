@@ -28,6 +28,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +38,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Collection;
@@ -48,8 +50,7 @@ import java.util.UUID;
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
 	
-	public static final File SKIN_DIRECTORY = new File(RegenConfig.skins.skinDir + "/regeneration/skins/");
-	public static final File SKIN_CACHE_DIRECTORY = new File(RegenConfig.skins.skinDir + "/regeneration/skincache/" + Minecraft.getMinecraft().getSession().getProfile().getId() + "/skins");
+	public static final File SKIN_DIRECTORY = new File(RegenConfig.skins.skinDir + "/Regeneration/skins/");
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	public static final Logger SKIN_LOG = LogManager.getLogger("Regeneration Skin Handler");
@@ -57,37 +58,26 @@ public class SkinChangingHandler {
 	public static final Map<UUID, SkinInfo.SkinType> TYPE_BACKUPS = new HashMap<>();
 	private static final Random RAND = new Random();
 	
-	private static String imageToPixelData(File file) throws IOException {
-		byte[] fileContent = FileUtils.readFileToByteArray(file);
-		return Base64.getEncoder().encodeToString(fileContent);
-	}
 	
 	/**
-	 * Converts a array of Bytes into a Buffered Image and caches to the cache directory
-	 * with the file name of "cache-%PLAYERUUID%.png"
+	 * Encode image to string
 	 *
-	 * @param player    - Player to be involved
-	 * @param imageData - Pixel data to be converted to a Buffered Image
-	 * @return Buffered image that will later be converted to a Dynamic texture
+	 * @param imageFile The image to encode
+	 * @return encoded string
 	 */
-	private static BufferedImage toImage(EntityPlayer player, String imageData, boolean write) throws IOException {
-		BufferedImage img = decodeToImage(imageData);
-		
-		if (write) {
-			File cacheFile = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
-			if (!SKIN_CACHE_DIRECTORY.exists()) {
-				SKIN_CACHE_DIRECTORY.mkdirs();
-			}
-			if (cacheFile.exists()) {
-				cacheFile.delete();
-			}
-			
-			ImageIO.write(img, "png", cacheFile);
-		}
-		return img;
+	public static String imageToPixelData(File imageFile) throws IOException {
+		byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
+		return Base64.getEncoder().encodeToString(imageBytes);
 	}
 	
-	public static BufferedImage decodeToImage(String imageString) throws IOException {
+	
+	/**
+	 * Decode string to image
+	 *
+	 * @param imageString The string to decode
+	 * @return decoded image
+	 */
+	public static BufferedImage toImage(String imageString) throws IOException {
 		BufferedImage image = null;
 		byte[] imageByte;
 		BASE64Decoder decoder = new BASE64Decoder();
@@ -95,6 +85,11 @@ public class SkinChangingHandler {
 		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
 		image = ImageIO.read(bis);
 		bis.close();
+		
+		if(image == null){
+			throw new IllegalStateException("The image data was " + imageString + " but the image became null...");
+		}
+		
 		return image;
 	}
 	
@@ -119,7 +114,7 @@ public class SkinChangingHandler {
 			skin = SkinChangingHandler.getRandomSkin(random, isAlex);
 			RegenerationMod.LOG.info(skin + " was choosen");
 			
-			String pixelData = "none";
+			String pixelData = "NONE";
 			try {
 				pixelData = SkinChangingHandler.imageToPixelData(skin);
 			} catch (IOException e) {
@@ -162,20 +157,15 @@ public class SkinChangingHandler {
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 		
-		if (data.getEncodedSkin().equals("NONE")) {
+		if (data.getEncodedSkin().toLowerCase().equals("none")) {
 			resourceLocation = getMojangSkin(player);
-			skinType = wasAlex(player) ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE;
+			skinType = TYPE_BACKUPS.get(player.getUniqueID());
 		} else {
-			BufferedImage bufferedImage = toImage(player, data.getEncodedSkin(), cache);
+			BufferedImage bufferedImage = toImage(data.getEncodedSkin());
 			bufferedImage = ClientUtil.ImageFixer.convertSkinTo64x64(bufferedImage);
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
-				File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
-				if(!SKIN_CACHE_DIRECTORY.exists()){
-					SKIN_CACHE_DIRECTORY.mkdirs();
-				}
-				ImageIO.write(bufferedImage, "png", file);
 				DynamicTexture tex = new DynamicTexture(bufferedImage);
 				resourceLocation = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
 				skinType = data.getSkinType();

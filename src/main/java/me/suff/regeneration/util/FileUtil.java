@@ -45,10 +45,6 @@ public class FileUtil {
 	 */
 	public static void createDefaultFolders() throws IOException {
 		
-		if (!SKIN_CACHE_DIRECTORY.exists()) {
-			FileUtils.forceMkdir(SKIN_CACHE_DIRECTORY);
-		}
-		
 		if (!SKIN_DIRECTORY.exists()) {
 			FileUtils.forceMkdir(SKIN_DIRECTORY);
 		}
