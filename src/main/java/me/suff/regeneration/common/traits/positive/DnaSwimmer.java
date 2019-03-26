@@ -1,9 +1,11 @@
-package me.suff.regeneration.common.dna.positive;
+package me.suff.regeneration.common.traits.positive;
 
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.dna.DnaHandler;
+import me.suff.regeneration.common.traits.DnaHandler;
+import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -19,9 +21,7 @@ public class DnaSwimmer implements DnaHandler.IDna {
 	public void onUpdate(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		if (player.isInWater()) {
-			if (player.ticksExisted % 20 == 0 && cap.isDnaActive()) {
-				player.setAir(player.getAir() + 1);
-			}
+			PlayerUtil.applyPotionIfAbsent(player, MobEffects.WATER_BREATHING, 100, 1, true, false);
 		}
 	}
 	
@@ -32,12 +32,13 @@ public class DnaSwimmer implements DnaHandler.IDna {
 	
 	@Override
 	public void onRemoved(IRegeneration cap) {
-		
+		EntityPlayer player = cap.getPlayer();
+		player.removeActivePotionEffect(MobEffects.WATER_BREATHING);
 	}
 	
 	@Override
 	public String getLangKey() {
-		return "dna." + getRegistryName().getPath() + ".name";
+		return "traits." + getRegistryName().getPath() + ".name";
 	}
 	
 	@Override

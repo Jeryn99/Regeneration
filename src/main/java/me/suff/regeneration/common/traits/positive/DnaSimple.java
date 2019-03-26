@@ -1,17 +1,20 @@
-package me.suff.regeneration.common.dna.negative;
+package me.suff.regeneration.common.traits.positive;
 
-import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.dna.DnaHandler;
+import me.suff.regeneration.common.traits.DnaHandler;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by Suffril
  * on 24/01/2019.
  */
-public class DnaAlcoholism implements DnaHandler.IDna {
+public class DnaSimple implements DnaHandler.IDna {
 	
-	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "alcoholism");
+	private ResourceLocation location;
+	
+	public DnaSimple(ResourceLocation location) {
+		this.location = location;
+	}
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {
@@ -30,11 +33,12 @@ public class DnaAlcoholism implements DnaHandler.IDna {
 	
 	@Override
 	public String getLangKey() {
-		return "dna." + ID.getPath() + ".name";
+		return "traits." + location.getPath() + ".name";
 	}
+	
 	
 	@Override
 	public ResourceLocation getRegistryName() {
-		return ID;
+		return location;
 	}
 }

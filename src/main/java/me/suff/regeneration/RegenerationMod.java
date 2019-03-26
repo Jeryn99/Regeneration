@@ -8,7 +8,7 @@ import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.capability.RegenerationStorage;
 import me.suff.regeneration.common.commands.RegenDebugCommand;
-import me.suff.regeneration.common.dna.DnaHandler;
+import me.suff.regeneration.common.traits.DnaHandler;
 import me.suff.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.suff.regeneration.compat.tardis.TardisModHandler;
 import me.suff.regeneration.debugger.DummyRegenDebugger;
@@ -100,7 +100,6 @@ public class RegenerationMod {
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new RegenDebugCommand());
-		
 		DEBUGGER = GraphicsEnvironment.isHeadless() ? new DummyRegenDebugger() : new GraphicalRegenDebugger();
 		MinecraftForge.EVENT_BUS.register(DEBUGGER);
 	}

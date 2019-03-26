@@ -1,15 +1,15 @@
-package me.suff.regeneration.common.dna;
+package me.suff.regeneration.common.traits;
 
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.dna.negative.DnaHydrophobic;
-import me.suff.regeneration.common.dna.positive.DnaAthlete;
-import me.suff.regeneration.common.dna.positive.DnaFireResistant;
-import me.suff.regeneration.common.dna.positive.DnaLucky;
-import me.suff.regeneration.common.dna.positive.DnaSimple;
-import me.suff.regeneration.common.dna.positive.DnaSwimmer;
-import me.suff.regeneration.common.dna.positive.DnaTough;
+import me.suff.regeneration.common.traits.negative.DnaHydrophobic;
+import me.suff.regeneration.common.traits.positive.DnaAthlete;
+import me.suff.regeneration.common.traits.positive.DnaFireResistant;
+import me.suff.regeneration.common.traits.positive.DnaLucky;
+import me.suff.regeneration.common.traits.positive.DnaSimple;
+import me.suff.regeneration.common.traits.positive.DnaSwimmer;
+import me.suff.regeneration.common.traits.positive.DnaTough;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingEvent;

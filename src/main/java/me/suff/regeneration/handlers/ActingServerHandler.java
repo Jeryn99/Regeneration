@@ -4,7 +4,7 @@ import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.advancements.RegenTriggers;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.dna.DnaHandler;
+import me.suff.regeneration.common.traits.DnaHandler;
 import me.suff.regeneration.network.MessagePlayRegenerationSound;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.PlayerUtil;

@@ -157,7 +157,7 @@ public class SkinChangingHandler {
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 		
-		if (data.getEncodedSkin().toLowerCase().equals("none")) {
+		if (data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
 			resourceLocation = getMojangSkin(player);
 			skinType = TYPE_BACKUPS.get(player.getUniqueID());
 		} else {
@@ -266,7 +266,6 @@ public class SkinChangingHandler {
 		if (player.ticksExisted == 20) {
 			PLAYER_SKINS.remove(player.getUniqueID());
 		}
-		
 		
 		if (cap.getState() == RegenState.REGENERATING) {
 			if (cap.getType().getAnimationProgress() > 0.7) {

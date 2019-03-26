@@ -5,7 +5,7 @@ import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.advancements.RegenTriggers;
-import me.suff.regeneration.common.dna.DnaHandler;
+import me.suff.regeneration.common.traits.DnaHandler;
 import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.common.types.IRegenType;
 import me.suff.regeneration.common.types.TypeFiery;
@@ -34,7 +34,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -484,7 +484,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		@Override
-		public void onPunchEntity(LivingDamageEvent event) {
+		public void onPunchEntity(LivingHurtEvent event) {
 			EntityLivingBase entity = event.getEntityLiving();
 			// We're healing mobs...
 			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && player.isSneaking()) { // ... check if we're in grace and if the mob needs health

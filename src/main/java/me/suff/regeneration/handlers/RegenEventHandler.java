@@ -28,10 +28,10 @@ import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -113,7 +113,7 @@ public class RegenEventHandler {
 	
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onHurt(LivingDamageEvent event) {
+	public static void onHurt(LivingHurtEvent event) {
 		Entity trueSource = event.getSource().getTrueSource();
 		
 		if (trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {

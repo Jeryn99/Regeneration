@@ -1,8 +1,8 @@
-package me.suff.regeneration.common.dna.positive;
+package me.suff.regeneration.common.traits.positive;
 
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.dna.DnaHandler;
+import me.suff.regeneration.common.traits.DnaHandler;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -30,7 +30,7 @@ public class DnaSneak implements DnaHandler.IDna {
 	
 	@Override
 	public String getLangKey() {
-		return "dna." + LOCATION.getPath() + ".name";
+		return "traits." + LOCATION.getPath() + ".name";
 	}
 	
 	@Override

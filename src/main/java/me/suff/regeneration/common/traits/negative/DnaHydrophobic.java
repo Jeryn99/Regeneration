@@ -1,8 +1,8 @@
-package me.suff.regeneration.common.dna.negative;
+package me.suff.regeneration.common.traits.negative;
 
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.dna.DnaHandler;
+import me.suff.regeneration.common.traits.DnaHandler;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -42,7 +42,7 @@ public class DnaHydrophobic implements DnaHandler.IDna {
 	
 	@Override
 	public String getLangKey() {
-		return "dna." + ID.getPath() + ".name";
+		return "traits." + ID.getPath() + ".name";
 	}
 	
 	@Override

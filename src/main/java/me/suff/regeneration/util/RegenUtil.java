@@ -77,7 +77,7 @@ public class RegenUtil {
 			if (entity instanceof EntityLivingBase && !exploder.isDead) {
 				EntityLivingBase victim = (EntityLivingBase) entity;
 				
-				if (entity instanceof EntityPlayer && !RegenConfig.onRegen.regenerationKnocksbackPlayers)
+				if (entity instanceof EntityPlayer && !RegenConfig.onRegen.regenerationKnocksbackPlayers || !victim.isNonBoss())
 					return;
 				
 				float densMod = world.getBlockDensity(new Vec3d(pos), entity.getEntityBoundingBox());

@@ -1,8 +1,8 @@
-package me.suff.regeneration.common.dna.positive;
+package me.suff.regeneration.common.traits.positive;
 
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.dna.DnaHandler;
+import me.suff.regeneration.common.traits.DnaHandler;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,7 +58,7 @@ public class DnaAthlete implements DnaHandler.IDna {
 	
 	@Override
 	public String getLangKey() {
-		return "dna." + ID.getPath() + ".name";
+		return "traits." + ID.getPath() + ".name";
 	}
 	
 	@Override
