@@ -1,6 +1,5 @@
 package me.suff.regeneration.proxy;
 
-import me.suff.regeneration.Trending;
 import me.suff.regeneration.client.RegenKeyBinds;
 import me.suff.regeneration.client.rendering.LayerRegeneration;
 import me.suff.regeneration.client.rendering.entity.RenderItemOverride;
@@ -12,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**

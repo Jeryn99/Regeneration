@@ -106,10 +106,6 @@ public class ActingForwarder {
 		}
 	}
 	
-	public enum RegenEvent{
-		ENTER_GRACE, REGEN_FINISH, REGEN_TRIGGER, CRITICAL_START, HAND_GLOW_START
-	}
-	
 	/**
 	 * Knows what to forward by reflection magic
 	 */
@@ -119,6 +115,10 @@ public class ActingForwarder {
 				throw new IllegalStateException("'Posting' \"acting\" `event` from client");
 			NetworkHandler.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event.name()), (EntityPlayerMP) cap.getPlayer());
 		});
+	}
+	
+	public enum RegenEvent {
+		ENTER_GRACE, REGEN_FINISH, REGEN_TRIGGER, CRITICAL_START, HAND_GLOW_START
 	}
 	
 }

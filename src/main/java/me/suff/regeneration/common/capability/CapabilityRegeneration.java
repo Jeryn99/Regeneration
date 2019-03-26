@@ -31,7 +31,7 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -466,7 +466,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		@Override
-		public void onPunchEntity(LivingDamageEvent event) {
+		public void onPunchEntity(LivingHurtEvent event) {
 			EntityLivingBase entity = event.getEntityLiving();
 			// We're healing mobs...
 			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && player.isSneaking()) { // ... check if we're in grace and if the mob needs health

@@ -2,7 +2,6 @@ package me.suff.regeneration.handlers;
 
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
-import me.suff.regeneration.client.RegenKeyBinds;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.commands.CommandRegen;
@@ -40,9 +39,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -53,8 +52,6 @@ import net.minecraftforge.fml.VersionChecker;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
-import net.minecraftforge.forgespi.language.IModInfo;
-import net.minecraftforge.versions.forge.ForgeVersion;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -114,14 +111,12 @@ public class RegenEventHandler {
 	// ============ USER EVENTS ==========
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onHurt(LivingDamageEvent event) {
+	public void onHurt(LivingHurtEvent event) {
 		Entity trueSource = event.getSource().getTrueSource();
 		
 		if (trueSource instanceof EntityPlayer && event.getEntityLiving() instanceof EntityLiving) {
 			EntityPlayer player = (EntityPlayer) trueSource;
-			CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
-				cap.getStateManager().onPunchEntity(event);
-			});
+			CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> cap.getStateManager().onPunchEntity(event));
 			return;
 		}
 		

@@ -7,6 +7,34 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ImageBufferDownloadAlt implements IImageBuffer {
+	
+	private static void setAreaTransparent(NativeImage image, int x, int y, int width, int height) {
+		for (int i = x; i < width; ++i) {
+			for (int j = y; j < height; ++j) {
+				int k = image.getPixelRGBA(i, j);
+				if ((k >> 24 & 255) < 128) {
+					return;
+				}
+			}
+		}
+		
+		for (int l = x; l < width; ++l) {
+			for (int i1 = y; i1 < height; ++i1) {
+				image.setPixelRGBA(l, i1, image.getPixelRGBA(l, i1) & 16777215);
+			}
+		}
+		
+	}
+	
+	private static void setAreaOpaque(NativeImage image, int x, int y, int width, int height) {
+		for (int i = x; i < width; ++i) {
+			for (int j = y; j < height; ++j) {
+				image.setPixelRGBA(i, j, image.getPixelRGBA(i, j) | -16777216);
+			}
+		}
+		
+	}
+	
 	public NativeImage parseUserSkin(NativeImage nativeImageIn) {
 		boolean flag = nativeImageIn.getHeight() == 32;
 		if (flag) {
@@ -40,32 +68,5 @@ public class ImageBufferDownloadAlt implements IImageBuffer {
 	}
 	
 	public void skinAvailable() {
-	}
-	
-	private static void setAreaTransparent(NativeImage image, int x, int y, int width, int height) {
-		for(int i = x; i < width; ++i) {
-			for(int j = y; j < height; ++j) {
-				int k = image.getPixelRGBA(i, j);
-				if ((k >> 24 & 255) < 128) {
-					return;
-				}
-			}
-		}
-		
-		for(int l = x; l < width; ++l) {
-			for(int i1 = y; i1 < height; ++i1) {
-				image.setPixelRGBA(l, i1, image.getPixelRGBA(l, i1) & 16777215);
-			}
-		}
-		
-	}
-	
-	private static void setAreaOpaque(NativeImage image, int x, int y, int width, int height) {
-		for(int i = x; i < width; ++i) {
-			for(int j = y; j < height; ++j) {
-				image.setPixelRGBA(i, j, image.getPixelRGBA(i, j) | -16777216);
-			}
-		}
-		
 	}
 }

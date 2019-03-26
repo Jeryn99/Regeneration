@@ -1,13 +1,5 @@
 package me.suff.regeneration.client.skinhandling;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.atomic.AtomicInteger;
-import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.IImageBuffer;
@@ -24,7 +16,14 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static me.suff.regeneration.client.skinhandling.SkinChangingHandler.SKIN_CACHE_DIRECTORY;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @OnlyIn(Dist.CLIENT)
 public class ImageDownloadAlt extends SimpleTexture {
@@ -58,7 +57,7 @@ public class ImageDownloadAlt extends SimpleTexture {
 			this.imageBuffer.skinAvailable();
 		}
 		
-		synchronized(this) {
+		synchronized (this) {
 			this.uploadImage(nativeImageIn);
 			this.textureUploaded = true;
 		}
@@ -66,7 +65,7 @@ public class ImageDownloadAlt extends SimpleTexture {
 	
 	public void loadTexture(IResourceManager manager) throws IOException {
 		if (!this.textureUploaded) {
-			synchronized(this) {
+			synchronized (this) {
 				super.loadTexture(manager);
 				this.textureUploaded = true;
 			}
@@ -74,7 +73,7 @@ public class ImageDownloadAlt extends SimpleTexture {
 		
 		if (this.imageThread == null) {
 			if (this.cacheFile != null && this.cacheFile.isFile()) {
-				LOGGER.debug("Loading http texture from local cache ({})", (Object)this.cacheFile);
+				LOGGER.debug("Loading http texture from local cache ({})", (Object) this.cacheFile);
 				NativeImage nativeimage = null;
 				
 				try {
@@ -107,7 +106,7 @@ public class ImageDownloadAlt extends SimpleTexture {
 				ImageDownloadAlt.LOGGER.debug("Downloading http texture from {} to {}", ImageDownloadAlt.this.imageUrl, ImageDownloadAlt.this.cacheFile);
 				
 				try {
-					httpurlconnection = (HttpURLConnection)(new URL(ImageDownloadAlt.this.imageUrl)).openConnection(Minecraft.getInstance().getProxy());
+					httpurlconnection = (HttpURLConnection) (new URL(ImageDownloadAlt.this.imageUrl)).openConnection(Minecraft.getInstance().getProxy());
 					httpurlconnection.setDoInput(true);
 					httpurlconnection.setDoOutput(false);
 					httpurlconnection.connect();
@@ -128,20 +127,8 @@ public class ImageDownloadAlt extends SimpleTexture {
 								if (ImageDownloadAlt.this.imageBuffer != null) {
 									nativeimage = ImageDownloadAlt.this.imageBuffer.parseUserSkin(nativeimage);
 								}
-								
-								final NativeImage nativeimage_f = nativeimage;
-								NativeImage finalNativeimage = nativeimage;
-								Minecraft.getInstance().addScheduledTask(() -> {
-									ImageDownloadAlt.this.setImage(nativeimage_f);
-									File file = new File(SKIN_CACHE_DIRECTORY, "cache-" + player.getUniqueID() + ".png");
-									try {
-										finalNativeimage.write(file);
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								});
 							} catch (IOException ioexception) {
-								ImageDownloadAlt.LOGGER.warn("Error while loading the skin texture", (Throwable)ioexception);
+								ImageDownloadAlt.LOGGER.warn("Error while loading the skin texture", (Throwable) ioexception);
 							} finally {
 								if (nativeimage != null) {
 									nativeimage.close();
@@ -154,7 +141,7 @@ public class ImageDownloadAlt extends SimpleTexture {
 						return;
 					}
 				} catch (Exception exception) {
-					ImageDownloadAlt.LOGGER.error("Couldn't download http texture", (Throwable)exception);
+					ImageDownloadAlt.LOGGER.error("Couldn't download http texture", (Throwable) exception);
 					return;
 				} finally {
 					if (httpurlconnection != null) {

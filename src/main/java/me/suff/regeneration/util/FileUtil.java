@@ -2,7 +2,7 @@ package me.suff.regeneration.util;
 
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.Trending;
-import me.suff.regeneration.client.skinhandling.ImageFixer;
+import me.suff.regeneration.client.skinhandling.ImageFixerLegacy;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import org.apache.commons.io.FileUtils;
 
@@ -40,7 +40,7 @@ public class FileUtil {
 		}
 	}
 	
-	public static void createDirAndSkins(){
+	public static void createDirAndSkins() {
 		try {
 			createDefaultFolders();
 			Trending.downloadTrendingSkins();
@@ -55,10 +55,6 @@ public class FileUtil {
 	 * If the download doesn't happen, NPEs will occur later on
 	 */
 	public static void createDefaultFolders() throws IOException {
-		
-		if (!SKIN_CACHE_DIRECTORY.exists()) {
-			FileUtils.forceMkdir(SKIN_CACHE_DIRECTORY);
-		}
 		
 		if (!SKIN_DIRECTORY.exists()) {
 			FileUtils.forceMkdir(SKIN_DIRECTORY);
@@ -93,7 +89,7 @@ public class FileUtil {
 		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
 		SkinChangingHandler.SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
-		ImageFixer.convertSkinTo64x64(img);
+		ImageFixerLegacy.convertSkinTo64x64(img);
 		if (!file.exists()) {
 			file.mkdirs();
 		}

@@ -48,6 +48,8 @@ public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable
 	default void onFinishRegeneration(EntityPlayer player, LazyOptional<IRegeneration> capability) {
 	}
 	
+	double getAnimationProgress();
+	
 	@Override
 	default NBTTagCompound serializeNBT() {
 		NBTTagCompound nbt = new NBTTagCompound();

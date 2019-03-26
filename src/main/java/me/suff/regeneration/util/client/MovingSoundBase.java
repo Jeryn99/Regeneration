@@ -4,8 +4,10 @@ import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.util.RegenUtil;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.function.Supplier;
 
@@ -13,16 +15,15 @@ import java.util.function.Supplier;
  * Created by Sub
  * on 20/09/2018.
  */
-//FIXME sound doesn't stop when dying mid-regen
-public class MovingSoundEntity extends MovingSound {
+public class MovingSoundBase extends MovingSound {
 	
-	private final Entity entity;
+	private final Object entity;
 	private final Supplier<Boolean> stopCondition;
 	private boolean donePlaying = false;
 	
-	public MovingSoundEntity(Entity playerIn, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier<Boolean> stopCondition, float volumeSfx) {
+	public MovingSoundBase(Object object, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier<Boolean> stopCondition, float volumeSfx) {
 		super(soundIn, categoryIn);
-		this.entity = playerIn;
+		this.entity = object;
 		this.stopCondition = stopCondition;
 		super.repeat = repeat;
 		volume = volumeSfx;
@@ -31,28 +32,38 @@ public class MovingSoundEntity extends MovingSound {
 	@Override
 	public void tick() {
 		
-		if (stopCondition.get() || !entity.isAlive()) {
-			setDonePlaying();
+		if (entity instanceof Entity) {
+			Entity entityObject = (Entity) entity;
+			if (stopCondition.get() || !entityObject.isAlive()) {
+				setDonePlaying();
+			}
+			
+			//I promise this is the only case specific thing I am putting in here ~ Suff
+			if (sound.getSoundLocation().equals(RegenObjects.Sounds.GRACE_HUM.getRegistryName())) {
+				volume = RegenUtil.randFloat(1.5F, 6F);
+			}
+			
+			super.x = (float) entityObject.posX;
+			super.y = (float) entityObject.posY;
+			super.z = (float) entityObject.posZ;
 		}
 		
-		//I promise this is the only case specific thing I am putting in here ~ Sub
-		if (sound.getSoundLocation().equals(RegenObjects.Sounds.GRACE_HUM.getRegistryName())) {
-			volume = RegenUtil.randFloat(1.5F, 6F);
+		if (entity instanceof TileEntity) {
+			TileEntity tileObject = (TileEntity) entity;
+			BlockPos pos = tileObject.getPos();
+			super.x = (float) pos.getX();
+			super.y = (float) pos.getY();
+			super.z = (float) pos.getZ();
 		}
-		
-		super.x = (float) entity.posX;
-		super.y = (float) entity.posY;
-		super.z = (float) entity.posZ;
 		
 	}
 	
-	//Explanation: http://www.minecraftforge.net/forum/topic/26645-solvedmovingsound-itickablesound-and-soundmanager-starting-stopping-sounds/
+	
 	public void setDonePlaying() {
 		this.repeat = false;
 		this.donePlaying = true;
 		this.repeatDelay = 0;
 	}
-	
 	
 	@Override
 	public boolean canRepeat() {

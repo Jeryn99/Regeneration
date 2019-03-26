@@ -10,13 +10,11 @@ import me.suff.regeneration.network.MessageTriggerRegeneration;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.EnumCompatModids;
-import me.suff.regeneration.util.RegenState;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -30,7 +28,6 @@ import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -39,7 +36,6 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -73,11 +69,11 @@ public class ClientEventHandler {
 				NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration());
 			}
 			
-			if(REGEN_FORCEFULLY.isPressed() && data.getState() == ALIVE){
+			if (REGEN_FORCEFULLY.isPressed() && data.getState() == ALIVE) {
 				NetworkHandler.INSTANCE.sendToServer(new MessageForceRegen());
 			}
 			
-			if(RegenKeyBinds.REGEN_CUSTOMISE.isPressed()){
+			if (RegenKeyBinds.REGEN_CUSTOMISE.isPressed()) {
 				Minecraft.getInstance().displayGuiScreen(null);
 				Minecraft.getInstance().displayGuiScreen(new GuiCustomizer());
 			}
@@ -294,7 +290,7 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	public void onClientLeaveServer(TickEvent.ClientTickEvent e) {
-		if(Minecraft.getInstance().world == null && Minecraft.getInstance().player == null) {
+		if (Minecraft.getInstance().world == null && Minecraft.getInstance().player == null) {
 			SkinChangingHandler.PLAYER_SKINS.clear();
 			SkinChangingHandler.TYPE_BACKUPS.clear();
 		}

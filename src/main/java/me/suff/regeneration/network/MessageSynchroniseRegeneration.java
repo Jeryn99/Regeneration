@@ -19,10 +19,6 @@ public class MessageSynchroniseRegeneration {
 	private UUID player;
 	private NBTTagCompound data;
 	
-	
-	public MessageSynchroniseRegeneration() {
-	}
-	
 	public MessageSynchroniseRegeneration(UUID player, NBTTagCompound data) {
 		this.player = player;
 		this.data = data;

@@ -5,8 +5,6 @@ import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiResourcePackList;
-import net.minecraft.client.gui.GuiScreenResourcePacks;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.model.ModelPlayer;
@@ -16,7 +14,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.awt.*;
-import java.io.IOException;
 
 import static me.suff.regeneration.util.RenderUtil.drawModelToGui;
 

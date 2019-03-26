@@ -24,7 +24,6 @@ import java.util.Random;
 public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	
 	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
-	public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
 	
 	private static final ResourceLocation GLOW_TEXTURE = new ResourceLocation(RegenerationMod.MODID, "textures/misc/post.png");
 	

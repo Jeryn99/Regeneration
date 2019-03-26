@@ -124,7 +124,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 			if (!cap.canRegenerate())
 				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
 			
-			if(cap.getState() != RegenState.ALIVE){
+			if (cap.getState() != RegenState.ALIVE) {
 				return msgUsageFailed(player, "regeneration.messages.transfer.not_alive", stack);
 			}
 			

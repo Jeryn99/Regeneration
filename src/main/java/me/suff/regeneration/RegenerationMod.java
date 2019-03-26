@@ -14,7 +14,6 @@ import me.suff.regeneration.proxy.CommonProxy;
 import me.suff.regeneration.proxy.IProxy;
 import me.suff.regeneration.util.LimbManipulationUtil;
 import me.suff.regeneration.util.PlayerUtil;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;

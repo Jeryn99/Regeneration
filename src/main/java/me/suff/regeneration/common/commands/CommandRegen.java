@@ -10,22 +10,21 @@ import me.suff.regeneration.util.RegenState;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class CommandRegen {
 	
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
-		dispatcher.register(Commands.literal("regendebug")
+		dispatcher.register(Commands.literal("regen-debug")
 				.requires(s -> s.hasPermissionLevel(ServerLifecycleHooks.getCurrentServer().getOpPermissionLevel()))
 				.then(Commands.literal("glow")
 						.executes(ctx -> glow(ctx.getSource())))
-				.then(Commands.literal("fastforward")
+				.then(Commands.literal("fast-forward")
 						.executes(ctx -> fastForward(ctx.getSource())))
 				.then(Commands.literal("open")
 						.executes(ctx -> open(ctx.getSource())))
-				.then(Commands.literal("setregens")
+				.then(Commands.literal("set-regens")
 						.then(Commands.argument("amount", IntegerArgumentType.integer(1)) //minimal regen to set is 1
 								.executes(ctx -> setRegens(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "amount"))))));
 	}
@@ -45,7 +44,7 @@ public class CommandRegen {
 		try {
 			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) ->
 			{
-				if(cap.getState() != RegenState.ALIVE) {
+				if (cap.getState() != RegenState.ALIVE) {
 					cap.getStateManager().fastForward();
 				} else {
 					throw new CommandException(new TextComponentTranslation("regeneration.messages.fast_forward_cmd_fail"));
