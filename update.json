@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "1.5.7",
-		"1.12.2-recommended": "1.5.7",
+		"1.12.2-latest": "1.5.7B",
+		"1.12.2-recommended": "1.5.7B",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
@@ -11,7 +11,7 @@
 		"1.5.4": "Better Skin grabbing handling for mojang skins. Should not longer randomly crash.",
 		"1.5.5": "NameMC trending feature",
 		"1.5.6": "Fixes and ability to view Regeneration skin change",
-		"1.5.7": "Finally properly fixed Raster crash, goodbye Cache folder"
+		"1.5.7B": "Fixes Swimming trait and Armor going bomb"
 	},
 	"1.13.2": {
 		"0.0.2": "Ported to 1.13.2 + Fixed Force Regen Crash"
