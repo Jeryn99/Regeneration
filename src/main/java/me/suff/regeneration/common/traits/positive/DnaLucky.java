@@ -22,7 +22,10 @@ public class DnaLucky implements DnaHandler.IDna {
 	
 	@Override
 	public void onUpdate(IRegeneration cap) {
-		
+		EntityPlayer player = cap.getPlayer();
+		if (!player.getEntityAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
+			player.getEntityAttribute(SharedMonsterAttributes.LUCK).applyModifier(LUCKY_MODIFIER);
+		}
 	}
 	
 	@Override

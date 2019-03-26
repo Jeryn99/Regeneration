@@ -21,12 +21,10 @@ public class DnaHydrophobic implements DnaHandler.IDna {
 	public void onUpdate(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
 		
-		if (player.world.canSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ))) {
-			if (player.isInWater() || player.world.isRaining()) {
+		if (player.isInWater() || player.world.isRaining() && player.world.canSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ))) {
 				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 300, 2, false, false);
 				PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, 300, 2, false, false);
 			}
-		}
 		
 	}
 	

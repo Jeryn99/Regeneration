@@ -91,13 +91,9 @@ public class DnaHandler {
 	
 	public interface IDna {
 		void onUpdate(IRegeneration cap);
-		
 		void onAdded(IRegeneration cap);
-		
 		void onRemoved(IRegeneration cap);
-		
 		String getLangKey();
-		
 		ResourceLocation getRegistryName();
 	}
 	

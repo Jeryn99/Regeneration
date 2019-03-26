@@ -14,7 +14,7 @@ regeneration.gui.reset_skin=Reset Skin
 regeneration.gui.infinite_regenerations=Infinite Regeneration Mode
 regeneration.gui.remaining_regens.status=Remaining Regenerations:
 
-regeneration.messages.now_timelord=You are now a timelord!
+regeneration.messages.now_timelord=You are now a Time lord!
 regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch
 
 regeneration.messages.empty_vial=This vial does not have enough Lindos to trigger a regeneration!
@@ -110,7 +110,7 @@ config.regeneration.category.on_regen=When Regenerating
 config.regeneration.category.post_regen=Post regeneration
 config.regeneration.skins.folder=Skin Regeneration folder
 
-dna.athlete.name=Atheltic genes!
+dna.athlete.name=Athletic genes!
 dna.boring.name=Lazy genes! (You're useless!)
 dna.dumb.name=Dumb genes!
 dna.sneak.name=Sneaky genes!
@@ -125,14 +125,14 @@ nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...
 regeneration.messages.cannot_use=You cannot use this right now!
 message.regeneration.healed=You have given %s some of your Regeneration Energy!
-nbt.item.water=Has Water: %s
+nbt.item.water=Has water: %s
 nbt.item.water_filled=You have now filled this Vial with Water
 nbt.item.water_already_filled=This Vial already has water in it
 
 regeneration.advancement.regeneration=Change my dear...
 regeneration.advancement.regeneration.desc=Regenerate for the First time!
-regeneration.advancement.change_refusual=I. WILL. NOT. CHANGE!
-regeneration.advancement.change_refusual.desc=Punch a block to delay your regeneration!
+regeneration.advancement.change_refusal=I. WILL. NOT. CHANGE!
+regeneration.advancement.change_refusal.desc=Punch a block to delay your regeneration!
 regeneration.advancement.critical=Your song is ending...
 regeneration.advancement.critical.desc=Refuse to Regenerate up till the point of near death...
 regeneration.advancement.lindos_vial=Lindos!

@@ -38,7 +38,7 @@ public class MovingSoundBase extends MovingSound {
 				setDonePlaying();
 			}
 			
-			//I promise this is the only case specific thing I am putting in here ~ Sub
+			//I promise this is the only case specific thing I am putting in here ~ Suff
 			if (sound.getSoundLocation().equals(RegenObjects.Sounds.GRACE_HUM.getRegistryName())) {
 				volume = RegenUtil.randFloat(1.5F, 6F);
 			}
