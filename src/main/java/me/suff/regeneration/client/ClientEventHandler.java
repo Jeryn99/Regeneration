@@ -1,5 +1,6 @@
 package me.suff.regeneration.client;
 
+import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.client.gui.GuiCustomizer;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
@@ -32,6 +33,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -55,6 +57,15 @@ import static me.suff.regeneration.util.RegenState.*;
 public class ClientEventHandler {
 	
 	@SubscribeEvent
+	public void onFov(FOVUpdateEvent event){
+		CapabilityRegeneration.getForPlayer(event.getEntity()).ifPresent((data) -> {
+			if(data.getState() == REGENERATING && RegenConfig.CLIENT.fovChange.get()){
+				event.setNewfov(data.getTicksAnimated());
+			}
+		});
+	}
+	
+	@SubscribeEvent
 	public void onKeyPress(InputUpdateEvent e) {
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
 		Minecraft minecraft = Minecraft.getInstance();
@@ -63,21 +74,23 @@ public class ClientEventHandler {
 			ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
 		}
 		
-		CapabilityRegeneration.getForPlayer(minecraft.player).ifPresent((data) -> {
-			
-			if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
-				NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration());
-			}
-			
-			if (REGEN_FORCEFULLY.isPressed() && data.getState() == ALIVE) {
-				NetworkHandler.INSTANCE.sendToServer(new MessageForceRegen());
-			}
-			
-			if (RegenKeyBinds.REGEN_CUSTOMISE.isPressed()) {
-				Minecraft.getInstance().displayGuiScreen(null);
-				Minecraft.getInstance().displayGuiScreen(new GuiCustomizer());
-			}
-		});
+		if (minecraft.player != null) {
+			CapabilityRegeneration.getForPlayer(minecraft.player).ifPresent((data) -> {
+				
+				if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
+					NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration());
+				}
+				
+				if (REGEN_FORCEFULLY.isPressed() && data.getState() == ALIVE) {
+					NetworkHandler.INSTANCE.sendToServer(new MessageForceRegen());
+				}
+				
+				if (RegenKeyBinds.REGEN_CUSTOMISE.isPressed()) {
+					Minecraft.getInstance().displayGuiScreen(null);
+					Minecraft.getInstance().displayGuiScreen(new GuiCustomizer());
+				}
+			});
+		}
 		
 	}
 	
@@ -163,12 +176,12 @@ public class ClientEventHandler {
 			switch (cap.getState()) {
 				case GRACE:
 					RenderUtil.renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
-					warning = new TextComponentTranslation("regeneration.messages.warning.grace", ClientUtil.keyBind).getUnformattedComponentText();
+					warning = new TextComponentTranslation("regeneration.messages.warning.grace", new TextComponentTranslation(ClientUtil.keyBind).getUnformattedComponentText()).getUnformattedComponentText();
 					break;
 				
 				case GRACE_CRIT:
 					RenderUtil.renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
-					warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", ClientUtil.keyBind).getUnformattedComponentText();
+					warning = new TextComponentTranslation("regeneration.messages.warning.grace_critical", new TextComponentTranslation(ClientUtil.keyBind).getUnformattedComponentText()).getUnformattedComponentText();
 					break;
 				
 				case REGENERATING:

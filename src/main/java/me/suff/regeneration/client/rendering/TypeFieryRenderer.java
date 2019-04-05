@@ -33,7 +33,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			return;
 		
 		RenderPlayer renderPlayer = ev.getRenderer();
-		double animationProgress = type.getAnimationProgress();
+		double animationProgress = cap.getTicksAnimated();
 		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
 		
 		int headRot = 50;
@@ -78,7 +78,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
 		Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 		
-		double x = type.getAnimationProgress();
+		double x = capability.getTicksAnimated();
 		double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
 		double r = 0.09890109890109888;
 		double f = p * Math.pow(x, 2) - r;

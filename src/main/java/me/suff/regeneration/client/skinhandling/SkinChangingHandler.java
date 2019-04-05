@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -46,7 +47,7 @@ import java.util.UUID;
 @OnlyIn(Dist.CLIENT)
 public class SkinChangingHandler {
 	
-	public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "/regeneration/skins/");
+	public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "/Regeneration Data/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
@@ -76,13 +77,14 @@ public class SkinChangingHandler {
 	}
 	
 	public static NativeImage decodeToImage(String imageString) throws IOException {
-		MemoryStack memorystack = MemoryStack.stackPush(); //TODO fix this trash
-		ByteBuffer bytebuffer = memorystack.UTF8(imageString, false);
-		ByteBuffer bytebuffer1 = Base64.getDecoder().decode(bytebuffer);
-		ByteBuffer bytebuffer2 = memorystack.malloc(bytebuffer1.remaining());
-		bytebuffer2.put(bytebuffer1);
-		bytebuffer2.rewind();
-		return NativeImage.read(bytebuffer2);
+		try (MemoryStack memorystack = MemoryStack.stackPush()) {//TODO fix this trash
+			ByteBuffer bytebuffer = memorystack.UTF8(imageString, false);
+			ByteBuffer bytebuffer1 = Base64.getDecoder().decode(bytebuffer);
+			ByteBuffer bytebuffer2 = memorystack.malloc(bytebuffer1.remaining());
+			bytebuffer2.put(bytebuffer1);
+			bytebuffer2.rewind();
+			return NativeImage.read(bytebuffer2);
+		}
 	}
 	
 	
@@ -135,7 +137,8 @@ public class SkinChangingHandler {
 	 * @return SkinInfo - A class that contains the SkinType and the resource location to use as a skin
 	 * @throws IOException
 	 */
-	private static SkinInfo getSkinInfo(AbstractClientPlayer player, IRegeneration data, boolean write) throws IOException {
+	private static SkinInfo getSkinInfo(AbstractClientPlayer player, IRegeneration data, boolean write) throws
+			IOException {
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 		
@@ -192,7 +195,8 @@ public class SkinChangingHandler {
 		return DefaultPlayerSkin.getDefaultSkinLegacy();
 	}
 	
-	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String par1Str, AbstractClientPlayer player) {
+	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String
+			par1Str, AbstractClientPlayer player) {
 		TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
 		ITextureObject object = texturemanager.getTexture(resource);
 		if (object == null) {
@@ -251,14 +255,14 @@ public class SkinChangingHandler {
 			if (player.ticksExisted == 20) {
 				SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());
 				if (oldSkinInfo != null) {
-					Minecraft.getInstance().getTextureManager().deleteTexture(oldSkinInfo.getSkinTextureLocation());
+					//oldSkinInfo.dispose();
 				}
 				PLAYER_SKINS.remove(player.getUniqueID());
 			}
 			
 			if (cap.getState() == RegenState.REGENERATING) {
 				
-				if (cap.getType().getAnimationProgress() > 0.7) {
+				if (cap.getTicksAnimated() > 0.7) {
 					setSkinFromData(player, CapabilityRegeneration.getForPlayer(player), false);
 				}
 				

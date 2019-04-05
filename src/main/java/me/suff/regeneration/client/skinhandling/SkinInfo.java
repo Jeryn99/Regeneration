@@ -1,5 +1,8 @@
 package me.suff.regeneration.client.skinhandling;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 
@@ -25,6 +28,14 @@ public class SkinInfo {
 			return skintype;
 		}
 		return SkinType.ALEX;
+	}
+	
+	public void dispose() {
+		TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+		ITextureObject texture = textureManager.getTexture(getSkinTextureLocation());
+		if (texture != null) {
+			textureManager.deleteTexture(getSkinTextureLocation());
+		}
 	}
 	
 	public enum SkinType {

@@ -64,6 +64,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
 	
+	private float ticksAnimated = 0F;
+	
 	/**
 	 * WHY THIS IS A SEPERATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
 	 * This property is synced over to the client to solve this
@@ -106,6 +108,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, CapabilityRegeneration.getForPlayer(player));
+			setTicksAnimated(ticksAnimated + 0.01F);
 		}
 	}
 	
@@ -142,6 +145,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setFloat("SecondaryRed", secondaryRed);
 		nbt.setFloat("SecondaryGreen", secondaryGreen);
 		nbt.setFloat("SecondaryBlue", secondaryBlue);
+		nbt.setFloat("ticksAnimated", ticksAnimated);
 		
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
@@ -193,6 +197,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		secondaryRed = nbt.getFloat("SecondaryRed");
 		secondaryGreen = nbt.getFloat("SecondaryGreen");
 		secondaryBlue = nbt.getFloat("SecondaryBlue");
+		
+		ticksAnimated = nbt.getFloat("ticksAnimated");
 		
 		if (nbt.hasKey("stateManager"))
 			if (stateManager != null) {
@@ -323,6 +329,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setDeathSource(String source) {
 		deathSource = source;
+	}
+	
+	@Override
+	public void setTicksAnimated(float ticks) {
+		ticksAnimated = ticks;
+	}
+	
+	@Override
+	public float getTicksAnimated() {
+		return ticksAnimated;
 	}
 	
 	@Override
@@ -527,6 +543,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			ActingForwarder.onRegenTrigger(CapabilityRegeneration.getForPlayer(player));
 			type.onStartRegeneration(player, CapabilityRegeneration.getForPlayer(player));
+			setTicksAnimated(0.0F);
 			sync();
 		}
 		
@@ -567,6 +584,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		private void finishRegeneration() {
+			setTicksAnimated(0.0F);
 			state = RegenState.POST;
 			scheduleTransitionInSeconds(RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;

@@ -7,6 +7,7 @@ import me.suff.regeneration.client.rendering.entity.RenderLindos;
 import me.suff.regeneration.common.entity.EntityItemOverride;
 import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.util.FileUtil;
+import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -39,9 +40,11 @@ public class ClientProxy extends CommonProxy {
 		// Render layers ===========================================
 		Map<String, RenderPlayer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
 		for (RenderPlayer renderPlayer : skinMap.values()) {
+			RenderUtil.setupArmorModelOverride(renderPlayer);
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
 		}
 		FileUtil.doThreadStuff();
+		
 	}
 	
 }

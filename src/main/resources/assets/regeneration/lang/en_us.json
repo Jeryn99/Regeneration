@@ -94,6 +94,7 @@
   "config.regeneration.category.post_regen": "Post regeneration",
   "config.regeneration.skins.skindir": "Skin Directory:",
   "config.regeneration.downloadTrendingSkins": "Download Trending Skins",
+  "config.regeneration.fov": "Change FOV?",
   "dna.athlete": "Atheltic genes!",
   "dna.boring": "Lazy genes! (You're useless!)",
   "dna.dumb": "Dumb genes!",

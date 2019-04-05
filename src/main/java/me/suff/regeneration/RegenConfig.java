@@ -26,16 +26,18 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue changePerspective;
 		public final ForgeConfigSpec.BooleanValue changeHand;
 		public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
+		public final ForgeConfigSpec.BooleanValue fovChange;
 		
 		Client(ForgeConfigSpec.Builder builder) {
 			
 			builder.comment("Client Regeneration Settings").push("client");
 			builder.comment("Skin Settings").push("skin");
 			changeMySkin = builder.comment("Disabling this will disable skin changing for you and you will retain your Mojang one").translation("config.regeneration.skins.changemyskin").define("changeMySkin", true);
-			skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './mods/', the path MUST NOT end in /").translation("config.regeneration.skins.skindir").define("skinDir", "./mods");
+			skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './', the path MUST NOT end in /").translation("config.regeneration.skins.skindir").define("skinDir", ".");
 			changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
 			changeHand = builder.comment("Toggle whether your hand has the chance of inverting after a regen").translation("config.regeneration.hand_change").define("changeHand", true);
 			downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
+			fovChange= builder.comment("Toggle whether a zoom effect happens during the Regeneration period").translation("config.regeneration.fov").define("fovChange", false);
 			builder.pop();
 		}
 		

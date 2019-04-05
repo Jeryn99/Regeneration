@@ -1,6 +1,7 @@
 package me.suff.regeneration.util;
 
 import me.suff.regeneration.RegenerationMod;
+import me.suff.regeneration.client.rendering.model.ModelArmorOverride;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -8,12 +9,22 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
+import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.ModelBase;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.opengl.GL11;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * Created by Sub
@@ -212,6 +223,22 @@ public class RenderUtil {
 		GlStateManager.disableBlend();
 		GlStateManager.disableDepthTest();
 		GlStateManager.popMatrix();
+	}
+	
+	
+	public static void setupArmorModelOverride(RenderPlayer renderPlayer) {
+		List<LayerRenderer<EntityLivingBase>> layers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, 4);
+		if (layers != null) {
+			LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer -> layer instanceof LayerBipedArmor).findFirst().orElse(null);
+			if (armorLayer != null) {
+				LayerBipedArmor bipedArmor = (LayerBipedArmor) armorLayer;
+				ModelArmorOverride armorOverride = new ModelArmorOverride();
+				//Field mainModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177186_d"));
+				//Field legModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177189_c"));
+				ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, bipedArmor,armorOverride, 1);
+				ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, bipedArmor, armorOverride, 2);
+			}
+		}
 	}
 	
 }

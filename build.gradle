@@ -9,11 +9,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
-}
-
-
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
@@ -82,27 +77,15 @@ jar {
         attributes([
             "Specification-Title": "regeneration",
             "Specification-Vendor": "regeneration-suff",
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": "4", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"regeneration-suff",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+    manifest.attributes ContainedDeps: "jsoup-1.11.3.jar"
 }
 
-shadowJar {
-    dependencies {
-        include(dependency('org.jsoup:.*'))
-    }
-
-    relocate 'org.jsoup', 'me.suff.regeneration.util.jsoup'
-
-    classifier '' // Replace the default JAR
-}
-
-reobf {
-    shadowJar {} // Reobfuscate the shadowed JAR
-}
 
 
