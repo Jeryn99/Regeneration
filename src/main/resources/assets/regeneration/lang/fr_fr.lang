@@ -108,15 +108,15 @@ config.regeneration.category.skins=Changement de Skin
 config.regeneration.category.on_regen=Quand régénérer
 config.regeneration.category.post_regen=Post-régénération
 
-dna.athlete.name=Votre ADN contient des gènes athlétique !
-dna.boring.name=Votre ADN contient des gènes fénéant ! (Vous êtes inutile !)
-dna.dumb.name=Votre ADN contient des gènes que personne ne veut !
-dna.sneak.name=Votre ADN contient des gènes de discrétions !
-dna.vampire.name=Votre ADN contient des gènes de Vampire ... Ah la la ...
-dna.lucky.name=Votre ADN contient des gènes de chanceux !
-dna.swimmer.name=Your DNA consists of Swimming genes!
-dna.hydrophobic.name=Your DNA consists of Hydrophobic genes!
-dna.tough.name=Your DNA consists of Strong genes!
+traits.athlete.name=Votre ADN contient des gènes athlétique !
+traits.boring.name=Votre ADN contient des gènes fénéant ! (Vous êtes inutile !)
+traits.dumb.name=Votre ADN contient des gènes que personne ne veut !
+traits.sneak.name=Votre ADN contient des gènes de discrétions !
+traits.vampire.name=Votre ADN contient des gènes de Vampire ... Ah la la ...
+traits.lucky.name=Votre ADN contient des gènes de chanceux !
+traits.swimmer.name=Your DNA consists of Swimming genes!
+traits.hydrophobic.name=Your DNA consists of Hydrophobic genes!
+traits.tough.name=Your DNA consists of Strong genes!
 
 nbt.item.lindos=Energie Lindos: %s
 regeneration.messages.no_water=Cette fiole n'a pas d'eau...

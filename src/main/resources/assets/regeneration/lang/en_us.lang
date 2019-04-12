@@ -46,6 +46,8 @@ regeneration.toast.regenerated=You have regenerated!
 regeneration.toast.regenerations_left=%s regenerations left
 regeneration.toast.enter_critical=You are going critical
 regeneration.toast.enter_critical.sub=%s minutes left...
+regeneration.toast.timelord=You are now a Time lord!
+regeneration.toast.to_use=You have %s lives now!
 
 regeneration.messages.regen_chat_message=%s is regenerating...
 regeneration.messages.warning.grace=You are in a state of grace, press %s to regenerate!
@@ -110,16 +112,16 @@ config.regeneration.category.on_regen=When Regenerating
 config.regeneration.category.post_regen=Post regeneration
 config.regeneration.skins.folder=Skin Regeneration folder
 
-dna.athlete.name=Athletic genes!
-dna.boring.name=Lazy genes! (You're useless!)
-dna.dumb.name=Dumb genes!
-dna.sneak.name=Sneaky genes!
-dna.vampire.name=Vampire genes....ah dear...
-dna.lucky.name=Lucky genes!
-dna.swimmer.name=Swimming genes!
-dna.hydrophobic.name=Hydrophobic genes!
-dna.tough.name=Strong genes!
-dna.fire.name=non-flammable genes!
+traits.athlete.name=Athletic genes!
+traits.boring.name=Lazy genes! (You're useless!)
+traits.dumb.name=Dumb genes!
+traits.sneak.name=Sneaky genes!
+traits.vampire.name=Vampire genes....ah dear...
+traits.lucky.name=Lucky genes!
+traits.swimmer.name=Swimming genes!
+traits.hydrophobic.name=Hydrophobic genes!
+traits.tough.name=Strong genes!
+traits.fire.name=non-flammable genes!
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...
