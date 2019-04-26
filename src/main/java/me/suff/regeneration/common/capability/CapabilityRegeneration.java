@@ -5,8 +5,8 @@ import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.advancements.RegenTriggers;
-import me.suff.regeneration.common.traits.DnaHandler;
 import me.suff.regeneration.common.entity.EntityLindos;
+import me.suff.regeneration.common.traits.DnaHandler;
 import me.suff.regeneration.common.types.IRegenType;
 import me.suff.regeneration.common.types.TypeFiery;
 import me.suff.regeneration.debugger.util.DebuggableScheduledAction;
@@ -64,6 +64,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private String BASE64_SKIN = "NONE";
 	
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
+	private SkinInfo.SkinType vanillaSkinType = SkinInfo.SkinType.ALEX;
 	private SkinChangingHandler.EnumChoices preferredModel = SkinChangingHandler.EnumChoices.EITHER;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
@@ -105,6 +106,12 @@ public class CapabilityRegeneration implements IRegeneration {
 			didSetup = true;
 		}
 		
+		if (getEncodedSkin().toLowerCase().equals("NONE")) {
+			if (getSkinType() != getVanillaDefault()) {
+				setSkinType(getVanillaDefault().name());
+			}
+		}
+		
 		if (getRegenerationsLeft() > RegenConfig.regenCapacity && !RegenConfig.infiniteRegeneration) {
 			regenerationsLeft = RegenConfig.regenCapacity;
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
@@ -128,7 +135,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == RegenState.Transition.HAND_GLOW_TRIGGER;
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
-		
 		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
 	}
 	
@@ -151,7 +157,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		nbt.setBoolean("traitActive", traitActive);
 		nbt.setInteger("lc_regen", lcCoreReserve);
-		
+		nbt.setString("v_type", vanillaSkinType.name());
 		
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
@@ -174,6 +180,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		} else {
 			setPreferredModel("ALEX");
 		}
+		
 		
 		if (nbt.hasKey("regenerationsLeft")) {
 			regenerationsLeft = nbt.getInteger("regenerationsLeft");
@@ -199,6 +206,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			lcCoreReserve = nbt.getInteger("lc_regen");
 		}
 		
+		if (nbt.hasKey("v_type")) {
+			vanillaSkinType = SkinInfo.SkinType.valueOf(nbt.getString("v_type"));
+		}
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.hasKey("style") ? nbt.getCompoundTag("style") : nbt);
@@ -361,6 +371,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setDnaActive(boolean alive) {
 		traitActive = alive;
+	}
+	
+	@Override
+	public SkinInfo.SkinType getVanillaDefault() {
+		return vanillaSkinType;
+	}
+	
+	@Override
+	public void setVanillaSkinType(SkinInfo.SkinType type) {
+		vanillaSkinType = type;
 	}
 	
 	@Override
@@ -528,7 +548,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
 			
-			if(state == RegenState.POST){
+			if (state == RegenState.POST) {
 				ActingForwarder.onPerformingPost(CapabilityRegeneration.this);
 			}
 		}

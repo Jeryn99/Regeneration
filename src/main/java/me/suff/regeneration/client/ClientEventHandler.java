@@ -6,6 +6,7 @@ import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.handlers.RegenObjects;
+import me.suff.regeneration.network.MessageRepairArms;
 import me.suff.regeneration.network.MessageTriggerForcedRegen;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
@@ -38,10 +39,13 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -59,6 +63,8 @@ import static me.suff.regeneration.util.RegenState.*;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
 	
+	private static boolean initialJoin = false;
+	
 	@SubscribeEvent
 	public static void onGui(InputUpdateEvent tickEvent) {
 		
@@ -74,11 +80,36 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onSortofWorldJoin(LivingEvent.LivingUpdateEvent e) {
+	public static void onJoin(EntityJoinWorldEvent event){
+		if(event.getEntity() instanceof EntityPlayer && !initialJoin) {
+			if (Minecraft.getMinecraft().player == event.getEntity()) {
+				EntityPlayerSP localPlayer = Minecraft.getMinecraft().player;
+				NetworkHandler.INSTANCE.sendToServer(new MessageRepairArms(localPlayer.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE));
+				initialJoin = true;
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onTickEvent(TickEvent.ClientTickEvent event){
+		if(event.phase.equals(TickEvent.Phase.START)) return;
+		if(Minecraft.getMinecraft().world == null){
+			if(SkinChangingHandler.PLAYER_SKINS.size() > 0 || SkinChangingHandler.TYPE_BACKUPS.size() > 0) {
+				SkinChangingHandler.TYPE_BACKUPS.clear();
+				SkinChangingHandler.PLAYER_SKINS.clear();
+				RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS AND TYPE_BACKUPS");
+			}
+			initialJoin = false;
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onClientUpdate(LivingEvent.LivingUpdateEvent e) {
 		if (!(e.getEntity() instanceof EntityPlayer) || Minecraft.getMinecraft().player == null)
 			return;
 		
 		EntityPlayer player = (EntityPlayer) e.getEntity();
+		
 		if (player.ticksExisted == 50) {
 			
 			UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
@@ -97,6 +128,7 @@ public class ClientEventHandler {
 				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
 				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.GRACE_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != GRACE, 1.5F);
 			}
+			
 		}
 	}
 	

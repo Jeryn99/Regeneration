@@ -32,6 +32,10 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 		if (transformedName.equals("paulscode.sound.libraries.SourceLWJGLOpenAL")) {
 			return this.applyTransform(transformedName, data, this::transformSoundSource);
 		}
+		
+		if (transformedName.equals("net.minecraft.client.model.ModelBiped"))
+			return patchModelBiped(name, data, false);
+		
 		return data;
 	}
 	
@@ -95,4 +99,66 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 	private Predicate<AbstractInsnNode> invoke(String owner, Predicate<String> name) {
 		return n -> n instanceof MethodInsnNode && ((MethodInsnNode) n).owner.equals(owner) && name.test(((MethodInsnNode) n).name);
 	}
+	
+	public static byte[] patchModelBiped(String name, byte[] bytes, boolean obf) {
+		String renderMethod = RegenerationMod.isDevEnv() ? "render" : "func_78088_a";
+		String renderDesc = "(Lnet/minecraft/entity/Entity;FFFFFF)V";
+		
+		String setRotationAnglesMethod = RegenerationMod.isDevEnv() ? "setRotationAngles" : "func_78087_a";
+		String setRotationAnglesDesc = "(FFFFFFLnet/minecraft/entity/Entity;)V";
+		
+		ClassNode classNode = new ClassNode();
+		ClassReader classReader = new ClassReader(bytes);
+		classReader.accept(classNode, 0);
+		
+		InsnList list = new InsnList();
+		
+		for (int j = 0; j < classNode.methods.size(); j++) {
+			MethodNode method = classNode.methods.get(j);
+			if (renderMethod.equals(method.name) && renderDesc.equals(method.desc)) {
+				for (int i = 0; i < method.instructions.size(); ++i) {
+					AbstractInsnNode node = method.instructions.get(i);
+					if (node instanceof MethodInsnNode) {
+						MethodInsnNode methodNode = (MethodInsnNode) node;
+						
+						if (methodNode.name.equals(setRotationAnglesMethod) && methodNode.desc.equals(setRotationAnglesDesc)) {
+							list.add(node);
+							list.add(new VarInsnNode(ALOAD, 0));
+							list.add(new VarInsnNode(ALOAD, 1));
+							list.add(new VarInsnNode(FLOAD, 2));
+							list.add(new VarInsnNode(FLOAD, 3));
+							list.add(new VarInsnNode(FLOAD, 4));
+							list.add(new VarInsnNode(FLOAD, 5));
+							list.add(new VarInsnNode(FLOAD, 6));
+							list.add(new VarInsnNode(FLOAD, 7));
+							list.add(new MethodInsnNode(INVOKESTATIC, "me/suff/regeneration/client/sound/echo/RegenClassTransformer", "renderBipedPre", "(Lnet/minecraft/client/model/ModelBiped;Lnet/minecraft/entity/Entity;FFFFFF)V", false));
+							continue;
+						}
+					}
+					
+					if (node.getOpcode() == RETURN) {
+						list.add(new VarInsnNode(ALOAD, 0));
+						list.add(new VarInsnNode(ALOAD, 1));
+						list.add(new VarInsnNode(FLOAD, 2));
+						list.add(new VarInsnNode(FLOAD, 3));
+						list.add(new VarInsnNode(FLOAD, 4));
+						list.add(new VarInsnNode(FLOAD, 5));
+						list.add(new VarInsnNode(FLOAD, 6));
+						list.add(new VarInsnNode(FLOAD, 7));
+						list.add(new MethodInsnNode(INVOKESTATIC, "me/suff/regeneration/client/sound/echo/RegenClassTransformer", "renderBipedPost", "(Lnet/minecraft/client/model/ModelBiped;Lnet/minecraft/entity/Entity;FFFFFF)V", false));
+					}
+					
+					list.add(node);
+				}
+				
+				method.instructions.clear();
+				method.instructions.add(list);
+			}
+		}
+		
+		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+		classNode.accept(writer);
+		return writer.toByteArray();
+	}
+	
 }

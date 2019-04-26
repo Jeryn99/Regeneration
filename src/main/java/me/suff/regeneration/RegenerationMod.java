@@ -19,6 +19,7 @@ import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.proxy.CommonProxy;
 import me.suff.regeneration.util.EnumCompatModids;
 import me.suff.regeneration.util.PlayerUtil;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
@@ -43,7 +44,7 @@ public class RegenerationMod {
 	
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
-	public static final String VERSION = "1.5.8";
+	public static final String VERSION = "1.5.9";
 	public static final String UPDATE_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/skins/update.json";
 	public static final String DEPS = "required:forge@[14.23.5.2768,);after:tardis@[0.0.7,];after:lucraftcore@[1.12.2-2.4.0,]";
 	
@@ -59,6 +60,10 @@ public class RegenerationMod {
 	
 	@SidedProxy(clientSide = "me.suff.regeneration.proxy.ClientProxy", serverSide = "me.suff.regeneration.proxy.CommonProxy")
 	public static CommonProxy proxy;
+	
+	public static boolean isDevEnv() {
+		return (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+	}
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

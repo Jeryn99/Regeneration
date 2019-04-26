@@ -32,7 +32,6 @@ public class ClientUtil {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(sound, pitch, volume));
 	}
 	
-	
 	public static void sendSkinResetPacket() {
 		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin("none", SkinChangingHandler.wasAlex(Minecraft.getMinecraft().player)));
 	}

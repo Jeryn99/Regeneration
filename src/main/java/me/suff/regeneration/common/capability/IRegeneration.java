@@ -73,7 +73,6 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	void setPreferredModel(String skinType);
 	
 	boolean areHandsGlowing();
-	//void setGlowing(boolean glowing);
 	
 	String getDeathSource();
 	
@@ -86,4 +85,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	boolean isDnaActive();
 	
 	void setDnaActive(boolean alive);
+	
+	SkinInfo.SkinType getVanillaDefault();
+	void setVanillaSkinType(SkinInfo.SkinType type);
 }

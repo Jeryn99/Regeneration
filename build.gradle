@@ -1,18 +1,23 @@
-//technically an internal api, but I don't really care
+
 
 buildscript {
 	repositories {
 		jcenter()
 		maven { url = 'http://files.minecraftforge.net/maven' }
 	}
-	
+
 	dependencies {
 		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 	}
 }
 
+plugins {
+	id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+//TODO add classifier for builds not on the master branch
 version = project.mod_version
 group = project.maven_group
 archivesBaseName = "${project.jar_name}-${minecraft_version}"
@@ -23,7 +28,7 @@ minecraft {
 	version = "${project.minecraft_version}-${project.forge_version}"
 	mappings = project.mappings_version
 	makeObfSourceJar = true
-	
+
 	if(project.hasProperty('runDir'))
 		runDir = project.runDir
 	else if(file('../run').exists())
@@ -37,17 +42,17 @@ repositories {
 		name = "IC2"
 		url = "http://maven.ic2.player.to"
 	}
-	
+
 	maven {
 		name = "CurseForge"
 		url = "https://minecraft.curseforge.com/api/maven"
 	}
-	
+
 	maven {
 		name = "JitPack"
 		url = "https://jitpack.io"
 	}
-	
+
 	maven {
 		name = "Progwml6 maven"
 		url = "http://dvs1.progwml6.com/files/maven"
@@ -59,13 +64,13 @@ configurations {
 }
 
 dependencies {
-	deobfCompile 'com.github.Spectre0987:TardisMod:0.1.0'
+	deobfCompile 'com.github.Spectre0987:TardisMod:0.0.9c'
 	deobfCompile 'com.gitlab.lcoremodders:LucraftCore:3fe48363d9'
 
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.objenesis:objenesis:3.0.1'
 	testCompile 'org.mockito:mockito-core:2.23.4'
-	
+
 	testServer 'com.github.HoldYourWaffle:CrashMyServer:-SNAPSHOT'
 	compile 'org.jsoup:jsoup:1.11.3'
 }
@@ -73,12 +78,12 @@ dependencies {
 processResources {
 	inputs.property 'version', project.version
 	inputs.property 'mcversion', project.minecraft.version
-	
+
 	from(sourceSets.main.resources.srcDirs) {
 		include 'mcmod.info'
 		expand 'version':project.version, 'mcversion':project.minecraft.version
 	}
-	
+
 	from(sourceSets.main.resources.srcDirs) {
 		exclude 'mcmod.info'
 	}
@@ -92,15 +97,27 @@ jar {
 		attributes "FMLCorePluginContainsFMLMod": "true"
 		attributes 'FMLAT': 'regeneration_at.cfg'
 	}
-	manifest.attributes ContainedDeps: "jsoup-1.11.3.jar"
 }
 
+shadowJar {
+	dependencies {
+		include(dependency('org.jsoup:.*'))
+	}
+
+	relocate 'org.jsoup', 'me.suff.regeneration.util.jsoup'
+
+	classifier '' // Replace the default JAR
+}
+
+reobf {
+	shadowJar {} // Reobfuscate the shadowed JAR
+}
 
 sourceSets.main {
 	java {
 		srcDirs = ['src/main/java', 'src/debugger/java']
 	}
-	
+
 	resources {
 		srcDirs = ['src/main/resources', 'src/debugger/resources']
 	}
