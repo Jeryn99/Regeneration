@@ -3,8 +3,10 @@ package me.suff.regeneration.client;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
+import me.suff.regeneration.client.sound.echo.AnimationEvent;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
+import me.suff.regeneration.common.item.ItemFobWatch;
 import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.network.MessageRepairArms;
 import me.suff.regeneration.network.MessageTriggerForcedRegen;
@@ -17,11 +19,14 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.SoundCategory;
@@ -37,16 +42,13 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -80,8 +82,8 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onJoin(EntityJoinWorldEvent event){
-		if(event.getEntity() instanceof EntityPlayer && !initialJoin) {
+	public static void onJoin(EntityJoinWorldEvent event) {
+		if (event.getEntity() instanceof EntityPlayer && !initialJoin) {
 			if (Minecraft.getMinecraft().player == event.getEntity()) {
 				EntityPlayerSP localPlayer = Minecraft.getMinecraft().player;
 				NetworkHandler.INSTANCE.sendToServer(new MessageRepairArms(localPlayer.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE));
@@ -91,10 +93,10 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onTickEvent(TickEvent.ClientTickEvent event){
-		if(event.phase.equals(TickEvent.Phase.START)) return;
-		if(Minecraft.getMinecraft().world == null){
-			if(SkinChangingHandler.PLAYER_SKINS.size() > 0 || SkinChangingHandler.TYPE_BACKUPS.size() > 0) {
+	public static void onTickEvent(TickEvent.ClientTickEvent event) {
+		if (event.phase.equals(TickEvent.Phase.START)) return;
+		if (Minecraft.getMinecraft().world == null) {
+			if (SkinChangingHandler.PLAYER_SKINS.size() > 0 || SkinChangingHandler.TYPE_BACKUPS.size() > 0) {
 				SkinChangingHandler.TYPE_BACKUPS.clear();
 				SkinChangingHandler.PLAYER_SKINS.clear();
 				RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS AND TYPE_BACKUPS");
@@ -129,6 +131,50 @@ public class ClientEventHandler {
 				ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.GRACE_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != GRACE, 1.5F);
 			}
 			
+		}
+	}
+	
+	@SubscribeEvent(receiveCanceled = true)
+	public static void onAnimate(AnimationEvent.SetRotationAngels event) {
+		if (event.getEntity() instanceof EntityPlayer) {
+			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntity());
+			if (data.getState() == REGENERATING) {
+				data.getType().getRenderer().onAnimateRegen(event);
+			} else {
+				
+				boolean isOpen = false;
+				
+				EntityPlayer player = (EntityPlayer) event.getEntity();
+				ItemStack stack = player.getHeldItemMainhand();
+				ItemStack offStack = player.getHeldItemOffhand();
+				
+				if (stack.getItem() instanceof ItemFobWatch) {
+					
+					isOpen = ItemFobWatch.getOpen(stack) == 1;
+					
+					if (isOpen) {
+						event.model.bipedRightArm.rotateAngleY = -0.1F + event.model.bipedHead.rotateAngleY;
+						event.model.bipedLeftArm.rotateAngleY = 0.1F + event.model.bipedHead.rotateAngleY + 0.4F;
+						event.model.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
+						event.model.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
+						event.setCanceled(true);
+					}
+					
+				} else if (offStack.getItem() instanceof ItemFobWatch) {
+					isOpen = ItemFobWatch.getOpen(stack) == 1;
+					if (isOpen) {
+						event.model.bipedRightArm.rotateAngleY = -0.1F + event.model.bipedHead.rotateAngleY - 0.4F;
+						event.model.bipedLeftArm.rotateAngleY = 0.1F + event.model.bipedHead.rotateAngleY;
+						event.model.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
+						event.model.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
+						event.setCanceled(true);
+					}
+				}
+				ModelPlayer playerModel = (ModelPlayer) event.model;
+				ModelBase.copyModelAngles(event.model.bipedRightArm, playerModel.bipedRightArmwear);
+				ModelBase.copyModelAngles(event.model.bipedLeftArm, playerModel.bipedLeftArmwear);
+				
+			}
 		}
 	}
 	
@@ -173,7 +219,7 @@ public class ClientEventHandler {
 			return;
 		
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		if(player == null) return;
+		if (player == null) return;
 		SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
 		if (skin != null) {
 			SkinChangingHandler.setPlayerSkin(player, skin.getSkinTextureLocation());
@@ -196,9 +242,9 @@ public class ClientEventHandler {
 			case REGENERATING:
 				RenderUtil.renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				break;
-				
+			
 			case POST:
-				if(player.hurtTime > 0 || player.getActivePotionEffect(MobEffects.NAUSEA) != null){
+				if (player.hurtTime > 0 || player.getActivePotionEffect(MobEffects.NAUSEA) != null) {
 					RenderUtil.renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				}
 				break;
@@ -313,17 +359,5 @@ public class ClientEventHandler {
 			}
 		}
 	}
-	
-	@SubscribeEvent
-	public static void onClientLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent e) {
-		SkinChangingHandler.PLAYER_SKINS.clear();
-		SkinChangingHandler.TYPE_BACKUPS.clear();
-	}
-	
-	@SubscribeEvent
-	public static void onRenderWorld(RenderWorldLastEvent event){
-	
-	}
-	
 	
 }

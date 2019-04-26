@@ -69,6 +69,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
+	private int ticksAnimating = 0; //Im so sorry
 	
 	/**
 	 * WHY THIS IS A SEPERATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
@@ -110,6 +111,12 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (getSkinType() != getVanillaDefault()) {
 				setSkinType(getVanillaDefault().name());
 			}
+		}
+		
+		if(state != RegenState.REGENERATING){
+			ticksAnimating = 0;
+		} else {
+			ticksAnimating++;
 		}
 		
 		if (getRegenerationsLeft() > RegenConfig.regenCapacity && !RegenConfig.infiniteRegeneration) {
@@ -158,6 +165,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setBoolean("traitActive", traitActive);
 		nbt.setInteger("lc_regen", lcCoreReserve);
 		nbt.setString("v_type", vanillaSkinType.name());
+		nbt.setInteger("ticks_animating", ticksAnimating);
 		
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
@@ -208,6 +216,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (nbt.hasKey("v_type")) {
 			vanillaSkinType = SkinInfo.SkinType.valueOf(nbt.getString("v_type"));
+		}
+		
+		if(nbt.hasKey("ticks_animating")){
+			ticksAnimating = nbt.getInteger("ticks_animating");
 		}
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
@@ -381,6 +393,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setVanillaSkinType(SkinInfo.SkinType type) {
 		vanillaSkinType = type;
+	}
+	
+	@Override
+	public int getAnimationTicks() {
+		return ticksAnimating;
+	}
+	
+	@Override
+	public void setAnimationTicks(int ticks) {
+		ticksAnimating = ticks;
 	}
 	
 	@Override

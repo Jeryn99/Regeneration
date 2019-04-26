@@ -1,16 +1,18 @@
 package me.suff.regeneration.client.rendering;
 
+import me.suff.regeneration.client.sound.echo.AnimationEvent;
+import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.TypeFiery;
-import me.suff.regeneration.util.LimbHelper;
 import me.suff.regeneration.util.RenderUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,30 +31,6 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	
 	@Override
 	public void renderRegeneratingPlayerPre(TypeFiery type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
-		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
-			return;
-		
-		RenderPlayer renderPlayer = ev.getRenderer();
-		double animationProgress = type.getAnimationProgress();
-		int arm_shake = ev.getEntityPlayer().getRNG().nextInt(7);
-		
-		int headRot = 50;
-		if (animationProgress < 0.05) {
-			headRot = (int) ((animationProgress / 0.05F) * 50F); // %headRotatingPhase * maxHeadRot
-		}
-		
-		float armRot = 85;
-		if (animationProgress < 0.075) {
-			arm_shake = 0;
-			armRot = (int) ((animationProgress / 0.075F) * 85F); // %armRotatingPhase * maxArmRot
-		}
-		
-		LimbHelper.rotateHead(renderPlayer, -headRot, 0, 0);
-		LimbHelper.rotateLeftArm(renderPlayer, 0, 0, -armRot + arm_shake);
-		LimbHelper.rotateRightArm(renderPlayer, 0, 0, armRot + arm_shake);
-		LimbHelper.rotateRightLeg(renderPlayer, 0, 0, 10);
-		LimbHelper.rotateLeftLeg(renderPlayer, 0, 0, -10);
-		LimbHelper.rotateBody(renderPlayer, 0, 0, 0);
 	}
 	
 	@Override
@@ -134,6 +112,59 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.color(255, 255, 255, 255);
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();
+	}
+	
+	@Override
+	public void onAnimateRegen(AnimationEvent.SetRotationAngels ev) {
+		if (ev.getEntity() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) ev.getEntity();
+			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+			ModelPlayer playerModel = (ModelPlayer) ev.model;
+			
+			double animationProgress = data.getAnimationTicks();
+			double arm_shake = player.getRNG().nextDouble();
+			
+			float armRot = (float) animationProgress * 3.5F;
+			if (armRot > 90) {
+				armRot = 90;
+			}
+			
+			//ARMS
+			playerModel.bipedLeftArm.rotateAngleY = 0;
+			playerModel.bipedRightArm.rotateAngleY = 0;
+			
+			playerModel.bipedLeftArm.rotateAngleX = 0;
+			playerModel.bipedRightArm.rotateAngleX = 0;
+			
+			playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
+			playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
+			
+			//BODY
+			playerModel.bipedBody.rotateAngleX = 0;
+			playerModel.bipedBody.rotateAngleY = 0;
+			playerModel.bipedBody.rotateAngleZ = 0;
+		
+			
+			//LEGS
+			playerModel.bipedLeftLeg.rotateAngleY = 0;
+			playerModel.bipedRightLeg.rotateAngleY = 0;
+			
+			playerModel.bipedLeftLeg.rotateAngleX = 0;
+			playerModel.bipedRightLeg.rotateAngleX = 0;
+			
+			playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
+			playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+			
+			
+			//EXTERNAL WEAR
+			ModelBase.copyModelAngles(playerModel.bipedRightArm, playerModel.bipedRightArmwear);
+			ModelBase.copyModelAngles(playerModel.bipedLeftArm, playerModel.bipedLeftArmwear);
+			ModelBase.copyModelAngles(playerModel.bipedRightLeg, playerModel.bipedRightLegwear);
+			ModelBase.copyModelAngles(playerModel.bipedLeftLeg, playerModel.bipedLeftLegwear);
+			ModelBase.copyModelAngles(playerModel.bipedBody, playerModel.bipedBodyWear);
+			
+			ev.setCanceled(true);
+		}
 	}
 	
 	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) {
