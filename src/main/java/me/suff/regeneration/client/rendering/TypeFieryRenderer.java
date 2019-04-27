@@ -119,7 +119,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		if (ev.getEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) ev.getEntity();
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-			ModelPlayer playerModel = (ModelPlayer) ev.model;
+			ModelBiped playerModel = ev.model;
 			
 			double animationProgress = data.getAnimationTicks();
 			double arm_shake = player.getRNG().nextDouble();
@@ -157,11 +157,14 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			
 			
 			//EXTERNAL WEAR
-			ModelBase.copyModelAngles(playerModel.bipedRightArm, playerModel.bipedRightArmwear);
-			ModelBase.copyModelAngles(playerModel.bipedLeftArm, playerModel.bipedLeftArmwear);
-			ModelBase.copyModelAngles(playerModel.bipedRightLeg, playerModel.bipedRightLegwear);
-			ModelBase.copyModelAngles(playerModel.bipedLeftLeg, playerModel.bipedLeftLegwear);
-			ModelBase.copyModelAngles(playerModel.bipedBody, playerModel.bipedBodyWear);
+			if(playerModel instanceof ModelPlayer) {
+				ModelPlayer model = (ModelPlayer) playerModel;
+				ModelBase.copyModelAngles(playerModel.bipedRightArm, model.bipedRightArmwear);
+				ModelBase.copyModelAngles(model.bipedLeftArm, model.bipedLeftArmwear);
+				ModelBase.copyModelAngles(model.bipedRightLeg, model.bipedRightLegwear);
+				ModelBase.copyModelAngles(model.bipedLeftLeg, model.bipedLeftLegwear);
+				ModelBase.copyModelAngles(model.bipedBody, model.bipedBodyWear);
+			}
 			
 			ev.setCanceled(true);
 		}
