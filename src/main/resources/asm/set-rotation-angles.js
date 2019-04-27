@@ -1,84 +1,96 @@
-var transformerName = "Regeneration Transformer";
-
 function initializeCoreMod() {
-    return {
-        transformerName: {
-            'target': {
-                'type': 'CLASS',
-                'name': 'net.minecraft.client.renderer.entity.model.ModelBiped'
-            },
-            'transformer': function(classNode) {
-
-                log("Patching ModelBiped");
-
+	return {
+		'coremodone': {
+			'target': {
+				'type': 'CLASS',
+				'name': 'net.minecraft.client.renderer.entity.model.ModelBiped'
+			},
+			'transformer': function(classNode) {
+			    print("Patching ModelBiped...");
                 var methods = classNode.methods;
-
-                var list = ASMAPI.getMethodNode().instructions;
-
-                for (var i in methods) {
+                var length = methods.length;
+                for(var i = 0; i < length; i++) {
                     var method = methods[i];
-                    var methodName = method.name;
-                    log(methodName);
-                    var deobfNameEquals = "render".equals(methodName);
-                    var mcpNameEquals = "func_78088_a".equals(methodName);
-
-                    if (!deobfNameEquals && !mcpNameEquals) {
-                        print("Did not match method " + methodName);
-                        continue;
-                    }
-
-                    print("Matched method " + methodName);
-
-                    print(deobfNameEquals ? "Matched a deobfuscated name - we are in a DEOBFUSCATED/MCP-NAMED DEVELOPER Environment" : "Matched an SRG name - We are in an SRG-NAMED PRODUCTION Environment")
-
-                    var instructions = method.instructions;
-                    log("Injecting hooks...");
-                    try {
-                        start("setRotationAngles - Pre");
-                        injectHooks(instructions);
-                        finish();
-                    } catch (exception) {
-                        var name = currentlyRunning;
-                        finish();
-                        log("Caught exception from " + name);
-                        throw exception;
+                    print(method.name);
+                    if("render".equals(method.name) || "func_78088_a".equals(method.name)) {
+                        edit(method);
+                        break;
                     }
                 }
-
-                return classNode;
-            }
-
-
-        }
-    }
+				return classNode;
+			}
+		}
+	}
 }
 
-function injectHooks(instructions) {
-    var injectionPoint;
+var Opcodes = Java.type('org.objectweb.asm.Opcodes');
+var MethodInsnNode = Java.type('org.objectweb.asm.tree.MethodInsnNode');
+var InsnNode = Java.type('org.objectweb.asm.tree.InsnNode');
+var VarInsnNode = Java.type('org.objectweb.asm.tree.VarInsnNode');
+var LabelNode = Java.type('org.objectweb.asm.tree.LabelNode');
+var FieldInsnNode = Java.type('org.objectweb.asm.tree.FieldInsnNode');
+var TypeInsnNode = Java.type('org.objectweb.asm.tree.TypeInsnNode');
+var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode');
+var FrameNode = Java.type('org.objectweb.asm.tree.FrameNode');
 
-    var arrayLength = instructions.size();
+// The starting target instruction to find in the method 'renderItemModelIntoGUI'
+var startInstruction = {
+    obfName: "func_78088_a",
+    name: "render",
+    matches: function(s) {
+        return s.equals(this.obfName) || s.equals(this.name);
+    }
+};
+
+// The ending target instruction to find in the method 'renderItemModelIntoGUI'
+var endInstruction = {
+    obfName: "func_78087_a",
+    name: "setRotationAngles",
+    matches: function(s) {
+        return s.equals(this.obfName) || s.equals(this.name);
+    }
+};
+
+function edit(method){
+
+     var startTarget;
+     var endTarget;
+
+        var instructionsArray = method.instructions.toArray();
+         var length = instructionsArray.length;
+
+     // Finds the starting target node
+        for (var i = 0; i < length; i++) {
+            var instruction = instructionsArray[i];
+            if(instruction instanceof MethodInsnNode && startInstruction.matches(instruction.name)) {
+                startTarget = instruction;
+                print("Found start target " + instruction);
+                break;
+            }
+        }
+
+        // Finds the ending target node
+        for (var j = 0; j < length; j++) {
+            var instruction = instructionsArray[j];
+            if(instruction.getOpcode() == Opcodes.INVOKEVIRTUAL) {
+                if(endInstruction.matches(instruction.name) && instruction.getPrevious().getOpcode() == Opcodes.ALOAD) {
+                    endTarget = instruction;
+                    print("Found end target " + instruction);
+                    break;
+                }
+            }
+        }
+
+    var rotationName = "func_78087_a";
+    var rotationNameDev = "setRotationAngles";
+    var rotationDesc = "(FFFFFFLnet/minecraft/entity/Entity;)V";
+
+    var arrayLength = method.instructions.size();
     for (var i = 0; i < arrayLength; ++i) {
-        var instruction = instructions.get(i);
-        if (instruction != undefined && instruction.desc == "(FFFFFFLnet/minecraft/entity/Entity;)V") {
-            log("Found Injection Point!");
-            injectionPoint = instruction;
-            break;
-        }
-    }
-
-    if (injectionPoint == undefined) {
-        throw "Error: Couldn't find label!";
-    }
-
-    var firstLabelBefore_first_INVOKESTATIC_setRotationAngles;
-    for (i = instructions.indexOf(injectionPoint); i >= 0; --i) {
-        var instruction = instructions.get(i);
-        if (instruction.getType() != undefined && instruction.getType() == AbstractInsnNode.LABEL) {
-            firstLabelBefore_first_INVOKESTATIC_setRotationAngles = instruction;
-            log("Found label " + instruction);
-            break;
-        }
-    }
+	var instruction = method.instructions.get(i);
+	if(instruction instanceof MethodInsnNode) {
+	if(instruction.name == rotationName || instruction.name == rotationNameDev)
+	    print("Found Rotation entry!");
 
     var toInject = ASMAPI.getMethodNode().instructions;
     var originalInstructionsLabel = new LabelNode();
@@ -95,7 +107,7 @@ function injectHooks(instructions) {
 
     toInject.add(originalInstructionsLabel);
 
-    if(instruction.getOpcode() == RETURN){
+    if(instruction.getOpCode() == RETURN){
         toInject.add(new VarInsnNode(ALOAD, 0));
         toInject.add(new VarInsnNode(ALOAD, 1));
         toInject.add(new VarInsnNode(FLOAD, 2));
@@ -107,60 +119,24 @@ function injectHooks(instructions) {
         toInject.add(new MethodInsnNode(INVOKESTATIC, "me/suff/regeneration/client/RegenClientHooks", "renderBipedPost", "(Lnet/minecraft/client/model/ModelBiped;Lnet/minecraft/entity/Entity;FFFFFF)V", false));
     }
 
-    // Inject instructions
-    instructions.insert(firstLabelBefore_first_INVOKESTATIC_setRotationAngles, toInject);
+    insertInstructions(method, startInstruction, toInject);
+    insertInstructions(method, endInstruction, toInject);
 
-    
+	}
+
+	}
 }
 
-function removeBetweenInclusive(instructions, startInstruction, endInstruction) {
-    var start = instructions.indexOf(startInstruction);
-    var end = instructions.indexOf(endInstruction);
-    for (var i = start; i < end; ++i) {
-        instructions.remove(instructions.get(start));
+
+/* At the time of writing this core mod InsnList class access has not been added. Instead a simple
+ * array that inserts the instructions in reverse will solve the problem for now. */
+function insertInstructions(method, target, instructions) {
+    var length = instructions.length;
+    for(var i = length - 1; i >= 0; i--) {
+        method.instructions.insert(target, instructions[i]);
     }
 }
 
-var currentlyRunning;
-
-function start(name) {
-    log("Starting " + name);
-    currentlyRunning = name;
-}
-
-function finish() {
-    var name = currentlyRunning;
-    currentlyRunning = undefined;
-    log("Finished " + name);
-}
-
-function log(msg) {
-    if (currentlyRunning == undefined) {
-        print("[" + transformerName + "]: " + msg);
-    } else {
-        print("[" + transformerName + "] [" + currentlyRunning + "]: " + msg);
-    }
-}
-
-
-
-
-var /*Class/Interface*/ Opcodes = Java.type('org.objectweb.asm.Opcodes');
-var /*Class*/ MethodNode = Java.type('org.objectweb.asm.tree.MethodNode');
-var /*Class*/ MethodInsnNode = Java.type('org.objectweb.asm.tree.MethodInsnNode');
-var /*Class*/ InsnNode = Java.type('org.objectweb.asm.tree.InsnNode');
-var /*Class*/ VarInsnNode = Java.type('org.objectweb.asm.tree.VarInsnNode');
-var /*Class*/ AbstractInsnNode = Java.type('org.objectweb.asm.tree.AbstractInsnNode');
-var /*Class*/ JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode');
-var /*Class*/ LabelNode = Java.type('org.objectweb.asm.tree.LabelNode');
-var /*Class*/ TypeInsnNode = Java.type('org.objectweb.asm.tree.TypeInsnNode');
-var /*Class*/ FieldInsnNode = Java.type('org.objectweb.asm.tree.FieldInsnNode');
-var /*Class*/ FieldNode = Java.type('org.objectweb.asm.tree.FieldNode');
-//var/*Class*/ InsnList = Java.type('org.objectweb.asm.tree.InsnList');
-
-var /*Class*/ ASMAPI = Java.type('net.minecraftforge.coremod.api.ASMAPI');
-
-// Opcodes
 
 // Access flags values, defined in
 // - https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.1-200-E.1
@@ -416,6 +392,3 @@ var MULTIANEWARRAY = Opcodes.MULTIANEWARRAY; // visitMultiANewArrayInsn
 var IFNULL = Opcodes.IFNULL; // visitJumpInsn
 var IFNONNULL = Opcodes.IFNONNULL; // -
 
-// Local variable indexes
-var ALOCALVARIABLE_this = 0;
-var ILOCALVARIABLE_newIsTerrainSmoothable = 1;
