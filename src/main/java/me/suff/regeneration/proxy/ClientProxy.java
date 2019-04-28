@@ -23,8 +23,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
 	}
 	
 	@Override

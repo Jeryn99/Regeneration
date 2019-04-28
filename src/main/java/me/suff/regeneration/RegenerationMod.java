@@ -3,8 +3,12 @@ package me.suff.regeneration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.suff.regeneration.client.ClientEventHandler;
+import me.suff.regeneration.client.rendering.entity.RenderItemOverride;
+import me.suff.regeneration.client.rendering.entity.RenderLindos;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.common.capability.IRegeneration;
+import me.suff.regeneration.common.entity.EntityItemOverride;
+import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.debugger.IRegenDebugger;
 import me.suff.regeneration.handlers.ActingForwarder;
 import me.suff.regeneration.handlers.RegenEventHandler;
@@ -22,6 +26,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -39,7 +44,7 @@ public class RegenerationMod {
 	
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
-	public static final String VERSION = "0.0.4";
+	public static final String VERSION = "0.0.5";
 	
 	public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
 	
@@ -69,6 +74,8 @@ public class RegenerationMod {
 	private void doClientStuff(final FMLClientSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
+		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
 	}
 	
 	private void setup(final FMLCommonSetupEvent event) {

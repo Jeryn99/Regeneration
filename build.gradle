@@ -12,7 +12,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = '0.0.4'
+version = '0.0.5'
 group = 'me.suff.regeneration'
 archivesBaseName = '[1.13.2] Regeneration'
 

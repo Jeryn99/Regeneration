@@ -26,7 +26,7 @@ public class Trending {
 		
 		long attr = trendingDir.lastModified();
 		
-		if (System.currentTimeMillis() - attr <= 86400000) {
+		if (System.currentTimeMillis() - attr >= 86400000) {
 			FileUtils.deleteDirectory(trendingDir);
 			RegenerationMod.LOG.warn("Refreshing Trending skins");
 			try {
