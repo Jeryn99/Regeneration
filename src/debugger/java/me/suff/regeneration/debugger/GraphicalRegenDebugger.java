@@ -2,7 +2,6 @@ package me.suff.regeneration.debugger;
 
 import com.mojang.authlib.GameProfile;
 import me.suff.regeneration.RegenerationMod;
-import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.debugger.util.UnloadedPlayerBufferChannel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -11,7 +10,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -56,42 +54,42 @@ public class GraphicalRegenDebugger implements IRegenDebugger {
 	
 	@SubscribeEvent
 	public void onLogin(PlayerLoggedInEvent ev) {
-		GameProfile gp = ev.getPlayer().getGameProfile();
-		PanelPlayerTab panel = new PanelPlayerTab(gp);
+		//	GameProfile gp = ev.player.getGameProfile();
+		//	PanelPlayerTab panel = new PanelPlayerTab(gp);
 		
-		tabs.addTab(gp.getName(), panel);
-		playerTabz.put(gp, panel);
+		//	tabs.addTab(gp.getName(), panel);
+		//	playerTabz.put(gp, panel);
 		
-		IDebugChannel ch = panel.createChannel();
-		channelz.put(gp, ch);
-		if (channelBuffer.containsKey(ev.getPlayer())) {
-			channelBuffer.get(ev.getPlayer()).flush(ch);
-			channelBuffer.remove(ev.getPlayer());
-		}
-		ch.notifyLoaded();
+		//	IDebugChannel ch = panel.createChannel();
+		//	channelz.put(gp, ch);
+		//	if (channelBuffer.containsKey(ev.player)) {
+		//		channelBuffer.get(ev.player).flush(ch);
+		//		channelBuffer.remove(ev.player);
+		//	}
+		//	ch.notifyLoaded();
 	}
 	
 	@SubscribeEvent
 	public void onLogout(PlayerLoggedOutEvent ev) {
-		GameProfile gp = ev.getPlayer().getGameProfile();
-		tabs.removeTabAt(tabs.indexOfTab(gp.getName()));
-		playerTabz.remove(gp);
+		//	GameProfile gp = ev.player.getGameProfile();
+		//	tabs.removeTabAt(tabs.indexOfTab(gp.getName()));
+		//	playerTabz.remove(gp);
 	}
 	
 	@SubscribeEvent
 	public void onTick(LivingUpdateEvent ev) {
-		if (ev.getEntity().world.isRemote)
-			return;
-		System.out.println("sdfsdfdsfd");
-		if (ev.getEntityLiving() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) ev.getEntityLiving();
-			EventQueue.invokeLater(() -> playerTabz.get(player.getGameProfile()).updateLabels(CapabilityRegeneration.getForPlayer(player)));
-		}
+		//	if (ev.getEntity().world.isRemote)
+		//	return;
+		
+		//	if (ev.getEntityLiving() instanceof EntityPlayer) {
+		//		EntityPlayer player = (EntityPlayer) ev.getEntityLiving();
+		//		EventQueue.invokeLater(() -> playerTabz.get(player.getGameProfile()).updateLabels(CapabilityRegeneration.getForPlayer(player)));
+		//	}
 	}
 	
 	@Override
 	public void open() {
-		frame.setVisible(true);
+		frame.setVisible(false);
 	}
 	
 	@Override

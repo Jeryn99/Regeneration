@@ -64,7 +64,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
 	
-	private float ticksAnimated = 0F;
+	private int ticksAnimated = 0;
+	private SkinInfo.SkinType vanillaSkin = SkinInfo.SkinType.ALEX;
 	
 	/**
 	 * WHY THIS IS A SEPERATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
@@ -98,6 +99,12 @@ public class CapabilityRegeneration implements IRegeneration {
 			didSetup = true;
 		}
 		
+		if (getEncodedSkin().toLowerCase().equals("NONE")) {
+			if (getSkinType() != getVanillaType()) {
+				setSkinType(getVanillaType().name());
+			}
+		}
+		
 		if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
 			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
@@ -108,7 +115,9 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (state == RegenState.REGENERATING) {
 			type.onUpdateMidRegen(player, CapabilityRegeneration.getForPlayer(player));
-			setTicksAnimated(ticksAnimated + 0.01F);
+			setTicksAnimated(ticksAnimated + 1);
+		} else {
+			setTicksAnimated(0);
 		}
 	}
 	
@@ -137,6 +146,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setString("preferredModel", preferredModel.name());
 		nbt.setBoolean("handsAreGlowing", handsAreGlowingClient);
 		nbt.setBoolean("traitActive", traitActive);
+		nbt.setString("v_type", vanillaSkin.name());
 		
 		nbt.setFloat("PrimaryRed", primaryRed);
 		nbt.setFloat("PrimaryGreen", primaryGreen);
@@ -156,7 +166,6 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void deserializeNBT(NBTTagCompound nbt) {
 		regenerationsLeft = Math.min(RegenConfig.COMMON.regenCapacity.get(), nbt.getInt(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 		
-		//TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
 		if (nbt.hasKey("skinType")) {
 			setSkinType(nbt.getString("skinType"));
 		} else {
@@ -167,6 +176,10 @@ public class CapabilityRegeneration implements IRegeneration {
 			setPreferredModel(nbt.getString("preferredModel"));
 		} else {
 			setPreferredModel("ALEX");
+		}
+		
+		if (nbt.hasKey("v_type")) {
+			vanillaSkin = SkinInfo.SkinType.valueOf(nbt.getString("v_type"));
 		}
 		
 		if (nbt.hasKey("regenerationsLeft")) {
@@ -198,7 +211,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		secondaryGreen = nbt.getFloat("SecondaryGreen");
 		secondaryBlue = nbt.getFloat("SecondaryBlue");
 		
-		ticksAnimated = nbt.getFloat("ticksAnimated");
+		ticksAnimated = nbt.getInt("ticksAnimated");
 		
 		if (nbt.hasKey("stateManager"))
 			if (stateManager != null) {
@@ -332,13 +345,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
-	public void setTicksAnimated(float ticks) {
-		ticksAnimated = ticks;
+	public int getTicksAnimated() {
+		return ticksAnimated;
 	}
 	
 	@Override
-	public float getTicksAnimated() {
-		return ticksAnimated;
+	public void setTicksAnimated(int ticks) {
+		ticksAnimated = ticks;
 	}
 	
 	@Override
@@ -359,6 +372,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setDnaActive(boolean alive) {
 		traitActive = alive;
+	}
+	
+	@Override
+	public SkinInfo.SkinType getVanillaType() {
+		return vanillaSkin;
+	}
+	
+	@Override
+	public void setVanillaType(SkinInfo.SkinType type) {
+		vanillaSkin = type;
 	}
 	
 	@Override
@@ -543,7 +566,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			ActingForwarder.onRegenTrigger(CapabilityRegeneration.getForPlayer(player));
 			type.onStartRegeneration(player, CapabilityRegeneration.getForPlayer(player));
-			setTicksAnimated(0.0F);
 			sync();
 		}
 		
@@ -584,7 +606,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		private void finishRegeneration() {
-			setTicksAnimated(0.0F);
+			setTicksAnimated(0);
 			state = RegenState.POST;
 			scheduleTransitionInSeconds(RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;

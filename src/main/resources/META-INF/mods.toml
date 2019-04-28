@@ -18,7 +18,7 @@ displayURL="https://minecraft.curseforge.com/projects/regeneration" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="regen_logo.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks to all listed Authors + Hydro and CommandrMoose for ideas" #optional
+credits="Thanks to all listed Authors + Hydro and CommandrMoose for ideas, Dhi_awesome for Fob watch and Lindos Vial models, Ashurath for sounds" #optional
 # A text field displayed in the mod UI
 authors="Suffril, HoldYourWaffle, Nictogen" #optional
 # The description text for the mod (multi line!) (#mandatory)

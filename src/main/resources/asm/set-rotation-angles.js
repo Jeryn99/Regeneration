@@ -1,142 +1,111 @@
+var transformerName = "Regeneration ModelBiped Transformer";
+
+var isSRG;
+
 function initializeCoreMod() {
-	return {
-		'coremodone': {
-			'target': {
-				'type': 'CLASS',
-				'name': 'net.minecraft.client.renderer.entity.model.ModelBiped'
-			},
-			'transformer': function(classNode) {
-			    print("Patching ModelBiped...");
+    return {
+        transformerName: {
+            'target': {
+                'type': 'CLASS',
+                'name': 'net.minecraft.client.renderer.entity.model.ModelBiped'
+            },
+            'transformer': function(classNode) {
+
                 var methods = classNode.methods;
-                var length = methods.length;
-                for(var i = 0; i < length; i++) {
+
+                for (var i in methods) {
                     var method = methods[i];
-                    print(method.name);
-                    if("render".equals(method.name) || "func_78088_a".equals(method.name)) {
-                        edit(method);
-                        break;
+                    var methodName = method.name;
+
+                    var deobfNameEquals = "render".equals(methodName);
+                    var srgNameEquals = "func_78088_a".equals(methodName);
+
+                    if (!deobfNameEquals && !srgNameEquals) {
+                        log("Did not match method " + methodName);
+                        continue;
                     }
-                }
-				return classNode;
-			}
-		}
-	}
-}
 
-var Opcodes = Java.type('org.objectweb.asm.Opcodes');
-var MethodInsnNode = Java.type('org.objectweb.asm.tree.MethodInsnNode');
-var InsnNode = Java.type('org.objectweb.asm.tree.InsnNode');
-var VarInsnNode = Java.type('org.objectweb.asm.tree.VarInsnNode');
-var LabelNode = Java.type('org.objectweb.asm.tree.LabelNode');
-var FieldInsnNode = Java.type('org.objectweb.asm.tree.FieldInsnNode');
-var TypeInsnNode = Java.type('org.objectweb.asm.tree.TypeInsnNode');
-var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode');
-var FrameNode = Java.type('org.objectweb.asm.tree.FrameNode');
+                    log("Matched method " + methodName);
 
-// The starting target instruction to find in the method 'renderItemModelIntoGUI'
-var startInstruction = {
-    obfName: "func_78088_a",
-    name: "render",
-    matches: function(s) {
-        return s.equals(this.obfName) || s.equals(this.name);
-    }
-};
+                    log(deobfNameEquals ? "Matched a deobfuscated name - we are in a DEOBFUSCATED/MCP-NAMED DEVELOPER Environment" : "Matched an SRG name - We are in an SRG-NAMED PRODUCTION Environment")
 
-// The ending target instruction to find in the method 'renderItemModelIntoGUI'
-var endInstruction = {
-    obfName: "func_78087_a",
-    name: "setRotationAngles",
-    matches: function(s) {
-        return s.equals(this.obfName) || s.equals(this.name);
-    }
-};
+                    isSRG = srgNameEquals;
 
-function edit(method){
+                    var instructions = method.instructions;
 
-     var startTarget;
-     var endTarget;
-
-        var instructionsArray = method.instructions.toArray();
-         var length = instructionsArray.length;
-
-     // Finds the starting target node
-        for (var i = 0; i < length; i++) {
-            var instruction = instructionsArray[i];
-            if(instruction instanceof MethodInsnNode && startInstruction.matches(instruction.name)) {
-                startTarget = instruction;
-                print("Found start target " + instruction);
-                break;
-            }
-        }
-
-        // Finds the ending target node
-        for (var j = 0; j < length; j++) {
-            var instruction = instructionsArray[j];
-            if(instruction.getOpcode() == Opcodes.INVOKEVIRTUAL) {
-                if(endInstruction.matches(instruction.name) && instruction.getPrevious().getOpcode() == Opcodes.ALOAD) {
-                    endTarget = instruction;
-                    print("Found end target " + instruction);
+                    log("Injecting hooks...");
+                    try {
+                        start("injectRenderHooks");
+                        injectRenderHooks(instructions);
+                        finish();
+                    } catch (exception) {
+                        var name = currentlyRunning;
+                        finish();
+                        log("Caught exception from " + name);
+                        throw exception;
+                    }
+                    log("Successfully injected hooks!");
                     break;
+
                 }
+
+                return classNode;
             }
         }
-
-    var rotationName = "func_78087_a";
-    var rotationNameDev = "setRotationAngles";
-    var rotationDesc = "(FFFFFFLnet/minecraft/entity/Entity;)V";
-
-    var arrayLength = method.instructions.size();
-    for (var i = 0; i < arrayLength; ++i) {
-	var instruction = method.instructions.get(i);
-	if(instruction instanceof MethodInsnNode) {
-	if(instruction.name == rotationName || instruction.name == rotationNameDev)
-	    print("Found Rotation entry!");
-
-    var toInject = ASMAPI.getMethodNode().instructions;
-    var originalInstructionsLabel = new LabelNode();
-
-    toInject.add(new VarInsnNode(ALOAD, 0));
-    toInject.add(new VarInsnNode(ALOAD, 1));
-    toInject.add(new VarInsnNode(FLOAD, 2));
-    toInject.add(new VarInsnNode(FLOAD, 3));
-    toInject.add(new VarInsnNode(FLOAD, 4));
-    toInject.add(new VarInsnNode(FLOAD, 5));
-    toInject.add(new VarInsnNode(FLOAD, 6));
-    toInject.add(new VarInsnNode(FLOAD, 7));
-    toInject.add(new MethodInsnNode(INVOKESTATIC, "me/suff/regeneration/client/RegenClientHooks", "renderBipedPre", "(Lnet/minecraft/client/model/ModelBiped;Lnet/minecraft/entity/Entity;FFFFFF)V", false));
-
-    toInject.add(originalInstructionsLabel);
-
-    if(instruction.getOpCode() == RETURN){
-        toInject.add(new VarInsnNode(ALOAD, 0));
-        toInject.add(new VarInsnNode(ALOAD, 1));
-        toInject.add(new VarInsnNode(FLOAD, 2));
-        toInject.add(new VarInsnNode(FLOAD, 3));
-        toInject.add(new VarInsnNode(FLOAD, 4));
-        toInject.add(new VarInsnNode(FLOAD, 5));
-        toInject.add(new VarInsnNode(FLOAD, 6));
-        toInject.add(new VarInsnNode(FLOAD, 7));
-        toInject.add(new MethodInsnNode(INVOKESTATIC, "me/suff/regeneration/client/RegenClientHooks", "renderBipedPost", "(Lnet/minecraft/client/model/ModelBiped;Lnet/minecraft/entity/Entity;FFFFFF)V", false));
-    }
-
-    insertInstructions(method, startInstruction, toInject);
-    insertInstructions(method, endInstruction, toInject);
-
-	}
-
-	}
-}
-
-
-/* At the time of writing this core mod InsnList class access has not been added. Instead a simple
- * array that inserts the instructions in reverse will solve the problem for now. */
-function insertInstructions(method, target, instructions) {
-    var length = instructions.length;
-    for(var i = length - 1; i >= 0; i--) {
-        method.instructions.insert(target, instructions[i]);
     }
 }
 
+
+
+
+function removeBetweenInclusive(instructions, startInstruction, endInstruction) {
+    var start = instructions.indexOf(startInstruction);
+    var end = instructions.indexOf(endInstruction);
+    for (var i = start; i < end; ++i) {
+        instructions.remove(instructions.get(start));
+    }
+}
+
+var currentlyRunning;
+
+function start(name) {
+    log("Starting " + name);
+    currentlyRunning = name;
+}
+
+function finish() {
+    var name = currentlyRunning;
+    currentlyRunning = undefined;
+    log("Finished " + name);
+}
+
+function log(msg) {
+    if (currentlyRunning == undefined) {
+        print("[" + transformerName + "]: " + msg);
+    } else {
+        print("[" + transformerName + "] [" + currentlyRunning + "]: " + msg);
+    }
+}
+
+
+
+
+var /*Class/Interface*/ Opcodes = Java.type('org.objectweb.asm.Opcodes');
+var /*Class*/ MethodNode = Java.type('org.objectweb.asm.tree.MethodNode');
+var /*Class*/ MethodInsnNode = Java.type('org.objectweb.asm.tree.MethodInsnNode');
+var /*Class*/ InsnNode = Java.type('org.objectweb.asm.tree.InsnNode');
+var /*Class*/ VarInsnNode = Java.type('org.objectweb.asm.tree.VarInsnNode');
+var /*Class*/ AbstractInsnNode = Java.type('org.objectweb.asm.tree.AbstractInsnNode');
+var /*Class*/ JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode');
+var /*Class*/ LabelNode = Java.type('org.objectweb.asm.tree.LabelNode');
+var /*Class*/ TypeInsnNode = Java.type('org.objectweb.asm.tree.TypeInsnNode');
+var /*Class*/ FieldInsnNode = Java.type('org.objectweb.asm.tree.FieldInsnNode');
+var /*Class*/ FieldNode = Java.type('org.objectweb.asm.tree.FieldNode');
+//var/*Class*/ InsnList = Java.type('org.objectweb.asm.tree.InsnList');
+
+var /*Class*/ ASMAPI = Java.type('net.minecraftforge.coremod.api.ASMAPI');
+
+// Opcodes
 
 // Access flags values, defined in
 // - https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.1-200-E.1
@@ -392,3 +361,127 @@ var MULTIANEWARRAY = Opcodes.MULTIANEWARRAY; // visitMultiANewArrayInsn
 var IFNULL = Opcodes.IFNULL; // visitJumpInsn
 var IFNONNULL = Opcodes.IFNONNULL; // -
 
+// Local variable indexes
+var ALOCALVARIABLE_this = 0;
+var ALOCALVARIABLE_entity = 1;
+var FLOCALVARIABLE_limbSwing = 2;
+var FLOCALVARIABLE_limbSwingAmount = 3;
+var FLOCALVARIABLE_ageInTicks = 4;
+var FLOCALVARIABLE_netHeadYaw = 5;
+var FLOCALVARIABLE_headPitch = 6;
+var FLOCALVARIABLE_scale = 7;
+
+
+
+
+// 1) find INVOKEVIRTUAL ModelBiped.setRotationAngles
+// 2) find previous label
+// 3) insert right after previous label
+// 4) insert right after INVOKEVIRTUAL ModelBiped.setRotationAngles
+function injectRenderHooks(instructions) {
+
+    var ModelBiped_setRotationAngles;
+    var arrayLength = instructions.size();
+    for (var i = 0; i < arrayLength; ++i) {
+        var instruction = instructions.get(i);
+        if (instruction.getOpcode() == INVOKEVIRTUAL) {
+            if (instruction.owner == "net/minecraft/client/renderer/entity/model/ModelBiped") {
+                //CPW PLS GIVE ME A WAY TO REMAP SRG TO NAMES FOR DEV
+                if (instruction.name == "func_78087_a" || instruction.name == "setRotationAngles") {
+                    if (instruction.desc == "(FFFFFFLnet/minecraft/entity/Entity;)V") {
+                        if (instruction.itf == false) {
+                            ModelBiped_setRotationAngles = instruction;
+                            log("Found injection point " + instruction);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (!ModelBiped_setRotationAngles) {
+        throw "Error: Couldn't find injection point!";
+    }
+
+    var firstLabelBefore_ModelBiped_setRotationAngles;
+    for (i = instructions.indexOf(ModelBiped_setRotationAngles); i >= 0; --i) {
+        var instruction = instructions.get(i);
+        if (instruction.getType() == AbstractInsnNode.LABEL) {
+            firstLabelBefore_ModelBiped_setRotationAngles = instruction;
+            log("Found label " + instruction);
+            break;
+        }
+    }
+    if (!firstLabelBefore_ModelBiped_setRotationAngles) {
+        throw "Error: Couldn't find label!";
+    }
+
+
+    {
+        //FFS why
+        var toInject = ASMAPI.getMethodNode().instructions;
+
+        // Labels n stuff
+        var originalInstructionsLabel = new LabelNode();
+
+        // Make list of instructions to inject
+        toInject.add(new VarInsnNode(ALOAD, ALOCALVARIABLE_this));
+        toInject.add(new VarInsnNode(ALOAD, ALOCALVARIABLE_entity));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_limbSwing));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_limbSwingAmount));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_ageInTicks));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_netHeadYaw));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_headPitch));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_scale));
+        toInject.add(new MethodInsnNode(
+            //int opcode
+            INVOKESTATIC,
+            //String owner
+            "me/suff/regeneration/client/RegenClientHooks",
+            //String name
+            "renderBipedPre",
+            //String descriptor
+            "(Lnet/minecraft/client/renderer/entity/model/ModelBiped;Lnet/minecraft/entity/Entity;FFFFFF)V",
+            //boolean isInterface
+            false
+        ));
+
+        toInject.add(originalInstructionsLabel);
+
+        // Inject instructions
+        instructions.insert(firstLabelBefore_ModelBiped_setRotationAngles, toInject);
+    }
+
+
+    {
+        //FFS why
+        var toInject = ASMAPI.getMethodNode().instructions;
+
+        // Make list of instructions to inject
+        toInject.add(new LabelNode());
+        toInject.add(new VarInsnNode(ALOAD, ALOCALVARIABLE_this));
+        toInject.add(new VarInsnNode(ALOAD, ALOCALVARIABLE_entity));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_limbSwing));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_limbSwingAmount));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_ageInTicks));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_netHeadYaw));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_headPitch));
+        toInject.add(new VarInsnNode(FLOAD, FLOCALVARIABLE_scale));
+        toInject.add(new MethodInsnNode(
+            //int opcode
+            INVOKESTATIC,
+            //String owner
+            "me/suff/regeneration/client/RegenClientHooks",
+            //String name
+            "renderBipedPost",
+            //String descriptor
+            "(Lnet/minecraft/client/renderer/entity/model/ModelBiped;Lnet/minecraft/entity/Entity;FFFFFF)V",
+            //boolean isInterface
+            false
+        ));
+
+        // Inject instructions
+        instructions.insert(ModelBiped_setRotationAngles, toInject);
+    }
+
+}

@@ -37,6 +37,7 @@ public class NetworkHandler {
 		INSTANCE.registerMessage(id++, MessagePlayRegenerationSound.class, MessagePlayRegenerationSound::encode, MessagePlayRegenerationSound::decode, MessagePlayRegenerationSound.Handler::handle);
 		INSTANCE.registerMessage(id++, MessageUpdateModel.class, MessageUpdateModel::encode, MessageUpdateModel::decode, MessageUpdateModel.Handler::handle);
 		INSTANCE.registerMessage(id++, MessageForceRegen.class, MessageForceRegen::encode, MessageForceRegen::decode, MessageForceRegen.Handler::handle);
+		INSTANCE.registerMessage(id++, MessageRepairArms.class, MessageRepairArms::encode, MessageRepairArms::decode, MessageRepairArms.Handler::handle);
 	}
 	
 	/**

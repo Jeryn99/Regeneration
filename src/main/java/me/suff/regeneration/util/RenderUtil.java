@@ -23,7 +23,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.opengl.GL11;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -235,7 +234,7 @@ public class RenderUtil {
 				ModelArmorOverride armorOverride = new ModelArmorOverride();
 				//Field mainModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177186_d"));
 				//Field legModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177189_c"));
-				ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, bipedArmor,armorOverride, 1);
+				ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, bipedArmor, armorOverride, 1);
 				ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, bipedArmor, armorOverride, 2);
 			}
 		}

@@ -78,8 +78,9 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	void setDeathSource(String source);
 	
-	void setTicksAnimated(float ticks);
-	float getTicksAnimated();
+	int getTicksAnimated();
+	
+	void setTicksAnimated(int ticks);
 	
 	ResourceLocation getDnaType();
 	
@@ -88,4 +89,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	boolean isDnaActive();
 	
 	void setDnaActive(boolean alive);
+	
+	SkinInfo.SkinType getVanillaType();
+	
+	void setVanillaType(SkinInfo.SkinType type);
 }

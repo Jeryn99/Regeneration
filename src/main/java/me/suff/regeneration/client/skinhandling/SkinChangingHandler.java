@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -77,7 +76,7 @@ public class SkinChangingHandler {
 	}
 	
 	public static NativeImage decodeToImage(String imageString) throws IOException {
-		try (MemoryStack memorystack = MemoryStack.stackPush()) {//TODO fix this trash
+		try (MemoryStack memorystack = MemoryStack.stackPush()) {
 			ByteBuffer bytebuffer = memorystack.UTF8(imageString, false);
 			ByteBuffer bytebuffer1 = Base64.getDecoder().decode(bytebuffer);
 			ByteBuffer bytebuffer2 = memorystack.malloc(bytebuffer1.remaining());

@@ -12,7 +12,6 @@ import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.proxy.ClientProxy;
 import me.suff.regeneration.proxy.CommonProxy;
 import me.suff.regeneration.proxy.IProxy;
-import me.suff.regeneration.util.LimbManipulationUtil;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.nbt.INBTBase;
 import net.minecraft.util.EnumFacing;
@@ -70,7 +69,6 @@ public class RegenerationMod {
 	private void doClientStuff(final FMLClientSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
-		MinecraftForge.EVENT_BUS.register(new LimbManipulationUtil());
 	}
 	
 	private void setup(final FMLCommonSetupEvent event) {

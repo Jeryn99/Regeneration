@@ -21,6 +21,10 @@ public class AnimationEvent extends LivingEvent {
 		return renderer;
 	}
 	
+	public enum ModelSetRotationAnglesEventType {
+		PRE, POST;
+	}
+	
 	@Cancelable
 	public static class SetRotationAngles extends EntityEvent {
 		
@@ -45,10 +49,6 @@ public class AnimationEvent extends LivingEvent {
 			this.type = type;
 		}
 		
-	}
-	
-	public enum ModelSetRotationAnglesEventType {
-		PRE, POST;
 	}
 	
 }

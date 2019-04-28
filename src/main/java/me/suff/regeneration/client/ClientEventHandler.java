@@ -1,12 +1,16 @@
 package me.suff.regeneration.client;
 
 import me.suff.regeneration.RegenConfig;
+import me.suff.regeneration.RegenerationMod;
+import me.suff.regeneration.client.events.AnimationEvent;
 import me.suff.regeneration.client.gui.GuiCustomizer;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
+import me.suff.regeneration.common.item.ItemFobWatch;
 import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.network.MessageForceRegen;
+import me.suff.regeneration.network.MessageRepairArms;
 import me.suff.regeneration.network.MessageTriggerRegeneration;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
@@ -17,10 +21,12 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.model.ModelBiped;
+import net.minecraft.client.renderer.entity.model.ModelBase;
+import net.minecraft.client.renderer.entity.model.ModelPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.SoundCategory;
@@ -39,6 +45,7 @@ import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -57,10 +64,81 @@ import static me.suff.regeneration.util.RegenState.*;
  */
 public class ClientEventHandler {
 	
+	private static boolean initialJoin = false;
+	
+	@SubscribeEvent(receiveCanceled = true)
+	public void onAnimate(AnimationEvent.SetRotationAngles event) {
+		if (event.getEntity() instanceof EntityPlayer) {
+			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntity()).ifPresent((data) -> {
+				if (data.getState() == REGENERATING) {
+					data.getType().getRenderer().onAnimateRegen(event);
+				}
+			});
+			
+			
+			boolean isOpen = false;
+			
+			EntityPlayer player = (EntityPlayer) event.getEntity();
+			ItemStack stack = player.getHeldItemMainhand();
+			ItemStack offStack = player.getHeldItemOffhand();
+			
+			if (stack.getItem() instanceof ItemFobWatch) {
+				
+				isOpen = ItemFobWatch.getOpen(stack) == 1;
+				
+				if (isOpen) {
+					event.model.bipedRightArm.rotateAngleY = -0.1F + event.model.bipedHead.rotateAngleY;
+					event.model.bipedLeftArm.rotateAngleY = 0.1F + event.model.bipedHead.rotateAngleY + 0.4F;
+					event.model.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
+					event.model.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
+					event.setCanceled(true);
+				}
+				
+			} else if (offStack.getItem() instanceof ItemFobWatch) {
+				isOpen = ItemFobWatch.getOpen(stack) == 1;
+				if (isOpen) {
+					event.model.bipedRightArm.rotateAngleY = -0.1F + event.model.bipedHead.rotateAngleY - 0.4F;
+					event.model.bipedLeftArm.rotateAngleY = 0.1F + event.model.bipedHead.rotateAngleY;
+					event.model.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
+					event.model.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
+					event.setCanceled(true);
+				}
+			}
+			ModelPlayer playerModel = (ModelPlayer) event.model;
+			ModelBase.copyModelAngles(event.model.bipedRightArm, playerModel.bipedRightArmwear);
+			ModelBase.copyModelAngles(event.model.bipedLeftArm, playerModel.bipedLeftArmwear);
+			
+		}
+	}
+	
 	@SubscribeEvent
-	public void onFov(FOVUpdateEvent event){
+	public void onJoin(EntityJoinWorldEvent event) {
+		if (event.getEntity() instanceof EntityPlayer && !initialJoin) {
+			if (Minecraft.getInstance().player == event.getEntity()) {
+				EntityPlayerSP localPlayer = Minecraft.getInstance().player;
+				NetworkHandler.INSTANCE.sendToServer(new MessageRepairArms(localPlayer.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE));
+				initialJoin = true;
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onTickEvent(TickEvent.ClientTickEvent event) {
+		if (event.phase.equals(TickEvent.Phase.START)) return;
+		if (Minecraft.getInstance().world == null) {
+			if (SkinChangingHandler.PLAYER_SKINS.size() > 0 || SkinChangingHandler.TYPE_BACKUPS.size() > 0) {
+				SkinChangingHandler.TYPE_BACKUPS.clear();
+				SkinChangingHandler.PLAYER_SKINS.clear();
+				RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS AND TYPE_BACKUPS");
+			}
+			initialJoin = false;
+		}
+	}
+	
+	@SubscribeEvent
+	public void onFov(FOVUpdateEvent event) {
 		CapabilityRegeneration.getForPlayer(event.getEntity()).ifPresent((data) -> {
-			if(data.getState() == REGENERATING && RegenConfig.CLIENT.fovChange.get()){
+			if (data.getState() == REGENERATING && RegenConfig.CLIENT.fovChange.get()) {
 				event.setNewfov(data.getTicksAnimated());
 			}
 		});

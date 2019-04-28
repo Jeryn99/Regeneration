@@ -157,7 +157,7 @@ public class GuiCustomizer extends GuiContainer {
 			fontRenderer.drawString(str, cx + 131 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(secondaryColor) > 0.179 ? 0x0 : 0xFFFFFF);
 			
 			if (RegenConfig.COMMON.infiniteRegeneration.get())
-				str = new TextComponentTranslation("regeneration.gui.infinite_regenerations").getFormattedText(); // TODO this should be optimized
+				str = new TextComponentTranslation("regeneration.gui.infinite_regenerations").getFormattedText();
 			else
 				str = new TextComponentTranslation("regeneration.gui.remaining_regens.status").getFormattedText() + " " + cap.getRegenerationsLeft();
 			length = mc.fontRenderer.getStringWidth(str);

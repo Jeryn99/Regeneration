@@ -1,5 +1,6 @@
 package me.suff.regeneration.client.rendering;
 
+import me.suff.regeneration.client.events.AnimationEvent;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.IRegenType;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -43,5 +44,7 @@ public abstract class ATypeRenderer<T> {
 			throw new IllegalStateException("RegenType <-> RegenRenderType mismatch", e);
 		}
 	}
+	
+	public abstract void onAnimateRegen(AnimationEvent.SetRotationAngles event);
 	
 }
