@@ -102,21 +102,4 @@ public class RegenUtil {
 		return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
 	}
 	
-	public enum ReflectionNames {
-		NETWORKPLAYERINFO_F_SKINDIR("field_152796_d"),
-		ABSTRACTCLIENTPLAYER_F_PLAYERINFO("field_175157_a"),
-		NETWORKPLAYERINFO_F_SKINTYPE("field_178863_g"),
-		NETWORKPLAYERINFO_F_TEXTURESLOADED("field_178864_d"),
-		NETWORKPLAYERINFO_F_TEXTURES("field_187107_a");
-		private final String name;
-		
-		ReflectionNames(String srg) {
-			this.name = srg;
-		}
-		
-		public String getSrg() {
-			return name;
-		}
-	}
-	
 }

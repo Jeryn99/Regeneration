@@ -145,10 +145,7 @@ class ActingServerHandler implements IActingHandler {
 	}
 	
 	@Override
-	public void onPerformingPost(IRegeneration cap) {
-		EntityPlayer entity = cap.getPlayer();
-		entity.setPositionAndRotation(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ, entity.getRNG().nextFloat() * 360f, entity.rotationPitch);
-	}
+	public void onPerformingPost(IRegeneration cap) {}
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {

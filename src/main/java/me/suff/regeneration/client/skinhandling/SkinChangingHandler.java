@@ -201,7 +201,7 @@ public class SkinChangingHandler {
 		}
 		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
 			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
-			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, Minecraft.getMinecraft().getSkinManager(), RegenUtil.ReflectionNames.NETWORKPLAYERINFO_F_SKINDIR.getSrg()), profile.getHash().substring(0, 2));
+			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, Minecraft.getMinecraft().getSkinManager(), 2), profile.getHash().substring(0, 2));
 			File file = new File(dir, profile.getHash());
 			if (file.exists())
 				file.delete();
@@ -233,13 +233,13 @@ public class SkinChangingHandler {
 		if (player.getLocationSkin() == texture) {
 			return;
 		}
-		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, RegenUtil.ReflectionNames.ABSTRACTCLIENTPLAYER_F_PLAYERINFO.getSrg());
+		NetworkPlayerInfo playerInfo = player.playerInfo;
 		if (playerInfo == null)
 			return;
-		Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = ObfuscationReflectionHelper.getPrivateValue(NetworkPlayerInfo.class, playerInfo, RegenUtil.ReflectionNames.NETWORKPLAYERINFO_F_TEXTURES.getSrg());
+		Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
 		playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
 		if (texture == null)
-			ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, RegenUtil.ReflectionNames.NETWORKPLAYERINFO_F_TEXTURESLOADED.getSrg());
+			playerInfo.playerTexturesLoaded = false;
 	}
 	
 	public static void setSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
@@ -247,8 +247,8 @@ public class SkinChangingHandler {
 		if (!TYPE_BACKUPS.containsKey(player.getUniqueID())) {
 			TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
 		}
-		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, RegenUtil.ReflectionNames.ABSTRACTCLIENTPLAYER_F_PLAYERINFO.getSrg());
-		ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), RegenUtil.ReflectionNames.NETWORKPLAYERINFO_F_SKINTYPE.getSrg());
+		NetworkPlayerInfo playerInfo = player.playerInfo;
+		playerInfo.skinType = skinType.getMojangType();
 	}
 	
 	/**
