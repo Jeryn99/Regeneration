@@ -22,7 +22,7 @@ public class AnimationEvent extends LivingEvent {
 	}
 	
 	@Cancelable
-	public static class SetRotationAngels extends EntityEvent {
+	public static class SetRotationAngles extends EntityEvent {
 		
 		public final ModelSetRotationAnglesEventType type;
 		public ModelBiped model;
@@ -33,7 +33,7 @@ public class AnimationEvent extends LivingEvent {
 		public float netHeadYaw;
 		public float headPitch;
 		
-		public SetRotationAngels(Entity entity, ModelBiped model, float f, float f1, float f2, float f3, float f4, float f5, ModelSetRotationAnglesEventType type) {
+		public SetRotationAngles(Entity entity, ModelBiped model, float f, float f1, float f2, float f3, float f4, float f5, ModelSetRotationAnglesEventType type) {
 			super(entity);
 			this.model = model;
 			this.limbSwing = f;

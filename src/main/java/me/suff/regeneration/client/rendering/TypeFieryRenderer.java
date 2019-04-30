@@ -115,7 +115,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	}
 	
 	@Override
-	public void onAnimateRegen(AnimationEvent.SetRotationAngels ev) {
+	public void onAnimateRegen(AnimationEvent.SetRotationAngles ev) {
 		if (ev.getEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) ev.getEntity();
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);

@@ -167,7 +167,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 	public static void renderBipedPre(ModelBiped model, Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		if (entity == null)
 			return;
-		AnimationEvent.SetRotationAngels ev = new AnimationEvent.SetRotationAngels(entity, model, f, f1, f2, f3, f4, f5, AnimationEvent.ModelSetRotationAnglesEventType.PRE);
+		AnimationEvent.SetRotationAngles ev = new AnimationEvent.SetRotationAngles(entity, model, f, f1, f2, f3, f4, f5, AnimationEvent.ModelSetRotationAnglesEventType.PRE);
 		MinecraftForge.EVENT_BUS.post(ev);
 		
 		if (!ev.isCanceled()) {
@@ -178,7 +178,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 	public static void renderBipedPost(ModelBiped model, Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		if (entity == null)
 			return;
-		AnimationEvent.SetRotationAngels ev = new AnimationEvent.SetRotationAngels(entity, model, f, f1, f2, f3, f4, f5, AnimationEvent.ModelSetRotationAnglesEventType.POST);
+		AnimationEvent.SetRotationAngles ev = new AnimationEvent.SetRotationAngles(entity, model, f, f1, f2, f3, f4, f5, AnimationEvent.ModelSetRotationAnglesEventType.POST);
 		MinecraftForge.EVENT_BUS.post(ev);
 	}
 	

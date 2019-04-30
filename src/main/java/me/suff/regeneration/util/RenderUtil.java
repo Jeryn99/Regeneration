@@ -167,26 +167,6 @@ public class RenderUtil {
 		GlStateManager.popMatrix();
 	}
 	
-	public static void setupArmorModelOverride(RenderPlayer renderPlayer) {
-		List<LayerRenderer<EntityLivingBase>> layers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, 4);
-		if (layers != null) {
-			LayerRenderer<EntityLivingBase> armorLayer = layers.stream().filter(layer -> layer instanceof LayerBipedArmor).findFirst().orElse(null);
-			if (armorLayer != null) {
-				Field mainModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177186_d"));
-				Field legModel = ReflectionHelper.findField(LayerArmorBase.class, ObfuscationReflectionHelper.remapFieldNames(LayerArmorBase.class.getName(), "field_177189_c"));
-				mainModel.setAccessible(true);
-				legModel.setAccessible(true);
-				try {
-					ModelArmorOverride model = new ModelArmorOverride();
-					mainModel.set(armorLayer, model);
-					legModel.set(armorLayer, model);
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
 	public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
 		if (left < right) {
 			int i = left;

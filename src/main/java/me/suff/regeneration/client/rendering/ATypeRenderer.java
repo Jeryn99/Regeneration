@@ -46,6 +46,6 @@ public abstract class ATypeRenderer<T> {
 		}
 	}
 	
-	public abstract void onAnimateRegen(AnimationEvent.SetRotationAngels event);
+	public abstract void onAnimateRegen(AnimationEvent.SetRotationAngles event);
 	
 }

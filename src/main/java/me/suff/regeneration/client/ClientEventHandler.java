@@ -135,7 +135,7 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent(receiveCanceled = true)
-	public static void onAnimate(AnimationEvent.SetRotationAngels event) {
+	public static void onAnimate(AnimationEvent.SetRotationAngles event) {
 		if (event.getEntity() instanceof EntityPlayer) {
 			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntity());
 			if (data.getState() == REGENERATING) {
