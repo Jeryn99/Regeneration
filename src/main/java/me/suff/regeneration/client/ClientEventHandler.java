@@ -170,9 +170,12 @@ public class ClientEventHandler {
 						event.setCanceled(true);
 					}
 				}
-				ModelPlayer playerModel = (ModelPlayer) event.model;
-				ModelBase.copyModelAngles(event.model.bipedRightArm, playerModel.bipedRightArmwear);
-				ModelBase.copyModelAngles(event.model.bipedLeftArm, playerModel.bipedLeftArmwear);
+				
+				if(event.model instanceof ModelPlayer) {
+					ModelPlayer playerModel = (ModelPlayer) event.model;
+					ModelBase.copyModelAngles(event.model.bipedRightArm, playerModel.bipedRightArmwear);
+					ModelBase.copyModelAngles(event.model.bipedLeftArm, playerModel.bipedLeftArmwear);
+				}
 				
 			}
 		}
