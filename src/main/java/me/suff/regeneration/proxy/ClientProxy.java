@@ -64,9 +64,6 @@ public class ClientProxy extends CommonProxy {
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
 			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
-			if(RegenConfig.skins.fixArmor) {
-				RenderUtil.setupArmorModelOverride(renderPlayer);
-			}
 		}
 		FileUtil.doSetupOnThread();
 	}
