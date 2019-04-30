@@ -11,7 +11,8 @@
 		"1.5.4": "Better Skin grabbing handling for mojang skins. Should not longer randomly crash.",
 		"1.5.5": "NameMC trending feature",
 		"1.5.6": "Fixes and ability to view Regeneration skin change",
-		"1.5.9b": "Fixes server crash and Animation system overhaul! || Fixes Iron Man crash"
+		"1.5.9b": "Fixes server crash and Animation system overhaul! || Fixes Iron Man crash",
+		"1.6.0" : "Fixed Iron Man and Armor issues, Updated Reflection, Updated localization, Removed Armor Util"
 	},
 	"1.13.2": {
 		"0.0.2": "Ported to 1.13.2 + Fixed Force Regen Crash"
