@@ -162,4 +162,9 @@ public class ItemFobWatch extends ItemOverrideBase {
 			}
 		}
 	}
+	
+	@Override
+	public boolean isRepairable() {
+		return false;
+	}
 }
