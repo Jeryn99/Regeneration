@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "1.5.9b",
-		"1.12.2-recommended": "1.5.9b",
+		"1.12.2-latest": "1.6.1",
+		"1.12.2-recommended": "1.6.1",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
@@ -12,7 +12,8 @@
 		"1.5.5": "NameMC trending feature",
 		"1.5.6": "Fixes and ability to view Regeneration skin change",
 		"1.5.9b": "Fixes server crash and Animation system overhaul! || Fixes Iron Man crash",
-		"1.6.0" : "Fixed Iron Man and Armor issues, Updated Reflection, Updated localization, Removed Armor Util"
+		"1.6.0" : "Fixed Iron Man and Armor issues, Updated Reflection, Updated localization, Removed Armor Util",
+		"1.6.1" : "Fixes Bug With LC Core animations || Adds Nightvision Trait and Hunger trait || Adds Command to set Trait"
 	},
 	"1.13.2": {
 		"0.0.2": "Ported to 1.13.2 + Fixed Force Regen Crash"
