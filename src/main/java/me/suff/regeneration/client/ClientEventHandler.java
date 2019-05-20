@@ -132,6 +132,8 @@ public class ClientEventHandler {
 			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntity());
 			if (data.getState() == REGENERATING) {
 				event.setCanceled(data.getType().getRenderer().onAnimateRegen(event.model, (EntityPlayer) event.getEntity()));
+			} else {
+				AnimationHandler.animatePlayer((EntityPlayer) event.getEntity(), event.model);
 			}
 		}
 	}

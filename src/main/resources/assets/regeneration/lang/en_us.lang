@@ -112,16 +112,16 @@ config.regeneration.category.on_regen=When Regenerating
 config.regeneration.category.post_regen=Post regeneration
 config.regeneration.skins.folder=Skin Regeneration folder
 
-traits.athlete.name=Athletic genes!
+traits.athlete.name=Athletic genes! (You can run faster!)
 traits.boring.name=Lazy genes! (You're useless!)
-traits.dumb.name=Dumb genes!
-traits.sneak.name=Sneaky genes!
-traits.vampire.name=Vampire genes....ah dear...
-traits.lucky.name=Lucky genes!
-traits.swimmer.name=Swimming genes!
-traits.hydrophobic.name=Hydrophobic genes!
-traits.tough.name=Strong genes!
-traits.fire.name=non-flammable genes!
+traits.dumb.name=Dumb genes! (Less XP!)
+traits.lucky.name=Lucky genes! (More XP!)
+traits.swimmer.name=Swimming genes! (Swim freely in Water!)
+traits.hydrophobic.name=Hydrophobic genes! (You hate the Water!)
+traits.tough.name=Strong genes! (You deal more damage in a punch!)
+traits.fire.name=Non-flammable genes! (You're immune to fire!)
+traits.hunger.name=Hunger genes! (You starve faster!)
+traits.nightvision.name=Bat genes! (You can see in the Dark!)
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...

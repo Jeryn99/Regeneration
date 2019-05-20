@@ -3,6 +3,7 @@ package me.suff.regeneration.common.traits;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
+import me.suff.regeneration.common.traits.negative.DnaHunger;
 import me.suff.regeneration.common.traits.negative.DnaHydrophobic;
 import me.suff.regeneration.common.traits.positive.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +32,9 @@ public class DnaHandler {
 	public static IDna DNA_SWIMMER = new DnaSwimmer();
 	public static IDna DNA_SCARED_OF_WATER = new DnaHydrophobic();
 	public static IDna DNA_FIRE_RESISTANT = new DnaFireResistant();
-	private static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
+	public static IDna DNA_HUNGER = new DnaHunger();
+	public static IDna DNA_NIGHTVISION = new DnaNightvision();
+	public static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
 	private static ArrayList<IDna> DNA_LIST = new ArrayList<>();
 	
 	public static void init() {
@@ -43,6 +46,8 @@ public class DnaHandler {
 		register(DNA_SWIMMER);
 		register(DNA_SCARED_OF_WATER);
 		register(DNA_FIRE_RESISTANT);
+		register(DNA_HUNGER);
+		register(DNA_NIGHTVISION);
 	}
 	
 	public static void register(IDna dna) {
