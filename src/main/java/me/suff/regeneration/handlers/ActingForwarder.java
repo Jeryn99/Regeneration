@@ -78,8 +78,8 @@ public class ActingForwarder {
 			handler.onHandsStartGlowing(cap);
 		}
 	}
-	
-	public static void onPerformingPost(IRegeneration cap){
+
+    public static void onPerformingPost(IRegeneration cap) {
 		checkAndForward(cap, RegenEvent.PERFORM_POST);
 		for (IActingHandler handler : serverHandlers) {
 			handler.onPerformingPost(cap);

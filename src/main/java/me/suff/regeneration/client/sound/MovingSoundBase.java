@@ -31,8 +31,8 @@ public class MovingSoundBase extends MovingSound {
 	
 	@Override
 	public void update() {
-		
-		if(entity instanceof Entity) {
+
+        if (entity instanceof Entity) {
 			Entity entityObject = (Entity) entity;
 			if (stopCondition.get() || entityObject.isDead) {
 				setDonePlaying();
@@ -47,8 +47,8 @@ public class MovingSoundBase extends MovingSound {
 			super.yPosF = (float) entityObject.posY;
 			super.zPosF = (float) entityObject.posZ;
 		}
-		
-		if(entity instanceof TileEntity){
+
+        if (entity instanceof TileEntity) {
 			TileEntity tileObject = (TileEntity) entity;
 			BlockPos pos = tileObject.getPos();
 			super.xPosF = (float) pos.getX();

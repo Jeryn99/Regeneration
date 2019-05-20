@@ -12,12 +12,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class MessageRepairArms implements IMessage {
 	
 	private String arm;
-	
-	public MessageRepairArms(SkinInfo.SkinType type){
+
+    public MessageRepairArms(SkinInfo.SkinType type) {
 		this.arm = type.name();
 	}
-	
-	public MessageRepairArms(){}
+
+    public MessageRepairArms() {
+    }
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {

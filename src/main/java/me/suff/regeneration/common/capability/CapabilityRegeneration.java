@@ -112,8 +112,8 @@ public class CapabilityRegeneration implements IRegeneration {
 				setSkinType(getVanillaDefault().name());
 			}
 		}
-		
-		if(state != RegenState.REGENERATING){
+
+        if (state != RegenState.REGENERATING) {
 			ticksAnimating = 0;
 		} else {
 			ticksAnimating++;
@@ -217,8 +217,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (nbt.hasKey("v_type")) {
 			vanillaSkinType = SkinInfo.SkinType.valueOf(nbt.getString("v_type"));
 		}
-		
-		if(nbt.hasKey("ticks_animating")){
+
+        if (nbt.hasKey("ticks_animating")) {
 			ticksAnimating = nbt.getInteger("ticks_animating");
 		}
 		

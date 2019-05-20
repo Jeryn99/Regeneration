@@ -1,17 +1,9 @@
 package me.suff.regeneration.client.sound.echo;
 
-import lucraft.mods.lucraftcore.util.events.RenderModelEvent;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.entity.Entity;
-import net.minecraftforge.common.MinecraftForge;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.AL10;
-import org.lwjgl.openal.AL11;
-import org.lwjgl.openal.ALC10;
-import org.lwjgl.openal.EFX10;
+import org.lwjgl.openal.*;
 
 //CREDIT: https://raw.githubusercontent.com/Cryptic-Mushroom/The-Midnight/master/src/main/java/com/mushroom/midnight/client/SoundReverbHandler.java
 public class SoundReverbHandler {

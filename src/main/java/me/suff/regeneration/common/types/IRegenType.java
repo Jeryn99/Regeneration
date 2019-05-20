@@ -46,10 +46,10 @@ public interface IRegenType<R extends ATypeRenderer<?>> extends INBTSerializable
 	
 	default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
 	}
-	
-	double getAnimationProgress();
-	
-	@Override
+
+    double getAnimationProgress(IRegeneration cap);
+
+    @Override
 	default NBTTagCompound serializeNBT() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setString("name", this.getClass().getName());

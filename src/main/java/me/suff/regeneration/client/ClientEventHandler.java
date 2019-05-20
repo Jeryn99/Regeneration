@@ -6,7 +6,6 @@ import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.client.sound.echo.AnimationEvent;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.item.ItemFobWatch;
 import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.network.MessageRepairArms;
 import me.suff.regeneration.network.MessageTriggerForcedRegen;
@@ -19,14 +18,11 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.SoundCategory;
@@ -36,12 +32,7 @@ import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -133,50 +124,14 @@ public class ClientEventHandler {
 			
 		}
 	}
-	
+
 	@SubscribeEvent(receiveCanceled = true)
 	public static void onAnimate(AnimationEvent.SetRotationAngles event) {
+		if (EnumCompatModids.LCCORE.isLoaded()) return;
 		if (event.getEntity() instanceof EntityPlayer) {
 			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntity());
 			if (data.getState() == REGENERATING) {
-				data.getType().getRenderer().onAnimateRegen(event);
-			} else {
-				
-				boolean isOpen = false;
-				
-				EntityPlayer player = (EntityPlayer) event.getEntity();
-				ItemStack stack = player.getHeldItemMainhand();
-				ItemStack offStack = player.getHeldItemOffhand();
-				
-				if (stack.getItem() instanceof ItemFobWatch) {
-					
-					isOpen = ItemFobWatch.getOpen(stack) == 1;
-					
-					if (isOpen) {
-						event.model.bipedRightArm.rotateAngleY = -0.1F + event.model.bipedHead.rotateAngleY;
-						event.model.bipedLeftArm.rotateAngleY = 0.1F + event.model.bipedHead.rotateAngleY + 0.4F;
-						event.model.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
-						event.model.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
-						event.setCanceled(true);
-					}
-					
-				} else if (offStack.getItem() instanceof ItemFobWatch) {
-					isOpen = ItemFobWatch.getOpen(stack) == 1;
-					if (isOpen) {
-						event.model.bipedRightArm.rotateAngleY = -0.1F + event.model.bipedHead.rotateAngleY - 0.4F;
-						event.model.bipedLeftArm.rotateAngleY = 0.1F + event.model.bipedHead.rotateAngleY;
-						event.model.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
-						event.model.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + event.model.bipedHead.rotateAngleX;
-						event.setCanceled(true);
-					}
-				}
-				
-				if(event.model instanceof ModelPlayer) {
-					ModelPlayer playerModel = (ModelPlayer) event.model;
-					ModelBase.copyModelAngles(event.model.bipedRightArm, playerModel.bipedRightArmwear);
-					ModelBase.copyModelAngles(event.model.bipedLeftArm, playerModel.bipedLeftArmwear);
-				}
-				
+				event.setCanceled(data.getType().getRenderer().onAnimateRegen(event.model, (EntityPlayer) event.getEntity()));
 			}
 		}
 	}

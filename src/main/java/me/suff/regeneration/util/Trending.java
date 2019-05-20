@@ -20,9 +20,9 @@ import java.util.Objects;
 public class Trending {
 	
 	public static void downloadTrendingSkins() throws IOException {
-		if(!RegenConfig.skins.downloadTrendingSkins) return;
+        if (!RegenConfig.skins.downloadTrendingSkins) return;
 		File trendingDir = new File(SkinChangingHandler.SKIN_DIRECTORY_ALEX.toPath().toString() + "/namemc_trending/");
-		if(!trendingDir.exists()){
+        if (!trendingDir.exists()) {
 			trendingDir.mkdirs();
 		}
 		

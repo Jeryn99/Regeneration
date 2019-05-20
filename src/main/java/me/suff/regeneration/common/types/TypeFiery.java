@@ -15,11 +15,9 @@ import net.minecraft.util.math.BlockPos;
  * on 16/09/2018.
  */
 public class TypeFiery implements IRegenType<TypeFieryRenderer> {
-	private int animationTicks;
 	
 	@Override
 	public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
-		animationTicks++;
 		
 		player.extinguish();
 		
@@ -48,7 +46,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	@Override
 	public void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
 		PlayerUtil.setPerspective((EntityPlayerMP) player, false, true);
-		animationTicks = 0;
+		capability.setAnimationTicks(0);
 	}
 	
 	@Override
@@ -57,24 +55,19 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	}
 	
 	@Override
-	public double getAnimationProgress() {
-		return Math.min(1, animationTicks / (double) getAnimationLength());
+	public double getAnimationProgress(IRegeneration cap) {
+		return Math.min(1, cap.getAnimationTicks() / (double) getAnimationLength());
 	}
 	
 	@Override
 	public NBTTagCompound serializeNBT() {
 		NBTTagCompound nbt = IRegenType.super.serializeNBT();
-		nbt.setLong("animationTicks", animationTicks);
 		return nbt;
 	}
 	
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		IRegenType.super.deserializeNBT(nbt);
-		
-		int nbtTicks = nbt.getInteger("animationTicks");
-		if (nbtTicks > animationTicks)
-			animationTicks = nbtTicks;
 	}
 	
 	@Override

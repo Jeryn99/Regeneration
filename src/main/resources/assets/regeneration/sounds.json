@@ -101,16 +101,16 @@
       }
     ]
   },
- "regen_breath": {
-  "category": "ambient",
-  "subtitle": "regeneration.subtitles.regen_breath",
-  "sounds": [
-    {
-      "name": "regeneration:regen_breath",
-      "stream": false
-    }
-  ]
-},
+  "regen_breath": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regen_breath",
+    "sounds": [
+      {
+        "name": "regeneration:regen_breath",
+        "stream": false
+      }
+    ]
+  },
   "alarm": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.alarm",

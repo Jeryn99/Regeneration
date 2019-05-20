@@ -145,7 +145,8 @@ class ActingServerHandler implements IActingHandler {
 	}
 	
 	@Override
-	public void onPerformingPost(IRegeneration cap) {}
+    public void onPerformingPost(IRegeneration cap) {
+    }
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {

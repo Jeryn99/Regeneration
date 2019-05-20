@@ -6,11 +6,13 @@ import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarKeys;
+import lucraft.mods.lucraftcore.util.events.RenderModelEvent;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.handlers.IActingHandler;
 import me.suff.regeneration.util.ClientUtil;
+import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.InputUpdateEvent;
@@ -20,6 +22,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import static me.suff.regeneration.util.RegenState.REGENERATING;
 import static me.suff.regeneration.util.RegenUtil.randFloat;
 
 public class LucraftCoreHandler implements IActingHandler {
@@ -103,7 +106,20 @@ public class LucraftCoreHandler implements IActingHandler {
 	
 	@SubscribeEvent
 	public void onCanRegen(PlayerCanRegenEvent e) {
-		if (RegenConfig.modIntegrations.lucraftcore.superpowerDisable && SuperpowerHandler.hasSuperpower(e.getEntityPlayer()))
+		boolean flag = RegenConfig.modIntegrations.lucraftcore.superpowerDisable && SuperpowerHandler.hasSuperpower(e.getEntityPlayer());
+		if(flag){
 			e.setCanceled(true);
+			PlayerUtil.sendMessage(e.getEntityPlayer(), "You cannot Regenerate with a superpower", true);
+		}
+	}
+
+	@SubscribeEvent(receiveCanceled = true)
+	public void onAnimation(RenderModelEvent.SetRotationAngels ev) {
+		if (ev.getEntity() instanceof EntityPlayer) {
+			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) ev.getEntity());
+			if (data.getState() == REGENERATING) {
+				ev.setCanceled(data.getType().getRenderer().onAnimateRegen(ev.model, (EntityPlayer) ev.getEntity()));
+			}
+		}
 	}
 }

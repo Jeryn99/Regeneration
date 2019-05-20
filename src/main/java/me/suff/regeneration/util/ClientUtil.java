@@ -54,7 +54,9 @@ public class ClientUtil {
 			if (image == null) {
 				return null;
 			} else {
-				if(image.getHeight() == 64 && image.getWidth() == 64) {return image;}
+                if (image.getHeight() == 64 && image.getWidth() == 64) {
+                    return image;
+                }
 				imageWidth = 64;
 				imageHeight = 64;
 				BufferedImage bufferedimage = new BufferedImage(imageWidth, imageHeight, 2);

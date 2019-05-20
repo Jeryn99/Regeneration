@@ -1,9 +1,8 @@
 package me.suff.regeneration.client.rendering;
 
-import me.suff.regeneration.client.sound.echo.AnimationEvent;
-import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.IRegenType;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -45,7 +44,7 @@ public abstract class ATypeRenderer<T> {
 			throw new IllegalStateException("RegenType <-> RegenRenderType mismatch", e);
 		}
 	}
-	
-	public abstract void onAnimateRegen(AnimationEvent.SetRotationAngles event);
+
+	public abstract boolean onAnimateRegen(ModelBiped modelBiped, EntityPlayer player);
 	
 }

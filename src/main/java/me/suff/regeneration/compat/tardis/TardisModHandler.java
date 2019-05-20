@@ -129,14 +129,14 @@ public class TardisModHandler implements IActingHandler {
 	}
 	
 	@SubscribeEvent
-	public void onLivingUpdate(LivingEvent.LivingUpdateEvent event){
-		if(event.getEntityLiving() instanceof EntityPlayer){
+    public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntityLiving() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-			if(player.dimension == TDimensions.TARDIS_ID){
-				if(data.getState().isGraceful()){
+            if (player.dimension == TDimensions.TARDIS_ID) {
+                if (data.getState().isGraceful()) {
 					for (TileEntity tileEntity : player.world.loadedTileEntityList) {
-						if(player.getDistanceSq(tileEntity.getPos()) < 40 && tileEntity instanceof TileEntityTardis && data.getPlayer().ticksExisted % 25 == 0){
+                        if (player.getDistanceSq(tileEntity.getPos()) < 40 && tileEntity instanceof TileEntityTardis && data.getPlayer().ticksExisted % 25 == 0) {
 							tileEntity.getWorld().playSound(null, tileEntity.getPos(), RegenObjects.Sounds.ALARM, SoundCategory.BLOCKS, 1.0F, 1.0F);
 						}
 					}

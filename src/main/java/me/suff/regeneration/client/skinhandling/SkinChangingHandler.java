@@ -10,7 +10,6 @@ import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.FileUtil;
 import me.suff.regeneration.util.RegenState;
-import me.suff.regeneration.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -41,12 +40,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
@@ -86,8 +80,8 @@ public class SkinChangingHandler {
 		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
 		image = ImageIO.read(bis);
 		bis.close();
-		
-		if(image == null){
+
+		if (image == null) {
 			throw new IllegalStateException("The image data was " + imageString + " but the image became null...");
 		}
 		
@@ -269,7 +263,7 @@ public class SkinChangingHandler {
 		}
 		
 		if (cap.getState() == RegenState.REGENERATING) {
-			if (cap.getType().getAnimationProgress() > 0.7) {
+			if (cap.getType().getAnimationProgress(cap) > 0.7) {
 				setSkinFromData(player, cap, false);
 			}
 			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);

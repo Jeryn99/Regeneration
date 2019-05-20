@@ -20,15 +20,15 @@ public class AnimationEvent extends LivingEvent {
 	public RenderLivingBase<EntityLivingBase> getRenderer() {
 		return renderer;
 	}
-	
-	public enum ModelSetRotationAnglesEventType {
+
+    public enum ModelRotationType {
 		PRE, POST
 	}
 	
 	@Cancelable
 	public static class SetRotationAngles extends EntityEvent {
-		
-		public final ModelSetRotationAnglesEventType type;
+
+        public final ModelRotationType type;
 		public ModelBiped model;
 		public float limbSwing;
 		public float limbSwingAmount;
@@ -36,8 +36,8 @@ public class AnimationEvent extends LivingEvent {
 		public float ageInTicks;
 		public float netHeadYaw;
 		public float headPitch;
-		
-		public SetRotationAngles(Entity entity, ModelBiped model, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, ModelSetRotationAnglesEventType type) {
+
+        public SetRotationAngles(Entity entity, ModelBiped model, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, ModelRotationType type) {
 			super(entity);
 			this.model = model;
 			this.limbSwing = limbSwing;

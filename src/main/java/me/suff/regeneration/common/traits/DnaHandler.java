@@ -4,12 +4,7 @@ import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.traits.negative.DnaHydrophobic;
-import me.suff.regeneration.common.traits.positive.DnaAthlete;
-import me.suff.regeneration.common.traits.positive.DnaFireResistant;
-import me.suff.regeneration.common.traits.positive.DnaLucky;
-import me.suff.regeneration.common.traits.positive.DnaSimple;
-import me.suff.regeneration.common.traits.positive.DnaSwimmer;
-import me.suff.regeneration.common.traits.positive.DnaTough;
+import me.suff.regeneration.common.traits.positive.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -91,10 +86,14 @@ public class DnaHandler {
 	
 	public interface IDna {
 		void onUpdate(IRegeneration cap);
-		void onAdded(IRegeneration cap);
-		void onRemoved(IRegeneration cap);
-		String getLangKey();
-		ResourceLocation getRegistryName();
+
+        void onAdded(IRegeneration cap);
+
+        void onRemoved(IRegeneration cap);
+
+        String getLangKey();
+
+        ResourceLocation getRegistryName();
 	}
 	
 	

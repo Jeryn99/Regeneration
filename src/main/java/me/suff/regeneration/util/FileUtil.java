@@ -6,13 +6,7 @@ import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.FileSystem;
@@ -80,7 +74,7 @@ public class FileUtil {
 		SkinChangingHandler.SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
 		img = ClientUtil.ImageFixer.convertSkinTo64x64(img);
-		if(!file.exists()){
+        if (!file.exists()) {
 			file.mkdirs();
 		}
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
