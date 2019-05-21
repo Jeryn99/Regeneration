@@ -2,7 +2,6 @@ package me.suff.regeneration.client.rendering;
 
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.IRegenType;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -45,6 +44,6 @@ public abstract class ATypeRenderer<T> {
 		}
 	}
 
-	public abstract boolean onAnimateRegen(ModelBiped modelBiped, EntityPlayer player);
+	public abstract boolean onAnimateRegen(AnimationContext animationContext);
 	
 }

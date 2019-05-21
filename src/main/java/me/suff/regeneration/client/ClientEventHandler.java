@@ -1,6 +1,7 @@
 package me.suff.regeneration.client;
 
 import me.suff.regeneration.RegenerationMod;
+import me.suff.regeneration.client.rendering.AnimationContext;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.client.sound.echo.AnimationEvent;
@@ -126,14 +127,17 @@ public class ClientEventHandler {
 	}
 
 	@SubscribeEvent(receiveCanceled = true)
-	public static void onAnimate(AnimationEvent.SetRotationAngles event) {
+	public static void onAnimate(AnimationEvent.SetRotationAngles ev) {
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
-		if (event.getEntity() instanceof EntityPlayer) {
-			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntity());
+
+		AnimationContext context = new AnimationContext(ev.model, (EntityPlayer) ev.getEntity(), ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
+
+		if (ev.getEntity() instanceof EntityPlayer) {
+			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) ev.getEntity());
 			if (data.getState() == REGENERATING) {
-				event.setCanceled(data.getType().getRenderer().onAnimateRegen(event.model, (EntityPlayer) event.getEntity()));
+				ev.setCanceled(data.getType().getRenderer().onAnimateRegen(context));
 			} else {
-				AnimationHandler.animatePlayer((EntityPlayer) event.getEntity(), event.model);
+				AnimationHandler.animatePlayer(context);
 			}
 		}
 	}

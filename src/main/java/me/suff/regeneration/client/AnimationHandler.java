@@ -1,5 +1,6 @@
 package me.suff.regeneration.client;
 
+import me.suff.regeneration.client.rendering.AnimationContext;
 import me.suff.regeneration.common.item.ItemFobWatch;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
@@ -9,11 +10,11 @@ import net.minecraft.item.ItemStack;
 
 public class AnimationHandler {
 
-    public static boolean animatePlayer(EntityPlayer player, ModelBiped modelBiped) {
-
+    public static boolean animatePlayer(AnimationContext animationContext) {
+        EntityPlayer player = animationContext.getEntityPlayer();
         ItemStack stack = player.getHeldItemMainhand();
         ItemStack offStack = player.getHeldItemOffhand();
-
+        ModelBiped modelBiped = animationContext.getModelBiped();
 
         //==============FOB WATCH START==============
         boolean isOpen = false;

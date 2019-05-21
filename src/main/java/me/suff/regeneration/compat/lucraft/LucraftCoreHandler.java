@@ -9,6 +9,7 @@ import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarKeys;
 import lucraft.mods.lucraftcore.util.events.RenderModelEvent;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.client.AnimationHandler;
+import me.suff.regeneration.client.rendering.AnimationContext;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.handlers.IActingHandler;
@@ -117,11 +118,12 @@ public class LucraftCoreHandler implements IActingHandler {
 	@SubscribeEvent(receiveCanceled = true)
 	public void onAnimation(RenderModelEvent.SetRotationAngels ev) {
 		if (ev.getEntity() instanceof EntityPlayer) {
+			AnimationContext context = new AnimationContext(ev.model, (EntityPlayer) ev.getEntity(), ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
 			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) ev.getEntity());
 			if (data.getState() == REGENERATING) {
-				ev.setCanceled(data.getType().getRenderer().onAnimateRegen(ev.model, (EntityPlayer) ev.getEntity()));
+				ev.setCanceled(data.getType().getRenderer().onAnimateRegen(context));
 			} else {
-				AnimationHandler.animatePlayer((EntityPlayer) ev.getEntity(), ev.model);
+				AnimationHandler.animatePlayer(context);
 			}
 		}
 	}
