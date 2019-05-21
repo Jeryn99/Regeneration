@@ -111,10 +111,12 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();
 	}
-
+	
 	@Override
-	public boolean onAnimateRegen(ModelBiped playerModel, EntityPlayer player) {
+	public boolean onAnimateRegen(AnimationContext animationContext) {
+		EntityPlayer player = animationContext.getEntityPlayer();
 		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+		ModelBiped playerModel = animationContext.getModelBiped();
 		double animationProgress = data.getAnimationTicks();
 		double arm_shake = player.getRNG().nextDouble();
 
