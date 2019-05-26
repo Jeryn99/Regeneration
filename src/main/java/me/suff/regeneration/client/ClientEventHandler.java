@@ -7,6 +7,8 @@ import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.client.sound.echo.AnimationEvent;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
+import me.suff.regeneration.common.entity.EntityDupePlayer;
+import me.suff.regeneration.common.types.TypeHandler;
 import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.network.MessageRepairArms;
 import me.suff.regeneration.network.MessageTriggerForcedRegen;
@@ -48,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
+import static me.suff.regeneration.util.ClientUtil.dummy;
 import static me.suff.regeneration.util.RegenState.*;
 
 /**
@@ -126,6 +129,8 @@ public class ClientEventHandler {
 		}
 	}
 
+	private static byte spawnDelay = 100;
+	
 	@SubscribeEvent(receiveCanceled = true)
 	public static void onAnimate(AnimationEvent.SetRotationAngles ev) {
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
@@ -135,45 +140,11 @@ public class ClientEventHandler {
 		if (ev.getEntity() instanceof EntityPlayer) {
 			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) ev.getEntity());
 			if (data.getState() == REGENERATING) {
-				ev.setCanceled(data.getType().getRenderer().onAnimateRegen(context));
+				ev.setCanceled(TypeHandler.getTypeInstance(data.getType()).getRenderer().onAnimateRegen(context));
 			} else {
 				AnimationHandler.animatePlayer(context);
 			}
 		}
-	}
-	
-	@SubscribeEvent
-	public static void onRenderHand(RenderHandEvent e) {
-		Minecraft mc = Minecraft.getMinecraft();
-		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		
-		float factor = 0.2F;
-		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
-			return;
-		
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (!cap.areHandsGlowing())
-			return;
-		
-		GlStateManager.pushMatrix();
-		
-		float leftHandedFactor = mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT) ? 1 : -1;
-		GlStateManager.translate(0.33F * leftHandedFactor, -0.23F, -0.5F); // move in place
-		GlStateManager.translate(-.8F * player.swingProgress * leftHandedFactor, -.8F * player.swingProgress, -.4F * player.swingProgress); // compensate for 'punching' motion
-		GlStateManager.translate(-(player.renderArmYaw - player.prevRenderArmYaw) / 400F, (player.renderArmPitch - player.prevRenderArmPitch) / 500F, 0); // compensate for 'swinging' motion
-		
-		RenderUtil.setupRenderLightning();
-		GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
-		for (int i = 0; i < 15; i++) {
-			GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
-			Vec3d primaryColor = cap.getPrimaryColor();
-			
-			Random rand = player.world.rand;
-			RenderUtil.drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, primaryColor, 0);
-		}
-		RenderUtil.finishRenderLightning();
-		
-		GlStateManager.popMatrix();
 	}
 	
 	@SuppressWarnings("incomplete-switch")
@@ -320,6 +291,65 @@ public class ClientEventHandler {
 			
 			if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) {
 				ClientUtil.sendSkinResetPacket();
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onRenderHand(RenderHandEvent e) {
+		Minecraft mc = Minecraft.getMinecraft();
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+
+		float factor = 0.2F;
+		if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
+			return;
+
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		boolean flag = cap.getType() == TypeHandler.RegenType.CONFUSED && cap.getState() == REGENERATING;
+		e.setCanceled(flag);
+
+		if (!cap.areHandsGlowing() || !flag)
+			return;
+
+
+		GlStateManager.pushMatrix();
+
+		float leftHandedFactor = mc.gameSettings.mainHand.equals(EnumHandSide.RIGHT) ? 1 : -1;
+		GlStateManager.translate(0.33F * leftHandedFactor, -0.23F, -0.5F); // move in place
+		GlStateManager.translate(-.8F * player.swingProgress * leftHandedFactor, -.8F * player.swingProgress, -.4F * player.swingProgress); // compensate for 'punching' motion
+		GlStateManager.translate(-(player.renderArmYaw - player.prevRenderArmYaw) / 400F, (player.renderArmPitch - player.prevRenderArmPitch) / 500F, 0); // compensate for 'swinging' motion
+
+		RenderUtil.setupRenderLightning();
+		GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
+		for (int i = 0; i < 15; i++) {
+			GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
+			Vec3d primaryColor = cap.getPrimaryColor();
+
+			Random rand = player.world.rand;
+			RenderUtil.drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, primaryColor, 0);
+		}
+		RenderUtil.finishRenderLightning();
+
+		GlStateManager.popMatrix();
+	}
+
+	@SubscribeEvent
+	public static void on(TickEvent.ClientTickEvent event) {
+
+		EntityPlayer player = Minecraft.getMinecraft().player;
+		if (player != null) {
+			if (dummy == null) {
+				if (spawnDelay == 0) {
+					dummy = new EntityDupePlayer(player.world);
+					dummy.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+					player.world.spawnEntity(dummy);
+				} else {
+					--spawnDelay;
+				}
+			} else if (dummy.world.provider.getDimension() != player.world.provider.getDimension() || dummy.getDistanceSq(player) > 5 || dummy.lastTickUpdated < player.world.getTotalWorldTime() - 20) {
+				dummy.setDead();
+				dummy = null;
+				spawnDelay = 100;
 			}
 		}
 	}

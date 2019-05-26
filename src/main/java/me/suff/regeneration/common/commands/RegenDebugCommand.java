@@ -6,7 +6,10 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.traits.DnaHandler;
 import me.suff.regeneration.util.PlayerUtil;
 import me.suff.regeneration.util.RegenState;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -14,7 +17,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,7 +74,7 @@ public class RegenDebugCommand extends CommandBase {
 	
 	@Override
 	public String getName() {
-		return "regendebug";
+        return "regen-debug";
 	}
 	
 	@Override
@@ -83,7 +85,7 @@ public class RegenDebugCommand extends CommandBase {
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		if (args.length < 2)
-			return getListOfStringsMatchingLastWord(args, "fastforward", "setregens", "open", "glow");
+            return getListOfStringsMatchingLastWord(args, "fast-forward", "set-regens", "open", "glow");
 		if(args.length < 3){
 			return getListOfStringsMatchingLastWord(args, DnaHandler.DNA_ENTRIES.keySet());
 		}

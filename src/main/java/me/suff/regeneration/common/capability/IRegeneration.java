@@ -3,7 +3,7 @@ package me.suff.regeneration.common.capability;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.skinhandling.SkinInfo;
-import me.suff.regeneration.common.types.IRegenType;
+import me.suff.regeneration.common.types.TypeHandler;
 import me.suff.regeneration.compat.lucraft.PlayerCanRegenEvent;
 import me.suff.regeneration.util.RegenState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,8 +55,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	void extractRegeneration(int amount);
 	
 	RegenState getState();
-	
-	IRegenType<?> getType();
+
+    TypeHandler.RegenType getType();
 	
 	IRegenerationStateManager getStateManager();
 	

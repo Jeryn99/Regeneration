@@ -9,6 +9,7 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.capability.RegenerationStorage;
 import me.suff.regeneration.common.commands.RegenDebugCommand;
 import me.suff.regeneration.common.traits.DnaHandler;
+import me.suff.regeneration.common.types.TypeHandler;
 import me.suff.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.suff.regeneration.compat.tardis.TardisModHandler;
 import me.suff.regeneration.debugger.DummyRegenDebugger;
@@ -27,11 +28,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
@@ -94,6 +91,7 @@ public class RegenerationMod {
 		LootTableList.register(LOOT_FILE);
 		DnaHandler.init();
 		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
+		TypeHandler.init();
 	}
 	
 	@EventHandler

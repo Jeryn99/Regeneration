@@ -3,7 +3,7 @@ package me.suff.regeneration.compat.tardis;
 import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.types.TypeFiery;
+import me.suff.regeneration.common.types.TypeHandler;
 import me.suff.regeneration.handlers.IActingHandler;
 import me.suff.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.player.EntityPlayer;
@@ -68,7 +68,7 @@ public class TardisModHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-		if (cap.getType() instanceof TypeFiery) {
+		if (cap.getType() == TypeHandler.RegenType.FIERY) {
 			damageTardisInRange(cap.getPlayer());
 		}
 	}

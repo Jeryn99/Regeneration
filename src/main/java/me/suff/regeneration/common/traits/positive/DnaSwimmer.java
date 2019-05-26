@@ -12,11 +12,15 @@ import net.minecraft.util.ResourceLocation;
  * Created by Suffril
  * on 25/01/2019.
  */
-public class DnaSwimmer implements DnaHandler.IDna {
+public class DnaSwimmer extends DnaHandler.IDna {
 	
 	
 	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "swimmer");
-	
+
+    public DnaSwimmer() {
+        super("swimmer");
+    }
+
 	@Override
 	public void onUpdate(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();

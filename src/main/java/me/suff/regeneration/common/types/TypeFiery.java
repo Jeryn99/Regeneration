@@ -7,7 +7,6 @@ import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -51,25 +50,19 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	
 	@Override
 	public int getAnimationLength() {
-		return 14 * 20; // 14 seconds of 20 ticks
+        return 280; // 14 seconds of 20 ticks
 	}
 	
 	@Override
 	public double getAnimationProgress(IRegeneration cap) {
 		return Math.min(1, cap.getAnimationTicks() / (double) getAnimationLength());
 	}
-	
+
 	@Override
-	public NBTTagCompound serializeNBT() {
-		NBTTagCompound nbt = IRegenType.super.serializeNBT();
-		return nbt;
-	}
-	
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt) {
-		IRegenType.super.deserializeNBT(nbt);
-	}
-	
+    public TypeHandler.RegenType getTypeID() {
+        return TypeHandler.RegenType.FIERY;
+    }
+
 	@Override
 	public TypeFieryRenderer getRenderer() {
 		return TypeFieryRenderer.INSTANCE;

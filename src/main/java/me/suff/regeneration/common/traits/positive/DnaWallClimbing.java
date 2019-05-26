@@ -2,20 +2,20 @@ package me.suff.regeneration.common.traits.positive;
 
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.traits.DnaHandler;
-import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 
-public class DnaNightvision extends DnaHandler.IDna {
+public class DnaWallClimbing extends DnaHandler.IDna {
 
-    public DnaNightvision() {
-        super("nightvision");
+    public DnaWallClimbing() {
+        super("wallclimbing");
     }
 
     @Override
     public void onUpdate(IRegeneration cap) {
         EntityPlayer player = cap.getPlayer();
-        PlayerUtil.applyPotionIfAbsent(player, MobEffects.NIGHT_VISION, 1200, 1, true, false);
+        if (player.collidedHorizontally) {
+            player.motionX = 0.2D;
+        }
     }
 
     @Override
@@ -25,8 +25,7 @@ public class DnaNightvision extends DnaHandler.IDna {
 
     @Override
     public void onRemoved(IRegeneration cap) {
-        EntityPlayer player = cap.getPlayer();
-        player.removePotionEffect(MobEffects.NIGHT_VISION);
+
     }
 
 }

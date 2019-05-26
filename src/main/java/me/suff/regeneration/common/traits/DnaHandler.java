@@ -25,8 +25,8 @@ import java.util.Random;
 public class DnaHandler {
 	
 	public static IDna DNA_ATHLETE = new DnaAthlete();
-	public static IDna DNA_BORING = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "boring"));
-	public static IDna DNA_DUMB = new DnaSimple(new ResourceLocation(RegenerationMod.MODID, "dumb"));
+    public static IDna DNA_BORING = new DnaSimple("boring");
+    public static IDna DNA_DUMB = new DnaSimple("dumb");
 	public static IDna DNA_TOUGH = new DnaTough();
 	public static IDna DNA_LUCKY = new DnaLucky();
 	public static IDna DNA_SWIMMER = new DnaSwimmer();
@@ -34,6 +34,7 @@ public class DnaHandler {
 	public static IDna DNA_FIRE_RESISTANT = new DnaFireResistant();
 	public static IDna DNA_HUNGER = new DnaHunger();
 	public static IDna DNA_NIGHTVISION = new DnaNightvision();
+    public static IDna DNA_WALLCLIMB = new DnaWallClimbing();
 	public static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
 	private static ArrayList<IDna> DNA_LIST = new ArrayList<>();
 	
@@ -48,6 +49,7 @@ public class DnaHandler {
 		register(DNA_FIRE_RESISTANT);
 		register(DNA_HUNGER);
 		register(DNA_NIGHTVISION);
+        register(DNA_WALLCLIMB);
 	}
 	
 	public static void register(IDna dna) {
@@ -87,18 +89,32 @@ public class DnaHandler {
 			}
 		}
 	}
-	
-	
-	public interface IDna {
-		void onUpdate(IRegeneration cap);
 
-        void onAdded(IRegeneration cap);
 
-        void onRemoved(IRegeneration cap);
+    public static abstract class IDna {
 
-        String getLangKey();
+        public ResourceLocation resourceLocation;
+        public String localName;
 
-        ResourceLocation getRegistryName();
+        public IDna(String name) {
+            localName = "traits." + name + ".name";
+            resourceLocation = new ResourceLocation(RegenerationMod.MODID, name);
+        }
+
+
+        public abstract void onUpdate(IRegeneration cap);
+
+        public abstract void onAdded(IRegeneration cap);
+
+        public abstract void onRemoved(IRegeneration cap);
+
+        public String getLangKey() {
+            return localName;
+        }
+
+        public ResourceLocation getRegistryName() {
+            return resourceLocation;
+        }
 	}
 	
 	

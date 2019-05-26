@@ -122,6 +122,7 @@ traits.tough.name=Strong genes! (You deal more damage in a punch!)
 traits.fire.name=Non-flammable genes! (You're immune to fire!)
 traits.hunger.name=Hunger genes! (You starve faster!)
 traits.nightvision.name=Bat genes! (You can see in the Dark!)
+traits.wallclimb.name=Spider Genes! (You can climb walls!)
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...

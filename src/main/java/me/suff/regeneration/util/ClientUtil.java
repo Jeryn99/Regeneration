@@ -2,11 +2,14 @@ package me.suff.regeneration.util;
 
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.sound.MovingSoundBase;
+import me.suff.regeneration.common.entity.EntityDupePlayer;
 import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.toasts.SystemToast;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -23,8 +26,10 @@ import java.util.function.Supplier;
 public class ClientUtil {
 	
 	public static String keyBind = "???"; //WAFFLE there was a weird thing with this somewhere that I still need to fix
-	
-	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle) {
+
+    public static EntityDupePlayer dummy;
+
+    public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle) {
 		Minecraft.getMinecraft().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
 	}
 	
@@ -42,9 +47,18 @@ public class ClientUtil {
 			Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundBase(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
 		}
 	}
-	
-	
-	public static class ImageFixer {
+
+    public static void copyAnglesToWear(ModelPlayer biped) {
+        ModelBase.copyModelAngles(biped.bipedRightArm, biped.bipedRightArmwear);
+        ModelBase.copyModelAngles(biped.bipedLeftArm, biped.bipedLeftArmwear);
+        ModelBase.copyModelAngles(biped.bipedRightLeg, biped.bipedRightLegwear);
+        ModelBase.copyModelAngles(biped.bipedLeftLeg, biped.bipedLeftLegwear);
+        ModelBase.copyModelAngles(biped.bipedBody, biped.bipedBodyWear);
+        ModelBase.copyModelAngles(biped.bipedHead, biped.bipedHeadwear);
+    }
+
+
+    public static class ImageFixer {
 		
 		private static int[] imageData;
 		private static int imageWidth;

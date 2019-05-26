@@ -2,6 +2,8 @@ package me.suff.regeneration.client.rendering;
 
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
+import me.suff.regeneration.common.types.IRegenType;
+import me.suff.regeneration.common.types.TypeHandler;
 import me.suff.regeneration.util.RegenState;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -27,59 +29,60 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
 
 	private static final ResourceLocation GLOW_TEXTURE = new ResourceLocation("textures/entity/wither/wither_invulnerable.png");
-	
-	private RenderPlayer playerRenderer;
+
+	private static RenderPlayer playerRenderer;
 	
 	public LayerRegeneration(RenderPlayer playerRenderer) {
-		this.playerRenderer = playerRenderer;
+		LayerRegeneration.playerRenderer = playerRenderer;
 	}
-	
-	@Override
-	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		if (cap.getState() == RegenState.REGENERATING) {
-			cap.getType().getRenderer().onRenderRegenerationLayer(cap.getType(), playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-		} else if (cap.areHandsGlowing()) {
-			renderGlowingHands(player, cap, scale);
-		}
-		
-		if (cap.getState() == RegenState.POST && player.hurtTime > 0) {
-			renderPost(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-		}
-	}
-	
-	private void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
+
+	public static void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
 		Vec3d primaryColor = handler.getPrimaryColor();
 		Vec3d secondaryColor = handler.getSecondaryColor();
-		
+
 		Minecraft mc = Minecraft.getMinecraft();
 		Random rand = player.world.rand;
 		float f = 0.2F;
-		
+
 		for (int j = 0; j < 2; j++) {
 			RenderUtil.setupRenderLightning();
-			
+
 			if (j == 0)
 				playerRenderer.getMainModel().bipedRightArm.postRender(scale);
 			else
 				playerRenderer.getMainModel().bipedLeftArm.postRender(scale);
-			
+
 			GlStateManager.scale(1.5F, 1.5F, 1.5F);
-			
+
 			if (player.isSneaking()) {
 				GlStateManager.translate(0.0F, 0.2F, 0.0F);
 			}
-			
+
 			GlStateManager.translate(0, 0.3F, 0);
 			GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
-			
+
 			for (int i = 0; i < 7; i++) {
 				GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
 				drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
 				drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, secondaryColor, 0);
 			}
-			
+
 			RenderUtil.finishRenderLightning();
+		}
+	}
+
+	@Override
+	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+		if (cap.getState() == RegenState.REGENERATING) {
+			IRegenType type = TypeHandler.getTypeInstance(cap.getType());
+			type.getRenderer().onRenderRegenerationLayer(type, playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+		} else if (cap.areHandsGlowing()) {
+			renderGlowingHands(player, cap, scale);
+		}
+
+		if (cap.getState() == RegenState.POST && player.hurtTime > 0) {
+			renderPost(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 	}
 	
@@ -87,7 +90,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 		boolean flag = player.isInvisible();
 		ModelBase playerModel = playerRenderer.getMainModel();
 		GlStateManager.depthMask(!flag);
-		this.playerRenderer.bindTexture(GLOW_TEXTURE);
+		playerRenderer.bindTexture(GLOW_TEXTURE);
 		GlStateManager.matrixMode(5890);
 		GlStateManager.loadIdentity();
 		float f = (float) player.ticksExisted + partialTicks;
@@ -97,7 +100,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 		GlStateManager.color(0.5F, 0.5F, 0.5F, 1.0F);
 		GlStateManager.disableLighting();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
-		playerModel.setModelAttributes(this.playerRenderer.getMainModel());
+		playerModel.setModelAttributes(playerRenderer.getMainModel());
 		Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
 		playerModel.render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 		Minecraft.getMinecraft().entityRenderer.setupFogColor(false);

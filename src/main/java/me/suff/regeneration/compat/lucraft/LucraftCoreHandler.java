@@ -12,6 +12,8 @@ import me.suff.regeneration.client.AnimationHandler;
 import me.suff.regeneration.client.rendering.AnimationContext;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
+import me.suff.regeneration.common.types.IRegenType;
+import me.suff.regeneration.common.types.TypeHandler;
 import me.suff.regeneration.handlers.IActingHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.PlayerUtil;
@@ -121,7 +123,8 @@ public class LucraftCoreHandler implements IActingHandler {
 			AnimationContext context = new AnimationContext(ev.model, (EntityPlayer) ev.getEntity(), ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
 			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) ev.getEntity());
 			if (data.getState() == REGENERATING) {
-				ev.setCanceled(data.getType().getRenderer().onAnimateRegen(context));
+				IRegenType type = TypeHandler.getTypeInstance(data.getType());
+				ev.setCanceled(type.getRenderer().onAnimateRegen(context));
 			} else {
 				AnimationHandler.animatePlayer(context);
 			}

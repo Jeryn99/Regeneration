@@ -1,12 +1,10 @@
 package me.suff.regeneration.common.traits.positive;
 
-import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.traits.DnaHandler;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.UUID;
 
@@ -14,14 +12,17 @@ import java.util.UUID;
  * Created by Suffril
  * on 24/01/2019.
  */
-public class DnaAthlete implements DnaHandler.IDna {
+public class DnaAthlete extends DnaHandler.IDna {
 	
 	private final UUID SPEED_ID = UUID.fromString("a22a9515-90d7-479d-9153-07268f2a1714");
 	private final AttributeModifier SPEED_MODIFIER = new AttributeModifier(SPEED_ID, "SANIC_FAST", 0.95, 1);
 	private final UUID KNOCKBACK_ID = UUID.fromString("49906f69-7b9d-4967-aba8-901621ee76a5");
 	private final AttributeModifier KNOCKBACK_MODIFIER = new AttributeModifier(KNOCKBACK_ID, "JUMPY", 0.95, 1);
-	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "athlete");
-	
+
+    public DnaAthlete() {
+        super("athlete");
+    }
+
 	@Override
 	public void onUpdate(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
@@ -55,14 +56,5 @@ public class DnaAthlete implements DnaHandler.IDna {
 			player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(KNOCKBACK_MODIFIER);
 		}
 	}
-	
-	@Override
-	public String getLangKey() {
-		return "traits." + ID.getPath() + ".name";
-	}
-	
-	@Override
-	public ResourceLocation getRegistryName() {
-		return ID;
-	}
+
 }

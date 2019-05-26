@@ -4,9 +4,11 @@ import me.suff.regeneration.client.RegenKeyBinds;
 import me.suff.regeneration.client.gui.InventoryTabRegeneration;
 import me.suff.regeneration.client.rendering.LayerFuzz;
 import me.suff.regeneration.client.rendering.LayerRegeneration;
+import me.suff.regeneration.client.rendering.entity.RenderDupe;
 import me.suff.regeneration.client.rendering.entity.RenderItemOverride;
 import me.suff.regeneration.client.rendering.entity.RenderLindos;
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
+import me.suff.regeneration.common.entity.EntityDupePlayer;
 import me.suff.regeneration.common.entity.EntityItemOverride;
 import me.suff.regeneration.common.entity.EntityLindos;
 import me.suff.regeneration.compat.lucraft.LucraftCoreHandler;
@@ -33,6 +35,7 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
 		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityDupePlayer.class, RenderDupe::new);
 	}
 	
 	@Override

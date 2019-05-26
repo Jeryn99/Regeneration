@@ -5,6 +5,8 @@ import me.suff.regeneration.RegenConfig;
 import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
+import me.suff.regeneration.common.types.IRegenType;
+import me.suff.regeneration.common.types.TypeHandler;
 import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.ClientUtil;
@@ -189,12 +191,12 @@ public class SkinChangingHandler {
 	 * @throws IOException
 	 */
 	private static ResourceLocation getMojangSkin(AbstractClientPlayer player) {
-		Map map = Minecraft.getMinecraft().getSkinManager().loadSkinFromCache(player.getGameProfile());
+		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getMinecraft().getSkinManager().loadSkinFromCache(player.getGameProfile());
 		if (map.isEmpty()) {
 			map = Minecraft.getMinecraft().getSessionService().getTextures(Minecraft.getMinecraft().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
 		}
 		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-			MinecraftProfileTexture profile = (MinecraftProfileTexture) map.get(MinecraftProfileTexture.Type.SKIN);
+			MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
 			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, Minecraft.getMinecraft().getSkinManager(), 2), profile.getHash().substring(0, 2));
 			File file = new File(dir, profile.getHash());
 			if (file.exists())
@@ -255,7 +257,7 @@ public class SkinChangingHandler {
 		if (MinecraftForgeClient.getRenderPass() == -1) return;
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
+		IRegenType type = TypeHandler.getTypeInstance(cap.getType());
 		addType(player);
 		
 		if (player.ticksExisted == 20) {
@@ -263,10 +265,10 @@ public class SkinChangingHandler {
 		}
 		
 		if (cap.getState() == RegenState.REGENERATING) {
-			if (cap.getType().getAnimationProgress(cap) > 0.7) {
+			if (type.getAnimationProgress(cap) > 0.7) {
 				setSkinFromData(player, cap, false);
 			}
-			cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
+			type.getRenderer().onRenderRegeneratingPlayerPre(type, e, cap);
 		} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
 			setSkinFromData(player, cap, true);
 		} else {
@@ -286,9 +288,10 @@ public class SkinChangingHandler {
 	public void onRenderPlayer(RenderPlayerEvent.Post e) {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
+		IRegenType type = TypeHandler.getTypeInstance(cap.getType());
+
 		if (cap.getState() == RegenState.REGENERATING) {
-			cap.getType().getRenderer().onRenderRegeneratingPlayerPost(cap.getType(), e, cap);
+			type.getRenderer().onRenderRegeneratingPlayerPost(type, e, cap);
 		}
 		
 	}
