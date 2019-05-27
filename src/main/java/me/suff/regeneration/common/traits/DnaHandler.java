@@ -6,8 +6,12 @@ import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.traits.negative.DnaHunger;
 import me.suff.regeneration.common.traits.negative.DnaHydrophobic;
 import me.suff.regeneration.common.traits.positive.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,6 +39,7 @@ public class DnaHandler {
 	public static IDna DNA_HUNGER = new DnaHunger();
 	public static IDna DNA_NIGHTVISION = new DnaNightvision();
     public static IDna DNA_WALLCLIMB = new DnaWallClimbing();
+	public static IDna DNA_REPEL_ARROW = new DnaSimple("repel_arrow");
 	public static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
 	private static ArrayList<IDna> DNA_LIST = new ArrayList<>();
 	
@@ -50,6 +55,7 @@ public class DnaHandler {
 		register(DNA_HUNGER);
 		register(DNA_NIGHTVISION);
         register(DNA_WALLCLIMB);
+		register(DNA_REPEL_ARROW);
 	}
 	
 	public static void register(IDna dna) {
@@ -90,6 +96,20 @@ public class DnaHandler {
 		}
 	}
 
+	@SubscribeEvent
+	public static void onArrow(LivingAttackEvent event) {
+		DamageSource source = event.getSource();
+		Entity attacked = event.getEntity();
+		if (source != null && attacked != null && source.getImmediateSource() != null) {
+			if (attacked instanceof EntityPlayer && source.getImmediateSource() instanceof EntityArrow) {
+				if (!attacked.world.isRemote) {
+					EntityPlayer player = (EntityPlayer) attacked;
+					boolean flag = CapabilityRegeneration.getForPlayer(player).getDnaType().toString().equals(DNA_REPEL_ARROW.getRegistryName().toString());
+					event.setCanceled(flag);
+				}
+			}
+		}
+	}
 
     public static abstract class IDna {
 

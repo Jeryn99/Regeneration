@@ -85,7 +85,7 @@ public class RegenDebugCommand extends CommandBase {
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		if (args.length < 2)
-            return getListOfStringsMatchingLastWord(args, "fast-forward", "set-regens", "open", "glow");
+			return getListOfStringsMatchingLastWord(args, "fast-forward", "set-regens", "open", "glow", "set-trait");
 		if(args.length < 3){
 			return getListOfStringsMatchingLastWord(args, DnaHandler.DNA_ENTRIES.keySet());
 		}
