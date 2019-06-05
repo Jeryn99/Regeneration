@@ -15,7 +15,9 @@ public class DnaNightvision extends DnaHandler.IDna {
     @Override
     public void onUpdate(IRegeneration cap) {
         EntityPlayer player = cap.getPlayer();
-        PlayerUtil.applyPotionIfAbsent(player, MobEffects.NIGHT_VISION, 1200, 1, true, false);
+        if (!player.world.checkLight(player.getPosition()) || !player.world.isDaytime()) {
+            PlayerUtil.applyPotionIfAbsent(player, MobEffects.NIGHT_VISION, 12, 1, true, false);
+        }
     }
 
     @Override

@@ -135,10 +135,11 @@ public class ClientEventHandler {
 	public static void onAnimate(AnimationEvent.SetRotationAngles ev) {
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
 
-		AnimationContext context = new AnimationContext(ev.model, (EntityPlayer) ev.getEntity(), ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
-
 		if (ev.getEntity() instanceof EntityPlayer) {
-			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) ev.getEntity());
+			EntityPlayer player = (EntityPlayer) ev.getEntity();
+			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+			AnimationContext context = new AnimationContext(ev.model, player, ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
+
 			if (data.getState() == REGENERATING) {
 				ev.setCanceled(TypeHandler.getTypeInstance(data.getType()).getRenderer().onAnimateRegen(context));
 			} else {

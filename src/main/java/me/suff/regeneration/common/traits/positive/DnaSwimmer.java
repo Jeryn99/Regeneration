@@ -39,14 +39,4 @@ public class DnaSwimmer extends DnaHandler.IDna {
 		EntityPlayer player = cap.getPlayer();
 		player.removeActivePotionEffect(MobEffects.WATER_BREATHING);
 	}
-	
-	@Override
-	public String getLangKey() {
-		return "traits." + getRegistryName().getPath() + ".name";
-	}
-	
-	@Override
-	public ResourceLocation getRegistryName() {
-		return ID;
-	}
 }
