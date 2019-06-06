@@ -118,6 +118,7 @@ public class LucraftCoreHandler implements IActingHandler {
 	}
 
 	@SubscribeEvent(receiveCanceled = true)
+	@SideOnly(Side.CLIENT)
 	public void onAnimation(RenderModelEvent.SetRotationAngels ev) {
 		if (ev.getEntity() instanceof EntityPlayer) {
 			AnimationContext context = new AnimationContext(ev.model, (EntityPlayer) ev.getEntity(), ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
