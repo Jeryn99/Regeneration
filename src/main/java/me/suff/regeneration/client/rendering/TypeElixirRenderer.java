@@ -9,8 +9,6 @@ import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
-import static me.suff.regeneration.client.rendering.LayerRegeneration.renderGlowingHands;
-
 public class TypeElixirRenderer extends ATypeRenderer<TypeElixir> {
 
     public static final TypeElixirRenderer INSTANCE = new TypeElixirRenderer();
@@ -30,7 +28,7 @@ public class TypeElixirRenderer extends ATypeRenderer<TypeElixir> {
 
     @Override
     protected void renderRegenerationLayer(TypeElixir type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        renderGlowingHands(entityPlayer, capability, scale);
+        // renderGlowingHands(entityPlayer, capability, scale);
     }
 
     @Override

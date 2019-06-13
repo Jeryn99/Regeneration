@@ -131,7 +131,11 @@ public class RegenConfig {
 		@Config.Comment("The amount of absorption hearts you get when regenerating")
 		@Config.RangeInt(min = 0)
 		public int absorbtionLevel = 10;
-	}
+
+        @Config.LangKey("config.regeneration.post_grater")
+        @Config.Comment("Create a creator when falling from a great height in POST")
+        public boolean genGreator = false;
+    }
 	
 	
 	public static class Skins {

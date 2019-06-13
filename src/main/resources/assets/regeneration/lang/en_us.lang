@@ -111,6 +111,7 @@ config.regeneration.category.skins=Skin changing
 config.regeneration.category.on_regen=When Regenerating
 config.regeneration.category.post_regen=Post regeneration
 config.regeneration.skins.folder=Skin Regeneration folder
+config.regeneration.post_grater=Create fall damage crator?
 
 traits.athlete.name=Athletic genes! (You can run faster!)
 traits.boring.name=Lazy genes! (You're useless!)
@@ -122,7 +123,7 @@ traits.tough.name=Strong genes! (You deal more damage in a punch!)
 traits.fire.name=Non-flammable genes! (You're immune to fire!)
 traits.hunger.name=Hunger genes! (You starve faster!)
 traits.nightvision.name=Bat genes! (You can see in the Dark!)
-traits.wallclimb.name=Spider Genes! (You can climb walls!)
+traits.wallclimbing.name=Spider Genes! (You can climb walls!)
 traits.repel_arrow.name=Thick Skinned Genes (Arrows bounce off you!)
 
 nbt.item.lindos=Lindos Energy: %s

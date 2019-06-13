@@ -2,7 +2,6 @@ package me.suff.regeneration.util;
 
 import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
 import me.suff.regeneration.client.sound.MovingSoundBase;
-import me.suff.regeneration.common.entity.EntityDupePlayer;
 import me.suff.regeneration.network.MessageUpdateSkin;
 import me.suff.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
@@ -26,8 +25,6 @@ import java.util.function.Supplier;
 public class ClientUtil {
 	
 	public static String keyBind = "???"; //WAFFLE there was a weird thing with this somewhere that I still need to fix
-
-    public static EntityDupePlayer dummy;
 
     public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle) {
 		Minecraft.getMinecraft().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));

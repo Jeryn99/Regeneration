@@ -14,7 +14,7 @@ public class DnaWallClimbing extends DnaHandler.IDna {
     public void onUpdate(IRegeneration cap) {
         EntityPlayer player = cap.getPlayer();
         if (player.collidedHorizontally) {
-            player.motionX = 0.2D;
+            player.motionY = 0.2D;
         }
     }
 

@@ -130,7 +130,7 @@ public class RegenEventHandler {
 			if (event.getSource() == DamageSource.FALL) {
 				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
 				if (event.getAmount() > 8.0F) {
-					if (player.world.getGameRules().getBoolean("mobGriefing")) {
+                    if (player.world.getGameRules().getBoolean("mobGriefing") && RegenConfig.postRegen.genGreator) {
 						RegenUtil.genCrater(player.world, player.getPosition(), 3);
 					}
 					event.setAmount(0.5F);

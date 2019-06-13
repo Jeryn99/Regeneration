@@ -11,14 +11,16 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+
+import static me.suff.regeneration.client.rendering.LayerRegeneration.playerModelSteve;
 
 public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 
@@ -36,11 +38,73 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 
     }
 
+	public static void renderOverlay(RenderPlayer renderPlayer, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		GlStateManager.pushMatrix();
+		RenderUtil.setLightmapTextureCoords(240, 240);
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.blendFunc(770, 1);
+		Vec3d color = CapabilityRegeneration.getForPlayer(entityPlayer).getPrimaryColor();
+		float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
+		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, opacity);
+		playerModelSteve.isChild = false;
+		playerModelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		RenderUtil.restoreLightMap();
+		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
+		GlStateManager.popMatrix();
+	}
+
+	@Override
+	public boolean onAnimateRegen(AnimationContext animationContext) {
+		EntityPlayer player = animationContext.getEntityPlayer();
+		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+		ModelBiped playerModel = animationContext.getModelBiped();
+		double animationProgress = data.getAnimationTicks();
+		double arm_shake = player.getRNG().nextDouble();
+
+		float armRot = (float) animationProgress * 3.5F;
+		if (armRot > 90) {
+			armRot = 90;
+		}
+
+		//ARMS
+		playerModel.bipedLeftArm.rotateAngleY = 0;
+		playerModel.bipedRightArm.rotateAngleY = 0;
+
+		playerModel.bipedLeftArm.rotateAngleX = 0;
+		playerModel.bipedRightArm.rotateAngleX = 0;
+
+		playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
+		playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
+
+		//BODY
+		playerModel.bipedBody.rotateAngleX = 0;
+		playerModel.bipedBody.rotateAngleY = 0;
+		playerModel.bipedBody.rotateAngleZ = 0;
+
+
+		//LEGS
+		playerModel.bipedLeftLeg.rotateAngleY = 0;
+		playerModel.bipedRightLeg.rotateAngleY = 0;
+
+		playerModel.bipedLeftLeg.rotateAngleX = 0;
+		playerModel.bipedRightLeg.rotateAngleX = 0;
+
+		playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
+		playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+
+
+		//EXTERNAL WEAR
+		if (playerModel instanceof ModelPlayer) {
+			ClientUtil.copyAnglesToWear((ModelPlayer) playerModel);
+		}
+		return true;
+	}
+	
     @Override
 	public void renderRegenerationLayer(TypeFiery type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (MinecraftForgeClient.getRenderPass() == -1) // rendering in inventory
-			return;
-
         ModelBiped model = (ModelBiped) renderLivingBase.getMainModel();
 
         // State manager changes
@@ -89,18 +153,10 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		renderCone(entityPlayer, secondaryScale / 1.6F, secondaryScale / 1.5F, secondaryColor);
 		GlStateManager.popMatrix();
 
-        // Check which slightly larger model to use
-		ModelPlayer playerModel = LayerRegeneration.playerModelSteve;
-
-        // Define which parts are glowing
-		playerModel.bipedBody.isHidden = playerModel.bipedLeftLeg.isHidden = playerModel.bipedRightLeg.isHidden = playerModel.bipedBodyWear.isHidden = playerModel.bipedHeadwear.isHidden = playerModel.bipedLeftLegwear.isHidden = playerModel.bipedRightLegwear.isHidden = false;
-
-        // Copy model attributes from the real player model
-		playerModel.setModelAttributes(model);
-
-        // Render glowing overlay
-		GlStateManager.color((float) primaryColor.x, (float) primaryColor.y, (float) primaryColor.z, 1);
-		playerModel.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		// Render glowing overlay
+		//GlStateManager.color((float) primaryColor.x, (float) primaryColor.y, (float) primaryColor.z, 1);
+		//playerModel.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		renderOverlay((RenderPlayer) renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 
         // Undo state manager changes
 		RenderUtil.restoreLightMap();
@@ -112,67 +168,21 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.popAttrib();
 	}
 
-    @Override
-	public boolean onAnimateRegen(AnimationContext animationContext) {
-		EntityPlayer player = animationContext.getEntityPlayer();
-		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-		ModelBiped playerModel = animationContext.getModelBiped();
-		double animationProgress = data.getAnimationTicks();
-		double arm_shake = player.getRNG().nextDouble();
-
-		float armRot = (float) animationProgress * 3.5F;
-		if (armRot > 90) {
-			armRot = 90;
-		}
-
-		//ARMS
-		playerModel.bipedLeftArm.rotateAngleY = 0;
-		playerModel.bipedRightArm.rotateAngleY = 0;
-
-		playerModel.bipedLeftArm.rotateAngleX = 0;
-		playerModel.bipedRightArm.rotateAngleX = 0;
-
-		playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
-		playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
-
-		//BODY
-		playerModel.bipedBody.rotateAngleX = 0;
-		playerModel.bipedBody.rotateAngleY = 0;
-		playerModel.bipedBody.rotateAngleZ = 0;
-
-
-		//LEGS
-		playerModel.bipedLeftLeg.rotateAngleY = 0;
-		playerModel.bipedRightLeg.rotateAngleY = 0;
-
-		playerModel.bipedLeftLeg.rotateAngleX = 0;
-		playerModel.bipedRightLeg.rotateAngleX = 0;
-
-		playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-		playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
-
-
-        //EXTERNAL WEAR
-		if (playerModel instanceof ModelPlayer) {
-            ClientUtil.copyAnglesToWear((ModelPlayer) playerModel);
-		}
-		return true;
-	}
-	
 	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
-		
+
 		for (int i = 0; i < 8; i++) {
 			GlStateManager.pushMatrix();
 			GlStateManager.rotate(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
+			//GlStateManager.scale(1.0f, 1.0f, 0.65f);
 			GlStateManager.scale(1.0f, 1.0f, 0.65f);
 			vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
-			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
-			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
-			vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
-			vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
-			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 100).endVertex();
+			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
+			vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
+			vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
+			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
 			tessellator.draw();
 			GlStateManager.popMatrix();
 		}

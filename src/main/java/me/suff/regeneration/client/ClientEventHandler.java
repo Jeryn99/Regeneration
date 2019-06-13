@@ -7,7 +7,6 @@ import me.suff.regeneration.client.skinhandling.SkinInfo;
 import me.suff.regeneration.client.sound.echo.AnimationEvent;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.entity.EntityDupePlayer;
 import me.suff.regeneration.common.types.TypeHandler;
 import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.network.MessageRepairArms;
@@ -21,6 +20,8 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -50,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import static me.suff.regeneration.util.ClientUtil.dummy;
 import static me.suff.regeneration.util.RegenState.*;
 
 /**
@@ -145,6 +145,13 @@ public class ClientEventHandler {
 			} else {
 				AnimationHandler.animatePlayer(context);
 			}
+
+            //==============MAKE SURE ANGLES COPY OVER==============
+            if (context.getModelBiped() instanceof ModelPlayer) {
+                ModelPlayer playerModel = (ModelPlayer) context.getModelBiped();
+                ModelBase.copyModelAngles(context.getModelBiped().bipedRightArm, playerModel.bipedRightArmwear);
+                ModelBase.copyModelAngles(context.getModelBiped().bipedLeftArm, playerModel.bipedLeftArmwear);
+            }
 		}
 	}
 	
@@ -332,27 +339,6 @@ public class ClientEventHandler {
 		RenderUtil.finishRenderLightning();
 
 		GlStateManager.popMatrix();
-	}
-
-	@SubscribeEvent
-	public static void on(TickEvent.ClientTickEvent event) {
-
-		EntityPlayer player = Minecraft.getMinecraft().player;
-		if (player != null) {
-			if (dummy == null) {
-				if (spawnDelay == 0) {
-					dummy = new EntityDupePlayer(player.world);
-					dummy.setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-					player.world.spawnEntity(dummy);
-				} else {
-					--spawnDelay;
-				}
-			} else if (dummy.world.provider.getDimension() != player.world.provider.getDimension() || dummy.getDistanceSq(player) > 5 || dummy.lastTickUpdated < player.world.getTotalWorldTime() - 20) {
-				dummy.setDead();
-				dummy = null;
-				spawnDelay = 100;
-			}
-		}
 	}
 	
 }
