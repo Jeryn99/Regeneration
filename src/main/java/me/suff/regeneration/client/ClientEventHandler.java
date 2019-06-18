@@ -20,8 +20,6 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -134,23 +132,14 @@ public class ClientEventHandler {
 	@SubscribeEvent(receiveCanceled = true)
 	public static void onAnimate(AnimationEvent.SetRotationAngles ev) {
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
-
 		if (ev.getEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) ev.getEntity();
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
 			AnimationContext context = new AnimationContext(ev.model, player, ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
-
 			if (data.getState() == REGENERATING) {
 				ev.setCanceled(TypeHandler.getTypeInstance(data.getType()).getRenderer().onAnimateRegen(context));
 			} else {
-				AnimationHandler.animatePlayer(context);
-			}
-
-            //==============MAKE SURE ANGLES COPY OVER==============
-            if (context.getModelBiped() instanceof ModelPlayer) {
-                ModelPlayer playerModel = (ModelPlayer) context.getModelBiped();
-                ModelBase.copyModelAngles(context.getModelBiped().bipedRightArm, playerModel.bipedRightArmwear);
-                ModelBase.copyModelAngles(context.getModelBiped().bipedLeftArm, playerModel.bipedLeftArmwear);
+                AnimationHandler.animate(context);
             }
 		}
 	}

@@ -2,12 +2,12 @@ package me.suff.regeneration.client.rendering;
 
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.TypeElixir;
-import me.suff.regeneration.util.ClientUtil;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+
+import static me.suff.regeneration.client.AnimationHandler.copyAndReturn;
 
 public class TypeElixirRenderer extends ATypeRenderer<TypeElixir> {
 
@@ -37,12 +37,7 @@ public class TypeElixirRenderer extends ATypeRenderer<TypeElixir> {
         EntityPlayer entityIn = animationContext.getEntityPlayer();
         modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-90);
         modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-90);
-
-        //EXTERNAL WEAR
-        if (modelBiped instanceof ModelPlayer) {
-            ClientUtil.copyAnglesToWear((ModelPlayer) modelBiped);
-        }
-        return true;
+        return copyAndReturn(modelBiped, true);
     }
 
 }

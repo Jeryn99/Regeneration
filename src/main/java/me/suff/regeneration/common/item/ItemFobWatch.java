@@ -1,12 +1,12 @@
 package me.suff.regeneration.common.item;
 
 import me.suff.regeneration.RegenConfig;
+import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.entity.EntityItemOverride;
 import me.suff.regeneration.handlers.RegenObjects;
 import me.suff.regeneration.util.ClientUtil;
-import me.suff.regeneration.util.DebuggerUtil;
 import me.suff.regeneration.util.PlayerUtil;
 import me.suff.regeneration.util.RegenState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,11 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
@@ -99,7 +95,6 @@ public class ItemFobWatch extends ItemOverrideBase {
 				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
 			} else {
 				if (!world.isRemote) {
-					DebuggerUtil.out(player, player.getName() + " is now a timelord");
 					setOpen(stack, 1);
 				} else {
 					ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.timelord"), new TextComponentTranslation("regeneration.toast.to_use", RegenConfig.regenCapacity));
@@ -107,7 +102,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 			}
 			
 			if (used < 0)
-				DebuggerUtil.warn(player, "Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.regenCapacity + ", damage:" + stack.getItemDamage() + ", regens:" + cap.getRegenerationsLeft());
+				RegenerationMod.LOG.warn(player.getName() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.regenCapacity + ", damage:" + stack.getItemDamage() + ", regens:" + cap.getRegenerationsLeft());
 			
 			
 			if (!cap.getPlayer().isCreative()) {

@@ -2,7 +2,7 @@ package me.suff.regeneration.client;
 
 import me.suff.regeneration.client.rendering.AnimationContext;
 import me.suff.regeneration.common.item.ItemFobWatch;
-import net.minecraft.client.model.ModelBase;
+import me.suff.regeneration.util.ClientUtil;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,14 +10,14 @@ import net.minecraft.item.ItemStack;
 
 public class AnimationHandler {
 
-    public static boolean animatePlayer(AnimationContext animationContext) {
+    public static boolean animate(AnimationContext animationContext) {
         EntityPlayer player = animationContext.getEntityPlayer();
         ItemStack stack = player.getHeldItemMainhand();
         ItemStack offStack = player.getHeldItemOffhand();
         ModelBiped modelBiped = animationContext.getModelBiped();
 
         //==============FOB WATCH START==============
-        boolean isOpen = false;
+        boolean isOpen;
         if (stack.getItem() instanceof ItemFobWatch) {
 
             isOpen = ItemFobWatch.getOpen(stack) == 1;
@@ -27,7 +27,7 @@ public class AnimationHandler {
                 modelBiped.bipedLeftArm.rotateAngleY = 0.1F + modelBiped.bipedHead.rotateAngleY + 0.4F;
                 modelBiped.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
                 modelBiped.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
-                return true;
+                return copyAndReturn(modelBiped, true);
             }
         } else if (offStack.getItem() instanceof ItemFobWatch) {
             isOpen = ItemFobWatch.getOpen(stack) == 1;
@@ -36,20 +36,27 @@ public class AnimationHandler {
                 modelBiped.bipedLeftArm.rotateAngleY = 0.1F + modelBiped.bipedHead.rotateAngleY;
                 modelBiped.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
                 modelBiped.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
-                return true;
+
+                //==============MAKE SURE ANGLES COPY OVER==============
+                if (modelBiped instanceof ModelPlayer) {
+                    ModelPlayer playerModel = (ModelPlayer) modelBiped;
+                    ClientUtil.copyAnglesToWear(playerModel);
+                }
+                return copyAndReturn(modelBiped, true);
             }
         }
         //==============FOB WATCH END==============
 
 
-        //==============MAKE SURE ANGLES COPY OVER==============
+        return copyAndReturn(modelBiped, false);
+    }
+
+    public static boolean copyAndReturn(ModelBiped modelBiped, boolean cancel) {
         if (modelBiped instanceof ModelPlayer) {
             ModelPlayer playerModel = (ModelPlayer) modelBiped;
-            ModelBase.copyModelAngles(modelBiped.bipedRightArm, playerModel.bipedRightArmwear);
-            ModelBase.copyModelAngles(modelBiped.bipedLeftArm, playerModel.bipedLeftArmwear);
+            ClientUtil.copyAnglesToWear(playerModel);
         }
-
-        return false;
+        return cancel;
     }
 
 }

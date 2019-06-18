@@ -1,6 +1,5 @@
 package me.suff.regeneration.common.commands;
 
-import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.traits.DnaHandler;
@@ -44,11 +43,6 @@ public class RegenDebugCommand extends CommandBase {
 				}
 				cap.getStateManager().fastForward();
 				break;
-			
-			case "open":
-				RegenerationMod.DEBUGGER.open();
-				break;
-			
 			case "set-regens":
 				int amount = args.length > 1 ? parseInt(args[1], 0) : -1;
 				if (amount >= 0)
@@ -85,7 +79,7 @@ public class RegenDebugCommand extends CommandBase {
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		if (args.length < 2)
-			return getListOfStringsMatchingLastWord(args, "fast-forward", "set-regens", "open", "glow", "set-trait");
+			return getListOfStringsMatchingLastWord(args, "fast-forward", "set-regens", "glow", "set-trait");
 		if(args.length < 3){
 			return getListOfStringsMatchingLastWord(args, DnaHandler.DNA_ENTRIES.keySet());
 		}

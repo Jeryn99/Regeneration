@@ -30,8 +30,8 @@ public class RegenConfig {
 	
 	@Config.LangKey("config.regeneration.category.skins")
 	public static final Skins skins = new Skins();
-	
-	
+
+
 	@Config.LangKey("config.regeneration.max_regens")
 	@Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
 	@Config.RequiresMcRestart

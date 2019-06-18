@@ -28,7 +28,10 @@ import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -50,8 +53,11 @@ public class RegenEventHandler {
 	
 	@SubscribeEvent
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
-		if (event.getEntityLiving() instanceof EntityPlayer)
-			CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).tick();
+		if (event.getEntityLiving() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+			data.tick();
+		}
 	}
 	
 	@SubscribeEvent
@@ -205,20 +211,6 @@ public class RegenEventHandler {
 				player.sendMessage(new TextComponentString(TextFormatting.GOLD + "Changes: " + TextFormatting.BLUE + changes));
 			}
 		}
-	}
-
-
-	@SubscribeEvent
-	public static void onItemUse(LivingEntityUseItemEvent.Start event) {
-		//	if(!(event.getEntityLiving() instanceof EntityPlayer)) return;
-		//	IRegeneration cap = CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving());
-		//	if (cap.getState() == RegenState.POST && cap.getPlayer().rand.nextBoolean()) {
-		//	if (event.getItem().getItem() instanceof ItemFood) {
-		//		cap.getPlayer().dropItem(event.getItem().getItem(), 1);
-		//			event.getItem().shrink(1);
-		//			event.setCanceled(true);
-		//		}
-		//}
 	}
 	
 }

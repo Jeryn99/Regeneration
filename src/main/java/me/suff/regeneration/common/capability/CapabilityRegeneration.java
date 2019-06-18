@@ -17,6 +17,7 @@ import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.util.PlayerUtil;
 import me.suff.regeneration.util.RegenState;
 import me.suff.regeneration.util.RegenUtil;
+import me.suff.regeneration.util.ScheduledAction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -68,7 +69,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
-	private int ticksAnimating = 0; //Im so sorry
+	private int ticksAnimating =0; //Im so sorry
 
 	/**
 	 * WHY THIS IS A SEPERATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
@@ -643,33 +644,33 @@ public class CapabilityRegeneration implements IRegeneration {
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
 			synchronise();
 		}
-		
+
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public Pair<RegenState.Transition, Long> getScheduledEvent() {
 			return nextTransition == null ? null : Pair.of(nextTransition.transition, nextTransition.getTicksLeft());
 		}
-		
+
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForward() {
 			while (!nextTransition.tick()) ;
 		}
-		
+
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForwardHandGlow() {
 			while (!handGlowTimer.tick()) ;
 		}
-		
+
 		@Override
 		public double getStateProgress() {
 			return nextTransition.getProgress();
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		@Override
 		public NBTTagCompound serializeNBT() {
@@ -678,22 +679,22 @@ public class CapabilityRegeneration implements IRegeneration {
 				nbt.setString("transitionId", nextTransition.transition.toString());
 				nbt.setLong("transitionInTicks", nextTransition.getTicksLeft());
 			}
-			
+
 			if (handGlowTimer != null && handGlowTimer.getTicksLeft() >= 0) {
 				nbt.setString("handGlowState", handGlowTimer.transition.toString());
 				nbt.setLong("handGlowScheduledTicks", handGlowTimer.getTicksLeft());
 			}
 			return nbt;
 		}
-		
+
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
 			if (nbt.hasKey("transitionId"))
 				scheduleTransitionInTicks(RegenState.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
-			
+
 			if (nbt.hasKey("handGlowState")) {
 				RegenState.Transition transition = RegenState.Transition.valueOf(nbt.getString("handGlowState"));
-				
+
 				Runnable callback;
 				if (transition == RegenState.Transition.HAND_GLOW_START)
 					callback = this::scheduleHandGlowTrigger;
@@ -701,7 +702,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					callback = this::triggerRegeneration;
 				else
 					throw new IllegalStateException("Illegal hand glow timer transition");
-				
+
 				handGlowTimer = new DebuggableScheduledAction(transition, player, callback, nbt.getLong("handGlowScheduledTicks"));
 			}
 		}

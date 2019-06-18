@@ -25,8 +25,8 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
                 GlStateManager.scale(0.5F, 0.5F, 0.5F);
             }
 
-            renderHand(entitylivingbaseIn, entitylivingbaseIn.getPrimaryHand(), scale);
-            // renderHand(entitylivingbaseIn, EnumHandSide.LEFT, scale);
+            renderHand(entitylivingbaseIn, EnumHandSide.LEFT, 1.5F);
+            renderHand(entitylivingbaseIn, EnumHandSide.RIGHT, 1.5F);
 
             GlStateManager.popMatrix();
         }
@@ -42,7 +42,7 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
         this.translateToHand(handSide);
         boolean flag = handSide == EnumHandSide.LEFT;
         GlStateManager.translate((float) (flag ? -1 : 1) / 25.0F, 0.125F, -0.625F);
-        GlStateManager.translate(0, 0, 0.6);
+        GlStateManager.translate(0, -0.050, 0.6);
         LayerRegeneration.renderGlowingHands(player, CapabilityRegeneration.getForPlayer(player), scale, handSide);
 
         GlStateManager.popMatrix();

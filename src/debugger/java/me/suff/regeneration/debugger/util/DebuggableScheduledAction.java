@@ -13,18 +13,14 @@ public class DebuggableScheduledAction extends ScheduledAction {
 		super(callback, inTicks);
 		this.transition = transition;
 		this.player = player;
-		
-		RegenerationMod.DEBUGGER.getChannelFor(player).notifySchedule(transition, inTicks);
 	}
 	
 	@Override
 	public boolean tick() {
 		if (scheduledTick == -1)
-			RegenerationMod.DEBUGGER.getChannelFor(player).warn("Ticking finsished/canceled ScheduledAction (" + transition + ")");
-		
+			RegenerationMod.LOG.warn(player.getName() + ": Ticking finsished/canceled ScheduledAction (" + transition + ")");
+
 		boolean willExecute = currentTick == scheduledTick;
-		if (willExecute)
-			RegenerationMod.DEBUGGER.getChannelFor(player).notifyExecution(transition, currentTick);
 		
 		boolean executed = super.tick();
 		if (willExecute != executed)
@@ -35,14 +31,13 @@ public class DebuggableScheduledAction extends ScheduledAction {
 	
 	@Override
 	public void cancel() {
-		RegenerationMod.DEBUGGER.getChannelFor(player).notifyCancel(transition, scheduledTick - currentTick);
 		super.cancel();
 	}
 	
 	@Override
 	public double getProgress() {
 		if (scheduledTick == -1)
-			RegenerationMod.DEBUGGER.getChannelFor(player).warn("Querying progress of canceled/finished transition");
+			RegenerationMod.LOG.warn(player.getName() + ": Querying progress of canceled/finished transition");
 		return super.getProgress();
 	}
 	

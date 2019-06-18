@@ -3,10 +3,8 @@ package me.suff.regeneration.client.rendering;
 import me.suff.regeneration.common.capability.CapabilityRegeneration;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.types.TypeFiery;
-import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.RenderUtil;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -20,6 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
+import static me.suff.regeneration.client.AnimationHandler.copyAndReturn;
 import static me.suff.regeneration.client.rendering.LayerRegeneration.playerModelSteve;
 
 public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
@@ -95,12 +94,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
 		playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
 
-
-		//EXTERNAL WEAR
-		if (playerModel instanceof ModelPlayer) {
-			ClientUtil.copyAnglesToWear((ModelPlayer) playerModel);
-		}
-		return true;
+		return copyAndReturn(playerModel, true);
 	}
 	
     @Override
@@ -154,8 +148,6 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.popMatrix();
 
 		// Render glowing overlay
-		//GlStateManager.color((float) primaryColor.x, (float) primaryColor.y, (float) primaryColor.z, 1);
-		//playerModel.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 		renderOverlay((RenderPlayer) renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 
         // Undo state manager changes
@@ -168,7 +160,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.popAttrib();
 	}
 
-	private void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) {
+	public static void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
 

@@ -6,17 +6,13 @@ public enum RegenState {
 	
 	ALIVE,
 	GRACE, GRACE_CRIT, POST,
-	REGENERATING;//, CORRUPT;
+    REGENERATING;
 	
 	public boolean isGraceful() {
 		return this == GRACE || this == GRACE_CRIT;
 	}
-	
-	/*public boolean isCorrupt() {
-		return this == CORRUPT;
-	}*/
-	
-	public enum Transition {
+
+    public enum Transition {
 		HAND_GLOW_START(Color.YELLOW.darker()), HAND_GLOW_TRIGGER(Color.ORANGE),
 		ENTER_CRITICAL(Color.BLUE),
 		CRITICAL_DEATH(Color.RED),

@@ -2,7 +2,6 @@ package me.suff.regeneration.proxy;
 
 import me.suff.regeneration.client.RegenKeyBinds;
 import me.suff.regeneration.client.gui.InventoryTabRegeneration;
-import me.suff.regeneration.client.rendering.LayerFuzz;
 import me.suff.regeneration.client.rendering.LayerHands;
 import me.suff.regeneration.client.rendering.LayerRegeneration;
 import me.suff.regeneration.client.rendering.entity.RenderItemOverride;
@@ -62,7 +61,6 @@ public class ClientProxy extends CommonProxy {
 		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
-			renderPlayer.addLayer(new LayerFuzz(renderPlayer));
 			renderPlayer.addLayer(new LayerHands(renderPlayer));
 		}
 		FileUtil.doSetupOnThread();

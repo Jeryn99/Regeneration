@@ -1,7 +1,6 @@
 package me.suff.regeneration.handlers;
 
 import me.suff.regeneration.RegenConfig;
-import me.suff.regeneration.RegenerationMod;
 import me.suff.regeneration.common.advancements.RegenTriggers;
 import me.suff.regeneration.common.capability.IRegeneration;
 import me.suff.regeneration.common.traits.DnaHandler;
@@ -61,14 +60,10 @@ class ActingServerHandler implements IActingHandler {
 				float nauseaPercentage = 0.5F;
 				
 				if (stateProgress > nauseaPercentage) {
-					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, (int) (RegenConfig.grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false)) {
-						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied nausea");
-					}
+                    PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, (int) (RegenConfig.grace.criticalPhaseLength * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false);
 				}
-				
-				if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.grace.criticalPhaseLength * 20 * (1 - stateProgress)), 0, false, false)) {
-					RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
-				}
+
+                PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.grace.criticalPhaseLength * 20 * (1 - stateProgress)), 0, false, false);
 				
 				if (player.world.rand.nextDouble() < (RegenConfig.grace.criticalDamageChance / 100F))
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
@@ -79,9 +74,7 @@ class ActingServerHandler implements IActingHandler {
 				float weaknessPercentage = 0.5F;
 				
 				if (stateProgress > weaknessPercentage) {
-					if (PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.grace.gracePhaseLength * 20 * (1 - weaknessPercentage) + RegenConfig.grace.criticalPhaseLength * 20), 0, false, false)) {
-						RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied weakness");
-					}
+                    PlayerUtil.applyPotionIfAbsent(player, MobEffects.WEAKNESS, (int) (RegenConfig.grace.gracePhaseLength * 20 * (1 - weaknessPercentage) + RegenConfig.grace.criticalPhaseLength * 20), 0, false, false);
 				}
 				
 				break;
@@ -108,7 +101,6 @@ class ActingServerHandler implements IActingHandler {
 		DnaHandler.IDna dna = DnaHandler.getDnaEntry(cap.getDnaType());
 		dna.onRemoved(cap);
 		cap.setDnaActive(false);
-		RegenerationMod.DEBUGGER.getChannelFor(player).out("Applied health reduction");
 		player.setHealth(player.getMaxHealth());
 	}
 	
@@ -125,8 +117,6 @@ class ActingServerHandler implements IActingHandler {
 		if (!cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
 			cap.getPlayer().getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
 		}
-		
-		RegenerationMod.DEBUGGER.getChannelFor(cap.getPlayer()).out("Applied speed reduction");
 	}
 	
 	@Override
@@ -151,15 +141,9 @@ class ActingServerHandler implements IActingHandler {
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		
 		NetworkHandler.INSTANCE.sendToAllAround(new MessagePlayRegenerationSound(getRandomSound(player.world.rand), player.getUniqueID().toString()), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 40));
-		
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
-		RegenerationMod.DEBUGGER.getChannelFor(player).out("Removed health reduction");
-		
 		player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
-		RegenerationMod.DEBUGGER.getChannelFor(player).out("Removed speed reduction");
-		
 		player.setHealth(Math.max(player.getHealth(), 8));
 		player.setAbsorptionAmount(0);
 		

@@ -42,7 +42,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 		float f = 0.2F;
 
 		RenderUtil.setupRenderLightning();
-			GlStateManager.scale(1.5F, 1.5F, 1.5F);
+        GlStateManager.scale(scale, scale, scale);
 			GlStateManager.translate(0, 0.3F, 0);
 			GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
 			for (int i = 0; i < 7; i++) {

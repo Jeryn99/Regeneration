@@ -18,8 +18,6 @@ import me.suff.regeneration.handlers.IActingHandler;
 import me.suff.regeneration.util.ClientUtil;
 import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -128,14 +126,8 @@ public class LucraftCoreHandler implements IActingHandler {
 			if (data.getState() == REGENERATING) {
 				IRegenType type = TypeHandler.getTypeInstance(data.getType());
 				ev.setCanceled(type.getRenderer().onAnimateRegen(context));
-				//==============MAKE SURE ANGLES COPY OVER==============
-				if (context.getModelBiped() instanceof ModelPlayer) {
-					ModelPlayer playerModel = (ModelPlayer) context.getModelBiped();
-					ModelBase.copyModelAngles(context.getModelBiped().bipedRightArm, playerModel.bipedRightArmwear);
-					ModelBase.copyModelAngles(context.getModelBiped().bipedLeftArm, playerModel.bipedLeftArmwear);
-				}
 			} else {
-				AnimationHandler.animatePlayer(context);
+                AnimationHandler.animate(context);
 			}
 		}
 	}

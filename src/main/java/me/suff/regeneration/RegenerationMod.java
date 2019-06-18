@@ -12,9 +12,6 @@ import me.suff.regeneration.common.traits.DnaHandler;
 import me.suff.regeneration.common.types.TypeHandler;
 import me.suff.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.suff.regeneration.compat.tardis.TardisModHandler;
-import me.suff.regeneration.debugger.DummyRegenDebugger;
-import me.suff.regeneration.debugger.GraphicalRegenDebugger;
-import me.suff.regeneration.debugger.IRegenDebugger;
 import me.suff.regeneration.handlers.ActingForwarder;
 import me.suff.regeneration.network.NetworkHandler;
 import me.suff.regeneration.proxy.CommonProxy;
@@ -23,18 +20,18 @@ import me.suff.regeneration.util.PlayerUtil;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.awt.*;
 
 @Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = RegenerationMod.DEPS)
 public class RegenerationMod {
@@ -51,7 +48,6 @@ public class RegenerationMod {
 	
 	@Mod.Instance(MODID)
 	public static RegenerationMod INSTANCE;
-	public static IRegenDebugger DEBUGGER;
 	
 	public static Logger LOG = LogManager.getLogger(NAME);
 	
@@ -103,15 +99,7 @@ public class RegenerationMod {
 	@EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
 		event.registerServerCommand(new RegenDebugCommand());
-		DEBUGGER = GraphicsEnvironment.isHeadless() ? new DummyRegenDebugger() : new GraphicalRegenDebugger();
-		MinecraftForge.EVENT_BUS.register(DEBUGGER);
 	}
-	
-	@EventHandler
-	public void serverStop(FMLServerStoppingEvent event) {
-		MinecraftForge.EVENT_BUS.unregister(DEBUGGER);
-		DEBUGGER.dispose();
-		DEBUGGER = null;
-	}
+
 	
 }

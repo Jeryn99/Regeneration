@@ -41,11 +41,10 @@ public class MessageTriggerRegeneration implements IMessage {
 		@Override
 		public IMessage onMessage(MessageTriggerRegeneration message, MessageContext ctx) {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-				RegenerationMod.DEBUGGER.getChannelFor(message.player).out("Regeneration keybind pressed");
 				IRegeneration regen = CapabilityRegeneration.getForPlayer(message.player);
 				
 				if (!regen.getState().isGraceful()) {
-					RegenerationMod.DEBUGGER.getChannelFor(message.player).warn("Trigger packet was sent when not in a graceful period");
+					RegenerationMod.LOG.warn(regen.getPlayer().getName() + "Trigger packet was sent when not in a graceful period");
 					return;
 				}
 				regen.triggerRegeneration();
