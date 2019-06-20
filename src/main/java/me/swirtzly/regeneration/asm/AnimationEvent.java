@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.client.sound.echo;
+package me.swirtzly.regeneration.asm;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -20,15 +20,10 @@ public class AnimationEvent extends LivingEvent {
 	public RenderLivingBase<EntityLivingBase> getRenderer() {
 		return renderer;
 	}
-
-    public enum ModelRotationType {
-		PRE, POST
-	}
 	
 	@Cancelable
 	public static class SetRotationAngles extends EntityEvent {
-
-        public final ModelRotationType type;
+		
 		public ModelBiped model;
 		public float limbSwing;
 		public float limbSwingAmount;
@@ -36,8 +31,8 @@ public class AnimationEvent extends LivingEvent {
 		public float ageInTicks;
 		public float netHeadYaw;
 		public float headPitch;
-
-        public SetRotationAngles(Entity entity, ModelBiped model, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, ModelRotationType type) {
+		
+		public SetRotationAngles(Entity entity, ModelBiped model, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 			super(entity);
 			this.model = model;
 			this.limbSwing = limbSwing;
@@ -46,7 +41,6 @@ public class AnimationEvent extends LivingEvent {
 			this.ageInTicks = ageInTicks;
 			this.netHeadYaw = netHeadYaw;
 			this.headPitch = headPitch;
-			this.type = type;
 		}
 		
 	}

@@ -167,7 +167,6 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		for (int i = 0; i < 8; i++) {
 			GlStateManager.pushMatrix();
 			GlStateManager.rotate(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
-			//GlStateManager.scale(1.0f, 1.0f, 0.65f);
 			GlStateManager.scale(1.0f, 1.0f, 0.65f);
 			vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
 			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();

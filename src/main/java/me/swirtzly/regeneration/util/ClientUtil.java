@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.util;
 
+import me.swirtzly.regeneration.client.MovingSoundBase;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
-import me.swirtzly.regeneration.client.sound.MovingSoundBase;
 import me.swirtzly.regeneration.network.MessageUpdateSkin;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;

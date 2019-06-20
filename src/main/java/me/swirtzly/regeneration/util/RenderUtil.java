@@ -2,18 +2,19 @@ package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelPlayer;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 
@@ -131,23 +132,6 @@ public class RenderUtil {
 		GlStateManager.enableTexture2D();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		GlStateManager.disableBlend();
-		GlStateManager.popMatrix();
-	}
-	
-	public static void renderPlayerLaying(RenderPlayerEvent.Pre e, AbstractClientPlayer player, boolean cancelEvent) {
-		GlStateManager.pushMatrix();
-		ModelPlayer model = e.getRenderer().getMainModel();
-		model.isChild = false;
-		GlStateManager.translate(0, 0.2F, 0);
-		GlStateManager.rotate(90, 1, 0, 0);
-		e.setCanceled(cancelEvent);
-		
-		GlStateManager.pushMatrix();
-		Minecraft.getMinecraft().renderEngine.bindTexture(player.getLocationSkin());
-		model.render(player, player.limbSwing, player.limbSwingAmount, player.ticksExisted, player.rotationYawHead, player.cameraPitch, 0.0625f);
-		GlStateManager.popMatrix();
-		
-		
 		GlStateManager.popMatrix();
 	}
 	

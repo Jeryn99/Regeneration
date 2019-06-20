@@ -1,9 +1,13 @@
-package me.swirtzly.regeneration.client.sound.echo;
+package me.swirtzly.regeneration.asm;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.openal.*;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.EFX10;
 
 //CREDIT: https://raw.githubusercontent.com/Cryptic-Mushroom/The-Midnight/master/src/main/java/com/mushroom/midnight/client/SoundReverbHandler.java
 public class SoundReverbHandler {

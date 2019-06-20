@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.client.sound;
+package me.swirtzly.regeneration.client;
 
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.RegenUtil;

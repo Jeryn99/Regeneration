@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.client.sound.echo;
+package me.swirtzly.regeneration.asm;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
@@ -9,9 +9,10 @@ import java.util.Map;
 @IFMLLoadingPlugin.SortingIndex(1001)
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 public class RegenerationPlugin implements IFMLLoadingPlugin {
+	
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[]{"me.swirtzly.regeneration.client.sound.echo.RegenClassTransformer"};
+		return new String[]{"me.swirtzly.regeneration.asm.RegenClassTransformer"};
 	}
 	
 	@Override

@@ -1,10 +1,10 @@
 package me.swirtzly.regeneration.client;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.asm.AnimationEvent;
 import me.swirtzly.regeneration.client.rendering.AnimationContext;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
-import me.swirtzly.regeneration.client.sound.echo.AnimationEvent;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeHandler;
@@ -34,7 +34,12 @@ import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
