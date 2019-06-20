@@ -1,11 +1,13 @@
 package me.swirtzly.regeneration.handlers;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.item.ItemFobWatch;
 import me.swirtzly.regeneration.common.item.ItemLindos;
 import me.swirtzly.regeneration.util.RegenDamageSource;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
@@ -54,6 +56,13 @@ public class RegenObjects {
 		e.getRegistry().registerAll(EntityEntries.ENTITY_ITEM, EntityEntries.ENTITY_LINDOS);
 	}
 	
+	
+	@SubscribeEvent
+	public static void addBlocks(RegistryEvent.Register<Block> e) {
+		e.getRegistry().registerAll(new BlockHandInJar().setRegistryName(RegenerationMod.MODID, "hand_jar"));
+	}
+	
+	
 	@SubscribeEvent
 	public static void addSounds(RegistryEvent.Register<SoundEvent> e) {
 		e.getRegistry().registerAll(
@@ -67,7 +76,8 @@ public class RegenObjects {
 				setUpSound("regeneration_3"),
 				setUpSound("grace_hum"),
 				setUpSound("regen_breath"),
-				setUpSound("alarm")
+				setUpSound("alarm"),
+				setUpSound("jar_bubbles")
 		);
 	}
 	
@@ -94,6 +104,7 @@ public class RegenObjects {
 		public static final SoundEvent GRACE_HUM = null;
 		public static final SoundEvent REGEN_BREATH = null;
 		public static final SoundEvent ALARM = null;
+		public static final SoundEvent JAR_BUBBLES = null;
 	}
 	
 	public static class EntityEntries {

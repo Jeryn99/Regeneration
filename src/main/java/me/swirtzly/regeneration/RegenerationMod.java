@@ -8,6 +8,7 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationStorage;
 import me.swirtzly.regeneration.common.commands.RegenDebugCommand;
+import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.compat.lucraft.LucraftCoreHandler;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,17 +69,19 @@ public class RegenerationMod {
 		RegenTriggers.init();
 		
 		if (EnumCompatModids.TARDIS.isLoaded()) {
-			LOG.info("Tardis mod Detected - Enabling Compat");
+			LOG.info("Tardis mod Detected - Enabling Compatibility");
 			ActingForwarder.register(TardisModHandler.class, Side.SERVER);
 			TardisModHandler.registerEventBus();
 			
 		}
 		
 		if (EnumCompatModids.LCCORE.isLoaded()) {
-			LOG.info("Lucraft Core Detected - Enabling Compat");
+			LOG.info("Lucraft Core Detected - Enabling Compatibility");
 			ActingForwarder.register(LucraftCoreHandler.class, Side.SERVER);
 			LucraftCoreHandler.registerEventBus();
 		}
+		
+		GameRegistry.registerTileEntity(TileEntityHandInJar.class, new ResourceLocation(MODID, "handinjar"));
 	}
 	
 	@EventHandler

@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.common.types.TypeElixir;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
 import static me.swirtzly.regeneration.client.AnimationHandler.copyAndReturn;
@@ -39,5 +40,10 @@ public class TypeElixirRenderer extends ATypeRenderer<TypeElixir> {
         modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-90);
         return copyAndReturn(modelBiped, true);
     }
-
+    
+    @Override
+    public void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render) {
+    
+    }
+    
 }

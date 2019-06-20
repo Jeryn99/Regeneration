@@ -17,7 +17,6 @@ import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenState;
 import me.swirtzly.regeneration.util.RegenUtil;
-import me.swirtzly.regeneration.util.ScheduledAction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -573,7 +572,7 @@ public class CapabilityRegeneration implements IRegeneration {
 
 			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
-
+			
 			if (state == RegenState.POST) {
 				ActingForwarder.onPerformingPost(CapabilityRegeneration.this);
 			}

@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.IRegenType;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent.Pre;
 
@@ -45,5 +46,7 @@ public abstract class ATypeRenderer<T> {
 	}
 
 	public abstract boolean onAnimateRegen(AnimationContext animationContext);
+	
+	public abstract void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render);
 	
 }

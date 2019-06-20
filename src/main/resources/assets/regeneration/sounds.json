@@ -9,6 +9,17 @@
       }
     ]
   },
+  "jar_bubbles": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration_bubbles",
+    "sounds": [
+      {
+        "name": "regeneration:jar_bubbles",
+        "stream": true
+      }
+    ]
+  },
+
   "grace_hum": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.hum",
