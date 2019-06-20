@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "1.6.5",
-		"1.12.2-recommended": "1.6.5",
+		"1.12.2-latest": "1.6.6",
+		"1.12.2-recommended": "1.6.6",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
@@ -15,7 +15,8 @@
 		"1.6.0" : "Fixed Iron Man and Armor issues, Updated Reflection, Updated localization, Removed Armor Util",
 		"1.6.1" : "Fixes Bug With LC Core animations || Adds Nightvision Trait and Hunger trait || Adds Command to set Trait",
 		"1.6.4" : "Fixes Lucraft integration crashing server ",
-	        "1.6.5" : "Animation bug fixes and fixes to Night-vision trait"
+	        "1.6.5" : "Animation bug fixes and fixes to Night-vision trait",
+		"1.6.6" : "Animation bug fixes...again...Can't wait for 1.14..."
 
 	},
 	"1.13.2": {
