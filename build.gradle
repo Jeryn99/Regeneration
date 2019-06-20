@@ -89,7 +89,7 @@ processResources {
 	}
 }
 
-def core_plugin = "me.swirtzly.asm.RegenerationPlugin"
+def core_plugin = "me.swirtzly.regeneration.asm.RegenerationPlugin"
 
 jar {
 	manifest {
