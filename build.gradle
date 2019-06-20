@@ -89,7 +89,7 @@ processResources {
 	}
 }
 
-def core_plugin = "me.suff.regeneration.client.asm.echo.RegenerationPlugin"
+def core_plugin = "me.swirtzly.asm.RegenerationPlugin"
 
 jar {
 	manifest {
@@ -104,7 +104,7 @@ shadowJar {
 		include(dependency('org.jsoup:.*'))
 	}
 
-	relocate 'org.jsoup', 'me.suff.regeneration.util.jsoup'
+	relocate 'org.jsoup', 'me.swirtzly.regeneration.util.jsoup'
 
 	classifier '' // Replace the default JAR
 }
@@ -113,12 +113,3 @@ reobf {
 	shadowJar {} // Reobfuscate the shadowed JAR
 }
 
-sourceSets.main {
-	java {
-		srcDirs = ['src/main/java', 'src/debugger/java']
-	}
-
-	resources {
-		srcDirs = ['src/main/resources', 'src/debugger/resources']
-	}
-}
