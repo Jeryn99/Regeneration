@@ -267,7 +267,7 @@ public class ClientEventHandler {
 			return;
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
-		if (cap.getState() == REGENERATING) { // locking user
+		if (cap.getState() == REGENERATING || cap.isSyncingToJar()) { // locking user
 			MovementInput moveType = e.getMovementInput();
 			moveType.rightKeyDown = false;
 			moveType.leftKeyDown = false;
@@ -282,7 +282,10 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent ev) {
 		RegenObjects.ITEMS.forEach(RenderUtil::setItemRender);
+		RegenObjects.ITEM_BLOCKS.forEach(RenderUtil::setItemRender);
+		
 		RegenObjects.ITEMS = new ArrayList<>();
+		RegenObjects.ITEM_BLOCKS = new ArrayList<>();
 	}
 	
 	@SubscribeEvent

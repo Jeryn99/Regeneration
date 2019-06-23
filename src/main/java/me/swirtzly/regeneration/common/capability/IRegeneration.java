@@ -93,4 +93,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	int getAnimationTicks();
 
     void setAnimationTicks(int ticks);
+	
+	void setSyncingFromJar(boolean syncing);
+	
+	boolean isSyncingToJar();
 }

@@ -33,7 +33,7 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
 			renderHand(entitylivingbaseIn, EnumHandSide.RIGHT, EnumHandRenderType.GRACE);
 		}
 		
-		if (data.getState() == RegenState.REGENERATING) {
+		if (data.getState() == RegenState.REGENERATING || data.isSyncingToJar()) {
 			renderHand(entitylivingbaseIn, EnumHandSide.LEFT, EnumHandRenderType.REGEN);
 			renderHand(entitylivingbaseIn, EnumHandSide.RIGHT, EnumHandRenderType.REGEN);
 		}
@@ -62,7 +62,6 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
 		if (type == EnumHandRenderType.REGEN) {
 			TypeHandler.getTypeInstance(data.getType()).getRenderer().renderHand(player, handSide, livingEntityRenderer);
 		}
-		
 		GlStateManager.popMatrix();
 	}
 	

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ActingForwarder {
 	
-	private static List<IActingHandler> serverHandlers = new ArrayList<>(), clientHandlers = new ArrayList<>();
+	private static List<IActingHandler> SERVER_HANDLERS = new ArrayList<>(), CLIENT_HANDLERS = new ArrayList<>();
 	
 	public static void init() {
 		register(ActingServerHandler.INSTANCE, Side.SERVER);
@@ -31,7 +31,7 @@ public class ActingForwarder {
 	}
 	
 	public static void register(IActingHandler handler, Side side) {
-		(side == Side.CLIENT ? clientHandlers : serverHandlers).add(handler);
+		(side == Side.CLIENT ? CLIENT_HANDLERS : SERVER_HANDLERS).add(handler);
 	}
 	
 	public static void onRegenTick(IRegeneration cap) {
@@ -39,55 +39,55 @@ public class ActingForwarder {
 		if (cap.getPlayer().world.isRemote)
 			throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
 		
-		for (IActingHandler handler : serverHandlers) {
+		for (IActingHandler handler : SERVER_HANDLERS) {
 			handler.onRegenTick(cap);
 		}
 	}
 	
 	public static void onEnterGrace(IRegeneration cap) {
 		checkAndForward(cap, RegenEvent.ENTER_GRACE);
-		for (IActingHandler handler : serverHandlers) {
+		for (IActingHandler handler : SERVER_HANDLERS) {
 			handler.onEnterGrace(cap);
 		}
 	}
 	
 	public static void onRegenFinish(IRegeneration cap) {
 		checkAndForward(cap, RegenEvent.REGEN_FINISH);
-		for (IActingHandler handler : serverHandlers) {
+		for (IActingHandler handler : SERVER_HANDLERS) {
 			handler.onRegenFinish(cap);
 		}
 	}
 	
 	public static void onRegenTrigger(IRegeneration cap) {
 		checkAndForward(cap, RegenEvent.REGEN_TRIGGER);
-		for (IActingHandler handler : serverHandlers) {
+		for (IActingHandler handler : SERVER_HANDLERS) {
 			handler.onRegenTrigger(cap);
 		}
 	}
 	
 	public static void onGoCritical(IRegeneration cap) {
 		checkAndForward(cap, RegenEvent.CRITICAL_START);
-		for (IActingHandler handler : serverHandlers) {
+		for (IActingHandler handler : SERVER_HANDLERS) {
 			handler.onGoCritical(cap);
 		}
 	}
 	
 	public static void onHandsStartGlowing(IRegeneration cap) {
 		checkAndForward(cap, RegenEvent.HAND_GLOW_START);
-		for (IActingHandler handler : serverHandlers) {
+		for (IActingHandler handler : SERVER_HANDLERS) {
 			handler.onHandsStartGlowing(cap);
 		}
 	}
 
     public static void onPerformingPost(IRegeneration cap) {
 		checkAndForward(cap, RegenEvent.PERFORM_POST);
-		for (IActingHandler handler : serverHandlers) {
+		for (IActingHandler handler : SERVER_HANDLERS) {
 			handler.onPerformingPost(cap);
 		}
 	}
 	
 	public static void onClient(RegenEvent event, IRegeneration cap) {
-		for (IActingHandler handler : clientHandlers) {
+		for (IActingHandler handler : CLIENT_HANDLERS) {
 			switch (event) {
 				case ENTER_GRACE:
 					handler.onEnterGrace(cap);

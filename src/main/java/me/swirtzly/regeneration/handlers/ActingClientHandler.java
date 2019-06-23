@@ -65,4 +65,5 @@ class ActingClientHandler implements IActingHandler {
 		ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != RegenState.GRACE_CRIT, 1.0F);
 	}
 	
+	
 }

@@ -50,12 +50,13 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 						newInstructions.add(new VarInsnNode(FLOAD, 5));
 						newInstructions.add(new VarInsnNode(FLOAD, 6));
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
-						newInstructions.add(new MethodInsnNode(INVOKESTATIC, "me.swirtzly.regeneration.asm.RegenClientHooks", "handleRotations", "(Lnet/minecraft/client/model/ModelBiped;FFFFFFLnet/minecraft/entity/Entity;)V", false));
+						newInstructions.add(new MethodInsnNode(INVOKESTATIC, "me/swirtzly/regeneration/asm/RegenClientHooks", "handleRotations", "(Lnet/minecraft/client/model/ModelBiped;FFFFFFLnet/minecraft/entity/Entity;)V", false));
 						method.instructions.insertBefore(anode, newInstructions);
 					}
 				}
 			}
 		}
+		
 		
 		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 		classNode.accept(writer);
@@ -71,8 +72,9 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 			return this.applyTransform(transformedName, data, this::transformSoundSource);
 		}
 		
-		if (transformedName.equals("net.minecraft.client.model.ModelBiped"))
+		if (transformedName.equals("net.minecraft.client.model.ModelBiped")) {
 			return patchModelBiped(name, data, false);
+		}
 		
 		return data;
 	}

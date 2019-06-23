@@ -6,6 +6,7 @@ import me.swirtzly.regeneration.common.types.TypeFiery;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -86,10 +87,6 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		float armRot = (float) animationProgress * 1.5F;
 		float headRot = (float) animationProgress * 1.5F;
 		
-		if (player.world.isRemote) {
-			System.out.println(data.getAnimationTicks());
-		}
-		
 		if (armRot > 90) {
 			armRot = 90;
 		}
@@ -130,17 +127,15 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		return copyAndReturn(playerModel, true);
 	}
 	
-	@Deprecated //This duplicated code needs sorted asap
-	@Override
-	public void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render) {
+	public static void renderConeAtArms(EntityPlayer player, RenderLivingBase<?> renderLivingBase, EnumHandSide side) {
 		IRegeneration capability = CapabilityRegeneration.getForPlayer(player);
 		double x = TypeHandler.getTypeInstance(capability.getType()).getAnimationProgress(capability);
 		double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
 		double r = 0.09890109890109888;
 		double f = p * Math.pow(x, 2) - r;
 		float cf = MathHelper.clamp((float) f, 0F, 1F);
-		float primaryScale = cf * 4F;
-		float secondaryScale = cf * 6.4F;
+		float primaryScale = capability.isSyncingToJar() ? 100 : cf * 4F;
+		float secondaryScale = capability.isSyncingToJar() ? 100 : cf * 6.4F;
 		
 		NBTTagCompound style = capability.getStyle();
 		Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
@@ -156,6 +151,10 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.depthMask(true);
 		RenderUtil.setLightmapTextureCoords(65, 65);
 		
+		if (capability.isSyncingToJar()) {
+			GlStateManager.rotate(-20, 1, 0, 0);
+		}
+		
 		renderCone(player, primaryScale, primaryScale, primaryColor);
 		renderCone(player, secondaryScale, secondaryScale * 1.5f, secondaryColor);
 		
@@ -167,6 +166,12 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.color(255, 255, 255, 255);
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();
+	}
+	
+	@Deprecated //This duplicated code needs sorted asap
+	@Override
+	public void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render) {
+		renderConeAtArms(player, render, handSide);
 	}
 	
 	@Override
@@ -196,15 +201,23 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		
 		// Render head cone
 		GlStateManager.pushMatrix();
+		
+		if (renderLivingBase.getMainModel() instanceof ModelPlayer) {
+			ModelPlayer player = (ModelPlayer) renderLivingBase.getMainModel();
+			player.bipedHead.postRender(0.0625F);
+		}
+		
 		GlStateManager.translate(0f, 0.3f, 0f);
 		GlStateManager.rotate(180, 1.0f, 0.0f, 0.0f);
+		
 		renderCone(entityPlayer, primaryScale / 1.6F, primaryScale * .75F, primaryColor);
 		renderCone(entityPlayer, secondaryScale / 1.6F, secondaryScale / 1.5F, secondaryColor);
 		GlStateManager.popMatrix();
 		
-		// Render glowing overlay
-		renderOverlay((RenderPlayer) renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-		
+		if (!capability.isSyncingToJar()) {
+			// Render glowing overlay
+			renderOverlay((RenderPlayer) renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+		}
 		// Undo state manager changes
 		RenderUtil.restoreLightMap();
 		GlStateManager.depthMask(false);

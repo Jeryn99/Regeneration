@@ -1,9 +1,11 @@
 package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.common.advancements.RegenTriggers;
+import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
+import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenState;
@@ -156,6 +158,15 @@ public class ItemLindos extends ItemOverrideBase {
 			BlockPos blockPos = raytraceresult.getBlockPos();
 			IBlockState iblockstate = worldIn.getBlockState(blockPos);
 			Material material = iblockstate.getMaterial();
+			
+			if (iblockstate.getBlock() instanceof BlockHandInJar && player.isSneaking()) {
+				if (worldIn.getTileEntity(blockPos) instanceof TileEntityHandInJar) {
+					TileEntityHandInJar jar = (TileEntityHandInJar) worldIn.getTileEntity(blockPos);
+					setAmount(itemStack, getAmount(itemStack) + jar.getLindosAmont());
+					jar.setLindosAmont(0);
+				}
+				return EnumActionResult.SUCCESS;
+			}
 			
 			if (material == Material.WATER) {
 				worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 11);

@@ -8,8 +8,8 @@ import me.swirtzly.regeneration.common.item.ItemFobWatch;
 import me.swirtzly.regeneration.common.item.ItemLindos;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ public class RegenObjects {
 	
 	public static List<Item> ITEMS = new ArrayList<>();
 	
+	public static List<Item> ITEM_BLOCKS = new ArrayList<>();
+	
 	public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"),
 			REGEN_DMG_HEALING = new RegenDamageSource("regen_heal"), // The irony lmao
 			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit"), REGEN_DMG_LINDOS = new RegenDamageSource("lindos").setDamageAllowedInCreativeMode();
@@ -40,8 +43,9 @@ public class RegenObjects {
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		e.getRegistry().registerAll(
 				setUpItem(new ItemFobWatch(), "fob_watch"),
-				setUpItem(new ItemLindos(), "lindos_vial").setCreativeTab(CreativeTabs.BREWING)
+				setUpItem(new ItemLindos(), "lindos_vial")
 		);
+		e.getRegistry().registerAll(ITEM_BLOCKS.toArray(new Item[ITEM_BLOCKS.size()]));
 	}
 	
 	private static Item setUpItem(Item item, String name) {
@@ -49,6 +53,20 @@ public class RegenObjects {
 		item.setTranslationKey(name);
 		ITEMS.add(item);
 		return item;
+	}
+	
+	
+	private static Block setUpBlock(Block block, String name) {
+		block.setRegistryName(RegenerationMod.MODID, name);
+		block.setTranslationKey(RegenerationMod.MODID + "." + name);
+		return block;
+	}
+	
+	private static void registerBlocks(IForgeRegistry<Block> reg, Block... blocks) {
+		reg.registerAll(blocks);
+		for (Block block : blocks) {
+			ITEM_BLOCKS.add(new ItemBlock(block).setRegistryName(block.getRegistryName()).setTranslationKey(block.getTranslationKey()));
+		}
 	}
 	
 	@SubscribeEvent
@@ -59,7 +77,7 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addBlocks(RegistryEvent.Register<Block> e) {
-		e.getRegistry().registerAll(new BlockHandInJar().setRegistryName(RegenerationMod.MODID, "hand_jar"));
+		registerBlocks(e.getRegistry(), setUpBlock(new BlockHandInJar(), "hand_jar"));
 	}
 	
 	
@@ -110,5 +128,10 @@ public class RegenObjects {
 	public static class EntityEntries {
 		public static final EntityEntry ENTITY_ITEM = EntityEntryBuilder.create().entity(EntityItemOverride.class).id(new ResourceLocation(RegenerationMod.MODID, "fob_watch"), 0).name("fob").tracker(80, 3, false).build();
 		public static final EntityEntry ENTITY_LINDOS = EntityEntryBuilder.create().entity(EntityLindos.class).id(new ResourceLocation(RegenerationMod.MODID, "lindos"), 1).name("lindos").tracker(80, 3, false).build();
+	}
+	
+	@GameRegistry.ObjectHolder(RegenerationMod.MODID)
+	public static class Blocks {
+		public static final Block HAND_JAR = null;
 	}
 }

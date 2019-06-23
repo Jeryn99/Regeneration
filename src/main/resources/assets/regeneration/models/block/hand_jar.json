@@ -3,7 +3,7 @@
   "textures": {
     "0": "regeneration:items/hand_metal",
     "1": "blocks/glass_light_blue",
-    "particle": "Actual Models/hand_metal"
+    "particle": "regeneration:items/hand_metal"
   },
   "elements": [
     {
