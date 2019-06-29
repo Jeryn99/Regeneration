@@ -108,10 +108,18 @@ public class CapabilityRegeneration implements IRegeneration {
 			didSetup = true;
 		}
 		
-		if (isSyncingToJar() && ticksAnimating == 250) {
+		if (isSyncingToJar() && ticksAnimating >= 250) {
 			setSyncingFromJar(false);
+			ticksAnimating = 0;
 			synchronise();
+		} else {
+			if (isSyncingToJar()) {
+				if (!player.world.isRemote) {
+					PlayerUtil.setPerspective((EntityPlayerMP) player, true, false);
+				}
+			}
 		}
+		
 		
 		if (getEncodedSkin().toLowerCase().equals("NONE")) {
 			if (getSkinType() != getVanillaDefault()) {

@@ -9,7 +9,11 @@ import org.lwjgl.openal.AL11;
 import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.EFX10;
 
-//CREDIT: https://raw.githubusercontent.com/Cryptic-Mushroom/The-Midnight/master/src/main/java/com/mushroom/midnight/client/SoundReverbHandler.java
+/**
+ * This ASM has been lifted and edited from the mod Midnight
+ * All credit for this code should go to them, they can be found below:
+ * https://github.com/Cryptic-Mushroom/The-Midnight/
+ */
 public class SoundReverbHandler {
 	private static final Minecraft MC = Minecraft.getMinecraft();
 	
