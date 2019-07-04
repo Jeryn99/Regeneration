@@ -79,6 +79,10 @@ public class RegenConfig {
 	@Config.Comment("Toggle whether your hand has the chance of inverting after a regen")
 	public static boolean changeHand = true;
 	
+	@Config.LangKey("config.regeneration.craft")
+	@Config.Comment("Toggle whether Fob watches are full when crafted")
+	public static boolean craftWithRegens = true;
+	
 	
 	public static class OnRegen {
 		

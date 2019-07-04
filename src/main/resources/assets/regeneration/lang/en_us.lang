@@ -39,6 +39,7 @@ regeneration.damagesrc.regen_heal=%s died by donating too much Regeneration ener
 regeneration.damagesrc.regen_crit=%s died from holding in their regeneration for too long
 regeneration.damagesrc.theft=%s had their body stolen!
 regeneration.damagesrc.lindos=%s consumed lindos hormones! They are reborn!
+regeneration.damagesrc.regen_killed=%s was killed mid-regeneration....
 
 regeneration.toast.regenerated=You have regenerated!
 regeneration.toast.regenerations_left=%s regenerations left
@@ -115,6 +116,7 @@ config.regeneration.category.on_regen=When Regenerating
 config.regeneration.category.post_regen=Post regeneration
 config.regeneration.skins.folder=Skin Regeneration folder
 config.regeneration.post_grater=Create fall damage crator?
+config.regeneration.craft=Craft with Regens?
 
 traits.athlete.name=Athletic genes! (You can run faster!)
 traits.boring.name=Lazy genes! (You're useless!)
