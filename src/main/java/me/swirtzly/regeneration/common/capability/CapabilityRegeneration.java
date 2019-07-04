@@ -639,12 +639,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			nextTransition = null;
 			handGlowTimer = null;
 			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
-			player.setHealth(-1);
+			player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
 			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
 			if (RegenConfig.loseRegensOnDeath) {
 				extractRegeneration(getRegenerationsLeft());
 			}
-			
 			synchronise();
 		}
 		

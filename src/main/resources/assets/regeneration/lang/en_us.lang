@@ -1,7 +1,5 @@
 item.fob_watch.name=Fob Watch
 item.lindos_vial.name=Lindos Vial
-superpower.timelord.name=Timelord
-
 regeneration.gui.red=Red
 regeneration.gui.green=Green
 regeneration.gui.blue=Blue
@@ -155,7 +153,7 @@ regeneration.messages.cant_glow=You cannot activate a glowing hand without being
 regeneration.gui.back=Back
 regeneration.gui.previous=<
 regeneration.gui.next=>
-regeneration.gui.customize=Customize
+regeneration.gui.customize=Preferences
 regeneration.gui.preference_model=Preferred skin type: %s
 regeneration.messages.info_trait=Trait:
 regeneration.keybinds.regenerate_forced=Force Regen!
