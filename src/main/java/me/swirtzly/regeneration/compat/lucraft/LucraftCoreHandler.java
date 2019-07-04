@@ -8,8 +8,8 @@ import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarKeys;
 import lucraft.mods.lucraftcore.util.events.RenderModelEvent;
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.client.AnimationHandler;
-import me.swirtzly.regeneration.client.rendering.AnimationContext;
+import me.swirtzly.regeneration.client.animation.AnimationContext;
+import me.swirtzly.regeneration.client.animation.AnimationHandler;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.IRegenType;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static me.swirtzly.regeneration.util.RegenState.REGENERATING;
+import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.REGENERATING;
 import static me.swirtzly.regeneration.util.RegenUtil.randFloat;
 
 public class LucraftCoreHandler implements IActingHandler {

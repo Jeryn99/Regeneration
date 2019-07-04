@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.common.types;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.client.rendering.TypeFieryRenderer;
+import me.swirtzly.regeneration.client.rendering.types.TypeFieryRenderer;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.BlockFire;

@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.client.skinhandling;
+package me.swirtzly.regeneration.client.image;
 
 import net.minecraft.client.renderer.ImageBufferDownload;
 

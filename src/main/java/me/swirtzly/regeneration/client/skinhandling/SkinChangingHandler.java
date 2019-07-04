@@ -3,6 +3,8 @@ package me.swirtzly.regeneration.client.skinhandling;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.client.image.ImageBufferDownloadAlt;
+import me.swirtzly.regeneration.client.image.ImageDownloadAlt;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.IRegenType;
@@ -11,7 +13,7 @@ import me.swirtzly.regeneration.network.MessageUpdateSkin;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.FileUtil;
-import me.swirtzly.regeneration.util.RegenState;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -42,7 +44,12 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
@@ -213,7 +220,7 @@ public class SkinChangingHandler {
 		TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
 		ITextureObject object = texturemanager.getTexture(resource);
 		if (object == null) {
-			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt(true), player);
+			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt(true));
 			texturemanager.loadTexture(resource, object);
 		}
 		return object;
@@ -264,7 +271,7 @@ public class SkinChangingHandler {
 			PLAYER_SKINS.remove(player.getUniqueID());
 		}
 		
-		if (cap.getState() == RegenState.REGENERATING) {
+		if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 			if (type.getAnimationProgress(cap) > 0.7) {
 				setSkinFromData(player, cap, false);
 			}
@@ -289,8 +296,8 @@ public class SkinChangingHandler {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		IRegenType type = TypeHandler.getTypeInstance(cap.getType());
-
-		if (cap.getState() == RegenState.REGENERATING) {
+		
+		if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 			type.getRenderer().onRenderRegeneratingPlayerPost(type, e, cap);
 		}
 		

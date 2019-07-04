@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.capability;
 
-import me.swirtzly.regeneration.util.RegenState;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -22,7 +22,7 @@ public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompou
 	
 	// Debug things
 	@Deprecated
-	Pair<RegenState.Transition, Long> getScheduledEvent();
+	Pair<PlayerUtil.RegenState.Transition, Long> getScheduledEvent();
 	
 	@Deprecated
 	void fastForward();

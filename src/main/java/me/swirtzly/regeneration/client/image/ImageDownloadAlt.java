@@ -1,12 +1,10 @@
-package me.swirtzly.regeneration.client.skinhandling;
+package me.swirtzly.regeneration.client.image;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -33,14 +31,12 @@ public class ImageDownloadAlt extends SimpleTexture {
 	private BufferedImage bufferedImage;
 	private Thread imageThread;
 	private boolean textureUploaded;
-	private EntityPlayer player;
 	
-	public ImageDownloadAlt(File file, String url, ResourceLocation resource, IImageBuffer buffer, AbstractClientPlayer player) {
+	public ImageDownloadAlt(File file, String url, ResourceLocation resource, IImageBuffer buffer) {
 		super(resource);
 		this.cacheFile = file;
 		this.imageUrl = url;
 		this.imageBuffer = buffer;
-		this.player = player;
 	}
 	
 	private void checkTextureUploaded() {

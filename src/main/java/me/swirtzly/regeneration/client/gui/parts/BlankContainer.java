@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.client.gui;
+package me.swirtzly.regeneration.client.gui.parts;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

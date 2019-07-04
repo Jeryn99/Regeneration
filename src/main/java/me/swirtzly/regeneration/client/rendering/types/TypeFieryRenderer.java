@@ -1,5 +1,6 @@
-package me.swirtzly.regeneration.client.rendering;
+package me.swirtzly.regeneration.client.rendering.types;
 
+import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeFiery;
@@ -20,8 +21,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
-import static me.swirtzly.regeneration.client.AnimationHandler.copyAndReturn;
-import static me.swirtzly.regeneration.client.rendering.LayerRegeneration.playerModelSteve;
+import static me.swirtzly.regeneration.client.animation.AnimationHandler.copyAndReturn;
+import static me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration.playerModelSteve;
 
 public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	

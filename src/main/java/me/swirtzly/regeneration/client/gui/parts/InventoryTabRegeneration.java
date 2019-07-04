@@ -1,6 +1,6 @@
-package me.swirtzly.regeneration.client.gui;
+package me.swirtzly.regeneration.client.gui.parts;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.client.gui.GuiCustomizer;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import net.minecraft.client.Minecraft;
@@ -19,7 +19,7 @@ public class InventoryTabRegeneration extends AbstractTab {
 	
 	@Override
 	public void onTabClicked() {
-		Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiCustomizer.ID, Minecraft.getMinecraft().world, 0, 0, 0);
+		Minecraft.getMinecraft().displayGuiScreen(new GuiCustomizer());
 	}
 	
 	@Override

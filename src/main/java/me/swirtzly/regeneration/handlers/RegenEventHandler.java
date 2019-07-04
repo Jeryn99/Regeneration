@@ -6,7 +6,6 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationProvider;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenState;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -132,7 +131,7 @@ public class RegenEventHandler {
 		
 		cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedText());
 		
-		if (cap.getState() == RegenState.POST && player.posY > 0) {
+		if (cap.getState() == PlayerUtil.RegenState.POST && player.posY > 0) {
 			if (event.getSource() == DamageSource.FALL) {
 				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
 				if (event.getAmount() > 8.0F) {
@@ -150,7 +149,7 @@ public class RegenEventHandler {
 			return;
 		}
 		
-		if (cap.getState() == RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage() || cap.getState() == RegenState.REGENERATING && event.getSource().isExplosion()) {
+		if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
 			event.setCanceled(true); // TODO still "hurts" the client view
 		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 			boolean notDead = cap.getStateManager().onKilled(event.getSource());
@@ -162,7 +161,7 @@ public class RegenEventHandler {
 	@SubscribeEvent
 	public static void onKnockback(LivingKnockBackEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
-			if (CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).getState() == RegenState.REGENERATING) {
+			if (CapabilityRegeneration.getForPlayer((EntityPlayer) event.getEntityLiving()).getState() == PlayerUtil.RegenState.REGENERATING) {
 				event.setCanceled(true);
 			}
 		}

@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.client.gui;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.client.gui.parts.BlankContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;

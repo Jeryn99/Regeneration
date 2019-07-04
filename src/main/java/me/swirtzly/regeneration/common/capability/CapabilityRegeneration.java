@@ -8,14 +8,13 @@ import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.debugger.util.DebuggableScheduledAction;
 import me.swirtzly.regeneration.handlers.ActingForwarder;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.MessageSynchronisationRequest;
 import me.swirtzly.regeneration.network.MessageSynchroniseRegeneration;
 import me.swirtzly.regeneration.network.NetworkHandler;
+import me.swirtzly.regeneration.util.DebuggableScheduledAction;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenState;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,7 +56,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	public int lcCoreReserve = 0;
 	private boolean didSetup = false, traitActive = true;
 	private int regenerationsLeft;
-	private RegenState state = RegenState.ALIVE;
+	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
 	private TypeHandler.RegenType regenType = TypeHandler.RegenType.FIERY;
 	
 	private String BASE64_SKIN = "NONE";
@@ -127,7 +126,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 		}
 		
-		if (state != RegenState.REGENERATING && !isSyncingToJar()) {
+		if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
 			ticksAnimating = 0;
 		} else {
 			ticksAnimating++;
@@ -140,10 +139,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		DnaHandler.getDnaEntry(getDnaType()).onUpdate(this);
 		
-		if (!player.world.isRemote && state != RegenState.ALIVE) // ticking only on the server for simplicity
+		if (!player.world.isRemote && state != PlayerUtil.RegenState.ALIVE) // ticking only on the server for simplicity
 			stateManager.tick();
 		
-		if (state == RegenState.REGENERATING) {
+		if (state == PlayerUtil.RegenState.REGENERATING) {
 			TypeHandler.getTypeInstance(regenType).onUpdateMidRegen(player, this);
 		}
 	}
@@ -153,7 +152,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (player.world.isRemote)
 			throw new IllegalStateException("Don't sync client -> server");
 		
-		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == RegenState.Transition.HAND_GLOW_TRIGGER;
+		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
 		NBTTagCompound nbt = serializeNBT();
 		nbt.removeTag("stateManager");
 		NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
@@ -248,7 +247,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		else // for previous save versions set to default 'fiery' type
 			regenType = TypeHandler.RegenType.FIERY;
 		
-		state = nbt.hasKey("state") ? RegenState.valueOf(nbt.getString("state")) : RegenState.ALIVE; // I need to check for versions before the new state-ticking system
+		state = nbt.hasKey("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
 		setEncodedSkin(nbt.getString("base64_skin"));
 		
 		if (nbt.hasKey("stateManager"))
@@ -443,7 +442,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
-	public RegenState getState() {
+	public PlayerUtil.RegenState getState() {
 		return state;
 	}
 	
@@ -461,38 +460,38 @@ public class CapabilityRegeneration implements IRegeneration {
 	 */
 	public class RegenerationStateManager implements IRegenerationStateManager {
 		
-		private final Map<RegenState.Transition, Runnable> transitionCallbacks;
+		private final Map<PlayerUtil.RegenState.Transition, Runnable> transitionCallbacks;
 		private DebuggableScheduledAction nextTransition, handGlowTimer;
 		
 		private RegenerationStateManager() {
 			this.transitionCallbacks = new HashMap<>();
-			transitionCallbacks.put(RegenState.Transition.ENTER_CRITICAL, this::enterCriticalPhase);
-			transitionCallbacks.put(RegenState.Transition.CRITICAL_DEATH, this::midSequenceKill);
-			transitionCallbacks.put(RegenState.Transition.FINISH_REGENERATION, this::finishRegeneration);
-			transitionCallbacks.put(RegenState.Transition.END_POST, this::endPost);
+			transitionCallbacks.put(PlayerUtil.RegenState.Transition.ENTER_CRITICAL, this::enterCriticalPhase);
+			transitionCallbacks.put(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, this::midSequenceKill);
+			transitionCallbacks.put(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, this::finishRegeneration);
+			transitionCallbacks.put(PlayerUtil.RegenState.Transition.END_POST, this::endPost);
 			
 			Runnable err = () -> {
 				throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
 			};
-			transitionCallbacks.put(RegenState.Transition.HAND_GLOW_START, err);
-			transitionCallbacks.put(RegenState.Transition.HAND_GLOW_TRIGGER, err);
+			transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_START, err);
+			transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, err);
 		}
 		
 		@SuppressWarnings("deprecation")
-		private void scheduleTransitionInTicks(RegenState.Transition transition, long inTicks) {
+		private void scheduleTransitionInTicks(PlayerUtil.RegenState.Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting non-completed/cancelled transition: " +
 						"\n Attempted Transition: " + transition.name() +
 						"\n Current: " + nextTransition.transition.name() +
 						"\n Affected Player: " + player.getName());
 			
-			if (transition == RegenState.Transition.HAND_GLOW_START || transition == RegenState.Transition.HAND_GLOW_TRIGGER)
+			if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START || transition == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER)
 				throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
 			
 			nextTransition = new DebuggableScheduledAction(transition, player, transitionCallbacks.get(transition), inTicks);
 		}
 		
-		private void scheduleTransitionInSeconds(RegenState.Transition transition, long inSeconds) {
+		private void scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition transition, long inSeconds) {
 			scheduleTransitionInTicks(transition, inSeconds * 20);
 		}
 		
@@ -501,7 +500,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleNextHandGlow() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.grace.handGlowInterval * 20);
+			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.grace.handGlowInterval * 20);
 			synchronise();
 		}
 		
@@ -509,7 +508,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleHandGlowTrigger() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new DebuggableScheduledAction(RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.grace.handGlowTriggerDelay * 20);
+			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.grace.handGlowTriggerDelay * 20);
 			ActingForwarder.onHandsStartGlowing(CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -522,15 +521,15 @@ public class CapabilityRegeneration implements IRegeneration {
 				return false;
 			}
 			
-			if (state == RegenState.ALIVE) {
+			if (state == PlayerUtil.RegenState.ALIVE) {
 				if (!canRegenerate()) // that's too bad :(
 					return false;
 				
 				// We're entering grace period...
-				scheduleTransitionInSeconds(RegenState.Transition.ENTER_CRITICAL, RegenConfig.grace.gracePhaseLength);
+				scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.ENTER_CRITICAL, RegenConfig.grace.gracePhaseLength);
 				scheduleHandGlowTrigger();
 				
-				state = RegenState.GRACE;
+				state = PlayerUtil.RegenState.GRACE;
 				synchronise();
 				ActingForwarder.onEnterGrace(CapabilityRegeneration.this);
 				return true;
@@ -541,15 +540,15 @@ public class CapabilityRegeneration implements IRegeneration {
 				triggerRegeneration();
 				return true;
 				
-			} else if (state == RegenState.REGENERATING) {
+			} else if (state == PlayerUtil.RegenState.REGENERATING) {
 				
 				// We've been killed mid regeneration!
 				nextTransition.cancel(); // ... cancel the finishing of the regeneration
 				midSequenceKill();
 				return false;
 				
-			} else if (state == RegenState.POST) {
-				state = RegenState.ALIVE;
+			} else if (state == PlayerUtil.RegenState.POST) {
+				state = PlayerUtil.RegenState.ALIVE;
 				nextTransition.cancel();
 				midSequenceKill();
 				return false;
@@ -593,7 +592,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void tick() {
 			if (player.world.isRemote)
 				throw new IllegalStateException("Ticking state manager on the client"); // the state manager shouldn't even exist on the client
-			if (state == RegenState.ALIVE)
+			if (state == PlayerUtil.RegenState.ALIVE)
 				throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
 			
 			if (state.isGraceful())
@@ -602,14 +601,14 @@ public class CapabilityRegeneration implements IRegeneration {
 			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
 			
-			if (state == RegenState.POST) {
+			if (state == PlayerUtil.RegenState.POST) {
 				ActingForwarder.onPerformingPost(CapabilityRegeneration.this);
 			}
 		}
 		
 		private void triggerRegeneration() {
 			// We're starting a regeneration!
-			state = RegenState.REGENERATING;
+			state = PlayerUtil.RegenState.REGENERATING;
 			
 			if (RegenConfig.sendRegenDeathMessages) {
 				TextComponentTranslation text = new TextComponentTranslation("regeneration.messages.regen_chat_message", player.getName());
@@ -620,7 +619,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			nextTransition.cancel(); // ... cancel any state shift we had planned
 			if (state.isGraceful())
 				handGlowTimer.cancel();
-			scheduleTransitionInTicks(RegenState.Transition.FINISH_REGENERATION, TypeHandler.getTypeInstance(regenType).getAnimationLength());
+			scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, TypeHandler.getTypeInstance(regenType).getAnimationLength());
 			
 			ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);
 			TypeHandler.getTypeInstance(regenType).onStartRegeneration(player, CapabilityRegeneration.this);
@@ -629,14 +628,14 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		private void enterCriticalPhase() {
 			// We're entering critical phase...
-			state = RegenState.GRACE_CRIT;
-			scheduleTransitionInSeconds(RegenState.Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
+			state = PlayerUtil.RegenState.GRACE_CRIT;
+			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
 			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
 			synchronise();
 		}
 		
 		private void midSequenceKill() {
-			state = RegenState.ALIVE;
+			state = PlayerUtil.RegenState.ALIVE;
 			nextTransition = null;
 			handGlowTimer = null;
 			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
@@ -650,7 +649,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		private void endPost() {
-			state = RegenState.ALIVE;
+			state = PlayerUtil.RegenState.ALIVE;
 			synchronise();
 			nextTransition = null;
 			
@@ -665,8 +664,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		private void finishRegeneration() {
-			state = RegenState.POST;
-			scheduleTransitionInSeconds(RegenState.Transition.END_POST, player.world.rand.nextInt(300));
+			state = PlayerUtil.RegenState.POST;
+			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;
 			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
@@ -676,7 +675,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */
-		public Pair<RegenState.Transition, Long> getScheduledEvent() {
+		public Pair<PlayerUtil.RegenState.Transition, Long> getScheduledEvent() {
 			return nextTransition == null ? null : Pair.of(nextTransition.transition, nextTransition.getTicksLeft());
 		}
 		
@@ -718,15 +717,15 @@ public class CapabilityRegeneration implements IRegeneration {
 		@Override
 		public void deserializeNBT(NBTTagCompound nbt) {
 			if (nbt.hasKey("transitionId"))
-				scheduleTransitionInTicks(RegenState.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
+				scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
 			
 			if (nbt.hasKey("handGlowState")) {
-				RegenState.Transition transition = RegenState.Transition.valueOf(nbt.getString("handGlowState"));
+				PlayerUtil.RegenState.Transition transition = PlayerUtil.RegenState.Transition.valueOf(nbt.getString("handGlowState"));
 				
 				Runnable callback;
-				if (transition == RegenState.Transition.HAND_GLOW_START)
+				if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START)
 					callback = this::scheduleHandGlowTrigger;
-				else if (transition == RegenState.Transition.HAND_GLOW_TRIGGER)
+				else if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER)
 					callback = this::triggerRegeneration;
 				else
 					throw new IllegalStateException("Illegal hand glow timer transition");

@@ -5,7 +5,7 @@ import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.compat.lucraft.PlayerCanRegenEvent;
-import me.swirtzly.regeneration.util.RegenState;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -54,7 +54,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	
 	void extractRegeneration(int amount);
 	
-	RegenState getState();
+	PlayerUtil.RegenState getState();
 
     TypeHandler.RegenType getType();
 	

@@ -2,6 +2,9 @@ package me.swirtzly.regeneration.util;
 
 import net.minecraftforge.fml.common.Loader;
 
+/**
+ * This is a helper enum for compat
+ */
 public enum EnumCompatModids {
 	TARDIS("tardis"), LCCORE("lucraftcore");
 	

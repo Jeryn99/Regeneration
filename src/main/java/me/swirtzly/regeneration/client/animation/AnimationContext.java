@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.client.rendering;
+package me.swirtzly.regeneration.client.animation;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.player.EntityPlayer;

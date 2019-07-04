@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.client.gui;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.client.gui.parts.BlankContainer;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;

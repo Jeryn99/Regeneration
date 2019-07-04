@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.client.gui;
+package me.swirtzly.regeneration.client.gui.parts;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.config.GuiSlider;

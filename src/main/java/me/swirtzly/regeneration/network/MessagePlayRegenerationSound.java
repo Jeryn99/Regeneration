@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.util.ClientUtil;
-import me.swirtzly.regeneration.util.RegenState;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -54,7 +54,7 @@ public class MessagePlayRegenerationSound implements IMessage {
 				EntityPlayer player = Minecraft.getMinecraft().world.getPlayerEntityByUUID(UUID.fromString(message.playerUUID));
 				if (player != null) {
 					IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-					ClientUtil.playSound(player, new ResourceLocation(message.sound), SoundCategory.PLAYERS, true, () -> !data.getState().equals(RegenState.REGENERATING), 1.0F);
+					ClientUtil.playSound(player, new ResourceLocation(message.sound), SoundCategory.PLAYERS, true, () -> !data.getState().equals(PlayerUtil.RegenState.REGENERATING), 1.0F);
 				}
 			});
 			return null;

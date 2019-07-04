@@ -20,7 +20,6 @@ import java.util.ListIterator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-//CREDIT https://raw.githubusercontent.com/Cryptic-Mushroom/The-Midnight/13ffab9ab0d78b0d030c2b3b55252e0e8fd2864e/src/main/java/com/mushroom/midnight/core/transformer/MidnightClassTransformer.java
 public class RegenClassTransformer implements IClassTransformer, Opcodes {
 	private static final String SOURCE_LWJGL_NAME = "paulscode/sound/libraries/SourceLWJGLOpenAL";
 	private static final String CHANNEL_LWJGL_NAME = "paulscode/sound/libraries/ChannelLWJGLOpenAL";
@@ -104,9 +103,8 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 		reader.accept(node, 0);
 		
 		if (transformer.test(node)) {
-			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 			node.accept(writer);
-			
 			return writer.toByteArray();
 		} else {
 			RegenerationMod.LOG.warn("Unable to patch class {}", name);

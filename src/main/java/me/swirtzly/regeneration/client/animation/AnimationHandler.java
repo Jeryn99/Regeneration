@@ -1,6 +1,5 @@
-package me.swirtzly.regeneration.client;
+package me.swirtzly.regeneration.client.animation;
 
-import me.swirtzly.regeneration.client.rendering.AnimationContext;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.item.ItemFobWatch;
 import me.swirtzly.regeneration.util.ClientUtil;

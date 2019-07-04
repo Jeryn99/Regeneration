@@ -8,14 +8,17 @@ import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
@@ -121,7 +124,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 			if (!cap.canRegenerate())
 				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
 			
-			if (cap.getState() != RegenState.ALIVE) {
+			if (cap.getState() != PlayerUtil.RegenState.ALIVE) {
 				return msgUsageFailed(player, "regeneration.messages.not_alive", stack);
 			}
 			

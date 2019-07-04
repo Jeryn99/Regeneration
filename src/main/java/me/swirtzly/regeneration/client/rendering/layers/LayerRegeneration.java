@@ -1,10 +1,10 @@
-package me.swirtzly.regeneration.client.rendering;
+package me.swirtzly.regeneration.client.rendering.layers;
 
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.IRegenType;
 import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.util.RegenState;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
@@ -17,7 +17,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.Random;
 
-import static me.swirtzly.regeneration.client.rendering.TypeFieryRenderer.renderOverlay;
+import static me.swirtzly.regeneration.client.rendering.types.TypeFieryRenderer.renderOverlay;
 import static me.swirtzly.regeneration.util.RenderUtil.drawGlowingLine;
 
 /**
@@ -34,7 +34,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	}
 	
 	public static void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale, EnumHandSide side) {
-		
 		Vec3d primaryColor = handler.getPrimaryColor();
 		Vec3d secondaryColor = handler.getSecondaryColor();
 		
@@ -58,11 +57,11 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	public void doRenderLayer(EntityPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		IRegenType type = TypeHandler.getTypeInstance(cap.getType());
-		if (cap.getState() == RegenState.REGENERATING) {
+		if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 			type.getRenderer().onRenderRegenerationLayer(type, playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 		
-		if (cap.getState() == RegenState.POST && player.hurtTime > 0) {
+		if (cap.getState() == PlayerUtil.RegenState.POST && player.hurtTime > 0) {
 			renderOverlay(playerRenderer, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 		

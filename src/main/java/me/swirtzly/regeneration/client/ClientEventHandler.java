@@ -1,8 +1,9 @@
 package me.swirtzly.regeneration.client;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.asm.AnimationEvent;
-import me.swirtzly.regeneration.client.rendering.AnimationContext;
+import me.swirtzly.regeneration.client.animation.AnimationContext;
+import me.swirtzly.regeneration.client.animation.AnimationHandler;
+import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
@@ -54,7 +55,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import static me.swirtzly.regeneration.util.RegenState.*;
+import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
 
 /**
  * Created by Sub
@@ -135,7 +136,7 @@ public class ClientEventHandler {
 	private static byte spawnDelay = 100;
 	
 	@SubscribeEvent(receiveCanceled = true)
-	public static void onAnimate(AnimationEvent.SetRotationAngles ev) {
+	public static void onAnimate(ModelRotationEvent ev) {
 		if (EnumCompatModids.LCCORE.isLoaded()) return;
 		if (ev.getEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) ev.getEntity();

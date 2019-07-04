@@ -1,15 +1,13 @@
-package me.swirtzly.regeneration.debugger.util;
+package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.util.RegenState;
-import me.swirtzly.regeneration.util.ScheduledAction;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class DebuggableScheduledAction extends ScheduledAction {
-	public final RegenState.Transition transition;
+	public final PlayerUtil.RegenState.Transition transition;
 	private final EntityPlayer player;
 	
-	public DebuggableScheduledAction(RegenState.Transition transition, EntityPlayer player, Runnable callback, long inTicks) {
+	public DebuggableScheduledAction(PlayerUtil.RegenState.Transition transition, EntityPlayer player, Runnable callback, long inTicks) {
 		super(callback, inTicks);
 		this.transition = transition;
 		this.player = player;
@@ -41,7 +39,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 		return super.getProgress();
 	}
 	
-	public RegenState.Transition getTransition() {
+	public PlayerUtil.RegenState.Transition getTransition() {
 		return transition;
 	}
 	

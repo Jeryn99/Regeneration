@@ -3,7 +3,7 @@ package me.swirtzly.regeneration.common.tiles;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.RegenState;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -48,7 +48,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickable {
 				
 				IRegeneration data = CapabilityRegeneration.getForPlayer(player);
 				
-				if (!isInUse && data.getState() == RegenState.REGENERATING && player.world.getWorldTime() % 30 == 0) {
+				if (!isInUse && data.getState() == PlayerUtil.RegenState.REGENERATING && player.world.getWorldTime() % 30 == 0) {
 					lindosAmont = lindosAmont + 1;
 					isInUse = true;
 				}

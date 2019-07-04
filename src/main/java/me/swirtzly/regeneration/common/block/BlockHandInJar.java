@@ -5,7 +5,6 @@ import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenState;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -46,7 +45,7 @@ public class BlockHandInJar extends BlockDirectional {
 		if (worldIn.getTileEntity(pos) instanceof TileEntityHandInJar) {
 			TileEntityHandInJar jar = (TileEntityHandInJar) worldIn.getTileEntity(pos);
 			
-			if (CapabilityRegeneration.getForPlayer(playerIn).getState() != RegenState.ALIVE) {
+			if (CapabilityRegeneration.getForPlayer(playerIn).getState() != PlayerUtil.RegenState.ALIVE) {
 				PlayerUtil.sendMessage(playerIn, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
 				return false;
 			}

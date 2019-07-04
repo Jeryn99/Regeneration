@@ -4,7 +4,6 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenState;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -38,7 +37,7 @@ public class RegenDebugCommand extends CommandBase {
 				break;
 			
 			case "fast-forward":
-				if (cap.getState() == RegenState.ALIVE) {
+				if (cap.getState() == PlayerUtil.RegenState.ALIVE) {
 					throw new CommandException("regeneration.messages.fast_forward_cmd_fail");
 				}
 				cap.getStateManager().fastForward();

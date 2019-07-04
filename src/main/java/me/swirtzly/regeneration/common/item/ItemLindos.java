@@ -8,7 +8,6 @@ import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenState;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -125,7 +124,7 @@ public class ItemLindos extends ItemOverrideBase {
 			//Entiies around
 			worldIn.getEntitiesWithinAABB(EntityPlayer.class, entityIn.getEntityBoundingBox().expand(10, 10, 10)).forEach(player -> {
 				IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) entityIn);
-				if (data.getState() == RegenState.REGENERATING) {
+				if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 					if (worldIn.rand.nextInt(100) > 50 && isSelected) {
 						setAmount(stack, getAmount(stack) + 1);
 					}
@@ -193,7 +192,7 @@ public class ItemLindos extends ItemOverrideBase {
 			
 			//If the player is in POST or Regenerating, stop them from drinking it
 			if (getAmount(stack) > 100) {
-				if (cap.getState() == RegenState.POST || cap.getState() == RegenState.REGENERATING || player.isCreative()) {
+				if (cap.getState() == PlayerUtil.RegenState.POST || cap.getState() == PlayerUtil.RegenState.REGENERATING || player.isCreative()) {
 					PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
 					return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(handIn));
 				}

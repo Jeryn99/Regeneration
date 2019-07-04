@@ -1,5 +1,6 @@
-package me.swirtzly.regeneration.client.rendering;
+package me.swirtzly.regeneration.client.rendering.types;
 
+import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeElixir;
 import net.minecraft.client.model.ModelBiped;
@@ -8,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
-import static me.swirtzly.regeneration.client.AnimationHandler.copyAndReturn;
+import static me.swirtzly.regeneration.client.animation.AnimationHandler.copyAndReturn;
 
 public class TypeElixirRenderer extends ATypeRenderer<TypeElixir> {
 

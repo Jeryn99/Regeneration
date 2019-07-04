@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.client.gui;
 
+import me.swirtzly.regeneration.client.gui.parts.BlankContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;

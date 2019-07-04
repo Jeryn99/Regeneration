@@ -6,7 +6,13 @@ import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.FileSystem;
@@ -160,7 +166,7 @@ public class FileUtil {
 		return builder.toString();
 	}
 	
-	public static interface IEnum<E extends Enum<E>> {
+	public interface IEnum<E extends Enum<E>> {
 		
 		int ordinal();
 		

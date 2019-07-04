@@ -33,6 +33,10 @@ public class ClientUtil {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(sound, pitch, volume));
 	}
 	
+	/**
+	 * This is a method that sends a packet to the server telling the server to reset the players Player model and skin
+	 * back to the ones supplied by Mojang
+	 */
 	public static void sendSkinResetPacket() {
 		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin("none", SkinChangingHandler.wasAlex(Minecraft.getMinecraft().player)));
 	}
@@ -42,6 +46,10 @@ public class ClientUtil {
 		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundBase(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
 	}
 	
+	/**
+	 * Helper method that copy pastes the angles of the ModelPlayer limbs to the players wear
+	 * @param biped
+	 */
 	public static void copyAnglesToWear(ModelPlayer biped) {
 		ModelBase.copyModelAngles(biped.bipedRightArm, biped.bipedRightArmwear);
 		ModelBase.copyModelAngles(biped.bipedLeftArm, biped.bipedLeftArmwear);

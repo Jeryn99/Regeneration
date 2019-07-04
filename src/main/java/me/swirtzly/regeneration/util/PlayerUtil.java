@@ -21,6 +21,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,4 +90,29 @@ public class PlayerUtil {
 		return false;
 	}
 	
+	public enum RegenState {
+		
+		ALIVE,
+		GRACE, GRACE_CRIT, POST,
+		REGENERATING;
+		
+		public boolean isGraceful() {
+			return this == GRACE || this == GRACE_CRIT;
+		}
+		
+		public enum Transition {
+			HAND_GLOW_START(Color.YELLOW.darker()), HAND_GLOW_TRIGGER(Color.ORANGE),
+			ENTER_CRITICAL(Color.BLUE),
+			CRITICAL_DEATH(Color.RED),
+			FINISH_REGENERATION(Color.GREEN.darker()),
+			END_POST(Color.PINK.darker());
+			
+			public final Color color;
+			
+			Transition(Color col) {
+				this.color = col;
+			}
+		}
+		
+	}
 }

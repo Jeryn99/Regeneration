@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.RegenState;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -31,7 +31,7 @@ public class MessageTriggerForcedRegen implements IMessage {
 			
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
-				if (cap.canRegenerate() && cap.getState() == RegenState.ALIVE) {
+				if (cap.canRegenerate() && cap.getState() == PlayerUtil.RegenState.ALIVE) {
 					cap.getPlayer().attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
 				}
 			});

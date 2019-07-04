@@ -1,9 +1,9 @@
-package me.swirtzly.regeneration.client.rendering;
+package me.swirtzly.regeneration.client.rendering.layers;
 
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.util.RegenState;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -33,7 +33,7 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
 			renderHand(entitylivingbaseIn, EnumHandSide.RIGHT, EnumHandRenderType.GRACE);
 		}
 		
-		if (data.getState() == RegenState.REGENERATING || data.isSyncingToJar()) {
+		if (data.getState() == PlayerUtil.RegenState.REGENERATING || data.isSyncingToJar()) {
 			renderHand(entitylivingbaseIn, EnumHandSide.LEFT, EnumHandRenderType.REGEN);
 			renderHand(entitylivingbaseIn, EnumHandSide.RIGHT, EnumHandRenderType.REGEN);
 		}
@@ -65,8 +65,8 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
 		GlStateManager.popMatrix();
 	}
 	
-	protected void translateToHand(EnumHandSide p_191361_1_) {
-		((ModelBiped) this.livingEntityRenderer.getMainModel()).postRenderArm(0.0625F, p_191361_1_);
+	protected void translateToHand(EnumHandSide handSide) {
+		((ModelBiped) this.livingEntityRenderer.getMainModel()).postRenderArm(0.0625F, handSide);
 	}
 	
 	public boolean shouldCombineTextures() {

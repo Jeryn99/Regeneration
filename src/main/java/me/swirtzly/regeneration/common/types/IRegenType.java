@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.types;
 
-import me.swirtzly.regeneration.client.rendering.ATypeRenderer;
+import me.swirtzly.regeneration.client.rendering.types.ATypeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
 

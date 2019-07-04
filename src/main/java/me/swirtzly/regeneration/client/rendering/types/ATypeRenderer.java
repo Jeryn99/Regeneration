@@ -1,5 +1,6 @@
-package me.swirtzly.regeneration.client.rendering;
+package me.swirtzly.regeneration.client.rendering.types;
 
+import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.IRegenType;
 import net.minecraft.client.renderer.entity.RenderLivingBase;

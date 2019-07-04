@@ -85,7 +85,7 @@ public class TabRegistry {
 	}
 	
 	public static int getPotionOffset() {
-		/*
+		/**
 		 * Disabled in 1.12.2 because a vanilla bug means potion offsets are currently not a thing
 		 * The vanilla bug is that GuiInventory.initGui() resets GuiLeft to the recipe book version of GuiLeft,
 		 * and in GuiRecipeBook.updateScreenPosition() it takes no account of potion offset even if the recipe book is inactive.

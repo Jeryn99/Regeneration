@@ -1,11 +1,11 @@
 package me.swirtzly.regeneration.proxy;
 
 import me.swirtzly.regeneration.client.RegenKeyBinds;
-import me.swirtzly.regeneration.client.gui.InventoryTabRegeneration;
-import me.swirtzly.regeneration.client.rendering.LayerHands;
-import me.swirtzly.regeneration.client.rendering.LayerRegeneration;
+import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.rendering.entity.RenderItemOverride;
 import me.swirtzly.regeneration.client.rendering.entity.RenderLindos;
+import me.swirtzly.regeneration.client.rendering.layers.LayerHands;
+import me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.common.entity.EntityLindos;

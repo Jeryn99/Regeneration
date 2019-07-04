@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.types;
 
-import me.swirtzly.regeneration.client.rendering.TypeElixirRenderer;
+import me.swirtzly.regeneration.client.rendering.types.TypeElixirRenderer;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
 

@@ -164,7 +164,7 @@ public class RenderUtil {
 		GlStateManager.disableBlend();
 	}
 	
-	public static void renderVignette(Vec3d color, float a, RegenState state) {
+	public static void renderVignette(Vec3d color, float a, PlayerUtil.RegenState state) {
 		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
