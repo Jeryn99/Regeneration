@@ -72,7 +72,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	
 	/**
-	 * WHY THIS IS A SEPERATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
+	 * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
 	 * This property is synced over to the client to solve this
 	 */
 	private boolean handsAreGlowingClient;
@@ -476,7 +476,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_START, err);
 			transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, err);
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		private void scheduleTransitionInTicks(PlayerUtil.RegenState.Transition transition, long inTicks) {
 			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
@@ -533,8 +533,8 @@ public class CapabilityRegeneration implements IRegeneration {
 				synchronise();
 				ActingForwarder.onEnterGrace(CapabilityRegeneration.this);
 				return true;
-				
-			} else if (state.isGraceful()) {
+
+			} else if (state == PlayerUtil.RegenState.GRACE) {
 				
 				// We're being forced to regenerate...
 				triggerRegeneration();
@@ -639,7 +639,11 @@ public class CapabilityRegeneration implements IRegeneration {
 			nextTransition = null;
 			handGlowTimer = null;
 			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
-			player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
+			if (state == PlayerUtil.RegenState.GRACE_CRIT) {
+				player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
+			} else {
+				player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
+			}
 			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
 			if (RegenConfig.loseRegensOnDeath) {
 				extractRegeneration(getRegenerationsLeft());

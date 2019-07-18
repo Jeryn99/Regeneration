@@ -30,15 +30,8 @@ public class RenderLindos extends Render<Entity> {
 			RenderUtil.setupRenderLightning();
 			GlStateManager.translate(x, y + 0.20, z);
 			GlStateManager.scale(0.9F, 0.9F, 0.9F);
-			GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
-			
-			for (int i = 0; i < 3; i++) {
-				GlStateManager.rotate((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
-				RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
-				RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, secondaryColor, 0);
-			}
-			RenderUtil.finishRenderLightning();
-		}
+            RenderItemOverride.makeGlowingBall(mc, f, rand, primaryColor, secondaryColor);
+        }
 	}
 	
 	@Nullable

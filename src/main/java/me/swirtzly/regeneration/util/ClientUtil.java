@@ -9,6 +9,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.toasts.SystemToast;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -57,8 +58,22 @@ public class ClientUtil {
 		ModelBase.copyModelAngles(biped.bipedLeftLeg, biped.bipedLeftLegwear);
 		ModelBase.copyModelAngles(biped.bipedBody, biped.bipedBodyWear);
 		ModelBase.copyModelAngles(biped.bipedHead, biped.bipedHeadwear);
+
+		copyRotationPoints(biped.bipedRightArm, biped.bipedRightArmwear);
+		copyRotationPoints(biped.bipedLeftArm, biped.bipedLeftArmwear);
+		copyRotationPoints(biped.bipedRightLeg, biped.bipedRightLegwear);
+		copyRotationPoints(biped.bipedLeftLeg, biped.bipedLeftLegwear);
+		copyRotationPoints(biped.bipedBody, biped.bipedBodyWear);
+		copyRotationPoints(biped.bipedHead, biped.bipedHeadwear);
+
 	}
-	
+
+	public static void copyRotationPoints(ModelRenderer src, ModelRenderer dest){
+		dest.rotationPointX = src.rotationPointX;
+		dest.rotationPointY = src.rotationPointY;
+		dest.rotationPointZ = src.rotationPointZ;
+	}
+
 	
 	public static class ImageFixer {
 		

@@ -122,8 +122,8 @@ public class RegenEventHandler {
 			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event);
 			return;
 		}
-		
-		if (!(event.getEntity() instanceof EntityPlayer) || event.getSource() == RegenObjects.REGEN_DMG_CRITICAL)
+
+		if (!(event.getEntity() instanceof EntityPlayer) || event.getSource() == RegenObjects.REGEN_DMG_CRITICAL || event.getSource() == RegenObjects.REGEN_DMG_KILLED)
 			return;
 		
 		EntityPlayer player = (EntityPlayer) event.getEntity();

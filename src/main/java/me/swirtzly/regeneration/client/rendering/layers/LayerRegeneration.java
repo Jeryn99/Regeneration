@@ -62,7 +62,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 		}
 		
 		if (cap.getState() == PlayerUtil.RegenState.POST && player.hurtTime > 0) {
-			renderOverlay(playerRenderer, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+			renderOverlay(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 		
 		if (cap.isSyncingToJar()) {

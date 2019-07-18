@@ -54,7 +54,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		}
 	}
 	
-	public static void renderOverlay(RenderPlayer renderPlayer, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public static void renderOverlay(EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
 		RenderUtil.setLightmapTextureCoords(240, 240);
 		GlStateManager.disableLighting();
@@ -155,7 +155,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		if (capability.isSyncingToJar()) {
 			GlStateManager.rotate(-20, 1, 0, 0);
 		}
-		
+
 		renderCone(player, primaryScale, primaryScale, primaryColor);
 		renderCone(player, secondaryScale, secondaryScale * 1.5f, secondaryColor);
 		
@@ -208,7 +208,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			player.bipedHead.postRender(0.0625F);
 		}
 		
-		GlStateManager.translate(0f, 0.3f, 0f);
+		GlStateManager.translate(0f, 0.09f, 0f);
 		GlStateManager.rotate(180, 1.0f, 0.0f, 0.0f);
 		
 		renderCone(entityPlayer, primaryScale / 1.6F, primaryScale * .75F, primaryColor);
@@ -217,7 +217,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		
 		if (!capability.isSyncingToJar()) {
 			// Render glowing overlay
-			renderOverlay((RenderPlayer) renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+			renderOverlay(entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 		// Undo state manager changes
 		RenderUtil.restoreLightMap();

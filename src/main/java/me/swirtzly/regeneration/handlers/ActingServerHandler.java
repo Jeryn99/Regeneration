@@ -25,7 +25,7 @@ class ActingServerHandler implements IActingHandler {
 	
 	public static final IActingHandler INSTANCE = new ActingServerHandler();
 	private final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782"), MAX_HEALTH_ID = UUID.fromString("5d6f0ba2-1286-46fc-b896-461c5cfd99cc");
-	private final double HEART_REDUCTION = 0.5, SPEED_REDUCTION = 0.25;
+	private final double HEART_REDUCTION = 0.5, SPEED_REDUCTION = 0.35;
 	private final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, 1),
 			heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, 1);
 	

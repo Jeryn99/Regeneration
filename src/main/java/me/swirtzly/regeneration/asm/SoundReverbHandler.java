@@ -3,11 +3,7 @@ package me.swirtzly.regeneration.asm;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.AL10;
-import org.lwjgl.openal.AL11;
-import org.lwjgl.openal.ALC10;
-import org.lwjgl.openal.EFX10;
+import org.lwjgl.openal.*;
 
 /**
  * This ASM has been lifted and edited from the mod Midnight
@@ -85,8 +81,9 @@ public class SoundReverbHandler {
 	}
 	
 	private static boolean shouldEcho() {
-		if (MC.player == null)
+		if (MC.player == null) {
 			return false;
+		}
 		return CapabilityRegeneration.getForPlayer(MC.player).getState().isGraceful();
 	}
 	
