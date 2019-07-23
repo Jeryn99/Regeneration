@@ -213,19 +213,7 @@ public class RegenConfig {
 		
 		
 		public static class LucraftCore {
-			
-			@Config.LangKey("config.regeneration.compat.lccore.size_changing")
-			@Config.Comment("If this is true and LCCore is installed, you will change size on regeneration")
-			public boolean lucraftcoreSizeChanging = true;
-			
-			@Config.LangKey("config.regeneration.compat.lccore.size_changing_min")
-			@Config.Comment("Minimum Size Change value")
-			public float sizeChangingMin = 0.796544F;
-			
-			@Config.LangKey("config.regeneration.compat.lccore.size_changing_max")
-			@Config.Comment("Maximum Size Change value")
-			public float sizeChangingMax = 1.1F;
-			
+
 			@Config.LangKey("config.regeneration.compat.lccore.radiation_immunity")
 			@Config.Comment("If this is true and LCCore is installed, timelords are immune to radiation")
 			public boolean immuneToRadiation = true;

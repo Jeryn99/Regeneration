@@ -134,7 +134,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (getRegenerationsLeft() > RegenConfig.regenCapacity && !RegenConfig.infiniteRegeneration) {
 			regenerationsLeft = RegenConfig.regenCapacity;
-			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
+			RegenerationMod.LOG.info("Correcting the amount of Regenerations {} has", player.getName());
 		}
 		
 		DnaHandler.getDnaEntry(getDnaType()).onUpdate(this);
@@ -145,6 +145,9 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (state == PlayerUtil.RegenState.REGENERATING) {
 			TypeHandler.getTypeInstance(regenType).onUpdateMidRegen(player, this);
 		}
+
+
+
 	}
 	
 	@Override

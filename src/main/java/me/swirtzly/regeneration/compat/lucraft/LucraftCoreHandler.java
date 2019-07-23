@@ -1,8 +1,6 @@
 package me.swirtzly.regeneration.compat.lucraft;
 
 import lucraft.mods.lucraftcore.materials.potions.PotionRadiation;
-import lucraft.mods.lucraftcore.sizechanging.capabilities.CapabilitySizeChanging;
-import lucraft.mods.lucraftcore.sizechanging.capabilities.ISizeChanging;
 import lucraft.mods.lucraftcore.superpowers.SuperpowerHandler;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarHandler;
 import lucraft.mods.lucraftcore.util.abilitybar.AbilityBarKeys;
@@ -27,7 +25,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.REGENERATING;
-import static me.swirtzly.regeneration.util.RegenUtil.randFloat;
 
 public class LucraftCoreHandler implements IActingHandler {
 	
@@ -84,13 +81,6 @@ public class LucraftCoreHandler implements IActingHandler {
 	
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
-		if (RegenConfig.modIntegrations.lucraftcore.lucraftcoreSizeChanging) {
-			EntityPlayer player = cap.getPlayer();
-			ISizeChanging sizeCap = player.getCapability(CapabilitySizeChanging.SIZE_CHANGING_CAP, null);
-			if (sizeCap != null) {
-				sizeCap.setSize(randFloat(RegenConfig.modIntegrations.lucraftcore.sizeChangingMin, RegenConfig.modIntegrations.lucraftcore.sizeChangingMax));
-			}
-		}
 	}
 	
 	@Override

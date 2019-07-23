@@ -13,10 +13,9 @@ import net.minecraft.entity.player.EntityPlayer;
 public interface IRegenType<R extends ATypeRenderer<?>> {
 
 	static IRegenType<?> getType(TypeHandler.RegenType type) {
-
 		return TypeHandler.getTypeInstance(TypeHandler.RegenType.FIERY);
 	}
-	
+
 	/**
 	 * @return in ticks
 	 */
@@ -37,5 +36,5 @@ public interface IRegenType<R extends ATypeRenderer<?>> {
 
 	TypeHandler.RegenType getTypeID();
 
-	
+
 }
