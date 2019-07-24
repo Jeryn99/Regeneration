@@ -40,17 +40,13 @@ import org.lwjgl.system.MemoryStack;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @OnlyIn(Dist.CLIENT)
 public class SkinChangingHandler {
 
-	public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "/Regeneration Data/skins/");
+	//	public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "./Regeneration Data/skins/");
+	public static final File SKIN_DIRECTORY = new File("./Regeneration Data/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
@@ -154,7 +150,7 @@ public class SkinChangingHandler {
 			}
 		} else {
 			NativeImage bufferedImage = toImage(player, data.getEncodedSkin(), write);
-			bufferedImage = ClientUtil.ImageFixer.convertSkinTo64x64(bufferedImage);
+			bufferedImage = ImageBufferDownloadAlt.convert(bufferedImage);
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
@@ -202,7 +198,7 @@ public class SkinChangingHandler {
 		TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
 		ITextureObject object = texturemanager.getTexture(resource);
 		if (object == null) {
-			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt(true));
+			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt());
 			texturemanager.loadTexture(resource, object);
 		}
 		return object;
@@ -268,7 +264,7 @@ public class SkinChangingHandler {
 					setSkinFromData(player, CapabilityRegeneration.getForPlayer(player), false);
 				}
 
-				cap.getType().getRenderer().onRenderRegeneratingPlayerPre(cap.getType(), e, cap);
+				TypeHandler.getTypeInstance(cap.getType()).getRenderer().onRenderRegeneratingPlayerPre(TypeHandler.getTypeInstance(cap.getType()), e, cap);
 
 
 			} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {

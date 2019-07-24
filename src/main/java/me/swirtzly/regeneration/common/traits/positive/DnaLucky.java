@@ -15,7 +15,7 @@ import java.util.UUID;
 public class DnaLucky extends DnaHandler.IDna {
 	
 	private final UUID LUCKY_ID = UUID.fromString("9aaf3f7c-264e-4c19-8485-49503b6940b7");
-	private final AttributeModifier LUCKY_MODIFIER = new AttributeModifier(LUCKY_ID, "LUCK", 0.95, 2);
+    private final AttributeModifier LUCKY_MODIFIER = new AttributeModifier(LUCKY_ID, "LUCK", 0.95, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     public DnaLucky() {
         super("lucky");
@@ -24,24 +24,24 @@ public class DnaLucky extends DnaHandler.IDna {
 	@Override
 	public void onUpdate(IRegeneration cap) {
 		PlayerEntity player = cap.getPlayer();
-		if (!player.getEntityAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
-			player.getEntityAttribute(SharedMonsterAttributes.LUCK).applyModifier(LUCKY_MODIFIER);
+        if (!player.getAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
+            player.getAttribute(SharedMonsterAttributes.LUCK).applyModifier(LUCKY_MODIFIER);
 		}
 	}
 	
 	@Override
 	public void onAdded(IRegeneration cap) {
 		PlayerEntity player = cap.getPlayer();
-		if (!player.getEntityAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
-			player.getEntityAttribute(SharedMonsterAttributes.LUCK).applyModifier(LUCKY_MODIFIER);
+        if (!player.getAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
+            player.getAttribute(SharedMonsterAttributes.LUCK).applyModifier(LUCKY_MODIFIER);
 		}
 	}
 	
 	@Override
 	public void onRemoved(IRegeneration cap) {
 		PlayerEntity player = cap.getPlayer();
-		if (player.getEntityAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
-			player.getEntityAttribute(SharedMonsterAttributes.LUCK).removeModifier(LUCKY_MODIFIER);
+        if (player.getAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
+            player.getAttribute(SharedMonsterAttributes.LUCK).removeModifier(LUCKY_MODIFIER);
 		}
 	}
 

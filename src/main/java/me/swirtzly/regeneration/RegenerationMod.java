@@ -2,11 +2,15 @@ package me.swirtzly.regeneration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.swirtzly.regeneration.client.rendering.entity.RenderItemOverride;
+import me.swirtzly.regeneration.client.rendering.entity.RenderLindos;
 import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationStorage;
 import me.swirtzly.regeneration.common.commands.RegenDebugCommand;
+import me.swirtzly.regeneration.common.entity.EntityItemOverride;
+import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.handlers.ActingForwarder;
@@ -19,7 +23,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
@@ -51,6 +58,10 @@ public class RegenerationMod {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 		MinecraftForge.EVENT_BUS.register(this);
+
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
+
 	}
 	
 	public static Logger LOG = LogManager.getLogger(NAME);
@@ -58,7 +69,8 @@ public class RegenerationMod {
 	public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
 	private void doClientStuff(final FMLClientSetupEvent event) {
-
+		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
 	}
 
 

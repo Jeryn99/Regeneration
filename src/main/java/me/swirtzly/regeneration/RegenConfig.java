@@ -70,6 +70,7 @@ public class RegenConfig {
 		public final ForgeConfigSpec.IntValue absorbtionLevel;
 		public final ForgeConfigSpec.ConfigValue<String> lootRegex;
 		public final ForgeConfigSpec.BooleanValue disableLoot;
+        public final ForgeConfigSpec.BooleanValue genCrater;
 
 		Common(ForgeConfigSpec.Builder builder) {
 			builder.comment("General Regeneration Settings").push("common");
@@ -109,6 +110,7 @@ public class RegenConfig {
 			regenerativeKnockback = builder.comment("The amount of knockback every mob inside of the knock back radius gets").translation("config.regeneration.regenerative_knockback").define("regenerativeKnockback", 2.5F);
 			regenKnockbackRange = builder.comment("Range wherein every mob is knocked back upon regeneration").translation("config.regeneration.regenerative_knockback_range").defineInRange("regenerativeKnockbackRange", 7, 0, Integer.MAX_VALUE);
 			regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);
+            genCrater = builder.comment("Generate graters in the ground if a player falls from a great height?").translation("config.regeneration.regeneration_craters").define("genCrater", true);
 			builder.pop();
 		}
 	}

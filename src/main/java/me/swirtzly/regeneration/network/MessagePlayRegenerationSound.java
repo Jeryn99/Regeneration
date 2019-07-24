@@ -3,7 +3,6 @@ package me.swirtzly.regeneration.network;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;

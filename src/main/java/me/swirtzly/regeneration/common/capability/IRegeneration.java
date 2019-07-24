@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.common.capability;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
+import me.swirtzly.regeneration.common.misc.PlayerCanRegenEvent;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.PlayerEntity;

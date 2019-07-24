@@ -3,132 +3,154 @@ package me.swirtzly.regeneration.client.image;
 import com.mojang.blaze3d.platform.TextureUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IImageBuffer;
+import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.DefaultUncaughtExceptionHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 @OnlyIn(Dist.CLIENT)
 public class ImageDownloadAlt extends SimpleTexture {
-    private static final Logger logger = LogManager.getLogger();
-    private static final AtomicInteger threadDownloadCounter = new AtomicInteger(0);
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final AtomicInteger TEXTURE_DOWNLOADER_THREAD_ID = new AtomicInteger(0);
+    @Nullable
     private final File cacheFile;
     private final String imageUrl;
+    @Nullable
     private final IImageBuffer imageBuffer;
-    private BufferedImage bufferedImage;
+    @Nullable
     private Thread imageThread;
-    private boolean textureUploaded;
+    private volatile boolean textureUploaded;
 
-    public ImageDownloadAlt(File file, String url, ResourceLocation resource, IImageBuffer buffer) {
-        super(resource);
-        this.cacheFile = file;
-        this.imageUrl = url;
-        this.imageBuffer = buffer;
+    public ImageDownloadAlt(@Nullable File cacheFileIn, String imageUrlIn, ResourceLocation textureResourceLocation, @Nullable IImageBuffer imageBufferIn) {
+        super(textureResourceLocation);
+        this.cacheFile = cacheFileIn;
+        this.imageUrl = imageUrlIn;
+        this.imageBuffer = imageBufferIn;
     }
 
-    private void checkTextureUploaded() {
-        if (!this.textureUploaded) {
-            if (this.bufferedImage != null) {
-                this.textureUploaded = true;
-                if (this.textureLocation != null) {
-                    this.deleteGlTexture();
-                }
-                TextureUtil.(super.getGlTextureId(), this.bufferedImage);
-            }
-        }
+    private void uploadImage(NativeImage nativeImageIn) {
+        TextureUtil.prepareImage(this.getGlTextureId(), nativeImageIn.getWidth(), nativeImageIn.getHeight());
+        nativeImageIn.uploadTextureSub(0, 0, 0, false);
     }
 
-    public int getGlTextureId() {
-        this.checkTextureUploaded();
-        return super.getGlTextureId();
-    }
-
-    public void setBufferedImage(BufferedImage p_147641_1_) {
-        this.bufferedImage = p_147641_1_;
-
+    public void setImage(NativeImage nativeImageIn) {
         if (this.imageBuffer != null) {
             this.imageBuffer.skinAvailable();
         }
+
+        synchronized (this) {
+            this.uploadImage(nativeImageIn);
+            this.textureUploaded = true;
+        }
     }
 
-    public void loadTexture(IResourceManager resourceManager) throws IOException {
-        if (this.bufferedImage == null && this.textureLocation != null) {
-            super.loadTexture(resourceManager);
+    public void loadTexture(IResourceManager manager) throws IOException {
+        if (!this.textureUploaded) {
+            synchronized (this) {
+                super.loadTexture(manager);
+                this.textureUploaded = true;
+            }
         }
 
         if (this.imageThread == null) {
             if (this.cacheFile != null && this.cacheFile.isFile()) {
-                logger.debug("Loading http texture from local cache ({})", new Object[]{this.cacheFile});
+                LOGGER.debug("Loading http texture from local cache ({})", (Object) this.cacheFile);
+                NativeImage nativeimage = null;
 
                 try {
-                    this.bufferedImage = ImageIO.read(this.cacheFile);
-
+                    nativeimage = NativeImage.read(new FileInputStream(this.cacheFile));
                     if (this.imageBuffer != null) {
-                        this.setBufferedImage(this.imageBuffer.parseUserSkin(this.bufferedImage));
+                        nativeimage = this.imageBuffer.parseUserSkin(nativeimage);
                     }
+
+                    this.setImage(nativeimage);
                 } catch (IOException ioexception) {
-                    logger.error("Couldn\'t load skin " + this.cacheFile, ioexception);
+                    LOGGER.error("Couldn't load skin {}", this.cacheFile, ioexception);
                     this.loadTextureFromServer();
+                } finally {
+                    if (nativeimage != null) {
+                        nativeimage.close();
+                    }
+
                 }
             } else {
                 this.loadTextureFromServer();
             }
         }
+
     }
 
     protected void loadTextureFromServer() {
-        this.imageThread = new Thread("Texture Downloader #" + threadDownloadCounter.incrementAndGet()) {
+        this.imageThread = new Thread("Texture Downloader #" + TEXTURE_DOWNLOADER_THREAD_ID.incrementAndGet()) {
             public void run() {
-                HttpURLConnection connection = null;
-                ImageDownloadAlt.logger.debug("Downloading http texture from {} to {}", new Object[]{ImageDownloadAlt.this.imageUrl, ImageDownloadAlt.this.cacheFile});
+                HttpURLConnection httpurlconnection = null;
+                ImageDownloadAlt.LOGGER.debug("Downloading http texture from {} to {}", ImageDownloadAlt.this.imageUrl, ImageDownloadAlt.this.cacheFile);
 
                 try {
-                    connection = (HttpURLConnection) (new URL(ImageDownloadAlt.this.imageUrl)).openConnection(Minecraft.getInstance().getProxy());
-                    connection.setDoInput(true);
-                    connection.setDoOutput(false);
-                    connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1; rv:19.0) Gecko/20100101 Firefox/19.0");
-                    connection.connect();
+                    httpurlconnection = (HttpURLConnection) (new URL(ImageDownloadAlt.this.imageUrl)).openConnection(Minecraft.getInstance().getProxy());
+                    httpurlconnection.setDoInput(true);
+                    httpurlconnection.setDoOutput(false);
+                    httpurlconnection.connect();
+                    if (httpurlconnection.getResponseCode() / 100 == 2) {
+                        InputStream inputstream;
+                        if (ImageDownloadAlt.this.cacheFile != null) {
+                            FileUtils.copyInputStreamToFile(httpurlconnection.getInputStream(), ImageDownloadAlt.this.cacheFile);
+                            inputstream = new FileInputStream(ImageDownloadAlt.this.cacheFile);
+                        } else {
+                            inputstream = httpurlconnection.getInputStream();
+                        }
 
-                    if (connection.getResponseCode() / 100 != 2) {
+                        Minecraft.getInstance().runAsync(() -> {
+                            NativeImage nativeimage = null;
+
+                            try {
+                                nativeimage = NativeImage.read(inputstream);
+                                if (ImageDownloadAlt.this.imageBuffer != null) {
+                                    nativeimage = ImageDownloadAlt.this.imageBuffer.parseUserSkin(nativeimage);
+                                }
+                            } catch (IOException ioexception) {
+                                ImageDownloadAlt.LOGGER.warn("Error while loading the skin texture", (Throwable) ioexception);
+                            } finally {
+                                if (nativeimage != null) {
+                                    nativeimage.close();
+                                }
+
+                                IOUtils.closeQuietly(inputstream);
+                            }
+
+                        });
                         return;
                     }
-
-                    BufferedImage bufferedimage;
-
-                    if (ImageDownloadAlt.this.cacheFile != null) {
-                        FileUtils.copyInputStreamToFile(connection.getInputStream(), ImageDownloadAlt.this.cacheFile);
-                        bufferedimage = ImageIO.read(ImageDownloadAlt.this.cacheFile);
-                    } else {
-                        bufferedimage = TextureUtil.readBufferedImage(connection.getInputStream());
-                    }
-
-                    if (ImageDownloadAlt.this.imageBuffer != null) {
-                        bufferedimage = ImageDownloadAlt.this.imageBuffer.parseUserSkin(bufferedimage);
-                    }
-
-                    ImageDownloadAlt.this.setBufferedImage(bufferedimage);
                 } catch (Exception exception) {
-                    ImageDownloadAlt.logger.error("Couldn\'t download http texture", exception);
+                    ImageDownloadAlt.LOGGER.error("Couldn't download http texture", (Throwable) exception);
+                    return;
                 } finally {
-                    if (connection != null) {
-                        connection.disconnect();
+                    if (httpurlconnection != null) {
+                        httpurlconnection.disconnect();
                     }
+
                 }
+
             }
         };
         this.imageThread.setDaemon(true);
+        this.imageThread.setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler(LOGGER));
         this.imageThread.start();
     }
 }

@@ -4,12 +4,8 @@ import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelRenderer;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -25,10 +21,10 @@ public class RegenClientHooks {
 	}
 
 	public static void renderBipedPre(BipedModel model, Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		if(entity instanceof PlayerEntity && CapabilityRegeneration.getForPlayer((PlayerEntity) entity).getState() == PlayerUtil.RegenState.GRACE_CRIT){
-				GlStateManager.translated(0, 1.5, 0);
-				GlStateManager.rotated(90, 1.0F, 0F, 0.0F);
-		}
+        //if(entity instanceof PlayerEntity && CapabilityRegeneration.getForPlayer((PlayerEntity) entity).getState() == PlayerUtil.RegenState.GRACE_CRIT){
+        //		GlStateManager.translated(0, 1.5, 0);
+        //			GlStateManager.rotated(90, 1.0F, 0F, 0.0F);
+        //	}
 	}
 
 	static int colorModeCache;
@@ -120,7 +116,7 @@ public class RegenClientHooks {
 	}
 
 	private static boolean enabled() {
-		return Minecraft.getInstance().player != null && CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player).getState() == PlayerUtil.RegenState.GRACE_CRIT;
+        return Minecraft.getInstance().player != null && CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player).orElse(null).getState() == PlayerUtil.RegenState.GRACE_CRIT;
 
 	}
 

@@ -5,7 +5,6 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.advancements.RegenTriggers;
-import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.handlers.ActingForwarder;
@@ -17,15 +16,17 @@ import me.swirtzly.regeneration.util.DebuggableScheduledAction;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -656,11 +657,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.post_ended"), true);
 			
 			if (player.world.rand.nextBoolean()) {
-				EntityLindos lindos = new EntityLindos(player.world);
-				lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
-				player.world.spawnEntity(lindos);
-
-
+				RegenObjects.EntityEntries.ITEM_LINDOS_TYPE.spawn(player.world, null, null, new BlockPos(player.posX, player.posY + player.getEyeHeight(), player.posZ), SpawnReason.NATURAL, true, true);
 				player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
 			}
 		}

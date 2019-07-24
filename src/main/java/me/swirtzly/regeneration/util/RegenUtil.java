@@ -3,18 +3,17 @@ package me.swirtzly.regeneration.util;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.block.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -79,9 +78,11 @@ public class RegenUtil {
 				
 				if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.isNonBoss())
 					return;
-				
-				float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
-				
+
+				//	float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
+
+				float densMod = 1;
+
 				int xr, zr;
 				xr = (int) -(victim.posX - exploder.posX);
 				zr = (int) -(victim.posZ - exploder.posZ);
@@ -93,7 +94,7 @@ public class RegenUtil {
 	
 	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-			if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity && RegenConfig.COMMON.regenerationKillsPlayers))
+			if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) //&& RegenConfig.COMMON.regenerationKillsPlayers))
 				entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
 		});
 	}

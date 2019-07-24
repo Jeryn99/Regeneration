@@ -14,8 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,23 +76,25 @@ public class DnaHandler {
 	
 	@SubscribeEvent
 	public static void onXpPickup(PlayerPickupXpEvent e) {
-		IRegeneration data = CapabilityRegeneration.getForPlayer(e.getEntityPlayer());
-		IDna dna = DnaHandler.getDnaEntry(data.getDnaType());
-		if (dna.getRegistryName().equals(DnaHandler.DNA_DUMB.getRegistryName()) && data.isDnaActive()) {
-			e.getOrb().xpValue *= 0.5;
-		}
+        CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).ifPresent((data) -> {
+            IDna dna = DnaHandler.getDnaEntry(data.getDnaType());
+            if (dna.getRegistryName().equals(DnaHandler.DNA_DUMB.getRegistryName()) && data.isDnaActive()) {
+                e.getOrb().xpValue *= 0.5;
+            }
+        });
 	}
 	
 	@SubscribeEvent
 	public static void onJump(LivingEvent.LivingJumpEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-			if (player.world.isRemote) return;
-			if (data.isDnaActive() && data.getDnaType().equals(DNA_ATHLETE.getRegistryName())) {
-				player.motionY += 0.1D;
-				player.velocityChanged = true;
-			}
+            CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+                if (player.world.isRemote) return;
+                if (data.isDnaActive() && data.getDnaType().equals(DNA_ATHLETE.getRegistryName())) {
+                    player.getMotion().add(0, 0.1, 0);
+                    player.velocityChanged = true;
+                }
+            });
 		}
 	}
 
@@ -104,7 +106,7 @@ public class DnaHandler {
 			if (attacked instanceof PlayerEntity && source.getImmediateSource() instanceof AbstractArrowEntity) {
 				if (!attacked.world.isRemote) {
 					PlayerEntity player = (PlayerEntity) attacked;
-					boolean flag = CapabilityRegeneration.getForPlayer(player).getDnaType().toString().equals(DNA_REPEL_ARROW.getRegistryName().toString());
+                    boolean flag = CapabilityRegeneration.getForPlayer(player).orElse(null).getDnaType().toString().equals(DNA_REPEL_ARROW.getRegistryName().toString());
 					event.setCanceled(flag);
 				}
 			}

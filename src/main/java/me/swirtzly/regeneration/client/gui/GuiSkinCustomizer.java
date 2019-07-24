@@ -1,17 +1,14 @@
 package me.swirtzly.regeneration.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.suff.regeneration.RegenerationMod;
-import me.suff.regeneration.client.skinhandling.SkinChangingHandler;
-import me.suff.regeneration.common.capability.CapabilityRegeneration;
-import me.suff.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.gui.parts.BlankContainer;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
@@ -20,7 +17,6 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.awt.*;
 
-import static me.suff.regeneration.util.RenderUtil.drawModelToGui;
 import static me.swirtzly.regeneration.util.RenderUtil.drawModelToGui;
 
 public class GuiSkinCustomizer extends ContainerScreen {
@@ -34,56 +30,46 @@ public class GuiSkinCustomizer extends ContainerScreen {
 	private float rotation = 0;
 	
 	public GuiSkinCustomizer() {
-		super(new BlankContainer());
+        super(new BlankContainer(), null, null);
 		xSize = 176;
 		ySize = 186;
 	}
 	
 	@Override
-	public void initGui() {
-		super.initGui();
+    public void init() {
+        super.init();
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
 		final int btnW = 60, btnH = 18;
 		rotation = 0;
-		
-		this.addButton(new GuiButtonExt( cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.previous").getFormattedText()) {
+
+        this.addButton(new GuiButtonExt(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.previous").getFormattedText(), button -> {
+            if (choices.previous() != null) {
+                choices = (SkinChangingHandler.EnumChoices) choices.previous();
+            } else {
+                choices = SkinChangingHandler.EnumChoices.EITHER;
+            }
+            PlayerUtil.updateModel(choices);
+        }));
+
+        this.addButton(new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.next").getFormattedText(), button -> {
+            if (choices.next() != null) {
+                choices = (SkinChangingHandler.EnumChoices) choices.next();
+            } else {
+                choices = SkinChangingHandler.EnumChoices.ALEX;
+            }
+            PlayerUtil.updateModel(choices);
+        }));
+
+        this.addButton(new GuiButtonExt(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.back").getFormattedText(), button -> Minecraft.getInstance().displayGuiScreen(new GuiCustomizer())));
+
+
+        this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder").getFormattedText(), new Button.IPressable() {
 			@Override
-			public void onClick(double mouseX, double mouseY) {
-				if (choices.previous() != null) {
-					choices = (SkinChangingHandler.EnumChoices) choices.previous();
-				} else {
-					choices = SkinChangingHandler.EnumChoices.EITHER;
-				}
-				PlayerUtil.updateModel(choices);
-			}
-		});
-		
-		this.addButton(new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.next").getFormattedText()) {
-			@Override
-			public void onClick(double mouseX, double mouseY) {
-				if (choices.next() != null) {
-					choices = (SkinChangingHandler.EnumChoices) choices.next();
-				} else {
-					choices = SkinChangingHandler.EnumChoices.ALEX;
-				}
-				PlayerUtil.updateModel(choices);
-			}
-		});
-		
-		this.addButton(new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.back").getFormattedText()) {
-			@Override
-			public void onClick(double mouseX, double mouseY) {
-				Minecraft.getInstance().displayGuiScreen(new GuiCustomizer());
-			}
-		});
-		
-		this.addButton(new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder").getFormattedText()) {
-			@Override
-			public void onClick(double mouseX, double mouseY) {
+            public void onPress(Button button) {
 				Util.getOSType().openFile(SkinChangingHandler.SKIN_DIRECTORY);
 			}
-		});
+        }));
 		
 		CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player).ifPresent((cap) -> choices = cap.getPreferredModel());
 	}

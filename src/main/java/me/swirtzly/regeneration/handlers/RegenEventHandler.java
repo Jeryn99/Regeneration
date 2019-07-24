@@ -8,6 +8,7 @@ import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -34,7 +35,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
 import javax.annotation.Nonnull;
@@ -126,7 +126,7 @@ public class RegenEventHandler {
 				if (event.getSource() == DamageSource.FALL) {
 					PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, 200, 4, false, false);
 					if (event.getAmount() > 8.0F) {
-						if (player.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && RegenConfig.COMMON.genGreator) {
+						if (player.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && RegenConfig.COMMON.genCrater.get()) {
 							RegenUtil.genCrater(player.world, player.getPosition(), 3);
 						}
 						event.setAmount(0.5F);
@@ -197,18 +197,6 @@ public class RegenEventHandler {
 
 	
 	// ================ OTHER ==============
-	@SubscribeEvent
-	public static void onLogin(PlayerLoggedInEvent event) {
-		if (event.getPlayer().world.isRemote)
-			return;
-		
-		CompoundNBT nbt = event.getPlayer().getEntityData(), persist = nbt.get(PlayerEntity.PERSISTED_NBT_TAG);
-		if (!persist.getBoolean("loggedInBefore"))
-			CapabilityRegeneration.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.freeRegenerations);
-		persist.putBoolean("loggedInBefore", true);
-		nbt.put(PlayerEntity.PERSISTED_NBT_TAG, persist);
-	}
-
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		Entity entity = event.getEntity();
@@ -220,7 +208,7 @@ public class RegenEventHandler {
 				if (newEntity != null) {
 					entity.remove();
 					event.setCanceled(true);
-					event.getWorld().spawnEntity(newEntity);
+					RegenObjects.EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE.spawn(event.getWorld(), null, null, event.getEntity().getPosition(), SpawnReason.DISPENSER, true, true);
 				}
 			}
 		}

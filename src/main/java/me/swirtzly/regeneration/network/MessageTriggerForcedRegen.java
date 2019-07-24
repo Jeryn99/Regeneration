@@ -1,42 +1,34 @@
 package me.swirtzly.regeneration.network;
 
-import io.netty.buffer.ByteBuf;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class MessageTriggerForcedRegen implements IMessage {
+import java.util.function.Supplier;
+
+public class MessageTriggerForcedRegen {
 	
 	public MessageTriggerForcedRegen() {
 	}
-	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-	
-	}
-	
-	@Override
-	public void toBytes(ByteBuf buf) {
-	
-	}
-	
-	public static class Handler implements IMessageHandler<MessageTriggerForcedRegen, IMessage> {
-		
-		@Override
-		public IMessage onMessage(MessageTriggerForcedRegen message, MessageContext ctx) {
-			
-			ctx.getServerHandler().player.getServerWorld().runAsync(() -> {
-				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
-				if (cap.canRegenerate() && cap.getState() == PlayerUtil.RegenState.ALIVE) {
-					cap.getPlayer().attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
+
+    public static void encode(MessageTriggerForcedRegen msg, PacketBuffer buffer) {
+    }
+
+    public static MessageTriggerForcedRegen decode(PacketBuffer buffer) {
+        return new MessageTriggerForcedRegen();
+    }
+
+
+    public static class Handler {
+
+        public static void handle(MessageTriggerForcedRegen message, Supplier<NetworkEvent.Context> ctx) {
+            ctx.get().getSender().getServer().runAsync(() -> CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((data) -> {
+                if (data.canRegenerate() && data.getState() == PlayerUtil.RegenState.ALIVE) {
+                    data.getPlayer().attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
 				}
-			});
-			
-			return null;
+            }));
 		}
 		
 	}

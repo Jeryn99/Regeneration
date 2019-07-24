@@ -1,7 +1,6 @@
 package me.swirtzly.regeneration.handlers;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.item.ItemFobWatch;
@@ -30,7 +29,7 @@ import static me.swirtzly.regeneration.RegenerationMod.MODID;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = MODID)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RegenObjects {
 	
 	public static List<Item> ITEMS = new ArrayList<>();
@@ -98,7 +97,7 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addBlocks(RegistryEvent.Register<Block> e) {
-		registerBlocks(e.getRegistry(), setUpBlock(new BlockHandInJar(), "hand_jar"));
+		//	registerBlocks(e.getRegistry(), setUpBlock(new BlockHandInJar(), "hand_jar"));
 	}
 	
 	

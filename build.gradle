@@ -83,6 +83,8 @@ minecraft {
             }
         }
     }
+
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 }
 
 dependencies {
@@ -109,6 +111,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+    compile 'org.jsoup:jsoup:1.11.3'
+
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -124,6 +128,7 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+    manifest.attributes ContainedDeps: "jsoup-1.11.3.jar"
 }
 
 // Example configuration to allow publishing using the maven-publish task
