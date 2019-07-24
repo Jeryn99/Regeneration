@@ -26,7 +26,7 @@ public class EntityLindos extends FlyingEntity {
 	
 	
 	public EntityLindos(World worldIn) {
-		super(worldIn);
+		super(worldIn, RegenObjects.EntityEntries.ITEM_LINDOS_TYPE);
 		setEntitySize(0.5F, 0.5F);
 		this.moveHelper = new FlyingMovementController(this);
 		noClip = true;
@@ -51,19 +51,19 @@ public class EntityLindos extends FlyingEntity {
 	protected PathNavigator createNavigator(World worldIn) {
 		FlyingPathNavigator pathnavigateflying = new FlyingPathNavigator(this, worldIn);
 		pathnavigateflying.setCanOpenDoors(false);
-		pathnavigateflying.setCanFloat(true);
+		pathnavigateflying.setCanSwim(true);
 		pathnavigateflying.setCanEnterDoors(true);
 		return pathnavigateflying;
 	}
 	
 	@Override
-	public void onUpdate() {
-		super.onUpdate();
+	public void tick() {
+		super.tick();
 		
 		setNoGravity(true);
 		
 		if (world.isRemote && ticksExisted == 2) {
-			ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.AMBIENT, true, () -> isDead, 1.0F);
+			ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.AMBIENT, true, () -> !isAlive(), 1.0F);
 		}
 		
 		if (ticksExisted < 60) {
@@ -75,7 +75,7 @@ public class EntityLindos extends FlyingEntity {
 		}
 		
 		if (ticksExisted % 2200 == 0) {
-			setDead();
+			remove();
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class EntityLindos extends FlyingEntity {
 			ItemStack stack = player.getHeldItem(hand);
 			if (stack.getItem() == RegenObjects.Items.LINDOS_VIAL) {
 				ItemLindos.setAmount(stack, ItemLindos.getAmount(stack) + getAmount());
-				setDead();
+				remove();
 			}
 		}
 		
@@ -105,14 +105,16 @@ public class EntityLindos extends FlyingEntity {
 	protected void damageEntity(DamageSource damageSrc, float damageAmount) {
 		super.damageEntity(damageSrc, damageAmount);
 	}
-	
+
+
 	@Override
-	protected void applyEntityAttributes() {
-		super.applyEntityAttributes();
-		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.4000000059604645D);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20000000298023224D);
+	protected void registerAttributes() {
+		super.registerAttributes();
+		getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
+		this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.4000000059604645D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20000000298023224D);
 	}
+	
 	
 }

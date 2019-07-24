@@ -42,7 +42,7 @@ public class RegenKeyBinds {
 		if (player == null || EnumCompatModids.LCCORE.isLoaded())
 			return;
 
-		CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {git config
+		CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
 			if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
 				NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration());
 			}

@@ -1,22 +1,21 @@
 package me.swirtzly.regeneration.common.entity;
 
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -24,7 +23,7 @@ import net.minecraft.world.World;
 
 public class EntityItemOverride extends Entity {
 
-	private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.ITEM_STACK);
+	private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.ITEMSTACK);
 	private static final DataParameter<Float> HEIGHT = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> WIDTH = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.FLOAT);
 
@@ -198,7 +197,7 @@ public class EntityItemOverride extends Entity {
 		this.setEntitySize(getWidth(), getHeight());
 
 		if (!this.hasNoGravity()) {
-			this.motionY -= 0.03999999910593033D;
+			this.getMotion().add(0, getMotion().getY() - 0.03999999910593033D, 0);
 		}
 
 		if (this.world.isRemote) {
@@ -212,9 +211,7 @@ public class EntityItemOverride extends Entity {
 
 		if (flag || this.ticksExisted % 25 == 0) {
 			if (this.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
-				this.motionY = 0.20000000298023224D;
-				this.motionX = (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F;
-				this.motionZ = (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F;
+				this.getMotion().add(0.20000000298023224D, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
 				this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
 			}
 		}
@@ -249,7 +246,7 @@ public class EntityItemOverride extends Entity {
 		}
 	}
 
-	public static interface IEntityOverride {
+	public interface IEntityOverride {
 
 		void update(EntityItemOverride itemOverride);
 

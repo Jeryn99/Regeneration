@@ -237,7 +237,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
-		setStyle(nbt.contains("style") ? nbt.get("style") : nbt);
+		setStyle(nbt.contains("style") ? (CompoundNBT) nbt.get("style") : nbt);
 		
 		if (nbt.contains("type_id")) // v1.3+ saves have a type tag
 			regenType = TypeHandler.RegenType.valueOf(nbt.getString("type_id"));
@@ -249,7 +249,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		
 		if (nbt.contains("stateManager"))
 			if (stateManager != null) {
-				stateManager.deserializeNBT(nbt.get("stateManager"));
+				stateManager.deserializeNBT((CompoundNBT) nbt.get("stateManager"));
 			}
 		
 		if (nbt.contains("jar")) {
@@ -329,8 +329,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void receiveRegenerations(int amount) {
-		if (RegenConfig.infiniteRegeneration)
-			regenerationsLeft = RegenConfig.regenCapacity;
+		if (RegenConfig.COMMON.infiniteRegeneration.get())
+			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
 		else
 			regenerationsLeft += amount;
 		synchronise();
@@ -338,8 +338,8 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	@Override
 	public void extractRegeneration(int amount) {
-		if (RegenConfig.infiniteRegeneration)
-			regenerationsLeft = RegenConfig.regenCapacity;
+		if (RegenConfig.COMMON.infiniteRegeneration.get())
+			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
 		else
 			regenerationsLeft -= amount;
 		synchronise();
@@ -497,7 +497,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleNextHandGlow() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.grace.handGlowInterval * 20);
+			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.COMMON.handGlowInterval.get() * 20);
 			synchronise();
 		}
 		
@@ -505,7 +505,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void scheduleHandGlowTrigger() {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.grace.handGlowTriggerDelay * 20);
+			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
 			ActingForwarder.onHandsStartGlowing(CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -523,7 +523,7 @@ public class CapabilityRegeneration implements IRegeneration {
 					return false;
 				
 				// We're entering grace period...
-				scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.ENTER_CRITICAL, RegenConfig.grace.gracePhaseLength);
+				scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
 				scheduleHandGlowTrigger();
 				
 				state = PlayerUtil.RegenState.GRACE;
@@ -607,7 +607,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			// We're starting a regeneration!
 			state = PlayerUtil.RegenState.REGENERATING;
 			
-			if (RegenConfig.sendRegenDeathMessages) {
+			if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
 				TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_chat_message", player.getName());
 				text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathSource())));
 				PlayerUtil.sendMessageToAll(text);
@@ -626,7 +626,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		private void enterCriticalPhase() {
 			// We're entering critical phase...
 			state = PlayerUtil.RegenState.GRACE_CRIT;
-			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, RegenConfig.grace.criticalPhaseLength);
+			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, RegenConfig.COMMON.criticalPhaseLength.get());
 			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
 			synchronise();
 		}
@@ -642,7 +642,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
 			}
 			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
-			if (RegenConfig.loseRegensOnDeath) {
+			if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
 				extractRegeneration(getRegenerationsLeft());
 			}
 			synchronise();

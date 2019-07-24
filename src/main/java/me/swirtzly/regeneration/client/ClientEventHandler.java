@@ -110,21 +110,21 @@ public class ClientEventHandler {
             if (player.ticksExisted == 50) {
 
                 UUID clientUUID = Minecraft.getInstance().player.getUniqueID();
-                IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+                CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+                    if (data.areHandsGlowing()) {
+                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.areHandsGlowing(), 0.5F);
+                    }
 
-                if (cap.areHandsGlowing()) {
-                    ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 0.5F);
-                }
+                    if (data.getState() == REGENERATING) {
+                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.REGENERATION.getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(REGENERATING), 1.0F);
+                    }
 
-                if (cap.getState() == REGENERATING) {
-                    ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.REGENERATION.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(REGENERATING), 1.0F);
-                }
-
-                if (cap.getState().isGraceful() && clientUUID == player.getUniqueID()) {
-                    ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(GRACE_CRIT), 1F);
-                    ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
-                    ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.GRACE_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != GRACE, 1.5F);
-                }
+                    if (data.getState().isGraceful() && clientUUID == player.getUniqueID()) {
+                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(GRACE_CRIT), 1F);
+                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().isGraceful(), 0.2F);
+                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.GRACE_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> data.getState() != GRACE, 1.5F);
+                    }
+                });
             }
 
         });
@@ -136,13 +136,14 @@ public class ClientEventHandler {
         if (EnumCompatModids.LCCORE.isLoaded()) return;
         if (ev.getEntity() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) ev.getEntity();
-            IRegeneration data = CapabilityRegeneration.getForPlayer(player).orElse(null);
-            AnimationContext context = new AnimationContext(ev.model, player, ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
-            if (data.getState() == REGENERATING) {
-                ev.setCanceled(TypeHandler.getTypeInstance(data.getType()).getRenderer().onAnimateRegen(context));
-            } else {
-                AnimationHandler.animate(context);
-            }
+            CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+                AnimationContext context = new AnimationContext(ev.model, player, ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
+                if (data.getState() == REGENERATING) {
+                    ev.setCanceled(TypeHandler.getTypeInstance(data.getType()).getRenderer().onAnimateRegen(context));
+                } else {
+                    AnimationHandler.animate(context);
+                }
+            });
         }
     }
 

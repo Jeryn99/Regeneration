@@ -1,7 +1,6 @@
 package me.swirtzly.regeneration.proxy;
 
 import me.swirtzly.regeneration.client.RegenKeyBinds;
-import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.rendering.entity.RenderItemOverride;
 import me.swirtzly.regeneration.client.rendering.entity.RenderLindos;
 import me.swirtzly.regeneration.client.rendering.layers.LayerHands;
