@@ -1,0 +1,139 @@
+item.fob_watch.name=Fob Watch
+item.lindos_vial.name=Lindos Vial
+superpower.timelord.name=Timelord
+
+regeneration.gui.red=Rouge
+regeneration.gui.green=Vert
+regeneration.gui.blue=Bleu
+regeneration.gui.primary=Primaire
+regeneration.gui.secondary=Secondaire
+regeneration.gui.undo=Retour
+regeneration.gui.default=Défaut
+regeneration.gui.open_folder=Skins
+regeneration.gui.reset_skin=Rétablie le Skin
+regeneration.gui.infinite_regenerations=Mode de regénérations infinie
+regeneration.gui.remaining_regens.status=Regénérations restantes:
+
+regeneration.messages.now_timelord=Vous êtes maintenant un Seigneur du Temps !
+regeneration.messages.gained_regens=Vous recevez %s regénérations depuis la Montre Gousset
+
+regeneration.messages.empty_vial=Cette fiole n'a pas assez de Lindos pour déclencher une régénération !
+
+regeneration.messages.transfer.success=Vous transférez une de vos regénération dans la montre
+regeneration.messages.transfer.full_watch=Vous ne pouvez plus stocker de regénérations dans la montre !
+regeneration.messages.transfer.empty_watch=Cette montre est vide !
+regeneration.messages.transfer.max_regens=Vous avez déjà le nombre de regénérations
+regeneration.messages.transfer.no_regens=Vous n'avez plus de regénérations à transférer
+
+regeneration.subtitles.fob_watch=Ouverture de la Montre Gousset
+regeneration.subtitles.regeneration=Énergie de regénération
+regeneration.subtitles.hand_glow=Mains brillantes
+regeneration.subtitles.heart_beat=Battement de coeurs
+regeneration.subtitles.critical_stage=Stade de grâce critique
+regeneration.subtitles.fob_watch_dialogue=Dialogue de la Montre Gousset
+regeneration.subtitles.regeneration_breath=Regeneration Breath
+
+regeneration.keybinds.regenerate=Regénérer
+regeneration.commands.debug.usage=<fastforward|setregens|open> [montant]
+
+regeneration.damagesrc.regen_energy=%s a été détruit par l'énergie de régénération !
+regeneration.damagesrc.regen_heal=%s est mort en donnant trop d'énergie de régénération...
+regeneration.damagesrc.regen_crit=%s sont morts parce qu'ils étaient trop longtemps restés dans leur régénération.
+regeneration.damagesrc.theft=%s s'est fait voler son corps !
+regeneration.damagesrc.lindos=%s consumed lindos hormones! They are reborn!
+
+regeneration.toast.regenerated=Vous vous êtes régénéré !
+regeneration.toast.regenerations_left=%s régénérations restantes
+regeneration.toast.enter_critical=Vous devenez critique
+regeneration.toast.enter_critical.sub=%s minutes restantes...
+
+regeneration.messages.regen_chat_message=%s se régénère...
+regeneration.messages.warning.grace=Vous êtes en état de grâce, pressez %s pour vous regénérer!
+regeneration.messages.warning.grace_critical=Vous êtes proche de la mort... pressez %s pour vous regénérer !
+regeneration.messages.regen_delayed=Régénération reporté!
+regeneration.messages.regen_warning=Tapez un block pour reporté votre régénération
+regeneration.messages.theft=Vous avez volé le corps de %s !
+
+
+config.regeneration.max_regens=Montant de regénérations par cycle
+config.regeneration.free_regens=Regénérations gratuites
+config.regeneration.first_start_gift_only=Le cadeau de départ n'est que pour la première fois
+config.regeneration.lose_regens_on_death=Perdre vos régénérations si vous vous faites tuer ?
+config.regeneration.infinite_regenerations=Régénérations infinie
+config.regeneration.regen_messages=Envoyé un message de régénération
+config.regeneration.fiery_regen=Régénération ardente
+config.regeneration.regeneration_fire_immunity=La regénération donne résistance au feu
+config.regeneration.perspective=Changer la perspective
+config.regeneration.update_checker=Activé la vérification des mises à jours ?
+config.regeneration.fob_recipe=Recette de la Montre GoussetFob Watch crafting
+
+config.regeneration.regeneration_kills_players=Regeneration kills players
+config.regeneration.regeneration_knocksback_players=Regeneration knocks back players
+config.regeneration.regenerative_kill_range=Regeneration kill range
+config.regeneration.regenerative_knockback=Regeneration knockback
+config.regeneration.regenerative_knockback_range=Regeneration knockback range
+
+config.regeneration.post_regen_duration=Durée de l'effet post-régénération
+config.regeneration.post_regenerationEffect_level=Concentration de l'effet post-régénération
+config.regeneration.reset_hunger=Rétablir la faim ?
+config.regeneration.reset_oxygen=Rétablir l'oxygène
+config.regeneration.absorbtion_level=Nombre de cœurs supplémentaires après le régéneration
+
+config.regeneration.loot_regex=Matcheur de butin
+config.regeneration.disable_loot=Désactiver le butin Montre Gousset
+
+config.regeneration.grace.gracePeriodLength=Durée du délai de grâce
+config.regeneration.grace.criticalPhaseLength=Longueur de phase critique
+config.regeneration.grace.criticalDamageChance=Risque de dommages critiques
+config.regeneration.grace.handGlowTriggerDelay=Délai du déclenchement des mains brillantes
+config.regeneration.grace.handGlowInterval=Interval des mains brillantes
+
+config.regeneration.compat.lccore.superpower=Considérer Regeneration comme un super-pouvoir
+config.regeneration.compat.lccore.size_changing=Changement de taille LucraftCore
+config.regeneration.compat.lccore.size_changing_min=Changement de taille minimum
+config.regeneration.compat.lccore.size_changing_max=Changement de taille maximum
+config.regeneration.compat.lccore.radiation_immunity=Seigneur du temps immunisé aux radiations ?
+config.regeneration.compat.tardis.tardis_damage=Endommager le TARDIS en regénérant ?
+
+config.regeneration.skins.model_preference=Modèle de skin préféré
+config.regeneration.skins.changemyskin=Changement de Skin
+config.regeneration.skins.download_url=URL de téléchargement
+
+config.regeneration.category.compat=Intégration de mod
+config.regeneration.category.compat.tardis=Tardis Mod
+config.regeneration.category.compat.lccore=Lucraft Core
+config.regeneration.category.grace=Période de grâce
+config.regeneration.category.loot=Paramètre de butin
+config.regeneration.category.skins=Changement de Skin
+config.regeneration.category.on_regen=Quand régénérer
+config.regeneration.category.post_regen=Post-régénération
+
+traits.athlete.name=Votre ADN contient des gènes athlétique !
+traits.boring.name=Votre ADN contient des gènes fénéant ! (Vous êtes inutile !)
+traits.dumb.name=Votre ADN contient des gènes que personne ne veut !
+traits.sneak.name=Votre ADN contient des gènes de discrétions !
+traits.vampire.name=Votre ADN contient des gènes de Vampire ... Ah la la ...
+traits.lucky.name=Votre ADN contient des gènes de chanceux !
+traits.swimmer.name=Your DNA consists of Swimming genes!
+traits.hydrophobic.name=Your DNA consists of Hydrophobic genes!
+traits.tough.name=Your DNA consists of Strong genes!
+
+nbt.item.lindos=Energie Lindos: %s
+regeneration.messages.no_water=Cette fiole n'a pas d'eau...
+regeneration.messages.cannot_use=You cannot use this right now!
+message.regeneration.healed=You have given %s some of your Regeneration Energy!
+nbt.item.water=Has Water: %s
+nbt.item.water_filled=You have now filled this Vial with Water
+nbt.item.water_already_filled=This Vial already has water in it
+
+regeneration.messages.reduced_dmg=Reduced Damage due to Post Regen State!
+regeneration.messages.fall_dmg=Fall damage reduced due to post regen state! Although you're gonna feel sick..
+regeneration.messages.post_ended=Your Regeneration process is now entirely completed!
+regeneration.messages.fast_forward_cmd_fail=Nothing to fast forward to.
+regeneration.messages.cant_glow=You cannot activate a glowing hand without being in a grace period
+regeneration.gui.back=Back
+regeneration.gui.previous=Previous
+regeneration.gui.next=Next
+regeneration.gui.customize=Customize
+regeneration.gui.preference_model=Current preferred skin type: %s
+regeneration.messages.info_trait=Your current trait is:

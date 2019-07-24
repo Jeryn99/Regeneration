@@ -1,0 +1,136 @@
+{
+  "regeneration": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration",
+        "stream": true
+      }
+    ]
+  },
+  "jar_bubbles": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration_bubbles",
+    "sounds": [
+      {
+        "name": "regeneration:jar_bubbles",
+        "stream": true
+      }
+    ]
+  },
+
+  "grace_hum": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.hum",
+    "sounds": [
+      {
+        "name": "regeneration:hum/grace_hum_1",
+        "stream": false
+      },
+      {
+        "name": "regeneration:hum/grace_hum_2",
+        "stream": false
+      },
+      {
+        "name": "regeneration:hum/grace_hum_3",
+        "stream": false
+      },
+      {
+        "name": "regeneration:hum/grace_hum_4",
+        "stream": false
+      }
+    ]
+  },
+  "regeneration_2": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration_2",
+        "stream": true
+      }
+    ]
+  },
+  "regeneration_3": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration_3",
+        "stream": true
+      }
+    ]
+  },
+  "fob_watch_dialogue": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.fob_watch_dialogue",
+    "sounds": [
+      {
+        "name": "regeneration:fob_watch_dialogue",
+        "stream": false
+      }
+    ]
+  },
+  "critical_stage": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.critical_stage",
+    "sounds": [
+      {
+        "name": "regeneration:critical_stage",
+        "stream": true
+      }
+    ]
+  },
+  "heart_beat": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.heart_beat",
+    "sounds": [
+      {
+        "name": "regeneration:heart_beat",
+        "stream": false
+      }
+    ]
+  },
+  "hand_glow": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.hand_glow",
+    "sounds": [
+      {
+        "name": "regeneration:hand_glow",
+        "stream": false
+      }
+    ]
+  },
+  "fob_watch": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.fob_watch",
+    "sounds": [
+      {
+        "name": "regeneration:fob_watch",
+        "stream": false
+      }
+    ]
+  },
+  "regen_breath": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regen_breath",
+    "sounds": [
+      {
+        "name": "regeneration:regen_breath",
+        "stream": false
+      }
+    ]
+  },
+  "alarm": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.alarm",
+    "sounds": [
+      {
+        "name": "regeneration:alarm",
+        "stream": false
+      }
+    ]
+  }
+}
+
