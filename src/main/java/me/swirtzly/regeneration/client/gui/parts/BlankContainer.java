@@ -8,8 +8,8 @@ import javax.annotation.Nullable;
 
 public class BlankContainer extends Container {
 
-	public BlankContainer(@Nullable ContainerType<?> type, int id) {
-		super(type, id);
+	public BlankContainer() {
+		super(null, 0);
 	}
 
 	@Override

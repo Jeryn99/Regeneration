@@ -27,7 +27,7 @@ public class MessageRepairArms {
 	public static class Handler {
 		public static void handle(MessageRepairArms message, Supplier<NetworkEvent.Context> ctx) {
 			PlayerEntity player = ctx.get().getSender();
-			ctx.get().getSender().getServerWorld().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> data.setVanillaType(message.type)));
+			ctx.get().getSender().getServer().runAsync(() -> CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> data.setVanillaSkinType(message.type)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

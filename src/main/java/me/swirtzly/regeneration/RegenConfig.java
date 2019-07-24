@@ -55,7 +55,7 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue sendRegenDeathMessages;
 		public final ForgeConfigSpec.IntValue regenerativeKillRange;
 		public final ForgeConfigSpec.BooleanValue regenKillsPlayers;
-		public final ForgeConfigSpec.ConfigValue<Double> regenerativeKnockback;
+		public final ForgeConfigSpec.ConfigValue<Float> regenerativeKnockback;
 		public final ForgeConfigSpec.IntValue regenKnockbackRange;
 		public final ForgeConfigSpec.BooleanValue regenerationKnocksbackPlayers;
 		public final ForgeConfigSpec.ConfigValue<Integer> gracePhaseLength;
@@ -106,7 +106,7 @@ public class RegenConfig {
 			builder.comment("Mid Regen Settings").push("onRegen");
 			regenerativeKillRange = builder.comment("Upon regeneration every mob inside of this radius is immediately killed. Keep in mind that you should round up to accommodate for mobs that aren't standing in the center of a block").translation("config.regeneration.regenerative_kill_range").defineInRange("regenKillRange", 4, 0, Integer.MAX_VALUE);
 			regenKillsPlayers = builder.comment("Players can be killed when too close to a regeneration").translation("config.regeneration.regeneration_kills_players").define("regenKillsPlayers", false);
-			regenerativeKnockback = builder.comment("The amount of knockback every mob inside of the knock back radius gets").translation("config.regeneration.regenerative_knockback").define("regenerativeKnockback", 2.5D);
+			regenerativeKnockback = builder.comment("The amount of knockback every mob inside of the knock back radius gets").translation("config.regeneration.regenerative_knockback").define("regenerativeKnockback", 2.5F);
 			regenKnockbackRange = builder.comment("Range wherein every mob is knocked back upon regeneration").translation("config.regeneration.regenerative_knockback_range").defineInRange("regenerativeKnockbackRange", 7, 0, Integer.MAX_VALUE);
 			regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);
 			builder.pop();

@@ -20,7 +20,7 @@ public class MessageForceRegen {
 	
 	public static class Handler {
 		public static void handle(MessageForceRegen message, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().getSender().getServerWorld().addScheduledTask(() -> {
+			ctx.get().getSender().getServer().runAsync(() -> {
 				ServerPlayerEntity player = ctx.get().getSender();
 				if (player != null) {
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, 99F);

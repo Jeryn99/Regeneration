@@ -24,7 +24,7 @@ public class MessageUpdateModel {
 	
 	public static class Handler {
 		public static void handle(MessageUpdateModel message, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().getSender().getServerWorld().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
+			ctx.get().getSender().getServer().runAsync(() -> CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
 				cap.setPreferredModel(message.preferred);
 				cap.synchronise();
 			}));

@@ -35,9 +35,9 @@ public class MessageSynchroniseRegeneration {
 	
 	public static class Handler {
 		public static void handle(MessageSynchroniseRegeneration message, Supplier<NetworkEvent.Context> ctx) {
-			PlayerEntity player = Minecraft.getInstance().world.getPlayerEntityByUUID(message.player);
+			PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.player);
 			if (player != null)
-				Minecraft.getInstance().addScheduledTask(() -> CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> data.deserializeNBT(message.data)));
+				Minecraft.getInstance().runAsync(() -> CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> data.deserializeNBT(message.data)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

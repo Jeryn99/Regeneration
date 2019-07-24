@@ -1,23 +1,19 @@
 package me.swirtzly.regeneration.util;
 
+import com.mojang.blaze3d.platform.GLX;
+import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.BufferBuilder;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -28,17 +24,18 @@ public class RenderUtil {
 	
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
 	public static float renderTick = Minecraft.getInstance().getRenderPartialTicks();
-	private static float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-	private static float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-	
+	private static float lastBrightnessX = GLX.lastBrightnessX;
+	private static float lastBrightnessY = GLX.lastBrightnessY;
+
 	public static void setLightmapTextureCoords(float x, float y) {
-		lastBrightnessX = OpenGlHelper.lastBrightnessX;
-		lastBrightnessY = OpenGlHelper.lastBrightnessY;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, x, y);
+		final int packedMaxLight = 0xf000f0; //15728880
+		final int skyLight = packedMaxLight % 0x10000; //65536
+		final int blockLight = packedMaxLight / 0x10000; //65536
+		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, skyLight, blockLight);
 	}
 	
 	public static void restoreLightMap() {
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastBrightnessX, lastBrightnessY);
 	}
 
 	public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Vec3d color, float alpha) {
@@ -112,62 +109,34 @@ public class RenderUtil {
 		
 		GlStateManager.popMatrix();
 	}
-	
+
 	public static void setupRenderLightning() {
 		GlStateManager.pushMatrix();
-		GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture();
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.SourceFactor.ONE_MINUS_CONSTANT_ALPHA.value);
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
 		setLightmapTextureCoords(240, 240);
 	}
-	
+
 	public static void finishRenderLightning() {
 		restoreLightMap();
 		GlStateManager.enableLighting();
-		GlStateManager.enableTexture2D();
+		GlStateManager.enableTexture();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 	}
-	
-	public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
-		if (left < right) {
-			int i = left;
-			left = right;
-			right = i;
-		}
-		
-		if (top < bottom) {
-			int j = top;
-			top = bottom;
-			bottom = j;
-		}
-		
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder worldrenderer = tessellator.getBuffer();
-		GlStateManager.enableBlend();
-		GlStateManager.disableTexture2D();
-		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.color4f(red, green, blue, alpha);
-		worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-		worldrenderer.pos(left, bottom, 0.0D).endVertex();
-		worldrenderer.pos(right, bottom, 0.0D).endVertex();
-		worldrenderer.pos(right, top, 0.0D).endVertex();
-		worldrenderer.pos(left, top, 0.0D).endVertex();
-		tessellator.draw();
-		GlStateManager.enableTexture2D();
-		GlStateManager.disableBlend();
-	}
+
 	
 	public static void renderVignette(Vec3d color, float a, PlayerUtil.RegenState state) {
 		GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, a);
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		Minecraft.getInstance().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -182,7 +151,7 @@ public class RenderUtil {
 		tessellator.draw();
 		
 		GlStateManager.depthMask(true);
-		GlStateManager.enableAlpha();
+		GlStateManager.enableAlphaTest();
 		GlStateManager.color4f(1, 1, 1, 1);
 	}
 	
@@ -200,23 +169,62 @@ public class RenderUtil {
 	
 	public static void drawModelToGui(EntityModel model, int xPos, int yPos, float scale, float rotation) {
 		GlStateManager.pushMatrix();
-		GlStateManager.enableDepth();
+		GlStateManager.enableDepthTest();
 		GlStateManager.enableBlend();
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		GlStateManager.translate(xPos, yPos, 100);
+
+		GlStateManager.translatef(xPos, yPos, 100);
 		GlStateManager.rotatef(-25, 1, 0, 0);
 		GlStateManager.rotatef(rotation, 0, 1, 0);
 		RenderHelper.enableGUIStandardItemLighting();
-		
-		GlStateManager.glLightModel(2899, RenderHelper.setColorBuffer(0.75F, 0.75F, 0.75F, 1F));
+
+		GlStateManager.lightModel(2899, RenderHelper.setColorBuffer(0.75F, 0.75F, 0.75F, 1F));
 		GlStateManager.scalef(38 * scale, 34 * scale, 38 * scale);
 		GlStateManager.scalef(-1, 1, 1);
 		model.render(Minecraft.getInstance().player, 0, 0, Minecraft.getInstance().player.ticksExisted, 0, 0, 0.0625f);
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableBlend();
-		GlStateManager.disableDepth();
+		GlStateManager.disableDepthTest();
 		GlStateManager.popMatrix();
+	}
+
+	public static void copyModelAngles(RendererModel src, RendererModel dest) {
+		src.rotateAngleX = dest.rotateAngleX;
+		src.rotateAngleY = dest.rotateAngleY;
+		src.rotateAngleZ = dest.rotateAngleZ;
+		src.rotationPointX = dest.rotationPointX;
+		src.rotationPointY = dest.rotationPointY;
+		src.rotationPointZ = dest.rotationPointZ;
+	}
+
+
+	public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
+		if (left < right) {
+			int i = left;
+			left = right;
+			right = i;
+		}
+
+		if (top < bottom) {
+			int j = top;
+			top = bottom;
+			bottom = j;
+		}
+
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder worldrenderer = tessellator.getBuffer();
+		GlStateManager.enableBlend();
+		GlStateManager.disableTexture();
+		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.color4f(red, green, blue, alpha);
+		worldrenderer.begin(7, DefaultVertexFormats.POSITION);
+		worldrenderer.pos(left, bottom, 0.0D).endVertex();
+		worldrenderer.pos(right, bottom, 0.0D).endVertex();
+		worldrenderer.pos(right, top, 0.0D).endVertex();
+		worldrenderer.pos(left, top, 0.0D).endVertex();
+		tessellator.draw();
+		GlStateManager.enableTexture();
+		GlStateManager.disableBlend();
 	}
 	
 }

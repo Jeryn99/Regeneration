@@ -20,7 +20,7 @@ import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -186,8 +186,7 @@ public class ClientEventHandler {
             }
 
             if (warning != null)
-                Minecraft.getInstance().fontRenderer.drawString(warning, new MainWindow(Minecraft.getInstance()).getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
-
+                Minecraft.getInstance().fontRenderer.drawString(warning, Minecraft.getInstance().mainWindow.getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
         });
 
 
@@ -202,7 +201,7 @@ public class ClientEventHandler {
         CapabilityRegeneration.getForPlayer(mc.player).ifPresent((cap) -> {
 
             if (e.getName().equals("entity.generic.explode")) {
-                ISound sound = PositionedSoundRecord.getRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
+                ISound sound = SimpleSound.master(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
 
                 for (AbstractClientPlayerEntity player : mc.world.getPlayers()) {
                     if (mc.player != player && mc.player.getDistance(player) < 40) {

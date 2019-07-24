@@ -659,6 +659,8 @@ public class CapabilityRegeneration implements IRegeneration {
 				EntityLindos lindos = new EntityLindos(player.world);
 				lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
 				player.world.spawnEntity(lindos);
+
+
 				player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
 			}
 		}

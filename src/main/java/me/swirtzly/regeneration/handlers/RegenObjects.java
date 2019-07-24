@@ -8,18 +8,16 @@ import me.swirtzly.regeneration.common.item.ItemFobWatch;
 import me.swirtzly.regeneration.common.item.ItemLindos;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -54,7 +52,6 @@ public class RegenObjects {
 	
 	private static Item setUpItem(Item item, String name) {
 		item.setRegistryName(MODID, name);
-		item.setTranslationKey(name);
 		ITEMS.add(item);
 		return item;
 	}
@@ -62,20 +59,40 @@ public class RegenObjects {
 	
 	private static Block setUpBlock(Block block, String name) {
 		block.setRegistryName(MODID, name);
-		block.setTranslationKey(MODID + "." + name);
 		return block;
 	}
 	
 	private static void registerBlocks(IForgeRegistry<Block> reg, Block... blocks) {
 		reg.registerAll(blocks);
 		for (Block block : blocks) {
-			ITEM_BLOCKS.add(new BlockItem(block).setRegistryName(block.getRegistryName()).setTranslationKey(block.getTranslationKey()));
+			ITEM_BLOCKS.add(new BlockItem(block, new Item.Properties()).setRegistryName(block.getRegistryName()));
 		}
 	}
-	
+
 	@SubscribeEvent
-	public static void addEntities(RegistryEvent.Register<EntityEntry> e) {
-		e.getRegistry().registerAll(EntityEntries.ENTITY_ITEM, EntityEntries.ENTITY_LINDOS);
+	public static void addEntities(final RegistryEvent.Register<EntityType<?>> event) {
+		IForgeRegistry<EntityType<?>> reg = event.getRegistry();
+
+
+		//Item Override
+		reg.register(EntityType.Builder.<EntityItemOverride>create(EntityItemOverride::new, EntityClassification.MISC)
+				.size(0.5F, 0.2F)
+				.setTrackingRange(128)
+				.setUpdateInterval(1)
+				.setShouldReceiveVelocityUpdates(true)
+				.setCustomClientFactory((spawnEntity, world) -> new EntityItemOverride(world))
+				.build(RegenerationMod.MODID + ":item_override")
+				.setRegistryName(new ResourceLocation(RegenerationMod.MODID, "item_override")));
+
+		//Lindos
+		reg.register(EntityType.Builder.<EntityLindos>create(EntityLindos::new, EntityClassification.MISC)
+				.size(0.5F, 0.2F)
+				.setTrackingRange(128)
+				.setUpdateInterval(1)
+				.setShouldReceiveVelocityUpdates(true)
+				.setCustomClientFactory((spawnEntity, world) -> new EntityLindos(world))
+				.build(RegenerationMod.MODID + ":lindos")
+				.setRegistryName(new ResourceLocation(RegenerationMod.MODID, "lindos")));
 	}
 	
 	
@@ -129,12 +146,13 @@ public class RegenObjects {
 		public static final SoundEvent JAR_BUBBLES = null;
 	}
 
+	@ObjectHolder(MODID)
 	public static class EntityEntries {
-		public static EntityType ITEM_OVERRIDE_ENTITY_TYPE = EntityType.register(MODID + ":item_override", EntityType.Builder.create(EntityItemOverride.class, EntityItemOverride::new).tracker(256, 20, false));
-		public static EntityType ITEM_LINDOS_TYPE = EntityType.register(MODID + ":lindos", EntityType.Builder.create(EntityLindos.class, EntityLindos::new).tracker(256, 20, false));
+		public static EntityType ITEM_OVERRIDE_ENTITY_TYPE = null;
+		public static EntityType ITEM_LINDOS_TYPE = null;
 	}
-	
-	@GameRegistry.ObjectHolder(MODID)
+
+	@ObjectHolder(MODID)
 	public static class Blocks {
 		public static final Block HAND_JAR = null;
 	}

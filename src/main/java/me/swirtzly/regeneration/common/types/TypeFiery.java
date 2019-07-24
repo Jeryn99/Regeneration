@@ -10,6 +10,11 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 
+import java.util.Iterator;
+import java.util.stream.Stream;
+
+import static net.minecraft.util.math.BlockPos.getAllInBox;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -35,12 +40,18 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
 		double z = player.posZ + player.getRNG().nextGaussian() * 2;
 		player.world.createExplosion(player, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
-		
-		for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east())) {
-			if (player.world.getBlockState(bs).getBlock() instanceof FireBlock) {
-				player.world.removeBlock(bs, false);
-			}
+
+
+		Iterator<BlockPos> iterator = getAllInBox(player.getPosition().north().west(), player.getPosition().south().east()).iterator();
+
+		while(iterator.hasNext()){
+			iterator.forEachRemaining((blockPos -> {
+				if (player.world.getBlockState(blockPos).getBlock() instanceof FireBlock) {
+					player.world.removeBlock(blockPos, false);
+				}
+			}));
 		}
+
 	}
 	
 	@Override

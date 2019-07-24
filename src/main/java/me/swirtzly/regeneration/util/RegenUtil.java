@@ -68,8 +68,8 @@ public class RegenUtil {
 	}
 	
 	public static void regenerationExplosion(PlayerEntity player) {
-		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKnockback, RegenConfig.onRegen.regenerativeKnockbackRange);
-		explodeKill(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKillRange);
+		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
+		explodeKill(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
 	}
 	
 	public static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {
@@ -77,7 +77,7 @@ public class RegenUtil {
 			if (entity instanceof LivingEntity && exploder.isAlive()) {
 				LivingEntity victim = (LivingEntity) entity;
 				
-				if (entity instanceof PlayerEntity && !RegenConfig.onRegen.regenerationKnocksbackPlayers || !victim.isNonBoss())
+				if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.isNonBoss())
 					return;
 				
 				float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
@@ -93,7 +93,7 @@ public class RegenUtil {
 	
 	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-			if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity && RegenConfig.onRegen.regenerationKillsPlayers))
+			if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity && RegenConfig.COMMON.regenerationKillsPlayers))
 				entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
 		});
 	}

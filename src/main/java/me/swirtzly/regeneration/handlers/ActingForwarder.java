@@ -5,8 +5,7 @@ import me.swirtzly.regeneration.network.MessageRegenStateEvent;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +16,8 @@ public class ActingForwarder {
 	
 	public static void init() {
 		register(ActingServerHandler.INSTANCE, Dist.DEDICATED_SERVER);
-		
-		if (FMLCommonHandler.instance().getSide() == Dist.CLIENT) {
+
+		if (FMLEnvironment.dist == Dist.CLIENT) {
 			register(ActingClientHandler.INSTANCE, Dist.CLIENT);
 		}
 	}
@@ -119,7 +118,7 @@ public class ActingForwarder {
 	private static void checkAndForward(IRegeneration cap, RegenEvent event) {
 		if (cap.getPlayer().world.isRemote)
 			throw new IllegalStateException("'Posting' \"acting\" `event` from client");
-		NetworkHandler.INSTANCE.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event.name()), (ServerPlayerEntity) cap.getPlayer());
+		NetworkHandler.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event.name()), (ServerPlayerEntity) cap.getPlayer());
 	}
 	
 	public enum RegenEvent {

@@ -1,36 +1,23 @@
-package me.suff.regeneration.common.item;
+package me.swirtzly.regeneration.common.item;
 
-import me.suff.regeneration.common.capability.CapabilityRegeneration;
-import me.suff.regeneration.common.capability.IRegeneration;
-import me.suff.regeneration.common.entity.EntityItemOverride;
-import me.suff.regeneration.handlers.RegenObjects;
-import me.suff.regeneration.util.PlayerUtil;
-import me.suff.regeneration.util.RegenState;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
-import me.swirtzly.regeneration.common.item.ItemOverrideBase;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -103,9 +90,9 @@ public class ItemLindos extends ItemOverrideBase {
 	public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
 		super.onCreated(stack, worldIn, playerIn);
 	}
-	
+
 	@Override
-	public void tick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 
 		if (stack.getTag() == null) {
 			stack.setTag(new CompoundNBT());
@@ -141,37 +128,40 @@ public class ItemLindos extends ItemOverrideBase {
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 	}
 
-	
-	
-	
+
 	@Override
 	public ActionResultType onItemUse(ItemUseContext useContext) {
 		PlayerEntity player = useContext.getPlayer();
 
 		if (!player.world.isRemote) {
 			ItemStack itemStack = useContext.getItem();
-			RayTraceResult raytraceresult = this.rayTrace(player.world, player, true);
+			RayTraceResult raytraceresult = rayTrace(player.world, player, RayTraceContext.FluidMode.ANY);
 
-			if (raytraceresult == null || raytraceresult.getBlockPos() == null) {
-				return ActionResultType.FAIL;
-			}
 
-			BlockPos blockPos = raytraceresult.getBlockPos();
-			BlockState iblockstate = player.world.getBlockState(blockPos);
-			Material material = iblockstate.getMaterial();
-
-			if (material == Material.WATER) {
-				player.world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 11);
-				player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-
-				if (!hasWater(itemStack)) {
-					setWater(itemStack, true);
-					player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-					PlayerUtil.sendMessage(player, new TranslationTextComponent("nbt.item.water_filled"), true);
-				} else {
-					PlayerUtil.sendMessage(player, new TranslationTextComponent("nbt.item.water_already_filled"), true);
+			if (raytraceresult.getType() == RayTraceResult.Type.BLOCK) {
+				BlockRayTraceResult blockResult = (BlockRayTraceResult) raytraceresult;
+				if (raytraceresult == null || blockResult.getPos() == null) {
+					return ActionResultType.FAIL;
 				}
-				return ActionResultType.SUCCESS;
+
+				BlockPos blockPos = blockResult.getPos();
+				BlockState iblockstate = player.world.getBlockState(blockPos);
+				Material material = iblockstate.getMaterial();
+
+				if (material == Material.WATER) {
+					player.world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 11);
+					player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+
+					if (!hasWater(itemStack)) {
+						setWater(itemStack, true);
+						player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+						PlayerUtil.sendMessage(player, new TranslationTextComponent("nbt.item.water_filled"), true);
+					} else {
+						PlayerUtil.sendMessage(player, new TranslationTextComponent("nbt.item.water_already_filled"), true);
+					}
+					return ActionResultType.SUCCESS;
+				}
+
 			}
 		}
 

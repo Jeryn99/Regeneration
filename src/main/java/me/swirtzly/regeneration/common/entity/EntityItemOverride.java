@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -26,6 +27,7 @@ public class EntityItemOverride extends Entity {
 	private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.ITEMSTACK);
 	private static final DataParameter<Float> HEIGHT = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.FLOAT);
 	private static final DataParameter<Float> WIDTH = EntityDataManager.createKey(EntityItemOverride.class, DataSerializers.FLOAT);
+	private double motionX, motionY, motionZ;
 
 	public EntityItemOverride(World worldIn, double x, double y, double z, ItemStack stack) {
 		this(worldIn);
@@ -40,6 +42,10 @@ public class EntityItemOverride extends Entity {
 		this.setPosition(x, y, z);
 		this.setItem(stack);
 		this.rotationYaw = (float) (Math.random() * 360.0D);
+	}
+
+	public EntityItemOverride(EntityType type, World world){
+		this(world);
 	}
 
 	public EntityItemOverride(World worldIn) {
@@ -103,7 +109,7 @@ public class EntityItemOverride extends Entity {
 		this.getDataManager().set(ITEM, stack);
 	}
 
-	public float getHeight() {
+	public float getCHeight() {
 		return this.getDataManager().get(HEIGHT);
 	}
 
@@ -116,7 +122,7 @@ public class EntityItemOverride extends Entity {
 		this.getDataManager().set(HEIGHT, height);
 	}
 
-	public float getWidth() {
+	public float getCWidth() {
 		return this.getDataManager().get(WIDTH);
 	}
 
@@ -203,10 +209,10 @@ public class EntityItemOverride extends Entity {
 		if (this.world.isRemote) {
 			this.noClip = false;
 		} else {
-			this.noClip = this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
+			this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
 		}
 
-		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+		this.move(MoverType.SELF, new Vec3d(this.motionX, this.motionY, this.motionZ));
 		boolean flag = (int) this.prevPosX != (int) this.posX || (int) this.prevPosY != (int) this.posY || (int) this.prevPosZ != (int) this.posZ;
 
 		if (flag || this.ticksExisted % 25 == 0) {
@@ -224,13 +230,16 @@ public class EntityItemOverride extends Entity {
 			f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.98F;
 		}
 
-		this.motionX *= f;
-		this.motionY *= 0.9800000190734863D;
-		this.motionZ *= f;
+		motionX *= f;
+		motionY *= 0.9800000190734863D;
+		motionZ *= f;
+		getMotion().add(new Vec3d(motionX, motionY, motionZ));
 
 		if (this.onGround) {
 			this.motionY *= -0.5D;
 		}
+
+		getMotion().add(new Vec3d(motionX, motionY, motionZ));
 
 		this.handleWaterMovement();
 
@@ -238,6 +247,7 @@ public class EntityItemOverride extends Entity {
 			double d3 = this.motionX - d0;
 			double d4 = this.motionY - d1;
 			double d5 = this.motionZ - d2;
+			getMotion().add(new Vec3d(motionX, motionY, motionZ));
 			double d6 = d3 * d3 + d4 * d4 + d5 * d5;
 
 			if (d6 > 0.01D) {

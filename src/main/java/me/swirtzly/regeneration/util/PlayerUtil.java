@@ -4,22 +4,12 @@ import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.network.MessageSetPerspective;
 import me.swirtzly.regeneration.network.MessageUpdateModel;
 import me.swirtzly.regeneration.network.NetworkHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.RangedBowAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.OwnerHurtByTargetGoal;
-import net.minecraft.entity.ai.goal.GoalSelector;
-import net.minecraft.entity.ai.goal.ZombieAttackGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.potion.Effect;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.awt.*;
@@ -63,7 +53,7 @@ public class PlayerUtil {
 	}
 	
 	public static void setPerspective(ServerPlayerEntity player, boolean thirdperson, boolean resetPitch) {
-		NetworkHandler.INSTANCE.sendTo(new MessageSetPerspective(thirdperson), player);
+		NetworkHandler.sendTo(new MessageSetPerspective(thirdperson), player);
 	}
 
 	

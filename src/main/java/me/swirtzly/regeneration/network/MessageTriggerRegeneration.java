@@ -22,7 +22,7 @@ public class MessageTriggerRegeneration {
     public static class Handler {
 
         public static void handle(MessageTriggerRegeneration message, Supplier<NetworkEvent.Context> ctx) {
-            Objects.requireNonNull(ctx.get().getSender()).getServerWorld().addScheduledTask(() -> {
+            Objects.requireNonNull(ctx.get().getSender()).getServerWorld().runAsync(() -> {
                 ServerPlayerEntity player = ctx.get().getSender();
                 RegenerationMod.LOG.warn("Regeneration keybind pressed");
                 if (player != null) {

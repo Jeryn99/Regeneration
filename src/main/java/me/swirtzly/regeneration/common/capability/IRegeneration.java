@@ -4,7 +4,6 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.compat.lucraft.PlayerCanRegenEvent;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -47,7 +46,7 @@ public interface IRegeneration extends INBTSerializable<CompoundNBT> {
 	 * Returns if the player is currently <i>able to</i> regenerate
 	 */
 	default boolean canRegenerate() {
-		return (RegenConfig.infiniteRegeneration || getRegenerationsLeft() > 0) && getPlayer().posY > 0 && !MinecraftForge.EVENT_BUS.post(new PlayerCanRegenEvent(getPlayer()));
+		return (RegenConfig.COMMON.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getPlayer().posY > 0 && !MinecraftForge.EVENT_BUS.post(new PlayerCanRegenEvent(getPlayer()));
 	}
 	
 	void receiveRegenerations(int amount);

@@ -4,44 +4,40 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
-import me.swirtzly.regeneration.common.capability.RegenerationProvider;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.storage.loot.ILootGenerator;
-import net.minecraft.world.storage.loot.TableLootEntry;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.RandomValueRange;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
-import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Sub
@@ -56,52 +52,43 @@ public class RegenEventHandler {
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-			LazyOptional<IRegeneration> data = CapabilityRegeneration.getForPlayer(player);
-			data.tick();
+			CapabilityRegeneration.getForPlayer(player).ifPresent(IRegeneration::tick);
+
 		}
 	}
-	
+
 	@SubscribeEvent
-	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		if (event.getObject() instanceof PlayerEntity) {
-			event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new RegenerationProvider(new CapabilityRegeneration((PlayerEntity) event.getObject())));
-		}
-	}
-	
-	@SubscribeEvent
-	public static void onPlayerClone(PlayerEvent.Clone event) {
+	public void onPlayerClone(PlayerEvent.Clone event) {
 		IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
 		event.getOriginal().revive();
-		IRegeneration oldCap = CapabilityRegeneration.getForPlayer(event.getOriginal());
-		IRegeneration newCap = CapabilityRegeneration.getForPlayer(event.getEntityPlayer());
-		
-		CompoundNBT nbt = (CompoundNBT) storage.writeNBT(CapabilityRegeneration.CAPABILITY, oldCap, null);
-		storage.readNBT(CapabilityRegeneration.CAPABILITY, newCap, null, nbt);
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
+		CapabilityRegeneration.getForPlayer(event.getOriginal()).ifPresent((old) -> CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).ifPresent((data) -> {
+			CompoundNBT nbt = (CompoundNBT) storage.writeNBT(CapabilityRegeneration.CAPABILITY, old, null);
+			storage.readNBT(CapabilityRegeneration.CAPABILITY, data, null, nbt);
+		}));
 	}
-	
+
 	@SubscribeEvent
-	public static void playerTracking(PlayerEvent.StartTracking event) {
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).synchronise();
+	public void onPlayerTracked(PlayerEvent.StartTracking event) {
+		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).ifPresent(IRegeneration::synchronise);
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerRespawn(PlayerRespawnEvent event) {
-		if (!RegenConfig.firstStartGiftOnly)
-			CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
-		
-		CapabilityRegeneration.getForPlayer(event.player).synchronise();
+	//	if (!RegenConfig.COMMON.firstStartGiftOnly)
+	//		CapabilityRegeneration.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.freeRegenerations);
+
+		CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent(IRegeneration::synchronise);
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		CapabilityRegeneration.getForPlayer(event.player).synchronise();
+		CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent(IRegeneration::synchronise);
 	}
 	
 	@SubscribeEvent
 	public static void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof PlayerEntity) {
-			CapabilityRegeneration.getForPlayer((PlayerEntity) e.getEntityLiving()).synchronise();
+			CapabilityRegeneration.getForPlayer((PlayerEntity) e.getEntityLiving()).ifPresent(IRegeneration::synchronise);
 		}
 	}
 	
@@ -111,7 +98,9 @@ public class RegenEventHandler {
 	public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
 		if (e.getEntityPlayer().world.isRemote)
 			return;
-		CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).getStateManager().onPunchBlock(e);
+
+		CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
+
 	}
 	
 	
@@ -121,7 +110,7 @@ public class RegenEventHandler {
 		
 		if (trueSource instanceof PlayerEntity && event.getEntityLiving() instanceof MobEntity) {
 			PlayerEntity player = (PlayerEntity) trueSource;
-			CapabilityRegeneration.getForPlayer(player).getStateManager().onPunchEntity(event);
+			CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
 			return;
 		}
 
@@ -129,45 +118,83 @@ public class RegenEventHandler {
 			return;
 		
 		PlayerEntity player = (PlayerEntity) event.getEntity();
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		
-		cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
-		
-		if (cap.getState() == PlayerUtil.RegenState.POST && player.posY > 0) {
-			if (event.getSource() == DamageSource.FALL) {
-				PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, 200, 4, false, false);
-				if (event.getAmount() > 8.0F) {
-                    if (player.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && RegenConfig.postRegen.genGreator) {
-						RegenUtil.genCrater(player.world, player.getPosition(), 3);
+		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+
+			cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
+
+			if (cap.getState() == PlayerUtil.RegenState.POST && player.posY > 0) {
+				if (event.getSource() == DamageSource.FALL) {
+					PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, 200, 4, false, false);
+					if (event.getAmount() > 8.0F) {
+						if (player.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && RegenConfig.COMMON.genGreator) {
+							RegenUtil.genCrater(player.world, player.getPosition(), 3);
+						}
+						event.setAmount(0.5F);
+						PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.fall_dmg"), true);
+						return;
 					}
+				} else {
 					event.setAmount(0.5F);
-					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.fall_dmg"), true);
-					return;
+					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.reduced_dmg"), true);
 				}
-			} else {
-				event.setAmount(0.5F);
-				PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.reduced_dmg"), true);
+				return;
 			}
-			return;
-		}
-		
-		if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
-			event.setCanceled(true); // TODO still "hurts" the client view
-		} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
-			boolean notDead = cap.getStateManager().onKilled(event.getSource());
-			event.setCanceled(notDead);
-		}
+
+			if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
+				event.setCanceled(true); // TODO still "hurts" the client view
+			} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
+				boolean notDead = cap.getStateManager().onKilled(event.getSource());
+				event.setCanceled(notDead);
+			}
+		});
 	}
 	
 	
 	@SubscribeEvent
 	public static void onKnockback(LivingKnockBackEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
-			if (CapabilityRegeneration.getForPlayer((PlayerEntity) event.getEntityLiving()).getState() == PlayerUtil.RegenState.REGENERATING) {
-				event.setCanceled(true);
-			}
+			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
+
+			CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+				if(data.getState() == PlayerUtil.RegenState.REGENERATING){
+					event.setCanceled(true);
+				}
+			});
 		}
 	}
+
+
+	@SubscribeEvent
+	public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+		if (event.getObject() instanceof PlayerEntity) {
+			event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
+				@Nonnull
+				@Override
+				public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
+					if (cap == CapabilityRegeneration.CAPABILITY)
+						return (LazyOptional<T>) regenInstance;
+					return LazyOptional.empty();
+				}
+
+				final CapabilityRegeneration regen = new CapabilityRegeneration((PlayerEntity) event.getObject());
+
+				final LazyOptional<IRegeneration> regenInstance = LazyOptional.of(() -> regen);
+
+				@Override
+				public CompoundNBT serializeNBT() {
+					return regen.serializeNBT();
+				}
+
+				@Override
+				public void deserializeNBT(CompoundNBT nbt) {
+					regen.deserializeNBT(nbt);
+				}
+
+			});
+		}
+	}
+
+
 	
 	// ================ OTHER ==============
 	@SubscribeEvent
@@ -181,21 +208,26 @@ public class RegenEventHandler {
 		persist.putBoolean("loggedInBefore", true);
 		nbt.put(PlayerEntity.PERSISTED_NBT_TAG, persist);
 	}
-	
-	@SubscribeEvent
-	public static void registerLoot(LootTableLoadEvent event) {
-		if (!event.getName().toString().toLowerCase().matches(RegenConfig.loot.lootRegex) || RegenConfig.loot.disableLoot)
-			return;
-		
-		// TODO configurable chances? Maybe by doing a simple loot table tutorial?
-		TableLootEntry entry = new TableLootEntry(RegenerationMod.LOOT_FILE, 1, 0, new ILootCondition[0], "regeneration_inject_entry");
-		LootPool pool = new LootPool(new ILootGenerator[]{entry}, new ILootCondition[0], new RandomValueRange(1), new RandomValueRange(1), "regeneration_inject_pool");
-		event.getTable().addPool(pool);
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		Entity entity = event.getEntity();
+		if (entity.getClass().equals(ItemEntity.class)) {
+			ItemStack stack = ((ItemEntity) entity).getItem();
+			Item item = stack.getItem();
+			if (item.hasCustomEntity(stack)) {
+				Entity newEntity = item.createEntity(event.getWorld(), entity, stack);
+				if (newEntity != null) {
+					entity.remove();
+					event.setCanceled(true);
+					event.getWorld().spawnEntity(newEntity);
+				}
+			}
+		}
 	}
 	
 	/**
 	 * Update checker thing, tells the player that the mods out of date if they're on a old build
-	 */
 	@SubscribeEvent
 	public static void onPlayerLogin(PlayerLoggedInEvent e) {
 		PlayerEntity player = e.player;
@@ -212,5 +244,5 @@ public class RegenEventHandler {
 			}
 		}
 	}
-	
+	 */
 }

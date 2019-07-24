@@ -2,44 +2,34 @@ package me.swirtzly.regeneration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import me.swirtzly.regeneration.client.gui.GuiHandler;
 import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationStorage;
 import me.swirtzly.regeneration.common.commands.RegenDebugCommand;
-import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.compat.lucraft.LucraftCoreHandler;
-import me.swirtzly.regeneration.compat.tardis.TardisModHandler;
 import me.swirtzly.regeneration.handlers.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkHandler;
+import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.proxy.CommonProxy;
-import me.swirtzly.regeneration.util.EnumCompatModids;
+import me.swirtzly.regeneration.proxy.IProxy;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = RegenerationMod.MODID, name = RegenerationMod.NAME, version = RegenerationMod.VERSION, updateJSON = RegenerationMod.UPDATE_URL, dependencies = RegenerationMod.DEPS)
+@Mod(RegenerationMod.MODID)
 public class RegenerationMod {
 	
 	public static final String MODID = "regeneration";
@@ -47,8 +37,7 @@ public class RegenerationMod {
 	public static final String VERSION = "1.6.7";
 	public static final String UPDATE_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/skins/update.json";
 	public static final String DEPS = "required:forge@[14.23.5.2768,);after:tardis@[0.0.7,];after:lucraftcore@[1.12.2-2.4.0,]";
-	
-	public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
+
 	
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -57,37 +46,38 @@ public class RegenerationMod {
 
 	public RegenerationMod(){
 		INSTANCE = this;
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	public static Logger LOG = LogManager.getLogger(NAME);
-	
-	@SidedProxy(clientSide = "me.swirtzly.regeneration.proxy.ClientProxy", serverSide = "me.swirtzly.regeneration.proxy.CommonProxy")
-	public static CommonProxy proxy;
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
+	public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+
+	private void doClientStuff(final FMLClientSetupEvent event) {
+
+	}
+
+
+	private void setup(final FMLCommonSetupEvent event) {
 		proxy.preInit();
 		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
-		
 		ActingForwarder.init();
 		RegenTriggers.init();
-
-		GameRegistry.registerTileEntity(TileEntityHandInJar.class, new ResourceLocation(MODID, "handinjar"));
 	}
-	
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
+
+	private void enqueueIMC(final InterModEnqueueEvent event) {
 		proxy.init();
 		NetworkHandler.init();
-		LootTables.register(LOOT_FILE);
 		DnaHandler.init();
-		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 		TypeHandler.init();
 	}
-	
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent e) {
+
+
+	private void processIMC(final InterModProcessEvent event) {
 		proxy.postInit();
 		PlayerUtil.createPostList();
 	}

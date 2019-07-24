@@ -29,7 +29,7 @@ public class MessageTriggerForcedRegen implements IMessage {
 		@Override
 		public IMessage onMessage(MessageTriggerForcedRegen message, MessageContext ctx) {
 			
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
+			ctx.getServerHandler().player.getServerWorld().runAsync(() -> {
 				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
 				if (cap.canRegenerate() && cap.getState() == PlayerUtil.RegenState.ALIVE) {
 					cap.getPlayer().attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);

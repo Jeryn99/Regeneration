@@ -49,7 +49,7 @@ public class BlockHandInJar extends DirectionalBlock {
 			
 			if (playerIn.isSneaking() && playerIn.getHeldItemMainhand().isEmpty()) {
 				if (!jar.isInUse && jar.getLindosAmont() >= 100) {
-					IRegeneration data = CapabilityRegeneration.getForPlayer(playerIn);
+					IRegeneration data = CapabilityRegeneration.getForPlayer(playerIn).orElse(null);
 					data.receiveRegenerations(1);
 					jar.setLindosAmont(0);
 					jar.setInUse(true);

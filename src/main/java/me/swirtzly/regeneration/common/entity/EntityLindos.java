@@ -4,11 +4,14 @@ import me.swirtzly.regeneration.common.item.ItemLindos;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.ClientUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FlyingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
+import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -24,20 +27,24 @@ public class EntityLindos extends FlyingEntity {
 	
 	private static final DataParameter<Integer> AMOUNT = EntityDataManager.createKey(EntityLindos.class, DataSerializers.VARINT);
 	
-	
+	public EntityLindos(EntityType type, World world){
+		this(world);
+	}
+
 	public EntityLindos(World worldIn) {
-		super(worldIn, RegenObjects.EntityEntries.ITEM_LINDOS_TYPE);
-		setEntitySize(0.5F, 0.5F);
-		this.moveHelper = new FlyingMovementController(this);
+		super(RegenObjects.EntityEntries.ITEM_LINDOS_TYPE, worldIn);
+		//setEntitySize(0.5F, 0.5F);
+		this.moveController = new FlyingMovementController(this);
 		noClip = true;
 	}
-	
-	
+
+
 	@Override
-	protected void entityInit() {
-		super.entityInit();
+	protected void registerData() {
+		super.registerData();
 		getDataManager().register(AMOUNT, rand.nextInt(100));
 	}
+
 	
 	public int getAmount() {
 		return getDataManager().get(AMOUNT);
@@ -67,7 +74,7 @@ public class EntityLindos extends FlyingEntity {
 		}
 		
 		if (ticksExisted < 60) {
-			motionX *= 0.3D;
+			getMotion().add(0,0.3, 0);
 		}
 		
 		if (ticksExisted % 100 == 0) {
@@ -115,6 +122,10 @@ public class EntityLindos extends FlyingEntity {
 		this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.4000000059604645D);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20000000298023224D);
 	}
-	
-	
+
+
+	@Override
+	public IPacket<?> createSpawnPacket() {
+		return super.createSpawnPacket();
+	}
 }

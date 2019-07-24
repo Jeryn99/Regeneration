@@ -33,7 +33,8 @@ public class MessageRegenStateEvent {
 	
 	public static class Handler {
 		public static void handle(MessageRegenStateEvent message, Supplier<NetworkEvent.Context> ctx) {
-			Minecraft.getInstance().addScheduledTask(() -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), CapabilityRegeneration.getForPlayer(message.player)));
+			Minecraft.getInstance().runAsync(() ->
+					CapabilityRegeneration.getForPlayer(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

@@ -40,7 +40,7 @@ public class MessagePlayRegenerationSound {
 	public static class Handler {
 		
 		public static void handle(MessagePlayRegenerationSound message, Supplier<NetworkEvent.Context> ctx) {
-			Minecraft.getInstance().addScheduledTask(() -> {
+			Minecraft.getInstance().runAsync(() -> {
 				PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.playerUUID);
 				if (player != null) {
 					CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.getState().equals(PlayerUtil.RegenState.REGENERATING), 1.0F));

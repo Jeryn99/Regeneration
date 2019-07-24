@@ -33,7 +33,7 @@ public class MessageUpdateSkin {
 	
 	public static class Handler {
 		public static void handle(MessageUpdateSkin message, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().getSender().getServerWorld().addScheduledTask(() ->
+			ctx.get().getSender().getServer().runAsync(() ->
 					CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
 						cap.setEncodedSkin(message.encodedSkin);
 						if (message.isAlex) {

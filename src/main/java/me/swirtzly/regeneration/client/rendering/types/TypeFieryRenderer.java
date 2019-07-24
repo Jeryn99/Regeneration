@@ -145,7 +145,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		// State manager changes
 		GlStateManager.pushAttrib();
 		GlStateManager.disableTexture2D();
-		GlStateManager.enableAlpha();
+		GlStateManager.enableAlphaTest();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 		GlStateManager.depthMask(true);
@@ -162,7 +162,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		RenderUtil.restoreLightMap();
 		GlStateManager.depthMask(false);
 		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 		GlStateManager.color4f(255, 255, 255, 255);
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();
@@ -180,7 +180,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		// State manager changes
 		GlStateManager.pushAttrib();
 		GlStateManager.disableTexture2D();
-		GlStateManager.enableAlpha();
+		GlStateManager.enableAlphaTest();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 		GlStateManager.depthMask(true);
@@ -222,7 +222,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		RenderUtil.restoreLightMap();
 		GlStateManager.depthMask(false);
 		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 		GlStateManager.color4f(255, 255, 255, 255);
 		GlStateManager.enableTexture2D();
 		GlStateManager.popAttrib();

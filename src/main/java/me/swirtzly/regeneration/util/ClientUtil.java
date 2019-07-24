@@ -5,21 +5,16 @@ import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.network.MessageUpdateSkin;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.toasts.SystemToast;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelPlayer;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -35,7 +30,7 @@ public class ClientUtil {
 	}
 	
 	public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
-		Minecraft.getInstance().getSoundHandler().play(PositionedSoundRecord.getRecord(sound, pitch, volume));
+		Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(sound, pitch, volume));
 	}
 	
 	/**
@@ -56,12 +51,12 @@ public class ClientUtil {
 	 * @param biped
 	 */
 	public static void copyAnglesToWear(PlayerModel biped) {
-		ModelBase.copyModelAngles(biped.bipedRightArm, biped.bipedRightArmwear);
-		ModelBase.copyModelAngles(biped.bipedLeftArm, biped.bipedLeftArmwear);
-		ModelBase.copyModelAngles(biped.bipedRightLeg, biped.bipedRightLegwear);
-		ModelBase.copyModelAngles(biped.bipedLeftLeg, biped.bipedLeftLegwear);
-		ModelBase.copyModelAngles(biped.bipedBody, biped.bipedBodyWear);
-		ModelBase.copyModelAngles(biped.bipedHead, biped.bipedHeadwear);
+		RenderUtil.copyModelAngles(biped.bipedRightArm, biped.bipedRightArmwear);
+		RenderUtil.copyModelAngles(biped.bipedLeftArm, biped.bipedLeftArmwear);
+		RenderUtil.copyModelAngles(biped.bipedRightLeg, biped.bipedRightLegwear);
+		RenderUtil.copyModelAngles(biped.bipedLeftLeg, biped.bipedLeftLegwear);
+		RenderUtil.copyModelAngles(biped.bipedBody, biped.bipedBodyWear);
+		RenderUtil.copyModelAngles(biped.bipedHead, biped.bipedHeadwear);
 
 		copyRotationPoints(biped.bipedRightArm, biped.bipedRightArmwear);
 		copyRotationPoints(biped.bipedLeftArm, biped.bipedLeftArmwear);
@@ -69,10 +64,9 @@ public class ClientUtil {
 		copyRotationPoints(biped.bipedLeftLeg, biped.bipedLeftLegwear);
 		copyRotationPoints(biped.bipedBody, biped.bipedBodyWear);
 		copyRotationPoints(biped.bipedHead, biped.bipedHeadwear);
-
 	}
 
-	public static void copyRotationPoints(ModelRenderer src, ModelRenderer dest){
+	public static void copyRotationPoints(RendererModel src, RendererModel dest) {
 		dest.rotationPointX = src.rotationPointX;
 		dest.rotationPointY = src.rotationPointY;
 		dest.rotationPointZ = src.rotationPointZ;

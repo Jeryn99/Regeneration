@@ -32,7 +32,7 @@ public class GuiColorSlider extends GuiSlider {
 	@Override
 	public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
 		sliderValue = round(sliderValue, 2);
-		displayString = dispString + ": " + sliderValue;
+		setMessage(dispString + ": " + sliderValue);
 		return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
 	}
 
