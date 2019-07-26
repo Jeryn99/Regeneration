@@ -74,7 +74,7 @@ public class RegenObjects {
 
 
 		//Item Override
-		reg.register(EntityType.Builder.<EntityItemOverride>create(EntityItemOverride::new, EntityClassification.MISC)
+		reg.register(EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE = EntityType.Builder.<EntityItemOverride>create(EntityItemOverride::new, EntityClassification.MISC)
 				.size(0.5F, 0.2F)
 				.setTrackingRange(128)
 				.setUpdateInterval(1)
@@ -84,7 +84,7 @@ public class RegenObjects {
 				.setRegistryName(new ResourceLocation(RegenerationMod.MODID, "item_override")));
 
 		//Lindos
-		reg.register(EntityType.Builder.<EntityLindos>create(EntityLindos::new, EntityClassification.MISC)
+		reg.register(EntityEntries.ITEM_LINDOS_TYPE = EntityType.Builder.<EntityLindos>create(EntityLindos::new, EntityClassification.MISC)
 				.size(0.5F, 0.2F)
 				.setTrackingRange(128)
 				.setUpdateInterval(1)

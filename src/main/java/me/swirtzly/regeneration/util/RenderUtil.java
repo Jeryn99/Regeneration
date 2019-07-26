@@ -212,16 +212,17 @@ public class RenderUtil {
 		}
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder worldrenderer = tessellator.getBuffer();
+		BufferBuilder bufferBuilder = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture();
+		//I think the below is my lad
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color4f(red, green, blue, alpha);
-		worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-		worldrenderer.pos(left, bottom, 0.0D).endVertex();
-		worldrenderer.pos(right, bottom, 0.0D).endVertex();
-		worldrenderer.pos(right, top, 0.0D).endVertex();
-		worldrenderer.pos(left, top, 0.0D).endVertex();
+		bufferBuilder.begin(7, DefaultVertexFormats.POSITION);
+		bufferBuilder.pos(left, bottom, 0.0D).endVertex();
+		bufferBuilder.pos(right, bottom, 0.0D).endVertex();
+		bufferBuilder.pos(right, top, 0.0D).endVertex();
+		bufferBuilder.pos(left, top, 0.0D).endVertex();
 		tessellator.draw();
 		GlStateManager.enableTexture();
 		GlStateManager.disableBlend();

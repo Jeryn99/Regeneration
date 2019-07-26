@@ -85,7 +85,12 @@ public class GuiCustomizer extends ContainerScreen {
             onChangeSliderValue(null);
         }));
 
-        slidePrimaryRed = new GuiColorSlider(cx + 10, cy + 65, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
+        slidePrimaryRed = new GuiColorSlider(cx + 10, cy + 65, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.red").getFormattedText(), "", 0, 1, primaryRed, true, true, new Button.IPressable() {
+            @Override
+            public void onPress(Button button) {
+                onChangeSliderValue(button);
+            }
+        });
         slidePrimaryGreen = new GuiColorSlider(cx + 10, cy + 84, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
         slidePrimaryBlue = new GuiColorSlider(cx + 10, cy + 103, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, this::onChangeSliderValue);
 
@@ -113,7 +118,7 @@ public class GuiCustomizer extends ContainerScreen {
         nbt.putFloat("SecondaryRed", (float) slideSecondaryRed.getValue());
         nbt.putFloat("SecondaryGreen", (float) slideSecondaryGreen.getValue());
         nbt.putFloat("SecondaryBlue", (float) slideSecondaryBlue.getValue());
-
+        System.out.println("Telling Server");
         NetworkHandler.sendToServer(new MessageSaveStyle(nbt));
     }
 

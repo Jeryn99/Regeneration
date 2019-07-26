@@ -4,14 +4,25 @@ import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.potion.Effects;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.awt.*;
 
 public class RegenClientHooks {
+
+	public static final PlayerModel playerModelSteve = new TempWorkAroundModel(0F, false);
+	public static final PlayerModel playerModelAlex = new TempWorkAroundModel(0F, true);
+
+	public static void onChange(LivingRenderer renderer, boolean isAlex){
+		ObfuscationReflectionHelper.setPrivateValue(LivingRenderer.class, renderer, isAlex ? playerModelAlex : playerModelSteve, 2);
+	}
 
 	public static void handleRotations(BipedModel model, float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
 		if (entity == null)

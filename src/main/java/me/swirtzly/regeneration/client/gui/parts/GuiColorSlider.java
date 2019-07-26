@@ -26,7 +26,7 @@ public class GuiColorSlider extends GuiSlider {
 		long factor = (long) Math.pow(10, places);
 		value = value * factor;
 		long tmp = Math.round(value);
-		return (double) tmp / factor;
+		return (double) Math.round(tmp / factor);
 	}
 
 	@Override

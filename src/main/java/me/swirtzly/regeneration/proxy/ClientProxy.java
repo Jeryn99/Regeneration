@@ -1,5 +1,7 @@
 package me.swirtzly.regeneration.proxy;
 
+import me.swirtzly.regeneration.asm.RegenClientHooks;
+import me.swirtzly.regeneration.handlers.ClientEventHandler;
 import me.swirtzly.regeneration.client.RegenKeyBinds;
 import me.swirtzly.regeneration.client.rendering.layers.LayerHands;
 import me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration;
@@ -41,8 +43,11 @@ public class ClientProxy extends CommonProxy {
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
 			renderPlayer.addLayer(new LayerHands(renderPlayer));
 		}
+		RegenClientHooks.onChange(skinMap.get("slim"), true);
+		RegenClientHooks.onChange(skinMap.get("default"), false);
 		FileUtil.doSetupOnThread();
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
+		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
 
 	}
 

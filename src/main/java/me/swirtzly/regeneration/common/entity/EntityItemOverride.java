@@ -65,7 +65,6 @@ public class EntityItemOverride extends Entity {
 	public void setEntitySize(float height, float width) {
 		this.setHeight(height);
 		this.setWidth(width);
-		this.setEntitySize(width, height);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
+import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -43,13 +45,12 @@ import javax.annotation.Nonnull;
  * Created by Sub
  * on 16/09/2018.
  */
-@Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class RegenEventHandler {
 	
 	// =========== CAPABILITY HANDLING =============
 	
 	@SubscribeEvent
-	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
+	public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
 			CapabilityRegeneration.getForPlayer(player).ifPresent(IRegeneration::tick);
@@ -73,7 +74,7 @@ public class RegenEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerRespawn(PlayerRespawnEvent event) {
+	public void onPlayerRespawn(PlayerRespawnEvent event) {
 	//	if (!RegenConfig.COMMON.firstStartGiftOnly)
 	//		CapabilityRegeneration.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.freeRegenerations);
 
@@ -81,12 +82,12 @@ public class RegenEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
+	public void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
 		CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent(IRegeneration::synchronise);
 	}
 	
 	@SubscribeEvent
-	public static void onDeathEvent(LivingDeathEvent e) {
+	public void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof PlayerEntity) {
 			CapabilityRegeneration.getForPlayer((PlayerEntity) e.getEntityLiving()).ifPresent(IRegeneration::synchronise);
 		}
@@ -95,7 +96,7 @@ public class RegenEventHandler {
 	// ============ USER EVENTS ==========
 	
 	@SubscribeEvent
-	public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
+	public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
 		if (e.getEntityPlayer().world.isRemote)
 			return;
 
@@ -105,7 +106,7 @@ public class RegenEventHandler {
 	
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onHurt(LivingHurtEvent event) {
+	public void onHurt(LivingHurtEvent event) {
 		Entity trueSource = event.getSource().getTrueSource();
 		
 		if (trueSource instanceof PlayerEntity && event.getEntityLiving() instanceof MobEntity) {
@@ -151,7 +152,7 @@ public class RegenEventHandler {
 	
 	
 	@SubscribeEvent
-	public static void onKnockback(LivingKnockBackEvent event) {
+	public void onKnockback(LivingKnockBackEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
 
@@ -165,7 +166,7 @@ public class RegenEventHandler {
 
 
 	@SubscribeEvent
-	public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof PlayerEntity) {
 			event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
 				@Nonnull
@@ -198,7 +199,7 @@ public class RegenEventHandler {
 	
 	// ================ OTHER ==============
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		Entity entity = event.getEntity();
 		if (entity.getClass().equals(ItemEntity.class)) {
 			ItemStack stack = ((ItemEntity) entity).getItem();
@@ -208,7 +209,7 @@ public class RegenEventHandler {
 				if (newEntity != null) {
 					entity.remove();
 					event.setCanceled(true);
-					RegenObjects.EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE.spawn(event.getWorld(), null, null, event.getEntity().getPosition(), SpawnReason.DISPENSER, true, true);
+					event.getWorld().addEntity(newEntity);
 				}
 			}
 		}

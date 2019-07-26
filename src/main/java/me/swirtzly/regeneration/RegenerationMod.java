@@ -14,6 +14,7 @@ import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.handlers.ActingForwarder;
+import me.swirtzly.regeneration.handlers.RegenEventHandler;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.proxy.CommonProxy;
@@ -58,6 +59,7 @@ public class RegenerationMod {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new RegenEventHandler());
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
