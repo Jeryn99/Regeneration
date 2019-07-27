@@ -1,10 +1,10 @@
 package me.swirtzly.regeneration.proxy;
 
 import me.swirtzly.regeneration.asm.RegenClientHooks;
-import me.swirtzly.regeneration.handlers.ClientEventHandler;
+import me.swirtzly.regeneration.handlers.ClientHandler;
 import me.swirtzly.regeneration.client.RegenKeyBinds;
-import me.swirtzly.regeneration.client.rendering.layers.LayerHands;
-import me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration;
+import me.swirtzly.regeneration.client.rendering.layers.HandsLayer;
+import me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.util.FileUtil;
 import net.minecraft.client.Minecraft;
@@ -40,14 +40,14 @@ public class ClientProxy extends CommonProxy {
 		// Render layers ===========================================
 		Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
 		for (PlayerRenderer renderPlayer : skinMap.values()) {
-			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
-			renderPlayer.addLayer(new LayerHands(renderPlayer));
+			renderPlayer.addLayer(new RegenerationLayer(renderPlayer)); // Add Regeneration Layer
+			renderPlayer.addLayer(new HandsLayer(renderPlayer));
 		}
 		RegenClientHooks.onChange(skinMap.get("slim"), true);
 		RegenClientHooks.onChange(skinMap.get("default"), false);
 		FileUtil.doSetupOnThread();
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
-		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+		MinecraftForge.EVENT_BUS.register(new ClientHandler());
 
 	}
 

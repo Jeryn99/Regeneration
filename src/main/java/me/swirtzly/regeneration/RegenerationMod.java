@@ -2,23 +2,23 @@ package me.swirtzly.regeneration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import me.swirtzly.regeneration.client.rendering.entity.RenderItemOverride;
-import me.swirtzly.regeneration.client.rendering.entity.RenderLindos;
-import me.swirtzly.regeneration.common.advancements.RegenTriggers;
+import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
+import me.swirtzly.regeneration.client.rendering.entity.LindosRenderer;
+import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationStorage;
 import me.swirtzly.regeneration.common.commands.RegenDebugCommand;
-import me.swirtzly.regeneration.common.entity.EntityItemOverride;
-import me.swirtzly.regeneration.common.entity.EntityLindos;
-import me.swirtzly.regeneration.common.traits.DnaHandler;
-import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.handlers.ActingForwarder;
-import me.swirtzly.regeneration.handlers.RegenEventHandler;
-import me.swirtzly.regeneration.network.NetworkHandler;
+import me.swirtzly.regeneration.common.entity.OverrideEntity;
+import me.swirtzly.regeneration.common.entity.LindosEntity;
+import me.swirtzly.regeneration.common.traits.TraitManager;
+import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
+import me.swirtzly.regeneration.handlers.CommonHandler;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.proxy.CommonProxy;
-import me.swirtzly.regeneration.proxy.IProxy;
+import me.swirtzly.regeneration.proxy.Proxy;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -59,7 +59,7 @@ public class RegenerationMod {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(new RegenEventHandler());
+		MinecraftForge.EVENT_BUS.register(new CommonHandler());
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
@@ -68,11 +68,11 @@ public class RegenerationMod {
 	
 	public static Logger LOG = LogManager.getLogger(NAME);
 
-	public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+	public static Proxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
 	private void doClientStuff(final FMLClientSetupEvent event) {
-		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
+		RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(LindosEntity.class, LindosRenderer::new);
 	}
 
 
@@ -80,14 +80,14 @@ public class RegenerationMod {
 		proxy.preInit();
 		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
 		ActingForwarder.init();
-		RegenTriggers.init();
+		TriggerManager.init();
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {
 		proxy.init();
-		NetworkHandler.init();
-		DnaHandler.init();
-		TypeHandler.init();
+		NetworkDispatcher.init();
+		TraitManager.init();
+		TypeManager.init();
 	}
 
 

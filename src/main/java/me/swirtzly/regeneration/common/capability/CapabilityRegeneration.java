@@ -4,14 +4,14 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
-import me.swirtzly.regeneration.common.advancements.RegenTriggers;
-import me.swirtzly.regeneration.common.traits.DnaHandler;
-import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.handlers.ActingForwarder;
+import me.swirtzly.regeneration.common.advancements.TriggerManager;
+import me.swirtzly.regeneration.common.traits.TraitManager;
+import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.network.MessageSynchronisationRequest;
-import me.swirtzly.regeneration.network.MessageSynchroniseRegeneration;
-import me.swirtzly.regeneration.network.NetworkHandler;
+import me.swirtzly.regeneration.network.SyncDataMessage;
+import me.swirtzly.regeneration.network.SyncClientPlayerMessage;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.util.DebuggableScheduledAction;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
@@ -59,7 +59,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	private boolean didSetup = false, traitActive = true;
 	private int regenerationsLeft;
 	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
-	private TypeHandler.RegenType regenType = TypeHandler.RegenType.FIERY;
+	private TypeManager.Type regenType = TypeManager.Type.FIERY;
 	
 	private String BASE64_SKIN = "NONE";
 	
@@ -101,7 +101,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void tick() {
 		if (!didSetup && player.world.isRemote) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageSynchronisationRequest(player.getUniqueID()));
+			NetworkDispatcher.INSTANCE.sendToServer(new SyncDataMessage(player.getUniqueID()));
 			didSetup = true;
 		}
 		
@@ -135,13 +135,13 @@ public class CapabilityRegeneration implements IRegeneration {
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
 		}
 		
-		DnaHandler.getDnaEntry(getDnaType()).onUpdate(this);
+		TraitManager.getDnaEntry(getDnaType()).onUpdate(this);
 		
 		if (!player.world.isRemote && state != PlayerUtil.RegenState.ALIVE) // ticking only on the server for simplicity
 			stateManager.tick();
 		
 		if (state == PlayerUtil.RegenState.REGENERATING) {
-			TypeHandler.getTypeInstance(regenType).onUpdateMidRegen(player, this);
+			TypeManager.getTypeInstance(regenType).onUpdateMidRegen(player, this);
 		}
 	}
 	
@@ -153,7 +153,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
 		CompoundNBT nbt = serializeNBT();
 		nbt.remove("stateManager");
-		NetworkHandler.sendPacketToAll(new MessageSynchroniseRegeneration(player.getUniqueID(), nbt));
+		NetworkDispatcher.sendPacketToAll(new SyncClientPlayerMessage(player.getUniqueID(), nbt));
 	}
 	
 	
@@ -166,7 +166,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (regenType != null) {
 			nbt.putString("type_id", regenType.name());
 		} else {
-			regenType = TypeHandler.RegenType.FIERY;
+			regenType = TypeManager.Type.FIERY;
 		}
 		nbt.putString("base64_skin", BASE64_SKIN);
 		nbt.putString("skinType", skinType.name());
@@ -175,7 +175,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (traitLocation != null) {
 			nbt.putString("regen_dna", traitLocation.toString());
 		} else {
-			nbt.putString("regen_dna", DnaHandler.DNA_BORING.getRegistryName().toString());
+			nbt.putString("regen_dna", TraitManager.DNA_BORING.getRegistryName().toString());
 		}
 		nbt.putBoolean("traitActive", traitActive);
 		nbt.putInt("lc_regen", lcCoreReserve);
@@ -218,7 +218,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (nbt.contains("regen_dna")) {
 			setDnaType(new ResourceLocation(nbt.getString("regen_dna")));
 		} else {
-			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
+			setDnaType(TraitManager.DNA_BORING.getRegistryName());
 		}
 		
 		if (nbt.contains("handsAreGlowing")) {
@@ -241,9 +241,9 @@ public class CapabilityRegeneration implements IRegeneration {
 		setStyle(nbt.contains("style") ? (CompoundNBT) nbt.get("style") : nbt);
 		
 		if (nbt.contains("type_id")) // v1.3+ saves have a type tag
-			regenType = TypeHandler.RegenType.valueOf(nbt.getString("type_id"));
+			regenType = TypeManager.Type.valueOf(nbt.getString("type_id"));
 		else // for previous save versions set to default 'fiery' type
-			regenType = TypeHandler.RegenType.FIERY;
+			regenType = TypeManager.Type.FIERY;
 		
 		state = nbt.contains("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
 		setEncodedSkin(nbt.getString("base64_skin"));
@@ -277,7 +277,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
-	public TypeHandler.RegenType getType() {
+	public TypeManager.Type getType() {
 		return regenType;
 	}
 	
@@ -580,7 +580,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				handGlowTimer.cancel();
 				scheduleNextHandGlow();
 				if (!player.world.isRemote) {
-					RegenTriggers.CHANGE_REFUSAL.trigger((ServerPlayerEntity) player);
+					TriggerManager.CHANGE_REFUSAL.trigger((ServerPlayerEntity) player);
 					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.regen_delayed"), true);
 				}
 				e.setCanceled(true); //It got annoying in creative to break something
@@ -617,10 +617,10 @@ public class CapabilityRegeneration implements IRegeneration {
 			nextTransition.cancel(); // ... cancel any state shift we had planned
 			if (state.isGraceful())
 				handGlowTimer.cancel();
-			scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, TypeHandler.getTypeInstance(regenType).getAnimationLength());
+			scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, TypeManager.getTypeInstance(regenType).getAnimationLength());
 			
 			ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);
-			TypeHandler.getTypeInstance(regenType).onStartRegeneration(player, CapabilityRegeneration.this);
+			TypeManager.getTypeInstance(regenType).onStartRegeneration(player, CapabilityRegeneration.this);
 			synchronise();
 		}
 		
@@ -636,13 +636,13 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = PlayerUtil.RegenState.ALIVE;
 			nextTransition = null;
 			handGlowTimer = null;
-			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
+			TypeManager.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
 			if (state == PlayerUtil.RegenState.GRACE_CRIT) {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
 			} else {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
 			}
-			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
+			setDnaType(TraitManager.DNA_BORING.getRegistryName());
 			if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
 				extractRegeneration(getRegenerationsLeft());
 			}
@@ -666,7 +666,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = PlayerUtil.RegenState.POST;
 			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;
-			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
+			TypeManager.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
 			synchronise();
 		}

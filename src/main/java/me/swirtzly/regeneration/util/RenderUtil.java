@@ -24,16 +24,16 @@ public class RenderUtil {
 	
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
 	public static float renderTick = Minecraft.getInstance().getRenderPartialTicks();
+
 	private static float lastBrightnessX = GLX.lastBrightnessX;
 	private static float lastBrightnessY = GLX.lastBrightnessY;
 
 	public static void setLightmapTextureCoords(float x, float y) {
-		final int packedMaxLight = 0xf000f0; //15728880
-		final int skyLight = packedMaxLight % 0x10000; //65536
-		final int blockLight = packedMaxLight / 0x10000; //65536
-		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, skyLight, blockLight);
+		lastBrightnessX = GLX.lastBrightnessX;
+		lastBrightnessY = GLX.lastBrightnessY;
+		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, x, y);
 	}
-	
+
 	public static void restoreLightMap() {
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastBrightnessX, lastBrightnessY);
 	}
@@ -41,30 +41,31 @@ public class RenderUtil {
 	public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Vec3d color, float alpha) {
 		if (start == null || end == null)
 			return;
-		
+
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bb = tessellator.getBuffer();
 		int smoothFactor = Minecraft.getInstance().gameSettings.ambientOcclusionStatus.func_216572_a();
 		int layers = 10 + smoothFactor * 20;
-		
+
 		GlStateManager.pushMatrix();
+		GlStateManager.disableTexture();
 		start = start.scale(-1D);
 		end = end.scale(-1D);
 		GlStateManager.translated(-start.x, -start.y, -start.z);
 		start = end.subtract(start);
 		end = end.subtract(end);
-		
+
 		{
 			double x = end.x - start.x;
 			double y = end.y - start.y;
 			double z = end.z - start.z;
 			double diff = MathHelper.sqrt(x * x + z * z);
-			float yaw = (float) (Math.atan2(z, x) * 180.0D / 3.141592653589793D) - 90.0F;
-			float pitch = (float) -(Math.atan2(y, diff) * 180.0D / 3.141592653589793D);
+			float yaw = (float) (Math.atan2(z, x) * 180.0D / Math.PI) - 90.0F;
+			float pitch = (float) -(Math.atan2(y, diff) * 180.0D / Math.PI);
 			GlStateManager.rotatef(-yaw, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotatef(pitch, 1.0F, 0.0F, 0.0F);
 		}
-		
+
 		for (int layer = 0; layer <= layers; ++layer) {
 			if (layer < layers) {
 				GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, 1.0F / layers / 2);
@@ -78,7 +79,7 @@ public class RenderUtil {
 			double width = 0.0625D * size;
 			double height = 0.0625D * size;
 			double length = start.distanceTo(end) + d;
-			
+
 			bb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 			bb.pos(-width, height, length).endVertex();
 			bb.pos(width, height, length).endVertex();
@@ -106,7 +107,8 @@ public class RenderUtil {
 			bb.pos(-width, -height, -d).endVertex();
 			tessellator.draw();
 		}
-		
+
+		GlStateManager.enableTexture();
 		GlStateManager.popMatrix();
 	}
 
@@ -116,6 +118,7 @@ public class RenderUtil {
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.enableBlend();
+		GlStateManager.enableAlphaTest();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.SourceFactor.ONE_MINUS_CONSTANT_ALPHA.value);
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
 		setLightmapTextureCoords(240, 240);
@@ -127,6 +130,7 @@ public class RenderUtil {
 		GlStateManager.enableTexture();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		GlStateManager.disableBlend();
+		GlStateManager.disableAlphaTest();
 		GlStateManager.popMatrix();
 	}
 

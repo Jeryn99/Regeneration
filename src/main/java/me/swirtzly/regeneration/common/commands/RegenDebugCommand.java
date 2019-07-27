@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.swirtzly.regeneration.client.gui.GuiCustomizer;
+import me.swirtzly.regeneration.client.gui.CustomizerScreen;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
@@ -59,7 +59,7 @@ public class RegenDebugCommand {
 
 	private static int setRegens(CommandSource source, int amount) {
 		try {
-			Minecraft.getInstance().displayGuiScreen(new GuiCustomizer());
+			Minecraft.getInstance().displayGuiScreen(new CustomizerScreen());
 			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) -> cap.setRegenerationsLeft(amount));
 		} catch (CommandSyntaxException e) {
 			e.printStackTrace();

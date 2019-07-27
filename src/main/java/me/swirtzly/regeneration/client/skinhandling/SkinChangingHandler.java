@@ -3,14 +3,14 @@ package me.swirtzly.regeneration.client.skinhandling;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.image.ImageBufferDownloadAlt;
-import me.swirtzly.regeneration.client.image.ImageDownloadAlt;
+import me.swirtzly.regeneration.client.image.ImageDownloadBuffer;
+import me.swirtzly.regeneration.client.image.ImageDownloader;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
-import me.swirtzly.regeneration.common.types.IRegenType;
-import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.network.MessageUpdateSkin;
-import me.swirtzly.regeneration.network.NetworkHandler;
+import me.swirtzly.regeneration.common.types.RegenType;
+import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.network.UpdateSkinMessage;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
@@ -78,11 +78,11 @@ public class SkinChangingHandler {
 	public static NativeImage decodeToImage(String imageString) throws IOException {
 		try (MemoryStack memorystack = MemoryStack.stackPush()) {
 			ByteBuffer bytebuffer = memorystack.UTF8(imageString, false);
-			ByteBuffer bytebuffer1 = Base64.getDecoder().decode(bytebuffer);
-			ByteBuffer bytebuffer2 = memorystack.malloc(bytebuffer1.remaining());
-			bytebuffer2.put(bytebuffer1);
-			bytebuffer2.rewind();
-			return NativeImage.read(bytebuffer2);
+			ByteBuffer decoded = Base64.getDecoder().decode(bytebuffer);
+			ByteBuffer toImage = memorystack.malloc(decoded.remaining());
+			toImage.put(decoded);
+			toImage.rewind();
+			return NativeImage.read(toImage);
 		}
 	}
 
@@ -112,7 +112,7 @@ public class SkinChangingHandler {
 					e.printStackTrace();
 				}
 				cap.setEncodedSkin(pixelData);
-				NetworkHandler.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+				NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, isAlex));
 			} else {
 				ClientUtil.sendSkinResetPacket();
 			}
@@ -150,7 +150,7 @@ public class SkinChangingHandler {
 			}
 		} else {
 			NativeImage bufferedImage = toImage(player, data.getEncodedSkin(), write);
-			bufferedImage = ImageBufferDownloadAlt.convert(bufferedImage);
+			bufferedImage = ImageDownloadBuffer.convert(bufferedImage);
 			if (bufferedImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
 			} else {
@@ -198,7 +198,7 @@ public class SkinChangingHandler {
 		TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
 		ITextureObject object = texturemanager.getTexture(resource);
 		if (object == null) {
-			object = new ImageDownloadAlt(file, par1Str, def, new ImageBufferDownloadAlt());
+			object = new ImageDownloader(file, par1Str, def, new ImageDownloadBuffer());
 			texturemanager.loadTexture(resource, object);
 		}
 		return object;
@@ -264,7 +264,7 @@ public class SkinChangingHandler {
 					setSkinFromData(player, CapabilityRegeneration.getForPlayer(player), false);
 				}
 
-				TypeHandler.getTypeInstance(cap.getType()).getRenderer().onRenderRegeneratingPlayerPre(TypeHandler.getTypeInstance(cap.getType()), e, cap);
+				TypeManager.getTypeInstance(cap.getType()).getRenderer().onRenderRegeneratingPlayerPre(TypeManager.getTypeInstance(cap.getType()), e, cap);
 
 
 			} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
@@ -291,8 +291,8 @@ public class SkinChangingHandler {
 		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) e.getEntityPlayer();
 		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
-				IRegenType type = TypeHandler.getTypeInstance(cap.getType());
-				type.getRenderer().onRenderRegeneratingPlayerPost(TypeHandler.getTypeInstance(cap.getType()), e, cap);
+				RegenType type = TypeManager.getTypeInstance(cap.getType());
+				type.getRenderer().onRenderRegeneratingPlayerPost(TypeManager.getTypeInstance(cap.getType()), e, cap);
 			}
 		});
 	}

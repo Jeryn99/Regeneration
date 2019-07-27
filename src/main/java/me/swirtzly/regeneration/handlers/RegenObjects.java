@@ -1,10 +1,10 @@
 package me.swirtzly.regeneration.handlers;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.entity.EntityItemOverride;
-import me.swirtzly.regeneration.common.entity.EntityLindos;
-import me.swirtzly.regeneration.common.item.ItemFobWatch;
-import me.swirtzly.regeneration.common.item.ItemLindos;
+import me.swirtzly.regeneration.common.entity.OverrideEntity;
+import me.swirtzly.regeneration.common.entity.LindosEntity;
+import me.swirtzly.regeneration.common.item.FobWatchItem;
+import me.swirtzly.regeneration.common.item.LindosVialItem;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
@@ -43,8 +43,8 @@ public class RegenObjects {
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		e.getRegistry().registerAll(
-				setUpItem(new ItemFobWatch(), "fob_watch"),
-				setUpItem(new ItemLindos(), "lindos_vial")
+				setUpItem(new FobWatchItem(), "fob_watch"),
+				setUpItem(new LindosVialItem(), "lindos_vial")
 		);
 		e.getRegistry().registerAll(ITEM_BLOCKS.toArray(new Item[ITEM_BLOCKS.size()]));
 	}
@@ -74,22 +74,22 @@ public class RegenObjects {
 
 
 		//Item Override
-		reg.register(EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE = EntityType.Builder.<EntityItemOverride>create(EntityItemOverride::new, EntityClassification.MISC)
+		reg.register(EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE = EntityType.Builder.<OverrideEntity>create(OverrideEntity::new, EntityClassification.MISC)
 				.size(0.5F, 0.2F)
 				.setTrackingRange(128)
 				.setUpdateInterval(1)
 				.setShouldReceiveVelocityUpdates(true)
-				.setCustomClientFactory((spawnEntity, world) -> new EntityItemOverride(world))
+				.setCustomClientFactory((spawnEntity, world) -> new OverrideEntity(world))
 				.build(RegenerationMod.MODID + ":item_override")
 				.setRegistryName(new ResourceLocation(RegenerationMod.MODID, "item_override")));
 
 		//Lindos
-		reg.register(EntityEntries.ITEM_LINDOS_TYPE = EntityType.Builder.<EntityLindos>create(EntityLindos::new, EntityClassification.MISC)
+		reg.register(EntityEntries.ITEM_LINDOS_TYPE = EntityType.Builder.<LindosEntity>create(LindosEntity::new, EntityClassification.MISC)
 				.size(0.5F, 0.2F)
 				.setTrackingRange(128)
 				.setUpdateInterval(1)
 				.setShouldReceiveVelocityUpdates(true)
-				.setCustomClientFactory((spawnEntity, world) -> new EntityLindos(world))
+				.setCustomClientFactory((spawnEntity, world) -> new LindosEntity(world))
 				.build(RegenerationMod.MODID + ":lindos")
 				.setRegistryName(new ResourceLocation(RegenerationMod.MODID, "lindos")));
 	}

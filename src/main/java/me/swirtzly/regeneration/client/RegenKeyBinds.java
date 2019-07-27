@@ -2,8 +2,8 @@ package me.swirtzly.regeneration.client;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.network.MessageTriggerRegeneration;
-import me.swirtzly.regeneration.network.NetworkHandler;
+import me.swirtzly.regeneration.network.RegenerateMessage;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.util.EnumCompatModids;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -44,7 +44,7 @@ public class RegenKeyBinds {
 
 		CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
 			if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
-				NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration());
+				NetworkDispatcher.INSTANCE.sendToServer(new RegenerateMessage());
 			}
 		});
 	}

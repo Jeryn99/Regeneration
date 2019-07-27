@@ -1,9 +1,9 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
-import me.swirtzly.regeneration.network.MessageSetPerspective;
-import me.swirtzly.regeneration.network.MessageUpdateModel;
-import me.swirtzly.regeneration.network.NetworkHandler;
+import me.swirtzly.regeneration.network.ThirdPersonMessage;
+import me.swirtzly.regeneration.network.UpdateSkinMapMessage;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.Effect;
@@ -53,12 +53,12 @@ public class PlayerUtil {
 	}
 	
 	public static void setPerspective(ServerPlayerEntity player, boolean thirdperson, boolean resetPitch) {
-		NetworkHandler.sendTo(new MessageSetPerspective(thirdperson), player);
+		NetworkDispatcher.sendTo(new ThirdPersonMessage(thirdperson), player);
 	}
 
 	
 	public static void updateModel(SkinChangingHandler.EnumChoices choice) {
-		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateModel(choice.name()));
+		NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMapMessage(choice.name()));
 	}
 	
 	public static boolean applyPotionIfAbsent(PlayerEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {

@@ -92,7 +92,7 @@ public class FileUtil {
 			while (notDownloaded.get()) {
 				try {
 					createDefaultFolders();
-					Trending.downloadTrendingSkins();
+					TrendingManager.downloadTrendingSkins();
 					notDownloaded.set(false);
 				} catch (Exception e) {
 					throw new RuntimeException(e);

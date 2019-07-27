@@ -1,9 +1,9 @@
 package me.swirtzly.regeneration.util;
 
-import me.swirtzly.regeneration.client.MovingSoundBase;
+import me.swirtzly.regeneration.client.MovingSound;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
-import me.swirtzly.regeneration.network.MessageUpdateSkin;
-import me.swirtzly.regeneration.network.NetworkHandler;
+import me.swirtzly.regeneration.network.UpdateSkinMessage;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.toasts.SystemToast;
@@ -38,12 +38,12 @@ public class ClientUtil {
 	 * back to the ones supplied by Mojang
 	 */
 	public static void sendSkinResetPacket() {
-		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin("none", SkinChangingHandler.wasAlex(Minecraft.getInstance().player)));
+		NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMessage("none", SkinChangingHandler.wasAlex(Minecraft.getInstance().player)));
 	}
 	
 	@OnlyIn(Dist.CLIENT)
 	public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
-		Minecraft.getInstance().getSoundHandler().play(new MovingSoundBase(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
+		Minecraft.getInstance().getSoundHandler().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
 	}
 	
 	/**
