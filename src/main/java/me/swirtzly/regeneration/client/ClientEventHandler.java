@@ -21,6 +21,7 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -28,6 +29,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -40,6 +42,7 @@ import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -58,7 +61,13 @@ import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
  */
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
-	
+
+
+	public static final ResourceLocation[] SHADERS_TEXTURES = new ResourceLocation[]{new ResourceLocation("shaders/post/notch.json"), new ResourceLocation("shaders/post/fxaa.json"), new ResourceLocation("shaders/post/art.json"), new ResourceLocation("shaders/post/bumpy.json"), new ResourceLocation("shaders/post/blobs2.json"), new ResourceLocation("shaders/post/pencil.json"), new ResourceLocation("shaders/post/color_convolve.json"), new ResourceLocation("shaders/post/deconverge.json"), new ResourceLocation("shaders/post/flip.json"), new ResourceLocation("shaders/post/invert.json"), new ResourceLocation("shaders/post/ntsc.json"), new ResourceLocation("shaders/post/outline.json"), new ResourceLocation("shaders/post/phosphor.json"), new ResourceLocation("shaders/post/scan_pincushion.json"), new ResourceLocation("shaders/post/sobel.json"), new ResourceLocation("shaders/post/bits.json"), new ResourceLocation("shaders/post/desaturate.json"), new ResourceLocation("shaders/post/green.json"), new ResourceLocation("shaders/post/blur.json"), new ResourceLocation("shaders/post/wobble.json"), new ResourceLocation("shaders/post/blobs.json"), new ResourceLocation("shaders/post/antialias.json"), new ResourceLocation("shaders/post/creeper.json"), new ResourceLocation("shaders/post/spider.json")};
+
+
+	//====
+
 	private static boolean initialJoin = false;
 	
 	@SubscribeEvent
@@ -90,10 +99,10 @@ public class ClientEventHandler {
 	public static void onTickEvent(TickEvent.ClientTickEvent event) {
 		if (event.phase.equals(TickEvent.Phase.START)) return;
 		if (Minecraft.getMinecraft().world == null) {
-			if (SkinChangingHandler.PLAYER_SKINS.size() > 0 || SkinChangingHandler.TYPE_BACKUPS.size() > 0) {
-				SkinChangingHandler.TYPE_BACKUPS.clear();
+			if (SkinChangingHandler.PLAYER_SKINS.size() > 0) {
+				SkinChangingHandler.PLAYER_SKINS.forEach(((uuid, skinInfo) -> Minecraft.getMinecraft().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation())));
 				SkinChangingHandler.PLAYER_SKINS.clear();
-				RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS AND TYPE_BACKUPS");
+				RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
 			}
 			initialJoin = false;
 		}
@@ -145,13 +154,19 @@ public class ClientEventHandler {
             }
 		}
 	}
-	
+
+
+
+
+
 	@SuppressWarnings("incomplete-switch")
 	@SubscribeEvent
 	public static void onRenderGui(RenderGameOverlayEvent.Post event) {
 		if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
 			return;
-		
+
+
+
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		if (player == null) return;
 		SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
@@ -161,7 +176,6 @@ public class ClientEventHandler {
 		
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		String warning = null;
-		
 		switch (cap.getState()) {
 			case GRACE:
 				RenderUtil.renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
@@ -333,5 +347,7 @@ public class ClientEventHandler {
 
 		GlStateManager.popMatrix();
 	}
-	
+
+
+
 }

@@ -6,21 +6,12 @@ import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Enumeration;
-import java.util.Objects;
+import java.nio.file.*;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -165,6 +156,33 @@ public class FileUtil {
 		
 		return builder.toString();
 	}
+
+
+	public static List<File> listAllSkins(EnumChoices choices) {
+		List<File> resultList = new ArrayList<>();
+		File directory = null;
+
+		switch (choices) {
+			case EITHER:
+				directory = SKIN_DIRECTORY;
+				break;
+			case ALEX:
+				directory = SKIN_DIRECTORY_ALEX;
+				break;
+			case STEVE:
+				directory = SKIN_DIRECTORY_STEVE;
+				break;
+		}
+
+		try {
+			Files.find(Paths.get(directory.toString()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile()).forEach((file) -> resultList.add(file.toFile()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return resultList;
+	}
+
+
 	
 	public interface IEnum<E extends Enum<E>> {
 		

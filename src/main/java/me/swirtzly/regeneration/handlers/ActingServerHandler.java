@@ -133,6 +133,7 @@ class ActingServerHandler implements IActingHandler {
 		newDna.onAdded(cap);
 		cap.setDnaActive(true);
 		PlayerUtil.sendMessage(player, new TextComponentTranslation(newDna.getLangKey()), true);
+		RegenUtil.resetNextSkin(player);
 	}
 	
 	@Override

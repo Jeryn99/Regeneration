@@ -2,6 +2,7 @@ package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.client.MovingSoundBase;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
+import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.network.MessageUpdateSkin;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
@@ -23,7 +24,10 @@ import java.awt.image.DataBufferInt;
 import java.util.function.Supplier;
 
 public class ClientUtil {
-	
+
+	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
+	public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
+
 	public static String keyBind = "???"; //WAFFLE there was a weird thing with this somewhere that I still need to fix
 	
 	public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle) {
@@ -39,7 +43,7 @@ public class ClientUtil {
 	 * back to the ones supplied by Mojang
 	 */
 	public static void sendSkinResetPacket() {
-		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin("none", SkinChangingHandler.wasAlex(Minecraft.getMinecraft().player)));
+		NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin("none", CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel().isAlex()));
 	}
 	
 	@SideOnly(Side.CLIENT)

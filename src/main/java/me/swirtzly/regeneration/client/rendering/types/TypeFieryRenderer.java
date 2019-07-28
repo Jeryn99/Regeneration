@@ -208,7 +208,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 			player.bipedHead.postRender(0.0625F);
 		}
 		
-		GlStateManager.translate(0f, 0.09f, 0f);
+		//GlStateManager.translate(0f, 0.1f, 0f);
 		GlStateManager.rotate(180, 1.0f, 0.0f, 0.0f);
 		
 		renderCone(entityPlayer, primaryScale / 1.6F, primaryScale * .75F, primaryColor);

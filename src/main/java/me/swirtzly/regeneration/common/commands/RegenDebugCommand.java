@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.commands;
 
+import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
@@ -15,6 +16,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -79,7 +86,7 @@ public class RegenDebugCommand extends CommandBase {
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		if (args.length < 2)
 			return getListOfStringsMatchingLastWord(args, "fast-forward", "set-regens", "glow", "set-trait");
-		if(args.length < 3){
+		if(args[0].equals("set-trait") && args.length < 3){
 			return getListOfStringsMatchingLastWord(args, DnaHandler.DNA_ENTRIES.keySet());
 		}
 		else
@@ -90,5 +97,6 @@ public class RegenDebugCommand extends CommandBase {
 	public int getRequiredPermissionLevel() {
 		return 2;
 	}
-	
+
+
 }

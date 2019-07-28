@@ -14,9 +14,11 @@ public class GuiHandler implements IGuiHandler {
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 		switch (id) {
 			case GuiCustomizer.ID:
-				return new BlankContainer();
-			case GuiSkinCustomizer.ID:
-				return new GuiSkinCustomizer();
+				return new GuiCustomizer();
+			case GuiModelChoice.ID:
+				return new GuiModelChoice();
+			case GuiSkinChange.ID:
+				return new GuiSkinChange();
 			default:
 				return null;
 		}
@@ -28,8 +30,10 @@ public class GuiHandler implements IGuiHandler {
 		switch (id) {
 			case GuiCustomizer.ID:
 				return new GuiCustomizer();
-			case GuiSkinCustomizer.ID:
-				return new GuiSkinCustomizer();
+			case GuiModelChoice.ID:
+				return new GuiModelChoice();
+			case GuiSkinChange.ID:
+				return new GuiSkinChange();
 			default:
 				return null;
 		}

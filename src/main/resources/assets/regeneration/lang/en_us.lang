@@ -1,3 +1,4 @@
+#PARSE_ESCAPES
 item.fob_watch.name=Fob Watch
 item.lindos_vial.name=Lindos Vial
 regeneration.gui.red=Red
@@ -8,12 +9,16 @@ regeneration.gui.secondary=Secondary
 regeneration.gui.undo=Undo
 regeneration.gui.default=Default
 regeneration.gui.open_folder=Skin Dir
+regeneration.gui.skin_choice=Skin
+regeneration.gui.save=Save
+regeneration.gui.current_skin=Skin name:
 regeneration.gui.reset_skin=Reset Skin
 regeneration.gui.infinite_regenerations=Infinite Regeneration Mode
 regeneration.gui.remaining_regens.status=Remaining Regenerations:
 
 regeneration.messages.now_timelord=You are now a Time lord!
 regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch
+regeneration.messages.new_skin=Your skin will change next Regeneration!
 
 regeneration.messages.empty_vial=This vial does not have enough Lindos to trigger a regeneration!
 

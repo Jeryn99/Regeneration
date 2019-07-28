@@ -9,6 +9,7 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.IRegenType;
 import me.swirtzly.regeneration.common.types.TypeHandler;
+import me.swirtzly.regeneration.network.MessageRepairArms;
 import me.swirtzly.regeneration.network.MessageUpdateSkin;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.ClientUtil;
@@ -16,6 +17,7 @@ import me.swirtzly.regeneration.util.FileUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -29,6 +31,8 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
@@ -44,12 +48,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
@@ -59,7 +58,6 @@ public class SkinChangingHandler {
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	public static final Logger SKIN_LOG = LogManager.getLogger("Regeneration Skin Handler");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
-	public static final Map<UUID, SkinInfo.SkinType> TYPE_BACKUPS = new HashMap<>();
 	private static final Random RAND = new Random();
 	
 	
@@ -112,20 +110,28 @@ public class SkinChangingHandler {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
 		if (RegenConfig.skins.changeMySkin) {
-			boolean isAlex = cap.getPreferredModel().isAlex();
-			
-			File skin = null;
-			skin = SkinChangingHandler.getRandomSkin(random, isAlex);
-			RegenerationMod.LOG.info(skin + " was choosen");
-			
+
 			String pixelData = "NONE";
-			try {
-				pixelData = SkinChangingHandler.imageToPixelData(skin);
-			} catch (IOException e) {
-				e.printStackTrace();
+			File skin = null;
+
+			if (cap.getNextSkin().equals("NONE")) {
+				boolean isAlex = cap.getPreferredModel().isAlex();
+				skin = SkinChangingHandler.getRandomSkin(random, isAlex);
+				RegenerationMod.LOG.info(skin + " was choosen");
+
+				try {
+					pixelData = SkinChangingHandler.imageToPixelData(skin);
+					cap.setEncodedSkin(pixelData);
+					NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				pixelData = cap.getNextSkin();
+				cap.setEncodedSkin(pixelData);
+				NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, cap.getNextSkinType().getMojangType().equals("slim")));
 			}
-			cap.setEncodedSkin(pixelData);
-			NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
+
 		} else {
 			ClientUtil.sendSkinResetPacket();
 		}
@@ -163,7 +169,7 @@ public class SkinChangingHandler {
 		
 		if (data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
 			resourceLocation = getMojangSkin(player);
-			skinType = TYPE_BACKUPS.get(player.getUniqueID());
+			skinType = data.getVanillaDefault();
 		} else {
 			BufferedImage bufferedImage = toImage(data.getEncodedSkin());
 			bufferedImage = ClientUtil.ImageFixer.convertSkinTo64x64(bufferedImage);
@@ -177,19 +183,18 @@ public class SkinChangingHandler {
 		}
 		return new SkinInfo(resourceLocation, skinType);
 	}
-	
-	public static boolean wasAlex(EntityPlayer player) {
-		if (TYPE_BACKUPS.containsKey(player.getUniqueID())) {
-			return TYPE_BACKUPS.get(player.getUniqueID()).getMojangType().equals("slim");
+
+	public static ResourceLocation getTextureOnly(File file) {
+		BufferedImage bufferedImage = null;
+		try {
+			bufferedImage = ImageIO.read(file);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return true;
+		return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("gui_skin_" + System.currentTimeMillis(), new DynamicTexture(bufferedImage));
 	}
-	
-	public static void addType(AbstractClientPlayer player) {
-		if (player == null || TYPE_BACKUPS.containsKey(player.getUniqueID())) return;
-		TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
-	}
-	
+
+
 	/**
 	 * This is used when the clients skin is reset
 	 *
@@ -247,9 +252,6 @@ public class SkinChangingHandler {
 	
 	public static void setSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
 		if (skinType.getMojangType().equals(player.getSkinType())) return;
-		if (!TYPE_BACKUPS.containsKey(player.getUniqueID())) {
-			TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
-		}
 		NetworkPlayerInfo playerInfo = player.playerInfo;
 		playerInfo.skinType = skinType.getMojangType();
 	}
@@ -265,8 +267,7 @@ public class SkinChangingHandler {
 		AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		IRegenType type = TypeHandler.getTypeInstance(cap.getType());
-		addType(player);
-		
+
 		if (player.ticksExisted == 20) {
 			PLAYER_SKINS.remove(player.getUniqueID());
 		}
@@ -300,9 +301,9 @@ public class SkinChangingHandler {
 		if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 			type.getRenderer().onRenderRegeneratingPlayerPost(type, e, cap);
 		}
-		
 	}
-	
+
+
 	@SubscribeEvent
 	public void onRelog(EntityJoinWorldEvent e) {
 		if (e.getEntity() instanceof AbstractClientPlayer) {

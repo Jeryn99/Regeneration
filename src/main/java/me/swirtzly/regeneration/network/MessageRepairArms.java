@@ -37,7 +37,7 @@ public class MessageRepairArms implements IMessage {
 			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
 				IRegeneration data = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
 				data.setVanillaSkinType(SkinInfo.SkinType.valueOf(message.arm));
-				System.out.println(message.arm);
+				System.out.println("Client vanilla SkinType is "+message.arm);
 			});
 			return null;
 		}

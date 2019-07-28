@@ -31,7 +31,7 @@ public class GuiCustomizer extends GuiContainer {
 	
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
 	
-	private GuiButtonExt btnDefault, btnReset, btnCust, btnResetSkin;
+	private GuiButtonExt btnDefault, btnReset, btnCust;
 	private GuiColorSlider slidePrimaryRed, slidePrimaryGreen, slidePrimaryBlue, slideSecondaryRed, slideSecondaryGreen, slideSecondaryBlue;
 	
 	private Vec3d initialPrimary, initialSecondary;
@@ -64,14 +64,12 @@ public class GuiCustomizer extends GuiContainer {
 		// WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS
 		btnReset = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.undo").getFormattedText());
 		btnDefault = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.default").getFormattedText());
-		btnResetSkin = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.reset_skin").getFormattedText());
-		btnCust = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.customize").getFormattedText());
-		
+		btnCust = new GuiButtonExt(99, cx + 10, cy + 145, btnW + 90, btnH, new TextComponentTranslation("regeneration.gui.customize").getFormattedText());
+
 		btnReset.enabled = false;
 		buttonList.add(btnReset);
 		buttonList.add(btnDefault);
 		buttonList.add(btnCust);
-		buttonList.add(btnResetSkin);
 		
 		slidePrimaryRed = new GuiColorSlider(5, cx + 10, cy + 65, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.red").getFormattedText(), "", 0, 1, primaryRed, true, true, this::onChangeSliderValue);
 		slidePrimaryGreen = new GuiColorSlider(6, cx + 10, cy + 84, sliderW, sliderH, new TextComponentTranslation("regeneration.gui.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, this::onChangeSliderValue);
@@ -129,9 +127,7 @@ public class GuiCustomizer extends GuiContainer {
 			
 			onChangeSliderValue(null);
 		} else if (button.id == btnCust.id) {
-			Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiSkinCustomizer.ID, Minecraft.getMinecraft().world, 0, 0, 0);
-		} else if (button.id == btnResetSkin.id) {
-			ClientUtil.sendSkinResetPacket();
+			Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiModelChoice.ID, Minecraft.getMinecraft().world, 0, 0, 0);
 		}
 	}
 	

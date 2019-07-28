@@ -52,32 +52,28 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
-	public String deathSource = "";
-	public int lcCoreReserve = 0;
-	private boolean didSetup = false, traitActive = true;
-	private int regenerationsLeft;
+	public int lcCoreReserve = 0, regenerationsLeft, ticksAnimating = 0;
+	private boolean didSetup = false, traitActive = true, syncingToJar = false;
 	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
 	private TypeHandler.RegenType regenType = TypeHandler.RegenType.FIERY;
 	
-	private String BASE64_SKIN = "NONE";
-	
-	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
-	private SkinInfo.SkinType vanillaSkinType = SkinInfo.SkinType.ALEX;
+	private String BASE64_SKIN = "NONE", BASE64_SKIN_NEXT = "NONE", deathSource = "";
+
+	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX, vanillaSkinType = SkinInfo.SkinType.ALEX;
 	private SkinChangingHandler.EnumChoices preferredModel = SkinChangingHandler.EnumChoices.EITHER;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
-	private int ticksAnimating = 0; //Im so sorry
-	private boolean syncingToJar = false;
-	
+	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
 	
 	/**
 	 * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
 	 * This property is synced over to the client to solve this
 	 */
 	private boolean handsAreGlowingClient;
-	
-	
+
+
+
 	public CapabilityRegeneration() {
 		this.player = null;
 		this.stateManager = null;
@@ -189,6 +185,8 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setBoolean("jar", syncingToJar);
 		if (!player.world.isRemote)
 			nbt.setTag("stateManager", stateManager.serializeNBT());
+		nbt.setString("nextSkin", BASE64_SKIN_NEXT);
+		nbt.setString("nextSkinType", nextSkinType.name());
 		return nbt;
 	}
 	
@@ -208,8 +206,11 @@ public class CapabilityRegeneration implements IRegeneration {
 		} else {
 			setPreferredModel("ALEX");
 		}
+
+		nextSkinType = SkinInfo.SkinType.valueOf(nextSkinType.name());
 		
-		
+		BASE64_SKIN_NEXT = nbt.getString("nextSkin");
+
 		if (nbt.hasKey("regenerationsLeft")) {
 			regenerationsLeft = nbt.getInteger("regenerationsLeft");
 		}
@@ -438,7 +439,27 @@ public class CapabilityRegeneration implements IRegeneration {
 	public boolean isSyncingToJar() {
 		return syncingToJar;
 	}
-	
+
+	@Override
+	public void setNextSkin(String base64) {
+		BASE64_SKIN_NEXT = base64;
+	}
+
+	@Override
+	public String getNextSkin() {
+		return BASE64_SKIN_NEXT;
+	}
+
+	@Override
+	public void setNextSkinType(SkinInfo.SkinType skinType) {
+		this.nextSkinType = skinType;
+	}
+
+	@Override
+	public SkinInfo.SkinType getNextSkinType() {
+		return nextSkinType;
+	}
+
 	@Override
 	public IRegenerationStateManager getStateManager() {
 		return stateManager;
@@ -555,7 +576,12 @@ public class CapabilityRegeneration implements IRegeneration {
 				nextTransition.cancel();
 				midSequenceKill();
 				return false;
-			} else
+			}
+			else if (state == PlayerUtil.RegenState.GRACE_CRIT){
+				nextTransition.cancel();
+				midSequenceKill();
+				return false;
+			}
 				throw new IllegalStateException("Unknown state: " + state);
 		}
 		

@@ -1,6 +1,8 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenConfig;
+import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -101,5 +103,11 @@ public class RegenUtil {
 	public static AxisAlignedBB getReach(BlockPos pos, int range) {
 		return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
 	}
-	
+
+	public static void resetNextSkin(EntityPlayer player){
+		IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+		data.setNextSkin("NONE");
+		data.synchronise();
+	}
+
 }

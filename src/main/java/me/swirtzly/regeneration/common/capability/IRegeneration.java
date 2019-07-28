@@ -97,4 +97,10 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	void setSyncingFromJar(boolean syncing);
 	
 	boolean isSyncingToJar();
+
+	void setNextSkin(String base64);
+	String getNextSkin();
+
+	void setNextSkinType(SkinInfo.SkinType choices);
+	SkinInfo.SkinType getNextSkinType();
 }

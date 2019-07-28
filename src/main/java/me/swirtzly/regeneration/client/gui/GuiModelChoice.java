@@ -7,6 +7,7 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiCustomizeSkin;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,20 +18,20 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import java.awt.*;
 import java.io.IOException;
 
+import static me.swirtzly.regeneration.util.ClientUtil.playerModelAlex;
+import static me.swirtzly.regeneration.util.ClientUtil.playerModelSteve;
 import static me.swirtzly.regeneration.util.RenderUtil.drawModelToGui;
 
-public class GuiSkinCustomizer extends GuiContainer {
-	
-	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
-	public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
+public class GuiModelChoice extends GuiContainer {
+
 	public static final int ID = 1;
 	private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
 	private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
-	private static SkinChangingHandler.EnumChoices choices = SkinChangingHandler.wasAlex(Minecraft.getMinecraft().player) ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
+	private static SkinChangingHandler.EnumChoices CHOICES = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
 	private float rotation = 0;
 	
-	public GuiSkinCustomizer() {
+	public GuiModelChoice() {
 		super(new BlankContainer());
 		xSize = 176;
 		ySize = 186;
@@ -46,14 +47,14 @@ public class GuiSkinCustomizer extends GuiContainer {
 		GuiButtonExt btnNext = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.previous").getFormattedText());
 		GuiButtonExt btnPrevious = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.next").getFormattedText());
 		GuiButtonExt btnBack = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText());
-		GuiButtonExt btnOpenFolder = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.open_folder").getFormattedText());
+		GuiButtonExt btnOpenFolder = new GuiButtonExt(99, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.skin_choice").getFormattedText());
 		
 		buttonList.add(btnNext);
 		buttonList.add(btnPrevious);
 		buttonList.add(btnOpenFolder);
 		buttonList.add(btnBack);
 		
-		choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
+		CHOICES = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
 	}
 	
 	@Override
@@ -64,7 +65,7 @@ public class GuiSkinCustomizer extends GuiContainer {
 		GlStateManager.pushMatrix();
 		playerModelAlex.isChild = false;
 		playerModelSteve.isChild = false;
-		switch (choices) {
+		switch (CHOICES) {
 			case ALEX:
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_ALEX);
 				drawModelToGui(playerModelAlex, width / 2, height / 2 - 40, 1.0f, rotation);
@@ -82,7 +83,7 @@ public class GuiSkinCustomizer extends GuiContainer {
 		}
 		GlStateManager.popMatrix();
 		
-		drawCenteredString(Minecraft.getMinecraft().fontRenderer, new TextComponentTranslation("regeneration.gui.preference_model", choices.name()).getUnformattedText(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
+		drawCenteredString(Minecraft.getMinecraft().fontRenderer, new TextComponentTranslation("regeneration.gui.preference_model", CHOICES.name()).getUnformattedText(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
 		
 	}
 	
@@ -96,30 +97,26 @@ public class GuiSkinCustomizer extends GuiContainer {
 			
 			case 4:
 				//Next
-				if (choices.previous() != null) {
-					choices = (SkinChangingHandler.EnumChoices) choices.previous();
+				if (CHOICES.previous() != null) {
+					CHOICES = (SkinChangingHandler.EnumChoices) CHOICES.previous();
 				} else {
-					choices = SkinChangingHandler.EnumChoices.EITHER;
+					CHOICES = SkinChangingHandler.EnumChoices.EITHER;
 				}
-				PlayerUtil.updateModel(choices);
+				PlayerUtil.updateModel(CHOICES);
 				break;
 			
 			case 1:
 				//Previous
-				if (choices.next() != null) {
-					choices = (SkinChangingHandler.EnumChoices) choices.next();
+				if (CHOICES.next() != null) {
+					CHOICES = (SkinChangingHandler.EnumChoices) CHOICES.next();
 				} else {
-					choices = SkinChangingHandler.EnumChoices.ALEX;
+					CHOICES = SkinChangingHandler.EnumChoices.ALEX;
 				}
-				PlayerUtil.updateModel(choices);
+				PlayerUtil.updateModel(CHOICES);
 				break;
 			
 			case 99:
-				try {
-					Desktop.getDesktop().open(SkinChangingHandler.SKIN_DIRECTORY);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiSkinChange.ID, Minecraft.getMinecraft().world, 0, 0, 0);
 				break;
 		}
 	}
