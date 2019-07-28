@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "1.6.6",
-		"1.12.2-recommended": "1.6.6",
+		"1.12.2-latest": "1.7.0",
+		"1.12.2-recommended": "1.7.0",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
@@ -17,7 +17,8 @@
 		"1.6.4" : "Fixes Lucraft integration crashing server ",
 	        "1.6.5" : "Animation bug fixes and fixes to Night-vision trait",
 		"1.6.6" : "Animation bug fixes || Wall Climbing fixes || Hand In Jar || Animation Compat with Quark and other mods",
-		"1.6.7" : "Fixes Server crash with hand in a jar"
+		"1.6.7" : "Fixes Server crash with hand in a jar",
+		"1.7.0" : "You can now select your next skin! Critical phase is now spookier! Fixed Various bugs, Check CurseForge for details!"
 
 	},
 	"1.13.2": {
