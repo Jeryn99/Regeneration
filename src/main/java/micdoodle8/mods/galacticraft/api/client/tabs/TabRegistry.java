@@ -82,7 +82,8 @@ public class TabRegistry {
 				buttonList.add(tab);
 			}
 		}
-	}
+
+    }
 	
 	public static int getPotionOffset() {
 		/**
@@ -158,8 +159,8 @@ public class TabRegistry {
 		gui.func_194310_f().func_194303_a(gui.width, gui.height, mc, widthTooNarrow, ((ContainerPlayer) gui.inventorySlots).craftMatrix);
 		return gui.func_194310_f().updateScreenPosition(widthTooNarrow, gui.width, gui.getXSize()) - (gui.width - 176) / 2;
 	}
-	
-	@SideOnly(Side.CLIENT)
+
+    @SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void guiPostInit(GuiScreenEvent.InitGuiEvent.Post event) {
 		if (event.getGui() instanceof GuiInventory) {
@@ -172,5 +173,5 @@ public class TabRegistry {
 			TabRegistry.addTabsToList(event.getButtonList());
 		}
 	}
-	
+
 }

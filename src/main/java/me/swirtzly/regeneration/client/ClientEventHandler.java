@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.client;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.asm.RegenClientHooks;
 import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.client.animation.AnimationHandler;
 import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
@@ -21,7 +22,6 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -42,7 +42,6 @@ import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -100,7 +99,10 @@ public class ClientEventHandler {
 		if (event.phase.equals(TickEvent.Phase.START)) return;
 		if (Minecraft.getMinecraft().world == null) {
 			if (SkinChangingHandler.PLAYER_SKINS.size() > 0) {
-				SkinChangingHandler.PLAYER_SKINS.forEach(((uuid, skinInfo) -> Minecraft.getMinecraft().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation())));
+				SkinChangingHandler.PLAYER_SKINS.forEach(((uuid, skinInfo) -> {
+					Minecraft.getMinecraft().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation());
+					RegenerationMod.LOG.warn("Deleted cache of: " + skinInfo.getSkinTextureLocation());
+				}));
 				SkinChangingHandler.PLAYER_SKINS.clear();
 				RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
 			}
@@ -165,8 +167,6 @@ public class ClientEventHandler {
 		if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
 			return;
 
-
-
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		if (player == null) return;
 		SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
@@ -189,12 +189,20 @@ public class ClientEventHandler {
 			
 			case REGENERATING:
 				RenderUtil.renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
+				if (cap.getAnimationTicks() < 3) {
+					RegenClientHooks.handleShader();
+				}
 				break;
 			
 			case POST:
 				if (player.hurtTime > 0 || player.getActivePotionEffect(MobEffects.NAUSEA) != null) {
 					RenderUtil.renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
 				}
+
+				if (player.hurtTime == 1 || player.ticksExisted % 600 == 0) {
+					RegenClientHooks.handleShader();
+				}
+
 				break;
 		}
 		
@@ -228,12 +236,15 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
-		IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
-		if (data.getState() == GRACE_CRIT) {
-			GlStateManager.setFog(GlStateManager.FogMode.EXP);
-			event.setCanceled(true);
-			float amount = MathHelper.cos(data.getPlayer().ticksExisted * 0.06F) * -0.09F;
-			event.setDensity(amount);
+		if (Minecraft.getMinecraft().getRenderViewEntity() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) Minecraft.getMinecraft().getRenderViewEntity();
+			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+			if (data.getState() == GRACE_CRIT) {
+				GlStateManager.setFog(GlStateManager.FogMode.EXP);
+				event.setCanceled(true);
+				float amount = MathHelper.cos(data.getPlayer().ticksExisted * 0.06F) * -0.09F;
+				event.setDensity(amount);
+			}
 		}
 	}
 
@@ -323,7 +334,7 @@ public class ClientEventHandler {
 		boolean flag = cap.getType() == TypeHandler.RegenType.CONFUSED && cap.getState() == REGENERATING;
 		e.setCanceled(flag);
 
-		if (!cap.areHandsGlowing() || !flag)
+		if (!cap.areHandsGlowing())
 			return;
 
 

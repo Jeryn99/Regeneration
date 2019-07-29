@@ -73,12 +73,17 @@ public class LucraftCoreHandler implements IActingHandler {
 	public void onRegenFinish(IRegeneration cap) {
 		
 	}
-	
+
 	@Override
-	public void onPerformingPost(IRegeneration cap) {
-	
+	public void onStartPost(IRegeneration cap) {
+
 	}
-	
+
+	@Override
+	public void onProcessDone(IRegeneration cap) {
+
+	}
+
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 	}

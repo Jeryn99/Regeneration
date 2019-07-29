@@ -79,10 +79,17 @@ public class ActingForwarder {
 		}
 	}
 
-    public static void onPerformingPost(IRegeneration cap) {
+	public static void onStartPost(IRegeneration cap) {
 		checkAndForward(cap, RegenEvent.PERFORM_POST);
 		for (IActingHandler handler : SERVER_HANDLERS) {
-			handler.onPerformingPost(cap);
+			handler.onStartPost(cap);
+		}
+	}
+
+	public static void onProcessDone(IRegeneration cap) {
+		checkAndForward(cap, RegenEvent.PROCESS_DONE);
+		for (IActingHandler handler : SERVER_HANDLERS) {
+			handler.onProcessDone(cap);
 		}
 	}
 	
@@ -105,7 +112,9 @@ public class ActingForwarder {
 					handler.onHandsStartGlowing(cap);
 					break;
 				case PERFORM_POST:
-					handler.onPerformingPost(cap);
+					handler.onStartPost(cap);
+				case PROCESS_DONE:
+					handler.onProcessDone(cap);
 				default:
 					break;
 			}
@@ -122,7 +131,7 @@ public class ActingForwarder {
 	}
 	
 	public enum RegenEvent {
-		ENTER_GRACE, REGEN_FINISH, REGEN_TRIGGER, CRITICAL_START, PERFORM_POST, HAND_GLOW_START
+		ENTER_GRACE, REGEN_FINISH, REGEN_TRIGGER, CRITICAL_START, PERFORM_POST, HAND_GLOW_START, PROCESS_DONE
 	}
 	
 }

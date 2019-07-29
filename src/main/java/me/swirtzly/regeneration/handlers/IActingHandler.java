@@ -35,7 +35,8 @@ public interface IActingHandler {
 	 * Called on the last tick of a players Regeneration
 	 */
 	void onRegenFinish(IRegeneration cap);
-	
-	void onPerformingPost(IRegeneration cap);
-	
+
+	void onStartPost(IRegeneration cap);
+
+	void onProcessDone(IRegeneration cap);
 }

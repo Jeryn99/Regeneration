@@ -1,20 +1,27 @@
 package me.swirtzly.regeneration.asm;
 
+import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
-import me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.awt.*;
-import java.lang.reflect.Method;
+
+import static me.swirtzly.regeneration.client.ClientEventHandler.SHADERS_TEXTURES;
 
 public class RegenClientHooks {
 
@@ -32,10 +39,56 @@ public class RegenClientHooks {
 		}
 	}
 
-	static int colorModeCache;
-	static float savedRed;
-	static float savedGreen;
-	static float savedBlue;
+	public static int colorModeCache;
+	public static float savedGreen, savedRed, savedBlue;
+
+	//Needs optimised greatly, as code had to be lifted and repeated, so when loadEntityShader is called
+	//It does the original stuff first, then this method, which winds up performing it again
+	public static void handleShader() {
+		if (Minecraft.getMinecraft().player == null || !RegenConfig.regenerationShaders) return;
+
+		EntityRenderer entityRender = Minecraft.getMinecraft().entityRenderer;
+
+		if (OpenGlHelper.shadersSupported) {
+			Entity entity = Minecraft.getMinecraft().getRenderViewEntity();
+			if (entity instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) entity;
+				IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+				switch (data.getState()) {
+					case POST:
+						entityRender.loadShader(SHADERS_TEXTURES[data.getPlayer().world.rand.nextInt(SHADERS_TEXTURES.length)]);
+						break;
+					case GRACE:
+					case GRACE_CRIT:
+						entityRender.loadShader(SHADERS_TEXTURES[16]);
+						break;
+					case ALIVE:
+					case REGENERATING:
+						resetShader(entityRender);
+					default:
+						break;
+				}
+			} else {
+				resetShader(entityRender);
+			}
+
+		}
+	}
+
+	public static void resetShader(EntityRenderer entityRender) {
+		//This part is the unoptimised part, it's needed to reset the players shader
+		//It's just my bad ASM, but I'll look into it at a later point
+		Entity entityIn = Minecraft.getMinecraft().getRenderViewEntity();
+		entityRender.stopUseShader();
+
+		if (entityIn instanceof EntityCreeper) {
+			entityRender.loadShader(new ResourceLocation("shaders/post/creeper.json"));
+		} else if (entityIn instanceof EntitySpider) {
+			entityRender.loadShader(new ResourceLocation("shaders/post/spider.json"));
+		} else if (entityIn instanceof EntityEnderman) {
+			entityRender.loadShader(new ResourceLocation("shaders/post/invert.json"));
+		} else net.minecraftforge.client.ForgeHooksClient.loadEntityShader(entityIn, entityRender);
+	}
 
 	public static float modRed(float red) {
 		if (!enabled()) {
@@ -121,8 +174,10 @@ public class RegenClientHooks {
 	}
 
 	private static boolean enabled() {
-		return Minecraft.getMinecraft().player != null && CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getState() == PlayerUtil.RegenState.GRACE_CRIT;
-
+		if (Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().getRenderViewEntity() instanceof EntityPlayer) {
+			return CapabilityRegeneration.getForPlayer((EntityPlayer) Minecraft.getMinecraft().getRenderViewEntity()).getState() == PlayerUtil.RegenState.GRACE_CRIT;
+		}
+		return false;
 	}
 
 

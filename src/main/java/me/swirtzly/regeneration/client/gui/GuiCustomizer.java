@@ -10,7 +10,6 @@ import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.network.MessageSaveStyle;
 import me.swirtzly.regeneration.network.NetworkHandler;
-import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
@@ -47,7 +46,6 @@ public class GuiCustomizer extends GuiContainer {
 		super.initGui();
 		TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
 		TabRegistry.addTabsToList(this.buttonList);
-		
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
 		

@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.handlers;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.network.MessagePlayRegenerationSound;
 import me.swirtzly.regeneration.network.NetworkHandler;
@@ -14,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -135,11 +137,23 @@ class ActingServerHandler implements IActingHandler {
 		PlayerUtil.sendMessage(player, new TextComponentTranslation(newDna.getLangKey()), true);
 		RegenUtil.resetNextSkin(player);
 	}
-	
+
 	@Override
-    public void onPerformingPost(IRegeneration cap) {
-    }
-	
+	public void onStartPost(IRegeneration cap) {
+
+	}
+
+	@Override
+	public void onProcessDone(IRegeneration cap) {
+		EntityPlayer player = cap.getPlayer();
+		if (player.world.rand.nextBoolean()) {
+			EntityLindos lindos = new EntityLindos(player.world);
+			lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
+			player.world.spawnEntity(lindos);
+			player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
+		}
+	}
+
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();

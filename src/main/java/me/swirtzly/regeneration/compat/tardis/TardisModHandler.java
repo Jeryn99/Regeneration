@@ -60,12 +60,17 @@ public class TardisModHandler implements IActingHandler {
 			playBells(cap, true);
 		}
 	}
-	
+
 	@Override
-	public void onPerformingPost(IRegeneration cap) {
-	
-	}
-	
+    public void onStartPost(IRegeneration cap) {
+
+    }
+
+    @Override
+    public void onProcessDone(IRegeneration cap) {
+
+    }
+
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 		if (cap.getType() == TypeHandler.RegenType.FIERY) {

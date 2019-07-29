@@ -5,7 +5,6 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.advancements.RegenTriggers;
-import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.handlers.ActingForwarder;
@@ -629,10 +628,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
 			nextTransition.tick();
-			
-			if (state == PlayerUtil.RegenState.POST) {
-				ActingForwarder.onPerformingPost(CapabilityRegeneration.this);
-			}
+
 		}
 		
 		private void triggerRegeneration() {
@@ -679,31 +675,25 @@ public class CapabilityRegeneration implements IRegeneration {
 			}
 			synchronise();
 		}
-		
-		private void endPost() {
-			state = PlayerUtil.RegenState.ALIVE;
-			synchronise();
-			nextTransition = null;
-			
-			PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.post_ended"), true);
-			
-			if (player.world.rand.nextBoolean()) {
-				EntityLindos lindos = new EntityLindos(player.world);
-				lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
-				player.world.spawnEntity(lindos);
-				player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
-			}
-		}
-		
+
 		private void finishRegeneration() {
 			state = PlayerUtil.RegenState.POST;
+			ActingForwarder.onStartPost(CapabilityRegeneration.this);
 			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;
 			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
 			synchronise();
 		}
-		
+
+		private void endPost() {
+			state = PlayerUtil.RegenState.ALIVE;
+			synchronise();
+			nextTransition = null;
+			PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.post_ended"), true);
+			ActingForwarder.onProcessDone(CapabilityRegeneration.this);
+		}
+
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */

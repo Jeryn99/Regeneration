@@ -45,7 +45,8 @@ public class Trending {
 				
 				imagesUrl.iterator().forEachRemaining(jsonElement -> {
 					try {
-						FileUtil.downloadImage(new URL(jsonElement.getAsJsonObject().get("sameAs").getAsString().replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), trendingDir, "namemc_"+jsonElement.getAsJsonObject().get("sameAs").getAsString().replaceAll("https://namemc.com/skin/",""));
+                        String trendingUrl = jsonElement.getAsJsonObject().get("sameAs").getAsString();
+                        FileUtil.downloadImage(new URL(trendingUrl.replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), trendingDir, "namemc_" + trendingUrl.replaceAll("https://namemc.com/skin/", ""));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

@@ -82,8 +82,11 @@ public class RegenConfig {
 	@Config.LangKey("config.regeneration.craft")
 	@Config.Comment("Toggle whether Fob watches are full when crafted")
 	public static boolean craftWithRegens = true;
-	
-	
+
+	@Config.LangKey("config.regeneration.shaders")
+	@Config.Comment("Toggle whether cool shaders become applied when Regeneration")
+	public static boolean regenerationShaders = true;
+
 	public static class OnRegen {
 		
 		@Config.LangKey("config.regeneration.regenerative_kill_range")

@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.asm;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import net.minecraft.launchwrapper.IClassTransformer;
-import org.lwjgl.Sys;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -37,6 +36,36 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
                 });
             }
         }
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        classNode.accept(writer);
+        return writer.toByteArray();
+    }
+
+    public static byte[] patchEntityRenderer(byte[] bytes) {
+        String shaderMethod = RegenerationMod.isDevEnv() ? "loadEntityShader" : "func_175066_a";
+        String shaderMethodDesc = "(Lnet/minecraft/entity/Entity;)V";
+
+        ClassNode classNode = new ClassNode();
+        ClassReader classReader = new ClassReader(bytes);
+        classReader.accept(classNode, 0);
+
+        for (int j = 0; j < classNode.methods.size(); j++) {
+            MethodNode method = classNode.methods.get(j);
+            if (shaderMethod.equals(method.name) && shaderMethodDesc.equals(method.desc)) {
+                Iterator<AbstractInsnNode> iterator = method.instructions.iterator();
+                while (iterator.hasNext()) {
+                    AbstractInsnNode anode = iterator.next();
+                    if (anode.getOpcode() == Opcodes.RETURN) {
+                        InsnList newInstructions = new InsnList();
+                        newInstructions.add(new MethodInsnNode(INVOKESTATIC, REGEN_HOOKS_CLASS, "handleShader", "()V", false));
+                        method.instructions.insertBefore(anode, newInstructions);
+                        System.out.println("Tried to patch!");
+                    }
+                }
+            }
+        }
+
+
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(writer);
         return writer.toByteArray();
@@ -83,7 +112,6 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
     }
 
     public static byte[] preAnimations(byte[] bytes) {
-        System.out.println("AN ATTEMPT WAS MADE");
         String renderMethod = RegenerationMod.isDevEnv() ? "render" : "func_78088_a";
         String renderDesc = "(Lnet/minecraft/entity/Entity;FFFFFF)V";
 
@@ -194,7 +222,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(writer);
 
-        return writer.toByteArray();
+        return patchEntityRenderer(writer.toByteArray());
     }
 
 
