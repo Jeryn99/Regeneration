@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.client.rendering.types;
 
-import me.swirtzly.regeneration.client.animation.AnimationContext;
+import me.swirtzly.animateme.events.AnimationManager;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.RegenType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -9,7 +9,7 @@ import net.minecraft.util.HandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent.Pre;
 
-public abstract class ATypeRenderer<T> {
+public abstract class ATypeRenderer<T> implements AnimationManager.IAnimate {
 	
 	protected abstract void renderRegeneratingPlayerPre(T type, Pre event, IRegeneration capability);
 	
@@ -46,7 +46,6 @@ public abstract class ATypeRenderer<T> {
 		}
 	}
 
-	public abstract boolean onAnimateRegen(AnimationContext animationContext);
 	
 	public abstract void renderHand(PlayerEntity player, HandSide handSide, LivingRenderer render);
 	

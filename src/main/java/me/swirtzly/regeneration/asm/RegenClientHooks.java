@@ -1,42 +1,13 @@
 package me.swirtzly.regeneration.asm;
 
-import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.entity.Entity;
 import net.minecraft.potion.Effects;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.awt.*;
 
 public class RegenClientHooks {
-
-	public static final PlayerModel playerModelSteve = new TempWorkAroundModel(0F, false);
-	public static final PlayerModel playerModelAlex = new TempWorkAroundModel(0F, true);
-
-	public static void onChange(LivingRenderer renderer, boolean isAlex){
-		ObfuscationReflectionHelper.setPrivateValue(LivingRenderer.class, renderer, isAlex ? playerModelAlex : playerModelSteve, 2);
-	}
-
-	public static void handleRotations(BipedModel model, float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-		if (entity == null)
-			return;
-		ModelRotationEvent rotationEvent = new ModelRotationEvent(entity, model, f, f1, f2, f3, f4, f5);
-		MinecraftForge.EVENT_BUS.post(rotationEvent);
-	}
-
-	public static void renderBipedPre(BipedModel model, Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        //if(entity instanceof PlayerEntity && CapabilityRegeneration.getForPlayer((PlayerEntity) entity).getState() == PlayerUtil.RegenState.GRACE_CRIT){
-        //		GlStateManager.translated(0, 1.5, 0);
-        //			GlStateManager.rotated(90, 1.0F, 0F, 0.0F);
-        //	}
-	}
 
 	static int colorModeCache;
 	static float savedRed;
@@ -138,5 +109,7 @@ public class RegenClientHooks {
 		}
 		return original;
 	}
+
+
 
 }

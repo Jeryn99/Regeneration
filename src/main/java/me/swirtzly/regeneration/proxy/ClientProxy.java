@@ -1,6 +1,10 @@
 package me.swirtzly.regeneration.proxy;
 
+import me.swirtzly.animateme.events.AnimationManager;
 import me.swirtzly.regeneration.asm.RegenClientHooks;
+import me.swirtzly.regeneration.client.animation.GeneralAnimations;
+import me.swirtzly.regeneration.client.rendering.types.ElixirRenderer;
+import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
 import me.swirtzly.regeneration.handlers.ClientHandler;
 import me.swirtzly.regeneration.client.RegenKeyBinds;
 import me.swirtzly.regeneration.client.rendering.layers.HandsLayer;
@@ -43,11 +47,15 @@ public class ClientProxy extends CommonProxy {
 			renderPlayer.addLayer(new RegenerationLayer(renderPlayer)); // Add Regeneration Layer
 			renderPlayer.addLayer(new HandsLayer(renderPlayer));
 		}
-		RegenClientHooks.onChange(skinMap.get("slim"), true);
-		RegenClientHooks.onChange(skinMap.get("default"), false);
+
 		FileUtil.doSetupOnThread();
 		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
 		MinecraftForge.EVENT_BUS.register(new ClientHandler());
+
+		AnimationManager.registerAnimation(new GeneralAnimations());
+		AnimationManager.registerAnimation(new FieryRenderer());
+		AnimationManager.registerAnimation(new ElixirRenderer());
+
 
 	}
 

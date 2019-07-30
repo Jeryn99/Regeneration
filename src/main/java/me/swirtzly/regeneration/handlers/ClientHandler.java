@@ -3,9 +3,7 @@ package me.swirtzly.regeneration.handlers;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.RegenKeyBinds;
-import me.swirtzly.regeneration.client.animation.AnimationContext;
-import me.swirtzly.regeneration.client.animation.AnimationManager;
-import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
+import me.swirtzly.regeneration.client.animation.GeneralAnimations;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
@@ -126,22 +124,6 @@ public class ClientHandler {
 
         });
 
-    }
-
-    @SubscribeEvent(receiveCanceled = true)
-    public void onAnimate(ModelRotationEvent ev) {
-        if (EnumCompatModids.LCCORE.isLoaded()) return;
-        if (ev.getEntity() instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) ev.getEntity();
-            CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
-                AnimationContext context = new AnimationContext(ev.model, player, ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
-                if (data.getState() == REGENERATING) {
-                    ev.setCanceled(TypeManager.getTypeInstance(data.getType()).getRenderer().onAnimateRegen(context));
-                } else {
-                    AnimationManager.animate(context);
-                }
-            });
-        }
     }
 
     @SuppressWarnings("incomplete-switch")

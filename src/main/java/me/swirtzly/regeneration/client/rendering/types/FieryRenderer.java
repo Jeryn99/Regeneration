@@ -1,11 +1,11 @@
 package me.swirtzly.regeneration.client.rendering.types;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.FieryType;
 import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.HandSide;
@@ -20,14 +21,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
-import static me.swirtzly.regeneration.client.animation.AnimationManager.copyAndReturn;
+import static me.swirtzly.regeneration.client.animation.GeneralAnimations.copyAnglesToWear;
 import static me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer.playerModelSteve;
 
 public class FieryRenderer extends ATypeRenderer<FieryType> {
 	
 	public static final FieryRenderer INSTANCE = new FieryRenderer();
 	
-	private FieryRenderer() {
+	public FieryRenderer() {
 	}
 	
 	@Override
@@ -119,57 +120,6 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
     }
 
     @Override
-	public boolean onAnimateRegen(AnimationContext animationContext) {
-		PlayerEntity player = animationContext.getEntityPlayer();
-        IRegeneration data = CapabilityRegeneration.getForPlayer(player).orElse(null);
-        BipedModel playerModel = animationContext.getModelBiped();
-		double animationProgress = data.getAnimationTicks();
-		double arm_shake = player.getRNG().nextDouble();
-
-		float armRot = (float) animationProgress * 1.5F;
-		float headRot = (float) animationProgress * 1.5F;
-
-		if (armRot > 90) {
-			armRot = 90;
-		}
-
-		if (headRot > 45) {
-			headRot = 45;
-		}
-
-
-		//ARMS
-		playerModel.bipedLeftArm.rotateAngleY = 0;
-		playerModel.bipedRightArm.rotateAngleY = 0;
-
-		playerModel.bipedLeftArm.rotateAngleX = 0;
-		playerModel.bipedRightArm.rotateAngleX = 0;
-
-		playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
-		playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
-
-		//BODY
-		playerModel.bipedBody.rotateAngleX = 0;
-		playerModel.bipedBody.rotateAngleY = 0;
-		playerModel.bipedBody.rotateAngleZ = 0;
-
-
-		//LEGS
-		playerModel.bipedLeftLeg.rotateAngleY = 0;
-		playerModel.bipedRightLeg.rotateAngleY = 0;
-
-		playerModel.bipedLeftLeg.rotateAngleX = 0;
-		playerModel.bipedRightLeg.rotateAngleX = 0;
-
-		playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-		playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
-
-		playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
-
-		return copyAndReturn(playerModel, true);
-	}
-
-    @Override
     public void renderHand(PlayerEntity player, HandSide handSide, LivingRenderer render) {
         renderConeAtArms(player, render, handSide);
     }
@@ -227,5 +177,66 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
         GlStateManager.enableTexture();
         GlStateManager.popAttributes();
 	}
-	
+
+	@Override
+	public void preAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+
+	}
+
+	@Override
+	public void postAnimation(BipedModel playerModel, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+		if(!(entity instanceof PlayerEntity)) return;
+		PlayerEntity player = (PlayerEntity) entity;
+		CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+			if(data.getState() != PlayerUtil.RegenState.REGENERATING && data.getType() != TypeManager.Type.FIERY) return;
+			double animationProgress = data.getAnimationTicks();
+			double arm_shake = player.getRNG().nextDouble();
+			float armRot = (float) animationProgress * 1.5F;
+			float headRot = (float) animationProgress * 1.5F;
+
+			if (armRot > 90) {
+				armRot = 90;
+			}
+
+			if (headRot > 45) {
+				headRot = 45;
+			}
+
+
+			//ARMS
+			playerModel.bipedLeftArm.rotateAngleY = 0;
+			playerModel.bipedRightArm.rotateAngleY = 0;
+
+			playerModel.bipedLeftArm.rotateAngleX = 0;
+			playerModel.bipedRightArm.rotateAngleX = 0;
+
+			playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
+			playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
+
+			//BODY
+			playerModel.bipedBody.rotateAngleX = 0;
+			playerModel.bipedBody.rotateAngleY = 0;
+			playerModel.bipedBody.rotateAngleZ = 0;
+
+
+			//LEGS
+			playerModel.bipedLeftLeg.rotateAngleY = 0;
+			playerModel.bipedRightLeg.rotateAngleY = 0;
+
+			playerModel.bipedLeftLeg.rotateAngleX = 0;
+			playerModel.bipedRightLeg.rotateAngleX = 0;
+
+			playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
+			playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+
+			playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
+
+			copyAnglesToWear(playerModel);
+		});
+	}
+
+	@Override
+	public boolean useVanilla() {
+		return false;
+	}
 }

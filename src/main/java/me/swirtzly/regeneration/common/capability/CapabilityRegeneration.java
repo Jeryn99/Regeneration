@@ -94,7 +94,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 
 	@Nonnull
-	public static LazyOptional<IRegeneration> getForPlayer(PlayerEntity player) {
+	public static LazyOptional<IRegeneration> getForPlayer(LivingEntity player) {
 		return player.getCapability(CapabilityRegeneration.CAPABILITY, null);
 	}
 	
