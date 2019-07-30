@@ -27,10 +27,7 @@ import static me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer
 public class FieryRenderer extends ATypeRenderer<FieryType> {
 	
 	public static final FieryRenderer INSTANCE = new FieryRenderer();
-	
-	public FieryRenderer() {
-	}
-	
+
 	@Override
 	public void renderRegeneratingPlayerPre(FieryType type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
 	}
@@ -97,7 +94,8 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
             GlStateManager.disableTexture();
             GlStateManager.enableAlphaTest();
             GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+           // GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.SourceFactor.CONSTANT_ALPHA.value);
             GlStateManager.depthMask(true);
             RenderUtil.setLightmapTextureCoords(65, 65);
 
@@ -188,55 +186,56 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		if(!(entity instanceof PlayerEntity)) return;
 		PlayerEntity player = (PlayerEntity) entity;
 		CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
-			if(data.getState() != PlayerUtil.RegenState.REGENERATING && data.getType() != TypeManager.Type.FIERY) return;
-			double animationProgress = data.getAnimationTicks();
-			double arm_shake = player.getRNG().nextDouble();
-			float armRot = (float) animationProgress * 1.5F;
-			float headRot = (float) animationProgress * 1.5F;
+			if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == TypeManager.Type.FIERY) {
+				double animationProgress = data.getAnimationTicks();
+				double arm_shake = player.getRNG().nextDouble();
+				float armRot = (float) animationProgress * 1.5F;
+				float headRot = (float) animationProgress * 0.5F;
 
-			if (armRot > 90) {
-				armRot = 90;
+				if (armRot > 90) {
+					armRot = 90;
+				}
+
+				if (headRot > 45) {
+					headRot = 45;
+				}
+
+				//ARMS
+				playerModel.bipedLeftArm.rotateAngleY = 0;
+				playerModel.bipedRightArm.rotateAngleY = 0;
+
+				playerModel.bipedLeftArm.rotateAngleX = 0;
+				playerModel.bipedRightArm.rotateAngleX = 0;
+
+				playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
+				playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
+				System.out.println(playerModel.bipedLeftArm.rotateAngleZ);
+
+				//BODY
+				playerModel.bipedBody.rotateAngleX = 0;
+				playerModel.bipedBody.rotateAngleY = 0;
+				playerModel.bipedBody.rotateAngleZ = 0;
+
+
+				//LEGS
+				playerModel.bipedLeftLeg.rotateAngleY = 0;
+				playerModel.bipedRightLeg.rotateAngleY = 0;
+
+				playerModel.bipedLeftLeg.rotateAngleX = 0;
+				playerModel.bipedRightLeg.rotateAngleX = 0;
+
+				playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
+				playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+
+				playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
+
+				copyAnglesToWear(playerModel);
 			}
-
-			if (headRot > 45) {
-				headRot = 45;
-			}
-
-
-			//ARMS
-			playerModel.bipedLeftArm.rotateAngleY = 0;
-			playerModel.bipedRightArm.rotateAngleY = 0;
-
-			playerModel.bipedLeftArm.rotateAngleX = 0;
-			playerModel.bipedRightArm.rotateAngleX = 0;
-
-			playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
-			playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
-
-			//BODY
-			playerModel.bipedBody.rotateAngleX = 0;
-			playerModel.bipedBody.rotateAngleY = 0;
-			playerModel.bipedBody.rotateAngleZ = 0;
-
-
-			//LEGS
-			playerModel.bipedLeftLeg.rotateAngleY = 0;
-			playerModel.bipedRightLeg.rotateAngleY = 0;
-
-			playerModel.bipedLeftLeg.rotateAngleX = 0;
-			playerModel.bipedRightLeg.rotateAngleX = 0;
-
-			playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-			playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
-
-			playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
-
-			copyAnglesToWear(playerModel);
 		});
 	}
 
 	@Override
 	public boolean useVanilla() {
-		return false;
+		return true;
 	}
 }

@@ -1,7 +1,6 @@
 package me.swirtzly.regeneration.proxy;
 
-import me.swirtzly.animateme.events.AnimationManager;
-import me.swirtzly.regeneration.asm.RegenClientHooks;
+import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.client.animation.GeneralAnimations;
 import me.swirtzly.regeneration.client.rendering.types.ElixirRenderer;
 import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;

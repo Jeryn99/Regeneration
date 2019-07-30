@@ -46,8 +46,8 @@ public class ElixirRenderer extends ATypeRenderer<ElixirType> {
 
     @Override
     public void postAnimation(BipedModel modelBiped, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-90);
-        modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-90);
+   //     modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-90);
+    //    modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-90);
         copyAnglesToWear(modelBiped);
     }
 

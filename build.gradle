@@ -102,20 +102,20 @@ dependencies {
     compile 'org.jsoup:jsoup:1.11.3'
     include 'org.jsoup:jsoup:1.11.3'
 
-    compile 'me.swirtzly:animate-me:1.14.4-1.2.0'
-    include 'me.swirtzly:animate-me:1.14.4-1.2.0'
+ //   compile 'me.swirtzly:animate-me:1.14.4-1.2.0'
+ //   include 'me.swirtzly:animate-me:1.14.4-1.2.0'
 }
 
 jar {
     manifest {
         attributes([
-            "Specification-Title": "regeneration",
-            "Specification-Vendor": "Swirtzly",
-            "Specification-Version": "${version}",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"Swirtzly",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title": "regeneration",
+                "Specification-Vendor": "Swirtzly",
+                "Specification-Version": "${version}",
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" :"Swirtzly",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
@@ -125,8 +125,13 @@ artifacts{
 }
 
 shadowJar {
+    dependencies {
+        include(dependency('org.jsoup:.*'))
+    }
+
     relocate 'org.jsoup', 'me.swirtzly.jsoup'
-    relocate 'me.swirtzly.animateme', 'me.swirtzly.animateme'
+
+    classifier '' // Replace the default JAR
 }
 
 reobf {

@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.client.rendering.types;
 
-import me.swirtzly.animateme.events.AnimationManager;
+import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.RegenType;
 import net.minecraft.client.renderer.entity.LivingRenderer;

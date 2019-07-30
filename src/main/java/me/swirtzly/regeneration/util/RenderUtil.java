@@ -119,7 +119,7 @@ public class RenderUtil {
 		GlStateManager.disableCull();
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlphaTest();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.SourceFactor.ONE_MINUS_CONSTANT_ALPHA.value);
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.SourceFactor.CONSTANT_ALPHA.value);
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
 		setLightmapTextureCoords(240, 240);
 	}

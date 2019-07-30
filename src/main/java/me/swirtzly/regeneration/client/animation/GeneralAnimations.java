@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.client.animation;
 
-import me.swirtzly.animateme.events.AnimationManager;
+import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
