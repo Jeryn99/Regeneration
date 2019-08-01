@@ -20,10 +20,17 @@ public class AnimationManager {
         RegenerationMod.LOG.info("Registered Animation Handler {}", animation.getClass().getName());
     }
 
-    public interface IAnimate {
-        BipedModel preAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
+    public static void registerAnimations(IAnimate... animations) {
+        for (IAnimate animation : animations) {
+            ANIMATIONS.add(animation);
+            RegenerationMod.LOG.info("Registered Animation Handler {}", animation.getClass().getName());
+        }
+    }
 
-        BipedModel postAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
+    public interface IAnimate {
+        void preAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
+
+        void postAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
 
         boolean useVanilla();
     }

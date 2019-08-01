@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.common.traits.positive;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager.IDna;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -27,12 +27,12 @@ public class ToughTrait extends IDna {
     }
 
 	@Override
-	public void onUpdate(IRegeneration cap) {
+    public void onUpdate(IRegen cap) {
 		
 	}
 	
 	@Override
-	public void onAdded(IRegeneration cap) {
+    public void onAdded(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
         if (!player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(TOUGH_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(TOUGH_MODIFIER);
@@ -44,7 +44,7 @@ public class ToughTrait extends IDna {
 	}
 	
 	@Override
-	public void onRemoved(IRegeneration cap) {
+    public void onRemoved(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
         if (player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(TOUGH_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(TOUGH_MODIFIER);

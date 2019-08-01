@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.network;
 
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -37,7 +37,7 @@ public class SyncClientPlayerMessage {
 		public static void handle(SyncClientPlayerMessage message, Supplier<NetworkEvent.Context> ctx) {
 			PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.player);
 			if (player != null)
-				Minecraft.getInstance().runAsync(() -> CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> data.deserializeNBT(message.data)));
+                Minecraft.getInstance().runAsync(() -> RegenCap.getForPlayer(player).ifPresent((data) -> data.deserializeNBT(message.data)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

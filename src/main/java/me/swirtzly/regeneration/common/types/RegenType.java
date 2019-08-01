@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.common.types;
 
 import me.swirtzly.regeneration.client.rendering.types.ATypeRenderer;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
 import net.minecraft.entity.player.PlayerEntity;
 
 /**
@@ -23,17 +23,17 @@ public interface RegenType<R extends ATypeRenderer<?>> {
 	int getAnimationLength();
 	
 	R getRenderer();
-	
-	default void onStartRegeneration(PlayerEntity player, IRegeneration capability) {
-	}
-	
-	default void onUpdateMidRegen(PlayerEntity player, IRegeneration capability) {
-	}
-	
-	default void onFinishRegeneration(PlayerEntity player, IRegeneration capability) {
+
+    default void onStartRegeneration(PlayerEntity player, IRegen capability) {
 	}
 
-    double getAnimationProgress(IRegeneration cap);
+    default void onUpdateMidRegen(PlayerEntity player, IRegen capability) {
+	}
+
+    default void onFinishRegeneration(PlayerEntity player, IRegen capability) {
+    }
+
+    double getAnimationProgress(IRegen cap);
 
 	TypeManager.Type getTypeID();
 

@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
-public interface IRegenerationStateManager extends INBTSerializable<CompoundNBT> {
+public interface IRegenStateManager extends INBTSerializable<CompoundNBT> {
 	
 	// Event proxy methods
 	boolean onKilled(DamageSource source);

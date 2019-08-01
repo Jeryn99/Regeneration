@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.handlers.acting;
 
-import me.swirtzly.regeneration.common.capability.IRegeneration;
-import me.swirtzly.regeneration.network.UpdateStateMessage;
+import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
+import me.swirtzly.regeneration.network.UpdateStateMessage;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -33,8 +33,8 @@ public class ActingForwarder {
 	public static void register(Acting handler, Dist side) {
 		(side == Dist.CLIENT ? CLIENT_HANDLERS : SERVER_HANDLERS).add(handler);
 	}
-	
-	public static void onRegenTick(IRegeneration cap) {
+
+    public static void onRegenTick(IRegen cap) {
 		// Never forwarded, as per the documentation
 		if (cap.getPlayer().world.isRemote)
 			throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
@@ -43,50 +43,50 @@ public class ActingForwarder {
 			handler.onRegenTick(cap);
 		}
 	}
-	
-	public static void onEnterGrace(IRegeneration cap) {
+
+    public static void onEnterGrace(IRegen cap) {
 		checkAndForward(cap, RegenEvent.ENTER_GRACE);
 		for (Acting handler : SERVER_HANDLERS) {
 			handler.onEnterGrace(cap);
 		}
 	}
-	
-	public static void onRegenFinish(IRegeneration cap) {
+
+    public static void onRegenFinish(IRegen cap) {
 		checkAndForward(cap, RegenEvent.REGEN_FINISH);
 		for (Acting handler : SERVER_HANDLERS) {
 			handler.onRegenFinish(cap);
 		}
 	}
-	
-	public static void onRegenTrigger(IRegeneration cap) {
+
+    public static void onRegenTrigger(IRegen cap) {
 		checkAndForward(cap, RegenEvent.REGEN_TRIGGER);
 		for (Acting handler : SERVER_HANDLERS) {
 			handler.onRegenTrigger(cap);
 		}
 	}
-	
-	public static void onGoCritical(IRegeneration cap) {
+
+    public static void onGoCritical(IRegen cap) {
 		checkAndForward(cap, RegenEvent.CRITICAL_START);
 		for (Acting handler : SERVER_HANDLERS) {
 			handler.onGoCritical(cap);
 		}
 	}
-	
-	public static void onHandsStartGlowing(IRegeneration cap) {
+
+    public static void onHandsStartGlowing(IRegen cap) {
 		checkAndForward(cap, RegenEvent.HAND_GLOW_START);
 		for (Acting handler : SERVER_HANDLERS) {
 			handler.onHandsStartGlowing(cap);
 		}
 	}
 
-    public static void onPerformingPost(IRegeneration cap) {
+    public static void onPerformingPost(IRegen cap) {
 		checkAndForward(cap, RegenEvent.PERFORM_POST);
 		for (Acting handler : SERVER_HANDLERS) {
 			handler.onPerformingPost(cap);
 		}
 	}
-	
-	public static void onClient(RegenEvent event, IRegeneration cap) {
+
+    public static void onClient(RegenEvent event, IRegen cap) {
 		for (Acting handler : CLIENT_HANDLERS) {
 			switch (event) {
 				case ENTER_GRACE:
@@ -115,7 +115,7 @@ public class ActingForwarder {
 	/**
 	 * Knows what to forward by reflection magic
 	 */
-	private static void checkAndForward(IRegeneration cap, RegenEvent event) {
+    private static void checkAndForward(IRegen cap, RegenEvent event) {
 		if (cap.getPlayer().world.isRemote)
 			throw new IllegalStateException("'Posting' \"acting\" `event` from client");
 		NetworkDispatcher.sendTo(new UpdateStateMessage(cap.getPlayer(), event.name()), (ServerPlayerEntity) cap.getPlayer());

@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.traits.negative;
 
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +19,7 @@ public class HydrophobicTrait extends TraitManager.IDna {
     }
 
 	@Override
-	public void onUpdate(IRegeneration cap) {
+    public void onUpdate(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
 		
 		if (player.isInWater() || player.world.isRaining() && player.world.canBlockSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ))) {
@@ -30,12 +30,12 @@ public class HydrophobicTrait extends TraitManager.IDna {
 	}
 	
 	@Override
-	public void onAdded(IRegeneration cap) {
+    public void onAdded(IRegen cap) {
 		
 	}
 	
 	@Override
-	public void onRemoved(IRegeneration cap) {
+    public void onRemoved(IRegen cap) {
 		
 	}
 

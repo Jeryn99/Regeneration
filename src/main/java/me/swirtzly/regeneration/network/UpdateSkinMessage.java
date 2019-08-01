@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.network;
 
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -34,7 +34,7 @@ public class UpdateSkinMessage {
 	public static class Handler {
 		public static void handle(UpdateSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
 			ctx.get().getSender().getServer().runAsync(() ->
-					CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
+                    RegenCap.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
 						cap.setEncodedSkin(message.encodedSkin);
 						if (message.isAlex) {
 							cap.setSkinType(SkinInfo.SkinType.ALEX.name());

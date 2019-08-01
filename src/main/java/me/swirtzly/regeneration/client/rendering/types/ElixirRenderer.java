@@ -1,7 +1,10 @@
 package me.swirtzly.regeneration.client.rendering.types;
 
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.ElixirType;
+import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
@@ -19,17 +22,17 @@ public class ElixirRenderer extends ATypeRenderer<ElixirType> {
     }
 
     @Override
-    protected void renderRegeneratingPlayerPre(ElixirType type, RenderPlayerEvent.Pre event, IRegeneration capability) {
+    protected void renderRegeneratingPlayerPre(ElixirType type, RenderPlayerEvent.Pre event, IRegen capability) {
 
     }
 
     @Override
-    protected void renderRegeneratingPlayerPost(ElixirType type, RenderPlayerEvent.Post event, IRegeneration capability) {
+    protected void renderRegeneratingPlayerPost(ElixirType type, RenderPlayerEvent.Post event, IRegen capability) {
 
     }
 
     @Override
-    protected void renderRegenerationLayer(ElixirType type, LivingRenderer renderLivingBase, IRegeneration capability, PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    protected void renderRegenerationLayer(ElixirType type, LivingRenderer renderLivingBase, IRegen capability, PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
     }
 
@@ -46,9 +49,13 @@ public class ElixirRenderer extends ATypeRenderer<ElixirType> {
 
     @Override
     public void postAnimation(BipedModel modelBiped, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-   //     modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-90);
-    //    modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-90);
-        copyAnglesToWear(modelBiped);
+        RegenCap.getForPlayer(entity).ifPresent((data) -> {
+            if (data.getType() == TypeManager.Type.CONFUSED && data.getState() == PlayerUtil.RegenState.REGENERATING) {
+                modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-90);
+                modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-90);
+                copyAnglesToWear(modelBiped);
+            }
+        });
     }
 
     @Override

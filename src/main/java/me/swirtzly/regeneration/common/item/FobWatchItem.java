@@ -2,8 +2,8 @@ package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.ClientUtil;
@@ -77,7 +77,7 @@ public class FobWatchItem extends OverrideItem {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 
-		IRegeneration cap = CapabilityRegeneration.getForPlayer(player).orElse(null);
+        IRegen cap = RegenCap.getForPlayer(player).orElse(null);
 
 		ItemStack stack = player.getHeldItem(hand);
 

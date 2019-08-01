@@ -2,11 +2,11 @@ package me.swirtzly.regeneration.client.gui;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
 import me.swirtzly.regeneration.client.gui.parts.ColorSliderWidget;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.network.UpdateColorMessage;
+import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
+import me.swirtzly.regeneration.network.UpdateColorMessage;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -48,7 +48,7 @@ public class CustomizerScreen extends ContainerScreen {
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
 
-        CapabilityRegeneration.getForPlayer(minecraft.player).ifPresent((data) -> {
+        RegenCap.getForPlayer(minecraft.player).ifPresent((data) -> {
             initialPrimary = data.getPrimaryColor();
             initialSecondary = data.getSecondaryColor();
         });
@@ -145,7 +145,7 @@ public class CustomizerScreen extends ContainerScreen {
         Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue()),
                 secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue());
 
-        CapabilityRegeneration.getForPlayer(minecraft.player).ifPresent((cap) -> {
+        RegenCap.getForPlayer(minecraft.player).ifPresent((cap) -> {
             String str = new TranslationTextComponent("regeneration.gui.primary").getFormattedText();
             int length = minecraft.fontRenderer.getStringWidth(str);
             font.drawString(str, cx + 45 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(primaryColor) > 0.179 ? 0x0 : 0xFFFFFF);

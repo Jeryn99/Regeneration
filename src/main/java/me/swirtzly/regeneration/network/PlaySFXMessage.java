@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.network;
 
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class PlaySFXMessage {
 			Minecraft.getInstance().runAsync(() -> {
 				PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.playerUUID);
 				if (player != null) {
-					CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.getState().equals(PlayerUtil.RegenState.REGENERATING), 1.0F));
+                    RegenCap.getForPlayer(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.getState().equals(PlayerUtil.RegenState.REGENERATING), 1.0F));
 				}
 			});
 			ctx.get().setPacketHandled(true);

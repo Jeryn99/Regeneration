@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,7 +21,7 @@ public class TrendingManager {
 	
 	public static void downloadTrendingSkins() throws IOException {
 		if (!RegenConfig.CLIENT.downloadTrendingSkins.get()) return;
-		File trendingDir = new File(SkinChangingHandler.SKIN_DIRECTORY_ALEX.toPath().toString() + "/namemc_trending/");
+        File trendingDir = new File(SkinManipulation.SKIN_DIRECTORY_ALEX.toPath().toString() + "/namemc_trending/");
         if (!trendingDir.exists()) {
 			trendingDir.mkdirs();
 		}

@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.network;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -26,7 +26,7 @@ public class RegenerateMessage {
                 ServerPlayerEntity player = ctx.get().getSender();
                 RegenerationMod.LOG.warn("Regeneration keybind pressed");
                 if (player != null) {
-                    CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+                    RegenCap.getForPlayer(player).ifPresent((cap) -> {
                         if (!cap.getState().isGraceful()) {
                             RegenerationMod.LOG.warn("Trigger packet was sent when not in a graceful period");
                             return;

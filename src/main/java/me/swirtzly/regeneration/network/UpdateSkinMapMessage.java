@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.network;
 
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -24,7 +24,7 @@ public class UpdateSkinMapMessage {
 	
 	public static class Handler {
 		public static void handle(UpdateSkinMapMessage message, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().getSender().getServer().runAsync(() -> CapabilityRegeneration.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
+            ctx.get().getSender().getServer().runAsync(() -> RegenCap.getForPlayer(ctx.get().getSender()).ifPresent((cap) -> {
 				cap.setPreferredModel(message.preferred);
 				cap.synchronise();
 			}));

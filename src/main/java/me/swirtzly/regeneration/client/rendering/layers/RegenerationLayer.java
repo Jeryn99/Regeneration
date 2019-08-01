@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.client.rendering.layers;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.RegenType;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -36,8 +36,8 @@ public class RegenerationLayer extends LayerRenderer<AbstractClientPlayerEntity,
         super(livingEntityRendererIn);
         this.livingEntityRenderer = livingEntityRendererIn;
 	}
-	
-	public static void renderGlowingHands(PlayerEntity player, IRegeneration handler, float scale, HandSide side) {
+
+    public static void renderGlowingHands(PlayerEntity player, IRegen handler, float scale, HandSide side) {
 		Vec3d primaryColor = handler.getPrimaryColor();
 		Vec3d secondaryColor = handler.getSecondaryColor();
 		
@@ -59,7 +59,7 @@ public class RegenerationLayer extends LayerRenderer<AbstractClientPlayerEntity,
 
 	@Override
     public void render(AbstractClientPlayerEntity player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+        RegenCap.getForPlayer(player).ifPresent((data) -> {
             RegenType type = TypeManager.getTypeInstance(data.getType());
             if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
                 type.getRenderer().onRenderRegenerationLayer(type, (LivingRenderer) livingEntityRenderer, data, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);

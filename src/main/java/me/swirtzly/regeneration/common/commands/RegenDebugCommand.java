@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.swirtzly.regeneration.client.gui.CustomizerScreen;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
@@ -30,7 +30,7 @@ public class RegenDebugCommand {
 
 	private static int glow(CommandSource source) {
 		try {
-			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) -> {
+            RegenCap.getForPlayer(source.asPlayer()).ifPresent((cap) -> {
 				cap.getStateManager().fastForwardHandGlow();
 			});
 		} catch (CommandSyntaxException e) {
@@ -41,7 +41,7 @@ public class RegenDebugCommand {
 
 	private static int fastForward(CommandSource source) {
 		try {
-			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) ->
+            RegenCap.getForPlayer(source.asPlayer()).ifPresent((cap) ->
 			{
 				if (cap.getState() != PlayerUtil.RegenState.ALIVE) {
 					cap.getStateManager().fastForward();
@@ -60,7 +60,7 @@ public class RegenDebugCommand {
 	private static int setRegens(CommandSource source, int amount) {
 		try {
 			Minecraft.getInstance().displayGuiScreen(new CustomizerScreen());
-			CapabilityRegeneration.getForPlayer(source.asPlayer()).ifPresent((cap) -> cap.setRegenerationsLeft(amount));
+            RegenCap.getForPlayer(source.asPlayer()).ifPresent((cap) -> cap.setRegenerationsLeft(amount));
 		} catch (CommandSyntaxException e) {
 			e.printStackTrace();
 		}

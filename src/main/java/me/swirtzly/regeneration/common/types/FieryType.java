@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.common.types;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.FireBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +21,7 @@ import static net.minecraft.util.math.BlockPos.getAllInBox;
 public class FieryType implements RegenType<FieryRenderer> {
 	
 	@Override
-	public void onUpdateMidRegen(PlayerEntity player, IRegeneration capability) {
+    public void onUpdateMidRegen(PlayerEntity player, IRegen capability) {
 		
 		player.extinguish();
 		
@@ -54,7 +54,7 @@ public class FieryType implements RegenType<FieryRenderer> {
 	}
 	
 	@Override
-	public void onFinishRegeneration(PlayerEntity player, IRegeneration capability) {
+    public void onFinishRegeneration(PlayerEntity player, IRegen capability) {
 		PlayerUtil.setPerspective((ServerPlayerEntity) player, false, true);
 		capability.setAnimationTicks(0);
 	}
@@ -65,7 +65,7 @@ public class FieryType implements RegenType<FieryRenderer> {
 	}
 	
 	@Override
-	public double getAnimationProgress(IRegeneration cap) {
+    public double getAnimationProgress(IRegen cap) {
 		return Math.min(1, cap.getAnimationTicks() / (double) getAnimationLength());
 	}
 

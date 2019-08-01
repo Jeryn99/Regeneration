@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.common.capability;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.misc.PlayerCanRegenEvent;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  * Created by Sub
  * on 16/09/2018.
  */
-public interface IRegeneration extends INBTSerializable<CompoundNBT> {
+public interface IRegen extends INBTSerializable<CompoundNBT> {
 	
 	PlayerEntity getPlayer();
 	
@@ -57,8 +57,8 @@ public interface IRegeneration extends INBTSerializable<CompoundNBT> {
 	PlayerUtil.RegenState getState();
 
     TypeManager.Type getType();
-	
-	IRegenerationStateManager getStateManager();
+
+    IRegenStateManager getStateManager();
 	
 	String getEncodedSkin();
 	
@@ -67,8 +67,8 @@ public interface IRegeneration extends INBTSerializable<CompoundNBT> {
 	SkinInfo.SkinType getSkinType();
 	
 	void setSkinType(String skinType);
-	
-	SkinChangingHandler.EnumChoices getPreferredModel();
+
+    SkinManipulation.EnumChoices getPreferredModel();
 	
 	void setPreferredModel(String skinType);
 	

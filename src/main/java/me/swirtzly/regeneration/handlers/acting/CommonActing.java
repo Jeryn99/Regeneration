@@ -2,11 +2,11 @@ package me.swirtzly.regeneration.handlers.acting;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.network.PlaySFXMessage;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
+import me.swirtzly.regeneration.network.PlaySFXMessage;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -40,7 +40,7 @@ class CommonActing implements Acting {
 	}
 	
 	@Override
-	public void onRegenTick(IRegeneration cap) {
+    public void onRegenTick(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
 		float stateProgress = (float) cap.getStateManager().getStateProgress();
 		
@@ -88,7 +88,7 @@ class CommonActing implements Acting {
 	}
 
 	@Override
-	public void onEnterGrace(IRegeneration cap) {
+    public void onEnterGrace(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
 		RegenUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
 		
@@ -106,12 +106,12 @@ class CommonActing implements Acting {
 	}
 	
 	@Override
-	public void onHandsStartGlowing(IRegeneration cap) {
+    public void onHandsStartGlowing(IRegen cap) {
 		PlayerUtil.sendMessage(cap.getPlayer(), new TranslationTextComponent("regeneration.messages.regen_warning"), true);
 	}
 	
 	@Override
-	public void onGoCritical(IRegeneration cap) {
+    public void onGoCritical(IRegen cap) {
 		
 		TriggerManager.CRITICAL.trigger((ServerPlayerEntity) cap.getPlayer());
 		
@@ -121,7 +121,7 @@ class CommonActing implements Acting {
 	}
 	
 	@Override
-	public void onRegenFinish(IRegeneration cap) {
+    public void onRegenFinish(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
 		TriggerManager.FIRST_REGENERATION.trigger((ServerPlayerEntity) cap.getPlayer());
 		player.addPotionEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
@@ -136,11 +136,11 @@ class CommonActing implements Acting {
 	}
 	
 	@Override
-    public void onPerformingPost(IRegeneration cap) {
+    public void onPerformingPost(IRegen cap) {
     }
 	
 	@Override
-	public void onRegenTrigger(IRegeneration cap) {
+    public void onRegenTrigger(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
 		NetworkDispatcher.sendPacketToAll(new PlaySFXMessage(getRandomSound(player.world.rand).getRegistryName(), player.getUniqueID()));
 		player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);

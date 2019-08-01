@@ -1,16 +1,13 @@
 package me.swirtzly.regeneration.handlers;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +17,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
-import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -35,7 +31,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
@@ -53,43 +48,43 @@ public class CommonHandler {
 	public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-			CapabilityRegeneration.getForPlayer(player).ifPresent(IRegeneration::tick);
+			RegenCap.getForPlayer(player).ifPresent(IRegen::tick);
 
 		}
 	}
 
 	@SubscribeEvent
 	public void onPlayerClone(PlayerEvent.Clone event) {
-		IStorage<IRegeneration> storage = CapabilityRegeneration.CAPABILITY.getStorage();
+		IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
 		event.getOriginal().revive();
-		CapabilityRegeneration.getForPlayer(event.getOriginal()).ifPresent((old) -> CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).ifPresent((data) -> {
-			CompoundNBT nbt = (CompoundNBT) storage.writeNBT(CapabilityRegeneration.CAPABILITY, old, null);
-			storage.readNBT(CapabilityRegeneration.CAPABILITY, data, null, nbt);
+		RegenCap.getForPlayer(event.getOriginal()).ifPresent((old) -> RegenCap.getForPlayer(event.getEntityPlayer()).ifPresent((data) -> {
+			CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
+			storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
 		}));
 	}
 
 	@SubscribeEvent
 	public void onPlayerTracked(PlayerEvent.StartTracking event) {
-		CapabilityRegeneration.getForPlayer(event.getEntityPlayer()).ifPresent(IRegeneration::synchronise);
+		RegenCap.getForPlayer(event.getEntityPlayer()).ifPresent(IRegen::synchronise);
 	}
 	
 	@SubscribeEvent
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 	//	if (!RegenConfig.COMMON.firstStartGiftOnly)
-	//		CapabilityRegeneration.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.freeRegenerations);
+		//		RegenCap.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.freeRegenerations);
 
-		CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent(IRegeneration::synchronise);
+		RegenCap.getForPlayer(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
 	
 	@SubscribeEvent
 	public void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		CapabilityRegeneration.getForPlayer(event.getPlayer()).ifPresent(IRegeneration::synchronise);
+		RegenCap.getForPlayer(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
 	
 	@SubscribeEvent
 	public void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof PlayerEntity) {
-			CapabilityRegeneration.getForPlayer((PlayerEntity) e.getEntityLiving()).ifPresent(IRegeneration::synchronise);
+			RegenCap.getForPlayer(e.getEntityLiving()).ifPresent(IRegen::synchronise);
 		}
 	}
 	
@@ -100,7 +95,7 @@ public class CommonHandler {
 		if (e.getEntityPlayer().world.isRemote)
 		//	return;
 
-		CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
+			RegenCap.getForPlayer(e.getEntityPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
 
 	}
 	
@@ -111,7 +106,7 @@ public class CommonHandler {
 		
 		if (trueSource instanceof PlayerEntity && event.getEntityLiving() instanceof MobEntity) {
 			PlayerEntity player = (PlayerEntity) trueSource;
-			CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
+			RegenCap.getForPlayer(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
 			return;
 		}
 
@@ -119,7 +114,7 @@ public class CommonHandler {
 			return;
 		
 		PlayerEntity player = (PlayerEntity) event.getEntity();
-		CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+		RegenCap.getForPlayer(player).ifPresent((cap) -> {
 
 			cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
 
@@ -156,7 +151,7 @@ public class CommonHandler {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
 
-			CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+			RegenCap.getForPlayer(player).ifPresent((data) -> {
 				if(data.getState() == PlayerUtil.RegenState.REGENERATING){
 					event.setCanceled(true);
 				}
@@ -168,18 +163,17 @@ public class CommonHandler {
 	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof PlayerEntity) {
-			event.addCapability(CapabilityRegeneration.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
+			event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
+				final RegenCap regen = new RegenCap((PlayerEntity) event.getObject());
+				final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
+
 				@Nonnull
 				@Override
 				public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-					if (cap == CapabilityRegeneration.CAPABILITY)
+					if (cap == RegenCap.CAPABILITY)
 						return (LazyOptional<T>) regenInstance;
 					return LazyOptional.empty();
 				}
-
-				final CapabilityRegeneration regen = new CapabilityRegeneration((PlayerEntity) event.getObject());
-
-				final LazyOptional<IRegeneration> regenInstance = LazyOptional.of(() -> regen);
 
 				@Override
 				public CompoundNBT serializeNBT() {

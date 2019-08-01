@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.common.traits;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.traits.negative.HungerTrait;
 import me.swirtzly.regeneration.common.traits.negative.HydrophobicTrait;
 import me.swirtzly.regeneration.common.traits.positive.*;
@@ -76,7 +76,7 @@ public class TraitManager {
 	
 	@SubscribeEvent
 	public static void onXpPickup(PlayerPickupXpEvent e) {
-        CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).ifPresent((data) -> {
+        RegenCap.getForPlayer(e.getEntityPlayer()).ifPresent((data) -> {
             IDna dna = TraitManager.getDnaEntry(data.getDnaType());
             if (dna.getRegistryName().equals(TraitManager.DNA_DUMB.getRegistryName()) && data.isDnaActive()) {
                 e.getOrb().xpValue *= 0.5;
@@ -88,7 +88,7 @@ public class TraitManager {
 	public static void onJump(LivingEvent.LivingJumpEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-            CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+            RegenCap.getForPlayer(player).ifPresent((data) -> {
                 if (player.world.isRemote) return;
                 if (data.isDnaActive() && data.getDnaType().equals(DNA_ATHLETE.getRegistryName())) {
                     player.getMotion().add(0, 0.1, 0);
@@ -106,7 +106,7 @@ public class TraitManager {
 			if (attacked instanceof PlayerEntity && source.getImmediateSource() instanceof AbstractArrowEntity) {
 				if (!attacked.world.isRemote) {
 					PlayerEntity player = (PlayerEntity) attacked;
-                    boolean flag = CapabilityRegeneration.getForPlayer(player).orElse(null).getDnaType().toString().equals(DNA_REPEL_ARROW.getRegistryName().toString());
+                    boolean flag = RegenCap.getForPlayer(player).orElse(null).getDnaType().toString().equals(DNA_REPEL_ARROW.getRegistryName().toString());
 					event.setCanceled(flag);
 				}
 			}
@@ -124,11 +124,11 @@ public class TraitManager {
         }
 
 
-        public abstract void onUpdate(IRegeneration cap);
+        public abstract void onUpdate(IRegen cap);
 
-        public abstract void onAdded(IRegeneration cap);
+        public abstract void onAdded(IRegen cap);
 
-        public abstract void onRemoved(IRegeneration cap);
+        public abstract void onRemoved(IRegen cap);
 
         public String getLangKey() {
             return localName;

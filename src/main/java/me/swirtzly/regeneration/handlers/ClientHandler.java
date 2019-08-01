@@ -3,11 +3,10 @@ package me.swirtzly.regeneration.handlers;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.RegenKeyBinds;
-import me.swirtzly.regeneration.client.animation.GeneralAnimations;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.network.AdjustArmsMessage;
 import me.swirtzly.regeneration.network.ForceRegenerationMessage;
@@ -85,9 +84,9 @@ public class ClientHandler {
     public void onTickEvent(TickEvent.ClientTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.START)) return;
         if (Minecraft.getInstance().world == null) {
-            if (SkinChangingHandler.PLAYER_SKINS.size() > 0 || SkinChangingHandler.TYPE_BACKUPS.size() > 0) {
-                SkinChangingHandler.TYPE_BACKUPS.clear();
-                SkinChangingHandler.PLAYER_SKINS.clear();
+            if (SkinManipulation.PLAYER_SKINS.size() > 0 || SkinManipulation.TYPE_BACKUPS.size() > 0) {
+                SkinManipulation.TYPE_BACKUPS.clear();
+                SkinManipulation.PLAYER_SKINS.clear();
                 RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS AND TYPE_BACKUPS");
             }
             initialJoin = false;
@@ -105,7 +104,7 @@ public class ClientHandler {
             if (player.ticksExisted == 50) {
 
                 UUID clientUUID = Minecraft.getInstance().player.getUniqueID();
-                CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+                RegenCap.getForPlayer(player).ifPresent((data) -> {
                     if (data.areHandsGlowing()) {
                         ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.areHandsGlowing(), 0.5F);
                     }
@@ -134,12 +133,12 @@ public class ClientHandler {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
+        SkinInfo skin = SkinManipulation.PLAYER_SKINS.get(player.getUniqueID());
         if (skin != null) {
-            SkinChangingHandler.setPlayerSkin(player, skin.getSkinTextureLocation());
+            SkinManipulation.setPlayerSkin(player, skin.getSkinTextureLocation());
         }
 
-        CapabilityRegeneration.getForPlayer(player).ifPresent((cap) -> {
+        RegenCap.getForPlayer(player).ifPresent((cap) -> {
             String warning = null;
 
             switch (cap.getState()) {
@@ -177,7 +176,7 @@ public class ClientHandler {
         if (mc.player == null || mc.world == null)
             return;
 
-        CapabilityRegeneration.getForPlayer(mc.player).ifPresent((cap) -> {
+        RegenCap.getForPlayer(mc.player).ifPresent((cap) -> {
 
             if (e.getName().equals("entity.generic.explode")) {
                 ISound sound = SimpleSound.master(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
@@ -202,7 +201,7 @@ public class ClientHandler {
 
     @SubscribeEvent
     public void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
-        IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player).orElse(null);
+        IRegen data = RegenCap.getForPlayer(Minecraft.getInstance().player).orElse(null);
         if (data.getState() == GRACE_CRIT) {
             GlStateManager.fogMode(GlStateManager.FogMode.EXP);
             event.setCanceled(true);
@@ -217,7 +216,7 @@ public class ClientHandler {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (e.getType() != ChatType.CHAT) return;
 
-        IRegeneration data = CapabilityRegeneration.getForPlayer(player).orElse(null);
+        IRegen data = RegenCap.getForPlayer(player).orElse(null);
         if (data.getState() != POST) return;
 
         if (player.world.rand.nextBoolean()) {
@@ -252,7 +251,7 @@ public class ClientHandler {
         if (Minecraft.getInstance().player == null)
             return;
 
-        CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player).ifPresent((data -> {
+        RegenCap.getForPlayer(Minecraft.getInstance().player).ifPresent((data -> {
             if (data.getState() == REGENERATING || data.isSyncingToJar()) { // locking user
                 MovementInput moveType = e.getMovementInput();
                 moveType.rightKeyDown = false;
@@ -270,7 +269,7 @@ public class ClientHandler {
     public void onDeath(LivingDeathEvent e) {
         if (e.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) e.getEntityLiving();
-            SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
+            SkinManipulation.PLAYER_SKINS.remove(player.getUniqueID());
 
             if (player.getUniqueID().equals(Minecraft.getInstance().player.getUniqueID())) {
                 ClientUtil.sendSkinResetPacket();
@@ -287,7 +286,7 @@ public class ClientHandler {
         if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
             return;
 
-        CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+        RegenCap.getForPlayer(player).ifPresent((data) -> {
 
             boolean flag = data.getType() == TypeManager.Type.CONFUSED && data.getState() == REGENERATING;
             e.setCanceled(flag);

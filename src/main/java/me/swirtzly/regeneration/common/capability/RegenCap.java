@@ -2,16 +2,16 @@ package me.swirtzly.regeneration.common.capability;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.common.types.TypeManager;
-import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.network.SyncDataMessage;
-import me.swirtzly.regeneration.network.SyncClientPlayerMessage;
+import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
+import me.swirtzly.regeneration.network.SyncClientPlayerMessage;
+import me.swirtzly.regeneration.network.SyncDataMessage;
 import me.swirtzly.regeneration.util.DebuggableScheduledAction;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
@@ -46,14 +46,14 @@ import java.util.Map;
  * Created by Sub
  * on 16/09/2018.
  */
-public class CapabilityRegeneration implements IRegeneration {
-	
-	@CapabilityInject(IRegeneration.class)
-	public static final Capability<IRegeneration> CAPABILITY = null;
+public class RegenCap implements IRegen {
+
+    @CapabilityInject(IRegen.class)
+    public static final Capability<IRegen> CAPABILITY = null;
 	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
 	
 	private final PlayerEntity player;
-	private final RegenerationStateManager stateManager;
+    private final RegenStateManager stateManager;
 	public String deathSource = "";
 	public int lcCoreReserve = 0;
 	private boolean didSetup = false, traitActive = true;
@@ -65,7 +65,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 	private SkinInfo.SkinType vanillaSkinType = SkinInfo.SkinType.ALEX;
-	private SkinChangingHandler.EnumChoices preferredModel = SkinChangingHandler.EnumChoices.EITHER;
+    private SkinManipulation.EnumChoices preferredModel = SkinManipulation.EnumChoices.EITHER;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
@@ -78,24 +78,24 @@ public class CapabilityRegeneration implements IRegeneration {
 	 * This property is synced over to the client to solve this
 	 */
 	private boolean handsAreGlowingClient;
-	
-	
-	public CapabilityRegeneration() {
+
+
+    public RegenCap() {
 		this.player = null;
 		this.stateManager = null;
 	}
-	
-	public CapabilityRegeneration(PlayerEntity player) {
+
+    public RegenCap(PlayerEntity player) {
 		this.player = player;
 		if (!player.world.isRemote)
-			this.stateManager = new RegenerationStateManager();
+            this.stateManager = new RegenStateManager();
 		else
 			this.stateManager = null;
 	}
 
 	@Nonnull
-	public static LazyOptional<IRegeneration> getForPlayer(LivingEntity player) {
-		return player.getCapability(CapabilityRegeneration.CAPABILITY, null);
+    public static LazyOptional<IRegen> getForPlayer(LivingEntity player) {
+        return player.getCapability(RegenCap.CAPABILITY, null);
 	}
 	
 	@Override
@@ -358,13 +358,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
-	public SkinChangingHandler.EnumChoices getPreferredModel() {
+    public SkinManipulation.EnumChoices getPreferredModel() {
 		return preferredModel;
 	}
 	
 	@Override
 	public void setPreferredModel(String skinType) {
-		this.preferredModel = SkinChangingHandler.EnumChoices.valueOf(skinType);
+        this.preferredModel = SkinManipulation.EnumChoices.valueOf(skinType);
 	}
 	
 	
@@ -435,7 +435,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	}
 	
 	@Override
-	public IRegenerationStateManager getStateManager() {
+    public IRegenStateManager getStateManager() {
 		return stateManager;
 	}
 	
@@ -456,12 +456,12 @@ public class CapabilityRegeneration implements IRegeneration {
 	/**
 	 * ONLY EXISTS ON THE SERVER SIDE
 	 */
-	public class RegenerationStateManager implements IRegenerationStateManager {
+    public class RegenStateManager implements IRegenStateManager {
 		
 		private final Map<PlayerUtil.RegenState.Transition, Runnable> transitionCallbacks;
 		private DebuggableScheduledAction nextTransition, handGlowTimer;
-		
-		private RegenerationStateManager() {
+
+        private RegenStateManager() {
 			this.transitionCallbacks = new HashMap<>();
 			transitionCallbacks.put(PlayerUtil.RegenState.Transition.ENTER_CRITICAL, this::enterCriticalPhase);
 			transitionCallbacks.put(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, this::midSequenceKill);
@@ -507,7 +507,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
 				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
 			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
-			ActingForwarder.onHandsStartGlowing(CapabilityRegeneration.this);
+            ActingForwarder.onHandsStartGlowing(RegenCap.this);
 			synchronise();
 		}
 		
@@ -529,7 +529,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				
 				state = PlayerUtil.RegenState.GRACE;
 				synchronise();
-				ActingForwarder.onEnterGrace(CapabilityRegeneration.this);
+                ActingForwarder.onEnterGrace(RegenCap.this);
 				return true;
 
 			} else if (state == PlayerUtil.RegenState.GRACE) {
@@ -595,12 +595,12 @@ public class CapabilityRegeneration implements IRegeneration {
 			
 			if (state.isGraceful())
 				handGlowTimer.tick();
-			
-			ActingForwarder.onRegenTick(CapabilityRegeneration.this);
+
+            ActingForwarder.onRegenTick(RegenCap.this);
 			nextTransition.tick();
 			
 			if (state == PlayerUtil.RegenState.POST) {
-				ActingForwarder.onPerformingPost(CapabilityRegeneration.this);
+                ActingForwarder.onPerformingPost(RegenCap.this);
 			}
 		}
 		
@@ -618,9 +618,9 @@ public class CapabilityRegeneration implements IRegeneration {
 			if (state.isGraceful())
 				handGlowTimer.cancel();
 			scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, TypeManager.getTypeInstance(regenType).getAnimationLength());
-			
-			ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);
-			TypeManager.getTypeInstance(regenType).onStartRegeneration(player, CapabilityRegeneration.this);
+
+            ActingForwarder.onRegenTrigger(RegenCap.this);
+            TypeManager.getTypeInstance(regenType).onStartRegeneration(player, RegenCap.this);
 			synchronise();
 		}
 		
@@ -628,7 +628,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			// We're entering critical phase...
 			state = PlayerUtil.RegenState.GRACE_CRIT;
 			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, RegenConfig.COMMON.criticalPhaseLength.get());
-			ActingForwarder.onGoCritical(CapabilityRegeneration.this);
+            ActingForwarder.onGoCritical(RegenCap.this);
 			synchronise();
 		}
 		
@@ -636,7 +636,7 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = PlayerUtil.RegenState.ALIVE;
 			nextTransition = null;
 			handGlowTimer = null;
-			TypeManager.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
+            TypeManager.getTypeInstance(regenType).onFinishRegeneration(player, RegenCap.this);
 			if (state == PlayerUtil.RegenState.GRACE_CRIT) {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
 			} else {
@@ -666,8 +666,8 @@ public class CapabilityRegeneration implements IRegeneration {
 			state = PlayerUtil.RegenState.POST;
 			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;
-			TypeManager.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
-			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);
+            TypeManager.getTypeInstance(regenType).onFinishRegeneration(player, RegenCap.this);
+            ActingForwarder.onRegenFinish(RegenCap.this);
 			synchronise();
 		}
 		

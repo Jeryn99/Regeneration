@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.network;
 
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,7 +34,7 @@ public class UpdateStateMessage {
 	public static class Handler {
 		public static void handle(UpdateStateMessage message, Supplier<NetworkEvent.Context> ctx) {
 			Minecraft.getInstance().runAsync(() ->
-					CapabilityRegeneration.getForPlayer(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
+                    RegenCap.getForPlayer(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

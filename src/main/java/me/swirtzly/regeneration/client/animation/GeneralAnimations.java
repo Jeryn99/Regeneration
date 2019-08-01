@@ -1,8 +1,7 @@
 package me.swirtzly.regeneration.client.animation;
 
 import me.swirtzly.animateme.AnimationManager;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.util.ClientUtil;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -40,8 +39,6 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
 
             ItemStack stack = player.getHeldItemMainhand();
             ItemStack offStack = player.getHeldItemOffhand();
-            IRegeneration data = CapabilityRegeneration.getForPlayer(player).orElse(null);
-
 
             //==============FOB WATCH & JAR START==============
             boolean isOpen;
@@ -65,12 +62,16 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
             }
             //==============FOB WATCH END==============
 
-            //JAR SYNCING
-            if (data.isSyncingToJar()) {
-                makeZombieArms(modelBiped);
-                modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(45);
-                copyAnglesToWear(modelBiped);
-            }
+
+            RegenCap.getForPlayer(player).ifPresent((data) -> {
+                //JAR SYNCING
+                if (data.isSyncingToJar()) {
+                    makeZombieArms(modelBiped);
+                    modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(45);
+                    copyAnglesToWear(modelBiped);
+                }
+            });
+
         }
     }
 

@@ -1,9 +1,9 @@
 package me.swirtzly.regeneration.util;
 
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.ThirdPersonMessage;
 import me.swirtzly.regeneration.network.UpdateSkinMapMessage;
-import me.swirtzly.regeneration.network.NetworkDispatcher;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.Effect;
@@ -56,8 +56,8 @@ public class PlayerUtil {
 		NetworkDispatcher.sendTo(new ThirdPersonMessage(thirdperson), player);
 	}
 
-	
-	public static void updateModel(SkinChangingHandler.EnumChoices choice) {
+
+    public static void updateModel(SkinManipulation.EnumChoices choice) {
 		NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMapMessage(choice.name()));
 	}
 	

@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.network;
 
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -31,7 +31,7 @@ public class SyncDataMessage {
 			PlayerEntity player = ServerLifecycleHooks.getCurrentServer().getWorld(ctx.get().getSender().dimension).getPlayerByUuid(message.player);
 			ctx.get().getSender().getServer().runAsync(() -> {
 				if (player != null) {
-					CapabilityRegeneration.getForPlayer(player).ifPresent(IRegeneration::synchronise);
+                    RegenCap.getForPlayer(player).ifPresent(IRegen::synchronise);
 				}
 			});
 			ctx.get().setPacketHandled(true);

@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.network;
 
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -30,7 +30,7 @@ public class InvalidatePlayerDataMessage {
 	
 	public static class Handler {
 		public static void handle(InvalidatePlayerDataMessage message, Supplier<NetworkEvent.Context> ctx) {
-			Minecraft.getInstance().runAsync(() -> SkinChangingHandler.PLAYER_SKINS.remove(message.playerUUID));
+            Minecraft.getInstance().runAsync(() -> SkinManipulation.PLAYER_SKINS.remove(message.playerUUID));
 			ctx.get().setPacketHandled(true);
 		}
 	}

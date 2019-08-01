@@ -3,8 +3,8 @@ package me.swirtzly.regeneration.client.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -26,7 +26,7 @@ public class SkinCustomizerScreen extends ContainerScreen {
 	private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
 	private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
-	private static SkinChangingHandler.EnumChoices choices = SkinChangingHandler.wasAlex(Minecraft.getInstance().player) ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
+	private static SkinManipulation.EnumChoices choices = SkinManipulation.wasAlex(Minecraft.getInstance().player) ? SkinManipulation.EnumChoices.ALEX : SkinManipulation.EnumChoices.STEVE;
 	private float rotation = 0;
 	
 	public SkinCustomizerScreen() {
@@ -45,18 +45,18 @@ public class SkinCustomizerScreen extends ContainerScreen {
 
         this.addButton(new GuiButtonExt(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.previous").getFormattedText(), button -> {
             if (choices.previous() != null) {
-                choices = (SkinChangingHandler.EnumChoices) choices.previous();
+				choices = (SkinManipulation.EnumChoices) choices.previous();
             } else {
-                choices = SkinChangingHandler.EnumChoices.EITHER;
+				choices = SkinManipulation.EnumChoices.EITHER;
             }
             PlayerUtil.updateModel(choices);
         }));
 
         this.addButton(new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.next").getFormattedText(), button -> {
             if (choices.next() != null) {
-                choices = (SkinChangingHandler.EnumChoices) choices.next();
+				choices = (SkinManipulation.EnumChoices) choices.next();
             } else {
-                choices = SkinChangingHandler.EnumChoices.ALEX;
+				choices = SkinManipulation.EnumChoices.ALEX;
             }
             PlayerUtil.updateModel(choices);
         }));
@@ -67,11 +67,11 @@ public class SkinCustomizerScreen extends ContainerScreen {
         this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder").getFormattedText(), new Button.IPressable() {
 			@Override
             public void onPress(Button button) {
-				Util.getOSType().openFile(SkinChangingHandler.SKIN_DIRECTORY);
+				Util.getOSType().openFile(SkinManipulation.SKIN_DIRECTORY);
 			}
         }));
-		
-		CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player).ifPresent((cap) -> choices = cap.getPreferredModel());
+
+		RegenCap.getForPlayer(Minecraft.getInstance().player).ifPresent((cap) -> choices = cap.getPreferredModel());
 	}
 	
 	@Override

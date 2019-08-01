@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.handlers.acting;
 
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
 
 public interface Acting {
 	
@@ -8,34 +8,34 @@ public interface Acting {
 	 * Called for every tick a Player is regenerating
 	 * WARNING: Server only!
 	 */
-	void onRegenTick(IRegeneration cap);
+    void onRegenTick(IRegen cap);
 	
 	/**
 	 * Called just after the player has been killed
 	 * It is only called ONCE, once the player enters a grace period
 	 */
-	void onEnterGrace(IRegeneration cap);
+    void onEnterGrace(IRegen cap);
 	
 	/**
 	 * Called ONCE when the players hands begin to glow
 	 */
-	void onHandsStartGlowing(IRegeneration cap);
+    void onHandsStartGlowing(IRegen cap);
 	
 	/**
 	 * Called when the player enters the critical stage of a grace period
 	 */
-	void onGoCritical(IRegeneration cap);
+    void onGoCritical(IRegen cap);
 	
 	/**
 	 * Called on the first tick of a players Regeneration
 	 */
-	void onRegenTrigger(IRegeneration cap);
+    void onRegenTrigger(IRegen cap);
 	
 	/**
 	 * Called on the last tick of a players Regeneration
 	 */
-	void onRegenFinish(IRegeneration cap);
-	
-	void onPerformingPost(IRegeneration cap);
+    void onRegenFinish(IRegen cap);
+
+    void onPerformingPost(IRegen cap);
 	
 }

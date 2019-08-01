@@ -1,14 +1,14 @@
 package me.swirtzly.regeneration.proxy;
 
 import me.swirtzly.animateme.AnimationManager;
-import me.swirtzly.regeneration.client.animation.GeneralAnimations;
-import me.swirtzly.regeneration.client.rendering.types.ElixirRenderer;
-import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
-import me.swirtzly.regeneration.handlers.ClientHandler;
 import me.swirtzly.regeneration.client.RegenKeyBinds;
+import me.swirtzly.regeneration.client.animation.GeneralAnimations;
 import me.swirtzly.regeneration.client.rendering.layers.HandsLayer;
 import me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
+import me.swirtzly.regeneration.client.rendering.types.ElixirRenderer;
+import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.handlers.ClientHandler;
 import me.swirtzly.regeneration.util.FileUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
@@ -48,12 +48,10 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		FileUtil.doSetupOnThread();
-		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
+		MinecraftForge.EVENT_BUS.register(new SkinManipulation());
 		MinecraftForge.EVENT_BUS.register(new ClientHandler());
 
-		AnimationManager.registerAnimation(new GeneralAnimations());
-		AnimationManager.registerAnimation(new FieryRenderer());
-		AnimationManager.registerAnimation(new ElixirRenderer());
+		AnimationManager.registerAnimations(new GeneralAnimations(), new FieryRenderer(), new ElixirRenderer());
 
 
 	}

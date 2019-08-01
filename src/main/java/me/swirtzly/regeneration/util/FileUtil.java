@@ -1,18 +1,12 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.FileSystem;
@@ -25,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler.*;
+import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.*;
 
 public class FileUtil {
 	
@@ -77,7 +71,7 @@ public class FileUtil {
 		uc.connect();
 		uc = url.openConnection();
 		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-		SkinChangingHandler.SKIN_LOG.info("Downloading Skin from: {}", url.toString());
+        SkinManipulation.SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
 		img = ClientUtil.ImageFixer.convertSkinTo64x64(img);
         if (!file.exists()) {

@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.client.rendering.types;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.FieryType;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -28,18 +28,32 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	
 	public static final FieryRenderer INSTANCE = new FieryRenderer();
 
-	@Override
-	public void renderRegeneratingPlayerPre(FieryType type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
+	public static void renderOverlay(PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		GlStateManager.pushMatrix();
+		RenderUtil.setLightmapTextureCoords(240, 240);
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
+        GlStateManager.blendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.blendFunc(770, 1);
+		Vec3d color = RegenCap.getForPlayer(entityPlayer).orElse(null).getPrimaryColor();
+		float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
+		GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, opacity);
+		playerModelSteve.isChild = false;
+		playerModelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		RenderUtil.restoreLightMap();
+		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
+		GlStateManager.popMatrix();
 	}
-	
+
 	public static void renderCone(PlayerEntity entityPlayer, float scale, float scale2, Vec3d color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
-		
+
 		for (int i = 0; i < 8; i++) {
 			GlStateManager.pushMatrix();
-            GlStateManager.rotatef(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
-            GlStateManager.scalef(1.0f, 1.0f, 0.65f);
+			GlStateManager.rotatef(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
+			GlStateManager.scalef(1.0f, 1.0f, 0.65f);
 			vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
 			vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
 			vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
@@ -51,31 +65,8 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		}
 	}
 	
-	public static void renderOverlay(PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		GlStateManager.pushMatrix();
-		RenderUtil.setLightmapTextureCoords(240, 240);
-		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.blendFunc(770, 1);
-        Vec3d color = CapabilityRegeneration.getForPlayer(entityPlayer).orElse(null).getPrimaryColor();
-		float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
-		GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, opacity);
-		playerModelSteve.isChild = false;
-		playerModelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-		RenderUtil.restoreLightMap();
-		GlStateManager.enableLighting();
-		GlStateManager.disableBlend();
-		GlStateManager.popMatrix();
-	}
-	
-	@Override
-	protected void renderRegeneratingPlayerPost(FieryType type, RenderPlayerEvent.Post event, IRegeneration capability) {
-	
-	}
-
     public static void renderConeAtArms(PlayerEntity player, LivingRenderer renderLivingBase, HandSide side) {
-        CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+		RegenCap.getForPlayer(player).ifPresent((data) -> {
             double x = TypeManager.getTypeInstance(data.getType()).getAnimationProgress(data);
             double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
             double r = 0.09890109890109888;
@@ -117,13 +108,22 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
         });
     }
 
+	@Override
+	public void renderRegeneratingPlayerPre(FieryType type, RenderPlayerEvent.Pre ev, IRegen cap) {
+	}
+
+	@Override
+	protected void renderRegeneratingPlayerPost(FieryType type, RenderPlayerEvent.Post event, IRegen capability) {
+
+	}
+
     @Override
     public void renderHand(PlayerEntity player, HandSide handSide, LivingRenderer render) {
         renderConeAtArms(player, render, handSide);
     }
 
     @Override
-    public void renderRegenerationLayer(FieryType type, LivingRenderer renderLivingBase, IRegeneration capability, PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public void renderRegenerationLayer(FieryType type, LivingRenderer renderLivingBase, IRegen capability, PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		
 		// State manager changes
         GlStateManager.pushTextureAttributes();
@@ -183,12 +183,11 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 
 	@Override
 	public void postAnimation(BipedModel playerModel, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		if(!(entity instanceof PlayerEntity)) return;
-		PlayerEntity player = (PlayerEntity) entity;
-		CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> {
+		RegenCap.getForPlayer(entity).ifPresent((data) -> {
 			if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == TypeManager.Type.FIERY) {
+
 				double animationProgress = data.getAnimationTicks();
-				double arm_shake = player.getRNG().nextDouble();
+				double arm_shake = entity.getRNG().nextDouble();
 				float armRot = (float) animationProgress * 1.5F;
 				float headRot = (float) animationProgress * 0.5F;
 
@@ -209,7 +208,6 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 
 				playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
 				playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
-				System.out.println(playerModel.bipedLeftArm.rotateAngleZ);
 
 				//BODY
 				playerModel.bipedBody.rotateAngleX = 0;

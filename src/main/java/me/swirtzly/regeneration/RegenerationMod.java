@@ -5,16 +5,16 @@ import com.google.gson.GsonBuilder;
 import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.LindosRenderer;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.capability.RegenerationStorage;
 import me.swirtzly.regeneration.common.commands.RegenDebugCommand;
-import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.LindosEntity;
+import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.common.types.TypeManager;
-import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.handlers.CommonHandler;
+import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.proxy.CommonProxy;
@@ -78,7 +78,7 @@ public class RegenerationMod {
 
 	private void setup(final FMLCommonSetupEvent event) {
 		proxy.preInit();
-		CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
+        CapabilityManager.INSTANCE.register(IRegen.class, new RegenerationStorage(), RegenCap::new);
 		ActingForwarder.init();
 		TriggerManager.init();
 	}

@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.asm;
 
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.potion.Effects;
@@ -98,7 +98,7 @@ public class RegenClientHooks {
 	}
 
 	private static boolean enabled() {
-        return Minecraft.getInstance().player != null && CapabilityRegeneration.getForPlayer(Minecraft.getInstance().player).orElse(null).getState() == PlayerUtil.RegenState.GRACE_CRIT;
+        return Minecraft.getInstance().player != null && RegenCap.getForPlayer(Minecraft.getInstance().player).orElse(null).getState() == PlayerUtil.RegenState.GRACE_CRIT;
 
 	}
 

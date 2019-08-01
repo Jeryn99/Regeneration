@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.network;
 
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -27,7 +27,7 @@ public class AdjustArmsMessage {
 	public static class Handler {
 		public static void handle(AdjustArmsMessage message, Supplier<NetworkEvent.Context> ctx) {
 			PlayerEntity player = ctx.get().getSender();
-			ctx.get().getSender().getServer().runAsync(() -> CapabilityRegeneration.getForPlayer(player).ifPresent((data) -> data.setVanillaSkinType(message.type)));
+            ctx.get().getSender().getServer().runAsync(() -> RegenCap.getForPlayer(player).ifPresent((data) -> data.setVanillaSkinType(message.type)));
 			ctx.get().setPacketHandled(true);
 		}
 	}
