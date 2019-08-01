@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.handlers;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.RegenKeyBinds;
+import me.swirtzly.regeneration.client.gui.CustomizerScreen;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
@@ -19,13 +20,13 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.client.gui.widget.button.ImageButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ChatType;
@@ -55,11 +56,24 @@ public class ClientHandler {
 
     private static boolean initialJoin = false;
 
+    private static final ResourceLocation ACCESSIBILITY_TEXTURES = new ResourceLocation("textures/gui/accessibility.png");
+
+
     @SubscribeEvent
-    public void onGui(InputUpdateEvent tickEvent) {
+    public void onGui(GuiScreenEvent.InitGuiEvent event){
+        if(event.getGui() instanceof InventoryScreen){
+            int j = event.getGui().height / 4 + 48;
+            event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, ACCESSIBILITY_TEXTURES, 32, 64, (p_213088_1_) -> {
+                Minecraft.getInstance().displayGuiScreen(new CustomizerScreen());
+            }, I18n.format("narrator.button.accessibility")));
+        }
+    }
+
+    @SubscribeEvent
+    public void onKeybindPress(InputUpdateEvent tickEvent) {
 
         if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
-            NetworkDispatcher.INSTANCE.sendToServer(new ForceRegenerationMessage());
+            NetworkDispatcher.sendToServer(new ForceRegenerationMessage());
         }
 
         if (EnumCompatModids.LCCORE.isLoaded()) return;
@@ -104,7 +118,7 @@ public class ClientHandler {
             if (player.ticksExisted == 50) {
 
                 UUID clientUUID = Minecraft.getInstance().player.getUniqueID();
-                RegenCap.getForPlayer(player).ifPresent((data) -> {
+                RegenCap.get(player).ifPresent((data) -> {
                     if (data.areHandsGlowing()) {
                         ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.areHandsGlowing(), 0.5F);
                     }
@@ -138,7 +152,7 @@ public class ClientHandler {
             SkinManipulation.setPlayerSkin(player, skin.getSkinTextureLocation());
         }
 
-        RegenCap.getForPlayer(player).ifPresent((cap) -> {
+        RegenCap.get(player).ifPresent((cap) -> {
             String warning = null;
 
             switch (cap.getState()) {
@@ -176,7 +190,7 @@ public class ClientHandler {
         if (mc.player == null || mc.world == null)
             return;
 
-        RegenCap.getForPlayer(mc.player).ifPresent((cap) -> {
+        RegenCap.get(mc.player).ifPresent((cap) -> {
 
             if (e.getName().equals("entity.generic.explode")) {
                 ISound sound = SimpleSound.master(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
@@ -201,13 +215,14 @@ public class ClientHandler {
 
     @SubscribeEvent
     public void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
-        IRegen data = RegenCap.getForPlayer(Minecraft.getInstance().player).orElse(null);
-        if (data.getState() == GRACE_CRIT) {
-            GlStateManager.fogMode(GlStateManager.FogMode.EXP);
-            event.setCanceled(true);
-            float amount = MathHelper.cos(data.getPlayer().ticksExisted * 0.06F) * -0.09F;
-            event.setDensity(amount);
-        }
+        RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
+            if (data.getState() == GRACE_CRIT) {
+                GlStateManager.fogMode(GlStateManager.FogMode.EXP);
+                event.setCanceled(true);
+                float amount = MathHelper.cos(data.getPlayer().ticksExisted * 0.06F) * -0.09F;
+                event.setDensity(amount);
+            }
+        });
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -216,7 +231,7 @@ public class ClientHandler {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (e.getType() != ChatType.CHAT) return;
 
-        IRegen data = RegenCap.getForPlayer(player).orElse(null);
+        IRegen data = RegenCap.get(player).orElse(null);
         if (data.getState() != POST) return;
 
         if (player.world.rand.nextBoolean()) {
@@ -251,7 +266,7 @@ public class ClientHandler {
         if (Minecraft.getInstance().player == null)
             return;
 
-        RegenCap.getForPlayer(Minecraft.getInstance().player).ifPresent((data -> {
+        RegenCap.get(Minecraft.getInstance().player).ifPresent((data -> {
             if (data.getState() == REGENERATING || data.isSyncingToJar()) { // locking user
                 MovementInput moveType = e.getMovementInput();
                 moveType.rightKeyDown = false;
@@ -286,7 +301,7 @@ public class ClientHandler {
         if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
             return;
 
-        RegenCap.getForPlayer(player).ifPresent((data) -> {
+        RegenCap.get(player).ifPresent((data) -> {
 
             boolean flag = data.getType() == TypeManager.Type.CONFUSED && data.getState() == REGENERATING;
             e.setCanceled(flag);

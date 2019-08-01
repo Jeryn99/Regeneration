@@ -77,7 +77,7 @@ public class FobWatchItem extends OverrideItem {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 
-        IRegen cap = RegenCap.getForPlayer(player).orElse(null);
+        IRegen cap = RegenCap.get(player).orElse(null);
 
 		ItemStack stack = player.getHeldItem(hand);
 

@@ -97,7 +97,7 @@ public class SkinManipulation {
 	public static void sendSkinUpdate(Random random, PlayerEntity player) {
 		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID())
 			return;
-        RegenCap.getForPlayer(player).ifPresent((cap) -> {
+        RegenCap.get(player).ifPresent((cap) -> {
 			if (RegenConfig.CLIENT.changeMySkin.get()) {
 				boolean isAlex = cap.getPreferredModel().isAlex();
 
@@ -213,10 +213,10 @@ public class SkinManipulation {
 		if (player.getLocationSkin() == texture) {
 			return;
 		}
-		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayerEntity.class, player, 0);
+        NetworkPlayerInfo playerInfo = player.playerInfo;
 		if (playerInfo == null)
 			return;
-		Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = ObfuscationReflectionHelper.getPrivateValue(NetworkPlayerInfo.class, playerInfo, 1);
+        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
 		playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
 		if (texture == null)
 			ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
@@ -227,7 +227,7 @@ public class SkinManipulation {
 		if (!TYPE_BACKUPS.containsKey(player.getUniqueID())) {
 			TYPE_BACKUPS.put(player.getUniqueID(), player.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
 		}
-		NetworkPlayerInfo playerInfo = ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayerEntity.class, player, 0);
+        NetworkPlayerInfo playerInfo = player.playerInfo;
 		ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), 5);
 	}
 
@@ -247,7 +247,7 @@ public class SkinManipulation {
 
 		addType(player);
 
-        RegenCap.getForPlayer(player).ifPresent((cap) -> {
+        RegenCap.get(player).ifPresent((cap) -> {
 			if (player.ticksExisted == 20) {
 				SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());
 				if (oldSkinInfo != null) {
@@ -259,14 +259,14 @@ public class SkinManipulation {
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 
 				if (cap.getAnimationTicks() > 0.7) {
-                    setSkinFromData(player, RegenCap.getForPlayer(player), false);
+                    setSkinFromData(player, RegenCap.get(player), false);
 				}
 
 				TypeManager.getTypeInstance(cap.getType()).getRenderer().onRenderRegeneratingPlayerPre(TypeManager.getTypeInstance(cap.getType()), e, cap);
 
 
 			} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
-                setSkinFromData(player, RegenCap.getForPlayer(player), true);
+                setSkinFromData(player, RegenCap.get(player), true);
 			} else {
 				SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
 
@@ -287,7 +287,7 @@ public class SkinManipulation {
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Post e) {
 		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) e.getEntityPlayer();
-        RegenCap.getForPlayer(player).ifPresent((cap) -> {
+        RegenCap.get(player).ifPresent((cap) -> {
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 				RegenType type = TypeManager.getTypeInstance(cap.getType());
 				type.getRenderer().onRenderRegeneratingPlayerPost(TypeManager.getTypeInstance(cap.getType()), e, cap);

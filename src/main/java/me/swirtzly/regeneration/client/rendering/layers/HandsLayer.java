@@ -27,7 +27,7 @@ public class HandsLayer extends LayerRenderer<AbstractClientPlayerEntity, Player
 	public void render(AbstractClientPlayerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
 
-        RegenCap.getForPlayer(entitylivingbaseIn).ifPresent((data) -> {
+        RegenCap.get(entitylivingbaseIn).ifPresent((data) -> {
 			if (this.livingEntityRenderer.getEntityModel().isChild) {
 				GlStateManager.translatef(0.0F, 0.75F, 0.0F);
 				GlStateManager.scalef(0.5F, 0.5F, 0.5F);
@@ -50,7 +50,7 @@ public class HandsLayer extends LayerRenderer<AbstractClientPlayerEntity, Player
 	private void renderHand(PlayerEntity player, HandSide handSide, EnumHandRenderType type) {
 		GlStateManager.pushMatrix();
 
-        RegenCap.getForPlayer(player).ifPresent((data) -> {
+        RegenCap.get(player).ifPresent((data) -> {
 			if (player.isSneaking()) {
 				GlStateManager.translatef(0.0F, 0.2F, 0.0F);
 			}

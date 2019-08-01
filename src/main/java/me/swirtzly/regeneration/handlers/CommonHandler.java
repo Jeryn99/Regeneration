@@ -48,7 +48,7 @@ public class CommonHandler {
 	public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-			RegenCap.getForPlayer(player).ifPresent(IRegen::tick);
+			RegenCap.get(player).ifPresent(IRegen::tick);
 
 		}
 	}
@@ -57,7 +57,7 @@ public class CommonHandler {
 	public void onPlayerClone(PlayerEvent.Clone event) {
 		IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
 		event.getOriginal().revive();
-		RegenCap.getForPlayer(event.getOriginal()).ifPresent((old) -> RegenCap.getForPlayer(event.getEntityPlayer()).ifPresent((data) -> {
+		RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getEntityPlayer()).ifPresent((data) -> {
 			CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
 			storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
 		}));
@@ -65,7 +65,7 @@ public class CommonHandler {
 
 	@SubscribeEvent
 	public void onPlayerTracked(PlayerEvent.StartTracking event) {
-		RegenCap.getForPlayer(event.getEntityPlayer()).ifPresent(IRegen::synchronise);
+		RegenCap.get(event.getEntityPlayer()).ifPresent(IRegen::synchronise);
 	}
 	
 	@SubscribeEvent
@@ -73,18 +73,18 @@ public class CommonHandler {
 	//	if (!RegenConfig.COMMON.firstStartGiftOnly)
 		//		RegenCap.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.freeRegenerations);
 
-		RegenCap.getForPlayer(event.getPlayer()).ifPresent(IRegen::synchronise);
+		RegenCap.get(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
 	
 	@SubscribeEvent
 	public void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
-		RegenCap.getForPlayer(event.getPlayer()).ifPresent(IRegen::synchronise);
+		RegenCap.get(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
 	
 	@SubscribeEvent
 	public void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof PlayerEntity) {
-			RegenCap.getForPlayer(e.getEntityLiving()).ifPresent(IRegen::synchronise);
+			RegenCap.get(e.getEntityLiving()).ifPresent(IRegen::synchronise);
 		}
 	}
 	
@@ -93,9 +93,8 @@ public class CommonHandler {
 	@SubscribeEvent
 	public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
 		if (e.getEntityPlayer().world.isRemote)
-		//	return;
-
-			RegenCap.getForPlayer(e.getEntityPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
+			return;
+		RegenCap.get(e.getEntityPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
 
 	}
 	
@@ -106,7 +105,7 @@ public class CommonHandler {
 		
 		if (trueSource instanceof PlayerEntity && event.getEntityLiving() instanceof MobEntity) {
 			PlayerEntity player = (PlayerEntity) trueSource;
-			RegenCap.getForPlayer(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
+			RegenCap.get(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
 			return;
 		}
 
@@ -114,7 +113,7 @@ public class CommonHandler {
 			return;
 		
 		PlayerEntity player = (PlayerEntity) event.getEntity();
-		RegenCap.getForPlayer(player).ifPresent((cap) -> {
+		RegenCap.get(player).ifPresent((cap) -> {
 
 			cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
 
@@ -151,7 +150,7 @@ public class CommonHandler {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
 
-			RegenCap.getForPlayer(player).ifPresent((data) -> {
+			RegenCap.get(player).ifPresent((data) -> {
 				if(data.getState() == PlayerUtil.RegenState.REGENERATING){
 					event.setCanceled(true);
 				}

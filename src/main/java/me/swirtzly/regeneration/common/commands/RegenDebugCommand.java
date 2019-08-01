@@ -30,7 +30,7 @@ public class RegenDebugCommand {
 
 	private static int glow(CommandSource source) {
 		try {
-            RegenCap.getForPlayer(source.asPlayer()).ifPresent((cap) -> {
+            RegenCap.get(source.asPlayer()).ifPresent((cap) -> {
 				cap.getStateManager().fastForwardHandGlow();
 			});
 		} catch (CommandSyntaxException e) {
@@ -41,7 +41,7 @@ public class RegenDebugCommand {
 
 	private static int fastForward(CommandSource source) {
 		try {
-            RegenCap.getForPlayer(source.asPlayer()).ifPresent((cap) ->
+            RegenCap.get(source.asPlayer()).ifPresent((cap) ->
 			{
 				if (cap.getState() != PlayerUtil.RegenState.ALIVE) {
 					cap.getStateManager().fastForward();
@@ -60,7 +60,7 @@ public class RegenDebugCommand {
 	private static int setRegens(CommandSource source, int amount) {
 		try {
 			Minecraft.getInstance().displayGuiScreen(new CustomizerScreen());
-            RegenCap.getForPlayer(source.asPlayer()).ifPresent((cap) -> cap.setRegenerationsLeft(amount));
+            RegenCap.get(source.asPlayer()).ifPresent((cap) -> cap.setRegenerationsLeft(amount));
 		} catch (CommandSyntaxException e) {
 			e.printStackTrace();
 		}

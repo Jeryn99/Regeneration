@@ -33,8 +33,8 @@ public class UpdateStateMessage {
 	
 	public static class Handler {
 		public static void handle(UpdateStateMessage message, Supplier<NetworkEvent.Context> ctx) {
-			Minecraft.getInstance().runAsync(() ->
-                    RegenCap.getForPlayer(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
+            Minecraft.getInstance().deferTask(() ->
+                    RegenCap.get(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

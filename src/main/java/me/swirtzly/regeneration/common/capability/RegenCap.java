@@ -94,7 +94,7 @@ public class RegenCap implements IRegen {
 	}
 
 	@Nonnull
-    public static LazyOptional<IRegen> getForPlayer(LivingEntity player) {
+    public static LazyOptional<IRegen> get(LivingEntity player) {
         return player.getCapability(RegenCap.CAPABILITY, null);
 	}
 	

@@ -22,11 +22,11 @@ public class RegenerateMessage {
     public static class Handler {
 
         public static void handle(RegenerateMessage message, Supplier<NetworkEvent.Context> ctx) {
-            Objects.requireNonNull(ctx.get().getSender()).getServer().runAsync(() -> {
+            Objects.requireNonNull(ctx.get().getSender()).getServer().deferTask(() -> {
                 ServerPlayerEntity player = ctx.get().getSender();
                 RegenerationMod.LOG.warn("Regeneration keybind pressed");
                 if (player != null) {
-                    RegenCap.getForPlayer(player).ifPresent((cap) -> {
+                    RegenCap.get(player).ifPresent((cap) -> {
                         if (!cap.getState().isGraceful()) {
                             RegenerationMod.LOG.warn("Trigger packet was sent when not in a graceful period");
                             return;

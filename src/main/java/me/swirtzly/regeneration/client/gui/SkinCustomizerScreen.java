@@ -71,7 +71,7 @@ public class SkinCustomizerScreen extends ContainerScreen {
 			}
         }));
 
-		RegenCap.getForPlayer(Minecraft.getInstance().player).ifPresent((cap) -> choices = cap.getPreferredModel());
+        RegenCap.get(Minecraft.getInstance().player).ifPresent((cap) -> choices = cap.getPreferredModel());
 	}
 	
 	@Override

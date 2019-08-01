@@ -21,7 +21,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
-import static me.swirtzly.regeneration.client.animation.GeneralAnimations.copyAnglesToWear;
 import static me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer.playerModelSteve;
 
 public class FieryRenderer extends ATypeRenderer<FieryType> {
@@ -35,7 +34,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		GlStateManager.enableBlend();
         GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.blendFunc(770, 1);
-		Vec3d color = RegenCap.getForPlayer(entityPlayer).orElse(null).getPrimaryColor();
+		Vec3d color = RegenCap.get(entityPlayer).orElse(null).getPrimaryColor();
 		float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
 		GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, opacity);
 		playerModelSteve.isChild = false;
@@ -66,7 +65,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	}
 	
     public static void renderConeAtArms(PlayerEntity player, LivingRenderer renderLivingBase, HandSide side) {
-		RegenCap.getForPlayer(player).ifPresent((data) -> {
+		RegenCap.get(player).ifPresent((data) -> {
             double x = TypeManager.getTypeInstance(data.getType()).getAnimationProgress(data);
             double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
             double r = 0.09890109890109888;
@@ -183,7 +182,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 
 	@Override
 	public void postAnimation(BipedModel playerModel, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		RegenCap.getForPlayer(entity).ifPresent((data) -> {
+		RegenCap.get(entity).ifPresent((data) -> {
 			if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == TypeManager.Type.FIERY) {
 
 				double animationProgress = data.getAnimationTicks();
@@ -226,8 +225,6 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 				playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
 
 				playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
-
-				copyAnglesToWear(playerModel);
 			}
 		});
 	}

@@ -29,9 +29,9 @@ public class SyncDataMessage {
 	public static class Handler {
 		public static void handle(SyncDataMessage message, Supplier<NetworkEvent.Context> ctx) {
 			PlayerEntity player = ServerLifecycleHooks.getCurrentServer().getWorld(ctx.get().getSender().dimension).getPlayerByUuid(message.player);
-			ctx.get().getSender().getServer().runAsync(() -> {
+            ctx.get().getSender().getServer().deferTask(() -> {
 				if (player != null) {
-                    RegenCap.getForPlayer(player).ifPresent(IRegen::synchronise);
+                    RegenCap.get(player).ifPresent(IRegen::synchronise);
 				}
 			});
 			ctx.get().setPacketHandled(true);

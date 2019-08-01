@@ -48,7 +48,7 @@ public class CustomizerScreen extends ContainerScreen {
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
 
-        RegenCap.getForPlayer(minecraft.player).ifPresent((data) -> {
+        RegenCap.get(minecraft.player).ifPresent((data) -> {
             initialPrimary = data.getPrimaryColor();
             initialSecondary = data.getSecondaryColor();
         });
@@ -123,7 +123,6 @@ public class CustomizerScreen extends ContainerScreen {
         nbt.putFloat("SecondaryRed", (float) slideSecondaryRed.getValue());
         nbt.putFloat("SecondaryGreen", (float) slideSecondaryGreen.getValue());
         nbt.putFloat("SecondaryBlue", (float) slideSecondaryBlue.getValue());
-        System.out.println("Telling Server");
         NetworkDispatcher.sendToServer(new UpdateColorMessage(nbt));
     }
 
@@ -145,7 +144,7 @@ public class CustomizerScreen extends ContainerScreen {
         Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue()),
                 secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue());
 
-        RegenCap.getForPlayer(minecraft.player).ifPresent((cap) -> {
+        RegenCap.get(minecraft.player).ifPresent((cap) -> {
             String str = new TranslationTextComponent("regeneration.gui.primary").getFormattedText();
             int length = minecraft.fontRenderer.getStringWidth(str);
             font.drawString(str, cx + 45 - length / 2, cy + 49, RenderUtil.calculateColorBrightness(primaryColor) > 0.179 ? 0x0 : 0xFFFFFF);

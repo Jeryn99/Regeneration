@@ -193,12 +193,12 @@ public class RenderUtil {
 	}
 
 	public static void copyModelAngles(RendererModel src, RendererModel dest) {
-		src.rotateAngleX = dest.rotateAngleX;
-		src.rotateAngleY = dest.rotateAngleY;
-		src.rotateAngleZ = dest.rotateAngleZ;
-		src.rotationPointX = dest.rotationPointX;
-		src.rotationPointY = dest.rotationPointY;
-		src.rotationPointZ = dest.rotationPointZ;
+        dest.rotateAngleX = src.rotateAngleX;
+        dest.rotateAngleY = src.rotateAngleY;
+        dest.rotateAngleZ = src.rotateAngleZ;
+        dest.rotationPointX = src.rotationPointX;
+        dest.rotationPointY = src.rotationPointY;
+        dest.rotationPointZ = src.rotationPointZ;
 	}
 
 

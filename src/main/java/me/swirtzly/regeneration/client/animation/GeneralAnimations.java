@@ -3,20 +3,18 @@ package me.swirtzly.regeneration.client.animation;
 import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
-import me.swirtzly.regeneration.util.ClientUtil;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
 public class GeneralAnimations implements AnimationManager.IAnimate {
 
     public static void copyAnglesToWear(BipedModel modelBiped) {
-        if (modelBiped instanceof PlayerModel) {
-            PlayerModel playerModel = (PlayerModel) modelBiped;
-            ClientUtil.copyAnglesToWear(playerModel);
-        }
+        // if (modelBiped instanceof PlayerModel) {
+        //     PlayerModel playerModel = (PlayerModel) modelBiped;
+        // ClientUtil.copyAnglesToWear(playerModel);
+        //  }
     }
 
     public static void makeZombieArms(BipedModel modelBiped) {
@@ -63,7 +61,7 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
             //==============FOB WATCH END==============
 
 
-            RegenCap.getForPlayer(player).ifPresent((data) -> {
+            RegenCap.get(player).ifPresent((data) -> {
                 //JAR SYNCING
                 if (data.isSyncingToJar()) {
                     makeZombieArms(modelBiped);

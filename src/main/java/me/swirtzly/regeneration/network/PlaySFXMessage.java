@@ -39,10 +39,10 @@ public class PlaySFXMessage {
 	public static class Handler {
 		
 		public static void handle(PlaySFXMessage message, Supplier<NetworkEvent.Context> ctx) {
-			Minecraft.getInstance().runAsync(() -> {
+            Minecraft.getInstance().deferTask(() -> {
 				PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.playerUUID);
 				if (player != null) {
-                    RegenCap.getForPlayer(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.getState().equals(PlayerUtil.RegenState.REGENERATING), 1.0F));
+                    RegenCap.get(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.getState().equals(PlayerUtil.RegenState.REGENERATING), 1.0F));
 				}
 			});
 			ctx.get().setPacketHandled(true);

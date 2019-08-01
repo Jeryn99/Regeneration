@@ -49,7 +49,7 @@ public class ElixirRenderer extends ATypeRenderer<ElixirType> {
 
     @Override
     public void postAnimation(BipedModel modelBiped, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        RegenCap.getForPlayer(entity).ifPresent((data) -> {
+        RegenCap.get(entity).ifPresent((data) -> {
             if (data.getType() == TypeManager.Type.CONFUSED && data.getState() == PlayerUtil.RegenState.REGENERATING) {
                 modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-90);
                 modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-90);

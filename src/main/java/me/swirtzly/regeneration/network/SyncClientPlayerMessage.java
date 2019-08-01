@@ -37,7 +37,7 @@ public class SyncClientPlayerMessage {
 		public static void handle(SyncClientPlayerMessage message, Supplier<NetworkEvent.Context> ctx) {
 			PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.player);
 			if (player != null)
-                Minecraft.getInstance().runAsync(() -> RegenCap.getForPlayer(player).ifPresent((data) -> data.deserializeNBT(message.data)));
+                Minecraft.getInstance().deferTask(() -> RegenCap.get(player).ifPresent((data) -> data.deserializeNBT(message.data)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

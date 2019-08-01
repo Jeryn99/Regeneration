@@ -1,6 +1,8 @@
 package me.swirtzly.regeneration.network;
 
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -20,11 +22,13 @@ public class ForceRegenerationMessage {
 	
 	public static class Handler {
 		public static void handle(ForceRegenerationMessage message, Supplier<NetworkEvent.Context> ctx) {
-			ctx.get().getSender().getServer().runAsync(() -> {
+			ctx.get().getSender().getServer().deferTask(() -> {
 				ServerPlayerEntity player = ctx.get().getSender();
-				if (player != null) {
-					player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, 99F);
-				}
+				RegenCap.get(player).ifPresent((data) -> {
+					if(data.getState() == PlayerUtil.RegenState.ALIVE){
+						player.attackEntityFrom(RegenObjects.REGEN_DMG_FORCED, Integer.MAX_VALUE);
+					}
+				});
 			});
 			ctx.get().setPacketHandled(true);
 		}

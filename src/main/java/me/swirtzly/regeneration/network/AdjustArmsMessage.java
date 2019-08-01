@@ -27,7 +27,7 @@ public class AdjustArmsMessage {
 	public static class Handler {
 		public static void handle(AdjustArmsMessage message, Supplier<NetworkEvent.Context> ctx) {
 			PlayerEntity player = ctx.get().getSender();
-            ctx.get().getSender().getServer().runAsync(() -> RegenCap.getForPlayer(player).ifPresent((data) -> data.setVanillaSkinType(message.type)));
+            ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(player).ifPresent((data) -> data.setVanillaSkinType(message.type)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

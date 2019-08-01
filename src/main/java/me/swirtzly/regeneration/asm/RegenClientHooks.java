@@ -98,7 +98,7 @@ public class RegenClientHooks {
 	}
 
 	private static boolean enabled() {
-        return Minecraft.getInstance().player != null && RegenCap.getForPlayer(Minecraft.getInstance().player).orElse(null).getState() == PlayerUtil.RegenState.GRACE_CRIT;
+        return Minecraft.getInstance().player != null && RegenCap.get(Minecraft.getInstance().player).orElse(null).getState() == PlayerUtil.RegenState.GRACE_CRIT;
 
 	}
 

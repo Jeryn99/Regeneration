@@ -104,7 +104,7 @@ public class LindosVialItem extends OverrideItem {
 		if (!worldIn.isRemote) {
 			//Entiies around
 			worldIn.getEntitiesWithinAABB(PlayerEntity.class, entityIn.getBoundingBox().expand(10, 10, 10)).forEach(player -> {
-                RegenCap.getForPlayer((PlayerEntity) entityIn).ifPresent((data) -> {
+                RegenCap.get((PlayerEntity) entityIn).ifPresent((data) -> {
 					if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 						if (worldIn.rand.nextInt(100) > 50 && isSelected) {
 							setAmount(stack, getAmount(stack) + 1);
@@ -116,7 +116,7 @@ public class LindosVialItem extends OverrideItem {
 			//Player glowing
 			if (entityIn instanceof PlayerEntity) {
 				PlayerEntity player = (PlayerEntity) entityIn;
-                RegenCap.getForPlayer(player).ifPresent((data) -> {
+                RegenCap.get(player).ifPresent((data) -> {
 					if (isSelected) {
 						if (data.areHandsGlowing() && player.ticksExisted % 40 == 0) {
 							setAmount(stack, getAmount(stack) + 2);
@@ -171,7 +171,7 @@ public class LindosVialItem extends OverrideItem {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity player, Hand handIn) {
 		ItemStack stack = player.getHeldItem(handIn);
-        IRegen cap = RegenCap.getForPlayer(player).orElse(null);
+        IRegen cap = RegenCap.get(player).orElse(null);
 		if (!worldIn.isRemote) {
 
 			//If the player is in POST or Regenerating, stop them from drinking it
