@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FOF",
+    "FPF",
+    "FOF"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "minecraft:rotten_flesh"
+    },
+    "O": {
+      "item": "minecraft:glowstone_dust"
+    }
+  },
+  "result": {
+    "item": "regeneration:hand_jar"
+  }
+}

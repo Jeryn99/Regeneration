@@ -1,0 +1,19 @@
+{
+    "display": {
+        "icon": {
+            "item": "regeneration:fob_watch"
+        },
+        "title": {
+            "text": "I. WILL. NOT. CHANGE!"
+        },
+        "description": {
+            "text": "Delay your Regeneration!"
+        }
+    },
+    "parent": "regeneration:first_regen",
+     "criteria": {
+       "change_refusal": {
+         "trigger": "change_refusal"
+       }
+     }
+}
