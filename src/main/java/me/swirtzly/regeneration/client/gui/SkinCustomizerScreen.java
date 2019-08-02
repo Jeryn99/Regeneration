@@ -30,7 +30,7 @@ public class SkinCustomizerScreen extends ContainerScreen {
 	private float rotation = 0;
 	
 	public SkinCustomizerScreen() {
-        super(new ContainerBlank(), null, null);
+        super(new ContainerBlank(), null, new TranslationTextComponent("Regeneration Skin Screen"));
 		xSize = 176;
 		ySize = 186;
 	}
@@ -99,6 +99,7 @@ public class SkinCustomizerScreen extends ContainerScreen {
 				drawModelToGui(playerModelSteve, width / 2 + 40, height / 2 - 40, 1.0f, rotation);
 				break;
 		}
+
 		GlStateManager.popMatrix();
 		drawCenteredString(Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regeneration.gui.preference_model", choices.name()).getUnformattedComponentText(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
 	}
@@ -110,5 +111,10 @@ public class SkinCustomizerScreen extends ContainerScreen {
 		if (rotation > 360) {
 			rotation = 0;
 		}
+	}
+
+	@Override
+	public String getNarrationMessage() {
+		return "Regeneration Skin Screen";
 	}
 }

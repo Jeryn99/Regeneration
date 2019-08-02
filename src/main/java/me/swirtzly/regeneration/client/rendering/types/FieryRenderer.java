@@ -28,21 +28,23 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	public static final FieryRenderer INSTANCE = new FieryRenderer();
 
 	public static void renderOverlay(PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		GlStateManager.pushMatrix();
-		RenderUtil.setLightmapTextureCoords(240, 240);
-		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(770, 771, 1, 0);
-		GlStateManager.blendFunc(770, 1);
-		Vec3d color = RegenCap.get(entityPlayer).orElse(null).getPrimaryColor();
-		float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
-		GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, opacity);
-		playerModelSteve.isChild = false;
-		playerModelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-		RenderUtil.restoreLightMap();
-		GlStateManager.enableLighting();
-		GlStateManager.disableBlend();
-		GlStateManager.popMatrix();
+		RegenCap.get(entityPlayer).ifPresent((data) -> {
+			GlStateManager.pushMatrix();
+			RenderUtil.setLightmapTextureCoords(240, 240);
+			GlStateManager.disableLighting();
+			GlStateManager.enableBlend();
+			GlStateManager.blendFuncSeparate(770, 771, 1, 0);
+			GlStateManager.blendFunc(770, 1);
+			Vec3d color = data.getPrimaryColor();
+			float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
+			GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, opacity);
+			playerModelSteve.isChild = false;
+			playerModelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+			RenderUtil.restoreLightMap();
+			GlStateManager.enableLighting();
+			GlStateManager.disableBlend();
+			GlStateManager.popMatrix();
+		});
 	}
 
 	public static void renderCone(PlayerEntity entityPlayer, float scale, float scale2, Vec3d color) {

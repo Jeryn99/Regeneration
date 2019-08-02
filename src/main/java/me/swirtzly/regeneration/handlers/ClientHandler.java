@@ -158,7 +158,7 @@ public class ClientHandler {
             switch (cap.getState()) {
                 case GRACE:
                     RenderUtil.renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
-                    warning = new TranslationTextComponent("regeneration.messages.warning.grace", ClientUtil.keyBind).getUnformattedComponentText();
+                    warning = new TranslationTextComponent("regeneration.messages.warning.grace", new TranslationTextComponent(ClientUtil.keyBind)).getUnformattedComponentText();
                     break;
 
                 case GRACE_CRIT:

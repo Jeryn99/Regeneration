@@ -11,16 +11,16 @@ import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.config.GuiSlider;
 
 import java.awt.*;
 
-public class CustomizerScreen extends ContainerScreen {
+public class CustomizerScreen extends ContainerScreen implements GuiSlider.ISlider {
     public static final int ID = 0;
 
     private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
@@ -35,7 +35,7 @@ public class CustomizerScreen extends ContainerScreen {
     private Vec3d initialPrimary, initialSecondary;
 
     public CustomizerScreen() {
-        super(new ContainerBlank(), null, new TranslationTextComponent(""));
+        super(new ContainerBlank(), null, new TranslationTextComponent("Regeneration"));
         xSize = 176;
         ySize = 186;
     }
@@ -75,7 +75,8 @@ public class CustomizerScreen extends ContainerScreen {
         this.addButton(new GuiButtonExt(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin").getFormattedText(), p_onPress_1_ -> ClientUtil.sendSkinResetPacket()));
 
         //Customize Button
-        this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.customize").getFormattedText(), button -> Minecraft.getInstance().displayGuiScreen(new SkinCustomizerScreen())));
+        this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.customize").getFormattedText(), button ->
+                Minecraft.getInstance().displayGuiScreen(new SkinCustomizerScreen())));
 
         //Default Button
         this.addButton(new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.default").getFormattedText(), button -> {
@@ -90,18 +91,24 @@ public class CustomizerScreen extends ContainerScreen {
             onChangeSliderValue(null);
         }));
 
-        slidePrimaryRed = new ColorSliderWidget(cx + 10, cy + 65, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.red").getFormattedText(), "", 0, 1, primaryRed, true, true, new Button.IPressable() {
-            @Override
-            public void onPress(Button button) {
-                onChangeSliderValue(button);
-            }
-        });
-        slidePrimaryGreen = new ColorSliderWidget(cx + 10, cy + 84, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, CustomizerScreen::onChangeSliderValue);
-        slidePrimaryBlue = new ColorSliderWidget(cx + 10, cy + 103, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, CustomizerScreen::onChangeSliderValue);
+        slidePrimaryRed = new ColorSliderWidget(cx + 10, cy + 65, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.red").getFormattedText(), "", 0, 1, primaryRed, true, true, button -> {
 
-        slideSecondaryRed = new ColorSliderWidget(cx + 96, cy + 65, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, CustomizerScreen::onChangeSliderValue);
-        slideSecondaryGreen = new ColorSliderWidget(cx + 96, cy + 84, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, CustomizerScreen::onChangeSliderValue);
-        slideSecondaryBlue = new ColorSliderWidget(cx + 96, cy + 103, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, CustomizerScreen::onChangeSliderValue);
+        }, this);
+        slidePrimaryGreen = new ColorSliderWidget(cx + 10, cy + 84, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.green").getFormattedText(), "", 0, 1, primaryGreen, true, true, p_onPress_1_ -> {
+
+        }, this);
+        slidePrimaryBlue = new ColorSliderWidget(cx + 10, cy + 103, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.blue").getFormattedText(), "", 0, 1, primaryBlue, true, true, p_onPress_1_ -> {
+
+        }, this);
+        slideSecondaryRed = new ColorSliderWidget(cx + 96, cy + 65, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.red").getFormattedText(), "", 0, 1, secondaryRed, true, true, p_onPress_1_ -> {
+
+        }, this);
+        slideSecondaryGreen = new ColorSliderWidget(cx + 96, cy + 84, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.green").getFormattedText(), "", 0, 1, secondaryGreen, true, true, p_onPress_1_ -> {
+
+        }, this);
+        slideSecondaryBlue = new ColorSliderWidget(cx + 96, cy + 103, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.blue").getFormattedText(), "", 0, 1, secondaryBlue, true, true, p_onPress_1_ -> {
+
+        }, this);
 
         addButton(slidePrimaryRed);
         addButton(slidePrimaryGreen);
@@ -111,19 +118,6 @@ public class CustomizerScreen extends ContainerScreen {
         addButton(slideSecondaryGreen);
         addButton(slideSecondaryBlue);
 
-    }
-
-
-    public static void onChangeSliderValue(Button button) {
-        CompoundNBT nbt = new CompoundNBT();
-        nbt.putFloat("PrimaryRed", (float) slidePrimaryRed.getValue());
-        nbt.putFloat("PrimaryGreen", (float) slidePrimaryGreen.getValue());
-        nbt.putFloat("PrimaryBlue", (float) slidePrimaryBlue.getValue());
-
-        nbt.putFloat("SecondaryRed", (float) slideSecondaryRed.getValue());
-        nbt.putFloat("SecondaryGreen", (float) slideSecondaryGreen.getValue());
-        nbt.putFloat("SecondaryBlue", (float) slideSecondaryBlue.getValue());
-        NetworkDispatcher.sendToServer(new UpdateColorMessage(nbt));
     }
 
     @Override
@@ -163,4 +157,16 @@ public class CustomizerScreen extends ContainerScreen {
     }
 
 
+    @Override
+    public void onChangeSliderValue(GuiSlider slider) {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putFloat("PrimaryRed", (float) slidePrimaryRed.getValue());
+        nbt.putFloat("PrimaryGreen", (float) slidePrimaryGreen.getValue());
+        nbt.putFloat("PrimaryBlue", (float) slidePrimaryBlue.getValue());
+
+        nbt.putFloat("SecondaryRed", (float) slideSecondaryRed.getValue());
+        nbt.putFloat("SecondaryGreen", (float) slideSecondaryGreen.getValue());
+        nbt.putFloat("SecondaryBlue", (float) slideSecondaryBlue.getValue());
+        NetworkDispatcher.sendToServer(new UpdateColorMessage(nbt));
+    }
 }

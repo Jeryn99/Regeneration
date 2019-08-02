@@ -52,8 +52,9 @@ public class RegenKeyBinds {
 	/**
 	 * Handles LCCore compatibility
 	 */
+	@Deprecated //This is not pretty at all, but Mojang seem to have forgotten/didn't add lang entries for A-Z
 	public static String getRegenerateNowDisplayName() {
-		return REGEN_NOW.getTranslationKey();
+		return REGEN_NOW.getKey().toString().replace("key.keyboard.", "").toUpperCase();
 	}
 	
 }

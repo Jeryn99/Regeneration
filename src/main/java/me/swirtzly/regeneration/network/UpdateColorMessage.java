@@ -33,7 +33,6 @@ public class UpdateColorMessage {
 				RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
 					cap.setStyle(message.style);
 					cap.synchronise();
-					System.out.println("WE got it!");
 				});
 				ctx.get().setPacketHandled(true);
 			});
