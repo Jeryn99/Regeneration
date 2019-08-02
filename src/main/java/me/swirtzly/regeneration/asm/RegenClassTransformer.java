@@ -41,7 +41,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         return writer.toByteArray();
     }
 
-    public static byte[] patchEntityRenderer(byte[] bytes) {
+    public static byte[] patchShader(byte[] bytes) {
         String shaderMethod = RegenerationMod.isDevEnv() ? "loadEntityShader" : "func_175066_a";
         String shaderMethodDesc = "(Lnet/minecraft/entity/Entity;)V";
 
@@ -59,13 +59,10 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
                         InsnList newInstructions = new InsnList();
                         newInstructions.add(new MethodInsnNode(INVOKESTATIC, REGEN_HOOKS_CLASS, "handleShader", "()V", false));
                         method.instructions.insertBefore(anode, newInstructions);
-                        System.out.println("Tried to patch!");
                     }
                 }
             }
         }
-
-
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(writer);
         return writer.toByteArray();
@@ -75,7 +72,6 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
     public static byte[] patchModelBiped(byte[] bytes) {
         String renderMethod = RegenerationMod.isDevEnv() ? "setRotationAngles" : "func_78087_a";
         String renderDesc = "(FFFFFFLnet/minecraft/entity/Entity;)V";
-
 
         ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(bytes);
@@ -111,58 +107,8 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         return writer.toByteArray();
     }
 
-    public static byte[] preAnimations(byte[] bytes) {
-        String renderMethod = RegenerationMod.isDevEnv() ? "render" : "func_78088_a";
-        String renderDesc = "(Lnet/minecraft/entity/Entity;FFFFFF)V";
 
-        String setRotationAnglesMethod = RegenerationMod.isDevEnv() ? "setRotationAngles" : "func_78087_a";
-        String setRotationAnglesDesc = "(FFFFFFLnet/minecraft/entity/Entity;)V";
-
-        ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(bytes);
-        classReader.accept(classNode, 0);
-
-        InsnList list = new InsnList();
-
-        for (int j = 0; j < classNode.methods.size(); j++) {
-            MethodNode method = classNode.methods.get(j);
-            if (renderMethod.equals(method.name) && renderDesc.equals(method.desc)) {
-                for (int i = 0; i < method.instructions.size(); ++i) {
-                    AbstractInsnNode node = method.instructions.get(i);
-                    if (node instanceof MethodInsnNode) {
-                        MethodInsnNode methodNode = (MethodInsnNode) node;
-
-                        if (methodNode.name.equals(setRotationAnglesMethod) && methodNode.desc.equals(setRotationAnglesDesc)) {
-                            list.add(node);
-                            list.add(new VarInsnNode(ALOAD, 0));
-                            list.add(new VarInsnNode(ALOAD, 1));
-                            list.add(new VarInsnNode(FLOAD, 2));
-                            list.add(new VarInsnNode(FLOAD, 3));
-                            list.add(new VarInsnNode(FLOAD, 4));
-                            list.add(new VarInsnNode(FLOAD, 5));
-                            list.add(new VarInsnNode(FLOAD, 6));
-                            list.add(new VarInsnNode(FLOAD, 7));
-                            list.add(new MethodInsnNode(INVOKESTATIC, REGEN_HOOKS_CLASS, "renderBipedPre", "(Lnet/minecraft/client/model/ModelBiped;Lnet/minecraft/entity/Entity;FFFFFF)V", false));
-                            continue;
-                        }
-                    }
-
-                    list.add(node);
-                }
-
-                method.instructions.clear();
-                method.instructions.add(list);
-            }
-        }
-
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-        classNode.accept(writer);
-        return writer.toByteArray();
-    }
-
-
-
-    private byte[] patchEntityRendererClass(byte[] basicClass) {
+    private byte[] patchLighting(byte[] basicClass) {
         ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(basicClass);
         classReader.accept(classNode, 0);
@@ -222,7 +168,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(writer);
 
-        return patchEntityRenderer(writer.toByteArray());
+        return patchShader(writer.toByteArray());
     }
 
 
@@ -234,14 +180,10 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 
         if (transformedName.equals("paulscode.sound.libraries.SourceLWJGLOpenAL")) {
             return transformSoundSource(data);
-        }
-
-        if (transformedName.equals("net.minecraft.client.model.ModelBiped")) {
+        } else if (transformedName.equals("net.minecraft.client.model.ModelBiped")) {
             return patchModelBiped(data);
-        }
-
-        if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")) {
-            return patchEntityRendererClass(data);
+        } else if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")) {
+            return patchLighting(data);
         }
         return data;
     }

@@ -132,4 +132,39 @@ public class ImageDownloadAlt extends SimpleTexture {
 		this.imageThread.setDaemon(true);
 		this.imageThread.start();
 	}
+
+	//It's okay, I hate it too
+	public static boolean isAlexSkin(BufferedImage image) {
+		return hasAlpha(55, 20, image) &&
+				hasAlpha(55, 21, image) &&
+				hasAlpha(55, 22, image) &&
+				hasAlpha(55, 23, image) &&
+				hasAlpha(55, 24, image) &&
+				hasAlpha(55, 25, image) &&
+				hasAlpha(55, 26, image) &&
+				hasAlpha(55, 27, image) &&
+				hasAlpha(55, 28, image) &&
+				hasAlpha(55, 29, image) &&
+				hasAlpha(55, 30, image) &&
+				hasAlpha(55, 31, image) &&
+				hasAlpha(54, 20, image) &&
+				hasAlpha(54, 21, image) &&
+				hasAlpha(54, 22, image) &&
+				hasAlpha(54, 23, image) &&
+				hasAlpha(54, 24, image) &&
+				hasAlpha(54, 25, image) &&
+				hasAlpha(54, 26, image) &&
+				hasAlpha(54, 27, image) &&
+				hasAlpha(54, 28, image) &&
+				hasAlpha(54, 29, image) &&
+				hasAlpha(54, 30, image) &&
+				hasAlpha(54, 31, image);
+	}
+
+
+	public static boolean hasAlpha(int x, int y, BufferedImage image) {
+		int pixel = image.getRGB(x, y);
+		return pixel >> 24 == 0x00 || ((pixel & 0x00FFFFFF) == 0);
+	}
+
 }

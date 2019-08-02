@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,7 +20,7 @@ public class Trending {
 	
 	public static void downloadTrendingSkins() throws IOException {
         if (!RegenConfig.skins.downloadTrendingSkins) return;
-		File trendingDir = new File(SkinChangingHandler.SKIN_DIRECTORY_ALEX.toPath().toString() + "/namemc_trending/");
+		File trendingDir = FileUtil.TRENDING_ALEX;
         if (!trendingDir.exists()) {
 			trendingDir.mkdirs();
 		}
@@ -46,7 +45,7 @@ public class Trending {
 				imagesUrl.iterator().forEachRemaining(jsonElement -> {
 					try {
                         String trendingUrl = jsonElement.getAsJsonObject().get("sameAs").getAsString();
-                        FileUtil.downloadImage(new URL(trendingUrl.replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), trendingDir, "namemc_" + trendingUrl.replaceAll("https://namemc.com/skin/", ""));
+						FileUtil.downloadSkins(new URL(trendingUrl.replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), "namemc_" + trendingUrl.replaceAll("https://namemc.com/skin/", ""));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

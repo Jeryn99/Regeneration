@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.client.image.ImageDownloadAlt;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import org.apache.commons.io.FileUtils;
 
@@ -11,7 +12,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -54,14 +58,16 @@ public class FileUtil {
 			handleDownloads();
 		}
 	}
-	
+
+	public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
+	public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
+
 	/**
 	 * @param url      - URL to download image from
-	 * @param file     - Directory of where to save the image to [SHOULD NOT CONTAIN THE FILES NAME]
 	 * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
 	 * @throws IOException
 	 */
-	public static void downloadImage(URL url, File file, String filename) throws IOException {
+	public static void downloadSkins(URL url, String filename) throws IOException {
 		
 		URLConnection uc;
 		uc = url.openConnection();
@@ -71,6 +77,9 @@ public class FileUtil {
 		SkinChangingHandler.SKIN_LOG.info("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
 		img = ClientUtil.ImageFixer.convertSkinTo64x64(img);
+
+		File file = ImageDownloadAlt.isAlexSkin(img) ? TRENDING_ALEX : TRENDING_STEVE;
+
         if (!file.exists()) {
 			file.mkdirs();
 		}
