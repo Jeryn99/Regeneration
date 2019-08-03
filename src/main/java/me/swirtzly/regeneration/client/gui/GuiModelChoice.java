@@ -7,9 +7,7 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiCustomizeSkin;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -27,9 +25,9 @@ public class GuiModelChoice extends GuiContainer {
 	public static final int ID = 1;
 	private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
 	private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
-	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
 	private static SkinChangingHandler.EnumChoices CHOICES = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
-	private float rotation = 0;
+    private float ROTATION = 0;
 	
 	public GuiModelChoice() {
 		super(new BlankContainer());
@@ -43,7 +41,7 @@ public class GuiModelChoice extends GuiContainer {
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
 		final int btnW = 60, btnH = 18;
-		rotation = 0;
+        ROTATION = 0;
 		GuiButtonExt btnNext = new GuiButtonExt(1, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.previous").getFormattedText());
 		GuiButtonExt btnPrevious = new GuiButtonExt(4, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.next").getFormattedText());
 		GuiButtonExt btnBack = new GuiButtonExt(98, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText());
@@ -59,7 +57,7 @@ public class GuiModelChoice extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		Minecraft.getMinecraft().getTextureManager().bindTexture(background);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(BACKGROUND);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		
 		GlStateManager.pushMatrix();
@@ -68,17 +66,17 @@ public class GuiModelChoice extends GuiContainer {
 		switch (CHOICES) {
 			case ALEX:
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_ALEX);
-				drawModelToGui(playerModelAlex, width / 2, height / 2 - 40, 1.0f, rotation);
+                drawModelToGui(playerModelAlex, width / 2, height / 2 - 40, 1.0f, ROTATION);
 				break;
 			case STEVE:
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_STEVE);
-				drawModelToGui(playerModelSteve, width / 2, height / 2 - 40, 1.0f, rotation);
+                drawModelToGui(playerModelSteve, width / 2, height / 2 - 40, 1.0f, ROTATION);
 				break;
 			case EITHER:
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_ALEX);
-				drawModelToGui(playerModelAlex, width / 2 - 40, height / 2 - 40, 1.0f, rotation);
+                drawModelToGui(playerModelAlex, width / 2 - 40, height / 2 - 40, 1.0f, ROTATION);
 				Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE_STEVE);
-				drawModelToGui(playerModelSteve, width / 2 + 40, height / 2 - 40, 1.0f, rotation);
+                drawModelToGui(playerModelSteve, width / 2 + 40, height / 2 - 40, 1.0f, ROTATION);
 				break;
 		}
 		GlStateManager.popMatrix();
@@ -126,9 +124,9 @@ public class GuiModelChoice extends GuiContainer {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		rotation++;
-		if (rotation > 360) {
-			rotation = 0;
+        ROTATION++;
+        if (ROTATION > 360) {
+            ROTATION = 0;
 		}
 	}
 	

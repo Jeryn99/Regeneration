@@ -9,7 +9,6 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.IRegenType;
 import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.network.MessageRepairArms;
 import me.swirtzly.regeneration.network.MessageUpdateSkin;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.ClientUtil;
@@ -17,7 +16,6 @@ import me.swirtzly.regeneration.util.FileUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -31,8 +29,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
@@ -184,7 +180,7 @@ public class SkinChangingHandler {
 		return new SkinInfo(resourceLocation, skinType);
 	}
 
-	public static ResourceLocation getTextureOnly(File file) {
+	public static ResourceLocation createGuiTexture(File file) {
 		BufferedImage bufferedImage = null;
 		try {
 			bufferedImage = ImageIO.read(file);
@@ -285,7 +281,7 @@ public class SkinChangingHandler {
 				if (skin.getSkinTextureLocation() == null) {
 					setPlayerSkin(player, skin.getSkinTextureLocation());
 				}
-				if (skin != null) {
+				if (skin.getSkintype() != null) {
 					setSkinType(player, skin.getSkintype());
 				}
 			}

@@ -20,7 +20,7 @@ public class RegenerationPlugin implements IFMLLoadingPlugin {
 	
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[]{"me.swirtzly.regeneration.asm.RegenClassTransformer"};
+        return new String[]{RegenClassTransformer.class.getName()};
 	}
 	
 	@Override

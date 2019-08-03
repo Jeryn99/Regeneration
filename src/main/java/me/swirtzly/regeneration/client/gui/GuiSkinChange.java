@@ -8,11 +8,9 @@ import me.swirtzly.regeneration.network.MessageNextSkin;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.FileUtil;
-import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
@@ -22,7 +20,6 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static me.swirtzly.regeneration.util.ClientUtil.playerModelAlex;
@@ -70,7 +67,7 @@ public class GuiSkinChange extends GuiContainer {
         buttonList.add(btnSave);
         buttonList.add(btnResetSkin);
 
-        PLAYER_TEXTURE = SkinChangingHandler.getTextureOnly(skins.get(position));
+        PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
         choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
         skins = FileUtil.listAllSkins(choices);
         updateModels();
@@ -122,7 +119,7 @@ public class GuiSkinChange extends GuiContainer {
                         position++;
                     }
                     textureManager.deleteTexture(PLAYER_TEXTURE);
-                    PLAYER_TEXTURE = SkinChangingHandler.getTextureOnly(skins.get(position));
+                    PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
                     updateModels();
                 }
                 break;
@@ -136,7 +133,7 @@ public class GuiSkinChange extends GuiContainer {
                         position = skins.size() -1;
                     }
                     textureManager.deleteTexture(PLAYER_TEXTURE);
-                    PLAYER_TEXTURE = SkinChangingHandler.getTextureOnly(skins.get(position));
+                    PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
                     updateModels();
                 }
                 break;

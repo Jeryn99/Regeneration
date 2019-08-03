@@ -41,6 +41,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
+import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.POST;
+
 /**
  * Created by Sub
  * on 16/09/2018.
@@ -49,7 +51,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 public class RegenEventHandler {
 	
 	// =========== CAPABILITY HANDLING =============
-	
+
 	@SubscribeEvent
 	public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
@@ -130,8 +132,8 @@ public class RegenEventHandler {
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 		
 		cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedText());
-		
-		if (cap.getState() == PlayerUtil.RegenState.POST && player.posY > 0) {
+
+        if (cap.getState() == POST && player.posY > 0) {
 			if (event.getSource() == DamageSource.FALL) {
 				PlayerUtil.applyPotionIfAbsent(player, MobEffects.NAUSEA, 200, 4, false, false);
 				if (event.getAmount() > 8.0F) {
