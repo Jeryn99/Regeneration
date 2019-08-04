@@ -14,11 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
@@ -27,23 +23,41 @@ import net.minecraft.world.World;
  * on 16/09/2018.
  */
 public class ItemFobWatch extends ItemOverrideBase {
-	
-	public ItemFobWatch() {
-		setMaxDamage(RegenConfig.regenCapacity);
-		setCreativeTab(CreativeTabs.MISC);
-		setMaxStackSize(1);
-		addPropertyOverride(new ResourceLocation("open"), (stack, worldIn, entityIn) -> {
-			if (getStackTag(stack) == null || !getStackTag(stack).hasKey("open")) {
-				return 0F; //Closed
-			}
-			return getOpen(stack);
-		});
-	}
-	
+
+    public ItemFobWatch() {
+        setMaxDamage(RegenConfig.regenCapacity);
+        setCreativeTab(CreativeTabs.MISC);
+        setMaxStackSize(1);
+
+        addPropertyOverride(new ResourceLocation("open"), (stack, worldIn, entityIn) -> {
+            if (getStackTag(stack) == null || !getStackTag(stack).hasKey("open")) {
+                return 0F; //Closed
+            }
+            return getOpen(stack);
+        });
+
+        addPropertyOverride(new ResourceLocation("engrave"), (stack, worldIn, entityIn) -> {
+            if (getStackTag(stack) == null || !getStackTag(stack).hasKey("engrave")) {
+                return 0F; //Default
+            }
+            return getEngrave(stack);
+        });
+
+    }
+
+    public static int getEngrave(ItemStack stack) {
+        return getStackTag(stack).getInteger("engrave");
+    }
+
+    public static void setEngrave(ItemStack stack, int engrave) {
+        getStackTag(stack).setInteger("engrave", engrave);
+    }
+
 	public static NBTTagCompound getStackTag(ItemStack stack) {
 		if (stack.getTagCompound() == null) {
 			stack.setTagCompound(new NBTTagCompound());
 			stack.getTagCompound().setInteger("open", 0);
+            stack.getTagCompound().setInteger("engrave", itemRand.nextInt(2));
 		}
 		return stack.getTagCompound();
 	}
@@ -61,6 +75,8 @@ public class ItemFobWatch extends ItemOverrideBase {
 		super.onCreated(stack, worldIn, playerIn);
 		if (RegenConfig.craftWithRegens) {
 			stack.setItemDamage(0);
+            setEngrave(stack, worldIn.rand.nextInt(3));
+            setOpen(stack, 0);
 		}
 	}
 	

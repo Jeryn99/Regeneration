@@ -5,7 +5,7 @@
     "3": "regeneration:items/face2_electricboogaloo",
     "particle": "regeneration:items/face",
     "texture": "regeneration:items/fob_watch",
-    "engraving": "regeneration:items/engrave"
+    "engraving": "regeneration:items/engraves/default"
   },
   "elements": [
     {

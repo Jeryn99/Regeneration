@@ -59,18 +59,14 @@ public class FileUtil {
 		}
 	}
 
-	public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
-	public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
-
 	/**
 	 * @param url      - URL to download image from
 	 * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
 	 * @throws IOException
 	 */
-	public static void downloadSkins(URL url, String filename) throws IOException {
-		
-		URLConnection uc;
-		uc = url.openConnection();
+    public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
+
+        URLConnection uc = url.openConnection();
 		uc.connect();
 		uc = url.openConnection();
 		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
@@ -78,11 +74,19 @@ public class FileUtil {
 		BufferedImage img = ImageIO.read(uc.getInputStream());
 		img = ClientUtil.ImageFixer.convertSkinTo64x64(img);
 
-		File file = ImageDownloadAlt.isAlexSkin(img) ? TRENDING_ALEX : TRENDING_STEVE;
+        File file = ImageDownloadAlt.isAlexSkin(img) ? alexDir : steveDir;
 
         if (!file.exists()) {
 			file.mkdirs();
 		}
+
+        if (!steveDir.exists()) {
+            steveDir.mkdirs();
+        }
+
+        if (!alexDir.exists()) {
+            alexDir.mkdirs();
+        }
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
 	
@@ -93,6 +97,7 @@ public class FileUtil {
 				try {
 					createDefaultFolders();
 					Trending.downloadTrendingSkins();
+                    Trending.downloadPreviousSkins();
 					notDownloaded.set(false);
 				} catch (Exception e) {
 					throw new RuntimeException(e);

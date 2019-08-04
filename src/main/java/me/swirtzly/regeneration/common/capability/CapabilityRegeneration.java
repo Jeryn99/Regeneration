@@ -58,19 +58,18 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private String BASE64_SKIN = "NONE", BASE64_SKIN_NEXT = "NONE", deathSource = "";
 
-	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX, vanillaSkinType = SkinInfo.SkinType.ALEX;
 	private SkinChangingHandler.EnumChoices preferredModel = SkinChangingHandler.EnumChoices.EITHER;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
 	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
+	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
 	
 	/**
 	 * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
 	 * This property is synced over to the client to solve this
 	 */
 	private boolean handsAreGlowingClient;
-
 
 
 	public CapabilityRegeneration() {
@@ -113,14 +112,7 @@ public class CapabilityRegeneration implements IRegeneration {
 				}
 			}
 		}
-		
-		
-		if (getEncodedSkin().toLowerCase().equals("NONE")) {
-			if (getSkinType() != getVanillaDefault()) {
-				setSkinType(getVanillaDefault().name());
-			}
-		}
-		
+
 		if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
 			ticksAnimating = 0;
 		} else {
@@ -179,7 +171,6 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 		nbt.setBoolean("traitActive", traitActive);
 		nbt.setInteger("lc_regen", lcCoreReserve);
-		nbt.setString("v_type", vanillaSkinType.name());
 		nbt.setInteger("ticks_animating", ticksAnimating);
 		nbt.setBoolean("jar", syncingToJar);
 		if (!player.world.isRemote)
@@ -233,11 +224,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (nbt.hasKey("lc_regen")) {
 			lcCoreReserve = nbt.getInteger("lc_regen");
 		}
-		
-		if (nbt.hasKey("v_type")) {
-			vanillaSkinType = SkinInfo.SkinType.valueOf(nbt.getString("v_type"));
-		}
-		
+
 		if (nbt.hasKey("ticks_animating")) {
 			ticksAnimating = nbt.getInteger("ticks_animating");
 		}
@@ -408,17 +395,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	public void setDnaActive(boolean alive) {
 		traitActive = alive;
 	}
-	
-	@Override
-	public SkinInfo.SkinType getVanillaDefault() {
-		return vanillaSkinType;
-	}
-	
-	@Override
-	public void setVanillaSkinType(SkinInfo.SkinType type) {
-		vanillaSkinType = type;
-	}
-	
+
 	@Override
 	public int getAnimationTicks() {
 		return ticksAnimating;

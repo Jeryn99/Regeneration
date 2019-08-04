@@ -11,7 +11,6 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.network.MessageRepairArms;
 import me.swirtzly.regeneration.network.MessageTriggerForcedRegen;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.ClientUtil;
@@ -39,7 +38,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -66,8 +64,6 @@ public class ClientEventHandler {
 
 
 	//====
-
-	private static boolean initialJoin = false;
 	
 	@SubscribeEvent
 	public static void onGui(InputUpdateEvent tickEvent) {
@@ -84,17 +80,6 @@ public class ClientEventHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onJoin(EntityJoinWorldEvent event) {
-		if (event.getEntity() instanceof EntityPlayer && !initialJoin) {
-			if (Minecraft.getMinecraft().player == event.getEntity()) {
-				EntityPlayerSP localPlayer = Minecraft.getMinecraft().player;
-				NetworkHandler.INSTANCE.sendToServer(new MessageRepairArms(localPlayer.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE));
-				initialJoin = true;
-			}
-		}
-	}
-	
-	@SubscribeEvent
 	public static void onTickEvent(TickEvent.ClientTickEvent event) {
 		if (event.phase.equals(TickEvent.Phase.START)) return;
 		if (Minecraft.getMinecraft().world == null) {
@@ -106,7 +91,6 @@ public class ClientEventHandler {
 				SkinChangingHandler.PLAYER_SKINS.clear();
 				RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
 			}
-			initialJoin = false;
 		}
 	}
 	

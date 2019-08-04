@@ -158,7 +158,7 @@ public class ImageDownloadAlt extends SimpleTexture {
 				hasAlpha(54, 28, image) &&
 				hasAlpha(54, 29, image) &&
 				hasAlpha(54, 30, image) &&
-				hasAlpha(54, 31, image);
+				hasAlpha(54, 31, image) || hasAlpha(46, 52, image) && hasAlpha(46, 53, image) && hasAlpha(46, 54, image) && hasAlpha(46, 54, image) && hasAlpha(46, 55, image) && hasAlpha(46, 56, image) && hasAlpha(46, 57, image) && hasAlpha(46, 58, image) && hasAlpha(46, 59, image) && hasAlpha(46, 60, image) && hasAlpha(46, 61, image) && hasAlpha(46, 63, image) && hasAlpha(46, 53, image);
 	}
 
 

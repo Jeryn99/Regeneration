@@ -25,8 +25,7 @@ public class NetworkHandler {
 		INSTANCE.registerMessage(MessagePlayRegenerationSound.Handler.class, MessagePlayRegenerationSound.class, 8, Side.CLIENT);
 		INSTANCE.registerMessage(MessageUpdateModel.Handler.class, MessageUpdateModel.class, 9, Side.SERVER);
 		INSTANCE.registerMessage(MessageTriggerForcedRegen.Handler.class, MessageTriggerForcedRegen.class, 10, Side.SERVER);
-		INSTANCE.registerMessage(MessageRepairArms.Handler.class, MessageRepairArms.class, 11, Side.SERVER);
-		INSTANCE.registerMessage(MessageNextSkin.Handler.class, MessageNextSkin.class, 12, Side.SERVER);
+		INSTANCE.registerMessage(MessageNextSkin.Handler.class, MessageNextSkin.class, 11, Side.SERVER);
 	}
 	
 }
