@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.asm.RegenClientHooks;
 import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.client.animation.AnimationHandler;
 import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
+import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
@@ -112,7 +113,7 @@ public class ClientEventHandler {
 				}
 
 				if (cap.getState() == REGENERATING) {
-					ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.REGENERATION.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(REGENERATING), 1.0F);
+					ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.REGENERATION_0.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().equals(REGENERATING), 1.0F);
 				}
 
 				if (cap.getState().isGraceful() && clientUUID == player.getUniqueID()) {
@@ -140,9 +141,6 @@ public class ClientEventHandler {
             }
 		}
 	}
-
-
-
 
 
 	@SuppressWarnings("incomplete-switch")
@@ -315,7 +313,7 @@ public class ClientEventHandler {
 			return;
 
 		IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-		boolean flag = cap.getType() == TypeHandler.RegenType.CONFUSED && cap.getState() == REGENERATING;
+		boolean flag = cap.getType() == TypeHandler.RegenType.LAY_FADE && cap.getState() == REGENERATING;
 		e.setCanceled(flag);
 
 		if (!cap.areHandsGlowing())
@@ -343,6 +341,24 @@ public class ClientEventHandler {
 		GlStateManager.popMatrix();
 	}
 
+
+	@SubscribeEvent
+	public static void onRenderCallBack(RenderCallbackEvent event) {
+		if (event.getEntityLiving() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+			TypeHandler.RegenType type = data.getType();
+			if (data.getState() == REGENERATING) {
+				TypeHandler.getTypeInstance(type).getRenderer().onRenderCallBack(event);
+			}
+
+			if (data.getState() == GRACE_CRIT) {
+				GlStateManager.rotate(90, 1, 0, 0);
+				GlStateManager.translate(0, 1, 0);
+			}
+
+		}
+	}
 
 
 }

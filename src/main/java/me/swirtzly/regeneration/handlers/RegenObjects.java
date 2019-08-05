@@ -84,19 +84,20 @@ public class RegenObjects {
 	@SubscribeEvent
 	public static void addSounds(RegistryEvent.Register<SoundEvent> e) {
 		e.getRegistry().registerAll(
-				setUpSound("regeneration"),
 				setUpSound("fob_watch"),
 				setUpSound("critical_stage"),
 				setUpSound("heart_beat"),
 				setUpSound("hand_glow"),
-				setUpSound("regeneration_2"),
 				setUpSound("fob_watch_dialogue"),
-				setUpSound("regeneration_3"),
 				setUpSound("grace_hum"),
 				setUpSound("regen_breath"),
 				setUpSound("alarm"),
 				setUpSound("jar_bubbles")
 		);
+
+		for (int i = 0; i < 7; i++) {
+			e.getRegistry().register(setUpSound("regeneration_"+i));
+		}
 	}
 	
 	private static SoundEvent setUpSound(String soundName) {
@@ -113,16 +114,20 @@ public class RegenObjects {
 	public static class Sounds {
 		public static final SoundEvent FOB_WATCH = null;
 		public static final SoundEvent FOB_WATCH_DIALOGUE = null;
-		public static final SoundEvent REGENERATION = null;
-		public static final SoundEvent REGENERATION_2 = null;
 		public static final SoundEvent CRITICAL_STAGE = null;
 		public static final SoundEvent HEART_BEAT = null;
 		public static final SoundEvent HAND_GLOW = null;
-		public static final SoundEvent REGENERATION_3 = null;
 		public static final SoundEvent GRACE_HUM = null;
 		public static final SoundEvent REGEN_BREATH = null;
 		public static final SoundEvent ALARM = null;
 		public static final SoundEvent JAR_BUBBLES = null;
+		public static final SoundEvent REGENERATION_0 = null;
+		public static final SoundEvent REGENERATION_1 = null;
+		public static final SoundEvent REGENERATION_2 = null;
+		public static final SoundEvent REGENERATION_3 = null;
+		public static final SoundEvent REGENERATION_4 = null;
+		public static final SoundEvent REGENERATION_5 = null;
+		public static final SoundEvent REGENERATION_6 = null;
 	}
 	
 	public static class EntityEntries {

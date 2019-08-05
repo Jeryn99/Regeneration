@@ -8,7 +8,7 @@ public class TypeHandler {
 
     public static void init() {
         TYPES.put(RegenType.FIERY, new TypeFiery());
-        TYPES.put(RegenType.CONFUSED, new TypeElixir());
+        TYPES.put(RegenType.LAY_FADE, new TypeElixir());
     }
 
     public static IRegenType getTypeInstance(RegenType type) {
@@ -20,6 +20,6 @@ public class TypeHandler {
 
 
     public enum RegenType {
-        FIERY, CONFUSED
+        FIERY, LAY_FADE
     }
 }

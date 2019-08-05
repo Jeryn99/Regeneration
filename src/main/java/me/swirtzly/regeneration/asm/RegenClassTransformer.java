@@ -129,7 +129,6 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         Float a3 = new Float("0.03");
 
         if (updateLightmap != null) {
-            System.out.println("Patched Lightmap");
             for (int i = 0; i < updateLightmap.instructions.size(); i++) {
                 AbstractInsnNode an = updateLightmap.instructions.get(i);
                 if (an instanceof LdcInsnNode) {
@@ -149,7 +148,6 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
                 } else if (an instanceof MethodInsnNode) {
                     MethodInsnNode min = (MethodInsnNode) an;
                     if (min.name.equals(RegenerationMod.isDevEnv() ? "updateDynamicTexture" : "func_110564_a")) {
-                        System.out.println("Patched Lightmap Manipulation");
                         InsnList toInsert = new InsnList();
                         toInsert.add(new VarInsnNode(Opcodes.ALOAD, 0));
                         toInsert.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -171,6 +169,48 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         return patchShader(writer.toByteArray());
     }
 
+    public static byte[] patchRenderLivingBase(byte[] bytes) {
+        String targetMethodName = RegenerationMod.isDevEnv() ? "prepareScale" : "func_188322_c";
+        String targetScaleMethodname = RegenerationMod.isDevEnv() ? "scale" : "func_179152_a";
+        String targetIsnName = "(Lnet/minecraft/entity/EntityLivingBase;F)F";
+
+        ClassNode classNode = new ClassNode();
+        ClassReader classReader = new ClassReader(bytes);
+        classReader.accept(classNode, 0);
+
+        for (int i = 0; i < classNode.methods.size(); i++) {
+            MethodNode method = classNode.methods.get(i);
+
+            if (targetMethodName.equals(method.name) && targetIsnName.equals(method.desc)) {
+                InsnList insnList = method.instructions;
+
+                for (int j = 0; j < insnList.size(); j++) {
+                    AbstractInsnNode insnNote = method.instructions.get(j);
+
+                    if (insnNote.getOpcode() == Opcodes.INVOKESTATIC) {
+                        MethodInsnNode method_0 = (MethodInsnNode) insnNote;
+
+                        if (targetScaleMethodname.contains(method_0.name)) {
+                            InsnList insnList_0 = new InsnList();
+                            insnList_0.add(new VarInsnNode(ALOAD, 0));
+                            insnList_0.add(new VarInsnNode(Opcodes.ALOAD, 1));
+                            String parameter = "(Lnet/minecraft/client/renderer/entity/RenderLivingBase;Lnet/minecraft/entity/EntityLivingBase;)V";
+                            MethodInsnNode method_1 = new MethodInsnNode(Opcodes.INVOKESTATIC, REGEN_HOOKS_CLASS, "preRenderCallBack", parameter, false);
+                            insnList_0.add(method_1);
+                            insnList.insert(method_0, insnList_0);
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        classNode.accept(writer);
+        return writer.toByteArray();
+    }
+
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] data) {
@@ -185,6 +225,9 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         } else if (transformedName.equals("net.minecraft.client.renderer.EntityRenderer")) {
             return patchLighting(data);
         }
+        if (transformedName.equals("net.minecraft.client.renderer.entity.RenderLivingBase"))
+            return patchRenderLivingBase(data);
+
         return data;
     }
 

@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.common.types;
 import me.swirtzly.regeneration.client.rendering.types.ATypeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.SoundEvent;
 
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
@@ -36,5 +37,6 @@ public interface IRegenType<R extends ATypeRenderer<?>> {
 
 	TypeHandler.RegenType getTypeID();
 
+	SoundEvent[] getRegeneratingSounds();
 
 }

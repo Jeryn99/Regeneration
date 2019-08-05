@@ -14,6 +14,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -110,4 +111,7 @@ public class RegenUtil {
 		data.synchronise();
 	}
 
+	public static SoundEvent getRandomSound(SoundEvent[] soundEvents, Random random) {
+		return soundEvents[random.nextInt(soundEvents.length)];
+	}
 }

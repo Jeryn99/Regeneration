@@ -26,7 +26,8 @@ import static me.swirtzly.regeneration.util.RenderUtil.drawGlowingLine;
  */
 public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 	
-	public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
+	public static final ModelPlayer modelSteve = new ModelPlayer(0.1F, false);
+	public static final ModelPlayer modelAlex = new ModelPlayer(0.1F, true);
 	private static RenderPlayer playerRenderer;
 	
 	public LayerRegeneration(RenderPlayer playerRenderer) {

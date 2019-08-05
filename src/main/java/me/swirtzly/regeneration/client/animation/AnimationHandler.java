@@ -7,8 +7,6 @@ import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
@@ -49,8 +47,8 @@ public class AnimationHandler {
 			return copyAndReturn(modelBiped, true);
 		}
 
-	/**	if(CapabilityRegeneration.getForPlayer(player).getState() == PlayerUtil.RegenState.GRACE_CRIT){
-
+		//CRAWL IN CRITICAL
+		if (CapabilityRegeneration.getForPlayer(player).getState() == PlayerUtil.RegenState.GRACE_CRIT) {
 			float limbSwingCrawl = animationContext.getLimbSwingAmount();
 
 			if(limbSwingCrawl > 0.25) {
@@ -61,12 +59,12 @@ public class AnimationHandler {
 			modelBiped.bipedLeftArm.rotateAngleX = 180 / (180F / (float)Math.PI) - movement * 0.25f;
 			modelBiped.bipedLeftArm.rotateAngleY = movement * -0.46f;
 			modelBiped.bipedLeftArm.rotateAngleZ = movement * -0.2f;
-		//	modelBiped.bipedLeftArm.rotationPointY = 2 - movement * 9.0F;
+			modelBiped.bipedLeftArm.rotationPointY = 2 - movement * 9.0F;
 
 			modelBiped.bipedRightArm.rotateAngleX = 180 / (180F / (float)Math.PI) + movement * 0.25f;
 			modelBiped.bipedRightArm.rotateAngleY = movement * -0.4f;
 			modelBiped.bipedRightArm.rotateAngleZ = movement * -0.2f;
-		//	modelBiped.bipedRightArm.rotationPointY = 2 + movement * 9.0F;
+			modelBiped.bipedRightArm.rotationPointY = 2 + movement * 9.0F;
 
 			modelBiped.bipedBody.rotateAngleY = movement * 0.1f;
 			modelBiped.bipedBody.rotateAngleX = 0;
@@ -75,18 +73,18 @@ public class AnimationHandler {
 			modelBiped.bipedLeftLeg.rotateAngleX = movement * 0.1f;
 			modelBiped.bipedLeftLeg.rotateAngleY = movement * 0.1f;
 			modelBiped.bipedLeftLeg.rotateAngleZ = -7 / (180F / (float)Math.PI) - movement * 0.25f;
-		//	modelBiped.bipedLeftLeg.rotationPointY = 10.4f + movement * 9.0F;
-		//	modelBiped.bipedLeftLeg.rotationPointZ = movement * 0.6f;
+			modelBiped.bipedLeftLeg.rotationPointY = 10.4f + movement * 9.0F;
+			modelBiped.bipedLeftLeg.rotationPointZ = movement * 0.6f;
 
 			modelBiped.bipedRightLeg.rotateAngleX = movement * -0.1f;
 			modelBiped.bipedRightLeg.rotateAngleY = movement * 0.1f;
 			modelBiped.bipedRightLeg.rotateAngleZ = 7 / (180F / (float)Math.PI) - movement * 0.25f;
-		//	modelBiped.bipedRightLeg.rotationPointY = 10.4f - movement * 9.0F;
-	//		modelBiped.bipedRightLeg.rotationPointZ = movement * -0.6f;
+			modelBiped.bipedRightLeg.rotationPointY = 10.4f - movement * 9.0F;
+			modelBiped.bipedRightLeg.rotationPointZ = movement * -0.6f;
 
 			return copyAndReturn(modelBiped, true);
 		}
-	 */
+
 
 		return copyAndReturn(modelBiped, false);
 	}

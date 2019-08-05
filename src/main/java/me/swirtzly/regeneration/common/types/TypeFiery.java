@@ -3,10 +3,12 @@ package me.swirtzly.regeneration.common.types;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.rendering.types.TypeFieryRenderer;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -62,6 +64,20 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
     public TypeHandler.RegenType getTypeID() {
         return TypeHandler.RegenType.FIERY;
     }
+
+	private SoundEvent[] SOUNDS = new SoundEvent[]{
+			RegenObjects.Sounds.REGENERATION_1,
+			RegenObjects.Sounds.REGENERATION_2,
+			RegenObjects.Sounds.REGENERATION_3,
+			RegenObjects.Sounds.REGENERATION_4,
+			RegenObjects.Sounds.REGENERATION_5,
+			RegenObjects.Sounds.REGENERATION_6,
+	};
+
+	@Override
+	public SoundEvent[] getRegeneratingSounds() {
+		return SOUNDS;
+	}
 
 	@Override
 	public TypeFieryRenderer getRenderer() {

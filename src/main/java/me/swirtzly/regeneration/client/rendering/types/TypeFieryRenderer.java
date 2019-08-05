@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.client.rendering.types;
 
 import me.swirtzly.regeneration.client.animation.AnimationContext;
+import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeFiery;
@@ -31,7 +32,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	}
 	
 	@Override
-	public void renderRegeneratingPlayerPre(TypeFiery type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
+	public void onRenderRegeneratingPre(TypeFiery type, RenderPlayerEvent.Pre ev, IRegeneration cap) {
 	}
 	
 	public static void renderCone(EntityPlayer entityPlayer, float scale, float scale2, Vec3d color) {
@@ -72,7 +73,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	}
 	
 	@Override
-	protected void renderRegeneratingPlayerPost(TypeFiery type, RenderPlayerEvent.Post event, IRegeneration capability) {
+	protected void onRenderRegeneratingPost(TypeFiery type, RenderPlayerEvent.Post event, IRegeneration capability) {
 	
 	}
 	
@@ -175,9 +176,14 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	public void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render) {
 		renderConeAtArms(player, render, handSide);
 	}
-	
+
 	@Override
-	public void renderRegenerationLayer(TypeFiery type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public void onRenderCallBack(RenderCallbackEvent event) {
+
+	}
+
+	@Override
+	public void onRenderLayer(TypeFiery type, RenderLivingBase<?> renderLivingBase, IRegeneration capability, EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		
 		// State manager changes
 		GlStateManager.pushAttrib();

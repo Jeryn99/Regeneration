@@ -2,15 +2,17 @@ package me.swirtzly.regeneration.asm;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
+import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntitySpider;
@@ -32,12 +34,13 @@ public class RegenClientHooks {
 		MinecraftForge.EVENT_BUS.post(rotationEvent);
 	}
 
-	public static void renderBipedPre(ModelBiped model, Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		if(entity instanceof EntityPlayer && CapabilityRegeneration.getForPlayer((EntityPlayer) entity).getState() == PlayerUtil.RegenState.GRACE_CRIT){
-				GlStateManager.translate(0, 1.5, 0);
-				GlStateManager.rotate(90, 1.0F, 0F, 0.0F);
-		}
+	public static void preRenderCallBack(RenderLivingBase renderer, EntityLivingBase entity) {
+		if (entity == null)
+			return;
+		RenderCallbackEvent ev = new RenderCallbackEvent(entity, renderer);
+		MinecraftForge.EVENT_BUS.post(ev);
 	}
+
 
 	public static int colorModeCache;
 	public static float savedGreen, savedRed, savedBlue;

@@ -51,10 +51,10 @@ public class CapabilityRegeneration implements IRegeneration {
 	
 	private final EntityPlayer player;
 	private final RegenerationStateManager stateManager;
-	public int lcCoreReserve = 0, regenerationsLeft, ticksAnimating = 0;
+	public int regenerationsLeft, ticksAnimating = 0;
 	private boolean didSetup = false, traitActive = true, syncingToJar = false;
 	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
-	private TypeHandler.RegenType regenType = TypeHandler.RegenType.FIERY;
+    private TypeHandler.RegenType regenType = TypeHandler.RegenType.LAY_FADE;
 	
 	private String BASE64_SKIN = "NONE", BASE64_SKIN_NEXT = "NONE", deathSource = "";
 
@@ -170,7 +170,6 @@ public class CapabilityRegeneration implements IRegeneration {
 			nbt.setString("regen_dna", DnaHandler.DNA_BORING.getRegistryName().toString());
 		}
 		nbt.setBoolean("traitActive", traitActive);
-		nbt.setInteger("lc_regen", lcCoreReserve);
 		nbt.setInteger("ticks_animating", ticksAnimating);
 		nbt.setBoolean("jar", syncingToJar);
 		if (!player.world.isRemote)
@@ -220,10 +219,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		if (nbt.hasKey("handsAreGlowing")) {
 			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
 		}
-		
-		if (nbt.hasKey("lc_regen")) {
-			lcCoreReserve = nbt.getInteger("lc_regen");
-		}
+
 
 		if (nbt.hasKey("ticks_animating")) {
 			ticksAnimating = nbt.getInteger("ticks_animating");

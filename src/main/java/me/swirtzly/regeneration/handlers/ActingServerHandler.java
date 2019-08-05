@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
+import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.network.MessagePlayRegenerationSound;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -33,12 +34,6 @@ class ActingServerHandler implements IActingHandler {
 	
 	
 	public ActingServerHandler() {
-	}
-	
-	
-	public static SoundEvent getRandomSound(Random random) {
-		SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION, RegenObjects.Sounds.REGENERATION_2, RegenObjects.Sounds.REGENERATION_3};
-		return SOUNDS[random.nextInt(SOUNDS.length)];
 	}
 	
 	@Override
@@ -157,7 +152,7 @@ class ActingServerHandler implements IActingHandler {
 	@Override
 	public void onRegenTrigger(IRegeneration cap) {
 		EntityPlayer player = cap.getPlayer();
-		NetworkHandler.INSTANCE.sendToAllAround(new MessagePlayRegenerationSound(getRandomSound(player.world.rand), player.getUniqueID().toString()), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 40));
+		NetworkHandler.INSTANCE.sendToAllAround(new MessagePlayRegenerationSound(RegenUtil.getRandomSound(TypeHandler.getTypeInstance(cap.getType()).getRegeneratingSounds(), player.world.rand), player.getUniqueID().toString()), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 40));
 		player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
 		player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
 		player.setHealth(Math.max(player.getHealth(), 8));

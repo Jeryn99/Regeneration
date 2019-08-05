@@ -155,8 +155,8 @@ public class SkinChangingHandler {
 	 * @throws IOException
 	 */
 	private static SkinInfo getSkinInfo(AbstractClientPlayer player, IRegeneration data) throws IOException {
-		
-		if (player == null || data == null || player.getName() == null || player.getUniqueID() == null) {
+
+		if (data == null || player.getName() == null || player.getUniqueID() == null) {
 			return new SkinInfo(null, getSkinType(player));
 		}
 		
