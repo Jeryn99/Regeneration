@@ -135,6 +135,10 @@ public class SkinManipulation {
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 
+		if (data == null || player.getName() == null || player.getUniqueID() == null) {
+			return new SkinInfo(null, getSkinType(player));
+		}
+
 		if (data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
 			resourceLocation = getMojangSkin(player);
 			skinType = getSkinType(player);
@@ -153,15 +157,11 @@ public class SkinManipulation {
 	}
 
 	public static SkinInfo.SkinType getSkinType(AbstractClientPlayerEntity player) {
-		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
-		if (map.isEmpty()) {
-			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
-		}
+		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = getVanillaMap(player);
 		MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
 		if (profile.getMetadata("model") == null) {
 			return SkinInfo.SkinType.STEVE;
 		}
-
 		return SkinInfo.SkinType.ALEX;
 	}
 
@@ -172,16 +172,14 @@ public class SkinManipulation {
 	 * @return ResourceLocation from Mojang
 	 */
 	private static ResourceLocation getMojangSkin(AbstractClientPlayerEntity player) {
-		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
-		if (map.isEmpty()) {
-			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
-		}
+		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = getVanillaMap(player);
 		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
 			MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
 			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, Minecraft.getInstance().getSkinManager(), 2), profile.getHash().substring(0, 2));
 			File file = new File(dir, profile.getHash());
-			if (file.exists())
+			if (file.exists()) {
 				file.delete();
+			}
 			ResourceLocation location = new ResourceLocation("skins/" + profile.getHash());
 			loadTexture(file, location, DefaultPlayerSkin.getDefaultSkinLegacy(), profile.getUrl());
 			setPlayerSkin(player, location);
@@ -198,6 +196,14 @@ public class SkinManipulation {
 			texturemanager.loadTexture(resource, object);
 		}
 		return object;
+	}
+
+	public static Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> getVanillaMap(AbstractClientPlayerEntity player) {
+		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
+		if (map.isEmpty()) {
+			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
+		}
+		return map;
 	}
 
 
@@ -246,7 +252,7 @@ public class SkinManipulation {
 
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 
-				if (cap.getAnimationTicks() > 0.7) {
+				if (cap.getAnimationTicks() > 100) {
                     setSkinFromData(player, RegenCap.get(player));
 				}
 

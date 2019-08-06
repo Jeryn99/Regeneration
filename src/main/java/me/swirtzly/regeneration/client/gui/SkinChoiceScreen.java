@@ -9,10 +9,13 @@ import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.NextSkinMessage;
 import me.swirtzly.regeneration.util.ClientUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.ResourcePacksScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
@@ -29,7 +32,7 @@ public class SkinChoiceScreen extends ContainerScreen {
 
     private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
     public static boolean isAlex = true;
-    private static ResourceLocation PLAYER_TEXTURE = Minecraft.getInstance().player.getLocationSkin();
+    private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
     private static SkinManipulation.EnumChoices choices = null;
     private static List<File> skins = null;
     private static int position = 0;
@@ -95,11 +98,7 @@ public class SkinChoiceScreen extends ContainerScreen {
         GuiButtonExt btnOpenFolder = new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder").getFormattedText(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                try {
-                    Desktop.getDesktop().open(SkinManipulation.SKIN_DIRECTORY);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Util.getOSType().openFile(SkinManipulation.SKIN_DIRECTORY);
             }
         });
         GuiButtonExt btnSave = new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.save").getFormattedText(), new Button.IPressable() {

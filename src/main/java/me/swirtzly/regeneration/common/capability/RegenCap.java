@@ -124,7 +124,7 @@ public class RegenCap implements IRegen {
 		
 		if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
 			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
-			RegenerationMod.LOG.info("Correcting the amount of Regenerations &s has", player.getName());
+			RegenerationMod.LOG.info("Correcting the amount of Regenerations {} has, from {} to {}", player.getName(), getRegenerationsLeft(), RegenConfig.COMMON.regenCapacity.get());
 		}
 		
 		TraitManager.getDnaEntry(getDnaType()).onUpdate(this);

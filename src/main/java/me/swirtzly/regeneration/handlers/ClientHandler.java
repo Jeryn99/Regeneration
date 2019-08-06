@@ -85,7 +85,6 @@ public class ClientHandler {
         if (Minecraft.getInstance().world == null) {
             if (SkinManipulation.PLAYER_SKINS.size() > 0) {
                 SkinManipulation.PLAYER_SKINS.forEach(((uuid, skinInfo) -> {
-                    RegenerationMod.LOG.warn("Deleted skin texture: " + skinInfo.getSkinTextureLocation());
                     Minecraft.getInstance().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation());
                 }));
                 SkinManipulation.PLAYER_SKINS.clear();
