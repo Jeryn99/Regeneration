@@ -40,10 +40,10 @@ public class RegenObjects {
 			REGEN_DMG_HEALING = new RegenDamageSource("regen_heal").setDamageAllowedInCreativeMode(), // The irony lmao
 			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit").setDamageAllowedInCreativeMode(), REGEN_DMG_KILLED = new RegenDamageSource("regen_killed"), REGEN_DMG_LINDOS = new RegenDamageSource("lindos").setDamageAllowedInCreativeMode(), REGEN_DMG_FORCED = new RegenDamageSource("forced").setDamageAllowedInCreativeMode();
 
-	//	@SubscribeEvent
+	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		e.getRegistry().registerAll(
-				setUpItem(new FobWatchItem(), "fob_watch"),
+				//setUpItem(new FobWatchItem(), "fob_watch"),
 				setUpItem(new LindosVialItem(), "lindos_vial")
 		);
 		e.getRegistry().registerAll(ITEM_BLOCKS.toArray(new Item[ITEM_BLOCKS.size()]));

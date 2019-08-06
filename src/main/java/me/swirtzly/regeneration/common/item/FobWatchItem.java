@@ -33,33 +33,33 @@ public class FobWatchItem extends OverrideItem {
 			return getOpen(stack);
 		});
 
-        //	addPropertyOverride(new ResourceLocation("engrave"), (stack, worldIn, entityIn) -> {
-        //		if (getStackTag(stack) == null || !getStackTag(stack).contains("engrave")) {
-        //			return 0F; //Default
-        //		}
-        //		return getEngrave(stack);
-        //	});
+		addPropertyOverride(new ResourceLocation("engrave"), (stack, worldIn, entityIn) -> {
+			if (getStackTag(stack) == null || !getStackTag(stack).contains("engrave")) {
+				return 0F; //Default
+			}
+			return getEngrave(stack);
+		});
 
-    }
+	}
 
 	public static CompoundNBT getStackTag(ItemStack stack) {
 		if (stack.getTag() == null) {
 			stack.setTag(new CompoundNBT());
 			stack.getTag().putInt("open", 0);
-            stack.getTag().putInt("engrave", random.nextInt(2));
+			//   stack.getTag().putInt("engrave", random.nextInt(2));
 		}
 		return stack.getTag();
 	}
 
-    public static int getEngrave(ItemStack stack) {
-        return getStackTag(stack).getInt("engrave");
-    }
+	public static int getEngrave(ItemStack stack) {
+		return getStackTag(stack).getInt("engrave");
+	}
 
-    public static void setEngrave(ItemStack stack, int engrave) {
-        getStackTag(stack).putInt("engrave", engrave);
-    }
+	public static void setEngrave(ItemStack stack, int engrave) {
+		getStackTag(stack).putInt("engrave", engrave);
+	}
 
-    public static int getOpen(ItemStack stack) {
+	public static int getOpen(ItemStack stack) {
 		return getStackTag(stack).getInt("open");
 	}
 

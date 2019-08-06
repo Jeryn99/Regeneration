@@ -53,26 +53,18 @@ public class SkinManipulation {
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	private static final Random RAND = new Random();
 
-	public static String imageToPixelData(File file) throws IOException {
-		byte[] fileContent = FileUtils.readFileToByteArray(file);
+	public static String imageToPixelData(File file) {
+		byte[] fileContent = new byte[0];
+		try {
+			fileContent = FileUtils.readFileToByteArray(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return Base64.getEncoder().encodeToString(fileContent);
 	}
 
-	/**
-	 * Converts a array of Bytes into a Buffered Image and caches to the cache directory
-	 * with the file name of "cache-%PLAYERUUID%.png"
-	 * @param imageData - Pixel data to be converted to a Buffered Image
-	 * @return Buffered image that will later be converted to a Dynamic texture
-	 */
-    private static NativeImage toImage(String imageData, boolean write) throws IOException {
-		NativeImage image = decodeToImage(imageData);
-		if (image != null && write) {
-			//TODO write
-		}
-		return image;
-	}
-
 	public static NativeImage decodeToImage(String imageString) throws IOException {
+		System.out.println(imageString);
 		try (MemoryStack memorystack = MemoryStack.stackPush()) {
 			ByteBuffer bytebuffer = memorystack.UTF8(imageString, false);
 			ByteBuffer decoded = Base64.getDecoder().decode(bytebuffer);
@@ -96,29 +88,29 @@ public class SkinManipulation {
 	public static void sendSkinUpdate(Random random, PlayerEntity player) {
 		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID())
 			return;
-        RegenCap.get(player).ifPresent((cap) -> {
+		RegenCap.get(player).ifPresent((data) -> {
 
-			String pixelData = "none";
-			boolean isAlex = false;
+		if (RegenConfig.CLIENT.changeMySkin.get()) {
 
-			if (RegenConfig.CLIENT.changeMySkin.get()) {
-				if(cap.getNextSkin().toLowerCase().equals("none")) {
-					isAlex = cap.getPreferredModel() == EnumChoices.ALEX;
-					File skin = SkinManipulation.chooseRandomSkin(random, isAlex);
-					RegenerationMod.LOG.info(skin + " was choosen");
-					try {
-						pixelData = SkinManipulation.imageToPixelData(skin);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				} else {
-					pixelData = cap.getNextSkin();
-					isAlex = cap.getNextSkinType() == SkinInfo.SkinType.ALEX;
-				}
+			String pixelData = "NONE";
+			File skin = null;
+
+			if (data.getNextSkin().equals("NONE")) {
+				boolean isAlex = data.getPreferredModel().isAlex();
+				skin = SkinManipulation.chooseRandomSkin(random, isAlex);
+				RegenerationMod.LOG.info(skin + " was choosen");
+				pixelData = SkinManipulation.imageToPixelData(skin);
+				data.setEncodedSkin(pixelData);
 				NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, isAlex));
 			} else {
-				ClientUtil.sendSkinResetPacket();
+				pixelData = data.getNextSkin();
+				data.setEncodedSkin(pixelData);
+				NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, data.getNextSkinType().getMojangType().equals("slim")));
 			}
+
+		} else {
+			ClientUtil.sendSkinResetPacket();
+		}
 		});
 	}
 
@@ -139,8 +131,7 @@ public class SkinManipulation {
 	 * @return SkinInfo - A class that contains the SkinType and the resource location to use as a skin
 	 * @throws IOException
 	 */
-    private static SkinInfo getSkinInfo(AbstractClientPlayerEntity player, IRegen data, boolean write) throws
-			IOException {
+    private static SkinInfo getSkinInfo(AbstractClientPlayerEntity player, IRegen data) throws IOException {
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 
@@ -148,7 +139,7 @@ public class SkinManipulation {
 			resourceLocation = getMojangSkin(player);
 			skinType = getSkinType(player);
 		} else {
-            NativeImage nativeImage = toImage(data.getNextSkin().toLowerCase().equals("none") ? data.getNextSkin() : data.getEncodedSkin(), write);
+            NativeImage nativeImage = decodeToImage(data.getEncodedSkin());
 			nativeImage = ImageDownloadBuffer.convert(nativeImage);
 			if (nativeImage == null) {
 				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
@@ -167,9 +158,7 @@ public class SkinManipulation {
 			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
 		}
 		MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
-		String modelType = profile.getMetadata("model");
-
-		if (modelType == null) {
+		if (profile.getMetadata("model") == null) {
 			return SkinInfo.SkinType.STEVE;
 		}
 
@@ -258,14 +247,14 @@ public class SkinManipulation {
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 
 				if (cap.getAnimationTicks() > 0.7) {
-                    setSkinFromData(player, RegenCap.get(player), false);
+                    setSkinFromData(player, RegenCap.get(player));
 				}
 
 				TypeManager.getTypeInstance(cap.getType()).getRenderer().onRenderRegeneratingPlayerPre(TypeManager.getTypeInstance(cap.getType()), e, cap);
 
 
 			} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
-                setSkinFromData(player, RegenCap.get(player), true);
+                setSkinFromData(player, RegenCap.get(player));
 			} else {
 				SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
 
@@ -300,11 +289,11 @@ public class SkinManipulation {
 	 * @param player - Player instance
 	 * @param cap    - Players Regen capability instance
 	 */
-    private void setSkinFromData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap, boolean write) {
+    private void setSkinFromData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
 		cap.ifPresent((data) -> {
 			SkinInfo skinInfo = null;
 			try {
-                skinInfo = SkinManipulation.getSkinInfo(player, data, write);
+                skinInfo = SkinManipulation.getSkinInfo(player, data);
 			} catch (IOException e1) {
 				if(!data.getEncodedSkin().toLowerCase().equals("none")) {
 					RegenerationMod.LOG.error("Error creating skin for: " + player.getName().getUnformattedComponentText() + " " + e1.getMessage());

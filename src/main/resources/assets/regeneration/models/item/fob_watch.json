@@ -4,85 +4,84 @@
     "texture": "regeneration:items/fob_watch",
     "engraving": "regeneration:items/engraves/default"
   },
-  "elements": [
-    {
-      "__comment": "backing rim1",
-      "from": [
-        7.5,
-        -0.5913,
-        0
+  "elements": [{
+    "__comment": "backing rim1",
+    "from": [
+      7.5,
+      -0.5913,
+      0
+    ],
+    "to": [
+      8.5,
+      2.5913,
+      0.75
+    ],
+    "rotation": {
+      "origin": [
+        8,
+        1,
+        8
       ],
-      "to": [
-        8.5,
-        2.5913,
-        0.75
-      ],
-      "rotation": {
-        "origin": [
-          8,
-          1,
-          8
-        ],
-        "axis": "x",
-        "angle": -45
-      },
-      "faces": {
-        "down": {
-          "uv": [
-            0.5,
-            0.5,
-            1.5,
-            1.5
-          ],
-          "texture": "#texture"
-        },
-        "up": {
-          "uv": [
-            0.5,
-            0.5,
-            1.5,
-            1.5
-          ],
-          "texture": "#texture"
-        },
-        "north": {
-          "uv": [
-            0.5,
-            0.5,
-            1.5,
-            1.5
-          ],
-          "texture": "#texture"
-        },
-        "south": {
-          "uv": [
-            0.5,
-            0.5,
-            1.5,
-            1.5
-          ],
-          "texture": "#texture"
-        },
-        "west": {
-          "uv": [
-            0.5,
-            0.5,
-            1.5,
-            1.5
-          ],
-          "texture": "#texture"
-        },
-        "east": {
-          "uv": [
-            0.5,
-            0.5,
-            1.5,
-            1.5
-          ],
-          "texture": "#texture"
-        }
-      }
+      "axis": "x",
+      "angle": -45
     },
+    "faces": {
+      "down": {
+        "uv": [
+          0.5,
+          0.5,
+          1.5,
+          1.5
+        ],
+        "texture": "#texture"
+      },
+      "up": {
+        "uv": [
+          0.5,
+          0.5,
+          1.5,
+          1.5
+        ],
+        "texture": "#texture"
+      },
+      "north": {
+        "uv": [
+          0.5,
+          0.5,
+          1.5,
+          1.5
+        ],
+        "texture": "#texture"
+      },
+      "south": {
+        "uv": [
+          0.5,
+          0.5,
+          1.5,
+          1.5
+        ],
+        "texture": "#texture"
+      },
+      "west": {
+        "uv": [
+          0.5,
+          0.5,
+          1.5,
+          1.5
+        ],
+        "texture": "#texture"
+      },
+      "east": {
+        "uv": [
+          0.5,
+          0.5,
+          1.5,
+          1.5
+        ],
+        "texture": "#texture"
+      }
+    }
+  },
     {
       "__comment": "backing rim2",
       "from": [
@@ -6728,14 +6727,13 @@
       ]
     }
   },
-  "overrides": [
-    {
-      "predicate": {
-        "open": 0,
-        "engrave": 0
-      },
-      "model": "regeneration:item/fob_watch"
+  "overrides": [{
+    "predicate": {
+      "open": 0,
+      "engrave": 0
     },
+    "model": "regeneration:item/fob_watch"
+  },
     {
       "predicate": {
         "open": 1,

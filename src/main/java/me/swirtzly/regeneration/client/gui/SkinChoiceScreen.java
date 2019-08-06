@@ -106,11 +106,7 @@ public class SkinChoiceScreen extends ContainerScreen {
             @Override
             public void onPress(Button button) {
                 updateModels();
-                try {
-                    NetworkDispatcher.sendToServer(new NextSkinMessage(SkinManipulation.imageToPixelData(skins.get(position)), isAlex));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                NetworkDispatcher.sendToServer(new NextSkinMessage(SkinManipulation.imageToPixelData(skins.get(position)), isAlex));
             }
         });
         GuiButtonExt btnResetSkin = new GuiButtonExt(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin").getFormattedText(), new Button.IPressable() {

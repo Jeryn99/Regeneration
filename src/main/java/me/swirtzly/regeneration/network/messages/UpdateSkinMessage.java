@@ -37,11 +37,7 @@ public class UpdateSkinMessage {
             ctx.get().getSender().getServer().deferTask(() ->
                     RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
 						cap.setEncodedSkin(message.encodedSkin);
-						if (message.isAlex) {
-							cap.setSkinType(SkinInfo.SkinType.ALEX.name());
-						} else {
-							cap.setSkinType(SkinInfo.SkinType.STEVE.name());
-						}
+						cap.setSkinType(message.isAlex ? SkinInfo.SkinType.ALEX.name() : SkinInfo.SkinType.STEVE.name());
 						cap.synchronise();
 						NetworkDispatcher.sendPacketToAll(new InvalidatePlayerDataMessage(ctx.get().getSender().getUniqueID()));
 					}));
