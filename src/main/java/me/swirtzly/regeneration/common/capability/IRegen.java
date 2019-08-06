@@ -86,10 +86,6 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	
 	void setDnaActive(boolean alive);
 	
-	SkinInfo.SkinType getVanillaDefault();
-
-    void setVanillaSkinType(SkinInfo.SkinType type);
-	
 	int getAnimationTicks();
 
     void setAnimationTicks(int ticks);
@@ -97,4 +93,14 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	void setSyncingFromJar(boolean syncing);
 	
 	boolean isSyncingToJar();
+
+	SkinInfo.SkinType getNextSkinType();
+
+	void setNextSkinType(SkinInfo.SkinType skinType);
+
+	String getNextSkin();
+
+	void setNextSkin(String encodedSkin);
+
+
 }

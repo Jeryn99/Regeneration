@@ -7,7 +7,7 @@ import me.swirtzly.regeneration.client.rendering.entity.LindosRenderer;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.capability.RegenerationStorage;
+import me.swirtzly.regeneration.common.capability.RegenStorage;
 import me.swirtzly.regeneration.common.commands.RegenDebugCommand;
 import me.swirtzly.regeneration.common.entity.LindosEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
@@ -78,7 +78,7 @@ public class RegenerationMod {
 
 	private void setup(final FMLCommonSetupEvent event) {
 		proxy.preInit();
-        CapabilityManager.INSTANCE.register(IRegen.class, new RegenerationStorage(), RegenCap::new);
+        CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
 		ActingForwarder.init();
 		TriggerManager.init();
 	}

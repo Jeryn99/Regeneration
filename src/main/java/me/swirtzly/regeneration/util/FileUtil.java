@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.client.image.ImageDownloader;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
@@ -57,26 +57,35 @@ public class FileUtil {
 			handleDownloads();
 		}
 	}
-	
+
 	/**
 	 * @param url      - URL to download image from
-	 * @param file     - Directory of where to save the image to [SHOULD NOT CONTAIN THE FILES NAME]
 	 * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
 	 * @throws IOException
 	 */
-	public static void downloadImage(URL url, File file, String filename) throws IOException {
-		
-		URLConnection uc;
-		uc = url.openConnection();
+    public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
+
+        URLConnection uc = url.openConnection();
 		uc.connect();
 		uc = url.openConnection();
 		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-        SkinManipulation.SKIN_LOG.info("Downloading Skin from: {}", url.toString());
+        RegenerationMod.LOG.warn("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
 		img = ClientUtil.ImageFixer.convertSkinTo64x64(img);
+
+        File file = ImageDownloader.isAlexSkin(img) ? alexDir : steveDir;
+
         if (!file.exists()) {
 			file.mkdirs();
 		}
+
+        if (!steveDir.exists()) {
+            steveDir.mkdirs();
+        }
+
+        if (!alexDir.exists()) {
+            alexDir.mkdirs();
+        }
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
 	
@@ -87,6 +96,7 @@ public class FileUtil {
 				try {
 					createDefaultFolders();
 					TrendingManager.downloadTrendingSkins();
+                    TrendingManager.downloadPreviousSkins();
 					notDownloaded.set(false);
 				} catch (Exception e) {
 					throw new RuntimeException(e);

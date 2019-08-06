@@ -1,11 +1,11 @@
 {
   "credit": "Made with Blockbench by dhi_awesome",
   "textures": {
-    "2": "items/face_g",
+    "2": "regeneration:items/face",
     "3": "regeneration:items/face2_electricboogaloo",
-    "particle": "items/face_g",
-    "texture": "items/fob_watch",
-    "engraving": "regeneration:items/engrave"
+    "particle": "regeneration:items/face",
+    "texture": "regeneration:items/fob_watch",
+    "engraving": "regeneration:items/engraves/engrave_2"
   },
   "elements": [
     {

@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.handlers.acting;
 
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.UpdateStateMessage;
+import me.swirtzly.regeneration.network.messages.UpdateStateMessage;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;

@@ -11,7 +11,6 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
@@ -19,17 +18,17 @@ import java.awt.*;
 
 import static me.swirtzly.regeneration.util.RenderUtil.drawModelToGui;
 
-public class SkinCustomizerScreen extends ContainerScreen {
+public class SkinTypeScreen extends ContainerScreen {
 	
 	public static final PlayerModel playerModelSteve = new PlayerModel(0.1F, false);
 	public static final PlayerModel playerModelAlex = new PlayerModel(0.1F, true);
 	private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
 	private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
 	private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
-	private static SkinManipulation.EnumChoices choices = SkinManipulation.wasAlex(Minecraft.getInstance().player) ? SkinManipulation.EnumChoices.ALEX : SkinManipulation.EnumChoices.STEVE;
+	private static SkinManipulation.EnumChoices choices = null;
 	private float rotation = 0;
-	
-	public SkinCustomizerScreen() {
+
+	public SkinTypeScreen() {
         super(new ContainerBlank(), null, new TranslationTextComponent("Regeneration Skin Screen"));
 		xSize = 176;
 		ySize = 186;
@@ -38,6 +37,9 @@ public class SkinCustomizerScreen extends ContainerScreen {
 	@Override
     public void init() {
         super.init();
+
+		RegenCap.get(minecraft.player).ifPresent((data) -> choices = data.getPreferredModel());
+
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
 		final int btnW = 60, btnH = 18;
@@ -61,13 +63,13 @@ public class SkinCustomizerScreen extends ContainerScreen {
             PlayerUtil.updateModel(choices);
         }));
 
-        this.addButton(new GuiButtonExt(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.back").getFormattedText(), button -> Minecraft.getInstance().displayGuiScreen(new CustomizerScreen())));
+		this.addButton(new GuiButtonExt(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.back").getFormattedText(), button -> Minecraft.getInstance().displayGuiScreen(new ColorScreen())));
 
 
-        this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder").getFormattedText(), new Button.IPressable() {
+		this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.skin_choice").getFormattedText(), new Button.IPressable() {
 			@Override
             public void onPress(Button button) {
-				Util.getOSType().openFile(SkinManipulation.SKIN_DIRECTORY);
+				Minecraft.getInstance().displayGuiScreen(new SkinChoiceScreen());
 			}
         }));
 

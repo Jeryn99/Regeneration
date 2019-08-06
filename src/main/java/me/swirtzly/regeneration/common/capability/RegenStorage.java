@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
  * Created by Sub
  * on 16/09/2018.
  */
-public class RegenerationStorage implements Capability.IStorage<IRegen> {
+public class RegenStorage implements Capability.IStorage<IRegen> {
 
 	@Nullable
 	@Override

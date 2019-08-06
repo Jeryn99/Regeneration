@@ -98,7 +98,7 @@ minecraft {
 
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.11'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.40'
     compile 'org.jsoup:jsoup:1.11.3'
     include 'org.jsoup:jsoup:1.11.3'
 

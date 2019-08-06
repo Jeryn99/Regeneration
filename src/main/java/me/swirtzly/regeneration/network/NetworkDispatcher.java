@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.network;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.network.messages.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.FakePlayer;
@@ -37,7 +38,7 @@ public class NetworkDispatcher {
         INSTANCE.registerMessage(id++, PlaySFXMessage.class, PlaySFXMessage::encode, PlaySFXMessage::decode, PlaySFXMessage.Handler::handle);
         INSTANCE.registerMessage(id++, UpdateSkinMapMessage.class, UpdateSkinMapMessage::encode, UpdateSkinMapMessage::decode, UpdateSkinMapMessage.Handler::handle);
         INSTANCE.registerMessage(id++, ForceRegenerationMessage.class, ForceRegenerationMessage::encode, ForceRegenerationMessage::decode, ForceRegenerationMessage.Handler::handle);
-        INSTANCE.registerMessage(id++, AdjustArmsMessage.class, AdjustArmsMessage::encode, AdjustArmsMessage::decode, AdjustArmsMessage.Handler::handle);
+        INSTANCE.registerMessage(id++, NextSkinMessage.class, NextSkinMessage::encode, NextSkinMessage::decode, NextSkinMessage.Handler::handle);
      }
 
     /**

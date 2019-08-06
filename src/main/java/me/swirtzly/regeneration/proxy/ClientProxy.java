@@ -8,6 +8,7 @@ import me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer;
 import me.swirtzly.regeneration.client.rendering.types.ElixirRenderer;
 import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.handlers.CameraHandler;
 import me.swirtzly.regeneration.handlers.ClientHandler;
 import me.swirtzly.regeneration.util.FileUtil;
 import net.minecraft.client.Minecraft;
@@ -50,6 +51,7 @@ public class ClientProxy extends CommonProxy {
 		FileUtil.doSetupOnThread();
 		MinecraftForge.EVENT_BUS.register(new SkinManipulation());
 		MinecraftForge.EVENT_BUS.register(new ClientHandler());
+        MinecraftForge.EVENT_BUS.register(new CameraHandler());
 
 		AnimationManager.registerAnimations(new GeneralAnimations(), new FieryRenderer(), new ElixirRenderer());
 

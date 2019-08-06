@@ -6,7 +6,7 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.PlaySFXMessage;
+import me.swirtzly.regeneration.network.messages.PlaySFXMessage;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -133,6 +133,7 @@ class CommonActing implements Acting {
 		newDna.onAdded(cap);
 		cap.setDnaActive(true);
 		PlayerUtil.sendMessage(player, new TranslationTextComponent(newDna.getLangKey()), true);
+		cap.setNextSkin("NONE");
 	}
 	
 	@Override

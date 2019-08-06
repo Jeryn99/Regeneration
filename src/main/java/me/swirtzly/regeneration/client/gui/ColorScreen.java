@@ -6,7 +6,7 @@ import me.swirtzly.regeneration.client.gui.parts.ColorSliderWidget;
 import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.UpdateColorMessage;
+import me.swirtzly.regeneration.network.messages.UpdateColorMessage;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 
 import java.awt.*;
 
-public class CustomizerScreen extends ContainerScreen implements GuiSlider.ISlider {
+public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
     public static final int ID = 0;
 
     private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
@@ -34,7 +34,7 @@ public class CustomizerScreen extends ContainerScreen implements GuiSlider.ISlid
 
     private Vec3d initialPrimary, initialSecondary;
 
-    public CustomizerScreen() {
+    public ColorScreen() {
         super(new ContainerBlank(), null, new TranslationTextComponent("Regeneration"));
         xSize = 176;
         ySize = 186;
@@ -76,7 +76,7 @@ public class CustomizerScreen extends ContainerScreen implements GuiSlider.ISlid
 
         //Customize Button
         this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.customize").getFormattedText(), button ->
-                Minecraft.getInstance().displayGuiScreen(new SkinCustomizerScreen())));
+                Minecraft.getInstance().displayGuiScreen(new SkinTypeScreen())));
 
         //Default Button
         this.addButton(new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.default").getFormattedText(), button -> {

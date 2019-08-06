@@ -4,7 +4,7 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 
 import javax.annotation.Nullable;
 
-public class ColorSliderWidget extends GuiSlider implements GuiSlider.ISlider {
+public class ColorSliderWidget extends GuiSlider {
 
 	public ColorSliderWidget(int xPos, int yPos, int width, int height, String prefix, String suf, double minVal, double maxVal, double currentVal, boolean showDec, boolean drawStr, IPressable handler) {
 		super(xPos, yPos, width, height, prefix, suf, minVal, maxVal, currentVal, showDec, drawStr, handler);
@@ -31,10 +31,6 @@ public class ColorSliderWidget extends GuiSlider implements GuiSlider.ISlider {
 	@Override
 	protected void narrate() {
 		super.narrate();
-	}
-
-	@Override
-	public void onChangeSliderValue(GuiSlider slider) {
 	}
 
 }

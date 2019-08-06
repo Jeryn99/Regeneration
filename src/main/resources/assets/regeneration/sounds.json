@@ -1,14 +1,4 @@
 {
-  "regeneration": {
-    "category": "ambient",
-    "subtitle": "regeneration.subtitles.regeneration",
-    "sounds": [
-      {
-        "name": "regeneration:regeneration",
-        "stream": true
-      }
-    ]
-  },
   "jar_bubbles": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.regeneration_bubbles",
@@ -42,12 +32,32 @@
       }
     ]
   },
+  "regeneration_0": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration/regeneration_0",
+        "stream": true
+      }
+    ]
+  },
+  "regeneration_1": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration/regeneration_1",
+        "stream": true
+      }
+    ]
+  },
   "regeneration_2": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.regeneration",
     "sounds": [
       {
-        "name": "regeneration:regeneration_2",
+        "name": "regeneration:regeneration/regeneration_2",
         "stream": true
       }
     ]
@@ -57,7 +67,37 @@
     "subtitle": "regeneration.subtitles.regeneration",
     "sounds": [
       {
-        "name": "regeneration:regeneration_3",
+        "name": "regeneration:regeneration/regeneration_3",
+        "stream": true
+      }
+    ]
+  },
+  "regeneration_4": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration/regeneration_4",
+        "stream": true
+      }
+    ]
+  },
+  "regeneration_5": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration/regeneration_5",
+        "stream": true
+      }
+    ]
+  },
+  "regeneration_6": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration/regeneration_6",
         "stream": true
       }
     ]
@@ -133,4 +173,3 @@
     ]
   }
 }
-

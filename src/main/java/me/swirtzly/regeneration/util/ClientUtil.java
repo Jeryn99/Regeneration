@@ -1,9 +1,10 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.client.MovingSound;
+import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.UpdateSkinMessage;
+import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.toasts.SystemToast;
@@ -38,7 +39,7 @@ public class ClientUtil {
 	 * back to the ones supplied by Mojang
 	 */
 	public static void sendSkinResetPacket() {
-        NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMessage("none", SkinManipulation.wasAlex(Minecraft.getInstance().player)));
+        NetworkDispatcher.sendToServer(new UpdateSkinMessage("none", SkinManipulation.getSkinType(Minecraft.getInstance().player) == SkinInfo.SkinType.ALEX));
 	}
 	
 	@OnlyIn(Dist.CLIENT)

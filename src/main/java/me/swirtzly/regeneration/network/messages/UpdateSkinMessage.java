@@ -1,7 +1,8 @@
-package me.swirtzly.regeneration.network;
+package me.swirtzly.regeneration.network.messages;
 
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 

@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.network;
+package me.swirtzly.regeneration.network.messages;
 
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.network.PacketBuffer;

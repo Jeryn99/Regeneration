@@ -2,8 +2,8 @@ package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.ThirdPersonMessage;
-import me.swirtzly.regeneration.network.UpdateSkinMapMessage;
+import me.swirtzly.regeneration.network.messages.ThirdPersonMessage;
+import me.swirtzly.regeneration.network.messages.UpdateSkinMapMessage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.Effect;

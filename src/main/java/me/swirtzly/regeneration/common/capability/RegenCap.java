@@ -10,8 +10,8 @@ import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.SyncClientPlayerMessage;
-import me.swirtzly.regeneration.network.SyncDataMessage;
+import me.swirtzly.regeneration.network.messages.SyncClientPlayerMessage;
+import me.swirtzly.regeneration.network.messages.SyncDataMessage;
 import me.swirtzly.regeneration.util.DebuggableScheduledAction;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
@@ -55,7 +55,6 @@ public class RegenCap implements IRegen {
 	private final PlayerEntity player;
     private final RegenStateManager stateManager;
 	public String deathSource = "";
-	public int lcCoreReserve = 0;
 	private boolean didSetup = false, traitActive = true;
 	private int regenerationsLeft;
 	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
@@ -64,15 +63,15 @@ public class RegenCap implements IRegen {
 	private String BASE64_SKIN = "NONE";
 	
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
-	private SkinInfo.SkinType vanillaSkinType = SkinInfo.SkinType.ALEX;
     private SkinManipulation.EnumChoices preferredModel = SkinManipulation.EnumChoices.EITHER;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
 	private int ticksAnimating = 0; //Im so sorry
 	private boolean syncingToJar = false;
-	
-	
+	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
+	private String nextSkin = "NONE";
+
 	/**
 	 * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
 	 * This property is synced over to the client to solve this
@@ -80,7 +79,7 @@ public class RegenCap implements IRegen {
 	private boolean handsAreGlowingClient;
 
 
-    public RegenCap() {
+	public RegenCap() {
 		this.player = null;
 		this.stateManager = null;
 	}
@@ -114,13 +113,6 @@ public class RegenCap implements IRegen {
 				if (!player.world.isRemote) {
 					PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
 				}
-			}
-		}
-		
-		
-		if (getEncodedSkin().toLowerCase().equals("NONE")) {
-			if (getSkinType() != getVanillaDefault()) {
-				setSkinType(getVanillaDefault().name());
 			}
 		}
 		
@@ -178,12 +170,12 @@ public class RegenCap implements IRegen {
 			nbt.putString("regen_dna", TraitManager.DNA_BORING.getRegistryName().toString());
 		}
 		nbt.putBoolean("traitActive", traitActive);
-		nbt.putInt("lc_regen", lcCoreReserve);
-		nbt.putString("v_type", vanillaSkinType.name());
 		nbt.putInt("ticks_animating", ticksAnimating);
 		nbt.putBoolean("jar", syncingToJar);
 		if (!player.world.isRemote)
 			nbt.put("stateManager", stateManager.serializeNBT());
+		nbt.putString("nextSkinType", nextSkinType.name());
+		nbt.putString("nextSkin", nextSkin);
 		return nbt;
 	}
 	
@@ -225,14 +217,6 @@ public class RegenCap implements IRegen {
 			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
 		}
 		
-		if (nbt.contains("lc_regen")) {
-			lcCoreReserve = nbt.getInt("lc_regen");
-		}
-		
-		if (nbt.contains("v_type")) {
-			vanillaSkinType = SkinInfo.SkinType.valueOf(nbt.getString("v_type"));
-		}
-		
 		if (nbt.contains("ticks_animating")) {
 			ticksAnimating = nbt.getInt("ticks_animating");
 		}
@@ -256,6 +240,9 @@ public class RegenCap implements IRegen {
 		if (nbt.contains("jar")) {
 			syncingToJar = nbt.getBoolean("jar");
 		}
+
+		nextSkin = nbt.getString("nextSkin");
+		nextSkinType = SkinInfo.SkinType.valueOf(nbt.getString("nextSkinType"));
 	}
 	
 	
@@ -405,16 +392,6 @@ public class RegenCap implements IRegen {
 	}
 	
 	@Override
-	public SkinInfo.SkinType getVanillaDefault() {
-		return vanillaSkinType;
-	}
-	
-	@Override
-	public void setVanillaSkinType(SkinInfo.SkinType type) {
-		vanillaSkinType = type;
-	}
-	
-	@Override
 	public int getAnimationTicks() {
 		return ticksAnimating;
 	}
@@ -433,7 +410,27 @@ public class RegenCap implements IRegen {
 	public boolean isSyncingToJar() {
 		return syncingToJar;
 	}
-	
+
+	@Override
+	public SkinInfo.SkinType getNextSkinType() {
+		return nextSkinType;
+	}
+
+	@Override
+	public void setNextSkinType(SkinInfo.SkinType skinType) {
+		nextSkinType = skinType;
+	}
+
+	@Override
+	public String getNextSkin() {
+		return nextSkin;
+	}
+
+	@Override
+	public void setNextSkin(String encodedSkin) {
+		nextSkin = encodedSkin;
+	}
+
 	@Override
     public IRegenStateManager getStateManager() {
 		return stateManager;

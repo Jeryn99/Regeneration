@@ -3,15 +3,14 @@ package me.swirtzly.regeneration.handlers;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.RegenKeyBinds;
-import me.swirtzly.regeneration.client.gui.CustomizerScreen;
+import me.swirtzly.regeneration.client.gui.ColorScreen;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.TypeManager;
-import me.swirtzly.regeneration.network.AdjustArmsMessage;
-import me.swirtzly.regeneration.network.ForceRegenerationMessage;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
+import me.swirtzly.regeneration.network.messages.ForceRegenerationMessage;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.EnumCompatModids;
 import me.swirtzly.regeneration.util.RenderUtil;
@@ -37,7 +36,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -54,20 +52,18 @@ import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
  */
 public class ClientHandler {
 
-    private static boolean initialJoin = false;
-
-    private static final ResourceLocation ACCESSIBILITY_TEXTURES = new ResourceLocation("textures/gui/accessibility.png");
-
+    private static final ResourceLocation BUTTON_TEX = new ResourceLocation(RegenerationMod.MODID, "textures/gui/gui_button_customize.png");
 
     @SubscribeEvent
     public void onGui(GuiScreenEvent.InitGuiEvent event){
         if(event.getGui() instanceof InventoryScreen){
             int j = event.getGui().height / 4 + 48;
-            event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, ACCESSIBILITY_TEXTURES, 32, 64, (p_213088_1_) -> {
-                Minecraft.getInstance().displayGuiScreen(new CustomizerScreen());
-            }, I18n.format("narrator.button.accessibility")));
+            event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, BUTTON_TEX, 32, 64, (p_213088_1_) -> {
+                Minecraft.getInstance().displayGuiScreen(new ColorScreen());
+            }, I18n.format("Regeneration")));
         }
     }
+
 
     @SubscribeEvent
     public void onKeybindPress(InputUpdateEvent tickEvent) {
@@ -84,26 +80,17 @@ public class ClientHandler {
     }
 
     @SubscribeEvent
-    public void onJoin(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof PlayerEntity && !initialJoin) {
-            if (Minecraft.getInstance().player == event.getEntity()) {
-                ClientPlayerEntity localPlayer = Minecraft.getInstance().player;
-                NetworkDispatcher.INSTANCE.sendToServer(new AdjustArmsMessage(localPlayer.getSkinType().equals("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE));
-                initialJoin = true;
-            }
-        }
-    }
-
-    @SubscribeEvent
     public void onTickEvent(TickEvent.ClientTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.START)) return;
         if (Minecraft.getInstance().world == null) {
-            if (SkinManipulation.PLAYER_SKINS.size() > 0 || SkinManipulation.TYPE_BACKUPS.size() > 0) {
-                SkinManipulation.TYPE_BACKUPS.clear();
+            if (SkinManipulation.PLAYER_SKINS.size() > 0) {
+                SkinManipulation.PLAYER_SKINS.forEach(((uuid, skinInfo) -> {
+                    RegenerationMod.LOG.warn("Deleted skin texture: " + skinInfo.getSkinTextureLocation());
+                    Minecraft.getInstance().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation());
+                }));
                 SkinManipulation.PLAYER_SKINS.clear();
-                RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS AND TYPE_BACKUPS");
+                RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
             }
-            initialJoin = false;
         }
     }
 
@@ -331,5 +318,6 @@ public class ClientHandler {
             GlStateManager.popMatrix();
         });
     }
+
 
 }

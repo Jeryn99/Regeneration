@@ -3,7 +3,7 @@ package me.swirtzly.regeneration.client;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.RegenerateMessage;
+import me.swirtzly.regeneration.network.messages.RegenerateMessage;
 import me.swirtzly.regeneration.util.EnumCompatModids;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
