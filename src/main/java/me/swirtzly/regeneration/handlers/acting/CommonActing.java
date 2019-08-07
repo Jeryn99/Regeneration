@@ -133,7 +133,7 @@ class CommonActing implements Acting {
 		newDna.onAdded(cap);
 		cap.setDnaActive(true);
 		PlayerUtil.sendMessage(player, new TranslationTextComponent(newDna.getLangKey()), true);
-		cap.setNextSkin("NONE");
+        cap.setNextSkin(RegenUtil.NO_SKIN);
 	}
 	
 	@Override

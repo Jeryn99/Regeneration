@@ -16,7 +16,7 @@ updateJSONURL="https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/upd
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://www.curseforge.com/minecraft/mc-mods/regeneration" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+logoFile="logo.png" #optional
 # A text field displayed in the mod UI
 credits="Dhi_Awesome, Mel, End-Pheonix, See authors for coders" #optional
 # A text field displayed in the mod UI

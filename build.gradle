@@ -38,7 +38,6 @@ repositories {
 
 minecraft {
     mappings channel: 'snapshot', version: '20190719-1.14.3'
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     runs {
         client {
@@ -98,7 +97,7 @@ minecraft {
 
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.40'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.45'
     compile 'org.jsoup:jsoup:1.11.3'
     include 'org.jsoup:jsoup:1.11.3'
 

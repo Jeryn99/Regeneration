@@ -31,8 +31,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
 import javax.annotation.Nonnull;
 
@@ -69,7 +67,7 @@ public class CommonHandler {
 	}
 	
 	@SubscribeEvent
-	public void onPlayerRespawn(PlayerRespawnEvent event) {
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
 	//	if (!RegenConfig.COMMON.firstStartGiftOnly)
 		//		RegenCap.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.freeRegenerations);
 
@@ -77,7 +75,7 @@ public class CommonHandler {
 	}
 	
 	@SubscribeEvent
-	public void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
+    public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
 		RegenCap.get(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
 	

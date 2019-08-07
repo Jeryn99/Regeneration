@@ -39,7 +39,7 @@ public class ClientUtil {
 	 * back to the ones supplied by Mojang
 	 */
 	public static void sendSkinResetPacket() {
-        NetworkDispatcher.sendToServer(new UpdateSkinMessage("none", SkinManipulation.getSkinType(Minecraft.getInstance().player) == SkinInfo.SkinType.ALEX));
+		NetworkDispatcher.sendToServer(new UpdateSkinMessage(RegenUtil.NO_SKIN, SkinManipulation.getSkinType(Minecraft.getInstance().player) == SkinInfo.SkinType.ALEX));
 	}
 	
 	@OnlyIn(Dist.CLIENT)

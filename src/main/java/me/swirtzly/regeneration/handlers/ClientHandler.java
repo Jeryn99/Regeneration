@@ -36,10 +36,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.Random;
 import java.util.UUID;
@@ -57,10 +57,13 @@ public class ClientHandler {
     @SubscribeEvent
     public void onGui(GuiScreenEvent.InitGuiEvent event){
         if(event.getGui() instanceof InventoryScreen){
-            int j = event.getGui().height / 4 + 48;
-            event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, BUTTON_TEX, 32, 64, (p_213088_1_) -> {
-                Minecraft.getInstance().displayGuiScreen(new ColorScreen());
-            }, I18n.format("Regeneration")));
+            RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
+                if (data.canRegenerate()) {
+                    event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, BUTTON_TEX, 32, 64, (p_213088_1_) -> {
+                        Minecraft.getInstance().displayGuiScreen(new ColorScreen());
+                    }, I18n.format("Regeneration")));
+                }
+            });
         }
     }
 
@@ -84,9 +87,7 @@ public class ClientHandler {
         if (event.phase.equals(TickEvent.Phase.START)) return;
         if (Minecraft.getInstance().world == null) {
             if (SkinManipulation.PLAYER_SKINS.size() > 0) {
-                SkinManipulation.PLAYER_SKINS.forEach(((uuid, skinInfo) -> {
-                    Minecraft.getInstance().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation());
-                }));
+                SkinManipulation.PLAYER_SKINS.forEach(((uuid, skinInfo) -> Minecraft.getInstance().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation())));
                 SkinManipulation.PLAYER_SKINS.clear();
                 RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
             }

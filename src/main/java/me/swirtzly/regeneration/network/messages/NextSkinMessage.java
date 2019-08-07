@@ -19,12 +19,12 @@ public class NextSkinMessage {
     }
 
     public static void encode(NextSkinMessage message, PacketBuffer packetBuffer) {
-        packetBuffer.writeBoolean(message.isAlex);
         packetBuffer.writeString(message.encodedSkin);
+        packetBuffer.writeBoolean(message.isAlex);
     }
 
     public static NextSkinMessage decode(PacketBuffer buffer) {
-        return new NextSkinMessage(buffer.readString(), buffer.readBoolean());
+        return new NextSkinMessage(buffer.readString(32767), buffer.readBoolean());
     }
 
 
@@ -36,6 +36,7 @@ public class NextSkinMessage {
 
                     data.setNextSkin(message.encodedSkin);
                     data.setNextSkinType(message.isAlex ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
+                    data.synchronise();
                 });
             });
             ctx.get().setPacketHandled(true);

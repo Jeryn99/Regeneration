@@ -33,12 +33,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.lwjgl.system.MemoryStack;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -53,28 +52,23 @@ public class SkinManipulation {
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 	private static final Random RAND = new Random();
 
-	public static String imageToPixelData(File file) {
-		byte[] fileContent = new byte[0];
+	public static String imageToPixelData(final BufferedImage img) {
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
-			fileContent = FileUtils.readFileToByteArray(file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return Base64.getEncoder().encodeToString(fileContent);
-	}
-
-	public static NativeImage decodeToImage(String imageString) throws IOException {
-		System.out.println(imageString);
-		try (MemoryStack memorystack = MemoryStack.stackPush()) {
-			ByteBuffer bytebuffer = memorystack.UTF8(imageString, false);
-			ByteBuffer decoded = Base64.getDecoder().decode(bytebuffer);
-			ByteBuffer toImage = memorystack.malloc(decoded.remaining());
-			toImage.put(decoded);
-			toImage.rewind();
-			return NativeImage.read(toImage);
+			ImageIO.write(img, "PNG", Base64.getEncoder().wrap(os));
+			return os.toString(StandardCharsets.ISO_8859_1.name());
+		} catch (final IOException ioe) {
+			throw new UncheckedIOException(ioe);
 		}
 	}
 
+	public static NativeImage decodeToImage(final String base64String) {
+		try {
+			return NativeImage.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64String)));
+		} catch (final IOException ioe) {
+			throw new UncheckedIOException(ioe);
+		}
+	}
 
 	/**
 	 * Choosens a random png file from Steve/Alex Directory (This really depends on the Clients preference)
@@ -92,14 +86,18 @@ public class SkinManipulation {
 
 		if (RegenConfig.CLIENT.changeMySkin.get()) {
 
-			String pixelData = "NONE";
+			String pixelData = RegenUtil.NO_SKIN;
 			File skin = null;
 
-			if (data.getNextSkin().equals("NONE")) {
+			if (data.getNextSkin().equals(RegenUtil.NO_SKIN)) {
 				boolean isAlex = data.getPreferredModel().isAlex();
 				skin = SkinManipulation.chooseRandomSkin(random, isAlex);
 				RegenerationMod.LOG.info(skin + " was choosen");
-				pixelData = SkinManipulation.imageToPixelData(skin);
+				try {
+					pixelData = SkinManipulation.imageToPixelData(ImageIO.read(skin));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				data.setEncodedSkin(pixelData);
 				NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, isAlex));
 			} else {
@@ -107,7 +105,6 @@ public class SkinManipulation {
 				data.setEncodedSkin(pixelData);
 				NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, data.getNextSkinType().getMojangType().equals("slim")));
 			}
-
 		} else {
 			ClientUtil.sendSkinResetPacket();
 		}
@@ -139,7 +136,7 @@ public class SkinManipulation {
 			return new SkinInfo(null, getSkinType(player));
 		}
 
-		if (data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
+		if (data.getEncodedSkin().equals(RegenUtil.NO_SKIN) || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
 			resourceLocation = getMojangSkin(player);
 			skinType = getSkinType(player);
 		} else {
@@ -173,15 +170,12 @@ public class SkinManipulation {
 	 */
 	private static ResourceLocation getMojangSkin(AbstractClientPlayerEntity player) {
 		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = getVanillaMap(player);
+		forceLoad(map);
 		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
 			MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
 			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, Minecraft.getInstance().getSkinManager(), 2), profile.getHash().substring(0, 2));
 			File file = new File(dir, profile.getHash());
-			if (file.exists()) {
-				file.delete();
-			}
 			ResourceLocation location = new ResourceLocation("skins/" + profile.getHash());
-			loadTexture(file, location, DefaultPlayerSkin.getDefaultSkinLegacy(), profile.getUrl());
 			setPlayerSkin(player, location);
 			return player.getLocationSkin();
 		}
@@ -289,27 +283,12 @@ public class SkinManipulation {
 		});
 	}
 
-	/**
-	 * Called by onRenderPlayer, sets model, sets texture, adds player and SkinInfo to map
-	 *
-	 * @param player - Player instance
-	 * @param cap    - Players Regen capability instance
-	 */
-    private void setSkinFromData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
-		cap.ifPresent((data) -> {
-			SkinInfo skinInfo = null;
-			try {
-                skinInfo = SkinManipulation.getSkinInfo(player, data);
-			} catch (IOException e1) {
-				if(!data.getEncodedSkin().toLowerCase().equals("none")) {
-					RegenerationMod.LOG.error("Error creating skin for: " + player.getName().getUnformattedComponentText() + " " + e1.getMessage());
-				}
-			}
-			if (skinInfo != null) {
-                SkinManipulation.setPlayerSkin(player, skinInfo.getSkinTextureLocation());
-                SkinManipulation.setPlayerSkinType(player, skinInfo.getSkintype());
-				PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
-			}});
+	//Experiment
+	public static ResourceLocation forceLoad(Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map) {
+		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+			return Minecraft.getInstance().getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN, null);
+		}
+		return null;
 	}
 
 	public static ResourceLocation createGuiTexture(File file) {
@@ -361,6 +340,30 @@ public class SkinManipulation {
 			}
 			return isAlex;
 		}
+	}
+
+	/**
+	 * Called by onRenderPlayer, sets model, sets texture, adds player and SkinInfo to map
+	 *
+	 * @param player - Player instance
+	 * @param cap    - Players Regen capability instance
+	 */
+	private void setSkinFromData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
+		cap.ifPresent((data) -> {
+			SkinInfo skinInfo = null;
+			try {
+				skinInfo = SkinManipulation.getSkinInfo(player, data);
+			} catch (IOException e1) {
+				if (!data.getEncodedSkin().equals(RegenUtil.NO_SKIN)) {
+					RegenerationMod.LOG.error("Error creating skin for: " + player.getName().getUnformattedComponentText() + " " + e1.getMessage());
+				}
+			}
+			if (skinInfo != null) {
+				SkinManipulation.setPlayerSkin(player, skinInfo.getSkinTextureLocation());
+				SkinManipulation.setPlayerSkinType(player, skinInfo.getSkintype());
+				PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
+			}
+		});
 	}
 
 

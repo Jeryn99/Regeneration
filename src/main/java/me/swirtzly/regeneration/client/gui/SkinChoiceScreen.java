@@ -9,7 +9,6 @@ import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.NextSkinMessage;
 import me.swirtzly.regeneration.util.ClientUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ResourcePacksScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -19,6 +18,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -105,7 +105,11 @@ public class SkinChoiceScreen extends ContainerScreen {
             @Override
             public void onPress(Button button) {
                 updateModels();
-                NetworkDispatcher.sendToServer(new NextSkinMessage(SkinManipulation.imageToPixelData(skins.get(position)), isAlex));
+                try {
+                    NetworkDispatcher.sendToServer(new NextSkinMessage(SkinManipulation.imageToPixelData(ImageIO.read(skins.get(position))), isAlex));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         GuiButtonExt btnResetSkin = new GuiButtonExt(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin").getFormattedText(), new Button.IPressable() {
@@ -132,6 +136,7 @@ public class SkinChoiceScreen extends ContainerScreen {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground();
         Minecraft.getInstance().getTextureManager().bindTexture(background);
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
         GlStateManager.pushMatrix();

@@ -59,8 +59,8 @@ public class RegenCap implements IRegen {
 	private int regenerationsLeft;
 	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
 	private TypeManager.Type regenType = TypeManager.Type.FIERY;
-	
-	private String BASE64_SKIN = "NONE";
+
+	private String BASE64_SKIN = RegenUtil.NO_SKIN;
 	
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
     private SkinManipulation.EnumChoices preferredModel = SkinManipulation.EnumChoices.EITHER;
@@ -70,7 +70,7 @@ public class RegenCap implements IRegen {
 	private int ticksAnimating = 0; //Im so sorry
 	private boolean syncingToJar = false;
 	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
-	private String nextSkin = "NONE";
+	private String nextSkin = RegenUtil.NO_SKIN;
 
 	/**
 	 * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
@@ -241,8 +241,12 @@ public class RegenCap implements IRegen {
 			syncingToJar = nbt.getBoolean("jar");
 		}
 
-		nextSkin = nbt.getString("nextSkin");
-		nextSkinType = SkinInfo.SkinType.valueOf(nbt.getString("nextSkinType"));
+		if (nbt.contains("nextSkin")) {
+			nextSkin = nbt.getString("nextSkin");
+		}
+		if (nbt.contains("nextSkinType")) {
+			nextSkinType = SkinInfo.SkinType.valueOf(nbt.getString("nextSkinType"));
+		}
 	}
 	
 	
@@ -429,6 +433,7 @@ public class RegenCap implements IRegen {
 	@Override
 	public void setNextSkin(String encodedSkin) {
 		nextSkin = encodedSkin;
+		System.out.println(encodedSkin);
 	}
 
 	@Override

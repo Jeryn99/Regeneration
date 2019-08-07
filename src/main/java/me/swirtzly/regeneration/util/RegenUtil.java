@@ -70,12 +70,26 @@ public class RegenUtil {
 		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
 		explodeKill(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
 	}
-	
-	public static void explodeKnockback(Entity exploder, World world, BlockPos pos, float knockback, int range) {
+
+    //Constants
+    public static String NO_SKIN = "no_skin";
+
+    public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
+        world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
+            if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) //&& RegenConfig.COMMON.regenerationKillsPlayers))
+                entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
+        });
+    }
+
+    public static AxisAlignedBB getReach(BlockPos pos, int range) {
+        return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
+    }
+
+    public static void explodeKnockback(Entity exploder, World world, BlockPos pos, double knockback, int range) {
 		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
 			if (entity instanceof LivingEntity && exploder.isAlive()) {
 				LivingEntity victim = (LivingEntity) entity;
-				
+
 				if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.isNonBoss())
 					return;
 
@@ -86,25 +100,14 @@ public class RegenUtil {
 				int xr, zr;
 				xr = (int) -(victim.posX - exploder.posX);
 				zr = (int) -(victim.posZ - exploder.posZ);
-				
-				victim.knockBack(exploder, knockback * densMod, xr, zr);
-			}
+
+                victim.knockBack(exploder, (float) (knockback * densMod), xr, zr);
+            }
 		});
 	}
-	
-	public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
-		world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-			if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) //&& RegenConfig.COMMON.regenerationKillsPlayers))
-				entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
-		});
-	}
-	
-	public static AxisAlignedBB getReach(BlockPos pos, int range) {
-		return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
-	}
 
-	public interface IEnum<E extends Enum<E>> {
 
+    public interface IEnum<E extends Enum<E>> {
 		int ordinal();
 
 		default E next() {

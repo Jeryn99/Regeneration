@@ -25,7 +25,7 @@ public class ForceRegenerationMessage {
 			ctx.get().getSender().getServer().deferTask(() -> {
 				ServerPlayerEntity player = ctx.get().getSender();
 				RegenCap.get(player).ifPresent((data) -> {
-					if(data.getState() == PlayerUtil.RegenState.ALIVE){
+                    if (data.getState() == PlayerUtil.RegenState.ALIVE && data.getRegenerationsLeft() > 0) {
 						player.attackEntityFrom(RegenObjects.REGEN_DMG_FORCED, Integer.MAX_VALUE);
 					}
 				});
