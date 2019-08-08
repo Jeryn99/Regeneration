@@ -268,8 +268,13 @@ public class CapabilityRegeneration implements IRegeneration {
 	public TypeHandler.RegenType getType() {
 		return regenType;
 	}
-	
-	
+
+	@Override
+	public void setType(TypeHandler.RegenType type) {
+		this.regenType = type;
+	}
+
+
 	@Override
 	public String getEncodedSkin() {
 		return BASE64_SKIN;

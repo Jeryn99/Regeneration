@@ -1,17 +1,18 @@
 #PARSE_ESCAPES
 item.fob_watch.name=Fob Watch
 item.lindos_vial.name=Lindos Vial
+regeneration.gui.color=Color
 regeneration.gui.red=Red
 regeneration.gui.green=Green
 regeneration.gui.blue=Blue
 regeneration.gui.primary=Primary
 regeneration.gui.secondary=Secondary
 regeneration.gui.undo=Undo
-regeneration.gui.default=Default
+regeneration.gui.default=Type Default
 regeneration.gui.open_folder=Skin Dir
-regeneration.gui.skin_choice=Skin
+regeneration.gui.skin_choice=Incarnation
 regeneration.gui.save=Save
-regeneration.gui.current_skin=Skin name:
+regeneration.gui.next_incarnation=Select next incarnation
 regeneration.gui.reset_skin=Reset Skin
 regeneration.gui.infinite_regenerations=Infinite Regeneration Mode
 regeneration.gui.remaining_regens.status=Remaining Regenerations:
@@ -160,10 +161,18 @@ regeneration.messages.cant_glow=You cannot activate a glowing hand without being
 regeneration.gui.back=Back
 regeneration.gui.previous=<
 regeneration.gui.next=>
-regeneration.gui.customize=Preferences
-regeneration.gui.preference_model=Preferred skin type: %s
+regeneration.gui.preferences=Preferences
 regeneration.messages.info_trait=Trait:
 regeneration.keybinds.regenerate_forced=Force Regen!
 
 entity.fob.name=Item
 entity.lindos.name=Lindos particles
+
+
+regentype.lay_fade=Hartnell
+regentype.fiery=Fiery
+
+
+skintype.alex=Alex Skins
+skintype.steve=Steve Skins
+skintype.either=All Skins

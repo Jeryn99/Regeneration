@@ -2,11 +2,14 @@ package me.swirtzly.regeneration.client.rendering.types;
 
 import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
+import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
+import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeFiery;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.util.RenderUtil;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -22,7 +25,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
 import static me.swirtzly.regeneration.client.animation.AnimationHandler.copyAndReturn;
-import static me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration.playerModelSteve;
+import static me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration.modelAlex;
+import static me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration.modelSteve;
 
 public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	
@@ -64,8 +68,13 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		Vec3d color = CapabilityRegeneration.getForPlayer(entityPlayer).getPrimaryColor();
 		float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
 		GlStateManager.color((float) color.x, (float) color.y, (float) color.z, opacity);
-		playerModelSteve.isChild = false;
-		playerModelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		if (SkinChangingHandler.getSkinType((AbstractClientPlayer) entityPlayer) == SkinInfo.SkinType.STEVE) {
+			modelSteve.isChild = false;
+			modelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		} else {
+			modelAlex.isChild = false;
+			modelAlex.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+		}
 		RenderUtil.restoreLightMap();
 		GlStateManager.enableLighting();
 		GlStateManager.disableBlend();
@@ -128,7 +137,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		return copyAndReturn(playerModel, true);
 	}
 	
-	public static void renderConeAtArms(EntityPlayer player, RenderLivingBase<?> renderLivingBase, EnumHandSide side) {
+	public static void renderConeAtArms(EntityPlayer player) {
 		IRegeneration capability = CapabilityRegeneration.getForPlayer(player);
 		double x = TypeHandler.getTypeInstance(capability.getType()).getAnimationProgress(capability);
 		double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
@@ -149,7 +158,6 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-		//GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
 		GlStateManager.depthMask(true);
 		RenderUtil.setLightmapTextureCoords(65, 65);
@@ -174,7 +182,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 	@Deprecated //This duplicated code needs sorted asap
 	@Override
 	public void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render) {
-		renderConeAtArms(player, render, handSide);
+		renderConeAtArms(player);
 	}
 
 	@Override

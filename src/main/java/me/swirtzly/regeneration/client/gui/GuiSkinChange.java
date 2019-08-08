@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.io.File;
@@ -40,18 +41,18 @@ public class GuiSkinChange extends GuiContainer {
 
     public GuiSkinChange() {
         super(new BlankContainer());
-        xSize = 176;
-        ySize = 186;
+        xSize = 256;
+        ySize = 173;
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        int cx = (width - xSize) / 2;
-        int cy = (height - ySize) / 2;
+        int cx = (width - xSize) / 2 + 80;
+        int cy = (height - ySize) / 2 + 13;
         final int btnW = 60, btnH = 18;
         rotation = 0;
-        position = 0;
+            position = 0;
         GuiButtonExt btnNext = new GuiButtonExt(44, cx + 25, cy + 80, 20, 20, new TextComponentTranslation("regeneration.gui.previous").getFormattedText());
         GuiButtonExt btnPrevious = new GuiButtonExt(55, cx + 130, cy + 80, 20, 20, new TextComponentTranslation("regeneration.gui.next").getFormattedText());
         GuiButtonExt btnBack = new GuiButtonExt(66, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText());
@@ -83,19 +84,19 @@ public class GuiSkinChange extends GuiContainer {
         Minecraft.getMinecraft().getTextureManager().bindTexture(PLAYER_TEXTURE);
         switch (choices) {
             case ALEX:
-                drawModelToGui(playerModelAlex, width / 2, height / 2 - 50, 1.0f, rotation);
+                drawModelToGui(playerModelAlex, width / 2, height / 2 - 45, 1.0f, rotation);
                 break;
             case STEVE:
-                drawModelToGui(playerModelSteve, width / 2, height / 2 - 50, 1.0f, rotation);
+                drawModelToGui(playerModelSteve, width / 2, height / 2 - 45, 1.0f, rotation);
                 break;
             case EITHER:
-                drawModelToGui(playerModelAlex, width / 2 - 40, height / 2 - 50, 1.0f, rotation);
-                drawModelToGui(playerModelSteve, width / 2 + 40, height / 2 - 50, 1.0f, rotation);
+                drawModelToGui(playerModelAlex, width / 2 - 40, height / 2 - 45, 1.0f, rotation);
+                drawModelToGui(playerModelSteve, width / 2 + 40, height / 2 - 45, 1.0f, rotation);
                 break;
         }
         GlStateManager.popMatrix();
 
-        drawCenteredString(Minecraft.getMinecraft().fontRenderer, new TextComponentTranslation("regeneration.gui.current_skin").getUnformattedText(), width / 2, height / 2 + 5, Color.WHITE.getRGB());
+        drawCenteredString(Minecraft.getMinecraft().fontRenderer, new TextComponentTranslation("regeneration.gui.next_incarnation").getUnformattedText(), width / 2, height / 2 - 80, Color.WHITE.getRGB());
         drawCenteredString(Minecraft.getMinecraft().fontRenderer, new TextComponentTranslation(skins.get(position).getName().replaceAll(".png", "")).getUnformattedText(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
 
     }

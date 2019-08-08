@@ -38,10 +38,12 @@ public class MessageSetPerspective implements IMessage {
 		@Override
 		public IMessage onMessage(MessageSetPerspective message, MessageContext ctx) {
 			Minecraft.getMinecraft().addScheduledTask(() -> {
-				if (message.resetPitch)
-					Minecraft.getMinecraft().player.rotationPitch = 0;
-				if (RegenConfig.changePerspective) {
-					Minecraft.getMinecraft().gameSettings.thirdPersonView = message.thirdperson ? 2 : 0;
+				if(Minecraft.getMinecraft().getRenderViewEntity().getUniqueID() == Minecraft.getMinecraft().player.getUniqueID()) {
+					if (message.resetPitch)
+						Minecraft.getMinecraft().player.rotationPitch = 0;
+					if (RegenConfig.changePerspective) {
+						Minecraft.getMinecraft().gameSettings.thirdPersonView = message.thirdperson ? 2 : 0;
+					}
 				}
 			});
 			return null;

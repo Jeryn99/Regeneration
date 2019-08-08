@@ -57,6 +57,7 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 	PlayerUtil.RegenState getState();
 
     TypeHandler.RegenType getType();
+    void setType(TypeHandler.RegenType type);
 	
 	IRegenerationStateManager getStateManager();
 	

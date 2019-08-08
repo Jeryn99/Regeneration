@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Created by Sub
@@ -77,6 +78,16 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 	@Override
 	public SoundEvent[] getRegeneratingSounds() {
 		return SOUNDS;
+	}
+
+	@Override
+	public Vec3d getDefaultPrimaryColor() {
+		return new Vec3d(0.93F, 0.61F, 0F);
+	}
+
+	@Override
+	public Vec3d getDefaultSecondaryColor() {
+		return new Vec3d(1F, 0.5F, 0.18F);
 	}
 
 	@Override

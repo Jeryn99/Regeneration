@@ -16,6 +16,7 @@ import me.swirtzly.regeneration.network.MessageTriggerForcedRegen;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.EnumCompatModids;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
@@ -64,10 +65,23 @@ public class ClientEventHandler {
 	public static final ResourceLocation[] SHADERS_TEXTURES = new ResourceLocation[]{new ResourceLocation("shaders/post/notch.json"), new ResourceLocation("shaders/post/fxaa.json"), new ResourceLocation("shaders/post/art.json"), new ResourceLocation("shaders/post/bumpy.json"), new ResourceLocation("shaders/post/blobs2.json"), new ResourceLocation("shaders/post/pencil.json"), new ResourceLocation("shaders/post/color_convolve.json"), new ResourceLocation("shaders/post/deconverge.json"), new ResourceLocation("shaders/post/flip.json"), new ResourceLocation("shaders/post/invert.json"), new ResourceLocation("shaders/post/ntsc.json"), new ResourceLocation("shaders/post/outline.json"), new ResourceLocation("shaders/post/phosphor.json"), new ResourceLocation("shaders/post/scan_pincushion.json"), new ResourceLocation("shaders/post/sobel.json"), new ResourceLocation("shaders/post/bits.json"), new ResourceLocation("shaders/post/desaturate.json"), new ResourceLocation("shaders/post/green.json"), new ResourceLocation("shaders/post/blur.json"), new ResourceLocation("shaders/post/wobble.json"), new ResourceLocation("shaders/post/blobs.json"), new ResourceLocation("shaders/post/antialias.json"), new ResourceLocation("shaders/post/creeper.json"), new ResourceLocation("shaders/post/spider.json")};
 
 
+	@SubscribeEvent
+	public static void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e){
+		if(Minecraft.getMinecraft().getRenderViewEntity() instanceof EntityPlayer){
+			IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
+			if(data.getType() == TypeHandler.RegenType.LAY_FADE && data.getState() == REGENERATING){
+				e.setRed((float) data.getPrimaryColor().x);
+				e.setGreen((float) data.getPrimaryColor().y);
+				e.setBlue((float) data.getPrimaryColor().z);
+			}
+		}
+	}
+
+
 	//====
 	
 	@SubscribeEvent
-	public static void onGui(InputUpdateEvent tickEvent) {
+	public static void onInput(InputUpdateEvent tickEvent) {
 		
 		if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
 			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
@@ -221,11 +235,19 @@ public class ClientEventHandler {
 		if (Minecraft.getMinecraft().getRenderViewEntity() instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) Minecraft.getMinecraft().getRenderViewEntity();
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+
 			if (data.getState() == GRACE_CRIT) {
 				GlStateManager.setFog(GlStateManager.FogMode.EXP);
 				event.setCanceled(true);
 				float amount = MathHelper.cos(data.getPlayer().ticksExisted * 0.06F) * -0.09F;
 				event.setDensity(amount);
+			}
+
+			if(data.getType() == TypeHandler.RegenType.LAY_FADE && data.getAnimationTicks() > 0){
+				GlStateManager.setFog(GlStateManager.FogMode.EXP);
+				event.setCanceled(true);
+				float opacity = MathHelper.clamp(MathHelper.sin((player.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
+				event.setDensity(opacity);
 			}
 		}
 	}
@@ -353,8 +375,7 @@ public class ClientEventHandler {
 			}
 
 			if (data.getState() == GRACE_CRIT) {
-				GlStateManager.rotate(90, 1, 0, 0);
-				GlStateManager.translate(0, 1, 0);
+				GlStateManager.translate(0, 0.125D, 0);
 			}
 
 		}

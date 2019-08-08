@@ -8,6 +8,8 @@ import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
+import me.swirtzly.regeneration.common.types.IRegenType;
+import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.network.MessageSaveStyle;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.RenderUtil;
@@ -37,8 +39,8 @@ public class GuiCustomizer extends GuiContainer {
 	
 	public GuiCustomizer() {
 		super(new BlankContainer());
-		xSize = 176;
-		ySize = 186;
+		xSize = 256;
+		ySize = 173;
 	}
 	
 	@Override
@@ -115,13 +117,16 @@ public class GuiCustomizer extends GuiContainer {
 			
 			btnReset.enabled = false;
 		} else if (button.id == btnDefault.id) {
-			slidePrimaryRed.setValue(0.93F);
-			slidePrimaryGreen.setValue(0.61F);
-			slidePrimaryBlue.setValue(0F);
+
+			IRegenType typeData = TypeHandler.getTypeInstance(CapabilityRegeneration.getForPlayer(mc.player).getType());
+
+			slidePrimaryRed.setValue(typeData.getDefaultPrimaryColor().x);
+			slidePrimaryGreen.setValue(typeData.getDefaultPrimaryColor().y);
+			slidePrimaryBlue.setValue(typeData.getDefaultPrimaryColor().z);
 			
-			slideSecondaryRed.setValue(1F);
-			slideSecondaryGreen.setValue(0.5F);
-			slideSecondaryBlue.setValue(0.18F);
+			slideSecondaryRed.setValue(typeData.getDefaultSecondaryColor().x);
+			slideSecondaryGreen.setValue(typeData.getDefaultSecondaryColor().y);
+			slideSecondaryBlue.setValue(typeData.getDefaultSecondaryColor().z);
 			
 			onChangeSliderValue(null);
 		} else if (button.id == btnCust.id) {

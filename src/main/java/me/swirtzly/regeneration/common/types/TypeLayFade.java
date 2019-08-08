@@ -7,8 +7,9 @@ import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 
-public class TypeElixir implements IRegenType<TypeLayFadeRenderer> {
+public class TypeLayFade implements IRegenType<TypeLayFadeRenderer> {
 
     @Override
     public int getAnimationLength() {
@@ -52,6 +53,16 @@ public class TypeElixir implements IRegenType<TypeLayFadeRenderer> {
     @Override
     public SoundEvent[] getRegeneratingSounds() {
         return soundEvents;
+    }
+
+    @Override
+    public Vec3d getDefaultPrimaryColor() {
+        return new Vec3d(1,1,1);
+    }
+
+    @Override
+    public Vec3d getDefaultSecondaryColor() {
+        return new Vec3d(1,1,1);
     }
 
 }

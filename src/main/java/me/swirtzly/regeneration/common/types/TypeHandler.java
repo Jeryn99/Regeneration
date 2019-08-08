@@ -1,5 +1,7 @@
 package me.swirtzly.regeneration.common.types;
 
+import me.swirtzly.regeneration.util.FileUtil;
+
 import java.util.HashMap;
 
 public class TypeHandler {
@@ -8,7 +10,7 @@ public class TypeHandler {
 
     public static void init() {
         TYPES.put(RegenType.FIERY, new TypeFiery());
-        TYPES.put(RegenType.LAY_FADE, new TypeElixir());
+        TYPES.put(RegenType.LAY_FADE, new TypeLayFade());
     }
 
     public static IRegenType getTypeInstance(RegenType type) {
@@ -19,7 +21,7 @@ public class TypeHandler {
     }
 
 
-    public enum RegenType {
+    public enum RegenType implements FileUtil.IEnum {
         FIERY, LAY_FADE
     }
 }

@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 public class InventoryTabRegeneration extends AbstractTab {
 	
 	public InventoryTabRegeneration() {
-		super(0, 0, 0, new ItemStack(RegenObjects.Items.FOB_WATCH));
+		super(777, 0, 0, new ItemStack(RegenObjects.Items.FOB_WATCH));
 		displayString = "Regeneration";
 	}
 	
