@@ -14,44 +14,44 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.util.UUID;
 
 public class MessageTriggerRegeneration implements IMessage {
-	
-	private EntityPlayer player;
-	
-	public MessageTriggerRegeneration() {
-	}
-	
-	public MessageTriggerRegeneration(EntityPlayer player) {
-		this.player = player;
-	}
-	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeInt(player.dimension);
-		ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
-	}
-	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		int dim = buf.readInt();
-		player = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim).getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
-	}
-	
-	public static class Handler implements IMessageHandler<MessageTriggerRegeneration, IMessage> {
-		
-		@Override
-		public IMessage onMessage(MessageTriggerRegeneration message, MessageContext ctx) {
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-				IRegeneration regen = CapabilityRegeneration.getForPlayer(message.player);
-				
-				if (!regen.getState().isGraceful()) {
-					RegenerationMod.LOG.warn(regen.getPlayer().getName() + "Trigger packet was sent when not in a graceful period");
-					return;
-				}
-				regen.triggerRegeneration();
-			});
-			
-			return null;
-		}
-	}
-	
+
+    private EntityPlayer player;
+
+    public MessageTriggerRegeneration() {
+    }
+
+    public MessageTriggerRegeneration(EntityPlayer player) {
+        this.player = player;
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        buf.writeInt(player.dimension);
+        ByteBufUtils.writeUTF8String(buf, player.getGameProfile().getId().toString());
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        int dim = buf.readInt();
+        player = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim).getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
+    }
+
+    public static class Handler implements IMessageHandler<MessageTriggerRegeneration, IMessage> {
+
+        @Override
+        public IMessage onMessage(MessageTriggerRegeneration message, MessageContext ctx) {
+            ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
+                IRegeneration regen = CapabilityRegeneration.getForPlayer(message.player);
+
+                if (!regen.getState().isGraceful()) {
+                    RegenerationMod.LOG.warn(regen.getPlayer().getName() + "Trigger packet was sent when not in a graceful period");
+                    return;
+                }
+                regen.triggerRegeneration();
+            });
+
+            return null;
+        }
+    }
+
 }

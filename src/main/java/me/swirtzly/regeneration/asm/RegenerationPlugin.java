@@ -17,32 +17,6 @@ import java.util.function.Supplier;
 @IFMLLoadingPlugin.SortingIndex(1001)
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 public class RegenerationPlugin implements IFMLLoadingPlugin {
-	
-	@Override
-	public String[] getASMTransformerClass() {
-        return new String[]{RegenClassTransformer.class.getName()};
-	}
-	
-	@Override
-	public String getModContainerClass() {
-		return null;
-	}
-	
-	@Nullable
-	@Override
-	public String getSetupClass() {
-		return null;
-	}
-	
-	@Override
-	public void injectData(Map<String, Object> data) {
-	}
-	
-	@Override
-	public String getAccessTransformerClass() {
-		return null;
-	}
-
 
     //ASM UTILS BELOW
     public static void insertBefore(InsnList instructions, Predicate<AbstractInsnNode> predicate, Supplier<InsnList> insert) {
@@ -69,6 +43,31 @@ public class RegenerationPlugin implements IFMLLoadingPlugin {
 
     public static Predicate<AbstractInsnNode> invoke(String owner, Predicate<String> name) {
         return n -> n instanceof MethodInsnNode && ((MethodInsnNode) n).owner.equals(owner) && name.test(((MethodInsnNode) n).name);
+    }
+
+    @Override
+    public String[] getASMTransformerClass() {
+        return new String[]{RegenClassTransformer.class.getName()};
+    }
+
+    @Override
+    public String getModContainerClass() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getSetupClass() {
+        return null;
+    }
+
+    @Override
+    public void injectData(Map<String, Object> data) {
+    }
+
+    @Override
+    public String getAccessTransformerClass() {
+        return null;
     }
 
 }

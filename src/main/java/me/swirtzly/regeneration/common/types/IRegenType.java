@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.client.rendering.types.ATypeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
@@ -13,30 +14,31 @@ import net.minecraft.util.SoundEvent;
  */
 public interface IRegenType<R extends ATypeRenderer<?>> {
 
-	static IRegenType<?> getType(TypeHandler.RegenType type) {
-		return TypeHandler.getTypeInstance(TypeHandler.RegenType.FIERY);
-	}
+    /**
+     * @return in ticks
+     */
+    int getAnimationLength();
 
-	/**
-	 * @return in ticks
-	 */
-	int getAnimationLength();
-	
-	R getRenderer();
-	
-	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {
-	}
-	
-	default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
-	}
-	
-	default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
-	}
+    R getRenderer();
+
+    default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {
+    }
+
+    default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
+    }
+
+    default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
+    }
 
     double getAnimationProgress(IRegeneration cap);
 
-	TypeHandler.RegenType getTypeID();
+    TypeHandler.RegenType getTypeID();
 
-	SoundEvent[] getRegeneratingSounds();
+    SoundEvent[] getRegeneratingSounds();
+
+    Vec3d getDefaultPrimaryColor();
+
+    Vec3d getDefaultSecondaryColor();
+
 
 }

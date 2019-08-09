@@ -10,22 +10,22 @@ public class DnaFireResistant extends DnaHandler.IDna {
         super("fire");
     }
 
-	@Override
-	public void onUpdate(IRegeneration cap) {
-		EntityPlayer player = cap.getPlayer();
-		if (player.isBurning() && cap.isDnaActive()) {
-			player.extinguish();
-		}
-	}
-	
-	@Override
-	public void onAdded(IRegeneration cap) {
-	
-	}
-	
-	@Override
-	public void onRemoved(IRegeneration cap) {
-	
-	}
+    @Override
+    public void onUpdate(IRegeneration cap) {
+        EntityPlayer player = cap.getPlayer();
+        if (player.isBurning() && cap.isDnaActive()) {
+            player.extinguish();
+        }
+    }
+
+    @Override
+    public void onAdded(IRegeneration cap) {
+
+    }
+
+    @Override
+    public void onRemoved(IRegeneration cap) {
+
+    }
 
 }

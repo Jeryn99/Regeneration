@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 @Cancelable
 public class PlayerCanRegenEvent extends PlayerEvent {
-	public PlayerCanRegenEvent(EntityPlayer player) {
-		super(player);
-	}
+    public PlayerCanRegenEvent(EntityPlayer player) {
+        super(player);
+    }
 }

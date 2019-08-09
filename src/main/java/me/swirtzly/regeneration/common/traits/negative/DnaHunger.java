@@ -15,7 +15,7 @@ public class DnaHunger extends DnaHandler.IDna {
     @Override
     public void onUpdate(IRegeneration cap) {
         EntityPlayer player = cap.getPlayer();
-        if(player.ticksExisted % 2400 == 0 && player.world.rand.nextBoolean()){
+        if (player.ticksExisted % 2400 == 0 && player.world.rand.nextBoolean()) {
             PlayerUtil.applyPotionIfAbsent(player, MobEffects.HUNGER, 200, 1, true, false);
         }
     }

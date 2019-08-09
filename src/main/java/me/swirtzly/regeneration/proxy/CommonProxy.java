@@ -5,9 +5,9 @@ package me.swirtzly.regeneration.proxy;
  * on 17/09/2018.
  */
 public class CommonProxy implements IProxy {
-	
-	@Override
-	public void postInit() {
-	
-	}
+
+    @Override
+    public void postInit() {
+
+    }
 }

@@ -26,44 +26,44 @@ import java.util.Map;
  * on 17/09/2018.
  */
 public class ClientProxy extends CommonProxy {
-	
-	@Override
-	public void preInit() {
-		super.preInit();
-		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
-		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
-	}
-	
-	@Override
-	public void init() {
-		super.init();
-		
-		// Galacticraft API for TABS ======================
-		if (TabRegistry.getTabList().isEmpty()) {
-			MinecraftForge.EVENT_BUS.register(new TabRegistry());
-			TabRegistry.registerTab(new InventoryTabVanilla());
-		}
-		TabRegistry.registerTab(new InventoryTabRegeneration());
-		
-		// LC Core
-		if (EnumCompatModids.LCCORE.isLoaded()) {
-			LucraftCoreHandler.registerEntry();
-		}
-	}
-	
-	@Override
-	public void postInit() {
-		super.postInit();
-		RegenKeyBinds.init();
-		
-		// Render layers ===========================================
-		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-		for (RenderPlayer renderPlayer : skinMap.values()) {
-			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
-			renderPlayer.addLayer(new LayerHands(renderPlayer));
-		}
-		FileUtil.doSetupOnThread();
-	}
-	
+
+    @Override
+    public void preInit() {
+        super.preInit();
+        MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
+        RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
+    }
+
+    @Override
+    public void init() {
+        super.init();
+
+        // Galacticraft API for TABS ======================
+        if (TabRegistry.getTabList().isEmpty()) {
+            MinecraftForge.EVENT_BUS.register(new TabRegistry());
+            TabRegistry.registerTab(new InventoryTabVanilla());
+        }
+        TabRegistry.registerTab(new InventoryTabRegeneration());
+
+        // LC Core
+        if (EnumCompatModids.LCCORE.isLoaded()) {
+            LucraftCoreHandler.registerEntry();
+        }
+    }
+
+    @Override
+    public void postInit() {
+        super.postInit();
+        RegenKeyBinds.init();
+
+        // Render layers ===========================================
+        Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
+        for (RenderPlayer renderPlayer : skinMap.values()) {
+            renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
+            renderPlayer.addLayer(new LayerHands(renderPlayer));
+        }
+        FileUtil.doSetupOnThread();
+    }
+
 }

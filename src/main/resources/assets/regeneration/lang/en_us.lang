@@ -7,14 +7,17 @@ regeneration.gui.blue=Blue
 regeneration.gui.primary=Primary
 regeneration.gui.secondary=Secondary
 regeneration.gui.undo=Undo
-regeneration.gui.default=Default
+regeneration.gui.default=Type Default
 regeneration.gui.open_folder=Skin Dir
-regeneration.gui.skin_choice=Skin
+regeneration.gui.skin_choice=Select next incarnation
 regeneration.gui.save=Save
-regeneration.gui.current_skin=Skin name:
+regeneration.gui.next_incarnation=Select next incarnation
 regeneration.gui.reset_skin=Reset Skin
 regeneration.gui.infinite_regenerations=Infinite Regeneration Mode
 regeneration.gui.remaining_regens.status=Remaining Regenerations:
+regeneration.gui.color_gui=Color selection
+regeneration.gui.close=Close
+regeneration.gui.type=Type: %s
 
 regeneration.messages.now_timelord=You are now a Time lord!
 regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch
@@ -123,18 +126,31 @@ config.regeneration.skins.folder=Skin Regeneration folder
 config.regeneration.post_grater=Create fall damage crator?
 config.regeneration.craft=Craft with Regens?
 
-traits.athlete.name=Athletic genes! (You can run faster!)
-traits.boring.name=Lazy genes! (You're useless!)
-traits.dumb.name=Dumb genes! (Less XP!)
-traits.lucky.name=Lucky genes! (More XP!)
-traits.swimmer.name=Swimming genes! (Swim freely in Water!)
-traits.hydrophobic.name=Hydrophobic genes! (You hate the Water!)
-traits.tough.name=Strong genes! (You deal more damage in a punch!)
-traits.fire.name=Non-flammable genes! (You're immune to fire!)
-traits.hunger.name=Hunger genes! (You starve faster!)
-traits.nightvision.name=Bat genes! (You can see in the Dark!)
-traits.wallclimbing.name=Spider Genes! (You can climb walls!)
-traits.repel_arrow.name=Thick Skinned Genes (Arrows bounce off you!)
+traits.athlete.name=Athletic genes!
+traits.boring.name=Lazy genes!
+traits.dumb.name=Dumb genes!
+traits.lucky.name=Lucky genes!
+traits.swimmer.name=Swimming genes!
+traits.hydrophobic.name=Hydrophobic genes!
+traits.tough.name=Strong genes!
+traits.fire.name=Non-flammable genes!
+traits.hunger.name=Hunger genes!
+traits.nightvision.name=Bat genes!
+traits.wallclimbing.name=Spider Genes!
+traits.repel_arrow.name=Thick Skinned Genes
+
+traits.athlete.desc=You can run faster!
+traits.boring.desc=Lazy genes! You're useless!
+traits.dumb.desc=Dumb genes! Less XP!
+traits.lucky.desc=Lucky genes! More XP!
+traits.swimmer.desc=Swimming genes! Swim freely in Water!
+traits.hydrophobic.desc=You hate the Water!
+traits.tough.desc=You deal more damage in a punch!
+traits.fire.desc=You're immune to fire!
+traits.hunger.desc=You starve faster!
+traits.nightvision.desc=You can see in the Dark!
+traits.wallclimbing.desc=You can climb walls!
+traits.repel_arrow.desc=Arrows bounce off you!
 
 nbt.item.lindos=Lindos Energy: %s
 regeneration.messages.no_water=This Vial has no water...
@@ -160,10 +176,18 @@ regeneration.messages.cant_glow=You cannot activate a glowing hand without being
 regeneration.gui.back=Back
 regeneration.gui.previous=<
 regeneration.gui.next=>
-regeneration.gui.customize=Preferences
-regeneration.gui.preference_model=Preferred skin type: %s
+regeneration.gui.preferences=Preferences
 regeneration.messages.info_trait=Trait:
 regeneration.keybinds.regenerate_forced=Force Regen!
 
 entity.fob.name=Item
 entity.lindos.name=Lindos particles
+
+
+regentype.lay_fade=Hartnell
+regentype.fiery=Fiery
+
+regeneration.gui.skintype=Model: %s
+skintype.alex=Alex
+skintype.steve=Steve
+skintype.either=Alex/Steve
