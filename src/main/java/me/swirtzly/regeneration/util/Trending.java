@@ -68,33 +68,33 @@ public class Trending {
         return locObj.getAsJsonArray("image");
     }
 
-	public static void downloadTrendingSkins() throws IOException {
+    public static void downloadTrendingSkins() throws IOException {
         if (!RegenConfig.skins.downloadTrendingSkins) return;
         File trendingDir = TRENDING_ALEX;
         if (!trendingDir.exists()) {
-			trendingDir.mkdirs();
-		}
+            trendingDir.mkdirs();
+        }
 
-		long attr = trendingDir.lastModified();
+        long attr = trendingDir.lastModified();
 
-		if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
-			FileUtils.deleteDirectory(trendingDir);
-			RegenerationMod.LOG.warn("Refreshing Trending skins");
-			try {
+        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
+            FileUtils.deleteDirectory(trendingDir);
+            RegenerationMod.LOG.warn("Refreshing Trending skins");
+            try {
                 String url = "https://namemc.com/minecraft-skins/trending/";
                 getListOfSkns(url).iterator().forEachRemaining(jsonElement -> {
-					try {
+                    try {
                         String trendingUrl = jsonElement.getAsJsonObject().get("sameAs").getAsString();
                         FileUtil.downloadSkins(new URL(trendingUrl.replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), "namemc_" + trendingUrl.replaceAll("https://namemc.com/skin/", ""), TRENDING_ALEX, TRENDING_STEVE);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				});
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
 
             } catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-		}
-	}
+                System.out.println(e.getMessage());
+            }
+        }
+    }
 
 }

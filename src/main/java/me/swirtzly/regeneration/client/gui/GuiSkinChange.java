@@ -31,14 +31,13 @@ import static me.swirtzly.regeneration.util.RenderUtil.drawModelToGui;
 public class GuiSkinChange extends GuiContainer {
 
     public static final int ID = 3;
-    private static ResourceLocation PLAYER_TEXTURE = Minecraft.getMinecraft().player.getLocationSkin();
     private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background_small.png");
-    private static SkinChangingHandler.EnumChoices choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
     public static boolean isAlex = true;
-    private float rotation = 0;
-
+    private static ResourceLocation PLAYER_TEXTURE = Minecraft.getMinecraft().player.getLocationSkin();
+    private static SkinChangingHandler.EnumChoices choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
     private static List<File> skins = FileUtil.listAllSkins(choices);
     private static int position = 0;
+    private float rotation = 0;
 
     public GuiSkinChange() {
         super(new BlankContainer());
@@ -89,6 +88,8 @@ public class GuiSkinChange extends GuiContainer {
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
         GlStateManager.pushMatrix();
         Minecraft.getMinecraft().getTextureManager().bindTexture(PLAYER_TEXTURE);
+        playerModelAlex.isChild = false;
+        playerModelSteve.isChild = false;
         switch (choices) {
             case ALEX:
                 drawModelToGui(playerModelAlex, width / 2, height / 2 - 45, 1.0f, rotation);
@@ -129,13 +130,13 @@ public class GuiSkinChange extends GuiContainer {
 
         switch (button.id) {
             case 66:
-                Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiCustomizer.ID, Minecraft.getMinecraft().world, 0, 0, 0);
+                Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiPreferences.ID, Minecraft.getMinecraft().world, 0, 0, 0);
                 break;
 
             case 55:
                 //Next
                 if (!PLAYER_TEXTURE.equals(Minecraft.getMinecraft().player.getLocationSkin())) {
-                    if(position >= skins.size() -1){
+                    if (position >= skins.size() - 1) {
                         position = 0;
                     } else {
                         position++;
@@ -149,10 +150,10 @@ public class GuiSkinChange extends GuiContainer {
             case 44:
                 //Previous
                 if (!PLAYER_TEXTURE.equals(Minecraft.getMinecraft().player.getLocationSkin())) {
-                    if(position > 0){
-                        position --;
+                    if (position > 0) {
+                        position--;
                     } else {
-                        position = skins.size() -1;
+                        position = skins.size() - 1;
                     }
                     textureManager.deleteTexture(PLAYER_TEXTURE);
                     PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));

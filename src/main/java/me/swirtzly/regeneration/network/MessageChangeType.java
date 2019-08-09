@@ -1,13 +1,10 @@
 package me.swirtzly.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
-import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeHandler;
-import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -17,9 +14,10 @@ public class MessageChangeType implements IMessage {
 
     private String regenType;
 
-    public MessageChangeType(){}
+    public MessageChangeType() {
+    }
 
-    public MessageChangeType(TypeHandler.RegenType type){
+    public MessageChangeType(TypeHandler.RegenType type) {
         this.regenType = type.name();
     }
 

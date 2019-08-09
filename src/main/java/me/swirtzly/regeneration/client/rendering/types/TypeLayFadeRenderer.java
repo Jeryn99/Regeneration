@@ -51,10 +51,10 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
         modelBiped.bipedRightArm.rotateAngleZ = (float) Math.toRadians(5);
         return copyAndReturn(modelBiped, true);
     }
-    
+
     @Override
     public void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render) {
-    
+
     }
 
     @Override

@@ -14,35 +14,35 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * on 20/09/2018.
  */
 public class MessageSaveStyle implements IMessage {
-	
-	private NBTTagCompound style;
-	
-	public MessageSaveStyle() {
-	}
-	
-	public MessageSaveStyle(NBTTagCompound nbtTagCompound) {
-		style = nbtTagCompound;
-	}
-	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		style = ByteBufUtils.readTag(buf);
-	}
-	
-	@Override
-	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeTag(buf, style);
-	}
-	
-	public static class Handler implements IMessageHandler<MessageSaveStyle, IMessage> {
-		@Override
-		public IMessage onMessage(MessageSaveStyle message, MessageContext ctx) {
-			ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-				IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
-				cap.setStyle(message.style);
-				cap.synchronise();
-			});
-			return null;
-		}
-	}
+
+    private NBTTagCompound style;
+
+    public MessageSaveStyle() {
+    }
+
+    public MessageSaveStyle(NBTTagCompound nbtTagCompound) {
+        style = nbtTagCompound;
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        style = ByteBufUtils.readTag(buf);
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        ByteBufUtils.writeTag(buf, style);
+    }
+
+    public static class Handler implements IMessageHandler<MessageSaveStyle, IMessage> {
+        @Override
+        public IMessage onMessage(MessageSaveStyle message, MessageContext ctx) {
+            ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
+                IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
+                cap.setStyle(message.style);
+                cap.synchronise();
+            });
+            return null;
+        }
+    }
 }

@@ -5,14 +5,14 @@ package me.swirtzly.regeneration.proxy;
  * on 17/09/2018.
  */
 public interface IProxy {
-	
-	default void preInit() {
-	}
-	
-	default void init() {
-	}
-	
-	default void postInit() {
-	}
-	
+
+    default void preInit() {
+    }
+
+    default void init() {
+    }
+
+    default void postInit() {
+    }
+
 }

@@ -14,30 +14,31 @@ import net.minecraft.util.math.Vec3d;
  */
 public interface IRegenType<R extends ATypeRenderer<?>> {
 
-	/**
-	 * @return in ticks
-	 */
-	int getAnimationLength();
-	
-	R getRenderer();
-	
-	default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {
-	}
-	
-	default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
-	}
-	
-	default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
-	}
+    /**
+     * @return in ticks
+     */
+    int getAnimationLength();
+
+    R getRenderer();
+
+    default void onStartRegeneration(EntityPlayer player, IRegeneration capability) {
+    }
+
+    default void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
+    }
+
+    default void onFinishRegeneration(EntityPlayer player, IRegeneration capability) {
+    }
 
     double getAnimationProgress(IRegeneration cap);
 
-	TypeHandler.RegenType getTypeID();
+    TypeHandler.RegenType getTypeID();
 
-	SoundEvent[] getRegeneratingSounds();
+    SoundEvent[] getRegeneratingSounds();
 
-	Vec3d getDefaultPrimaryColor();
-	Vec3d getDefaultSecondaryColor();
+    Vec3d getDefaultPrimaryColor();
+
+    Vec3d getDefaultSecondaryColor();
 
 
 }

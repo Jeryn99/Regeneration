@@ -11,6 +11,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class TypeLayFade implements IRegenType<TypeLayFadeRenderer> {
 
+    private SoundEvent[] soundEvents = new SoundEvent[]{RegenObjects.Sounds.HAND_GLOW};
+
     @Override
     public int getAnimationLength() {
         return 350;
@@ -48,8 +50,6 @@ public class TypeLayFade implements IRegenType<TypeLayFadeRenderer> {
         return TypeHandler.RegenType.LAY_FADE;
     }
 
-    private SoundEvent[] soundEvents = new SoundEvent[]{RegenObjects.Sounds.HAND_GLOW};
-
     @Override
     public SoundEvent[] getRegeneratingSounds() {
         return soundEvents;
@@ -57,12 +57,12 @@ public class TypeLayFade implements IRegenType<TypeLayFadeRenderer> {
 
     @Override
     public Vec3d getDefaultPrimaryColor() {
-        return new Vec3d(1,1,1);
+        return new Vec3d(1, 1, 1);
     }
 
     @Override
     public Vec3d getDefaultSecondaryColor() {
-        return new Vec3d(1,1,1);
+        return new Vec3d(1, 1, 1);
     }
 
 }

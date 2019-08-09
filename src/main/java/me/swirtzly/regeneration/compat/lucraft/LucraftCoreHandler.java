@@ -27,103 +27,103 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.REGENERATING;
 
 public class LucraftCoreHandler implements IActingHandler {
-	
-	public static void registerEntry() {
-		AbilityBarHandler.registerProvider(new LCCoreBarEntry());
-	}
-	
-	public static void registerEventBus() {
-		MinecraftForge.EVENT_BUS.register(new LucraftCoreHandler());
-	}
-	
-	public static String getKeyBindDisplayName() {
-		for (int i = 0; i < AbilityBarHandler.ENTRY_SHOW_AMOUNT; i++) {
-			if (AbilityBarHandler.getEntryFromKey(i) instanceof LCCoreBarEntry) {
-				return AbilityBarKeys.KEYS.get(i).getDisplayName();
-			}
-		}
-		return "???";
-	}
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onGui(InputUpdateEvent tickEvent) {
-		Minecraft minecraft = Minecraft.getMinecraft();
-		if (minecraft.currentScreen == null && minecraft.player != null) {
-			ClientUtil.keyBind = getKeyBindDisplayName();
-		}
-	}
-	
-	@Override
-	public void onRegenTick(IRegeneration cap) {
-	
-	}
-	
-	@Override
-	public void onEnterGrace(IRegeneration cap) {
-		
-	}
-	
-	@Override
-	public void onHandsStartGlowing(IRegeneration cap) {
-		
-	}
-	
-	@Override
-	public void onRegenFinish(IRegeneration cap) {
-		
-	}
 
-	@Override
-	public void onStartPost(IRegeneration cap) {
+    public static void registerEntry() {
+        AbilityBarHandler.registerProvider(new LCCoreBarEntry());
+    }
 
-	}
+    public static void registerEventBus() {
+        MinecraftForge.EVENT_BUS.register(new LucraftCoreHandler());
+    }
 
-	@Override
-	public void onProcessDone(IRegeneration cap) {
+    public static String getKeyBindDisplayName() {
+        for (int i = 0; i < AbilityBarHandler.ENTRY_SHOW_AMOUNT; i++) {
+            if (AbilityBarHandler.getEntryFromKey(i) instanceof LCCoreBarEntry) {
+                return AbilityBarKeys.KEYS.get(i).getDisplayName();
+            }
+        }
+        return "???";
+    }
 
-	}
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onGui(InputUpdateEvent tickEvent) {
+        Minecraft minecraft = Minecraft.getMinecraft();
+        if (minecraft.currentScreen == null && minecraft.player != null) {
+            ClientUtil.keyBind = getKeyBindDisplayName();
+        }
+    }
 
-	@Override
-	public void onRegenTrigger(IRegeneration cap) {
-	}
-	
-	@Override
-	public void onGoCritical(IRegeneration cap) {
-		
-	}
-	
-	@SubscribeEvent
-	public void onHurt(LivingHurtEvent e) {
-		if (e.getEntityLiving() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-			boolean flag = data.canRegenerate() && e.getSource() == PotionRadiation.RADIATION && RegenConfig.modIntegrations.lucraftcore.immuneToRadiation;
-			e.setCanceled(flag);
-		}
-	}
-	
-	@SubscribeEvent
-	public void onCanRegen(PlayerCanRegenEvent e) {
-		boolean flag = RegenConfig.modIntegrations.lucraftcore.superpowerDisable && SuperpowerHandler.hasSuperpower(e.getEntityPlayer());
-		if(flag){
-			e.setCanceled(true);
-			PlayerUtil.sendMessage(e.getEntityPlayer(), "You cannot Regenerate with a superpower", true);
-		}
-	}
+    @Override
+    public void onRegenTick(IRegeneration cap) {
 
-	@SubscribeEvent(receiveCanceled = true)
-	@SideOnly(Side.CLIENT)
-	public void onAnimation(RenderModelEvent.SetRotationAngels ev) {
-		if (ev.getEntity() instanceof EntityPlayer) {
-			AnimationContext context = new AnimationContext(ev.model, (EntityPlayer) ev.getEntity(), ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
-			IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) ev.getEntity());
-			if (data.getState() == REGENERATING) {
-				IRegenType type = TypeHandler.getTypeInstance(data.getType());
-				ev.setCanceled(type.getRenderer().onAnimateRegen(context));
-			} else {
+    }
+
+    @Override
+    public void onEnterGrace(IRegeneration cap) {
+
+    }
+
+    @Override
+    public void onHandsStartGlowing(IRegeneration cap) {
+
+    }
+
+    @Override
+    public void onRegenFinish(IRegeneration cap) {
+
+    }
+
+    @Override
+    public void onStartPost(IRegeneration cap) {
+
+    }
+
+    @Override
+    public void onProcessDone(IRegeneration cap) {
+
+    }
+
+    @Override
+    public void onRegenTrigger(IRegeneration cap) {
+    }
+
+    @Override
+    public void onGoCritical(IRegeneration cap) {
+
+    }
+
+    @SubscribeEvent
+    public void onHurt(LivingHurtEvent e) {
+        if (e.getEntityLiving() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+            IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+            boolean flag = data.canRegenerate() && e.getSource() == PotionRadiation.RADIATION && RegenConfig.modIntegrations.lucraftcore.immuneToRadiation;
+            e.setCanceled(flag);
+        }
+    }
+
+    @SubscribeEvent
+    public void onCanRegen(PlayerCanRegenEvent e) {
+        boolean flag = RegenConfig.modIntegrations.lucraftcore.superpowerDisable && SuperpowerHandler.hasSuperpower(e.getEntityPlayer());
+        if (flag) {
+            e.setCanceled(true);
+            PlayerUtil.sendMessage(e.getEntityPlayer(), "You cannot Regenerate with a superpower", true);
+        }
+    }
+
+    @SubscribeEvent(receiveCanceled = true)
+    @SideOnly(Side.CLIENT)
+    public void onAnimation(RenderModelEvent.SetRotationAngels ev) {
+        if (ev.getEntity() instanceof EntityPlayer) {
+            AnimationContext context = new AnimationContext(ev.model, (EntityPlayer) ev.getEntity(), ev.limbSwing, ev.limbSwingAmount, ev.ageInTicks, ev.netHeadYaw, ev.headPitch);
+            IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) ev.getEntity());
+            if (data.getState() == REGENERATING) {
+                IRegenType type = TypeHandler.getTypeInstance(data.getType());
+                ev.setCanceled(type.getRenderer().onAnimateRegen(context));
+            } else {
                 AnimationHandler.animate(context);
-			}
-		}
-	}
+            }
+        }
+    }
 }

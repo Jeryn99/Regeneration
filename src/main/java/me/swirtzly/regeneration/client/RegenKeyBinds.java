@@ -21,38 +21,38 @@ import org.lwjgl.input.Keyboard;
  */
 @EventBusSubscriber(Side.CLIENT)
 public class RegenKeyBinds {
-	public static KeyBinding REGEN_NOW;
-	public static KeyBinding REGEN_FORCEFULLY;
-	
-	public static void init() {
-		
-		if (!EnumCompatModids.LCCORE.isLoaded()) {
-			REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", Keyboard.KEY_R, RegenerationMod.NAME);
-			ClientRegistry.registerKeyBinding(REGEN_NOW);
-		}
-		
-		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", Keyboard.KEY_Y, RegenerationMod.NAME);
-		ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
-	}
-	
-	
-	@SubscribeEvent
-	public static void keyInput(InputUpdateEvent e) {
-		EntityPlayer player = Minecraft.getMinecraft().player;
-		if (player == null || EnumCompatModids.LCCORE.isLoaded())
-			return;
-		
-		if (REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
-			NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration(player));
-		}
-		
-	}
-	
-	/**
-	 * Handles LCCore compatibility
-	 */
-	public static String getRegenerateNowDisplayName() {
-		return REGEN_NOW.getDisplayName();
-	}
-	
+    public static KeyBinding REGEN_NOW;
+    public static KeyBinding REGEN_FORCEFULLY;
+
+    public static void init() {
+
+        if (!EnumCompatModids.LCCORE.isLoaded()) {
+            REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", Keyboard.KEY_R, RegenerationMod.NAME);
+            ClientRegistry.registerKeyBinding(REGEN_NOW);
+        }
+
+        REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", Keyboard.KEY_Y, RegenerationMod.NAME);
+        ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
+    }
+
+
+    @SubscribeEvent
+    public static void keyInput(InputUpdateEvent e) {
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if (player == null || EnumCompatModids.LCCORE.isLoaded())
+            return;
+
+        if (REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
+            NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration(player));
+        }
+
+    }
+
+    /**
+     * Handles LCCore compatibility
+     */
+    public static String getRegenerateNowDisplayName() {
+        return REGEN_NOW.getDisplayName();
+    }
+
 }
