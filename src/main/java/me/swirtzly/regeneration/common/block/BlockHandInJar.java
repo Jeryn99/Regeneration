@@ -1,9 +1,7 @@
 package me.swirtzly.regeneration.common.block;
 
-import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
-import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
-import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
@@ -38,35 +36,9 @@ public class BlockHandInJar extends BlockDirectional {
 
         if (worldIn.getTileEntity(pos) instanceof TileEntityHandInJar) {
             TileEntityHandInJar jar = (TileEntityHandInJar) worldIn.getTileEntity(pos);
-
-            if (CapabilityRegeneration.getForPlayer(playerIn).getState() != PlayerUtil.RegenState.ALIVE) {
-                PlayerUtil.sendMessage(playerIn, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
-                return false;
-            }
-
-            if (playerIn.isSneaking() && playerIn.getHeldItemMainhand().isEmpty()) {
-                if (!jar.isInUse && jar.getLindosAmont() >= 100) {
-                    IRegeneration data = CapabilityRegeneration.getForPlayer(playerIn);
-                    data.receiveRegenerations(1);
-                    jar.setLindosAmont(0);
-                    jar.setInUse(true);
-                    data.setSyncingFromJar(true);
-                    worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 0.7F);
-                    data.synchronise();
-                    PlayerUtil.sendMessage(playerIn, new TextComponentTranslation("regeneration.messages.jar"), true);
-                } else if (jar.isInUse) {
-                    PlayerUtil.sendMessage(playerIn, new TextComponentTranslation("regeneration.messages.jar_inuse"), true);
-                } else if (jar.getLindosAmont() < 100) {
-                    PlayerUtil.sendMessage(playerIn, new TextComponentTranslation("regeneration.messages.jar_not_enough"), true);
-                }
-            } else {
-                if (playerIn.getHeldItemMainhand().isEmpty()) {
-                    PlayerUtil.sendMessage(playerIn, new TextComponentTranslation("regeneration.messages.jar_amount", jar.getLindosAmont()), true);
-                }
-            }
-            return true;
+            playerIn.openGui(RegenerationMod.INSTANCE, 77, worldIn, jar.getPos().getX(), jar.getPos().getY(), jar.getPos().getZ());
         }
-        return false;
+        return true;
     }
 
     @Nullable
