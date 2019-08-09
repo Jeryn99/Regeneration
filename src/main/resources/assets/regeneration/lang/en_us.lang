@@ -16,6 +16,8 @@ regeneration.gui.next_incarnation=Select next incarnation
 regeneration.gui.reset_skin=Reset Skin
 regeneration.gui.infinite_regenerations=Infinite Regeneration Mode
 regeneration.gui.remaining_regens.status=Remaining Regenerations:
+regeneration.gui.color_gui=Color selection
+regeneration.gui.close=Close
 
 regeneration.messages.now_timelord=You are now a Time lord!
 regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch

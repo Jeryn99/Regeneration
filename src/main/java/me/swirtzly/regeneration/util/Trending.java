@@ -30,20 +30,29 @@ public class Trending {
 
     public static void downloadPreviousSkins() {
         RegenerationMod.LOG.warn("Refreshing users past skins");
-        for (int i = 0; i < 5; i++) {
-            try {
-                String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getMinecraft().getSession().getPlayerID() + "?page=" + i;
-                getListOfSkns(url).iterator().forEachRemaining(jsonElement -> {
-                    try {
-                        String trendingUrl = jsonElement.getAsJsonObject().get("sameAs").getAsString();
-                        FileUtil.downloadSkins(new URL(trendingUrl.replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), Minecraft.getMinecraft().getSession().getUsername() + "_" + trendingUrl.replaceAll("https://namemc.com/skin/", ""), USER_ALEX, USER_STEVE);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
 
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+        if (!USER_ALEX.exists()) {
+            USER_ALEX.mkdirs();
+        }
+
+        long attr = USER_ALEX.lastModified();
+
+        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(USER_ALEX.list()).length == 0) {
+            for (int i = 0; i < 5; i++) {
+                try {
+                    String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getMinecraft().getSession().getPlayerID() + "?page=" + i;
+                    getListOfSkns(url).iterator().forEachRemaining(jsonElement -> {
+                        try {
+                            String trendingUrl = jsonElement.getAsJsonObject().get("sameAs").getAsString();
+                            FileUtil.downloadSkins(new URL(trendingUrl.replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), Minecraft.getMinecraft().getSession().getUsername() + "_" + trendingUrl.replaceAll("https://namemc.com/skin/", ""), USER_ALEX, USER_STEVE);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
     }
