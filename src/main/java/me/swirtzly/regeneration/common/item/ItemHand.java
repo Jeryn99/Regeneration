@@ -82,7 +82,7 @@ public class ItemHand extends Item {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         Date date = new Date(ItemHand.getTimeCreated(stack));
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+        DateFormat formatter = new SimpleDateFormat("dd/MM/YYYY @ HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
         String dateFormatted = formatter.format(date);
         tooltip.add(new TextComponentTranslation("nbt.created", dateFormatted).getUnformattedComponentText());
