@@ -52,7 +52,7 @@ public class CapabilityRegeneration implements IRegeneration {
     private final EntityPlayer player;
     private final RegenerationStateManager stateManager;
     public int regenerationsLeft, ticksAnimating = 0;
-    private boolean didSetup = false, traitActive = true, syncingToJar = false;
+    private boolean didSetup = false, traitActive = true, syncingToJar = false, handDropped = false;
     private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
     private TypeHandler.RegenType regenType = TypeHandler.RegenType.LAY_FADE;
 
@@ -70,7 +70,6 @@ public class CapabilityRegeneration implements IRegeneration {
      * This property is synced over to the client to solve this
      */
     private boolean handsAreGlowingClient;
-
 
     public CapabilityRegeneration() {
         this.player = null;
@@ -175,6 +174,7 @@ public class CapabilityRegeneration implements IRegeneration {
             nbt.setTag("stateManager", stateManager.serializeNBT());
         nbt.setString("nextSkin", BASE64_SKIN_NEXT);
         nbt.setString("nextSkinType", nextSkinType.name());
+        nbt.setBoolean("handDropped", handDropped);
         return nbt;
     }
 
@@ -242,6 +242,10 @@ public class CapabilityRegeneration implements IRegeneration {
 
         if (nbt.hasKey("jar")) {
             syncingToJar = nbt.getBoolean("jar");
+        }
+
+        if (nbt.hasKey("handDropped")) {
+            handDropped = nbt.getBoolean("handDropped");
         }
     }
 
@@ -434,6 +438,16 @@ public class CapabilityRegeneration implements IRegeneration {
     @Override
     public void setNextSkinType(SkinInfo.SkinType skinType) {
         this.nextSkinType = skinType;
+    }
+
+    @Override
+    public boolean hasDroppedHand() {
+        return handDropped;
+    }
+
+    @Override
+    public void setDroppedHand(boolean droppedHand) {
+        this.handDropped = droppedHand;
     }
 
     @Override

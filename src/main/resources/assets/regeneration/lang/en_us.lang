@@ -1,6 +1,7 @@
 #PARSE_ESCAPES
 item.fob_watch.name=Fob Watch
 item.lindos_vial.name=Lindos Vial
+item.hand.name=%s's hand
 regeneration.gui.red=Red
 regeneration.gui.green=Green
 regeneration.gui.blue=Blue
@@ -57,7 +58,7 @@ regeneration.toast.timelord=You are now a Time lord!
 regeneration.toast.to_use=You have %s lives now!
 regeneration.messages.jar_amount=This container currently contains %s Lindos!
 regeneration.messages.jar_inuse=This is in use!
-tile.regeneration.hand_jar.name=Hand in a Jar
+tile.regeneration.hand_jar.name=Bio-Container
 
 regeneration.messages.regen_chat_message=%s is regenerating...
 regeneration.messages.warning.grace=You are in a state of grace, press %s to regenerate!
@@ -191,3 +192,6 @@ regeneration.gui.skintype=Model: %s
 skintype.alex=Alex
 skintype.steve=Steve
 skintype.either=Alex/Steve
+
+
+nbt.created=Created on: %s

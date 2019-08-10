@@ -29,7 +29,6 @@ public class PlayerUtil {
 
     public static void createPostList() {
         POTIONS.add(MobEffects.WEAKNESS);
-        POTIONS.add(MobEffects.BLINDNESS);
         POTIONS.add(MobEffects.MINING_FATIGUE);
         POTIONS.add(MobEffects.RESISTANCE);
         POTIONS.add(MobEffects.HEALTH_BOOST);

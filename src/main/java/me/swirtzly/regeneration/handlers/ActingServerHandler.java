@@ -145,6 +145,7 @@ class ActingServerHandler implements IActingHandler {
             player.world.spawnEntity(lindos);
             player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
         }
+        cap.setDroppedHand(false);
     }
 
     @Override

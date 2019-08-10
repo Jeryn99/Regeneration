@@ -22,6 +22,8 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -375,6 +377,23 @@ public class ClientEventHandler {
 
             if (data.getState() == GRACE_CRIT) {
                 GlStateManager.translate(0, 0.125D, 0);
+            }
+
+            ModelBase model = event.getRenderer().getMainModel();
+            if (model instanceof ModelPlayer) {
+                ModelPlayer modelPlayer = (ModelPlayer) model;
+                if (data.hasDroppedHand()) {
+                    if (player.getPrimaryHand() == EnumHandSide.LEFT) {
+                        modelPlayer.bipedRightArmwear.isHidden = modelPlayer.bipedRightArm.isHidden = true;
+                    }
+                    if (player.getPrimaryHand() == EnumHandSide.RIGHT) {
+                        modelPlayer.bipedLeftArmwear.isHidden = modelPlayer.bipedLeftArm.isHidden = true;
+                    }
+                } else {
+                    modelPlayer.bipedLeftArmwear.isHidden = modelPlayer.bipedLeftArm.isHidden = false;
+                    modelPlayer.bipedRightArmwear.isHidden = modelPlayer.bipedRightArm.isHidden = false;
+                }
+
             }
 
         }

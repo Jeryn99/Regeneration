@@ -103,4 +103,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     SkinInfo.SkinType getNextSkinType();
 
     void setNextSkinType(SkinInfo.SkinType choices);
+
+    boolean hasDroppedHand();
+
+    void setDroppedHand(boolean droppedHand);
 }

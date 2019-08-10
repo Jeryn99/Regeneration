@@ -1,6 +1,9 @@
 package me.swirtzly.regeneration.common.block;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.BlockDirectional;
@@ -9,10 +12,10 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -36,7 +39,16 @@ public class BlockHandInJar extends BlockDirectional {
 
         if (worldIn.getTileEntity(pos) instanceof TileEntityHandInJar) {
             TileEntityHandInJar jar = (TileEntityHandInJar) worldIn.getTileEntity(pos);
-            playerIn.openGui(RegenerationMod.INSTANCE, 77, worldIn, jar.getPos().getX(), jar.getPos().getY(), jar.getPos().getZ());
+            IRegeneration data = CapabilityRegeneration.getForPlayer(playerIn);
+
+            if (data.getState() != PlayerUtil.RegenState.REGENERATING) {
+                playerIn.openGui(RegenerationMod.INSTANCE, 77, worldIn, jar.getPos().getX(), jar.getPos().getY(), jar.getPos().getZ());
+            }
+
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING && jar.hasHand && ItemHand.getOwner(jar.getHand()) == playerIn.getUniqueID()) {
+                data.getStateManager().fastForward();
+                jar.clear();
+            }
         }
         return true;
     }
@@ -107,12 +119,10 @@ public class BlockHandInJar extends BlockDirectional {
 
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        if (world.isRemote) return super.removedByPlayer(state, world, pos, player, willHarvest);
         if (world.getTileEntity(pos) instanceof TileEntityHandInJar) {
             TileEntityHandInJar jar = (TileEntityHandInJar) world.getTileEntity(pos);
-            if (jar != null && jar.getLindosAmont() > 0) {
-                PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.jar_no_break", jar.getLindosAmont()), true);
-                return false;
-            }
+            InventoryHelper.dropInventoryItems(world, pos, jar);
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest);
     }

@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.tiles;
 
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -8,11 +9,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+
+import javax.annotation.Nullable;
 
 public class TileEntityHandInJar extends TileEntity implements ITickable, IInventory {
 
-    public boolean isInUse = false;
+    public boolean hasHand = false;
     public int lindosAmont = 0;
     private AxisAlignedBB AABB = new AxisAlignedBB(0.2, 0, 0, 0.8, 2, 0.1);
     private NonNullList<ItemStack> handInv = NonNullList.withSize(7, ItemStack.EMPTY);
@@ -26,24 +32,33 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
         this.lindosAmont = lindosAmont;
     }
 
-    public boolean isInUse() {
-        return isInUse;
-    }
-
-    public void setInUse(boolean inUse) {
-        isInUse = inUse;
-    }
 
     @Override
     public void update() {
+        hasHand = !handInv.isEmpty();
+
+        if (world.getWorldTime() % 35 == 0) {
+            world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.4F, 0.3F);
+        }
 
     }
 
+    public ItemStack getHand() {
+        return handInv.get(3);
+    }
+
+    public boolean hasHand() {
+        return hasHand;
+    }
+
+    public void setHasHand(boolean hasHand) {
+        this.hasHand = hasHand;
+    }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setBoolean("inUse", isInUse);
         compound.setFloat("lindos", lindosAmont);
+        compound.setBoolean("hasHand", hasHand);
         ItemStackHelper.saveAllItems(compound, this.handInv);
         return super.writeToNBT(compound);
     }
@@ -51,8 +66,8 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        isInUse = compound.getBoolean("inUse");
         lindosAmont = compound.getInteger("lindos");
+        hasHand = compound.getBoolean("hasHand");
         ItemStackHelper.loadAllItems(compound, this.handInv);
         super.readFromNBT(compound);
     }
@@ -122,7 +137,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return false;
+        return true;
     }
 
     @Override
@@ -147,11 +162,17 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 
     @Override
     public String getName() {
-        return "t";
+        return "Bio Jar";
     }
 
     @Override
     public boolean hasCustomName() {
-        return false;
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getDisplayName() {
+        return new TextComponentTranslation(RegenObjects.Blocks.HAND_JAR.getLocalizedName());
     }
 }

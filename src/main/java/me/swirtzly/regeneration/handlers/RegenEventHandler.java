@@ -5,12 +5,15 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationProvider;
+import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextComponentString;
@@ -145,6 +148,17 @@ public class RegenEventHandler {
                     return;
                 }
             } else {
+                if (!player.world.isRemote) {
+                    if (player.world.rand.nextBoolean() && !cap.hasDroppedHand()) {
+                        ItemStack hand = new ItemStack(RegenObjects.Items.HAND);
+                        ItemHand.setTextureString(hand, cap.getEncodedSkin());
+                        ItemHand.setSkinType(hand, cap.getSkinType().name());
+                        ItemHand.setOwner(hand, player.getUniqueID());
+                        ItemHand.setTimeCreated(hand, System.currentTimeMillis());
+                        cap.setDroppedHand(true);
+                        InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
+                    }
+                }
                 event.setAmount(0.5F);
                 PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.reduced_dmg"), true);
             }

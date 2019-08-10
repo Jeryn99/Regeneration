@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.item.ItemFobWatch;
+import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.common.item.ItemLindos;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
@@ -43,7 +44,8 @@ public class RegenObjects {
     public static void addItems(RegistryEvent.Register<Item> e) {
         e.getRegistry().registerAll(
                 setUpItem(new ItemFobWatch(), "fob_watch"),
-                setUpItem(new ItemLindos(), "lindos_vial")
+                setUpItem(new ItemLindos(), "lindos_vial"),
+                setUpItem(new ItemHand(), "hand")
         );
         e.getRegistry().registerAll(ITEM_BLOCKS.toArray(new Item[ITEM_BLOCKS.size()]));
     }
@@ -108,6 +110,7 @@ public class RegenObjects {
     public static class Items {
         public static final Item FOB_WATCH = null;
         public static final Item LINDOS_VIAL = null;
+        public static final Item HAND = null;
     }
 
     @GameRegistry.ObjectHolder(RegenerationMod.MODID)
