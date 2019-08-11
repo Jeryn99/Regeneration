@@ -1,8 +1,10 @@
 package me.swirtzly.regeneration.client.gui;
 
 import me.swirtzly.regeneration.client.gui.parts.HIJContainer;
+import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -32,7 +34,8 @@ public class GuiHandler implements IGuiHandler {
             case GuiSkinChange.ID:
                 return new GuiSkinChange();
             case GuiHij.ID:
-                return new GuiHij(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)));
+                TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+                return new GuiHij(player.inventory, (IInventory) tile, (TileEntityHandInJar) tile);
             default:
                 return null;
         }

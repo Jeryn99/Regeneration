@@ -49,7 +49,6 @@ class ActingServerHandler implements IActingHandler {
                 float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
                 player.heal(stateProgress * 0.3F * dm);
                 player.setArrowCountInEntity(0);
-                RegenUtil.regenerationExplosion(player);
                 break;
 
             case GRACE_CRIT:
@@ -85,7 +84,6 @@ class ActingServerHandler implements IActingHandler {
     @Override
     public void onEnterGrace(IRegeneration cap) {
         EntityPlayer player = cap.getPlayer();
-        RegenUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.onRegen.regenerativeKnockback / 2, RegenConfig.onRegen.regenerativeKnockbackRange);
 
         // Reduce number of hearts, but compensate with absorption
         player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);

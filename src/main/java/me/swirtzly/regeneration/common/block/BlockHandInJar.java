@@ -3,8 +3,10 @@ package me.swirtzly.regeneration.common.block;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
@@ -41,16 +43,34 @@ public class BlockHandInJar extends BlockDirectional {
             TileEntityHandInJar jar = (TileEntityHandInJar) worldIn.getTileEntity(pos);
             IRegeneration data = CapabilityRegeneration.getForPlayer(playerIn);
 
-            if (data.getState() != PlayerUtil.RegenState.REGENERATING) {
-                playerIn.openGui(RegenerationMod.INSTANCE, 77, worldIn, jar.getPos().getX(), jar.getPos().getY(), jar.getPos().getZ());
+            if (jar.getLindosAmont() >= 100 && data.getState() == PlayerUtil.RegenState.ALIVE && playerIn.isSneaking() && jar.hasHand()) {
+                jar.setLindosAmont(jar.getLindosAmont() - 100);
+                data.receiveRegenerations(1);
+                data.setSyncingFromJar(true);
+                worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 0.7F);
+                data.synchronise();
+                jar.sendUpdates();
+                return true;
             }
 
+            if (data.getState() != PlayerUtil.RegenState.REGENERATING && !playerIn.isSneaking()) {
+                playerIn.openGui(RegenerationMod.INSTANCE, 77, worldIn, jar.getPos().getX(), jar.getPos().getY(), jar.getPos().getZ());
+                return true;
+            }
+
+
             if (data.getState() == PlayerUtil.RegenState.REGENERATING && jar.hasHand && ItemHand.getOwner(jar.getHand()) == playerIn.getUniqueID()) {
+                data.setEncodedSkin(ItemHand.getTextureString(jar.getHand()));
+                data.setSkinType(ItemHand.getSkinType(jar.getHand()));
+                data.setDnaType(new ResourceLocation(ItemHand.getTrait(jar.getHand())));
                 data.getStateManager().fastForward();
                 jar.clear();
+                jar.setLindosAmont(jar.getLindosAmont() + worldIn.rand.nextInt(15));
+                jar.sendUpdates();
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     @Nullable
@@ -122,6 +142,12 @@ public class BlockHandInJar extends BlockDirectional {
         if (world.isRemote) return super.removedByPlayer(state, world, pos, player, willHarvest);
         if (world.getTileEntity(pos) instanceof TileEntityHandInJar) {
             TileEntityHandInJar jar = (TileEntityHandInJar) world.getTileEntity(pos);
+            if (jar.lindosAmont > 0) {
+                EntityLindos lindos = new EntityLindos(player.world);
+                lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
+                lindos.setAmount(jar.lindosAmont);
+                player.world.spawnEntity(lindos);
+            }
             InventoryHelper.dropInventoryItems(world, pos, jar);
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest);
@@ -131,4 +157,5 @@ public class BlockHandInJar extends BlockDirectional {
     public CreativeTabs getCreativeTab() {
         return CreativeTabs.MISC;
     }
+
 }

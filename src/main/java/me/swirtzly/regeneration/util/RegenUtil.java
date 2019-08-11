@@ -13,6 +13,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -97,7 +99,7 @@ public class RegenUtil {
     public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
         world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
             if ((entity instanceof EntityCreature && entity.isNonBoss()) || (entity instanceof EntityPlayer && RegenConfig.onRegen.regenerationKillsPlayers))
-                entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
+                entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, 4);
         });
     }
 
@@ -113,5 +115,9 @@ public class RegenUtil {
 
     public static SoundEvent getRandomSound(SoundEvent[] soundEvents, Random random) {
         return soundEvents[random.nextInt(soundEvents.length)];
+    }
+
+    public static boolean isSharp(ItemStack stack) {
+        return stack.getItem() instanceof ItemTool || stack.getItem() instanceof ItemSword;
     }
 }

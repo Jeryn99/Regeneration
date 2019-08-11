@@ -1,18 +1,25 @@
 package me.swirtzly.regeneration.common.tiles;
 
+import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.util.PlayerUtil;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -20,7 +27,6 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 
     public boolean hasHand = false;
     public int lindosAmont = 0;
-    private AxisAlignedBB AABB = new AxisAlignedBB(0.2, 0, 0, 0.8, 2, 0.1);
     private NonNullList<ItemStack> handInv = NonNullList.withSize(7, ItemStack.EMPTY);
 
 
@@ -32,15 +38,29 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
         this.lindosAmont = lindosAmont;
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+    }
 
     @Override
     public void update() {
-        hasHand = !handInv.isEmpty();
+        setHasHand(getHand().getItem() == RegenObjects.Items.HAND);
 
-        if (world.getWorldTime() % 35 == 0) {
+        if (world.getWorldTime() % 35 == 0 && hasHand) {
             world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.4F, 0.3F);
         }
 
+        EntityPlayer player = world.getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 56, false);
+        if (player != null) {
+            IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
+                if (world.rand.nextBoolean()) {
+                    lindosAmont = lindosAmont + 1;
+                    markDirty();
+                }
+            }
+        }
     }
 
     public ItemStack getHand() {
@@ -162,7 +182,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 
     @Override
     public String getName() {
-        return "Bio Jar";
+        return getDisplayName().getUnformattedText();
     }
 
     @Override
@@ -174,5 +194,33 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
     @Override
     public ITextComponent getDisplayName() {
         return new TextComponentTranslation(RegenObjects.Blocks.HAND_JAR.getLocalizedName());
+    }
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(pos, 3, getUpdateTag());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        handleUpdateTag(pkt.getNbtCompound());
+    }
+
+    public void sendUpdates() {
+        world.markBlockRangeForRenderUpdate(pos, pos);
+        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+        world.scheduleBlockUpdate(pos, getBlockType(), 0, 0);
+        markDirty();
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+        return false;
     }
 }

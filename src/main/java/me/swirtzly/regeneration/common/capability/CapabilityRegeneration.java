@@ -5,6 +5,8 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.advancements.RegenTriggers;
+import me.swirtzly.regeneration.common.block.BlockHandInJar;
+import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.handlers.ActingForwarder;
@@ -54,7 +56,7 @@ public class CapabilityRegeneration implements IRegeneration {
     public int regenerationsLeft, ticksAnimating = 0;
     private boolean didSetup = false, traitActive = true, syncingToJar = false, handDropped = false;
     private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
-    private TypeHandler.RegenType regenType = TypeHandler.RegenType.LAY_FADE;
+    private TypeHandler.RegenType regenType = TypeHandler.RegenType.FIERY;
 
     private String BASE64_SKIN = "NONE", BASE64_SKIN_NEXT = "NONE", deathSource = "";
 
@@ -527,6 +529,9 @@ public class CapabilityRegeneration implements IRegeneration {
             synchronise();
         }
 
+        public DebuggableScheduledAction getHandGlowTimer() {
+            return handGlowTimer;
+        }
 
         @Override
         public boolean onKilled(DamageSource source) {
@@ -595,6 +600,11 @@ public class CapabilityRegeneration implements IRegeneration {
 
                 if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_LAYER) {
                     e.getWorld().playSound(null, e.getPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
+                }
+
+                if (block.getBlock() instanceof BlockHandInJar) {
+                    TileEntityHandInJar handInJar = (TileEntityHandInJar) e.getWorld().getTileEntity(e.getPos());
+                    handInJar.setLindosAmont(handInJar.getLindosAmont() + e.getWorld().rand.nextInt(10));
                 }
 
                 handGlowTimer.cancel();

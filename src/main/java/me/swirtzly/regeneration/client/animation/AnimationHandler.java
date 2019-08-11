@@ -73,11 +73,12 @@ public class AnimationHandler {
         return cancel;
     }
 
-    public static void makeZombieArms(ModelBiped modelBiped) {
+    public static boolean makeZombieArms(ModelBiped modelBiped) {
         modelBiped.bipedRightArm.rotateAngleY = -0.1F + modelBiped.bipedHead.rotateAngleY - 0.4F;
         modelBiped.bipedLeftArm.rotateAngleY = 0.1F + modelBiped.bipedHead.rotateAngleY;
         modelBiped.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
         modelBiped.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
+        return copyAndReturn(modelBiped, true);
     }
 
 

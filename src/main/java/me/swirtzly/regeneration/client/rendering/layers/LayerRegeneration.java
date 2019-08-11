@@ -62,12 +62,8 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
             type.getRenderer().onRenderRegenerationLayer(type, playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
         }
 
-        if (cap.getState() == PlayerUtil.RegenState.POST && player.hurtTime > 0) {
-            renderOverlay(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-        }
-
-        if (cap.isSyncingToJar()) {
-            TypeHandler.getTypeInstance(TypeHandler.RegenType.FIERY).getRenderer().onRenderRegenerationLayer(type, playerRenderer, cap, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+        if (cap.getState() == PlayerUtil.RegenState.POST && player.hurtTime > 0 || cap.isSyncingToJar()) {
+            renderOverlay(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale, null);
         }
     }
 

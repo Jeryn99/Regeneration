@@ -10,6 +10,7 @@ import me.swirtzly.regeneration.common.types.TypeFiery;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -23,6 +24,8 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+
+import javax.annotation.Nullable;
 
 import static me.swirtzly.regeneration.client.animation.AnimationHandler.copyAndReturn;
 import static me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration.modelAlex;
@@ -54,7 +57,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         }
     }
 
-    public static void renderOverlay(EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public static void renderOverlay(EntityPlayer entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, @Nullable ModelBase base) {
         GlStateManager.pushMatrix();
         RenderUtil.setLightmapTextureCoords(240, 240);
         GlStateManager.disableLighting();
@@ -64,12 +67,18 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         Vec3d color = CapabilityRegeneration.getForPlayer(entityPlayer).getPrimaryColor();
         float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
         GlStateManager.color((float) color.x, (float) color.y, (float) color.z, opacity);
-        if (SkinChangingHandler.getSkinType((AbstractClientPlayer) entityPlayer) == SkinInfo.SkinType.STEVE) {
-            modelSteve.isChild = false;
-            modelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+
+        if (base == null) {
+            if (SkinChangingHandler.getSkinType((AbstractClientPlayer) entityPlayer) == SkinInfo.SkinType.STEVE) {
+                modelSteve.isChild = false;
+                modelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            } else {
+                modelAlex.isChild = false;
+                modelAlex.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            }
         } else {
-            modelAlex.isChild = false;
-            modelAlex.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            GlStateManager.scale(1.1, 1.1, 1.);
+            base.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         }
         RenderUtil.restoreLightMap();
         GlStateManager.enableLighting();
@@ -232,7 +241,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 
         if (!capability.isSyncingToJar()) {
             // Render glowing overlay
-            renderOverlay(entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            renderOverlay(entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale, null);
         }
         // Undo state manager changes
         RenderUtil.restoreLightMap();

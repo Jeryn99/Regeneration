@@ -6,9 +6,11 @@ import me.swirtzly.regeneration.client.rendering.entity.RenderItemOverride;
 import me.swirtzly.regeneration.client.rendering.entity.RenderLindos;
 import me.swirtzly.regeneration.client.rendering.layers.LayerHands;
 import me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration;
+import me.swirtzly.regeneration.client.rendering.tile.RenderHand;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
+import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.compat.lucraft.LucraftCoreHandler;
 import me.swirtzly.regeneration.util.EnumCompatModids;
 import me.swirtzly.regeneration.util.FileUtil;
@@ -17,6 +19,7 @@ import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import java.util.Map;
@@ -33,6 +36,7 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
         RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandInJar.class, new RenderHand());
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
@@ -22,6 +23,9 @@ public class ItemHand extends Item {
 
     public ItemHand() {
         setMaxStackSize(1);
+
+        addPropertyOverride(new ResourceLocation("skin_type"), (stack, worldIn, entityIn) -> getSkinType(stack).equals("ALEX") ? 1 : 0);
+
     }
 
     public static void setTimeCreated(ItemStack stack, long created) {
@@ -46,6 +50,14 @@ public class ItemHand extends Item {
 
     public static String getSkinType(ItemStack stack) {
         return getStackTag(stack).getString("skinType");
+    }
+
+    public static void setTrait(ItemStack stack, String trait) {
+        getStackTag(stack).setString("trait", trait);
+    }
+
+    public static String getTrait(ItemStack stack) {
+        return getStackTag(stack).getString("trait");
     }
 
 

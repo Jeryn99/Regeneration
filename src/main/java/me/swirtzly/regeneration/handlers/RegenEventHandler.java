@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.handlers;
 
+import com.google.common.base.Predicate;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
@@ -9,7 +10,9 @@ import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.InventoryHelper;
@@ -30,6 +33,7 @@ import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -149,14 +153,18 @@ public class RegenEventHandler {
                 }
             } else {
                 if (!player.world.isRemote) {
-                    if (player.world.rand.nextBoolean() && !cap.hasDroppedHand()) {
-                        ItemStack hand = new ItemStack(RegenObjects.Items.HAND);
-                        ItemHand.setTextureString(hand, cap.getEncodedSkin());
-                        ItemHand.setSkinType(hand, cap.getSkinType().name());
-                        ItemHand.setOwner(hand, player.getUniqueID());
-                        ItemHand.setTimeCreated(hand, System.currentTimeMillis());
-                        cap.setDroppedHand(true);
-                        InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
+                    if (trueSource instanceof EntityLiving) {
+                        EntityLiving living = (EntityLiving) trueSource;
+                        if (RegenUtil.isSharp(living.getHeldItemMainhand()) & player.world.rand.nextBoolean() && !cap.hasDroppedHand()) {
+                            ItemStack hand = new ItemStack(RegenObjects.Items.HAND);
+                            ItemHand.setTextureString(hand, cap.getEncodedSkin());
+                            ItemHand.setSkinType(hand, cap.getSkinType().name());
+                            ItemHand.setOwner(hand, player.getUniqueID());
+                            ItemHand.setTimeCreated(hand, System.currentTimeMillis());
+                            ItemHand.setTrait(hand, cap.getDnaType().toString());
+                            cap.setDroppedHand(true);
+                            InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
+                        }
                     }
                 }
                 event.setAmount(0.5F);
@@ -227,5 +235,42 @@ public class RegenEventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void addRunAwayTask(EntityJoinWorldEvent e) {
+        if (e.getEntity() instanceof EntityCreature) {
+            EntityCreature living = (EntityCreature) e.getEntity();
+            Predicate<Entity> pred = entity -> {
+
+                if (entity instanceof EntityPlayer) {
+                    EntityPlayer player = (EntityPlayer) entity;
+                    IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+                    return data.getState() == PlayerUtil.RegenState.REGENERATING || data.areHandsGlowing();
+                }
+                return false;
+            };
+
+            living.tasks.addTask(0, new EntityAIAvoidEntity(living, EntityPlayer.class, pred, 6.0F, 1.0D, 1.2D));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onCut(PlayerInteractEvent.RightClickItem event) {
+        if (RegenUtil.isSharp(event.getItemStack())) {
+            EntityPlayer player = event.getEntityPlayer();
+            IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+            if (!player.world.isRemote && cap.getState() == POST && player.isSneaking() && !cap.hasDroppedHand()) {
+                ItemStack hand = new ItemStack(RegenObjects.Items.HAND);
+                ItemHand.setTextureString(hand, cap.getEncodedSkin());
+                ItemHand.setSkinType(hand, cap.getSkinType().name());
+                ItemHand.setOwner(hand, player.getUniqueID());
+                ItemHand.setTimeCreated(hand, System.currentTimeMillis());
+                ItemHand.setTrait(hand, cap.getDnaType().toString());
+                cap.setDroppedHand(true);
+                InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
+            }
+        }
+    }
+
 
 }

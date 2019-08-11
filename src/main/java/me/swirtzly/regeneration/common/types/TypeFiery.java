@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.client.rendering.types.TypeFieryRenderer;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,6 +47,8 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
         double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
         double z = player.posZ + player.getRNG().nextGaussian() * 2;
         player.world.newExplosion(player, x, y, z, 0.1F, RegenConfig.fieryRegen, false);
+
+        RegenUtil.regenerationExplosion(player);
 
         for (BlockPos bs : BlockPos.getAllInBox(player.getPosition().north().west(), player.getPosition().south().east())) {
             if (player.world.getBlockState(bs).getBlock() instanceof BlockFire) {

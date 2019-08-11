@@ -55,7 +55,7 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
         GlStateManager.translate((float) (flag ? -1 : 1) / 25.0F, 0.125F, -0.625F);
         GlStateManager.translate(0, -0.050, 0.6);
 
-        if (type == EnumHandRenderType.GRACE) {
+        if (type == EnumHandRenderType.GRACE || data.isSyncingToJar()) {
             LayerRegeneration.renderGlowingHands(player, data, 1.5F, handSide);
         }
 
