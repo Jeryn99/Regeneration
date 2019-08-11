@@ -6,6 +6,7 @@ import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.client.animation.AnimationHandler;
 import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
 import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
+import me.swirtzly.regeneration.client.rendering.tile.RenderHand;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
@@ -62,6 +63,7 @@ import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
 
+    public static EnumHandSide SIDE = null;
 
     public static final ResourceLocation[] SHADERS_TEXTURES = new ResourceLocation[]{new ResourceLocation("shaders/post/notch.json"), new ResourceLocation("shaders/post/fxaa.json"), new ResourceLocation("shaders/post/art.json"), new ResourceLocation("shaders/post/bumpy.json"), new ResourceLocation("shaders/post/blobs2.json"), new ResourceLocation("shaders/post/pencil.json"), new ResourceLocation("shaders/post/color_convolve.json"), new ResourceLocation("shaders/post/deconverge.json"), new ResourceLocation("shaders/post/flip.json"), new ResourceLocation("shaders/post/invert.json"), new ResourceLocation("shaders/post/ntsc.json"), new ResourceLocation("shaders/post/outline.json"), new ResourceLocation("shaders/post/phosphor.json"), new ResourceLocation("shaders/post/scan_pincushion.json"), new ResourceLocation("shaders/post/sobel.json"), new ResourceLocation("shaders/post/bits.json"), new ResourceLocation("shaders/post/desaturate.json"), new ResourceLocation("shaders/post/green.json"), new ResourceLocation("shaders/post/blur.json"), new ResourceLocation("shaders/post/wobble.json"), new ResourceLocation("shaders/post/blobs.json"), new ResourceLocation("shaders/post/antialias.json"), new ResourceLocation("shaders/post/creeper.json"), new ResourceLocation("shaders/post/spider.json")};
 
@@ -99,6 +101,7 @@ public class ClientEventHandler {
     public static void onTickEvent(TickEvent.ClientTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.START)) return;
         if (Minecraft.getMinecraft().world == null) {
+
             if (SkinChangingHandler.PLAYER_SKINS.size() > 0) {
                 SkinChangingHandler.PLAYER_SKINS.forEach(((uuid, skinInfo) -> {
                     Minecraft.getMinecraft().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation());
@@ -107,6 +110,20 @@ public class ClientEventHandler {
                 SkinChangingHandler.PLAYER_SKINS.clear();
                 RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
             }
+
+            if (RenderHand.TEXTURES.size() > 0) {
+                RenderHand.TEXTURES.forEach(((tileEntityHandInJar, skin) -> {
+                    Minecraft.getMinecraft().getTextureManager().deleteTexture(skin);
+                    RegenerationMod.LOG.warn("Deleted cache of: " + skin);
+                }));
+                RenderHand.TEXTURES.clear();
+                RegenerationMod.LOG.warn("CLEARED CACHE OF HAND TEXTURES");
+            }
+
+            if (SIDE != null) {
+                Minecraft.getMinecraft().gameSettings.mainHand = SIDE;
+            }
+
         }
     }
 
@@ -119,7 +136,9 @@ public class ClientEventHandler {
         Minecraft.getMinecraft().addScheduledTask(() -> {
 
             if (player.ticksExisted == 50) {
-
+                if (SIDE != null) {
+                    SIDE = Minecraft.getMinecraft().gameSettings.mainHand;
+                }
                 UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
                 IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 

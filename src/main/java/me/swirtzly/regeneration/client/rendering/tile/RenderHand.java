@@ -28,7 +28,7 @@ public class RenderHand extends TileEntitySpecialRenderer<TileEntityHandInJar> {
      * The default skin for the Alex model.
      */
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
-    private static HashMap<TileEntityHandInJar, ResourceLocation> TEXTURES = new HashMap();
+    public static HashMap<TileEntityHandInJar, ResourceLocation> TEXTURES = new HashMap();
     ModelBase STEVE_ARM = new ModelHand(false);
     ModelBase ALEX_ARM = new ModelHand(true);
 

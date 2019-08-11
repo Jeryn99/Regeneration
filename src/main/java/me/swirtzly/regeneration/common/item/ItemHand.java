@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
+import me.swirtzly.regeneration.common.traits.DnaHandler;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -76,6 +77,7 @@ public class ItemHand extends Item {
             stack.getTagCompound().setString("skinType", SkinInfo.SkinType.ALEX.name());
             stack.getTagCompound().setUniqueId("owner", UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39"));
             stack.getTagCompound().setLong("created", 0);
+            stack.getTagCompound().setString("trait", DnaHandler.DNA_BORING.resourceLocation.toString());
         }
         return stack.getTagCompound();
     }
@@ -98,5 +100,6 @@ public class ItemHand extends Item {
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
         String dateFormatted = formatter.format(date);
         tooltip.add(new TextComponentTranslation("nbt.created", dateFormatted).getUnformattedComponentText());
+        tooltip.add("Trait: " + new TextComponentTranslation(DnaHandler.getDnaEntry(new ResourceLocation(getTrait(stack))).getLangKey()).getUnformattedComponentText());
     }
 }
