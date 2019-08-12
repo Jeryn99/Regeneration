@@ -141,9 +141,9 @@ traits.wallclimbing.name=Spider Genes!
 traits.repel_arrow.name=Thick Skinned Genes
 
 traits.athlete.desc=You can run faster!
-traits.boring.desc=Lazy genes! You're useless!
-traits.dumb.desc=Dumb genes! Less XP!
-traits.lucky.desc=Lucky genes! More XP!
+traits.boring.desc=You're useless!
+traits.dumb.desc=Less XP!
+traits.lucky.desc= More XP!
 traits.swimmer.desc=Swimming genes! Swim freely in Water!
 traits.hydrophobic.desc=You hate the Water!
 traits.tough.desc=You deal more damage!

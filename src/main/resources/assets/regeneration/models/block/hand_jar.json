@@ -2,7 +2,7 @@
   "credit": "Made with Blockbench",
   "textures": {
     "0": "regeneration:items/hand_metal",
-    "1": "blocks/glass_light_blue",
+    "1": "regeneration:blocks/glass_light_blue",
     "particle": "regeneration:items/hand_metal"
   },
   "elements": [
@@ -2392,48 +2392,65 @@
   "display": {
     "thirdperson_righthand": {
       "rotation": [
-        75,
-        45,
+        0,
+        87,
         0
       ],
       "translation": [
         0,
-        2.5,
-        0
+        -1,
+        -2.5
       ],
       "scale": [
-        0.375,
-        0.375,
-        0.375
+        0.42,
+        0.42,
+        0.42
       ]
     },
     "thirdperson_lefthand": {
       "rotation": [
-        75,
-        45,
+        0,
+        87,
         0
       ],
       "translation": [
         0,
-        2.5,
-        0
+        -1,
+        -2.5
       ],
       "scale": [
-        0.375,
-        0.375,
-        0.375
+        0.42,
+        0.42,
+        0.42
       ]
     },
     "firstperson_righthand": {
       "rotation": [
         0,
-        45,
+        95,
+        0
+      ],
+      "translation": [
+        3.25,
+        3.75,
         0
       ],
       "scale": [
         0.4,
         0.4,
         0.4
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        -80,
+        0
+      ],
+      "translation": [
+        1.75,
+        0,
+        -4
       ]
     },
     "ground": {
@@ -2474,15 +2491,20 @@
     },
     "fixed": {
       "scale": [
-        0.5,
-        0.5,
-        0.5
+        0.57,
+        0.57,
+        0.57
       ]
     }
   },
   "groups": [
     {
       "name": "walls",
+      "origin": [
+        8,
+        8,
+        8
+      ],
       "children": [
         0,
         1,
@@ -2496,6 +2518,11 @@
     },
     {
       "name": "base",
+      "origin": [
+        8,
+        8,
+        8
+      ],
       "children": [
         8,
         9,
@@ -2508,6 +2535,11 @@
     },
     {
       "name": "lid",
+      "origin": [
+        8,
+        8,
+        8
+      ],
       "children": [
         15,
         16,
@@ -2520,6 +2552,11 @@
     },
     {
       "name": "glass",
+      "origin": [
+        8,
+        8,
+        8
+      ],
       "children": [
         22,
         23,

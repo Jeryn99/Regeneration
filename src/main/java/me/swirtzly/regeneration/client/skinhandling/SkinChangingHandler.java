@@ -184,10 +184,11 @@ public class SkinChangingHandler {
         BufferedImage bufferedImage = null;
         try {
             bufferedImage = ImageIO.read(file);
+            return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("gui_skin_" + System.currentTimeMillis(), new DynamicTexture(bufferedImage));
         } catch (IOException e) {
             e.printStackTrace();
+            return DefaultPlayerSkin.getDefaultSkinLegacy();
         }
-        return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("gui_skin_" + System.currentTimeMillis(), new DynamicTexture(bufferedImage));
     }
 
 

@@ -39,6 +39,7 @@ public class GuiSkinChange extends GuiContainer {
     private static int position = 0;
     private float rotation = 0;
 
+
     public GuiSkinChange() {
         super(new BlankContainer());
         xSize = 176;
