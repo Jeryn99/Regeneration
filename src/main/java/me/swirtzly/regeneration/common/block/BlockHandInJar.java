@@ -7,6 +7,8 @@ import me.swirtzly.regeneration.common.entity.EntityLindos;
 import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.network.MessageRemovePlayer;
+import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
@@ -53,22 +55,25 @@ public class BlockHandInJar extends BlockDirectional {
                 return true;
             }
 
-            if (data.getState() != PlayerUtil.RegenState.REGENERATING && !playerIn.isSneaking()) {
-                playerIn.openGui(RegenerationMod.INSTANCE, 77, worldIn, jar.getPos().getX(), jar.getPos().getY(), jar.getPos().getZ());
-                return true;
-            }
-
-
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING && jar.hasHand && ItemHand.getOwner(jar.getHand()) == playerIn.getUniqueID()) {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING && jar.hasHand && ItemHand.getOwner(jar.getHand()).toString().equals(playerIn.getUniqueID().toString())) {
+                data.getStateManager().fastForward();
                 data.setEncodedSkin(ItemHand.getTextureString(jar.getHand()));
                 data.setSkinType(ItemHand.getSkinType(jar.getHand()));
                 data.setDnaType(new ResourceLocation(ItemHand.getTrait(jar.getHand())));
-                data.getStateManager().fastForward();
+                data.synchronise();
+                data.setSyncingFromJar(true);
+                NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(playerIn.getUniqueID()));
                 jar.clear();
                 jar.setLindosAmont(jar.getLindosAmont() + worldIn.rand.nextInt(15));
                 jar.sendUpdates();
                 return true;
             }
+
+            if (data.getState() != PlayerUtil.RegenState.REGENERATING && !playerIn.isSneaking()) {
+                playerIn.openGui(RegenerationMod.INSTANCE, 77, worldIn, jar.getPos().getX(), jar.getPos().getY(), jar.getPos().getZ());
+                return true;
+            }
+
         }
         return false;
     }

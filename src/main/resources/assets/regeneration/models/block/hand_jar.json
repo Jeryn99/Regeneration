@@ -2,7 +2,7 @@
   "credit": "Made with Blockbench",
   "textures": {
     "0": "regeneration:items/hand_metal",
-    "1": "regeneration:blocks/glass_light_blue",
+    "1": "blocks/glass_light_blue",
     "particle": "regeneration:items/hand_metal"
   },
   "elements": [

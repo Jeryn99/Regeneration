@@ -11,7 +11,6 @@ import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.network.MessageChangeType;
 import me.swirtzly.regeneration.network.MessageUpdateModel;
 import me.swirtzly.regeneration.network.NetworkHandler;
-import me.swirtzly.regeneration.util.RenderUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -51,7 +50,7 @@ public class GuiPreferences extends GuiContainer {
         ROTATION = 0;
 
         GuiButtonExt btnClose = new GuiButtonExt(98, width / 2 - 109, cy + 145, 71, btnH, new TextComponentTranslation("regeneration.gui.close").getFormattedText());
-        GuiButtonExt btnRegenType = new GuiButtonExt(4, width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TextComponentTranslation("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText());
+        GuiButtonExt btnRegenType = new GuiButtonExt(44, width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TextComponentTranslation("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText());
         GuiButtonExt btnSkinType = new GuiButtonExt(22, width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TextComponentTranslation("regeneration.gui.skintype",new TextComponentTranslation("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText());
         btnRegenType.displayString = new TextComponentTranslation("regeneration.gui.type", new TextComponentTranslation("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText()).getUnformattedComponentText();
 
@@ -108,7 +107,7 @@ public class GuiPreferences extends GuiContainer {
                 Minecraft.getMinecraft().displayGuiScreen(null);
                 break;
 
-            case 4:
+            case 44:
                 if (SELECTED_TYPE.next() != null) {
                     SELECTED_TYPE = (TypeHandler.RegenType) SELECTED_TYPE.next();
                 } else {

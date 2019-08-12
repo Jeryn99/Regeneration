@@ -144,7 +144,7 @@ traits.athlete.desc=You can run faster!
 traits.boring.desc=You're useless!
 traits.dumb.desc=Less XP!
 traits.lucky.desc= More XP!
-traits.swimmer.desc=Swimming genes! Swim freely in Water!
+traits.swimmer.desc=Swim freely in Water!
 traits.hydrophobic.desc=You hate the Water!
 traits.tough.desc=You deal more damage!
 traits.fire.desc=You're immune to fire!
@@ -195,3 +195,8 @@ skintype.either=Alex/Steve
 
 
 nbt.created=Created on: %s
+
+gui.hover.skintype=Select your preferred Skin Type
+gui.hover.color=Select your Regeneration Colors
+gui.hover.incarnation=Choose what your next Incarnation will look like
+gui.hover.regen_type=Select your preferred Regeneration Style

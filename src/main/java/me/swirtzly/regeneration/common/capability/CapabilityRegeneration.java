@@ -25,6 +25,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
@@ -66,6 +67,7 @@ public class CapabilityRegeneration implements IRegeneration {
     private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
     private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
     private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
+    private EnumHandSide cutOffHand = EnumHandSide.LEFT;
 
     /**
      * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
@@ -105,7 +107,9 @@ public class CapabilityRegeneration implements IRegeneration {
         if (isSyncingToJar() && ticksAnimating >= 250) {
             setSyncingFromJar(false);
             ticksAnimating = 0;
-            synchronise();
+            if (!player.world.isRemote) {
+                synchronise();
+            }
         } else {
             if (isSyncingToJar()) {
                 if (!player.world.isRemote) {
@@ -177,6 +181,7 @@ public class CapabilityRegeneration implements IRegeneration {
         nbt.setString("nextSkin", BASE64_SKIN_NEXT);
         nbt.setString("nextSkinType", nextSkinType.name());
         nbt.setBoolean("handDropped", handDropped);
+        nbt.setString("cutOffhand", cutOffHand.name());
         return nbt;
     }
 
@@ -248,6 +253,10 @@ public class CapabilityRegeneration implements IRegeneration {
 
         if (nbt.hasKey("handDropped")) {
             handDropped = nbt.getBoolean("handDropped");
+        }
+
+        if (nbt.hasKey("cutOffHand")) {
+            cutOffHand = EnumHandSide.valueOf(nbt.getString("cutOffhand"));
         }
     }
 
@@ -450,6 +459,16 @@ public class CapabilityRegeneration implements IRegeneration {
     @Override
     public void setDroppedHand(boolean droppedHand) {
         this.handDropped = droppedHand;
+    }
+
+    @Override
+    public EnumHandSide getCutoffHand() {
+        return cutOffHand;
+    }
+
+    @Override
+    public void setCutOffHand(EnumHandSide side) {
+        cutOffHand = side;
     }
 
     @Override

@@ -69,13 +69,12 @@ public class GuiSkinChange extends GuiContainer {
         GuiButtonExt btnSave = new GuiButtonExt(88, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.save").getFormattedText());
         GuiButtonExt btnResetSkin = new GuiButtonExt(100, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.reset_skin").getFormattedText());
 
-
-        buttonList.add(btnNext);
-        buttonList.add(btnPrevious);
-        buttonList.add(btnOpenFolder);
-        buttonList.add(btnBack);
-        buttonList.add(btnSave);
-        buttonList.add(btnResetSkin);
+        addButton(btnNext);
+        addButton(btnPrevious);
+        addButton(btnOpenFolder);
+        addButton(btnBack);
+        addButton(btnSave);
+        addButton(btnResetSkin);
 
         PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
         choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
@@ -177,6 +176,7 @@ public class GuiSkinChange extends GuiContainer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                Minecraft.getMinecraft().displayGuiScreen(null);
                 break;
         }
     }

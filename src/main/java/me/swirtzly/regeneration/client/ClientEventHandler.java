@@ -6,6 +6,8 @@ import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.client.animation.AnimationHandler;
 import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
 import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
+import me.swirtzly.regeneration.client.gui.GuiPreferences;
+import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.rendering.tile.RenderHand;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
@@ -124,6 +126,13 @@ public class ClientEventHandler {
                 Minecraft.getMinecraft().gameSettings.mainHand = SIDE;
             }
 
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAction(GuiScreenEvent.ActionPerformedEvent event) {
+        if (event.getButton() instanceof InventoryTabRegeneration) {
+            Minecraft.getMinecraft().displayGuiScreen(new GuiPreferences());
         }
     }
 
@@ -402,11 +411,15 @@ public class ClientEventHandler {
             if (model instanceof ModelPlayer) {
                 ModelPlayer modelPlayer = (ModelPlayer) model;
                 if (data.hasDroppedHand()) {
-                    if (player.getPrimaryHand() == EnumHandSide.LEFT) {
+                    if (data.getCutoffHand() == EnumHandSide.LEFT) {
                         modelPlayer.bipedRightArmwear.isHidden = modelPlayer.bipedRightArm.isHidden = true;
+                    } else {
+                        modelPlayer.bipedRightArmwear.isHidden = modelPlayer.bipedRightArm.isHidden = false;
                     }
-                    if (player.getPrimaryHand() == EnumHandSide.RIGHT) {
+                    if (data.getCutoffHand() == EnumHandSide.RIGHT) {
                         modelPlayer.bipedLeftArmwear.isHidden = modelPlayer.bipedLeftArm.isHidden = true;
+                    } else {
+                        modelPlayer.bipedLeftArmwear.isHidden = modelPlayer.bipedLeftArm.isHidden = false;
                     }
                 } else {
                     modelPlayer.bipedLeftArmwear.isHidden = modelPlayer.bipedLeftArm.isHidden = false;

@@ -42,18 +42,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         super.init();
-
-        // Galacticraft API for TABS ======================
-        if (TabRegistry.getTabList().isEmpty()) {
-            MinecraftForge.EVENT_BUS.register(new TabRegistry());
-            TabRegistry.registerTab(new InventoryTabVanilla());
-        }
-        TabRegistry.registerTab(new InventoryTabRegeneration());
-
-        // LC Core
-        if (EnumCompatModids.LCCORE.isLoaded()) {
-            LucraftCoreHandler.registerEntry();
-        }
     }
 
     @Override
@@ -68,6 +56,18 @@ public class ClientProxy extends CommonProxy {
             renderPlayer.addLayer(new LayerHands(renderPlayer));
         }
         FileUtil.doSetupOnThread();
+
+        // Galacticraft API for TABS ======================
+        if (TabRegistry.getTabList().isEmpty()) {
+            MinecraftForge.EVENT_BUS.register(new TabRegistry());
+            TabRegistry.registerTab(new InventoryTabVanilla());
+        }
+        TabRegistry.registerTab(new InventoryTabRegeneration());
+
+        // LC Core
+        if (EnumCompatModids.LCCORE.isLoaded()) {
+            LucraftCoreHandler.registerEntry();
+        }
     }
 
 }

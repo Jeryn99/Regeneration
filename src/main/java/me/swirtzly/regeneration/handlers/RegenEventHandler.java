@@ -14,11 +14,14 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -65,6 +68,11 @@ public class RegenEventHandler {
             EntityPlayer player = (EntityPlayer) event.getEntityLiving();
             IRegeneration data = CapabilityRegeneration.getForPlayer(player);
             data.tick();
+
+            if (data.hasDroppedHand() && !player.getHeldItemOffhand().isEmpty()) {
+                player.dropItem(player.getHeldItemOffhand(), false);
+                player.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, new ItemStack(Items.AIR));
+            }
         }
     }
 
@@ -163,6 +171,11 @@ public class RegenEventHandler {
                             ItemHand.setTimeCreated(hand, System.currentTimeMillis());
                             ItemHand.setTrait(hand, cap.getDnaType().toString());
                             cap.setDroppedHand(true);
+                            if (player.getPrimaryHand() == EnumHandSide.LEFT) {
+                                cap.setCutOffHand(EnumHandSide.RIGHT);
+                            } else {
+                                cap.setCutOffHand(EnumHandSide.LEFT);
+                            }
                             InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
                         }
                     }
@@ -267,6 +280,11 @@ public class RegenEventHandler {
                 ItemHand.setTimeCreated(hand, System.currentTimeMillis());
                 ItemHand.setTrait(hand, cap.getDnaType().toString());
                 cap.setDroppedHand(true);
+                if (player.getPrimaryHand() == EnumHandSide.LEFT) {
+                    cap.setCutOffHand(EnumHandSide.RIGHT);
+                } else {
+                    cap.setCutOffHand(EnumHandSide.LEFT);
+                }
                 InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
             }
         }

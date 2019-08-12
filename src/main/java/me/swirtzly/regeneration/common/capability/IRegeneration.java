@@ -8,6 +8,7 @@ import me.swirtzly.regeneration.compat.lucraft.PlayerCanRegenEvent;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
@@ -107,4 +108,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     boolean hasDroppedHand();
 
     void setDroppedHand(boolean droppedHand);
+
+    EnumHandSide getCutoffHand();
+
+    void setCutOffHand(EnumHandSide side);
 }
