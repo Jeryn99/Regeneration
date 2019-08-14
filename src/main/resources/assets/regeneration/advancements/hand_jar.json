@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "regeneration:hand_jar"
+    },
+    "title": {
+      "text": "Vanity issues..."
+    },
+    "description": {
+      "text": "Store and use your cut off hand"
+    }
+  },
+  "parent": "regeneration:hand",
+  "criteria": {
+    "change_refusal": {
+      "trigger": "hand_jar"
+    }
+  }
+}

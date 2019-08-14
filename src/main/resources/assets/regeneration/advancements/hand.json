@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "regeneration:hand"
+    },
+    "title": {
+      "text": "You cut my hand off!"
+    },
+    "description": {
+      "text": "Have your hand cut off!"
+    }
+  },
+  "parent": "regeneration:first_regen",
+  "criteria": {
+    "change_refusal": {
+      "trigger": "hand"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.common.block;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
@@ -15,8 +16,11 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -66,6 +70,7 @@ public class BlockHandInJar extends BlockDirectional {
                 jar.clear();
                 jar.setLindosAmont(jar.getLindosAmont() + worldIn.rand.nextInt(15));
                 jar.sendUpdates();
+                RegenTriggers.HAND_JAR_FIRST.trigger((EntityPlayerMP) playerIn);
                 return true;
             }
 
@@ -115,6 +120,7 @@ public class BlockHandInJar extends BlockDirectional {
      * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever possible. Implementing/overriding is
      * fine.
      */
+    @Override
     public IBlockState withRotation(IBlockState state, Rotation rot) {
         return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
     }
@@ -125,6 +131,7 @@ public class BlockHandInJar extends BlockDirectional {
      *
      * @deprecated call via {@link IBlockState#withMirror(Mirror)} whenever possible. Implementing/overriding is fine.
      */
+    @Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
         return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
     }
@@ -132,6 +139,7 @@ public class BlockHandInJar extends BlockDirectional {
     /**
      * Convert the given metadata into a BlockState for this Block
      */
+    @Override
     public IBlockState getStateFromMeta(int meta) {
         EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
@@ -163,4 +171,23 @@ public class BlockHandInJar extends BlockDirectional {
         return CreativeTabs.MISC;
     }
 
+
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+        EnumFacing entityFacing = entity.getHorizontalFacing();
+
+        if (!world.isRemote) {
+            if (entityFacing == EnumFacing.NORTH) {
+                entityFacing = EnumFacing.SOUTH;
+            } else if (entityFacing == EnumFacing.EAST) {
+                entityFacing = EnumFacing.WEST;
+            } else if (entityFacing == EnumFacing.SOUTH) {
+                entityFacing = EnumFacing.NORTH;
+            } else if (entityFacing == EnumFacing.WEST) {
+                entityFacing = EnumFacing.EAST;
+            }
+
+            world.setBlockState(pos, state.withProperty(FACING, entityFacing), 2);
+        }
+    }
 }

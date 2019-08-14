@@ -37,7 +37,7 @@ public class CameraHandler {
 
         IRegeneration data = CapabilityRegeneration.getForPlayer(player);
 
-        boolean allowFreemode = CapabilityRegeneration.getForPlayer(player).getState() == PlayerUtil.RegenState.REGENERATING;
+        boolean allowFreemode = data.getState() == PlayerUtil.RegenState.REGENERATING || data.isSyncingToJar();
 
         if (allowFreemode) {
             if (gameSettings.keyBindLeft.isKeyDown()) {

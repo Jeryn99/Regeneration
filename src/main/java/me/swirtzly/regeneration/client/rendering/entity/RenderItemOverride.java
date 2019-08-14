@@ -9,8 +9,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -61,6 +64,22 @@ public class RenderItemOverride extends Render<EntityItemOverride> {
                 makeGlowingBall(mc, f, rand, primaryColor, secondaryColor);
             }
         }
+
+        GlStateManager.pushMatrix();
+        Entity look = mc.objectMouseOver.entityHit;
+        if (look != null && look == entity) {
+
+            float offset = MathHelper.cos(entity.ticksExisted * 0.1F) * -0.09F;
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, 0.4F, 0);
+            GlStateManager.scale(0.60F, 0.60F, 0.60F);
+            this.renderLivingLabel(entity, new TextComponentTranslation("right.click", Minecraft.getMinecraft().gameSettings.keyBindUseItem.getDisplayName()).getUnformattedComponentText(), x, y + 0.4 + offset, z, 46);
+            GlStateManager.popMatrix();
+        }
+
+
+        GlStateManager.popMatrix();
 
         GlStateManager.translate(x, y + 0.17F, z);
         GlStateManager.rotate(-entity.rotationYaw, 0, 1, 0);

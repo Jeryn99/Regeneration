@@ -29,8 +29,8 @@ public class RenderHand extends TileEntitySpecialRenderer<TileEntityHandInJar> {
      */
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
     public static HashMap<TileEntityHandInJar, ResourceLocation> TEXTURES = new HashMap();
-    ModelBase STEVE_ARM = new ModelHand(false);
-    ModelBase ALEX_ARM = new ModelHand(true);
+    public static ModelBase STEVE_ARM = new ModelHand(false);
+    public static ModelBase ALEX_ARM = new ModelHand(true);
 
     @Override
     public void render(TileEntityHandInJar te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {

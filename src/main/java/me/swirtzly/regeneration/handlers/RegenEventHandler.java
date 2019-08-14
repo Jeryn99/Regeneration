@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.handlers;
 import com.google.common.base.Predicate;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationProvider;
@@ -14,6 +15,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -171,6 +173,7 @@ public class RegenEventHandler {
                             ItemHand.setTimeCreated(hand, System.currentTimeMillis());
                             ItemHand.setTrait(hand, cap.getDnaType().toString());
                             cap.setDroppedHand(true);
+                            RegenTriggers.HAND.trigger((EntityPlayerMP) player);
                             if (player.getPrimaryHand() == EnumHandSide.LEFT) {
                                 cap.setCutOffHand(EnumHandSide.RIGHT);
                             } else {
@@ -280,6 +283,7 @@ public class RegenEventHandler {
                 ItemHand.setTimeCreated(hand, System.currentTimeMillis());
                 ItemHand.setTrait(hand, cap.getDnaType().toString());
                 cap.setDroppedHand(true);
+                RegenTriggers.HAND.trigger((EntityPlayerMP) player);
                 if (player.getPrimaryHand() == EnumHandSide.LEFT) {
                     cap.setCutOffHand(EnumHandSide.RIGHT);
                 } else {

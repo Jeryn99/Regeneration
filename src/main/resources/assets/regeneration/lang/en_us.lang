@@ -200,3 +200,5 @@ gui.hover.skintype=Select your preferred Skin Type
 gui.hover.color=Select your Regeneration Colors
 gui.hover.incarnation=Choose what your next Incarnation will look like
 gui.hover.regen_type=Select your preferred Regeneration Style
+
+right.click=Pickup with %s

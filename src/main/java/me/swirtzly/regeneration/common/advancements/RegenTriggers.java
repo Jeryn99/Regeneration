@@ -8,6 +8,8 @@ public class RegenTriggers {
     public static final CustomTrigger CHANGE_REFUSAL = new CustomTrigger("change_refusal");
     public static final CustomTrigger CRITICAL = new CustomTrigger("critical_period");
     public static final CustomTrigger LINDOS_VIAL = new CustomTrigger("lindos_vial");
+    public static final CustomTrigger HAND = new CustomTrigger("hand");
+    public static final CustomTrigger HAND_JAR_FIRST = new CustomTrigger("hand_jar");
 
 
     public static void init() {
@@ -15,6 +17,8 @@ public class RegenTriggers {
         CriteriaTriggers.register(CHANGE_REFUSAL);
         CriteriaTriggers.register(CRITICAL);
         CriteriaTriggers.register(LINDOS_VIAL);
+        CriteriaTriggers.register(HAND);
+        CriteriaTriggers.register(HAND_JAR_FIRST);
     }
 
 }
