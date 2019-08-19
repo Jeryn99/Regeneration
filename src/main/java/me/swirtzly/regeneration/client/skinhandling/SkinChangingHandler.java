@@ -259,9 +259,8 @@ public class SkinChangingHandler {
             map = Minecraft.getMinecraft().getSessionService().getTextures(Minecraft.getMinecraft().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
         }
         MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
-        String modelType = profile.getMetadata("model");
 
-        if (modelType == null) {
+        if (profile.getMetadata("model") == null) {
             return SkinInfo.SkinType.STEVE;
         }
 
