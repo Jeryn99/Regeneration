@@ -24,7 +24,6 @@ public interface IRegenerationStateManager extends INBTSerializable<NBTTagCompou
     @Deprecated
     Pair<PlayerUtil.RegenState.Transition, Long> getScheduledEvent();
 
-    @Deprecated
     void fastForward();
 
     @Deprecated

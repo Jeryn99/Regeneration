@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 
 public class TileEntityHandInJar extends TileEntity implements ITickable, IInventory {
 
-    public boolean hasHand = false;
+    private boolean hasHand = false;
     public int lindosAmont = 0;
     private NonNullList<ItemStack> handInv = NonNullList.withSize(7, ItemStack.EMPTY);
 
@@ -45,7 +45,6 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 
     @Override
     public void update() {
-        setHasHand(getHand().getItem() == RegenObjects.Items.HAND);
 
         if (world.getWorldTime() % 35 == 0 && hasHand) {
             world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.4F, 0.3F);
@@ -55,7 +54,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
         if (player != null) {
             IRegeneration data = CapabilityRegeneration.getForPlayer(player);
             if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                if (world.rand.nextInt(90) < 30) {
+                if (world.rand.nextInt(90) < 10) {
                     lindosAmont = lindosAmont + 1;
                     markDirty();
                 }
@@ -66,10 +65,10 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
     public ItemStack getHand() {
         return handInv.get(3);
     }
-
     public boolean hasHand() {
         return hasHand;
     }
+
 
     public void setHasHand(boolean hasHand) {
         this.hasHand = hasHand;

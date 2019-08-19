@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.client.rendering.layers;
 
+import me.swirtzly.regeneration.client.rendering.types.TypeFieryRenderer;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeHandler;
@@ -33,15 +34,20 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
             renderHand(entitylivingbaseIn, EnumHandSide.RIGHT, EnumHandRenderType.GRACE);
         }
 
-        if (data.getState() == PlayerUtil.RegenState.REGENERATING || data.isSyncingToJar()) {
+        if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
             renderHand(entitylivingbaseIn, EnumHandSide.LEFT, EnumHandRenderType.REGEN);
             renderHand(entitylivingbaseIn, EnumHandSide.RIGHT, EnumHandRenderType.REGEN);
+        }
+
+        if (data.isSyncingToJar()) {
+            renderHand(entitylivingbaseIn, EnumHandSide.LEFT, EnumHandRenderType.JAR);
+            renderHand(entitylivingbaseIn, EnumHandSide.RIGHT, EnumHandRenderType.JAR);
         }
 
         GlStateManager.popMatrix();
     }
 
-    private void renderHand(EntityPlayer player, EnumHandSide handSide, EnumHandRenderType type) {
+    public void renderHand(EntityPlayer player, EnumHandSide handSide, EnumHandRenderType type) {
         GlStateManager.pushMatrix();
 
         IRegeneration data = CapabilityRegeneration.getForPlayer(player);
@@ -49,19 +55,24 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
         if (player.isSneaking()) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
         }
-        // Forge: moved this call down, fixes incorrect offset while sneaking.
+
         this.translateToHand(handSide);
         boolean flag = handSide == EnumHandSide.LEFT;
         GlStateManager.translate((float) (flag ? -1 : 1) / 25.0F, 0.125F, -0.625F);
         GlStateManager.translate(0, -0.050, 0.6);
 
-        if (type == EnumHandRenderType.GRACE || data.isSyncingToJar()) {
+        if (type == EnumHandRenderType.GRACE) {
             LayerRegeneration.renderGlowingHands(player, data, 1.5F, handSide);
         }
 
         if (type == EnumHandRenderType.REGEN) {
             TypeHandler.getTypeInstance(data.getType()).getRenderer().renderHand(player, handSide, livingEntityRenderer);
         }
+
+        if (type == EnumHandRenderType.JAR) {
+            TypeFieryRenderer.renderConeAtArms(player);
+        }
+
         GlStateManager.popMatrix();
     }
 
@@ -74,6 +85,6 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
     }
 
     public enum EnumHandRenderType {
-        REGEN, GRACE
+        REGEN, GRACE, JAR
     }
 }

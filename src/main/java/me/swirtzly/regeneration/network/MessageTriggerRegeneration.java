@@ -1,7 +1,6 @@
 package me.swirtzly.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
-import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,12 +41,9 @@ public class MessageTriggerRegeneration implements IMessage {
         public IMessage onMessage(MessageTriggerRegeneration message, MessageContext ctx) {
             ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
                 IRegeneration regen = CapabilityRegeneration.getForPlayer(message.player);
-
-                if (!regen.getState().isGraceful()) {
-                    RegenerationMod.LOG.warn(regen.getPlayer().getName() + "Trigger packet was sent when not in a graceful period");
-                    return;
+                if (regen.getState().isGraceful()) {
+                    regen.triggerRegeneration();
                 }
-                regen.triggerRegeneration();
             });
 
             return null;

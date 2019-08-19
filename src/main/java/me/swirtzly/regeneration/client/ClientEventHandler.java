@@ -8,7 +8,7 @@ import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
 import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
 import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
-import me.swirtzly.regeneration.client.rendering.tile.RenderHand;
+import me.swirtzly.regeneration.client.rendering.tile.RenderTileEntityHand;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
@@ -87,6 +87,8 @@ public class ClientEventHandler {
     @SubscribeEvent
     public static void onInput(InputUpdateEvent tickEvent) {
 
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        
         if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
             NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
         }
@@ -112,12 +114,12 @@ public class ClientEventHandler {
                 RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
             }
 
-            if (RenderHand.TEXTURES.size() > 0) {
-                RenderHand.TEXTURES.forEach(((tileEntityHandInJar, skin) -> {
+            if (RenderTileEntityHand.TEXTURES.size() > 0) {
+                RenderTileEntityHand.TEXTURES.forEach(((tileEntityHandInJar, skin) -> {
                     Minecraft.getMinecraft().getTextureManager().deleteTexture(skin);
                     RegenerationMod.LOG.warn("Deleted cache of: " + skin);
                 }));
-                RenderHand.TEXTURES.clear();
+                RenderTileEntityHand.TEXTURES.clear();
                 RegenerationMod.LOG.warn("CLEARED CACHE OF HAND TEXTURES");
             }
 
@@ -141,14 +143,15 @@ public class ClientEventHandler {
             return;
 
         EntityPlayer player = (EntityPlayer) e.getEntity();
-        Minecraft.getMinecraft().addScheduledTask(() -> {
+        UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
+        IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 
+        //Horrible Sound repairs
+        Minecraft.getMinecraft().addScheduledTask(() -> {
             if (player.ticksExisted == 50) {
                 if (SIDE != null) {
                     SIDE = Minecraft.getMinecraft().gameSettings.mainHand;
                 }
-                UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
-                IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 
                 if (cap.areHandsGlowing()) {
                     ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 0.5F);
@@ -166,6 +169,7 @@ public class ClientEventHandler {
             }
 
         });
+
 
     }
 

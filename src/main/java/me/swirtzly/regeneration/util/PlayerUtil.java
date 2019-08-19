@@ -83,6 +83,29 @@ public class PlayerUtil {
         return false;
     }
 
+    public static void lookAt(double px, double py, double pz, EntityPlayer me) {
+        double dirx = me.getPosition().getX() - px;
+        double diry = me.getPosition().getY() - py;
+        double dirz = me.getPosition().getZ() - pz;
+
+        double len = Math.sqrt(dirx * dirx + diry * diry + dirz * dirz);
+
+        dirx /= len;
+        diry /= len;
+        dirz /= len;
+
+        double pitch = Math.asin(diry);
+        double yaw = Math.atan2(dirz, dirx);
+
+        //to degree
+        pitch = pitch * 180.0 / Math.PI;
+        yaw = yaw * 180.0 / Math.PI;
+
+        yaw += 90f;
+        me.rotationPitch = (float) pitch;
+        me.rotationYaw = (float) yaw;
+    }
+
     public enum RegenState {
 
         ALIVE,

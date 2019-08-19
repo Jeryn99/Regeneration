@@ -1,13 +1,23 @@
 package me.swirtzly.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
+import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.item.ItemHand;
+import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.REGENERATING;
 
 public class MessageTriggerForcedRegen implements IMessage {
 
@@ -30,10 +40,44 @@ public class MessageTriggerForcedRegen implements IMessage {
         public IMessage onMessage(MessageTriggerForcedRegen message, MessageContext ctx) {
 
             ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-                IRegeneration cap = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
-                if (cap.canRegenerate() && cap.getState() == PlayerUtil.RegenState.ALIVE) {
-                    cap.getPlayer().attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
+
+                EntityPlayerMP player = ctx.getServerHandler().player;
+
+                IRegeneration data = CapabilityRegeneration.getForPlayer(ctx.getServerHandler().player);
+                if (data.canRegenerate() && data.getState() == PlayerUtil.RegenState.ALIVE) {
+                    data.getPlayer().attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
                 }
+
+                if (data.getState() == REGENERATING) {
+                    AxisAlignedBB box = player.getEntityBoundingBox().grow(15);
+                    for (BlockPos pos : BlockPos.getAllInBox(new BlockPos(box.minX, box.minY, box.minZ), new BlockPos(box.maxX, box.maxY, box.maxZ))) {
+                        IBlockState blockState = player.world.getBlockState(pos);
+                        if (blockState.getBlock() == RegenObjects.Blocks.HAND_JAR) {
+                            TileEntityHandInJar handInJar = (TileEntityHandInJar) player.world.getTileEntity(pos);
+                            if (handInJar.hasHand()) {
+                                boolean isPlayers = ItemHand.getOwner(handInJar.getHand()).toString().equals(player.getUniqueID().toString());
+                                if (isPlayers) {
+                                    PlayerUtil.lookAt(pos.getX(), pos.getY(), pos.getZ(), player);
+                                    data.getStateManager().fastForward();
+                                    data.setEncodedSkin(ItemHand.getTextureString(handInJar.getHand()));
+                                    data.setSkinType(ItemHand.getSkinType(handInJar.getHand()));
+                                    data.setDnaType(new ResourceLocation(ItemHand.getTrait(handInJar.getHand())));
+                                    data.synchronise();
+                                    data.setSyncingFromJar(true);
+                                    NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID()));
+                                    handInJar.clear();
+                                    handInJar.setLindosAmont(handInJar.getLindosAmont() + player.world.rand.nextInt(15));
+                                    RegenTriggers.HAND_JAR_FIRST.trigger(player);
+                                    data.getStateManager().fastForward();
+                                    handInJar.markDirty();
+                                    handInJar.sendUpdates();
+                                }
+                                return;
+                            }
+                        }
+                    }
+                }
+                
             });
 
             return null;

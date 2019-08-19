@@ -179,7 +179,7 @@ regeneration.gui.previous=<
 regeneration.gui.next=>
 regeneration.gui.preferences=Preferences
 regeneration.messages.info_trait=Trait:
-regeneration.keybinds.regenerate_forced=Force Regen!
+regeneration.keybinds.regenerate_forced=Force Regen/Sync to hand!
 
 entity.fob.name=Item
 entity.lindos.name=Lindos particles

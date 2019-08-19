@@ -6,7 +6,7 @@ import me.swirtzly.regeneration.client.rendering.entity.RenderItemOverride;
 import me.swirtzly.regeneration.client.rendering.entity.RenderLindos;
 import me.swirtzly.regeneration.client.rendering.layers.LayerHands;
 import me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration;
-import me.swirtzly.regeneration.client.rendering.tile.RenderHand;
+import me.swirtzly.regeneration.client.rendering.tile.RenderTileEntityHand;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
@@ -36,7 +36,7 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
         RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandInJar.class, new RenderHand());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandInJar.class, new RenderTileEntityHand());
     }
 
     @Override

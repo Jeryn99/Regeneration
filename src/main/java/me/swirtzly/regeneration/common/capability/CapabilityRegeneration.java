@@ -104,15 +104,13 @@ public class CapabilityRegeneration implements IRegeneration {
             didSetup = true;
         }
 
-        if (isSyncingToJar() && ticksAnimating >= 250) {
-            setSyncingFromJar(false);
-            ticksAnimating = 0;
-            if (!player.world.isRemote) {
+        if (!player.world.isRemote) {
+            if (isSyncingToJar() && ticksAnimating >= 250) {
+                setSyncingFromJar(false);
+                ticksAnimating = 0;
                 synchronise();
-            }
-        } else {
-            if (isSyncingToJar()) {
-                if (!player.world.isRemote) {
+            } else {
+                if (isSyncingToJar()) {
                     PlayerUtil.setPerspective((EntityPlayerMP) player, true, false);
                 }
             }
@@ -176,8 +174,9 @@ public class CapabilityRegeneration implements IRegeneration {
         nbt.setBoolean("traitActive", traitActive);
         nbt.setInteger("ticks_animating", ticksAnimating);
         nbt.setBoolean("jar", syncingToJar);
-        if (!player.world.isRemote)
+        if (!player.world.isRemote) {
             nbt.setTag("stateManager", stateManager.serializeNBT());
+        }
         nbt.setString("nextSkin", BASE64_SKIN_NEXT);
         nbt.setString("nextSkinType", nextSkinType.name());
         nbt.setBoolean("handDropped", handDropped);

@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 import static me.swirtzly.regeneration.client.rendering.types.TypeFieryRenderer.renderOverlay;
 
-public class RenderHand extends TileEntitySpecialRenderer<TileEntityHandInJar> {
+public class RenderTileEntityHand extends TileEntitySpecialRenderer<TileEntityHandInJar> {
 
     /**
      * The default skin for the Steve model.
@@ -28,7 +28,7 @@ public class RenderHand extends TileEntitySpecialRenderer<TileEntityHandInJar> {
      * The default skin for the Alex model.
      */
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
-    public static HashMap<TileEntityHandInJar, ResourceLocation> TEXTURES = new HashMap();
+    public static HashMap<TileEntityHandInJar, ResourceLocation> TEXTURES = new HashMap<>();
     public static ModelBase STEVE_ARM = new ModelHand(false);
     public static ModelBase ALEX_ARM = new ModelHand(true);
 
@@ -41,7 +41,7 @@ public class RenderHand extends TileEntitySpecialRenderer<TileEntityHandInJar> {
             String handType = ItemHand.getSkinType(te.getHand());
             Minecraft.getMinecraft().getTextureManager().bindTexture(getOrCreateTexture(te));
             GlStateManager.rotate(180, 1, 0, 0);
-            GlStateManager.translate(0.5, -1.5, -0.6);
+            GlStateManager.translate(0.5, -1.5, -0.5);
             if (handType.equals("ALEX")) {
                 ALEX_ARM.render(null, 0, 0, 0, 0, 0, 0.0625F);
                 if (te.getLindosAmont() >= 100) {

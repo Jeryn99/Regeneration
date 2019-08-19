@@ -1,15 +1,11 @@
 package me.swirtzly.regeneration.common.block;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
-import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.network.MessageRemovePlayer;
-import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
@@ -18,7 +14,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -56,21 +51,6 @@ public class BlockHandInJar extends BlockDirectional {
                 worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 0.7F);
                 data.synchronise();
                 jar.sendUpdates();
-                return true;
-            }
-
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING && jar.hasHand && ItemHand.getOwner(jar.getHand()).toString().equals(playerIn.getUniqueID().toString())) {
-                data.getStateManager().fastForward();
-                data.setEncodedSkin(ItemHand.getTextureString(jar.getHand()));
-                data.setSkinType(ItemHand.getSkinType(jar.getHand()));
-                data.setDnaType(new ResourceLocation(ItemHand.getTrait(jar.getHand())));
-                data.synchronise();
-                data.setSyncingFromJar(true);
-                NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(playerIn.getUniqueID()));
-                jar.clear();
-                jar.setLindosAmont(jar.getLindosAmont() + worldIn.rand.nextInt(15));
-                jar.sendUpdates();
-                RegenTriggers.HAND_JAR_FIRST.trigger((EntityPlayerMP) playerIn);
                 return true;
             }
 

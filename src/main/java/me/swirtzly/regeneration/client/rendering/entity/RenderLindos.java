@@ -23,6 +23,7 @@ public class RenderLindos extends Render<Entity> {
 
     @Override
     public void doRender(Entity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        GlStateManager.pushMatrix();
         Minecraft mc = Minecraft.getMinecraft();
         Random rand = entity.world.rand;
         float f = 0.1F;
@@ -32,6 +33,7 @@ public class RenderLindos extends Render<Entity> {
             GlStateManager.scale(0.9F, 0.9F, 0.9F);
             RenderItemOverride.makeGlowingBall(mc, f, rand, primaryColor, secondaryColor);
         }
+        GlStateManager.popMatrix();
     }
 
     @Nullable

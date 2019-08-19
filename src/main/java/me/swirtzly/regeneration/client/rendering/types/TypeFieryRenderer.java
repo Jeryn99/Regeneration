@@ -93,8 +93,8 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         double r = 0.09890109890109888;
         double f = p * Math.pow(x, 2) - r;
         float cf = MathHelper.clamp((float) f, 0F, 1F);
-        float primaryScale = capability.isSyncingToJar() ? 100 : cf * 4F;
-        float secondaryScale = capability.isSyncingToJar() ? 100 : cf * 6.4F;
+        float primaryScale = cf * 4F;
+        float secondaryScale = cf * 6.4F;
 
         NBTTagCompound style = capability.getStyle();
         Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
@@ -184,6 +184,8 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
 
         playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
+        playerModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
+        playerModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
 
         return copyAndReturn(playerModel, true);
     }
