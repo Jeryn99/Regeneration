@@ -21,7 +21,9 @@
 		"1.7.0" : "You can now select your next skin! Critical phase is now spookier! Fixed Various bugs, Check CurseForge for details!",
 		"1.8.0" : "Freecam! || Sorting downloaded skins into correct folders correctly || Shaders for various Regeneration stages || Spectators can now view all effects of a Regenerating person",
 		"1.9.0" : "A lot was overhauled! You're gonna need to check the CurseForge description of Update 1.9.0",
-		"1.9.2" : "Fixed a issue with Jars not working || You now drop items in your cut off hand || Fixed Tab not being able to be clicked"
+		"1.9.2" : "Fixed a issue with Jars not working || You now drop items in your cut off hand || Fixed Tab not being able to be clicked",
+		"1.9.3" : "Small fixes & Adjustments",
+
 	},
 	"1.13.2": {
 		"0.0.2": "Ported to 1.13.2 + Fixed Force Regen Crash"
