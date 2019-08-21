@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "1.9.4",
-		"1.12.2-recommended": "1.9.4",
+		"1.12.2-latest": "1.9.5",
+		"1.12.2-recommended": "1.9.5",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
@@ -23,7 +23,8 @@
 		"1.9.0" : "A lot was overhauled! You're gonna need to check the CurseForge description of Update 1.9.0",
 		"1.9.2" : "Fixed a issue with Jars not working || You now drop items in your cut off hand || Fixed Tab not being able to be clicked",
 		"1.9.3" : "Small fixes & Adjustments",
-		"1.9.4" : "Fixes crash with Steve modelled players"
+		"1.9.4" : "Fixes crash with Steve modelled players",
+		"1.9.5" : "Fixes issue with hand in jar not seeing the player and nothing happening"
 
 	},
 	"1.13.2": {
