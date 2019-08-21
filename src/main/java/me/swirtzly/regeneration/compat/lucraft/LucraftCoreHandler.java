@@ -47,7 +47,7 @@ public class LucraftCoreHandler implements IActingHandler {
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onGui(InputUpdateEvent tickEvent) {
+    public void onInput(InputUpdateEvent tickEvent) {
         Minecraft minecraft = Minecraft.getMinecraft();
         if (minecraft.currentScreen == null && minecraft.player != null) {
             ClientUtil.keyBind = getKeyBindDisplayName();

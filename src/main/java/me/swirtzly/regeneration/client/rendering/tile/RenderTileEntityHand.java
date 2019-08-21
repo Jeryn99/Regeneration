@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.client.rendering.tile;
 
-import me.swirtzly.regeneration.client.ModelHand;
+import me.swirtzly.regeneration.client.models.ModelHand;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;

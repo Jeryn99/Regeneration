@@ -15,8 +15,6 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.network.MessageTriggerForcedRegen;
-import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.EnumCompatModids;
 import me.swirtzly.regeneration.util.RenderUtil;
@@ -33,7 +31,6 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
@@ -81,24 +78,6 @@ public class ClientEventHandler {
         }
     }
 
-
-    //====
-
-    @SubscribeEvent
-    public static void onInput(InputUpdateEvent tickEvent) {
-
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
-        
-        if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
-            NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
-        }
-
-        if (EnumCompatModids.LCCORE.isLoaded()) return;
-        Minecraft minecraft = Minecraft.getMinecraft();
-        if (minecraft.currentScreen == null && minecraft.player != null) {
-            ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
-        }
-    }
 
     @SubscribeEvent
     public static void onTickEvent(TickEvent.ClientTickEvent event) {
@@ -316,24 +295,6 @@ public class ClientEventHandler {
 
     public static String getColoredText(String msg) {
         return msg.replaceAll("&", String.valueOf('\u00a7'));
-    }
-
-    @SubscribeEvent
-    public static void keyInput(InputUpdateEvent e) {
-        if (Minecraft.getMinecraft().player == null)
-            return;
-
-        IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
-        if (cap.getState() == REGENERATING || cap.isSyncingToJar()) { // locking user
-            MovementInput moveType = e.getMovementInput();
-            moveType.rightKeyDown = false;
-            moveType.leftKeyDown = false;
-            moveType.backKeyDown = false;
-            moveType.jump = false;
-            moveType.moveForward = 0.0F;
-            moveType.sneak = false;
-            moveType.moveStrafe = 0.0F;
-        }
     }
 
     @SubscribeEvent

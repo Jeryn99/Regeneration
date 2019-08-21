@@ -11,8 +11,8 @@ import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -49,10 +49,9 @@ public class MessageTriggerForcedRegen implements IMessage {
                 }
 
                 if (data.getState() == REGENERATING) {
-                    AxisAlignedBB box = player.getEntityBoundingBox().grow(15);
-                    for (BlockPos pos : BlockPos.getAllInBox(new BlockPos(box.minX, box.minY, box.minZ), new BlockPos(box.maxX, box.maxY, box.maxZ))) {
+                    for (BlockPos pos : BlockPos.getAllInBox(player.getPosition().add(15, 15, 15), player.getPosition().subtract(new Vec3i(15, 15, 15)))) {
                         IBlockState blockState = player.world.getBlockState(pos);
-                        if (blockState.getBlock() == RegenObjects.Blocks.HAND_JAR) {
+                        if (blockState.getBlock().getRegistryName() == RegenObjects.Blocks.HAND_JAR.getRegistryName()) {
                             TileEntityHandInJar handInJar = (TileEntityHandInJar) player.world.getTileEntity(pos);
                             if (handInJar.hasHand()) {
                                 boolean isPlayers = ItemHand.getOwner(handInJar.getHand()).toString().equals(player.getUniqueID().toString());
@@ -71,13 +70,13 @@ public class MessageTriggerForcedRegen implements IMessage {
                                     data.getStateManager().fastForward();
                                     handInJar.markDirty();
                                     handInJar.sendUpdates();
+                                    return;
                                 }
-                                return;
                             }
                         }
                     }
                 }
-                
+
             });
 
             return null;

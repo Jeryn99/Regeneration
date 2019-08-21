@@ -25,10 +25,8 @@ import javax.annotation.Nullable;
 
 public class TileEntityHandInJar extends TileEntity implements ITickable, IInventory {
 
-    private boolean hasHand = false;
     public int lindosAmont = 0;
     private NonNullList<ItemStack> handInv = NonNullList.withSize(7, ItemStack.EMPTY);
-
 
     public int getLindosAmont() {
         return lindosAmont;
@@ -39,14 +37,9 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-    }
-
-    @Override
     public void update() {
 
-        if (world.getWorldTime() % 35 == 0 && hasHand) {
+        if (world.getWorldTime() % 35 == 0 && hasHand()) {
             world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.4F, 0.3F);
         }
 
@@ -56,7 +49,6 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
             if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
                 if (world.rand.nextInt(90) < 10) {
                     lindosAmont = lindosAmont + 1;
-                    markDirty();
                 }
             }
         }
@@ -65,19 +57,16 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
     public ItemStack getHand() {
         return handInv.get(3);
     }
+
     public boolean hasHand() {
-        return hasHand;
+        return handInv.get(3).getItem() == RegenObjects.Items.HAND;
     }
 
-
-    public void setHasHand(boolean hasHand) {
-        this.hasHand = hasHand;
-    }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setFloat("lindos", lindosAmont);
-        compound.setBoolean("hasHand", hasHand);
+        compound.setBoolean("hasHand", hasHand());
         ItemStackHelper.saveAllItems(compound, this.handInv);
         return super.writeToNBT(compound);
     }
@@ -86,7 +75,6 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         lindosAmont = compound.getInteger("lindos");
-        hasHand = compound.getBoolean("hasHand");
         ItemStackHelper.loadAllItems(compound, this.handInv);
         super.readFromNBT(compound);
     }
@@ -128,7 +116,6 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         this.handInv.set(index, stack);
-
         if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
@@ -146,7 +133,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 
     @Override
     public void openInventory(EntityPlayer player) {
-
+        this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), false);
     }
 
     @Override

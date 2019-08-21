@@ -47,7 +47,7 @@ public class GuiSkinChange extends GuiContainer {
     }
 
     public static void updateModels() {
-        isAlex = skins.get(position).toPath().startsWith(SkinChangingHandler.SKIN_DIRECTORY_ALEX.toPath().toString());
+        isAlex = skins.get(position).toPath().toString().contains(SkinChangingHandler.SKIN_DIRECTORY_ALEX.toPath().toString());
         choices = isAlex ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
     }
 
