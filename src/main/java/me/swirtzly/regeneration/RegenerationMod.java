@@ -63,7 +63,6 @@ public class RegenerationMod {
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
-
 	}
 	
 	public static Logger LOG = LogManager.getLogger(NAME);

@@ -216,8 +216,9 @@ public class SkinManipulation {
 			return;
         Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
 		playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
-		if (texture == null)
-			ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
+        if (texture == null) {
+            ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
+        }
 	}
 
 	public static void setPlayerSkinType(AbstractClientPlayerEntity player, SkinInfo.SkinType skinType) {

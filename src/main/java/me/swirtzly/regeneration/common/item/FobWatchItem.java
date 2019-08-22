@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.handlers.RegenObjects;
@@ -25,7 +24,7 @@ import net.minecraft.world.World;
 public class FobWatchItem extends OverrideItem {
 
 	public FobWatchItem() {
-		super(new Item.Properties().defaultMaxDamage(12).group(ItemGroup.MISC));
+		super(new Item.Properties().setNoRepair().maxStackSize(1).group(ItemGroup.MISC));
 		addPropertyOverride(new ResourceLocation("open"), (stack, worldIn, entityIn) -> {
 			if (getStackTag(stack) == null || !getStackTag(stack).contains("open")) {
 				return 0F; //Closed
@@ -46,7 +45,7 @@ public class FobWatchItem extends OverrideItem {
 		if (stack.getTag() == null) {
 			stack.setTag(new CompoundNBT());
 			stack.getTag().putInt("open", 0);
-			//   stack.getTag().putInt("engrave", random.nextInt(2));
+			stack.getTag().putInt("engrave", random.nextInt(2));
 		}
 		return stack.getTag();
 	}
@@ -94,65 +93,68 @@ public class FobWatchItem extends OverrideItem {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 
-        IRegen cap = RegenCap.get(player).orElse(null);
-
 		ItemStack stack = player.getHeldItem(hand);
 
-		if (!player.isSneaking()) { // transferring watch->player
-			if (stack.getDamage() == RegenConfig.COMMON.regenCapacity.get())
-				return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
-			else if (cap.getRegenerationsLeft() == RegenConfig.COMMON.regenCapacity.get())
-				return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
+		RegenCap.get(player).map((cap) -> {
 
-			int supply = RegenConfig.COMMON.regenCapacity.get() - stack.getDamage(), needed = RegenConfig.COMMON.regenCapacity.get() - cap.getRegenerationsLeft(), used = Math.min(supply, needed);
+			if (!player.isSneaking()) { // transferring watch->player
+				if (stack.getDamage() == RegenConfig.COMMON.regenCapacity.get())
+					return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
+				else if (cap.getRegenerationsLeft() == RegenConfig.COMMON.regenCapacity.get())
+					return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
 
-			if (cap.canRegenerate()) {
-				setOpen(stack, 1);
-				PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.gained_regens", used), true);
-			} else if (!world.isRemote) {
-				setOpen(stack, 1);
-				PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.now_timelord"), true);
+				int supply = RegenConfig.COMMON.regenCapacity.get() - stack.getDamage(), needed = RegenConfig.COMMON.regenCapacity.get() - cap.getRegenerationsLeft(), used = Math.min(supply, needed);
+
+				if (cap.canRegenerate()) {
+					setOpen(stack, 1);
+					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.gained_regens", used), true);
+				} else if (!world.isRemote) {
+					setOpen(stack, 1);
+					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.now_timelord"), true);
+				}
+
+				if (used < 0)
+					RegenerationMod.LOG.warn(player.getName().getUnformattedComponentText() + " Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + stack.getDamage() + ", regens:" + cap.getRegenerationsLeft());
+
+
+				if (!cap.getPlayer().isCreative()) {
+					stack.setDamage(stack.getDamage() + used);
+				}
+
+				if (world.isRemote) {
+					setOpen(stack, 1);
+					ClientUtil.playPositionedSoundRecord(RegenObjects.Sounds.FOB_WATCH, 1.0F, 2.0F);
+				} else {
+					cap.receiveRegenerations(used);
+				}
+
+				return new ActionResult<>(ActionResultType.SUCCESS, stack);
+			} else { // transferring player->watch
+				if (!cap.canRegenerate())
+					return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
+
+				if (cap.getState() != PlayerUtil.RegenState.ALIVE) {
+					return msgUsageFailed(player, "regeneration.messages.transfer.not_alive", stack);
+				}
+
+				if (stack.getDamage() == 0)
+					return msgUsageFailed(player, "regeneration.messages.transfer.full_watch", stack);
+
+				stack.setDamage(stack.getDamage() - 1);
+				PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
+
+				if (world.isRemote) {
+					ClientUtil.playPositionedSoundRecord(SoundEvents.BLOCK_FIRE_EXTINGUISH, 5.0F, 2.0F);
+				} else {
+					setOpen(stack, 1);
+					cap.extractRegeneration(1);
+				}
+
+				return new ActionResult<>(ActionResultType.SUCCESS, stack);
 			}
+		});
+		return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
-			if (used < 0)
-				RegenerationMod.LOG.warn(player.getName().getUnformattedComponentText() + " Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + stack.getDamage() + ", regens:" + cap.getRegenerationsLeft());
-
-
-			if (!cap.getPlayer().isCreative()) {
-				stack.setDamage(stack.getDamage() + used);
-			}
-
-			if (world.isRemote) {
-				setOpen(stack, 1);
-				ClientUtil.playPositionedSoundRecord(RegenObjects.Sounds.FOB_WATCH, 1.0F, 2.0F);
-			} else {
-				cap.receiveRegenerations(used);
-			}
-
-			return new ActionResult<>(ActionResultType.SUCCESS, stack);
-		} else { // transferring player->watch
-			if (!cap.canRegenerate())
-				return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
-
-			if (cap.getState() != PlayerUtil.RegenState.ALIVE) {
-				return msgUsageFailed(player, "regeneration.messages.transfer.not_alive", stack);
-			}
-
-			if (stack.getDamage() == 0)
-				return msgUsageFailed(player, "regeneration.messages.transfer.full_watch", stack);
-
-			stack.setDamage(stack.getDamage() - 1);
-			PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
-
-			if (world.isRemote) {
-				ClientUtil.playPositionedSoundRecord(SoundEvents.BLOCK_FIRE_EXTINGUISH, 5.0F, 2.0F);
-			} else {
-				setOpen(stack, 1);
-				cap.extractRegeneration(1);
-			}
-
-			return new ActionResult<>(ActionResultType.SUCCESS, stack);
-		}
 	}
 
 	private ActionResult<ItemStack> msgUsageFailed(PlayerEntity player, String message, ItemStack stack) {
