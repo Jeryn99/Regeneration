@@ -169,18 +169,34 @@ public class SkinManipulation {
 	 * @return ResourceLocation from Mojang
 	 */
 	private static ResourceLocation getMojangSkin(AbstractClientPlayerEntity player) {
-		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = getVanillaMap(player);
-		forceLoad(map);
+		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
+		if (map.isEmpty()) {
+			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
+		}
 		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
 			MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
 			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, Minecraft.getInstance().getSkinManager(), 2), profile.getHash().substring(0, 2));
 			File file = new File(dir, profile.getHash());
 			ResourceLocation location = new ResourceLocation("skins/" + profile.getHash());
+			loadTexture(file, location, getMojangSkin2(player), profile.getUrl());
 			setPlayerSkin(player, location);
 			return player.getLocationSkin();
 		}
-		return DefaultPlayerSkin.getDefaultSkinLegacy();
+		return getMojangSkin2(player);
 	}
+
+	public static ResourceLocation getMojangSkin2(AbstractClientPlayerEntity player) {
+		Minecraft minecraft = Minecraft.getInstance();
+		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(player.getGameProfile());
+		ResourceLocation resourcelocation;
+		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+			resourcelocation = minecraft.getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+		} else {
+			resourcelocation = DefaultPlayerSkin.getDefaultSkin(PlayerEntity.getUUID(player.getGameProfile()));
+		}
+		return resourcelocation;
+	}
+
 
 	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String par1Str) {
 		TextureManager texturemanager = Minecraft.getInstance().getTextureManager();

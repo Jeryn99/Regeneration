@@ -143,7 +143,6 @@ public class RegenObjects {
 	}
 
 	private static SoundEvent setUpSound(String soundName) {
-		System.out.println("subtitle.regeneration." + soundName);
 		return new SoundEvent(new ResourceLocation(MODID, soundName)).setRegistryName(soundName);
 	}
 	

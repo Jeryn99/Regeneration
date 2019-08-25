@@ -8,6 +8,7 @@ import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
@@ -58,6 +59,8 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 
     TypeManager.Type getType();
 
+    void setType(TypeManager.Type type);
+
     IRegenStateManager getStateManager();
 	
 	String getEncodedSkin();
@@ -101,6 +104,15 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	String getNextSkin();
 
 	void setNextSkin(String encodedSkin);
+
+    boolean hasDroppedHand();
+
+    void setDroppedHand(boolean droppedHand);
+
+    HandSide getCutoffHand();
+
+    void setCutOffHand(HandSide side);
+
 
 
 }

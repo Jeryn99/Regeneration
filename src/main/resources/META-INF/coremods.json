@@ -1,3 +1,4 @@
 {
-  "setRotationAnglesEvent": "asm/set-rotation-angles.js"
+  "setRotationAnglesEvent": "asm/set-rotation-angles.js",
+  "pre-render-callback": "asm/pre-render-callback.js"
 }

@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class OverrideEntity extends Entity {
 
@@ -114,7 +115,7 @@ public class OverrideEntity extends Entity {
 
 	@Override
 	public IPacket<?> createSpawnPacket() {
-		return null;
+        return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	public void setHeight(float height) {

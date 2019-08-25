@@ -43,6 +43,11 @@ public class ElixirRenderer extends ATypeRenderer<ElixirType> {
 
 
     @Override
+    public void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
+
+    }
+
+    @Override
     public void preAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }

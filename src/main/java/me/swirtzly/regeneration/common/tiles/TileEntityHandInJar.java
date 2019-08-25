@@ -157,4 +157,8 @@ public class TileEntityHandInJar extends TileEntity implements ITickableTileEnti
     public ItemStack getHand() {
         return getCapability(ITEM_HANDLER_CAPABILITY).map(data -> data.getStackInSlot(0)).orElse(ItemStack.EMPTY);
     }
+
+    public void destroyHand() {
+        getCapability(ITEM_HANDLER_CAPABILITY).ifPresent(data -> data.getStackInSlot(0).setCount(0));
+    }
 }

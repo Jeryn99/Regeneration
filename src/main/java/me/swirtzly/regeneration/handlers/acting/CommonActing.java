@@ -138,6 +138,7 @@ class CommonActing implements Acting {
 	
 	@Override
     public void onPerformingPost(IRegen cap) {
+        PlayerUtil.handleCutOffhand(cap.getPlayer());
     }
 	
 	@Override

@@ -117,10 +117,12 @@ public class TraitManager {
 
         public ResourceLocation resourceLocation;
         public String localName;
+		public String localDesc;
 
         public IDna(String name) {
-            localName = "traits." + name + ".name";
+			localName = "trait." + name;
             resourceLocation = new ResourceLocation(RegenerationMod.MODID, name);
+			localDesc = "trait." + name + ".desc";
         }
 
 
@@ -137,6 +139,10 @@ public class TraitManager {
         public ResourceLocation getRegistryName() {
             return resourceLocation;
         }
+
+		public String getLocalDesc() {
+			return localDesc;
+		}
 	}
 	
 	

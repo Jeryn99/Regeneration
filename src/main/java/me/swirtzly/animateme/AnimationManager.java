@@ -1,6 +1,7 @@
 package me.swirtzly.animateme;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
 
@@ -28,6 +29,9 @@ public class AnimationManager {
     }
 
     public interface IAnimate {
+
+        void preRenderCallBack(LivingRenderer renderer, LivingEntity entity);
+
         void preAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
 
         void postAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);

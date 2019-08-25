@@ -76,7 +76,7 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
 
         //Customize Button
         this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.customize").getFormattedText(), button ->
-                Minecraft.getInstance().displayGuiScreen(new SkinTypeScreen())));
+                Minecraft.getInstance().displayGuiScreen(null)));
 
         //Default Button
         this.addButton(new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.default").getFormattedText(), button -> {

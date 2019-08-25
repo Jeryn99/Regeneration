@@ -11,6 +11,7 @@ import me.swirtzly.regeneration.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
@@ -24,8 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static me.swirtzly.regeneration.client.gui.SkinTypeScreen.playerModelAlex;
-import static me.swirtzly.regeneration.client.gui.SkinTypeScreen.playerModelSteve;
 import static me.swirtzly.regeneration.util.RenderUtil.drawModelToGui;
 
 public class SkinChoiceScreen extends ContainerScreen {
@@ -38,6 +37,9 @@ public class SkinChoiceScreen extends ContainerScreen {
     private static int position = 0;
     TextureManager textureManager = Minecraft.getInstance().getTextureManager();
     private float rotation = 0;
+
+    private static PlayerModel ALEX_MODEL = new PlayerModel(0.1f, true);
+    private static PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
 
     public SkinChoiceScreen() {
         super(new ContainerBlank(), null, new TranslationTextComponent("Regeneration"));
@@ -140,19 +142,19 @@ public class SkinChoiceScreen extends ContainerScreen {
         Minecraft.getInstance().getTextureManager().bindTexture(background);
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
         GlStateManager.pushMatrix();
-        playerModelAlex.isChild = false;
-        playerModelSteve.isChild = false;
+        ALEX_MODEL.isChild = false;
+        STEVE_MODEL.isChild = false;
         Minecraft.getInstance().getTextureManager().bindTexture(PLAYER_TEXTURE);
         switch (choices) {
             case ALEX:
-                drawModelToGui(playerModelAlex, width / 2, height / 2 - 50, 1.0f, rotation);
+                drawModelToGui(ALEX_MODEL, width / 2, height / 2 - 50, 1.0f, rotation);
                 break;
             case STEVE:
-                drawModelToGui(playerModelSteve, width / 2, height / 2 - 50, 1.0f, rotation);
+                drawModelToGui(STEVE_MODEL, width / 2, height / 2 - 50, 1.0f, rotation);
                 break;
             case EITHER:
-                drawModelToGui(playerModelAlex, width / 2 - 40, height / 2 - 50, 1.0f, rotation);
-                drawModelToGui(playerModelSteve, width / 2 + 40, height / 2 - 50, 1.0f, rotation);
+                drawModelToGui(ALEX_MODEL, width / 2 - 40, height / 2 - 50, 1.0f, rotation);
+                drawModelToGui(STEVE_MODEL, width / 2 + 40, height / 2 - 50, 1.0f, rotation);
                 break;
         }
         GlStateManager.popMatrix();

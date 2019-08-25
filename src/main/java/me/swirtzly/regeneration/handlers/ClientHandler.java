@@ -3,7 +3,7 @@ package me.swirtzly.regeneration.handlers;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.RegenKeyBinds;
-import me.swirtzly.regeneration.client.gui.ColorScreen;
+import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
@@ -60,7 +60,7 @@ public class ClientHandler {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
                 if (data.canRegenerate()) {
                     event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, BUTTON_TEX, 32, 64, (p_213088_1_) -> {
-                        Minecraft.getInstance().displayGuiScreen(new ColorScreen());
+                        Minecraft.getInstance().displayGuiScreen(new GuiPreferences());
                     }, I18n.format("Regeneration")));
                 }
             });
@@ -318,6 +318,5 @@ public class ClientHandler {
             GlStateManager.popMatrix();
         });
     }
-
 
 }

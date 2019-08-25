@@ -1,5 +1,7 @@
 package me.swirtzly.regeneration.common.types;
 
+import me.swirtzly.regeneration.util.RegenUtil;
+
 import java.util.HashMap;
 
 public class TypeManager {
@@ -19,7 +21,7 @@ public class TypeManager {
     }
 
 
-    public enum Type {
+    public enum Type implements RegenUtil.IEnum {
         FIERY, CONFUSED
     }
 }
