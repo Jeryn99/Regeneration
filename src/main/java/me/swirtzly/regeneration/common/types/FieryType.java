@@ -3,11 +3,14 @@ package me.swirtzly.regeneration.common.types;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.FireBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
 
 import java.util.Iterator;
@@ -19,7 +22,17 @@ import static net.minecraft.util.math.BlockPos.getAllInBox;
  * on 16/09/2018.
  */
 public class FieryType implements RegenType<FieryRenderer> {
-	
+
+	private SoundEvent[] SOUNDS = new SoundEvent[]{
+			RegenObjects.Sounds.REGENERATION_0,
+			RegenObjects.Sounds.REGENERATION_1,
+			RegenObjects.Sounds.REGENERATION_2,
+			RegenObjects.Sounds.REGENERATION_3,
+			RegenObjects.Sounds.REGENERATION_4,
+			RegenObjects.Sounds.REGENERATION_5,
+			RegenObjects.Sounds.REGENERATION_6,
+	};
+
 	@Override
     public void onUpdateMidRegen(PlayerEntity player, IRegen capability) {
 		
@@ -73,6 +86,21 @@ public class FieryType implements RegenType<FieryRenderer> {
     public TypeManager.Type getTypeID() {
         return TypeManager.Type.FIERY;
     }
+
+	@Override
+	public SoundEvent[] getRegeneratingSounds() {
+		return SOUNDS;
+	}
+
+	@Override
+	public Vec3d getDefaultPrimaryColor() {
+		return new Vec3d(0.93F, 0.61F, 0F);
+	}
+
+	@Override
+	public Vec3d getDefaultSecondaryColor() {
+		return new Vec3d(1F, 0.5F, 0.18F);
+	}
 
 	@Override
 	public FieryRenderer getRenderer() {

@@ -125,7 +125,6 @@ public class PlayerUtil {
     public static void handleCutOffhand(PlayerEntity player) {
         RegenCap.get(player).ifPresent((data) -> {
             if (data.hasDroppedHand()) {
-
                 if (!player.getHeldItemOffhand().isEmpty()) {
                     player.dropItem(player.getHeldItemOffhand(), false);
                     player.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.AIR));

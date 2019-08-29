@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -30,24 +29,25 @@ public class TrendingManager {
 	public static File USER_STEVE = new File(SKIN_DIRECTORY_STEVE + "/the_past");
 
 	public static void downloadPreviousSkins() {
-		long attr = USER_ALEX.lastModified();
+		if (RegenConfig.CLIENT.downloadPreviousSkins.get()) {
+			long attr = USER_ALEX.lastModified();
+			if (System.currentTimeMillis() - attr >= 86400000 || !USER_ALEX.exists()) {
+				RegenerationMod.LOG.warn("Refreshing users past skins");
+				for (int i = 0; i < 5; i++) {
+					try {
+						String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getInstance().getSession().getPlayerID() + "?page=" + i;
+						getListOfSkins(url).iterator().forEachRemaining(jsonElement -> {
+							try {
+								String trendingUrl = jsonElement.getAsJsonObject().get("sameAs").getAsString();
+								FileUtil.downloadSkins(new URL(trendingUrl.replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), Minecraft.getInstance().getSession().getUsername() + "_" + trendingUrl.replaceAll("https://namemc.com/skin/", ""), USER_ALEX, USER_STEVE);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						});
 
-		if (System.currentTimeMillis() - attr >= 86400000 || !USER_ALEX.exists()) {
-			RegenerationMod.LOG.warn("Refreshing users past skins");
-			for (int i = 0; i < 5; i++) {
-				try {
-					String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getInstance().getSession().getPlayerID() + "?page=" + i;
-					getListOfSkins(url).iterator().forEachRemaining(jsonElement -> {
-						try {
-							String trendingUrl = jsonElement.getAsJsonObject().get("sameAs").getAsString();
-							FileUtil.downloadSkins(new URL(trendingUrl.replace("https://namemc.com/skin/", "https://namemc.com/texture/") + ".png"), Minecraft.getInstance().getSession().getUsername() + "_" + trendingUrl.replaceAll("https://namemc.com/skin/", ""), USER_ALEX, USER_STEVE);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					});
-
-				} catch (Exception e) {
-					RegenerationMod.LOG.error(e.getMessage());
+					} catch (Exception e) {
+						RegenerationMod.LOG.error(e.getMessage());
+					}
 				}
 			}
 		}

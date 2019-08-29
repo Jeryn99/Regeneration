@@ -35,7 +35,7 @@ public class SkinChoiceScreen extends ContainerScreen {
     private static SkinManipulation.EnumChoices choices = null;
     private static List<File> skins = null;
     private static int position = 0;
-    TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+    private static TextureManager textureManager = Minecraft.getInstance().getTextureManager();
     private float rotation = 0;
 
     private static PlayerModel ALEX_MODEL = new PlayerModel(0.1f, true);

@@ -122,6 +122,8 @@
   "config.regeneration.skins.folder": "Skin Regeneration folder",
   "config.regeneration.post_grater": "Create fall damage crator?",
   "config.regeneration.craft": "Craft with Regens?",
+  "config.regeneration.downloadTrendingSkins": "Download trending skins?",
+  "config.regeneration.downloadPreviousSkins": "Download previous skins?",
   "trait.athlete": "Athletic genes!",
   "trait.boring": "Lazy genes!",
   "trait.dumb": "Dumb genes!",

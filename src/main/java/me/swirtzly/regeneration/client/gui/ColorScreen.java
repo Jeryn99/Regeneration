@@ -21,7 +21,6 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 import java.awt.*;
 
 public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
-    public static final int ID = 0;
 
     private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
 

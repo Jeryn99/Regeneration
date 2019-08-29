@@ -10,7 +10,7 @@ public class TypeManager {
 
     public static void init() {
         TYPES.put(Type.FIERY, new FieryType());
-        TYPES.put(Type.CONFUSED, new ElixirType());
+        TYPES.put(Type.LAY_FADE, new TypeLayFade());
     }
 
     public static RegenType getTypeInstance(TypeManager.Type type) {
@@ -22,6 +22,6 @@ public class TypeManager {
 
 
     public enum Type implements RegenUtil.IEnum {
-        FIERY, CONFUSED
+        FIERY, LAY_FADE
     }
 }

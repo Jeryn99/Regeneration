@@ -17,6 +17,7 @@ import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
@@ -93,7 +94,7 @@ public class RegenCap implements IRegen {
 	}
 
 	@Nonnull
-    public static LazyOptional<IRegen> get(LivingEntity player) {
+    public static LazyOptional<IRegen> get(Entity player) {
         return player.getCapability(RegenCap.CAPABILITY, null);
 	}
 	

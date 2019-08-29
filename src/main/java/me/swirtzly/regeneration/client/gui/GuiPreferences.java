@@ -10,7 +10,8 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.messages.UpdateSkinMapMessage;
+import me.swirtzly.regeneration.network.messages.UpdateTypeMessage;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
@@ -23,13 +24,10 @@ import java.awt.*;
 
 public class GuiPreferences extends ContainerScreen {
 
-
-    public static final int ID = 1;
     private static final ResourceLocation BACKGROUND = new ResourceLocation(RegenerationMod.MODID, "textures/gui/pref_back.png");
     private static TypeManager.Type SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getType();
     private static SkinManipulation.EnumChoices CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getPreferredModel();
     private float ROTATION = 0;
-
 
     public GuiPreferences() {
         super(new ContainerBlank(), null, new TranslationTextComponent("Regeneration"));
@@ -58,7 +56,7 @@ public class GuiPreferences extends ContainerScreen {
                 }
 
                 button.setMessage(new TranslationTextComponent("regeneration.gui.type", new TranslationTextComponent("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText()).getUnformattedComponentText());
-                NetworkDispatcher.sendToServer(new UpdateSkinMapMessage(SELECTED_TYPE.name()));
+                NetworkDispatcher.sendToServer(new UpdateTypeMessage(SELECTED_TYPE.name()));
             }
         });
         GuiButtonExt btnSkinType = new GuiButtonExt(width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText(), new Button.IPressable() {
@@ -70,7 +68,7 @@ public class GuiPreferences extends ContainerScreen {
                     CHOICES = SkinManipulation.EnumChoices.ALEX;
                 }
                 button.setMessage(new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText());
-                NetworkDispatcher.sendToServer(new UpdateSkinMapMessage(CHOICES.name()));
+                PlayerUtil.updateModel(CHOICES);
             }
         });
         btnRegenType.setMessage(new TranslationTextComponent("regeneration.gui.type", new TranslationTextComponent("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText()).getUnformattedComponentText());
@@ -106,7 +104,6 @@ public class GuiPreferences extends ContainerScreen {
         int cy = (height - ySize) / 2;
 
         GlStateManager.pushMatrix();
-        //RenderUtil.drawRect(width / 2, height / 2 - 50, width / 2 - 80, height / 2 + 35, 0.0F, 0.0F, 0.0F, 1);
         InventoryScreen.drawEntityOnScreen(width / 2 - 75, height / 2 + 45, 55, (float) (guiLeft + 51) - mouseX, (float) (guiTop + 75 - 50) - mouseY, Minecraft.getInstance().player);
         GlStateManager.popMatrix();
 
