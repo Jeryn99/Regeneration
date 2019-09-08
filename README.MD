@@ -10,7 +10,6 @@ Massive credit to ConnorSimp and Nictogen and the general userbase, for creating
 - Fob watch Model
 - Lindos vial model
 - Hand in a jar model
-- Various Doctor who related skins 
 
 #### End-Phoenix
 - Altered Engrave texture
@@ -21,11 +20,9 @@ Massive credit to ConnorSimp and Nictogen and the general userbase, for creating
 #### ConnorSimp
 - Locating various sounds for use in mod
 
-#### GasMask
-- Various Doctor who Related Skins
 
-#### Violet
-- Various Doctor who related skins 
+#### CommandrMoose
+- Being a hot piece of ass
 
 
 ### For more information: see the mod's page on [curseforge](https://minecraft.curseforge.com/projects/regeneration?gameCategorySlug=mc-mods&projectID=274275#c161).
