@@ -128,6 +128,9 @@ public class GuiSkinChange extends GuiContainer {
         super.actionPerformed(button);
         TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
+        skins = FileUtil.listAllSkins(choices);
+        updateModels();
+
         switch (button.id) {
             case 66:
                 Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiPreferences.ID, Minecraft.getMinecraft().world, 0, 0, 0);
@@ -141,7 +144,6 @@ public class GuiSkinChange extends GuiContainer {
                     } else {
                         position++;
                     }
-                    textureManager.deleteTexture(PLAYER_TEXTURE);
                     PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
                     updateModels();
                 }
@@ -155,7 +157,6 @@ public class GuiSkinChange extends GuiContainer {
                     } else {
                         position = skins.size() - 1;
                     }
-                    textureManager.deleteTexture(PLAYER_TEXTURE);
                     PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
                     updateModels();
                 }

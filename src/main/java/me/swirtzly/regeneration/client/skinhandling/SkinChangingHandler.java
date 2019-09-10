@@ -36,7 +36,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -78,8 +77,8 @@ public class SkinChangingHandler {
     public static BufferedImage toImage(String imageString) throws IOException {
         BufferedImage image = null;
         byte[] imageByte;
-        BASE64Decoder decoder = new BASE64Decoder();
-        imageByte = decoder.decodeBuffer(imageString);
+        Base64.Decoder decoder = Base64.getDecoder();
+        imageByte = decoder.decode(imageString);
         ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
         image = ImageIO.read(bis);
         bis.close();
@@ -183,8 +182,17 @@ public class SkinChangingHandler {
     public static ResourceLocation createGuiTexture(File file) {
         BufferedImage bufferedImage = null;
         try {
-            bufferedImage = ImageIO.read(file);
-            return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("gui_skin_" + System.currentTimeMillis(), new DynamicTexture(bufferedImage));
+            if (file != null) {
+                bufferedImage = ImageIO.read(file);
+            } else {
+                return DefaultPlayerSkin.getDefaultSkinLegacy();
+            }
+            if (bufferedImage == null) {
+                return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("gui_skin_" + System.currentTimeMillis(), new DynamicTexture(bufferedImage));
+            } else {
+                return DefaultPlayerSkin.getDefaultSkinLegacy();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
             return DefaultPlayerSkin.getDefaultSkinLegacy();
@@ -260,6 +268,10 @@ public class SkinChangingHandler {
         }
         MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
 
+        if (profile == null) {
+            return SkinInfo.SkinType.STEVE;
+        }
+
         if (profile.getMetadata("model") == null) {
             return SkinInfo.SkinType.STEVE;
         }
@@ -334,7 +346,7 @@ public class SkinChangingHandler {
         try {
             skinInfo = SkinChangingHandler.getSkinInfo(player, cap);
         } catch (IOException e1) {
-            SKIN_LOG.error("Error creating skin for: " + player.getName() + " " + e1.getMessage());
+            SKIN_LOG.error("Error creating skin data for: " + player.getName() + " " + e1.getMessage());
         }
         if (skinInfo != null) {
             SkinChangingHandler.setPlayerSkin(player, skinInfo.getSkinTextureLocation());

@@ -61,12 +61,11 @@ public class RenderTileEntityHand extends TileEntitySpecialRenderer<TileEntityHa
     }
 
     public ResourceLocation getOrCreateTexture(TileEntityHandInJar tileEntityHandInJar) {
-
-        if (ItemHand.getTextureString(tileEntityHandInJar.getHand()).equalsIgnoreCase("NONE")) {
+        String skinString = ItemHand.getTextureString(tileEntityHandInJar.getHand());
+        if (skinString.equalsIgnoreCase("NONE") || skinString.equals(" ") || skinString.equals("")) {
             boolean isAlex = ItemHand.getSkinType(tileEntityHandInJar.getHand()).equalsIgnoreCase("ALEX");
             return isAlex ? TEXTURE_ALEX : TEXTURE_STEVE;
         }
-
 
         if (!TEXTURES.containsKey(tileEntityHandInJar)) {
             try {
@@ -78,6 +77,7 @@ public class RenderTileEntityHand extends TileEntitySpecialRenderer<TileEntityHa
                 e.printStackTrace();
             }
         }
+
         return TEXTURES.get(tileEntityHandInJar);
     }
 
