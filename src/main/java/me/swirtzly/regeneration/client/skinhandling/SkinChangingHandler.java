@@ -187,7 +187,7 @@ public class SkinChangingHandler {
             } else {
                 return DefaultPlayerSkin.getDefaultSkinLegacy();
             }
-            if (bufferedImage == null) {
+            if (bufferedImage != null) {
                 return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("gui_skin_" + System.currentTimeMillis(), new DynamicTexture(bufferedImage));
             } else {
                 return DefaultPlayerSkin.getDefaultSkinLegacy();

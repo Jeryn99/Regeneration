@@ -14,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -49,6 +48,7 @@ public class GuiSkinChange extends GuiContainer {
     public static void updateModels() {
         isAlex = skins.get(position).toPath().toString().contains(SkinChangingHandler.SKIN_DIRECTORY_ALEX.toPath().toString());
         choices = isAlex ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
+        PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
     }
 
     @Override
@@ -126,8 +126,6 @@ public class GuiSkinChange extends GuiContainer {
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
-        TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-
         skins = FileUtil.listAllSkins(choices);
         updateModels();
 
