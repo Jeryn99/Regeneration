@@ -30,7 +30,6 @@ public class GuiPreferences extends GuiContainer {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(RegenerationMod.MODID, "textures/gui/pref_back.png");
     private static TypeHandler.RegenType SELECTED_TYPE = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getType();
     private static SkinChangingHandler.EnumChoices CHOICES = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
-    private float ROTATION = 0;
 
 
     public GuiPreferences() {
@@ -47,7 +46,6 @@ public class GuiPreferences extends GuiContainer {
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
         final int btnW = 66, btnH = 18;
-        ROTATION = 0;
 
         GuiButtonExt btnClose = new GuiButtonExt(98, width / 2 - 109, cy + 145, 71, btnH, new TextComponentTranslation("regeneration.gui.close").getFormattedText());
         GuiButtonExt btnRegenType = new GuiButtonExt(44, width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TextComponentTranslation("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText());
@@ -141,10 +139,6 @@ public class GuiPreferences extends GuiContainer {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
-        ROTATION++;
-        if (ROTATION > 360) {
-            ROTATION = 0;
-        }
     }
 
 }

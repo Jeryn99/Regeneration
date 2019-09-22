@@ -53,6 +53,7 @@ repositories {
 		url = "https://jitpack.io"
 	}
 
+
 	maven {
 		name = "Progwml6 maven"
 		url = "http://dvs1.progwml6.com/files/maven"
@@ -72,7 +73,6 @@ dependencies {
 	testCompile 'org.mockito:mockito-core:2.23.4'
 
 	testServer 'com.github.HoldYourWaffle:CrashMyServer:-SNAPSHOT'
-	compile 'org.jsoup:jsoup:1.11.3'
 }
 
 processResources {
@@ -99,17 +99,4 @@ jar {
 	}
 }
 
-shadowJar {
-	dependencies {
-		include(dependency('org.jsoup:.*'))
-	}
-
-	relocate 'org.jsoup', 'me.swirtzly.regeneration.util.jsoup'
-
-	classifier '' // Replace the default JAR
-}
-
-reobf {
-	shadowJar {} // Reobfuscate the shadowed JAR
-}
 

@@ -36,13 +36,17 @@ public class GuiSkinChange extends GuiContainer {
     private static SkinChangingHandler.EnumChoices choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
     private static List<File> skins = FileUtil.listAllSkins(choices);
     private static int position = 0;
-    private float rotation = 0;
 
 
     public GuiSkinChange() {
         super(new BlankContainer());
         xSize = 176;
         ySize = 186;
+
+        choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
+        skins = FileUtil.listAllSkins(choices);
+        PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
+
     }
 
     public static void updateModels() {
@@ -59,7 +63,6 @@ public class GuiSkinChange extends GuiContainer {
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
         final int btnW = 60, btnH = 18;
-        rotation = 0;
         position = 0;
 
         GuiButtonExt btnNext = new GuiButtonExt(44, cx + 25, cy + 80, 20, 20, new TextComponentTranslation("regeneration.gui.previous").getFormattedText());
@@ -75,10 +78,6 @@ public class GuiSkinChange extends GuiContainer {
         addButton(btnBack);
         addButton(btnSave);
         addButton(btnResetSkin);
-
-        PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
-        choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
-        skins = FileUtil.listAllSkins(choices);
         updateModels();
     }
 
@@ -90,6 +89,7 @@ public class GuiSkinChange extends GuiContainer {
         Minecraft.getMinecraft().getTextureManager().bindTexture(PLAYER_TEXTURE);
         playerModelAlex.isChild = false;
         playerModelSteve.isChild = false;
+        float rotation = Minecraft.getMinecraft().player.ticksExisted * 2;
         switch (choices) {
             case ALEX:
                 drawModelToGui(playerModelAlex, width / 2, height / 2 - 45, 1.0f, rotation);
@@ -117,10 +117,6 @@ public class GuiSkinChange extends GuiContainer {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
-        rotation++;
-        if (rotation > 360) {
-            rotation = 0;
-        }
     }
 
     @Override
@@ -164,7 +160,6 @@ public class GuiSkinChange extends GuiContainer {
                 updateModels();
                 NetworkHandler.INSTANCE.sendToServer(new MessageNextSkin(SkinChangingHandler.imageToPixelData(skins.get(position)), isAlex));
                 break;
-
             case 100:
                 ClientUtil.sendSkinResetPacket();
                 break;

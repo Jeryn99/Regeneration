@@ -31,9 +31,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -134,15 +132,20 @@ public class SkinChangingHandler {
     }
 
     private static File getRandomSkin(Random rand, boolean isAlex) {
-        File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
-        Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
-        if (folderFiles.isEmpty()) {
-            SKIN_LOG.info("The Skin folder was empty....Downloading some skins...");
+        List<File> skins = FileUtil.listAllSkins(isAlex ? EnumChoices.ALEX : EnumChoices.STEVE);
+        if (skins.isEmpty()) {
             FileUtil.doSetupOnThread();
-            folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+            skins = FileUtil.listAllSkins(isAlex ? EnumChoices.ALEX : EnumChoices.STEVE);
         }
-        SKIN_LOG.info("There were " + folderFiles.size() + " to chose from");
-        return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
+
+        for (File skin : skins) {
+            if (!skin.getName().contains(".png")) {
+                skins.remove(skin);
+            }
+        }
+
+        SKIN_LOG.info("There were " + skins.size() + " skins to chose from");
+        return (File) skins.toArray()[rand.nextInt(skins.size())];
     }
 
     /**
@@ -287,6 +290,10 @@ public class SkinChangingHandler {
 
         if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
             type.getRenderer().onRenderRegeneratingPlayerPost(type, e, cap);
+        }
+
+        if (!player.playerInfo.skinType.equalsIgnoreCase(cap.getSkinType().getMojangType())) {
+            setSkinType(player, cap.getSkinType().getMojangType().equalsIgnoreCase("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
         }
     }
 

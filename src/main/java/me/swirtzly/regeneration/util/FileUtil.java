@@ -65,7 +65,6 @@ public class FileUtil {
      * @throws IOException
      */
     public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
-
         URLConnection uc = url.openConnection();
         uc.connect();
         uc = url.openConnection();
@@ -189,7 +188,11 @@ public class FileUtil {
         }
 
         try {
-            Files.find(Paths.get(directory.toString()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile()).forEach((file) -> resultList.add(file.toFile()));
+            Files.find(Paths.get(directory.toString()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile()).forEach((file) -> {
+                if (file.toString().contains(".png")) {
+                    resultList.add(file.toFile());
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
