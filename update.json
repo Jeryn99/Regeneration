@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "2.0.0",
-		"1.12.2-recommended": "2.0.0",
+		"1.12.2-latest": "2.0.1",
+		"1.12.2-recommended": "2.0.1",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
@@ -24,7 +24,8 @@
 		"1.9.2" : "Fixed a issue with Jars not working || You now drop items in your cut off hand || Fixed Tab not being able to be clicked",
 		"1.9.3" : "Small fixes & Adjustments",
 		"1.9.4" : "Fixes crash with Steve modelled players",
-		"2.0.0" : "Fixes various crashes and bugs"
+		"2.0.0" : "Fixes various crashes and bugs",
+		"2.0.1" : "Fixed issues on Macs || Fixed Skin related issues || Updated Trending download no longer working"
 
 	},
 	"1.13.2": {
