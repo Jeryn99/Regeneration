@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.client.gui;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.gui.parts.BlankContainer;
 import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
+import me.swirtzly.regeneration.client.image.ImageDownloadAlt;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.network.MessageNextSkin;
@@ -18,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +52,11 @@ public class GuiSkinChange extends GuiContainer {
     }
 
     public static void updateModels() {
-        isAlex = skins.get(position).toPath().toString().contains(SkinChangingHandler.SKIN_DIRECTORY_ALEX.toPath().toString());
+        try {
+            isAlex = ImageDownloadAlt.isAlexSkin(ImageIO.read(skins.get(position)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         choices = isAlex ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
         PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
     }
@@ -158,7 +164,7 @@ public class GuiSkinChange extends GuiContainer {
 
             case 88:
                 updateModels();
-                NetworkHandler.INSTANCE.sendToServer(new MessageNextSkin(SkinChangingHandler.imageToPixelData(skins.get(position)), isAlex));
+                NetworkHandler.INSTANCE.sendToServer(new MessageNextSkin(SkinChangingHandler.imageToPixelData(skins.get(position)), ImageDownloadAlt.isAlexSkin(ImageIO.read(skins.get(position)))));
                 break;
             case 100:
                 ClientUtil.sendSkinResetPacket();

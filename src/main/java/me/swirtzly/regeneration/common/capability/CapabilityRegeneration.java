@@ -16,7 +16,6 @@ import me.swirtzly.regeneration.network.MessageSynchroniseRegeneration;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.DebuggableScheduledAction;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -191,14 +190,12 @@ public class CapabilityRegeneration implements IRegeneration {
         //TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
         if (nbt.hasKey("skinType")) {
             setSkinType(nbt.getString("skinType"));
-        } else {
-            setSkinType(RegenUtil.isSlimSkin(player.getUniqueID()) ? "ALEX" : "STEVE");
         }
 
         if (nbt.hasKey("preferredModel")) {
             setPreferredModel(nbt.getString("preferredModel"));
         } else {
-            setPreferredModel("ALEX");
+            setPreferredModel("EITHER");
         }
 
         nextSkinType = SkinInfo.SkinType.valueOf(nextSkinType.name());

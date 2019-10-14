@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.common.entity.EntityLindos;
+import me.swirtzly.regeneration.common.entity.EntityWatcher;
 import me.swirtzly.regeneration.common.item.ItemFobWatch;
 import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.common.item.ItemLindos;
@@ -73,7 +74,7 @@ public class RegenObjects {
 
     @SubscribeEvent
     public static void addEntities(RegistryEvent.Register<EntityEntry> e) {
-        e.getRegistry().registerAll(EntityEntries.ENTITY_ITEM, EntityEntries.ENTITY_LINDOS);
+        e.getRegistry().registerAll(EntityEntries.ENTITY_ITEM, EntityEntries.ENTITY_LINDOS, EntityEntries.ENTITY_WATCHER);
     }
 
 
@@ -136,6 +137,7 @@ public class RegenObjects {
     public static class EntityEntries {
         public static final EntityEntry ENTITY_ITEM = EntityEntryBuilder.create().entity(EntityItemOverride.class).id(new ResourceLocation(RegenerationMod.MODID, "fob_watch"), 0).name("fob").tracker(80, 3, false).build();
         public static final EntityEntry ENTITY_LINDOS = EntityEntryBuilder.create().entity(EntityLindos.class).id(new ResourceLocation(RegenerationMod.MODID, "lindos"), 1).name("lindos").tracker(80, 3, false).build();
+        public static final EntityEntry ENTITY_WATCHER = EntityEntryBuilder.create().entity(EntityWatcher.class).id(new ResourceLocation(RegenerationMod.MODID, "watcher"), 2).name("lindos").tracker(80, 3, false).build();
     }
 
     @GameRegistry.ObjectHolder(RegenerationMod.MODID)

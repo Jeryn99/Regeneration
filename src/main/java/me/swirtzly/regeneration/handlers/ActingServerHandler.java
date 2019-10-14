@@ -84,7 +84,6 @@ class ActingServerHandler implements IActingHandler {
     @Override
     public void onEnterGrace(IRegeneration cap) {
         EntityPlayer player = cap.getPlayer();
-
         // Reduce number of hearts, but compensate with absorption
         player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
 
