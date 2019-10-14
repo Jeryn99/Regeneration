@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "2.0.1",
-		"1.12.2-recommended": "2.0.1",
+		"1.12.2-latest": "2.0.2",
+		"1.12.2-recommended": "2.0.2",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
@@ -25,7 +25,8 @@
 		"1.9.3" : "Small fixes & Adjustments",
 		"1.9.4" : "Fixes crash with Steve modelled players",
 		"2.0.0" : "Fixes various crashes and bugs",
-		"2.0.1" : "Fixed issues on Macs || Fixed Skin related issues || Updated Trending download no longer working"
+		"2.0.1" : "Fixed issues on Macs || Fixed Skin related issues || Updated Trending download no longer working",
+		"2.0.2" : "Fixed issues with world load :)"
 
 	},
 	"1.13.2": {
