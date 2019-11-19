@@ -9,6 +9,7 @@ import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
 import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.rendering.tile.RenderTileEntityHand;
+import me.swirtzly.regeneration.client.skinhandling.PlayerDataPool;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
@@ -75,37 +76,6 @@ public class ClientEventHandler {
                 e.setGreen((float) data.getPrimaryColor().y);
                 e.setBlue((float) data.getPrimaryColor().z);
             }
-        }
-    }
-
-
-    @SubscribeEvent
-    public static void onTickEvent(TickEvent.ClientTickEvent event) {
-        if (event.phase.equals(TickEvent.Phase.START)) return;
-        if (Minecraft.getMinecraft().world == null) {
-
-            if (SkinChangingHandler.PLAYER_SKINS.size() > 0) {
-                SkinChangingHandler.PLAYER_SKINS.forEach(((uuid, skinInfo) -> {
-                    Minecraft.getMinecraft().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation());
-                    RegenerationMod.LOG.warn("Deleted cache of: " + skinInfo.getSkinTextureLocation());
-                }));
-                SkinChangingHandler.PLAYER_SKINS.clear();
-                RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
-            }
-
-            if (RenderTileEntityHand.TEXTURES.size() > 0) {
-                RenderTileEntityHand.TEXTURES.forEach(((tileEntityHandInJar, skin) -> {
-                    Minecraft.getMinecraft().getTextureManager().deleteTexture(skin);
-                    RegenerationMod.LOG.warn("Deleted cache of: " + skin);
-                }));
-                RenderTileEntityHand.TEXTURES.clear();
-                RegenerationMod.LOG.warn("CLEARED CACHE OF HAND TEXTURES");
-            }
-
-            if (SIDE != null) {
-                Minecraft.getMinecraft().gameSettings.mainHand = SIDE;
-            }
-
         }
     }
 
@@ -176,9 +146,9 @@ public class ClientEventHandler {
 
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         if (player == null) return;
-        SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
+        SkinInfo skin = PlayerDataPool.getOrCreate(player);
         if (skin != null) {
-            SkinChangingHandler.setPlayerSkin(player, skin.getSkinTextureLocation());
+            SkinChangingHandler.setPlayerSkin(player, skin.getTextureLocation());
         }
 
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
@@ -310,8 +280,6 @@ public class ClientEventHandler {
     public static void onDeath(LivingDeathEvent e) {
         if (e.getEntityLiving() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-            SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
-
             if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) {
                 ClientUtil.sendSkinResetPacket();
             }

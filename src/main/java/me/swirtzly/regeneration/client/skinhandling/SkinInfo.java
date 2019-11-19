@@ -5,26 +5,34 @@ import net.minecraft.util.ResourceLocation;
 
 public class SkinInfo {
 
-    private final SkinType skintype;
-    private final ResourceLocation textureLocation;
-
-    public SkinInfo(ResourceLocation resourceLocation, SkinType skinType) {
-        this.skintype = skinType;
-        this.textureLocation = resourceLocation;
-    }
-
-    public ResourceLocation getSkinTextureLocation() {
-        if (textureLocation != null) {
-            return textureLocation;
-        }
-        return DefaultPlayerSkin.getDefaultSkinLegacy();
-    }
+    private SkinType skintype = SkinType.ALEX;
+    private ResourceLocation textureLocation = DefaultPlayerSkin.getDefaultSkinLegacy();
+    private boolean update = false;
 
     public SkinType getSkintype() {
-        if (skintype != null) {
-            return skintype;
-        }
-        return SkinType.ALEX;
+        return skintype;
+    }
+
+    public ResourceLocation getTextureLocation() {
+        return textureLocation;
+    }
+
+    public SkinInfo setSkintype(SkinType skintype) {
+        this.skintype = skintype;
+        return this;
+    }
+
+    public SkinInfo setTextureLocation(ResourceLocation textureLocation) {
+        this.textureLocation = textureLocation;
+        return this;
+    }
+
+    public boolean isUpdateRequired() {
+        return update;
+    }
+
+    public void setUpdateRequired(boolean update) {
+        this.update = update;
     }
 
     public enum SkinType {

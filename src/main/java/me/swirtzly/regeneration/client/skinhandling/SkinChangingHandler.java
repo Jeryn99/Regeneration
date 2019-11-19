@@ -26,7 +26,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,7 +40,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @SideOnly(Side.CLIENT)
 public class SkinChangingHandler {
@@ -50,7 +52,6 @@ public class SkinChangingHandler {
     public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
     public static final Logger SKIN_LOG = LogManager.getLogger("Regeneration Skin Handler");
-    public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
     private static final Random RAND = new Random();
 
 
@@ -147,36 +148,29 @@ public class SkinChangingHandler {
         return (File) skins.toArray()[rand.nextInt(skins.size())];
     }
 
-    /**
-     * Creates a SkinInfo object for later use
-     *
-     * @param player - Player instance involved
-     * @param data   - The players regeneration capability instance
-     * @return SkinInfo - A class that contains the SkinType and the resource location to use as a skin
-     * @throws IOException
-     */
-    private static SkinInfo getSkinInfo(AbstractClientPlayer player, IRegeneration data) throws IOException {
 
-        if (data == null || player.getName() == null || player.getUniqueID() == null) {
-            return new SkinInfo(null, getSkinType(player));
-        }
-
-        ResourceLocation resourceLocation;
-        SkinInfo.SkinType skinType = getSkinType(player);
-
-        if (data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
-            resourceLocation = getMojangSkin(player);
+    private static SkinInfo update(AbstractClientPlayer player, IRegeneration data) {
+        SkinInfo skinData = PlayerDataPool.getOrCreate(player);
+        boolean shouldBeMojang = data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("");
+        if (shouldBeMojang) {
+            //Mojang stuff here
+            skinData.setTextureLocation(getMojangSkin(player));
         } else {
-            BufferedImage bufferedImage = toImage(data.getEncodedSkin());
+            //Generate custom skin
+            BufferedImage bufferedImage = null;
+            try {
+                bufferedImage = toImage(data.getEncodedSkin());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             bufferedImage = ClientUtil.ImageFixer.convertSkinTo64x64(bufferedImage);
-            if (bufferedImage == null) {
-                resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
-            } else {
+            if (bufferedImage != null) {
                 DynamicTexture tex = new DynamicTexture(bufferedImage);
-                resourceLocation = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
+                skinData.setTextureLocation(Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex));
             }
         }
-        return new SkinInfo(resourceLocation, skinType);
+        return skinData.setSkintype(getSkinType(player));
     }
 
     public static ResourceLocation createGuiTexture(File file) {
@@ -274,7 +268,6 @@ public class SkinChangingHandler {
             if (profile == null) {
                 return SkinInfo.SkinType.STEVE;
             }
-            System.out.println(profile.getMetadata("model"));
             if (profile.getMetadata("model") == null) {
                 return SkinInfo.SkinType.STEVE;
             }
@@ -291,27 +284,12 @@ public class SkinChangingHandler {
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
         IRegenType type = TypeHandler.getTypeInstance(cap.getType());
 
-        if (player.playerInfo == null || player.playerInfo.skinType == null) {
-            return;
-        }
-
         if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
             type.getRenderer().onRenderRegeneratingPlayerPost(type, e, cap);
         }
 
-        if (!player.playerInfo.skinType.equalsIgnoreCase(cap.getSkinType().getMojangType())) {
-            setSkinType(player, cap.getSkinType().getMojangType().equalsIgnoreCase("slim") ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE);
-        }
     }
 
-
-    @SubscribeEvent
-    public void onRelog(EntityJoinWorldEvent e) {
-        if (e.getEntity() instanceof AbstractClientPlayer) {
-            AbstractClientPlayer clientPlayer = (AbstractClientPlayer) e.getEntity();
-            PLAYER_SKINS.remove(clientPlayer.getUniqueID());
-        }
-    }
 
     /**
      * Subscription to RenderPlayerEvent.Pre to set players model and texture from hashmap
@@ -324,52 +302,20 @@ public class SkinChangingHandler {
         AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
         IRegenType type = TypeHandler.getTypeInstance(cap.getType());
+        SkinInfo skinData = PlayerDataPool.getOrCreate(player);
 
-        if (player.ticksExisted == 20) {
-            PLAYER_SKINS.remove(player.getUniqueID());
+        if (player.ticksExisted == 20 || skinData.isUpdateRequired()) {
+            setPlayerSkin(player, skinData.getTextureLocation());
+            setSkinType(player, skinData.getSkintype());
         }
 
         if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
             if (type.getAnimationProgress(cap) > 0.7) {
-                setSkinFromData(player, cap);
+                update(player, cap);
             }
             type.getRenderer().onRenderRegeneratingPlayerPre(type, e, cap);
-        } else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
-            setSkinFromData(player, cap);
-        } else {
-            SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
-            if (skin != null) {
-                if (skin.getSkinTextureLocation() == null) {
-                    setPlayerSkin(player, skin.getSkinTextureLocation());
-                }
-                if (skin.getSkintype() != null) {
-                    setSkinType(player, skin.getSkintype());
-                }
-            }
         }
     }
-
-    /**
-     * Called by onRenderPlayer, sets model, sets texture, adds player and SkinInfo to map
-     *
-     * @param player - Player instance
-     * @param cap    - Players Regen capability instance
-     */
-    private void setSkinFromData(AbstractClientPlayer player, IRegeneration cap) {
-        SkinInfo skinInfo = null;
-        try {
-            skinInfo = SkinChangingHandler.getSkinInfo(player, cap);
-        } catch (IOException e1) {
-            SKIN_LOG.error("Error creating skin data for: " + player.getName() + " " + e1.getMessage());
-        }
-        if (skinInfo != null) {
-            SkinChangingHandler.setPlayerSkin(player, skinInfo.getSkinTextureLocation());
-            SkinChangingHandler.setSkinType(player, skinInfo.getSkintype());
-        }
-        PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
-
-    }
-
 
     public enum EnumChoices implements FileUtil.IEnum {
         ALEX(true), STEVE(false), EITHER(true);

@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
+import me.swirtzly.regeneration.client.skinhandling.PlayerDataPool;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -40,7 +41,7 @@ public class MessageRemovePlayer implements IMessage {
     public static class Handler implements IMessageHandler<MessageRemovePlayer, IMessage> {
         @Override
         public IMessage onMessage(MessageRemovePlayer message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> SkinChangingHandler.PLAYER_SKINS.remove(message.playerUUID));
+            Minecraft.getMinecraft().addScheduledTask(() -> PlayerDataPool.removePlayer(message.playerUUID));
             return null;
         }
     }
