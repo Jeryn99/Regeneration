@@ -13,13 +13,13 @@ public class SkinInfo {
         return skintype;
     }
 
-    public ResourceLocation getTextureLocation() {
-        return textureLocation;
-    }
-
     public SkinInfo setSkintype(SkinType skintype) {
         this.skintype = skintype;
         return this;
+    }
+
+    public ResourceLocation getTextureLocation() {
+        return textureLocation;
     }
 
     public SkinInfo setTextureLocation(ResourceLocation textureLocation) {

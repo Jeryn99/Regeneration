@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.network;
 
 import io.netty.buffer.ByteBuf;
 import me.swirtzly.regeneration.client.skinhandling.PlayerDataPool;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

@@ -154,6 +154,7 @@ public class SkinChangingHandler {
         boolean shouldBeMojang = data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("");
         if (shouldBeMojang) {
             //Mojang stuff here
+            setPlayerSkin(player, null);
             skinData.setTextureLocation(getMojangSkin(player));
         } else {
             //Generate custom skin
