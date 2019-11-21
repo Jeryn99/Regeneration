@@ -28,6 +28,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.IOUtils;
@@ -112,10 +113,8 @@ public class SkinChangingHandler {
                 boolean isAlex = cap.getPreferredModel().isAlex();
                 skin = SkinChangingHandler.getRandomSkin(random, isAlex);
                 RegenerationMod.LOG.info(skin + " was choosen");
-
                 try {
                     pixelData = SkinChangingHandler.imageToPixelData(skin);
-                    cap.setEncodedSkin(pixelData);
                     NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(pixelData, isAlex));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -149,7 +148,8 @@ public class SkinChangingHandler {
     }
 
 
-    private static SkinInfo update(AbstractClientPlayer player, IRegeneration data) {
+    public static SkinInfo update(AbstractClientPlayer player) {
+        IRegeneration data = CapabilityRegeneration.getForPlayer(player);
         SkinInfo skinData = PlayerDataPool.getOrCreate(player);
         boolean shouldBeMojang = data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("");
         if (shouldBeMojang) {
@@ -171,7 +171,7 @@ public class SkinChangingHandler {
                 skinData.setTextureLocation(Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex));
             }
         }
-        return skinData.setSkintype(getSkinType(player));
+        return skinData.setSkintype(getSkinType(player)).setUpdateRequired(false);
     }
 
     public static ResourceLocation createGuiTexture(File file) {
@@ -291,6 +291,13 @@ public class SkinChangingHandler {
 
     }
 
+    @SubscribeEvent
+    public void clickTick(TickEvent.ClientTickEvent e) {
+        if (Minecraft.getMinecraft().world == null) {
+            PlayerDataPool.wipeAllData();
+        }
+    }
+
 
     /**
      * Subscription to RenderPlayerEvent.Pre to set players model and texture from hashmap
@@ -305,14 +312,12 @@ public class SkinChangingHandler {
         IRegenType type = TypeHandler.getTypeInstance(cap.getType());
         SkinInfo skinData = PlayerDataPool.getOrCreate(player);
 
-        if (player.ticksExisted == 20 || skinData.isUpdateRequired()) {
-            setPlayerSkin(player, skinData.getTextureLocation());
-            setSkinType(player, skinData.getSkintype());
-        }
+        setPlayerSkin(player, skinData.getTextureLocation());
+        setSkinType(player, skinData.getSkintype());
 
         if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
             if (type.getAnimationProgress(cap) > 0.7) {
-                update(player, cap);
+                update(player);
             }
             type.getRenderer().onRenderRegeneratingPlayerPre(type, e, cap);
         }

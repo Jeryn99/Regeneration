@@ -37,11 +37,13 @@ public class PlayerDataPool {
             return PLAYER_POOL.get(player.getUniqueID());
         }
         SkinInfo skinInfo = new SkinInfo();
-        skinInfo.setTextureLocation(player.getLocationSkin());
-        skinInfo.setSkintype(SkinChangingHandler.getSkinType(player));
         addPlayer(player, skinInfo);
+        SkinChangingHandler.update(player);
         return skinInfo;
     }
 
 
+    public static void wipeAllData() {
+        PLAYER_POOL.clear();
+    }
 }

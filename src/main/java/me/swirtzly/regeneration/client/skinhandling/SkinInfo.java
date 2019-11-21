@@ -7,7 +7,7 @@ public class SkinInfo {
 
     private SkinType skintype = SkinType.ALEX;
     private ResourceLocation textureLocation = DefaultPlayerSkin.getDefaultSkinLegacy();
-    private boolean update = false;
+    private boolean update = true;
 
     public SkinType getSkintype() {
         return skintype;
@@ -31,8 +31,9 @@ public class SkinInfo {
         return update;
     }
 
-    public void setUpdateRequired(boolean update) {
+    public SkinInfo setUpdateRequired(boolean update) {
         this.update = update;
+        return this;
     }
 
     public enum SkinType {
