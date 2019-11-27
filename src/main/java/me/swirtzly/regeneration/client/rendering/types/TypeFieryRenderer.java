@@ -69,7 +69,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         GlStateManager.color((float) color.x, (float) color.y, (float) color.z, opacity);
 
         if (base == null) {
-            if (SkinChangingHandler.getSkinType((AbstractClientPlayer) entityPlayer) == SkinInfo.SkinType.STEVE) {
+            if (SkinChangingHandler.getSkinType((AbstractClientPlayer) entityPlayer, false) == SkinInfo.SkinType.STEVE) {
                 modelSteve.isChild = false;
                 modelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
             } else {

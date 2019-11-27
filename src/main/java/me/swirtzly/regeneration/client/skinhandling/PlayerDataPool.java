@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.client.skinhandling;
 
+import me.swirtzly.regeneration.RegenerationMod;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
@@ -44,6 +45,9 @@ public class PlayerDataPool {
 
 
     public static void wipeAllData() {
-        PLAYER_POOL.clear();
+        for (UUID uuid : PLAYER_POOL.keySet()) {
+            RegenerationMod.LOG.warn("Deleting skin data for: " + uuid);
+            PLAYER_POOL.remove(uuid);
+        }
     }
 }

@@ -171,7 +171,7 @@ public class SkinChangingHandler {
                 skinData.setTextureLocation(Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex));
             }
         }
-        return skinData.setSkintype(getSkinType(player)).setUpdateRequired(false);
+        return skinData.setSkintype(getSkinType(player, false)).setUpdateRequired(false);
     }
 
     public static ResourceLocation createGuiTexture(File file) {
@@ -255,7 +255,7 @@ public class SkinChangingHandler {
         playerInfo.skinType = skinType.getMojangType();
     }
 
-    public static SkinInfo.SkinType getSkinType(AbstractClientPlayer player) {
+    public static SkinInfo.SkinType getSkinType(AbstractClientPlayer player, boolean forceMojang) {
         Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getMinecraft().getSkinManager().loadSkinFromCache(player.getGameProfile());
         if (map.isEmpty()) {
             map = Minecraft.getMinecraft().getSessionService().getTextures(Minecraft.getMinecraft().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
@@ -265,7 +265,7 @@ public class SkinChangingHandler {
         IRegeneration data = CapabilityRegeneration.getForPlayer(player);
 
 
-        if (data.getEncodedSkin().toLowerCase().equals("none")) {
+        if (data.getEncodedSkin().toLowerCase().equals("none") || forceMojang) {
             if (profile == null) {
                 return SkinInfo.SkinType.STEVE;
             }
@@ -311,6 +311,10 @@ public class SkinChangingHandler {
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
         IRegenType type = TypeHandler.getTypeInstance(cap.getType());
         SkinInfo skinData = PlayerDataPool.getOrCreate(player);
+
+        if(player.ticksExisted < 20){
+            update(player);
+        }
 
         setPlayerSkin(player, skinData.getTextureLocation());
         setSkinType(player, skinData.getSkintype());

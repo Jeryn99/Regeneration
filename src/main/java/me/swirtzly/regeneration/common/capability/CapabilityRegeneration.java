@@ -357,7 +357,6 @@ public class CapabilityRegeneration implements IRegeneration {
 
     @Override
     public void setSkinType(String skinType) {
-        System.out.println(Thread.currentThread().getStackTrace()[2].getClassName() + " || " + Thread.currentThread().getStackTrace()[2].getMethodName() + " || " + skinType);
         this.skinType = SkinInfo.SkinType.valueOf(skinType);
         if (!player.world.isRemote) {
             synchronise();
