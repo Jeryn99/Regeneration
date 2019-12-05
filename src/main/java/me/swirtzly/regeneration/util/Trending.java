@@ -16,6 +16,8 @@ import java.util.Objects;
 
 import static me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler.SKIN_DIRECTORY_ALEX;
 import static me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler.SKIN_DIRECTORY_STEVE;
+import static me.swirtzly.regeneration.util.FileUtil.getJsonFromURL;
+import static me.swirtzly.regeneration.util.FileUtil.unzipSkinPack;
 
 
 public class Trending {
@@ -27,6 +29,7 @@ public class Trending {
     public static File USER_STEVE = new File(SKIN_DIRECTORY_STEVE + "/the_past");
 
     public static void downloadPreviousSkins() {
+        if (!RegenConfig.skins.downloadPastSkins) return;
         RegenerationMod.LOG.warn("Refreshing users past skins");
 
         if (!USER_ALEX.exists()) {
@@ -92,5 +95,13 @@ public class Trending {
         }
     }
 
+    public static void handleDownloads() throws IOException {
+        if (!RegenConfig.skins.downloadInternalSkins) return;
+        String PACKS_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/skins/index.json";
+        String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
+        for (String link : links) {
+            unzipSkinPack(link);
+        }
+    }
 
 }

@@ -104,6 +104,13 @@ public class CapabilityRegeneration implements IRegeneration {
         }
 
         if (!player.world.isRemote) {
+
+            if (!RegenConfig.onRegen.traitsEnabled) {
+                DnaHandler.getDnaEntry(getDnaType()).onRemoved(this);
+                setDnaType(DnaHandler.DNA_BORING.resourceLocation);
+            }
+
+
             if (isSyncingToJar() && ticksAnimating >= 250) {
                 setSyncingFromJar(false);
                 ticksAnimating = 0;

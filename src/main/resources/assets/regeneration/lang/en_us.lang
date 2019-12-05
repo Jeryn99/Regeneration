@@ -126,6 +126,8 @@ config.regeneration.category.post_regen=Post regeneration
 config.regeneration.skins.folder=Skin Regeneration folder
 config.regeneration.post_grater=Create fall damage crator?
 config.regeneration.craft=Craft with Regens?
+config.regeneration.skins.internal_skins=Download Internal Skins
+config.regeneration.skins.past_skins=Download your past skins
 
 traits.athlete.name=Athletic genes!
 traits.boring.name=Lazy genes!
