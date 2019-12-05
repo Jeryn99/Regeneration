@@ -111,6 +111,10 @@ public class RegenConfig {
         @Config.Comment("Players can be killed when too close to a regeneration")
         public boolean regenerationKillsPlayers = false;
 
+        @Config.LangKey("config.regeneration.traits")
+        @Config.Comment("Toggle whether traits are enabled")
+        public boolean traitsEnabled = true;
+
     }
 
 
@@ -159,6 +163,13 @@ public class RegenConfig {
         @Config.Comment("Toggle whether trending skins are downloaded once per day from namemc")
         public boolean downloadTrendingSkins = true;
 
+        @Config.LangKey("config.regeneration.skins.past_skins")
+        @Config.Comment("Toggle whether the users past skins are downloaded once per day from namemc")
+        public boolean downloadPastSkins = true;
+
+        @Config.LangKey("config.regeneration.skins.internal_skins")
+        @Config.Comment("Toggle whether the mod downloads its own batch of skins")
+        public boolean downloadInternalSkins = true;
     }
 
 

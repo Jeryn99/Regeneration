@@ -113,9 +113,9 @@ public class DnaHandler {
 
     public static abstract class IDna {
 
-        private String localDesc;
         public ResourceLocation resourceLocation;
         public String localName;
+        private String localDesc;
 
         public IDna(String name) {
             localName = "traits." + name + ".name";

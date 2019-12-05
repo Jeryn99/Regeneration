@@ -104,6 +104,13 @@ public class CapabilityRegeneration implements IRegeneration {
         }
 
         if (!player.world.isRemote) {
+
+            if (!RegenConfig.onRegen.traitsEnabled) {
+                DnaHandler.getDnaEntry(getDnaType()).onRemoved(this);
+                setDnaType(DnaHandler.DNA_BORING.resourceLocation);
+            }
+
+
             if (isSyncingToJar() && ticksAnimating >= 250) {
                 setSyncingFromJar(false);
                 ticksAnimating = 0;
@@ -358,6 +365,9 @@ public class CapabilityRegeneration implements IRegeneration {
     @Override
     public void setSkinType(String skinType) {
         this.skinType = SkinInfo.SkinType.valueOf(skinType);
+        if (!player.world.isRemote) {
+            synchronise();
+        }
     }
 
     @Override

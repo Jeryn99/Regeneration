@@ -158,7 +158,7 @@ public class RenderUtil {
         tessellator.draw();
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
-        GlStateManager.color(1,1,1,1);
+        GlStateManager.color(1, 1, 1, 1);
     }
 
     public static void renderVignette(Vec3d color, float a, PlayerUtil.RegenState state) {

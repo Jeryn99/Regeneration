@@ -67,7 +67,7 @@ public class RegenDebugCommand extends CommandBase {
 
     @Override
     public String getName() {
-        return "regen-debug";
+        return "regen";
     }
 
     @Override

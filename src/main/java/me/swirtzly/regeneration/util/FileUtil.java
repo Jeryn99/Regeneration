@@ -21,17 +21,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler.*;
+import static me.swirtzly.regeneration.util.Trending.handleDownloads;
 
 public class FileUtil {
-
-
-    public static void handleDownloads() throws IOException {
-        String PACKS_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/skins/index.json";
-        String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
-        for (String link : links) {
-            unzipSkinPack(link);
-        }
-    }
 
     /**
      * Creates skin folders

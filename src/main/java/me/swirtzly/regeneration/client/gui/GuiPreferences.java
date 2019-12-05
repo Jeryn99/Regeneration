@@ -49,7 +49,7 @@ public class GuiPreferences extends GuiContainer {
 
         GuiButtonExt btnClose = new GuiButtonExt(98, width / 2 - 109, cy + 145, 71, btnH, new TextComponentTranslation("regeneration.gui.close").getFormattedText());
         GuiButtonExt btnRegenType = new GuiButtonExt(44, width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TextComponentTranslation("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText());
-        GuiButtonExt btnSkinType = new GuiButtonExt(22, width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TextComponentTranslation("regeneration.gui.skintype",new TextComponentTranslation("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText());
+        GuiButtonExt btnSkinType = new GuiButtonExt(22, width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TextComponentTranslation("regeneration.gui.skintype", new TextComponentTranslation("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText());
         btnRegenType.displayString = new TextComponentTranslation("regeneration.gui.type", new TextComponentTranslation("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText()).getUnformattedComponentText();
 
         GuiButtonExt btnColor = new GuiButtonExt(99, width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TextComponentTranslation("regeneration.gui.color_gui").getUnformattedComponentText());
@@ -128,7 +128,7 @@ public class GuiPreferences extends GuiContainer {
                 } else {
                     CHOICES = SkinChangingHandler.EnumChoices.ALEX;
                 }
-                button.displayString = new TextComponentTranslation("regeneration.gui.skintype",new TextComponentTranslation("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText();
+                button.displayString = new TextComponentTranslation("regeneration.gui.skintype", new TextComponentTranslation("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText();
                 NetworkHandler.INSTANCE.sendToServer(new MessageUpdateModel(CHOICES.name()));
                 break;
         }

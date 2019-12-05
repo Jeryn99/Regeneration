@@ -8,7 +8,7 @@ import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
 import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
 import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
-import me.swirtzly.regeneration.client.rendering.tile.RenderTileEntityHand;
+import me.swirtzly.regeneration.client.skinhandling.PlayerDataPool;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
@@ -45,7 +45,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -62,9 +61,8 @@ import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
 
-    public static EnumHandSide SIDE = null;
-
     public static final ResourceLocation[] SHADERS_TEXTURES = new ResourceLocation[]{new ResourceLocation("shaders/post/notch.json"), new ResourceLocation("shaders/post/fxaa.json"), new ResourceLocation("shaders/post/art.json"), new ResourceLocation("shaders/post/bumpy.json"), new ResourceLocation("shaders/post/blobs2.json"), new ResourceLocation("shaders/post/pencil.json"), new ResourceLocation("shaders/post/color_convolve.json"), new ResourceLocation("shaders/post/deconverge.json"), new ResourceLocation("shaders/post/flip.json"), new ResourceLocation("shaders/post/invert.json"), new ResourceLocation("shaders/post/ntsc.json"), new ResourceLocation("shaders/post/outline.json"), new ResourceLocation("shaders/post/phosphor.json"), new ResourceLocation("shaders/post/scan_pincushion.json"), new ResourceLocation("shaders/post/sobel.json"), new ResourceLocation("shaders/post/bits.json"), new ResourceLocation("shaders/post/desaturate.json"), new ResourceLocation("shaders/post/green.json"), new ResourceLocation("shaders/post/blur.json"), new ResourceLocation("shaders/post/wobble.json"), new ResourceLocation("shaders/post/blobs.json"), new ResourceLocation("shaders/post/antialias.json"), new ResourceLocation("shaders/post/creeper.json"), new ResourceLocation("shaders/post/spider.json")};
+    public static EnumHandSide SIDE = null;
 
     @SubscribeEvent
     public static void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
@@ -75,37 +73,6 @@ public class ClientEventHandler {
                 e.setGreen((float) data.getPrimaryColor().y);
                 e.setBlue((float) data.getPrimaryColor().z);
             }
-        }
-    }
-
-
-    @SubscribeEvent
-    public static void onTickEvent(TickEvent.ClientTickEvent event) {
-        if (event.phase.equals(TickEvent.Phase.START)) return;
-        if (Minecraft.getMinecraft().world == null) {
-
-            if (SkinChangingHandler.PLAYER_SKINS.size() > 0) {
-                SkinChangingHandler.PLAYER_SKINS.forEach(((uuid, skinInfo) -> {
-                    Minecraft.getMinecraft().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation());
-                    RegenerationMod.LOG.warn("Deleted cache of: " + skinInfo.getSkinTextureLocation());
-                }));
-                SkinChangingHandler.PLAYER_SKINS.clear();
-                RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
-            }
-
-            if (RenderTileEntityHand.TEXTURES.size() > 0) {
-                RenderTileEntityHand.TEXTURES.forEach(((tileEntityHandInJar, skin) -> {
-                    Minecraft.getMinecraft().getTextureManager().deleteTexture(skin);
-                    RegenerationMod.LOG.warn("Deleted cache of: " + skin);
-                }));
-                RenderTileEntityHand.TEXTURES.clear();
-                RegenerationMod.LOG.warn("CLEARED CACHE OF HAND TEXTURES");
-            }
-
-            if (SIDE != null) {
-                Minecraft.getMinecraft().gameSettings.mainHand = SIDE;
-            }
-
         }
     }
 
@@ -176,9 +143,9 @@ public class ClientEventHandler {
 
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         if (player == null) return;
-        SkinInfo skin = SkinChangingHandler.PLAYER_SKINS.get(player.getUniqueID());
+        SkinInfo skin = PlayerDataPool.getOrCreate(player);
         if (skin != null) {
-            SkinChangingHandler.setPlayerSkin(player, skin.getSkinTextureLocation());
+            SkinChangingHandler.setPlayerSkin(player, skin.getTextureLocation());
         }
 
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
@@ -310,8 +277,6 @@ public class ClientEventHandler {
     public static void onDeath(LivingDeathEvent e) {
         if (e.getEntityLiving() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) e.getEntityLiving();
-            SkinChangingHandler.PLAYER_SKINS.remove(player.getUniqueID());
-
             if (player.getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID())) {
                 ClientUtil.sendSkinResetPacket();
             }

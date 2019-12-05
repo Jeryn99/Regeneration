@@ -33,7 +33,7 @@ public class RegenKeyBinds {
     public static void init() {
 
         REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", Keyboard.KEY_R, RegenerationMod.NAME);
-            ClientRegistry.registerKeyBinding(REGEN_NOW);
+        ClientRegistry.registerKeyBinding(REGEN_NOW);
 
         REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", Keyboard.KEY_Y, RegenerationMod.NAME);
         ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
@@ -80,7 +80,6 @@ public class RegenKeyBinds {
         }
 
     }
-
 
 
     /**

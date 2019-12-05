@@ -119,12 +119,13 @@ class ActingServerHandler implements IActingHandler {
         player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, RegenConfig.postRegen.postRegenerationDuration * 2, RegenConfig.postRegen.postRegenerationLevel - 1, false, false));
         player.setHealth(player.getMaxHealth());
         player.setAbsorptionAmount(RegenConfig.postRegen.absorbtionLevel * 2);
-
-        cap.setDnaType(DnaHandler.getRandomDna(player.world.rand).getRegistryName());
-        DnaHandler.IDna newDna = DnaHandler.getDnaEntry(cap.getDnaType());
-        newDna.onAdded(cap);
-        cap.setDnaActive(true);
-        PlayerUtil.sendMessage(player, new TextComponentTranslation(newDna.getLangKey()), true);
+        if (RegenConfig.onRegen.traitsEnabled) {
+            cap.setDnaType(DnaHandler.getRandomDna(player.world.rand).getRegistryName());
+            DnaHandler.IDna newDna = DnaHandler.getDnaEntry(cap.getDnaType());
+            newDna.onAdded(cap);
+            cap.setDnaActive(true);
+            PlayerUtil.sendMessage(player, new TextComponentTranslation(newDna.getLangKey()), true);
+        }
         RegenUtil.resetNextSkin(player);
     }
 
