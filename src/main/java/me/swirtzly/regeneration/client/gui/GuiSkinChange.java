@@ -84,6 +84,7 @@ public class GuiSkinChange extends GuiContainer {
         addButton(btnBack);
         addButton(btnSave);
         addButton(btnResetSkin);
+
         updateModels();
     }
 

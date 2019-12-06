@@ -19,6 +19,8 @@ regeneration.gui.remaining_regens.status=Remaining Regenerations:
 regeneration.gui.color_gui=Color selection
 regeneration.gui.close=Close
 regeneration.gui.type=Type: %s
+regeneration.gui.force_alex=Force Alex Model
+regeneration.gui.force_steve=Force Steve Model
 
 regeneration.messages.now_timelord=You are now a Time lord!
 regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch

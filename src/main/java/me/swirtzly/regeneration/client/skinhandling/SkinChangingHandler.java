@@ -312,7 +312,7 @@ public class SkinChangingHandler {
         IRegenType type = TypeHandler.getTypeInstance(cap.getType());
         SkinInfo skinData = PlayerDataPool.getOrCreate(player);
 
-        if(player.ticksExisted < 20){
+        if (player.ticksExisted < 20 || skinData.isUpdateRequired()) {
             update(player);
         }
 
