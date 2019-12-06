@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "2.0.3",
-		"1.12.2-recommended": "2.0.3",
+		"1.12.2-latest": "2.0.4",
+		"1.12.2-recommended": "2.0.4",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
@@ -27,7 +27,7 @@
 		"2.0.0" : "Fixes various crashes and bugs",
 		"2.0.1" : "Fixed issues on Macs || Fixed Skin related issues || Updated Trending download no longer working",
 		"2.0.2" : "Fixed issues with world load :)",
-		"2.0.3" : "Address Alex bug || Adds Configs for downloading various skins || Adds config for toggling traits"
+		"2.0.4" : "Fixes Server Crash || Adds buttons to force player model change"
 
 	},
 	"1.13.2": {
