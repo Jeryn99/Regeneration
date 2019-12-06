@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.util;
 import me.swirtzly.regeneration.client.MovingSoundBase;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
+import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.network.MessageUpdateSkin;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
@@ -44,6 +45,11 @@ public class ClientUtil {
      */
     public static void sendSkinResetPacket() {
         NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin("none", SkinChangingHandler.getSkinType(Minecraft.getMinecraft().player, true).getMojangType().equals("slim")));
+    }
+
+    public static void sendSkinChange(boolean isAlex) {
+        IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
+        NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin(data.getEncodedSkin(), isAlex));
     }
 
     @SideOnly(Side.CLIENT)
