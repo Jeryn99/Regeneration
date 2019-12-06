@@ -3,6 +3,7 @@ package me.swirtzly.regeneration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.swirtzly.regeneration.client.gui.GuiHandler;
+import me.swirtzly.regeneration.common.RegenPermission;
 import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
@@ -92,6 +93,7 @@ public class RegenerationMod {
         DnaHandler.init();
         NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
         TypeHandler.init();
+        RegenPermission.registerPermissions();
     }
 
     @EventHandler

@@ -1,0 +1,204 @@
+#PARSE_ESCAPES
+item.fob_watch.name=Fobklocka
+item.lindos_vial.name=Lindosbehållare
+item.hand.name=%s hand
+regeneration.gui.red=Röd
+regeneration.gui.green=Grön
+regeneration.gui.blue=Blå
+regeneration.gui.primary=Primära
+regeneration.gui.secondary=Sekundära
+regeneration.gui.undo=Gör om
+regeneration.gui.default=Typ Standard
+regeneration.gui.open_folder=Utseende Map
+regeneration.gui.skin_choice=Välj nästa regeneration
+regeneration.gui.save=Spara
+regeneration.gui.next_incarnation=Välj nästa regeneration
+regeneration.gui.reset_skin=Återställ utseende
+regeneration.gui.infinite_regenerations=Oändlig Regeneration läge
+regeneration.gui.remaining_regens.status=Återstående Regenerationer:
+regeneration.gui.color_gui=Färgväljare
+regeneration.gui.close=Stäng
+regeneration.gui.type=Type: %s
+
+regeneration.messages.now_timelord=Du är nu en Tidsherre!
+regeneration.messages.gained_regens=Du har fått %s regenerationer från Fobklockan
+regeneration.messages.new_skin=Ditt utseende kommer ändras vid nästa regeneration!
+
+regeneration.messages.empty_vial=Den här behållaren har inte tillräckligt med Lindos för att starta en regeneration!
+
+regeneration.messages.transfer.success=Du har överfört en av dina regenerationer till klockan
+regeneration.messages.transfer.full_watch=Du kan inte förvara några fler regenerationer i den här klockan!
+regeneration.messages.transfer.empty_watch=Den här klockan är tom!
+regeneration.messages.transfer.max_regens=Du har redan max antal regenerationer
+regeneration.messages.transfer.no_regens=Du har inga regenerationer kvar att överföra
+
+regeneration.subtitles.fob_watch=Fobklocka öppnar
+regeneration.subtitles.regeneration=Regenerationsenergi
+regeneration.subtitles.hand_glow=Lysande händer
+regeneration.subtitles.heart_beat=Hjärtslag
+regeneration.subtitles.critical_stage=Kritisk elegans fas
+regeneration.subtitles.fob_watch_dialogue=Fobklocka Dialog
+regeneration.subtitles.regeneration_breath=Regenerationsandedräkt
+
+regeneration.keybinds.regenerate=Regenerara
+regeneration.commands.debug.usage=setregens|open> [amount]
+
+regeneration.damagesrc.regen_energy=%s var träffad av Regenerationsenergi!
+regeneration.damagesrc.regen_heal=%s dog av att donera för mycket Regenerationsenergi...
+regeneration.damagesrc.regen_crit=%s dog av att hålla inne sin Regenerationsenergi för länge
+regeneration.damagesrc.theft=%s hade sin kropp stulen!
+regeneration.damagesrc.lindos=%s konsumerade lindoshormoner! De är återfödd!
+regeneration.damagesrc.regen_killed=%s var dödad under regeneration....
+
+regeneration.toast.regenerated=Du har regenererat!
+regeneration.toast.regenerations_left=%s regenerationer kvar
+regeneration.toast.enter_critical=Du går kritisk
+regeneration.toast.enter_critical.sub=%s minuter kvar...
+regeneration.toast.timelord=Du är nu en Tidsherre!
+regeneration.toast.to_use=Du har %s liv kvar!
+regeneration.messages.jar_amount=Den här behållaren innehåller %s Lindos!
+regeneration.messages.jar_inuse=Den här är i bruk!
+tile.regeneration.hand_jar.name=Biobehållare
+
+regeneration.messages.regen_chat_message=%s regenererar
+regeneration.messages.warning.grace=Du är i elegans fas, tryck %s för att regenerera!
+regeneration.messages.warning.grace_critical=Du är nära döden, tryck %s för att regenerera!
+regeneration.messages.regen_delayed=Regeneration framskjutet!
+regeneration.messages.regen_warning=Slå ett block för att framskjuta din regeneration!
+regeneration.messages.theft=Du stal %s kropp!
+regeneration.messages.jar=Du har fått ett liv från skördade lindos!
+regeneration.messages.jar_not_enough=Det finns inte tillräckligt med Lindos i den här burken! [100 Lindos = 1 gratis Regeneration]
+regeneration.messages.jar_no_break=Du kan inte skörda den här Burken medan den har %s Lindosenergi!
+
+config.regeneration.max_regens=Antal regenerationer per cykel
+config.regeneration.free_regens=Gratis regenerationer
+config.regeneration.first_start_gift_only=Startgåva är endast första gången
+config.regeneration.lose_regens_on_death=Förlorar dina regenerationer om du dör
+config.regeneration.infinite_regenerations=Oändlig Regenerationer
+config.regeneration.regen_messages=Skicka 'regenererar' dödsmeddelande
+config.regeneration.fiery_regen=Frammande regeneration
+config.regeneration.regeneration_fire_immunity=Regeneration eld immunitet
+config.regeneration.perspective=Ändra perspektiv
+config.regeneration.update_checker=Aktivera updateringskollare
+config.regeneration.fob_recipe=Fobklocka byggning
+config.regeneration.hand_change=Byt hand
+
+config.regeneration.regeneration_kills_players=Regeneration dödar spelare
+config.regeneration.regeneration_knocksback_players=Regeneration knuffar spelare back
+config.regeneration.regenerative_kill_range=Regeneration dödslängd
+config.regeneration.regenerative_knockback=Regeneration knuff
+config.regeneration.regenerative_knockback_range=Regeneration knufflängd
+
+config.regeneration.post_regen_duration=Efter regenerationseffect tidslängd
+config.regeneration.post_regenerationEffect_level=Efter regenerationseffect nivå
+config.regeneration.reset_hunger=Återställ hunger
+config.regeneration.reset_oxygen=Återställ syre
+config.regeneration.absorbtion_level=Mängd extra hjärtan efter regeneration
+
+config.regeneration.loot_regex=Bytes-pool matchare
+config.regeneration.disable_loot=Fobklocka byte
+
+config.regeneration.grace.gracePeriodLength=Elegans fas längd
+config.regeneration.grace.criticalPhaseLength=Kritisk fas
+config.regeneration.grace.criticalDamageChance=Kritisk skada chans
+config.regeneration.grace.handGlowTriggerDelay=Lysande händer startare fördröjning
+config.regeneration.grace.handGlowInterval=Lysande händer intervall
+
+config.regeneration.compat.lccore.disable_superpower=Inaktivera regeneration medan superladdad
+config.regeneration.compat.lccore.size_changing=LucraftCore Storlek ändrar
+config.regeneration.compat.lccore.size_changing_min=Ändra Minimum
+config.regeneration.compat.lccore.size_changing_max=Ändra Maximum
+config.regeneration.compat.lccore.radiation_immunity=Tidsherrar immun mot strålning
+config.regeneration.compat.tardis.tardis_damage=Skada Tardis vid Regeneration
+
+config.regeneration.skins.model_preference=Föredragen utseende model
+config.regeneration.skins.changemyskin=Utseende förändras
+config.regeneration.skins.download_url=Url nerladdning
+regeneration.messages.not_alive=Kan ej överföra liv in denna stadie!
+config.regeneration.category.compat=Mod interaktion
+config.regeneration.category.compat.tardis=Tardis Mod
+config.regeneration.category.compat.lccore=Lucraft Core
+config.regeneration.category.grace=Elegans fas
+config.regeneration.category.loot=Byte inställningar
+config.regeneration.category.skins=Utseende inställningar
+config.regeneration.category.on_regen=Vid Regeneration
+config.regeneration.category.post_regen=Efter regeneration
+config.regeneration.skins.folder=Utseende Regeneration map
+config.regeneration.post_grater=Skapa fallskada skapare?
+config.regeneration.craft=Bygg med liv?
+
+traits.athlete.name=Atletiska gener!
+traits.boring.name=Lata gener!
+traits.dumb.name=Dumma gener!
+traits.lucky.name=Tursamma gener!
+traits.swimmer.name=Simma gener!
+traits.hydrophobic.name=Hydrophoic gener!
+traits.tough.name=Starka genes!
+traits.fire.name=Ej flammande gener!
+traits.hunger.name=Hunger genes!Hunger genes!
+traits.nightvision.name=Bat genes!Fladdermus gener!
+traits.wallclimbing.name=Spindel gener!
+traits.repel_arrow.name=Tjock hud gener!
+
+traits.athlete.desc=Du kan springa snabbare!
+traits.boring.desc=Du är värdelös!
+traits.dumb.desc=Minedre XP!
+traits.lucky.desc=Mer XP!
+traits.swimmer.desc=Simma fritt i vatten!
+traits.hydrophobic.desc=Du avskyr vatten!
+traits.tough.desc=Du gör mer skada!
+traits.fire.desc=Du är immun mot eld!
+traits.hunger.desc=Du svälter snabbare!
+traits.nightvision.desc=Du kan se i mörkret!
+traits.wallclimbing.desc=Du kan klättra på väggar!
+traits.repel_arrow.desc=Pilar studsar av dig!
+
+nbt.item.lindos=Lindosenergi: %s
+regeneration.messages.no_water=Den här behållaren har inget vatten...
+regeneration.messages.cannot_use=Du kan inte använda den här just nu!
+message.regeneration.healed=Du har gett %s lite av din Regenerations energi!
+nbt.item.water=Har vatten: %s
+nbt.item.water_filled=Du har nu fyllt den här behållaren med vatten
+nbt.item.water_already_filled=Den här behållaren har redan vatten
+
+regeneration.advancement.regeneration=Förändring, käraste...
+regeneration.advancement.regeneration.desc=Regenerera för första gången!
+regeneration.advancement.change_refusal=JAG. KOMMER. INTE. FÖRÄNDRAS!
+regeneration.advancement.change_refusal.desc=Slå ett block för att framskjuta din regeneration!
+regeneration.advancement.critical=Din sång håller på att ta slut...
+regeneration.advancement.critical.desc=Vägra Regenerera upp till nära din död...
+regeneration.advancement.lindos_vial=Lindos!
+regeneration.advancement.lindos_vial.desc=Bygg en Lindosbehållare!
+regeneration.messages.reduced_dmg=Minskad skada efter Regenerationsfas!
+regeneration.messages.fall_dmg=Fallskada minskad p.g.a efter Regenerationsfas!
+regeneration.messages.post_ended=Din Regenerations process är nu färdig!
+regeneration.messages.fast_forward_cmd_fail=Inget att framspola till.
+regeneration.messages.cant_glow=Du kan inte aktivera lysande händer utan att vara i elegansfas
+regeneration.gui.back=Bakåt
+regeneration.gui.previous=<
+regeneration.gui.next=>
+regeneration.gui.preferences=Inställningar
+regeneration.messages.info_trait=Drag:
+regeneration.keybinds.regenerate_forced=Tvinga Regen/Synca till hand!
+
+entity.fob.name=Sak
+entity.lindos.name=Lindos partikel
+
+
+regentype.lay_fade=Hartnell
+regentype.fiery=Eldig
+
+regeneration.gui.skintype=Modell: %s
+skintype.alex=Alex
+skintype.steve=Steve
+skintype.either=Alex/Steve
+
+
+nbt.created=Skapad på: %s
+
+gui.hover.skintype=Välj din föredragna utseende typ
+gui.hover.color=Välj din Regenerations färger
+gui.hover.incarnation=Välj vad ditt nästa kommer se ut
+gui.hover.regen_type=Din föredragna Regenerations stil
+
+right.click=Plocka upp med %s
