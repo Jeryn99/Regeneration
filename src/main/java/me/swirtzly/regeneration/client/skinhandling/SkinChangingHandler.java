@@ -90,18 +90,10 @@ public class SkinChangingHandler {
         return image;
     }
 
-    /**
-     * Chooses a random png file from Steve/Alex Directory (This really depends on the Clients preference)
-     * It also checks image size of the select file, if it's too large, we'll just reset the player back to their Mojang skin,
-     * else they will be kicked from their server. If the player has disabled skin changing on the client, it will just send a reset packet
-     *
-     * @param random - This kinda explains itself, doesn't it?
-     * @param player - Player instance, used to check UUID to ensure it is the client player being involved in the scenario
-     * @throws IOException
-     */
     public static void sendSkinUpdate(Random random, EntityPlayer player) {
-        if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID())
+        if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID()) //Not our Player
             return;
+
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 
         if (RegenConfig.skins.changeMySkin) {
@@ -150,7 +142,7 @@ public class SkinChangingHandler {
 
     public static SkinInfo update(AbstractClientPlayer player) {
         IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-        SkinInfo skinData = PlayerDataPool.getOrCreate(player);
+        SkinInfo skinData = PlayerDataPool.get(player);
         boolean shouldBeMojang = data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("");
         if (shouldBeMojang) {
             //Mojang stuff here
@@ -164,14 +156,18 @@ public class SkinChangingHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             bufferedImage = ClientUtil.ImageFixer.convertSkinTo64x64(bufferedImage);
             if (bufferedImage != null) {
                 DynamicTexture tex = new DynamicTexture(bufferedImage);
-                skinData.setTextureLocation(Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex));
+                ResourceLocation location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(player.getName().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
+                RegenerationMod.LOG.warn("Generating Skin file for " + player.getName() + " || " + location);
+                skinData.setTextureLocation(location);
             }
         }
-        return skinData.setSkintype(getSkinType(player, false)).setUpdateRequired(false);
+
+        SkinInfo newData = skinData.setSkintype(getSkinType(player, false)).setUpdateRequired(false);
+        PlayerDataPool.updatePlayer(player, newData);
+        return newData;
     }
 
     public static ResourceLocation createGuiTexture(File file) {
@@ -310,7 +306,12 @@ public class SkinChangingHandler {
         AbstractClientPlayer player = (AbstractClientPlayer) e.getEntityPlayer();
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
         IRegenType type = TypeHandler.getTypeInstance(cap.getType());
-        SkinInfo skinData = PlayerDataPool.getOrCreate(player);
+        SkinInfo skinData = PlayerDataPool.get(player);
+
+        if (skinData == null) {
+            skinData = update(player);
+            PlayerDataPool.addPlayer(player, skinData);
+        }
 
         if (player.ticksExisted < 20 || skinData.isUpdateRequired()) {
             update(player);

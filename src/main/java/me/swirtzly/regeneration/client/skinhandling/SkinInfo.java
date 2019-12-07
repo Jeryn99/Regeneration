@@ -7,7 +7,7 @@ public class SkinInfo {
 
     private SkinType skintype = SkinType.ALEX;
     private ResourceLocation textureLocation = DefaultPlayerSkin.getDefaultSkinLegacy();
-    private boolean update = true;
+    private boolean update = false;
 
     public SkinType getSkintype() {
         return skintype;

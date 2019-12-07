@@ -205,7 +205,7 @@ public class CapabilityRegeneration implements IRegeneration {
             setPreferredModel("EITHER");
         }
 
-        nextSkinType = SkinInfo.SkinType.valueOf(nextSkinType.name());
+        nextSkinType = SkinInfo.SkinType.valueOf(nbt.getString("nextSkinType"));
 
         BASE64_SKIN_NEXT = nbt.getString("nextSkin");
 

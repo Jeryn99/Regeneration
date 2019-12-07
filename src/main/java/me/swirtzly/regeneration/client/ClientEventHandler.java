@@ -8,9 +8,6 @@ import me.swirtzly.regeneration.client.animation.ModelRotationEvent;
 import me.swirtzly.regeneration.client.animation.RenderCallbackEvent;
 import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
-import me.swirtzly.regeneration.client.skinhandling.PlayerDataPool;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
-import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.types.TypeHandler;
@@ -142,13 +139,8 @@ public class ClientEventHandler {
             return;
 
         EntityPlayerSP player = Minecraft.getMinecraft().player;
-        if (player == null) return;
-        SkinInfo skin = PlayerDataPool.getOrCreate(player);
-        if (skin != null) {
-            SkinChangingHandler.setPlayerSkin(player, skin.getTextureLocation());
-        }
-
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+
         String warning = null;
         switch (cap.getState()) {
             case GRACE:
