@@ -7,6 +7,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -57,9 +59,10 @@ public class PlayerDataPool {
 
 
     public static void wipeAllData() {
-        for (UUID uuid : PLAYER_POOL.keySet()) {
-            RegenerationMod.LOG.warn("Deleting skin data for: " + uuid);
-            PLAYER_POOL.remove(uuid);
+        Iterator iterator = PLAYER_POOL.entrySet().iterator();
+        while (iterator.hasNext()) {
+            iterator.remove();
         }
+        RegenerationMod.LOG.info("Cleared Player Pool.");
     }
 }
