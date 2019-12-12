@@ -7,8 +7,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -59,7 +57,9 @@ public class PlayerDataPool {
 
 
     public static void wipeAllData() {
-        PLAYER_POOL.clear();
-        RegenerationMod.LOG.info("Cleared Player Pool.");
+        if (!PLAYER_POOL.isEmpty()) {
+            PLAYER_POOL.clear();
+            RegenerationMod.LOG.info("Cleared Player Pool.");
+        }
     }
 }
