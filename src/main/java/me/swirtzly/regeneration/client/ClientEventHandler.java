@@ -42,6 +42,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -77,6 +78,7 @@ public class ClientEventHandler {
     public static void onAction(GuiScreenEvent.ActionPerformedEvent event) {
         if (event.getButton() instanceof InventoryTabRegeneration) {
             Minecraft.getMinecraft().displayGuiScreen(new GuiPreferences());
+            TickEvent.ClientTickEvent
         }
     }
 

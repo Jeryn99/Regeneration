@@ -97,7 +97,7 @@ public class Trending {
 
     public static void handleDownloads() throws IOException {
         if (!RegenConfig.skins.downloadInternalSkins) return;
-        String PACKS_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/skins/index.json";
+        String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
         String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
         for (String link : links) {
             unzipSkinPack(link);

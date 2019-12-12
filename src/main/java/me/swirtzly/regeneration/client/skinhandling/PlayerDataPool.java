@@ -59,10 +59,7 @@ public class PlayerDataPool {
 
 
     public static void wipeAllData() {
-        Iterator iterator = PLAYER_POOL.entrySet().iterator();
-        while (iterator.hasNext()) {
-            iterator.remove();
-        }
+        PLAYER_POOL.clear();
         RegenerationMod.LOG.info("Cleared Player Pool.");
     }
 }
