@@ -56,7 +56,7 @@ public class GuiCustomizer extends GuiContainer {
         float primaryRed = (float) initialPrimary.x, primaryGreen = (float) initialPrimary.y, primaryBlue = (float) initialPrimary.z;
         float secondaryRed = (float) initialSecondary.x, secondaryGreen = (float) initialSecondary.y, secondaryBlue = (float) initialSecondary.z;
 
-        final int btnW = 66, btnH = 18;
+        final int btnW = 68, btnH = 17;
         final int sliderW = 70, sliderH = 20;
 
         // WE CAN'T USE BUTTON ID'S 2 & 3 HERE BECAUSE THEY ARE USED BY THE INVENTORY TAB BUTTONS

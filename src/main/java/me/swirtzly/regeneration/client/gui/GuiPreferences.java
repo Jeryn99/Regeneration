@@ -46,7 +46,7 @@ public class GuiPreferences extends GuiContainer {
         TabRegistry.addTabsToList(this.buttonList);
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
-        final int btnW = 66, btnH = 18;
+        final int btnW = 68, btnH = 17;
 
         GuiButtonExt btnClose = new GuiButtonExt(98, width / 2 - 109, cy + 145, 71, btnH, new TextComponentTranslation("regeneration.gui.close").getFormattedText());
         GuiButtonExt btnRegenType = new GuiButtonExt(44, width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TextComponentTranslation("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText());

@@ -47,8 +47,13 @@ public class GuiSkinChange extends GuiContainer {
 
         choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
         skins = FileUtil.listAllSkins(choices);
-        PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
-
+        if (skins.size() > 0) {
+            PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
+        } else try {
+            throw new Exception("NO SKINS COULD BE FOUND.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void updateModels() {
@@ -68,15 +73,15 @@ public class GuiSkinChange extends GuiContainer {
         TabRegistry.addTabsToList(this.buttonList);
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
-        final int btnW = 60, btnH = 18;
+        final int btnW = 68, btnH = 17;
         position = 0;
 
-        GuiButtonExt btnNext = new GuiButtonExt(44, cx + 25, cy + 80, 20, 20, new TextComponentTranslation("regeneration.gui.previous").getFormattedText());
+        GuiButtonExt btnNext = new GuiButtonExt(44, cx + 20, cy + 80, 20, 20, new TextComponentTranslation("regeneration.gui.previous").getFormattedText());
         GuiButtonExt btnPrevious = new GuiButtonExt(55, cx + 130, cy + 80, 20, 20, new TextComponentTranslation("regeneration.gui.next").getFormattedText());
-        GuiButtonExt btnBack = new GuiButtonExt(66, cx + 25, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText());
+        GuiButtonExt btnBack = new GuiButtonExt(66, cx + 20, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText());
         GuiButtonExt btnOpenFolder = new GuiButtonExt(77, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.open_folder").getFormattedText());
-        GuiButtonExt btnSave = new GuiButtonExt(88, cx + 90, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.save").getFormattedText());
-        GuiButtonExt btnResetSkin = new GuiButtonExt(100, cx + 25, cy + 125, btnW, btnH, new TextComponentTranslation("regeneration.gui.reset_skin").getFormattedText());
+        GuiButtonExt btnSave = new GuiButtonExt(88, cx + 90, cy + 127, btnW, btnH, new TextComponentTranslation("regeneration.gui.save").getFormattedText());
+        GuiButtonExt btnResetSkin = new GuiButtonExt(100, cx + 20, cy + 127, btnW, btnH, new TextComponentTranslation("regeneration.gui.reset_skin").getFormattedText());
 
         addButton(btnNext);
         addButton(btnPrevious);

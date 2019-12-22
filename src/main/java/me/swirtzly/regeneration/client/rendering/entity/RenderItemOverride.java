@@ -66,18 +66,17 @@ public class RenderItemOverride extends Render<EntityItemOverride> {
         }
 
         GlStateManager.pushMatrix();
-        Entity look = mc.objectMouseOver.entityHit;
-        if (look != null && look == entity) {
-
-            float offset = MathHelper.cos(entity.ticksExisted * 0.1F) * -0.09F;
-
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(0, 0.4F, 0);
-            GlStateManager.scale(0.60F, 0.60F, 0.60F);
-            this.renderLivingLabel(entity, new TextComponentTranslation("right.click", Minecraft.getMinecraft().gameSettings.keyBindUseItem.getDisplayName()).getUnformattedComponentText(), x, y + 0.4 + offset, z, 46);
-            GlStateManager.popMatrix();
+        if (mc.objectMouseOver != null) {
+            Entity look = mc.objectMouseOver.entityHit;
+            if (look != null && look == entity) {
+                float offset = MathHelper.cos(entity.ticksExisted * 0.1F) * -0.09F;
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(0, 0.4F, 0);
+                GlStateManager.scale(0.60F, 0.60F, 0.60F);
+                this.renderLivingLabel(entity, new TextComponentTranslation("right.click", Minecraft.getMinecraft().gameSettings.keyBindUseItem.getDisplayName()).getUnformattedComponentText(), x, y + 0.4 + offset, z, 46);
+                GlStateManager.popMatrix();
+            }
         }
-
 
         GlStateManager.popMatrix();
 
