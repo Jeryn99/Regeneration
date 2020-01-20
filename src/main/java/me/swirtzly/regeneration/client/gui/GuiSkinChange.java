@@ -18,11 +18,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import org.lwjgl.input.Mouse;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static me.swirtzly.regeneration.util.ClientUtil.playerModelAlex;
@@ -38,13 +40,15 @@ public class GuiSkinChange extends GuiContainer {
     private static SkinChangingHandler.EnumChoices choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
     private static List<File> skins = FileUtil.listAllSkins(choices);
     private static int position = 0;
+    public int posX;
+    public int posY;
+    private ArrayList<GuiButton> scrollButtonList = new ArrayList<>();
 
 
     public GuiSkinChange() {
         super(new BlankContainer());
         xSize = 176;
         ySize = 186;
-
         choices = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
         skins = FileUtil.listAllSkins(choices);
         if (skins.size() > 0) {
@@ -66,32 +70,12 @@ public class GuiSkinChange extends GuiContainer {
         PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
     }
 
-    @Override
-    public void initGui() {
-        super.initGui();
-        TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
-        TabRegistry.addTabsToList(this.buttonList);
-        int cx = (width - xSize) / 2;
-        int cy = (height - ySize) / 2;
-        final int btnW = 68, btnH = 17;
-        position = 0;
-
-        GuiButtonExt btnNext = new GuiButtonExt(44, cx + 20, cy + 80, 20, 20, new TextComponentTranslation("regeneration.gui.previous").getFormattedText());
-        GuiButtonExt btnPrevious = new GuiButtonExt(55, cx + 130, cy + 80, 20, 20, new TextComponentTranslation("regeneration.gui.next").getFormattedText());
-        GuiButtonExt btnBack = new GuiButtonExt(66, cx + 20, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText());
-        GuiButtonExt btnOpenFolder = new GuiButtonExt(77, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.open_folder").getFormattedText());
-        GuiButtonExt btnSave = new GuiButtonExt(88, cx + 90, cy + 127, btnW, btnH, new TextComponentTranslation("regeneration.gui.save").getFormattedText());
-        GuiButtonExt btnResetSkin = new GuiButtonExt(100, cx + 20, cy + 127, btnW, btnH, new TextComponentTranslation("regeneration.gui.reset_skin").getFormattedText());
-
-        addButton(btnNext);
-        addButton(btnPrevious);
-        addButton(btnOpenFolder);
-        addButton(btnBack);
-        addButton(btnSave);
-        addButton(btnResetSkin);
-
-        updateModels();
-    }
+    private int scrollbarChangeReq;
+    private GuiButtonExt btnNext, btnPrevious, btnBack, btnOpenFolder, btnSave, btnResetSkin;
+    /**
+     * Scroll Bar
+     **/
+    private int scrollbarPosY;
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -141,7 +125,6 @@ public class GuiSkinChange extends GuiContainer {
             case 66:
                 Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiPreferences.ID, Minecraft.getMinecraft().world, 0, 0, 0);
                 break;
-
             case 55:
                 //Next
                 if (!PLAYER_TEXTURE.equals(Minecraft.getMinecraft().player.getLocationSkin())) {
@@ -184,6 +167,141 @@ public class GuiSkinChange extends GuiContainer {
                 }
                 Minecraft.getMinecraft().displayGuiScreen(null);
                 break;
+        }
+    }
+
+    private int scrollbarIndex;
+    private int scrollbarChange;
+    private boolean isScrollPressed;
+
+    @Override
+    public void initGui() {
+
+        this.scrollButtonList.clear();
+        for (File skin : skins) {
+            this.scrollButtonList.add(new GuiButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", "")));
+        }
+
+        super.initGui();
+        TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
+        TabRegistry.addTabsToList(this.buttonList);
+        int cx = (width - xSize) / 2;
+        int cy = (height - ySize) / 2;
+        final int btnW = 68, btnH = 17;
+        position = 0;
+
+        btnBack = new GuiButtonExt(66, cx + 20, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText());
+        btnOpenFolder = new GuiButtonExt(77, cx + 90, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.open_folder").getFormattedText());
+        btnSave = new GuiButtonExt(88, cx + 90, cy + 127, btnW, btnH, new TextComponentTranslation("regeneration.gui.save").getFormattedText());
+        btnResetSkin = new GuiButtonExt(100, cx + 20, cy + 127, btnW, btnH, new TextComponentTranslation("regeneration.gui.reset_skin").getFormattedText());
+
+        this.updateButtonsList();
+        //this.scrollbarChangeReq = 85 / this.scrollButtonList.size();
+        updateModels();
+    }
+
+    public boolean needsScrollbar() {
+        return this.scrollButtonList.size() > 5;
+    }
+
+    public void updateButtonsList() {
+        this.buttonList.clear();
+        addButton(btnNext);
+        addButton(btnPrevious);
+        addButton(btnOpenFolder);
+        addButton(btnBack);
+        addButton(btnSave);
+        addButton(btnResetSkin);
+        int id = 1000;
+        for (int i = this.scrollbarIndex; i < this.scrollbarIndex + 5 && i < this.scrollButtonList.size(); i++) {
+            GuiButton but = this.scrollButtonList.get(i);
+            this.buttonList.add(new GuiButton(id, posX + 8, posY + 7 + (24 * (i - this.scrollbarIndex)), but.displayString));
+            id++;
+        }
+    }
+
+    public void updateScrollPositon(int change) {
+        if (change != 0 && this.needsScrollbar()) {
+            this.scrollbarPosY = change;
+            if (this.scrollbarPosY > 85)
+                this.scrollbarPosY = 85;
+            if (this.scrollbarPosY < 00)
+                this.scrollbarPosY = 00;
+            this.updateScrollIndex();
+        }
+    }
+
+    public void updateScrollIndex() {
+        if (this.scrollbarPosY <= this.scrollbarChangeReq) {
+            this.scrollbarIndex = 0;
+            this.scrollbarChange = this.scrollbarPosY;
+
+            this.updateButtonsList();
+        } else if (this.scrollbarPosY - this.scrollbarChange >= this.scrollbarChangeReq) {
+            this.scrollbarIndex++;
+            this.scrollbarChange = this.scrollbarPosY;
+            this.updateButtonsList();
+        } else if (this.scrollbarPosY - this.scrollbarChange <= (-1 * this.scrollbarChangeReq)) {
+            this.scrollbarIndex--;
+            this.scrollbarChange = this.scrollbarPosY;
+
+            if (this.scrollbarIndex < 0)
+                this.scrollbarIndex = 0;
+
+            this.updateButtonsList();
+        }
+    }
+
+    private boolean isMouseOverArea(int mouseX, int mouseY, int posX, int posY, int width, int height) {
+        return (mouseX >= posX && mouseX < posX + width && mouseY >= posY && mouseY < posY + height);
+    }
+
+    @Override
+    public void handleMouseInput() {
+        try {
+            super.handleMouseInput();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int wheelState;
+        if ((wheelState = Mouse.getEventDWheel()) != 0)
+            this.updateScrollPositon(this.scrollbarPosY - (wheelState / 10));
+    }
+
+    @Override
+    public void mouseClicked(int mouseX, int mouseY, int button) {
+        try {
+            super.mouseClicked(mouseX, mouseY, button);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int posX = (this.width - this.xSize) / 2;
+        int posY = (this.height - this.ySize) / 2;
+
+        if (button != 0 || !this.needsScrollbar())
+            return;
+
+        if (isMouseOverArea(mouseX, mouseY, posX + 154, posY + 7 + this.scrollbarPosY, 12, 15))
+            this.isScrollPressed = true;
+
+    }
+
+    @Override
+    public void mouseClickMove(int mouseX, int mouseY, int button, long timeSince) {
+        super.mouseClickMove(mouseX, mouseY, button, timeSince);
+
+        int posX = (this.width - this.xSize) / 2;
+        int posY = (this.height - this.ySize) / 2;
+
+        //if(isMouseOverArea(mouseX, mouseY, posX + 234, posY + 26, 14, 102))
+        if (Mouse.isButtonDown(0) && this.isScrollPressed) {
+            this.updateScrollPositon(mouseY - posY);
+
+            // If they release the button, set isScrollPressed to false
+            if (!Mouse.isButtonDown(0))
+                this.isScrollPressed = false;
         }
     }
 
