@@ -182,10 +182,7 @@ public class FileUtil {
 
         Collection files = org.apache.commons.io.FileUtils.listFiles(directory, extensions, true);
 
-        int skin = 0;
         for (Object file : files) {
-            System.out.println(skin + " " + file);
-            skin++;
             resultList.add((File) file);
         }
 
