@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.client.gui;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.client.gui.parts.BlankButton;
 import me.swirtzly.regeneration.client.gui.parts.BlankContainer;
 import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.image.ImageDownloadAlt;
@@ -13,6 +14,7 @@ import me.swirtzly.regeneration.util.FileUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -43,6 +45,8 @@ public class GuiSkinChange extends GuiContainer {
     public int posX;
     public int posY;
     private ArrayList<GuiButton> scrollButtonList = new ArrayList<>();
+    private int scrollbarChangeReq;
+    private GuiTextField textFieldValue;
 
 
     public GuiSkinChange() {
@@ -60,6 +64,8 @@ public class GuiSkinChange extends GuiContainer {
         }
     }
 
+    private GuiButtonExt btnBack, btnOpenFolder, btnSave, btnResetSkin;
+
     public static void updateModels() {
         try {
             isAlex = ImageDownloadAlt.isAlexSkin(ImageIO.read(skins.get(position)));
@@ -67,15 +73,15 @@ public class GuiSkinChange extends GuiContainer {
             e.printStackTrace();
         }
         choices = isAlex ? SkinChangingHandler.EnumChoices.ALEX : SkinChangingHandler.EnumChoices.STEVE;
-        PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
+        //   PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
+    }
+    private int scrollbarPosY;
+
+    @Override
+    protected void keyTyped(char eventChar, int eventKey) throws IOException {
+        this.textFieldValue.textboxKeyTyped(eventChar, eventKey);
     }
 
-    private int scrollbarChangeReq;
-    private GuiButtonExt btnNext, btnPrevious, btnBack, btnOpenFolder, btnSave, btnResetSkin;
-    /**
-     * Scroll Bar
-     **/
-    private int scrollbarPosY;
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -112,7 +118,14 @@ public class GuiSkinChange extends GuiContainer {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
+        textFieldValue.drawTextBox();
         super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public void updateScreen() {
+        super.updateScreen();
+        textFieldValue.updateCursorCounter();
     }
 
     @Override
@@ -125,32 +138,6 @@ public class GuiSkinChange extends GuiContainer {
             case 66:
                 Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiPreferences.ID, Minecraft.getMinecraft().world, 0, 0, 0);
                 break;
-            case 55:
-                //Next
-                if (!PLAYER_TEXTURE.equals(Minecraft.getMinecraft().player.getLocationSkin())) {
-                    if (position >= skins.size() - 1) {
-                        position = 0;
-                    } else {
-                        position++;
-                    }
-                    PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
-                    updateModels();
-                }
-                break;
-
-            case 44:
-                //Previous
-                if (!PLAYER_TEXTURE.equals(Minecraft.getMinecraft().player.getLocationSkin())) {
-                    if (position > 0) {
-                        position--;
-                    } else {
-                        position = skins.size() - 1;
-                    }
-                    PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(position));
-                    updateModels();
-                }
-                break;
-
             case 88:
                 updateModels();
                 NetworkHandler.INSTANCE.sendToServer(new MessageNextSkin(SkinChangingHandler.imageToPixelData(skins.get(position)), ImageDownloadAlt.isAlexSkin(ImageIO.read(skins.get(position)))));
@@ -158,7 +145,6 @@ public class GuiSkinChange extends GuiContainer {
             case 100:
                 ClientUtil.sendSkinResetPacket();
                 break;
-
             case 77:
                 try {
                     Desktop.getDesktop().open(SkinChangingHandler.SKIN_DIRECTORY);
@@ -167,6 +153,12 @@ public class GuiSkinChange extends GuiContainer {
                 }
                 Minecraft.getMinecraft().displayGuiScreen(null);
                 break;
+        }
+
+        if (button instanceof BlankButton) {
+            BlankButton buttonUpdate = (BlankButton) button;
+            PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(buttonUpdate.getFile());
+            updateModels();
         }
     }
 
@@ -179,8 +171,16 @@ public class GuiSkinChange extends GuiContainer {
 
         this.scrollButtonList.clear();
         for (File skin : skins) {
-            this.scrollButtonList.add(new GuiButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", "")));
+            BlankButton BUTTON = new BlankButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
+            BUTTON.setFile(skin);
+            this.scrollButtonList.add(BUTTON);
         }
+
+        textFieldValue = new GuiTextField(10, this.mc.fontRenderer, posX + 170, posY + 170, 177, 16);
+        textFieldValue.setMaxStringLength(10000);
+        textFieldValue.setText("Enter Search");
+        textFieldValue.setEnabled(true);
+        textFieldValue.setFocused(true);
 
         super.initGui();
         TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
@@ -196,7 +196,6 @@ public class GuiSkinChange extends GuiContainer {
         btnResetSkin = new GuiButtonExt(100, cx + 20, cy + 127, btnW, btnH, new TextComponentTranslation("regeneration.gui.reset_skin").getFormattedText());
 
         this.updateButtonsList();
-        //this.scrollbarChangeReq = 85 / this.scrollButtonList.size();
         updateModels();
     }
 
@@ -206,16 +205,17 @@ public class GuiSkinChange extends GuiContainer {
 
     public void updateButtonsList() {
         this.buttonList.clear();
-        addButton(btnNext);
-        addButton(btnPrevious);
         addButton(btnOpenFolder);
         addButton(btnBack);
         addButton(btnSave);
         addButton(btnResetSkin);
         int id = 1000;
         for (int i = this.scrollbarIndex; i < this.scrollbarIndex + 5 && i < this.scrollButtonList.size(); i++) {
-            GuiButton but = this.scrollButtonList.get(i);
-            this.buttonList.add(new GuiButton(id, posX + 8, posY + 7 + (24 * (i - this.scrollbarIndex)), but.displayString));
+            BlankButton but = (BlankButton) this.scrollButtonList.get(i);
+
+            BlankButton BUTTON = new BlankButton(id, posX + 160, posY + 197 + (24 * (i - this.scrollbarIndex)), but.displayString);
+            BUTTON.setFile(but.getFile());
+            this.buttonList.add(BUTTON);
             id++;
         }
     }
@@ -271,6 +271,9 @@ public class GuiSkinChange extends GuiContainer {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
+
+        this.textFieldValue.mouseClicked(mouseX, mouseY, button);
+
         try {
             super.mouseClicked(mouseX, mouseY, button);
         } catch (IOException e) {
