@@ -1,8 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "2.0.4",
-		"1.12.2-recommended": "2.0.4",
+		"1.12.2-latest": "2.0.8",
+		"1.12.2-recommended": "2.0.8",
 		"1.13.2-latest": "0.0.2",
 		"1.13.2-recommended": "0.0.2"
 	},
@@ -27,7 +27,8 @@
 		"2.0.0" : "Fixes various crashes and bugs",
 		"2.0.1" : "Fixed issues on Macs || Fixed Skin related issues || Updated Trending download no longer working",
 		"2.0.2" : "Fixed issues with world load :)",
-		"2.0.4" : "Fixes Server Crash || Adds buttons to force player model change"
+		"2.0.4" : "Fixes Server Crash || Adds buttons to force player model change",
+		"2.0.8" : "Skin change gui over-haul || Skin search bar || Fixes issues where not all skins would be added to mod"
 
 	},
 	"1.13.2": {
