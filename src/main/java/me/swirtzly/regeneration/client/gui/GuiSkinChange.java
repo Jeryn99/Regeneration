@@ -78,8 +78,28 @@ public class GuiSkinChange extends GuiContainer {
 
     @Override
     protected void keyTyped(char eventChar, int eventKey) throws IOException {
-        this.textFieldValue.textboxKeyTyped(eventChar, eventKey);
-        super.keyTyped(eventChar, eventKey);
+        if (textFieldValue.textboxKeyTyped(eventChar, eventKey) && !textFieldValue.getText().isEmpty()) {
+            this.scrollButtonList.clear();
+            for (File skin : FileUtil.similarWords(textFieldValue.getText(), FileUtil.listAllSkins(choices))) {
+                BlankButton BUTTON = new BlankButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
+                BUTTON.setFile(skin);
+                this.scrollButtonList.add(BUTTON);
+                updateButtonsList();
+            }
+        } else {
+            if (textFieldValue.getText().isEmpty()) {
+                if (textFieldValue.textboxKeyTyped(eventChar, eventKey)) {
+                    this.scrollButtonList.clear();
+                    for (File skin : FileUtil.listAllSkins(choices)) {
+                        BlankButton BUTTON = new BlankButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
+                        BUTTON.setFile(skin);
+                        this.scrollButtonList.add(BUTTON);
+                        updateButtonsList();
+                    }
+                }
+            }
+            super.keyTyped(eventChar, eventKey);
+        }
     }
 
 
@@ -102,7 +122,7 @@ public class GuiSkinChange extends GuiContainer {
         drawCenteredString(Minecraft.getMinecraft().fontRenderer, new TextComponentTranslation("regeneration.gui.next_incarnation").getUnformattedText(), width / 2, height / 2 - 80, Color.WHITE.getRGB());
         drawCenteredString(Minecraft.getMinecraft().fontRenderer, skinName, width / 2, height / 2 + 15, Color.WHITE.getRGB());
 
-        drawCenteredString(Minecraft.getMinecraft().fontRenderer, "Enter Search", posX + 210, posY + 155, Color.WHITE.getRGB());
+        drawCenteredString(Minecraft.getMinecraft().fontRenderer, "Search", posX + 210, posY + 155, Color.WHITE.getRGB());
 
 
     }
@@ -111,24 +131,19 @@ public class GuiSkinChange extends GuiContainer {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
-        textFieldValue.drawTextBox();
         super.drawScreen(mouseX, mouseY, partialTicks);
+        textFieldValue.drawTextBox();
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
         textFieldValue.updateCursorCounter();
-
-        if (textFieldValue.getText().isEmpty()) {
-            textFieldValue.setText(" ");
-        }
     }
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
-        skins = FileUtil.listAllSkins(choices);
         switch (button.id) {
             case 66:
                 Minecraft.getMinecraft().player.openGui(RegenerationMod.INSTANCE, GuiPreferences.ID, Minecraft.getMinecraft().world, 0, 0, 0);
@@ -174,9 +189,10 @@ public class GuiSkinChange extends GuiContainer {
         }
         textFieldValue = new GuiTextField(10, this.mc.fontRenderer, posX + 170, posY + 170, 177, 16);
         textFieldValue.setMaxStringLength(10000);
-        textFieldValue.setText(" ");
+        textFieldValue.setText("");
         textFieldValue.setEnabled(true);
         textFieldValue.setFocused(true);
+        textFieldValue.setEnableBackgroundDrawing(true);
 
         super.initGui();
         TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
@@ -209,9 +225,8 @@ public class GuiSkinChange extends GuiContainer {
         addButton(btnSave);
         addButton(btnResetSkin);
         int id = 1000;
-        for (int i = this.scrollbarIndex; i < this.scrollbarIndex + 8 && i < this.scrollButtonList.size(); i++) {
+        for (int i = this.scrollbarIndex; i < this.scrollbarIndex + 5 && i < this.scrollButtonList.size(); i++) {
             BlankButton but = (BlankButton) this.scrollButtonList.get(i);
-
             BlankButton BUTTON = new BlankButton(id, posX + 160, posY + 197 + (24 * (i - this.scrollbarIndex)), but.displayString);
             BUTTON.setFile(but.getFile());
             this.buttonList.add(BUTTON);

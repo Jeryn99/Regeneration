@@ -186,9 +186,22 @@ public class FileUtil {
             resultList.add((File) file);
         }
 
+        Collections.sort(resultList);
+
         return resultList;
     }
 
+
+    public static List<File> similarWords(String word, List<File> allWords) {
+        List<File> similarWordList = new ArrayList<>();
+
+        for (File currentWord : allWords) {
+            if (currentWord.getName().contains(word)) {
+                similarWordList.add(currentWord);
+            }
+        }
+        return similarWordList;
+    }
 
     public interface IEnum<E extends Enum<E>> {
 
