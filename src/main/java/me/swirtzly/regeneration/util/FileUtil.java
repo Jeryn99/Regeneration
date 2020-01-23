@@ -11,11 +11,10 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.FileSystem;
-import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Objects;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -163,6 +162,8 @@ public class FileUtil {
     }
 
 
+    private static String[] extensions = {"png"};
+
     public static List<File> listAllSkins(EnumChoices choices) {
         List<File> resultList = new ArrayList<>();
         File directory = null;
@@ -179,18 +180,28 @@ public class FileUtil {
                 break;
         }
 
-        try {
-            Files.find(Paths.get(directory.toString()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile()).forEach((file) -> {
-                if (file.toString().contains(".png")) {
-                    resultList.add(file.toFile());
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
+        Collection files = org.apache.commons.io.FileUtils.listFiles(directory, extensions, true);
+
+        for (Object file : files) {
+            resultList.add((File) file);
         }
+
+        Collections.sort(resultList);
+
         return resultList;
     }
 
+
+    public static List<File> similarWords(String word, List<File> allWords) {
+        List<File> similarWordList = new ArrayList<>();
+
+        for (File currentWord : allWords) {
+            if (currentWord.getName().contains(word)) {
+                similarWordList.add(currentWord);
+            }
+        }
+        return similarWordList;
+    }
 
     public interface IEnum<E extends Enum<E>> {
 
