@@ -121,10 +121,6 @@ public class GuiSkinChange extends GuiContainer {
 
         drawCenteredString(Minecraft.getMinecraft().fontRenderer, new TextComponentTranslation("regeneration.gui.next_incarnation").getUnformattedText(), width / 2, height / 2 - 80, Color.WHITE.getRGB());
         drawCenteredString(Minecraft.getMinecraft().fontRenderer, skinName, width / 2, height / 2 + 15, Color.WHITE.getRGB());
-
-        drawCenteredString(Minecraft.getMinecraft().fontRenderer, "Search", posX + 210, posY + 155, Color.WHITE.getRGB());
-
-
     }
 
 
@@ -181,13 +177,16 @@ public class GuiSkinChange extends GuiContainer {
     @Override
     public void initGui() {
 
+        int cx = (width - xSize) / 2;
+        int cy = (height - ySize) / 2;
+
         this.scrollButtonList.clear();
         for (File skin : skins) {
             BlankButton BUTTON = new BlankButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
             BUTTON.setFile(skin);
             this.scrollButtonList.add(BUTTON);
         }
-        textFieldValue = new GuiTextField(10, this.mc.fontRenderer, posX + 170, posY + 170, 177, 16);
+        textFieldValue = new GuiTextField(10, this.mc.fontRenderer, cx - 220, cy + 15, 200, 20);
         textFieldValue.setMaxStringLength(10000);
         textFieldValue.setText("");
         textFieldValue.setEnabled(true);
@@ -197,8 +196,6 @@ public class GuiSkinChange extends GuiContainer {
         super.initGui();
         TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
         TabRegistry.addTabsToList(this.buttonList);
-        int cx = (width - xSize) / 2;
-        int cy = (height - ySize) / 2;
         final int btnW = 68, btnH = 17;
 
         btnBack = new GuiButtonExt(66, cx + 20, cy + 145, btnW, btnH, new TextComponentTranslation("regeneration.gui.back").getFormattedText());
@@ -225,9 +222,11 @@ public class GuiSkinChange extends GuiContainer {
         addButton(btnSave);
         addButton(btnResetSkin);
         int id = 1000;
+        int cx = (width - xSize) / 2;
+        int cy = (height - ySize) / 2;
         for (int i = this.scrollbarIndex; i < this.scrollbarIndex + 5 && i < this.scrollButtonList.size(); i++) {
             BlankButton but = (BlankButton) this.scrollButtonList.get(i);
-            BlankButton BUTTON = new BlankButton(id, posX + 160, posY + 197 + (24 * (i - this.scrollbarIndex)), but.displayString);
+            BlankButton BUTTON = new BlankButton(id, cx - 220, cy + 45 + (24 * (i - this.scrollbarIndex)), but.displayString);
             BUTTON.setFile(but.getFile());
             this.buttonList.add(BUTTON);
             id++;
