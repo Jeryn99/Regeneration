@@ -24,9 +24,7 @@ public class ItemHand extends Item {
 
     public ItemHand() {
         setMaxStackSize(1);
-
         addPropertyOverride(new ResourceLocation("skin_type"), (stack, worldIn, entityIn) -> getSkinType(stack).equals("ALEX") ? 1 : 0);
-
     }
 
     public static void setTimeCreated(ItemStack stack, long created) {
