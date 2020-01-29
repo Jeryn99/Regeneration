@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.client.gui;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.gui.parts.BlankButton;
 import me.swirtzly.regeneration.client.gui.parts.BlankContainer;
+import me.swirtzly.regeneration.client.gui.parts.FileButton;
 import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.image.ImageDownloadAlt;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
@@ -81,7 +81,7 @@ public class GuiSkinChange extends GuiContainer {
         if (textFieldValue.textboxKeyTyped(eventChar, eventKey) && !textFieldValue.getText().isEmpty()) {
             this.scrollButtonList.clear();
             for (File skin : FileUtil.similarWords(textFieldValue.getText(), FileUtil.listAllSkins(choices))) {
-                BlankButton BUTTON = new BlankButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
+                FileButton BUTTON = new FileButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
                 BUTTON.setFile(skin);
                 this.scrollButtonList.add(BUTTON);
                 updateButtonsList();
@@ -91,7 +91,7 @@ public class GuiSkinChange extends GuiContainer {
                 if (textFieldValue.textboxKeyTyped(eventChar, eventKey)) {
                     this.scrollButtonList.clear();
                     for (File skin : FileUtil.listAllSkins(choices)) {
-                        BlankButton BUTTON = new BlankButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
+                        FileButton BUTTON = new FileButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
                         BUTTON.setFile(skin);
                         this.scrollButtonList.add(BUTTON);
                         updateButtonsList();
@@ -160,8 +160,8 @@ public class GuiSkinChange extends GuiContainer {
                 break;
         }
 
-        if (button instanceof BlankButton) {
-            BlankButton buttonUpdate = (BlankButton) button;
+        if (button instanceof FileButton) {
+            FileButton buttonUpdate = (FileButton) button;
             PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(buttonUpdate.getFile());
             updateModels(buttonUpdate.getFile());
             skinName = buttonUpdate.getFile().getName().substring(0, 1).toUpperCase() + buttonUpdate.getFile().getName().substring(1).replaceAll(".png", "");
@@ -182,7 +182,7 @@ public class GuiSkinChange extends GuiContainer {
 
         this.scrollButtonList.clear();
         for (File skin : skins) {
-            BlankButton BUTTON = new BlankButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
+            FileButton BUTTON = new FileButton(scrollButtonList.size() + 3, posX + 8, posY + 7 + (24 * (scrollButtonList.size())), skin.getName().replaceAll(".png", ""));
             BUTTON.setFile(skin);
             this.scrollButtonList.add(BUTTON);
         }
@@ -225,8 +225,8 @@ public class GuiSkinChange extends GuiContainer {
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
         for (int i = this.scrollbarIndex; i < this.scrollbarIndex + 5 && i < this.scrollButtonList.size(); i++) {
-            BlankButton but = (BlankButton) this.scrollButtonList.get(i);
-            BlankButton BUTTON = new BlankButton(id, cx - 220, cy + 45 + (24 * (i - this.scrollbarIndex)), but.displayString);
+            FileButton but = (FileButton) this.scrollButtonList.get(i);
+            FileButton BUTTON = new FileButton(id, cx - 220, cy + 45 + (24 * (i - this.scrollbarIndex)), but.displayString);
             BUTTON.setFile(but.getFile());
             this.buttonList.add(BUTTON);
             id++;

@@ -49,6 +49,7 @@ class ActingServerHandler implements IActingHandler {
                 float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
                 player.heal(stateProgress * 0.3F * dm);
                 player.setArrowCountInEntity(0);
+                PlayerUtil.openDoors(player);
                 break;
 
             case GRACE_CRIT:

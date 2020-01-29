@@ -27,6 +27,7 @@ class ActingClientHandler implements IActingHandler {
 
     @Override
     public void onEnterGrace(IRegeneration cap) {
+        ClientUtil.takeScreenshot();
         ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
         ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.GRACE_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE, 1.5F);
         RegenClientHooks.handleShader();

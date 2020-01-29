@@ -4,6 +4,11 @@ import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.network.MessageSetPerspective;
 import me.swirtzly.regeneration.network.MessageUpdateModel;
 import me.swirtzly.regeneration.network.NetworkHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockTrapDoor;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.*;
@@ -12,7 +17,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.awt.*;
@@ -73,6 +81,35 @@ public class PlayerUtil {
     public static void updateModel(SkinChangingHandler.EnumChoices choice) {
         NetworkHandler.INSTANCE.sendToServer(new MessageUpdateModel(choice.name()));
     }
+
+    public static void openDoors(EntityPlayer player) {
+        if (player.world.isRemote) return;
+        AxisAlignedBB box = player.getEntityBoundingBox().grow(20);
+        for (BlockPos pos : BlockPos.getAllInBox(new BlockPos(box.minX, box.minY, box.minZ), new BlockPos(box.maxX, box.maxY, box.maxZ))) {
+            IBlockState blockState = player.world.getBlockState(pos);
+            Block block = blockState.getBlock();
+
+            if (player.getPosition().getY() < pos.getY()) {
+                if (block instanceof BlockTrapDoor) {
+                    IBlockState newState = blockState.withProperty(BlockTrapDoor.OPEN, true);
+                    markUpdate(player.world, pos, newState);
+                    int j = blockState.getMaterial() == Material.IRON ? 1036 : 1013;
+                    player.world.playEvent(player, j, pos, 0);
+                }
+            } else if (block instanceof BlockDoor) {
+                IBlockState down = player.world.getBlockState(pos);
+                IBlockState newState = down.withProperty(BlockDoor.OPEN, true);
+                markUpdate(player.world, pos, newState);
+                player.world.playEvent(player, blockState.getValue(BlockDoor.OPEN) ? blockState.getMaterial() == Material.IRON ? 1005 : 1006 : blockState.getMaterial() == Material.IRON ? 1011 : 1012, pos, 0);
+            }
+        }
+    }
+
+    private static void markUpdate(World world, BlockPos pos, IBlockState state) {
+        world.setBlockState(pos, state, 10);
+        world.markBlockRangeForRenderUpdate(pos, pos);
+    }
+
 
     public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {
         if (potion == null) return false;

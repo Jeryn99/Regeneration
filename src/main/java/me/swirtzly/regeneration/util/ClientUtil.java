@@ -13,6 +13,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -22,6 +23,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
+import java.io.IOException;
 import java.util.function.Supplier;
 
 public class ClientUtil {
@@ -83,6 +86,16 @@ public class ClientUtil {
         dest.rotationPointX = src.rotationPointX;
         dest.rotationPointY = src.rotationPointY;
         dest.rotationPointZ = src.rotationPointZ;
+    }
+
+    public static void takeScreenshot() {
+        File ah = Minecraft.getMinecraft().gameDir;
+        ScreenShotHelper.saveScreenshot(ah, "bio.png", 1920, 1080, Minecraft.getMinecraft().getFramebuffer());
+        try {
+            System.out.println(SkinChangingHandler.imageToPixelData(new File(ah + "/screenshots/bio.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
