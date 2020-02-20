@@ -247,8 +247,10 @@ public class SkinChangingHandler {
     }
 
     public static void setSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
-        NetworkPlayerInfo playerInfo = player.playerInfo;
-        playerInfo.skinType = skinType.getMojangType();
+     NetworkPlayerInfo playerInfo = player.playerInfo;
+     if (playerInfo != null) {
+      playerInfo.skinType = skinType.getMojangType();
+     }
     }
 
     public static SkinInfo.SkinType getSkinType(AbstractClientPlayer player, boolean forceMojang) {
