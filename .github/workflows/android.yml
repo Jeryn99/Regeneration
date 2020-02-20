@@ -1,4 +1,4 @@
-name: Android CI
+name: Regeneration - 1.12 - Build 
 
 on: [push]
 
