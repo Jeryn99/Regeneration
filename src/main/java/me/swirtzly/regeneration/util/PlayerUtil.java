@@ -11,12 +11,16 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -141,6 +145,36 @@ public class PlayerUtil {
         yaw += 90f;
         me.rotationPitch = (float) pitch;
         me.rotationYaw = (float) yaw;
+    }
+
+    public static boolean isInHand(EnumHand hand, EntityLivingBase holder, Item item) {
+        ItemStack heldItem = holder.getHeldItem(hand);
+        return heldItem.getItem() == item;
+    }
+
+    public static boolean isInMainHand(EntityLivingBase holder, Item item) {
+        return isInHand(EnumHand.MAIN_HAND, holder, item);
+    }
+
+    /**
+     * Checks if player has item in offhand
+     */
+    public static boolean isInOffHand(EntityLivingBase holder, Item item) {
+        return isInHand(EnumHand.OFF_HAND, holder, item);
+    }
+
+    /**
+     * Checks if player has item in either hand
+     */
+    public static boolean isInEitherHand(EntityLivingBase holder, Item item) {
+        return isInMainHand(holder, item) || isInOffHand(holder, item);
+    }
+
+    // MAIN_HAND xor OFF_HAND
+    public static boolean isInOneHand(EntityLivingBase holder, Item item) {
+        boolean mainHand = (isInMainHand(holder, item) && !isInOffHand(holder, item));
+        boolean offHand = (isInOffHand(holder, item) && !isInMainHand(holder, item));
+        return mainHand || offHand;
     }
 
     public enum RegenState {
