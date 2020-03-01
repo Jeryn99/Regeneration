@@ -12,8 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by Swirtzly
- * on 12/08/2019 @ 15:40
+ * Created by Swirtzly on 12/08/2019 @ 15:40
  */
 public class ButtonHoverText extends GuiButtonExt {
 
@@ -42,8 +41,7 @@ public class ButtonHoverText extends GuiButtonExt {
     }
 
     private void drawHoveringText(List list, int x, int y, FontRenderer font) {
-        if (list.isEmpty())
-            return;
+        if (list.isEmpty()) return;
 
         GlStateManager.disableRescaleNormal();
         RenderHelper.disableStandardItemLighting();

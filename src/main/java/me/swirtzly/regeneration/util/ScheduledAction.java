@@ -18,8 +18,7 @@ public class ScheduledAction {
      * @return If the callback was executed
      */
     public boolean tick() {
-        if (scheduledTick == -1)
-            return false;
+        if (scheduledTick == -1) return false;
 
         if (currentTick == scheduledTick) {
             callback.run();

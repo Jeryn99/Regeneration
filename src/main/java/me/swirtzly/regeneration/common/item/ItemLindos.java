@@ -114,7 +114,7 @@ public class ItemLindos extends ItemOverrideBase {
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
         if (!worldIn.isRemote) {
 
-            //If the player is in POST or Regenerating, stop them from drinking it
+            // If the player is in POST or Regenerating, stop them from drinking it
             if (getAmount(stack) > 100 && hasWater(stack)) {
                 if (cap.getState() == PlayerUtil.RegenState.POST || cap.getState() == PlayerUtil.RegenState.REGENERATING || player.isCreative()) {
                     PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
@@ -123,10 +123,9 @@ public class ItemLindos extends ItemOverrideBase {
             }
 
             if (hasWater(stack)) {
-                //If the stack has enough, basically kill them
+                // If the stack has enough, basically kill them
                 if (getAmount(stack) == 100) {
-                    if (cap.getRegenerationsLeft() < 1)
-                        cap.receiveRegenerations(1);
+                    if (cap.getRegenerationsLeft() < 1) cap.receiveRegenerations(1);
                     setAmount(stack, 0);
                     setWater(stack, false);
                     return stack;
@@ -153,7 +152,7 @@ public class ItemLindos extends ItemOverrideBase {
         }
 
         if (!worldIn.isRemote) {
-            //Entiies around
+            // Entities around
             worldIn.getEntitiesWithinAABB(EntityPlayer.class, entityIn.getEntityBoundingBox().expand(10, 10, 10)).forEach(player -> {
                 IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) entityIn);
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
@@ -163,7 +162,7 @@ public class ItemLindos extends ItemOverrideBase {
                 }
             });
 
-            //Player glowing
+            // Player glowing
             if (entityIn instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) entityIn;
                 if (PlayerUtil.isInEitherHand(player, this)) {
@@ -190,7 +189,7 @@ public class ItemLindos extends ItemOverrideBase {
             IBlockState iblockstate = worldIn.getBlockState(blockPos);
             Material material = iblockstate.getMaterial();
 
-            //TODO fix the logic of this
+            // TODO fix the logic of this
             if (iblockstate.getBlock() instanceof BlockHandInJar && player.isSneaking()) {
                 if (worldIn.getTileEntity(blockPos) instanceof TileEntityHandInJar) {
                     TileEntityHandInJar jar = (TileEntityHandInJar) worldIn.getTileEntity(blockPos);
@@ -225,7 +224,6 @@ public class ItemLindos extends ItemOverrideBase {
         return 32;
     }
 
-
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
@@ -237,7 +235,6 @@ public class ItemLindos extends ItemOverrideBase {
             return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
         }
     }
-
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
@@ -258,6 +255,5 @@ public class ItemLindos extends ItemOverrideBase {
             }
         }
     }
-
 
 }

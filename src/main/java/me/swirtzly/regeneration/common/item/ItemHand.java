@@ -59,7 +59,6 @@ public class ItemHand extends Item {
         return getStackTag(stack).getString("trait");
     }
 
-
     public static void setOwner(ItemStack stack, UUID owner) {
         getStackTag(stack).setUniqueId("owner", owner);
     }

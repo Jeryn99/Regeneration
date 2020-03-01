@@ -42,8 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class CapabilityRegeneration implements IRegeneration {
 
@@ -69,8 +68,7 @@ public class CapabilityRegeneration implements IRegeneration {
     private EnumHandSide cutOffHand = EnumHandSide.LEFT;
 
     /**
-     * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
-     * This property is synced over to the client to solve this
+     * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client. This property is synced over to the client to solve this
      */
     private boolean handsAreGlowingClient;
 
@@ -95,7 +93,6 @@ public class CapabilityRegeneration implements IRegeneration {
         throw new IllegalStateException("Missing Regeneration capability: " + player + ", please report this to the issue tracker");
     }
 
-
     @Override
     public void tick() {
         if (!didSetup && player.world.isRemote) {
@@ -109,7 +106,6 @@ public class CapabilityRegeneration implements IRegeneration {
                 DnaHandler.getDnaEntry(getDnaType()).onRemoved(this);
                 setDnaType(DnaHandler.DNA_BORING.resourceLocation);
             }
-
 
             if (isSyncingToJar() && ticksAnimating >= 250) {
                 setSyncingFromJar(false);
@@ -142,20 +138,17 @@ public class CapabilityRegeneration implements IRegeneration {
             TypeHandler.getTypeInstance(regenType).onUpdateMidRegen(player, this);
         }
 
-
     }
 
     @Override
     public void synchronise() {
-        if (player.world.isRemote)
-            throw new IllegalStateException("Don't sync client -> server");
+        if (player.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
 
         handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
         NBTTagCompound nbt = serializeNBT();
         nbt.removeTag("stateManager");
         NetworkHandler.INSTANCE.sendToAll(new MessageSynchroniseRegeneration(player, nbt));
     }
-
 
     @Override
     public NBTTagCompound serializeNBT() {
@@ -194,7 +187,7 @@ public class CapabilityRegeneration implements IRegeneration {
     public void deserializeNBT(NBTTagCompound nbt) {
         regenerationsLeft = Math.min(RegenConfig.regenCapacity, nbt.getInteger(nbt.hasKey("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 
-        //TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
+        // TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
         if (nbt.hasKey("skinType")) {
             setSkinType(nbt.getString("skinType"));
         }
@@ -229,7 +222,6 @@ public class CapabilityRegeneration implements IRegeneration {
             handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
         }
 
-
         if (nbt.hasKey("ticks_animating")) {
             ticksAnimating = nbt.getInteger("ticks_animating");
         }
@@ -245,10 +237,9 @@ public class CapabilityRegeneration implements IRegeneration {
         state = nbt.hasKey("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
         setEncodedSkin(nbt.getString("base64_skin"));
 
-        if (nbt.hasKey("stateManager"))
-            if (stateManager != null) {
-                stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
-            }
+        if (nbt.hasKey("stateManager")) if (stateManager != null) {
+            stateManager.deserializeNBT(nbt.getCompoundTag("stateManager"));
+        }
 
         if (nbt.hasKey("jar")) {
             syncingToJar = nbt.getBoolean("jar");
@@ -263,7 +254,6 @@ public class CapabilityRegeneration implements IRegeneration {
         }
     }
 
-
     @Override
     public int getRegenerationsLeft() {
         return regenerationsLeft;
@@ -274,7 +264,6 @@ public class CapabilityRegeneration implements IRegeneration {
     public void setRegenerationsLeft(int amount) {
         regenerationsLeft = amount;
     }
-
 
     @Override
     public EntityPlayer getPlayer() {
@@ -291,7 +280,6 @@ public class CapabilityRegeneration implements IRegeneration {
         this.regenType = type;
     }
 
-
     @Override
     public String getEncodedSkin() {
         return BASE64_SKIN;
@@ -301,7 +289,6 @@ public class CapabilityRegeneration implements IRegeneration {
     public void setEncodedSkin(String string) {
         BASE64_SKIN = string;
     }
-
 
     @Override
     public NBTTagCompound getStyle() {
@@ -337,7 +324,6 @@ public class CapabilityRegeneration implements IRegeneration {
         return new Vec3d(secondaryRed, secondaryGreen, secondaryBlue);
     }
 
-
     @Override
     public void receiveRegenerations(int amount) {
         if (RegenConfig.infiniteRegeneration)
@@ -355,7 +341,6 @@ public class CapabilityRegeneration implements IRegeneration {
             regenerationsLeft -= amount;
         synchronise();
     }
-
 
     @Override
     public SkinInfo.SkinType getSkinType() {
@@ -380,12 +365,10 @@ public class CapabilityRegeneration implements IRegeneration {
         this.preferredModel = SkinChangingHandler.EnumChoices.valueOf(skinType);
     }
 
-
     @Override
     public boolean areHandsGlowing() {
         return handsAreGlowingClient;
     }
-
 
     @Override
     public String getDeathSource() {
@@ -487,14 +470,12 @@ public class CapabilityRegeneration implements IRegeneration {
         return state;
     }
 
-
     @Override
     public void triggerRegeneration() {
         if (player.world.isRemote)
             throw new IllegalStateException("Triggering regeneration via capability instance on the client side");
         stateManager.triggerRegeneration();
     }
-
 
     /**
      * ONLY EXISTS ON THE SERVER SIDE
@@ -521,10 +502,7 @@ public class CapabilityRegeneration implements IRegeneration {
         @SuppressWarnings("deprecation")
         private void scheduleTransitionInTicks(PlayerUtil.RegenState.Transition transition, long inTicks) {
             if (nextTransition != null && nextTransition.getTicksLeft() > 0)
-                throw new IllegalStateException("Overwriting non-completed/cancelled transition: " +
-                        "\n Attempted Transition: " + transition.name() +
-                        "\n Current: " + nextTransition.transition.name() +
-                        "\n Affected Player: " + player.getName());
+                throw new IllegalStateException("Overwriting non-completed/cancelled transition: " + "\n Attempted Transition: " + transition.name() + "\n Current: " + nextTransition.transition.name() + "\n Affected Player: " + player.getName());
 
             if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START || transition == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER)
                 throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
@@ -535,7 +513,6 @@ public class CapabilityRegeneration implements IRegeneration {
         private void scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition transition, long inSeconds) {
             scheduleTransitionInTicks(transition, inSeconds * 20);
         }
-
 
         @SuppressWarnings("deprecation")
         private void scheduleNextHandGlow() {
@@ -638,7 +615,7 @@ public class CapabilityRegeneration implements IRegeneration {
                     RegenTriggers.CHANGE_REFUSAL.trigger((EntityPlayerMP) player);
                     PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.regen_delayed"), true);
                 }
-                e.setCanceled(true); //It got annoying in creative to break something
+                e.setCanceled(true); // It got annoying in creative to break something
             }
         }
 
@@ -648,8 +625,7 @@ public class CapabilityRegeneration implements IRegeneration {
             if (state == PlayerUtil.RegenState.ALIVE)
                 throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
 
-            if (state.isGraceful())
-                handGlowTimer.tick();
+            if (state.isGraceful()) handGlowTimer.tick();
 
             ActingForwarder.onRegenTick(CapabilityRegeneration.this);
             nextTransition.tick();
@@ -667,8 +643,7 @@ public class CapabilityRegeneration implements IRegeneration {
             }
 
             nextTransition.cancel(); // ... cancel any state shift we had planned
-            if (state.isGraceful())
-                handGlowTimer.cancel();
+            if (state.isGraceful()) handGlowTimer.cancel();
             scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, TypeHandler.getTypeInstance(regenType).getAnimationLength());
 
             ActingForwarder.onRegenTrigger(CapabilityRegeneration.this);
@@ -730,14 +705,16 @@ public class CapabilityRegeneration implements IRegeneration {
         @Deprecated
         /** @deprecated Debug purposes */
         public void fastForward() {
-            while (!nextTransition.tick()) ;
+            while (!nextTransition.tick())
+                ;
         }
 
         @Override
         @Deprecated
         /** @deprecated Debug purposes */
         public void fastForwardHandGlow() {
-            while (!handGlowTimer.tick()) ;
+            while (!handGlowTimer.tick())
+                ;
         }
 
         @Override

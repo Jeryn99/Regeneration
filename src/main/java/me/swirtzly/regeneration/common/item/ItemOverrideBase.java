@@ -39,5 +39,4 @@ public class ItemOverrideBase extends Item implements IEntityOverride {
         return true;
     }
 
-
 }

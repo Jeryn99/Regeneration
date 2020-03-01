@@ -8,11 +8,9 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * Created by Suffril
- * on 25/01/2019.
+ * Created by Suffril on 25/01/2019.
  */
 public class DnaHydrophobic extends DnaHandler.IDna {
-
 
     public DnaHydrophobic() {
         super("hydrophobic");

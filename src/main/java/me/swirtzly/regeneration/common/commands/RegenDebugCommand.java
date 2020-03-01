@@ -23,8 +23,7 @@ public class RegenDebugCommand extends CommandBase {
     @SuppressWarnings("deprecation")
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args.length == 0 || args.length > 2)
-            throw new WrongUsageException("regeneration.commands.debug.usage");
+        if (args.length == 0 || args.length > 2) throw new WrongUsageException("regeneration.commands.debug.usage");
 
         EntityPlayer player = getCommandSenderAsPlayer(sender);
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
@@ -33,7 +32,8 @@ public class RegenDebugCommand extends CommandBase {
             case "glow":
                 if (cap.getState().isGraceful()) {
                     cap.getStateManager().fastForwardHandGlow();
-                } else throw new CommandException("regeneration.messages.cant_glow");
+                } else
+                    throw new CommandException("regeneration.messages.cant_glow");
                 break;
 
             case "fast-forward":
@@ -89,6 +89,5 @@ public class RegenDebugCommand extends CommandBase {
     public int getRequiredPermissionLevel() {
         return 2;
     }
-
 
 }

@@ -19,8 +19,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class ItemFobWatch extends ItemOverrideBase {
 
@@ -31,14 +30,14 @@ public class ItemFobWatch extends ItemOverrideBase {
 
         addPropertyOverride(new ResourceLocation("open"), (stack, worldIn, entityIn) -> {
             if (getStackTag(stack) == null || !getStackTag(stack).hasKey("open")) {
-                return 0F; //Closed
+                return 0F; // Closed
             }
             return getOpen(stack);
         });
 
         addPropertyOverride(new ResourceLocation("engrave"), (stack, worldIn, entityIn) -> {
             if (getStackTag(stack) == null || !getStackTag(stack).hasKey("engrave")) {
-                return 0F; //Default
+                return 0F; // Default
             }
             return getEngrave(stack);
         });
@@ -125,7 +124,6 @@ public class ItemFobWatch extends ItemOverrideBase {
             if (used < 0)
                 RegenerationMod.LOG.warn(player.getName() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.regenCapacity + ", damage:" + stack.getItemDamage() + ", regens:" + cap.getRegenerationsLeft());
 
-
             if (!cap.getPlayer().isCreative()) {
                 stack.setItemDamage(stack.getItemDamage() + used);
             }
@@ -139,8 +137,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         } else { // transferring player->watch
-            if (!cap.canRegenerate())
-                return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
+            if (!cap.canRegenerate()) return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
 
             if (cap.getState() != PlayerUtil.RegenState.ALIVE) {
                 return msgUsageFailed(player, "regeneration.messages.not_alive", stack);

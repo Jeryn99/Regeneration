@@ -15,8 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
 

@@ -39,7 +39,8 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance> 
         RL = parRL;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.minecraft.advancements.ICriterionTrigger#getId()
      */
     @Override
@@ -47,7 +48,8 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance> 
         return RL;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
@@ -62,7 +64,8 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance> 
         myCustomTrigger$listeners.add(listener);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
@@ -78,7 +81,8 @@ public class CustomTrigger implements ICriterionTrigger<CustomTrigger.Instance> 
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.minecraft.advancements.ICriterionTrigger#removeAllListeners(net.minecraft.advancements.PlayerAdvancements)
      */
     @Override

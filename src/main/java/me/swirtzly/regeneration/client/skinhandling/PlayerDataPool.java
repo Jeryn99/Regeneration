@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Created by Swirtzly
- * on 19/11/2019 @ 22:51
+ * Created by Swirtzly on 19/11/2019 @ 22:51
  */
 @Mod.EventBusSubscriber(value = Side.CLIENT)
 public class PlayerDataPool {
@@ -54,7 +53,6 @@ public class PlayerDataPool {
         }
         return new SkinInfo().setUpdateRequired(true);
     }
-
 
     public static void wipeAllData() {
         if (!PLAYER_POOL.isEmpty()) {

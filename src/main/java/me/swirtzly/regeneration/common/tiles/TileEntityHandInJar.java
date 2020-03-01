@@ -62,7 +62,6 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
         return handInv.get(3).getItem() == RegenObjects.Items.HAND;
     }
 
-
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setFloat("lindos", lindosAmont);
@@ -71,14 +70,12 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
         return super.writeToNBT(compound);
     }
 
-
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         lindosAmont = compound.getInteger("lindos");
         ItemStackHelper.loadAllItems(compound, this.handInv);
         super.readFromNBT(compound);
     }
-
 
     @Override
     public int getSizeInventory() {
@@ -106,7 +103,6 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
             return itemstack1;
         }
     }
-
 
     @Override
     public ItemStack removeStackFromSlot(int index) {

@@ -32,7 +32,6 @@ public class GuiPreferences extends GuiContainer {
     private static TypeHandler.RegenType SELECTED_TYPE = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getType();
     private static SkinChangingHandler.EnumChoices CHOICES = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
 
-
     public GuiPreferences() {
         super(new BlankContainer());
         xSize = 256;
@@ -79,7 +78,7 @@ public class GuiPreferences extends GuiContainer {
         int cy = (height - ySize) / 2;
 
         GlStateManager.pushMatrix();
-        //RenderUtil.drawRect(width / 2, height / 2 - 50, width / 2 - 80, height / 2 + 35, 0.0F, 0.0F, 0.0F, 1);
+        // RenderUtil.drawRect(width / 2, height / 2 - 50, width / 2 - 80, height / 2 + 35, 0.0F, 0.0F, 0.0F, 1);
         GuiInventory.drawEntityOnScreen(width / 2 - 75, height / 2 + 45, 55, (float) (guiLeft + 51) - mouseX, (float) (guiTop + 75 - 50) - mouseY, Minecraft.getMinecraft().player);
         GlStateManager.popMatrix();
 
@@ -146,7 +145,6 @@ public class GuiPreferences extends GuiContainer {
                 break;
         }
     }
-
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {

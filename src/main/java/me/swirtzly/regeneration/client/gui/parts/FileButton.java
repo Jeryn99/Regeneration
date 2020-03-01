@@ -5,8 +5,7 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import java.io.File;
 
 /**
- * Created by Swirtzly
- * on 11/01/2020 @ 11:04
+ * Created by Swirtzly on 11/01/2020 @ 11:04
  */
 public class FileButton extends GuiButtonExt {
 

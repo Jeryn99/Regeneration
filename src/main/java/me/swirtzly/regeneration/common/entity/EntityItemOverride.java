@@ -77,8 +77,7 @@ public class EntityItemOverride extends Entity {
         NBTTagCompound nbttagcompound = compound.getCompoundTag("Item");
         this.setItem(new ItemStack(nbttagcompound));
 
-        if (this.getItem().isEmpty())
-            this.setDead();
+        if (this.getItem().isEmpty()) this.setDead();
 
         this.setHeight(compound.getFloat("Height"));
         this.setWidth(compound.getFloat("Width"));
@@ -89,8 +88,7 @@ public class EntityItemOverride extends Entity {
      */
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
-        if (!this.getItem().isEmpty())
-            compound.setTag("Item", this.getItem().writeToNBT(new NBTTagCompound()));
+        if (!this.getItem().isEmpty()) compound.setTag("Item", this.getItem().writeToNBT(new NBTTagCompound()));
 
         compound.setFloat("Height", getHeight());
         compound.setFloat("Width", getWidth());
@@ -142,8 +140,7 @@ public class EntityItemOverride extends Entity {
     }
 
     /**
-     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-     * prevent them from trampling crops
+     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to prevent them from trampling crops
      */
     @Override
     protected boolean canTriggerWalking() {

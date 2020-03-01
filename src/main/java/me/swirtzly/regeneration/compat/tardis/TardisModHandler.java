@@ -92,11 +92,9 @@ public class TardisModHandler implements IActingHandler {
     }
 
     private void damageTardisInRange(EntityPlayer player) {
-        if (!RegenConfig.modIntegrations.tardisMod.damageTardis)
-            return;
+        if (!RegenConfig.modIntegrations.tardisMod.damageTardis) return;
         for (TileEntity te : player.world.loadedTileEntityList) {
-            if (!(te instanceof TileEntityTardis) || player.getDistanceSq(te.getPos()) > 10)
-                continue;
+            if (!(te instanceof TileEntityTardis) || player.getDistanceSq(te.getPos()) > 10) continue;
 
             TileEntityTardis tileEntityTardis = (TileEntityTardis) te;
             Random rand = tileEntityTardis.getWorld().rand;

@@ -11,8 +11,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
- * Created by Sub
- * on 20/09/2018.
+ * Created by Sub on 20/09/2018.
  */
 public class MessageUpdateSkin implements IMessage {
 

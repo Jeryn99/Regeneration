@@ -32,7 +32,7 @@ public class ClientUtil {
     public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
     public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
 
-    public static String keyBind = "???"; //WAFFLE there was a weird thing with this somewhere that I still need to fix
+    public static String keyBind = "???"; // WAFFLE there was a weird thing with this somewhere that I still need to fix
 
     public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle) {
         Minecraft.getMinecraft().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
@@ -43,8 +43,7 @@ public class ClientUtil {
     }
 
     /**
-     * This is a method that sends a packet to the server telling the server to reset the players Player model and skin
-     * back to the ones supplied by Mojang
+     * This is a method that sends a packet to the server telling the server to reset the players Player model and skin back to the ones supplied by Mojang
      */
     public static void sendSkinResetPacket() {
         NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin("none", SkinChangingHandler.getSkinType(Minecraft.getMinecraft().player, true).getMojangType().equals("slim")));
@@ -97,7 +96,6 @@ public class ClientUtil {
             e.printStackTrace();
         }
     }
-
 
     public static class ImageFixer {
 

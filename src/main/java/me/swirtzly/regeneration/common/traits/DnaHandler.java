@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Created by Suffril
- * on 24/01/2019.
+ * Created by Suffril on 24/01/2019.
  */
 @Mod.EventBusSubscriber
 public class DnaHandler {
@@ -123,7 +122,6 @@ public class DnaHandler {
             resourceLocation = new ResourceLocation(RegenerationMod.MODID, name);
         }
 
-
         public abstract void onUpdate(IRegeneration cap);
 
         public abstract void onAdded(IRegeneration cap);
@@ -142,6 +140,5 @@ public class DnaHandler {
             return resourceLocation;
         }
     }
-
 
 }

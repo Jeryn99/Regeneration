@@ -16,7 +16,6 @@ class ActingClientHandler implements IActingHandler {
 
     public static final IActingHandler INSTANCE = new ActingClientHandler();
 
-
     private ActingClientHandler() {
     }
 
@@ -74,6 +73,5 @@ class ActingClientHandler implements IActingHandler {
         ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE_CRIT, 1.0F);
         RegenClientHooks.handleShader();
     }
-
 
 }

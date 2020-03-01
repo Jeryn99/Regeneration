@@ -54,7 +54,6 @@ public class CameraHandler {
 
         event.setRoll(cameraRoll);
 
-
         if (allowFreemode) {
             pendingExit = true;
             if (initFreeCam) {
@@ -123,7 +122,6 @@ public class CameraHandler {
             gameSettings.fovSetting = 120;
         }
     }
-
 
     public static void resetEverything(GameSettings gameSettings) {
         initFreeCam = true;

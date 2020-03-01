@@ -55,7 +55,6 @@ public class SkinChangingHandler {
     public static final Logger SKIN_LOG = LogManager.getLogger("Regeneration Skin Handler");
     private static final Random RAND = new Random();
 
-
     /**
      * Encode image to string
      *
@@ -66,7 +65,6 @@ public class SkinChangingHandler {
         byte[] imageBytes = IOUtils.toByteArray(new FileInputStream(imageFile));
         return Base64.getEncoder().encodeToString(imageBytes);
     }
-
 
     /**
      * Decode string to image
@@ -91,7 +89,7 @@ public class SkinChangingHandler {
     }
 
     public static void sendSkinUpdate(Random random, EntityPlayer player) {
-        if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID()) //Not our Player
+        if (Minecraft.getMinecraft().player.getUniqueID() != player.getUniqueID()) // Not our Player
             return;
 
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
@@ -139,17 +137,16 @@ public class SkinChangingHandler {
         return (File) skins.toArray()[rand.nextInt(skins.size())];
     }
 
-
     public static SkinInfo update(AbstractClientPlayer player) {
         IRegeneration data = CapabilityRegeneration.getForPlayer(player);
         SkinInfo skinData = PlayerDataPool.get(player);
         boolean shouldBeMojang = data.getEncodedSkin().toLowerCase().equals("none") || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("");
         if (shouldBeMojang) {
-            //Mojang stuff here
+            // Mojang stuff here
             setPlayerSkin(player, null);
             skinData.setTextureLocation(getMojangSkin(player));
         } else {
-            //Generate custom skin
+            // Generate custom skin
             BufferedImage bufferedImage = null;
             try {
                 bufferedImage = toImage(data.getEncodedSkin());
@@ -190,7 +187,6 @@ public class SkinChangingHandler {
         }
     }
 
-
     /**
      * This is used when the clients skin is reset
      *
@@ -207,8 +203,7 @@ public class SkinChangingHandler {
             MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
             File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, Minecraft.getMinecraft().getSkinManager(), 2), profile.getHash().substring(0, 2));
             File file = new File(dir, profile.getHash());
-            if (file.exists())
-                file.delete();
+            if (file.exists()) file.delete();
             ResourceLocation location = new ResourceLocation("skins/" + profile.getHash());
             loadTexture(file, location, DefaultPlayerSkin.getDefaultSkinLegacy(), profile.getUrl(), player);
             setPlayerSkin(player, location);
@@ -238,12 +233,10 @@ public class SkinChangingHandler {
             return;
         }
         NetworkPlayerInfo playerInfo = player.playerInfo;
-        if (playerInfo == null)
-            return;
+        if (playerInfo == null) return;
         Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
         playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
-        if (texture == null)
-            playerInfo.playerTexturesLoaded = false;
+        if (texture == null) playerInfo.playerTexturesLoaded = false;
     }
 
     public static void setSkinType(AbstractClientPlayer player, SkinInfo.SkinType skinType) {
@@ -259,7 +252,6 @@ public class SkinChangingHandler {
         MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
 
         IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-
 
         if (data.getEncodedSkin().toLowerCase().equals("none") || forceMojang) {
             if (profile == null) {
@@ -293,7 +285,6 @@ public class SkinChangingHandler {
             PlayerDataPool.wipeAllData();
         }
     }
-
 
     /**
      * Subscription to RenderPlayerEvent.Pre to set players model and texture from hashmap

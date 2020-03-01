@@ -24,14 +24,12 @@ public class EntityLindos extends EntityFlying {
 
     private static final DataParameter<Integer> AMOUNT = EntityDataManager.createKey(EntityLindos.class, DataSerializers.VARINT);
 
-
     public EntityLindos(World worldIn) {
         super(worldIn);
         setSize(0.5F, 0.5F);
         this.moveHelper = new EntityFlyHelper(this);
         noClip = true;
     }
-
 
     @Override
     protected void entityInit() {

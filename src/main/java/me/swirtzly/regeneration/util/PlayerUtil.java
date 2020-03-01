@@ -32,8 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Sub
- * on 20/09/2018.
+ * Created by Sub on 20/09/2018.
  */
 public class PlayerUtil {
 
@@ -74,8 +73,7 @@ public class PlayerUtil {
         if (entity instanceof EntityLiving) {
             EntityLiving ent = (EntityLiving) entity;
             for (EntityAITasks.EntityAITaskEntry task : ent.tasks.taskEntries) {
-                if (task.action instanceof EntityAIAttackMelee || task.action instanceof EntityAIAttackRanged || task.action instanceof EntityAIAttackRangedBow
-                        || task.action instanceof EntityAINearestAttackableTarget || task.action instanceof EntityAIZombieAttack || task.action instanceof EntityAIOwnerHurtByTarget)
+                if (task.action instanceof EntityAIAttackMelee || task.action instanceof EntityAIAttackRanged || task.action instanceof EntityAIAttackRangedBow || task.action instanceof EntityAINearestAttackableTarget || task.action instanceof EntityAIZombieAttack || task.action instanceof EntityAIOwnerHurtByTarget)
                     return true;
             }
         }
@@ -114,7 +112,6 @@ public class PlayerUtil {
         world.markBlockRangeForRenderUpdate(pos, pos);
     }
 
-
     public static boolean applyPotionIfAbsent(EntityPlayer player, Potion potion, int length, int amplifier, boolean ambient, boolean showParticles) {
         if (potion == null) return false;
         if (player.getActivePotionEffect(potion) == null) {
@@ -138,7 +135,7 @@ public class PlayerUtil {
         double pitch = Math.asin(diry);
         double yaw = Math.atan2(dirz, dirx);
 
-        //to degree
+        // to degree
         pitch = pitch * 180.0 / Math.PI;
         yaw = yaw * 180.0 / Math.PI;
 
@@ -179,20 +176,14 @@ public class PlayerUtil {
 
     public enum RegenState {
 
-        ALIVE,
-        GRACE, GRACE_CRIT, POST,
-        REGENERATING;
+        ALIVE, GRACE, GRACE_CRIT, POST, REGENERATING;
 
         public boolean isGraceful() {
             return this == GRACE || this == GRACE_CRIT;
         }
 
         public enum Transition {
-            HAND_GLOW_START(Color.YELLOW.darker()), HAND_GLOW_TRIGGER(Color.ORANGE),
-            ENTER_CRITICAL(Color.BLUE),
-            CRITICAL_DEATH(Color.RED),
-            FINISH_REGENERATION(Color.GREEN.darker()),
-            END_POST(Color.PINK.darker());
+            HAND_GLOW_START(Color.YELLOW.darker()), HAND_GLOW_TRIGGER(Color.ORANGE), ENTER_CRITICAL(Color.BLUE), CRITICAL_DEATH(Color.RED), FINISH_REGENERATION(Color.GREEN.darker()), END_POST(Color.PINK.darker());
 
             public final Color color;
 

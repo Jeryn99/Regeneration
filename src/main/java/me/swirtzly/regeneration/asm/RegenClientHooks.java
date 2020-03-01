@@ -31,21 +31,19 @@ public class RegenClientHooks {
     public static float savedGreen, savedRed, savedBlue;
 
     public static void handleRotations(ModelBiped model, float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-        if (entity == null)
-            return;
+        if (entity == null) return;
         ModelRotationEvent rotationEvent = new ModelRotationEvent(entity, model, f, f1, f2, f3, f4, f5);
         MinecraftForge.EVENT_BUS.post(rotationEvent);
     }
 
     public static void preRenderCallBack(RenderLivingBase renderer, EntityLivingBase entity) {
-        if (entity == null)
-            return;
+        if (entity == null) return;
         RenderCallbackEvent ev = new RenderCallbackEvent(entity, renderer);
         MinecraftForge.EVENT_BUS.post(ev);
     }
 
-    //Needs optimised greatly, as code had to be lifted and repeated, so when loadEntityShader is called
-    //It does the original stuff first, then this method, which winds up performing it again
+    // Needs optimised greatly, as code had to be lifted and repeated, so when loadEntityShader is called
+    // It does the original stuff first, then this method, which winds up performing it again
     public static void handleShader() {
         if (Minecraft.getMinecraft().player == null || !RegenConfig.regenerationShaders) return;
 
@@ -78,8 +76,8 @@ public class RegenClientHooks {
     }
 
     public static void resetShader(EntityRenderer entityRender) {
-        //This part is the unoptimised part, it's needed to reset the players shader
-        //It's just my bad ASM, but I'll look into it at a later point
+        // This part is the unoptimised part, it's needed to reset the players shader
+        // It's just my bad ASM, but I'll look into it at a later point
         Entity entityIn = Minecraft.getMinecraft().getRenderViewEntity();
         entityRender.stopUseShader();
 
@@ -89,7 +87,8 @@ public class RegenClientHooks {
             entityRender.loadShader(new ResourceLocation("shaders/post/spider.json"));
         } else if (entityIn instanceof EntityEnderman) {
             entityRender.loadShader(new ResourceLocation("shaders/post/invert.json"));
-        } else net.minecraftforge.client.ForgeHooksClient.loadEntityShader(entityIn, entityRender);
+        } else
+            net.minecraftforge.client.ForgeHooksClient.loadEntityShader(entityIn, entityRender);
     }
 
     public static float modRed(float red) {
@@ -181,7 +180,6 @@ public class RegenClientHooks {
         }
         return false;
     }
-
 
     public static float overrideGamma(float original) {
         if (enabled()) {

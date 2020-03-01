@@ -8,8 +8,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import javax.annotation.Nullable;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class RegenerationStorage implements Capability.IStorage<IRegeneration> {
 

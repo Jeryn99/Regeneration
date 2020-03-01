@@ -100,7 +100,6 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
         Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 
-
         // State manager changes
         GlStateManager.pushAttrib();
         GlStateManager.disableTexture2D();
@@ -156,8 +155,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
             headRot = 45;
         }
 
-
-        //ARMS
+        // ARMS
         playerModel.bipedLeftArm.rotateAngleY = 0;
         playerModel.bipedRightArm.rotateAngleY = 0;
 
@@ -167,13 +165,12 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
         playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
 
-        //BODY
+        // BODY
         playerModel.bipedBody.rotateAngleX = 0;
         playerModel.bipedBody.rotateAngleY = 0;
         playerModel.bipedBody.rotateAngleZ = 0;
 
-
-        //LEGS
+        // LEGS
         playerModel.bipedLeftLeg.rotateAngleY = 0;
         playerModel.bipedRightLeg.rotateAngleY = 0;
 
@@ -190,7 +187,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         return copyAndReturn(playerModel, true);
     }
 
-    @Deprecated //This duplicated code needs sorted asap
+    @Deprecated // This duplicated code needs sorted asap
     @Override
     public void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render) {
         renderConeAtArms(player);
@@ -234,7 +231,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
             player.bipedHead.postRender(0.0625F);
         }
 
-        //GlStateManager.translate(0f, 0.1f, 0f);
+        // GlStateManager.translate(0f, 0.1f, 0f);
         GlStateManager.rotate(180, 1.0f, 0.0f, 0.0f);
 
         renderCone(entityPlayer, primaryScale / 1.6F, primaryScale * .75F, primaryColor);

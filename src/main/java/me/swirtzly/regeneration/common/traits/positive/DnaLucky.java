@@ -9,8 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.UUID;
 
 /**
- * Created by Suffril
- * on 24/01/2019.
+ * Created by Suffril on 24/01/2019.
  */
 public class DnaLucky extends DnaHandler.IDna {
 

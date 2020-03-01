@@ -9,6 +9,9 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationStorage;
 import me.swirtzly.regeneration.common.commands.RegenDebugCommand;
+import me.swirtzly.regeneration.common.item.dodododo.IArch;
+import me.swirtzly.regeneration.common.item.dodododo.capability.ArchStorage;
+import me.swirtzly.regeneration.common.item.dodododo.capability.CapabilityArch;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
@@ -65,6 +68,7 @@ public class RegenerationMod {
     public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit();
         CapabilityManager.INSTANCE.register(IRegeneration.class, new RegenerationStorage(), CapabilityRegeneration::new);
+        CapabilityManager.INSTANCE.register(IArch.class, new ArchStorage(), CapabilityArch::new);
 
         ActingForwarder.init();
         RegenTriggers.init();
@@ -106,6 +110,5 @@ public class RegenerationMod {
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new RegenDebugCommand());
     }
-
 
 }

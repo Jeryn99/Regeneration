@@ -9,19 +9,16 @@ import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
- * Created by Swirtzly
- * on 21/11/2019 @ 10:21
+ * Created by Swirtzly on 21/11/2019 @ 10:21
  */
 @Mod.EventBusSubscriber
 public class RegenPermission {
-
 
     public static String CAN_REGENERATE = createPerm("can.regenerate");
 
     public static void registerPermissions() {
         PermissionAPI.registerNode(CAN_REGENERATE, DefaultPermissionLevel.ALL, "This permission determines whether someone can Regenerate");
     }
-
 
     public static String createPerm(String perm) {
         String permission = "regeneration." + perm;
@@ -34,7 +31,7 @@ public class RegenPermission {
         return PermissionAPI.hasPermission(player, RegenPermission.CAN_REGENERATE);
     }
 
-    //Stop the Player Regeneration if they are not allowed to!
+    // Stop the Player Regeneration if they are not allowed to!
     @SubscribeEvent
     public static void onRegenerate(PlayerCanRegenEvent event) {
         if (!isAllowedToRegeneration(event.getEntityPlayer())) {
@@ -43,4 +40,3 @@ public class RegenPermission {
     }
 
 }
-

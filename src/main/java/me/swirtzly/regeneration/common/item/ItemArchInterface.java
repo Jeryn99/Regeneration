@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.item;
 
+import me.swirtzly.regeneration.common.item.dodododo.ArchHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,8 +15,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 /**
- * Created by Swirtzly
- * on 29/01/2020 @ 20:41
+ * Created by Swirtzly on 29/01/2020 @ 20:41
  */
 public class ItemArchInterface extends Item {
 
@@ -35,6 +35,7 @@ public class ItemArchInterface extends Item {
 
         if (itemstack1.isEmpty()) {
             playerIn.setItemStackToSlot(entityequipmentslot, itemstack.copy());
+            ArchHelper.onArchUse(playerIn, playerIn.getHeldItemOffhand());
             itemstack.setCount(0);
             return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
         } else {

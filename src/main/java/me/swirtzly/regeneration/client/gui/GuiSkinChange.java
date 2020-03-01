@@ -48,6 +48,11 @@ public class GuiSkinChange extends GuiContainer {
     private GuiTextField textFieldValue;
     private String skinName = skins.get(0).getName();
     private String skinData = "";
+    private GuiButtonExt btnBack, btnOpenFolder, btnSave, btnResetSkin;
+    private int scrollbarPosY;
+    private int scrollbarIndex;
+    private int scrollbarChange;
+    private boolean isScrollPressed;
 
     public GuiSkinChange() {
         super(new BlankContainer());
@@ -57,14 +62,13 @@ public class GuiSkinChange extends GuiContainer {
         skins = FileUtil.listAllSkins(choices);
         if (skins.size() > 0) {
             PLAYER_TEXTURE = SkinChangingHandler.createGuiTexture(skins.get(0));
-        } else try {
-            throw new Exception("NO SKINS COULD BE FOUND.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } else
+            try {
+                throw new Exception("NO SKINS COULD BE FOUND.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
-
-    private GuiButtonExt btnBack, btnOpenFolder, btnSave, btnResetSkin;
 
     public static void updateModels(File file) {
         try {
@@ -73,8 +77,6 @@ public class GuiSkinChange extends GuiContainer {
             e.printStackTrace();
         }
     }
-
-    private int scrollbarPosY;
 
     @Override
     protected void keyTyped(char eventChar, int eventKey) throws IOException {
@@ -102,7 +104,6 @@ public class GuiSkinChange extends GuiContainer {
         }
     }
 
-
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(background);
@@ -115,14 +116,13 @@ public class GuiSkinChange extends GuiContainer {
         if (isAlex) {
             drawModelToGui(playerModelAlex, width / 2, height / 2 - 45, 1.0f, rotation);
         } else {
-                drawModelToGui(playerModelSteve, width / 2, height / 2 - 45, 1.0f, rotation);
+            drawModelToGui(playerModelSteve, width / 2, height / 2 - 45, 1.0f, rotation);
         }
         GlStateManager.popMatrix();
 
         drawCenteredString(Minecraft.getMinecraft().fontRenderer, new TextComponentTranslation("regeneration.gui.next_incarnation").getUnformattedText(), width / 2, height / 2 - 80, Color.WHITE.getRGB());
         drawCenteredString(Minecraft.getMinecraft().fontRenderer, skinName, width / 2, height / 2 + 15, Color.WHITE.getRGB());
     }
-
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -170,10 +170,6 @@ public class GuiSkinChange extends GuiContainer {
         }
     }
 
-    private int scrollbarIndex;
-    private int scrollbarChange;
-    private boolean isScrollPressed;
-
     @Override
     public void initGui() {
 
@@ -207,7 +203,6 @@ public class GuiSkinChange extends GuiContainer {
 
         skinName = skinName.substring(0, 1).toUpperCase() + skinName.substring(1).replaceAll(".png", "");
 
-
         this.updateButtonsList();
     }
 
@@ -236,10 +231,8 @@ public class GuiSkinChange extends GuiContainer {
     public void updateScrollPositon(int change) {
         if (change != 0 && this.needsScrollbar()) {
             this.scrollbarPosY = change;
-            if (this.scrollbarPosY > 85)
-                this.scrollbarPosY = 85;
-            if (this.scrollbarPosY < 00)
-                this.scrollbarPosY = 00;
+            if (this.scrollbarPosY > 85) this.scrollbarPosY = 85;
+            if (this.scrollbarPosY < 00) this.scrollbarPosY = 00;
             this.updateScrollIndex();
         }
     }
@@ -258,8 +251,7 @@ public class GuiSkinChange extends GuiContainer {
             this.scrollbarIndex--;
             this.scrollbarChange = this.scrollbarPosY;
 
-            if (this.scrollbarIndex < 0)
-                this.scrollbarIndex = 0;
+            if (this.scrollbarIndex < 0) this.scrollbarIndex = 0;
 
             this.updateButtonsList();
         }
@@ -296,8 +288,7 @@ public class GuiSkinChange extends GuiContainer {
         int posX = (this.width - this.xSize) / 2;
         int posY = (this.height - this.ySize) / 2;
 
-        if (button != 0 || !this.needsScrollbar())
-            return;
+        if (button != 0 || !this.needsScrollbar()) return;
 
         if (isMouseOverArea(mouseX, mouseY, posX + 154, posY + 7 + this.scrollbarPosY, 12, 15))
             this.isScrollPressed = true;
@@ -314,8 +305,7 @@ public class GuiSkinChange extends GuiContainer {
         if (Mouse.isButtonDown(0) && this.isScrollPressed) {
             this.updateScrollPositon(mouseY - posY);
 
-            if (!Mouse.isButtonDown(0))
-                this.isScrollPressed = false;
+            if (!Mouse.isButtonDown(0)) this.isScrollPressed = false;
         }
     }
 

@@ -24,10 +24,10 @@ import static me.swirtzly.regeneration.util.Trending.handleDownloads;
 
 public class FileUtil {
 
+    private static String[] extensions = {"png"};
+
     /**
-     * Creates skin folders
-     * Proceeds to download skins to the folders if they are empty
-     * If the download doesn't happen, NPEs will occur later on
+     * Creates skin folders Proceeds to download skins to the folders if they are empty If the download doesn't happen, NPEs will occur later on
      */
     public static void createDefaultFolders() throws IOException {
 
@@ -42,7 +42,6 @@ public class FileUtil {
         if (!SKIN_DIRECTORY_STEVE.exists()) {
             FileUtils.forceMkdir(SKIN_DIRECTORY_STEVE);
         }
-
 
         if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.list()).length == 0 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.list()).length == 0) {
             RegenerationMod.LOG.warn("One of the skin directories is empty, so we're going to fill both.");
@@ -95,7 +94,6 @@ public class FileUtil {
             }
         }, RegenerationMod.NAME + " Download Daemon").start();
     }
-
 
     public static void unzipSkinPack(String url) throws IOException {
         File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
@@ -161,9 +159,6 @@ public class FileUtil {
         return builder.toString();
     }
 
-
-    private static String[] extensions = {"png"};
-
     public static List<File> listAllSkins(EnumChoices choices) {
         List<File> resultList = new ArrayList<>();
         File directory = null;
@@ -190,7 +185,6 @@ public class FileUtil {
 
         return resultList;
     }
-
 
     public static List<File> similarWords(String word, List<File> allWords) {
         List<File> similarWordList = new ArrayList<>();

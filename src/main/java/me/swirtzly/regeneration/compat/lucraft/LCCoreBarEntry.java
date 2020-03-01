@@ -76,5 +76,4 @@ public class LCCoreBarEntry implements IAbilityBarProvider, IAbilityBarEntry {
         return list;
     }
 
-
 }

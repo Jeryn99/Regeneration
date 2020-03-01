@@ -7,8 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by Sub
- * on 20/09/2018.
+ * Created by Sub on 20/09/2018.
  */
 public class InventoryTabRegeneration extends AbstractTab {
 

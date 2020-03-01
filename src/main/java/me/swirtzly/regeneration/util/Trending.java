@@ -19,7 +19,6 @@ import static me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler.S
 import static me.swirtzly.regeneration.util.FileUtil.getJsonFromURL;
 import static me.swirtzly.regeneration.util.FileUtil.unzipSkinPack;
 
-
 public class Trending {
 
     public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
@@ -77,7 +76,6 @@ public class Trending {
         }
         return skins;
     }
-
 
     public static void downloadTrendingSkins() throws IOException {
         if (!RegenConfig.skins.downloadTrendingSkins) return;

@@ -16,7 +16,6 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 
     private static final String REGEN_HOOKS_CLASS = "me/swirtzly/regeneration/asm/RegenClientHooks";
 
-
     public static byte[] transformSoundSource(byte[] data) {
         ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(data);
@@ -68,7 +67,6 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         return writer.toByteArray();
     }
 
-
     public static byte[] patchModelBiped(byte[] bytes) {
         String renderMethod = RegenerationMod.isDevEnv() ? "setRotationAngles" : "func_78087_a";
         String renderDesc = "(FFFFFFLnet/minecraft/entity/Entity;)V";
@@ -77,7 +75,7 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
         ClassReader classReader = new ClassReader(bytes);
         classReader.accept(classNode, 0);
 
-        //POST
+        // POST
         for (int j = 0; j < classNode.methods.size(); j++) {
             MethodNode method = classNode.methods.get(j);
 
@@ -228,6 +226,5 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 
         return data;
     }
-
 
 }

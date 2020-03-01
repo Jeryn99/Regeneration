@@ -53,8 +53,7 @@ public class ImageBufferDownloadAlt extends ImageBufferDownload {
     }
 
     private void drawImage(Graphics graphics, BufferedImage bufferedimage, int x, int y, int x2, int y2, int xx, int yy, int xx2, int yy2, float scale) {
-        graphics.drawImage(bufferedimage, (int) (x * scale), (int) (y * scale), (int) (x2 * scale), (int) (y2 * scale),
-                (int) (xx * scale), (int) (yy * scale), (int) (xx2 * scale), (int) (yy2 * scale), null);
+        graphics.drawImage(bufferedimage, (int) (x * scale), (int) (y * scale), (int) (x2 * scale), (int) (y2 * scale), (int) (xx * scale), (int) (yy * scale), (int) (xx2 * scale), (int) (yy2 * scale), null);
     }
 
     private void setAreaTransparent(int par1, int par2, int par3, int par4) {

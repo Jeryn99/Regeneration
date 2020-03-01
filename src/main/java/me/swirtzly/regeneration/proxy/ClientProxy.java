@@ -27,8 +27,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import java.util.Map;
 
 /**
- * Created by Sub
- * on 17/09/2018.
+ * Created by Sub on 17/09/2018.
  */
 public class ClientProxy extends CommonProxy {
 

@@ -8,8 +8,7 @@ import net.minecraft.util.math.Vec3d;
 import javax.vecmath.Vector3d;
 
 /**
- * Created by Swirtzly
- * on 22/09/2019 @ 21:37
+ * Created by Swirtzly on 22/09/2019 @ 21:37
  */
 public class CreepTowardPlayer extends EntityAIAttackMelee {
     private final EntityWatcher eyes;
@@ -21,21 +20,18 @@ public class CreepTowardPlayer extends EntityAIAttackMelee {
 
     @Override
     public boolean shouldContinueExecuting() {
-        if (isPlayerLookingInMyGeneralDirection())
-            return false;
+        if (isPlayerLookingInMyGeneralDirection()) return false;
         return super.shouldContinueExecuting();
     }
 
     private boolean isPlayerLookingInMyGeneralDirection() {
         BlockPos position = eyes.getPosition().up();
         float blockLight = eyes.world.getLight(position, false);
-        if (blockLight >= 8)
-            return true;
+        if (blockLight >= 8) return true;
 
         Vector3d selfPos = new Vector3d(eyes.posX, eyes.posY, eyes.posZ);
         EntityLivingBase target = eyes.getAttackTarget();
-        if (target == null)
-            return false;
+        if (target == null) return false;
         Vector3d playerPos = new Vector3d(target.posX, target.posY, target.posZ);
         Vec3d lookVec = target.getLookVec();
         Vector3d playerLook = new Vector3d(lookVec.x, lookVec.y, lookVec.z);
@@ -49,8 +45,7 @@ public class CreepTowardPlayer extends EntityAIAttackMelee {
 
     @Override
     public boolean shouldExecute() {
-        if (isPlayerLookingInMyGeneralDirection())
-            return false;
+        if (isPlayerLookingInMyGeneralDirection()) return false;
         return super.shouldExecute();
     }
 }

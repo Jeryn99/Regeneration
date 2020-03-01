@@ -14,19 +14,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class TypeFiery implements IRegenType<TypeFieryRenderer> {
 
-    private SoundEvent[] SOUNDS = new SoundEvent[]{
-            RegenObjects.Sounds.REGENERATION_1,
-            RegenObjects.Sounds.REGENERATION_2,
-            RegenObjects.Sounds.REGENERATION_3,
-            RegenObjects.Sounds.REGENERATION_4,
-            RegenObjects.Sounds.REGENERATION_5,
-            RegenObjects.Sounds.REGENERATION_6,
-    };
+    private SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_1, RegenObjects.Sounds.REGENERATION_2, RegenObjects.Sounds.REGENERATION_3, RegenObjects.Sounds.REGENERATION_4, RegenObjects.Sounds.REGENERATION_5, RegenObjects.Sounds.REGENERATION_6,};
 
     @Override
     public void onUpdateMidRegen(EntityPlayer player, IRegeneration capability) {
@@ -37,8 +29,7 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
             PlayerUtil.setPerspective((EntityPlayerMP) player, true, false);
         }
 
-        if (player.world.isRemote)
-            return;
+        if (player.world.isRemote) return;
 
         if (player.world.getBlockState(player.getPosition()).getBlock() instanceof BlockFire)
             player.world.setBlockToAir(player.getPosition());

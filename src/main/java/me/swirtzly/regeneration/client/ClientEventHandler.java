@@ -52,8 +52,7 @@ import java.util.UUID;
 import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
@@ -82,14 +81,13 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void onClientUpdate(LivingEvent.LivingUpdateEvent e) {
-        if (!(e.getEntity() instanceof EntityPlayer) || Minecraft.getMinecraft().player == null)
-            return;
+        if (!(e.getEntity() instanceof EntityPlayer) || Minecraft.getMinecraft().player == null) return;
 
         EntityPlayer player = (EntityPlayer) e.getEntity();
         UUID clientUUID = Minecraft.getMinecraft().player.getUniqueID();
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
 
-        //Horrible Sound repairs
+        // Horrible Sound repairs
         Minecraft.getMinecraft().addScheduledTask(() -> {
             if (player.ticksExisted == 50) {
                 if (SIDE != null) {
@@ -113,7 +111,6 @@ public class ClientEventHandler {
 
         });
 
-
     }
 
     @SubscribeEvent(receiveCanceled = true)
@@ -131,12 +128,10 @@ public class ClientEventHandler {
         }
     }
 
-
     @SuppressWarnings("incomplete-switch")
     @SubscribeEvent
     public static void onRenderGui(RenderGameOverlayEvent.Post event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
-            return;
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
 
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
@@ -179,8 +174,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public static void onPlaySound(PlaySoundEvent e) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.player == null || mc.world == null)
-            return;
+        if (mc.player == null || mc.world == null) return;
 
         if (e.getName().equals("entity.generic.explode")) {
             ISound sound = PositionedSoundRecord.getRecord(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
@@ -198,7 +192,6 @@ public class ClientEventHandler {
         }
 
     }
-
 
     @SubscribeEvent
     public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
@@ -281,16 +274,13 @@ public class ClientEventHandler {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
 
         float factor = 0.2F;
-        if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
-            return;
+        if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0) return;
 
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
         boolean flag = cap.getType() == TypeHandler.RegenType.LAY_FADE && cap.getState() == REGENERATING;
         e.setCanceled(flag);
 
-        if (!cap.areHandsGlowing())
-            return;
-
+        if (!cap.areHandsGlowing()) return;
 
         GlStateManager.pushMatrix();
 
@@ -312,7 +302,6 @@ public class ClientEventHandler {
 
         GlStateManager.popMatrix();
     }
-
 
     @SubscribeEvent
     public static void onRenderCallBack(RenderCallbackEvent event) {
@@ -351,6 +340,5 @@ public class ClientEventHandler {
 
         }
     }
-
 
 }

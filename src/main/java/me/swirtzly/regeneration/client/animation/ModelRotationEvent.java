@@ -6,9 +6,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 /**
- * Event is fired via RegenClientHooks (me.swirtzly.regeneration.asm.RegenClientHooks)
- * It is fired after setRotationAngles in ModelBiped via ASM
- * Allows the manipulation of the players limbs without breaking compatibility with other mods (So far as I know)
+ * Event is fired via RegenClientHooks (me.swirtzly.regeneration.asm.RegenClientHooks) It is fired after setRotationAngles in ModelBiped via ASM Allows the manipulation of the players limbs without breaking compatibility with other mods (So far as I know)
  */
 @Cancelable
 public class ModelRotationEvent extends EntityEvent {

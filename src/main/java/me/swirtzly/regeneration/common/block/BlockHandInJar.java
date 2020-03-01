@@ -94,11 +94,9 @@ public class BlockHandInJar extends BlockDirectional {
     }
 
     /**
-     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-     * blockstate.
+     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed blockstate.
      *
-     * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever possible. Implementing/overriding is
-     * fine.
+     * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever possible. Implementing/overriding is fine.
      */
     @Override
     public IBlockState withRotation(IBlockState state, Rotation rot) {
@@ -106,8 +104,7 @@ public class BlockHandInJar extends BlockDirectional {
     }
 
     /**
-     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-     * blockstate.
+     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed blockstate.
      *
      * @deprecated call via {@link IBlockState#withMirror(Mirror)} whenever possible. Implementing/overriding is fine.
      */
@@ -150,7 +147,6 @@ public class BlockHandInJar extends BlockDirectional {
     public CreativeTabs getCreativeTab() {
         return CreativeTabs.MISC;
     }
-
 
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {

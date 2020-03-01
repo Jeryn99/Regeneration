@@ -21,8 +21,7 @@ import static me.swirtzly.regeneration.client.rendering.types.TypeFieryRenderer.
 import static me.swirtzly.regeneration.util.RenderUtil.drawGlowingLine;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
 
@@ -66,7 +65,6 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
             renderOverlay(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale, null);
         }
     }
-
 
     @Override
     public boolean shouldCombineTextures() {
