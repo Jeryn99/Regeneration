@@ -42,7 +42,7 @@ public class Trending {
                 try {
                     String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getMinecraft().getSession().getPlayerID() + "?page=" + i;
                     for (String skin : getSkins(url)) {
-                        FileUtil.downloadSkins(new URL(skin), Minecraft.getMinecraft().getSession().getUsername() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
+                        FileUtil.downloadAsPng(new URL(skin), Minecraft.getMinecraft().getSession().getUsername() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -89,7 +89,7 @@ public class Trending {
             RegenerationMod.LOG.warn("Refreshing Trending skins");
             for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
                 String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
-                FileUtil.downloadSkins(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
+                FileUtil.downloadAsPng(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
             }
         }
     }
@@ -102,5 +102,5 @@ public class Trending {
             unzipSkinPack(link);
         }
     }
-
+	
 }

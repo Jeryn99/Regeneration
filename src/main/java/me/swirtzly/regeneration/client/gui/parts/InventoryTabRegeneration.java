@@ -25,5 +25,5 @@ public class InventoryTabRegeneration extends AbstractTab {
     public boolean shouldAddToList() {
         return Minecraft.getMinecraft().player != null && CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft() > 0;
     }
-
+	
 }

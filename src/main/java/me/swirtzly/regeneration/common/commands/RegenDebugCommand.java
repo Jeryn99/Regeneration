@@ -89,5 +89,5 @@ public class RegenDebugCommand extends CommandBase {
     public int getRequiredPermissionLevel() {
         return 2;
     }
-
+	
 }

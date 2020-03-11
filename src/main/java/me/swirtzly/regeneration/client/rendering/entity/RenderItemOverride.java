@@ -84,5 +84,5 @@ public class RenderItemOverride extends Render<EntityItemOverride> {
         Minecraft.getMinecraft().getRenderItem().renderItem(entity.getItem(), ItemCameraTransforms.TransformType.GROUND);
         GlStateManager.popMatrix();
     }
-
+	
 }

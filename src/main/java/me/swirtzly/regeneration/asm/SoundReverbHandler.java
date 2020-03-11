@@ -84,5 +84,5 @@ public class SoundReverbHandler {
         }
         return CapabilityRegeneration.getForPlayer(MC.player).getState().isGraceful();
     }
-
+	
 }

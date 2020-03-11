@@ -313,7 +313,7 @@ public class SkinChangingHandler {
 
         if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
             if (type.getAnimationProgress(cap) > 0.7) {
-                update(player);
+                // update(player);
             }
             type.getRenderer().onRenderRegeneratingPlayerPre(type, e, cap);
         }
@@ -335,5 +335,5 @@ public class SkinChangingHandler {
             return isAlex;
         }
     }
-
+	
 }

@@ -11,7 +11,6 @@ import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.network.MessageChangeType;
 import me.swirtzly.regeneration.network.MessageUpdateModel;
 import me.swirtzly.regeneration.network.NetworkHandler;
-import me.swirtzly.regeneration.util.ClientUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -54,12 +53,6 @@ public class GuiPreferences extends GuiContainer {
 
         GuiButtonExt btnColor = new GuiButtonExt(99, width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TextComponentTranslation("regeneration.gui.color_gui").getUnformattedComponentText());
         GuiButtonExt btnOpenFolder = new GuiButtonExt(100, width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TextComponentTranslation("regeneration.gui.skin_choice").getFormattedText());
-
-        GuiButtonExt forceAlex = new GuiButtonExt(34, cx + 135, cy + 175, btnW + 50, btnH, new TextComponentTranslation("regeneration.gui.force_alex").getFormattedText());
-        GuiButtonExt forceSteve = new GuiButtonExt(35, cx + 15, cy + 175, btnW + 50, btnH, new TextComponentTranslation("regeneration.gui.force_steve").getFormattedText());
-
-        addButton(forceAlex);
-        addButton(forceSteve);
 
         buttonList.add(btnRegenType);
         buttonList.add(btnOpenFolder);
@@ -137,12 +130,6 @@ public class GuiPreferences extends GuiContainer {
                 button.displayString = new TextComponentTranslation("regeneration.gui.skintype", new TextComponentTranslation("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText();
                 NetworkHandler.INSTANCE.sendToServer(new MessageUpdateModel(CHOICES.name()));
                 break;
-            case 34:
-                ClientUtil.sendSkinChange(true);
-                break;
-            case 35:
-                ClientUtil.sendSkinChange(false);
-                break;
         }
     }
 
@@ -151,5 +138,5 @@ public class GuiPreferences extends GuiContainer {
         drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
-
+	
 }

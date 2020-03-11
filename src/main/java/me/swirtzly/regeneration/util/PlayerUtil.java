@@ -97,12 +97,14 @@ public class PlayerUtil {
                     markUpdate(player.world, pos, newState);
                     int j = blockState.getMaterial() == Material.IRON ? 1036 : 1013;
                     player.world.playEvent(player, j, pos, 0);
+                    return;
                 }
             } else if (block instanceof BlockDoor) {
                 IBlockState down = player.world.getBlockState(pos);
                 IBlockState newState = down.withProperty(BlockDoor.OPEN, true);
                 markUpdate(player.world, pos, newState);
                 player.world.playEvent(player, blockState.getValue(BlockDoor.OPEN) ? blockState.getMaterial() == Material.IRON ? 1005 : 1006 : blockState.getMaterial() == Material.IRON ? 1011 : 1012, pos, 0);
+                return;
             }
         }
     }

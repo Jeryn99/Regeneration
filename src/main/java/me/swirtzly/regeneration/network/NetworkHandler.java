@@ -28,5 +28,5 @@ public class NetworkHandler {
         INSTANCE.registerMessage(MessageChangeType.Handler.class, MessageChangeType.class, 12, Side.SERVER);
         INSTANCE.registerMessage(MessageUpdateArch.Handler.class, MessageUpdateArch.class, 13, Side.CLIENT);
     }
-
+	
 }

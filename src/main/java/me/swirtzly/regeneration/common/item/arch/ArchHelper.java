@@ -1,9 +1,9 @@
-package me.swirtzly.regeneration.common.item.dodododo;
+package me.swirtzly.regeneration.common.item.arch;
 
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
-import me.swirtzly.regeneration.common.item.dodododo.capability.ArchProvider;
-import me.swirtzly.regeneration.common.item.dodododo.capability.CapabilityArch;
+import me.swirtzly.regeneration.common.item.arch.capability.ArchProvider;
+import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;

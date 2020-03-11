@@ -5,49 +5,49 @@ import net.minecraft.util.ResourceLocation;
 
 public class SkinInfo {
 
-    private SkinType skintype = SkinType.ALEX;
-    private ResourceLocation textureLocation = DefaultPlayerSkin.getDefaultSkinLegacy();
-    private boolean update = false;
+	private SkinType skintype = SkinType.ALEX;
+	private ResourceLocation textureLocation = DefaultPlayerSkin.getDefaultSkinLegacy();
+	private boolean update = false;
 
-    public SkinType getSkintype() {
-        return skintype;
-    }
+	public SkinType getSkintype() {
+		return skintype;
+	}
 
-    public SkinInfo setSkintype(SkinType skintype) {
-        this.skintype = skintype;
-        return this;
-    }
+	public SkinInfo setSkintype(SkinType skintype) {
+		this.skintype = skintype;
+		return this;
+	}
 
-    public ResourceLocation getTextureLocation() {
-        return textureLocation;
-    }
+	public ResourceLocation getTextureLocation() {
+		return textureLocation;
+	}
 
-    public SkinInfo setTextureLocation(ResourceLocation textureLocation) {
-        this.textureLocation = textureLocation;
-        return this;
-    }
+	public SkinInfo setTextureLocation(ResourceLocation textureLocation) {
+		this.textureLocation = textureLocation;
+		return this;
+	}
 
-    public boolean isUpdateRequired() {
-        return update;
-    }
+	public boolean isUpdateRequired() {
+		return update;
+	}
 
-    public SkinInfo setUpdateRequired(boolean update) {
-        this.update = update;
-        return this;
-    }
+	public SkinInfo setUpdateRequired(boolean update) {
+		this.update = update;
+		return this;
+	}
 
-    public enum SkinType {
-        ALEX("slim"), STEVE("default");
+	public enum SkinType {
+		ALEX("slim"), STEVE("default");
 
-        private final String type;
+		private final String type;
 
-        SkinType(String type) {
-            this.type = type;
-        }
+		SkinType(String type) {
+			this.type = type;
+		}
 
-        public String getMojangType() {
-            return type;
-        }
-    }
-
+		public String getMojangType() {
+			return type;
+		}
+	}
+	
 }

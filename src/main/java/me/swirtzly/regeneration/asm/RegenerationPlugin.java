@@ -69,5 +69,5 @@ public class RegenerationPlugin implements IFMLLoadingPlugin {
     public String getAccessTransformerClass() {
         return null;
     }
-
+	
 }

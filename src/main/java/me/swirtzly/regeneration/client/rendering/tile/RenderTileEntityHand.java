@@ -80,5 +80,5 @@ public class RenderTileEntityHand extends TileEntitySpecialRenderer<TileEntityHa
 
         return TEXTURES.get(tileEntityHandInJar);
     }
-
+	
 }

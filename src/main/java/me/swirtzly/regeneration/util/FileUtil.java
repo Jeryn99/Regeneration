@@ -54,7 +54,7 @@ public class FileUtil {
      * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
      * @throws IOException
      */
-    public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
+    public static void downloadAsPng(URL url, String filename, File alexDir, File steveDir) throws IOException {
         URLConnection uc = url.openConnection();
         uc.connect();
         uc = url.openConnection();

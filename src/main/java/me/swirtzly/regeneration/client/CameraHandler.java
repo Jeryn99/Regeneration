@@ -130,5 +130,5 @@ public class CameraHandler {
         gameSettings.fovSetting = originalFOV;
         pendingExit = false;
     }
-
+	
 }

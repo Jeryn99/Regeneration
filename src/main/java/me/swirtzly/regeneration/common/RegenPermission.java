@@ -38,5 +38,5 @@ public class RegenPermission {
             event.setCanceled(true);
         }
     }
-
+	
 }

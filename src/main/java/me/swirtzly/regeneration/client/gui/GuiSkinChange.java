@@ -308,5 +308,5 @@ public class GuiSkinChange extends GuiContainer {
             if (!Mouse.isButtonDown(0)) this.isScrollPressed = false;
         }
     }
-
+	
 }

@@ -187,5 +187,5 @@ public class RegenClientHooks {
         }
         return original;
     }
-
+	
 }

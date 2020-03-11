@@ -46,5 +46,5 @@ public class MessageRegenStateEvent implements IMessage {
             return null;
         }
     }
-
+	
 }

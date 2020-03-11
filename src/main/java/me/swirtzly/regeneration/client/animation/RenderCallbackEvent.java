@@ -16,5 +16,5 @@ public class RenderCallbackEvent extends LivingEvent {
     public RenderLivingBase<EntityLivingBase> getRenderer() {
         return renderer;
     }
-
+	
 }

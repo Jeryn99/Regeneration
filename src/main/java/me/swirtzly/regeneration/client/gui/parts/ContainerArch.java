@@ -1,24 +1,26 @@
 package me.swirtzly.regeneration.client.gui.parts;
 
-import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class HIJContainer extends Container {
-    private final IInventory hijInv;
+public class ContainerArch extends Container {
+    public static final int ID = 99;
+    private final IInventory archInv;
 
-    public HIJContainer(IInventory playerInventory, IInventory hijInvIn, EntityPlayer player) {
-        this.hijInv = hijInvIn;
-        hijInvIn.openInventory(player);
-        Slot s = new HandSlot(hijInvIn, 3, 44 + 2 * 18, 20) {
+    public ContainerArch(IInventory playerInventory, IInventory archInv, EntityPlayer player) {
+        this.archInv = archInv;
+        archInv.openInventory(player);
+        Slot s = new ArchSlot(this.archInv, 3, 44 + 2 * 18, 20) {
             @Override
             public void onSlotChanged() {
                 super.onSlotChanged();
             }
         };
+
         this.addSlotToContainer(s);
 
         for (int l = 0; l < 3; ++l) {
@@ -45,19 +47,18 @@ public class HIJContainer extends Container {
     @Override
     public void onContainerClosed(EntityPlayer playerIn) {
         super.onContainerClosed(playerIn);
-        this.hijInv.closeInventory(playerIn);
+        this.archInv.closeInventory(playerIn);
     }
 
-    public static class HandSlot extends Slot {
+    public static class ArchSlot extends Slot {
 
-        public HandSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
+        public ArchSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
             super(inventoryIn, index, xPosition, yPosition);
         }
 
         @Override
         public boolean isItemValid(ItemStack stack) {
-            return stack.getItem() == RegenObjects.Items.HAND;
+            return stack.hasCapability(CapabilityArch.CAPABILITY, null);
         }
     }
-	
 }

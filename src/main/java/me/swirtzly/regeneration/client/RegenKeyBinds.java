@@ -83,5 +83,5 @@ public class RegenKeyBinds {
     public static String getRegenerateNowDisplayName() {
         return REGEN_NOW.getDisplayName();
     }
-
+	
 }

@@ -38,5 +38,5 @@ public interface IRegenType<R extends ATypeRenderer<?>> {
     Vec3d getDefaultPrimaryColor();
 
     Vec3d getDefaultSecondaryColor();
-
+	
 }

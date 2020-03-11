@@ -28,5 +28,5 @@ public class DnaNightvision extends DnaHandler.IDna {
         EntityPlayer player = cap.getPlayer();
         player.removePotionEffect(MobEffects.NIGHT_VISION);
     }
-
+	
 }

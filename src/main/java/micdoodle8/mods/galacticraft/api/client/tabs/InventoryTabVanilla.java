@@ -18,5 +18,5 @@ public class InventoryTabVanilla extends AbstractTab {
     public boolean shouldAddToList() {
         return true;
     }
-
+	
 }

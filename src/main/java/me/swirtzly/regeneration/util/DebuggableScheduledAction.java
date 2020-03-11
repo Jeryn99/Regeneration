@@ -15,6 +15,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 
     @Override
     public boolean tick() {
+
         if (scheduledTick == -1)
             RegenerationMod.LOG.warn(player.getName() + ": Ticking finsished/canceled ScheduledAction (" + transition + ")");
 
@@ -42,5 +43,5 @@ public class DebuggableScheduledAction extends ScheduledAction {
     public PlayerUtil.RegenState.Transition getTransition() {
         return transition;
     }
-
+	
 }

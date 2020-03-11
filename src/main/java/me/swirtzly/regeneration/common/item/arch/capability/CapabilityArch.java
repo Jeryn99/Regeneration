@@ -1,7 +1,7 @@
-package me.swirtzly.regeneration.common.item.dodododo.capability;
+package me.swirtzly.regeneration.common.item.arch.capability;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.item.dodododo.IArch;
+import me.swirtzly.regeneration.common.item.arch.IArch;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.network.MessageUpdateArch;
 import me.swirtzly.regeneration.network.NetworkHandler;
@@ -89,6 +89,5 @@ public class CapabilityArch implements IArch {
         savedTrait = new ResourceLocation(nbt.getString("trait"));
         archStatus = ArchStatus.valueOf(nbt.getString("arch_status"));
     }
-
 
 }

@@ -251,5 +251,5 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         GlStateManager.enableTexture2D();
         GlStateManager.popAttrib();
     }
-
+	
 }
