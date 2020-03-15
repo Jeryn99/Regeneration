@@ -4,7 +4,6 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.item.arch.ArchHelper;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -33,8 +32,6 @@ import javax.annotation.Nullable;
 public class ItemArchInterface extends Item {
 
 
-    private static final String TAG_ITEMS = "ArchInv";
-
     public ItemArchInterface() {
         setCreativeTab(CreativeTabs.MISC);
         setMaxStackSize(1);
@@ -44,7 +41,7 @@ public class ItemArchInterface extends Item {
      * Called when the equipped item is right clicked.
      */
 
-    //TODO Finish me 
+    //TODO Finish me
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
@@ -69,20 +66,6 @@ public class ItemArchInterface extends Item {
         return new InvProvider();
     }
 
-    @Override
-    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(TAG_ITEMS)) {
-            // NBTTagList oldData = stack.getTagCompound().getTagList(TAG_ITEMS, Constants.NBT.TAG_COMPOUND);
-            //IItemHandler newInv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-
-            // CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(newInv, null, oldData);
-
-            // stack.getTagCompound().removeTag(TAG_ITEMS);
-
-            // if(stack.getTagCompound().getSize() == 0)
-            //     stack.setTagCompound(null);
-        }
-    }
 
     @Nullable
     @Override

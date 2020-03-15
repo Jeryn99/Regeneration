@@ -46,7 +46,7 @@ public class RegenKeyBinds {
     public static void handleGeneralInputs(InputUpdateEvent e) {
         EntityPlayer player = Minecraft.getMinecraft().player;
 
-        if (player == null) return;
+        if (player == null || Minecraft.getMinecraft().currentScreen != null) return;
 
         // If Lucraft isn't installed, we get our stuff
         if (Minecraft.getMinecraft().currentScreen == null && !EnumCompatModids.LCCORE.isLoaded()) {
