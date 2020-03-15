@@ -7,6 +7,7 @@ import me.swirtzly.regeneration.client.rendering.entity.RenderLindos;
 import me.swirtzly.regeneration.client.rendering.entity.RenderWatcher;
 import me.swirtzly.regeneration.client.rendering.layers.LayerHands;
 import me.swirtzly.regeneration.client.rendering.layers.LayerRegeneration;
+import me.swirtzly.regeneration.client.rendering.layers.RenderArchItem;
 import me.swirtzly.regeneration.client.rendering.tile.RenderTileEntityHand;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
@@ -56,6 +57,7 @@ public class ClientProxy extends CommonProxy {
 		for (RenderPlayer renderPlayer : skinMap.values()) {
 			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
 			renderPlayer.addLayer(new LayerHands(renderPlayer));
+            renderPlayer.addLayer(new RenderArchItem(renderPlayer));
 		}
 		FileUtil.doSetupOnThread();
 

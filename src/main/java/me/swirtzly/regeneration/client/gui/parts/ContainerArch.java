@@ -1,53 +1,47 @@
 package me.swirtzly.regeneration.client.gui.parts;
 
+import me.swirtzly.regeneration.common.item.arch.capability.ArchInventory;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
+
+import javax.annotation.Nonnull;
 
 public class ContainerArch extends Container {
+
     public static final int ID = 99;
-    private final IInventory archInv;
+    private final ArchInventory archInvIn;
 
-    public ContainerArch(IInventory playerInventory, IInventory archInv, EntityPlayer player) {
-        this.archInv = archInv;
-        archInv.openInventory(player);
-        Slot s = new ArchSlot(this.archInv, 3, 44 + 2 * 18, 20) {
-            @Override
-            public void onSlotChanged() {
-                super.onSlotChanged();
-            }
-        };
+    public ContainerArch(EntityPlayer player, ArchInventory archInv) {
+        IInventory playerInv = player.inventory;
+        archInvIn = archInv;
 
-        this.addSlotToContainer(s);
+        addSlotToContainer(new SlotItemHandler(archInvIn, 3, 44 + 2 * 18, 20));
 
         for (int l = 0; l < 3; ++l) {
             for (int k = 0; k < 9; ++k) {
-                this.addSlotToContainer(new Slot(playerInventory, k + l * 9 + 9, 8 + k * 18, l * 18 + 51));
+                this.addSlotToContainer(new Slot(playerInv, k + l * 9 + 9, 8 + k * 18, l * 18 + 51));
             }
         }
 
         for (int i1 = 0; i1 < 9; ++i1) {
-            this.addSlotToContainer(new Slot(playerInventory, i1, 8 + i1 * 18, 109));
+            this.addSlotToContainer(new Slot(playerInv, i1, 8 + i1 * 18, 109));
         }
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
-        return true;
+    public boolean canInteractWith(@Nonnull EntityPlayer player) {
+        return player.getHeldItemMainhand().getItem() == RegenObjects.Items.ARCH
+                || player.getHeldItemOffhand().getItem() == RegenObjects.Items.ARCH;
     }
 
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void onContainerClosed(EntityPlayer playerIn) {
-        super.onContainerClosed(playerIn);
-        this.archInv.closeInventory(playerIn);
+    public boolean isAllowed(ItemStack stack) {
+        return stack.hasCapability(CapabilityArch.CAPABILITY, null);
     }
 
     public static class ArchSlot extends Slot {
@@ -61,4 +55,5 @@ public class ContainerArch extends Container {
             return stack.hasCapability(CapabilityArch.CAPABILITY, null);
         }
     }
+
 }

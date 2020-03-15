@@ -49,6 +49,7 @@ public class ArchHelper {
             playerData.setDnaType(DnaHandler.DNA_BORING.getRegistryName());
             playerData.extractRegeneration(playerData.getRegenerationsLeft());
             stackData.sync();
+            playerData.synchronise();
         }
     }
 

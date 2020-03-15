@@ -2,12 +2,14 @@ package me.swirtzly.regeneration.client.animation;
 
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.item.ItemArchInterface;
 import me.swirtzly.regeneration.common.item.ItemFobWatch;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 
 public class AnimationHandler {
@@ -81,6 +83,15 @@ public class AnimationHandler {
             modelBiped.bipedLeftLeg.rotationPointY = 9.0F;
             modelBiped.bipedHead.rotationPointY = 1.0F;
             modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(45);
+            return copyAndReturn(modelBiped, true);
+        }
+
+        if (player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemArchInterface) {
+            modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(55);
+            modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-100);
+            modelBiped.bipedRightArm.rotateAngleY = (float) Math.toRadians(-5);
+            modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-100);
+            modelBiped.bipedLeftArm.rotateAngleY = (float) Math.toRadians(5);
             return copyAndReturn(modelBiped, true);
         }
 

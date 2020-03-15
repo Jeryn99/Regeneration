@@ -1,14 +1,16 @@
 package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.common.item.arch.ArchHelper;
+import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -17,8 +19,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,60 +32,99 @@ import javax.annotation.Nullable;
  */
 public class ItemArchInterface extends Item {
 
-    public IInventory inventory;
+
+    private static final String TAG_ITEMS = "ArchInv";
 
     public ItemArchInterface() {
         setCreativeTab(CreativeTabs.MISC);
         setMaxStackSize(1);
-        this.inventory = new InventoryBasic("Arch", true, 8);
     }
 
     /**
      * Called when the equipped item is right clicked.
      */
+
+    //TODO Finish me 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemstack);
         ItemStack itemstack1 = playerIn.getItemStackFromSlot(entityequipmentslot);
-
-        playerIn.openGui(RegenerationMod.INSTANCE, 99, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
-
-
         if (itemstack1.isEmpty()) {
             playerIn.setItemStackToSlot(entityequipmentslot, itemstack.copy());
-            //ArchHelper.onArchUse(playerIn, playerIn.getHeldItemOffhand());itemstack.setCount(0);
+            playerIn.openGui(RegenerationMod.INSTANCE, 99, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
+            itemstack.setCount(0);
             return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
         } else {
-            return new ActionResult<>(EnumActionResult.FAIL, itemstack);
+            if (playerIn.isSneaking()) {
+                ArchHelper.onArchUse(playerIn, itemstack1.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(3));
+            }
+            return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
         }
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-        return new ICapabilityProvider() {
+    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound oldCapNbt) {
+        return new InvProvider();
+    }
 
-            @Override
-            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-                return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !stack.isEmpty();
-            }
+    @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(TAG_ITEMS)) {
+            // NBTTagList oldData = stack.getTagCompound().getTagList(TAG_ITEMS, Constants.NBT.TAG_COMPOUND);
+            //IItemHandler newInv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
+            // CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(newInv, null, oldData);
 
-            @Nullable
-            @Override
-            public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-                if (hasCapability(capability, facing)) {
-                    return (T) new InvWrapper(inventory);
-                }
-                return null;
-            }
-        };
+            // stack.getTagCompound().removeTag(TAG_ITEMS);
+
+            // if(stack.getTagCompound().getSize() == 0)
+            //     stack.setTagCompound(null);
+        }
     }
 
     @Nullable
     @Override
     public EntityEquipmentSlot getEquipmentSlot(ItemStack stack) {
         return EntityEquipmentSlot.HEAD;
+    }
+
+    private static class InvProvider implements ICapabilitySerializable<NBTBase> {
+
+        private final IItemHandler inv = new ItemStackHandler(24) {
+            @Nonnull
+            @Override
+            public ItemStack insertItem(int slot, @Nonnull ItemStack toInsert, boolean simulate) {
+                if (!toInsert.isEmpty()) {
+                    boolean isUseAble = toInsert.hasCapability(CapabilityArch.CAPABILITY, null);
+                    if (isUseAble)
+                        return super.insertItem(slot, toInsert, simulate);
+                }
+                return toInsert;
+            }
+        };
+
+        @Override
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+        }
+
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inv);
+            else return null;
+        }
+
+        @Override
+        public NBTBase serializeNBT() {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(inv, null);
+        }
+
+        @Override
+        public void deserializeNBT(NBTBase nbt) {
+            CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(inv, null, nbt);
+        }
     }
 }

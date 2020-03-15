@@ -132,13 +132,15 @@ public class BlockHandInJar extends BlockDirectional {
 		if (world.isRemote) return super.removedByPlayer(state, world, pos, player, willHarvest);
 		if (world.getTileEntity(pos) instanceof TileEntityHandInJar) {
 			TileEntityHandInJar jar = (TileEntityHandInJar) world.getTileEntity(pos);
-			if (jar.lindosAmont > 0) {
+			if (jar != null && jar.lindosAmont > 0) {
 				EntityLindos lindos = new EntityLindos(player.world);
 				lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
 				lindos.setAmount(jar.lindosAmont);
 				player.world.spawnEntity(lindos);
 			}
-			InventoryHelper.dropInventoryItems(world, pos, jar);
+			if (jar != null) {
+				InventoryHelper.dropInventoryItems(world, pos, jar);
+			}
 		}
 		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
