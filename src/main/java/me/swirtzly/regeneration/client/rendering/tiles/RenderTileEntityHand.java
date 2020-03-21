@@ -41,7 +41,7 @@ public class RenderTileEntityHand extends TileEntityRenderer<TileEntityHandInJar
             String handType = HandItem.getSkinType(tileEntityIn.getHand());
             Minecraft.getInstance().getTextureManager().bindTexture(getOrCreateTexture(tileEntityIn));
             GlStateManager.rotatef(180, 1, 0, 0);
-            GlStateManager.translated(0.5, -1.5, -0.5);
+            GlStateManager.translated(0, -1.5, 0);
             if (handType.equals("ALEX")) {
                 ALEX_ARM.render(null, 0, 0, 0, 0, 0, 0.0625F);
             } else {

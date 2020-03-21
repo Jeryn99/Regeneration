@@ -19,7 +19,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -55,12 +54,7 @@ public class FileUtil {
 		if (!SKIN_DIRECTORY_STEVE.exists()) {
 			FileUtils.forceMkdir(SKIN_DIRECTORY_STEVE);
 		}
-		
-		
-		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.list()).length == 0 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.list()).length == 0) {
-			RegenerationMod.LOG.warn("One of the skin directories is empty, so we're going to fill both.");
-			handleDownloads();
-		}
+
 	}
 
 	/**
@@ -100,6 +94,7 @@ public class FileUtil {
 			while (notDownloaded.get()) {
 				try {
 					createDefaultFolders();
+					handleDownloads();
 					TrendingManager.downloadTrendingSkins();
                     TrendingManager.downloadPreviousSkins();
 					notDownloaded.set(false);

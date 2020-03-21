@@ -2,17 +2,13 @@ package me.swirtzly.regeneration.handlers;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.RegenKeyBinds;
 import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.TypeManager;
-import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.messages.ForceRegenerationMessage;
 import me.swirtzly.regeneration.util.ClientUtil;
-import me.swirtzly.regeneration.util.EnumCompatModids;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
@@ -68,20 +64,6 @@ public class ClientHandler {
         }
     }
 
-
-    @SubscribeEvent
-    public void onKeybindPress(InputUpdateEvent tickEvent) {
-
-        if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
-            NetworkDispatcher.sendToServer(new ForceRegenerationMessage());
-        }
-
-        if (EnumCompatModids.LCCORE.isLoaded()) return;
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.currentScreen == null && minecraft.player != null) {
-            ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
-        }
-    }
 
     @SubscribeEvent
     public void onTickEvent(TickEvent.ClientTickEvent event) {

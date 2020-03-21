@@ -34,7 +34,6 @@ public class TileEntityHandInJar extends TileEntity implements ITickableTileEnti
     public int lindosAmont = 0;
     private LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
 
-
     public TileEntityHandInJar() {
         super(RegenObjects.Tiles.HAND_JAR);
     }
