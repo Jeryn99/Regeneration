@@ -69,7 +69,7 @@ public class LindosEntity extends FlyingEntity {
 		setNoGravity(true);
 		
 		if (world.isRemote && ticksExisted == 2) {
-			ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.AMBIENT, true, () -> !isAlive(), 1.0F);
+			ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.AMBIENT, true, () -> !isAlive(), 0.2F);
 		}
 		
 		if (ticksExisted < 60) {

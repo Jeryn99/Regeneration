@@ -1,21 +1,24 @@
 {
   "variants": {
     "facing=north": {
-      "model": "regeneration:hand_jar"
-    },
-    "normal": {
-      "model": "regeneration:hand_jar"
+      "model": "regeneration:block/hand_jar"
     },
     "facing=south": {
-      "model": "regeneration:hand_jar",
+      "model": "regeneration:block/hand_jar",
       "y": 180
     },
     "facing=west": {
-      "model": "regeneration:hand_jar",
+      "model": "regeneration:block/hand_jar",
       "y": 270
     },
+    "facing=up": {
+      "model": "regeneration:block/hand_jar"
+    },
+    "facing=down": {
+      "model": "regeneration:block/hand_jar"
+    },
     "facing=east": {
-      "model": "regeneration:hand_jar",
+      "model": "regeneration:block/hand_jar",
       "y": 90
     }
   }

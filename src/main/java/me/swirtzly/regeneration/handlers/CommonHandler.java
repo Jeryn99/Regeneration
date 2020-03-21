@@ -6,6 +6,7 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -55,7 +56,7 @@ public class CommonHandler {
 	public void onPlayerClone(PlayerEvent.Clone event) {
 		IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
 		event.getOriginal().revive();
-		RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getEntityPlayer()).ifPresent((data) -> {
+        RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
 			CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
 			storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
 		}));
@@ -63,14 +64,6 @@ public class CommonHandler {
 
 	@SubscribeEvent
 	public void onPlayerTracked(PlayerEvent.StartTracking event) {
-		RegenCap.get(event.getEntityPlayer()).ifPresent(IRegen::synchronise);
-	}
-	
-	@SubscribeEvent
-    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-	//	if (!RegenConfig.COMMON.firstStartGiftOnly)
-		//		RegenCap.getForPlayer(event.getPlayer()).receiveRegenerations(RegenConfig.freeRegenerations);
-
 		RegenCap.get(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
 	
@@ -90,9 +83,9 @@ public class CommonHandler {
 	
 	@SubscribeEvent
 	public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-		if (e.getEntityPlayer().world.isRemote)
+        if (e.getPlayer().world.isRemote)
 			return;
-		RegenCap.get(e.getEntityPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
+        RegenCap.get(e.getPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
 
 	}
 	
@@ -129,6 +122,17 @@ public class CommonHandler {
 				} else {
 					event.setAmount(0.5F);
 					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.reduced_dmg"), true);
+
+
+                    if (event.getSource().getTrueSource() instanceof LivingEntity) {
+                        LivingEntity livingEntity = (LivingEntity) event.getSource().getTrueSource();
+                        if (PlayerUtil.isSharp(livingEntity.getHeldItemMainhand())) {
+                            if (!cap.hasDroppedHand() && cap.getState() == PlayerUtil.RegenState.POST) {
+                                PlayerUtil.createHand(player);
+                            }
+                        }
+                    }
+
 				}
 				return;
 			}
@@ -205,24 +209,18 @@ public class CommonHandler {
 			}
 		}
 	}
-	
-	/**
-	 * Update checker thing, tells the player that the mods out of date if they're on a old build
+
 	@SubscribeEvent
-	public static void onPlayerLogin(PlayerLoggedInEvent e) {
-		PlayerEntity player = e.player;
-		if (!player.world.isRemote && RegenConfig.enableUpdateChecker) {
-			ForgeVersion.CheckResult version = ForgeVersion.getResult(Loader.instance().activeModContainer());
-			if (version.status.equals(ForgeVersion.Status.OUTDATED)) {
-				StringTextComponent url = new StringTextComponent(TextFormatting.AQUA + TextFormatting.BOLD.toString() + "UPDATE");
-				url.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minecraft.curseforge.com/projects/regeneration"));
-				url.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Open URL")));
-				
-				player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "[Regeneration] : ").appendSibling(url));
-				String changes = version.changes.get(version.target);
-				player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "Changes: " + TextFormatting.BLUE + changes));
-			}
+    public void onCut(PlayerInteractEvent.RightClickItem event) {
+        if (PlayerUtil.isSharp(event.getItemStack())) {
+            PlayerEntity player = event.getPlayer();
+            RegenCap.get(player).ifPresent((data) -> {
+                if (data.getState() == PlayerUtil.RegenState.POST && !data.hasDroppedHand()) {
+                    PlayerUtil.createHand(player);
+                }
+            });
 		}
 	}
-	 */
+
+
 }

@@ -3,6 +3,8 @@ package me.swirtzly.regeneration.common.types;
 import me.swirtzly.regeneration.client.rendering.types.ATypeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
@@ -37,5 +39,10 @@ public interface RegenType<R extends ATypeRenderer<?>> {
 
 	TypeManager.Type getTypeID();
 
-	
+
+    SoundEvent[] getRegeneratingSounds();
+
+    Vec3d getDefaultPrimaryColor();
+
+    Vec3d getDefaultSecondaryColor();
 }

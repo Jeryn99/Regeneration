@@ -26,7 +26,9 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue changePerspective;
 		public final ForgeConfigSpec.BooleanValue changeHand;
 		public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
+        public final ForgeConfigSpec.BooleanValue downloadPreviousSkins;
 		public final ForgeConfigSpec.BooleanValue fovChange;
+		public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
 
 		Client(ForgeConfigSpec.Builder builder) {
 
@@ -37,6 +39,8 @@ public class RegenConfig {
 			changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
 			changeHand = builder.comment("Toggle whether your hand has the chance of inverting after a regen").translation("config.regeneration.hand_change").define("changeHand", true);
 			downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
+            downloadPreviousSkins = builder.comment("Toggle whether the mod downloads your past skins from NameMC").translation("config.regeneration.downloadPreviousSkins").define("downloadPastSkins", true);
+			downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
 			fovChange = builder.comment("Toggle whether a zoom effect happens during the Regeneration period").translation("config.regeneration.fov").define("fovChange", false);
 			builder.pop();
 		}

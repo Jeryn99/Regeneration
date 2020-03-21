@@ -4,7 +4,6 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.image.ImageDownloadBuffer;
-import me.swirtzly.regeneration.client.image.ImageDownloader;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.RegenType;
@@ -12,17 +11,15 @@ import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
 import me.swirtzly.regeneration.util.ClientUtil;
+import me.swirtzly.regeneration.util.FileUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.SkinManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,6 +34,8 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -46,7 +45,7 @@ import java.util.*;
 public class SkinManipulation {
 
 	//	public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "./Regeneration Data/skins/");
-	public static final File SKIN_DIRECTORY = new File("./Regeneration Data/skins/");
+	public static final File SKIN_DIRECTORY = new File("./mods/Regeneration Data/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
@@ -131,11 +130,9 @@ public class SkinManipulation {
     private static SkinInfo getSkinInfo(AbstractClientPlayerEntity player, IRegen data) throws IOException {
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
-
 		if (data == null || player.getName() == null || player.getUniqueID() == null) {
-			return new SkinInfo(null, getSkinType(player));
+			return new SkinInfo(player, null, getSkinType(player));
 		}
-
 		if (data.getEncodedSkin().equals(RegenUtil.NO_SKIN) || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
 			resourceLocation = getMojangSkin(player);
 			skinType = getSkinType(player);
@@ -150,7 +147,7 @@ public class SkinManipulation {
 				skinType = data.getSkinType();
 			}
 		}
-		return new SkinInfo(resourceLocation, skinType);
+		return new SkinInfo(player, resourceLocation, skinType);
 	}
 
 	public static SkinInfo.SkinType getSkinType(AbstractClientPlayerEntity player) {
@@ -162,35 +159,16 @@ public class SkinManipulation {
 		return SkinInfo.SkinType.ALEX;
 	}
 
-	/**
-	 * This is used when the clients skin is reset
-	 *
-	 * @param player - Player to get the skin of themselves
-	 * @return ResourceLocation from Mojang
-	 */
 	private static ResourceLocation getMojangSkin(AbstractClientPlayerEntity player) {
-		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = getVanillaMap(player);
-		forceLoad(map);
-		if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-			MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
-			File dir = new File((File) ObfuscationReflectionHelper.getPrivateValue(SkinManager.class, Minecraft.getInstance().getSkinManager(), 2), profile.getHash().substring(0, 2));
-			File file = new File(dir, profile.getHash());
-			ResourceLocation location = new ResourceLocation("skins/" + profile.getHash());
-			setPlayerSkin(player, location);
-			return player.getLocationSkin();
+		try {
+			String t = "https://crafatar.com/skins/" + player.getUniqueID();
+			return FileUtil.urlToTexture(new URL(t.trim()));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
 		}
 		return DefaultPlayerSkin.getDefaultSkinLegacy();
 	}
 
-	private static ITextureObject loadTexture(File file, ResourceLocation resource, ResourceLocation def, String par1Str) {
-		TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
-		ITextureObject object = texturemanager.getTexture(resource);
-		if (object == null) {
-			object = new ImageDownloader(file, par1Str, def, new ImageDownloadBuffer());
-			texturemanager.loadTexture(resource, object);
-		}
-		return object;
-	}
 
 	public static Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> getVanillaMap(AbstractClientPlayerEntity player) {
 		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
@@ -216,8 +194,9 @@ public class SkinManipulation {
 			return;
         Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
 		playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
-		if (texture == null)
-			ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
+        if (texture == null) {
+            ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
+        }
 	}
 
 	public static void setPlayerSkinType(AbstractClientPlayerEntity player, SkinInfo.SkinType skinType) {
@@ -261,8 +240,8 @@ public class SkinManipulation {
 				if (skin == null) {
 					return;
 				}
-				if (skin.getSkinTextureLocation() != null) {
-					setPlayerSkin(player, skin.getSkinTextureLocation());
+				if (skin.getTextureLocation() != null) {
+					setPlayerSkin(player, skin.getTextureLocation());
 				}
 
 				if (skin.getSkintype() != null) {
@@ -359,7 +338,7 @@ public class SkinManipulation {
 				}
 			}
 			if (skinInfo != null) {
-				SkinManipulation.setPlayerSkin(player, skinInfo.getSkinTextureLocation());
+				SkinManipulation.setPlayerSkin(player, skinInfo.getTextureLocation());
 				SkinManipulation.setPlayerSkinType(player, skinInfo.getSkintype());
 				PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 			}

@@ -7,7 +7,7 @@ import net.minecraftforge.fml.ModList;
  * This is a helper enum for compat
  */
 public enum EnumCompatModids {
-	TARDIS("tardis"), LCCORE("lucraftcore");
+	TARDIS("tardis");
 	
 	private final String modid;
 	

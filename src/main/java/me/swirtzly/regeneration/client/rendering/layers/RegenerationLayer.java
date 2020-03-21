@@ -69,9 +69,6 @@ public class RegenerationLayer extends LayerRenderer<AbstractClientPlayerEntity,
                 renderOverlay(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
             }
 
-            if (data.isSyncingToJar()) {
-                TypeManager.getTypeInstance(TypeManager.Type.FIERY).getRenderer().onRenderRegenerationLayer(type, (LivingRenderer) livingEntityRenderer, data, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-            }
         });
 
     }

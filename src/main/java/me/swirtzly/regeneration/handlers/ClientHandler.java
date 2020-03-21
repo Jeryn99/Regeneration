@@ -2,17 +2,13 @@ package me.swirtzly.regeneration.handlers;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.RegenKeyBinds;
-import me.swirtzly.regeneration.client.gui.ColorScreen;
+import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.TypeManager;
-import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.messages.ForceRegenerationMessage;
 import me.swirtzly.regeneration.util.ClientUtil;
-import me.swirtzly.regeneration.util.EnumCompatModids;
 import me.swirtzly.regeneration.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
@@ -22,6 +18,7 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effects;
@@ -60,7 +57,7 @@ public class ClientHandler {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
                 if (data.canRegenerate()) {
                     event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, BUTTON_TEX, 32, 64, (p_213088_1_) -> {
-                        Minecraft.getInstance().displayGuiScreen(new ColorScreen());
+                        Minecraft.getInstance().displayGuiScreen(new GuiPreferences());
                     }, I18n.format("Regeneration")));
                 }
             });
@@ -69,25 +66,11 @@ public class ClientHandler {
 
 
     @SubscribeEvent
-    public void onKeybindPress(InputUpdateEvent tickEvent) {
-
-        if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
-            NetworkDispatcher.sendToServer(new ForceRegenerationMessage());
-        }
-
-        if (EnumCompatModids.LCCORE.isLoaded()) return;
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.currentScreen == null && minecraft.player != null) {
-            ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
-        }
-    }
-
-    @SubscribeEvent
     public void onTickEvent(TickEvent.ClientTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.START)) return;
         if (Minecraft.getInstance().world == null) {
             if (SkinManipulation.PLAYER_SKINS.size() > 0) {
-                SkinManipulation.PLAYER_SKINS.forEach(((uuid, skinInfo) -> Minecraft.getInstance().getTextureManager().deleteTexture(skinInfo.getSkinTextureLocation())));
+                SkinManipulation.PLAYER_SKINS.forEach(((uuid, skinInfo) -> Minecraft.getInstance().getTextureManager().deleteTexture(skinInfo.getTextureLocation())));
                 SkinManipulation.PLAYER_SKINS.clear();
                 RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
             }
@@ -111,7 +94,7 @@ public class ClientHandler {
                     }
 
                     if (data.getState() == REGENERATING) {
-                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.REGENERATION.getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(REGENERATING), 1.0F);
+                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.REGENERATION_0.getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(REGENERATING), 1.0F);
                     }
 
                     if (data.getState().isGraceful() && clientUUID == player.getUniqueID()) {
@@ -136,7 +119,7 @@ public class ClientHandler {
 
         SkinInfo skin = SkinManipulation.PLAYER_SKINS.get(player.getUniqueID());
         if (skin != null) {
-            SkinManipulation.setPlayerSkin(player, skin.getSkinTextureLocation());
+            SkinManipulation.setPlayerSkin(player, skin.getTextureLocation());
         }
 
         RegenCap.get(player).ifPresent((cap) -> {
@@ -199,16 +182,38 @@ public class ClientHandler {
     }
 
 
+    @SubscribeEvent
+    public void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
+        if (Minecraft.getInstance().getRenderViewEntity() instanceof PlayerEntity) {
+            RegenCap.get(Minecraft.getInstance().getRenderViewEntity()).ifPresent((data) -> {
+                if (data.getType() == TypeManager.Type.LAY_FADE && data.getState() == REGENERATING) {
+                    e.setRed((float) data.getPrimaryColor().x);
+                    e.setGreen((float) data.getPrimaryColor().y);
+                    e.setBlue((float) data.getPrimaryColor().z);
+                }
+            });
+        }
+    }
+
+
+
 
     @SubscribeEvent
     public void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
-        RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
+        Entity viewer = Minecraft.getInstance().getRenderViewEntity();
+        RegenCap.get(viewer).ifPresent((data) -> {
             if (data.getState() == GRACE_CRIT) {
-                GlStateManager.fogMode(GlStateManager.FogMode.EXP);
                 event.setCanceled(true);
                 float amount = MathHelper.cos(data.getPlayer().ticksExisted * 0.06F) * -0.09F;
                 event.setDensity(amount);
             }
+
+            if (data.getType() == TypeManager.Type.LAY_FADE && data.getAnimationTicks() > 0) {
+                event.setCanceled(true);
+                float opacity = MathHelper.clamp(MathHelper.sin((viewer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
+                event.setDensity(opacity);
+            }
+
         });
     }
 
@@ -290,7 +295,7 @@ public class ClientHandler {
 
         RegenCap.get(player).ifPresent((data) -> {
 
-            boolean flag = data.getType() == TypeManager.Type.CONFUSED && data.getState() == REGENERATING;
+            boolean flag = data.getState() == REGENERATING;
             e.setCanceled(flag);
 
             if (!data.areHandsGlowing())//|| !flag)
@@ -318,6 +323,5 @@ public class ClientHandler {
             GlStateManager.popMatrix();
         });
     }
-
 
 }

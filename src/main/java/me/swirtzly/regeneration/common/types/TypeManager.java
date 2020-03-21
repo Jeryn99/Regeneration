@@ -1,5 +1,7 @@
 package me.swirtzly.regeneration.common.types;
 
+import me.swirtzly.regeneration.util.RegenUtil;
+
 import java.util.HashMap;
 
 public class TypeManager {
@@ -8,7 +10,7 @@ public class TypeManager {
 
     public static void init() {
         TYPES.put(Type.FIERY, new FieryType());
-        TYPES.put(Type.CONFUSED, new ElixirType());
+        TYPES.put(Type.LAY_FADE, new TypeLayFade());
     }
 
     public static RegenType getTypeInstance(TypeManager.Type type) {
@@ -19,7 +21,7 @@ public class TypeManager {
     }
 
 
-    public enum Type {
-        FIERY, CONFUSED
+    public enum Type implements RegenUtil.IEnum {
+        FIERY, LAY_FADE
     }
 }

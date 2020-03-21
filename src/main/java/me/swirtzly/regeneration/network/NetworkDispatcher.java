@@ -39,6 +39,7 @@ public class NetworkDispatcher {
         INSTANCE.registerMessage(id++, UpdateSkinMapMessage.class, UpdateSkinMapMessage::encode, UpdateSkinMapMessage::decode, UpdateSkinMapMessage.Handler::handle);
         INSTANCE.registerMessage(id++, ForceRegenerationMessage.class, ForceRegenerationMessage::encode, ForceRegenerationMessage::decode, ForceRegenerationMessage.Handler::handle);
         INSTANCE.registerMessage(id++, NextSkinMessage.class, NextSkinMessage::encode, NextSkinMessage::decode, NextSkinMessage.Handler::handle);
+        INSTANCE.registerMessage(id++, UpdateTypeMessage.class, UpdateTypeMessage::encode, UpdateTypeMessage::decode, UpdateTypeMessage.Handler::handle);
      }
 
     /**

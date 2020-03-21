@@ -1,19 +1,28 @@
 package me.swirtzly.regeneration.handlers;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.client.gui.BioContainerContainer;
+import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.entity.LindosEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
+import me.swirtzly.regeneration.common.item.HandItem;
 import me.swirtzly.regeneration.common.item.LindosVialItem;
+import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -43,8 +52,9 @@ public class RegenObjects {
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
 		e.getRegistry().registerAll(
-				//setUpItem(new FobWatchItem(), "fob_watch"),
-				setUpItem(new LindosVialItem(), "lindos_vial")
+				setUpItem(new FobWatchItem(), "fob_watch"),
+				setUpItem(new LindosVialItem(), "lindos_vial"),
+				setUpItem(new HandItem(), "hand")
 		);
 		e.getRegistry().registerAll(ITEM_BLOCKS.toArray(new Item[ITEM_BLOCKS.size()]));
 	}
@@ -66,6 +76,11 @@ public class RegenObjects {
 		for (Block block : blocks) {
 			ITEM_BLOCKS.add(new BlockItem(block, new Item.Properties()).setRegistryName(block.getRegistryName()));
 		}
+	}
+
+	@SubscribeEvent
+	public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event) {
+		event.getRegistry().register(TileEntityType.Builder.create(TileEntityHandInJar::new, Blocks.HAND_JAR).build(null).setRegistryName(MODID, "hand_jar"));
 	}
 
 	@SubscribeEvent
@@ -97,28 +112,37 @@ public class RegenObjects {
 	
 	@SubscribeEvent
 	public static void addBlocks(RegistryEvent.Register<Block> e) {
-		//	registerBlocks(e.getRegistry(), setUpBlock(new BlockHandInJar(), "hand_jar"));
+		registerBlocks(e.getRegistry(), setUpBlock(new BlockHandInJar(), "hand_jar"));
 	}
 	
 	
 	@SubscribeEvent
 	public static void addSounds(RegistryEvent.Register<SoundEvent> e) {
 		e.getRegistry().registerAll(
-				setUpSound("regeneration"),
 				setUpSound("fob_watch"),
 				setUpSound("critical_stage"),
 				setUpSound("heart_beat"),
 				setUpSound("hand_glow"),
-				setUpSound("regeneration_2"),
 				setUpSound("fob_watch_dialogue"),
-				setUpSound("regeneration_3"),
 				setUpSound("grace_hum"),
 				setUpSound("regen_breath"),
 				setUpSound("alarm"),
 				setUpSound("jar_bubbles")
 		);
+
+		for (int i = 0; i < 7; i++) {
+			e.getRegistry().register(setUpSound("regeneration_" + i));
+		}
 	}
-	
+
+	@SubscribeEvent
+	public static void onContainerRegistry(final RegistryEvent.Register<ContainerType<?>> event) {
+		event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> {
+			BlockPos pos = data.readBlockPos();
+			return new BioContainerContainer(windowId, RegenerationMod.proxy.getClientWorld(), pos, inv, RegenerationMod.proxy.getClientPlayer(), (TileEntityHandInJar) Minecraft.getInstance().world.getTileEntity(pos));
+		}).setRegistryName(MODID, "bio_container"));
+	}
+
 	private static SoundEvent setUpSound(String soundName) {
 		return new SoundEvent(new ResourceLocation(MODID, soundName)).setRegistryName(soundName);
 	}
@@ -127,22 +151,28 @@ public class RegenObjects {
 	public static class Items {
 		public static final Item FOB_WATCH = null;
 		public static final Item LINDOS_VIAL = null;
+		public static final Item HAND = null;
 	}
 	
 	@ObjectHolder(MODID)
 	public static class Sounds {
 		public static final SoundEvent FOB_WATCH = null;
 		public static final SoundEvent FOB_WATCH_DIALOGUE = null;
-		public static final SoundEvent REGENERATION = null;
-		public static final SoundEvent REGENERATION_2 = null;
 		public static final SoundEvent CRITICAL_STAGE = null;
 		public static final SoundEvent HEART_BEAT = null;
 		public static final SoundEvent HAND_GLOW = null;
-		public static final SoundEvent REGENERATION_3 = null;
 		public static final SoundEvent GRACE_HUM = null;
 		public static final SoundEvent REGEN_BREATH = null;
 		public static final SoundEvent ALARM = null;
 		public static final SoundEvent JAR_BUBBLES = null;
+
+		public static final SoundEvent REGENERATION_0 = null;
+		public static final SoundEvent REGENERATION_1 = null;
+		public static final SoundEvent REGENERATION_2 = null;
+		public static final SoundEvent REGENERATION_3 = null;
+		public static final SoundEvent REGENERATION_4 = null;
+		public static final SoundEvent REGENERATION_5 = null;
+		public static final SoundEvent REGENERATION_6 = null;
 	}
 
 	@ObjectHolder(MODID)
@@ -155,4 +185,15 @@ public class RegenObjects {
 	public static class Blocks {
 		public static final Block HAND_JAR = null;
 	}
+
+	@ObjectHolder(MODID)
+	public static class Tiles {
+		public static final TileEntityType<TileEntityHandInJar> HAND_JAR = null;
+	}
+
+	@ObjectHolder(MODID)
+	public static class Containers {
+		public static final ContainerType<BioContainerContainer> BIO_CONTAINER = null;
+	}
+
 }

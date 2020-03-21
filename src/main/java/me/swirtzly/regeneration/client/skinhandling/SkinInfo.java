@@ -1,32 +1,40 @@
 package me.swirtzly.regeneration.client.skinhandling;
 
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class SkinInfo {
 	
 	private final SkinType skintype;
-	private final ResourceLocation textureLocation;
-	
-	public SkinInfo(ResourceLocation resourceLocation, SkinType skinType) {
+    private final ResourceLocation TEXTURE_LOCATION;
+    private final PlayerEntity PLAYER;
+
+    public SkinInfo(PlayerEntity playerEntity, ResourceLocation resourceLocation, SkinType skinType) {
 		this.skintype = skinType;
-		this.textureLocation = resourceLocation;
-	}
-	
-	public ResourceLocation getSkinTextureLocation() {
-		if (textureLocation != null) {
-			return textureLocation;
+        this.TEXTURE_LOCATION = resourceLocation;
+        this.PLAYER = playerEntity;
+    }
+
+    public ResourceLocation getTextureLocation() {
+        if (TEXTURE_LOCATION != null) {
+            return TEXTURE_LOCATION;
 		}
 		return DefaultPlayerSkin.getDefaultSkinLegacy();
 	}
-	
+
 	public SkinType getSkintype() {
 		if (skintype != null) {
 			return skintype;
 		}
 		return SkinType.ALEX;
 	}
-	
+
+
+    public PlayerEntity getPlayer() {
+        return PLAYER;
+    }
+
 	public enum SkinType {
 		ALEX("slim"), STEVE("default");
 		

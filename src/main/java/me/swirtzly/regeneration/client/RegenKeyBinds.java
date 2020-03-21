@@ -3,8 +3,9 @@ package me.swirtzly.regeneration.client;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
+import me.swirtzly.regeneration.network.messages.ForceRegenerationMessage;
 import me.swirtzly.regeneration.network.messages.RegenerateMessage;
-import me.swirtzly.regeneration.util.EnumCompatModids;
+import me.swirtzly.regeneration.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,11 +26,9 @@ public class RegenKeyBinds {
 	public static KeyBinding REGEN_FORCEFULLY;
 	
 	public static void init() {
-		
-		if (!EnumCompatModids.LCCORE.isLoaded()) {
+
 			REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", GLFW.GLFW_KEY_R, RegenerationMod.NAME);
 			ClientRegistry.registerKeyBinding(REGEN_NOW);
-		}
 		
 		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", GLFW.GLFW_KEY_Y, RegenerationMod.NAME);
 		ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
@@ -39,19 +38,26 @@ public class RegenKeyBinds {
 	@SubscribeEvent
 	public static void keyInput(InputUpdateEvent e) {
 		PlayerEntity player = Minecraft.getInstance().player;
-		if (player == null || EnumCompatModids.LCCORE.isLoaded())
+		if (player == null || Minecraft.getInstance().currentScreen != null)
 			return;
+
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.currentScreen == null && minecraft.player != null) {
+			ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
+		}
 
 		RegenCap.get(player).ifPresent((data) -> {
 			if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
 				NetworkDispatcher.INSTANCE.sendToServer(new RegenerateMessage());
 			}
 		});
+
+		if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
+			NetworkDispatcher.sendToServer(new ForceRegenerationMessage());
+		}
+
 	}
-	
-	/**
-	 * Handles LCCore compatibility
-	 */
+
 	@Deprecated //This is not pretty at all, but Mojang seem to have forgotten/didn't add lang entries for A-Z
 	public static String getRegenerateNowDisplayName() {
 		return REGEN_NOW.getKey().toString().replace("key.keyboard.", "").toUpperCase();

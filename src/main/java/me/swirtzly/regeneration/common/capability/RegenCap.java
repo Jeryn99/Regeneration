@@ -17,15 +17,13 @@ import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
@@ -67,10 +65,13 @@ public class RegenCap implements IRegen {
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
-	private int ticksAnimating = 0; //Im so sorry
+	private int ticksAnimating = 0; //I`m so sorry
 	private boolean syncingToJar = false;
 	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
 	private String nextSkin = RegenUtil.NO_SKIN;
+	private HandSide cutOffHand = HandSide.LEFT;
+	private boolean hasDroppedHand = false;
+
 
 	/**
 	 * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
@@ -93,7 +94,7 @@ public class RegenCap implements IRegen {
 	}
 
 	@Nonnull
-    public static LazyOptional<IRegen> get(LivingEntity player) {
+    public static LazyOptional<IRegen> get(Entity player) {
         return player.getCapability(RegenCap.CAPABILITY, null);
 	}
 	
@@ -103,35 +104,35 @@ public class RegenCap implements IRegen {
 			NetworkDispatcher.INSTANCE.sendToServer(new SyncDataMessage(player.getUniqueID()));
 			didSetup = true;
 		}
-		
+
+		if (!player.world.isRemote) {
 		if (isSyncingToJar() && ticksAnimating >= 250) {
 			setSyncingFromJar(false);
 			ticksAnimating = 0;
 			synchronise();
 		} else {
 			if (isSyncingToJar()) {
-				if (!player.world.isRemote) {
 					PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
 				}
 			}
 		}
-		
+
 		if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
 			ticksAnimating = 0;
 		} else {
 			ticksAnimating++;
 		}
-		
+
 		if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
 			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations {} has, from {} to {}", player.getName(), getRegenerationsLeft(), RegenConfig.COMMON.regenCapacity.get());
 		}
-		
+
 		TraitManager.getDnaEntry(getDnaType()).onUpdate(this);
-		
+
 		if (!player.world.isRemote && state != PlayerUtil.RegenState.ALIVE) // ticking only on the server for simplicity
 			stateManager.tick();
-		
+
 		if (state == PlayerUtil.RegenState.REGENERATING) {
 			TypeManager.getTypeInstance(regenType).onUpdateMidRegen(player, this);
 		}
@@ -176,6 +177,8 @@ public class RegenCap implements IRegen {
 			nbt.put("stateManager", stateManager.serializeNBT());
 		nbt.putString("nextSkinType", nextSkinType.name());
 		nbt.putString("nextSkin", nextSkin);
+		nbt.putString("cutOffHand", cutOffHand.name());
+		nbt.putBoolean("hasCutOff", hasDroppedHand);
 		return nbt;
 	}
 	
@@ -247,6 +250,14 @@ public class RegenCap implements IRegen {
 		if (nbt.contains("nextSkinType")) {
 			nextSkinType = SkinInfo.SkinType.valueOf(nbt.getString("nextSkinType"));
 		}
+
+		if (nbt.contains("cutOffhand")) {
+			cutOffHand = HandSide.valueOf(nbt.getString("cutOffHand"));
+		}
+
+		if (nbt.contains("hasCutOff")) {
+			hasDroppedHand = nbt.getBoolean("hasCutOff");
+		}
 	}
 	
 	
@@ -271,8 +282,13 @@ public class RegenCap implements IRegen {
 	public TypeManager.Type getType() {
 		return regenType;
 	}
-	
-	
+
+	@Override
+	public void setType(TypeManager.Type type) {
+		this.regenType = type;
+	}
+
+
 	@Override
 	public String getEncodedSkin() {
 		return BASE64_SKIN;
@@ -433,7 +449,26 @@ public class RegenCap implements IRegen {
 	@Override
 	public void setNextSkin(String encodedSkin) {
 		nextSkin = encodedSkin;
-		System.out.println(encodedSkin);
+	}
+
+	@Override
+	public boolean hasDroppedHand() {
+		return hasDroppedHand;
+	}
+
+	@Override
+	public void setDroppedHand(boolean droppedHand) {
+		hasDroppedHand = droppedHand;
+	}
+
+	@Override
+	public HandSide getCutoffHand() {
+		return cutOffHand;
+	}
+
+	@Override
+	public void setCutOffHand(HandSide side) {
+		cutOffHand = side;
 	}
 
 	@Override
@@ -662,6 +697,8 @@ public class RegenCap implements IRegen {
 				RegenObjects.EntityEntries.ITEM_LINDOS_TYPE.spawn(player.world, null, null, new BlockPos(player.posX, player.posY + player.getEyeHeight(), player.posZ), SpawnReason.NATURAL, true, true);
 				player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
 			}
+
+			setDroppedHand(false);
 		}
 		
 		private void finishRegeneration() {

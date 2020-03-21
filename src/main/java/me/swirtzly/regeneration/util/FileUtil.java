@@ -2,6 +2,11 @@ package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.image.ImageDownloader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
@@ -14,7 +19,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -50,12 +54,7 @@ public class FileUtil {
 		if (!SKIN_DIRECTORY_STEVE.exists()) {
 			FileUtils.forceMkdir(SKIN_DIRECTORY_STEVE);
 		}
-		
-		
-		if (Objects.requireNonNull(SKIN_DIRECTORY_ALEX.list()).length == 0 || Objects.requireNonNull(SKIN_DIRECTORY_STEVE.list()).length == 0) {
-			RegenerationMod.LOG.warn("One of the skin directories is empty, so we're going to fill both.");
-			handleDownloads();
-		}
+
 	}
 
 	/**
@@ -95,6 +94,7 @@ public class FileUtil {
 			while (notDownloaded.get()) {
 				try {
 					createDefaultFolders();
+					handleDownloads();
 					TrendingManager.downloadTrendingSkins();
                     TrendingManager.downloadPreviousSkins();
 					notDownloaded.set(false);
@@ -168,6 +168,24 @@ public class FileUtil {
 		}
 		
 		return builder.toString();
+	}
+
+
+	public static ResourceLocation urlToTexture(URL url) {
+		URLConnection uc = null;
+		NativeImage image = null;
+		try {
+			uc = url.openConnection();
+			uc.connect();
+			uc = url.openConnection();
+			uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
+			RegenerationMod.LOG.warn("Downloading Skin from: {}", url.toString());
+			image = NativeImage.read(uc.getInputStream());
+			return Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("mojang_", new DynamicTexture(image));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return DefaultPlayerSkin.getDefaultSkinLegacy();
 	}
 
 }
