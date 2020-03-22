@@ -10,8 +10,7 @@ public class GuiColorSlider extends GuiSlider {
     }
 
     private static double round(double value, int places) {
-        if (places < 0)
-            throw new IllegalArgumentException();
+        if (places < 0) throw new IllegalArgumentException();
 
         long factor = (long) Math.pow(10, places);
         value = value * factor;
@@ -25,5 +24,5 @@ public class GuiColorSlider extends GuiSlider {
         sliderValue = round(sliderValue, 2);
         displayString = dispString + ": " + sliderValue;
     }
-
+	
 }

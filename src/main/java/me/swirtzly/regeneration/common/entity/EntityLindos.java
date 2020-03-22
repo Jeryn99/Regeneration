@@ -22,97 +22,95 @@ import net.minecraft.world.World;
 
 public class EntityLindos extends EntityFlying {
 
-    private static final DataParameter<Integer> AMOUNT = EntityDataManager.createKey(EntityLindos.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> AMOUNT = EntityDataManager.createKey(EntityLindos.class, DataSerializers.VARINT);
 
+	public EntityLindos(World worldIn) {
+		super(worldIn);
+		setSize(0.5F, 0.5F);
+		this.moveHelper = new EntityFlyHelper(this);
+		noClip = true;
+	}
 
-    public EntityLindos(World worldIn) {
-        super(worldIn);
-        setSize(0.5F, 0.5F);
-        this.moveHelper = new EntityFlyHelper(this);
-        noClip = true;
-    }
+	@Override
+	protected void entityInit() {
+		super.entityInit();
+		getDataManager().register(AMOUNT, rand.nextInt(100));
+	}
 
+	public int getAmount() {
+		return getDataManager().get(AMOUNT);
+	}
 
-    @Override
-    protected void entityInit() {
-        super.entityInit();
-        getDataManager().register(AMOUNT, rand.nextInt(100));
-    }
+	public void setAmount(int amount) {
+		getDataManager().set(AMOUNT, amount);
+	}
 
-    public int getAmount() {
-        return getDataManager().get(AMOUNT);
-    }
+	@Override
+	protected PathNavigate createNavigator(World worldIn) {
+		PathNavigateFlying pathnavigateflying = new PathNavigateFlying(this, worldIn);
+		pathnavigateflying.setCanOpenDoors(false);
+		pathnavigateflying.setCanFloat(true);
+		pathnavigateflying.setCanEnterDoors(true);
+		return pathnavigateflying;
+	}
 
-    public void setAmount(int amount) {
-        getDataManager().set(AMOUNT, amount);
-    }
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
 
-    @Override
-    protected PathNavigate createNavigator(World worldIn) {
-        PathNavigateFlying pathnavigateflying = new PathNavigateFlying(this, worldIn);
-        pathnavigateflying.setCanOpenDoors(false);
-        pathnavigateflying.setCanFloat(true);
-        pathnavigateflying.setCanEnterDoors(true);
-        return pathnavigateflying;
-    }
+		setNoGravity(true);
 
-    @Override
-    public void onUpdate() {
-        super.onUpdate();
+		if (world.isRemote && ticksExisted == 2) {
+			ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.AMBIENT, true, () -> isDead, 0.3F);
+		}
 
-        setNoGravity(true);
+		if (ticksExisted < 60) {
+			motionX *= 0.3D;
+		}
 
-        if (world.isRemote && ticksExisted == 2) {
-            ClientUtil.playSound(this, RegenObjects.Sounds.HAND_GLOW.getRegistryName(), SoundCategory.AMBIENT, true, () -> isDead, 1.0F);
-        }
+		if (ticksExisted % 100 == 0) {
+			jump();
+		}
 
-        if (ticksExisted < 60) {
-            motionX *= 0.3D;
-        }
+		if (ticksExisted % 2200 == 0) {
+			setDead();
+		}
+	}
 
-        if (ticksExisted % 100 == 0) {
-            jump();
-        }
+	@Override
+	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
 
-        if (ticksExisted % 2200 == 0) {
-            setDead();
-        }
-    }
+		if (!world.isRemote) {
+			ItemStack stack = player.getHeldItem(hand);
+			if (stack.getItem() == RegenObjects.Items.LINDOS_VIAL) {
+				ItemLindos.setAmount(stack, ItemLindos.getAmount(stack) + getAmount());
+				setDead();
+			}
+		}
 
-    @Override
-    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+		return super.processInteract(player, hand);
+	}
 
-        if (!world.isRemote) {
-            ItemStack stack = player.getHeldItem(hand);
-            if (stack.getItem() == RegenObjects.Items.LINDOS_VIAL) {
-                ItemLindos.setAmount(stack, ItemLindos.getAmount(stack) + getAmount());
-                setDead();
-            }
-        }
+	@Override
+	public void fall(float distance, float damageMultiplier) {
+	}
 
-        return super.processInteract(player, hand);
-    }
+	@Override
+	protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
+	}
 
-    @Override
-    public void fall(float distance, float damageMultiplier) {
-    }
+	@Override
+	protected void damageEntity(DamageSource damageSrc, float damageAmount) {
+		super.damageEntity(damageSrc, damageAmount);
+	}
 
-    @Override
-    protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
-    }
-
-    @Override
-    protected void damageEntity(DamageSource damageSrc, float damageAmount) {
-        super.damageEntity(damageSrc, damageAmount);
-    }
-
-    @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.4000000059604645D);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20000000298023224D);
-    }
-
+	@Override
+	protected void applyEntityAttributes() {
+		super.applyEntityAttributes();
+		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.4000000059604645D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20000000298023224D);
+	}
+	
 }

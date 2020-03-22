@@ -6,7 +6,6 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
-import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -17,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -107,6 +107,41 @@ public class ItemLindos extends ItemOverrideBase {
     }
 
     @Override
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
+        if (!(entityLiving instanceof EntityPlayer)) return stack;
+
+        EntityPlayer player = (EntityPlayer) entityLiving;
+        IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+        if (!worldIn.isRemote) {
+
+            // If the player is in POST or Regenerating, stop them from drinking it
+            if (getAmount(stack) > 100 && hasWater(stack)) {
+                if (cap.getState() == PlayerUtil.RegenState.POST || cap.getState() == PlayerUtil.RegenState.REGENERATING || player.isCreative()) {
+                    PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
+                    return stack;
+                }
+            }
+
+            if (hasWater(stack)) {
+                // If the stack has enough, basically kill them
+                if (getAmount(stack) == 100) {
+                    if (cap.getRegenerationsLeft() < 1) cap.receiveRegenerations(1);
+                    setAmount(stack, 0);
+                    setWater(stack, false);
+                    return stack;
+                } else {
+                    PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.empty_vial"), true);
+                    return stack;
+                }
+            } else {
+                PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.no_water"), true);
+                return stack;
+            }
+        }
+        return super.onItemUseFinish(stack, worldIn, entityLiving);
+    }
+
+    @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 
         if (stack.getTagCompound() == null) {
@@ -117,21 +152,21 @@ public class ItemLindos extends ItemOverrideBase {
         }
 
         if (!worldIn.isRemote) {
-            //Entiies around
+            // Entities around
             worldIn.getEntitiesWithinAABB(EntityPlayer.class, entityIn.getEntityBoundingBox().expand(10, 10, 10)).forEach(player -> {
                 IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) entityIn);
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                    if (worldIn.rand.nextInt(100) > 50 && isSelected) {
+                    if (hasWater(stack) && worldIn.rand.nextInt(100) > 70 && PlayerUtil.isInEitherHand(player, this)) {
                         setAmount(stack, getAmount(stack) + 1);
                     }
                 }
             });
 
-            //Player glowing
+            // Player glowing
             if (entityIn instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) entityIn;
-                if (isSelected) {
-                    if (CapabilityRegeneration.getForPlayer(player).areHandsGlowing() && player.ticksExisted % 40 == 0) {
+                if (PlayerUtil.isInEitherHand(player, this)) {
+                    if (hasWater(stack) && CapabilityRegeneration.getForPlayer(player).areHandsGlowing() && player.ticksExisted % 100 == 0) {
                         setAmount(stack, getAmount(stack) + 2);
                     }
                 }
@@ -154,6 +189,7 @@ public class ItemLindos extends ItemOverrideBase {
             IBlockState iblockstate = worldIn.getBlockState(blockPos);
             Material material = iblockstate.getMaterial();
 
+            // TODO fix the logic of this
             if (iblockstate.getBlock() instanceof BlockHandInJar && player.isSneaking()) {
                 if (worldIn.getTileEntity(blockPos) instanceof TileEntityHandInJar) {
                     TileEntityHandInJar jar = (TileEntityHandInJar) worldIn.getTileEntity(blockPos);
@@ -164,12 +200,10 @@ public class ItemLindos extends ItemOverrideBase {
             }
 
             if (material == Material.WATER) {
-                worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 11);
-                player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-
                 if (!hasWater(itemStack)) {
-                    setWater(itemStack, true);
+                    worldIn.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 11);
                     player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+                    setWater(itemStack, true);
                     PlayerUtil.sendMessage(player, new TextComponentTranslation("nbt.item.water_filled"), true);
                 } else {
                     PlayerUtil.sendMessage(player, new TextComponentTranslation("nbt.item.water_already_filled"), true);
@@ -181,39 +215,25 @@ public class ItemLindos extends ItemOverrideBase {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn) {
-        ItemStack stack = player.getHeldItem(handIn);
-        IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-        if (!worldIn.isRemote) {
+    public EnumAction getItemUseAction(ItemStack stack) {
+        return EnumAction.DRINK;
+    }
 
-            //If the player is in POST or Regenerating, stop them from drinking it
-            if (getAmount(stack) > 100) {
-                if (cap.getState() == PlayerUtil.RegenState.POST || cap.getState() == PlayerUtil.RegenState.REGENERATING || player.isCreative()) {
-                    PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.cannot_use"), true);
-                    return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(handIn));
-                }
-            }
+    @Override
+    public int getMaxItemUseDuration(ItemStack stack) {
+        return 32;
+    }
 
-            if (hasWater(stack)) {
-                //If the stack has enough, basically kill them
-                if (getAmount(stack) == 100) {
-                    if (cap.getRegenerationsLeft() < 1)
-                        cap.receiveRegenerations(1);
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack itemstack = playerIn.getHeldItem(handIn);
 
-                    player.attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
-                    setAmount(stack, 0);
-                    setWater(stack, false);
-                    return ActionResult.newResult(EnumActionResult.PASS, player.getHeldItem(handIn));
-                } else {
-                    PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.empty_vial"), true);
-                    return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(handIn));
-                }
-            } else {
-                PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.no_water"), true);
-                return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(handIn));
-            }
+        if (CapabilityRegeneration.getForPlayer(playerIn).getState() != PlayerUtil.RegenState.POST) {
+            playerIn.setActiveHand(handIn);
+            return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
+        } else {
+            return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemstack);
         }
-        return ActionResult.newResult(EnumActionResult.FAIL, player.getHeldItem(handIn));
     }
 
     @Override
@@ -235,6 +255,5 @@ public class ItemLindos extends ItemOverrideBase {
             }
         }
     }
-
-
+	
 }

@@ -20,7 +20,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 @SideOnly(Side.CLIENT)
 public class ImageDownloadAlt extends SimpleTexture {
     private static final Logger logger = LogManager.getLogger();
@@ -39,32 +38,9 @@ public class ImageDownloadAlt extends SimpleTexture {
         this.imageBuffer = buffer;
     }
 
-    //It's okay, I hate it too
+    // It's okay, I hate it too
     public static boolean isAlexSkin(BufferedImage image) {
-        return hasAlpha(55, 20, image) &&
-                hasAlpha(55, 21, image) &&
-                hasAlpha(55, 22, image) &&
-                hasAlpha(55, 23, image) &&
-                hasAlpha(55, 24, image) &&
-                hasAlpha(55, 25, image) &&
-                hasAlpha(55, 26, image) &&
-                hasAlpha(55, 27, image) &&
-                hasAlpha(55, 28, image) &&
-                hasAlpha(55, 29, image) &&
-                hasAlpha(55, 30, image) &&
-                hasAlpha(55, 31, image) &&
-                hasAlpha(54, 20, image) &&
-                hasAlpha(54, 21, image) &&
-                hasAlpha(54, 22, image) &&
-                hasAlpha(54, 23, image) &&
-                hasAlpha(54, 24, image) &&
-                hasAlpha(54, 25, image) &&
-                hasAlpha(54, 26, image) &&
-                hasAlpha(54, 27, image) &&
-                hasAlpha(54, 28, image) &&
-                hasAlpha(54, 29, image) &&
-                hasAlpha(54, 30, image) &&
-                hasAlpha(54, 31, image) || hasAlpha(46, 52, image) && hasAlpha(46, 53, image) && hasAlpha(46, 54, image) && hasAlpha(46, 54, image) && hasAlpha(46, 55, image) && hasAlpha(46, 56, image) && hasAlpha(46, 57, image) && hasAlpha(46, 58, image) && hasAlpha(46, 59, image) && hasAlpha(46, 60, image) && hasAlpha(46, 61, image) && hasAlpha(46, 63, image) && hasAlpha(46, 53, image);
+        return hasAlpha(55, 20, image) && hasAlpha(55, 21, image) && hasAlpha(55, 22, image) && hasAlpha(55, 23, image) && hasAlpha(55, 24, image) && hasAlpha(55, 25, image) && hasAlpha(55, 26, image) && hasAlpha(55, 27, image) && hasAlpha(55, 28, image) && hasAlpha(55, 29, image) && hasAlpha(55, 30, image) && hasAlpha(55, 31, image) && hasAlpha(54, 20, image) && hasAlpha(54, 21, image) && hasAlpha(54, 22, image) && hasAlpha(54, 23, image) && hasAlpha(54, 24, image) && hasAlpha(54, 25, image) && hasAlpha(54, 26, image) && hasAlpha(54, 27, image) && hasAlpha(54, 28, image) && hasAlpha(54, 29, image) && hasAlpha(54, 30, image) && hasAlpha(54, 31, image) || hasAlpha(46, 52, image) && hasAlpha(46, 53, image) && hasAlpha(46, 54, image) && hasAlpha(46, 54, image) && hasAlpha(46, 55, image) && hasAlpha(46, 56, image) && hasAlpha(46, 57, image) && hasAlpha(46, 58, image) && hasAlpha(46, 59, image) && hasAlpha(46, 60, image) && hasAlpha(46, 61, image) && hasAlpha(46, 63, image) && hasAlpha(46, 53, image);
     }
 
     public static boolean hasAlpha(int x, int y, BufferedImage image) {
@@ -165,5 +141,5 @@ public class ImageDownloadAlt extends SimpleTexture {
         this.imageThread.setDaemon(true);
         this.imageThread.start();
     }
-
+	
 }

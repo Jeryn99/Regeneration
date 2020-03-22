@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 public class RegenerationPlugin implements IFMLLoadingPlugin {
 
-    //ASM UTILS BELOW
+    // ASM UTILS BELOW
     public static void insertBefore(InsnList instructions, Predicate<AbstractInsnNode> predicate, Supplier<InsnList> insert) {
         AbstractInsnNode node = selectNode(instructions, predicate);
         if (node != null) {
@@ -69,5 +69,5 @@ public class RegenerationPlugin implements IFMLLoadingPlugin {
     public String getAccessTransformerClass() {
         return null;
     }
-
+	
 }

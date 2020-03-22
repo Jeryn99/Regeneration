@@ -2,12 +2,14 @@ package me.swirtzly.regeneration.client.animation;
 
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.item.ItemArchInterface;
 import me.swirtzly.regeneration.common.item.ItemFobWatch;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 
 public class AnimationHandler {
@@ -19,10 +21,10 @@ public class AnimationHandler {
         ModelBiped modelBiped = animationContext.getModelBiped();
         IRegeneration data = CapabilityRegeneration.getForPlayer(player);
 
-        //==============FOB WATCH & JAR START==============
+        // ==============FOB WATCH & JAR START==============
         boolean isOpen;
 
-        //MAINHAND
+        // MAINHAND
         if (stack.getItem() instanceof ItemFobWatch) {
             isOpen = ItemFobWatch.getOpen(stack) == 1;
             if (isOpen) {
@@ -31,7 +33,7 @@ public class AnimationHandler {
             }
         }
 
-        //OFFHAND
+        // OFFHAND
         if (offStack.getItem() instanceof ItemFobWatch) {
             isOpen = ItemFobWatch.getOpen(stack) == 1;
             if (isOpen) {
@@ -39,9 +41,9 @@ public class AnimationHandler {
                 return copyAndReturn(modelBiped, true);
             }
         }
-        //==============FOB WATCH END==============
+        // ==============FOB WATCH END==============
 
-        //JAR SYNCING
+        // JAR SYNCING
         if (data.isSyncingToJar()) {
 
             double animationProgress = data.getAnimationTicks();
@@ -58,7 +60,7 @@ public class AnimationHandler {
             modelBiped.bipedBody.rotateAngleY = 0;
             modelBiped.bipedBody.rotateAngleZ = 0;
 
-            //Legs
+            // Legs
             modelBiped.bipedLeftLeg.rotateAngleY = 0;
             modelBiped.bipedRightLeg.rotateAngleY = 0;
             modelBiped.bipedLeftLeg.rotateAngleX = 0;
@@ -69,7 +71,7 @@ public class AnimationHandler {
             return copyAndReturn(modelBiped, true);
         }
 
-        //STRUGGLE IN CRITICAL
+        // STRUGGLE IN CRITICAL
         if (CapabilityRegeneration.getForPlayer(player).getState() == PlayerUtil.RegenState.GRACE_CRIT) {
             modelBiped.bipedBody.rotateAngleX = 0.5F;
             modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-25);
@@ -84,6 +86,14 @@ public class AnimationHandler {
             return copyAndReturn(modelBiped, true);
         }
 
+        if (player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemArchInterface) {
+            modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(55);
+            modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-100);
+            modelBiped.bipedRightArm.rotateAngleY = (float) Math.toRadians(-5);
+            modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-100);
+            modelBiped.bipedLeftArm.rotateAngleY = (float) Math.toRadians(5);
+            return copyAndReturn(modelBiped, true);
+        }
 
         return copyAndReturn(modelBiped, false);
     }
@@ -103,6 +113,5 @@ public class AnimationHandler {
         modelBiped.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
         return copyAndReturn(modelBiped, true);
     }
-
-
+	
 }

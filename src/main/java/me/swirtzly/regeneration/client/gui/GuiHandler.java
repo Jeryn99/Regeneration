@@ -1,9 +1,13 @@
 package me.swirtzly.regeneration.client.gui;
 
+import me.swirtzly.regeneration.client.gui.parts.ContainerArch;
 import me.swirtzly.regeneration.client.gui.parts.HIJContainer;
+import me.swirtzly.regeneration.common.item.arch.capability.ArchInventory;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,6 +23,9 @@ public class GuiHandler implements IGuiHandler {
         switch (id) {
             case GuiHij.ID:
                 return new HIJContainer(player.inventory, (IInventory) world.getTileEntity(new BlockPos(x, y, z)), player);
+            case ContainerArch.ID:
+                ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+                return new ContainerArch(player, new ArchInventory(stack));
         }
         return null;
     }
@@ -36,9 +43,12 @@ public class GuiHandler implements IGuiHandler {
             case GuiHij.ID:
                 TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
                 return new GuiHij(player.inventory, (IInventory) tile, (TileEntityHandInJar) tile);
+            case ContainerArch.ID:
+                ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+                return new GuiArchInterface(player, new ArchInventory(stack));
             default:
                 return null;
         }
     }
-
+	
 }

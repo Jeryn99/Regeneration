@@ -18,8 +18,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.util.UUID;
 
 /**
- * Created by Suffril
- * on 20/01/2019.
+ * Created by Suffril on 20/01/2019.
  */
 public class MessagePlayRegenerationSound implements IMessage {
 

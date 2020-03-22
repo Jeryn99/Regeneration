@@ -10,8 +10,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 /**
- * Created by Swirtzly
- * on 22/09/2019 @ 20:57
+ * Created by Swirtzly on 22/09/2019 @ 20:57
  */
 public class EntityWatcher extends EntityCreature {
 

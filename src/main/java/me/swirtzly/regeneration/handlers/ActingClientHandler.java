@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.handlers;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.asm.RegenClientHooks;
-import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -16,7 +15,6 @@ class ActingClientHandler implements IActingHandler {
 
     public static final IActingHandler INSTANCE = new ActingClientHandler();
 
-
     private ActingClientHandler() {
     }
 
@@ -27,6 +25,7 @@ class ActingClientHandler implements IActingHandler {
 
     @Override
     public void onEnterGrace(IRegeneration cap) {
+        ClientUtil.takeScreenshot();
         ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.HEART_BEAT.getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
         ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.GRACE_HUM.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE, 1.5F);
         RegenClientHooks.handleShader();
@@ -46,6 +45,7 @@ class ActingClientHandler implements IActingHandler {
             Minecraft.getMinecraft().gameSettings.mainHand = RegenUtil.randomEnum(EnumHandSide.class);
             Minecraft.getMinecraft().gameSettings.sendSettingsToServer();
         }
+
         RegenClientHooks.handleShader();
     }
 
@@ -61,9 +61,6 @@ class ActingClientHandler implements IActingHandler {
 
     @Override
     public void onRegenTrigger(IRegeneration cap) {
-        if (Minecraft.getMinecraft().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
-            SkinChangingHandler.sendSkinUpdate(cap.getPlayer().world.rand, cap.getPlayer());
-        }
         RegenClientHooks.handleShader();
     }
 
@@ -73,6 +70,5 @@ class ActingClientHandler implements IActingHandler {
         ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE_CRIT, 1.0F);
         RegenClientHooks.handleShader();
     }
-
-
+	
 }

@@ -32,14 +32,17 @@ public class HIJContainer extends Container {
         }
     }
 
+    @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
         return true;
     }
 
+    @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
         return ItemStack.EMPTY;
     }
 
+    @Override
     public void onContainerClosed(EntityPlayer playerIn) {
         super.onContainerClosed(playerIn);
         this.hijInv.closeInventory(playerIn);
@@ -56,6 +59,5 @@ public class HIJContainer extends Container {
             return stack.getItem() == RegenObjects.Items.HAND;
         }
     }
-
+	
 }
-

@@ -9,8 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.UUID;
 
 /**
- * Created by Suffril
- * on 24/01/2019.
+ * Created by Suffril on 24/01/2019.
  */
 public class DnaAthlete extends DnaHandler.IDna {
 
@@ -56,5 +55,5 @@ public class DnaAthlete extends DnaHandler.IDna {
             player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(KNOCKBACK_MODIFIER);
         }
     }
-
+	
 }

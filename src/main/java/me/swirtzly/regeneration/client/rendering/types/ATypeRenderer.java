@@ -12,7 +12,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent.Pre;
 
 public abstract class ATypeRenderer<T> {
 
-
     protected abstract void onRenderRegeneratingPre(T type, Pre event, IRegeneration capability);
 
     protected abstract void onRenderRegeneratingPost(T type, RenderPlayerEvent.Post event, IRegeneration capability);
@@ -53,5 +52,5 @@ public abstract class ATypeRenderer<T> {
     public abstract void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render);
 
     public abstract void onRenderCallBack(RenderCallbackEvent event);
-
+	
 }

@@ -31,7 +31,6 @@ public class MessageChangeType implements IMessage {
         ByteBufUtils.writeUTF8String(buf, regenType);
     }
 
-
     public static class Handler implements IMessageHandler<MessageChangeType, IMessage> {
         @Override
         public IMessage onMessage(MessageChangeType message, MessageContext ctx) {

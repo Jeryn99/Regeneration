@@ -20,7 +20,6 @@ public class TypeHandler {
         return TYPES.get(RegenType.FIERY);
     }
 
-
     public enum RegenType implements FileUtil.IEnum {
         FIERY, LAY_FADE
     }

@@ -33,8 +33,7 @@ public class MessageRegenStateEvent implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        if (Minecraft.getMinecraft().player == null)
-            return;
+        if (Minecraft.getMinecraft().player == null) return;
         player = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
         event = ByteBufUtils.readUTF8String(buf);
     }
@@ -47,5 +46,5 @@ public class MessageRegenStateEvent implements IMessage {
             return null;
         }
     }
-
+	
 }

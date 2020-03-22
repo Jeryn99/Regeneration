@@ -15,8 +15,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class RenderUtil {
 
@@ -40,8 +39,7 @@ public class RenderUtil {
     }
 
     public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Vec3d color, float alpha) {
-        if (start == null || end == null)
-            return;
+        if (start == null || end == null) return;
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bb = tessellator.getBuffer();
@@ -217,5 +215,5 @@ public class RenderUtil {
         GlStateManager.disableDepth();
         GlStateManager.popMatrix();
     }
-
+	
 }

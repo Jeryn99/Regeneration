@@ -6,9 +6,7 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.openal.*;
 
 /**
- * This ASM has been lifted and edited from the mod Midnight
- * All credit for this code should go to them, they can be found below:
- * https://github.com/Cryptic-Mushroom/The-Midnight/
+ * This ASM has been lifted and edited from the mod Midnight All credit for this code should go to them, they can be found below: https://github.com/Cryptic-Mushroom/The-Midnight/
  */
 public class SoundReverbHandler {
     private static final Minecraft MC = Minecraft.getMinecraft();
@@ -86,5 +84,5 @@ public class SoundReverbHandler {
         }
         return CapabilityRegeneration.getForPlayer(MC.player).getState().isGraceful();
     }
-
+	
 }

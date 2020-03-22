@@ -9,8 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class RegenerationProvider implements ICapabilitySerializable<NBTTagCompound> {
 
@@ -40,5 +39,5 @@ public class RegenerationProvider implements ICapabilitySerializable<NBTTagCompo
     public void deserializeNBT(NBTTagCompound nbt) {
         CapabilityRegeneration.CAPABILITY.getStorage().readNBT(CapabilityRegeneration.CAPABILITY, capability, null, nbt);
     }
-
+	
 }

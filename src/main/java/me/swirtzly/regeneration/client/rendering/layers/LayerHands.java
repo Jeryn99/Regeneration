@@ -19,7 +19,6 @@ public class LayerHands implements LayerRenderer<EntityPlayer> {
         this.livingEntityRenderer = livingEntityRendererIn;
     }
 
-
     public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         GlStateManager.pushMatrix();
 

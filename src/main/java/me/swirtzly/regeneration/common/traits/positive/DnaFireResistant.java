@@ -27,5 +27,5 @@ public class DnaFireResistant extends DnaHandler.IDna {
     public void onRemoved(IRegeneration cap) {
 
     }
-
+	
 }

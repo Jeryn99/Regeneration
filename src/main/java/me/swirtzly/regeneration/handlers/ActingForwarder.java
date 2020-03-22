@@ -125,13 +125,12 @@ public class ActingForwarder {
      * Knows what to forward by reflection magic
      */
     private static void checkAndForward(IRegeneration cap, RegenEvent event) {
-        if (cap.getPlayer().world.isRemote)
-            throw new IllegalStateException("'Posting' \"acting\" `event` from client");
+        if (cap.getPlayer().world.isRemote) throw new IllegalStateException("'Posting' \"acting\" `event` from client");
         NetworkHandler.INSTANCE.sendTo(new MessageRegenStateEvent(cap.getPlayer(), event.name()), (EntityPlayerMP) cap.getPlayer());
     }
 
     public enum RegenEvent {
         ENTER_GRACE, REGEN_FINISH, REGEN_TRIGGER, CRITICAL_START, PERFORM_POST, HAND_GLOW_START, PROCESS_DONE
     }
-
+	
 }

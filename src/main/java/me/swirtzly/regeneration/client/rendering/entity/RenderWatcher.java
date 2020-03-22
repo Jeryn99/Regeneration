@@ -11,8 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nullable;
 
 /**
- * Created by Swirtzly
- * on 22/09/2019 @ 20:59
+ * Created by Swirtzly on 22/09/2019 @ 20:59
  */
 public class RenderWatcher extends RenderLiving<EntityWatcher> {
 

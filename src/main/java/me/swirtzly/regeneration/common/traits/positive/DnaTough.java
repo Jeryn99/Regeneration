@@ -11,8 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.UUID;
 
 /**
- * Created by Suffril
- * on 24/01/2019.
+ * Created by Suffril on 24/01/2019.
  */
 public class DnaTough extends IDna {
 

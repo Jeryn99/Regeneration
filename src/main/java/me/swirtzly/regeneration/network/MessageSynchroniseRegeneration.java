@@ -13,8 +13,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.util.UUID;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class MessageSynchroniseRegeneration implements IMessage {
 
@@ -37,8 +36,7 @@ public class MessageSynchroniseRegeneration implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        if (Minecraft.getMinecraft().player == null)
-            return;
+        if (Minecraft.getMinecraft().player == null) return;
         player = Minecraft.getMinecraft().player.world.getPlayerEntityByUUID(UUID.fromString(ByteBufUtils.readUTF8String(buf)));
         data = ByteBufUtils.readTag(buf);
     }
@@ -53,5 +51,5 @@ public class MessageSynchroniseRegeneration implements IMessage {
             return null;
         }
     }
-
+	
 }

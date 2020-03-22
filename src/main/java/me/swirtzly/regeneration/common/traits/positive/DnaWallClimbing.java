@@ -27,5 +27,5 @@ public class DnaWallClimbing extends DnaHandler.IDna {
     public void onRemoved(IRegeneration cap) {
 
     }
-
+	
 }

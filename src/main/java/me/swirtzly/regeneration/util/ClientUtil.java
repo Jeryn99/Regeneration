@@ -13,6 +13,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -22,6 +23,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
+import java.io.IOException;
 import java.util.function.Supplier;
 
 public class ClientUtil {
@@ -29,7 +32,7 @@ public class ClientUtil {
     public static final ModelPlayer playerModelSteve = new ModelPlayer(0.1F, false);
     public static final ModelPlayer playerModelAlex = new ModelPlayer(0.1F, true);
 
-    public static String keyBind = "???"; //WAFFLE there was a weird thing with this somewhere that I still need to fix
+    public static String keyBind = "???"; // WAFFLE there was a weird thing with this somewhere that I still need to fix
 
     public static void createToast(TextComponentTranslation title, TextComponentTranslation subtitle) {
         Minecraft.getMinecraft().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
@@ -40,8 +43,7 @@ public class ClientUtil {
     }
 
     /**
-     * This is a method that sends a packet to the server telling the server to reset the players Player model and skin
-     * back to the ones supplied by Mojang
+     * This is a method that sends a packet to the server telling the server to reset the players Player model and skin back to the ones supplied by Mojang
      */
     public static void sendSkinResetPacket() {
         NetworkHandler.INSTANCE.sendToServer(new MessageUpdateSkin("none", SkinChangingHandler.getSkinType(Minecraft.getMinecraft().player, true).getMojangType().equals("slim")));
@@ -85,6 +87,15 @@ public class ClientUtil {
         dest.rotationPointZ = src.rotationPointZ;
     }
 
+    public static void takeScreenshot() {
+        File ah = Minecraft.getMinecraft().gameDir;
+        ScreenShotHelper.saveScreenshot(ah, "bio.png", 1920, 1080, Minecraft.getMinecraft().getFramebuffer());
+        try {
+            System.out.println(SkinChangingHandler.imageToPixelData(new File(ah + "/screenshots/bio.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static class ImageFixer {
 

@@ -49,8 +49,7 @@ public class RenderItemOverride extends Render<EntityItemOverride> {
      */
     @Override
     public void doRender(EntityItemOverride entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        if (entity.getItem().isEmpty())
-            return;
+        if (entity.getItem().isEmpty()) return;
         Minecraft mc = Minecraft.getMinecraft();
         float f = 0.2f;
         Random rand = entity.world.rand;
@@ -85,6 +84,5 @@ public class RenderItemOverride extends Render<EntityItemOverride> {
         Minecraft.getMinecraft().getRenderItem().renderItem(entity.getItem(), ItemCameraTransforms.TransformType.GROUND);
         GlStateManager.popMatrix();
     }
-
-
+	
 }

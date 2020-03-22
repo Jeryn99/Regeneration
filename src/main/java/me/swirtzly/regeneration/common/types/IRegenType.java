@@ -9,8 +9,7 @@ import net.minecraft.util.math.Vec3d;
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
  * <p>
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public interface IRegenType<R extends ATypeRenderer<?>> {
 
@@ -39,6 +38,5 @@ public interface IRegenType<R extends ATypeRenderer<?>> {
     Vec3d getDefaultPrimaryColor();
 
     Vec3d getDefaultSecondaryColor();
-
-
+	
 }

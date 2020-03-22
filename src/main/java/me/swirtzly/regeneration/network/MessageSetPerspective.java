@@ -40,8 +40,7 @@ public class MessageSetPerspective implements IMessage {
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 if (Minecraft.getMinecraft().getRenderViewEntity().getUniqueID() == Minecraft.getMinecraft().player.getUniqueID()) {
                     if (RegenConfig.changePerspective) {
-                        if (message.resetPitch)
-                            Minecraft.getMinecraft().player.rotationPitch = 0;
+                        if (message.resetPitch) Minecraft.getMinecraft().player.rotationPitch = 0;
                         Minecraft.getMinecraft().gameSettings.thirdPersonView = message.thirdperson ? 2 : 0;
                     }
                 }

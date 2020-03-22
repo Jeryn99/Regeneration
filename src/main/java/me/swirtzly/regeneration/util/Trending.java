@@ -19,7 +19,6 @@ import static me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler.S
 import static me.swirtzly.regeneration.util.FileUtil.getJsonFromURL;
 import static me.swirtzly.regeneration.util.FileUtil.unzipSkinPack;
 
-
 public class Trending {
 
     public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
@@ -43,7 +42,7 @@ public class Trending {
                 try {
                     String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getMinecraft().getSession().getPlayerID() + "?page=" + i;
                     for (String skin : getSkins(url)) {
-                        FileUtil.downloadSkins(new URL(skin), Minecraft.getMinecraft().getSession().getUsername() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
+                        FileUtil.downloadAsPng(new URL(skin), Minecraft.getMinecraft().getSession().getUsername() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -78,7 +77,6 @@ public class Trending {
         return skins;
     }
 
-
     public static void downloadTrendingSkins() throws IOException {
         if (!RegenConfig.skins.downloadTrendingSkins) return;
         File trendingDir = TRENDING_ALEX;
@@ -90,7 +88,8 @@ public class Trending {
             FileUtils.deleteDirectory(trendingDir);
             RegenerationMod.LOG.warn("Refreshing Trending skins");
             for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
-                FileUtil.downloadSkins(new URL(skin), "trending_" + System.currentTimeMillis(), TRENDING_ALEX, TRENDING_STEVE);
+                String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
+                FileUtil.downloadAsPng(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
             }
         }
     }
@@ -103,5 +102,5 @@ public class Trending {
             unzipSkinPack(link);
         }
     }
-
+	
 }

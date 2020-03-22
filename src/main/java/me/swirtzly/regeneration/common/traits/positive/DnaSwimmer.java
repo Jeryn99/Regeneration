@@ -9,11 +9,9 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Created by Suffril
- * on 25/01/2019.
+ * Created by Suffril on 25/01/2019.
  */
 public class DnaSwimmer extends DnaHandler.IDna {
-
 
     private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "swimmer");
 

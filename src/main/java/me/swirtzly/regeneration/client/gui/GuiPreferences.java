@@ -11,7 +11,6 @@ import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.network.MessageChangeType;
 import me.swirtzly.regeneration.network.MessageUpdateModel;
 import me.swirtzly.regeneration.network.NetworkHandler;
-import me.swirtzly.regeneration.util.ClientUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -31,7 +30,6 @@ public class GuiPreferences extends GuiContainer {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(RegenerationMod.MODID, "textures/gui/pref_back.png");
     private static TypeHandler.RegenType SELECTED_TYPE = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getType();
     private static SkinChangingHandler.EnumChoices CHOICES = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getPreferredModel();
-
 
     public GuiPreferences() {
         super(new BlankContainer());
@@ -56,12 +54,6 @@ public class GuiPreferences extends GuiContainer {
         GuiButtonExt btnColor = new GuiButtonExt(99, width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TextComponentTranslation("regeneration.gui.color_gui").getUnformattedComponentText());
         GuiButtonExt btnOpenFolder = new GuiButtonExt(100, width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TextComponentTranslation("regeneration.gui.skin_choice").getFormattedText());
 
-        GuiButtonExt forceAlex = new GuiButtonExt(34, cx + 135, cy + 175, btnW + 50, btnH, new TextComponentTranslation("regeneration.gui.force_alex").getFormattedText());
-        GuiButtonExt forceSteve = new GuiButtonExt(35, cx + 15, cy + 175, btnW + 50, btnH, new TextComponentTranslation("regeneration.gui.force_steve").getFormattedText());
-
-        addButton(forceAlex);
-        addButton(forceSteve);
-
         buttonList.add(btnRegenType);
         buttonList.add(btnOpenFolder);
         buttonList.add(btnClose);
@@ -79,7 +71,7 @@ public class GuiPreferences extends GuiContainer {
         int cy = (height - ySize) / 2;
 
         GlStateManager.pushMatrix();
-        //RenderUtil.drawRect(width / 2, height / 2 - 50, width / 2 - 80, height / 2 + 35, 0.0F, 0.0F, 0.0F, 1);
+        // RenderUtil.drawRect(width / 2, height / 2 - 50, width / 2 - 80, height / 2 + 35, 0.0F, 0.0F, 0.0F, 1);
         GuiInventory.drawEntityOnScreen(width / 2 - 75, height / 2 + 45, 55, (float) (guiLeft + 51) - mouseX, (float) (guiTop + 75 - 50) - mouseY, Minecraft.getMinecraft().player);
         GlStateManager.popMatrix();
 
@@ -138,20 +130,13 @@ public class GuiPreferences extends GuiContainer {
                 button.displayString = new TextComponentTranslation("regeneration.gui.skintype", new TextComponentTranslation("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText();
                 NetworkHandler.INSTANCE.sendToServer(new MessageUpdateModel(CHOICES.name()));
                 break;
-            case 34:
-                ClientUtil.sendSkinChange(true);
-                break;
-            case 35:
-                ClientUtil.sendSkinChange(false);
-                break;
         }
     }
-
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
-
+	
 }

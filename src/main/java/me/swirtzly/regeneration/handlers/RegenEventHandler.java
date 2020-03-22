@@ -56,8 +56,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.POST;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 @Mod.EventBusSubscriber(modid = RegenerationMod.MODID)
 public class RegenEventHandler {
@@ -126,11 +125,9 @@ public class RegenEventHandler {
 
     @SubscribeEvent
     public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-        if (e.getEntityPlayer().world.isRemote)
-            return;
+        if (e.getEntityPlayer().world.isRemote) return;
         CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).getStateManager().onPunchBlock(e);
     }
-
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onHurt(LivingHurtEvent event) {
@@ -197,7 +194,6 @@ public class RegenEventHandler {
         }
     }
 
-
     @SubscribeEvent
     public static void onKnockback(LivingKnockBackEvent event) {
         if (event.getEntityLiving() instanceof EntityPlayer) {
@@ -210,11 +206,9 @@ public class RegenEventHandler {
     // ================ OTHER ==============
     @SubscribeEvent
     public static void onLogin(PlayerLoggedInEvent event) {
-        if (event.player.world.isRemote)
-            return;
+        if (event.player.world.isRemote) return;
 
-        NBTTagCompound nbt = event.player.getEntityData(),
-                persist = nbt.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+        NBTTagCompound nbt = event.player.getEntityData(), persist = nbt.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
         if (!persist.getBoolean("loggedInBefore"))
             CapabilityRegeneration.getForPlayer(event.player).receiveRegenerations(RegenConfig.freeRegenerations);
         persist.setBoolean("loggedInBefore", true);
@@ -293,6 +287,5 @@ public class RegenEventHandler {
             }
         }
     }
-
-
+	
 }

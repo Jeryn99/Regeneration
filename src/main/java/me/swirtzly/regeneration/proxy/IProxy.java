@@ -1,8 +1,7 @@
 package me.swirtzly.regeneration.proxy;
 
 /**
- * Created by Sub
- * on 17/09/2018.
+ * Created by Sub on 17/09/2018.
  */
 public interface IProxy {
 
@@ -14,5 +13,5 @@ public interface IProxy {
 
     default void postInit() {
     }
-
+	
 }

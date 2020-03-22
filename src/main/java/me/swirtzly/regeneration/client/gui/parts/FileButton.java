@@ -5,18 +5,17 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import java.io.File;
 
 /**
- * Created by Swirtzly
- * on 11/01/2020 @ 11:04
+ * Created by Swirtzly on 11/01/2020 @ 11:04
  */
-public class BlankButton extends GuiButtonExt {
+public class FileButton extends GuiButtonExt {
 
     private File fileLocation;
 
-    public BlankButton(int id, int xPos, int yPos, String displayString) {
+    public FileButton(int id, int xPos, int yPos, String displayString) {
         super(id, xPos, yPos, displayString);
     }
 
-    public BlankButton(int id, int xPos, int yPos, int width, int height, String displayString) {
+    public FileButton(int id, int xPos, int yPos, int width, int height, String displayString) {
         super(id, xPos, yPos, width, height, displayString);
     }
 

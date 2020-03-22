@@ -24,9 +24,7 @@ public class ItemHand extends Item {
 
     public ItemHand() {
         setMaxStackSize(1);
-
         addPropertyOverride(new ResourceLocation("skin_type"), (stack, worldIn, entityIn) -> getSkinType(stack).equals("ALEX") ? 1 : 0);
-
     }
 
     public static void setTimeCreated(ItemStack stack, long created) {
@@ -60,7 +58,6 @@ public class ItemHand extends Item {
     public static String getTrait(ItemStack stack) {
         return getStackTag(stack).getString("trait");
     }
-
 
     public static void setOwner(ItemStack stack, UUID owner) {
         getStackTag(stack).setUniqueId("owner", owner);

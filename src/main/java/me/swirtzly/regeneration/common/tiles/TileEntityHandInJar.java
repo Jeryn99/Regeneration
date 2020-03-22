@@ -25,188 +25,183 @@ import javax.annotation.Nullable;
 
 public class TileEntityHandInJar extends TileEntity implements ITickable, IInventory {
 
-    public int lindosAmont = 0;
-    private NonNullList<ItemStack> handInv = NonNullList.withSize(7, ItemStack.EMPTY);
+	public int lindosAmont = 0;
+	private NonNullList<ItemStack> handInv = NonNullList.withSize(7, ItemStack.EMPTY);
 
-    public int getLindosAmont() {
-        return lindosAmont;
-    }
+	public int getLindosAmont() {
+		return lindosAmont;
+	}
 
-    public void setLindosAmont(int lindosAmont) {
-        this.lindosAmont = lindosAmont;
-    }
+	public void setLindosAmont(int lindosAmont) {
+		this.lindosAmont = lindosAmont;
+	}
 
-    @Override
-    public void update() {
+	@Override
+	public void update() {
 
-        if (world.getWorldTime() % 35 == 0 && hasHand()) {
-            world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.4F, 0.3F);
-        }
+		if (world.getWorldTime() % 45 == 0 && hasHand()) {
+			world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.2F, 0.2F);
+		}
 
-        EntityPlayer player = world.getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 56, false);
-        if (player != null) {
-            IRegeneration data = CapabilityRegeneration.getForPlayer(player);
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                if (world.rand.nextInt(90) < 10) {
-                    lindosAmont = lindosAmont + 1;
-                }
-            }
-        }
-    }
+		EntityPlayer player = world.getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 56, false);
+		if (player != null) {
+			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
+			if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
+				if (world.rand.nextInt(90) < 10) {
+					lindosAmont = lindosAmont + 1;
+				}
+			}
+		}
+	}
 
-    public ItemStack getHand() {
-        return handInv.get(3);
-    }
+	public ItemStack getHand() {
+		return handInv.get(3);
+	}
 
-    public boolean hasHand() {
-        return handInv.get(3).getItem() == RegenObjects.Items.HAND;
-    }
+	public boolean hasHand() {
+		return handInv.get(3).getItem() == RegenObjects.Items.HAND;
+	}
 
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		compound.setFloat("lindos", lindosAmont);
+		compound.setBoolean("hasHand", hasHand());
+		ItemStackHelper.saveAllItems(compound, this.handInv);
+		return super.writeToNBT(compound);
+	}
 
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setFloat("lindos", lindosAmont);
-        compound.setBoolean("hasHand", hasHand());
-        ItemStackHelper.saveAllItems(compound, this.handInv);
-        return super.writeToNBT(compound);
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		lindosAmont = compound.getInteger("lindos");
+		ItemStackHelper.loadAllItems(compound, this.handInv);
+		super.readFromNBT(compound);
+	}
 
+	@Override
+	public int getSizeInventory() {
+		return handInv.size();
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        lindosAmont = compound.getInteger("lindos");
-        ItemStackHelper.loadAllItems(compound, this.handInv);
-        super.readFromNBT(compound);
-    }
+	@Override
+	public boolean isEmpty() {
+		return handInv.isEmpty();
+	}
 
+	@Override
+	public ItemStack getStackInSlot(int index) {
+		return handInv.get(index);
+	}
 
-    @Override
-    public int getSizeInventory() {
-        return handInv.size();
-    }
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+		ItemStack itemstack = this.handInv.get(index);
 
-    @Override
-    public boolean isEmpty() {
-        return handInv.isEmpty();
-    }
+		if (index == 2 && !itemstack.isEmpty()) {
+			return ItemStackHelper.getAndSplit(this.handInv, index, itemstack.getCount());
+		} else {
+			return ItemStackHelper.getAndSplit(this.handInv, index, count);
+		}
+	}
 
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return handInv.get(index);
-    }
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return ItemStackHelper.getAndRemove(handInv, index);
+	}
 
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        ItemStack itemstack = this.handInv.get(index);
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		this.handInv.set(index, stack);
+		if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
+			stack.setCount(this.getInventoryStackLimit());
+		}
+	}
 
-        if (index == 2 && !itemstack.isEmpty()) {
-            return ItemStackHelper.getAndSplit(this.handInv, index, itemstack.getCount());
-        } else {
-            ItemStack itemstack1 = ItemStackHelper.getAndSplit(this.handInv, index, count);
-            return itemstack1;
-        }
-    }
+	@Override
+	public int getInventoryStackLimit() {
+		return 1;
+	}
 
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return true;
+	}
 
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(handInv, index);
-    }
+	@Override
+	public void openInventory(EntityPlayer player) {
+		this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), false);
+	}
 
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        this.handInv.set(index, stack);
-        if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
-            stack.setCount(this.getInventoryStackLimit());
-        }
-    }
+	@Override
+	public void closeInventory(EntityPlayer player) {
 
-    @Override
-    public int getInventoryStackLimit() {
-        return 1;
-    }
+	}
 
-    @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
-        return true;
-    }
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		return true;
+	}
 
-    @Override
-    public void openInventory(EntityPlayer player) {
-        this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), false);
-    }
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
 
-    @Override
-    public void closeInventory(EntityPlayer player) {
+	@Override
+	public void setField(int id, int value) {
 
-    }
+	}
 
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return true;
-    }
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
 
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
+	@Override
+	public void clear() {
+		handInv.clear();
+	}
 
-    @Override
-    public void setField(int id, int value) {
+	@Override
+	public String getName() {
+		return getDisplayName().getUnformattedText();
+	}
 
-    }
+	@Override
+	public boolean hasCustomName() {
+		return true;
+	}
 
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
+	@Nullable
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TextComponentTranslation(RegenObjects.Blocks.HAND_JAR.getLocalizedName());
+	}
 
-    @Override
-    public void clear() {
-        handInv.clear();
-    }
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(pos, 3, getUpdateTag());
+	}
 
-    @Override
-    public String getName() {
-        return getDisplayName().getUnformattedText();
-    }
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		return writeToNBT(new NBTTagCompound());
+	}
 
-    @Override
-    public boolean hasCustomName() {
-        return true;
-    }
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		super.onDataPacket(net, pkt);
+		handleUpdateTag(pkt.getNbtCompound());
+	}
 
-    @Nullable
-    @Override
-    public ITextComponent getDisplayName() {
-        return new TextComponentTranslation(RegenObjects.Blocks.HAND_JAR.getLocalizedName());
-    }
+	public void sendUpdates() {
+		world.markBlockRangeForRenderUpdate(pos, pos);
+		world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+		world.scheduleBlockUpdate(pos, getBlockType(), 0, 0);
+		markDirty();
+	}
 
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(pos, 3, getUpdateTag());
-    }
-
-    @Override
-    public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
-    }
-
-    public void sendUpdates() {
-        world.markBlockRangeForRenderUpdate(pos, pos);
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        world.scheduleBlockUpdate(pos, getBlockType(), 0, 0);
-        markDirty();
-    }
-
-    @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-        return false;
-    }
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+		return false;
+	}
 }

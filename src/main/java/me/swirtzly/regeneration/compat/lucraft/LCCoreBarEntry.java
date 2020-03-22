@@ -75,6 +75,5 @@ public class LCCoreBarEntry implements IAbilityBarProvider, IAbilityBarEntry {
         list.add(new LCCoreBarEntry());
         return list;
     }
-
-
+	
 }

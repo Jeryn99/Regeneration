@@ -11,7 +11,6 @@ public class RegenTriggers {
     public static final CustomTrigger HAND = new CustomTrigger("hand");
     public static final CustomTrigger HAND_JAR_FIRST = new CustomTrigger("hand_jar");
 
-
     public static void init() {
         CriteriaTriggers.register(FIRST_REGENERATION);
         CriteriaTriggers.register(CHANGE_REFUSAL);
@@ -20,5 +19,5 @@ public class RegenTriggers {
         CriteriaTriggers.register(HAND);
         CriteriaTriggers.register(HAND_JAR_FIRST);
     }
-
+	
 }

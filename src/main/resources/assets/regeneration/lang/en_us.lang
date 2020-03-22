@@ -1,6 +1,7 @@
 #PARSE_ESCAPES
 item.fob_watch.name=Fob Watch
 item.lindos_vial.name=Lindos Vial
+item.arch.name=Chameleon Arch
 item.hand.name=%s's hand
 regeneration.gui.red=Red
 regeneration.gui.green=Green
@@ -10,17 +11,15 @@ regeneration.gui.secondary=Secondary
 regeneration.gui.undo=Undo
 regeneration.gui.default=Type Default
 regeneration.gui.open_folder=Skin Dir
-regeneration.gui.skin_choice=Select next incarnation
+regeneration.gui.skin_choice=Skin Settings
 regeneration.gui.save=Save
 regeneration.gui.next_incarnation=Select next incarnation
 regeneration.gui.reset_skin=Reset Skin
 regeneration.gui.infinite_regenerations=Infinite Regeneration Mode
 regeneration.gui.remaining_regens.status=Remaining Regenerations:
-regeneration.gui.color_gui=Color selection
+regeneration.gui.color_gui=Colour Settings
 regeneration.gui.close=Close
 regeneration.gui.type=Type: %s
-regeneration.gui.force_alex=Force Alex Model
-regeneration.gui.force_steve=Force Steve Model
 
 regeneration.messages.now_timelord=You are now a Time lord!
 regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch

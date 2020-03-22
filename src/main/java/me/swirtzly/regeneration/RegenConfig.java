@@ -7,8 +7,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Created by Sub
- * on 17/09/2018.
+ * Created by Sub on 17/09/2018.
  */
 @Config(modid = RegenerationMod.MODID, name = "Regeneration")
 public class RegenConfig {
@@ -30,7 +29,6 @@ public class RegenConfig {
 
     @Config.LangKey("config.regeneration.category.skins")
     public static final Skins skins = new Skins();
-
 
     @Config.LangKey("config.regeneration.max_regens")
     @Config.Comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.")
@@ -117,7 +115,6 @@ public class RegenConfig {
 
     }
 
-
     public static class PostRegen {
 
         @Config.LangKey("config.regeneration.post_regen_duration")
@@ -148,7 +145,6 @@ public class RegenConfig {
         public boolean genGreator = false;
     }
 
-
     public static class Skins {
         @Config.LangKey("config.regeneration.skins.changemyskin")
         @Config.Comment("Disabling this will disable skin changing for you and you will retain your Mojang one")
@@ -171,7 +167,6 @@ public class RegenConfig {
         @Config.Comment("Toggle whether the mod downloads its own batch of skins")
         public boolean downloadInternalSkins = true;
     }
-
 
     public static class Loot {
 
@@ -216,7 +211,6 @@ public class RegenConfig {
 
     }
 
-
     public static class ModIntegrations {
 
         @Config.LangKey("config.regeneration.category.compat.lccore")
@@ -224,7 +218,6 @@ public class RegenConfig {
 
         @Config.LangKey("config.regeneration.category.compat.tardis")
         public final TardisMod tardisMod = new TardisMod();
-
 
         public static class LucraftCore {
 
@@ -244,7 +237,6 @@ public class RegenConfig {
         }
 
     }
-
 
     @EventBusSubscriber
     public static class EventHandler {

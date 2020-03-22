@@ -22,8 +22,7 @@ import org.lwjgl.input.Keyboard;
 import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.REGENERATING;
 
 /**
- * Created by Sub
- * on 17/09/2018.
+ * Created by Sub on 17/09/2018.
  */
 @EventBusSubscriber(Side.CLIENT)
 public class RegenKeyBinds {
@@ -39,24 +38,22 @@ public class RegenKeyBinds {
         ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
     }
 
-
     @SubscribeEvent
     public static void keyInput(InputUpdateEvent e) {
         handleGeneralInputs(e);
     }
 
-
     public static void handleGeneralInputs(InputUpdateEvent e) {
         EntityPlayer player = Minecraft.getMinecraft().player;
 
-        if (player == null) return;
+        if (player == null || Minecraft.getMinecraft().currentScreen != null) return;
 
-        //If Lucraft isn't installed, we get our stuff
+        // If Lucraft isn't installed, we get our stuff
         if (Minecraft.getMinecraft().currentScreen == null && !EnumCompatModids.LCCORE.isLoaded()) {
             ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
         }
 
-        //Regenerate if in Grace & Keybind is pressed
+        // Regenerate if in Grace & Keybind is pressed
         if (REGEN_NOW.isPressed() && CapabilityRegeneration.getForPlayer(player).getState().isGraceful()) {
             NetworkHandler.INSTANCE.sendToServer(new MessageTriggerRegeneration(player));
         }
@@ -65,7 +62,6 @@ public class RegenKeyBinds {
         if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
             NetworkHandler.INSTANCE.sendToServer(new MessageTriggerForcedRegen());
         }
-
 
         IRegeneration cap = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
         if (cap.getState() == REGENERATING || cap.isSyncingToJar()) { // locking user
@@ -81,12 +77,11 @@ public class RegenKeyBinds {
 
     }
 
-
     /**
      * Handles LCCore compatibility
      */
     public static String getRegenerateNowDisplayName() {
         return REGEN_NOW.getDisplayName();
     }
-
+	
 }
