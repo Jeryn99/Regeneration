@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.block;
 
-import afu.org.checkerframework.checker.nullness.qual.Nullable;
+
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.tiles.RegenShapes;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
@@ -32,6 +32,8 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.EnumMap;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by Swirtzly
  * on 21/08/2019 @ 17:31
@@ -39,7 +41,6 @@ import java.util.EnumMap;
 public class BlockHandInJar extends Block {
 
     protected final EnumMap<Direction, VoxelShape> shapes = new EnumMap<>(Direction.class);
-
 
 
     public BlockHandInJar() {
