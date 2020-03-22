@@ -32,16 +32,16 @@ public class BioContainerScreen extends ContainerScreen<BioContainerContainer> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.getTranslationKey()).getUnformattedComponentText(), 8, 6, Color.BLACK.getRGB());
-        this.font.drawString("Residual Energy: " + getContainer().getTileEntity().getLindosAmont(), 8, 40, Color.BLACK.getRGB());
+        this.font.drawString(new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.getTranslationKey()).getUnformattedComponentText(), 8, 25, Color.BLACK.getRGB());
+        this.font.drawString("Residual Energy: " + getContainer().getTileEntity().getLindosAmont(), 8, 59, Color.BLACK.getRGB());
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bindTexture(GUI);
-        int relX = (this.width - this.xSize) / 2;
-        int relY = (this.height - this.ySize) / 2;
+        int relX = (this.width - this.xSize) / 2 + 2;
+        int relY = (this.height - this.ySize) / 2 + 19;
         this.blit(relX, relY, 0, 0, this.xSize, this.ySize);
     }
 }
