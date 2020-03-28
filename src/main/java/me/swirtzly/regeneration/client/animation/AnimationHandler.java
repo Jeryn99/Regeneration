@@ -92,6 +92,8 @@ public class AnimationHandler {
             modelBiped.bipedRightArm.rotateAngleY = (float) Math.toRadians(-5);
             modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-100);
             modelBiped.bipedLeftArm.rotateAngleY = (float) Math.toRadians(5);
+            modelBiped.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
+            modelBiped.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
             return copyAndReturn(modelBiped, true);
         }
 

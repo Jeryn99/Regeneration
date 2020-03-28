@@ -22,7 +22,7 @@ regeneration.gui.close=Close
 regeneration.gui.type=Type: %s
 
 regeneration.messages.now_timelord=You are now a Time lord!
-regeneration.messages.gained_regens=You've received %s regenerations from the Fob Watch
+regeneration.messages.gained_regens=Received %s regenerations!
 regeneration.messages.new_skin=Your skin will change next Regeneration!
 
 regeneration.messages.empty_vial=This vial does not have enough Lindos to trigger a regeneration!
@@ -42,7 +42,7 @@ regeneration.subtitles.fob_watch_dialogue=Fob Watch Dialogue
 regeneration.subtitles.regeneration_breath=Regeneration Breath
 
 regeneration.keybinds.regenerate=Regenerate
-regeneration.commands.debug.usage=<fastforward|setregens|open> [amount]
+regeneration.commands.debug.usage=<fast-forward|set-regens|open|glow> [amount]
 
 regeneration.damagesrc.regen_energy=%s was blasted by Regeneration Energy!
 regeneration.damagesrc.regen_heal=%s died by donating too much Regeneration energy...
@@ -56,20 +56,24 @@ regeneration.toast.regenerations_left=%s regenerations left
 regeneration.toast.enter_critical=You are going critical
 regeneration.toast.enter_critical.sub=%s minutes left...
 regeneration.toast.timelord=You are now a Time lord!
-regeneration.toast.to_use=You have %s lives now!
+regeneration.toast.to_use=You now have %s lives!
 regeneration.messages.jar_amount=This container currently contains %s Lindos!
 regeneration.messages.jar_inuse=This is in use!
 tile.regeneration.hand_jar.name=Bio-Container
 
 regeneration.messages.regen_chat_message=%s is regenerating...
-regeneration.messages.warning.grace=You are in a state of grace, press %s to regenerate!
-regeneration.messages.warning.grace_critical=You are near death, press %s to regenerate!
 regeneration.messages.regen_delayed=Regeneration delayed!
 regeneration.messages.regen_warning=Punch a block to delay your regeneration further
 regeneration.messages.theft=You stole the body of %s!
 regeneration.messages.jar=You have gained a Regeneration from harvested lindos!
 regeneration.messages.jar_not_enough=There is not enough Lindos in this jar! [100 Lindos = 1 free Regeneration]
 regeneration.messages.jar_no_break=You cannot break this Jar while it has %s Lindos Energy!
+
+transition.regeneration.regenerating=You are Regenerating!
+transition.regeneration.post=Post-Regenerative period!
+transition.regeneration.grace=State of Grace
+transition.regeneration.grace_crit=You must Regenerate! You will Die!
+transition.regeneration.hand_glow=Punch the ground, or you will regenerate!
 
 config.regeneration.max_regens=Amount of regenerations per cycle
 config.regeneration.free_regens=Free regenerations

@@ -1,6 +1,5 @@
 package me.swirtzly.regeneration.common.item;
 
-import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.item.arch.ArchHelper;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import net.minecraft.creativetab.CreativeTabs;
@@ -49,7 +48,6 @@ public class ItemArchInterface extends Item {
         ItemStack itemstack1 = playerIn.getItemStackFromSlot(entityequipmentslot);
         if (itemstack1.isEmpty()) {
             playerIn.setItemStackToSlot(entityequipmentslot, itemstack.copy());
-            playerIn.openGui(RegenerationMod.INSTANCE, 99, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
             itemstack.setCount(0);
             return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
         } else {

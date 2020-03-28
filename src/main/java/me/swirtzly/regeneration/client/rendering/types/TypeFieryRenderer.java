@@ -144,11 +144,16 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         double animationProgress = data.getAnimationTicks();
         double arm_shake = player.getRNG().nextDouble();
 
-        float armRot = (float) animationProgress * 1.5F;
+        float armRotY = (float) animationProgress * 1.5F;
+        float armRotZ = (float) animationProgress * 1.5F;
         float headRot = (float) animationProgress * 1.5F;
 
-        if (armRot > 90) {
-            armRot = 90;
+        if (armRotY > 90) {
+            armRotY = 90;
+        }
+
+        if (armRotZ > 95) {
+            armRotZ = 95;
         }
 
         if (headRot > 45) {
@@ -162,8 +167,10 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
         playerModel.bipedLeftArm.rotateAngleX = 0;
         playerModel.bipedRightArm.rotateAngleX = 0;
 
-        playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
-        playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
+        playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRotZ + arm_shake);
+        playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRotZ + arm_shake);
+        playerModel.bipedLeftArm.rotateAngleY = (float) -Math.toRadians(armRotY);
+        playerModel.bipedRightArm.rotateAngleY = (float) Math.toRadians(armRotY);
 
         // BODY
         playerModel.bipedBody.rotateAngleX = 0;
@@ -179,6 +186,7 @@ public class TypeFieryRenderer extends ATypeRenderer<TypeFiery> {
 
         playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
         playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+
 
         playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
         playerModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);

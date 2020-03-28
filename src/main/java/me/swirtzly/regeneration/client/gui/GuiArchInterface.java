@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.client.gui;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.gui.parts.ContainerArch;
 import me.swirtzly.regeneration.common.item.arch.capability.ArchInventory;
+import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +19,15 @@ public class GuiArchInterface extends GuiContainer {
     public GuiArchInterface(EntityPlayer player, ArchInventory archInv) {
         super(new ContainerArch(player, archInv));
         this.archInv = archInv;
+        xSize = 256;
+        ySize = 173;
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabArch.class);
+        TabRegistry.addTabsToList(this.buttonList);
     }
 
     @Override

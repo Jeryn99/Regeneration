@@ -112,12 +112,12 @@ public class ItemFobWatch extends ItemOverrideBase {
 
 			if (cap.canRegenerate()) {
 				setOpen(stack, 1);
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
+                ClientUtil.createToast(new TextComponentTranslation("regeneration.messages.gained_regens", used), new TextComponentTranslation("regeneration.toast.to_use", CapabilityRegeneration.getForPlayer(player).getRegenerationsLeft()));
 			} else {
 				if (!world.isRemote) {
 					setOpen(stack, 1);
 				} else {
-					ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.timelord"), new TextComponentTranslation("regeneration.toast.to_use", RegenConfig.regenCapacity));
+                    ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.timelord"), new TextComponentTranslation("regeneration.toast.to_use", CapabilityRegeneration.getForPlayer(player).getRegenerationsLeft()));
 				}
 			}
 
@@ -176,7 +176,8 @@ public class ItemFobWatch extends ItemOverrideBase {
 		}
 	}
 
-	@Override
+
+    @Override
 	public boolean isRepairable() {
 		return false;
 	}

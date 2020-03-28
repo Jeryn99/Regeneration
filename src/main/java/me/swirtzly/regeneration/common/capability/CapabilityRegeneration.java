@@ -71,6 +71,7 @@ public class CapabilityRegeneration implements IRegeneration {
 	 * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client. This property is synced over to the client to solve this
 	 */
 	private boolean handsAreGlowingClient;
+	private float progress = 0;
 
 	public CapabilityRegeneration() {
 		this.player = null;
@@ -107,6 +108,13 @@ public class CapabilityRegeneration implements IRegeneration {
 				setDnaType(DnaHandler.DNA_BORING.resourceLocation);
 			}
 
+			if (stateManager != null && state != PlayerUtil.RegenState.ALIVE) {
+				if (!areHandsGlowing()) {
+					setProgress((float) stateManager.getStateProgress());
+				} else {
+					setProgress((float) stateManager.handGlowTimer.getProgress());
+				}
+			}
 			if (isSyncingToJar() && ticksAnimating >= 250) {
 				setSyncingFromJar(false);
 				ticksAnimating = 0;
@@ -180,6 +188,7 @@ public class CapabilityRegeneration implements IRegeneration {
 		nbt.setString("nextSkinType", nextSkinType.name());
 		nbt.setBoolean("handDropped", handDropped);
 		nbt.setString("cutOffhand", cutOffHand.name());
+		nbt.setFloat("progress", progress);
 		return nbt;
 	}
 
@@ -190,6 +199,10 @@ public class CapabilityRegeneration implements IRegeneration {
 		// TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
 		if (nbt.hasKey("skinType")) {
 			setSkinType(nbt.getString("skinType"));
+		}
+
+		if (nbt.hasKey("progress")) {
+			setProgress(nbt.getFloat("progress"));
 		}
 
 		if (nbt.hasKey("preferredModel")) {
@@ -458,6 +471,16 @@ public class CapabilityRegeneration implements IRegeneration {
 	@Override
 	public void setCutOffHand(EnumHandSide side) {
 		cutOffHand = side;
+	}
+
+	@Override
+	public float getProgress() {
+		return progress;
+	}
+
+	@Override
+	public void setProgress(float progress) {
+		this.progress = progress;
 	}
 
 	@Override

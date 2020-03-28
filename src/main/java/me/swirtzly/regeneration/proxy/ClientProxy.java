@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.proxy;
 
 import me.swirtzly.regeneration.client.RegenKeyBinds;
+import me.swirtzly.regeneration.client.gui.InventoryTabArch;
 import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.rendering.entity.RenderItemOverride;
 import me.swirtzly.regeneration.client.rendering.entity.RenderLindos;
@@ -67,6 +68,7 @@ public class ClientProxy extends CommonProxy {
 			TabRegistry.registerTab(new InventoryTabVanilla());
 		}
 		TabRegistry.registerTab(new InventoryTabRegeneration());
+		TabRegistry.registerTab(new InventoryTabArch());
 
 		// LC Core
 		if (EnumCompatModids.LCCORE.isLoaded()) {
