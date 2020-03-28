@@ -26,6 +26,8 @@ public class NetworkHandler {
         INSTANCE.registerMessage(MessageTriggerForcedRegen.Handler.class, MessageTriggerForcedRegen.class, 10, Side.SERVER);
         INSTANCE.registerMessage(MessageNextSkin.Handler.class, MessageNextSkin.class, 11, Side.SERVER);
         INSTANCE.registerMessage(MessageChangeType.Handler.class, MessageChangeType.class, 12, Side.SERVER);
+        INSTANCE.registerMessage(MessageOpenArch.Handler.class, MessageOpenArch.class, 13, Side.SERVER);
+        INSTANCE.registerMessage(MessageUseArch.Handler.class, MessageUseArch.class, 14, Side.SERVER);
     }
 	
 }

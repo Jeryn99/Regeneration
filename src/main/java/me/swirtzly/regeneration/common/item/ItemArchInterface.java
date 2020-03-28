@@ -1,9 +1,11 @@
 package me.swirtzly.regeneration.common.item;
 
+import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.item.arch.ArchHelper;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -39,23 +41,17 @@ public class ItemArchInterface extends Item {
     /**
      * Called when the equipped item is right clicked.
      */
-
-    //TODO Finish me
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemstack);
-        ItemStack itemstack1 = playerIn.getItemStackFromSlot(entityequipmentslot);
-        if (itemstack1.isEmpty()) {
+        ItemStack headSlot = playerIn.getItemStackFromSlot(entityequipmentslot);
+        if (headSlot.isEmpty()) {
             playerIn.setItemStackToSlot(entityequipmentslot, itemstack.copy());
             itemstack.setCount(0);
             return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
-        } else {
-            if (playerIn.isSneaking()) {
-                ArchHelper.onArchUse(playerIn, itemstack1.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(3));
-            }
-            return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
         }
+        return new ActionResult<>(EnumActionResult.FAIL, itemstack);
     }
 
     @Nonnull
@@ -87,7 +83,7 @@ public class ItemArchInterface extends Item {
     public NBTTagCompound getNBTShareTag(ItemStack stack) {
         NBTTagCompound tag = stack.getTagCompound();
         if (tag != null) {
-            tag.setTag("arch_sync", CapabilityArch.getForPlayer(stack).serializeNBT());
+            tag.setTag("arch_sync", CapabilityArch.getForStack(stack).serializeNBT());
             return tag;
         }
         return super.getNBTShareTag(stack);
@@ -98,11 +94,16 @@ public class ItemArchInterface extends Item {
         super.readNBTShareTag(stack, nbt);
         if (nbt != null && stack != null) {
             if (nbt.hasKey("cap_sync")) {
-                CapabilityArch.getForPlayer(stack).deserializeNBT((NBTTagCompound) nbt.getTag("arch_sync"));
+                CapabilityArch.getForStack(stack).deserializeNBT((NBTTagCompound) nbt.getTag("arch_sync"));
             }
         }
     }
 
+
+    @Override
+    public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
+        return super.onEntitySwing(entityLiving, stack);
+    }
 
     @Nullable
     @Override
@@ -112,7 +113,7 @@ public class ItemArchInterface extends Item {
 
     private static class InvProvider implements ICapabilitySerializable<NBTBase> {
 
-        private final IItemHandler inv = new ItemStackHandler(24) {
+        private final IItemHandler inv = new ItemStackHandler(1) {
             @Nonnull
             @Override
             public ItemStack insertItem(int slot, @Nonnull ItemStack toInsert, boolean simulate) {

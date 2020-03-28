@@ -1,8 +1,10 @@
-package me.swirtzly.regeneration.client.gui;
+package me.swirtzly.regeneration.client.gui.parts;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.item.ItemArchInterface;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.network.MessageOpenArch;
+import me.swirtzly.regeneration.network.NetworkHandler;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -21,8 +23,7 @@ public class InventoryTabArch extends AbstractTab {
 
     @Override
     public void onTabClicked() {
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
-        player.openGui(RegenerationMod.INSTANCE, 99, player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
+        NetworkHandler.INSTANCE.sendToServer(new MessageOpenArch());
     }
 
     @Override

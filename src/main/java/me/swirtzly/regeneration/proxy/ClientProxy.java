@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.proxy;
 
 import me.swirtzly.regeneration.client.RegenKeyBinds;
-import me.swirtzly.regeneration.client.gui.InventoryTabArch;
+import me.swirtzly.regeneration.client.gui.parts.InventoryTabArch;
 import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.rendering.entity.RenderItemOverride;
 import me.swirtzly.regeneration.client.rendering.entity.RenderLindos;

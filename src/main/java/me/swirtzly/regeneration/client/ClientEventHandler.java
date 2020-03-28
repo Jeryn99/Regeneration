@@ -11,8 +11,6 @@ import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
-import me.swirtzly.regeneration.common.item.arch.IArch;
-import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.ClientUtil;
@@ -42,7 +40,6 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -347,16 +344,6 @@ public class ClientEventHandler {
                 }
 
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void addInfo(ItemTooltipEvent event) {
-        if (event.getItemStack().hasCapability(CapabilityArch.CAPABILITY, null)) {
-            IArch stack = CapabilityArch.getForPlayer(event.getItemStack());
-            event.getToolTip().add("" + stack.getRegenAmount());
-            event.getToolTip().add(stack.getSavedTrait() + "");
-            event.getToolTip().add(stack.getArchStatus() + "");
         }
     }
 

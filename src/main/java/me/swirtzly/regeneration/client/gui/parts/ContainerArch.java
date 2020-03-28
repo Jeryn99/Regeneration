@@ -1,10 +1,12 @@
 package me.swirtzly.regeneration.client.gui.parts;
 
+import me.swirtzly.regeneration.common.item.ItemArchInterface;
 import me.swirtzly.regeneration.common.item.arch.capability.ArchInventory;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -21,7 +23,7 @@ public class ContainerArch extends Container {
         IInventory playerInv = player.inventory;
         archInvIn = archInv;
 
-        addSlotToContainer(new SlotItemHandler(archInvIn, 3, 44 + 2 * 18, 20));
+        addSlotToContainer(new SlotItemHandler(archInvIn, 0, 44 + 2 * 18, 20));
 
         for (int l = 0; l < 3; ++l) {
             for (int k = 0; k < 9; ++k) {
@@ -36,8 +38,7 @@ public class ContainerArch extends Container {
 
     @Override
     public boolean canInteractWith(@Nonnull EntityPlayer player) {
-        return player.getHeldItemMainhand().getItem() == RegenObjects.Items.ARCH
-                || player.getHeldItemOffhand().getItem() == RegenObjects.Items.ARCH;
+        return player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemArchInterface;
     }
 
     public boolean isAllowed(ItemStack stack) {

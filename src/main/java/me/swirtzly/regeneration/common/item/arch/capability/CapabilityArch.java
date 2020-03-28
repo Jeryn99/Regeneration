@@ -34,7 +34,7 @@ public class CapabilityArch implements IArch {
     }
 
     @Nonnull
-    public static IArch getForPlayer(ItemStack stack) {
+    public static IArch getForStack(ItemStack stack) {
         if (stack.hasCapability(CAPABILITY, null)) {
             return stack.getCapability(CAPABILITY, null);
         }
