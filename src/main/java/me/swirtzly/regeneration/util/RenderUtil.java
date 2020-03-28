@@ -6,6 +6,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -215,5 +217,33 @@ public class RenderUtil {
         GlStateManager.disableDepth();
         GlStateManager.popMatrix();
     }
-	
+
+
+    public static void renderFire(Minecraft mc, String texture) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+        TextureAtlasSprite sprite = mc.getTextureMapBlocks().getTextureExtry(texture);
+        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        GlStateManager.pushMatrix();
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        buffer.pos(0.0D, 0.0D, 0.0D).tex(sprite.getMaxU(), sprite.getMinV());
+        buffer.pos(1.0D, 0.0D, 0.0D).tex(sprite.getMinU(), sprite.getMinV());
+        buffer.pos(1.0D, 1.0D, 0.0D).tex(sprite.getMinU(), sprite.getMaxV());
+        buffer.pos(0.0D, 1.0D, 0.0D).tex(sprite.getMaxU(), sprite.getMaxV());
+        buffer.pos(1.0D, 0.0D, 1.0D).tex(sprite.getMaxU(), sprite.getMinV());
+        buffer.pos(1.0D, 0.0D, 0.0D).tex(sprite.getMinU(), sprite.getMinV());
+        buffer.pos(1.0D, 1.0D, 0.0D).tex(sprite.getMinU(), sprite.getMaxV());
+        buffer.pos(1.0D, 1.0D, 1.0D).tex(sprite.getMaxU(), sprite.getMaxV());
+        buffer.pos(0.0D, 0.0D, 1.0D).tex(sprite.getMaxU(), sprite.getMinV());
+        buffer.pos(1.0D, 0.0D, 1.0D).tex(sprite.getMinU(), sprite.getMinV());
+        buffer.pos(1.0D, 1.0D, 1.0D).tex(sprite.getMinU(), sprite.getMaxV());
+        buffer.pos(0.0D, 1.0D, 1.0D).tex(sprite.getMaxU(), sprite.getMaxV());
+        buffer.pos(0.0D, 0.0D, 1.0D).tex(sprite.getMaxU(), sprite.getMinV());
+        buffer.pos(0.0D, 0.0D, 0.0D).tex(sprite.getMinU(), sprite.getMinV());
+        buffer.pos(0.0D, 1.0D, 0.0D).tex(sprite.getMinU(), sprite.getMaxV());
+        buffer.pos(0.0D, 1.0D, 1.0D).tex(sprite.getMaxU(), sprite.getMaxV());
+        tessellator.draw();
+        GlStateManager.popMatrix();
+    }
+
 }

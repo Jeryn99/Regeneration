@@ -67,6 +67,45 @@ public class ItemArchInterface extends Item {
     }
 
 
+    public static void sync(ItemStack stack) {
+        if (stack.getTagCompound() != null) {
+            stack.getTagCompound().merge(stack.getItem().getNBTShareTag(stack));
+        }
+    }
+
+    public static void readSync(ItemStack stack) {
+        if (stack.getTagCompound() != null) {
+            stack.getItem().readNBTShareTag(stack, stack.getTagCompound());
+        }
+    }
+
+    @Override
+    public boolean getShareTag() {
+        return super.getShareTag();
+    }
+
+    @Nullable
+    @Override
+    public NBTTagCompound getNBTShareTag(ItemStack stack) {
+        NBTTagCompound tag = stack.getTagCompound();
+        if (tag != null) {
+            tag.setTag("arch_sync", CapabilityArch.getForPlayer(stack).serializeNBT());
+            return tag;
+        }
+        return super.getNBTShareTag(stack);
+    }
+
+    @Override
+    public void readNBTShareTag(ItemStack stack, @Nullable NBTTagCompound nbt) {
+        super.readNBTShareTag(stack, nbt);
+        if (nbt != null && stack != null) {
+            if (nbt.hasKey("cap_sync")) {
+                CapabilityArch.getForPlayer(stack).deserializeNBT((NBTTagCompound) nbt.getTag("arch_sync"));
+            }
+        }
+    }
+
+
     @Nullable
     @Override
     public EntityEquipmentSlot getEquipmentSlot(ItemStack stack) {

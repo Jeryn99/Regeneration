@@ -17,8 +17,6 @@ public interface IArch extends INBTSerializable<NBTTagCompound> {
 
 	void setSavedTrait(ResourceLocation savedTrait);
 
-	void sync();
-
 	ArchStatus getArchStatus();
 
 	void setArchStatus(ArchStatus status);

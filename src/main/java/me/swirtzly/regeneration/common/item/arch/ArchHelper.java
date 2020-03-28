@@ -2,6 +2,7 @@ package me.swirtzly.regeneration.common.item.arch;
 
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.item.ItemArchInterface;
 import me.swirtzly.regeneration.common.item.arch.capability.ArchProvider;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
@@ -48,7 +49,7 @@ public class ArchHelper {
             stackData.setArchStatus(IArch.ArchStatus.ARCH_ITEM);
             playerData.setDnaType(DnaHandler.DNA_BORING.getRegistryName());
             playerData.extractRegeneration(playerData.getRegenerationsLeft());
-            stackData.sync();
+            ItemArchInterface.sync(stack);
             playerData.synchronise();
         }
     }
