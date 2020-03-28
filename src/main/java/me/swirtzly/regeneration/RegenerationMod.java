@@ -48,8 +48,6 @@ public class RegenerationMod {
     public static final String UPDATE_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/update.json";
     public static final String DEPS = "required:forge@[14.23.5.2768,);after:tardis@[0.0.7,];after:lucraftcore@[1.12.2-2.4.0,]";
 
-    public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
-
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Mod.Instance(MODID)
@@ -93,7 +91,6 @@ public class RegenerationMod {
     public void init(FMLInitializationEvent event) {
         proxy.init();
         NetworkHandler.init();
-        LootTableList.register(LOOT_FILE);
         DnaHandler.init();
         NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
         TypeHandler.init();

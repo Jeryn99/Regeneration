@@ -116,7 +116,7 @@ public class ItemArchInterface extends Item {
             @Override
             public ItemStack insertItem(int slot, @Nonnull ItemStack toInsert, boolean simulate) {
                 if (!toInsert.isEmpty()) {
-                    boolean isUseAble = toInsert.hasCapability(CapabilityArch.CAPABILITY, null);
+                    boolean isUseAble = toInsert.hasCapability(CapabilityArch.CAPABILITY, null) && toInsert.getCount() == 1;
                     if (isUseAble)
                         return super.insertItem(slot, toInsert, simulate);
                 }

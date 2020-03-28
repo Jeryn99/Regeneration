@@ -12,9 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid = RegenerationMod.MODID, name = "Regeneration")
 public class RegenConfig {
 
-    @Config.LangKey("config.regeneration.category.loot")
-    public static final Loot loot = new Loot();
-
     @Config.LangKey("config.regeneration.category.grace")
     public static final GracePeriod grace = new GracePeriod();
 
@@ -166,20 +163,6 @@ public class RegenConfig {
         @Config.LangKey("config.regeneration.skins.internal_skins")
         @Config.Comment("Toggle whether the mod downloads its own batch of skins")
         public boolean downloadInternalSkins = true;
-    }
-
-    public static class Loot {
-
-        @Config.LangKey("config.regeneration.loot_regex")
-        @Config.Comment("The loot pool for chameleon arch's will only be added to loot tables whose name matches this regular expression")
-        @Config.RequiresWorldRestart
-        public String lootRegex = "minecraft:chests\\/.*";
-
-        @Config.LangKey("config.regeneration.disable_loot")
-        @Config.Comment("If this is true there won't be any Fob Watches spawned naturally")
-        @Config.RequiresWorldRestart
-        public boolean disableLoot = false;
-
     }
 
     public static class GracePeriod {

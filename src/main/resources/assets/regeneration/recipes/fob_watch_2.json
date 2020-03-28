@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GIG",
+    "ISI",
+    "GIG"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+	 "G": {
+      "item": "minecraft:gold_ingot"
+    },
+	"S": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "result": {
+    "item": "regeneration:fob_watch",
+    "count": 1
+  }
+}

@@ -29,20 +29,6 @@ public class RenderArchItem implements LayerRenderer<EntityPlayer> {
         this.playerRenderer = playerRenderer;
     }
 
-    public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel) {
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        buffer.pos(x + 0, y + height, zLevel).tex(0, 1);
-        buffer.pos(x + width, y + height, zLevel).tex(1, 1);
-        buffer.pos(x + width, y + 0, zLevel).tex(1, 0);
-        buffer.pos(x + 0, y + 0, zLevel).tex(0, 0);
-        tessellator.draw();
-
-    }
-
     @Override
     public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if (entitylivingbaseIn.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemArchInterface) {

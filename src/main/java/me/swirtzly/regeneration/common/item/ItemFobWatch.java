@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
+import me.swirtzly.regeneration.common.item.arch.ArchHelper;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -28,6 +29,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 		setCreativeTab(CreativeTabs.MISC);
 		setMaxStackSize(1);
 
+
 		addPropertyOverride(new ResourceLocation("open"), (stack, worldIn, entityIn) -> {
 			if (getStackTag(stack) == null || !getStackTag(stack).hasKey("open")) {
 				return 0F; // Closed
@@ -42,6 +44,16 @@ public class ItemFobWatch extends ItemOverrideBase {
 			return getEngrave(stack);
 		});
 
+	}
+
+	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return false;
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		return false;
 	}
 
 	public static int getEngrave(ItemStack stack) {

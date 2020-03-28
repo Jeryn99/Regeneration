@@ -1,5 +1,7 @@
 package me.swirtzly.regeneration.common.item.arch;
 
+import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
+import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.item.ItemArchInterface;
@@ -7,9 +9,13 @@ import me.swirtzly.regeneration.common.item.arch.capability.ArchProvider;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import me.swirtzly.regeneration.common.item.arch.capability.IArch;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
+import me.swirtzly.regeneration.network.MessageRemovePlayer;
+import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -56,38 +62,47 @@ public class ArchHelper {
 
         IRegeneration playerData = CapabilityRegeneration.getForPlayer(player);
 
-        boolean shouldntContinue = playerData.getState() != PlayerUtil.RegenState.ALIVE && !player.world.isBlockPowered(player.getPosition());
+        boolean isSafe = playerData.getState() == PlayerUtil.RegenState.ALIVE && player.world.isBlockPowered(player.getPosition());
 
-        if (shouldntContinue) return;
+        if (isSafe) {
 
-        IArch stackData = CapabilityArch.getForStack(stack);
+            IArch stackData = CapabilityArch.getForStack(stack);
 
-        if (stackData.getArchStatus() == IArch.ArchStatus.NORMAL_ITEM) {
-            stackData.setRegenAmount(playerData.getRegenerationsLeft());
-            stackData.setSavedTrait(playerData.getDnaType());
-            stackData.setArchStatus(IArch.ArchStatus.ARCH_ITEM);
-            ItemArchInterface.sync(stack);
-            playerData.setDnaType(DnaHandler.DNA_BORING.getRegistryName());
-            playerData.extractRegeneration(playerData.getRegenerationsLeft());
-            playerData.synchronise();
-            player.inventory.add(stack.getCount(), stack.copy());
-            stack.setCount(0);
-            return;
+            if (stackData.getArchStatus() == IArch.ArchStatus.NORMAL_ITEM) {
+                stackData.setRegenAmount(playerData.getRegenerationsLeft());
+                stackData.setSavedTrait(playerData.getDnaType());
+                stackData.setArchStatus(IArch.ArchStatus.ARCH_ITEM);
+                stackData.setSkinType(playerData.getSkinType());
+                stackData.setSkin(playerData.getEncodedSkin());
+                ItemArchInterface.sync(stack);
+                playerData.setDnaType(DnaHandler.DNA_BORING.getRegistryName());
+                playerData.extractRegeneration(playerData.getRegenerationsLeft());
+                playerData.setEncodedSkin("NONE");
+                NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID()));
+                boolean isAlex = SkinChangingHandler.getSkinType(Minecraft.getMinecraft().player, true).getMojangType().equals("slim");
+                playerData.setSkinType(isAlex ? SkinInfo.SkinType.ALEX.name() : SkinInfo.SkinType.STEVE.name());
+                playerData.synchronise();
+                InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, stack.copy());
+                stack.setCount(0);
+                return;
+            }
+
+            if (stackData.getArchStatus() == IArch.ArchStatus.ARCH_ITEM && playerData.getRegenerationsLeft() == 0) {
+                playerData.receiveRegenerations(stackData.getRegenAmount());
+                playerData.setDnaType(stackData.getSavedTrait());
+                playerData.setEncodedSkin(stackData.getSkin());
+                playerData.setSkinType(stackData.getSkinType().name());
+                playerData.synchronise();
+                NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID()));
+                stackData.setArchStatus(IArch.ArchStatus.NORMAL_ITEM);
+                stackData.setRegenAmount(0);
+                stackData.setSavedTrait(DnaHandler.DNA_BORING.getRegistryName());
+                ItemArchInterface.sync(stack);
+                InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, stack.copy());
+                stack.setCount(0);
+                return;
+            }
         }
-
-        if (stackData.getArchStatus() == IArch.ArchStatus.ARCH_ITEM && playerData.getRegenerationsLeft() == 0) {
-            playerData.receiveRegenerations(stackData.getRegenAmount());
-            playerData.setDnaType(stackData.getSavedTrait());
-            playerData.synchronise();
-            stackData.setArchStatus(IArch.ArchStatus.NORMAL_ITEM);
-            stackData.setRegenAmount(0);
-            stackData.setSavedTrait(DnaHandler.DNA_BORING.getRegistryName());
-            ItemArchInterface.sync(stack);
-            player.inventory.add(stack.getCount(), stack.copy());
-            stack.setCount(0);
-            return;
-        }
-
 
     }
 

@@ -215,17 +215,6 @@ public class RegenEventHandler {
         nbt.setTag(EntityPlayer.PERSISTED_NBT_TAG, persist);
     }
 
-    @SubscribeEvent
-    public static void registerLoot(LootTableLoadEvent event) {
-        if (!event.getName().toString().toLowerCase().matches(RegenConfig.loot.lootRegex) || RegenConfig.loot.disableLoot)
-            return;
-
-        // TODO configurable chances? Maybe by doing a simple loot table tutorial?
-        LootEntryTable entry = new LootEntryTable(RegenerationMod.LOOT_FILE, 1, 0, new LootCondition[0], "regeneration_inject_entry");
-        LootPool pool = new LootPool(new LootEntry[]{entry}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(1), "regeneration_inject_pool");
-        event.getTable().addPool(pool);
-    }
-
     /**
      * Update checker thing, tells the player that the mods out of date if they're on a old build
      */

@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.common.item.arch.capability;
 
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +24,8 @@ public class CapabilityArch implements IArch {
     private ArchStatus archStatus = ArchStatus.NORMAL_ITEM;
     private int regenAmount = 0;
     private ResourceLocation savedTrait = DnaHandler.DNA_BORING.getRegistryName();
+    private String encoded = "NONE";
+    private SkinInfo.SkinType skinType = SkinInfo.SkinType.STEVE;
 
     public CapabilityArch() {
         itemStack = null;
@@ -68,11 +71,33 @@ public class CapabilityArch implements IArch {
     }
 
     @Override
+    public void setSkinType(SkinInfo.SkinType skinType) {
+        this.skinType = skinType;
+    }
+
+    @Override
+    public SkinInfo.SkinType getSkinType() {
+        return skinType;
+    }
+
+    @Override
+    public void setSkin(String encoded) {
+        this.encoded = encoded;
+    }
+
+    @Override
+    public String getSkin() {
+        return encoded;
+    }
+
+    @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("regenAmount", regenAmount);
         nbt.setString("trait", savedTrait.toString());
         nbt.setString("arch_status", archStatus.name());
+        nbt.setString("skinType", skinType.name());
+        nbt.setString("skin", encoded);
         return nbt;
     }
 
@@ -81,6 +106,8 @@ public class CapabilityArch implements IArch {
         regenAmount = nbt.getInteger("regenAmount");
         savedTrait = new ResourceLocation(nbt.getString("trait"));
         archStatus = ArchStatus.valueOf(nbt.getString("arch_status"));
+        skinType = SkinInfo.SkinType.valueOf(nbt.getString("skinType"));
+        encoded = nbt.getString("skin");
     }
 
 }
