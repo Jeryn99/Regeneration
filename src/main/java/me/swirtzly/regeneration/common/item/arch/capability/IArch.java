@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.common.item.arch;
+package me.swirtzly.regeneration.common.item.arch.capability;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;

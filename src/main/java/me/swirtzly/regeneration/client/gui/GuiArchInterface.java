@@ -54,7 +54,7 @@ public class GuiArchInterface extends GuiContainer {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
 
-        if(button.id == 98){
+        if (button.id == 98) {
             NetworkHandler.INSTANCE.sendToServer(new MessageUseArch());
             Minecraft.getMinecraft().displayGuiScreen(null);
         }

@@ -3,7 +3,6 @@ package me.swirtzly.regeneration.client.gui.parts;
 import me.swirtzly.regeneration.common.item.ItemArchInterface;
 import me.swirtzly.regeneration.common.item.arch.capability.ArchInventory;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
-import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;

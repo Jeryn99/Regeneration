@@ -368,12 +368,12 @@ public class ClientEventHandler {
 
                 String text = data.areHandsGlowing() ? new TextComponentTranslation("transition.regeneration.hand_glow").getUnformattedComponentText() : data.getState().getText().getUnformattedComponentText();
                 int length = mc.fontRenderer.getStringWidth(text);
-                drawStringWithOutline(text, e.getResolution().getScaledWidth() / 2 - length / 2, 8, data.getAnimationTicks() > 0 ? 16738589 : 16761115, 0);
+                drawStringWithOutline(text, e.getResolution().getScaledWidth() / 2 - length / 2, 8, 16761115, 0);
 
 
                 String regensLeft = String.valueOf(data.getRegenerationsLeft());
                 int regensLeftLength = mc.fontRenderer.getStringWidth(regensLeft);
-                drawStringWithOutline(regensLeft, e.getResolution().getScaledWidth() / 2 - regensLeftLength / 2, e.getResolution().getScaledHeight() - 32, data.getAnimationTicks() > 0 ? 16738589 : 16761115, 0);
+                drawStringWithOutline(regensLeft, e.getResolution().getScaledWidth() / 2 - regensLeftLength / 2, e.getResolution().getScaledHeight() - 32, 16761115, 0);
                 GlStateManager.popMatrix();
             }
         }

@@ -1,7 +1,5 @@
 package me.swirtzly.regeneration.common.item;
 
-import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.item.arch.ArchHelper;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;

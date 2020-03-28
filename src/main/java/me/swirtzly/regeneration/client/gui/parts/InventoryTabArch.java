@@ -1,6 +1,5 @@
 package me.swirtzly.regeneration.client.gui.parts;
 
-import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.item.ItemArchInterface;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.MessageOpenArch;
@@ -23,7 +22,10 @@ public class InventoryTabArch extends AbstractTab {
 
     @Override
     public void onTabClicked() {
-        NetworkHandler.INSTANCE.sendToServer(new MessageOpenArch());
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        if (player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemArchInterface) {
+            NetworkHandler.INSTANCE.sendToServer(new MessageOpenArch());
+        }
     }
 
     @Override

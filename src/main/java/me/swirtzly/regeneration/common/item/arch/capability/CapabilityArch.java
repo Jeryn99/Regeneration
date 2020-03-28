@@ -1,7 +1,6 @@
 package me.swirtzly.regeneration.common.item.arch.capability;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.item.arch.IArch;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
