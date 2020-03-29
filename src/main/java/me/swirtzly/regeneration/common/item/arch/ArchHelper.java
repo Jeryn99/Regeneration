@@ -12,7 +12,6 @@ import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.network.MessageRemovePlayer;
 import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryHelper;
@@ -20,7 +19,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.IItemHandler;
@@ -40,18 +38,6 @@ public class ArchHelper {
         event.addCapability(CapabilityArch.ARCH_ID, new ArchProvider(new CapabilityArch(event.getObject())));
     }
 
-    @SubscribeEvent
-    public static void onToolTip(ItemTooltipEvent event) {
-        if (event.getItemStack().hasCapability(CapabilityArch.CAPABILITY, null)) {
-            IArch data = CapabilityArch.getForStack(event.getItemStack());
-            DnaHandler.IDna trait = DnaHandler.getDnaEntry(data.getSavedTrait());
-            ItemArchInterface.readSync(event.getItemStack());
-            if (data.getArchStatus() == IArch.ArchStatus.ARCH_ITEM) {
-                event.getToolTip().add(new TextComponentTranslation("regeneration.tooltip.arch_trait", new TextComponentTranslation(trait.getLangKey()).getUnformattedComponentText()).getUnformattedComponentText());
-                event.getToolTip().add(new TextComponentTranslation("regeneration.tooltip.stored_regens", data.getRegenAmount()).getUnformattedComponentText());
-            }
-        }
-    }
 
     public static void onArchUse(EntityPlayer player) {
         if (player.world.isRemote) return;
@@ -80,7 +66,7 @@ public class ArchHelper {
                 playerData.extractRegeneration(playerData.getRegenerationsLeft());
                 playerData.setEncodedSkin("NONE");
                 NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID()));
-                boolean isAlex = SkinChangingHandler.getSkinType(Minecraft.getMinecraft().player, true).getMojangType().equals("slim");
+                boolean isAlex = SkinChangingHandler.getSkinType(player, true).getMojangType().equals("slim");
                 playerData.setSkinType(isAlex ? SkinInfo.SkinType.ALEX.name() : SkinInfo.SkinType.STEVE.name());
                 playerData.synchronise();
                 InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, stack.copy());

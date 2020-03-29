@@ -246,7 +246,7 @@ public class SkinChangingHandler {
      }
     }
 
-    public static SkinInfo.SkinType getSkinType(AbstractClientPlayer player, boolean forceMojang) {
+    public static SkinInfo.SkinType getSkinType(EntityPlayer player, boolean forceMojang) {
         Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getMinecraft().getSkinManager().loadSkinFromCache(player.getGameProfile());
         if (map.isEmpty()) {
             map = Minecraft.getMinecraft().getSessionService().getTextures(Minecraft.getMinecraft().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);

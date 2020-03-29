@@ -11,6 +11,10 @@ import me.swirtzly.regeneration.client.gui.parts.InventoryTabRegeneration;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.item.ItemArchInterface;
+import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
+import me.swirtzly.regeneration.common.item.arch.capability.IArch;
+import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.ClientUtil;
@@ -40,6 +44,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -375,6 +380,19 @@ public class ClientEventHandler {
                 int regensLeftLength = mc.fontRenderer.getStringWidth(regensLeft);
                 drawStringWithOutline(regensLeft, e.getResolution().getScaledWidth() / 2 - regensLeftLength / 2, e.getResolution().getScaledHeight() - 32, 16761115, 0);
                 GlStateManager.popMatrix();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onToolTip(ItemTooltipEvent event) {
+        if (event.getItemStack().hasCapability(CapabilityArch.CAPABILITY, null)) {
+            IArch data = CapabilityArch.getForStack(event.getItemStack());
+            DnaHandler.IDna trait = DnaHandler.getDnaEntry(data.getSavedTrait());
+            ItemArchInterface.readSync(event.getItemStack());
+            if (data.getArchStatus() == IArch.ArchStatus.ARCH_ITEM) {
+                event.getToolTip().add(new TextComponentTranslation("regeneration.tooltip.arch_trait", new TextComponentTranslation(trait.getLangKey()).getUnformattedComponentText()).getUnformattedComponentText());
+                event.getToolTip().add(new TextComponentTranslation("regeneration.tooltip.stored_regens", data.getRegenAmount()).getUnformattedComponentText());
             }
         }
     }
