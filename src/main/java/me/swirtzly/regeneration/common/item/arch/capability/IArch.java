@@ -1,5 +1,6 @@
-package me.swirtzly.regeneration.common.item.arch;
+package me.swirtzly.regeneration.common.item.arch.capability;
 
+import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -17,13 +18,17 @@ public interface IArch extends INBTSerializable<NBTTagCompound> {
 
 	void setSavedTrait(ResourceLocation savedTrait);
 
-	void sync();
-
 	ArchStatus getArchStatus();
 
 	void setArchStatus(ArchStatus status);
 
-	enum ArchStatus {
+    void setSkinType(SkinInfo.SkinType skinType);
+    SkinInfo.SkinType getSkinType();
+
+    void setSkin(String encoded);
+    String getSkin();
+
+    enum ArchStatus {
 		ARCH_ITEM, NORMAL_ITEM
 	}
 }

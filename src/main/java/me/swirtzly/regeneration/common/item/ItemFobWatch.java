@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
+import me.swirtzly.regeneration.common.item.arch.ArchHelper;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -28,6 +29,7 @@ public class ItemFobWatch extends ItemOverrideBase {
 		setCreativeTab(CreativeTabs.MISC);
 		setMaxStackSize(1);
 
+
 		addPropertyOverride(new ResourceLocation("open"), (stack, worldIn, entityIn) -> {
 			if (getStackTag(stack) == null || !getStackTag(stack).hasKey("open")) {
 				return 0F; // Closed
@@ -42,6 +44,16 @@ public class ItemFobWatch extends ItemOverrideBase {
 			return getEngrave(stack);
 		});
 
+	}
+
+	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return false;
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		return false;
 	}
 
 	public static int getEngrave(ItemStack stack) {
@@ -112,12 +124,12 @@ public class ItemFobWatch extends ItemOverrideBase {
 
 			if (cap.canRegenerate()) {
 				setOpen(stack, 1);
-				PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.gained_regens", used), true);
+                ClientUtil.createToast(new TextComponentTranslation("regeneration.messages.gained_regens", used), new TextComponentTranslation("regeneration.toast.to_use", CapabilityRegeneration.getForPlayer(player).getRegenerationsLeft()));
 			} else {
 				if (!world.isRemote) {
 					setOpen(stack, 1);
 				} else {
-					ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.timelord"), new TextComponentTranslation("regeneration.toast.to_use", RegenConfig.regenCapacity));
+                    ClientUtil.createToast(new TextComponentTranslation("regeneration.toast.timelord"), new TextComponentTranslation("regeneration.toast.to_use", CapabilityRegeneration.getForPlayer(player).getRegenerationsLeft()));
 				}
 			}
 
@@ -176,7 +188,8 @@ public class ItemFobWatch extends ItemOverrideBase {
 		}
 	}
 
-	@Override
+
+    @Override
 	public boolean isRepairable() {
 		return false;
 	}

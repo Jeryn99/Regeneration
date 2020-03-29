@@ -1,21 +1,29 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " I ",
-    "IGI",
-    "III"
+    "QIG",
+    "SES",
+    "IGI"
   ],
   "key": {
     "I": {
       "item": "minecraft:iron_ingot"
     },
     "G": {
-      "item": "minecraft:glowstone_dust"
+      "item": "minecraft:ghast_tear"
+    },
+    "E": {
+      "item": "minecraft:ender_eye"
+    },
+    "S": {
+      "item": "minecraft:spider_eye"
+    },
+    "Q": {
+      "item": "minecraft:blaze_rod"
     }
   },
   "result": {
     "item": "regeneration:fob_watch",
-    "count": 1,
-    "data": 12
+    "count": 1
   }
 }

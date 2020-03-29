@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.util;
 
+import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
 import me.swirtzly.regeneration.network.MessageSetPerspective;
 import me.swirtzly.regeneration.network.MessageUpdateModel;
@@ -27,7 +28,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,14 +184,12 @@ public class PlayerUtil {
             return this == GRACE || this == GRACE_CRIT;
         }
 
+        public TextComponentTranslation getText() {
+            return new TextComponentTranslation("transition." + RegenerationMod.MODID + "." + name().toLowerCase());
+        }
+
         public enum Transition {
-            HAND_GLOW_START(Color.YELLOW.darker()), HAND_GLOW_TRIGGER(Color.ORANGE), ENTER_CRITICAL(Color.BLUE), CRITICAL_DEATH(Color.RED), FINISH_REGENERATION(Color.GREEN.darker()), END_POST(Color.PINK.darker());
-
-            public final Color color;
-
-            Transition(Color col) {
-                this.color = col;
-            }
+            HAND_GLOW_START, HAND_GLOW_TRIGGER, ENTER_CRITICAL, CRITICAL_DEATH, FINISH_REGENERATION, END_POST
         }
 
     }

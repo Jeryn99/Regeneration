@@ -111,4 +111,8 @@ public interface IRegeneration extends INBTSerializable<NBTTagCompound> {
     EnumHandSide getCutoffHand();
 
     void setCutOffHand(EnumHandSide side);
+
+    float getProgress();
+
+    void setProgress(float progress);
 }

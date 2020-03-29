@@ -23,7 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.awt.*;
 
-import static me.swirtzly.regeneration.client.ClientEventHandler.SHADERS_TEXTURES;
+import static me.swirtzly.regeneration.client.ClientEventHandler.SHADERS;
 
 public class RegenClientHooks {
 
@@ -42,8 +42,7 @@ public class RegenClientHooks {
         MinecraftForge.EVENT_BUS.post(ev);
     }
 
-    // Needs optimised greatly, as code had to be lifted and repeated, so when loadEntityShader is called
-    // It does the original stuff first, then this method, which winds up performing it again
+    static int[] postShaders = new int[]{19, 18, 7, 12, 20};
     public static void handleShader() {
         if (Minecraft.getMinecraft().player == null || !RegenConfig.regenerationShaders) return;
 
@@ -56,11 +55,12 @@ public class RegenClientHooks {
                 IRegeneration data = CapabilityRegeneration.getForPlayer(player);
                 switch (data.getState()) {
                     case POST:
-                        entityRender.loadShader(SHADERS_TEXTURES[data.getPlayer().world.rand.nextInt(SHADERS_TEXTURES.length)]);
+                        int shader = postShaders[entity.world.rand.nextInt(postShaders.length)];
+                        entityRender.loadShader(SHADERS[shader]);
                         break;
                     case GRACE:
                     case GRACE_CRIT:
-                        entityRender.loadShader(SHADERS_TEXTURES[16]);
+                        entityRender.loadShader(SHADERS[16]);
                         break;
                     case ALIVE:
                     case REGENERATING:
@@ -187,5 +187,5 @@ public class RegenClientHooks {
         }
         return original;
     }
-	
+
 }

@@ -9,9 +9,9 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationStorage;
 import me.swirtzly.regeneration.common.commands.RegenDebugCommand;
-import me.swirtzly.regeneration.common.item.arch.IArch;
 import me.swirtzly.regeneration.common.item.arch.capability.ArchStorage;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
+import me.swirtzly.regeneration.common.item.arch.capability.IArch;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.common.traits.DnaHandler;
 import me.swirtzly.regeneration.common.types.TypeHandler;
@@ -24,7 +24,6 @@ import me.swirtzly.regeneration.util.EnumCompatModids;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -44,11 +43,9 @@ public class RegenerationMod {
 
     public static final String MODID = "regeneration";
     public static final String NAME = "Regeneration";
-    public static final String VERSION = "2.1.1";
+    public static final String VERSION = "2.1.2";
     public static final String UPDATE_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/update.json";
     public static final String DEPS = "required:forge@[14.23.5.2768,);after:tardis@[0.0.7,];after:lucraftcore@[1.12.2-2.4.0,]";
-
-    public static final ResourceLocation LOOT_FILE = new ResourceLocation(MODID, "fob_watch_loot");
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -93,7 +90,6 @@ public class RegenerationMod {
     public void init(FMLInitializationEvent event) {
         proxy.init();
         NetworkHandler.init();
-        LootTableList.register(LOOT_FILE);
         DnaHandler.init();
         NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
         TypeHandler.init();

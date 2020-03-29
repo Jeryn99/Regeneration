@@ -1,6 +1,5 @@
 package me.swirtzly.regeneration.common.item.arch.capability;
 
-import me.swirtzly.regeneration.common.item.arch.IArch;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;

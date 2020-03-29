@@ -3,6 +3,14 @@ package me.swirtzly.regeneration.util;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.image.ImageDownloadAlt;
 import me.swirtzly.regeneration.client.skinhandling.SkinChangingHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.ImageBufferDownload;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
@@ -215,5 +223,15 @@ public class FileUtil {
             IEnum[] ies = this.getClass().getEnumConstants();
             return (E[]) ies;
         }
+    }
+
+    public static ThreadDownloadImageData getDownloadImageSkin(ResourceLocation resourceLocationIn, String url) {
+        TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+        Object object = texturemanager.getTexture(resourceLocationIn);
+        if (object == null) {
+            object = new ThreadDownloadImageData(null, url, DefaultPlayerSkin.getDefaultSkin(AbstractClientPlayer.getOfflineUUID("")), new ImageBufferDownload());
+            texturemanager.loadTexture(resourceLocationIn, (ITextureObject) object);
+        }
+        return (ThreadDownloadImageData) object;
     }
 }

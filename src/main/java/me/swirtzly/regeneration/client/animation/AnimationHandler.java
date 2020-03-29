@@ -86,12 +86,14 @@ public class AnimationHandler {
             return copyAndReturn(modelBiped, true);
         }
 
-        if (player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemArchInterface) {
+        if (player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof ItemArchInterface && player.world.isBlockPowered(player.getPosition())) {
             modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(55);
             modelBiped.bipedRightArm.rotateAngleX = (float) Math.toRadians(-100);
             modelBiped.bipedRightArm.rotateAngleY = (float) Math.toRadians(-5);
             modelBiped.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-100);
             modelBiped.bipedLeftArm.rotateAngleY = (float) Math.toRadians(5);
+            modelBiped.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
+            modelBiped.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
             return copyAndReturn(modelBiped, true);
         }
 
