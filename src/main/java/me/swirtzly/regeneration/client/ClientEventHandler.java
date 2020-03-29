@@ -1,6 +1,5 @@
 package me.swirtzly.regeneration.client;
 
-import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.client.animation.AnimationHandler;
@@ -352,37 +351,6 @@ public class ClientEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre e) {
-        IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
-        if (data.getRegenerationsLeft() > 0 && data.getState() != ALIVE) {
-            if (e.getType() == RenderGameOverlayEvent.ElementType.HEALTH || e.getType() == RenderGameOverlayEvent.ElementType.HEALTHMOUNT || e.getType() == RenderGameOverlayEvent.ElementType.FOOD || e.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
-                GlStateManager.pushMatrix();
-                GlStateManager.translate(0.0F, -10.0F, 0.0F);
-            }
-            if (e.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
-                GlStateManager.pushMatrix();
-                Minecraft mc = Minecraft.getMinecraft();
-                mc.getTextureManager().bindTexture(TEX);
-                float regensProgress = (float) data.getRegenerationsLeft() / RegenConfig.regenCapacity;
-                mc.ingameGUI.drawTexturedModalRect(e.getResolution().getScaledWidth() / 2 - 91, e.getResolution().getScaledHeight() - 30, 0, 0, 182, 5);
-                mc.ingameGUI.drawTexturedModalRect(e.getResolution().getScaledWidth() / 2 - 91, e.getResolution().getScaledHeight() - 30, 0, 5, (int) (182.0F * regensProgress), 5);
-
-                mc.ingameGUI.drawTexturedModalRect(e.getResolution().getScaledWidth() / 2 - 91, 10, 0, 0, 182, 5);
-                mc.ingameGUI.drawTexturedModalRect(e.getResolution().getScaledWidth() / 2 - 91, 10, 0, 5, (int) (182.0F * data.getProgress()), 5);
-
-                String text = data.areHandsGlowing() ? new TextComponentTranslation("transition.regeneration.hand_glow").getUnformattedComponentText() : data.getState().getText().getUnformattedComponentText();
-                int length = mc.fontRenderer.getStringWidth(text);
-                drawStringWithOutline(text, e.getResolution().getScaledWidth() / 2 - length / 2, 8, 16761115, 0);
-
-
-                String regensLeft = String.valueOf(data.getRegenerationsLeft());
-                int regensLeftLength = mc.fontRenderer.getStringWidth(regensLeft);
-                drawStringWithOutline(regensLeft, e.getResolution().getScaledWidth() / 2 - regensLeftLength / 2, e.getResolution().getScaledHeight() - 32, 16761115, 0);
-                GlStateManager.popMatrix();
-            }
-        }
-    }
 
     @SubscribeEvent
     public static void onToolTip(ItemTooltipEvent event) {

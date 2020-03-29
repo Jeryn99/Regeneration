@@ -94,20 +94,49 @@ public class CapabilityArch implements IArch {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("regenAmount", regenAmount);
-        nbt.setString("trait", savedTrait.toString());
-        nbt.setString("arch_status", archStatus.name());
-        nbt.setString("skinType", skinType.name());
-        nbt.setString("skin", encoded);
+
+        if (savedTrait != null) {
+            nbt.setString("trait", savedTrait.toString());
+        }
+        if (archStatus == null) {
+            archStatus = ArchStatus.NORMAL_ITEM;
+        } else {
+            nbt.setString("arch_status", archStatus.name());
+        }
+        if (skinType == null) {
+            skinType = SkinInfo.SkinType.STEVE;
+        } else {
+            nbt.setString("skinType", skinType.name());
+        }
+        if (encoded == null) {
+            encoded = "NONE";
+        } else {
+            nbt.setString("skin", encoded);
+        }
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         regenAmount = nbt.getInteger("regenAmount");
+
         savedTrait = new ResourceLocation(nbt.getString("trait"));
-        archStatus = ArchStatus.valueOf(nbt.getString("arch_status"));
-        skinType = SkinInfo.SkinType.valueOf(nbt.getString("skinType"));
-        encoded = nbt.getString("skin");
+
+        if (nbt.hasKey("arch_status")) {
+            archStatus = ArchStatus.valueOf(nbt.getString("arch_status"));
+        } else {
+            archStatus = ArchStatus.NORMAL_ITEM;
+        }
+        if (nbt.hasKey("skinType")) {
+            skinType = SkinInfo.SkinType.valueOf(nbt.getString("skinType"));
+        } else {
+            skinType = SkinInfo.SkinType.ALEX;
+        }
+        if (nbt.hasKey("skin")) {
+            encoded = nbt.getString("skin");
+        } else {
+            encoded = "NONE";
+        }
     }
 
 }
