@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Random;
@@ -33,7 +32,7 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
         LayerRegeneration.playerRenderer = playerRenderer;
     }
 
-    public static void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale, EnumHandSide side) {
+    public static void renderGlowingHands(EntityPlayer player, IRegeneration handler, float scale) {
         Vec3d primaryColor = handler.getPrimaryColor();
         Vec3d secondaryColor = handler.getSecondaryColor();
 

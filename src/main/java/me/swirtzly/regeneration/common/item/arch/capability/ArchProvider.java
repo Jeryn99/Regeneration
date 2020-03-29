@@ -32,11 +32,23 @@ public class ArchProvider implements ICapabilitySerializable<NBTTagCompound> {
 
     @Override
     public NBTTagCompound serializeNBT() {
-        return (NBTTagCompound) CapabilityArch.CAPABILITY.getStorage().writeNBT(CapabilityArch.CAPABILITY, capability, null);
+        if (CapabilityArch.CAPABILITY != null) {
+            Capability.IStorage<IArch> storage = CapabilityArch.CAPABILITY.getStorage();
+            if (storage != null) {
+                return (NBTTagCompound) CapabilityArch.CAPABILITY.getStorage().writeNBT(CapabilityArch.CAPABILITY, capability, null);
+            }
+        }
+        return new NBTTagCompound();
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        CapabilityArch.CAPABILITY.getStorage().readNBT(CapabilityArch.CAPABILITY, capability, null, nbt);
+
+        if (CapabilityArch.CAPABILITY != null) {
+            Capability.IStorage<IArch> storage = CapabilityArch.CAPABILITY.getStorage();
+            if (storage != null) {
+                CapabilityArch.CAPABILITY.getStorage().readNBT(CapabilityArch.CAPABILITY, capability, null, nbt);
+            }
+        }
     }
 }

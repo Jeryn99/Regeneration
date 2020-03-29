@@ -1,6 +1,8 @@
 package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,6 +16,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -24,6 +27,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Created by Swirtzly on 29/01/2020 @ 20:41
@@ -145,5 +149,21 @@ public class ItemArchInterface extends Item {
         public void deserializeNBT(NBTBase nbt) {
             CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(inv, null, nbt);
         }
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+
+        tooltip.add(new TextComponentTranslation("item.info.purpose").getUnformattedComponentText());
+
+        if (GuiInventory.isShiftKeyDown()) {
+            tooltip.add(new TextComponentTranslation("item.info.arch_power").getUnformattedComponentText());
+            tooltip.add(new TextComponentTranslation("item.info.arch_power2").getUnformattedComponentText());
+            tooltip.add(new TextComponentTranslation("item.info.arch_use").getUnformattedComponentText());
+        } else {
+            tooltip.add(new TextComponentTranslation("item.info.shift").getUnformattedComponentText());
+        }
+
     }
 }
