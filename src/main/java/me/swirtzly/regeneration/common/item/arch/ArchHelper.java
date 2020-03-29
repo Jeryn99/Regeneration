@@ -35,7 +35,8 @@ public class ArchHelper {
 
     @SubscribeEvent
     public static void onItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-        if (event.getObject().getItem() instanceof ItemBlock) return;
+        if (event.getObject().getItem() instanceof ItemBlock || event.getObject().getItem() instanceof ItemArchInterface)
+            return;
         event.addCapability(CapabilityArch.ARCH_ID, new ArchProvider(new CapabilityArch(event.getObject())));
     }
 
@@ -102,6 +103,8 @@ public class ArchHelper {
                 stack.setCount(0);
                 return;
             }
+        } else {
+            PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.arch_fail"), true);
         }
 
     }

@@ -73,6 +73,7 @@ regeneration.messages.theft=You stole the body of %s!
 regeneration.messages.jar=You have gained a Regeneration from harvested lindos!
 regeneration.messages.jar_not_enough=There is not enough Lindos in this jar! [100 Lindos = 1 free Regeneration]
 regeneration.messages.jar_no_break=You cannot break this Jar while it has %s Lindos Energy!
+regeneration.messages.arch_fail=The block you are standing on must be powered and you must not be in any regeneration state.
 
 transition.regeneration.regenerating=You are Regenerating!
 transition.regeneration.post=Post-Regenerative period!
@@ -214,3 +215,8 @@ gui.hover.incarnation=Choose what your next Incarnation will look like
 gui.hover.regen_type=Select your preferred Regeneration Style
 
 right.click=Pickup with %s
+item.info.shift=\u00A77Press \u00A7e\u00A7lSHIFT \u00A77for more information
+item.info.arch_power=- In order to use the Arch, stand on any block providing power
+item.info.arch_power2=- You must also not be any any Regeneration state
+item.info.arch_use=- You can then proceed to use the arch from within the survival GUI
+item.info.purpose=The purpose of the Arch is to store your regeneration data into any item

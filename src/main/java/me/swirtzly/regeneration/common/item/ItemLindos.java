@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.item;
 
+import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.common.advancements.RegenTriggers;
 import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
@@ -123,9 +124,14 @@ public class ItemLindos extends ItemOverrideBase {
             }
 
             if (hasWater(stack)) {
-                // If the stack has enough, basically kill them
                 if (getAmount(stack) == 100) {
-                    if (cap.getRegenerationsLeft() < 1) cap.receiveRegenerations(1);
+                    if (cap.getRegenerationsLeft() <= RegenConfig.regenCapacity) {
+                        cap.receiveRegenerations(1);
+                        PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.jar"), true);
+                    } else {
+                        PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.transfer.max_regens"), true);
+                    }
+
                     setAmount(stack, 0);
                     setWater(stack, false);
                     return stack;
@@ -228,7 +234,7 @@ public class ItemLindos extends ItemOverrideBase {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
 
-        if (CapabilityRegeneration.getForPlayer(playerIn).getState() != PlayerUtil.RegenState.POST) {
+        if (CapabilityRegeneration.getForPlayer(playerIn).getState() == PlayerUtil.RegenState.ALIVE) {
             playerIn.setActiveHand(handIn);
             return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
         } else {
