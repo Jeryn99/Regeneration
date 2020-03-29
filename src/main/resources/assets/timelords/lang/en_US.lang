@@ -1,0 +1,8 @@
+commands.setregenerations.usage=/setregenerations <player> <regenerations>
+commands.setregenerations.success.self=Set regenerations to %s
+commands.setregenerations.success.other=Set %s's regenerations to %s
+
+commands.triggerregeneration.usage=/triggerregeneration [player]
+commands.triggerregeneration.success.self=Triggered regeneration
+commands.triggerregeneration.success.other=Triggered %s's regeneration
+commands.triggerregeneration.noregenleft=There is no regeneration left!
