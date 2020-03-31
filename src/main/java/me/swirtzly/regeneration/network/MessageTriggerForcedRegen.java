@@ -8,6 +8,7 @@ import me.swirtzly.regeneration.common.item.ItemHand;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
@@ -49,34 +50,57 @@ public class MessageTriggerForcedRegen implements IMessage {
                 }
 
                 if (data.getState() == REGENERATING) {
-                    for (BlockPos pos : BlockPos.getAllInBox(player.getPosition().add(15, 15, 15), player.getPosition().subtract(new Vec3i(15, 15, 15)))) {
-                        IBlockState blockState = player.world.getBlockState(pos);
-                        if (blockState.getBlock().getRegistryName() == RegenObjects.Blocks.HAND_JAR.getRegistryName()) {
-                            TileEntityHandInJar handInJar = (TileEntityHandInJar) player.world.getTileEntity(pos);
-                            if (handInJar.hasHand()) {
-                                boolean isPlayers = ItemHand.getOwner(handInJar.getHand()).toString().equals(player.getUniqueID().toString());
-                                if (isPlayers) {
-                                    PlayerUtil.lookAt(pos.getX(), pos.getY(), pos.getZ(), player);
-                                    data.getStateManager().fastForward();
-                                    data.setEncodedSkin(ItemHand.getTextureString(handInJar.getHand()));
-                                    data.setSkinType(ItemHand.getSkinType(handInJar.getHand()));
-                                    data.setDnaType(new ResourceLocation(ItemHand.getTrait(handInJar.getHand())));
-                                    data.synchronise();
-                                    data.setSyncingFromJar(true);
-                                    NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID()));
-                                    handInJar.clear();
-                                    handInJar.setLindosAmont(handInJar.getLindosAmont() + player.world.rand.nextInt(15));
-                                    RegenTriggers.HAND_JAR_FIRST.trigger(player);
-                                    data.getStateManager().fastForward();
-                                    handInJar.markDirty();
-                                    handInJar.sendUpdates();
-                                    return;
+
+                    if (RegenUtil.getContainer(RegenUtil.getPosLookingAt(player), player.world) != null) {
+                        TileEntityHandInJar detected = RegenUtil.getContainer(RegenUtil.getPosLookingAt(player), player.world);
+                        if (detected.hasHand()) {
+                            boolean isPlayers = ItemHand.getOwner(detected.getHand()).toString().equals(player.getUniqueID().toString());
+                            if (isPlayers) {
+                                data.getStateManager().fastForward();
+                                data.setEncodedSkin(ItemHand.getTextureString(detected.getHand()));
+                                data.setSkinType(ItemHand.getSkinType(detected.getHand()));
+                                data.setDnaType(new ResourceLocation(ItemHand.getTrait(detected.getHand())));
+                                data.synchronise();
+                                data.setSyncingFromJar(true);
+                                NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID()));
+                                detected.clear();
+                                detected.setLindosAmont(detected.getLindosAmont() + player.world.rand.nextInt(15));
+                                RegenTriggers.HAND_JAR_FIRST.trigger(player);
+                                data.getStateManager().fastForward();
+                                detected.markDirty();
+                                detected.sendUpdates();
+                                return;
+                            }
+                        }
+                    } else {
+                        for (BlockPos pos : BlockPos.getAllInBox(player.getPosition().add(15, 15, 15), player.getPosition().subtract(new Vec3i(15, 15, 15)))) {
+                            IBlockState blockState = player.world.getBlockState(pos);
+                            if (blockState.getBlock().getRegistryName() == RegenObjects.Blocks.HAND_JAR.getRegistryName()) {
+                                TileEntityHandInJar handInJar = (TileEntityHandInJar) player.world.getTileEntity(pos);
+                                if (handInJar.hasHand()) {
+                                    boolean isPlayers = ItemHand.getOwner(handInJar.getHand()).toString().equals(player.getUniqueID().toString());
+                                    if (isPlayers) {
+                                        PlayerUtil.lookAt(pos.getX(), pos.getY(), pos.getZ(), player);
+                                        data.getStateManager().fastForward();
+                                        data.setEncodedSkin(ItemHand.getTextureString(handInJar.getHand()));
+                                        data.setSkinType(ItemHand.getSkinType(handInJar.getHand()));
+                                        data.setDnaType(new ResourceLocation(ItemHand.getTrait(handInJar.getHand())));
+                                        data.synchronise();
+                                        data.setSyncingFromJar(true);
+                                        NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(player.getUniqueID()));
+                                        handInJar.clear();
+                                        handInJar.setLindosAmont(handInJar.getLindosAmont() + player.world.rand.nextInt(15));
+                                        RegenTriggers.HAND_JAR_FIRST.trigger(player);
+                                        data.getStateManager().fastForward();
+                                        handInJar.markDirty();
+                                        handInJar.sendUpdates();
+                                        return;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
             });
 
             return null;

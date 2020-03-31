@@ -8,6 +8,8 @@ import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.capability.RegenerationProvider;
 import me.swirtzly.regeneration.common.item.ItemHand;
+import me.swirtzly.regeneration.network.MessageRemovePlayer;
+import me.swirtzly.regeneration.network.NetworkHandler;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
@@ -29,15 +31,9 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.world.storage.loot.LootEntry;
-import net.minecraft.world.storage.loot.LootEntryTable;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.RandomValueRange;
-import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -237,6 +233,7 @@ public class RegenEventHandler {
 
     @SubscribeEvent
     public static void addRunAwayTask(EntityJoinWorldEvent e) {
+        if (e.getEntity().world.isRemote) return;
         if (e.getEntity() instanceof EntityCreature) {
             EntityCreature living = (EntityCreature) e.getEntity();
             Predicate<Entity> pred = entity -> {
@@ -250,6 +247,10 @@ public class RegenEventHandler {
             };
 
             living.tasks.addTask(0, new EntityAIAvoidEntity(living, EntityPlayer.class, pred, 6.0F, 1.0D, 1.2D));
+        }
+
+        if (e.getEntity() instanceof EntityPlayer) {
+            NetworkHandler.INSTANCE.sendToAll(new MessageRemovePlayer(e.getEntity().getUniqueID()));
         }
     }
 

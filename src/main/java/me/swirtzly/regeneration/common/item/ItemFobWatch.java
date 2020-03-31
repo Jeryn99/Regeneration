@@ -5,7 +5,7 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
-import me.swirtzly.regeneration.common.item.arch.ArchHelper;
+import me.swirtzly.regeneration.common.item.arch.IDontStore;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 /**
  * Created by Sub on 16/09/2018.
  */
-public class ItemFobWatch extends ItemOverrideBase {
+public class ItemFobWatch extends ItemOverrideBase implements IDontStore {
 
 	public ItemFobWatch() {
 		setMaxDamage(RegenConfig.regenCapacity);

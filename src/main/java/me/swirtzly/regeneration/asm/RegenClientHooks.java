@@ -23,7 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import java.awt.*;
 
-import static me.swirtzly.regeneration.client.ClientEventHandler.SHADERS;
+import static me.swirtzly.regeneration.client.ClientEventHandler.SHADERS_TEXTURES;
 
 public class RegenClientHooks {
 
@@ -42,7 +42,8 @@ public class RegenClientHooks {
         MinecraftForge.EVENT_BUS.post(ev);
     }
 
-    static int[] postShaders = new int[]{19, 18, 7, 12, 20};
+    private static int[] postShaders = new int[]{19, 18, 7, 12, 20};
+
     public static void handleShader() {
         if (Minecraft.getMinecraft().player == null || !RegenConfig.regenerationShaders) return;
 
@@ -56,11 +57,11 @@ public class RegenClientHooks {
                 switch (data.getState()) {
                     case POST:
                         int shader = postShaders[entity.world.rand.nextInt(postShaders.length)];
-                        entityRender.loadShader(SHADERS[shader]);
+                        entityRender.loadShader(SHADERS_TEXTURES[shader]);
                         break;
                     case GRACE:
                     case GRACE_CRIT:
-                        entityRender.loadShader(SHADERS[16]);
+                        entityRender.loadShader(SHADERS_TEXTURES[16]);
                         break;
                     case ALIVE:
                     case REGENERATING:

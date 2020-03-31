@@ -33,7 +33,7 @@ public class ArchHelper {
 
     @SubscribeEvent
     public static void onItemCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-        if (event.getObject().getItem() instanceof ItemBlock || event.getObject().getItem() instanceof ItemArchInterface)
+        if (event.getObject().getItem() instanceof ItemBlock || event.getObject().getItem() instanceof IDontStore)
             return;
         event.addCapability(CapabilityArch.ARCH_ID, new ArchProvider(new CapabilityArch(event.getObject())));
     }

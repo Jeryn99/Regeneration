@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.client;
 
+import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.animation.AnimationContext;
 import me.swirtzly.regeneration.client.animation.AnimationHandler;
@@ -62,7 +63,7 @@ import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = RegenerationMod.MODID)
 public class ClientEventHandler {
 
-    public static final ResourceLocation[] SHADERS = new ResourceLocation[]{new ResourceLocation("shaders/post/notch.json"), new ResourceLocation("shaders/post/fxaa.json"), new ResourceLocation("shaders/post/art.json"), new ResourceLocation("shaders/post/bumpy.json"), new ResourceLocation("shaders/post/blobs2.json"), new ResourceLocation("shaders/post/pencil.json"), new ResourceLocation("shaders/post/color_convolve.json"), new ResourceLocation("shaders/post/deconverge.json"), new ResourceLocation("shaders/post/flip.json"), new ResourceLocation("shaders/post/invert.json"), new ResourceLocation("shaders/post/ntsc.json"), new ResourceLocation("shaders/post/outline.json"), new ResourceLocation("shaders/post/phosphor.json"), new ResourceLocation("shaders/post/scan_pincushion.json"), new ResourceLocation("shaders/post/sobel.json"), new ResourceLocation("shaders/post/bits.json"), new ResourceLocation("shaders/post/desaturate.json"), new ResourceLocation("shaders/post/green.json"), new ResourceLocation("shaders/post/blur.json"), new ResourceLocation("shaders/post/wobble.json"), new ResourceLocation("shaders/post/blobs.json"), new ResourceLocation("shaders/post/antialias.json"), new ResourceLocation("shaders/post/creeper.json"), new ResourceLocation("shaders/post/spider.json")};
+    public static final ResourceLocation[] SHADERS_TEXTURES = new ResourceLocation[]{new ResourceLocation("shaders/post/notch.json"), new ResourceLocation("shaders/post/fxaa.json"), new ResourceLocation("shaders/post/art.json"), new ResourceLocation("shaders/post/bumpy.json"), new ResourceLocation("shaders/post/blobs2.json"), new ResourceLocation("shaders/post/pencil.json"), new ResourceLocation("shaders/post/color_convolve.json"), new ResourceLocation("shaders/post/deconverge.json"), new ResourceLocation("shaders/post/flip.json"), new ResourceLocation("shaders/post/invert.json"), new ResourceLocation("shaders/post/ntsc.json"), new ResourceLocation("shaders/post/outline.json"), new ResourceLocation("shaders/post/phosphor.json"), new ResourceLocation("shaders/post/scan_pincushion.json"), new ResourceLocation("shaders/post/sobel.json"), new ResourceLocation("shaders/post/bits.json"), new ResourceLocation("shaders/post/desaturate.json"), new ResourceLocation("shaders/post/green.json"), new ResourceLocation("shaders/post/blur.json"), new ResourceLocation("shaders/post/wobble.json"), new ResourceLocation("shaders/post/blobs.json"), new ResourceLocation("shaders/post/antialias.json"), new ResourceLocation("shaders/post/creeper.json"), new ResourceLocation("shaders/post/spider.json")};
     public static final ResourceLocation TEX = new ResourceLocation(RegenerationMod.MODID, "textures/gui/widgets.png");
     public static EnumHandSide SIDE = null;
 
@@ -139,7 +140,7 @@ public class ClientEventHandler {
         }
     }
 
-    @SuppressWarnings("incomplete-switch")
+
     @SubscribeEvent
     public static void onRenderGui(RenderGameOverlayEvent.Post event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
@@ -163,12 +164,12 @@ public class ClientEventHandler {
                 if (player.hurtTime == 1 || player.ticksExisted % 600 == 0) {
                     handleShader();
                 }
-
+                break;
+            case ALIVE:
+            case GRACE_CRIT:
+            case GRACE:
                 break;
         }
-
-        //if (warning != null)
-        //Minecraft.getMinecraft().fontRenderer.drawString(warning, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
     }
 
     @SubscribeEvent
@@ -268,16 +269,6 @@ public class ClientEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void onRenderSpecificHand(RenderSpecificHandEvent handEvent) {
-        //	handEvent.setCanceled(true);
-        //EntityPlayerSP player = Minecraft.getMinecraft().player;
-        //	player.setPrimaryHand(EnumHandSide.LEFT);
-        //	Minecraft.getMinecraft().getItemRenderer().renderItemInFirstPerson(Minecraft.getMinecraft().player, handEvent.getPartialTicks(), handEvent.getInterpolatedPitch(), EnumHand.MAIN_HAND, player.swingProgress, player.getHeldItem(EnumHand.OFF_HAND), 0.0f);
-        //	player.setPrimaryHand(EnumHandSide.RIGHT);
-        //	Minecraft.getMinecraft().getItemRenderer().renderItemInFirstPerson(Minecraft.getMinecraft().player, handEvent.getPartialTicks(), handEvent.getInterpolatedPitch(), EnumHand.MAIN_HAND, player.swingProgress, player.getHeldItem(EnumHand.MAIN_HAND), 0.0f);
-
-    }
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent e) {
@@ -365,6 +356,52 @@ public class ClientEventHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre e) {
+        IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
+        if (RegenConfig.coolCustomBarThings) {
+            if (data.getRegenerationsLeft() > 0 && data.getState() != ALIVE) {
+                if (e.getType() == RenderGameOverlayEvent.ElementType.HEALTH || e.getType() == RenderGameOverlayEvent.ElementType.HEALTHMOUNT || e.getType() == RenderGameOverlayEvent.ElementType.FOOD || e.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(0.0F, -10.0F, 0.0F);
+                }
+                if (e.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
+                    GlStateManager.pushMatrix();
+                    Minecraft mc = Minecraft.getMinecraft();
+                    mc.getTextureManager().bindTexture(TEX);
+                    float regensProgress = (float) data.getRegenerationsLeft() / RegenConfig.regenCapacity;
+                    mc.ingameGUI.drawTexturedModalRect(e.getResolution().getScaledWidth() / 2 - 91, e.getResolution().getScaledHeight() - 30, 0, 0, 182, 5);
+                    mc.ingameGUI.drawTexturedModalRect(e.getResolution().getScaledWidth() / 2 - 91, e.getResolution().getScaledHeight() - 30, 0, 5, (int) (182.0F * regensProgress), 5);
+
+                    mc.ingameGUI.drawTexturedModalRect(e.getResolution().getScaledWidth() / 2 - 91, 10, 0, 0, 182, 5);
+                    mc.ingameGUI.drawTexturedModalRect(e.getResolution().getScaledWidth() / 2 - 91, 10, 0, 5, (int) (182.0F * data.getProgress()), 5);
+
+                    String text = data.areHandsGlowing() ? new TextComponentTranslation("transition.regeneration.hand_glow").getUnformattedComponentText() : data.getState().getText().getUnformattedComponentText();
+                    int length = mc.fontRenderer.getStringWidth(text);
+                    drawStringWithOutline(text, e.getResolution().getScaledWidth() / 2 - length / 2, 8, 16761115, 0);
+
+
+                    String regensLeft = String.valueOf(data.getRegenerationsLeft());
+                    int regensLeftLength = mc.fontRenderer.getStringWidth(regensLeft);
+                    drawStringWithOutline(regensLeft, e.getResolution().getScaledWidth() / 2 - regensLeftLength / 2, e.getResolution().getScaledHeight() - 32, 16761115, 0);
+                    GlStateManager.popMatrix();
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderGameOverlayPost(RenderGameOverlayEvent.Post e) {
+        IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
+        if (RegenConfig.coolCustomBarThings) {
+            if (data.getRegenerationsLeft() > 0 && data.getState() != ALIVE) {
+                if (e.getType() == RenderGameOverlayEvent.ElementType.HEALTH || e.getType() == RenderGameOverlayEvent.ElementType.HEALTHMOUNT || e.getType() == RenderGameOverlayEvent.ElementType.FOOD || e.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+                    GlStateManager.popMatrix();
+                }
+            }
+        }
+    }
+
     public static void drawStringWithOutline(String string, int posX, int posY, int fontColor, int outlineColor) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.fontRenderer.drawString(string, posX + 1, posY, outlineColor);
@@ -372,15 +409,6 @@ public class ClientEventHandler {
         mc.fontRenderer.drawString(string, posX, posY + 1, outlineColor);
         mc.fontRenderer.drawString(string, posX, posY - 1, outlineColor);
         mc.fontRenderer.drawString(string, posX, posY, fontColor);
-    }
-
-    @SubscribeEvent
-    public static void onRenderGameOverlayPost(RenderGameOverlayEvent.Post e) {
-        IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
-        if (data.getRegenerationsLeft() > 0 && data.getState() != ALIVE) {
-            if (e.getType() == RenderGameOverlayEvent.ElementType.HEALTH || e.getType() == RenderGameOverlayEvent.ElementType.HEALTHMOUNT || e.getType() == RenderGameOverlayEvent.ElementType.FOOD || e.getType() == RenderGameOverlayEvent.ElementType.EXPERIENCE)
-                GlStateManager.popMatrix();
-        }
     }
 
 

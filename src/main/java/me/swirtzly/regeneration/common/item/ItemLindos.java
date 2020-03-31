@@ -6,6 +6,7 @@ import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
 import me.swirtzly.regeneration.common.entity.EntityItemOverride;
+import me.swirtzly.regeneration.common.item.arch.IDontStore;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.material.Material;
@@ -33,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemLindos extends ItemOverrideBase {
+public class ItemLindos extends ItemOverrideBase implements IDontStore {
 
     public ItemLindos() {
         setMaxStackSize(1);
@@ -195,12 +196,15 @@ public class ItemLindos extends ItemOverrideBase {
             IBlockState iblockstate = worldIn.getBlockState(blockPos);
             Material material = iblockstate.getMaterial();
 
-            // TODO fix the logic of this
             if (iblockstate.getBlock() instanceof BlockHandInJar && player.isSneaking()) {
                 if (worldIn.getTileEntity(blockPos) instanceof TileEntityHandInJar) {
                     TileEntityHandInJar jar = (TileEntityHandInJar) worldIn.getTileEntity(blockPos);
-                    setAmount(itemStack, getAmount(itemStack) + jar.getLindosAmont());
-                    jar.setLindosAmont(0);
+                    int has = getAmount(itemStack);
+                    int needs = 100 - has;
+                    if (jar.getLindosAmont() >= needs) {
+                        jar.setLindosAmont(jar.getLindosAmont() - needs);
+                        setAmount(itemStack, getAmount(itemStack) + needs);
+                    }
                 }
                 return EnumActionResult.SUCCESS;
             }

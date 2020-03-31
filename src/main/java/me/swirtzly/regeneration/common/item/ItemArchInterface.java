@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.item;
 
+import me.swirtzly.regeneration.common.item.arch.IDontStore;
 import me.swirtzly.regeneration.common.item.arch.capability.CapabilityArch;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.util.ITooltipFlag;
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * Created by Swirtzly on 29/01/2020 @ 20:41
  */
-public class ItemArchInterface extends Item {
+public class ItemArchInterface extends Item implements IDontStore {
 
 
     public ItemArchInterface() {

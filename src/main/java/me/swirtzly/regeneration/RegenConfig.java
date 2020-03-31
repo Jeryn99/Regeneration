@@ -79,8 +79,11 @@ public class RegenConfig {
     public static boolean craftWithRegens = true;
 
     @Config.LangKey("config.regeneration.shaders")
-    @Config.Comment("Toggle whether cool shaders become applied when Regeneration")
+    @Config.Comment("Toggle whether cool shaders become applied when Regenerating")
     public static boolean regenerationShaders = true;
+
+    @Config.Comment("Toggle whether cool bar things display when Regenerating")
+    public static boolean coolCustomBarThings = true;
 
     public static class OnRegen {
 

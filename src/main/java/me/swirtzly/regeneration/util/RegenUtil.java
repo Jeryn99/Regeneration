@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.util;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.common.capability.CapabilityRegeneration;
 import me.swirtzly.regeneration.common.capability.IRegeneration;
+import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -19,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -120,4 +122,35 @@ public class RegenUtil {
     public static boolean isSharp(ItemStack stack) {
         return stack.getItem() instanceof ItemTool || stack.getItem() instanceof ItemSword;
     }
+
+    public static RayTraceResult getPosLookingAt(Entity entity) {
+        Vec3d lookVec = entity.getLookVec();
+        double distance = 10;
+        for (int i = 0; i < distance * 2; i++) {
+            float scale = i / 2F;
+            Vec3d pos = entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(lookVec.scale(scale));
+
+            if (entity.world.isBlockFullCube(new BlockPos(pos)) && !entity.world.isAirBlock(new BlockPos(pos))) {
+                return new RayTraceResult(pos, null);
+            } else {
+                Vec3d min = pos.add(0.25F, 0.25F, 0.25F);
+                Vec3d max = pos.add(-0.25F, -0.25F, -0.25F);
+                for (Entity e : entity.world.getEntitiesWithinAABBExcludingEntity(entity, new AxisAlignedBB(min.x, min.y, min.z, max.x, max.y, max.z))) {
+                    return new RayTraceResult(e);
+                }
+            }
+        }
+        return new RayTraceResult(entity.getPositionVector().add(0, entity.getEyeHeight(), 0).add(lookVec.scale(distance)), null);
+    }
+
+    public static TileEntityHandInJar getContainer(RayTraceResult result, World world) {
+        if (result.typeOfHit == RayTraceResult.Type.BLOCK) {
+            BlockPos pos = result.getBlockPos();
+            if (world.getTileEntity(pos) instanceof TileEntityHandInJar) {
+                return (TileEntityHandInJar) world.getTileEntity(pos);
+            }
+        }
+        return null;
+    }
+
 }
