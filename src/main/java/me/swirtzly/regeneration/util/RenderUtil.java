@@ -162,7 +162,6 @@ public class RenderUtil {
     }
 
     public static void renderVignette(Vec3d color, float a, PlayerUtil.RegenState state) {
-        GlStateManager.pushMatrix();
         GlStateManager.color((float) color.x, (float) color.y, (float) color.z, a);
         GlStateManager.disableAlpha();
         GlStateManager.depthMask(false);
@@ -184,7 +183,6 @@ public class RenderUtil {
         GlStateManager.depthMask(true);
         GlStateManager.enableAlpha();
         GlStateManager.color(1, 1, 1, 1);
-        GlStateManager.popMatrix();
     }
 
     /**

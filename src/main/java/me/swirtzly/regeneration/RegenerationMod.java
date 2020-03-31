@@ -43,7 +43,7 @@ public class RegenerationMod {
 
     public static final String MODID = "regeneration";
     public static final String NAME = "Regeneration";
-    public static final String VERSION = "2.1.6";
+    public static final String VERSION = "2.1.7";
     public static final String UPDATE_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/update.json";
     public static final String DEPS = "required:forge@[14.23.5.2768,);after:tardis@[0.0.7,];after:lucraftcore@[1.12.2-2.4.0,]";
 
