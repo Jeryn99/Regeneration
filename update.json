@@ -1,33 +1,10 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "2.1.6",
-		"1.12.2-recommended": "2.1.6"
+		"1.12.2-latest": "2.1.7",
+		"1.12.2-recommended": "2.1.7"
 	},
 	"1.12.2": {
-		"1.5.3": "1.13.2 Release it out now! || I will still be maintaining 1.12.2 for a while! || Fix to Fob watch bug and some performance stuff",
-		"1.5.4": "Better Skin grabbing handling for mojang skins. Should not longer randomly crash.",
-		"1.5.5": "NameMC trending feature",
-		"1.5.6": "Fixes and ability to view Regeneration skin change",
-		"1.5.9b": "Fixes server crash and Animation system overhaul! || Fixes Iron Man crash",
-		"1.6.0" : "Fixed Iron Man and Armor issues, Updated Reflection, Updated localization, Removed Armor Util",
-		"1.6.1" : "Fixes Bug With LC Core animations || Adds Nightvision Trait and Hunger trait || Adds Command to set Trait",
-		"1.6.4" : "Fixes Lucraft integration crashing server ",
-	        "1.6.5" : "Animation bug fixes and fixes to Night-vision trait",
-		"1.6.6" : "Animation bug fixes || Wall Climbing fixes || Hand In Jar || Animation Compat with Quark and other mods",
-		"1.6.7" : "Fixes Server crash with hand in a jar",
-		"1.7.0" : "You can now select your next skin! Critical phase is now spookier! Fixed Various bugs, Check CurseForge for details!",
-		"1.8.0" : "Freecam! || Sorting downloaded skins into correct folders correctly || Shaders for various Regeneration stages || Spectators can now view all effects of a Regenerating person",
-		"1.9.0" : "A lot was overhauled! You're gonna need to check the CurseForge description of Update 1.9.0",
-		"1.9.2" : "Fixed a issue with Jars not working || You now drop items in your cut off hand || Fixed Tab not being able to be clicked",
-		"1.9.3" : "Small fixes & Adjustments",
-		"1.9.4" : "Fixes crash with Steve modelled players",
-		"2.0.0" : "Fixes various crashes and bugs",
-		"2.0.1" : "Fixed issues on Macs || Fixed Skin related issues || Updated Trending download no longer working",
-		"2.0.2" : "Fixed issues with world load :)",
-		"2.0.4" : "Fixes Server Crash || Adds buttons to force player model change",
-		"2.0.8" : "Skin change gui over-haul || Skin search bar || Fixes issues where not all skins would be added to mod",
-		"2.1.6" : "See CurseForge for changes, mainly fixes render issues!"
-
+		"2.1.7" : "See CurseForge for changes, sadly, more rendering issues had to be addressed!"
 	}
 }
