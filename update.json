@@ -1,10 +1,8 @@
 {
 	"homepage": "https://minecraft.curseforge.com/projects/regeneration",
 	"promos": {
-		"1.12.2-latest": "2.1.5",
-		"1.12.2-recommended": "2.1.5",
-		"1.13.2-latest": "0.0.2",
-		"1.13.2-recommended": "0.0.2"
+		"1.12.2-latest": "2.1.6",
+		"1.12.2-recommended": "2.1.6"
 	},
 	"1.12.2": {
 		"1.5.3": "1.13.2 Release it out now! || I will still be maintaining 1.12.2 for a while! || Fix to Fob watch bug and some performance stuff",
@@ -29,10 +27,7 @@
 		"2.0.2" : "Fixed issues with world load :)",
 		"2.0.4" : "Fixes Server Crash || Adds buttons to force player model change",
 		"2.0.8" : "Skin change gui over-haul || Skin search bar || Fixes issues where not all skins would be added to mod",
-		"2.1.5" : "See CurseForge for changes, mainly fixes server crashes!"
+		"2.1.6" : "See CurseForge for changes, mainly fixes render issues!"
 
-	},
-	"1.13.2": {
-		"0.0.2": "Ported to 1.13.2 + Fixed Force Regen Crash"
 	}
 }
