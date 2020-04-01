@@ -12,13 +12,12 @@ import java.util.function.Supplier;
 public class ForceRegenerationMessage {
 	
 	public static void encode(ForceRegenerationMessage event, PacketBuffer packetBuffer) {
-	
-	}
+
+    }
 	
 	public static ForceRegenerationMessage decode(PacketBuffer buffer) {
 		return new ForceRegenerationMessage();
 	}
-	
 	
 	public static class Handler {
 		public static void handle(ForceRegenerationMessage message, Supplier<NetworkEvent.Context> ctx) {

@@ -27,42 +27,42 @@ import java.util.List;
 
 public class LindosVialItem extends OverrideItem {
 
-	public LindosVialItem() {
+    public LindosVialItem() {
 		super(new Item.Properties().group(ItemGroup.MISC).maxStackSize(1));
 		addPropertyOverride(new ResourceLocation("amount"), (stack, world, entityLivingBase) -> {
 			if (stack.getTag() != null) {
 				int amount = getAmount(stack);
 
-				if (!hasWater(stack)) {
+                if (!hasWater(stack)) {
 					return 0.0F;
 				}
 
-				if (hasWater(stack) && getAmount(stack) <= 0) {
+                if (hasWater(stack) && getAmount(stack) <= 0) {
 					return 2F;
 				}
 
-				if (amount == 100) {
+                if (amount == 100) {
 					return 1.0F;
 				}
 
-				if (amount >= 90) {
+                if (amount >= 90) {
 					return 0.2F;
 				}
 
-				if (amount >= 50) {
+                if (amount >= 50) {
 					return 0.5F;
 				}
 
-				if (amount >= 10) {
+                if (amount >= 10) {
 					return 0.1F;
 				}
 			}
 
-			return 2F;
+            return 2F;
 		});
 	}
 
-	public static CompoundNBT getStackTag(ItemStack stack) {
+    public static CompoundNBT getStackTag(ItemStack stack) {
 		if (stack.getTag() == null) {
 			stack.setTag(new CompoundNBT());
 			stack.getTag().putInt("amount", 0);
@@ -70,41 +70,41 @@ public class LindosVialItem extends OverrideItem {
 		return stack.getTag();
 	}
 
-	public static int getAmount(ItemStack stack) {
+    public static int getAmount(ItemStack stack) {
 		return getStackTag(stack).getInt("amount");
 	}
 
-	public static void setAmount(ItemStack stack, int amount) {
+    public static void setAmount(ItemStack stack, int amount) {
 		getStackTag(stack).putInt("amount", MathHelper.clamp(amount, 0, 100));
 	}
 
-	public static boolean hasWater(ItemStack stack) {
+    public static boolean hasWater(ItemStack stack) {
 		return getStackTag(stack).getBoolean("water");
 	}
 
-	public static void setWater(ItemStack stack, boolean water) {
+    public static void setWater(ItemStack stack, boolean water) {
 		getStackTag(stack).putBoolean("water", water);
 	}
 
-	@Override
+    @Override
 	public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
 		super.onCreated(stack, worldIn, playerIn);
 	}
 
-	@Override
+    @Override
 	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 
-		if (stack.getTag() == null) {
+        if (stack.getTag() == null) {
 			stack.setTag(new CompoundNBT());
 			stack.getTag().putBoolean("live", true);
 		} else {
 			stack.getTag().putBoolean("live", true);
 		}
 
-		if (!worldIn.isRemote) {
-			//Entiies around
+        if (!worldIn.isRemote) {
+            // Entiies around
 			worldIn.getEntitiesWithinAABB(PlayerEntity.class, entityIn.getBoundingBox().expand(10, 10, 10)).forEach(player -> {
-                RegenCap.get((PlayerEntity) entityIn).ifPresent((data) -> {
+                RegenCap.get(entityIn).ifPresent((data) -> {
 					if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 						if (worldIn.rand.nextInt(100) > 50 && isSelected) {
 							setAmount(stack, getAmount(stack) + 1);
@@ -113,7 +113,7 @@ public class LindosVialItem extends OverrideItem {
 				});
 			});
 
-			//Player glowing
+            // Player glowing
 			if (entityIn instanceof PlayerEntity) {
 				PlayerEntity player = (PlayerEntity) entityIn;
                 RegenCap.get(player).ifPresent((data) -> {
@@ -128,31 +128,29 @@ public class LindosVialItem extends OverrideItem {
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 	}
 
-
-	@Override
+    @Override
 	public ActionResultType onItemUse(ItemUseContext useContext) {
 		PlayerEntity player = useContext.getPlayer();
 
-		if (!player.world.isRemote) {
+        if (!player.world.isRemote) {
 			ItemStack itemStack = useContext.getItem();
 			RayTraceResult raytraceresult = rayTrace(player.world, player, RayTraceContext.FluidMode.ANY);
 
-
-			if (raytraceresult.getType() == RayTraceResult.Type.BLOCK) {
+            if (raytraceresult.getType() == RayTraceResult.Type.BLOCK) {
 				BlockRayTraceResult blockResult = (BlockRayTraceResult) raytraceresult;
 				if (raytraceresult == null || blockResult.getPos() == null) {
 					return ActionResultType.FAIL;
 				}
 
-				BlockPos blockPos = blockResult.getPos();
+                BlockPos blockPos = blockResult.getPos();
 				BlockState iblockstate = player.world.getBlockState(blockPos);
 				Material material = iblockstate.getMaterial();
 
-				if (material == Material.WATER) {
+                if (material == Material.WATER) {
 					player.world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 11);
 					player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 
-					if (!hasWater(itemStack)) {
+                    if (!hasWater(itemStack)) {
 						setWater(itemStack, true);
 						player.playSound(SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
 						PlayerUtil.sendMessage(player, new TranslationTextComponent("nbt.item.water_filled"), true);
@@ -162,30 +160,29 @@ public class LindosVialItem extends OverrideItem {
 					return ActionResultType.SUCCESS;
 				}
 
-			}
+            }
 		}
 
-		return super.onItemUse(useContext);
+        return super.onItemUse(useContext);
 	}
 
-	@Override
+    @Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity player, Hand handIn) {
 		ItemStack stack = player.getHeldItem(handIn);
         IRegen cap = RegenCap.get(player).orElse(null);
 		if (!worldIn.isRemote) {
 
-			//If the player is in POST or Regenerating, stop them from drinking it
+            // If the player is in POST or Regenerating, stop them from drinking it
 			if (cap.getState() == PlayerUtil.RegenState.POST || cap.getState() == PlayerUtil.RegenState.REGENERATING || player.isCreative()) {
 				PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.cannot_use"), true);
 				return ActionResult.newResult(ActionResultType.FAIL, player.getHeldItem(handIn));
 			}
 
-			if (hasWater(stack)) {
-				//If the stack has enough, basically kill them
+            if (hasWater(stack)) {
+                // If the stack has enough, basically kill them
 				if (getAmount(stack) == 100) {
-					if (cap.getRegenerationsLeft() < 1)
-						cap.receiveRegenerations(1);
-
+                    if (cap.getRegenerationsLeft() < 1) cap.receiveRegenerations(1);
+					
 					player.attackEntityFrom(RegenObjects.REGEN_DMG_LINDOS, Integer.MAX_VALUE);
 					setAmount(stack, 0);
 					setWater(stack, false);
@@ -202,15 +199,14 @@ public class LindosVialItem extends OverrideItem {
 		return ActionResult.newResult(ActionResultType.FAIL, player.getHeldItem(handIn));
 	}
 
-	@Override
+    @Override
 	public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag idk) {
 		super.addInformation(stack, world, tooltip, idk);
 		tooltip.add(new TranslationTextComponent("nbt.item.lindos", getAmount(stack)));
 		tooltip.add(new TranslationTextComponent("nbt.item.water", hasWater(stack)));
 	}
 
-
-	@Override
+    @Override
 	public void update(OverrideEntity itemOverride) {
 		if (itemOverride.world.isRemote) return;
 		ItemStack itemStack = itemOverride.getItem();
@@ -222,6 +218,5 @@ public class LindosVialItem extends OverrideItem {
 			}
 		}
 	}
-
 
 }

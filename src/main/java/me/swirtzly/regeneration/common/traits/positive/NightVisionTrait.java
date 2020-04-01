@@ -28,5 +28,5 @@ public class NightVisionTrait extends TraitManager.IDna {
         PlayerEntity player = cap.getPlayer();
         player.removePotionEffect(Effects.NIGHT_VISION);
     }
-
+	
 }

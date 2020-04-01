@@ -12,8 +12,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.awt.*;
 
 /**
- * Created by Swirtzly
- * on 22/08/2019 @ 14:47
+ * Created by Swirtzly on 22/08/2019 @ 14:47
  */
 public class BioContainerScreen extends ContainerScreen<BioContainerContainer> {
 

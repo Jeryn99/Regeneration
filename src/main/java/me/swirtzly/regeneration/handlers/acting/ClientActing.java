@@ -4,9 +4,9 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
+import me.swirtzly.regeneration.util.client.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
@@ -15,10 +15,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 class ClientActing implements Acting {
 	
 	public static final Acting INSTANCE = new ClientActing();
-	
-	
-	private ClientActing() {
-	}
+
+    private ClientActing() {
+    }
 	
 	@Override
     public void onRegenTick(IRegen cap) {
@@ -45,12 +44,11 @@ class ClientActing implements Acting {
 			Minecraft.getInstance().gameSettings.sendSettingsToServer();
 		}
 		
-		
 	}
 	
 	@Override
     public void onPerformingPost(IRegen cap) {
-	
+		
 	}
 	
 	@Override
@@ -65,6 +63,5 @@ class ClientActing implements Acting {
 		ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.enter_critical"), new TranslationTextComponent("regeneration.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
 		ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE_CRIT, 1.0F);
 	}
-	
 	
 }

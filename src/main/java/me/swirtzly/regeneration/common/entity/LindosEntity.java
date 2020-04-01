@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.common.entity;
 
 import me.swirtzly.regeneration.common.item.LindosVialItem;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.ClientUtil;
+import me.swirtzly.regeneration.util.client.ClientUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FlyingEntity;
@@ -25,25 +25,23 @@ import net.minecraft.world.World;
 public class LindosEntity extends FlyingEntity {
 	
 	private static final DataParameter<Integer> AMOUNT = EntityDataManager.createKey(LindosEntity.class, DataSerializers.VARINT);
-	
-	public LindosEntity(EntityType type, World world){
+
+    public LindosEntity(EntityType type, World world) {
 		this(world);
 	}
 
-	public LindosEntity(World worldIn) {
+    public LindosEntity(World worldIn) {
 		super(RegenObjects.EntityEntries.ITEM_LINDOS_TYPE, worldIn);
-		//setEntitySize(0.5F, 0.5F);
+        // setEntitySize(0.5F, 0.5F);
 		this.moveController = new FlyingMovementController(this);
 		noClip = true;
 	}
 
-
-	@Override
+    @Override
 	protected void registerData() {
 		super.registerData();
 		getDataManager().register(AMOUNT, rand.nextInt(100));
 	}
-
 	
 	public int getAmount() {
 		return getDataManager().get(AMOUNT);
@@ -73,7 +71,7 @@ public class LindosEntity extends FlyingEntity {
 		}
 		
 		if (ticksExisted < 60) {
-			getMotion().add(0,0.3, 0);
+            getMotion().add(0, 0.3, 0);
 		}
 		
 		if (ticksExisted % 100 == 0) {
@@ -100,20 +98,19 @@ public class LindosEntity extends FlyingEntity {
 	}
 	
 	@Override
-	public void fall(float distance, float damageMultiplier) {
-	}
+    public void fall(float distance, float damageMultiplier) {
+    }
 	
 	@Override
-	protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
-	}
+    protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+    }
 	
 	@Override
 	protected void damageEntity(DamageSource damageSrc, float damageAmount) {
 		super.damageEntity(damageSrc, damageAmount);
 	}
 
-
-	@Override
+    @Override
 	protected void registerAttributes() {
 		super.registerAttributes();
 		getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
@@ -122,8 +119,7 @@ public class LindosEntity extends FlyingEntity {
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20000000298023224D);
 	}
 
-
-	@Override
+    @Override
 	public IPacket<?> createSpawnPacket() {
 		return super.createSpawnPacket();
 	}

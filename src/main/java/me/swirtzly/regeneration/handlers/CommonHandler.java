@@ -36,8 +36,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import javax.annotation.Nonnull;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class CommonHandler {
 	
@@ -48,11 +47,10 @@ public class CommonHandler {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
 			RegenCap.get(player).ifPresent(IRegen::tick);
-
 		}
 	}
 
-	@SubscribeEvent
+    @SubscribeEvent
 	public void onPlayerClone(PlayerEvent.Clone event) {
 		IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
 		event.getOriginal().revive();
@@ -62,7 +60,7 @@ public class CommonHandler {
 		}));
 	}
 
-	@SubscribeEvent
+    @SubscribeEvent
 	public void onPlayerTracked(PlayerEvent.StartTracking event) {
 		RegenCap.get(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
@@ -79,16 +77,12 @@ public class CommonHandler {
 		}
 	}
 	
-	// ============ USER EVENTS ==========
-	
 	@SubscribeEvent
 	public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-        if (e.getPlayer().world.isRemote)
-			return;
+        if (e.getPlayer().world.isRemote) return;
         RegenCap.get(e.getPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
-
+		
 	}
-	
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onHurt(LivingHurtEvent event) {
@@ -100,15 +94,15 @@ public class CommonHandler {
 			return;
 		}
 
-		if (!(event.getEntity() instanceof PlayerEntity) || event.getSource() == RegenObjects.REGEN_DMG_CRITICAL || event.getSource() == RegenObjects.REGEN_DMG_KILLED)
-			return;
+        if (!(event.getEntity() instanceof PlayerEntity) || event.getSource() == RegenObjects.REGEN_DMG_CRITICAL || event.getSource() == RegenObjects.REGEN_DMG_KILLED)
+            return;
 		
 		PlayerEntity player = (PlayerEntity) event.getEntity();
 		RegenCap.get(player).ifPresent((cap) -> {
 
-			cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
+            cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
 
-			if (cap.getState() == PlayerUtil.RegenState.POST && player.posY > 0) {
+            if (cap.getState() == PlayerUtil.RegenState.POST && player.posY > 0) {
 				if (event.getSource() == DamageSource.FALL) {
 					PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, 200, 4, false, false);
 					if (event.getAmount() > 8.0F) {
@@ -123,7 +117,6 @@ public class CommonHandler {
 					event.setAmount(0.5F);
 					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.reduced_dmg"), true);
 
-
                     if (event.getSource().getTrueSource() instanceof LivingEntity) {
                         LivingEntity livingEntity = (LivingEntity) event.getSource().getTrueSource();
                         if (PlayerUtil.isSharp(livingEntity.getHeldItemMainhand())) {
@@ -132,12 +125,12 @@ public class CommonHandler {
                             }
                         }
                     }
-
+					
 				}
 				return;
 			}
 
-			if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
+            if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
 				event.setCanceled(true); // TODO still "hurts" the client view
 			} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 				boolean notDead = cap.getStateManager().onKilled(event.getSource());
@@ -146,54 +139,48 @@ public class CommonHandler {
 		});
 	}
 	
-	
 	@SubscribeEvent
 	public void onKnockback(LivingKnockBackEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
 
-			RegenCap.get(player).ifPresent((data) -> {
-				if(data.getState() == PlayerUtil.RegenState.REGENERATING){
+            RegenCap.get(player).ifPresent((data) -> {
+                if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 					event.setCanceled(true);
 				}
 			});
 		}
 	}
 
-
-	@SubscribeEvent
+    @SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof PlayerEntity) {
 			event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
 				final RegenCap regen = new RegenCap((PlayerEntity) event.getObject());
 				final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
 
-				@Nonnull
+                @Nonnull
 				@Override
 				public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-					if (cap == RegenCap.CAPABILITY)
-						return (LazyOptional<T>) regenInstance;
+                    if (cap == RegenCap.CAPABILITY) return (LazyOptional<T>) regenInstance;
 					return LazyOptional.empty();
 				}
 
-				@Override
+                @Override
 				public CompoundNBT serializeNBT() {
 					return regen.serializeNBT();
 				}
 
-				@Override
+                @Override
 				public void deserializeNBT(CompoundNBT nbt) {
 					regen.deserializeNBT(nbt);
 				}
 
-			});
+            });
 		}
 	}
 
-
-	
-	// ================ OTHER ==============
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		Entity entity = event.getEntity();
 		if (entity.getClass().equals(ItemEntity.class)) {
@@ -210,7 +197,7 @@ public class CommonHandler {
 		}
 	}
 
-	@SubscribeEvent
+    @SubscribeEvent
     public void onCut(PlayerInteractEvent.RightClickItem event) {
         if (PlayerUtil.isSharp(event.getItemStack())) {
             PlayerEntity player = event.getPlayer();
@@ -221,6 +208,5 @@ public class CommonHandler {
             });
 		}
 	}
-
 
 }

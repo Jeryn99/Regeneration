@@ -8,8 +8,8 @@ import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.TypeManager;
-import me.swirtzly.regeneration.util.ClientUtil;
-import me.swirtzly.regeneration.util.RenderUtil;
+import me.swirtzly.regeneration.util.client.ClientUtil;
+import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
@@ -44,16 +44,19 @@ import java.util.UUID;
 import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class ClientHandler {
 
     private static final ResourceLocation BUTTON_TEX = new ResourceLocation(RegenerationMod.MODID, "textures/gui/gui_button_customize.png");
 
+    public static String getColoredText(String msg) {
+        return msg.replaceAll("&", String.valueOf('\u00a7'));
+    }
+
     @SubscribeEvent
-    public void onGui(GuiScreenEvent.InitGuiEvent event){
-        if(event.getGui() instanceof InventoryScreen){
+    public void onGui(GuiScreenEvent.InitGuiEvent event) {
+        if (event.getGui() instanceof InventoryScreen) {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
                 if (data.canRegenerate()) {
                     event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, BUTTON_TEX, 32, 64, (p_213088_1_) -> {
@@ -63,7 +66,6 @@ public class ClientHandler {
             });
         }
     }
-
 
     @SubscribeEvent
     public void onTickEvent(TickEvent.ClientTickEvent event) {
@@ -79,8 +81,7 @@ public class ClientHandler {
 
     @SubscribeEvent
     public void onClientUpdate(LivingEvent.LivingUpdateEvent e) {
-        if (!(e.getEntity() instanceof PlayerEntity) || Minecraft.getInstance().player == null)
-            return;
+        if (!(e.getEntity() instanceof PlayerEntity) || Minecraft.getInstance().player == null) return;
 
         PlayerEntity player = (PlayerEntity) e.getEntity();
         Minecraft.getInstance().runAsync(() -> {
@@ -151,14 +152,12 @@ public class ClientHandler {
                 Minecraft.getInstance().fontRenderer.drawString(warning, Minecraft.getInstance().mainWindow.getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
         });
 
-
     }
 
     @SubscribeEvent
     public void onPlaySound(PlaySoundEvent e) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.world == null)
-            return;
+        if (mc.player == null || mc.world == null) return;
 
         RegenCap.get(mc.player).ifPresent((cap) -> {
 
@@ -181,7 +180,6 @@ public class ClientHandler {
 
     }
 
-
     @SubscribeEvent
     public void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
         if (Minecraft.getInstance().getRenderViewEntity() instanceof PlayerEntity) {
@@ -194,9 +192,6 @@ public class ClientHandler {
             });
         }
     }
-
-
-
 
     @SubscribeEvent
     public void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
@@ -249,14 +244,9 @@ public class ClientHandler {
         }
     }
 
-    public static String getColoredText(String msg) {
-        return msg.replaceAll("&", String.valueOf('\u00a7'));
-    }
-
     @SubscribeEvent
     public void keyInput(InputUpdateEvent e) {
-        if (Minecraft.getInstance().player == null)
-            return;
+        if (Minecraft.getInstance().player == null) return;
 
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data -> {
             if (data.getState() == REGENERATING || data.isSyncingToJar()) { // locking user
@@ -290,17 +280,15 @@ public class ClientHandler {
         ClientPlayerEntity player = Minecraft.getInstance().player;
 
         float factor = 0.2F;
-        if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0)
-            return;
+        if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0) return;
 
         RegenCap.get(player).ifPresent((data) -> {
 
             boolean flag = data.getState() == REGENERATING;
             e.setCanceled(flag);
 
-            if (!data.areHandsGlowing())//|| !flag)
+            if (!data.areHandsGlowing())// || !flag)
                 return;
-
 
             GlStateManager.pushMatrix();
 
@@ -323,5 +311,5 @@ public class ClientHandler {
             GlStateManager.popMatrix();
         });
     }
-
+	
 }

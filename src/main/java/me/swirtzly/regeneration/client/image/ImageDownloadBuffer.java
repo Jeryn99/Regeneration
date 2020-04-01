@@ -8,7 +8,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ImageDownloadBuffer implements IImageBuffer {
 
-	private static void setAreaTransparent(NativeImage image, int x, int y, int width, int height) {
+    private static void setAreaTransparent(NativeImage image, int x, int y, int width, int height) {
 		for (int i = x; i < width; ++i) {
 			for (int j = y; j < height; ++j) {
 				int k = image.getPixelRGBA(i, j);
@@ -18,14 +18,14 @@ public class ImageDownloadBuffer implements IImageBuffer {
 			}
 		}
 
-		for (int l = x; l < width; ++l) {
+        for (int l = x; l < width; ++l) {
 			for (int i1 = y; i1 < height; ++i1) {
 				image.setPixelRGBA(l, i1, image.getPixelRGBA(l, i1) & 16777215);
 			}
 		}
 
-	}
-
+    }
+	
 	private static void setAreaOpaque(NativeImage image, int x, int y, int width, int height) {
 		for (int i = x; i < width; ++i) {
 			for (int j = y; j < height; ++j) {
@@ -33,8 +33,8 @@ public class ImageDownloadBuffer implements IImageBuffer {
 			}
 		}
 
-	}
-
+    }
+	
 	public static NativeImage convert(NativeImage nativeImageIn) {
 		boolean flag = nativeImageIn.getHeight() == 32;
 		if (flag) {
@@ -57,21 +57,21 @@ public class ImageDownloadBuffer implements IImageBuffer {
 			nativeimage.copyAreaRGBA(52, 20, -8, 32, 4, 12, true, false);
 		}
 
-		setAreaOpaque(nativeImageIn, 0, 0, 32, 16);
+        setAreaOpaque(nativeImageIn, 0, 0, 32, 16);
 		if (flag) {
 			setAreaTransparent(nativeImageIn, 32, 0, 64, 32);
 		}
 
-		setAreaOpaque(nativeImageIn, 0, 16, 64, 32);
+        setAreaOpaque(nativeImageIn, 0, 16, 64, 32);
 		setAreaOpaque(nativeImageIn, 16, 48, 48, 64);
 		return nativeImageIn;
 	}
 
-	@Override
+    @Override
 	public NativeImage parseUserSkin(NativeImage nativeImage) {
 		return convert(nativeImage);
 	}
 
-	public void skinAvailable() {
-	}
+    public void skinAvailable() {
+    }
 }

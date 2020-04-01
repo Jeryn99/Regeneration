@@ -9,8 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import java.util.UUID;
 
 /**
- * Created by Suffril
- * on 24/01/2019.
+ * Created by Suffril on 24/01/2019.
  */
 public class AthleteTrait extends TraitManager.IDna {
 	
@@ -22,7 +21,7 @@ public class AthleteTrait extends TraitManager.IDna {
     public AthleteTrait() {
         super("athlete");
     }
-
+	
 	@Override
     public void onUpdate(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
@@ -38,7 +37,7 @@ public class AthleteTrait extends TraitManager.IDna {
 		PlayerEntity player = cap.getPlayer();
         if (!player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(SPEED_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(SPEED_MODIFIER);
-		}
+        }
 
         if (!player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(KNOCKBACK_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(KNOCKBACK_MODIFIER);
@@ -50,14 +49,14 @@ public class AthleteTrait extends TraitManager.IDna {
 		PlayerEntity player = cap.getPlayer();
         if (player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(SPEED_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SPEED_MODIFIER);
-		}
+        }
 
         if (player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(KNOCKBACK_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(KNOCKBACK_MODIFIER);
 		}
 	}
 
-	@Override
+    @Override
 	public String getLocalDesc() {
 		return "asdsa";
 	}

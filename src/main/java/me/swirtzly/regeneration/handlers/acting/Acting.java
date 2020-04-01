@@ -5,14 +5,12 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 public interface Acting {
 	
 	/**
-	 * Called for every tick a Player is regenerating
-	 * WARNING: Server only!
+     * Called for every tick a Player is regenerating WARNING: Server only!
 	 */
     void onRegenTick(IRegen cap);
 	
 	/**
-	 * Called just after the player has been killed
-	 * It is only called ONCE, once the player enters a grace period
+     * Called just after the player has been killed It is only called ONCE, once the player enters a grace period
 	 */
     void onEnterGrace(IRegen cap);
 	

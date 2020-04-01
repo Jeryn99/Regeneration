@@ -15,10 +15,9 @@ import net.minecraft.util.HandSide;
 
 public class HandsLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> {
 
+    private final IEntityRenderer livingEntityRenderer;
 
-	private final IEntityRenderer livingEntityRenderer;
-
-	public HandsLayer(IEntityRenderer livingEntityRendererIn) {
+    public HandsLayer(IEntityRenderer livingEntityRendererIn) {
 		super(livingEntityRendererIn);
 		this.livingEntityRenderer = livingEntityRendererIn;
 	}
@@ -37,12 +36,11 @@ public class HandsLayer extends LayerRenderer<AbstractClientPlayerEntity, Player
 				renderHand(entitylivingbaseIn, HandSide.RIGHT, EnumHandRenderType.GRACE);
 			}
 
-			if (data.getState() == PlayerUtil.RegenState.REGENERATING || data.isSyncingToJar()) {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING || data.isSyncingToJar()) {
 				renderHand(entitylivingbaseIn, HandSide.LEFT, EnumHandRenderType.REGEN);
 				renderHand(entitylivingbaseIn, HandSide.RIGHT, EnumHandRenderType.REGEN);
 			}
 		});
-
 		
 		GlStateManager.popMatrix();
 	}
@@ -60,26 +58,24 @@ public class HandsLayer extends LayerRenderer<AbstractClientPlayerEntity, Player
 			GlStateManager.translatef((float) (flag ? -1 : 1) / 25.0F, 0.125F, -0.625F);
 			GlStateManager.translated(0, -0.050, 0.6);
 
-			if (type == EnumHandRenderType.GRACE) {
+            if (type == EnumHandRenderType.GRACE) {
 				RegenerationLayer.renderGlowingHands(player, data, 1.5F, handSide);
 			}
 
-			if (type == EnumHandRenderType.REGEN) {
+            if (type == EnumHandRenderType.REGEN) {
 				TypeManager.getTypeInstance(data.getType()).getRenderer().renderHand(player, handSide, (LivingRenderer) livingEntityRenderer);
 			}
 
-		});
+        });
 
-		GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
 	}
 	
 	protected void translateToHand(HandSide handSide) {
 		((BipedModel) this.livingEntityRenderer.getEntityModel()).postRenderArm(0.0625F, handSide);
 	}
 
-
-
-	public boolean shouldCombineTextures() {
+    public boolean shouldCombineTextures() {
 		return false;
 	}
 	

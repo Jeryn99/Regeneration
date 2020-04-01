@@ -1,10 +1,11 @@
-package me.swirtzly.regeneration.util;
+package me.swirtzly.regeneration.util.client;
 
 import me.swirtzly.regeneration.client.MovingSound;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
+import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.toasts.SystemToast;
@@ -24,8 +25,8 @@ import java.util.function.Supplier;
 
 public class ClientUtil {
 
-    public static String keyBind = "???";
-
+	public static String keyBind = "???";
+	
 	public static void createToast(TranslationTextComponent title, TranslationTextComponent subtitle) {
 		Minecraft.getInstance().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
 	}
@@ -35,8 +36,7 @@ public class ClientUtil {
 	}
 	
 	/**
-	 * This is a method that sends a packet to the server telling the server to reset the players Player model and skin
-	 * back to the ones supplied by Mojang
+	 * This is a method that sends a packet to the server telling the server to reset the players Player model and skin back to the ones supplied by Mojang
 	 */
 	public static void sendSkinResetPacket() {
 		NetworkDispatcher.sendToServer(new UpdateSkinMessage(RegenUtil.NO_SKIN, SkinManipulation.getSkinType(Minecraft.getInstance().player) == SkinInfo.SkinType.ALEX));
@@ -49,6 +49,7 @@ public class ClientUtil {
 	
 	/**
 	 * Helper method that copy pastes the angles of the ModelPlayer limbs to the players wear
+	 * 
 	 * @param biped
 	 */
 	public static void copyAnglesToWear(PlayerModel biped) {
@@ -72,7 +73,6 @@ public class ClientUtil {
 		dest.rotationPointY = src.rotationPointY;
 		dest.rotationPointZ = src.rotationPointZ;
 	}
-
 	
 	public static class ImageFixer {
 		

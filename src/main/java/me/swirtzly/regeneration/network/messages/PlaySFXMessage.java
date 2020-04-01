@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.network.messages;
 
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.client.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -14,8 +14,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Created by Suffril
- * on 20/01/2019.
+ * Created by Suffril on 20/01/2019.
  */
 public class PlaySFXMessage {
 	

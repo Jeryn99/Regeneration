@@ -7,8 +7,8 @@ import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.GRACE_CRIT;
 
 public class RegenClientHooks {
 
-	private static boolean enabled() {
+    private static boolean enabled() {
         return Minecraft.getInstance().player != null && RegenCap.get(Minecraft.getInstance().player).orElse(null).getState() == GRACE_CRIT;
     }
-
+	
 }

@@ -6,7 +6,7 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.RegenType;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RenderUtil;
+import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
@@ -20,11 +20,10 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Random;
 
 import static me.swirtzly.regeneration.client.rendering.types.FieryRenderer.renderOverlay;
-import static me.swirtzly.regeneration.util.RenderUtil.drawGlowingLine;
+import static me.swirtzly.regeneration.util.client.RenderUtil.drawGlowingLine;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class RegenerationLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> {
 
@@ -35,7 +34,7 @@ public class RegenerationLayer extends LayerRenderer<AbstractClientPlayerEntity,
     public RegenerationLayer(IEntityRenderer livingEntityRendererIn) {
         super(livingEntityRendererIn);
         this.livingEntityRenderer = livingEntityRendererIn;
-	}
+    }
 
     public static void renderGlowingHands(PlayerEntity player, IRegen handler, float scale, HandSide side) {
 		Vec3d primaryColor = handler.getPrimaryColor();
@@ -57,7 +56,7 @@ public class RegenerationLayer extends LayerRenderer<AbstractClientPlayerEntity,
 		RenderUtil.finishRenderLightning();
 	}
 
-	@Override
+    @Override
     public void render(AbstractClientPlayerEntity player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         RegenCap.get(player).ifPresent((data) -> {
             RegenType type = TypeManager.getTypeInstance(data.getType());

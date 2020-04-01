@@ -8,16 +8,14 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * Created by Suffril
- * on 25/01/2019.
+ * Created by Suffril on 25/01/2019.
  */
 public class HydrophobicTrait extends TraitManager.IDna {
-
 
     public HydrophobicTrait() {
         super("hydrophobic");
     }
-
+	
 	@Override
     public void onUpdate(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();

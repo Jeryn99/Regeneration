@@ -23,18 +23,17 @@ public class SkinInfo {
 		return DefaultPlayerSkin.getDefaultSkinLegacy();
 	}
 
-	public SkinType getSkintype() {
+    public SkinType getSkintype() {
 		if (skintype != null) {
 			return skintype;
 		}
 		return SkinType.ALEX;
 	}
 
-
     public PlayerEntity getPlayer() {
         return PLAYER;
     }
-
+	
 	public enum SkinType {
 		ALEX("slim"), STEVE("default");
 		

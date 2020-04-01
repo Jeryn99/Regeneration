@@ -31,133 +31,132 @@ import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABI
 
 public class TileEntityHandInJar extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
-    public int lindosAmont = 0;
-    private LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
+	public int lindosAmont = 0;
+	public LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
 
-    public TileEntityHandInJar() {
-        super(RegenObjects.Tiles.HAND_JAR);
-    }
+	public TileEntityHandInJar() {
+		super(RegenObjects.Tiles.HAND_JAR);
+	}
 
-    public int getLindosAmont() {
-        return lindosAmont;
-    }
+	public int getLindosAmont() {
+		return lindosAmont;
+	}
 
-    public void setLindosAmont(int lindosAmont) {
-        this.lindosAmont = lindosAmont;
-    }
+	public void setLindosAmont(int lindosAmont) {
+		this.lindosAmont = lindosAmont;
+	}
 
-    @Override
-    public void tick() {
+	@Override
+	public void tick() {
 
-        if (world.getGameTime() % 35 == 0 && hasHand()) {
-            world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.4F, 0.3F);
-        }
+		if (world.getGameTime() % 35 == 0 && hasHand()) {
+			world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.4F, 0.3F);
+		}
 
-        PlayerEntity player = world.getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 56, false);
-        if (player != null) {
-            RegenCap.get(player).ifPresent((data) -> {
-                if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                    if (world.rand.nextInt(90) < 10) {
-                        lindosAmont = lindosAmont + 1;
-                    }
-                }
-            });
-        }
-    }
+		PlayerEntity player = world.getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 56, false);
+		if (player != null) {
+			RegenCap.get(player).ifPresent((data) -> {
+				if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
+					if (world.rand.nextInt(90) < 10) {
+						lindosAmont = lindosAmont + 1;
+					}
+				}
+			});
+		}
+	}
 
-    public boolean hasHand() {
-        return getCapability(ITEM_HANDLER_CAPABILITY).map(data -> data.getStackInSlot(0).getItem() == RegenObjects.Items.HAND).orElse(false);
-    }
+	public boolean hasHand() {
+		return getCapability(ITEM_HANDLER_CAPABILITY).map(data -> data.getStackInSlot(0).getItem() == RegenObjects.Items.HAND).orElse(false);
+	}
 
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, 3, getUpdateTag());
-    }
+	@Override
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		return new SUpdateTileEntityPacket(pos, 3, getUpdateTag());
+	}
 
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
-    }
+	@Override
+	public CompoundNBT getUpdateTag() {
+		return write(new CompoundNBT());
+	}
 
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
-    }
+	@Override
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		super.onDataPacket(net, pkt);
+		handleUpdateTag(pkt.getNbtCompound());
+	}
 
-    public void sendUpdates() {
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        markDirty();
-    }
+	public void sendUpdates() {
+		world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+		markDirty();
+	}
 
-    @Override
-    public void read(CompoundNBT tag) {
-        CompoundNBT invTag = tag.getCompound("inv");
-        handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(invTag));
-        lindosAmont = tag.getInt("lindos");
-        super.read(tag);
-    }
+	@Override
+	public void read(CompoundNBT tag) {
+		CompoundNBT invTag = tag.getCompound("inv");
+		handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(invTag));
+		lindosAmont = tag.getInt("lindos");
+		super.read(tag);
+	}
 
-    @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        handler.ifPresent(h -> {
-            CompoundNBT compound = ((INBTSerializable<CompoundNBT>) h).serializeNBT();
-            tag.put("inv", compound);
-        });
-        tag.putInt("lindos", lindosAmont);
-        tag.putBoolean("hasHand", hasHand());
-        return super.write(tag);
-    }
+	@Override
+	public CompoundNBT write(CompoundNBT tag) {
+		handler.ifPresent(h -> {
+			CompoundNBT compound = ((INBTSerializable<CompoundNBT>) h).serializeNBT();
+			tag.put("inv", compound);
+		});
+		tag.putInt("lindos", lindosAmont);
+		tag.putBoolean("hasHand", hasHand());
+		return super.write(tag);
+	}
 
-    private IItemHandler createHandler() {
-        return new ItemStackHandler(1) {
-            @Override
-            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                return stack.getItem() == RegenObjects.Items.HAND;
-            }
+	private IItemHandler createHandler() {
+		return new ItemStackHandler(1) {
+			@Override
+			public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+				return stack.getItem() == RegenObjects.Items.HAND;
+			}
 
-            @Nonnull
-            @Override
-            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                if (stack.getItem() != RegenObjects.Items.HAND) {
-                    return stack;
-                }
-                return super.insertItem(slot, stack, simulate);
-            }
-        };
-    }
+			@Nonnull
+			@Override
+			public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+				if (stack.getItem() != RegenObjects.Items.HAND) {
+					return stack;
+				}
+				return super.insertItem(slot, stack, simulate);
+			}
+		};
+	}
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ITEM_HANDLER_CAPABILITY) {
-            return handler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
+	@Nonnull
+	@Override
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+		if (cap == ITEM_HANDLER_CAPABILITY) {
+			return handler.cast();
+		}
+		return super.getCapability(cap, side);
+	}
 
-    public LazyOptional<IItemHandler> getInventory() {
-        return getCapability(ITEM_HANDLER_CAPABILITY);
-    }
+	public LazyOptional<IItemHandler> getInventory() {
+		return getCapability(ITEM_HANDLER_CAPABILITY);
+	}
 
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.getTranslationKey());
+	}
 
-    @Override
-    public ITextComponent getDisplayName() {
-        return new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.getTranslationKey());
-    }
+	@Nullable
+	@Override
+	public Container createMenu(int slot, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+		return new BioContainerContainer(slot, playerInventory, playerEntity, this);
+	}
 
-    @Nullable
-    @Override
-    public Container createMenu(int slot, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new BioContainerContainer(slot, world, pos, playerInventory, playerEntity, this);
-    }
+	public ItemStack getHand() {
+		return getCapability(ITEM_HANDLER_CAPABILITY).map(data -> data.getStackInSlot(0)).orElse(ItemStack.EMPTY);
+	}
 
+	public void destroyHand() {
+		getCapability(ITEM_HANDLER_CAPABILITY).ifPresent(data -> data.getStackInSlot(0).setCount(0));
+	}
 
-    public ItemStack getHand() {
-        return getCapability(ITEM_HANDLER_CAPABILITY).map(data -> data.getStackInSlot(0)).orElse(ItemStack.EMPTY);
-    }
-
-    public void destroyHand() {
-        getCapability(ITEM_HANDLER_CAPABILITY).ifPresent(data -> data.getStackInSlot(0).setCount(0));
-    }
 }

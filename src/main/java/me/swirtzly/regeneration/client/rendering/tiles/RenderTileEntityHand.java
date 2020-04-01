@@ -15,18 +15,11 @@ import net.minecraft.util.ResourceLocation;
 import java.util.HashMap;
 
 /**
- * Created by Swirtzly
- * on 22/08/2019 @ 16:30
+ * Created by Swirtzly on 22/08/2019 @ 16:30
  */
 public class RenderTileEntityHand extends TileEntityRenderer<TileEntityHandInJar> {
 
-    /**
-     * The default skin for the Steve model.
-     */
     private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
-    /**
-     * The default skin for the Alex model.
-     */
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
     public static HashMap<TileEntityHandInJar, ResourceLocation> TEXTURES = new HashMap<>();
     public static EntityModel STEVE_ARM = new HandModel(false);
@@ -41,7 +34,8 @@ public class RenderTileEntityHand extends TileEntityRenderer<TileEntityHandInJar
             String handType = HandItem.getSkinType(tileEntityIn.getHand());
             Minecraft.getInstance().getTextureManager().bindTexture(getOrCreateTexture(tileEntityIn));
             GlStateManager.rotatef(180, 1, 0, 0);
-            GlStateManager.translated(0, -1.5, 0);
+            GlStateManager.translated(0.5, -1.5, -0.5);
+
             if (handType.equals("ALEX")) {
                 ALEX_ARM.render(null, 0, 0, 0, 0, 0, 0.0625F);
             } else {
@@ -61,7 +55,6 @@ public class RenderTileEntityHand extends TileEntityRenderer<TileEntityHandInJar
             return isAlex ? TEXTURE_ALEX : TEXTURE_STEVE;
         }
 
-
         if (!TEXTURES.containsKey(tileEntityHandInJar)) {
             NativeImage image = SkinManipulation.decodeToImage(HandItem.getTextureString(tileEntityHandInJar.getHand()));
             ResourceLocation res = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("hand_", new DynamicTexture(image));
@@ -70,6 +63,5 @@ public class RenderTileEntityHand extends TileEntityRenderer<TileEntityHandInJar
         }
         return TEXTURES.get(tileEntityHandInJar);
     }
-
 
 }

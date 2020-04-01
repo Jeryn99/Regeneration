@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Sub
- * on 20/09/2018.
+ * Created by Sub on 20/09/2018.
  */
 public class PlayerUtil {
 	
@@ -58,7 +57,7 @@ public class PlayerUtil {
         double pitch = Math.asin(diry);
         double yaw = Math.atan2(dirz, dirx);
 
-        //to degree
+        // to degree
         pitch = pitch * 180.0 / Math.PI;
         yaw = yaw * 180.0 / Math.PI;
 
@@ -66,7 +65,7 @@ public class PlayerUtil {
         me.rotationPitch = (float) pitch;
         me.rotationYaw = (float) yaw;
     }
-
+	
 	public static void sendMessage(PlayerEntity player, String message, boolean hotBar) {
 		if (!player.world.isRemote) {
 			player.sendStatusMessage(new TranslationTextComponent(message), hotBar);
@@ -87,7 +86,6 @@ public class PlayerUtil {
 	public static void setPerspective(ServerPlayerEntity player, boolean thirdperson, boolean resetPitch) {
 		NetworkDispatcher.sendTo(new ThirdPersonMessage(thirdperson), player);
 	}
-
 
     public static void updateModel(SkinManipulation.EnumChoices choice) {
 		NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMapMessage(choice.name()));
@@ -115,7 +113,7 @@ public class PlayerUtil {
             HandItem.setTimeCreated(hand, System.currentTimeMillis());
             HandItem.setTrait(hand, data.getDnaType().toString());
             data.setDroppedHand(true);
-            //RegenTriggers.HAND.trigger((EntityPlayerMP) player);
+            // RegenTriggers.HAND.trigger((EntityPlayerMP) player);
             data.setCutOffHand(player.getPrimaryHand() == HandSide.LEFT ? HandSide.RIGHT : HandSide.LEFT);
             data.setDroppedHand(true);
             InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
@@ -132,23 +130,17 @@ public class PlayerUtil {
             }
         });
     }
-
+	
 	public enum RegenState {
-		
-		ALIVE,
-		GRACE, GRACE_CRIT, POST,
-		REGENERATING;
+
+        ALIVE, GRACE, GRACE_CRIT, POST, REGENERATING;
 		
 		public boolean isGraceful() {
 			return this == GRACE || this == GRACE_CRIT;
 		}
 		
 		public enum Transition {
-			HAND_GLOW_START(Color.YELLOW.darker()), HAND_GLOW_TRIGGER(Color.ORANGE),
-			ENTER_CRITICAL(Color.BLUE),
-			CRITICAL_DEATH(Color.RED),
-			FINISH_REGENERATION(Color.GREEN.darker()),
-			END_POST(Color.PINK.darker());
+            HAND_GLOW_START(Color.YELLOW.darker()), HAND_GLOW_TRIGGER(Color.ORANGE), ENTER_CRITICAL(Color.BLUE), CRITICAL_DEATH(Color.RED), FINISH_REGENERATION(Color.GREEN.darker()), END_POST(Color.PINK.darker());
 			
 			public final Color color;
 			

@@ -11,8 +11,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class SyncClientPlayerMessage {
 	
@@ -36,7 +35,7 @@ public class SyncClientPlayerMessage {
 	public static class Handler {
 		public static void handle(SyncClientPlayerMessage message, Supplier<NetworkEvent.Context> ctx) {
 			PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.player);
-			if (player != null)
+            if (player != null)
                 Minecraft.getInstance().deferTask(() -> RegenCap.get(player).ifPresent((data) -> data.deserializeNBT(message.data)));
 			ctx.get().setPacketHandled(true);
 		}

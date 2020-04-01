@@ -27,5 +27,5 @@ public class WallClimbingTrait extends TraitManager.IDna {
     public void onRemoved(IRegen cap) {
 
     }
-
+	
 }

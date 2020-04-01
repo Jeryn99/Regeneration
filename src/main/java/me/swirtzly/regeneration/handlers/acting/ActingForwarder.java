@@ -17,7 +17,7 @@ public class ActingForwarder {
 	public static void init() {
 		register(CommonActing.INSTANCE, Dist.DEDICATED_SERVER);
 
-		if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
 			register(ClientActing.INSTANCE, Dist.CLIENT);
 		}
 	}
@@ -36,8 +36,8 @@ public class ActingForwarder {
 
     public static void onRegenTick(IRegen cap) {
 		// Never forwarded, as per the documentation
-		if (cap.getPlayer().world.isRemote)
-			throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
+        if (cap.getPlayer().world.isRemote)
+            throw new IllegalStateException("'Posting' tick `event` from client (this is VERY wrong)");
 		
 		for (Acting handler : SERVER_HANDLERS) {
 			handler.onRegenTick(cap);
@@ -116,8 +116,7 @@ public class ActingForwarder {
 	 * Knows what to forward by reflection magic
 	 */
     private static void checkAndForward(IRegen cap, RegenEvent event) {
-		if (cap.getPlayer().world.isRemote)
-			throw new IllegalStateException("'Posting' \"acting\" `event` from client");
+        if (cap.getPlayer().world.isRemote) throw new IllegalStateException("'Posting' \"acting\" `event` from client");
 		NetworkDispatcher.sendTo(new UpdateStateMessage(cap.getPlayer(), event.name()), (ServerPlayerEntity) cap.getPlayer());
 	}
 	

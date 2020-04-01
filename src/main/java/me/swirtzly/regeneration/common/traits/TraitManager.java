@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 /**
- * Created by Suffril
- * on 24/01/2019.
+ * Created by Suffril on 24/01/2019.
  */
 @Mod.EventBusSubscriber
 public class TraitManager {
@@ -98,7 +97,7 @@ public class TraitManager {
 		}
 	}
 
-	@SubscribeEvent
+    @SubscribeEvent
 	public static void onArrow(LivingAttackEvent event) {
 		DamageSource source = event.getSource();
 		Entity attacked = event.getEntity();
@@ -125,7 +124,6 @@ public class TraitManager {
 			localDesc = "trait." + name + ".desc";
         }
 
-
         public abstract void onUpdate(IRegen cap);
 
         public abstract void onAdded(IRegen cap);
@@ -139,11 +137,10 @@ public class TraitManager {
         public ResourceLocation getRegistryName() {
             return resourceLocation;
         }
-
+		
 		public String getLocalDesc() {
 			return localDesc;
 		}
 	}
-	
 	
 }

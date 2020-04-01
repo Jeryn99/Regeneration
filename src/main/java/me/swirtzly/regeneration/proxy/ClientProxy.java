@@ -28,8 +28,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import java.util.Map;
 
 /**
- * Created by Sub
- * on 17/09/2018.
+ * Created by Sub on 17/09/2018.
  */
 public class ClientProxy extends CommonProxy {
 	
@@ -50,34 +49,32 @@ public class ClientProxy extends CommonProxy {
 		super.postInit();
 		RegenKeyBinds.init();
 
-		// Render layers ===========================================
+        // Render layers ===========================================
 		Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
 		for (PlayerRenderer renderPlayer : skinMap.values()) {
 			renderPlayer.addLayer(new RegenerationLayer(renderPlayer)); // Add Regeneration Layer
 			renderPlayer.addLayer(new HandsLayer(renderPlayer));
 		}
 
-		FileUtil.doSetupOnThread();
+        FileUtil.doSetupOnThread();
 		MinecraftForge.EVENT_BUS.register(new SkinManipulation());
 		MinecraftForge.EVENT_BUS.register(new ClientHandler());
 		MinecraftForge.EVENT_BUS.register(new CameraHandler());
 
-		AnimationManager.registerAnimations(new GeneralAnimations(), new FieryRenderer(), new TypeLayFadeRenderer());
+        AnimationManager.registerAnimations(new GeneralAnimations(), new FieryRenderer(), new TypeLayFadeRenderer());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandInJar.class, new RenderTileEntityHand());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandInJar.class, new RenderTileEntityHand());
 
-
-	}
-
+    }
+	
 	@Override
 	public World getClientWorld() {
 		return Minecraft.getInstance().world;
 	}
 
-	@Override
+    @Override
 	public PlayerEntity getClientPlayer() {
 		return Minecraft.getInstance().player;
 	}
-
 
 }

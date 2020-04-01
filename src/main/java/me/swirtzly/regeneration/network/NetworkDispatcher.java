@@ -11,19 +11,12 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class NetworkDispatcher {
 
     private static final String PROTOCOL_VERSION = Integer.toString(1);
-    public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
-            .named(new ResourceLocation(RegenerationMod.MODID, "main_channel"))
-            .clientAcceptedVersions(PROTOCOL_VERSION::equals)
-            .serverAcceptedVersions(PROTOCOL_VERSION::equals)
-            .networkProtocolVersion(() -> PROTOCOL_VERSION)
-            .simpleChannel();
-
+    public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(RegenerationMod.MODID, "main_channel")).clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals).networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
     public static void init() {
         int id = 0;
@@ -40,7 +33,7 @@ public class NetworkDispatcher {
         INSTANCE.registerMessage(id++, ForceRegenerationMessage.class, ForceRegenerationMessage::encode, ForceRegenerationMessage::decode, ForceRegenerationMessage.Handler::handle);
         INSTANCE.registerMessage(id++, NextSkinMessage.class, NextSkinMessage::encode, NextSkinMessage::decode, NextSkinMessage.Handler::handle);
         INSTANCE.registerMessage(id++, UpdateTypeMessage.class, UpdateTypeMessage::encode, UpdateTypeMessage::decode, UpdateTypeMessage.Handler::handle);
-     }
+    }
 
     /**
      * Sends a packet to the server.<br>

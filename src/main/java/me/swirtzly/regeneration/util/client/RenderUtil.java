@@ -1,8 +1,9 @@
-package me.swirtzly.regeneration.util;
+package me.swirtzly.regeneration.util.client;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -17,37 +18,35 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class RenderUtil {
 	
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
 	public static float renderTick = Minecraft.getInstance().getRenderPartialTicks();
 
-	private static float lastBrightnessX = GLX.lastBrightnessX;
+    private static float lastBrightnessX = GLX.lastBrightnessX;
 	private static float lastBrightnessY = GLX.lastBrightnessY;
 
-	public static void setLightmapTextureCoords(float x, float y) {
+    public static void setLightmapTextureCoords(float x, float y) {
 		lastBrightnessX = GLX.lastBrightnessX;
 		lastBrightnessY = GLX.lastBrightnessY;
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, x, y);
 	}
 
-	public static void restoreLightMap() {
+    public static void restoreLightMap() {
 		GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, lastBrightnessX, lastBrightnessY);
 	}
 
-	public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Vec3d color, float alpha) {
-		if (start == null || end == null)
-			return;
-
+    public static void drawGlowingLine(Vec3d start, Vec3d end, float thickness, Vec3d color, float alpha) {
+        if (start == null || end == null) return;
+		
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bb = tessellator.getBuffer();
 		int smoothFactor = Minecraft.getInstance().gameSettings.ambientOcclusionStatus.func_216572_a();
 		int layers = 10 + smoothFactor * 20;
 
-		GlStateManager.pushMatrix();
+        GlStateManager.pushMatrix();
 		GlStateManager.disableTexture();
 		start = start.scale(-1D);
 		end = end.scale(-1D);
@@ -55,7 +54,7 @@ public class RenderUtil {
 		start = end.subtract(start);
 		end = end.subtract(end);
 
-		{
+        {
 			double x = end.x - start.x;
 			double y = end.y - start.y;
 			double z = end.z - start.z;
@@ -66,7 +65,7 @@ public class RenderUtil {
 			GlStateManager.rotatef(pitch, 1.0F, 0.0F, 0.0F);
 		}
 
-		for (int layer = 0; layer <= layers; ++layer) {
+        for (int layer = 0; layer <= layers; ++layer) {
 			if (layer < layers) {
 				GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, 1.0F / layers / 2);
 				GlStateManager.depthMask(false);
@@ -80,7 +79,7 @@ public class RenderUtil {
 			double height = 0.0625D * size;
 			double length = start.distanceTo(end) + d;
 
-			bb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+            bb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 			bb.pos(-width, height, length).endVertex();
 			bb.pos(width, height, length).endVertex();
 			bb.pos(width, height, -d).endVertex();
@@ -108,11 +107,11 @@ public class RenderUtil {
 			tessellator.draw();
 		}
 
-		GlStateManager.enableTexture();
+        GlStateManager.enableTexture();
 		GlStateManager.popMatrix();
 	}
 
-	public static void setupRenderLightning() {
+    public static void setupRenderLightning() {
 		GlStateManager.pushMatrix();
 		GlStateManager.disableTexture();
 		GlStateManager.disableLighting();
@@ -124,7 +123,7 @@ public class RenderUtil {
 		setLightmapTextureCoords(240, 240);
 	}
 
-	public static void finishRenderLightning() {
+    public static void finishRenderLightning() {
 		restoreLightMap();
 		GlStateManager.enableLighting();
 		GlStateManager.enableTexture();
@@ -133,7 +132,6 @@ public class RenderUtil {
 		GlStateManager.disableAlphaTest();
 		GlStateManager.popMatrix();
 	}
-
 
     public static void renderVignette(Vec3d color, float alpha, PlayerUtil.RegenState state) {
         GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, alpha);
@@ -177,12 +175,12 @@ public class RenderUtil {
 		GlStateManager.enableBlend();
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		GlStateManager.translatef(xPos, yPos, 100);
+        GlStateManager.translatef(xPos, yPos, 100);
 		GlStateManager.rotatef(-25, 1, 0, 0);
 		GlStateManager.rotatef(rotation, 0, 1, 0);
 		RenderHelper.enableGUIStandardItemLighting();
 
-		GlStateManager.lightModel(2899, RenderHelper.setColorBuffer(0.75F, 0.75F, 0.75F, 1F));
+        GlStateManager.lightModel(2899, RenderHelper.setColorBuffer(0.75F, 0.75F, 0.75F, 1F));
 		GlStateManager.scalef(38 * scale, 34 * scale, 38 * scale);
 		GlStateManager.scalef(-1, 1, 1);
 		model.render(Minecraft.getInstance().player, 0, 0, Minecraft.getInstance().player.ticksExisted, 0, 0, 0.0625f);
@@ -192,16 +190,15 @@ public class RenderUtil {
 		GlStateManager.popMatrix();
 	}
 
-	public static void copyModelAngles(RendererModel src, RendererModel dest) {
+    public static void copyModelAngles(RendererModel src, RendererModel dest) {
         dest.rotateAngleX = src.rotateAngleX;
         dest.rotateAngleY = src.rotateAngleY;
         dest.rotateAngleZ = src.rotateAngleZ;
         dest.rotationPointX = src.rotationPointX;
         dest.rotationPointY = src.rotationPointY;
         dest.rotationPointZ = src.rotationPointZ;
-	}
-
-
+    }
+	
 	public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
 		if (left < right) {
 			int i = left;
@@ -209,17 +206,17 @@ public class RenderUtil {
 			right = i;
 		}
 
-		if (top < bottom) {
+        if (top < bottom) {
 			int j = top;
 			top = bottom;
 			bottom = j;
 		}
 
-		Tessellator tessellator = Tessellator.getInstance();
+        Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferBuilder = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture();
-		//I think the below is my lad
+        // I think the below is my lad
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color4f(red, green, blue, alpha);
 		bufferBuilder.begin(7, DefaultVertexFormats.POSITION);

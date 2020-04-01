@@ -11,8 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.UUID;
 
 /**
- * Created by Suffril
- * on 24/01/2019.
+ * Created by Suffril on 24/01/2019.
  */
 public class ToughTrait extends IDna {
 	
@@ -25,7 +24,7 @@ public class ToughTrait extends IDna {
     public ToughTrait() {
         super("tough");
     }
-
+	
 	@Override
     public void onUpdate(IRegen cap) {
 		
@@ -36,7 +35,7 @@ public class ToughTrait extends IDna {
 		PlayerEntity player = cap.getPlayer();
         if (!player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(TOUGH_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(TOUGH_MODIFIER);
-		}
+        }
 
         if (!player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).hasModifier(ATTACK_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(ATTACK_MODIFIER);
@@ -48,7 +47,7 @@ public class ToughTrait extends IDna {
 		PlayerEntity player = cap.getPlayer();
         if (player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(TOUGH_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(TOUGH_MODIFIER);
-		}
+        }
 
         if (player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).hasModifier(ATTACK_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(ATTACK_MODIFIER);

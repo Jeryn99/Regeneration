@@ -20,7 +20,6 @@ public class TypeManager {
         return TYPES.get(Type.FIERY);
     }
 
-
     public enum Type implements RegenUtil.IEnum {
         FIERY, LAY_FADE
     }

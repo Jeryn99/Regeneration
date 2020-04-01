@@ -12,8 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.function.Supplier;
 
 /**
- * Created by Sub
- * on 20/09/2018.
+ * Created by Sub on 20/09/2018.
  */
 public class MovingSound extends TickableSound {
 	
@@ -37,8 +36,8 @@ public class MovingSound extends TickableSound {
 			if (stopCondition.get() || !entityObject.isAlive()) {
 				setDonePlaying();
 			}
-			
-			//I promise this is the only case specific thing I am putting in here ~ swirtzly
+
+            // I promise this is the only case specific thing I am putting in here ~ swirtzly
 			if (sound.getSoundLocation().equals(RegenObjects.Sounds.GRACE_HUM.getRegistryName())) {
 				volume = RegenUtil.randFloat(1.5F, 6F);
 			}
@@ -57,7 +56,6 @@ public class MovingSound extends TickableSound {
 		}
 		
 	}
-	
 	
 	public void setDonePlaying() {
 		this.repeat = false;
@@ -84,7 +82,6 @@ public class MovingSound extends TickableSound {
 	public boolean isDonePlaying() {
 		return donePlaying;
 	}
-	
 	
 	@Override
 	public int getRepeatDelay() {

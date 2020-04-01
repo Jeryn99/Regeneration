@@ -7,16 +7,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 /**
- * Created by Swirtzly
- * on 22/08/2019 @ 14:43
+ * Created by Swirtzly on 22/08/2019 @ 14:43
  */
 public class BioContainerContainer extends Container {
 
@@ -24,13 +21,13 @@ public class BioContainerContainer extends Container {
     private PlayerEntity playerEntity;
     private IItemHandler playerInventory;
 
-    public BioContainerContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player, TileEntityHandInJar tileEntityHandInJar) {
+    public BioContainerContainer(int windowId, PlayerInventory playerInventory, PlayerEntity player, TileEntityHandInJar tileEntityHandInJar) {
         super(RegenObjects.Containers.BIO_CONTAINER, windowId);
-        tileEntity = (TileEntityHandInJar) world.getTileEntity(pos);
+        tileEntity = tileEntityHandInJar;
         this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);
 
-        tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> addSlot(new SlotItemHandler(h, 0, 44 + 2 * 18, 20)));
+        tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> addSlot(new SlotItemHandler(h, 0, 44 + 2 * 19, 38)));
         layoutPlayerInventorySlots(10, 70);
     }
 
@@ -38,7 +35,6 @@ public class BioContainerContainer extends Container {
     public boolean canInteractWith(PlayerEntity playerIn) {
         return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerEntity, RegenObjects.Blocks.HAND_JAR);
     }
-
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {

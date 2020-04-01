@@ -9,8 +9,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
- * Created by Sub
- * on 20/09/2018.
+ * Created by Sub on 20/09/2018.
  */
 public class InvalidatePlayerDataMessage {
 	

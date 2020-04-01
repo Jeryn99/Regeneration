@@ -9,14 +9,13 @@ import net.minecraft.util.math.Vec3d;
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
  * <p>
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public interface RegenType<R extends ATypeRenderer<?>> {
 
-	static RegenType<?> getType(TypeManager.Type type) {
+    static RegenType<?> getType(TypeManager.Type type) {
 
-		return TypeManager.getTypeInstance(TypeManager.Type.FIERY);
+        return TypeManager.getTypeInstance(TypeManager.Type.FIERY);
 	}
 	
 	/**
@@ -27,18 +26,17 @@ public interface RegenType<R extends ATypeRenderer<?>> {
 	R getRenderer();
 
     default void onStartRegeneration(PlayerEntity player, IRegen capability) {
-	}
+    }
 
     default void onUpdateMidRegen(PlayerEntity player, IRegen capability) {
-	}
+    }
 
     default void onFinishRegeneration(PlayerEntity player, IRegen capability) {
     }
 
     double getAnimationProgress(IRegen cap);
-
+	
 	TypeManager.Type getTypeID();
-
 
     SoundEvent[] getRegeneratingSounds();
 

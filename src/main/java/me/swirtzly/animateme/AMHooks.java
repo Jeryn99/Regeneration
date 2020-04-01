@@ -1,6 +1,6 @@
 package me.swirtzly.animateme;
 
-import me.swirtzly.regeneration.util.ClientUtil;
+import me.swirtzly.regeneration.util.client.ClientUtil;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
@@ -28,14 +28,11 @@ public class AMHooks {
         }
     }
 
-
     public static void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
-        if (entity == null)
-            return;
+        if (entity == null) return;
         for (AnimationManager.IAnimate animation : AnimationManager.getAnimations()) {
             animation.preRenderCallBack(renderer, entity);
         }
     }
-
-
+	
 }

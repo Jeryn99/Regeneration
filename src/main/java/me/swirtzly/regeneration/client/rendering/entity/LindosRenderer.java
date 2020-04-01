@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.client.rendering.entity;
 
-import me.swirtzly.regeneration.util.RenderUtil;
-import net.minecraft.client.Minecraft;
 import com.mojang.blaze3d.platform.GlStateManager;
+import me.swirtzly.regeneration.util.client.RenderUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;

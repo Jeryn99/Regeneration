@@ -6,7 +6,7 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.FieryType;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RenderUtil;
+import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -27,7 +27,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	
 	public static final FieryRenderer INSTANCE = new FieryRenderer();
 
-	public static void renderOverlay(PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public static void renderOverlay(PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		RegenCap.get(entityPlayer).ifPresent((data) -> {
 			GlStateManager.pushMatrix();
 			RenderUtil.setLightmapTextureCoords(240, 240);
@@ -47,11 +47,11 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		});
 	}
 
-	public static void renderCone(PlayerEntity entityPlayer, float scale, float scale2, Vec3d color) {
+    public static void renderCone(PlayerEntity entityPlayer, float scale, float scale2, Vec3d color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
 
-		for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
 			GlStateManager.pushMatrix();
 			GlStateManager.rotatef(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
 			GlStateManager.scalef(1.0f, 1.0f, 0.65f);
@@ -65,7 +65,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 			GlStateManager.popMatrix();
 		}
 	}
-	
+
     public static void renderConeAtArms(PlayerEntity player, LivingRenderer renderLivingBase, HandSide side) {
 		RegenCap.get(player).ifPresent((data) -> {
             double x = TypeManager.getTypeInstance(data.getType()).getAnimationProgress(data);
@@ -80,13 +80,12 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
             Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
             Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
 
-
             // State manager changes
             GlStateManager.pushTextureAttributes();
             GlStateManager.disableTexture();
             GlStateManager.enableAlphaTest();
             GlStateManager.enableBlend();
-           // GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+            // GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.SourceFactor.CONSTANT_ALPHA.value);
             GlStateManager.depthMask(true);
             RenderUtil.setLightmapTextureCoords(65, 65);
@@ -108,15 +107,15 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
             GlStateManager.popAttributes();
         });
     }
-
+	
 	@Override
-	public void renderRegeneratingPlayerPre(FieryType type, RenderPlayerEvent.Pre ev, IRegen cap) {
-	}
-
+    public void renderRegeneratingPlayerPre(FieryType type, RenderPlayerEvent.Pre ev, IRegen cap) {
+    }
+	
 	@Override
 	protected void renderRegeneratingPlayerPost(FieryType type, RenderPlayerEvent.Post event, IRegen capability) {
 
-	}
+    }
 
     @Override
     public void renderHand(PlayerEntity player, HandSide handSide, LivingRenderer render) {
@@ -175,68 +174,67 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		GlStateManager.color4f(255, 255, 255, 255);
         GlStateManager.enableTexture();
         GlStateManager.popAttributes();
-	}
+    }
 
     @Override
     public void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
 
     }
-
+	
 	@Override
 	public void preAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
-	}
-
+    }
+	
 	@Override
 	public void postAnimation(BipedModel playerModel, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		RegenCap.get(entity).ifPresent((data) -> {
 			if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == TypeManager.Type.FIERY) {
 
-				double animationProgress = data.getAnimationTicks();
+                double animationProgress = data.getAnimationTicks();
 				double arm_shake = entity.getRNG().nextDouble();
 				float armRot = (float) animationProgress * 1.5F;
 				float headRot = (float) animationProgress * 0.5F;
 
-				if (armRot > 90) {
+                if (armRot > 90) {
 					armRot = 90;
 				}
 
-				if (headRot > 45) {
+                if (headRot > 45) {
 					headRot = 45;
 				}
 
-				//ARMS
+                // ARMS
 				playerModel.bipedLeftArm.rotateAngleY = 0;
 				playerModel.bipedRightArm.rotateAngleY = 0;
 
-				playerModel.bipedLeftArm.rotateAngleX = 0;
+                playerModel.bipedLeftArm.rotateAngleX = 0;
 				playerModel.bipedRightArm.rotateAngleX = 0;
 
-				playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
+                playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRot + arm_shake);
 				playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRot + arm_shake);
 
-				//BODY
+                // BODY
 				playerModel.bipedBody.rotateAngleX = 0;
 				playerModel.bipedBody.rotateAngleY = 0;
 				playerModel.bipedBody.rotateAngleZ = 0;
 
-
-				//LEGS
+                // LEGS
 				playerModel.bipedLeftLeg.rotateAngleY = 0;
 				playerModel.bipedRightLeg.rotateAngleY = 0;
 
-				playerModel.bipedLeftLeg.rotateAngleX = 0;
+                playerModel.bipedLeftLeg.rotateAngleX = 0;
 				playerModel.bipedRightLeg.rotateAngleX = 0;
 
-				playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
+                playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
 				playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
 
-				playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
+                playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
 			}
 		});
 	}
 
-	@Override
+    @Override
 	public boolean useVanilla() {
 		return true;
 	}

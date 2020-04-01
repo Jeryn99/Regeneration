@@ -17,9 +17,9 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
 
     public static void copyAnglesToWear(BipedModel modelBiped) {
         // if (modelBiped instanceof PlayerModel) {
-        //     PlayerModel playerModel = (PlayerModel) modelBiped;
+        // PlayerModel playerModel = (PlayerModel) modelBiped;
         // ClientUtil.copyAnglesToWear(playerModel);
-        //  }
+        // }
     }
 
     public static void makeZombieArms(BipedModel modelBiped) {
@@ -28,7 +28,6 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
         modelBiped.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
         modelBiped.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
     }
-
 
     @Override
     public void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
@@ -68,10 +67,10 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
             ItemStack stack = player.getHeldItemMainhand();
             ItemStack offStack = player.getHeldItemOffhand();
 
-            //==============FOB WATCH & JAR START==============
+            // ==============FOB WATCH & JAR START==============
             boolean isOpen;
 
-            //MAINHAND
+            // MAINHAND
             if (stack.getItem() instanceof FobWatchItem) {
                 isOpen = FobWatchItem.getOpen(stack) == 1;
                 if (isOpen) {
@@ -80,7 +79,7 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
                 }
             }
 
-            //OFFHAND
+            // OFFHAND
             if (offStack.getItem() instanceof FobWatchItem) {
                 isOpen = FobWatchItem.getOpen(stack) == 1;
                 if (isOpen) {
@@ -88,11 +87,10 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
                     copyAnglesToWear(modelBiped);
                 }
             }
-            //==============FOB WATCH END==============
-
+            // ==============FOB WATCH END==============
 
             RegenCap.get(player).ifPresent((data) -> {
-                //JAR SYNCING
+                // JAR SYNCING
                 if (data.isSyncingToJar()) {
                     makeZombieArms(modelBiped);
                     modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(45);

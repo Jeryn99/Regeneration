@@ -45,6 +45,15 @@ public class ImageDownloader extends SimpleTexture {
         this.imageBuffer = imageBufferIn;
     }
 
+    public static boolean isAlexSkin(BufferedImage image) {
+        return hasAlpha(55, 20, image) && hasAlpha(55, 21, image) && hasAlpha(55, 22, image) && hasAlpha(55, 23, image) && hasAlpha(55, 24, image) && hasAlpha(55, 25, image) && hasAlpha(55, 26, image) && hasAlpha(55, 27, image) && hasAlpha(55, 28, image) && hasAlpha(55, 29, image) && hasAlpha(55, 30, image) && hasAlpha(55, 31, image) && hasAlpha(54, 20, image) && hasAlpha(54, 21, image) && hasAlpha(54, 22, image) && hasAlpha(54, 23, image) && hasAlpha(54, 24, image) && hasAlpha(54, 25, image) && hasAlpha(54, 26, image) && hasAlpha(54, 27, image) && hasAlpha(54, 28, image) && hasAlpha(54, 29, image) && hasAlpha(54, 30, image) && hasAlpha(54, 31, image) || hasAlpha(46, 52, image) && hasAlpha(46, 53, image) && hasAlpha(46, 54, image) && hasAlpha(46, 54, image) && hasAlpha(46, 55, image) && hasAlpha(46, 56, image) && hasAlpha(46, 57, image) && hasAlpha(46, 58, image) && hasAlpha(46, 59, image) && hasAlpha(46, 60, image) && hasAlpha(46, 61, image) && hasAlpha(46, 63, image) && hasAlpha(46, 53, image);
+    }
+
+    public static boolean hasAlpha(int x, int y, BufferedImage image) {
+        int pixel = image.getRGB(x, y);
+        return pixel >> 24 == 0x00 || ((pixel & 0x00FFFFFF) == 0);
+    }
+
     private void uploadImage(NativeImage nativeImageIn) {
         TextureUtil.prepareImage(this.getGlTextureId(), nativeImageIn.getWidth(), nativeImageIn.getHeight());
         nativeImageIn.uploadTextureSub(0, 0, 0, false);
@@ -71,7 +80,7 @@ public class ImageDownloader extends SimpleTexture {
 
         if (this.imageThread == null) {
             if (this.cacheFile != null && this.cacheFile.isFile()) {
-                LOGGER.debug("Loading http texture from local cache ({})", (Object) this.cacheFile);
+                LOGGER.debug("Loading http texture from local cache ({})", this.cacheFile);
                 NativeImage nativeimage = null;
 
                 try {
@@ -126,7 +135,7 @@ public class ImageDownloader extends SimpleTexture {
                                     nativeimage = ImageDownloader.this.imageBuffer.parseUserSkin(nativeimage);
                                 }
                             } catch (IOException ioexception) {
-                                ImageDownloader.LOGGER.warn("Error while loading the skin texture", (Throwable) ioexception);
+                                ImageDownloader.LOGGER.warn("Error while loading the skin texture", ioexception);
                             } finally {
                                 if (nativeimage != null) {
                                     nativeimage.close();
@@ -139,7 +148,7 @@ public class ImageDownloader extends SimpleTexture {
                         return;
                     }
                 } catch (Exception exception) {
-                    ImageDownloader.LOGGER.error("Couldn't download http texture", (Throwable) exception);
+                    ImageDownloader.LOGGER.error("Couldn't download http texture", exception);
                     return;
                 } finally {
                     if (httpurlconnection != null) {
@@ -153,38 +162,5 @@ public class ImageDownloader extends SimpleTexture {
         this.imageThread.setDaemon(true);
         this.imageThread.setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler(LOGGER));
         this.imageThread.start();
-    }
-
-    public static boolean isAlexSkin(BufferedImage image) {
-        return hasAlpha(55, 20, image) &&
-                hasAlpha(55, 21, image) &&
-                hasAlpha(55, 22, image) &&
-                hasAlpha(55, 23, image) &&
-                hasAlpha(55, 24, image) &&
-                hasAlpha(55, 25, image) &&
-                hasAlpha(55, 26, image) &&
-                hasAlpha(55, 27, image) &&
-                hasAlpha(55, 28, image) &&
-                hasAlpha(55, 29, image) &&
-                hasAlpha(55, 30, image) &&
-                hasAlpha(55, 31, image) &&
-                hasAlpha(54, 20, image) &&
-                hasAlpha(54, 21, image) &&
-                hasAlpha(54, 22, image) &&
-                hasAlpha(54, 23, image) &&
-                hasAlpha(54, 24, image) &&
-                hasAlpha(54, 25, image) &&
-                hasAlpha(54, 26, image) &&
-                hasAlpha(54, 27, image) &&
-                hasAlpha(54, 28, image) &&
-                hasAlpha(54, 29, image) &&
-                hasAlpha(54, 30, image) &&
-                hasAlpha(54, 31, image) || hasAlpha(46, 52, image) && hasAlpha(46, 53, image) && hasAlpha(46, 54, image) && hasAlpha(46, 54, image) && hasAlpha(46, 55, image) && hasAlpha(46, 56, image) && hasAlpha(46, 57, image) && hasAlpha(46, 58, image) && hasAlpha(46, 59, image) && hasAlpha(46, 60, image) && hasAlpha(46, 61, image) && hasAlpha(46, 63, image) && hasAlpha(46, 53, image);
-    }
-
-
-    public static boolean hasAlpha(int x, int y, BufferedImage image) {
-        int pixel = image.getRGB(x, y);
-        return pixel >> 24 == 0x00 || ((pixel & 0x00FFFFFF) == 0);
     }
 }

@@ -8,18 +8,17 @@ import net.minecraftforge.common.capabilities.Capability;
 import javax.annotation.Nullable;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class RegenStorage implements Capability.IStorage<IRegen> {
 
-	@Nullable
+    @Nullable
 	@Override
     public INBT writeNBT(Capability<IRegen> capability, IRegen instance, Direction side) {
 		return instance.serializeNBT();
 	}
 
-	@Override
+    @Override
     public void readNBT(Capability<IRegen> capability, IRegen instance, Direction side, INBT nbt) {
 		instance.deserializeNBT(nbt instanceof CompoundNBT ? (CompoundNBT) nbt : new CompoundNBT());
 	}

@@ -25,16 +25,13 @@ public class UpdateStateMessage {
 	}
 	
 	public static UpdateStateMessage decode(PacketBuffer buffer) {
-		if (Minecraft.getInstance().player == null)
-			return null;
+        if (Minecraft.getInstance().player == null) return null;
 		return new UpdateStateMessage(Minecraft.getInstance().player.world.getPlayerByUuid(buffer.readUniqueId()), buffer.readString(600));
 	}
 	
-	
 	public static class Handler {
 		public static void handle(UpdateStateMessage message, Supplier<NetworkEvent.Context> ctx) {
-            Minecraft.getInstance().deferTask(() ->
-                    RegenCap.get(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
+            Minecraft.getInstance().deferTask(() -> RegenCap.get(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
 			ctx.get().setPacketHandled(true);
 		}
 	}

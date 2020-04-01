@@ -45,9 +45,9 @@ public class RegenerationMod {
 	
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	public static RegenerationMod INSTANCE;
+    public static RegenerationMod INSTANCE;
 
-	public RegenerationMod(){
+    public RegenerationMod() {
 		INSTANCE = this;
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
@@ -56,36 +56,34 @@ public class RegenerationMod {
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
 
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
 	}
 	
 	public static Logger LOG = LogManager.getLogger(NAME);
 
-	public static Proxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+    public static Proxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
-	private void doClientStuff(final FMLClientSetupEvent event) {
+    private void doClientStuff(final FMLClientSetupEvent event) {
 		RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(LindosEntity.class, LindosRenderer::new);
 	}
 
-
-	private void setup(final FMLCommonSetupEvent event) {
+    private void setup(final FMLCommonSetupEvent event) {
 		proxy.preInit();
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
 		ActingForwarder.init();
 		TriggerManager.init();
 	}
 
-	private void enqueueIMC(final InterModEnqueueEvent event) {
+    private void enqueueIMC(final InterModEnqueueEvent event) {
 		proxy.init();
 		NetworkDispatcher.init();
 		TraitManager.init();
 		TypeManager.init();
 	}
 
-
-	private void processIMC(final InterModProcessEvent event) {
+    private void processIMC(final InterModProcessEvent event) {
 		proxy.postInit();
 		PlayerUtil.createPostList();
 	}
@@ -94,6 +92,5 @@ public class RegenerationMod {
 	public void serverStart(FMLServerStartingEvent event) {
 		RegenDebugCommand.register(event.getCommandDispatcher());
 	}
-
 	
 }

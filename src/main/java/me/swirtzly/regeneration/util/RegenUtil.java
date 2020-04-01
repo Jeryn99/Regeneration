@@ -71,12 +71,12 @@ public class RegenUtil {
 		explodeKill(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
 	}
 
-    //Constants
+    // Constants
     public static String NO_SKIN = "no_skin";
 
     public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
         world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-            if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) //&& RegenConfig.COMMON.regenerationKillsPlayers))
+            if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
                 entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
         });
     }
@@ -90,14 +90,14 @@ public class RegenUtil {
 			if (entity instanceof LivingEntity && exploder.isAlive()) {
 				LivingEntity victim = (LivingEntity) entity;
 
-				if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.isNonBoss())
-					return;
+                if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.isNonBoss())
+                    return;
 
-				//	float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
-
+                // float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
+				
 				float densMod = 1;
 
-				int xr, zr;
+                int xr, zr;
 				xr = (int) -(victim.posX - exploder.posX);
 				zr = (int) -(victim.posZ - exploder.posZ);
 
@@ -106,20 +106,19 @@ public class RegenUtil {
 		});
 	}
 
-
     public interface IEnum<E extends Enum<E>> {
 		int ordinal();
 
-		default E next() {
+        default E next() {
 			E[] ies = this.getAllValues();
 			return this.ordinal() != ies.length - 1 ? ies[this.ordinal() + 1] : null;
 		}
 
-		default E previous() {
+        default E previous() {
 			return this.ordinal() != 0 ? this.getAllValues()[this.ordinal() - 1] : null;
 		}
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
 		default E[] getAllValues() {
 			IEnum[] ies = this.getClass().getEnumConstants();
 			return (E[]) ies;

@@ -18,7 +18,6 @@ public class RegenerateMessage {
         return new RegenerateMessage();
     }
 
-
     public static class Handler {
 
         public static void handle(RegenerateMessage message, Supplier<NetworkEvent.Context> ctx) {
@@ -38,5 +37,5 @@ public class RegenerateMessage {
             ctx.get().setPacketHandled(true);
         }
     }
-
+	
 }

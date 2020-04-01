@@ -45,7 +45,6 @@ public abstract class ATypeRenderer<T> implements AnimationManager.IAnimate {
 			throw new IllegalStateException("RegenType <-> RegenRenderType mismatch", e);
 		}
 	}
-
 	
 	public abstract void renderHand(PlayerEntity player, HandSide handSide, LivingRenderer render);
 	

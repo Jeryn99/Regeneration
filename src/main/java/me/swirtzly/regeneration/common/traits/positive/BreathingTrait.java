@@ -9,18 +9,16 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Created by Suffril
- * on 25/01/2019.
+ * Created by Suffril on 25/01/2019.
  */
 public class BreathingTrait extends TraitManager.IDna {
-	
 	
 	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "swimmer");
 
     public BreathingTrait() {
         super("swimmer");
     }
-
+	
 	@Override
     public void onUpdate(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();

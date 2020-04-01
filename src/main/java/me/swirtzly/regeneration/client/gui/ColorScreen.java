@@ -7,8 +7,8 @@ import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateColorMessage;
-import me.swirtzly.regeneration.util.ClientUtil;
-import me.swirtzly.regeneration.util.RenderUtil;
+import me.swirtzly.regeneration.util.client.ClientUtil;
+import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.nbt.CompoundNBT;
@@ -39,7 +39,6 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
         ySize = 186;
     }
 
-
     @Override
     public void init() {
         super.init();
@@ -58,26 +57,24 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
         final int btnW = 60, btnH = 18;
         final int sliderW = 70, sliderH = 20;
 
-        //Reset Style Button
-        this.addButton(new GuiButtonExt(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.undo").getFormattedText(),
-                button -> {
-                    slidePrimaryRed.setValue(initialPrimary.x);
-                    slidePrimaryGreen.setValue(initialPrimary.y);
-                    slidePrimaryBlue.setValue(initialPrimary.z);
+        // Reset Style Button
+        this.addButton(new GuiButtonExt(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.undo").getFormattedText(), button -> {
+            slidePrimaryRed.setValue(initialPrimary.x);
+            slidePrimaryGreen.setValue(initialPrimary.y);
+            slidePrimaryBlue.setValue(initialPrimary.z);
 
-                    slideSecondaryRed.setValue(initialSecondary.x);
-                    slideSecondaryGreen.setValue(initialSecondary.y);
-                    slideSecondaryBlue.setValue(initialSecondary.z);
-                }));
+            slideSecondaryRed.setValue(initialSecondary.x);
+            slideSecondaryGreen.setValue(initialSecondary.y);
+            slideSecondaryBlue.setValue(initialSecondary.z);
+        }));
 
-        //Reset Skin Button
+        // Reset Skin Button
         this.addButton(new GuiButtonExt(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin").getFormattedText(), p_onPress_1_ -> ClientUtil.sendSkinResetPacket()));
 
-        //Customize Button
-        this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.customize").getFormattedText(), button ->
-                Minecraft.getInstance().displayGuiScreen(null)));
+        // Customize Button
+        this.addButton(new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.customize").getFormattedText(), button -> Minecraft.getInstance().displayGuiScreen(null)));
 
-        //Default Button
+        // Default Button
         this.addButton(new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.default").getFormattedText(), button -> {
             slidePrimaryRed.setValue(0.93F);
             slidePrimaryGreen.setValue(0.61F);
@@ -134,8 +131,7 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
         RenderUtil.drawRect(cx + 95, cy + 44, cx + 166, cy + 61, 0.1F, 0.1F, 0.1F, 1);
         RenderUtil.drawRect(cx + 96, cy + 45, cx + 165, cy + 60, (float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue(), 1);
 
-        Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue()),
-                secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue());
+        Vec3d primaryColor = new Vec3d((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue()), secondaryColor = new Vec3d((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue());
 
         RegenCap.get(minecraft.player).ifPresent((cap) -> {
             String str = new TranslationTextComponent("regeneration.gui.primary").getFormattedText();
@@ -154,7 +150,6 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
             font.drawString(str, cx + 86 - length / 2, cy + 21, Color.DARK_GRAY.getRGB());
         });
     }
-
 
     @Override
     public void onChangeSliderValue(GuiSlider slider) {

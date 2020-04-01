@@ -41,8 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public class RegenCap implements IRegen {
 
@@ -58,29 +57,26 @@ public class RegenCap implements IRegen {
 	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
 	private TypeManager.Type regenType = TypeManager.Type.FIERY;
 
-	private String BASE64_SKIN = RegenUtil.NO_SKIN;
+    private String BASE64_SKIN = RegenUtil.NO_SKIN;
 	
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
     private SkinManipulation.EnumChoices preferredModel = SkinManipulation.EnumChoices.EITHER;
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
-	private int ticksAnimating = 0; //I`m so sorry
+    private int ticksAnimating = 0; // I`m so sorry
 	private boolean syncingToJar = false;
 	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
 	private String nextSkin = RegenUtil.NO_SKIN;
 	private HandSide cutOffHand = HandSide.LEFT;
 	private boolean hasDroppedHand = false;
 
-
-	/**
-	 * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client.
-	 * This property is synced over to the client to solve this
+    /**
+     * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client. This property is synced over to the client to solve this
 	 */
 	private boolean handsAreGlowingClient;
 
-
-	public RegenCap() {
+    public RegenCap() {
 		this.player = null;
 		this.stateManager = null;
 	}
@@ -93,7 +89,7 @@ public class RegenCap implements IRegen {
 			this.stateManager = null;
 	}
 
-	@Nonnull
+    @Nonnull
     public static LazyOptional<IRegen> get(Entity player) {
         return player.getCapability(RegenCap.CAPABILITY, null);
 	}
@@ -105,50 +101,48 @@ public class RegenCap implements IRegen {
 			didSetup = true;
 		}
 
-		if (!player.world.isRemote) {
-		if (isSyncingToJar() && ticksAnimating >= 250) {
-			setSyncingFromJar(false);
-			ticksAnimating = 0;
-			synchronise();
-		} else {
-			if (isSyncingToJar()) {
+        if (!player.world.isRemote) {
+            if (isSyncingToJar() && ticksAnimating >= 250) {
+                setSyncingFromJar(false);
+                ticksAnimating = 0;
+                synchronise();
+            } else {
+                if (isSyncingToJar()) {
 					PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
 				}
 			}
 		}
 
-		if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
+        if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
 			ticksAnimating = 0;
 		} else {
 			ticksAnimating++;
 		}
 
-		if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
+        if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
 			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
 			RegenerationMod.LOG.info("Correcting the amount of Regenerations {} has, from {} to {}", player.getName(), getRegenerationsLeft(), RegenConfig.COMMON.regenCapacity.get());
 		}
 
-		TraitManager.getDnaEntry(getDnaType()).onUpdate(this);
+        TraitManager.getDnaEntry(getDnaType()).onUpdate(this);
 
-		if (!player.world.isRemote && state != PlayerUtil.RegenState.ALIVE) // ticking only on the server for simplicity
+        if (!player.world.isRemote && state != PlayerUtil.RegenState.ALIVE) // ticking only on the server for simplicity
 			stateManager.tick();
 
-		if (state == PlayerUtil.RegenState.REGENERATING) {
+        if (state == PlayerUtil.RegenState.REGENERATING) {
 			TypeManager.getTypeInstance(regenType).onUpdateMidRegen(player, this);
 		}
 	}
 	
 	@Override
 	public void synchronise() {
-		if (player.world.isRemote)
-			throw new IllegalStateException("Don't sync client -> server");
+        if (player.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
 		
 		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
 		CompoundNBT nbt = serializeNBT();
 		nbt.remove("stateManager");
 		NetworkDispatcher.sendPacketToAll(new SyncClientPlayerMessage(player.getUniqueID(), nbt));
 	}
-	
 	
 	@Override
 	public CompoundNBT serializeNBT() {
@@ -173,8 +167,7 @@ public class RegenCap implements IRegen {
 		nbt.putBoolean("traitActive", traitActive);
 		nbt.putInt("ticks_animating", ticksAnimating);
 		nbt.putBoolean("jar", syncingToJar);
-		if (!player.world.isRemote)
-			nbt.put("stateManager", stateManager.serializeNBT());
+        if (!player.world.isRemote) nbt.put("stateManager", stateManager.serializeNBT());
 		nbt.putString("nextSkinType", nextSkinType.name());
 		nbt.putString("nextSkin", nextSkin);
 		nbt.putString("cutOffHand", cutOffHand.name());
@@ -185,8 +178,8 @@ public class RegenCap implements IRegen {
 	@Override
 	public void deserializeNBT(CompoundNBT nbt) {
 		regenerationsLeft = Math.min(RegenConfig.COMMON.regenCapacity.get(), nbt.getInt(nbt.contains("livesLeft") ? "livesLeft" : "regenerationsLeft"));
-		
-		//TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
+
+        // TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
 		if (nbt.contains("skinType")) {
 			setSkinType(nbt.getString("skinType"));
 		} else {
@@ -198,7 +191,6 @@ public class RegenCap implements IRegen {
 		} else {
 			setPreferredModel("ALEX");
 		}
-		
 		
 		if (nbt.contains("regenerationsLeft")) {
 			regenerationsLeft = nbt.getInt("regenerationsLeft");
@@ -234,32 +226,30 @@ public class RegenCap implements IRegen {
 		
 		state = nbt.contains("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
 		setEncodedSkin(nbt.getString("base64_skin"));
-		
-		if (nbt.contains("stateManager"))
-			if (stateManager != null) {
-				stateManager.deserializeNBT((CompoundNBT) nbt.get("stateManager"));
-			}
+
+        if (nbt.contains("stateManager")) if (stateManager != null) {
+            stateManager.deserializeNBT((CompoundNBT) nbt.get("stateManager"));
+        }
 		
 		if (nbt.contains("jar")) {
 			syncingToJar = nbt.getBoolean("jar");
 		}
 
-		if (nbt.contains("nextSkin")) {
+        if (nbt.contains("nextSkin")) {
 			nextSkin = nbt.getString("nextSkin");
 		}
 		if (nbt.contains("nextSkinType")) {
 			nextSkinType = SkinInfo.SkinType.valueOf(nbt.getString("nextSkinType"));
 		}
 
-		if (nbt.contains("cutOffhand")) {
+        if (nbt.contains("cutOffhand")) {
 			cutOffHand = HandSide.valueOf(nbt.getString("cutOffHand"));
 		}
 
-		if (nbt.contains("hasCutOff")) {
+        if (nbt.contains("hasCutOff")) {
 			hasDroppedHand = nbt.getBoolean("hasCutOff");
 		}
 	}
-	
 	
 	@Override
 	public int getRegenerationsLeft() {
@@ -272,7 +262,6 @@ public class RegenCap implements IRegen {
 		regenerationsLeft = amount;
 	}
 	
-	
 	@Override
 	public PlayerEntity getPlayer() {
 		return player;
@@ -283,13 +272,12 @@ public class RegenCap implements IRegen {
 		return regenType;
 	}
 
-	@Override
+    @Override
 	public void setType(TypeManager.Type type) {
 		this.regenType = type;
 	}
 
-
-	@Override
+    @Override
 	public String getEncodedSkin() {
 		return BASE64_SKIN;
 	}
@@ -298,7 +286,6 @@ public class RegenCap implements IRegen {
 	public void setEncodedSkin(String string) {
 		BASE64_SKIN = string;
 	}
-	
 	
 	@Override
 	public CompoundNBT getStyle() {
@@ -334,7 +321,6 @@ public class RegenCap implements IRegen {
 		return new Vec3d(secondaryRed, secondaryGreen, secondaryBlue);
 	}
 	
-	
 	@Override
 	public void receiveRegenerations(int amount) {
 		if (RegenConfig.COMMON.infiniteRegeneration.get())
@@ -352,7 +338,6 @@ public class RegenCap implements IRegen {
 			regenerationsLeft -= amount;
 		synchronise();
 	}
-	
 	
 	@Override
 	public SkinInfo.SkinType getSkinType() {
@@ -374,12 +359,10 @@ public class RegenCap implements IRegen {
         this.preferredModel = SkinManipulation.EnumChoices.valueOf(skinType);
 	}
 	
-	
 	@Override
 	public boolean areHandsGlowing() {
 		return handsAreGlowingClient;
 	}
-	
 	
 	@Override
 	public String getDeathSource() {
@@ -431,47 +414,47 @@ public class RegenCap implements IRegen {
 		return syncingToJar;
 	}
 
-	@Override
+    @Override
 	public SkinInfo.SkinType getNextSkinType() {
 		return nextSkinType;
 	}
 
-	@Override
+    @Override
 	public void setNextSkinType(SkinInfo.SkinType skinType) {
 		nextSkinType = skinType;
 	}
 
-	@Override
+    @Override
 	public String getNextSkin() {
 		return nextSkin;
 	}
 
-	@Override
+    @Override
 	public void setNextSkin(String encodedSkin) {
 		nextSkin = encodedSkin;
 	}
 
-	@Override
+    @Override
 	public boolean hasDroppedHand() {
 		return hasDroppedHand;
 	}
 
-	@Override
+    @Override
 	public void setDroppedHand(boolean droppedHand) {
 		hasDroppedHand = droppedHand;
 	}
 
-	@Override
+    @Override
 	public HandSide getCutoffHand() {
 		return cutOffHand;
 	}
 
-	@Override
+    @Override
 	public void setCutOffHand(HandSide side) {
 		cutOffHand = side;
 	}
 
-	@Override
+    @Override
     public IRegenStateManager getStateManager() {
 		return stateManager;
 	}
@@ -481,14 +464,12 @@ public class RegenCap implements IRegen {
 		return state;
 	}
 	
-	
 	@Override
 	public void triggerRegeneration() {
-		if (player.world.isRemote)
-			throw new IllegalStateException("Triggering regeneration via capability instance on the client side");
+        if (player.world.isRemote)
+            throw new IllegalStateException("Triggering regeneration via capability instance on the client side");
 		stateManager.triggerRegeneration();
 	}
-	
 	
 	/**
 	 * ONLY EXISTS ON THE SERVER SIDE
@@ -512,16 +493,13 @@ public class RegenCap implements IRegen {
 			transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, err);
 		}
 
-		@SuppressWarnings("deprecation")
+        @SuppressWarnings("deprecation")
 		private void scheduleTransitionInTicks(PlayerUtil.RegenState.Transition transition, long inTicks) {
-			if (nextTransition != null && nextTransition.getTicksLeft() > 0)
-				throw new IllegalStateException("Overwriting non-completed/cancelled transition: " +
-						"\n Attempted Transition: " + transition.name() +
-						"\n Current: " + nextTransition.transition.name() +
-						"\n Affected Player: " + player.getName());
-			
-			if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START || transition == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER)
-				throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
+            if (nextTransition != null && nextTransition.getTicksLeft() > 0)
+                throw new IllegalStateException("Overwriting non-completed/cancelled transition: " + "\n Attempted Transition: " + transition.name() + "\n Current: " + nextTransition.transition.name() + "\n Affected Player: " + player.getName());
+
+            if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START || transition == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER)
+                throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
 			
 			nextTransition = new DebuggableScheduledAction(transition, player, transitionCallbacks.get(transition), inTicks);
 		}
@@ -530,24 +508,22 @@ public class RegenCap implements IRegen {
 			scheduleTransitionInTicks(transition, inSeconds * 20);
 		}
 		
-		
 		@SuppressWarnings("deprecation")
 		private void scheduleNextHandGlow() {
-			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
-				throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
+            if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
+                throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
 			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.COMMON.handGlowInterval.get() * 20);
 			synchronise();
 		}
 		
 		@SuppressWarnings("deprecation")
 		private void scheduleHandGlowTrigger() {
-			if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
-				throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
+            if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
+                throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
 			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
             ActingForwarder.onHandsStartGlowing(RegenCap.this);
 			synchronise();
 		}
-		
 		
 		@Override
 		public boolean onKilled(DamageSource source) {
@@ -569,7 +545,7 @@ public class RegenCap implements IRegen {
                 ActingForwarder.onEnterGrace(RegenCap.this);
 				return true;
 
-			} else if (state == PlayerUtil.RegenState.GRACE) {
+            } else if (state == PlayerUtil.RegenState.GRACE) {
 				
 				// We're being forced to regenerate...
 				triggerRegeneration();
@@ -620,18 +596,17 @@ public class RegenCap implements IRegen {
 					TriggerManager.CHANGE_REFUSAL.trigger((ServerPlayerEntity) player);
 					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.regen_delayed"), true);
 				}
-				e.setCanceled(true); //It got annoying in creative to break something
+                e.setCanceled(true); // It got annoying in creative to break something
 			}
 		}
 		
 		private void tick() {
-			if (player.world.isRemote)
-				throw new IllegalStateException("Ticking state manager on the client"); // the state manager shouldn't even exist on the client
-			if (state == PlayerUtil.RegenState.ALIVE)
-				throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
-			
-			if (state.isGraceful())
-				handGlowTimer.tick();
+            if (player.world.isRemote)
+                throw new IllegalStateException("Ticking state manager on the client"); // the state manager shouldn't even exist on the client
+            if (state == PlayerUtil.RegenState.ALIVE)
+                throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
+
+            if (state.isGraceful()) handGlowTimer.tick();
 
             ActingForwarder.onRegenTick(RegenCap.this);
 			nextTransition.tick();
@@ -652,8 +627,7 @@ public class RegenCap implements IRegen {
 			}
 			
 			nextTransition.cancel(); // ... cancel any state shift we had planned
-			if (state.isGraceful())
-				handGlowTimer.cancel();
+            if (state.isGraceful()) handGlowTimer.cancel();
 			scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, TypeManager.getTypeInstance(regenType).getAnimationLength());
 
             ActingForwarder.onRegenTrigger(RegenCap.this);
@@ -698,7 +672,7 @@ public class RegenCap implements IRegen {
 				player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
 			}
 
-			setDroppedHand(false);
+            setDroppedHand(false);
 		}
 		
 		private void finishRegeneration() {
@@ -721,14 +695,16 @@ public class RegenCap implements IRegen {
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForward() {
-			while (!nextTransition.tick()) ;
+            while (!nextTransition.tick())
+                ;
 		}
 		
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForwardHandGlow() {
-			while (!handGlowTimer.tick()) ;
+            while (!handGlowTimer.tick())
+                ;
 		}
 		
 		@Override
@@ -754,8 +730,8 @@ public class RegenCap implements IRegen {
 		
 		@Override
 		public void deserializeNBT(CompoundNBT nbt) {
-			if (nbt.contains("transitionId"))
-				scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
+            if (nbt.contains("transitionId"))
+                scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
 			
 			if (nbt.contains("handGlowState")) {
 				PlayerUtil.RegenState.Transition transition = PlayerUtil.RegenState.Transition.valueOf(nbt.getString("handGlowState"));

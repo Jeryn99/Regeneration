@@ -7,7 +7,7 @@ import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.NextSkinMessage;
-import me.swirtzly.regeneration.util.ClientUtil;
+import me.swirtzly.regeneration.util.client.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -25,7 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static me.swirtzly.regeneration.util.RenderUtil.drawModelToGui;
+import static me.swirtzly.regeneration.util.client.RenderUtil.drawModelToGui;
 
 public class SkinChoiceScreen extends ContainerScreen {
 
@@ -36,10 +36,9 @@ public class SkinChoiceScreen extends ContainerScreen {
     private static List<File> skins = null;
     private static int position = 0;
     private static TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-    private float rotation = 0;
-
     private static PlayerModel ALEX_MODEL = new PlayerModel(0.1f, true);
     private static PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
+    private float rotation = 0;
 
     public SkinChoiceScreen() {
         super(new ContainerBlank(), null, new TranslationTextComponent("Regeneration"));
@@ -78,7 +77,7 @@ public class SkinChoiceScreen extends ContainerScreen {
         GuiButtonExt btnPrevious = new GuiButtonExt(cx + 130, cy + 80, 20, 20, new TranslationTextComponent("regeneration.gui.next").getFormattedText(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                //Previous
+                // Previous
                 if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
                     if (position > 0) {
                         position--;

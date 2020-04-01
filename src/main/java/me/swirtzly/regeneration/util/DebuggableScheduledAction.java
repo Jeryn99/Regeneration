@@ -15,14 +15,14 @@ public class DebuggableScheduledAction extends ScheduledAction {
 	
 	@Override
 	public boolean tick() {
-		if (scheduledTick == -1)
-			RegenerationMod.LOG.warn(player.getName() + ": Ticking finsished/canceled ScheduledAction (" + transition + ")");
-
+        if (scheduledTick == -1)
+            RegenerationMod.LOG.warn(player.getName() + ": Ticking finsished/canceled ScheduledAction (" + transition + ")");
+		
 		boolean willExecute = currentTick == scheduledTick;
 		
 		boolean executed = super.tick();
-		if (willExecute != executed)
-			throw new IllegalStateException("Execution prospect wasn't true (prospect: " + willExecute + ", result: " + executed + ", cTick: " + currentTick + ", scheduledTick: " + scheduledTick);
+        if (willExecute != executed)
+            throw new IllegalStateException("Execution prospect wasn't true (prospect: " + willExecute + ", result: " + executed + ", cTick: " + currentTick + ", scheduledTick: " + scheduledTick);
 		
 		return executed;
 	}
@@ -34,8 +34,8 @@ public class DebuggableScheduledAction extends ScheduledAction {
 	
 	@Override
 	public double getProgress() {
-		if (scheduledTick == -1)
-			RegenerationMod.LOG.warn(player.getName() + ": Querying progress of canceled/finished transition");
+        if (scheduledTick == -1)
+            RegenerationMod.LOG.warn(player.getName() + ": Querying progress of canceled/finished transition");
 		return super.getProgress();
 	}
 	

@@ -9,7 +9,7 @@ public class FireResistantTrait extends TraitManager.IDna {
     public FireResistantTrait() {
         super("fire");
     }
-
+	
 	@Override
     public void onUpdate(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
@@ -20,12 +20,12 @@ public class FireResistantTrait extends TraitManager.IDna {
 	
 	@Override
     public void onAdded(IRegen cap) {
-	
+		
 	}
 	
 	@Override
     public void onRemoved(IRegen cap) {
-	
-	}
 
+    }
+	
 }

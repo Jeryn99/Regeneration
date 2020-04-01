@@ -5,8 +5,8 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.TypeLayFade;
 import me.swirtzly.regeneration.common.types.TypeManager;
-import me.swirtzly.regeneration.util.ClientUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.client.ClientUtil;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
@@ -16,8 +16,7 @@ import net.minecraft.util.HandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
 /**
- * Created by Swirtzly
- * on 29/08/2019 @ 15:18
+ * Created by Swirtzly on 29/08/2019 @ 15:18
  */
 public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
 

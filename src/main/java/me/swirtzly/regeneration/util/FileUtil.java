@@ -2,6 +2,8 @@ package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.image.ImageDownloader;
+import me.swirtzly.regeneration.util.client.ClientUtil;
+import me.swirtzly.regeneration.util.client.TrendingManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -27,7 +29,6 @@ import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.*;
 
 public class FileUtil {
 	
-	
 	public static void handleDownloads() throws IOException {
 		String PACKS_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/skins/index.json";
 		String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
@@ -37,9 +38,7 @@ public class FileUtil {
 	}
 	
 	/**
-	 * Creates skin folders
-	 * Proceeds to download skins to the folders if they are empty
-	 * If the download doesn't happen, NPEs will occur later on
+	 * Creates skin folders Proceeds to download skins to the folders if they are empty If the download doesn't happen, NPEs will occur later on
 	 */
 	public static void createDefaultFolders() throws IOException {
 		
@@ -56,35 +55,35 @@ public class FileUtil {
 		}
 
 	}
-
+	
 	/**
-	 * @param url      - URL to download image from
+	 * @param url - URL to download image from
 	 * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
 	 * @throws IOException
 	 */
-    public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
+	public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
 
-        URLConnection uc = url.openConnection();
+		URLConnection uc = url.openConnection();
 		uc.connect();
 		uc = url.openConnection();
 		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-        RegenerationMod.LOG.warn("Downloading Skin from: {}", url.toString());
+		RegenerationMod.LOG.warn("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
 		img = ClientUtil.ImageFixer.convertSkinTo64x64(img);
 
-        File file = ImageDownloader.isAlexSkin(img) ? alexDir : steveDir;
+		File file = ImageDownloader.isAlexSkin(img) ? alexDir : steveDir;
 
-        if (!file.exists()) {
+		if (!file.exists()) {
 			file.mkdirs();
 		}
 
-        if (!steveDir.exists()) {
-            steveDir.mkdirs();
-        }
+		if (!steveDir.exists()) {
+			steveDir.mkdirs();
+		}
 
-        if (!alexDir.exists()) {
-            alexDir.mkdirs();
-        }
+		if (!alexDir.exists()) {
+			alexDir.mkdirs();
+		}
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
 	
@@ -96,7 +95,7 @@ public class FileUtil {
 					createDefaultFolders();
 					handleDownloads();
 					TrendingManager.downloadTrendingSkins();
-                    TrendingManager.downloadPreviousSkins();
+					TrendingManager.downloadPreviousSkins();
 					notDownloaded.set(false);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
@@ -104,7 +103,6 @@ public class FileUtil {
 			}
 		}, RegenerationMod.NAME + " Download Daemon").start();
 	}
-	
 	
 	public static void unzipSkinPack(String url) throws IOException {
 		File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
@@ -169,7 +167,6 @@ public class FileUtil {
 		
 		return builder.toString();
 	}
-
 
 	public static ResourceLocation urlToTexture(URL url) {
 		URLConnection uc = null;

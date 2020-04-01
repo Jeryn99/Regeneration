@@ -11,12 +11,6 @@
       "model": "regeneration:block/hand_jar",
       "y": 270
     },
-    "facing=up": {
-      "model": "regeneration:block/hand_jar"
-    },
-    "facing=down": {
-      "model": "regeneration:block/hand_jar"
-    },
     "facing=east": {
       "model": "regeneration:block/hand_jar",
       "y": 90

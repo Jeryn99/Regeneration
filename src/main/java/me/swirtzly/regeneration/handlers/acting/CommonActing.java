@@ -26,16 +26,13 @@ class CommonActing implements Acting {
 	public static final Acting INSTANCE = new CommonActing();
 	private final UUID SLOWNESS_ID = UUID.fromString("f9aa2c36-f3f3-4d76-a148-86d6f2c87782"), MAX_HEALTH_ID = UUID.fromString("5d6f0ba2-1286-46fc-b896-461c5cfd99cc");
 	private final double HEART_REDUCTION = 0.5, SPEED_REDUCTION = 0.35;
-	private final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, AttributeModifier.Operation.MULTIPLY_BASE),
-			heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, AttributeModifier.Operation.MULTIPLY_BASE);
-	
-	
-	public CommonActing() {
-	}
-	
+    private final AttributeModifier slownessModifier = new AttributeModifier(SLOWNESS_ID, "slow", -SPEED_REDUCTION, AttributeModifier.Operation.MULTIPLY_BASE), heartModifier = new AttributeModifier(MAX_HEALTH_ID, "short-heart", -HEART_REDUCTION, AttributeModifier.Operation.MULTIPLY_BASE);
+
+    public CommonActing() {
+    }
 	
 	public static SoundEvent getRandomSound(Random random) {
-		SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0, RegenObjects.Sounds.REGENERATION_2, RegenObjects.Sounds.REGENERATION_3};
+        SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0, RegenObjects.Sounds.REGENERATION_2, RegenObjects.Sounds.REGENERATION_3};
 		return SOUNDS[random.nextInt(SOUNDS.length)];
 	}
 	
@@ -60,34 +57,34 @@ class CommonActing implements Acting {
 			case GRACE_CRIT:
 				float nauseaPercentage = 0.5F;
 
-				if (stateProgress > nauseaPercentage) {
+                if (stateProgress > nauseaPercentage) {
 					PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false);
 				}
 
-				PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
+                PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
 
-				if (player.world.rand.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F))
-					player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
-
+                if (player.world.rand.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F))
+                    player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
+				
 				break;
 
-			case GRACE:
+            case GRACE:
 				float weaknessPercentage = 0.5F;
 
-				if (stateProgress > weaknessPercentage) {
+                if (stateProgress > weaknessPercentage) {
 					PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false);
 				}
 
-				break;
+                break;
 
-			case ALIVE:
+            case ALIVE:
 				break;
 			default:
 				throw new IllegalStateException("Unknown state " + cap.getState());
 		}
 	}
 
-	@Override
+    @Override
     public void onEnterGrace(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();
 		RegenUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
@@ -155,11 +152,9 @@ class CommonActing implements Acting {
 		player.clearActivePotions();
 		player.stopRiding();
 
-		if (RegenConfig.COMMON.resetHunger.get())
-			player.getFoodStats().setFoodLevel(20);
+        if (RegenConfig.COMMON.resetHunger.get()) player.getFoodStats().setFoodLevel(20);
 
-		if (RegenConfig.COMMON.resetOxygen.get())
-			player.setAir(300);
+        if (RegenConfig.COMMON.resetOxygen.get()) player.setAir(300);
 		
 		cap.extractRegeneration(1);
 	}

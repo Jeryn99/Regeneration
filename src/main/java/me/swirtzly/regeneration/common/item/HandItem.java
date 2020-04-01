@@ -21,8 +21,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 /**
- * Created by Swirtzly
- * on 21/08/2019 @ 17:39
+ * Created by Swirtzly on 21/08/2019 @ 17:39
  */
 public class HandItem extends Item {
     public HandItem() {
@@ -62,7 +61,6 @@ public class HandItem extends Item {
         return getStackTag(stack).getString("trait");
     }
 
-
     public static void setOwner(ItemStack stack, UUID owner) {
         getStackTag(stack).putUniqueId("owner", owner);
     }
@@ -88,7 +86,6 @@ public class HandItem extends Item {
         return new TranslationTextComponent("item.regeneration.hand", UsernameCache.getLastKnownUsername(getOwner(stack)));
     }
 
-
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
@@ -100,7 +97,5 @@ public class HandItem extends Item {
         tooltip.add(new TranslationTextComponent(TraitManager.getDnaEntry(new ResourceLocation(getTrait(stack))).getLangKey()));
 
     }
-
+	
 }
-
-

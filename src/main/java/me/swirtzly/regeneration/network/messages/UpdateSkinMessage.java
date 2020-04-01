@@ -9,8 +9,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 /**
- * Created by Sub
- * on 20/09/2018.
+ * Created by Sub on 20/09/2018.
  */
 public class UpdateSkinMessage {
 	
@@ -27,20 +26,18 @@ public class UpdateSkinMessage {
 		buf.writeBoolean(skin.isAlex);
 	}
 	
-	
 	public static UpdateSkinMessage decode(PacketBuffer buf) {
 		return new UpdateSkinMessage(buf.readString(32767), buf.readBoolean());
 	}
 	
 	public static class Handler {
 		public static void handle(UpdateSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().getSender().getServer().deferTask(() ->
-                    RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
-						cap.setEncodedSkin(message.encodedSkin);
-						cap.setSkinType(message.isAlex ? SkinInfo.SkinType.ALEX.name() : SkinInfo.SkinType.STEVE.name());
-						cap.synchronise();
-						NetworkDispatcher.sendPacketToAll(new InvalidatePlayerDataMessage(ctx.get().getSender().getUniqueID()));
-					}));
+            ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
+                cap.setEncodedSkin(message.encodedSkin);
+                cap.setSkinType(message.isAlex ? SkinInfo.SkinType.ALEX.name() : SkinInfo.SkinType.STEVE.name());
+                cap.synchronise();
+                NetworkDispatcher.sendPacketToAll(new InvalidatePlayerDataMessage(ctx.get().getSender().getUniqueID()));
+            }));
 			ctx.get().setPacketHandled(true);
 		}
 	}

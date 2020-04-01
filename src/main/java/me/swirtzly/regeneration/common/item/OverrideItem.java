@@ -10,21 +10,21 @@ import javax.annotation.Nullable;
 
 public class OverrideItem extends Item implements OverrideEntity.IEntityOverride {
 
-	public OverrideItem(Properties p_i48487_1_) {
+    public OverrideItem(Properties p_i48487_1_) {
 		super(p_i48487_1_);
 	}
 
-	@Override
+    @Override
 	public void update(OverrideEntity itemOverride) {
 
-	}
-
+    }
+	
 	@Override
 	public boolean hasCustomEntity(ItemStack stack) {
 		return true;
 	}
 
-	@Nullable
+    @Nullable
 	@Override
 	public Entity createEntity(World world, Entity location, ItemStack itemstack) {
 		OverrideEntity item = new OverrideEntity(world, location.posX, location.posY, location.posZ, itemstack);
@@ -33,13 +33,12 @@ public class OverrideItem extends Item implements OverrideEntity.IEntityOverride
 		return item;
 	}
 
-	@Override
+    @Override
 	public boolean shouldDie(ItemStack stack) {
 		if (stack.getTag() != null) {
 			return !stack.getTag().contains("live");
 		}
 		return true;
 	}
-
 
 }

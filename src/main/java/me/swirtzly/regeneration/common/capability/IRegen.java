@@ -15,8 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
- * Created by Sub
- * on 16/09/2018.
+ * Created by Sub on 16/09/2018.
  */
 public interface IRegen extends INBTSerializable<CompoundNBT> {
 	
@@ -97,13 +96,13 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	
 	boolean isSyncingToJar();
 
-	SkinInfo.SkinType getNextSkinType();
+    SkinInfo.SkinType getNextSkinType();
 
-	void setNextSkinType(SkinInfo.SkinType skinType);
+    void setNextSkinType(SkinInfo.SkinType skinType);
 
-	String getNextSkin();
+    String getNextSkin();
 
-	void setNextSkin(String encodedSkin);
+    void setNextSkin(String encodedSkin);
 
     boolean hasDroppedHand();
 
@@ -112,7 +111,5 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
     HandSide getCutoffHand();
 
     void setCutOffHand(HandSide side);
-
-
-
+	
 }

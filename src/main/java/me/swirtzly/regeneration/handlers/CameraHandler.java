@@ -30,7 +30,7 @@ public class CameraHandler implements MouseWheelListener {
 
     private static void manipulateFov(GameSettings gameSettings, double sensitivity) {
         prevScrollWheelKnot = 0;
-        //TODO FIX ASAP
+        // TODO FIX ASAP
         prevScrollWheelKnot += Minecraft.getInstance().mouseHelper.getYVelocity();
 
         while (prevScrollWheelKnot >= 120) {
@@ -78,7 +78,6 @@ public class CameraHandler implements MouseWheelListener {
 
         AtomicBoolean allowFreemode = new AtomicBoolean(false);
 
-
         RegenCap.get(player).ifPresent((data) -> {
             allowFreemode.set(data.getState() == PlayerUtil.RegenState.REGENERATING);
 
@@ -96,9 +95,7 @@ public class CameraHandler implements MouseWheelListener {
             }
         }
 
-
         event.setRoll(cameraRoll);
-
 
         if (allowFreemode.get()) {
             pendingExit = true;

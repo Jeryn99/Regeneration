@@ -27,7 +27,6 @@ public class NextSkinMessage {
         return new NextSkinMessage(buffer.readString(32767), buffer.readBoolean());
     }
 
-
     public static class Handler {
         public static void handle(NextSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().getSender().getServer().deferTask(() -> {
@@ -42,5 +41,5 @@ public class NextSkinMessage {
             ctx.get().setPacketHandled(true);
         }
     }
-
+	
 }

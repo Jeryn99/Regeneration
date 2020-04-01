@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.RenderUtil;
+import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -29,18 +29,28 @@ public class ItemOverrideRenderer extends EntityRenderer<OverrideEntity> {
 	protected ResourceLocation getEntityTexture(OverrideEntity entity) {
 		return null;
 	}
+
+    static void makeGlowingBall(Minecraft mc, float f, Random rand, Vec3d primaryColor, Vec3d secondaryColor) {
+        GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
+
+        for (int i = 0; i < 3; i++) {
+            GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
+            RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
+            RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, secondaryColor, 0);
+        }
+        RenderUtil.finishRenderLightning();
+    }
 	
 	/**
 	 * Renders the desired {@code T} type Entity.
 	 */
 	@Override
 	public void doRender(OverrideEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		if (entity.getItem().isEmpty())
-			return;
+        if (entity.getItem().isEmpty()) return;
 		Minecraft mc = Minecraft.getInstance();
 		float f = 0.2f;
 		Random rand = entity.world.rand;
-		
+
 		GlStateManager.pushMatrix();
 		if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH && entity.getItem().getDamage() != RegenConfig.COMMON.regenCapacity.get()) {
 			for (int j = 0; j < 2; j++) {
@@ -50,23 +60,11 @@ public class ItemOverrideRenderer extends EntityRenderer<OverrideEntity> {
 				makeGlowingBall(mc, f, rand, primaryColor, secondaryColor);
 			}
 		}
-		
-		GlStateManager.translated(x, y + 0.17F, z);
+
+        GlStateManager.translated(x, y + 0.17F, z);
 		GlStateManager.rotatef(-entity.rotationYaw, 0, 1, 0);
 		Minecraft.getInstance().getItemRenderer().renderItem(entity.getItem(), ItemCameraTransforms.TransformType.GROUND);
 		GlStateManager.popMatrix();
 	}
-
-	static void makeGlowingBall(Minecraft mc, float f, Random rand, Vec3d primaryColor, Vec3d secondaryColor) {
-		GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
-
-		for (int i = 0; i < 3; i++) {
-			GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
-			RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
-			RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, secondaryColor, 0);
-		}
-		RenderUtil.finishRenderLightning();
-	}
-
 
 }

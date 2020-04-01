@@ -9,8 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import java.util.UUID;
 
 /**
- * Created by Suffril
- * on 24/01/2019.
+ * Created by Suffril on 24/01/2019.
  */
 public class LuckyTrait extends TraitManager.IDna {
 	
@@ -20,7 +19,7 @@ public class LuckyTrait extends TraitManager.IDna {
     public LuckyTrait() {
         super("lucky");
     }
-
+	
 	@Override
     public void onUpdate(IRegen cap) {
 		PlayerEntity player = cap.getPlayer();

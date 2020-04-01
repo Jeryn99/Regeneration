@@ -1,7 +1,8 @@
-package me.swirtzly.regeneration.util;
+package me.swirtzly.regeneration.util.client;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.util.FileUtil;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
 
@@ -16,9 +17,6 @@ import java.util.Objects;
 
 import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_ALEX;
 import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_STEVE;
-import static me.swirtzly.regeneration.util.FileUtil.getJsonFromURL;
-import static me.swirtzly.regeneration.util.FileUtil.unzipSkinPack;
-
 
 public class TrendingManager {
 
@@ -78,7 +76,6 @@ public class TrendingManager {
 		return skins;
 	}
 
-
 	public static void downloadTrendingSkins() throws IOException {
 		if (!RegenConfig.CLIENT.downloadTrendingSkins.get()) return;
 		File trendingDir = TRENDING_ALEX;
@@ -92,15 +89,6 @@ public class TrendingManager {
 			for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
 				FileUtil.downloadSkins(new URL(skin), "trending_" + System.currentTimeMillis(), TRENDING_ALEX, TRENDING_STEVE);
 			}
-		}
-	}
-
-	public static void handleDownloads() throws IOException {
-		if (!RegenConfig.CLIENT.downloadInteralSkins.get()) return;
-		String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
-		String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
-		for (String link : links) {
-			unzipSkinPack(link);
 		}
 	}
 
