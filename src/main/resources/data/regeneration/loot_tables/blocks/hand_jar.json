@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+    "name":"regeneration:hand_jar",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "regeneration:hand_jar"
+        }
+      ]
+    }
+  ]
+}
+    

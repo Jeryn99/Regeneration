@@ -13,6 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -40,7 +41,7 @@ public class BlockHandInJar extends Block {
 
 
 	public BlockHandInJar() {
-		super(Block.Properties.create(Material.PISTON));
+		super(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10));
 	}
 
 	public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
@@ -73,6 +74,12 @@ public class BlockHandInJar extends Block {
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(BlockStateProperties.HORIZONTAL_FACING);
+	}
+	
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		return super.getStateForPlacement(context)
+				.with(BlockStateProperties.HORIZONTAL_FACING, context.getPlayer().getHorizontalFacing().getOpposite());
 	}
 
 	@Override
