@@ -2,7 +2,7 @@
   "__comment": "Designed by Jedicus10 with Cubik Studio - https://cubik.studio",
   "textures": {
     "texture": "regeneration:items/fob_watch",
-    "engraving": "regeneration:items/engraves/default"
+    "engraving": "regeneration:items/engraves/engrave_1"
   },
   "elements": [
     {
@@ -6727,49 +6727,5 @@
         0.75
       ]
     }
-  },
-  "overrides": [
-    {
-      "predicate": {
-        "open": 0,
-        "engrave": 0
-      },
-      "model": "regeneration:item/fob_watch"
-    },
-    {
-      "predicate": {
-        "open": 1,
-        "engrave": 0
-      },
-      "model": "regeneration:item/fob_watch_open"
-    },
-    {
-      "predicate": {
-        "open": 0,
-        "engrave": 1
-      },
-      "model": "regeneration:item/fob_watch_gold"
-    },
-    {
-      "predicate": {
-        "open": 1,
-        "engrave": 1
-      },
-      "model": "regeneration:item/fob_watch_open_gold"
-    },
-    {
-      "predicate": {
-        "open": 0,
-        "engrave": 2
-      },
-      "model": "regeneration:item/fob_watch_silver"
-    },
-    {
-      "predicate": {
-        "open": 1,
-        "engrave": 2
-      },
-      "model": "regeneration:item/fob_watch_open_silver"
-    }
-  ]
+  }
 }

@@ -3,11 +3,9 @@ package me.swirtzly.regeneration.handlers;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.gui.BioContainerContainer;
 import me.swirtzly.regeneration.common.block.BlockHandInJar;
-import me.swirtzly.regeneration.common.entity.LindosEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.common.item.HandItem;
-import me.swirtzly.regeneration.common.item.LindosVialItem;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
@@ -45,11 +43,11 @@ public class RegenObjects {
 	public static List<Item> ITEM_BLOCKS = new ArrayList<>();
 
     public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"), REGEN_DMG_HEALING = new RegenDamageSource("regen_heal").setDamageAllowedInCreativeMode(), // The irony lmao
-			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit").setDamageAllowedInCreativeMode(), REGEN_DMG_KILLED = new RegenDamageSource("regen_killed"), REGEN_DMG_LINDOS = new RegenDamageSource("lindos").setDamageAllowedInCreativeMode(), REGEN_DMG_FORCED = new RegenDamageSource("forced").setDamageAllowedInCreativeMode();
+			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit").setDamageAllowedInCreativeMode(), REGEN_DMG_KILLED = new RegenDamageSource("regen_killed"), REGEN_DMG_FORCED = new RegenDamageSource("forced").setDamageAllowedInCreativeMode();
 
     @SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
-        e.getRegistry().registerAll(setUpItem(new FobWatchItem(), "fob_watch"), setUpItem(new LindosVialItem(), "lindos_vial"), setUpItem(new HandItem(), "hand"));
+		e.getRegistry().registerAll(setUpItem(new FobWatchItem(), "fob_watch"), setUpItem(new HandItem(), "hand"));
 		e.getRegistry().registerAll(ITEM_BLOCKS.toArray(new Item[ITEM_BLOCKS.size()]));
 	}
 	
@@ -79,12 +77,8 @@ public class RegenObjects {
     @SubscribeEvent
 	public static void addEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		IForgeRegistry<EntityType<?>> reg = event.getRegistry();
-
         // Item Override
         reg.register(EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE = EntityType.Builder.<OverrideEntity>create(OverrideEntity::new, EntityClassification.MISC).size(0.5F, 0.2F).setTrackingRange(128).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true).setCustomClientFactory((spawnEntity, world) -> new OverrideEntity(world)).build(RegenerationMod.MODID + ":item_override").setRegistryName(new ResourceLocation(RegenerationMod.MODID, "item_override")));
-
-        // Lindos
-        reg.register(EntityEntries.ITEM_LINDOS_TYPE = EntityType.Builder.<LindosEntity>create(LindosEntity::new, EntityClassification.MISC).size(0.5F, 0.2F).setTrackingRange(128).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true).setCustomClientFactory((spawnEntity, world) -> new LindosEntity(world)).build(RegenerationMod.MODID + ":lindos").setRegistryName(new ResourceLocation(RegenerationMod.MODID, "lindos")));
 	}
 	
 	@SubscribeEvent
@@ -116,7 +110,6 @@ public class RegenObjects {
 	@ObjectHolder(MODID)
 	public static class Items {
 		public static final Item FOB_WATCH = null;
-		public static final Item LINDOS_VIAL = null;
 		public static final Item HAND = null;
 	}
 	

@@ -1,25 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "QIG",
-    "SES",
-    "IGI"
+    "GIG",
+    "ISI",
+    "GIG"
   ],
   "key": {
     "I": {
       "item": "minecraft:iron_ingot"
     },
     "G": {
-      "item": "minecraft:ghast_tear"
-    },
-    "E": {
-      "item": "minecraft:ender_eye"
+      "item": "minecraft:gold_ingot"
     },
     "S": {
-      "item": "minecraft:spider_eye"
-    },
-    "Q": {
-      "item": "minecraft:blaze_rod"
+      "item": "minecraft:nether_star"
     }
   },
   "result": {
