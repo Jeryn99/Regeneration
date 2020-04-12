@@ -48,9 +48,7 @@ class ActingServerHandler implements IActingHandler {
                 player.heal(stateProgress * 0.3F * dm);
                 player.setArrowCountInEntity(0);
 
-                if (cap.getAnimationTicks() == 100) {
-                    //	RegenUtil.onEntityTick(player.world, player);
-                }
+                RegenUtil.regenerationExplosion(player);
 
                 if (player.ticksExisted % 5 == 0) {
                     PlayerUtil.openDoors(player);

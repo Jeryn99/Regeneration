@@ -39,7 +39,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 	@Override
 	public void update() {
 
-		if (world.getWorldTime() % 45 == 0 && hasHand()) {
+		if (world.getWorldTime() % 77 == 0 && hasHand()) {
 			world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.2F, 0.2F);
 		}
 
@@ -59,8 +59,9 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 	}
 
 	public boolean hasHand() {
-		return handInv.get(3).getItem() == RegenObjects.Items.HAND;
+		return getHand().getItem() == RegenObjects.Items.HAND;
 	}
+
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
@@ -74,6 +75,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 	public void readFromNBT(NBTTagCompound compound) {
 		lindosAmont = compound.getInteger("lindos");
 		ItemStackHelper.loadAllItems(compound, this.handInv);
+
 		super.readFromNBT(compound);
 	}
 
@@ -195,7 +197,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 
 	public void sendUpdates() {
 		world.markBlockRangeForRenderUpdate(pos, pos);
-		world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+		world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 7);
 		world.scheduleBlockUpdate(pos, getBlockType(), 0, 0);
 		markDirty();
 	}
