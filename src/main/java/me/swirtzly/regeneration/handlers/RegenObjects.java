@@ -137,7 +137,6 @@ public class RegenObjects {
     @ObjectHolder(MODID)
 	public static class EntityEntries {
 		public static EntityType ITEM_OVERRIDE_ENTITY_TYPE = null;
-		public static EntityType ITEM_LINDOS_TYPE = null;
 	}
 
     @ObjectHolder(MODID)

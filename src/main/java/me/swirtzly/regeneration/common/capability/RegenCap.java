@@ -19,12 +19,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -664,14 +662,7 @@ public class RegenCap implements IRegen {
 			state = PlayerUtil.RegenState.ALIVE;
 			synchronise();
 			nextTransition = null;
-			
 			PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.post_ended"), true);
-			
-			if (player.world.rand.nextBoolean()) {
-				RegenObjects.EntityEntries.ITEM_LINDOS_TYPE.spawn(player.world, null, null, new BlockPos(player.posX, player.posY + player.getEyeHeight(), player.posZ), SpawnReason.NATURAL, true, true);
-				player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
-			}
-
             setDroppedHand(false);
 		}
 		

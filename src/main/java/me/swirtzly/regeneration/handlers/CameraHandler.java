@@ -1,16 +1,12 @@
 package me.swirtzly.regeneration.handlers;
 
-import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CameraHandler implements MouseWheelListener {
 
@@ -72,7 +68,7 @@ public class CameraHandler implements MouseWheelListener {
     @SubscribeEvent
     public void onView(EntityViewRenderEvent.CameraSetup event) {
 
-        Minecraft mc = Minecraft.getInstance();
+      /*  Minecraft mc = Minecraft.getInstance();
         ClientPlayerEntity player = mc.player;
         GameSettings gameSettings = mc.gameSettings;
 
@@ -131,7 +127,7 @@ public class CameraHandler implements MouseWheelListener {
                 resetEverything(gameSettings);
             }
         }
-
+*/
     }
 
     public void mouseWheelMoved(MouseWheelEvent e) {

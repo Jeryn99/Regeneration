@@ -6,6 +6,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -71,4 +73,34 @@ public class BioContainerContainer extends Container {
     public ContainerType<?> getType() {
         return RegenObjects.Containers.BIO_CONTAINER;
     }
+
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        final Slot slot = inventorySlots.get(index);
+        if ((slot != null) && slot.getHasStack()) {
+            final ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            final int containerSlots = inventorySlots.size() - player.inventory.mainInventory.size();
+            if (index < containerSlots) {
+                if (!mergeItemStack(itemstack1, containerSlots, inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!mergeItemStack(itemstack1, 0, containerSlots, false)) {
+                return ItemStack.EMPTY;
+            }
+            if (itemstack1.getCount() == 0) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+            if (itemstack1.getCount() == itemstack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+            slot.onTake(player, itemstack1);
+        }
+        return itemstack;
+    }
+
 }
