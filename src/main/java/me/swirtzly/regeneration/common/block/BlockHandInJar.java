@@ -9,14 +9,15 @@ import me.swirtzly.regeneration.util.VoxelShapeUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -32,33 +33,38 @@ import javax.annotation.Nullable;
 /**
  * Created by Swirtzly on 21/08/2019 @ 17:31
  */
-public class BlockHandInJar extends Block {
+public class BlockHandInJar extends DirectionalBlock {
 
 	public static final VoxelShape NORTH = RegenShapes.getJarShape();
 	public static final VoxelShape EAST = VoxelShapeUtils.rotate(RegenShapes.getJarShape(), Rotation.CLOCKWISE_90);
 	public static final VoxelShape SOUTH = VoxelShapeUtils.rotate(RegenShapes.getJarShape(), Rotation.CLOCKWISE_180);
 	public static final VoxelShape WEST = VoxelShapeUtils.rotate(RegenShapes.getJarShape(), Rotation.COUNTERCLOCKWISE_90);
 
+	public static final DirectionProperty CFACING = DirectionProperty.create("facing", (facing) -> facing != Direction.UP && facing != Direction.DOWN);
 
 	public BlockHandInJar() {
 		super(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10));
 	}
 
 	public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-		return Direction.getFacingFromVector((float) (entity.posX - clickedBlock.getX()), (float) (entity.posY - clickedBlock.getY()), (float) (entity.posZ - clickedBlock.getZ()));
+		Direction direction = Direction.getFacingFromVector((float) (entity.posX - clickedBlock.getX()), (float) (entity.posY - clickedBlock.getY()), (float) (entity.posZ - clickedBlock.getZ()));
+		if (direction == Direction.UP || direction == Direction.DOWN) {
+			return Direction.NORTH;
+		}
+		return direction;
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
 		if (entity != null) {
-			world.setBlockState(pos, state.with(BlockStateProperties.HORIZONTAL_FACING, getFacingFromEntity(pos, entity)), 2);
+			world.setBlockState(pos, state.with(CFACING, getFacingFromEntity(pos, entity)), 2);
 		}
 	}
 
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		switch (state.get(BlockStateProperties.HORIZONTAL_FACING)) {
+		switch (state.get(CFACING)) {
 			case EAST:
 				return EAST;
 			case SOUTH:
@@ -73,13 +79,13 @@ public class BlockHandInJar extends Block {
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		builder.add(BlockStateProperties.HORIZONTAL_FACING);
+		builder.add(CFACING);
 	}
 	
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return super.getStateForPlacement(context)
-				.with(BlockStateProperties.HORIZONTAL_FACING, context.getPlayer().getHorizontalFacing().getOpposite());
+				.with(CFACING, context.getPlayer().getHorizontalFacing().getOpposite());
 	}
 
 	@Override

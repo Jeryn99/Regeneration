@@ -7,6 +7,7 @@ import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.ClientUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -14,8 +15,15 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.tardis.mod.items.SonicItem;
+
+import java.util.Iterator;
 
 /**
  * Created by Sub on 16/09/2018.
@@ -92,7 +100,40 @@ public class FobWatchItem extends OverrideItem {
     @Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 
-        ItemStack stack = player.getHeldItem(hand);
+		RayTraceResult result = SonicItem.getPosLookingAt(player, 5);
+		if (result != null && result.getType() == RayTraceResult.Type.BLOCK) {
+			BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) result;
+			BlockPos clickedBlock = blockRayTraceResult.getPos();
+			Direction direction = Direction.getFacingFromVector((float) (player.posX - clickedBlock.getX()), (float) (player.posY - clickedBlock.getY()), (float) (player.posZ - clickedBlock.getZ()));
+
+			AxisAlignedBB box = null;
+
+			switch (direction) {
+				case EAST:
+				case WEST:
+					box = new AxisAlignedBB(clickedBlock.up().north(), clickedBlock.down().south());
+					break;
+				case NORTH:
+				case SOUTH:
+					box = new AxisAlignedBB(clickedBlock.up().west(), clickedBlock.down().east());
+					break;
+				case DOWN:
+				case UP:
+					box = new AxisAlignedBB(clickedBlock.north().west(), clickedBlock.south().east());
+					break;
+				default:
+					break;
+			}
+
+			for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
+				BlockPos pos = iterator.next();
+				BlockState blockState = world.getBlockState(pos);
+				world.removeBlock(pos, false);
+			}
+		}
+
+
+		ItemStack stack = player.getHeldItem(hand);
 
         RegenCap.get(player).map((cap) -> {
 
