@@ -19,6 +19,7 @@
   "regeneration.gui.color_gui": "Color selection",
   "regeneration.gui.close": "Close",
   "regeneration.gui.type": "Type: %s",
+  "regeneration.gui.current_skin": "Select next Incarnation",
   "regeneration.messages.now_timelord": "You are now a Time lord!",
   "regeneration.messages.gained_regens": "You've received %s regenerations from the Fob Watch",
   "regeneration.messages.new_skin": "Your skin will change next Regeneration!",

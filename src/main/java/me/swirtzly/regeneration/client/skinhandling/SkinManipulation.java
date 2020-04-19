@@ -10,18 +10,19 @@ import me.swirtzly.regeneration.common.types.RegenType;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
-import me.swirtzly.regeneration.util.FileUtil;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.renderer.DownloadImageBuffer;
+import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -34,8 +35,6 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -131,7 +130,7 @@ public class SkinManipulation {
 			return new SkinInfo(player, null, getSkinType(player));
 		}
 		if (data.getEncodedSkin().equals(RegenUtil.NO_SKIN) || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
-			resourceLocation = getMojangSkin(player);
+			resourceLocation = null;//getTextureForPlayer(player.getName().getUnformattedComponentText());
 			skinType = getSkinType(player);
 		} else {
             NativeImage nativeImage = decodeToImage(data.getEncodedSkin());
@@ -156,15 +155,25 @@ public class SkinManipulation {
 		return SkinInfo.SkinType.ALEX;
 	}
 
-    private static ResourceLocation getMojangSkin(AbstractClientPlayerEntity player) {
-		try {
-			String t = "https://crafatar.com/skins/" + player.getUniqueID();
-			return FileUtil.urlToTexture(new URL(t.trim()));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return DefaultPlayerSkin.getDefaultSkinLegacy();
+	public static ResourceLocation getTextureForPlayer(String username) {
+		ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
+		resourcelocation = ClientPlayerEntity.getLocationSkin(username);
+		getDownloadImageSkin(resourcelocation, username);
+		return resourcelocation;
 	}
+
+	public static DownloadingTexture getDownloadImageSkin(ResourceLocation resourceLocationIn, String username) {
+		TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
+		ITextureObject itextureobject = texturemanager.getTexture(resourceLocationIn);
+
+		if (itextureobject == null) {
+			itextureobject = new DownloadingTexture(null, String.format("https://visage.surgeplay.com/skin/%s.png", StringUtils.stripControlCodes(username)), DefaultPlayerSkin.getDefaultSkin(AbstractClientPlayerEntity.getOfflineUUID(username)), new DownloadImageBuffer());
+			texturemanager.loadTexture(resourceLocationIn, itextureobject);
+		}
+
+		return (DownloadingTexture) itextureobject;
+	}
+
 
     public static Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> getVanillaMap(AbstractClientPlayerEntity player) {
 		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
