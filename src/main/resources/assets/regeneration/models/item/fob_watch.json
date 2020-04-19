@@ -5,7 +5,7 @@
         "open": 0,
         "engrave": 0
       },
-      "model": "regeneration:item/fob_watch_open"
+      "model": "regeneration:item/fob_watch_closed"
     },
     {
       "predicate": {
