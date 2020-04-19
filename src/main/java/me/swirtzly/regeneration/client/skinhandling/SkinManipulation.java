@@ -250,10 +250,6 @@ public class SkinManipulation {
 
         RegenCap.get(player).ifPresent((cap) -> {
 			if (player.ticksExisted == 20) {
-				SkinInfo oldSkinInfo = PLAYER_SKINS.get(player.getUniqueID());
-				if (oldSkinInfo != null) {
-                    // oldSkinInfo.dispose();
-				}
 				PLAYER_SKINS.remove(player.getUniqueID());
 			}
 
@@ -273,9 +269,8 @@ public class SkinManipulation {
 				if (skin == null) {
 					return;
 				}
-				if (skin.getTextureLocation() != null) {
-					setPlayerSkin(player, skin.getTextureLocation());
-				}
+
+                setPlayerSkin(player, skin.getTextureLocation());
 
 				if (skin.getSkintype() != null) {
 					setPlayerSkinType(player, skin.getSkintype());

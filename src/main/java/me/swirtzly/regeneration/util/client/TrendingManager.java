@@ -87,7 +87,8 @@ public class TrendingManager {
 			FileUtils.deleteDirectory(trendingDir);
 			RegenerationMod.LOG.warn("Refreshing Trending skins");
 			for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
-				FileUtil.downloadSkins(new URL(skin), "trending_" + System.currentTimeMillis(), TRENDING_ALEX, TRENDING_STEVE);
+				String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
+				FileUtil.downloadSkins(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
 			}
 		}
 	}

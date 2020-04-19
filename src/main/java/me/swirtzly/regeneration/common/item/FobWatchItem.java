@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 /**
  * Created by Sub on 16/09/2018.
  */
-public class FobWatchItem extends OverrideItem {
+public class FobWatchItem extends SolidItem {
 
     public FobWatchItem() {
 		super(new Item.Properties().setNoRepair().maxStackSize(1).group(ItemGroup.MISC));
@@ -163,15 +163,17 @@ public class FobWatchItem extends OverrideItem {
 	}
 
     @Override
-	public void update(OverrideEntity itemOverride) {
-		if (!itemOverride.world.isRemote) return;
+    public boolean onSolidEntityItemUpdate(OverrideEntity itemOverride) {
+        if (!itemOverride.world.isRemote) return false;
 		ItemStack itemStack = itemOverride.getItem();
 		if (itemStack.getItem() == this && itemStack.getDamage() != RegenConfig.COMMON.regenCapacity.get()) {
 			if (itemOverride.ticksExisted % 5000 == 0 || itemOverride.ticksExisted == 2) {
 				ClientUtil.playSound(itemOverride, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.getRegistryName(), SoundCategory.AMBIENT, false, () -> !itemOverride.isAlive(), 1.5F);
 			}
 		}
-	}
+        return true;
+    }
+
 
     @Override
 	public int getMaxDamage(ItemStack stack) {

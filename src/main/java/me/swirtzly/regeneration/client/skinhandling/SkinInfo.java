@@ -1,6 +1,5 @@
 package me.swirtzly.regeneration.client.skinhandling;
 
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -17,10 +16,7 @@ public class SkinInfo {
     }
 
     public ResourceLocation getTextureLocation() {
-        if (TEXTURE_LOCATION != null) {
-            return TEXTURE_LOCATION;
-		}
-		return DefaultPlayerSkin.getDefaultSkinLegacy();
+        return TEXTURE_LOCATION;
 	}
 
     public SkinType getSkintype() {

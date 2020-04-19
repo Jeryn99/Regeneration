@@ -1,261 +1,263 @@
 package me.swirtzly.regeneration.common.entity;
 
+import me.swirtzly.regeneration.common.item.SolidItem;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MoverType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class OverrideEntity extends Entity {
 
     private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(OverrideEntity.class, DataSerializers.ITEMSTACK);
-	private static final DataParameter<Float> HEIGHT = EntityDataManager.createKey(OverrideEntity.class, DataSerializers.FLOAT);
-	private static final DataParameter<Float> WIDTH = EntityDataManager.createKey(OverrideEntity.class, DataSerializers.FLOAT);
-	private double motionX, motionY, motionZ;
+
+    private UUID thrower;
+    private UUID owner;
+    private int health = 5;
+
+    public OverrideEntity(EntityType<? extends OverrideEntity> entityTypeIn, World worldIn) {
+        super(entityTypeIn, worldIn);
+    }
+
+    public OverrideEntity(World world) {
+        this(RegenObjects.EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE, world);
+    }
+
+    public OverrideEntity(World worldIn, double x, double y, double z) {
+        this(RegenObjects.EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE, worldIn);
+        this.setPosition(x, y, z);
+        this.rotationYaw = this.rand.nextFloat() * 360.0F;
+        this.setMotion(this.rand.nextDouble() * 0.2D - 0.1D, 0.2D, this.rand.nextDouble() * 0.2D - 0.1D);
+    }
 
     public OverrideEntity(World worldIn, double x, double y, double z, ItemStack stack) {
-		this(worldIn);
-		this.setPosition(x, y, z);
-		this.setItem(stack);
-		this.rotationYaw = (float) (Math.random() * 360.0D);
-	}
-
-    public OverrideEntity(World worldIn, double x, double y, double z, ItemStack stack, float height, float width) {
-		this(worldIn);
-		this.setEntitySize(height, width);
-		this.setPosition(x, y, z);
-		this.setItem(stack);
-		this.rotationYaw = (float) (Math.random() * 360.0D);
-	}
-
-    public OverrideEntity(EntityType type, World world) {
-		this(world);
-	}
-
-    public OverrideEntity(World worldIn) {
-		super(RegenObjects.EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE, worldIn);
-		this.setEntitySize(getWidth(), getHeight());
-	}
-
-    public static void givePlayerItemStack(PlayerEntity player, ItemStack stack) {
-		if (player.getHeldItemMainhand().isEmpty())
-			player.setItemStackToSlot(EquipmentSlotType.MAINHAND, stack);
-		else if (!player.inventory.addItemStackToInventory(stack)) {
-			player.dropItem(stack, true);
-		}
-	}
-
-    public void setEntitySize(float height, float width) {
-		this.setHeight(height);
-		this.setWidth(width);
-	}
-
-    @Override
-	protected void registerData() {
-		this.getDataManager().register(ITEM, ItemStack.EMPTY);
-		this.getDataManager().register(HEIGHT, 0.25F);
-		this.getDataManager().register(WIDTH, 0.25F);
-	}
-
-    /**
-	 * (abstract) Protected helper method to read subclass entity data from NBT.
-	 */
-	@Override
-	public void readAdditional(CompoundNBT compound) {
-		CompoundNBT itemCompound = (CompoundNBT) compound.get("Item");
-		this.setItem(ItemStack.read(itemCompound));
-
-        if (this.getItem().isEmpty()) this.onKillCommand();
-		this.setHeight(compound.getFloat("Height"));
-		this.setWidth(compound.getFloat("Width"));
-	}
-
-    /**
-	 * (abstract) Protected helper method to write subclass entity data to NBT.
-	 */
-	@Override
-	public void writeAdditional(CompoundNBT compound) {
-        if (!this.getItem().isEmpty()) compound.put("Item", this.getItem().write(new CompoundNBT()));
-		
-		compound.putFloat("Height", getHeight());
-		compound.putFloat("Width", getWidth());
-	}
-
-    public ItemStack getItem() {
-		return this.getDataManager().get(ITEM);
-	}
-
-    public void setItem(ItemStack stack) {
-		this.getDataManager().set(ITEM, stack);
-	}
-
-    public float getCHeight() {
-		return this.getDataManager().get(HEIGHT);
-	}
-
-    @Override
-	public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        this(worldIn, x, y, z);
+        this.setItem(stack);
     }
-	
-	public void setHeight(float height) {
-		this.getDataManager().set(HEIGHT, height);
-	}
 
-    public float getCWidth() {
-		return this.getDataManager().get(WIDTH);
-	}
-
-    public void setWidth(float width) {
-		this.getDataManager().set(WIDTH, width);
-	}
-
-    @Override
-	public boolean isInvulnerable() {
-		return true;
-	}
-
-    /**
-	 * Will deal the specified amount of fire damage to the entity if the entity isn't immune to fire damage.
-	 */
-	@Override
-    protected void dealFireDamage(int amount) {
-    }
-	
-	/**
-     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to prevent them from trampling crops
-	 */
 	@Override
 	protected boolean canTriggerWalking() {
 		return false;
 	}
 
-    /**
-	 * Returns true if this entity should push and be pushed by other entities when colliding.
-	 */
 	@Override
-	public boolean canBePushed() {
-		return false;
+    public void registerData() {
+        this.getDataManager().register(ITEM, ItemStack.EMPTY);
 	}
 
-    /**
-	 * Returns true if other Entities should be prevented from moving through this Entity.
-	 */
 	@Override
-	public boolean canBeCollidedWith() {
-		return this.isAlive();
-	}
+    public ITextComponent getName() {
+        ITextComponent itextcomponent = this.getCustomName();
+        return (itextcomponent != null ? itextcomponent : new TranslationTextComponent(this.getItem().getTranslationKey()));
+    }
 
-    /**
-	 * Applies the given player interaction to this Entity.
-	 */
+    @Override
+    public EntitySize getSize(Pose poseIn) {
+        Item item = this.getItem().getItem();
+        if (item instanceof SolidItem) {
+            EntitySize size = ((SolidItem) item).getEntitySize(this, this.getItem());
+            return size != null ? size : super.getSize(poseIn);
+        }
+        return super.getSize(poseIn);
+    }
+
 	@Override
 	public ActionResultType applyPlayerInteraction(PlayerEntity player, Vec3d vec, Hand hand) {
-		givePlayerItemStack(player, this.getItem());
-		this.remove();
-		return ActionResultType.SUCCESS;
+        if (player.getHeldItem(hand).isEmpty() && this.isAlive()) {
+            player.setHeldItem(hand, this.getItem());
+            this.remove();
+            return ActionResultType.SUCCESS;
+        }
+        return super.applyPlayerInteraction(player, vec, hand);
 	}
 
-    /**
-	 * Gets called every tick from main Entity class
-	 */
 	@Override
 	public void tick() {
-		super.tick();
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		double d0 = this.motionX;
-		double d1 = this.motionY;
-		double d2 = this.motionZ;
+        if (getItem().getItem() instanceof SolidItem && ((SolidItem) getItem().getItem()).onSolidEntityItemUpdate(this))
+            return;
+        if (this.getItem().isEmpty()) {
+            this.remove();
+        } else {
+            super.tick();
 
-        ItemStack itemStack = getItem();
+            this.prevPosX = this.posX;
+            this.prevPosY = this.posY;
+            this.prevPosZ = this.posZ;
+            Vec3d vec3d = this.getMotion();
+            if (this.areEyesInFluid(FluidTags.WATER)) {
+                this.applyFloatMotion();
+            } else if (!this.hasNoGravity()) {
+                this.setMotion(this.getMotion().add(0.0D, -0.04D, 0.0D));
+            }
 
-        if (itemStack.getItem() instanceof IEntityOverride) {
-			IEntityOverride iEntityOverride = (IEntityOverride) itemStack.getItem();
-			if (iEntityOverride.shouldDie(itemStack)) {
-				remove();
-			}
-			iEntityOverride.update(this);
-		}
+            if (this.world.isRemote) {
+                this.noClip = false;
+            } else {
+                this.noClip = !this.world.areCollisionShapesEmpty(this);
+                if (this.noClip) {
+                    this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
+                }
+            }
 
-        this.setEntitySize(getWidth(), getHeight());
+            if (!this.onGround || func_213296_b(this.getMotion()) > (double) 1.0E-5F || (this.ticksExisted + this.getEntityId()) % 4 == 0) {
+                this.move(MoverType.SELF, this.getMotion());
+                float f = 0.98F;
+                if (this.onGround) {
+                    BlockPos pos = new BlockPos(this.posX, this.getBoundingBox().minY - 1.0D, this.posZ);
+                    f = this.world.getBlockState(pos).getSlipperiness(this.world, pos, this) * 0.98F;
+                }
 
-        if (!this.hasNoGravity()) {
-			this.getMotion().add(0, getMotion().getY() - 0.03999999910593033D, 0);
-		}
+                this.setMotion(this.getMotion().mul(f, 0.98D, f));
+                if (this.onGround) {
+                    this.setMotion(this.getMotion().mul(1.0D, -0.5D, 1.0D));
+                }
+            }
 
-        if (this.world.isRemote) {
-			this.noClip = false;
-		} else {
-			this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
-		}
+            boolean flag = MathHelper.floor(this.prevPosX) != MathHelper.floor(this.posX) || MathHelper.floor(this.prevPosY) != MathHelper.floor(this.posY) || MathHelper.floor(this.prevPosZ) != MathHelper.floor(this.posZ);
+            int i = flag ? 2 : 40;
+            if (this.ticksExisted % i == 0) {
+                if (this.world.getFluidState(new BlockPos(this)).isTagged(FluidTags.LAVA)) {
+                    this.setMotion((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F, 0.2F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+                    this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
+                }
+            }
 
-        this.move(MoverType.SELF, new Vec3d(this.motionX, this.motionY, this.motionZ));
-		boolean flag = (int) this.prevPosX != (int) this.posX || (int) this.prevPosY != (int) this.posY || (int) this.prevPosZ != (int) this.posZ;
+            this.isAirBorne |= this.handleWaterMovement();
+            if (!this.world.isRemote) {
+                double d0 = this.getMotion().subtract(vec3d).lengthSquared();
+                if (d0 > 0.01D) {
+                    this.isAirBorne = true;
+                }
+            }
 
-        if (flag || this.ticksExisted % 25 == 0) {
-			if (this.world.getBlockState(new BlockPos(this)).getMaterial() == Material.LAVA) {
-				this.getMotion().add(0.20000000298023224D, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-				this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
-			}
-		}
+            if (this.getItem().isEmpty()) {
+                this.remove();
+            }
 
-        float f = 0.98F;
+        }
+    }
 
-        if (this.onGround) {
-			BlockPos underPos = new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getBoundingBox().minY) - 1, MathHelper.floor(this.posZ));
-			BlockState underState = this.world.getBlockState(underPos);
-			f = underState.getBlock().getSlipperiness(underState, this.world, underPos, this) * 0.98F;
-		}
+    private void applyFloatMotion() {
+        Vec3d vec3d = this.getMotion();
+        this.setMotion(vec3d.x * (double) 0.99F, vec3d.y + (double) (vec3d.y < (double) 0.06F ? 5.0E-4F : 0.0F), vec3d.z * (double) 0.99F);
+    }
 
-        motionX *= f;
-		motionY *= 0.9800000190734863D;
-		motionZ *= f;
-		getMotion().add(new Vec3d(motionX, motionY, motionZ));
+    @Override
+    protected void dealFireDamage(int amount) {
+        this.attackEntityFrom(DamageSource.IN_FIRE, (float) amount);
+    }
 
-        if (this.onGround) {
-			this.motionY *= -0.5D;
-		}
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+        if (this.world.isRemote || this.isAlive()) return false;
+        if (this.isInvulnerableTo(source)) {
+            return false;
+        } else if (!this.getItem().isEmpty() && this.getItem().getItem() == Items.NETHER_STAR && source.isExplosion()) {
+            return false;
+        } else {
+            this.markVelocityChanged();
+            this.health = (int) ((float) this.health - amount);
+            if (this.health <= 0) {
+                this.remove();
+            }
 
-        getMotion().add(new Vec3d(motionX, motionY, motionZ));
+            return false;
+        }
+    }
 
-        this.handleWaterMovement();
+    @Override
+    protected void readAdditional(CompoundNBT compound) {
+        this.health = compound.getShort("Health");
 
-        if (!this.world.isRemote) {
-			double d3 = this.motionX - d0;
-			double d4 = this.motionY - d1;
-			double d5 = this.motionZ - d2;
-			getMotion().add(new Vec3d(motionX, motionY, motionZ));
-			double d6 = d3 * d3 + d4 * d4 + d5 * d5;
+        if (compound.contains("Owner", Constants.NBT.TAG_COMPOUND))
+            this.owner = NBTUtil.readUniqueId(compound.getCompound("Owner"));
 
-            if (d6 > 0.01D) {
-				this.isAirBorne = true;
-			}
-		}
-	}
+        if (compound.contains("Thrower", Constants.NBT.TAG_COMPOUND))
+            this.thrower = NBTUtil.readUniqueId(compound.getCompound("Thrower"));
 
-    public interface IEntityOverride {
+        CompoundNBT compoundnbt = compound.getCompound("Item");
+        this.setItem(ItemStack.read(compoundnbt));
+        if (this.getItem().isEmpty())
+            this.remove();
+    }
 
-        void update(OverrideEntity itemOverride);
+    @Override
+    protected void writeAdditional(CompoundNBT compound) {
+        compound.putShort("Health", (short) this.health);
 
-        boolean shouldDie(ItemStack stack);
+        if (this.getThrowerId() != null)
+            compound.put("Thrower", NBTUtil.writeUniqueId(this.getThrowerId()));
+
+        if (this.getOwnerId() != null)
+            compound.put("Owner", NBTUtil.writeUniqueId(this.getOwnerId()));
+
+        if (!this.getItem().isEmpty())
+            compound.put("Item", this.getItem().write(new CompoundNBT()));
+    }
+
+    @Nonnull
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public boolean canBeAttackedWithItem() {
+        return false;
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return true;
+    }
+
+    public ItemStack getItem() {
+        return this.getDataManager().get(ITEM);
+    }
+
+    public void setItem(ItemStack stack) {
+        this.getDataManager().set(ITEM, stack);
+    }
+
+    @Nullable
+    public UUID getOwnerId() {
+        return this.owner;
+    }
+
+    public void setOwnerId(@Nullable UUID ownerUUID) {
+        this.owner = ownerUUID;
+    }
+
+    @Nullable
+    public UUID getThrowerId() {
+        return this.thrower;
+    }
+
+    public void setThrowerId(@Nullable UUID throwerUUID) {
+        this.thrower = throwerUUID;
 	}
 }

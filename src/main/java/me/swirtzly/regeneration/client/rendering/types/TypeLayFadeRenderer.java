@@ -49,8 +49,8 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
     public void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
         RegenCap.get(entity).ifPresent((data) -> {
             if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == TypeManager.Type.LAY_FADE) {
-                GlStateManager.rotatef(-90, 1, 0, 0);
-                GlStateManager.translatef(0, 1, 0);
+                GlStateManager.rotatef(15, 1, 0, 0);
+                // GlStateManager.translatef(0, 1, 0);
             }
         });
     }

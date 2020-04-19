@@ -11,6 +11,7 @@ import me.swirtzly.regeneration.common.commands.RegenDebugCommand;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.compat.TardisCompat;
 import me.swirtzly.regeneration.handlers.CommonHandler;
 import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
@@ -22,6 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -83,6 +85,10 @@ public class RegenerationMod {
     private void processIMC(final InterModProcessEvent event) {
 		proxy.postInit();
 		PlayerUtil.createPostList();
+
+		if (ModList.get().isLoaded("tardis")) {
+			MinecraftForge.EVENT_BUS.register(new TardisCompat());
+		}
 	}
 	
 	@SubscribeEvent

@@ -16,7 +16,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.GameRules;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
@@ -41,7 +45,8 @@ import javax.annotation.Nonnull;
 public class CommonHandler {
 	
 	// =========== CAPABILITY HANDLING =============
-	
+
+
 	@SubscribeEvent
 	public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof PlayerEntity) {
@@ -194,6 +199,18 @@ public class CommonHandler {
 					event.getWorld().addEntity(newEntity);
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent e) {
+		PlayerEntity player = e.getPlayer();
+		if (!player.world.isRemote) {
+			StringTextComponent url = new StringTextComponent(TextFormatting.AQUA + TextFormatting.BOLD.toString() + "LINK");
+			url.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://gist.github.com/Swirtzly/d2115c297853e00079ba958c29cbb88c"));
+			url.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Open URL")));
+
+			player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "[Regeneration] : Important, please read: ").appendSibling(url));
 		}
 	}
 

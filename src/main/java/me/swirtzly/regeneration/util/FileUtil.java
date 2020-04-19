@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.util;
 
+import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.image.ImageDownloader;
 import me.swirtzly.regeneration.util.client.ClientUtil;
@@ -30,6 +31,7 @@ import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.*;
 public class FileUtil {
 	
 	public static void handleDownloads() throws IOException {
+		if (!RegenConfig.CLIENT.downloadInteralSkins.get()) return;
 		String PACKS_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/skins/index.json";
 		String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
 		for (String link : links) {
@@ -103,7 +105,7 @@ public class FileUtil {
 			}
 		}, RegenerationMod.NAME + " Download Daemon").start();
 	}
-	
+
 	public static void unzipSkinPack(String url) throws IOException {
 		File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
 		RegenerationMod.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
@@ -121,6 +123,11 @@ public class FileUtil {
 					String uncompressedFileName = SKIN_DIRECTORY + File.separator + entry.getName();
 					Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
 					RegenerationMod.LOG.info("Extracting file: " + uncompressedFilePath);
+					File temp = uncompressedFilePath.toFile();
+					if (temp.exists()) {
+						RegenerationMod.LOG.info(uncompressedFilePath + " exists, deleting and remaking!");
+						temp.delete();
+					}
 					Files.createFile(uncompressedFilePath);
 					FileOutputStream fileOutput = new FileOutputStream(uncompressedFileName);
 					while (bis.available() > 0) {
@@ -132,7 +139,7 @@ public class FileUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (tempZip.exists()) {
 			FileUtils.forceDelete(tempZip.getParentFile());
 		}

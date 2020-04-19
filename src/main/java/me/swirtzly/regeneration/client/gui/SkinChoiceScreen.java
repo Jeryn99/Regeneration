@@ -59,7 +59,7 @@ public class SkinChoiceScreen extends ContainerScreen {
         final int btnW = 60, btnH = 18;
         rotation = 0;
         position = 0;
-        GuiButtonExt btnNext = new GuiButtonExt(cx + 25, cy + 80, 20, 20, new TranslationTextComponent("regeneration.gui.previous").getFormattedText(), new Button.IPressable() {
+        GuiButtonExt btnNext = new GuiButtonExt(cx + 25, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.previous").getFormattedText(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
@@ -74,7 +74,7 @@ public class SkinChoiceScreen extends ContainerScreen {
                 }
             }
         });
-        GuiButtonExt btnPrevious = new GuiButtonExt(cx + 130, cy + 80, 20, 20, new TranslationTextComponent("regeneration.gui.next").getFormattedText(), new Button.IPressable() {
+        GuiButtonExt btnPrevious = new GuiButtonExt(cx + 130, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.next").getFormattedText(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 // Previous
