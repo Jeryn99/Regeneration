@@ -34,7 +34,6 @@ public class TardisCompat {
             RegenCap.get(playerEntity).ifPresent((data) -> {
                 //Regenerating
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-
                     if (data.getType() == TypeManager.Type.FIERY && playerEntity.ticksExisted % 60 == 0) {
                         for (Subsystem subSystem : console.getSubSystems()) {
                             subSystem.damage((ServerPlayerEntity) playerEntity, world.rand.nextInt(5));

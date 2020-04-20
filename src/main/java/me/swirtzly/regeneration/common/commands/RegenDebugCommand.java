@@ -15,7 +15,7 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 public class RegenDebugCommand {
 
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register(Commands.literal("regen-debug").requires(s -> s.hasPermissionLevel(ServerLifecycleHooks.getCurrentServer().getOpPermissionLevel())).then(Commands.literal("glow").executes(ctx -> glow(ctx.getSource()))).then(Commands.literal("fast-forward").executes(ctx -> fastForward(ctx.getSource()))).then(Commands.literal("set-regens").then(Commands.argument("amount", IntegerArgumentType.integer(1)) // minimal regen to set is 1
+		dispatcher.register(Commands.literal("regen").requires(s -> s.hasPermissionLevel(ServerLifecycleHooks.getCurrentServer().getOpPermissionLevel())).then(Commands.literal("glow").executes(ctx -> glow(ctx.getSource()))).then(Commands.literal("fast-forward").executes(ctx -> fastForward(ctx.getSource()))).then(Commands.literal("set-regens").then(Commands.argument("amount", IntegerArgumentType.integer(1)) // minimal regen to set is 1
                 .executes(ctx -> setRegens(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "amount"))))));
     }
 	

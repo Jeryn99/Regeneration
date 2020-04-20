@@ -39,7 +39,7 @@ public class ClientUtil {
 	 * This is a method that sends a packet to the server telling the server to reset the players Player model and skin back to the ones supplied by Mojang
 	 */
 	public static void sendSkinResetPacket() {
-		NetworkDispatcher.sendToServer(new UpdateSkinMessage(RegenUtil.NO_SKIN, SkinManipulation.getSkinType(Minecraft.getInstance().player) == SkinInfo.SkinType.ALEX));
+		NetworkDispatcher.sendToServer(new UpdateSkinMessage(RegenUtil.NO_SKIN, SkinManipulation.getSkinType(Minecraft.getInstance().player, true) == SkinInfo.SkinType.ALEX));
 	}
 	
 	@OnlyIn(Dist.CLIENT)

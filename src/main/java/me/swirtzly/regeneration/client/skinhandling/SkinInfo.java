@@ -4,24 +4,25 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class SkinInfo {
-	
-	private final SkinType skintype;
+
+	private final SkinType SKIN_TYPE;
     private final ResourceLocation TEXTURE_LOCATION;
     private final PlayerEntity PLAYER;
 
     public SkinInfo(PlayerEntity playerEntity, ResourceLocation resourceLocation, SkinType skinType) {
-		this.skintype = skinType;
+		this.SKIN_TYPE = skinType;
         this.TEXTURE_LOCATION = resourceLocation;
         this.PLAYER = playerEntity;
     }
+
 
     public ResourceLocation getTextureLocation() {
         return TEXTURE_LOCATION;
 	}
 
     public SkinType getSkintype() {
-		if (skintype != null) {
-			return skintype;
+		if (SKIN_TYPE != null) {
+			return SKIN_TYPE;
 		}
 		return SkinType.ALEX;
 	}

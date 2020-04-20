@@ -39,6 +39,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @OnlyIn(Dist.CLIENT)
 public class SkinManipulation {
@@ -48,6 +49,7 @@ public class SkinManipulation {
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
+	private static final HashMap<UUID, ResourceLocation> MOJANG = new HashMap<>();
 	private static final Random RAND = new Random();
 
     public static String imageToPixelData(final BufferedImage img) {
@@ -127,11 +129,11 @@ public class SkinManipulation {
 		ResourceLocation resourceLocation;
 		SkinInfo.SkinType skinType = null;
 		if (data == null || player.getName() == null || player.getUniqueID() == null) {
-			return new SkinInfo(player, null, getSkinType(player));
+			return new SkinInfo(player, null, getSkinType(player, true));
 		}
 		if (data.getEncodedSkin().equals(RegenUtil.NO_SKIN) || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
-			resourceLocation = null;//getTextureForPlayer(player.getName().getUnformattedComponentText());
-			skinType = getSkinType(player);
+			resourceLocation = MOJANG.get(player.getUniqueID());//getTextureForPlayer(player.getName().getUnformattedComponentText());
+			skinType = getSkinType(player, true);
 		} else {
             NativeImage nativeImage = decodeToImage(data.getEncodedSkin());
 			nativeImage = ImageDownloadBuffer.convert(nativeImage);
@@ -146,13 +148,32 @@ public class SkinManipulation {
 		return new SkinInfo(player, resourceLocation, skinType);
 	}
 
-    public static SkinInfo.SkinType getSkinType(AbstractClientPlayerEntity player) {
-		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = getVanillaMap(player);
-		MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
-		if (profile.getMetadata("model") == null) {
-			return SkinInfo.SkinType.STEVE;
+
+	public static SkinInfo.SkinType getSkinType(PlayerEntity player, boolean forceMojang) {
+		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
+		if (map.isEmpty()) {
+			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
 		}
-		return SkinInfo.SkinType.ALEX;
+		MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
+
+		AtomicReference<SkinInfo.SkinType> skinType = new AtomicReference<>();
+		skinType.set(SkinInfo.SkinType.ALEX);
+
+		RegenCap.get(player).ifPresent((data) -> {
+
+			if (data.getEncodedSkin().toLowerCase().equals("none") || forceMojang) {
+				if (profile == null) {
+					skinType.set(SkinInfo.SkinType.STEVE);
+				}
+				if (profile != null && profile.getMetadata("model") == null) {
+					skinType.set(SkinInfo.SkinType.STEVE);
+				}
+			} else {
+				skinType.set(data.getSkinType());
+			}
+		});
+
+		return skinType.get();
 	}
 
 	public static ResourceLocation getTextureForPlayer(String username) {
@@ -205,16 +226,9 @@ public class SkinManipulation {
 	public static void setPlayerSkinType(AbstractClientPlayerEntity player, SkinInfo.SkinType skinType) {
 		if (skinType.getMojangType().equals(player.getSkinType())) return;
         NetworkPlayerInfo playerInfo = player.playerInfo;
+		if (playerInfo == null) return;
 		ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), 5);
 	}
-
-    // Experiment
-    public static ResourceLocation forceLoad(Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map) {
-        if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-            return Minecraft.getInstance().getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN, null);
-        }
-        return null;
-    }
 
     public static List<File> listAllSkins(EnumChoices choices) {
         List<File> resultList = new ArrayList<>();
@@ -247,6 +261,10 @@ public class SkinManipulation {
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
 		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) e.getEntityPlayer();
+
+		if (!MOJANG.containsKey(player.getUniqueID())) {
+			MOJANG.put(player.getUniqueID(), player.getLocationSkin());
+		}
 
         RegenCap.get(player).ifPresent((cap) -> {
 			if (player.ticksExisted == 20) {
