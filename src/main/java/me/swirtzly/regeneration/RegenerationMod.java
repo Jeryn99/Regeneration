@@ -88,6 +88,7 @@ public class RegenerationMod {
 
 		if (ModList.get().isLoaded("tardis")) {
 			MinecraftForge.EVENT_BUS.register(new TardisCompat());
+            TardisCompat.on();
 		}
 	}
 	

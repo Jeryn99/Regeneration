@@ -106,6 +106,7 @@ public class RegenUtil {
 		});
 	}
 
+
     public interface IEnum<E extends Enum<E>> {
 		int ordinal();
 

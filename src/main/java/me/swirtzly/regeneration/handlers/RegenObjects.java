@@ -2,13 +2,22 @@ package me.swirtzly.regeneration.handlers;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.gui.BioContainerContainer;
+import me.swirtzly.regeneration.common.block.ArchBlock;
 import me.swirtzly.regeneration.common.block.BlockHandInJar;
+import me.swirtzly.regeneration.common.dimension.DimSingle;
+import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
+import me.swirtzly.regeneration.common.dimension.RBiomes;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifrayanWastelands;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanMountainsBiome;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanRedLands;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.common.item.HandItem;
+import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -20,6 +29,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -69,10 +81,7 @@ public class RegenObjects {
 		}
 	}
 
-    @SubscribeEvent
-	public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event) {
-		event.getRegistry().register(TileEntityType.Builder.create(TileEntityHandInJar::new, Blocks.HAND_JAR).build(null).setRegistryName(MODID, "hand_jar"));
-	}
+    public static ModDimension GALLIFREY;
 
     @SubscribeEvent
 	public static void addEntities(final RegistryEvent.Register<EntityType<?>> event) {
@@ -80,11 +89,8 @@ public class RegenObjects {
         // Item Override
         reg.register(EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE = EntityType.Builder.<OverrideEntity>create(OverrideEntity::new, EntityClassification.MISC).size(0.5F, 0.2F).setTrackingRange(128).setUpdateInterval(1).setShouldReceiveVelocityUpdates(true).setCustomClientFactory((spawnEntity, world) -> new OverrideEntity(world)).build(RegenerationMod.MODID + ":item_override").setRegistryName(new ResourceLocation(RegenerationMod.MODID, "item_override")));
 	}
-	
-	@SubscribeEvent
-	public static void addBlocks(RegistryEvent.Register<Block> e) {
-		registerBlocks(e.getRegistry(), setUpBlock(new BlockHandInJar(), "hand_jar"));
-	}
+
+    public static DimensionType GALLIFREY_TYPE;
 	
 	@SubscribeEvent
 	public static void addSounds(RegistryEvent.Register<SoundEvent> e) {
@@ -102,6 +108,36 @@ public class RegenObjects {
             return new BioContainerContainer(windowId, inv, RegenerationMod.proxy.getClientPlayer(), (TileEntityHandInJar) Minecraft.getInstance().world.getTileEntity(pos));
 		}).setRegistryName(MODID, "bio_container"));
 	}
+
+    @SubscribeEvent
+    public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event) {
+        event.getRegistry().register(TileEntityType.Builder.create(TileEntityHandInJar::new, Blocks.HAND_JAR).build(null).setRegistryName(MODID, "hand_jar"));
+        event.getRegistry().register(TileEntityType.Builder.create(ArchTile::new, Blocks.ARCH).build(null).setRegistryName(MODID, "arch"));
+    }
+
+    @SubscribeEvent
+    public static void addBlocks(RegistryEvent.Register<Block> e) {
+        registerBlocks(e.getRegistry(), setUpBlock(new BlockHandInJar(), "hand_jar"));
+        registerBlocks(e.getRegistry(), setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10)), "arch"));
+    }
+
+    @SubscribeEvent
+    public static void registerBiome(RegistryEvent.Register<Biome> event) {
+        event.getRegistry().registerAll(
+                RBiomes.gallifreyMountains = new GallifreyanMountainsBiome().setRegistryName(new ResourceLocation(MODID, "gallifreyan_mountains")),
+                RBiomes.redLands = new GallifreyanRedLands().setRegistryName(new ResourceLocation(MODID, "redlands")),
+                RBiomes.wasteLands = new GallifrayanWastelands().setRegistryName(new ResourceLocation(MODID, "wastelands"))
+        );
+
+        RBiomes.registerBiome();
+    }
+
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<ModDimension> event) {
+        event.getRegistry().registerAll(
+                GALLIFREY = new DimSingle(GallifreyDimension::new).setRegistryName(RegenerationMod.MODID, "gallifrey")
+        );
+    }
 
     private static SoundEvent setUpSound(String soundName) {
 		return new SoundEvent(new ResourceLocation(MODID, soundName)).setRegistryName(soundName);
@@ -142,11 +178,13 @@ public class RegenObjects {
     @ObjectHolder(MODID)
 	public static class Blocks {
 		public static final Block HAND_JAR = null;
+        public static final Block ARCH = null;
 	}
 
     @ObjectHolder(MODID)
 	public static class Tiles {
 		public static final TileEntityType<TileEntityHandInJar> HAND_JAR = null;
+        public static final TileEntityType<ArchTile> ARCH = null;
 	}
 
     @ObjectHolder(MODID)

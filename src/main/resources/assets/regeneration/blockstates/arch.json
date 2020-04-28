@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "regeneration:block/arch"
+    },
+    "facing=south": {
+      "model": "regeneration:block/arch",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "regeneration:block/arch",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "regeneration:block/arch",
+      "y": 90
+    }
+  }
+}
