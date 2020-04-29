@@ -9,6 +9,7 @@ import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
 import me.swirtzly.regeneration.common.dimension.RBiomes;
 import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
+import me.swirtzly.regeneration.common.item.ComponentItem;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.common.item.HandItem;
 import me.swirtzly.regeneration.common.item.ItemGroups;
@@ -60,7 +61,7 @@ public class RegenObjects {
 
     @SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {
-		e.getRegistry().registerAll(setUpItem(new FobWatchItem(), "fob_watch"), setUpItem(new HandItem(), "hand"));
+		e.getRegistry().registerAll(setUpItem(new FobWatchItem(), "fob_watch"), setUpItem(new HandItem(), "hand"), setUpItem(new ComponentItem(), "arch_part"));
 		e.getRegistry().registerAll(ITEM_BLOCKS.toArray(new Item[ITEM_BLOCKS.size()]));
 	}
 	
@@ -155,6 +156,7 @@ public class RegenObjects {
 	public static class Items {
 		public static final Item FOB_WATCH = null;
 		public static final Item HAND = null;
+		public static final Item ARCH_PART = null;
 	}
 	
 	@ObjectHolder(MODID)

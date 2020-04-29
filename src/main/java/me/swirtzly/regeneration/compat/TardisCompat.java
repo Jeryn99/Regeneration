@@ -32,7 +32,7 @@ public class TardisCompat {
 
     public static void on() {
         PROTOCOL_REGISTRY.register("arch_protocol", new ArchProtocol());
-        ARCH_SUBSYSTEM = register("arch", new SubsystemEntry<>(ArchSubSystem::new, RegenObjects.Items.FOB_WATCH));
+        ARCH_SUBSYSTEM = register("arch", new SubsystemEntry<>(ArchSubSystem::new, RegenObjects.Items.ARCH_PART));
     }
 
     public static <T extends Subsystem> SubsystemEntry<T> register(ResourceLocation key, SubsystemEntry<T> system) {

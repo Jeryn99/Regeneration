@@ -197,5 +197,13 @@
   "stored.regens": "Stored Regenerations: %s",
   "itemGroup.regeneration": "Regeneration",
   "block.regeneration.arch": "Chameleon Arch",
-  "message.regeneration.arch_no_space": "There is not enough space to deploy!"
+  "message.regeneration.arch_no_space": "There is not enough space to deploy!",
+  "message.regeneration.arch_system_dead": "Component is not in a functional state or is not installed...",
+  "biome.regeneration.gallifreyan_river": "Gallifreyan River",
+  "biome.regeneration.gallifreyan_ocean": "Gallifreyan Ocean",
+  "biome.regeneration.gallifreyan_mountains": "Gallifreyan River",
+  "biome.regeneration.redlands": "Gallifreyan Redlands",
+  "biome.regeneration.redlands_forest": "Gallifreyan Redlands Forest",
+  "biome.regeneration.wastelands": "Gallifreyan Wastelands",
+  "item.regeneration.arch_part": "Bio-Component"
 }

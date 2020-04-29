@@ -59,11 +59,18 @@ public class ArchProtocol extends Protocol {
                 } else {
                     BlockState console = world.getBlockState(pos);
                     for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, console.getCollisionShape(world, pos).getBoundingBox().grow(25))) {
-                        PlayerUtil.sendMessage(playerEntity, new TranslationTextComponent("message.regeneration.arch_no_space"), true);
+                        PlayerUtil.sendMessage(playerEntity, new TranslationTextComponent("message.regeneration.arch_no_space"), false);
                     }
+                }
+            } else {
+                BlockState console = world.getBlockState(consoleTile.getPos());
+                for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, console.getCollisionShape(world, consoleTile.getPos()).getBoundingBox().grow(25))) {
+                    PlayerUtil.sendMessage(playerEntity, new TranslationTextComponent("message.regeneration.arch_system_dead"), false);
                 }
             }
         }));
+
+
     }
 
     @Override

@@ -412,7 +412,7 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
             tessellator.draw();
         }
 
-        if (world.dimension.isSkyColored()) {
+        if (!world.dimension.isSkyColored()) {
             GlStateManager.color3f(f * 0.2F + 0.04F, f1 * 0.2F + 0.04F, f2 * 0.6F + 0.1F);
         } else {
             GlStateManager.color3f(f, f1, f2);
