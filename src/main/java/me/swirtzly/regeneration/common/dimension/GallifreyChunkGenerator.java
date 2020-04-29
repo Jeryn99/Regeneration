@@ -7,7 +7,6 @@ import net.minecraft.world.gen.OverworldGenSettings;
 
 public class GallifreyChunkGenerator extends OverworldChunkGenerator {
 
-
     public GallifreyChunkGenerator(IWorld worldIn, BiomeProvider provider, OverworldGenSettings settingsIn) {
         super(worldIn, provider, settingsIn);
     }

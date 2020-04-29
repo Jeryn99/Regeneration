@@ -14,7 +14,8 @@ public class GalBiomeProvider extends ModdedBiomeProvider {
     public Layer wrapMappedBiomesAround(Layer parent) {
         GenLayerBiomeMapping mapping = new GenLayerBiomeMapping(RBiomes.redLands, parent);
         mapping.addBiomeOverride(Biomes.OCEAN, RBiomes.wasteLands);
-        mapping.addBiomeOverride(Biomes.DEEP_OCEAN, Biomes.OCEAN);
+        mapping.addBiomeOverride(Biomes.DEEP_OCEAN, RBiomes.gallifreyOcean);
+        mapping.addBiomeOverride(Biomes.OCEAN, RBiomes.gallifreyOcean);
         mapping.addBiomeOverride(Biomes.BEACH, RBiomes.wasteLands);
         mapping.addBiomeOverride(Biomes.SNOWY_BEACH, RBiomes.wasteLands);
         mapping.addBiomeOverride(Biomes.RIVER, RBiomes.gallifreyRiver);

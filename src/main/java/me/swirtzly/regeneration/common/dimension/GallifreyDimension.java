@@ -181,4 +181,9 @@ public class GallifreyDimension extends Dimension {
     public float getCloudHeight() {
         return 128F;
     }
+
+    @Override
+    public Vec3d getCloudColor(float partialTicks) {
+        return super.getCloudColor(partialTicks);
+    }
 }

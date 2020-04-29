@@ -176,7 +176,8 @@
   "regeneration.gui.next": ">",
   "regeneration.gui.preferences": "Preferences",
   "regeneration.messages.info_trait": "Trait:",
-  "regeneration.messages.regen_fail": "This item contains no Regenerations",
+  "regeneration.messages.regen_fail": "This item either contains no Regenerations and you have no regenerations to store!",
+  "regeneration.messages.item_invalid": "This item either contains no Regenerations and you have no regenerations to store!",
   "regeneration.messages.stored_item": "%s Regenerations have been stored into %s",
   "regeneration.keybinds.regenerate_forced": "Force Regen/Sync to hand!",
   "entity.fob": "Item",
@@ -193,5 +194,8 @@
   "gui.hover.incarnation": "Choose what your next Incarnation will look like",
   "gui.hover.regen_type": "Select your preferred Regeneration Style",
   "right.click": "Pickup with %s",
-  "stored.regens": "Stored Regenerations: %s"
+  "stored.regens": "Stored Regenerations: %s",
+  "itemGroup.regeneration": "Regeneration",
+  "block.regeneration.arch": "Chameleon Arch",
+  "message.regeneration.arch_no_space": "There is not enough space to deploy!"
 }

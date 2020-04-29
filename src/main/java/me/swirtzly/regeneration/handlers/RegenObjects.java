@@ -11,6 +11,7 @@ import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.common.item.HandItem;
+import me.swirtzly.regeneration.common.item.ItemGroups;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.util.RegenDamageSource;
@@ -22,6 +23,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -33,6 +35,7 @@ import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
@@ -75,7 +78,11 @@ public class RegenObjects {
 	private static void registerBlocks(IForgeRegistry<Block> reg, Block... blocks) {
 		reg.registerAll(blocks);
 		for (Block block : blocks) {
-			ITEM_BLOCKS.add(new BlockItem(block, new Item.Properties()).setRegistryName(block.getRegistryName()));
+			ItemGroup itemGroup = ItemGroups.REGEN_TAB;
+			if (block == Blocks.ARCH && !ModList.get().isLoaded("tardis")) {
+				itemGroup = null;
+			}
+			ITEM_BLOCKS.add(new BlockItem(block, new Item.Properties().group(itemGroup)).setRegistryName(block.getRegistryName()));
 		}
 	}
 
@@ -126,7 +133,8 @@ public class RegenObjects {
                 RBiomes.redLands = new GallifreyanRedLands().setRegistryName(new ResourceLocation(MODID, "redlands")),
                 RBiomes.wasteLands = new GallifrayanWastelands().setRegistryName(new ResourceLocation(MODID, "wastelands")),
                 RBiomes.redLandsForest = new GallifreyanRedlandsForest().setRegistryName(new ResourceLocation(MODID, "redlands_forest")),
-                RBiomes.gallifreyRiver = new GallifreyanRiver().setRegistryName(new ResourceLocation(MODID, "gallifreyan_river"))
+				RBiomes.gallifreyRiver = new GallifreyanRiver().setRegistryName(new ResourceLocation(MODID, "gallifreyan_river")),
+				RBiomes.gallifreyOcean = new GallifreyanOcean().setRegistryName(new ResourceLocation(MODID, "gallifreyan_ocean"))
         );
 
         RBiomes.registerBiome();

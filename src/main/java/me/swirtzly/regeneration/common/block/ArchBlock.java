@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.compat.ArchHelper;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -13,6 +14,7 @@ import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -83,6 +85,11 @@ public class ArchBlock extends DirectionalBlock {
 
         if (mainHandItem.isEmpty()) return false;
         if (handIn == Hand.MAIN_HAND && cap.getState() == PlayerUtil.RegenState.ALIVE) {
+
+            if (mainHandItem.getItem() == Item.getItemFromBlock(RegenObjects.Blocks.ARCH) || mainHandItem.getItem() == Item.getItemFromBlock(RegenObjects.Blocks.HAND_JAR)) {
+                PlayerHelper.sendMessageToPlayer(player, new TranslationTextComponent("regeneration.messages.item_invalid"), true);
+                return true;
+            }
 
             if (cap.getRegenerationsLeft() > 0 && regensLeftInHand == 0) {
                 int stored = cap.getRegenerationsLeft();

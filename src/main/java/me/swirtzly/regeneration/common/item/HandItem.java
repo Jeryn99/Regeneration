@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 public class HandItem extends Item {
     public HandItem() {
-        super(new Item.Properties().maxStackSize(1).setNoRepair());
+        super(new Item.Properties().maxStackSize(1).setNoRepair().group(ItemGroups.REGEN_TAB));
         addPropertyOverride(new ResourceLocation("skin_type"), (stack, worldIn, entityIn) -> getSkinType(stack).equals("ALEX") ? 1 : 0);
     }
 

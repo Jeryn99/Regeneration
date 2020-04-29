@@ -5,7 +5,6 @@ import net.minecraft.world.gen.ChunkGeneratorType;
 import net.minecraft.world.gen.IChunkGeneratorFactory;
 import net.minecraft.world.gen.OverworldGenSettings;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,6 +21,7 @@ public class RBiomes {
     public static Biome redLandsForest;
     public static Biome wasteLands;
     public static Biome gallifreyRiver;
+    public static Biome gallifreyOcean;
 
     static {
         IChunkGeneratorFactory<OverworldGenSettings, GallifreyChunkGenerator> factoryIn3 = GallifreyChunkGenerator::new;
@@ -39,7 +39,6 @@ public class RBiomes {
 
     public static void addTypes(Biome biome) {
         BiomeDictionary.addTypes(biome, BiomeDictionary.Type.MOUNTAIN);
-        BiomeManager.addSpawnBiome(biome);
     }
 
     @SubscribeEvent
