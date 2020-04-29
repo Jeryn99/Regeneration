@@ -24,7 +24,7 @@ import net.minecraft.world.server.ServerWorld;
  */
 public class GallifreyanMountainsBiome extends Biome {
     public GallifreyanMountainsBiome() {
-        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.STONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(0F).waterColor(0xEB623D).waterFogColor(0xEB623D).scale(0.4F).parent(null));
+        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.STONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(6F).waterColor(0xEB623D).waterFogColor(0xEB623D).scale(0.4F).parent(null));
         DefaultBiomeFeatures.func_222339_L(this);
     }
 

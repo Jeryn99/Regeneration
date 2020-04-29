@@ -40,7 +40,7 @@ public class GallifrayanWastelands extends Biome {
     };
 
     public GallifrayanWastelands() {
-        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.SAND.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.STONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(0F).waterColor(0xEB623D).waterFogColor(0xEB623D).scale(0.5F).parent(null));
+        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.SAND.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.STONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(6F).waterColor(0xEB623D).waterFogColor(0xEB623D).scale(0.5F).parent(null));
         DefaultBiomeFeatures.addSwampClayDisks(this);
         DefaultBiomeFeatures.addSwampVegetation(this);
       //  GallifreyanBiomeFeatures.addWoodlandTrees(this);
