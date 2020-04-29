@@ -19,7 +19,9 @@ public class RBiomes {
     public static final ChunkGeneratorType<OverworldGenSettings, GallifreyChunkGenerator> GALLIFREY;
     public static Biome gallifreyMountains;
     public static Biome redLands;
+    public static Biome redLandsForest;
     public static Biome wasteLands;
+    public static Biome gallifreyRiver;
 
     static {
         IChunkGeneratorFactory<OverworldGenSettings, GallifreyChunkGenerator> factoryIn3 = GallifreyChunkGenerator::new;
@@ -31,6 +33,8 @@ public class RBiomes {
         addTypes(gallifreyMountains);
         addTypes(redLands);
         addTypes(wasteLands);
+        addTypes(redLandsForest);
+        addTypes(gallifreyRiver);
     }
 
     public static void addTypes(Biome biome) {

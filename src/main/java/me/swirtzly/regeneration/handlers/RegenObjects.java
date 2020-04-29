@@ -7,9 +7,7 @@ import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.dimension.DimSingle;
 import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
 import me.swirtzly.regeneration.common.dimension.RBiomes;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifrayanWastelands;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanMountainsBiome;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanRedLands;
+import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.common.item.HandItem;
@@ -126,7 +124,9 @@ public class RegenObjects {
         event.getRegistry().registerAll(
                 RBiomes.gallifreyMountains = new GallifreyanMountainsBiome().setRegistryName(new ResourceLocation(MODID, "gallifreyan_mountains")),
                 RBiomes.redLands = new GallifreyanRedLands().setRegistryName(new ResourceLocation(MODID, "redlands")),
-                RBiomes.wasteLands = new GallifrayanWastelands().setRegistryName(new ResourceLocation(MODID, "wastelands"))
+                RBiomes.wasteLands = new GallifrayanWastelands().setRegistryName(new ResourceLocation(MODID, "wastelands")),
+                RBiomes.redLandsForest = new GallifreyanRedlandsForest().setRegistryName(new ResourceLocation(MODID, "redlands_forest")),
+                RBiomes.gallifreyRiver = new GallifreyanRiver().setRegistryName(new ResourceLocation(MODID, "gallifreyan_river"))
         );
 
         RBiomes.registerBiome();
