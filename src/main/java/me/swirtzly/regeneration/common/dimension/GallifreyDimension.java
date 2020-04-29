@@ -2,6 +2,7 @@ package me.swirtzly.regeneration.common.dimension;
 
 import me.swirtzly.regeneration.common.dimension.biomes.GalBiomeProvider;
 import me.swirtzly.regeneration.common.dimension.util.GallifreyanSkyRenderer;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +38,7 @@ public class GallifreyDimension extends Dimension {
     public ChunkGenerator<?> createChunkGenerator() {
         OverworldGenSettings gensettings = new OverworldGenSettings();
         GalBiomeProvider biomes = new GalBiomeProvider(BiomeProviderType.VANILLA_LAYERED.createSettings().setWorldInfo(this.world.getWorldInfo()).setGeneratorSettings(gensettings));
-        return RBiomes.GALLIFREY.create(this.world, biomes, gensettings);
+        return RegenObjects.ChunkGeneratorTypes.GALLIFREY_CHUNKS.get().create(this.world, biomes, gensettings);
     }
 
     @Override

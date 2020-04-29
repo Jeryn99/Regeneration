@@ -108,7 +108,7 @@ public class BlockHandInJar extends DirectionalBlock {
 					data.receiveRegenerations(1);
 					data.setSyncingFromJar(true);
 					jar.destroyHand();
-					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), RegenObjects.Sounds.HAND_GLOW, SoundCategory.PLAYERS, 1.0F, 0.7F);
+					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), RegenObjects.Sounds.HAND_GLOW.get(), SoundCategory.PLAYERS, 1.0F, 0.7F);
 					data.synchronise();
 					jar.sendUpdates();
 					// return true;

@@ -31,7 +31,7 @@ public class BioContainerScreen extends ContainerScreen<BioContainerContainer> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.getTranslationKey()).getUnformattedComponentText(), 8, 25, Color.BLACK.getRGB());
+        this.font.drawString(new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.get().getTranslationKey()).getUnformattedComponentText(), 8, 25, Color.BLACK.getRGB());
         this.font.drawString("Residual Energy: " + getContainer().getTileEntity().getLindosAmont(), 8, 59, Color.BLACK.getRGB());
     }
 

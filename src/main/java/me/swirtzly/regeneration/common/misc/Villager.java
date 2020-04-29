@@ -35,7 +35,7 @@ public class Villager {
     @SubscribeEvent
     public static void registerPOI(RegistryEvent.Register<PointOfInterestType> event) {
         event.getRegistry().registerAll(
-                BIO = registerPOI("timelord", RegenObjects.Blocks.HAND_JAR)
+                BIO = registerPOI("timelord", RegenObjects.Blocks.HAND_JAR.get())
         );
 
         try {

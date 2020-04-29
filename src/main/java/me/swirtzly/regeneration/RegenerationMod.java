@@ -13,6 +13,7 @@ import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.compat.TardisCompat;
 import me.swirtzly.regeneration.handlers.CommonHandler;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.proxy.ClientProxy;
@@ -73,7 +74,17 @@ public class RegenerationMod {
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
 		ActingForwarder.init();
 		TriggerManager.init();
-	}
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Blocks.BLOCKS);
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Blocks.BLOCK_ITEMS);
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Items.ITEMS);
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Sounds.SOUNDS);
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.EntityEntries.ENTITIES);
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Tiles.TILES);
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Containers.CONTAINERS);
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.ChunkGeneratorTypes.CHUNK_GENERATOR_TYPES);
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Biomes.BIOMES);
+		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Dimensions.DIMENSIONS);
+    }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
 		proxy.init();

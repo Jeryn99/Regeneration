@@ -38,7 +38,7 @@ public class MovingSound extends TickableSound {
 			}
 
             // I promise this is the only case specific thing I am putting in here ~ swirtzly
-			if (sound.getSoundLocation().equals(RegenObjects.Sounds.GRACE_HUM.getRegistryName())) {
+			if (sound.getSoundLocation().equals(RegenObjects.Sounds.GRACE_HUM.get().getRegistryName())) {
 				volume = RegenUtil.randFloat(1.5F, 6F);
 			}
 			

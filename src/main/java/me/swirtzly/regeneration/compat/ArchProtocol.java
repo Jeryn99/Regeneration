@@ -51,7 +51,7 @@ public class ArchProtocol extends Protocol {
                 BlockPos placePos = pos.north(2).up(2);
 
                 if (world.isAirBlock(placePos)) {
-                    world.setBlockState(placePos, RegenObjects.Blocks.ARCH.getDefaultState());
+                    world.setBlockState(placePos, RegenObjects.Blocks.ARCH.get().getDefaultState());
                     TardisCompat.damageSubsystem(world);
                     if (consoleTile.getArtron() > 10) {
                         consoleTile.setArtron(consoleTile.getArtron() - 10);

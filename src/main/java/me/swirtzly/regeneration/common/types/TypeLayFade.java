@@ -11,7 +11,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class TypeLayFade implements RegenType {
 
-    private SoundEvent[] soundEvents = new SoundEvent[]{RegenObjects.Sounds.HAND_GLOW};
+    private SoundEvent[] soundEvents = new SoundEvent[]{RegenObjects.Sounds.HAND_GLOW.get()};
 
     @Override
     public int getAnimationLength() {

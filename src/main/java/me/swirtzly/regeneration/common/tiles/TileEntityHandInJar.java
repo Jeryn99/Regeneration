@@ -35,7 +35,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickableTileEnti
 	public LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
 
 	public TileEntityHandInJar() {
-		super(RegenObjects.Tiles.HAND_JAR);
+		super(RegenObjects.Tiles.HAND_JAR.get());
 	}
 
 	public int getLindosAmont() {
@@ -50,7 +50,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickableTileEnti
 	public void tick() {
 
 		if (world.getGameTime() % 35 == 0 && hasHand()) {
-			world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.4F, 0.3F);
+			world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.4F, 0.3F);
 		}
 
 		PlayerEntity player = world.getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 56, false);
@@ -66,7 +66,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickableTileEnti
 	}
 
 	public boolean hasHand() {
-		return getCapability(ITEM_HANDLER_CAPABILITY).map(data -> data.getStackInSlot(0).getItem() == RegenObjects.Items.HAND).orElse(false);
+		return getCapability(ITEM_HANDLER_CAPABILITY).map(data -> data.getStackInSlot(0).getItem() == RegenObjects.Items.HAND.get()).orElse(false);
 	}
 
 	@Override
@@ -113,13 +113,13 @@ public class TileEntityHandInJar extends TileEntity implements ITickableTileEnti
 		return new ItemStackHandler(1) {
 			@Override
 			public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-				return stack.getItem() == RegenObjects.Items.HAND;
+				return stack.getItem() == RegenObjects.Items.HAND.get();
 			}
 
 			@Nonnull
 			@Override
 			public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-				if (stack.getItem() != RegenObjects.Items.HAND) {
+				if (stack.getItem() != RegenObjects.Items.HAND.get()) {
 					return stack;
 				}
 				return super.insertItem(slot, stack, simulate);
@@ -142,7 +142,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickableTileEnti
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.getTranslationKey());
+		return new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.get().getTranslationKey());
 	}
 
 	@Nullable

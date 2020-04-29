@@ -122,7 +122,7 @@ public class FobWatchItem extends SolidItem {
 
                 if (world.isRemote) {
 					setOpen(stack, 1);
-					ClientUtil.playPositionedSoundRecord(RegenObjects.Sounds.FOB_WATCH, 1.0F, 2.0F);
+					ClientUtil.playPositionedSoundRecord(RegenObjects.Sounds.FOB_WATCH.get(), 1.0F, 2.0F);
 				} else {
 					cap.receiveRegenerations(used);
 				}
@@ -167,7 +167,7 @@ public class FobWatchItem extends SolidItem {
 		ItemStack itemStack = itemOverride.getItem();
 		if (itemStack.getItem() == this && itemStack.getDamage() != RegenConfig.COMMON.regenCapacity.get()) {
 			if (itemOverride.ticksExisted % 5000 == 0 || itemOverride.ticksExisted == 2) {
-				ClientUtil.playSound(itemOverride, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.getRegistryName(), SoundCategory.AMBIENT, false, () -> !itemOverride.isAlive(), 1.5F);
+				ClientUtil.playSound(itemOverride, RegenObjects.Sounds.FOB_WATCH_DIALOGUE.get().getRegistryName(), SoundCategory.AMBIENT, false, () -> !itemOverride.isAlive(), 1.5F);
 			}
 		}
         return true;

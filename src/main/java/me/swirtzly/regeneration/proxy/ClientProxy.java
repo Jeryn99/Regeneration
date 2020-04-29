@@ -42,7 +42,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init() {
 		super.init();
-		ScreenManager.registerFactory(RegenObjects.Containers.BIO_CONTAINER, BioContainerScreen::new);
+		ScreenManager.registerFactory(RegenObjects.Containers.BIO_CONTAINER.get(), BioContainerScreen::new);
 	}
 	
 	@Override

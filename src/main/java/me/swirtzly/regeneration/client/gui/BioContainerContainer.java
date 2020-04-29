@@ -24,7 +24,7 @@ public class BioContainerContainer extends Container {
     private IItemHandler playerInventory;
 
     public BioContainerContainer(int windowId, PlayerInventory playerInventory, PlayerEntity player, TileEntityHandInJar tileEntityHandInJar) {
-        super(RegenObjects.Containers.BIO_CONTAINER, windowId);
+        super(RegenObjects.Containers.BIO_CONTAINER.get(), windowId);
         tileEntity = tileEntityHandInJar;
         this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);
@@ -35,7 +35,7 @@ public class BioContainerContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerEntity, RegenObjects.Blocks.HAND_JAR);
+        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerEntity, RegenObjects.Blocks.HAND_JAR.get());
     }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
@@ -71,7 +71,7 @@ public class BioContainerContainer extends Container {
 
     @Override
     public ContainerType<?> getType() {
-        return RegenObjects.Containers.BIO_CONTAINER;
+        return RegenObjects.Containers.BIO_CONTAINER.get();
     }
 
     @Override

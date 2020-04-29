@@ -10,7 +10,7 @@ import net.minecraft.util.math.AxisAlignedBB;
  */
 public class ArchTile extends TileEntity {
     public ArchTile() {
-        super(RegenObjects.Tiles.ARCH);
+        super(RegenObjects.Tiles.ARCH.get());
     }
 
     @Override

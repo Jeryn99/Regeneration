@@ -32,7 +32,7 @@ class CommonActing implements Acting {
     }
 	
 	public static SoundEvent getRandomSound(Random random) {
-        SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0, RegenObjects.Sounds.REGENERATION_2, RegenObjects.Sounds.REGENERATION_3};
+        SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0.get(), RegenObjects.Sounds.REGENERATION_2.get(), RegenObjects.Sounds.REGENERATION_3.get()};
 		return SOUNDS[random.nextInt(SOUNDS.length)];
 	}
 	

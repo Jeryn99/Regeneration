@@ -13,7 +13,7 @@ public class ItemGroups {
     public static final ItemGroup REGEN_TAB = new ItemGroup("regeneration") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(RegenObjects.Blocks.HAND_JAR);
+            return new ItemStack(RegenObjects.Blocks.HAND_JAR.get());
         }
     };
 }

@@ -106,7 +106,7 @@ public class PlayerUtil {
 
     public static void createHand(PlayerEntity player) {
         RegenCap.get(player).ifPresent((data) -> {
-            ItemStack hand = new ItemStack(RegenObjects.Items.HAND);
+            ItemStack hand = new ItemStack(RegenObjects.Items.HAND.get());
             HandItem.setTextureString(hand, data.getEncodedSkin());
             HandItem.setSkinType(hand, data.getSkinType().name());
             HandItem.setOwner(hand, player.getUniqueID());

@@ -32,7 +32,7 @@ public class TardisCompat {
 
     public static void on() {
         PROTOCOL_REGISTRY.register("arch_protocol", new ArchProtocol());
-        ARCH_SUBSYSTEM = register("arch", new SubsystemEntry<>(ArchSubSystem::new, RegenObjects.Items.FOB_WATCH));
+        ARCH_SUBSYSTEM = register("arch", new SubsystemEntry<>(ArchSubSystem::new, RegenObjects.Items.FOB_WATCH.get()));
     }
 
     public static <T extends Subsystem> SubsystemEntry<T> register(ResourceLocation key, SubsystemEntry<T> system) {
@@ -88,7 +88,7 @@ public class TardisCompat {
                 if (data.getState().isGraceful()) {
                     for (TileEntity tileEntity : playerEntity.world.loadedTileEntityList) {
                         if (playerEntity.getDistanceSq(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()) < 40 && tileEntity instanceof ConsoleTile && data.getPlayer().ticksExisted % 25 == 0) {
-                            tileEntity.getWorld().playSound(null, tileEntity.getPos(), RegenObjects.Sounds.ALARM, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                            tileEntity.getWorld().playSound(null, tileEntity.getPos(), RegenObjects.Sounds.ALARM.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
                         }
                     }
                 }

@@ -1,7 +1,6 @@
 package me.swirtzly.regeneration.common.dimension.biomes;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.dimension.biomes.features.GallifreyanBiomeFeatures;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
@@ -14,13 +13,10 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.extensions.IForgeWorldServer;
 
 /**
  * Created by Swirtzly
