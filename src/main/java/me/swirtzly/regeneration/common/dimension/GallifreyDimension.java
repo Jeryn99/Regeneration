@@ -178,6 +178,12 @@ public class GallifreyDimension extends Dimension {
         return GallifreyanSkyRenderer.getInstance();
     }
 
+    @Nullable
+    @Override
+    public IRenderHandler getCloudRenderer() {
+        return null;
+    }
+
     @Override
     public float getCloudHeight() {
         return 128F;

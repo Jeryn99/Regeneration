@@ -122,7 +122,7 @@ public class BlockHandInJar extends DirectionalBlock {
 			});
 
 		}
-		return false;
+		return true; //This means you can't accidentally place another block when you click this
 	}
 
 	@Nullable

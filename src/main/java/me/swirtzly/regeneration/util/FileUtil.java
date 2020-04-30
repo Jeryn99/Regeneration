@@ -100,6 +100,7 @@ public class FileUtil {
 					TrendingManager.downloadPreviousSkins();
 					notDownloaded.set(false);
 				} catch (Exception e) {
+					System.out.println("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");
 					throw new RuntimeException(e);
 				}
 			}

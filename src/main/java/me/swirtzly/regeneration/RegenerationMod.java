@@ -20,8 +20,11 @@ import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.proxy.CommonProxy;
 import me.swirtzly.regeneration.proxy.Proxy;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -50,6 +53,7 @@ public class RegenerationMod {
 
     public RegenerationMod() {
 		INSTANCE = this;
+		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
@@ -74,16 +78,20 @@ public class RegenerationMod {
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
 		ActingForwarder.init();
 		TriggerManager.init();
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Blocks.BLOCKS);
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Blocks.BLOCK_ITEMS);
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Items.ITEMS);
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Sounds.SOUNDS);
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.EntityEntries.ENTITIES);
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Tiles.TILES);
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Containers.CONTAINERS);
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.ChunkGeneratorTypes.CHUNK_GENERATOR_TYPES);
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Biomes.BIOMES);
-		FMLJavaModLoadingContext.get().getModEventBus().register(RegenObjects.Dimensions.DIMENSIONS);
+	}
+    
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onNewRegistries(RegistryEvent.NewRegistry e) {
+    	RegenObjects.Blocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		RegenObjects.Blocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		RegenObjects.Items.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		RegenObjects.Sounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		RegenObjects.EntityEntries.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		RegenObjects.Tiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		RegenObjects.Containers.CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		RegenObjects.ChunkGeneratorTypes.CHUNK_GENERATOR_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		RegenObjects.Biomes.BIOMES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		RegenObjects.Dimensions.DIMENSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -98,6 +106,7 @@ public class RegenerationMod {
 		PlayerUtil.createPostList();
 
 		if (ModList.get().isLoaded("tardis")) {
+			LOG.info("Loading Tardis Compatibility");
 			MinecraftForge.EVENT_BUS.register(new TardisCompat());
             TardisCompat.on();
 		}

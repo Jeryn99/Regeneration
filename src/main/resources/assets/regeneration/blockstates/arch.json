@@ -14,6 +14,12 @@
     "facing=east": {
       "model": "regeneration:block/arch",
       "y": 90
+    },
+    "facing=up": {
+      "model": "regeneration:block/arch"
+    },
+    "facing=down": {
+      "model": "regeneration:block/arch"
     }
   }
 }

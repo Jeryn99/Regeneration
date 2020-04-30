@@ -8,9 +8,9 @@ import me.swirtzly.regeneration.common.block.BlockHandInJar;
 import me.swirtzly.regeneration.common.dimension.DimSingle;
 import me.swirtzly.regeneration.common.dimension.GallifreyChunkGenerator;
 import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
-import me.swirtzly.regeneration.common.dimension.RBiomes;
 import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
+import me.swirtzly.regeneration.common.item.ComponentItem;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.common.item.HandItem;
 import me.swirtzly.regeneration.common.item.ItemGroups;
@@ -36,7 +36,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -46,18 +48,18 @@ import net.minecraft.world.gen.ChunkGeneratorType;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.IChunkGeneratorFactory;
 import net.minecraft.world.gen.OverworldGenSettings;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 import static me.swirtzly.regeneration.RegenerationMod.MODID;
@@ -76,7 +78,6 @@ public class RegenObjects {
     public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"), REGEN_DMG_HEALING = new RegenDamageSource("regen_heal").setDamageAllowedInCreativeMode(), // The irony lmao
 			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit").setDamageAllowedInCreativeMode(), REGEN_DMG_KILLED = new RegenDamageSource("regen_killed"), REGEN_DMG_FORCED = new RegenDamageSource("forced").setDamageAllowedInCreativeMode();
     
-
 	public static class Blocks {
 		public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, RegenerationMod.MODID);
 		public static final DeferredRegister<Item> BLOCK_ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, RegenerationMod.MODID);
@@ -84,12 +85,12 @@ public class RegenObjects {
 		public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
         public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
 	}
-
 	public static class Items {
 		public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, RegenerationMod.MODID);
 		
 		public static final RegistryObject<Item> FOB_WATCH = ITEMS.register("fob_watch", FobWatchItem::new);
 		public static final RegistryObject<Item> HAND = ITEMS.register("hand", HandItem::new);
+		public static final RegistryObject<Item> ARCH_PART = ITEMS.register("arch_part", ComponentItem::new);
 	}
 	
 
@@ -118,7 +119,7 @@ public class RegenObjects {
 	public static class EntityEntries {
 		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, RegenerationMod.MODID);
 		
-		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerBase(OverrideEntity::new, null, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
+		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
 	}
 
 	public static class Tiles {
@@ -142,15 +143,14 @@ public class RegenObjects {
 	public static class Biomes {
 		public static final DeferredRegister<Biome> BIOMES = new DeferredRegister<>(ForgeRegistries.BIOMES,RegenerationMod.MODID);
 		
-		public static final RegistryObject<Biome> GALLIFREY_MOUNTAINS = BIOMES.register("gallifreyan_mountains", () -> registerBiomes(new GallifreyanMountainsBiome(),BiomeDictionary.Type.MOUNTAIN));
-		public static final RegistryObject<Biome> GALLIFREYAN_RIVER = BIOMES.register("gallifreyan_river", () -> registerBiomes(new GallifreyanRiver(),BiomeDictionary.Type.MOUNTAIN));
-		public static final RegistryObject<Biome> GALLIFREYAN_OCEAN = BIOMES.register("gallifreyan_ocean", () -> registerBiomes(new GallifreyanOcean(),BiomeDictionary.Type.MOUNTAIN));
+		public static final RegistryObject<Biome> GALLIFREY_MOUNTAINS = BIOMES.register("gallifreyan_mountains", GallifreyanMountainsBiome::new);
+		public static final RegistryObject<Biome> GALLIFREYAN_RIVER = BIOMES.register("gallifreyan_river", GallifreyanRiver::new);
+		public static final RegistryObject<Biome> GALLIFREYAN_OCEAN = BIOMES.register("gallifreyan_ocean", GallifreyanOcean::new);
 	
-		public static final RegistryObject<Biome> REDLANDS = BIOMES.register("redlands", () -> registerBiomes(new GallifreyanRedLands(),BiomeDictionary.Type.MOUNTAIN));
-		public static final RegistryObject<Biome> WASTELANDS = BIOMES.register("wastelands", () -> registerBiomes(new GallifrayanWastelands(),BiomeDictionary.Type.MOUNTAIN));
-		public static final RegistryObject<Biome> REDLANDS_FOREST = BIOMES.register("redlands_forest", () -> registerBiomes(new GallifreyanRedLands(),BiomeDictionary.Type.MOUNTAIN));
+		public static final RegistryObject<Biome> REDLANDS = BIOMES.register("redlands", GallifreyanRedLands::new);
+		public static final RegistryObject<Biome> WASTELANDS = BIOMES.register("wastelands", GallifrayanWastelands::new);
+		public static final RegistryObject<Biome> REDLANDS_FOREST = BIOMES.register("redlands_forest", GallifreyanRedLands::new);
 	}
-	
 	public static class ChunkGeneratorTypes{
 		public static final DeferredRegister<ChunkGeneratorType<?,?>> CHUNK_GENERATOR_TYPES = new DeferredRegister<>(ForgeRegistries.CHUNK_GENERATOR_TYPES,RegenerationMod.MODID);
 		
@@ -158,27 +158,62 @@ public class RegenObjects {
 		
 		public static final RegistryObject<ChunkGeneratorType<OverworldGenSettings, GallifreyChunkGenerator>> GALLIFREY_CHUNKS = 
 				CHUNK_GENERATOR_TYPES.register("gallifrey_chunks", () -> 
-					registerChunkGeneratorType(factory, OverworldGenSettings::new, true, "gallifrey_chunks"));
+					registerChunkGeneratorType(factory, OverworldGenSettings::new, true));
 	}
 	
 	public static class Dimensions{
 		public static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS,RegenerationMod.MODID);
 		
-		public static final RegistryObject<ModDimension> GALLIFREY = DIMENSIONS.register("gallifrey", () -> registerDimensions(new DimSingle(GallifreyDimension::new), null, true, "gallifrey"));
+		public static final RegistryObject<ModDimension> GALLIFREY = DIMENSIONS.register("gallifrey", () -> registerDimensions(new DimSingle(GallifreyDimension::new)));
 	}
-
+	
+	public static class WorldGenEntries {
+		public static final DeferredRegister<Feature<?>> FEATURES = new DeferredRegister<>(ForgeRegistries.FEATURES, RegenerationMod.MODID);
+		
+//		public static final RegistryObject<Feature<YourConfigTypeHere>> FEATURE_NAME = FEATURES.register("snow_arm", () -> registerFeatures(new FeatureClassHere(YourConfigType::deserialize)));
+	}
+	
+	@SubscribeEvent
+	public static void regBlockItems(RegistryEvent.Register<Item> e) {
+		genBlockItems(Blocks.BLOCKS.getEntries());
+	}
+	
+//	@SubscribeEvent
+//	public static void regBiomeTypes(RegistryEvent.Register<Biome>e) {
+//		e.getRegistry().registerAll(Biomes.GALLIFREY_MOUNTAINS.get(),
+//				Biomes.GALLIFREYAN_OCEAN.get(),
+//				Biomes.GALLIFREYAN_RIVER.get(),
+//				Biomes.REDLANDS.get(),
+//				Biomes.REDLANDS_FOREST.get(),
+//				Biomes.WASTELANDS.get()
+//				);
+//		addBiomeTypes(Biomes.GALLIFREY_MOUNTAINS,BiomeDictionary.Type.MOUNTAIN);
+//		addBiomeTypes(Biomes.GALLIFREYAN_OCEAN,BiomeDictionary.Type.MOUNTAIN);
+//		addBiomeTypes(Biomes.GALLIFREYAN_RIVER,BiomeDictionary.Type.MOUNTAIN);
+//		addBiomeTypes(Biomes.REDLANDS,BiomeDictionary.Type.MOUNTAIN);
+//		addBiomeTypes(Biomes.REDLANDS_FOREST,BiomeDictionary.Type.MOUNTAIN);
+//		addBiomeTypes(Biomes.WASTELANDS,BiomeDictionary.Type.MOUNTAIN);
+//	}
+	
+	//Registry Methods
 	private static Item setUpItem(Item item) {
 		return item;
 	}
 	
 	private static Block setUpBlock(Block block) {
-		if (block == Blocks.ARCH.get() && !ModList.get().isLoaded("tardis")) {
-			itemGroup = null;
-		}
-		else {
-			Blocks.BLOCK_ITEMS.register(block.getRegistryName().getPath(), () -> setUpItem(new BlockItem(block, new Item.Properties().group(itemGroup))));	
-		}
 		return block;
+	}
+	
+	private static void genBlockItems(Collection<RegistryObject<Block>> collection) {
+		for (RegistryObject<Block> block : collection) {
+			if (block.get() == Blocks.ARCH.get() && !ModList.get().isLoaded("tardis")) {
+			itemGroup = null;
+			}
+			else {
+			itemGroup = ItemGroups.REGEN_TAB;
+			Blocks.BLOCK_ITEMS.register(block.get().getRegistryName().getPath(), () -> setUpItem(new BlockItem(block.get(), new Item.Properties().group(itemGroup))));
+			}
+		}
 	}
     
     // Tile Creation
@@ -188,13 +223,13 @@ public class RegenObjects {
  	
     
  	//Container Creation
-	public static <T extends Container> ContainerType<T> registerContainer(IContainerFactory<T> fact, String name){
+ 	private static <T extends Container> ContainerType<T> registerContainer(IContainerFactory<T> fact, String name){
 		ContainerType<T> type = new ContainerType<T>(fact);
 		type.setRegistryName(new ResourceLocation(RegenerationMod.MODID, name));
 		return type;
 	}
 	
-	public static <T extends Container> ContainerType<T> registerContainerSpecial(IContainerFactory<T> fact, int windowId, PlayerInventory playerInv, PlayerEntity player, PacketBuffer buf ,TileEntity te, String name){
+ 	private static <T extends Container> ContainerType<T> registerContainerSpecial(IContainerFactory<T> fact, int windowId, PlayerInventory playerInv, PlayerEntity player, PacketBuffer buf ,TileEntity te, String name){
 		ContainerType<T> type = new ContainerType<T>(fact);
 		type.setRegistryName(new ResourceLocation(RegenerationMod.MODID, name));
 		return type;
@@ -205,6 +240,17 @@ public class RegenObjects {
 	}
  	
  	// Entity Creation
+	private static <T extends Entity> EntityType<T> registerNoSpawnerBase(EntityType.IFactory<T> factory, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
+ 		ResourceLocation loc = new ResourceLocation(RegenerationMod.MODID, name);
+ 		EntityType.Builder<T> builder = EntityType.Builder.create(factory, classification);
+ 		builder.setShouldReceiveVelocityUpdates(sendUpdate);
+ 		builder.setTrackingRange(trackingRange);
+ 		builder.setUpdateInterval(updateFreq);
+ 		builder.size(width, height);
+ 		EntityType<T> type = builder.build(loc.toString());
+ 		return type;
+ 	}
+	
  	private static <T extends Entity> EntityType<T> registerBase(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
  		ResourceLocation loc = new ResourceLocation(RegenerationMod.MODID, name);
  		EntityType.Builder<T> builder = EntityType.Builder.create(factory, classification);
@@ -235,34 +281,39 @@ public class RegenObjects {
  		return registerFireImmuneBase(factory, client, classification, width, height, 80, 3, velocity, name);
  	}
  	
- 	public static <T extends Entity> EntityType<T> registerStatic(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name) {
+ 	private static <T extends Entity> EntityType<T> registerStatic(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name) {
  		return registerBase(factory, client, classification, width, height, 64, 40, false, name);
  	}
  	
- 	public static <T extends Entity> EntityType<T> registerMob(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name, boolean velocity) {
+ 	private static <T extends Entity> EntityType<T> registerMob(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name, boolean velocity) {
  		return registerBase(factory, client, classification, width, height, 80, 3, velocity, name);
+ 	}
+ 	
+	private static <T extends Entity> EntityType<T> registerNonSpawner(EntityType.IFactory<T> factory, EntityClassification classification, float width, float height, boolean velocity, String name) {
+ 		return registerNoSpawnerBase(factory, classification, width, height, 64, 40, velocity, name);
  	}
  	
  	public interface IClientSpawner<T> {
 		T spawn(World world);
 	}
  	
-	public static Biome registerBiomes(Biome biome, BiomeDictionary.Type biomeType) {
-		BiomeDictionary.addTypes(biome, biomeType);
+ 	private static Biome registerBiomes(Biome biome) {
 		return biome;
 	}
+ 	
+ 	private static void addBiomeTypes(RegistryObject<Biome> biome, BiomeDictionary.Type biomeType) {
+ 		BiomeDictionary.addTypes(biome.get(), biomeType);
+ 	}
 	
 	//Chunk Generator Type creation
-	public static  <C extends GenerationSettings, T extends ChunkGenerator<C>> 
+ 	private static  <C extends GenerationSettings, T extends ChunkGenerator<C>> 
 	ChunkGeneratorType<C, T> 
-	registerChunkGeneratorType(IChunkGeneratorFactory<C, T> factoryIn, Supplier<C> settingsIn, boolean canUseForBuffet, String registryName) {
+	registerChunkGeneratorType(IChunkGeneratorFactory<C, T> factoryIn, Supplier<C> settingsIn, boolean canUseForBuffet) {
 		ChunkGeneratorType<C, T> type = new ChunkGeneratorType<C, T>(factoryIn, canUseForBuffet, settingsIn);
-		type.setRegistryName(new ResourceLocation(RegenerationMod.MODID,registryName));
 		return type;
 	}
 	
-	public static ModDimension registerDimensions(ModDimension type, PacketBuffer data, boolean hasSkyLight, String name) {
-		DimensionManager.registerOrGetDimension(new ResourceLocation(RegenerationMod.MODID,name), type, data, hasSkyLight);
+ 	private static ModDimension registerDimensions(ModDimension type) {
 		return type;
 	}
 }
