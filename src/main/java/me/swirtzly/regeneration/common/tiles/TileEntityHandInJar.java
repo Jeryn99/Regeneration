@@ -73,6 +73,11 @@ public class TileEntityHandInJar extends TileEntity implements ITickableTileEnti
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		return new SUpdateTileEntityPacket(pos, 3, getUpdateTag());
 	}
+	
+	@Override
+	public void handleUpdateTag(CompoundNBT tag) {
+		super.handleUpdateTag(tag);
+	}
 
 	@Override
 	public CompoundNBT getUpdateTag() {

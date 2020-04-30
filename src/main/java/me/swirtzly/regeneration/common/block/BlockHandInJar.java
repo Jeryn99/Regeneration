@@ -14,6 +14,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
@@ -145,5 +146,17 @@ public class BlockHandInJar extends DirectionalBlock {
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
 	}
+
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		TileEntityHandInJar te = (TileEntityHandInJar) worldIn.getTileEntity(pos);
+		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+//			InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntityHandInJar)te);
+			//TODO: Make TE implement IInventory so we can make it drop its items
+	         worldIn.removeTileEntity(pos);
+	      }
+	}
+	
+	
 
 }

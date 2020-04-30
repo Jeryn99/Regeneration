@@ -50,7 +50,6 @@ import net.minecraft.world.gen.IChunkGeneratorFactory;
 import net.minecraft.world.gen.OverworldGenSettings;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -150,6 +149,19 @@ public class RegenObjects {
 		public static final RegistryObject<Biome> REDLANDS = BIOMES.register("redlands", GallifreyanRedLands::new);
 		public static final RegistryObject<Biome> WASTELANDS = BIOMES.register("wastelands", GallifrayanWastelands::new);
 		public static final RegistryObject<Biome> REDLANDS_FOREST = BIOMES.register("redlands_forest", GallifreyanRedLands::new);
+		
+		public static void registerBiomeTypes() {
+			addBiomeTypes(GALLIFREY_MOUNTAINS, BiomeDictionary.Type.MOUNTAIN);
+			addBiomeTypes(GALLIFREYAN_RIVER,BiomeDictionary.Type.RIVER);
+			addBiomeTypes(GALLIFREYAN_OCEAN,BiomeDictionary.Type.OCEAN);
+			addBiomeTypes(REDLANDS,BiomeDictionary.Type.PLAINS);
+			addBiomeTypes(WASTELANDS,BiomeDictionary.Type.SANDY);
+			addBiomeTypes(REDLANDS_FOREST,BiomeDictionary.Type.PLAINS);
+	    }
+		
+		public static void addBiomeTypes(RegistryObject<Biome> biome, BiomeDictionary.Type biomeType) {
+	 		BiomeDictionary.addTypes(biome.get(), biomeType);
+	 	}
 	}
 	public static class ChunkGeneratorTypes{
 		public static final DeferredRegister<ChunkGeneratorType<?,?>> CHUNK_GENERATOR_TYPES = new DeferredRegister<>(ForgeRegistries.CHUNK_GENERATOR_TYPES,RegenerationMod.MODID);
@@ -178,22 +190,6 @@ public class RegenObjects {
 		genBlockItems(Blocks.BLOCKS.getEntries());
 	}
 	
-//	@SubscribeEvent
-//	public static void regBiomeTypes(RegistryEvent.Register<Biome>e) {
-//		e.getRegistry().registerAll(Biomes.GALLIFREY_MOUNTAINS.get(),
-//				Biomes.GALLIFREYAN_OCEAN.get(),
-//				Biomes.GALLIFREYAN_RIVER.get(),
-//				Biomes.REDLANDS.get(),
-//				Biomes.REDLANDS_FOREST.get(),
-//				Biomes.WASTELANDS.get()
-//				);
-//		addBiomeTypes(Biomes.GALLIFREY_MOUNTAINS,BiomeDictionary.Type.MOUNTAIN);
-//		addBiomeTypes(Biomes.GALLIFREYAN_OCEAN,BiomeDictionary.Type.MOUNTAIN);
-//		addBiomeTypes(Biomes.GALLIFREYAN_RIVER,BiomeDictionary.Type.MOUNTAIN);
-//		addBiomeTypes(Biomes.REDLANDS,BiomeDictionary.Type.MOUNTAIN);
-//		addBiomeTypes(Biomes.REDLANDS_FOREST,BiomeDictionary.Type.MOUNTAIN);
-//		addBiomeTypes(Biomes.WASTELANDS,BiomeDictionary.Type.MOUNTAIN);
-//	}
 	
 	//Registry Methods
 	private static Item setUpItem(Item item) {
@@ -301,10 +297,6 @@ public class RegenObjects {
 		return biome;
 	}
  	
- 	private static void addBiomeTypes(RegistryObject<Biome> biome, BiomeDictionary.Type biomeType) {
- 		BiomeDictionary.addTypes(biome.get(), biomeType);
- 	}
-	
 	//Chunk Generator Type creation
  	private static  <C extends GenerationSettings, T extends ChunkGenerator<C>> 
 	ChunkGeneratorType<C, T> 

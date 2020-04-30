@@ -78,6 +78,7 @@ public class RegenerationMod {
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
 		ActingForwarder.init();
 		TriggerManager.init();
+		RegenObjects.Biomes.registerBiomeTypes();
 	}
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
