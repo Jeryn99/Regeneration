@@ -9,6 +9,7 @@ import me.swirtzly.regeneration.common.dimension.DimSingle;
 import me.swirtzly.regeneration.common.dimension.GallifreyChunkGenerator;
 import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
 import me.swirtzly.regeneration.common.dimension.biomes.*;
+import me.swirtzly.regeneration.common.dimension.features.GallifreyanTreeFeature;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.item.ComponentItem;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
@@ -144,8 +145,8 @@ public class RegenObjects {
 	
 		public static final RegistryObject<Biome> REDLANDS = BIOMES.register("redlands", GallifreyanRedLands::new);
 		public static final RegistryObject<Biome> WASTELANDS = BIOMES.register("wastelands", GallifrayanWastelands::new);
-		public static final RegistryObject<Biome> REDLANDS_FOREST = BIOMES.register("redlands_forest", GallifreyanRedLands::new);
-		
+		public static final RegistryObject<Biome> REDLANDS_FOREST = BIOMES.register("redlands_forest", GallifreyanRedlandsForest::new);
+
 		public static void registerBiomeTypes() {
 			addBiomeTypes(GALLIFREY_MOUNTAINS, BiomeDictionary.Type.MOUNTAIN);
 			addBiomeTypes(GALLIFREYAN_RIVER,BiomeDictionary.Type.RIVER);

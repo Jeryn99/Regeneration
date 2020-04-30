@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.common.dimension.biomes;
+package me.swirtzly.regeneration.common.dimension.util;
 
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;

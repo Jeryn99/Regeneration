@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.common.dimension.biomes;
+package me.swirtzly.regeneration.common.dimension.util;
 
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.world.biome.Biomes;
@@ -13,7 +13,7 @@ public class GalBiomeProvider extends ModdedBiomeProvider {
 
     public Layer wrapMappedBiomesAround(Layer parent) {
         GenLayerBiomeMapping mapping = new GenLayerBiomeMapping(RegenObjects.Biomes.REDLANDS.get(), parent);
-        mapping.addBiomeOverride(Biomes.OCEAN, RegenObjects.Biomes.WASTELANDS.get());
+        mapping.addBiomeOverride(Biomes.OCEAN, RegenObjects.Biomes.GALLIFREYAN_OCEAN.get());
         mapping.addBiomeOverride(Biomes.DEEP_OCEAN, RegenObjects.Biomes.GALLIFREYAN_OCEAN.get());
         mapping.addBiomeOverride(Biomes.OCEAN, RegenObjects.Biomes.GALLIFREYAN_OCEAN.get());
         mapping.addBiomeOverride(Biomes.BEACH, RegenObjects.Biomes.WASTELANDS.get());

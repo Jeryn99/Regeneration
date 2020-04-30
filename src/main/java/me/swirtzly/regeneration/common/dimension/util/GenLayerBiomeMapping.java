@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.common.dimension.biomes;
+package me.swirtzly.regeneration.common.dimension.util;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.layer.Layer;

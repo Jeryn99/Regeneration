@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.dimension;
 
-import me.swirtzly.regeneration.common.dimension.biomes.GalBiomeProvider;
+import me.swirtzly.regeneration.common.dimension.util.GalBiomeProvider;
 import me.swirtzly.regeneration.common.dimension.util.GallifreyanSkyRenderer;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
@@ -96,13 +96,22 @@ public class GallifreyDimension extends Dimension {
 
     @Override
     public boolean isSurfaceWorld() {
-        return false;
+        return true;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public Vec3d getFogColor(float celestialAngle, float partialTicks) {
-        return new Vec3d(0.7, 0.4, 0.2);
+        float f = MathHelper.cos(celestialAngle * ((float) Math.PI * 2F)) * 2.0F + 0.5F;
+        f = MathHelper.clamp(f, 0.0F, 1.0F);
+        float f1 = 0.7F;
+        float f2 = 0.4F;
+        float f3 = 0.2F;
+        f1 = f1 * (f * 0.94F + 0.06F);
+        f2 = f2 * (f * 0.94F + 0.06F);
+        f3 = f3 * (f * 0.91F + 0.09F);
+        return new Vec3d((double) f1, (double) f2, (double) f3);
+        // return new Vec3d(0.7, 0.4, 0.2);
     }
 
     @Override
@@ -124,18 +133,13 @@ public class GallifreyDimension extends Dimension {
 
     @Override
     public Vec3d getSkyColor(BlockPos cameraPos, float partialTicks) {
-
-        if (world.isDaytime()) {
-            return new Vec3d(0.7, 0.4, 0.2);
-        }
-
         float f = world.getCelestialAngle(partialTicks);
         float f1 = MathHelper.cos(f * ((float) Math.PI * 2F)) * 2.0F + 0.5F;
         f1 = MathHelper.clamp(f1, 0.0F, 1.0F);
         int i = net.minecraftforge.client.ForgeHooksClient.getSkyBlendColour(world, cameraPos);
-        float f3 = (float) (i >> 16 & 255) / 255.0F;
-        float f4 = (float) (i >> 8 & 255) / 255.0F;
-        float f5 = (float) (i & 255) / 255.0F;
+        float f3 = 0.7F;
+        float f4 = 0.4F;
+        float f5 = 0.2F;
         f3 = f3 * f1;
         f4 = f4 * f1;
         f5 = f5 * f1;
@@ -186,11 +190,12 @@ public class GallifreyDimension extends Dimension {
 
     @Override
     public float getCloudHeight() {
-        return 128F;
+        return 150F;
     }
 
     @Override
     public Vec3d getCloudColor(float partialTicks) {
-        return super.getCloudColor(partialTicks);
+        return new Vec3d(0.9, 0.3, 0.1);
+        // return new Vec3d(255 / 255.0F, 153/ 255.0, 204/ 255.0);
     }
 }

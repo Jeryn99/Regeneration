@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.common.dimension.biomes;
+package me.swirtzly.regeneration.common.dimension.features;
 
 import com.mojang.datafixers.Dynamic;
 import me.swirtzly.regeneration.RegenerationMod;

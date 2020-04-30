@@ -1,14 +1,12 @@
 package me.swirtzly.regeneration.common.dimension.biomes;
 
-import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.common.dimension.features.BiomeHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.placement.ChanceConfig;
-import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
@@ -26,7 +24,10 @@ public class GallifreyanRedLands extends Biome {
         DefaultBiomeFeatures.addSprings(this);
         DefaultBiomeFeatures.func_222319_X(this);
         DefaultBiomeFeatures.addExtraDefaultFlowers(this);
-        addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, Biome.createDecoratedFeature(RegenObjects.HUT, NoFeatureConfig.NO_FEATURE_CONFIG, Placement.CHANCE_HEIGHTMAP, new ChanceConfig(32)));
+        DefaultBiomeFeatures.addTaigaRocks(this);
+        BiomeHelper.restoreVanillaStuff(this);
+        BiomeHelper.addGallifreyTress(this);
+
     }
 
     @Override
@@ -39,7 +40,8 @@ public class GallifreyanRedLands extends Biome {
         return 0xEAEDED;
     }
 
-
-
-
+    @Override
+    public <C extends IFeatureConfig> boolean hasStructure(Structure<C> structureIn) {
+        return super.hasStructure(structureIn);
+    }
 }

@@ -1,12 +1,13 @@
 package me.swirtzly.regeneration.common.dimension.biomes;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.structure.MineshaftConfig;
+import net.minecraft.world.gen.feature.structure.MineshaftStructure;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
 /**
  * Created by Swirtzly
@@ -15,8 +16,25 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 public class GallifreyanMountainsBiome extends Biome {
 
     public GallifreyanMountainsBiome() {
-        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.STONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(6F).waterColor(0xEB623D).waterFogColor(0xEB623D).scale(0.4F).parent(null));
-        DefaultBiomeFeatures.func_222339_L(this);
+        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.MOUNTAIN, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(Biome.RainType.RAIN).category(Biome.Category.EXTREME_HILLS).depth(1.0F).scale(0.5F).temperature(0.2F).downfall(0.3F).waterColor(0xEB623D).waterFogColor(0xEB623D).parent(null));
+        this.addStructure(Feature.MINESHAFT, new MineshaftConfig(0.004D, MineshaftStructure.Type.NORMAL));
+        this.addStructure(Feature.STRONGHOLD, IFeatureConfig.NO_FEATURE_CONFIG);
+        DefaultBiomeFeatures.addCarvers(this);
+        DefaultBiomeFeatures.addStructures(this);
+        DefaultBiomeFeatures.addLakes(this);
+        DefaultBiomeFeatures.addMonsterRooms(this);
+        DefaultBiomeFeatures.addStoneVariants(this);
+        DefaultBiomeFeatures.addOres(this);
+        DefaultBiomeFeatures.addSedimentDisks(this);
+        DefaultBiomeFeatures.func_222343_A(this);
+        DefaultBiomeFeatures.addDefaultFlowers(this);
+        DefaultBiomeFeatures.func_222348_W(this);
+        DefaultBiomeFeatures.addMushrooms(this);
+        DefaultBiomeFeatures.addReedsAndPumpkins(this);
+        DefaultBiomeFeatures.addSprings(this);
+        DefaultBiomeFeatures.addExtraEmeraldOre(this);
+        DefaultBiomeFeatures.addInfestedStone(this);
+        DefaultBiomeFeatures.addFreezeTopLayer(this);
     }
 
     @Override
