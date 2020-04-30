@@ -36,24 +36,22 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.ChunkGeneratorType;
-import net.minecraft.world.gen.GenerationSettings;
-import net.minecraft.world.gen.IChunkGeneratorFactory;
-import net.minecraft.world.gen.OverworldGenSettings;
+import net.minecraft.world.gen.*;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -68,8 +66,7 @@ import static me.swirtzly.regeneration.RegenerationMod.MODID;
  */
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RegenObjects {
-	
-    public static ModDimension GALLIFREY;
+
 	public static DimensionType GALLIFREY_TYPE;
 	
 	private static ItemGroup itemGroup = ItemGroups.REGEN_TAB;
@@ -117,7 +114,6 @@ public class RegenObjects {
 
 	public static class EntityEntries {
 		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, RegenerationMod.MODID);
-		
 		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
 	}
 
@@ -178,13 +174,20 @@ public class RegenObjects {
 		
 		public static final RegistryObject<ModDimension> GALLIFREY = DIMENSIONS.register("gallifrey", () -> registerDimensions(new DimSingle(GallifreyDimension::new)));
 	}
-	
-	public static class WorldGenEntries {
-		public static final DeferredRegister<Feature<?>> FEATURES = new DeferredRegister<>(ForgeRegistries.FEATURES, RegenerationMod.MODID);
-		
-//		public static final RegistryObject<Feature<YourConfigTypeHere>> FEATURE_NAME = FEATURES.register("snow_arm", () -> registerFeatures(new FeatureClassHere(YourConfigType::deserialize)));
+
+	public static final GallifreyanTreeFeature TREES = new GallifreyanTreeFeature(NoFeatureConfig::deserialize);
+
+
+	@SubscribeEvent
+	public static void registerFeature(RegistryEvent.Register<Feature<?>> event) {
+		event.getRegistry().registerAll(TREES.setRegistryName(MODID, "trees"));
 	}
-	
+
+
+	private static <C extends IFeatureConfig, F extends Feature<C>> F registerFeatures(F value) {
+		return value;
+	}
+
 	@SubscribeEvent
 	public static void regBlockItems(RegistryEvent.Register<Item> e) {
 		genBlockItems(Blocks.BLOCKS.getEntries());

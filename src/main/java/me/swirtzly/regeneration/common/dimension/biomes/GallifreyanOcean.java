@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.dimension.biomes;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.GenerationStage;
@@ -11,7 +12,7 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 
 public final class GallifreyanOcean extends Biome {
     public GallifreyanOcean() {
-        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(Biome.RainType.RAIN).category(Biome.Category.OCEAN).depth(-1.0F).scale(0.1F).temperature(0.5F).downfall(0.5F).waterColor(4159204).waterFogColor(329011).parent(null));
+        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(Biome.RainType.RAIN).category(Biome.Category.OCEAN).depth(-1.0F).scale(0.1F).temperature(0.5F).downfall(0.5F).waterColor(0xEB623D).waterFogColor(0xEB623D).parent(null));
         DefaultBiomeFeatures.addOceanCarvers(this);
         DefaultBiomeFeatures.addStructures(this);
         DefaultBiomeFeatures.addLakes(this);
@@ -30,4 +31,15 @@ public final class GallifreyanOcean extends Biome {
         DefaultBiomeFeatures.func_222287_ah(this);
         DefaultBiomeFeatures.addFreezeTopLayer(this);
     }
+
+    @Override
+    public int getGrassColor(BlockPos pos) {
+        return 0xE74C3C;
+    }
+
+    @Override
+    public int getFoliageColor(BlockPos pos) {
+        return 0xEAEDED;
+    }
+
 }
