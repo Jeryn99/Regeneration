@@ -9,6 +9,7 @@ import me.swirtzly.regeneration.common.dimension.DimSingle;
 import me.swirtzly.regeneration.common.dimension.GallifreyChunkGenerator;
 import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
 import me.swirtzly.regeneration.common.dimension.biomes.*;
+import me.swirtzly.regeneration.common.dimension.features.FeatureSpikeyBoys;
 import me.swirtzly.regeneration.common.dimension.features.GallifreyanTreeFeature;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.item.ComponentItem;
@@ -177,11 +178,13 @@ public class RegenObjects {
 	}
 
 	public static final GallifreyanTreeFeature TREES = new GallifreyanTreeFeature(NoFeatureConfig::deserialize);
+    public static final FeatureSpikeyBoys SPIKEYS = new FeatureSpikeyBoys(NoFeatureConfig::deserialize);
 
 
 	@SubscribeEvent
 	public static void registerFeature(RegistryEvent.Register<Feature<?>> event) {
 		event.getRegistry().registerAll(TREES.setRegistryName(MODID, "trees"));
+        event.getRegistry().registerAll(SPIKEYS.setRegistryName(MODID, "spikeys"));
 	}
 
 

@@ -27,23 +27,21 @@ public class GallifreyanTreeFeature extends Feature<NoFeatureConfig> {
         super(configFactoryIn);
     }
 
+    private ResourceLocation[] TREE_LIST = new ResourceLocation[]{
+            createTreeLocation("gal_normal_large"),
+            createTreeLocation("gal_pine_normal"),
+            createTreeLocation("gal_skinny_large"),
+            createTreeLocation("gal_skinny_lollypop"),
+            createTreeLocation("gal_small_lollypop"),
+            createTreeLocation("gal_tree_pine_large")
+    };
+
     public static ResourceLocation createTreeLocation(String name) {
         return new ResourceLocation(RegenerationMod.MODID, "regeneration/structures/gallifrey/trees/" + name);
     }
 
     @Override
     public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-
-        ResourceLocation[] TREE_LIST = new ResourceLocation[]{
-                createTreeLocation("gal_normal_large"),
-                createTreeLocation("gal_pine_normal"),
-                createTreeLocation("gal_skinny_large"),
-                createTreeLocation("gal_skinny_lollypop"),
-                createTreeLocation("gal_small_lollypop"),
-                createTreeLocation("gal_tree_pine_large")
-
-        };
-
         if (worldIn instanceof WorldGenRegion) {
             WorldGenRegion reg = (WorldGenRegion) worldIn;
             Template temp = reg.getWorld().getStructureTemplateManager().getTemplate(TREE_LIST[rand.nextInt(TREE_LIST.length)]);

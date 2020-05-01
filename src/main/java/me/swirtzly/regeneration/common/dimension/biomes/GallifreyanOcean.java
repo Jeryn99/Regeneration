@@ -10,9 +10,11 @@ import net.minecraft.world.gen.placement.IPlacementConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 
+import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
+
 public final class GallifreyanOcean extends Biome {
     public GallifreyanOcean() {
-        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(Biome.RainType.RAIN).category(Biome.Category.OCEAN).depth(-1.0F).scale(0.1F).temperature(0.5F).downfall(0.5F).waterColor(0xEB623D).waterFogColor(0xEB623D).parent(null));
+        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(Biome.RainType.RAIN).category(Biome.Category.OCEAN).depth(-1.0F).scale(0.1F).temperature(0.5F).downfall(0.5F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent(null));
         DefaultBiomeFeatures.addOceanCarvers(this);
         DefaultBiomeFeatures.addStructures(this);
         DefaultBiomeFeatures.addLakes(this);
@@ -34,12 +36,12 @@ public final class GallifreyanOcean extends Biome {
 
     @Override
     public int getGrassColor(BlockPos pos) {
-        return 0xE74C3C;
+        return RED_GRASS_COLOR;
     }
 
     @Override
     public int getFoliageColor(BlockPos pos) {
-        return 0xEAEDED;
+        return GREY_LEAVES_COLOR;
     }
 
 }

@@ -9,6 +9,8 @@ import net.minecraft.world.gen.feature.structure.MineshaftConfig;
 import net.minecraft.world.gen.feature.structure.MineshaftStructure;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 
+import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
+
 /**
  * Created by Swirtzly
  * on 28/04/2020 @ 11:41
@@ -16,7 +18,7 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 public class GallifreyanMountainsBiome extends Biome {
 
     public GallifreyanMountainsBiome() {
-        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.MOUNTAIN, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(Biome.RainType.RAIN).category(Biome.Category.EXTREME_HILLS).depth(1.0F).scale(0.5F).temperature(0.2F).downfall(0.3F).waterColor(0xEB623D).waterFogColor(0xEB623D).parent(null));
+        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.MOUNTAIN, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(Biome.RainType.RAIN).category(Biome.Category.EXTREME_HILLS).depth(1.0F).scale(0.5F).temperature(0.2F).downfall(0.3F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent(null));
         this.addStructure(Feature.MINESHAFT, new MineshaftConfig(0.004D, MineshaftStructure.Type.NORMAL));
         this.addStructure(Feature.STRONGHOLD, IFeatureConfig.NO_FEATURE_CONFIG);
         DefaultBiomeFeatures.addCarvers(this);
@@ -39,12 +41,12 @@ public class GallifreyanMountainsBiome extends Biome {
 
     @Override
     public int getGrassColor(BlockPos pos) {
-        return 0xE74C3C;
+        return RED_GRASS_COLOR;
     }
 
     @Override
     public int getFoliageColor(BlockPos pos) {
-        return 0xEAEDED;
+        return GREY_LEAVES_COLOR;
     }
 
 
