@@ -2,6 +2,7 @@
   "item.regeneration.fob_watch": "Fob Watch",
   "item.regeneration.lindos_vial": "Lindos Vial",
   "item.regeneration.hand": "%s's hand",
+  "argument.regeneration.invalid": "This trait is invalid!",
   "block.regeneration.gal_ore": "Unknown Ore",
   "item.regeneration.gal_ingot": "Unknown Ingot",
   "regeneration.gui.red": "Red ",

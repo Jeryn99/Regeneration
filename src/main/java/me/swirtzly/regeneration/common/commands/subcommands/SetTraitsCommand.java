@@ -6,13 +6,14 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.commands.arguments.TraitsArgumentType;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class SetTraitsCommand implements Command<CommandSource> {
@@ -33,9 +34,17 @@ public class SetTraitsCommand implements Command<CommandSource> {
         String username = context.getArgument("username", String.class);
         ServerPlayerEntity player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByUsername(username);
 
-        //TODO : Do the thing to set the trait
+        if (player == null || trait == null) {
+            return Command.SINGLE_SUCCESS;
+        }
 
-        RegenerationMod.LOG.debug(trait);
+        RegenCap.get(player).ifPresent((data) -> {
+            ResourceLocation oldDna = data.getDnaType();
+            TraitManager.IDna oldTrait = TraitManager.getDnaEntry(oldDna);
+            oldTrait.onRemoved(data);
+            data.setDnaType(trait.getRegistryName());
+            trait.onAdded(data);
+        });
         return Command.SINGLE_SUCCESS;
     }
 }

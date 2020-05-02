@@ -24,7 +24,7 @@ import java.util.Random;
 /**
  * Created by Suffril on 24/01/2019.
  */
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = RegenerationMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TraitManager {
 	
 	public static IDna DNA_ATHLETE = new AthleteTrait();
