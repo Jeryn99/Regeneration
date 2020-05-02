@@ -55,6 +55,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.tardis.mod.blocks.TBlocks;
 
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -77,7 +78,6 @@ public class RegenObjects {
 	public static class Blocks {
 		public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, RegenerationMod.MODID);
 		public static final DeferredRegister<Item> BLOCK_ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, RegenerationMod.MODID);
-		
 		public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
         public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
 		public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
