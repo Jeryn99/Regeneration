@@ -59,7 +59,7 @@ public class TardisCompat {
         World world = event.getEntityLiving().world;
         if (!(event.getEntityLiving() instanceof PlayerEntity)) return;
         if (world.dimension.getDimension() instanceof TardisDimension) {
-            ConsoleTile console = TardisHelper.getConsole(world.dimension.getType());
+            ConsoleTile console = TardisHelper.getConsole(world.getServer(),world.dimension.getType());
             if (console == null || world.isRemote) return;
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
 
