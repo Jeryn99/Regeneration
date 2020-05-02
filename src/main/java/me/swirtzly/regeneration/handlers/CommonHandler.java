@@ -208,18 +208,6 @@ public class CommonHandler {
 		}
 	}
 
-	@SubscribeEvent
-	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent e) {
-	/*	PlayerEntity player = e.getPlayer();
-		if (!player.world.isRemote) {
-			StringTextComponent url = new StringTextComponent(TextFormatting.AQUA + TextFormatting.BOLD.toString() + "LINK");
-			url.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://gist.github.com/Swirtzly/d2115c297853e00079ba958c29cbb88c"));
-			url.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Open URL")));
-
-			player.sendMessage(new StringTextComponent(TextFormatting.GOLD + "[Regeneration] : Important, please read: ").appendSibling(url));
-		}*/
-	}
-
     @SubscribeEvent
     public void onCut(PlayerInteractEvent.RightClickItem event) {
         if (PlayerUtil.isSharp(event.getItemStack())) {

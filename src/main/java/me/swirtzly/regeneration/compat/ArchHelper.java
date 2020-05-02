@@ -31,12 +31,4 @@ public class ArchHelper {
         return 0;
     }
 
-    @SubscribeEvent
-    public static void onItemToolTip(ItemTooltipEvent event) {
-        List<ITextComponent> tooltip = event.getToolTip();
-        ItemStack stack = event.getItemStack();
-        if (getRegenerations(stack) > 0) {
-            tooltip.add(new TranslationTextComponent("stored.regens", getRegenerations(stack)));
-        }
-    }
 }

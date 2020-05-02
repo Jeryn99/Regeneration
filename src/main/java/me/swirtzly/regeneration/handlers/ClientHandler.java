@@ -20,12 +20,14 @@ import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -36,11 +38,14 @@ import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static me.swirtzly.regeneration.compat.ArchHelper.getRegenerations;
 import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
 
 /**
@@ -310,6 +315,15 @@ public class ClientHandler {
 
             GlStateManager.popMatrix();
         });
+    }
+
+    @SubscribeEvent
+    public static void onItemToolTip(ItemTooltipEvent event) {
+        List<ITextComponent> tooltip = event.getToolTip();
+        ItemStack stack = event.getItemStack();
+        if (getRegenerations(stack) > 0) {
+            tooltip.add(new TranslationTextComponent("stored.regens", getRegenerations(stack)));
+        }
     }
 	
 }
