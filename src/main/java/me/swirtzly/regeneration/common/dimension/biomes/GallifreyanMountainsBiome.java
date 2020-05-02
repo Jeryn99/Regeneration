@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.dimension.biomes;
 
+import me.swirtzly.regeneration.common.dimension.features.BiomeHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
@@ -28,15 +29,15 @@ public class GallifreyanMountainsBiome extends Biome {
         DefaultBiomeFeatures.addStoneVariants(this);
         DefaultBiomeFeatures.addOres(this);
         DefaultBiomeFeatures.addSedimentDisks(this);
-        DefaultBiomeFeatures.func_222343_A(this);
         DefaultBiomeFeatures.addDefaultFlowers(this);
-        DefaultBiomeFeatures.func_222348_W(this);
+        DefaultBiomeFeatures.func_222348_W(this); //Grass
         DefaultBiomeFeatures.addMushrooms(this);
         DefaultBiomeFeatures.addReedsAndPumpkins(this);
         DefaultBiomeFeatures.addSprings(this);
         DefaultBiomeFeatures.addExtraEmeraldOre(this);
         DefaultBiomeFeatures.addInfestedStone(this);
         DefaultBiomeFeatures.addFreezeTopLayer(this);
+        BiomeHelper.addGallifreyTress(this);
     }
 
     @Override

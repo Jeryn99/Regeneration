@@ -26,7 +26,7 @@ public class FeatureSpikeyBoys extends Feature<NoFeatureConfig> {
             pos = pos.down();
         }
 
-        if (worldIn.getBlockState(pos).getBlock() != Blocks.GRASS_BLOCK) {
+        if (!worldIn.getBlockState(pos).getBlock().getRegistryName().toString().contains("sand")) {
             return false;
         } else {
             pos = pos.up(rand.nextInt(4));
@@ -48,14 +48,14 @@ public class FeatureSpikeyBoys extends Feature<NoFeatureConfig> {
                         if ((i1 == 0 && j1 == 0 || !(f1 * f1 + f2 * f2 > f * f)) && (i1 != -l && i1 != l && j1 != -l && j1 != l || !(rand.nextFloat() > 0.75F))) {
                             BlockState blockstate = worldIn.getBlockState(pos.add(i1, k, j1));
                             Block block = blockstate.getBlock();
-                            if (blockstate.isAir(worldIn, pos.add(i1, k, j1)) || Block.isDirt(block) || block == Blocks.SNOW_BLOCK || block == Blocks.ICE) {
+                            if (blockstate.isAir(worldIn, pos.add(i1, k, j1)) || Block.isDirt(block) || block == Blocks.SNOW_BLOCK || block == Blocks.ICE || block.getRegistryName().toString().contains("sand")) {
                                 this.setBlockState(worldIn, pos.add(i1, k, j1), Blocks.BLACK_CONCRETE.getDefaultState());
                             }
 
                             if (k != 0 && l > 1) {
                                 blockstate = worldIn.getBlockState(pos.add(i1, -k, j1));
                                 block = blockstate.getBlock();
-                                if (blockstate.isAir(worldIn, pos.add(i1, -k, j1)) || Block.isDirt(block) || block == Blocks.GRASS_BLOCK || block == Blocks.ICE) {
+                                if (blockstate.isAir(worldIn, pos.add(i1, -k, j1)) || Block.isDirt(block) || block == Blocks.GRASS_BLOCK || block == Blocks.ICE || block.getRegistryName().toString().contains("sand")) {
                                     this.setBlockState(worldIn, pos.add(i1, -k, j1), Blocks.BLACK_CONCRETE.getDefaultState());
                                 }
                             }
