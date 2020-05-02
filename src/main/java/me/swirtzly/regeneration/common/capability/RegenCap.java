@@ -51,7 +51,7 @@ public class RegenCap implements IRegen {
     private final RegenStateManager stateManager;
 	public String deathSource = "";
 	private boolean didSetup = false, traitActive = true;
-	private int regenerationsLeft;
+	private int regenerationsLeft = 0;
 	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
 	private TypeManager.Type regenType = TypeManager.Type.FIERY;
 

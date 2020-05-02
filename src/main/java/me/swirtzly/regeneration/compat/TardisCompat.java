@@ -17,6 +17,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.tardis.mod.dimensions.TardisDimension;
 import net.tardis.mod.helper.TardisHelper;
+import net.tardis.mod.items.TItems;
+import net.tardis.mod.recipe.Recipes;
+import net.tardis.mod.recipe.WeldRecipe;
 import net.tardis.mod.registries.TardisRegistries;
 import net.tardis.mod.subsystem.Subsystem;
 import net.tardis.mod.subsystem.SubsystemEntry;
@@ -35,6 +38,7 @@ public class TardisCompat {
     public static void on() {
         PROTOCOL_REGISTRY.register("arch_protocol", new ArchProtocol());
         ARCH_SUBSYSTEM = register("arch", new SubsystemEntry<>(ArchSubSystem::new, RegenObjects.Items.ARCH_PART.get()));
+        Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), false, RegenObjects.Items.HAND.get(), TItems.CIRCUITS));
     }
 
     public static <T extends Subsystem> SubsystemEntry<T> register(ResourceLocation key, SubsystemEntry<T> system) {
@@ -66,7 +70,6 @@ public class TardisCompat {
             ConsoleTile console = TardisHelper.getConsole(minecraftServer, world.dimension.getType());
             if (console == null || world.isRemote) return;
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-
             RegenCap.get(playerEntity).ifPresent((data) -> {
                 //Regenerating
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {

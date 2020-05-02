@@ -15,7 +15,7 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 public class RegenDebugCommand {
 
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-		dispatcher.register(Commands.literal("regen").requires(s -> s.hasPermissionLevel(ServerLifecycleHooks.getCurrentServer().getOpPermissionLevel())).then(Commands.literal("glow").executes(ctx -> glow(ctx.getSource()))).then(Commands.literal("fast-forward").executes(ctx -> fastForward(ctx.getSource()))).then(Commands.literal("set-regens").then(Commands.argument("amount", IntegerArgumentType.integer(1)) // minimal regen to set is 1
+		dispatcher.register(Commands.literal("regen").requires(s -> s.hasPermissionLevel(ServerLifecycleHooks.getCurrentServer().getOpPermissionLevel())).then(Commands.literal("glow").executes(ctx -> glow(ctx.getSource()))).then(Commands.literal("fast-forward").executes(ctx -> fastForward(ctx.getSource()))).then(Commands.literal("set-regens").then(Commands.argument("amount", IntegerArgumentType.integer(0)) // minimal regen to set is 1
                 .executes(ctx -> setRegens(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "amount"))))));
     }
 	
@@ -44,9 +44,10 @@ public class RegenDebugCommand {
 		return Command.SINGLE_SUCCESS;
 	}
 
-    private static int setRegens(CommandSource source, int amount) {
+	//TODO This doesn't seem to work
+	private static int setRegens(CommandSource source, int amount) {
 		try {
-            RegenCap.get(source.asPlayer()).ifPresent((cap) -> cap.setRegenerationsLeft(amount));
+			RegenCap.get(source.asPlayer()).ifPresent((cap) -> cap.setRegenerationsLeft(amount));
 		} catch (CommandSyntaxException e) {
 			e.printStackTrace();
 		}

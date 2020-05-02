@@ -13,7 +13,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -107,6 +106,7 @@ public class ArchBlock extends DirectionalBlock {
                 ArchHelper.storeRegenerations(mainHandItem, regensLeftInHand - used);
                 PlayerHelper.sendMessageToPlayer(player, new TranslationTextComponent("regeneration.messages.item_taken_regens", used, new TranslationTextComponent(mainHandItem.getTranslationKey())), true);
                 worldIn.removeBlock(pos, false);
+                cap.receiveRegenerations(used);
                 cap.synchronise();
                 return true;
             }
