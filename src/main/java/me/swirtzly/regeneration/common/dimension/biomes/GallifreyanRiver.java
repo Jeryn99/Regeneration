@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.dimension.biomes;
 
+import me.swirtzly.regeneration.common.dimension.features.BiomeHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
@@ -32,6 +33,8 @@ public class GallifreyanRiver extends Biome {
             DefaultBiomeFeatures.addSprings(this);
             this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, createDecoratedFeature(Feature.SEAGRASS, new SeaGrassConfig(48, 0.4D), Placement.TOP_SOLID_HEIGHTMAP, IPlacementConfig.NO_PLACEMENT_CONFIG));
             DefaultBiomeFeatures.addFreezeTopLayer(this);
+        BiomeHelper.addGallifreyOres(this);
+
     }
 
     @Override

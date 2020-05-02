@@ -21,6 +21,7 @@ public class FeatureSpikeyBoys extends Feature<NoFeatureConfig> {
         super(p_i51493_1_);
     }
 
+    @Override
     public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
         while (worldIn.isAirBlock(pos) && pos.getY() > 2) {
             pos = pos.down();

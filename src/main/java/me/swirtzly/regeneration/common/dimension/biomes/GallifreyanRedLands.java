@@ -29,6 +29,8 @@ public class GallifreyanRedLands extends Biome {
         DefaultBiomeFeatures.addTaigaRocks(this);
         BiomeHelper.restoreVanillaStuff(this);
         BiomeHelper.addGallifreyTress(this);
+        BiomeHelper.addGallifreyOres(this);
+
 
     }
 

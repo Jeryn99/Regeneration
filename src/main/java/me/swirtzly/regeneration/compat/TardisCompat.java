@@ -7,12 +7,14 @@ import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.tardis.mod.dimensions.TardisDimension;
 import net.tardis.mod.helper.TardisHelper;
 import net.tardis.mod.registries.TardisRegistries;
@@ -57,9 +59,11 @@ public class TardisCompat {
     @SubscribeEvent
     public void onLive(LivingEvent.LivingUpdateEvent event) {
         World world = event.getEntityLiving().world;
+        if (world.isRemote) return;
         if (!(event.getEntityLiving() instanceof PlayerEntity)) return;
         if (world.dimension.getDimension() instanceof TardisDimension) {
-            ConsoleTile console = TardisHelper.getConsole(world.dimension.getType());
+            MinecraftServer minecraftServer = ServerLifecycleHooks.getCurrentServer();
+            ConsoleTile console = TardisHelper.getConsole(minecraftServer, world.dimension.getType());
             if (console == null || world.isRemote) return;
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
 

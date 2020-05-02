@@ -35,6 +35,7 @@ public class GallifrayanWastelands extends Biome {
         DefaultBiomeFeatures.addDeadBushes(this);
         DefaultBiomeFeatures.addFossils(this);
         BiomeHelper.addBlackSpikes(this);
+        BiomeHelper.addGallifreyOres(this);
     }
 
     @Override

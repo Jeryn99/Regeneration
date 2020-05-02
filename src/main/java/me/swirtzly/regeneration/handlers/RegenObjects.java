@@ -12,14 +12,12 @@ import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.dimension.features.FeatureSpikeyBoys;
 import me.swirtzly.regeneration.common.dimension.features.GallifreyanTreeFeature;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
-import me.swirtzly.regeneration.common.item.ComponentItem;
-import me.swirtzly.regeneration.common.item.FobWatchItem;
-import me.swirtzly.regeneration.common.item.HandItem;
-import me.swirtzly.regeneration.common.item.ItemGroups;
+import me.swirtzly.regeneration.common.item.*;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
+import net.minecraft.block.OreBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -82,6 +80,7 @@ public class RegenObjects {
 		
 		public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
         public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
+		public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
 	}
 	public static class Items {
 		public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, RegenerationMod.MODID);
@@ -89,6 +88,7 @@ public class RegenObjects {
 		public static final RegistryObject<Item> FOB_WATCH = ITEMS.register("fob_watch", FobWatchItem::new);
 		public static final RegistryObject<Item> HAND = ITEMS.register("hand", HandItem::new);
 		public static final RegistryObject<Item> ARCH_PART = ITEMS.register("arch_part", ComponentItem::new);
+		public static final RegistryObject<Item> GAL_INGOT = ITEMS.register("gal_ingot", IngotItem::new);
 	}
 	
 
