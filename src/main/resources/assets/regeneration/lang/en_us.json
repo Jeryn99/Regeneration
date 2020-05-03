@@ -1,5 +1,6 @@
 {
   "item.regeneration.fob_watch": "Fob Watch",
+  "entity.regeneration.timelord": "Timelord",
   "item.regeneration.lindos_vial": "Lindos Vial",
   "item.regeneration.hand": "%s's hand",
   "argument.regeneration.invalid": "This trait is invalid!",

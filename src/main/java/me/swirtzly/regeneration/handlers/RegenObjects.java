@@ -12,6 +12,7 @@ import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.dimension.features.FeatureSpikeyBoys;
 import me.swirtzly.regeneration.common.dimension.features.GallifreyanTreeFeature;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
+import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.item.*;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
@@ -55,7 +56,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.tardis.mod.blocks.TBlocks;
 
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -117,6 +117,7 @@ public class RegenObjects {
 	public static class EntityEntries {
 		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, RegenerationMod.MODID);
 		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
+        public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
 	}
 
 	public static class Tiles {
