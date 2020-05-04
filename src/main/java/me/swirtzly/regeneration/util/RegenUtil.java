@@ -65,8 +65,8 @@ public class RegenUtil {
 			}
 		}
 	}
-	
-	public static void regenerationExplosion(PlayerEntity player) {
+
+    public static void regenerationExplosion(LivingEntity player) {
 		explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
 		explodeKill(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
 	}

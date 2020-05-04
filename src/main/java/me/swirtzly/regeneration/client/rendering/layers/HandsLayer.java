@@ -4,16 +4,15 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.HandSide;
 
-public class HandsLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> {
+public class HandsLayer extends LayerRenderer {
 
     private final IEntityRenderer livingEntityRenderer;
 
@@ -23,9 +22,9 @@ public class HandsLayer extends LayerRenderer<AbstractClientPlayerEntity, Player
 	}
 	
 	@Override
-	public void render(AbstractClientPlayerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public void render(Entity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		GlStateManager.pushMatrix();
-
+		LivingEntity entitylivingbaseIn = (LivingEntity) entity;
         RegenCap.get(entitylivingbaseIn).ifPresent((data) -> {
 			if (this.livingEntityRenderer.getEntityModel().isChild) {
 				GlStateManager.translatef(0.0F, 0.75F, 0.0F);
@@ -44,8 +43,8 @@ public class HandsLayer extends LayerRenderer<AbstractClientPlayerEntity, Player
 		
 		GlStateManager.popMatrix();
 	}
-	
-	private void renderHand(PlayerEntity player, HandSide handSide, EnumHandRenderType type) {
+
+	private void renderHand(LivingEntity player, HandSide handSide, EnumHandRenderType type) {
 		GlStateManager.pushMatrix();
 
         RegenCap.get(player).ifPresent((data) -> {

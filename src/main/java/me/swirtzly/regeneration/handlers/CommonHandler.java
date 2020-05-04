@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
@@ -98,17 +99,17 @@ public class CommonHandler {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onHurt(LivingHurtEvent event) {
 		Entity trueSource = event.getSource().getTrueSource();
-		
+
 		if (trueSource instanceof PlayerEntity && event.getEntityLiving() instanceof MobEntity) {
 			PlayerEntity player = (PlayerEntity) trueSource;
 			RegenCap.get(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
-			return;
+			//return;
 		}
 
-        if (!(event.getEntity() instanceof PlayerEntity) || event.getSource() == RegenObjects.REGEN_DMG_CRITICAL || event.getSource() == RegenObjects.REGEN_DMG_KILLED)
+		if (event.getSource() == RegenObjects.REGEN_DMG_CRITICAL || event.getSource() == RegenObjects.REGEN_DMG_KILLED)
             return;
-		
-		PlayerEntity player = (PlayerEntity) event.getEntity();
+
+		LivingEntity player = event.getEntityLiving();
 		RegenCap.get(player).ifPresent((cap) -> {
 
             cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
@@ -152,10 +153,9 @@ public class CommonHandler {
 	
 	@SubscribeEvent
 	public void onKnockback(LivingKnockBackEvent event) {
-		if (event.getEntityLiving() instanceof PlayerEntity) {
-			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-
-            RegenCap.get(player).ifPresent((data) -> {
+		if (event.getEntityLiving() instanceof PlayerEntity || event.getEntityLiving() instanceof TimelordEntity) {
+			LivingEntity livingEntity = event.getEntityLiving();
+			RegenCap.get(livingEntity).ifPresent((data) -> {
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 					event.setCanceled(true);
 				}
@@ -165,9 +165,9 @@ public class CommonHandler {
 
     @SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		if (event.getObject() instanceof PlayerEntity) {
+		if (event.getObject() instanceof PlayerEntity || event.getObject() instanceof TimelordEntity) {
 			event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
-				final RegenCap regen = new RegenCap((PlayerEntity) event.getObject());
+				final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
 				final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
 
                 @Nonnull

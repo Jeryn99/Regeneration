@@ -2,33 +2,32 @@ package me.swirtzly.regeneration.network.messages;
 
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public class SyncDataMessage {
-	
-	private UUID player;
-	
-	public SyncDataMessage(UUID player) {
+
+	private Entity player;
+
+	public SyncDataMessage(Entity player) {
 		this.player = player;
 	}
 	
 	public static void encode(SyncDataMessage message, PacketBuffer packetBuffer) {
-		packetBuffer.writeUniqueId(message.player);
+		packetBuffer.writeInt(message.player.getEntityId());
 	}
 	
 	public static SyncDataMessage decode(PacketBuffer buffer) {
-		return new SyncDataMessage(buffer.readUniqueId());
+		return new SyncDataMessage(Minecraft.getInstance().player.world.getEntityByID(buffer.readInt()));
 	}
 	
 	public static class Handler {
 		public static void handle(SyncDataMessage message, Supplier<NetworkEvent.Context> ctx) {
-			PlayerEntity player = ServerLifecycleHooks.getCurrentServer().getWorld(ctx.get().getSender().dimension).getPlayerByUuid(message.player);
+			Entity player = message.player;
             ctx.get().getSender().getServer().deferTask(() -> {
 				if (player != null) {
                     RegenCap.get(player).ifPresent(IRegen::synchronise);

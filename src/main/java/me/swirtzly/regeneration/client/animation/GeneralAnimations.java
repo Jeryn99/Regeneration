@@ -2,12 +2,12 @@ package me.swirtzly.regeneration.client.animation;
 
 import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -31,24 +31,17 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
 
     @Override
     public void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
-        if (entity instanceof PlayerEntity) {
+        if (entity instanceof PlayerEntity || entity instanceof TimelordEntity) {
 
             RegenCap.get(entity).ifPresent((data) -> {
-                PlayerModel modelPlayer = (PlayerModel) renderer.getEntityModel();
+                BipedModel modelPlayer = (BipedModel) renderer.getEntityModel();
+
                 if (data.hasDroppedHand() && data.getState() == PlayerUtil.RegenState.POST) {
-                    if (data.getCutoffHand() == HandSide.RIGHT) {
-                        modelPlayer.bipedRightArmwear.isHidden = modelPlayer.bipedRightArm.isHidden = true;
-                    } else {
-                        modelPlayer.bipedRightArmwear.isHidden = modelPlayer.bipedRightArm.isHidden = false;
-                    }
-                    if (data.getCutoffHand() == HandSide.LEFT) {
-                        modelPlayer.bipedLeftArmwear.isHidden = modelPlayer.bipedLeftArm.isHidden = true;
-                    } else {
-                        modelPlayer.bipedLeftArmwear.isHidden = modelPlayer.bipedLeftArm.isHidden = false;
-                    }
+                    modelPlayer.bipedRightArm.isHidden = data.getCutoffHand() == HandSide.RIGHT;
+                    modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
                 } else {
-                    modelPlayer.bipedLeftArmwear.isHidden = modelPlayer.bipedLeftArm.isHidden = false;
-                    modelPlayer.bipedRightArmwear.isHidden = modelPlayer.bipedRightArm.isHidden = false;
+                    modelPlayer.bipedLeftArm.isHidden = false;
+                    modelPlayer.bipedRightArm.isHidden = false;
                 }
             });
         }

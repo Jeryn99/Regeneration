@@ -3,23 +3,21 @@ package me.swirtzly.regeneration.common.capability;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
-import me.swirtzly.regeneration.common.misc.PlayerCanRegenEvent;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
  * Created by Sub on 16/09/2018.
  */
 public interface IRegen extends INBTSerializable<CompoundNBT> {
-	
-	PlayerEntity getPlayer();
+
+    LivingEntity getPlayer();
 	
 	int getRegenerationsLeft();
 	
@@ -47,7 +45,7 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	 * Returns if the player is currently <i>able to</i> regenerate
 	 */
 	default boolean canRegenerate() {
-		return (RegenConfig.COMMON.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getPlayer().posY > 0 && !MinecraftForge.EVENT_BUS.post(new PlayerCanRegenEvent(getPlayer()));
+        return (RegenConfig.COMMON.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getPlayer().posY > 0;// && !MinecraftForge.EVENT_BUS.post(new PlayerCanRegenEvent(getPlayer()));
 	}
 	
 	void receiveRegenerations(int amount);

@@ -1,7 +1,9 @@
-package me.swirtzly.regeneration.client.entity;
+package me.swirtzly.regeneration.client.rendering.model;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
@@ -466,6 +468,60 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
             this.right_leg.rotateAngleX = MathHelper.lerp(this.swimAnimation, this.right_leg.rotateAngleX, 0.3F * MathHelper.cos(limbSwing * 0.33333334F));
         }
 
+
+        RegenCap.get(entityIn).ifPresent((data) -> {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
+                double animationProgress = data.getAnimationTicks();
+                double arm_shake = entityIn.getRNG().nextDouble();
+                float armRotY = (float) animationProgress * 1.5F;
+                float armRotZ = (float) animationProgress * 1.5F;
+                float headRot = (float) animationProgress * 1.5F;
+
+                if (armRotY > 90) {
+                    armRotY = 90;
+                }
+
+                if (armRotZ > 95) {
+                    armRotZ = 95;
+                }
+
+                if (headRot > 45) {
+                    headRot = 45;
+                }
+
+                // ARMS
+                left_arm.rotateAngleY = 0;
+                right_arm.rotateAngleY = 0;
+
+                left_arm.rotateAngleX = 0;
+                right_arm.rotateAngleX = 0;
+
+                left_arm.rotateAngleZ = (float) -Math.toRadians(armRotZ + arm_shake);
+                right_arm.rotateAngleZ = (float) Math.toRadians(armRotZ + arm_shake);
+                left_arm.rotateAngleY = (float) -Math.toRadians(armRotY);
+                right_arm.rotateAngleY = (float) Math.toRadians(armRotY);
+
+                // BODY
+                body.rotateAngleX = 0;
+                body.rotateAngleY = 0;
+                body.rotateAngleZ = 0;
+
+                // LEGS
+                left_leg.rotateAngleY = 0;
+                right_leg.rotateAngleY = 0;
+
+                left_leg.rotateAngleX = 0;
+                right_leg.rotateAngleX = 0;
+
+                left_leg.rotateAngleZ = (float) -Math.toRadians(5);
+                right_leg.rotateAngleZ = (float) Math.toRadians(5);
+
+
+                head.rotateAngleX = (float) Math.toRadians(-headRot);
+                head.rotateAngleY = (float) Math.toRadians(0);
+                head.rotateAngleZ = (float) Math.toRadians(0);
+            }
+        });
     }
 
     private float func_203068_a(float p_203068_1_) {

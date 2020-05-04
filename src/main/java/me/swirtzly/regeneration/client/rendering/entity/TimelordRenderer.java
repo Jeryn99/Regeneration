@@ -1,7 +1,9 @@
 package me.swirtzly.regeneration.client.rendering.entity;
 
 import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.client.entity.TimelordModel;
+import me.swirtzly.regeneration.client.rendering.layers.HandsLayer;
+import me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer;
+import me.swirtzly.regeneration.client.rendering.model.TimelordModel;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -17,6 +19,8 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, TimelordMod
 
     public TimelordRenderer(EntityRendererManager entityRendererManager) {
         super(entityRendererManager, new TimelordModel(), 0.1F);
+        addLayer(new RegenerationLayer(this));
+        addLayer(new HandsLayer(this));
     }
 
     @Nullable

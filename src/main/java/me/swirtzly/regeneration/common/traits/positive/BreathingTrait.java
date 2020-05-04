@@ -4,7 +4,7 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 
@@ -21,7 +21,7 @@ public class BreathingTrait extends TraitManager.IDna {
 	
 	@Override
     public void onUpdate(IRegen cap) {
-		PlayerEntity player = cap.getPlayer();
+        LivingEntity player = cap.getPlayer();
 		if (player.isInWater()) {
 			PlayerUtil.applyPotionIfAbsent(player, Effects.WATER_BREATHING, 100, 1, true, false);
 		}
@@ -34,7 +34,7 @@ public class BreathingTrait extends TraitManager.IDna {
 	
 	@Override
     public void onRemoved(IRegen cap) {
-		PlayerEntity player = cap.getPlayer();
+        LivingEntity player = cap.getPlayer();
 		player.removeActivePotionEffect(Effects.WATER_BREATHING);
 	}
 }

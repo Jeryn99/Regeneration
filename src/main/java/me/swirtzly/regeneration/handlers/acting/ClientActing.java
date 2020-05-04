@@ -8,6 +8,7 @@ import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -54,7 +55,7 @@ class ClientActing implements Acting {
 	@Override
     public void onRegenTrigger(IRegen cap) {
 		if (Minecraft.getInstance().player.getUniqueID().equals(cap.getPlayer().getUniqueID())) {
-            SkinManipulation.sendSkinUpdate(cap.getPlayer().world.rand, cap.getPlayer());
+            SkinManipulation.sendSkinUpdate(cap.getPlayer().world.rand, (PlayerEntity) cap.getPlayer());
 		}
 	}
 	

@@ -9,6 +9,7 @@ import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.PlaySFXMessage;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +39,7 @@ class CommonActing implements Acting {
 	
 	@Override
     public void onRegenTick(IRegen cap) {
-		PlayerEntity player = cap.getPlayer();
+		LivingEntity player = cap.getPlayer();
 		float stateProgress = (float) cap.getStateManager().getStateProgress();
 		
 		switch (cap.getState()) {
@@ -86,7 +87,7 @@ class CommonActing implements Acting {
 
     @Override
     public void onEnterGrace(IRegen cap) {
-		PlayerEntity player = cap.getPlayer();
+		LivingEntity player = cap.getPlayer();
 		RegenUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
 		
 		// Reduce number of hearts, but compensate with absorption
@@ -109,9 +110,11 @@ class CommonActing implements Acting {
 	
 	@Override
     public void onGoCritical(IRegen cap) {
-		
-		TriggerManager.CRITICAL.trigger((ServerPlayerEntity) cap.getPlayer());
-		
+
+		if (cap.getPlayer() instanceof ServerPlayerEntity) {
+			TriggerManager.CRITICAL.trigger((ServerPlayerEntity) cap.getPlayer());
+		}
+
 		if (!cap.getPlayer().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
 			cap.getPlayer().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
 		}
@@ -119,7 +122,7 @@ class CommonActing implements Acting {
 	
 	@Override
     public void onRegenFinish(IRegen cap) {
-		PlayerEntity player = cap.getPlayer();
+		LivingEntity player = cap.getPlayer();
 		TriggerManager.FIRST_REGENERATION.trigger((ServerPlayerEntity) cap.getPlayer());
 		player.addPotionEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
 		player.setHealth(player.getMaxHealth());
@@ -140,7 +143,7 @@ class CommonActing implements Acting {
 	
 	@Override
     public void onRegenTrigger(IRegen cap) {
-		PlayerEntity player = cap.getPlayer();
+		LivingEntity player = cap.getPlayer();
 		NetworkDispatcher.sendPacketToAll(new PlaySFXMessage(getRandomSound(player.world.rand).getRegistryName(), player.getUniqueID()));
 		player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
 		player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
@@ -152,7 +155,10 @@ class CommonActing implements Acting {
 		player.clearActivePotions();
 		player.stopRiding();
 
-        if (RegenConfig.COMMON.resetHunger.get()) player.getFoodStats().setFoodLevel(20);
+		if (player instanceof PlayerEntity) {
+			PlayerEntity playerEntity = (PlayerEntity) player;
+			if (RegenConfig.COMMON.resetHunger.get()) playerEntity.getFoodStats().setFoodLevel(20);
+		}
 
         if (RegenConfig.COMMON.resetOxygen.get()) player.setAir(300);
 		

@@ -46,8 +46,8 @@ public class RegenCap implements IRegen {
     @CapabilityInject(IRegen.class)
     public static final Capability<IRegen> CAPABILITY = null;
 	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
-	
-	private final PlayerEntity player;
+
+	private final LivingEntity player;
     private final RegenStateManager stateManager;
 	public String deathSource = "";
 	private boolean didSetup = false, traitActive = true;
@@ -79,7 +79,7 @@ public class RegenCap implements IRegen {
 		this.stateManager = null;
 	}
 
-    public RegenCap(PlayerEntity player) {
+	public RegenCap(LivingEntity player) {
 		this.player = player;
 		if (!player.world.isRemote)
             this.stateManager = new RegenStateManager();
@@ -95,7 +95,7 @@ public class RegenCap implements IRegen {
 	@Override
 	public void tick() {
 		if (!didSetup && player.world.isRemote) {
-			NetworkDispatcher.INSTANCE.sendToServer(new SyncDataMessage(player.getUniqueID()));
+			NetworkDispatcher.INSTANCE.sendToServer(new SyncDataMessage(player));
 			didSetup = true;
 		}
 
@@ -111,7 +111,8 @@ public class RegenCap implements IRegen {
 			}
 		}
 
-        if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
+		// if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
+		if (false) {
 			ticksAnimating = 0;
 		} else {
 			ticksAnimating++;
@@ -139,7 +140,8 @@ public class RegenCap implements IRegen {
 		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
 		CompoundNBT nbt = serializeNBT();
 		nbt.remove("stateManager");
-		NetworkDispatcher.sendPacketToAll(new SyncClientPlayerMessage(player.getUniqueID(), nbt));
+		nbt.putInt("ticks_animating", ticksAnimating);
+		NetworkDispatcher.sendPacketToAll(new SyncClientPlayerMessage(player, nbt));
 	}
 	
 	@Override
@@ -261,7 +263,7 @@ public class RegenCap implements IRegen {
 	}
 	
 	@Override
-	public PlayerEntity getPlayer() {
+	public LivingEntity getPlayer() {
 		return player;
 	}
 	
@@ -543,7 +545,7 @@ public class RegenCap implements IRegen {
                 ActingForwarder.onEnterGrace(RegenCap.this);
 				return true;
 
-            } else if (state == PlayerUtil.RegenState.GRACE) {
+			} else if (state == PlayerUtil.RegenState.GRACE || state == PlayerUtil.RegenState.GRACE_CRIT) {
 				
 				// We're being forced to regenerate...
 				triggerRegeneration();
@@ -572,7 +574,9 @@ public class RegenCap implements IRegen {
 			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && player.isSneaking()) { // ... check if we're in grace and if the mob needs health
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
-				PlayerUtil.sendMessage(player, new TranslationTextComponent("message.regeneration.healed", entity.getName()), true);
+				if (player instanceof PlayerEntity) {
+					PlayerUtil.sendMessage(player, new TranslationTextComponent("message.regeneration.healed", entity.getName()), true);
+				}
 				event.setAmount(0.0F);
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
 			}
@@ -591,8 +595,10 @@ public class RegenCap implements IRegen {
 				handGlowTimer.cancel();
 				scheduleNextHandGlow();
 				if (!player.world.isRemote) {
-					TriggerManager.CHANGE_REFUSAL.trigger((ServerPlayerEntity) player);
-					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.regen_delayed"), true);
+					if (player instanceof PlayerEntity) {
+						TriggerManager.CHANGE_REFUSAL.trigger((ServerPlayerEntity) player);
+						PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.regen_delayed"), true);
+					}
 				}
                 e.setCanceled(true); // It got annoying in creative to break something
 			}
@@ -662,8 +668,10 @@ public class RegenCap implements IRegen {
 			state = PlayerUtil.RegenState.ALIVE;
 			synchronise();
 			nextTransition = null;
-			PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.post_ended"), true);
-            setDroppedHand(false);
+			if (player instanceof PlayerEntity) {
+				PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.post_ended"), true);
+			}
+			setDroppedHand(false);
 		}
 		
 		private void finishRegeneration() {

@@ -3,7 +3,6 @@ package me.swirtzly.regeneration.handlers.acting;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateStateMessage;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -117,7 +116,7 @@ public class ActingForwarder {
 	 */
     private static void checkAndForward(IRegen cap, RegenEvent event) {
         if (cap.getPlayer().world.isRemote) throw new IllegalStateException("'Posting' \"acting\" `event` from client");
-		NetworkDispatcher.sendTo(new UpdateStateMessage(cap.getPlayer(), event.name()), (ServerPlayerEntity) cap.getPlayer());
+        NetworkDispatcher.sendPacketToAll(new UpdateStateMessage(cap.getPlayer(), event.name()));
 	}
 	
 	public enum RegenEvent {

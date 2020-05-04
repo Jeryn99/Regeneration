@@ -8,12 +8,12 @@ import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.Vec3d;
 
@@ -25,7 +25,7 @@ import static me.swirtzly.regeneration.util.client.RenderUtil.drawGlowingLine;
 /**
  * Created by Sub on 16/09/2018.
  */
-public class RegenerationLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> {
+public class RegenerationLayer extends LayerRenderer {
 
     public static final PlayerModel playerModelSteve = new PlayerModel(0.1F, false);
 
@@ -36,7 +36,7 @@ public class RegenerationLayer extends LayerRenderer<AbstractClientPlayerEntity,
         this.livingEntityRenderer = livingEntityRendererIn;
     }
 
-    public static void renderGlowingHands(PlayerEntity player, IRegen handler, float scale, HandSide side) {
+    public static void renderGlowingHands(LivingEntity player, IRegen handler, float scale, HandSide side) {
 		Vec3d primaryColor = handler.getPrimaryColor();
 		Vec3d secondaryColor = handler.getSecondaryColor();
 		
@@ -57,7 +57,8 @@ public class RegenerationLayer extends LayerRenderer<AbstractClientPlayerEntity,
 	}
 
     @Override
-    public void render(AbstractClientPlayerEntity player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(Entity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        LivingEntity player = (LivingEntity) entity;
         RegenCap.get(player).ifPresent((data) -> {
             RegenType type = TypeManager.getTypeInstance(data.getType());
             if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
