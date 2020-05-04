@@ -116,8 +116,8 @@ public class FobWatchItem extends SolidItem {
                 if (used < 0)
                     RegenerationMod.LOG.warn(player.getName().getUnformattedComponentText() + " Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + stack.getDamage() + ", regens:" + cap.getRegenerationsLeft());
 
-                if (cap.getPlayer() instanceof PlayerEntity) {
-                    PlayerEntity playerEntity = (PlayerEntity) cap.getPlayer();
+				if (cap.getLivingEntity() instanceof PlayerEntity) {
+					PlayerEntity playerEntity = (PlayerEntity) cap.getLivingEntity();
                     if (!playerEntity.isCreative()) {
                         stack.setDamage(stack.getDamage() + used);
                     }

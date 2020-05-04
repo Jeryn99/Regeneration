@@ -111,8 +111,7 @@ public class RegenCap implements IRegen {
 			}
 		}
 
-		// if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
-		if (false) {
+		if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
 			ticksAnimating = 0;
 		} else {
 			ticksAnimating++;
@@ -140,7 +139,7 @@ public class RegenCap implements IRegen {
 		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
 		CompoundNBT nbt = serializeNBT();
 		nbt.remove("stateManager");
-		nbt.putInt("ticks_animating", ticksAnimating);
+		nbt.putInt("ticks_animating", 78);
 		NetworkDispatcher.sendPacketToAll(new SyncClientPlayerMessage(player, nbt));
 	}
 	
@@ -263,7 +262,7 @@ public class RegenCap implements IRegen {
 	}
 	
 	@Override
-	public LivingEntity getPlayer() {
+	public LivingEntity getLivingEntity() {
 		return player;
 	}
 	

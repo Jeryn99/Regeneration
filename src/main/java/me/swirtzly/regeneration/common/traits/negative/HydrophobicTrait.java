@@ -18,7 +18,7 @@ public class HydrophobicTrait extends TraitManager.IDna {
 	
 	@Override
     public void onUpdate(IRegen cap) {
-        LivingEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
 		
 		if (player.isInWater() || player.world.isRaining() && player.world.canBlockSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ))) {
             PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, 300, 2, false, false);

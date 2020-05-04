@@ -32,7 +32,10 @@ public class ToughTrait extends IDna {
 	
 	@Override
     public void onAdded(IRegen cap) {
-        LivingEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
+        registerAttributeIfAbsent(player, SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
+        registerAttributeIfAbsent(player, SharedMonsterAttributes.ATTACK_DAMAGE);
+
         if (!player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(TOUGH_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(TOUGH_MODIFIER);
         }
@@ -44,11 +47,10 @@ public class ToughTrait extends IDna {
 	
 	@Override
     public void onRemoved(IRegen cap) {
-        LivingEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
         if (player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(TOUGH_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(TOUGH_MODIFIER);
         }
-
         if (player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).hasModifier(ATTACK_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(ATTACK_MODIFIER);
 		}

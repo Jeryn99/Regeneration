@@ -30,7 +30,9 @@ public class FieryType implements RegenType<FieryRenderer> {
 		player.extinguish();
 		
 		if (!player.world.isRemote) {
-			PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
+			if (capability.getLivingEntity() instanceof ServerPlayerEntity) {
+				PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
+			}
 		}
 
         if (player.world.isRemote) return;

@@ -95,7 +95,7 @@ public class TardisCompat {
                 //Grace
                 if (data.getState().isGraceful()) {
                     for (TileEntity tileEntity : playerEntity.world.loadedTileEntityList) {
-                        if (playerEntity.getDistanceSq(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()) < 40 && tileEntity instanceof ConsoleTile && data.getPlayer().ticksExisted % 25 == 0) {
+                        if (playerEntity.getDistanceSq(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()) < 40 && tileEntity instanceof ConsoleTile && data.getLivingEntity().ticksExisted % 25 == 0) {
                             tileEntity.getWorld().playSound(null, tileEntity.getPos(), RegenObjects.Sounds.ALARM.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
                         }
                     }

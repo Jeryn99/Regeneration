@@ -24,7 +24,7 @@ public class AthleteTrait extends TraitManager.IDna {
 	
 	@Override
     public void onUpdate(IRegen cap) {
-		LivingEntity player = cap.getPlayer();
+		LivingEntity player = cap.getLivingEntity();
 		if (player.isSprinting()) {
 			onAdded(cap);
 		} else {
@@ -34,7 +34,9 @@ public class AthleteTrait extends TraitManager.IDna {
 	
 	@Override
     public void onAdded(IRegen cap) {
-		LivingEntity player = cap.getPlayer();
+		LivingEntity player = cap.getLivingEntity();
+		registerAttributeIfAbsent(player, SharedMonsterAttributes.MOVEMENT_SPEED);
+		registerAttributeIfAbsent(player, SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
         if (!player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(SPEED_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(SPEED_MODIFIER);
         }
@@ -46,7 +48,7 @@ public class AthleteTrait extends TraitManager.IDna {
 	
 	@Override
     public void onRemoved(IRegen cap) {
-		LivingEntity player = cap.getPlayer();
+		LivingEntity player = cap.getLivingEntity();
         if (player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(SPEED_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SPEED_MODIFIER);
         }

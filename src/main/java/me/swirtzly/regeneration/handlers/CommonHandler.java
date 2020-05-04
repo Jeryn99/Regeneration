@@ -56,10 +56,7 @@ public class CommonHandler {
 
 	@SubscribeEvent
 	public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
-		if (event.getEntityLiving() instanceof PlayerEntity) {
-			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-			RegenCap.get(player).ifPresent(IRegen::tick);
-		}
+		RegenCap.get(event.getEntityLiving()).ifPresent(IRegen::tick);
 	}
 
     @SubscribeEvent

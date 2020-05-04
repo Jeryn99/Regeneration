@@ -120,14 +120,8 @@ public class TimelordEntity extends AbstractVillagerEntity {
 
         RegenCap.get(this).ifPresent((data) -> {
             if (!world.isRemote) {
-
-                if (data.getState() == PlayerUtil.RegenState.GRACE) {
-                    data.getStateManager().fastForward();
-                }
-
                 data.synchronise();
                 setAnimationsTicks(data.getAnimationTicks());
-                System.out.println(data.getAnimationTicks());
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
                     setNoAI(true);
                     setInvulnerable(true);

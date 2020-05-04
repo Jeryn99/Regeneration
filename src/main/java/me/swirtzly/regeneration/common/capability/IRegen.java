@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public interface IRegen extends INBTSerializable<CompoundNBT> {
 
-    LivingEntity getPlayer();
+	LivingEntity getLivingEntity();
 	
 	int getRegenerationsLeft();
 	
@@ -45,7 +45,7 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	 * Returns if the player is currently <i>able to</i> regenerate
 	 */
 	default boolean canRegenerate() {
-        return (RegenConfig.COMMON.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getPlayer().posY > 0;// && !MinecraftForge.EVENT_BUS.post(new PlayerCanRegenEvent(getPlayer()));
+		return (RegenConfig.COMMON.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getLivingEntity().posY > 0;// && !MinecraftForge.EVENT_BUS.post(new PlayerCanRegenEvent(getPlayer()));
 	}
 	
 	void receiveRegenerations(int amount);

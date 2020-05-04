@@ -14,7 +14,7 @@ public class NightVisionTrait extends TraitManager.IDna {
 
     @Override
     public void onUpdate(IRegen cap) {
-        LivingEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
         PlayerUtil.applyPotionIfAbsent(player, Effects.NIGHT_VISION, 1200, 2, true, false);
     }
 
@@ -25,7 +25,7 @@ public class NightVisionTrait extends TraitManager.IDna {
 
     @Override
     public void onRemoved(IRegen cap) {
-        LivingEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
         player.removePotionEffect(Effects.NIGHT_VISION);
     }
 	

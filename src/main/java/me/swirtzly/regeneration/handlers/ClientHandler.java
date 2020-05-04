@@ -96,17 +96,17 @@ public class ClientHandler {
                 UUID clientUUID = Minecraft.getInstance().player.getUniqueID();
                 RegenCap.get(player).ifPresent((data) -> {
                     if (data.areHandsGlowing()) {
-                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.areHandsGlowing(), 0.5F);
+                        ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.areHandsGlowing(), 0.5F);
                     }
 
                     if (data.getState() == REGENERATING) {
-                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.REGENERATION_0.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(REGENERATING), 1.0F);
+                        ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.REGENERATION_0.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(REGENERATING), 1.0F);
                     }
 
                     if (data.getState().isGraceful() && clientUUID == player.getUniqueID()) {
-                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(GRACE_CRIT), 1F);
-                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().isGraceful(), 0.2F);
-                        ClientUtil.playSound(data.getPlayer(), RegenObjects.Sounds.GRACE_HUM.get().getRegistryName(), SoundCategory.AMBIENT, true, () -> data.getState() != GRACE, 1.5F);
+                        ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(GRACE_CRIT), 1F);
+                        ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().isGraceful(), 0.2F);
+                        ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.GRACE_HUM.get().getRegistryName(), SoundCategory.AMBIENT, true, () -> data.getState() != GRACE, 1.5F);
                     }
                 });
             }
@@ -204,7 +204,7 @@ public class ClientHandler {
         RegenCap.get(viewer).ifPresent((data) -> {
             if (data.getState() == GRACE_CRIT) {
                 event.setCanceled(true);
-                float amount = MathHelper.cos(data.getPlayer().ticksExisted * 0.06F) * -0.09F;
+                float amount = MathHelper.cos(data.getLivingEntity().ticksExisted * 0.06F) * -0.09F;
                 event.setDensity(amount);
             }
 

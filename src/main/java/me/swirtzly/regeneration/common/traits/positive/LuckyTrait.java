@@ -22,7 +22,7 @@ public class LuckyTrait extends TraitManager.IDna {
 	
 	@Override
     public void onUpdate(IRegen cap) {
-        LivingEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
         if (!player.getAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.LUCK).applyModifier(LUCKY_MODIFIER);
 		}
@@ -30,7 +30,8 @@ public class LuckyTrait extends TraitManager.IDna {
 	
 	@Override
     public void onAdded(IRegen cap) {
-        LivingEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
+        registerAttributeIfAbsent(player, SharedMonsterAttributes.LUCK);
         if (!player.getAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.LUCK).applyModifier(LUCKY_MODIFIER);
 		}
@@ -38,7 +39,7 @@ public class LuckyTrait extends TraitManager.IDna {
 	
 	@Override
     public void onRemoved(IRegen cap) {
-        LivingEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
         if (player.getAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.LUCK).removeModifier(LUCKY_MODIFIER);
 		}

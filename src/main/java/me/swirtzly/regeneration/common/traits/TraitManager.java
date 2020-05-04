@@ -7,6 +7,8 @@ import me.swirtzly.regeneration.common.traits.negative.HungerTrait;
 import me.swirtzly.regeneration.common.traits.negative.HydrophobicTrait;
 import me.swirtzly.regeneration.common.traits.positive.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.util.DamageSource;
@@ -114,7 +116,7 @@ public class TraitManager {
 
     public static abstract class IDna {
 
-        public ResourceLocation resourceLocation;
+		private ResourceLocation resourceLocation;
         public String localName;
 		public String localDesc;
 
@@ -140,6 +142,12 @@ public class TraitManager {
 		
 		public String getLocalDesc() {
 			return localDesc;
+		}
+
+		public void registerAttributeIfAbsent(LivingEntity livingEntity, IAttribute attributes) {
+			if (livingEntity.getAttributes().getAttributeInstance(attributes) == null) {
+				livingEntity.getAttributes().registerAttribute(attributes);
+			}
 		}
 	}
 	
