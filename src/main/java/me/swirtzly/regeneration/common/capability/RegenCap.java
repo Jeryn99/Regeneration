@@ -100,8 +100,9 @@ public class RegenCap implements IRegen {
 		}
 
 
+
         if (!player.world.isRemote) {
-            if (isSyncingToJar() && ticksAnimating >= 250) {
+			if (isSyncingToJar() && ticksAnimating >= 250) {
                 setSyncingFromJar(false);
                 ticksAnimating = 0;
                 synchronise();

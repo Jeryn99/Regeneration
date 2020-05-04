@@ -4,7 +4,6 @@ import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
@@ -49,11 +48,8 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
 
     @Override
     public void postAnimation(BipedModel modelBiped, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (entity instanceof AbstractClientPlayerEntity) {
-            AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) entity;
-
-            ItemStack stack = player.getHeldItemMainhand();
-            ItemStack offStack = player.getHeldItemOffhand();
+        ItemStack stack = entity.getHeldItemMainhand();
+        ItemStack offStack = entity.getHeldItemOffhand();
 
             // ==============FOB WATCH & JAR START==============
             boolean isOpen;
@@ -77,7 +73,7 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
             }
             // ==============FOB WATCH END==============
 
-            RegenCap.get(player).ifPresent((data) -> {
+        RegenCap.get(entity).ifPresent((data) -> {
                 // JAR SYNCING
                 if (data.isSyncingToJar()) {
                     makeZombieArms(modelBiped);
@@ -85,8 +81,6 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
                     copyAnglesToWear(modelBiped);
                 }
             });
-
-        }
     }
 
     @Override

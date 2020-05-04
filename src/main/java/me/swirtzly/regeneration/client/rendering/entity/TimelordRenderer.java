@@ -26,6 +26,6 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, TimelordMod
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(TimelordEntity entity) {
-        return new ResourceLocation(RegenerationMod.MODID, "textures/entity/timelord.png");
+        return new ResourceLocation(RegenerationMod.MODID, "textures/entity/timelords/timelord/timelord_" + entity.getSkin() + ".png");
     }
 }

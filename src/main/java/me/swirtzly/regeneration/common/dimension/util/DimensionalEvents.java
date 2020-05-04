@@ -4,7 +4,6 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,8 +25,8 @@ public class DimensionalEvents {
             if (!data.canRegenerate()) {
                 if (!living.world.isRemote) {
                     if (living.world.getBiome(living.getPosition()) == RegenObjects.Biomes.WASTELANDS.get() && living.isInWater()) {
-                        PlayerUtil.applyPotionIfAbsent((PlayerEntity) living, Effects.NAUSEA, 200, 1, false, false);
-                        PlayerUtil.applyPotionIfAbsent((PlayerEntity) living, Effects.POISON, 100, 1, false, false);
+                        PlayerUtil.applyPotionIfAbsent(living, Effects.NAUSEA, 200, 1, false, false);
+                        PlayerUtil.applyPotionIfAbsent(living, Effects.POISON, 100, 1, false, false);
                     }
                 }
             }

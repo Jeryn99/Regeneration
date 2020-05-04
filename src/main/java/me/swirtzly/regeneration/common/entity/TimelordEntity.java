@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
 import me.swirtzly.regeneration.common.trades.Trades;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
@@ -18,8 +19,12 @@ import net.minecraft.item.Items;
 import net.minecraft.item.MerchantOffer;
 import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -34,12 +39,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class TimelordEntity extends AbstractVillagerEntity {
 
+    public static final DataParameter<Integer> SKIN = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.VARINT);
+
+
     public TimelordEntity(World world) {
         this(RegenObjects.EntityEntries.TIMELORD.get(), world);
     }
 
     public TimelordEntity(EntityType<TimelordEntity> entityEntityType, World world) {
         super(entityEntityType, world);
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        getDataManager().register(SKIN, rand.nextInt(5));
     }
 
     @Override
@@ -85,9 +99,11 @@ public class TimelordEntity extends AbstractVillagerEntity {
                 nbt.putFloat("SecondaryGreen", rand.nextInt(255) / 255.0F);
                 nbt.putFloat("SecondaryBlue", rand.nextInt(255) / 255.0F);
                 data.setStyle(nbt);
-
             });
         }
+
+        setCustomName(new StringTextComponent(RegenUtil.TIMELORD_NAMES[rand.nextInt(RegenUtil.TIMELORD_NAMES.length)]));
+
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
@@ -99,6 +115,11 @@ public class TimelordEntity extends AbstractVillagerEntity {
             if (!world.isRemote) {
                 data.synchronise();
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
+
+                    if (data.getAnimationTicks() == 100) {
+                        getDataManager().set(SKIN, rand.nextInt(5));
+                    }
+
                     setNoAI(true);
                     setInvulnerable(true);
                 } else {
@@ -107,6 +128,14 @@ public class TimelordEntity extends AbstractVillagerEntity {
                 }
             }
         });
+    }
+
+    public int getSkin() {
+        return getDataManager().get(SKIN);
+    }
+
+    public void setSkin(int skin) {
+        getDataManager().set(SKIN, skin);
     }
 
     @Nullable
@@ -170,6 +199,19 @@ public class TimelordEntity extends AbstractVillagerEntity {
     }
 
     @Override
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = super.serializeNBT();
+        nbt.putInt("skin", getSkin());
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+        super.deserializeNBT(nbt);
+        setSkin(nbt.getInt("skin"));
+    }
+
+    @Override
     protected void populateTradeData() {
         VillagerTrades.ITrade[] trades = Trades.genTrades();
         if (trades != null) {
@@ -177,7 +219,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
             this.addTrades(merchantoffers, trades, 5);
         }
 
-       /* if(ModList.get().isLoaded("tardis")) {
+     /*   if(ModList.get().isLoaded("tardis")) {
             VillagerTrades.ITrade[] tardisTrades = TardisCompat.genTrades();
             if (trades != null) {
                 MerchantOffers merchantoffers = this.getOffers();

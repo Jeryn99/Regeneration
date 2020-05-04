@@ -20,7 +20,32 @@ import java.util.Random;
 import java.util.UUID;
 
 public class RegenUtil {
-	
+
+	public static String[] TIMELORD_NAMES = new String[]{
+			"Nemma",
+			"Seeta",
+			"Ulysses",
+			"Omen",
+			"Calix",
+			"Vermela",
+			"Uriel",
+			"Orion",
+			"Eta Rho",
+			"Eon",
+			"Kashgar",
+			"Stratos",
+			"Sylok",
+			"Seba",
+			"Alphmega",
+			"Draylex",
+			"Simo",
+			"Flaco",
+			"Skarra",
+			"Yanagundapheno",
+			"Venubelekuna",
+			"Ajorusa"
+	};
+
 	private static Random rand = new Random();
 	
 	public static boolean isSlimSkin(UUID playerUUID) {
