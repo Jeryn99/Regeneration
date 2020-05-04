@@ -2,8 +2,6 @@ package me.swirtzly.regeneration.common.traits.positive;
 
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 
 import java.util.UUID;
@@ -22,27 +20,27 @@ public class LuckyTrait extends TraitManager.IDna {
 	
 	@Override
     public void onUpdate(IRegen cap) {
-        LivingEntity player = cap.getLivingEntity();
+        /*LivingEntity player = cap.getLivingEntity();
         if (!player.getAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.LUCK).applyModifier(LUCKY_MODIFIER);
-		}
+		}*/
 	}
 	
 	@Override
     public void onAdded(IRegen cap) {
-        LivingEntity player = cap.getLivingEntity();
+      /*  LivingEntity player = cap.getLivingEntity();
         registerAttributeIfAbsent(player, SharedMonsterAttributes.LUCK);
         if (!player.getAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.LUCK).applyModifier(LUCKY_MODIFIER);
-		}
+		}*/
 	}
 	
 	@Override
     public void onRemoved(IRegen cap) {
-        LivingEntity player = cap.getLivingEntity();
+     /*   LivingEntity player = cap.getLivingEntity();
         if (player.getAttribute(SharedMonsterAttributes.LUCK).hasModifier(LUCKY_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.LUCK).removeModifier(LUCKY_MODIFIER);
-		}
+		}*/
 	}
 
 }

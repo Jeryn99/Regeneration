@@ -99,6 +99,7 @@ public class RegenCap implements IRegen {
 			didSetup = true;
 		}
 
+
         if (!player.world.isRemote) {
             if (isSyncingToJar() && ticksAnimating >= 250) {
                 setSyncingFromJar(false);
@@ -125,21 +126,22 @@ public class RegenCap implements IRegen {
         TraitManager.getDnaEntry(getDnaType()).onUpdate(this);
 
         if (!player.world.isRemote && state != PlayerUtil.RegenState.ALIVE) // ticking only on the server for simplicity
-			stateManager.tick();
+			if (stateManager != null) {
+				stateManager.tick();
+			}
 
-        if (state == PlayerUtil.RegenState.REGENERATING) {
+		if (state == PlayerUtil.RegenState.REGENERATING) {
 			TypeManager.getTypeInstance(regenType).onUpdateMidRegen(player, this);
 		}
 	}
 	
 	@Override
 	public void synchronise() {
-        if (player.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
-		
+		if (player != null && player.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
+
 		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
 		CompoundNBT nbt = serializeNBT();
 		nbt.remove("stateManager");
-		nbt.putInt("ticks_animating", 78);
 		NetworkDispatcher.sendPacketToAll(new SyncClientPlayerMessage(player, nbt));
 	}
 	

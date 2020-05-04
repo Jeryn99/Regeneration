@@ -58,7 +58,8 @@ public class ClientProxy extends CommonProxy {
 			renderPlayer.addLayer(new HandsLayer(renderPlayer));
 		}
 
-        FileUtil.doSetupOnThread();
+
+		FileUtil.doSetupOnThread();
 		MinecraftForge.EVENT_BUS.register(new SkinManipulation());
 		MinecraftForge.EVENT_BUS.register(new ClientHandler());
 		MinecraftForge.EVENT_BUS.register(new CameraHandler());

@@ -2,14 +2,12 @@ package me.swirtzly.regeneration.client.animation;
 
 import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 
@@ -31,11 +29,9 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
 
     @Override
     public void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
-        if (entity instanceof PlayerEntity || entity instanceof TimelordEntity) {
-
             RegenCap.get(entity).ifPresent((data) -> {
+                if (!(renderer.getEntityModel() instanceof BipedModel)) return;
                 BipedModel modelPlayer = (BipedModel) renderer.getEntityModel();
-
                 if (data.hasDroppedHand() && data.getState() == PlayerUtil.RegenState.POST) {
                     modelPlayer.bipedRightArm.isHidden = data.getCutoffHand() == HandSide.RIGHT;
                     modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
@@ -44,7 +40,6 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
                     modelPlayer.bipedRightArm.isHidden = false;
                 }
             });
-        }
     }
 
     @Override

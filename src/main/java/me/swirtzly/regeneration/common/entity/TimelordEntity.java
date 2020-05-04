@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.common.entity;
 
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
 import me.swirtzly.regeneration.common.trades.Trades;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -9,35 +10,29 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.entity.monster.ZombiePigmanEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.TurtleEntity;
+import net.minecraft.entity.monster.SkeletonEntity;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.MerchantOffer;
 import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.tardis.mod.entity.DalekEntity;
 
 import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by Swirtzly
  * on 03/05/2020 @ 18:50
  */
 public class TimelordEntity extends AbstractVillagerEntity {
-
-    private static final DataParameter<Integer> REGENBERATIONS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Float> ANIMATIONS_TICKS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.FLOAT);
-    private PlayerUtil.RegenState regenState = PlayerUtil.RegenState.ALIVE;
 
     public TimelordEntity(World world) {
         this(RegenObjects.EntityEntries.TIMELORD.get(), world);
@@ -48,51 +43,20 @@ public class TimelordEntity extends AbstractVillagerEntity {
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(REGENBERATIONS, rand.nextInt(12));
-        this.dataManager.register(ANIMATIONS_TICKS, 0F);
-    }
-
-    public int getRegenerations() {
-        return getDataManager().get(REGENBERATIONS);
-    }
-
-    public void setRegenerations(int regenerations) {
-        getDataManager().set(REGENBERATIONS, regenerations);
-    }
-
-    public void setAnimationsTicks(float regenerations) {
-        getDataManager().set(ANIMATIONS_TICKS, regenerations);
-    }
-
-    public float getAnimationTicks() {
-        return getDataManager().get(ANIMATIONS_TICKS);
-    }
-
-    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(1, new TradeWithPlayerGoal(this));
+        this.goalSelector.addGoal(1, new TimelordMelee(this, (double) 1.2F, true));
         this.applyEntityAI();
     }
 
     protected void applyEntityAI() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(ZombiePigmanEntity.class));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, TurtleEntity.class, 10, true, false, TurtleEntity.TARGET_DRY_BABY));
-    }
-
-    public PlayerUtil.RegenState getRegenState() {
-        return regenState;
-    }
-
-    public void setRegenState(PlayerUtil.RegenState regenState) {
-        this.regenState = regenState;
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, DalekEntity.class, false));
     }
 
     @Override
@@ -100,6 +64,8 @@ public class TimelordEntity extends AbstractVillagerEntity {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double) 0.23F);
+        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
     }
 
@@ -108,7 +74,18 @@ public class TimelordEntity extends AbstractVillagerEntity {
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         if (!worldIn.isRemote()) {
             RegenCap.get(this).ifPresent((data) -> {
-                data.receiveRegenerations(12);
+                data.receiveRegenerations(worldIn.getRandom().nextInt(12));
+
+                CompoundNBT nbt = new CompoundNBT();
+                nbt.putFloat("PrimaryRed", rand.nextInt(255) / 255.0F);
+                nbt.putFloat("PrimaryGreen", rand.nextInt(255) / 255.0F);
+                nbt.putFloat("PrimaryBlue", rand.nextInt(255) / 255.0F);
+
+                nbt.putFloat("SecondaryRed", rand.nextInt(255) / 255.0F);
+                nbt.putFloat("SecondaryGreen", rand.nextInt(255) / 255.0F);
+                nbt.putFloat("SecondaryBlue", rand.nextInt(255) / 255.0F);
+                data.setStyle(nbt);
+
             });
         }
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
@@ -121,7 +98,6 @@ public class TimelordEntity extends AbstractVillagerEntity {
         RegenCap.get(this).ifPresent((data) -> {
             if (!world.isRemote) {
                 data.synchronise();
-                setAnimationsTicks(data.getAnimationTicks());
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
                     setNoAI(true);
                     setInvulnerable(true);
@@ -155,6 +131,19 @@ public class TimelordEntity extends AbstractVillagerEntity {
 
     @Override
     public boolean processInteract(PlayerEntity player, Hand hand) {
+        AtomicBoolean atomicBoolean = new AtomicBoolean();
+        atomicBoolean.set(false);
+
+        RegenCap.get(this).ifPresent((data) -> {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
+                atomicBoolean.set(true);
+            }
+        });
+
+        if (atomicBoolean.get()) {
+            return true;
+        }
+
         ItemStack itemstack = player.getHeldItem(hand);
         boolean flag = itemstack.getItem() == Items.NAME_TAG;
         if (flag) {
@@ -180,6 +169,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
         }
     }
 
+    @Override
     protected void populateTradeData() {
         VillagerTrades.ITrade[] trades = Trades.genTrades();
         if (trades != null) {

@@ -150,19 +150,17 @@ public class CommonHandler {
 	
 	@SubscribeEvent
 	public void onKnockback(LivingKnockBackEvent event) {
-		if (event.getEntityLiving() instanceof PlayerEntity || event.getEntityLiving() instanceof TimelordEntity) {
 			LivingEntity livingEntity = event.getEntityLiving();
 			RegenCap.get(livingEntity).ifPresent((data) -> {
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 					event.setCanceled(true);
 				}
 			});
-		}
 	}
 
     @SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		if (event.getObject() instanceof PlayerEntity || event.getObject() instanceof TimelordEntity) {
+		if (event.getObject() instanceof PlayerEntity || event.getObject() instanceof TimelordEntity || event.getObject() instanceof LivingEntity) {
 			event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
 				final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
 				final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
