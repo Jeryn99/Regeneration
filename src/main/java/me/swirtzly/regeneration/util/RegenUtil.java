@@ -43,24 +43,49 @@ public class RegenUtil {
 			"Skarra",
 			"Yanagundapheno",
 			"Venubelekuna",
-			"Ajorusa"
+			"Ajorusa",
+			"Siegold",
+			"Geirmund",
+			"Rorich",
+			"Dietwald",
+			"Kjartan",
+			"Shadera",
+			"Eylimi",
+			"Carsmyr",
+			"Friedald",
+			"Heseth",
+			"Tarasran",
+			"Lyrdia",
+			"Otwig",
+			"Svart",
+			"Bersi",
+			"Ingun",
+			"Erithic",
+			"Vonrak",
+			"Ludgart",
+			"Aerlan",
+			"Adolrin",
+			"Heinemar",
+			"Otfried",
+			"Aerael",
+			"Agnare"
 	};
 
 	private static Random rand = new Random();
-	
+
 	public static boolean isSlimSkin(UUID playerUUID) {
 		return (playerUUID.hashCode() & 1) == 1;
 	}
-	
+
 	public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
 		int x = rand.nextInt(clazz.getEnumConstants().length);
 		return clazz.getEnumConstants()[x];
 	}
-	
+
 	public static float randFloat(float min, float max) {
 		return rand.nextFloat() * (max - min) + min;
 	}
-	
+
 	public static void genCrater(World world, BlockPos pos, int radius) {
 		for (int x = pos.getX() - radius; x < pos.getX() + radius; ++x) {
 			for (int y = pos.getY() - radius; y < pos.getY() + radius; ++y) {
@@ -68,11 +93,11 @@ public class RegenUtil {
 					double squareDistance = Math.pow(x - pos.getX(), 2) + Math.pow(y - pos.getY(), 2) + Math.pow(z - pos.getZ(), 2);
 					if (squareDistance <= Math.pow(radius, 2)) {
 						BlockState block = world.getBlockState(new BlockPos(x, y, z));
-						
+
 						if (block.getBlock() != Blocks.BEDROCK && block.getBlockHardness(world, new BlockPos(x, y, z)) < 3.0F) {
-							
+
 							if (!world.isRemote) {
-								
+
 								if (world.getTileEntity(new BlockPos(x, y, z)) != null) {
 									TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 									if (tileEntity instanceof IInventory) {
@@ -80,7 +105,7 @@ public class RegenUtil {
 										world.updateComparatorOutputLevel(pos, block.getBlock());
 									}
 								}
-								
+
 								InventoryHelper.spawnItemStack(world, x, y, z, new ItemStack(block.getBlock()));
 							}
 							world.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
@@ -119,7 +144,7 @@ public class RegenUtil {
                     return;
 
                 // float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
-				
+
 				float densMod = 1;
 
                 int xr, zr;
