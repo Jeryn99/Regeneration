@@ -6,8 +6,6 @@ import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -23,10 +21,8 @@ import net.tardis.mod.recipe.Recipes;
 import net.tardis.mod.recipe.WeldRecipe;
 import net.tardis.mod.registries.TardisRegistries;
 import net.tardis.mod.subsystem.Subsystem;
-import net.tardis.mod.subsystem.SubsystemEntry;
 import net.tardis.mod.tileentities.ConsoleTile;
-
-import static net.tardis.mod.registries.TardisRegistries.PROTOCOL_REGISTRY;
+import net.tardis.mod.upgrades.UpgradeEntry;
 
 /**
  * Created by Swirtzly
@@ -34,27 +30,27 @@ import static net.tardis.mod.registries.TardisRegistries.PROTOCOL_REGISTRY;
  */
 public class TardisCompat {
 
-    public static SubsystemEntry<ArchSubSystem> ARCH_SUBSYSTEM;
-
-    public static void on() {
-        PROTOCOL_REGISTRY.register("arch_protocol", new ArchProtocol());
-        ARCH_SUBSYSTEM = register("arch", new SubsystemEntry<>(ArchSubSystem::new, RegenObjects.Items.ARCH_PART.get()));
+    public static void addTardisCompat() {
+        TardisRegistries.registerRegisters(TardisCompat::registerAllProtocols);
+        TardisRegistries.registerRegisters(TardisCompat::registerAllUpgrades);
         Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), false, RegenObjects.Items.HAND.get(), TItems.CIRCUITS));
         Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), true, RegenObjects.Items.ARCH_PART.get(), TItems.CIRCUITS, RegenObjects.Items.HAND.get()));
     }
 
-    public static <T extends Subsystem> SubsystemEntry<T> register(ResourceLocation key, SubsystemEntry<T> system) {
-        TardisRegistries.SUBSYSTEM_REGISTRY.register(key, system);
-        return system;
+    public static void registerAllUpgrades() {
+        TardisRegistries.UPGRADES.register(new ResourceLocation(RegenerationMod.MODID, "arch"), new UpgradeEntry<>(ArchUpgrade::new, RegenObjects.Items.ARCH_PART.get(), null));
     }
 
-    public static <T extends Subsystem> SubsystemEntry<T> register(String key, SubsystemEntry<T> system) {
-        return register(new ResourceLocation(RegenerationMod.MODID, key), system);
+    public static void registerAllProtocols() {
+        TardisRegistries.PROTOCOL_REGISTRY.register(new ResourceLocation(RegenerationMod.MODID, "arch_protocol"), new ArchProtocol());
     }
+
 
     public static void damageSubsystem(World world) {
-        getTardis(world).getSubsystem(ArchSubSystem.class).ifPresent((archSubSystem -> {
-            archSubSystem.damage(null, 1);
+        getTardis(world).getUpgrade(ArchUpgrade.class).ifPresent((archUpgrade -> {
+            //TODO FIX SOURCES SO THE BELOW CALL CAN BE MADE
+            // archUpgrade.damage(1, null, null);
+            archUpgrade.getStack().attemptDamageItem(1, world.rand, null);
         }));
     }
 
