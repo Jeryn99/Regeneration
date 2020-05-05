@@ -53,7 +53,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
     @Override
     protected void registerData() {
         super.registerData();
-        getDataManager().register(SKIN, rand.nextInt(5));
+        getDataManager().register(SKIN, rand.nextInt(6));
     }
 
     @Override
@@ -117,7 +117,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 
                     if (data.getAnimationTicks() == 100) {
-                        getDataManager().set(SKIN, rand.nextInt(5));
+                        getDataManager().set(SKIN, rand.nextInt(6));
                     }
 
                     setNoAI(true);

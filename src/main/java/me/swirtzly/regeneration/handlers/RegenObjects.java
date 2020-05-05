@@ -148,6 +148,7 @@ public class RegenObjects {
 		public static final RegistryObject<Biome> REDLANDS = BIOMES.register("redlands", GallifreyanRedLands::new);
 		public static final RegistryObject<Biome> WASTELANDS = BIOMES.register("wastelands", GallifrayanWastelands::new);
 		public static final RegistryObject<Biome> REDLANDS_FOREST = BIOMES.register("redlands_forest", GallifreyanRedlandsForest::new);
+		public static final RegistryObject<Biome> WASTELANDS_MOUNTAINS = BIOMES.register("wasteland_mountains", GallifreyanWastelandsMountains::new);
 
 		public static void registerBiomeTypes() {
 			addBiomeTypes(GALLIFREY_MOUNTAINS, BiomeDictionary.Type.MOUNTAIN);

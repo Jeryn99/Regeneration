@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.client.rendering.model;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
+import me.swirtzly.regeneration.compat.TardisCompat;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -29,6 +30,9 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
     private final RendererModel left_leg;
     private final RendererModel shoes;
     private final RendererModel robs;
+    private final RendererModel villagerHead;
+    private final RendererModel villagerNose;
+    private final RendererModel villagerTimeHat;
 
     public TimelordModel() {
         textureWidth = 80;
@@ -245,13 +249,46 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         robs.cubeList.add(new ModelBox(robs, 50, 71, -3.25F, -3.0F, 2.75F, 1, 2, 1, 0.0F, true));
         robs.cubeList.add(new ModelBox(robs, 50, 73, -3.0F, -3.0F, 3.0F, 4, 2, 1, 0.0F, true));
 
+        villagerHead = new RendererModel(this);
+        villagerHead.setRotationPoint(0.0F, 0.0F, 0.0F);
+        villagerHead.cubeList.add(new ModelBox(villagerHead, 0, 15, -4.0F, -10.0F, -4.0F, 8, 10, 8, 0.0F, false));
+
+        villagerNose = new RendererModel(this);
+        villagerNose.setRotationPoint(0.0F, 24.0F, 0.0F);
+        villagerHead.addChild(villagerNose);
+        villagerNose.cubeList.add(new ModelBox(villagerNose, 24, 15, -1.0F, -27.0F, -6.0F, 2, 4, 2, 0.0F, false));
+
+        villagerTimeHat = new RendererModel(this);
+        villagerTimeHat.setRotationPoint(0.0F, -2.0F, 0.0F);
+        villagerHead.addChild(villagerTimeHat);
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.25F, -5.0F, -3.0F, 1, 1, 7, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.25F, -5.0F, -3.0F, 1, 1, 7, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.25F, -4.0F, 1.0F, 1, 2, 3, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.25F, -4.0F, 1.0F, 1, 2, 3, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.0F, 3.25F, 8, 6, 1, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.25F, -4.0F, -2.5F, 1, 2, 1, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.25F, -4.0F, -2.5F, 1, 2, 1, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.0F, -8.0F, -4.25F, 1, 3, 1, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.0F, -4.25F, 1, 3, 1, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -2.5F, -7.5F, -4.25F, 5, 1, 1, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -1.5F, -7.0F, -4.25F, 3, 1, 1, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -1.0F, -6.5F, -4.25F, 2, 1, 1, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.0F, -4.25F, 8, 1, 1, 0.0F, false));
+        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.25F, -4.0F, 8, 1, 8, 0.0F, false));
+
 
     }
 
     @Override
     public void render(TimelordEntity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         GlStateManager.pushMatrix();
-        head.render(f5);
+        if (entity.getSkin() == 6) {
+            villagerHead.render(f5);
+        } else {
+            head.render(f5);
+        }
         body.render(f5);
         right_arm.render(f5);
         left_arm.render(f5);
@@ -319,6 +356,7 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         });
 
         RenderUtil.copyModelAngles(bipedHead, head);
+        RenderUtil.copyModelAngles(bipedHead, villagerHead);
         RenderUtil.copyModelAngles(bipedBody, body);
         RenderUtil.copyModelAngles(bipedLeftArm, left_arm);
         RenderUtil.copyModelAngles(bipedRightArm, right_arm);

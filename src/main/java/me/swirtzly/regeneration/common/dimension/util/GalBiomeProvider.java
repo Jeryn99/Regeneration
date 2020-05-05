@@ -31,7 +31,7 @@ public class GalBiomeProvider extends ModdedBiomeProvider {
         mapping.addBiomeOverride(Biomes.MODIFIED_GRAVELLY_MOUNTAINS, RegenObjects.Biomes.GALLIFREY_MOUNTAINS.get());
         mapping.addBiomeOverride(Biomes.TALL_BIRCH_FOREST, RegenObjects.Biomes.REDLANDS_FOREST.get());
         mapping.addBiomeOverride(Biomes.DESERT, RegenObjects.Biomes.WASTELANDS.get());
-        mapping.addBiomeOverride(Biomes.DESERT_HILLS, RegenObjects.Biomes.WASTELANDS.get());
+        mapping.addBiomeOverride(Biomes.DESERT_HILLS, RegenObjects.Biomes.WASTELANDS_MOUNTAINS.get());
         mapping.addBiomeOverride(Biomes.BADLANDS, RegenObjects.Biomes.WASTELANDS.get());
         mapping.addBiomeOverride(Biomes.ERODED_BADLANDS, RegenObjects.Biomes.WASTELANDS.get());
         mapping.addBiomeOverride(Biomes.BADLANDS_PLATEAU, RegenObjects.Biomes.WASTELANDS.get());

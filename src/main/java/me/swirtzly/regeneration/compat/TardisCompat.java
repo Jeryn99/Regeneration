@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -39,6 +40,7 @@ public class TardisCompat {
         PROTOCOL_REGISTRY.register("arch_protocol", new ArchProtocol());
         ARCH_SUBSYSTEM = register("arch", new SubsystemEntry<>(ArchSubSystem::new, RegenObjects.Items.ARCH_PART.get()));
         Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), false, RegenObjects.Items.HAND.get(), TItems.CIRCUITS));
+        Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), true, RegenObjects.Items.ARCH_PART.get(), TItems.CIRCUITS, RegenObjects.Items.HAND.get()));
     }
 
     public static <T extends Subsystem> SubsystemEntry<T> register(ResourceLocation key, SubsystemEntry<T> system) {
@@ -65,18 +67,18 @@ public class TardisCompat {
     public void onLive(LivingEvent.LivingUpdateEvent event) {
         World world = event.getEntityLiving().world;
         if (world.isRemote) return;
-        if (!(event.getEntityLiving() instanceof PlayerEntity)) return;
+
         if (world.dimension.getDimension() instanceof TardisDimension) {
             MinecraftServer minecraftServer = ServerLifecycleHooks.getCurrentServer();
             ConsoleTile console = TardisHelper.getConsole(minecraftServer, world.dimension.getType());
-            if (console == null || world.isRemote) return;
-            PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+            if (console == null) return;
+            LivingEntity playerEntity = event.getEntityLiving();
             RegenCap.get(playerEntity).ifPresent((data) -> {
                 //Regenerating
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
                     if (data.getType() == TypeManager.Type.FIERY && playerEntity.ticksExisted % 10 == 0) {
                         for (Subsystem subSystem : console.getSubSystems()) {
-                            subSystem.damage((ServerPlayerEntity) playerEntity, world.rand.nextInt(5));
+                            subSystem.damage(null, world.rand.nextInt(5));
                         }
                     }
 

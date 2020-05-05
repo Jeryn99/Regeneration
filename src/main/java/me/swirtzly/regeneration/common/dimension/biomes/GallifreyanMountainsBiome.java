@@ -8,6 +8,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.structure.MineshaftConfig;
 import net.minecraft.world.gen.feature.structure.MineshaftStructure;
+import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 
 import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
@@ -19,7 +20,7 @@ import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
 public class GallifreyanMountainsBiome extends Biome {
 
     public GallifreyanMountainsBiome() {
-        super((new Biome.Builder()).surfaceBuilder(SurfaceBuilder.MOUNTAIN, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(Biome.RainType.RAIN).category(Biome.Category.EXTREME_HILLS).depth(1.0F).scale(0.5F).temperature(0.2F).downfall(0.3F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent(null));
+        super((new Biome.Builder()).surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG)).precipitation(Biome.RainType.RAIN).category(Biome.Category.EXTREME_HILLS).depth(1.3F).scale(0.3F).temperature(0.3F).downfall(0.3F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent(null));
         this.addStructure(Feature.MINESHAFT, new MineshaftConfig(0.004D, MineshaftStructure.Type.NORMAL));
         this.addStructure(Feature.STRONGHOLD, IFeatureConfig.NO_FEATURE_CONFIG);
         DefaultBiomeFeatures.addCarvers(this);
