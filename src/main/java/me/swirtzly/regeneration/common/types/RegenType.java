@@ -23,13 +23,13 @@ public interface RegenType<R extends ATypeRenderer<?>> {
 	
 	R getRenderer();
 
-    default void onStartRegeneration(LivingEntity player, IRegen capability) {
+    default void onStartRegeneration(IRegen cap) {
     }
 
-    default void onUpdateMidRegen(LivingEntity player, IRegen capability) {
+    default void onUpdateMidRegen(IRegen cap) {
     }
 
-    default void onFinishRegeneration(LivingEntity player, IRegen capability) {
+    default void onFinishRegeneration(IRegen cap) {
     }
 
     double getAnimationProgress(IRegen cap);

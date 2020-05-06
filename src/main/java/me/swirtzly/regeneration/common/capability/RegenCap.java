@@ -132,7 +132,7 @@ public class RegenCap implements IRegen {
 			}
 
 		if (state == PlayerUtil.RegenState.REGENERATING) {
-			regenType.create().onUpdateMidRegen(player, this);
+			regenType.create().onUpdateMidRegen(this);
 		}
 	}
 	
@@ -637,7 +637,7 @@ public class RegenCap implements IRegen {
 			scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, regenType.create().getAnimationLength());
 
             ActingForwarder.onRegenTrigger(RegenCap.this);
-			regenType.create().onStartRegeneration(player, RegenCap.this);
+			regenType.create().onStartRegeneration(RegenCap.this);
 			synchronise();
 		}
 		
@@ -653,7 +653,7 @@ public class RegenCap implements IRegen {
 			state = PlayerUtil.RegenState.ALIVE;
 			nextTransition = null;
 			handGlowTimer = null;
-			regenType.create().onFinishRegeneration(player, RegenCap.this);
+			regenType.create().onFinishRegeneration(RegenCap.this);
 			if (state == PlayerUtil.RegenState.GRACE_CRIT) {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
 			} else {
@@ -680,7 +680,7 @@ public class RegenCap implements IRegen {
 			state = PlayerUtil.RegenState.POST;
 			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;
-			regenType.create().onFinishRegeneration(player, RegenCap.this);
+			regenType.create().onFinishRegeneration(RegenCap.this);
             ActingForwarder.onRegenFinish(RegenCap.this);
 			synchronise();
 		}

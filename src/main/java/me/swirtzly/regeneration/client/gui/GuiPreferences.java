@@ -54,6 +54,7 @@ public class GuiPreferences extends ContainerScreen {
 				} else {
 					SELECTED_TYPE = TypeManager.Type.FIERY;
 				}*/
+				SELECTED_TYPE = RRRegenType.HARTNELL;
 				System.out.println(SELECTED_TYPE.create().getTranslation());
 
 				button.setMessage(new TranslationTextComponent("regeneration.gui.type", SELECTED_TYPE.create().getTranslation()).getUnformattedComponentText());

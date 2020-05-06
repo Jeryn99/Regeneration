@@ -11,8 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 
-import javax.annotation.Nullable;
-
 public class TypeLayFade implements RegenType {
 
     private SoundEvent[] soundEvents = new SoundEvent[]{RegenObjects.Sounds.HAND_GLOW.get()};
@@ -28,20 +26,28 @@ public class TypeLayFade implements RegenType {
     }
 
     @Override
-    public void onStartRegeneration(LivingEntity player, IRegen capability) {
+    public void onStartRegeneration(IRegen capability) {
 
     }
 
     @Override
-    public void onUpdateMidRegen(LivingEntity player, IRegen capability) {
-        if (!player.world.isRemote) {
-            PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
+    public void onUpdateMidRegen(IRegen capability) {
+        if (capability.getLivingEntity() instanceof ServerPlayerEntity) {
+            LivingEntity player = capability.getLivingEntity();
+            if (!player.world.isRemote) {
+                PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
+            }
         }
     }
 
     @Override
-    public void onFinishRegeneration(LivingEntity player, IRegen capability) {
-        PlayerUtil.setPerspective((ServerPlayerEntity) player, false, true);
+    public void onFinishRegeneration(IRegen capability) {
+        if (capability.getLivingEntity() instanceof ServerPlayerEntity) {
+            LivingEntity player = capability.getLivingEntity();
+            if (!player.world.isRemote) {
+                PlayerUtil.setPerspective((ServerPlayerEntity) player, false, true);
+            }
+        }
     }
 
     @Override
@@ -58,8 +64,8 @@ public class TypeLayFade implements RegenType {
     public Vec3d getDefaultPrimaryColor() {
         return new Vec3d(1, 1, 1);
     }
-""
-    @Override
+
+        @Override
     public Vec3d getDefaultSecondaryColor() {
         return new Vec3d(1, 1, 1);
     }

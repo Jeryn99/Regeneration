@@ -25,7 +25,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	
 	public static final FieryRenderer INSTANCE = new FieryRenderer();
 
-	public static void renderOverlay(LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public static void renderOverlay(LivingRenderer renderer, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		RegenCap.get(entityPlayer).ifPresent((data) -> {
 			GlStateManager.pushMatrix();
 			RenderUtil.setLightmapTextureCoords(240, 240);
@@ -36,8 +36,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 			Vec3d color = data.getPrimaryColor();
 			float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
 			GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, opacity);
-			playerModelSteve.isChild = false;
-			playerModelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+			renderer.getEntityModel().render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 			RenderUtil.restoreLightMap();
 			GlStateManager.enableLighting();
 			GlStateManager.disableBlend();
@@ -162,7 +161,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		
 		if (!capability.isSyncingToJar()) {
 			// Render glowing overlay
-			renderOverlay(entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+			renderOverlay(renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 		// Undo state manager changes
 		RenderUtil.restoreLightMap();

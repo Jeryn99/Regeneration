@@ -28,9 +28,9 @@ public class RegenerationLayer extends LayerRenderer {
 
     public static final PlayerModel playerModelSteve = new PlayerModel(0.1F, false);
 
-    private final IEntityRenderer livingEntityRenderer;
+    private final LivingRenderer livingEntityRenderer;
 
-    public RegenerationLayer(IEntityRenderer livingEntityRendererIn) {
+    public RegenerationLayer(LivingRenderer livingEntityRendererIn) {
         super(livingEntityRendererIn);
         this.livingEntityRenderer = livingEntityRendererIn;
     }
@@ -61,11 +61,11 @@ public class RegenerationLayer extends LayerRenderer {
         RegenCap.get(player).ifPresent((data) -> {
             RegenType type = data.getType().create();
             if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                type.getRenderer().onRenderRegenerationLayer(type, (LivingRenderer) livingEntityRenderer, data, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+                type.getRenderer().onRenderRegenerationLayer(type, livingEntityRenderer, data, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
             }
 
             if (data.getState() == PlayerUtil.RegenState.POST && player.hurtTime > 0) {
-                renderOverlay(player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+                renderOverlay(livingEntityRenderer, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
             }
 
         });
