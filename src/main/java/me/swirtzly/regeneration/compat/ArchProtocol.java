@@ -45,8 +45,8 @@ public class ArchProtocol extends Protocol {
 
     @Override
     public void call(World world, ConsoleTile consoleTile) {
-        consoleTile.getSubsystem(ArchSubSystem.class).ifPresent((archSubSystem -> {
-            if (archSubSystem.canBeUsed()) {
+        consoleTile.getUpgrade(ArchUpgrade.class).ifPresent((archSubSystem -> {
+            if (archSubSystem.isUsable()) {
                 BlockPos pos = consoleTile.getPos();
                 BlockPos placePos = pos.north(2).up(2);
 

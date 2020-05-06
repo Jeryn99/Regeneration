@@ -3,30 +3,29 @@ package me.swirtzly.regeneration.network.messages;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class UpdateStateMessage {
-	
-	private PlayerEntity player;
+
+	private Entity player;
 	private String event;
-	
-	public UpdateStateMessage(PlayerEntity player, String event) {
+
+	public UpdateStateMessage(Entity player, String event) {
 		this.player = player;
 		this.event = event;
 	}
 	
 	public static void encode(UpdateStateMessage event, PacketBuffer packetBuffer) {
-		packetBuffer.writeUniqueId(event.player.getUniqueID());
+		packetBuffer.writeInt(event.player.getEntityId());
 		packetBuffer.writeString(event.event);
 	}
 	
 	public static UpdateStateMessage decode(PacketBuffer buffer) {
-        if (Minecraft.getInstance().player == null) return null;
-		return new UpdateStateMessage(Minecraft.getInstance().player.world.getPlayerByUuid(buffer.readUniqueId()), buffer.readString(600));
+		return new UpdateStateMessage(Minecraft.getInstance().player.world.getEntityByID(buffer.readInt()), buffer.readString(600));
 	}
 	
 	public static class Handler {

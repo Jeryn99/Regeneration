@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.HandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
@@ -36,12 +35,12 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
     }
 
     @Override
-    protected void renderRegenerationLayer(TypeLayFade type, LivingRenderer renderLivingBase, IRegen capability, PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    protected void renderRegenerationLayer(TypeLayFade type, LivingRenderer renderLivingBase, IRegen capability, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         FieryRenderer.renderOverlay(entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
     @Override
-    public void renderHand(PlayerEntity player, HandSide handSide, LivingRenderer render) {
+    public void renderHand(LivingEntity player, HandSide handSide, LivingRenderer render) {
 
     }
 

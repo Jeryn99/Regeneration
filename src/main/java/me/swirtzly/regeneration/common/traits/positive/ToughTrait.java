@@ -3,9 +3,9 @@ package me.swirtzly.regeneration.common.traits.positive;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager.IDna;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.UUID;
@@ -32,7 +32,10 @@ public class ToughTrait extends IDna {
 	
 	@Override
     public void onAdded(IRegen cap) {
-		PlayerEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
+        registerAttributeIfAbsent(player, SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
+        registerAttributeIfAbsent(player, SharedMonsterAttributes.ATTACK_DAMAGE);
+
         if (!player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(TOUGH_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(TOUGH_MODIFIER);
         }
@@ -44,11 +47,10 @@ public class ToughTrait extends IDna {
 	
 	@Override
     public void onRemoved(IRegen cap) {
-		PlayerEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
         if (player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(TOUGH_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(TOUGH_MODIFIER);
         }
-
         if (player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).hasModifier(ATTACK_MODIFIER)) {
             player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).removeModifier(ATTACK_MODIFIER);
 		}

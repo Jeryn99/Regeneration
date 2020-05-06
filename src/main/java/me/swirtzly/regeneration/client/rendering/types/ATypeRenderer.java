@@ -4,7 +4,7 @@ import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.types.RegenType;
 import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.HandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent.Pre;
@@ -15,7 +15,7 @@ public abstract class ATypeRenderer<T> implements AnimationManager.IAnimate {
 
     protected abstract void renderRegeneratingPlayerPost(T type, RenderPlayerEvent.Post event, IRegen capability);
 
-    protected abstract void renderRegenerationLayer(T type, LivingRenderer renderLivingBase, IRegen capability, PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
+	protected abstract void renderRegenerationLayer(T type, LivingRenderer renderLivingBase, IRegen capability, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
 	
 	// Generic casting convenience methods:
 	
@@ -38,14 +38,14 @@ public abstract class ATypeRenderer<T> implements AnimationManager.IAnimate {
 	}
 	
 	@SuppressWarnings("unchecked")
-    public final void onRenderRegenerationLayer(RegenType<?> type, LivingRenderer renderLivingBase, IRegen capability, PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public final void onRenderRegenerationLayer(RegenType<?> type, LivingRenderer renderLivingBase, IRegen capability, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		try {
 			renderRegenerationLayer((T) type, renderLivingBase, capability, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		} catch (ClassCastException e) {
 			throw new IllegalStateException("RegenType <-> RegenRenderType mismatch", e);
 		}
 	}
-	
-	public abstract void renderHand(PlayerEntity player, HandSide handSide, LivingRenderer render);
+
+	public abstract void renderHand(LivingEntity player, HandSide handSide, LivingRenderer render);
 	
 }

@@ -81,6 +81,14 @@ public class RegenerationMod {
 		ActingForwarder.init();
 		TriggerManager.init();
 		RegenObjects.Biomes.registerBiomeTypes();
+
+
+		if (ModList.get().isLoaded("tardis")) {
+			LOG.info("Loading Tardis Compatibility");
+			MinecraftForge.EVENT_BUS.register(new TardisCompat());
+			TardisCompat.addTardisCompat();
+		}
+
 	}
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -107,12 +115,6 @@ public class RegenerationMod {
     private void processIMC(final InterModProcessEvent event) {
 		proxy.postInit();
 		PlayerUtil.createPostList();
-
-		if (ModList.get().isLoaded("tardis")) {
-			LOG.info("Loading Tardis Compatibility");
-			MinecraftForge.EVENT_BUS.register(new TardisCompat());
-            TardisCompat.on();
-		}
 	}
 	
 	@SubscribeEvent

@@ -39,6 +39,7 @@ public class OverrideEntity extends Entity {
     private UUID owner;
     private int health = 5;
 
+
     public OverrideEntity(EntityType<? extends OverrideEntity> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }

@@ -11,10 +11,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
@@ -27,7 +25,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	
 	public static final FieryRenderer INSTANCE = new FieryRenderer();
 
-    public static void renderOverlay(PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public static void renderOverlay(LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		RegenCap.get(entityPlayer).ifPresent((data) -> {
 			GlStateManager.pushMatrix();
 			RenderUtil.setLightmapTextureCoords(240, 240);
@@ -47,7 +45,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		});
 	}
 
-    public static void renderCone(PlayerEntity entityPlayer, float scale, float scale2, Vec3d color) {
+	public static void renderCone(LivingEntity entityPlayer, float scale, float scale2, Vec3d color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder vertexBuffer = tessellator.getBuffer();
 
@@ -66,7 +64,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		}
 	}
 
-    public static void renderConeAtArms(PlayerEntity player, LivingRenderer renderLivingBase, HandSide side) {
+	public static void renderConeAtArms(LivingEntity player, LivingRenderer renderLivingBase, HandSide side) {
 		RegenCap.get(player).ifPresent((data) -> {
             double x = TypeManager.getTypeInstance(data.getType()).getAnimationProgress(data);
             double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
@@ -118,12 +116,12 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
     }
 
     @Override
-    public void renderHand(PlayerEntity player, HandSide handSide, LivingRenderer render) {
+	public void renderHand(LivingEntity player, HandSide handSide, LivingRenderer render) {
         renderConeAtArms(player, render, handSide);
     }
 
     @Override
-	public void renderRegenerationLayer(FieryType type, LivingRenderer renderLivingBase, IRegen capability, PlayerEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public void renderRegenerationLayer(FieryType type, LivingRenderer renderLivingBase, IRegen capability, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		
 		// State manager changes
         GlStateManager.pushTextureAttributes();
@@ -150,9 +148,9 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		// Render head cone
 		GlStateManager.pushMatrix();
 
-        if (renderLivingBase.getEntityModel() instanceof PlayerModel) {
-            PlayerModel player = (PlayerModel) renderLivingBase.getEntityModel();
-			player.bipedHead.postRender(0.0625F);
+		if (renderLivingBase.getEntityModel() instanceof BipedModel) {
+			BipedModel player = (BipedModel) renderLivingBase.getEntityModel();
+			player.bipedHead.postRender(scale);
 		}
 
         GlStateManager.translatef(0f, 0.09f, 0f);

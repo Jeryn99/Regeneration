@@ -6,7 +6,7 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.FireBlock;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -25,12 +25,14 @@ public class FieryType implements RegenType<FieryRenderer> {
     private SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0.get(), RegenObjects.Sounds.REGENERATION_1.get(), RegenObjects.Sounds.REGENERATION_2.get(), RegenObjects.Sounds.REGENERATION_3.get(), RegenObjects.Sounds.REGENERATION_4.get(), RegenObjects.Sounds.REGENERATION_5.get(), RegenObjects.Sounds.REGENERATION_6.get(),};
 	
 	@Override
-    public void onUpdateMidRegen(PlayerEntity player, IRegen capability) {
+	public void onUpdateMidRegen(LivingEntity player, IRegen capability) {
 		
 		player.extinguish();
 		
 		if (!player.world.isRemote) {
-			PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
+			if (capability.getLivingEntity() instanceof ServerPlayerEntity) {
+				PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
+			}
 		}
 
         if (player.world.isRemote) return;
@@ -56,8 +58,10 @@ public class FieryType implements RegenType<FieryRenderer> {
     }
 	
 	@Override
-    public void onFinishRegeneration(PlayerEntity player, IRegen capability) {
-		PlayerUtil.setPerspective((ServerPlayerEntity) player, false, true);
+	public void onFinishRegeneration(LivingEntity player, IRegen capability) {
+		if (player instanceof ServerPlayerEntity) {
+			PlayerUtil.setPerspective((ServerPlayerEntity) player, false, true);
+		}
 		capability.setAnimationTicks(0);
 	}
 	

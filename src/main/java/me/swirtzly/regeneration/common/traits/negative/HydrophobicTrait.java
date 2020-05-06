@@ -3,7 +3,7 @@ package me.swirtzly.regeneration.common.traits.negative;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.BlockPos;
 
@@ -18,7 +18,7 @@ public class HydrophobicTrait extends TraitManager.IDna {
 	
 	@Override
     public void onUpdate(IRegen cap) {
-		PlayerEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
 		
 		if (player.isInWater() || player.world.isRaining() && player.world.canBlockSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ))) {
             PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, 300, 2, false, false);

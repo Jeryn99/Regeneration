@@ -28,6 +28,10 @@ public class GallifrayanWastelands extends Biome {
     protected static final BlockState SANDSTONE = Blocks.RED_SANDSTONE.getDefaultState();
     protected static final BlockState DIRT = Blocks.DIRT.getDefaultState();
 
+    public GallifrayanWastelands(Biome.Builder biomeBuilder){
+        super(biomeBuilder);
+    }
+
     public GallifrayanWastelands() {
         super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.SAND.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.STONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(6F).waterColor(WASTELAND_WATER).waterFogColor(WASTELAND_WATER).scale(0.5F).parent(null));
         DefaultBiomeFeatures.addSwampClayDisks(this);

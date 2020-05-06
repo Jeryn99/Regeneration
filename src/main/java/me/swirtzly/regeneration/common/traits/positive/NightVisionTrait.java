@@ -3,7 +3,7 @@ package me.swirtzly.regeneration.common.traits.positive;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effects;
 
 public class NightVisionTrait extends TraitManager.IDna {
@@ -14,7 +14,7 @@ public class NightVisionTrait extends TraitManager.IDna {
 
     @Override
     public void onUpdate(IRegen cap) {
-        PlayerEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
         PlayerUtil.applyPotionIfAbsent(player, Effects.NIGHT_VISION, 1200, 2, true, false);
     }
 
@@ -25,7 +25,7 @@ public class NightVisionTrait extends TraitManager.IDna {
 
     @Override
     public void onRemoved(IRegen cap) {
-        PlayerEntity player = cap.getPlayer();
+        LivingEntity player = cap.getLivingEntity();
         player.removePotionEffect(Effects.NIGHT_VISION);
     }
 	

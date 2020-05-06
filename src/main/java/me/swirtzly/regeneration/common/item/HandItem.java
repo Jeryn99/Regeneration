@@ -76,7 +76,7 @@ public class HandItem extends Item {
             stack.getTag().putString("skinType", SkinInfo.SkinType.ALEX.name());
             stack.getTag().putUniqueId("owner", UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39"));
             stack.getTag().putLong("created", 0);
-            stack.getTag().putString("trait", TraitManager.DNA_BORING.resourceLocation.toString());
+            stack.getTag().putString("trait", TraitManager.DNA_BORING.getRegistryName().toString());
         }
         return stack.getTag();
     }

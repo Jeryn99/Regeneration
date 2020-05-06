@@ -7,6 +7,7 @@ import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.ThirdPersonMessage;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMapMessage;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -65,14 +66,18 @@ public class PlayerUtil {
         me.rotationPitch = (float) pitch;
         me.rotationYaw = (float) yaw;
     }
-	
-	public static void sendMessage(PlayerEntity player, String message, boolean hotBar) {
+
+    public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
+        if (!(livingEntity instanceof PlayerEntity)) return;
+        PlayerEntity player = (PlayerEntity) livingEntity;
 		if (!player.world.isRemote) {
 			player.sendStatusMessage(new TranslationTextComponent(message), hotBar);
 		}
 	}
-	
-	public static void sendMessage(PlayerEntity player, TranslationTextComponent translation, boolean hotBar) {
+
+    public static void sendMessage(LivingEntity livingEntity, TranslationTextComponent translation, boolean hotBar) {
+        if (!(livingEntity instanceof PlayerEntity)) return;
+        PlayerEntity player = (PlayerEntity) livingEntity;
 		if (!player.world.isRemote) {
 			player.sendStatusMessage(translation, hotBar);
 		}
@@ -90,8 +95,8 @@ public class PlayerUtil {
     public static void updateModel(SkinManipulation.EnumChoices choice) {
 		NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMapMessage(choice.name()));
 	}
-	
-	public static boolean applyPotionIfAbsent(PlayerEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
+
+    public static boolean applyPotionIfAbsent(LivingEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
 		if (potion == null) return false;
 		if (player.getActivePotionEffect(potion) == null) {
 			player.addPotionEffect(new EffectInstance(potion, length, amplifier, ambient, showParticles));
@@ -104,7 +109,7 @@ public class PlayerUtil {
         return stack.getItem() instanceof ToolItem || stack.getItem() instanceof SwordItem;
     }
 
-    public static void createHand(PlayerEntity player) {
+    public static void createHand(LivingEntity player) {
         RegenCap.get(player).ifPresent((data) -> {
             ItemStack hand = new ItemStack(RegenObjects.Items.HAND.get());
             HandItem.setTextureString(hand, data.getEncodedSkin());
@@ -120,11 +125,11 @@ public class PlayerUtil {
         });
     }
 
-    public static void handleCutOffhand(PlayerEntity player) {
+    public static void handleCutOffhand(LivingEntity player) {
         RegenCap.get(player).ifPresent((data) -> {
             if (data.hasDroppedHand()) {
                 if (!player.getHeldItemOffhand().isEmpty()) {
-                    player.dropItem(player.getHeldItemOffhand(), false);
+                    player.entityDropItem(player.getHeldItemOffhand());
                     player.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.AIR));
                 }
             }
