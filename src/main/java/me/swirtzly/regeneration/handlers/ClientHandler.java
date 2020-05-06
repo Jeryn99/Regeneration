@@ -7,7 +7,7 @@ import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -189,7 +189,7 @@ public class ClientHandler {
     public void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
         if (Minecraft.getInstance().getRenderViewEntity() instanceof PlayerEntity) {
             RegenCap.get(Minecraft.getInstance().getRenderViewEntity()).ifPresent((data) -> {
-                if (data.getType() == TypeManager.Type.LAY_FADE && data.getState() == REGENERATING) {
+                if (data.getType() == RRRegenType.HARTNELL && data.getState() == REGENERATING) {
                     e.setRed((float) data.getPrimaryColor().x);
                     e.setGreen((float) data.getPrimaryColor().y);
                     e.setBlue((float) data.getPrimaryColor().z);
@@ -208,7 +208,7 @@ public class ClientHandler {
                 event.setDensity(amount);
             }
 
-            if (data.getType() == TypeManager.Type.LAY_FADE && data.getAnimationTicks() > 0) {
+            if (data.getType() == RRRegenType.HARTNELL && data.getAnimationTicks() > 0) {
                 event.setCanceled(true);
                 float opacity = MathHelper.clamp(MathHelper.sin((viewer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
                 event.setDensity(opacity);

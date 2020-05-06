@@ -12,7 +12,6 @@ import me.swirtzly.regeneration.common.commands.RegenCommand;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
-import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.compat.TardisCompat;
 import me.swirtzly.regeneration.handlers.CommonHandler;
 import me.swirtzly.regeneration.handlers.RegenObjects;
@@ -21,6 +20,7 @@ import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.proxy.CommonProxy;
 import me.swirtzly.regeneration.proxy.Proxy;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -109,7 +109,6 @@ public class RegenerationMod {
 		proxy.init();
 		NetworkDispatcher.init();
 		TraitManager.init();
-		TypeManager.init();
 	}
 
     private void processIMC(final InterModProcessEvent event) {

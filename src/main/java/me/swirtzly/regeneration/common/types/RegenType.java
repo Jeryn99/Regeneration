@@ -3,8 +3,11 @@ package me.swirtzly.regeneration.common.types;
 import me.swirtzly.regeneration.client.rendering.types.ATypeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
@@ -12,11 +15,6 @@ import net.minecraft.util.math.Vec3d;
  * Created by Sub on 16/09/2018.
  */
 public interface RegenType<R extends ATypeRenderer<?>> {
-
-    static RegenType<?> getType(TypeManager.Type type) {
-
-        return TypeManager.getTypeInstance(TypeManager.Type.FIERY);
-	}
 	
 	/**
 	 * @return in ticks
@@ -35,12 +33,16 @@ public interface RegenType<R extends ATypeRenderer<?>> {
     }
 
     double getAnimationProgress(IRegen cap);
-	
-	TypeManager.Type getTypeID();
 
     SoundEvent[] getRegeneratingSounds();
 
     Vec3d getDefaultPrimaryColor();
 
     Vec3d getDefaultSecondaryColor();
+
+    default TranslationTextComponent getTranslation(){
+        return new TranslationTextComponent("type.regeneration."+getRegistryName().getPath());
+    }
+
+    ResourceLocation getRegistryName();
 }

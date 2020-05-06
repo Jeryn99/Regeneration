@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.RegenType;
-import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -60,7 +59,7 @@ public class RegenerationLayer extends LayerRenderer {
     public void render(Entity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         LivingEntity player = (LivingEntity) entity;
         RegenCap.get(player).ifPresent((data) -> {
-            RegenType type = TypeManager.getTypeInstance(data.getType());
+            RegenType type = data.getType().create();
             if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
                 type.getRenderer().onRenderRegenerationLayer(type, (LivingRenderer) livingEntityRenderer, data, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
             }

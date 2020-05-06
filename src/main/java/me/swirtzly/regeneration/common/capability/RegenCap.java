@@ -6,12 +6,12 @@ import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.traits.TraitManager;
-import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.SyncClientPlayerMessage;
 import me.swirtzly.regeneration.network.messages.SyncDataMessage;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.DebuggableScheduledAction;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
@@ -53,7 +53,7 @@ public class RegenCap implements IRegen {
 	private boolean didSetup = false, traitActive = true;
 	private int regenerationsLeft = 0;
 	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
-	private TypeManager.Type regenType = TypeManager.Type.FIERY;
+	private RRRegenType regenType = RRRegenType.FIERY;
 
     private String BASE64_SKIN = RegenUtil.NO_SKIN;
 	
@@ -132,7 +132,7 @@ public class RegenCap implements IRegen {
 			}
 
 		if (state == PlayerUtil.RegenState.REGENERATING) {
-			TypeManager.getTypeInstance(regenType).onUpdateMidRegen(player, this);
+			regenType.create().onUpdateMidRegen(player, this);
 		}
 	}
 	
@@ -153,9 +153,9 @@ public class RegenCap implements IRegen {
 		nbt.putInt("regenerationsLeft", regenerationsLeft);
 		nbt.put("style", getStyle());
 		if (regenType != null) {
-			nbt.putString("type_id", regenType.name());
+			nbt.putString("regen_type", regenType.getRegistryName().toString());
 		} else {
-			regenType = TypeManager.Type.FIERY;
+			regenType = RRRegenType.FIERY;
 		}
 		nbt.putString("base64_skin", BASE64_SKIN);
 		nbt.putString("skinType", skinType.name());
@@ -220,11 +220,11 @@ public class RegenCap implements IRegen {
 		
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.contains("style") ? (CompoundNBT) nbt.get("style") : nbt);
-		
-		if (nbt.contains("type_id")) // v1.3+ saves have a type tag
-			regenType = TypeManager.Type.valueOf(nbt.getString("type_id"));
+
+		if (nbt.contains("regen_type")) // v1.3+ saves have a type tag
+			regenType = RRRegenType.REGISTRY.getValue(new ResourceLocation(nbt.getString("regen_type")));
 		else // for previous save versions set to default 'fiery' type
-			regenType = TypeManager.Type.FIERY;
+			regenType = RRRegenType.FIERY;
 		
 		state = nbt.contains("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
 		setEncodedSkin(nbt.getString("base64_skin"));
@@ -267,16 +267,6 @@ public class RegenCap implements IRegen {
 	@Override
 	public LivingEntity getLivingEntity() {
 		return player;
-	}
-	
-	@Override
-	public TypeManager.Type getType() {
-		return regenType;
-	}
-
-    @Override
-	public void setType(TypeManager.Type type) {
-		this.regenType = type;
 	}
 
     @Override
@@ -465,7 +455,17 @@ public class RegenCap implements IRegen {
 	public PlayerUtil.RegenState getState() {
 		return state;
 	}
-	
+
+	@Override
+	public RRRegenType getType() {
+		return regenType;
+	}
+
+	@Override
+	public void setType(RRRegenType type) {
+		this.regenType = type;
+	}
+
 	@Override
 	public void triggerRegeneration() {
         if (player.world.isRemote)
@@ -634,10 +634,10 @@ public class RegenCap implements IRegen {
 			
 			nextTransition.cancel(); // ... cancel any state shift we had planned
             if (state.isGraceful()) handGlowTimer.cancel();
-			scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, TypeManager.getTypeInstance(regenType).getAnimationLength());
+			scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, regenType.create().getAnimationLength());
 
             ActingForwarder.onRegenTrigger(RegenCap.this);
-            TypeManager.getTypeInstance(regenType).onStartRegeneration(player, RegenCap.this);
+			regenType.create().onStartRegeneration(player, RegenCap.this);
 			synchronise();
 		}
 		
@@ -653,7 +653,7 @@ public class RegenCap implements IRegen {
 			state = PlayerUtil.RegenState.ALIVE;
 			nextTransition = null;
 			handGlowTimer = null;
-            TypeManager.getTypeInstance(regenType).onFinishRegeneration(player, RegenCap.this);
+			regenType.create().onFinishRegeneration(player, RegenCap.this);
 			if (state == PlayerUtil.RegenState.GRACE_CRIT) {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
 			} else {
@@ -680,7 +680,7 @@ public class RegenCap implements IRegen {
 			state = PlayerUtil.RegenState.POST;
 			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
 			handGlowTimer = null;
-            TypeManager.getTypeInstance(regenType).onFinishRegeneration(player, RegenCap.this);
+			regenType.create().onFinishRegeneration(player, RegenCap.this);
             ActingForwarder.onRegenFinish(RegenCap.this);
 			synchronise();
 		}
