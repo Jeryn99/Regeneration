@@ -20,8 +20,8 @@ import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.proxy.CommonProxy;
 import me.swirtzly.regeneration.proxy.Proxy;
-import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
@@ -114,6 +114,7 @@ public class RegenerationMod {
     private void processIMC(final InterModProcessEvent event) {
 		proxy.postInit();
 		PlayerUtil.createPostList();
+		RegenUtil.TIMELORD_NAMES = RegenUtil.downloadNames();
 	}
 	
 	@SubscribeEvent

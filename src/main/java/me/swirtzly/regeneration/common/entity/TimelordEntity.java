@@ -68,7 +68,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
 
     protected void applyEntityAI() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(TimelordEntity.class));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, DalekEntity.class, false));

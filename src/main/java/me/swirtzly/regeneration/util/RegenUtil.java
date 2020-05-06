@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenConfig;
+import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,57 +20,21 @@ import net.minecraft.world.World;
 import java.util.Random;
 import java.util.UUID;
 
+import static me.swirtzly.regeneration.util.FileUtil.getJsonFromURL;
+
 public class RegenUtil {
 
 	public static String[] TIMELORD_NAMES = new String[]{
-			"Nemma",
-			"Seeta",
-			"Ulysses",
-			"Omen",
-			"Calix",
-			"Vermela",
-			"Uriel",
-			"Orion",
-			"Eta Rho",
-			"Eon",
-			"Kashgar",
-			"Stratos",
-			"Sylok",
-			"Seba",
-			"Alphmega",
-			"Draylex",
-			"Simo",
-			"Flaco",
-			"Skarra",
-			"Yanagundapheno",
-			"Venubelekuna",
-			"Ajorusa",
-			"Siegold",
-			"Geirmund",
-			"Rorich",
-			"Dietwald",
-			"Kjartan",
-			"Shadera",
-			"Eylimi",
-			"Carsmyr",
-			"Friedald",
-			"Heseth",
-			"Tarasran",
-			"Lyrdia",
-			"Otwig",
-			"Svart",
-			"Bersi",
-			"Ingun",
-			"Erithic",
-			"Vonrak",
-			"Ludgart",
-			"Aerlan",
-			"Adolrin",
-			"Heinemar",
-			"Otfried",
-			"Aerael",
-			"Agnare"
+			"Timelord"
 	};
+
+	public static String[] downloadNames() {
+		String[] names = RegenerationMod.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/timelord-names.json"), String[].class);
+		for (String name : names) {
+			System.out.println(name);
+		}
+		return names;
+	}
 
 	private static Random rand = new Random();
 
