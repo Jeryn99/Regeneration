@@ -38,9 +38,8 @@ class ClientActing implements Acting {
 	
 	@Override
     public void onRegenFinish(IRegen cap) {
-		ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.regenerated"), new TranslationTextComponent("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()));
-
         if (RegenConfig.CLIENT.changeHand.get() && cap.getLivingEntity().getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
+			ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.regenerated"), new TranslationTextComponent("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()));
 			Minecraft.getInstance().gameSettings.mainHand = RegenUtil.randomEnum(HandSide.class);
 			Minecraft.getInstance().gameSettings.sendSettingsToServer();
 		}
@@ -61,8 +60,10 @@ class ClientActing implements Acting {
 	
 	@Override
     public void onGoCritical(IRegen cap) {
-		ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.enter_critical"), new TranslationTextComponent("regeneration.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
-        ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE_CRIT, 1.0F);
+		if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLivingEntity().getUniqueID())) {
+			ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.enter_critical"), new TranslationTextComponent("regeneration.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
+			ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE_CRIT, 1.0F);
+		}
 	}
 	
 }

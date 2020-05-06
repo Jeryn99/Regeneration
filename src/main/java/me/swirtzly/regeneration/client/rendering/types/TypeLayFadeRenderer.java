@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.TypeLayFade;
-import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -36,7 +36,7 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
 
     @Override
     protected void renderRegenerationLayer(TypeLayFade type, LivingRenderer renderLivingBase, IRegen capability, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        FieryRenderer.renderOverlay(entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+        FieryRenderer.renderOverlay(renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
     @Override
     public void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
         RegenCap.get(entity).ifPresent((data) -> {
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == TypeManager.Type.LAY_FADE) {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RRRegenType.HARTNELL) {
                 GlStateManager.rotatef(15, 1, 0, 0);
                 // GlStateManager.translatef(0, 1, 0);
             }
@@ -62,7 +62,7 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
     @Override
     public void postAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(entity).ifPresent((data) -> {
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == TypeManager.Type.LAY_FADE) {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RRRegenType.HARTNELL) {
                 model.bipedHead.rotateAngleX = (float) Math.toRadians(0);
                 model.bipedHead.rotateAngleY = (float) Math.toRadians(0);
                 model.bipedHead.rotateAngleZ = (float) Math.toRadians(0);

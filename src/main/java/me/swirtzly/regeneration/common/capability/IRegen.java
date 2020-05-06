@@ -3,7 +3,7 @@ package me.swirtzly.regeneration.common.capability;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
-import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -54,9 +54,9 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	
 	PlayerUtil.RegenState getState();
 
-    TypeManager.Type getType();
+    RRRegenType getType();
 
-    void setType(TypeManager.Type type);
+    void setType(RRRegenType type);
 
     IRegenStateManager getStateManager();
 	

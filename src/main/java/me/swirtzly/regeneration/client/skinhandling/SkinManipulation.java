@@ -7,7 +7,6 @@ import me.swirtzly.regeneration.client.image.ImageDownloadBuffer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.RegenType;
-import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -277,7 +276,7 @@ public class SkinManipulation {
                     setSkinFromData(player, RegenCap.get(player));
 				}
 
-				TypeManager.getTypeInstance(cap.getType()).getRenderer().onRenderRegeneratingPlayerPre(TypeManager.getTypeInstance(cap.getType()), e, cap);
+				cap.getType().create().getRenderer().onRenderRegeneratingPlayerPre(cap.getType().create(), e, cap);
 
 			} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
                 setSkinFromData(player, RegenCap.get(player));
@@ -312,8 +311,8 @@ public class SkinManipulation {
         AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) e.getEntityPlayer();
         RegenCap.get(player).ifPresent((cap) -> {
             if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
-                RegenType type = TypeManager.getTypeInstance(cap.getType());
-                type.getRenderer().onRenderRegeneratingPlayerPost(TypeManager.getTypeInstance(cap.getType()), e, cap);
+                RegenType type = cap.getType().create();
+                type.getRenderer().onRenderRegeneratingPlayerPost(type, e, cap);
             }
         });
     }

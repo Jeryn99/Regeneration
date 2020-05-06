@@ -8,9 +8,9 @@ import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.traits.TraitManager;
-import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateTypeMessage;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -25,7 +25,7 @@ import java.awt.*;
 public class GuiPreferences extends ContainerScreen {
 
 	private static final ResourceLocation BACKGROUND = new ResourceLocation(RegenerationMod.MODID, "textures/gui/pref_back.png");
-	private static TypeManager.Type SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getType();
+	private static RRRegenType SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getType();
 	private static SkinManipulation.EnumChoices CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getPreferredModel();
 	private float ROTATION = 0;
 
@@ -46,17 +46,19 @@ public class GuiPreferences extends ContainerScreen {
 		ROTATION = 0;
 
 		GuiButtonExt btnClose = new GuiButtonExt(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regeneration.gui.close").getFormattedText(), onPress -> Minecraft.getInstance().displayGuiScreen(null));
-		GuiButtonExt btnRegenType = new GuiButtonExt(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText(), new Button.IPressable() {
+		GuiButtonExt btnRegenType = new GuiButtonExt(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regentype." + SELECTED_TYPE.getRegistryName()).getUnformattedComponentText(), new Button.IPressable() {
 			@Override
 			public void onPress(Button button) {
-				if (SELECTED_TYPE.next() != null) {
+				/*if (SELECTED_TYPE.next() != null) {
 					SELECTED_TYPE = (TypeManager.Type) SELECTED_TYPE.next();
 				} else {
 					SELECTED_TYPE = TypeManager.Type.FIERY;
-				}
+				}*/
+				SELECTED_TYPE = RRRegenType.HARTNELL;
+				System.out.println(SELECTED_TYPE.create().getTranslation());
 
-				button.setMessage(new TranslationTextComponent("regeneration.gui.type", new TranslationTextComponent("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText()).getUnformattedComponentText());
-				NetworkDispatcher.sendToServer(new UpdateTypeMessage(SELECTED_TYPE.name()));
+				button.setMessage(new TranslationTextComponent("regeneration.gui.type", SELECTED_TYPE.create().getTranslation()).getUnformattedComponentText());
+				NetworkDispatcher.sendToServer(new UpdateTypeMessage(SELECTED_TYPE.getRegistryName().toString()));
 			}
 		});
 
@@ -74,7 +76,7 @@ public class GuiPreferences extends ContainerScreen {
 				PlayerUtil.updateModel(CHOICES);
 			}
 		});
-		btnRegenType.setMessage(new TranslationTextComponent("regeneration.gui.type", new TranslationTextComponent("regentype." + SELECTED_TYPE.name().toLowerCase()).getUnformattedComponentText()).getUnformattedComponentText());
+		btnRegenType.setMessage(new TranslationTextComponent("regeneration.gui.type", SELECTED_TYPE.create().getTranslation()).getUnformattedComponentText());
 
 		GuiButtonExt btnColor = new GuiButtonExt(width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.color_gui").getUnformattedComponentText(), new Button.IPressable() {
 			@Override

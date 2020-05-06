@@ -5,8 +5,10 @@ import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.gui.parts.ColorSliderWidget;
 import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.types.RegenType;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateColorMessage;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -76,13 +78,16 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
 
         // Default Button
         this.addButton(new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.default").getFormattedText(), button -> {
-            slidePrimaryRed.setValue(0.93F);
-            slidePrimaryGreen.setValue(0.61F);
-            slidePrimaryBlue.setValue(0F);
+            RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
+                RegenType regenType = data.getType().create();
+                slidePrimaryRed.setValue(regenType.getDefaultPrimaryColor().x);
+                slidePrimaryGreen.setValue(regenType.getDefaultPrimaryColor().y);
+                slidePrimaryBlue.setValue(regenType.getDefaultPrimaryColor().z);
 
-            slideSecondaryRed.setValue(1F);
-            slideSecondaryGreen.setValue(0.5F);
-            slideSecondaryBlue.setValue(0.18F);
+                slideSecondaryRed.setValue(regenType.getDefaultSecondaryColor().x);
+                slideSecondaryGreen.setValue(regenType.getDefaultSecondaryColor().y);
+                slideSecondaryBlue.setValue(regenType.getDefaultSecondaryColor().z);
+            });
 
             onChangeSliderValue(null);
         }));

@@ -2,8 +2,8 @@ package me.swirtzly.regeneration.compat;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.MinecraftServer;
@@ -72,7 +72,7 @@ public class TardisCompat {
             RegenCap.get(playerEntity).ifPresent((data) -> {
                 //Regenerating
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                    if (data.getType() == TypeManager.Type.FIERY && playerEntity.ticksExisted % 10 == 0) {
+                    if (data.getType() == RRRegenType.FIERY && playerEntity.ticksExisted % 10 == 0) {
                         for (Subsystem subSystem : console.getSubSystems()) {
                             subSystem.damage(null, world.rand.nextInt(5));
                         }
@@ -82,7 +82,7 @@ public class TardisCompat {
                         console.getInteriorManager().setAlarmOn(true);
                         console.getInteriorManager().setLight(0);
 
-                        if (console.isInFlight() && data.getType() == TypeManager.Type.FIERY) {
+                        if (console.isInFlight() && data.getType() == RRRegenType.FIERY) {
                             if (world.rand.nextInt(50) < 10) {
                                 console.crash();
                             }

@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.client.rendering.layers;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.types.TypeManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -62,7 +61,7 @@ public class HandsLayer extends LayerRenderer {
 			}
 
             if (type == EnumHandRenderType.REGEN) {
-				TypeManager.getTypeInstance(data.getType()).getRenderer().renderHand(player, handSide, (LivingRenderer) livingEntityRenderer);
+				data.getType().create().getRenderer().renderHand(player, handSide, (LivingRenderer) livingEntityRenderer);
 			}
 
         });

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.FieryType;
-import me.swirtzly.regeneration.common.types.TypeManager;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -25,7 +25,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	
 	public static final FieryRenderer INSTANCE = new FieryRenderer();
 
-	public static void renderOverlay(LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	public static void renderOverlay(LivingRenderer renderer, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		RegenCap.get(entityPlayer).ifPresent((data) -> {
 			GlStateManager.pushMatrix();
 			RenderUtil.setLightmapTextureCoords(240, 240);
@@ -36,8 +36,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 			Vec3d color = data.getPrimaryColor();
 			float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
 			GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, opacity);
-			playerModelSteve.isChild = false;
-			playerModelSteve.render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+			renderer.getEntityModel().render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 			RenderUtil.restoreLightMap();
 			GlStateManager.enableLighting();
 			GlStateManager.disableBlend();
@@ -66,7 +65,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 
 	public static void renderConeAtArms(LivingEntity player, LivingRenderer renderLivingBase, HandSide side) {
 		RegenCap.get(player).ifPresent((data) -> {
-            double x = TypeManager.getTypeInstance(data.getType()).getAnimationProgress(data);
+            double x = data.getType().create().getAnimationProgress(data);
             double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
             double r = 0.09890109890109888;
             double f = p * Math.pow(x, 2) - r;
@@ -162,7 +161,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		
 		if (!capability.isSyncingToJar()) {
 			// Render glowing overlay
-			renderOverlay(entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+			renderOverlay(renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 		// Undo state manager changes
 		RenderUtil.restoreLightMap();
@@ -187,7 +186,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	@Override
 	public void postAnimation(BipedModel playerModel, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		RegenCap.get(entity).ifPresent((data) -> {
-			if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == TypeManager.Type.FIERY) {
+			if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RRRegenType.FIERY) {
 
                 double animationProgress = data.getAnimationTicks();
 				double arm_shake = entity.getRNG().nextDouble();

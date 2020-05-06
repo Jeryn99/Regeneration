@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.common.types;
 
 import me.swirtzly.regeneration.RegenConfig;
+import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.handlers.RegenObjects;
@@ -8,6 +9,7 @@ import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.FireBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -25,32 +27,34 @@ public class FieryType implements RegenType<FieryRenderer> {
     private SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0.get(), RegenObjects.Sounds.REGENERATION_1.get(), RegenObjects.Sounds.REGENERATION_2.get(), RegenObjects.Sounds.REGENERATION_3.get(), RegenObjects.Sounds.REGENERATION_4.get(), RegenObjects.Sounds.REGENERATION_5.get(), RegenObjects.Sounds.REGENERATION_6.get(),};
 	
 	@Override
-	public void onUpdateMidRegen(LivingEntity player, IRegen capability) {
+	public void onUpdateMidRegen(IRegen capability) {
+
+		LivingEntity livingEntity = capability.getLivingEntity();
+
+		livingEntity.extinguish();
 		
-		player.extinguish();
-		
-		if (!player.world.isRemote) {
+		if (!livingEntity.world.isRemote) {
 			if (capability.getLivingEntity() instanceof ServerPlayerEntity) {
-				PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
+				PlayerUtil.setPerspective((ServerPlayerEntity) livingEntity, true, false);
 			}
 		}
 
-        if (player.world.isRemote) return;
+        if (livingEntity.world.isRemote) return;
 
-        if (player.world.getBlockState(player.getPosition()).getBlock() instanceof FireBlock)
-            player.world.removeBlock(player.getPosition(), false);
+        if (livingEntity.world.getBlockState(livingEntity.getPosition()).getBlock() instanceof FireBlock)
+			livingEntity.world.removeBlock(livingEntity.getPosition(), false);
 		
-		double x = player.posX + player.getRNG().nextGaussian() * 2;
-		double y = player.posY + 0.5 + player.getRNG().nextGaussian() * 2;
-		double z = player.posZ + player.getRNG().nextGaussian() * 2;
-		player.world.createExplosion(player, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
+		double x = livingEntity.posX + livingEntity.getRNG().nextGaussian() * 2;
+		double y = livingEntity.posY + 0.5 + livingEntity.getRNG().nextGaussian() * 2;
+		double z = livingEntity.posZ + livingEntity.getRNG().nextGaussian() * 2;
+		livingEntity.world.createExplosion(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
 
-        Iterator<BlockPos> iterator = getAllInBox(player.getPosition().north().west(), player.getPosition().south().east()).iterator();
+        Iterator<BlockPos> iterator = getAllInBox(livingEntity.getPosition().north().west(), livingEntity.getPosition().south().east()).iterator();
 
         while (iterator.hasNext()) {
 			iterator.forEachRemaining((blockPos -> {
-				if (player.world.getBlockState(blockPos).getBlock() instanceof FireBlock) {
-					player.world.removeBlock(blockPos, false);
+				if (livingEntity.world.getBlockState(blockPos).getBlock() instanceof FireBlock) {
+					livingEntity.world.removeBlock(blockPos, false);
 				}
 			}));
 		}
@@ -58,9 +62,9 @@ public class FieryType implements RegenType<FieryRenderer> {
     }
 	
 	@Override
-	public void onFinishRegeneration(LivingEntity player, IRegen capability) {
-		if (player instanceof ServerPlayerEntity) {
-			PlayerUtil.setPerspective((ServerPlayerEntity) player, false, true);
+	public void onFinishRegeneration(IRegen capability) {
+		if (capability.getLivingEntity() instanceof ServerPlayerEntity) {
+			PlayerUtil.setPerspective((ServerPlayerEntity) capability.getLivingEntity() , false, true);
 		}
 		capability.setAnimationTicks(0);
 	}
@@ -75,10 +79,6 @@ public class FieryType implements RegenType<FieryRenderer> {
 		return Math.min(1, cap.getAnimationTicks() / (double) getAnimationLength());
 	}
 
-    @Override
-    public TypeManager.Type getTypeID() {
-        return TypeManager.Type.FIERY;
-    }
 	
 	@Override
 	public SoundEvent[] getRegeneratingSounds() {
@@ -95,7 +95,12 @@ public class FieryType implements RegenType<FieryRenderer> {
 		return new Vec3d(1F, 0.5F, 0.18F);
 	}
 
-    @Override
+	@Override
+	public ResourceLocation getRegistryName() {
+		return new ResourceLocation(RegenerationMod.MODID, "fiery");
+	}
+
+	@Override
 	public FieryRenderer getRenderer() {
 		return FieryRenderer.INSTANCE;
 	}

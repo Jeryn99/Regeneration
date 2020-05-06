@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
 import me.swirtzly.regeneration.common.trades.Trades;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.*;
@@ -67,7 +68,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
 
     protected void applyEntityAI() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(TimelordEntity.class));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, DalekEntity.class, false));
@@ -99,6 +100,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
                 nbt.putFloat("SecondaryGreen", rand.nextInt(255) / 255.0F);
                 nbt.putFloat("SecondaryBlue", rand.nextInt(255) / 255.0F);
                 data.setStyle(nbt);
+                data.setType(rand.nextBoolean() ? RRRegenType.FIERY : RRRegenType.HARTNELL);
             });
         }
 
