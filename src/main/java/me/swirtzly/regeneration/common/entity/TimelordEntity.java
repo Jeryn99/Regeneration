@@ -29,7 +29,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.tardis.mod.entity.DalekEntity;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,7 +53,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
     @Override
     protected void registerData() {
         super.registerData();
-        getDataManager().register(SKIN, rand.nextInt(6));
+        getDataManager().register(SKIN, rand.nextInt(11));
     }
 
     @Override
@@ -71,7 +70,6 @@ public class TimelordEntity extends AbstractVillagerEntity {
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(TimelordEntity.class));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, DalekEntity.class, false));
     }
 
     @Override
@@ -119,7 +117,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 
                     if (data.getAnimationTicks() == 100) {
-                        getDataManager().set(SKIN, rand.nextInt(6));
+                        setSkin(rand.nextInt(11));
                     }
 
                     setNoAI(true);

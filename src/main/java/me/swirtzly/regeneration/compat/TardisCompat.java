@@ -2,19 +2,24 @@ package me.swirtzly.regeneration.compat;
 
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.tardis.mod.dimensions.TardisDimension;
+import net.tardis.mod.entity.DalekEntity;
 import net.tardis.mod.helper.TardisHelper;
 import net.tardis.mod.items.TItems;
 import net.tardis.mod.recipe.Recipes;
@@ -58,6 +63,13 @@ public class TardisCompat {
         return (ConsoleTile) world.getTileEntity(TardisHelper.TARDIS_POS);
     }
 
+    @SubscribeEvent
+    public void onJoin(EntityJoinWorldEvent entityJoinWorldEvent){
+        if(entityJoinWorldEvent.getEntity() instanceof TimelordEntity){
+            TimelordEntity timelordEntity = (TimelordEntity) entityJoinWorldEvent.getEntity();
+            timelordEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(timelordEntity, DalekEntity.class, false));
+        }
+    }
 
     @SubscribeEvent
     public void onLive(LivingEvent.LivingUpdateEvent event) {
