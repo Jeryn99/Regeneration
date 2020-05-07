@@ -90,8 +90,8 @@ public class RegenObjects {
 		public static final RegistryObject<Item> HAND = ITEMS.register("hand", HandItem::new);
 		public static final RegistryObject<Item> ARCH_PART = ITEMS.register("arch_part", ComponentItem::new);
 		public static final RegistryObject<Item> GAL_INGOT = ITEMS.register("gal_ingot", IngotItem::new);
-		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30));
-		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18));
+		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 5));
+		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 2));
 	}
 	
 
@@ -115,6 +115,8 @@ public class RegenObjects {
 		public static final RegistryObject<SoundEvent> REGENERATION_4 = SOUNDS.register("regeneration_4", () -> setUpSound("regeneration_4"));
 		public static final RegistryObject<SoundEvent> REGENERATION_5 = SOUNDS.register("regeneration_5", () -> setUpSound("regeneration_5"));
 		public static final RegistryObject<SoundEvent> REGENERATION_6 = SOUNDS.register("regeneration_6", () -> setUpSound("regeneration_6"));
+		public static final RegistryObject<SoundEvent> STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
+		public static final RegistryObject<SoundEvent> RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));
 	}
 
 	public static class EntityEntries {
