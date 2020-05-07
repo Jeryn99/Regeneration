@@ -219,7 +219,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
             this.addTrades(merchantoffers, trades, 5);
         }
 
-     /*   if(ModList.get().isLoaded("tardis")) {
+      /*  if(ModList.get().isLoaded("tardis")) {
             VillagerTrades.ITrade[] tardisTrades = TardisCompat.genTrades();
             if (trades != null) {
                 MerchantOffers merchantoffers = this.getOffers();

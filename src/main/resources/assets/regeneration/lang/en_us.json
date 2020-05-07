@@ -2,6 +2,8 @@
   "item.regeneration.fob_watch": "Fob Watch",
   "entity.regeneration.timelord": "Timelord",
   "item.regeneration.lindos_vial": "Lindos Vial",
+  "item.regeneration.time_lord_rifle": "Gallifreyan Rifle",
+  "item.regeneration.time_lord_gun": "Gallifreyan Staser",
   "item.regeneration.hand": "%s's hand",
   "argument.regeneration.invalid": "This trait is invalid!",
   "block.regeneration.gal_ore": "Unknown Ore",

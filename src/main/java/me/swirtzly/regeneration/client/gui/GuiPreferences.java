@@ -49,14 +49,12 @@ public class GuiPreferences extends ContainerScreen {
 		GuiButtonExt btnRegenType = new GuiButtonExt(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regentype." + SELECTED_TYPE.getRegistryName()).getUnformattedComponentText(), new Button.IPressable() {
 			@Override
 			public void onPress(Button button) {
-				/*if (SELECTED_TYPE.next() != null) {
-					SELECTED_TYPE = (TypeManager.Type) SELECTED_TYPE.next();
-				} else {
-					SELECTED_TYPE = TypeManager.Type.FIERY;
-				}*/
-				SELECTED_TYPE = RRRegenType.HARTNELL;
-				System.out.println(SELECTED_TYPE.create().getTranslation());
+                int pos = RRRegenType.getPosition(SELECTED_TYPE) + 1;
 
+                if (pos < 0 || pos >= RRRegenType.TYPES.length) {
+                    pos = 0;
+                }
+                SELECTED_TYPE = RRRegenType.TYPES[pos];
 				button.setMessage(new TranslationTextComponent("regeneration.gui.type", SELECTED_TYPE.create().getTranslation()).getUnformattedComponentText());
 				NetworkDispatcher.sendToServer(new UpdateTypeMessage(SELECTED_TYPE.getRegistryName().toString()));
 			}

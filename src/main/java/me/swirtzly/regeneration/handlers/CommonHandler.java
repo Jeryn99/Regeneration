@@ -4,16 +4,12 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
@@ -27,7 +23,6 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -160,7 +155,7 @@ public class CommonHandler {
 
     @SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		if (event.getObject() instanceof PlayerEntity || event.getObject() instanceof TimelordEntity || event.getObject() instanceof LivingEntity) {
+        if (event.getObject() instanceof LivingEntity) {
 			event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
 				final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
 				final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
@@ -186,22 +181,6 @@ public class CommonHandler {
 		}
 	}
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		Entity entity = event.getEntity();
-		if (entity.getClass().equals(ItemEntity.class)) {
-			ItemStack stack = ((ItemEntity) entity).getItem();
-			Item item = stack.getItem();
-			if (item.hasCustomEntity(stack)) {
-				Entity newEntity = item.createEntity(event.getWorld(), entity, stack);
-				if (newEntity != null) {
-					entity.remove();
-					event.setCanceled(true);
-					event.getWorld().addEntity(newEntity);
-				}
-			}
-		}
-	}
 
     @SubscribeEvent
     public void onCut(PlayerInteractEvent.RightClickItem event) {

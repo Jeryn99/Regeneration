@@ -7,13 +7,13 @@ import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,7 +27,10 @@ import net.tardis.mod.recipe.WeldRecipe;
 import net.tardis.mod.registries.TardisRegistries;
 import net.tardis.mod.subsystem.Subsystem;
 import net.tardis.mod.tileentities.ConsoleTile;
+import net.tardis.mod.upgrades.Upgrade;
 import net.tardis.mod.upgrades.UpgradeEntry;
+
+import static me.swirtzly.regeneration.RegenerationMod.LOG;
 
 /**
  * Created by Swirtzly
@@ -36,10 +39,12 @@ import net.tardis.mod.upgrades.UpgradeEntry;
 public class TardisCompat {
 
     public static void addTardisCompat() {
+        LOG.info("Loading Tardis Compatibility");
         TardisRegistries.registerRegisters(TardisCompat::registerAllProtocols);
         TardisRegistries.registerRegisters(TardisCompat::registerAllUpgrades);
         Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), false, RegenObjects.Items.HAND.get(), TItems.CIRCUITS));
         Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), true, RegenObjects.Items.ARCH_PART.get(), TItems.CIRCUITS, RegenObjects.Items.HAND.get()));
+        MinecraftForge.EVENT_BUS.register(new TardisCompat());
     }
 
     public static void registerAllUpgrades() {
@@ -53,9 +58,7 @@ public class TardisCompat {
 
     public static void damageSubsystem(World world) {
         getTardis(world).getUpgrade(ArchUpgrade.class).ifPresent((archUpgrade -> {
-            //TODO FIX SOURCES SO THE BELOW CALL CAN BE MADE
-            // archUpgrade.damage(1, null, null);
-            archUpgrade.getStack().attemptDamageItem(1, world.rand, null);
+            archUpgrade.damage(1, Upgrade.DamageType.ITEM, null);
         }));
     }
 

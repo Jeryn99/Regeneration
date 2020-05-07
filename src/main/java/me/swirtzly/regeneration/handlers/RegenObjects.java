@@ -11,6 +11,7 @@ import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
 import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.dimension.features.FeatureSpikeyBoys;
 import me.swirtzly.regeneration.common.dimension.features.GallifreyanTreeFeature;
+import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.item.*;
@@ -89,6 +90,8 @@ public class RegenObjects {
 		public static final RegistryObject<Item> HAND = ITEMS.register("hand", HandItem::new);
 		public static final RegistryObject<Item> ARCH_PART = ITEMS.register("arch_part", ComponentItem::new);
 		public static final RegistryObject<Item> GAL_INGOT = ITEMS.register("gal_ingot", IngotItem::new);
+		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30));
+		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18));
 	}
 	
 
@@ -115,9 +118,12 @@ public class RegenObjects {
 	}
 
 	public static class EntityEntries {
+
+
 		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, RegenerationMod.MODID);
 		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
         public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
+		public static RegistryObject<EntityType<LaserEntity>> LASER = ENTITIES.register("laser", () -> registerMob(LaserEntity::new, LaserEntity::new, EntityClassification.MISC, 0.5F, 0.5F, "laser", true));
 	}
 
 	public static class Tiles {
@@ -300,10 +306,6 @@ public class RegenObjects {
  	
  	public interface IClientSpawner<T> {
 		T spawn(World world);
-	}
- 	
- 	private static Biome registerBiomes(Biome biome) {
-		return biome;
 	}
  	
 	//Chunk Generator Type creation

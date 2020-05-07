@@ -32,6 +32,17 @@ public class RRRegenType extends ForgeRegistryEntry<RRRegenType> {
     public static final RRRegenType FIERY = new RRRegenType(FieryType::new);
     public static final RRRegenType HARTNELL = new RRRegenType(TypeLayFade::new);
 
+    public static RRRegenType[] TYPES = new RRRegenType[]{FIERY, HARTNELL};
+
+    public static int getPosition(RRRegenType rrRegenType) {
+        for (int i = 0; i < TYPES.length; i++) {
+            if (TYPES[i] == rrRegenType) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register<RRRegenType> e) {
         e.getRegistry().registerAll(FIERY, HARTNELL);

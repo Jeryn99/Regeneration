@@ -3,12 +3,14 @@ package me.swirtzly.regeneration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
+import me.swirtzly.regeneration.client.rendering.entity.LaserRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.capability.RegenStorage;
 import me.swirtzly.regeneration.common.commands.RegenCommand;
+import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
@@ -73,6 +75,7 @@ public class RegenerationMod {
     private void doClientStuff(final FMLClientSetupEvent event) {
 		RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(TimelordEntity.class, TimelordRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(LaserEntity.class, LaserRenderer::new);
 	}
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -84,8 +87,6 @@ public class RegenerationMod {
 
 
 		if (ModList.get().isLoaded("tardis")) {
-			LOG.info("Loading Tardis Compatibility");
-			MinecraftForge.EVENT_BUS.register(new TardisCompat());
 			TardisCompat.addTardisCompat();
 		}
 
