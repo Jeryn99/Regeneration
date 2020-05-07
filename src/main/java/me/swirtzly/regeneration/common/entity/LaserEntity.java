@@ -18,7 +18,6 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.tardis.mod.entity.TEntities;
 
 public class LaserEntity extends ThrowableEntity {
     public float damage;
@@ -43,7 +42,7 @@ public class LaserEntity extends ThrowableEntity {
     }
 
     public LaserEntity(double x, double y, double z, World worldIn, LivingEntity livingEntityIn, float damage, DamageSource source, Vec3d color) {
-        super(TEntities.LASER, x, y, z, worldIn);
+        super(RegenObjects.EntityEntries.LASER.get(), x, y, z, worldIn);
         this.damage = 10.0F;
         this.scale = 0.5F;
         this.color = new Vec3d(0.0D, 1.0D, 1.0D);
@@ -66,11 +65,13 @@ public class LaserEntity extends ThrowableEntity {
     }
 
 
+    @Override
     public void tick() {
         double speed = (new Vec3d(this.posX, this.posY, this.posZ)).distanceTo(new Vec3d(this.prevPosX, this.prevPosY, this.prevPosZ));
         if (!this.world.isRemote && (this.ticksExisted > 600 || speed < 0.01D)) {
             this.remove();
         }
+
 
         if (!this.removed) {
             super.tick();

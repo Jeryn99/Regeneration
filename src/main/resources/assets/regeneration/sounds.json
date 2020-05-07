@@ -9,6 +9,26 @@
       }
     ]
   },
+  "staser": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.staser",
+    "sounds": [
+      {
+        "name": "regeneration:gun/staser",
+        "stream": false
+      }
+    ]
+  },
+  "rifle": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.rifle",
+    "sounds": [
+      {
+        "name": "regeneration:gun/rifle",
+        "stream": false
+      }
+    ]
+  },
 
   "grace_hum": {
     "category": "ambient",
