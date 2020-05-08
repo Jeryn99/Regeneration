@@ -62,7 +62,7 @@ public class RegenCap implements IRegen {
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
 	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
-    private int ticksAnimating = 0; // I`m so sorry
+    private int ticksAnimating = 0;
 	private boolean syncingToJar = false;
 	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
 	private String nextSkin = RegenUtil.NO_SKIN;

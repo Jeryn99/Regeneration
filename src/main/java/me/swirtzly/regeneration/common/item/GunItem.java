@@ -2,6 +2,7 @@ package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
+import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +15,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -32,7 +34,8 @@ public class GunItem extends SolidItem {
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
+    public ActionResultType onItemUse(ItemUseContext context)
+    {
         return super.onItemUse(context);
     }
 
@@ -80,6 +83,10 @@ public class GunItem extends SolidItem {
                 setDamage(stack, getDamage(stack) - 1);
             }
         }
+    }
+
+    public int getDamage() {
+        return damage;
     }
 
     @Override

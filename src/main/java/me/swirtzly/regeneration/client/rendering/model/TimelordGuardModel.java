@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.client.rendering.model;
 
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.common.item.GunItem;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
@@ -261,65 +261,11 @@ public class TimelordGuardModel extends BipedModel<TimelordEntity> {
 
     @Override
     public void setRotationAngles(TimelordEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
-
-        rightArmPose = ArmPose.BOW_AND_ARROW;
-
+        if (entityIn.getHeldItemMainhand().getItem() instanceof GunItem) {
+            rightArmPose = ArmPose.BOW_AND_ARROW;
+        }
         super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-
-        RegenCap.get(entityIn).ifPresent((data) -> {
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                double animationProgress = data.getAnimationTicks();
-                double arm_shake = entityIn.getRNG().nextDouble();
-                float armRotY = (float) animationProgress * 1.5F;
-                float armRotZ = (float) animationProgress * 1.5F;
-                float headRot = (float) animationProgress * 1.5F;
-
-                if (armRotY > 90) {
-                    armRotY = 90;
-                }
-
-                if (armRotZ > 95) {
-                    armRotZ = 95;
-                }
-
-                if (headRot > 45) {
-                    headRot = 45;
-                }
-
-                // ARMS
-                bipedLeftArm.rotateAngleY = 0;
-                bipedRightArm.rotateAngleY = 0;
-
-                bipedLeftArm.rotateAngleX = 0;
-                bipedRightArm.rotateAngleX = 0;
-
-                bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRotZ + arm_shake);
-                bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRotZ + arm_shake);
-                bipedLeftArm.rotateAngleY = (float) -Math.toRadians(armRotY);
-                bipedRightArm.rotateAngleY = (float) Math.toRadians(armRotY);
-
-                // bipedBody
-                bipedBody.rotateAngleX = 0;
-                bipedBody.rotateAngleY = 0;
-                bipedBody.rotateAngleZ = 0;
-
-                // LEGS
-                bipedLeftLeg.rotateAngleY = 0;
-                bipedRightLeg.rotateAngleY = 0;
-
-                bipedLeftLeg.rotateAngleX = 0;
-                bipedRightLeg.rotateAngleX = 0;
-
-                bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-                bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
-
-
-                bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
-                bipedHead.rotateAngleY = (float) Math.toRadians(0);
-                bipedHead.rotateAngleZ = (float) Math.toRadians(0);
-            }
-        });
-
+        RegenCap.get(entityIn).ifPresent((data) -> data.getType().create().getRenderer().postAnimation(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
         RenderUtil.copyModelAngles(bipedHead, head);
         RenderUtil.copyModelAngles(bipedBody, body);
         RenderUtil.copyModelAngles(bipedLeftArm, left_arm);

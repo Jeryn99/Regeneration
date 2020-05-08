@@ -48,7 +48,6 @@ public class Trades {
         @Override
         public MerchantOffer getOffer(Entity trader, Random rand) {
             return new MerchantOffer(coin, coin2, wares, stock, xp, 0F);
-
         }
     }
 

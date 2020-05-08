@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.RegenerationMod;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
+import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.ClientUtil;
@@ -13,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -93,6 +95,20 @@ public class FobWatchItem extends SolidItem {
     @Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
+
+		if(player.getName().getUnformattedComponentText().equalsIgnoreCase("dev")) {
+			BlockPos pos = player.getPosition();
+			for (int i = 0; i < 12; i++) {
+				pos = pos.add(1, 0, 0);
+				TimelordEntity timelordEntity = new TimelordEntity(world);
+				timelordEntity.canUpdate(false);
+				timelordEntity.setSkin(i);
+				timelordEntity.setTimelordType(player.isSneaking() ? TimelordEntity.TimelordType.GUARD : TimelordEntity.TimelordType.COUNCIL);
+				timelordEntity.setPosition(pos.getX(), pos.getY(), pos.getZ());
+				world.addEntity(timelordEntity);
+			}
+		}
+
 
         RegenCap.get(player).ifPresent((cap) -> {
 

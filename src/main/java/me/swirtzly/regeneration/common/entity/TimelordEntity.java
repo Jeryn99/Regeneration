@@ -2,6 +2,7 @@ package me.swirtzly.regeneration.common.entity;
 
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
+import me.swirtzly.regeneration.common.item.GunItem;
 import me.swirtzly.regeneration.common.trades.Trades;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.registries.RRRegenType;
@@ -12,6 +13,7 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
+import net.minecraft.entity.monster.DrownedEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,8 +25,13 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
@@ -37,11 +44,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by Swirtzly
  * on 03/05/2020 @ 18:50
  */
-public class TimelordEntity extends AbstractVillagerEntity {
+public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
     public static final DataParameter<Integer> SKIN = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.VARINT);
     public static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
 
+    protected final SwimmerPathNavigator waterNavigator;
+    protected final GroundPathNavigator groundNavigator;
 
     public TimelordEntity(World world) {
         this(RegenObjects.EntityEntries.TIMELORD.get(), world);
@@ -49,14 +59,46 @@ public class TimelordEntity extends AbstractVillagerEntity {
 
     public TimelordEntity(EntityType<TimelordEntity> entityEntityType, World world) {
         super(entityEntityType, world);
+        this.waterNavigator = new SwimmerPathNavigator(this, world);
+        this.groundNavigator = new GroundPathNavigator(this, world);
     }
 
     @Override
     protected void registerData() {
         super.registerData();
         getDataManager().register(SKIN, rand.nextInt(11));
-        getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.getName() : TimelordType.GUARD.getName());
+        getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
+        getDataManager().register(SWINGING_ARMS, false);
     }
+
+
+
+    @Override
+    public void updateSwimming() {
+        if (!this.world.isRemote) {
+            if (this.isServerWorld() && this.isInWater()) {
+                this.navigator = this.waterNavigator;
+                this.setSwimming(true);
+            } else {
+                this.navigator = this.groundNavigator;
+                this.setSwimming(false);
+            }
+        }
+    }
+
+    private boolean func_204715_dF() {
+            LivingEntity livingentity = this.getAttackTarget();
+            return livingentity != null && livingentity.isInWater();
+    }
+
+    public void setSwingingArms(boolean swingingArms) {
+        this.getDataManager().set(SWINGING_ARMS, swingingArms);
+    }
+
+    public boolean isSwingingArms() {
+        return this.getDataManager().get(SWINGING_ARMS);
+    }
+
 
     @Override
     protected void registerGoals() {
@@ -64,6 +106,10 @@ public class TimelordEntity extends AbstractVillagerEntity {
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(1, new TradeWithPlayerGoal(this));
         this.goalSelector.addGoal(1, new TimelordMelee(this, (double) 1.2F, true));
+        this.goalSelector.addGoal(1, new SwimGoal(this));
+        if (getTimelordType() == TimelordType.GUARD) {
+            this.goalSelector.addGoal(1, new RangedAttackGoal(this, 1.25D, 15, 20.0F));
+        }
         this.applyEntityAI();
     }
 
@@ -84,6 +130,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
     }
 
+
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
@@ -96,7 +143,6 @@ public class TimelordEntity extends AbstractVillagerEntity {
 
             RegenCap.get(this).ifPresent((data) -> {
                 data.receiveRegenerations(worldIn.getRandom().nextInt(12));
-
                 CompoundNBT nbt = new CompoundNBT();
                 nbt.putFloat("PrimaryRed", rand.nextInt(255) / 255.0F);
                 nbt.putFloat("PrimaryGreen", rand.nextInt(255) / 255.0F);
@@ -117,6 +163,19 @@ public class TimelordEntity extends AbstractVillagerEntity {
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
+    @Override
+    public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
+        if (this.getHeldItemMainhand().getItem() instanceof GunItem) {
+            GunItem gunItem = (GunItem) getHeldItemMainhand().getItem();
+            LaserEntity laserEntity = new LaserEntity(RegenObjects.EntityEntries.LASER.get(), this, this.world);
+            laserEntity.setColor(new Vec3d(1, 0, 0));
+            laserEntity.setDamage(gunItem.getDamage());
+            laserEntity.shoot(this, this.rotationPitch, this.rotationYaw, 0.0F, 1.5F, 0F);
+            this.world.playSound(null, this.posX, this.posY, this.posZ, this.getHeldItemMainhand().getItem() == RegenObjects.Items.PISTOL.get() ? RegenObjects.Sounds.STASER.get() : RegenObjects.Sounds.RIFLE.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
+            this.world.addEntity(laserEntity);
+        }
+    }
+
     public enum TimelordType{
         COUNCIL("timelord"), GUARD("guards");
 
@@ -132,17 +191,17 @@ public class TimelordEntity extends AbstractVillagerEntity {
     }
 
     public void setTimelordType(TimelordType type){
-        getDataManager().set(TYPE, type.getName());
+        getDataManager().set(TYPE, type.name());
     }
 
     public TimelordType getTimelordType(){
         String type = getDataManager().get(TYPE);
         for (TimelordType value : TimelordType.values()) {
-            if(value.getName().equals(type)){
+            if(value.name().equals(type)){
                 return value;
             }
         }
-        return TimelordType.COUNCIL;
+        return TimelordType.GUARD;
     }
 
     @Override
@@ -237,16 +296,24 @@ public class TimelordEntity extends AbstractVillagerEntity {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = super.serializeNBT();
-        nbt.putInt("skin", getSkin());
-        return nbt;
+    public void onKillCommand() {
+        remove();
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-        super.deserializeNBT(nbt);
-        setSkin(nbt.getInt("skin"));
+    public void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("skin", getSkin());
+        compound.putString("timelord_type", getTimelordType().name());
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+        setSkin(compound.getInt("skin"));
+        if (compound.contains("timelord_type")) {
+            setTimelordType(TimelordType.valueOf(compound.getString("timelord_type")));
+        }
     }
 
     @Override

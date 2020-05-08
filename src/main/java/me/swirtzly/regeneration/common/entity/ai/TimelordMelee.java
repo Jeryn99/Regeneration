@@ -36,6 +36,7 @@ public class TimelordMelee extends Goal {
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
+    @Override
     public boolean shouldExecute() {
         long i = this.attacker.world.getGameTime();
         if (i - this.field_220720_k < 20L) {
@@ -70,6 +71,7 @@ public class TimelordMelee extends Goal {
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
+    @Override
     public boolean shouldContinueExecuting() {
         LivingEntity livingentity = this.attacker.getAttackTarget();
         if (livingentity == null) {
@@ -88,21 +90,24 @@ public class TimelordMelee extends Goal {
     /**
      * Execute a one shot task or start executing a continuous task
      */
+    @Override
     public void startExecuting() {
         this.attacker.getNavigator().setPath(this.path, this.speedTowardsTarget);
         this.attacker.setAggroed(true);
+        attacker.setSwingingArms(true);
         this.delayCounter = 0;
     }
 
     /**
      * Reset the task's internal state. Called when this task is interrupted by another one
      */
+    @Override
     public void resetTask() {
         LivingEntity livingentity = this.attacker.getAttackTarget();
         if (!EntityPredicates.CAN_AI_TARGET.test(livingentity)) {
             this.attacker.setAttackTarget(null);
         }
-
+        this.attacker.setSwingingArms(false);
         this.attacker.setAggroed(false);
         this.attacker.getNavigator().clearPath();
     }
@@ -110,6 +115,7 @@ public class TimelordMelee extends Goal {
     /**
      * Keep ticking a continuous task that has already been started
      */
+    @Override
     public void tick() {
         LivingEntity livingentity = this.attacker.getAttackTarget();
         this.attacker.getLookController().setLookPositionWithEntity(livingentity, 30.0F, 30.0F);
