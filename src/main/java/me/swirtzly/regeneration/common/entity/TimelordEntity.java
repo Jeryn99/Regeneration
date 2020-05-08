@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class TimelordEntity extends AbstractVillagerEntity {
 
     public static final DataParameter<Integer> SKIN = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.VARINT);
+    public static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
 
 
     public TimelordEntity(World world) {
@@ -54,6 +55,7 @@ public class TimelordEntity extends AbstractVillagerEntity {
     protected void registerData() {
         super.registerData();
         getDataManager().register(SKIN, rand.nextInt(11));
+        getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.getName() : TimelordType.GUARD.getName());
     }
 
     @Override
@@ -85,7 +87,13 @@ public class TimelordEntity extends AbstractVillagerEntity {
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+
         if (!worldIn.isRemote()) {
+
+            if(getTimelordType() == TimelordType.GUARD){
+                setHeldItem(Hand.MAIN_HAND, new ItemStack(rand.nextBoolean() ? RegenObjects.Items.PISTOL.get() : RegenObjects.Items.RIFLE.get()));
+            }
+
             RegenCap.get(this).ifPresent((data) -> {
                 data.receiveRegenerations(worldIn.getRandom().nextInt(12));
 
@@ -100,11 +108,41 @@ public class TimelordEntity extends AbstractVillagerEntity {
                 data.setStyle(nbt);
                 data.setType(rand.nextBoolean() ? RRRegenType.FIERY : RRRegenType.HARTNELL);
             });
+
+
         }
 
         setCustomName(new StringTextComponent(RegenUtil.TIMELORD_NAMES[rand.nextInt(RegenUtil.TIMELORD_NAMES.length)]));
 
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
+
+    public enum TimelordType{
+        COUNCIL("timelord"), GUARD("guards");
+
+        private final String name;
+
+        TimelordType(String guard) {
+            this.name = guard;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public void setTimelordType(TimelordType type){
+        getDataManager().set(TYPE, type.getName());
+    }
+
+    public TimelordType getTimelordType(){
+        String type = getDataManager().get(TYPE);
+        for (TimelordType value : TimelordType.values()) {
+            if(value.getName().equals(type)){
+                return value;
+            }
+        }
+        return TimelordType.COUNCIL;
     }
 
     @Override

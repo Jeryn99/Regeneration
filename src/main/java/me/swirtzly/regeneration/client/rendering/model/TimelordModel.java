@@ -9,6 +9,7 @@ import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
+import net.minecraft.util.HandSide;
 
 public class TimelordModel extends BipedModel<TimelordEntity> {
 
@@ -377,4 +378,8 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         return p_205060_1_ + p_205060_3_ * f;
     }
 
+    @Override
+    protected RendererModel getArmForSide(HandSide side) {
+        return side == HandSide.LEFT ? this.left_arm : this.right_arm;
+    }
 }
