@@ -184,7 +184,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	@Override
 	public void postAnimation(BipedModel playerModel, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		RegenCap.get(entity).ifPresent((data) -> {
-			if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RegenTypes.FIERY) {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RegenTypes.FIERY) {
 
                 double animationProgress = data.getAnimationTicks();
 				double arm_shake = entity.getRNG().nextDouble();

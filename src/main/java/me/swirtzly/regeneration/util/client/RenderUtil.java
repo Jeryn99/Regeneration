@@ -21,8 +21,8 @@ import org.lwjgl.opengl.GL11;
  * Created by Sub on 16/09/2018.
  */
 public class RenderUtil {
-	
-	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(Regeneration.MODID, "textures/misc/vignette.png");
+
+    private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(Regeneration.MODID, "textures/misc/vignette.png");
 	public static float renderTick = Minecraft.getInstance().getRenderPartialTicks();
 
     private static float lastBrightnessX = GLX.lastBrightnessX;

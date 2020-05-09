@@ -29,12 +29,12 @@ import javax.annotation.Nullable;
 
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
-public class TileEntityHandInJar extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+public class HandInJarTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
 	public int lindosAmont = 0;
 	public LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
 
-	public TileEntityHandInJar() {
+    public HandInJarTile() {
 		super(RegenObjects.Tiles.HAND_JAR.get());
 	}
 

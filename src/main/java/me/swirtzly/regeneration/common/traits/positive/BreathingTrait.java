@@ -12,8 +12,8 @@ import net.minecraft.util.ResourceLocation;
  * Created by Suffril on 25/01/2019.
  */
 public class BreathingTrait extends TraitManager.IDna {
-	
-	private ResourceLocation ID = new ResourceLocation(Regeneration.MODID, "swimmer");
+
+    private ResourceLocation ID = new ResourceLocation(Regeneration.MODID, "swimmer");
 
     public BreathingTrait() {
         super("swimmer");

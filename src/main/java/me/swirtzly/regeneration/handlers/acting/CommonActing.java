@@ -4,10 +4,10 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.PlaySFXMessage;
-import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.LivingEntity;
@@ -32,9 +32,9 @@ class CommonActing implements Acting {
 
     public CommonActing() {
     }
-	
-	public static SoundEvent getRandomSound(Random random) {
-        SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0.get(), RegenObjects.Sounds.REGENERATION_2.get(), RegenObjects.Sounds.REGENERATION_3.get()};
+
+	public static SoundEvent getRandomSound(Random random, IRegen cap) {
+		SoundEvent[] SOUNDS = cap.getType().create().getRegeneratingSounds();
 		return SOUNDS[random.nextInt(SOUNDS.length)];
 	}
 	
@@ -53,7 +53,7 @@ class CommonActing implements Acting {
 				float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
 				player.heal(stateProgress * 0.3F * dm);
 				player.setArrowCountInEntity(0);
-				if(cap.getType() == RegenTypes.FIERY) {
+				if (cap.getType() == RegenTypes.FIERY) {
 					RegenUtil.regenerationExplosion(player);
 				}
 				break;
@@ -149,7 +149,7 @@ class CommonActing implements Acting {
 	@Override
     public void onRegenTrigger(IRegen cap) {
 		LivingEntity player = cap.getLivingEntity();
-		NetworkDispatcher.sendPacketToAll(new PlaySFXMessage(getRandomSound(player.world.rand).getRegistryName(), player.getUniqueID()));
+		NetworkDispatcher.sendPacketToAll(new PlaySFXMessage(getRandomSound(player.world.rand, cap).getRegistryName(), player.getUniqueID()));
 		player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
 		player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
 		player.setHealth(Math.max(player.getHealth(), 8));

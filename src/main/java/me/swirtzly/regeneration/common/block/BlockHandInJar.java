@@ -98,14 +98,14 @@ public class BlockHandInJar extends DirectionalBlock {
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (worldIn.isRemote) return false;
 
-		if(player instanceof ServerPlayerEntity){
-			ServerPlayerEntity playerEntity = (ServerPlayerEntity) player;
-			//ResourceLocation p_i47939_1_, SoundCategory p_i47939_2_, Vec3d p_i47939_3_, float p_i47939_4_, float p_i47939_5_
-			playerEntity.connection.sendPacket(new SPlaySoundPacket());
-		}
+        if (player instanceof ServerPlayerEntity) {
+            ServerPlayerEntity playerEntity = (ServerPlayerEntity) player;
+            //ResourceLocation p_i47939_1_, SoundCategory p_i47939_2_, Vec3d p_i47939_3_, float p_i47939_4_, float p_i47939_5_
+            playerEntity.connection.sendPacket(new SPlaySoundPacket());
+        }
 
-		if (worldIn.getTileEntity(pos) instanceof HandInJarTile) {
-			HandInJarTile jar = (HandInJarTile) worldIn.getTileEntity(pos);
+        if (worldIn.getTileEntity(pos) instanceof HandInJarTile) {
+            HandInJarTile jar = (HandInJarTile) worldIn.getTileEntity(pos);
 
 			RegenCap.get(player).ifPresent((data) -> {
 
@@ -135,7 +135,7 @@ public class BlockHandInJar extends DirectionalBlock {
 	@Nullable
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new HandInJarTile();
+        return new HandInJarTile();
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class BlockHandInJar extends DirectionalBlock {
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		HandInJarTile te = (HandInJarTile) worldIn.getTileEntity(pos);
+        HandInJarTile te = (HandInJarTile) worldIn.getTileEntity(pos);
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 //			InventoryHelper.dropInventoryItems(worldIn, pos, (HandInJarTile)te);
 			//TODO: Make TE implement IInventory so we can make it drop its items

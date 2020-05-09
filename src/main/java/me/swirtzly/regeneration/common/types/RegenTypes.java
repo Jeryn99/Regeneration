@@ -1,9 +1,6 @@
-package me.swirtzly.regeneration.registries;
+package me.swirtzly.regeneration.common.types;
 
-import me.swirtzly.regeneration.RegenerationMod;
-import me.swirtzly.regeneration.common.types.FieryType;
-import me.swirtzly.regeneration.common.types.RegenType;
-import me.swirtzly.regeneration.common.types.TypeLayFade;
+import me.swirtzly.regeneration.Regeneration;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,23 +15,25 @@ import java.util.function.Supplier;
  * Created by Swirtzly
  * on 06/05/2020 @ 14:09
  */
-@Mod.EventBusSubscriber(modid = RegenerationMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class RRRegenType extends ForgeRegistryEntry<RRRegenType> {
+@Mod.EventBusSubscriber(modid = Regeneration.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class RegenTypes extends ForgeRegistryEntry<RegenTypes> {
 
-    public static IForgeRegistry<RRRegenType> REGISTRY;
+    public static final RegenTypes FIERY = new RegenTypes(FieryType::new);
+    public static final RegenTypes HARTNELL = new RegenTypes(TypeLayFade::new);
+    public static IForgeRegistry<RegenTypes> REGISTRY;
+    public static RegenTypes[] TYPES = new RegenTypes[]{FIERY, HARTNELL};
+
+    public RegenTypes(Supplier<RegenType> supplier) {
+        this.supplier = supplier;
+        this.setRegistryName(supplier.get().getRegistryName());
+    }
 
     @SubscribeEvent
     public static void onRegisterNewRegistries(RegistryEvent.NewRegistry e) {
-        REGISTRY = new RegistryBuilder<RRRegenType>().setName(new ResourceLocation(RegenerationMod.MODID, "regeneration_types")).setType(RRRegenType.class).setIDRange(0, 2048).create();
+        REGISTRY = new RegistryBuilder<RegenTypes>().setName(new ResourceLocation(Regeneration.MODID, "regeneration_types")).setType(RegenTypes.class).setIDRange(0, 2048).create();
     }
 
-
-    public static final RRRegenType FIERY = new RRRegenType(FieryType::new);
-    public static final RRRegenType HARTNELL = new RRRegenType(TypeLayFade::new);
-
-    public static RRRegenType[] TYPES = new RRRegenType[]{FIERY, HARTNELL};
-
-    public static int getPosition(RRRegenType rrRegenType) {
+    public static int getPosition(RegenTypes rrRegenType) {
         for (int i = 0; i < TYPES.length; i++) {
             if (TYPES[i] == rrRegenType) {
                 return i;
@@ -43,18 +42,13 @@ public class RRRegenType extends ForgeRegistryEntry<RRRegenType> {
         return 0;
     }
 
-    @SubscribeEvent
-    public static void onRegisterTypes(RegistryEvent.Register<RRRegenType> e) {
-        e.getRegistry().registerAll(FIERY, HARTNELL);
-    }
-
 
         //==================================
     private Supplier<RegenType> supplier;
 
-    public RRRegenType(Supplier<RegenType> supplier) {
-        this.supplier = supplier;
-        this.setRegistryName(supplier.get().getRegistryName());
+    @SubscribeEvent
+    public static void onRegisterTypes(RegistryEvent.Register<RegenTypes> e) {
+        e.getRegistry().registerAll(FIERY, HARTNELL);
     }
 
     public RegenType create() {

@@ -329,7 +329,7 @@ public class SkinManipulation {
 				skinInfo = SkinManipulation.getSkinInfo(player, data);
 			} catch (IOException e1) {
 				if (!data.getEncodedSkin().equals(RegenUtil.NO_SKIN)) {
-					Regeneration.LOG.error("Error creating skin for: " + player.getName().getUnformattedComponentText() + " " + e1.getMessage());
+                    Regeneration.LOG.error("Error creating skin for: " + player.getName().getUnformattedComponentText() + " " + e1.getMessage());
 				}
 			}
 			if (skinInfo != null) {

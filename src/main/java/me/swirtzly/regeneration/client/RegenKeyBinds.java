@@ -28,8 +28,8 @@ public class RegenKeyBinds {
 
         REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", GLFW.GLFW_KEY_R, Regeneration.NAME);
         ClientRegistry.registerKeyBinding(REGEN_NOW);
-		
-		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", GLFW.GLFW_KEY_Y, Regeneration.NAME);
+
+        REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", GLFW.GLFW_KEY_Y, Regeneration.NAME);
 		ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
 	}
 	

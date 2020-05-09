@@ -11,9 +11,6 @@ import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -23,7 +20,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.*;
+import net.minecraft.util.HandSide;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ChatType;
@@ -164,30 +164,10 @@ public class ClientHandler {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.world == null) return;
 
-        RegenCap.get(mc.player).ifPresent((cap) -> {
-
-            if (e.getName().equals("entity.generic.explode")) {
-                ISound sound = SimpleSound.master(SoundEvents.ENTITY_GENERIC_EXPLODE, 1F, 0.2F);
-
-                for (AbstractClientPlayerEntity player : mc.world.getPlayers()) {
-                    if (mc.player != player && mc.player.getDistance(player) < 40) {
-                        if (cap.getState().equals(REGENERATING)) {
-                            e.setResultSound(sound);
-                        }
-                    }
-                }
-
-                if (cap.getState() == REGENERATING) {
-                    e.setResultSound(sound);
-                }
-            }
-        });
-
     }
 
     @SubscribeEvent
     public void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
-        if (Minecraft.getInstance().getRenderViewEntity() instanceof PlayerEntity) {
             RegenCap.get(Minecraft.getInstance().getRenderViewEntity()).ifPresent((data) -> {
                 if (data.getType() == RegenTypes.HARTNELL && data.getState() == REGENERATING) {
                     e.setRed((float) data.getPrimaryColor().x);
@@ -195,26 +175,27 @@ public class ClientHandler {
                     e.setBlue((float) data.getPrimaryColor().z);
                 }
             });
-        }
     }
 
     @SubscribeEvent
     public void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
         Entity viewer = Minecraft.getInstance().getRenderViewEntity();
-        RegenCap.get(viewer).ifPresent((data) -> {
-            if (data.getState() == GRACE_CRIT) {
-                event.setCanceled(true);
-                float amount = MathHelper.cos(data.getLivingEntity().ticksExisted * 0.06F) * -0.09F;
-                event.setDensity(amount);
-            }
+        if (viewer != null) {
+            RegenCap.get(viewer).ifPresent((data) -> {
+                if (data.getState() == GRACE_CRIT) {
+                    event.setCanceled(true);
+                    float amount = MathHelper.cos(data.getLivingEntity().ticksExisted * 0.06F) * -0.09F;
+                    event.setDensity(amount);
+                }
 
-            if (data.getType() == RegenTypes.HARTNELL && data.getAnimationTicks() > 0) {
-                event.setCanceled(true);
-                float opacity = MathHelper.clamp(MathHelper.sin((viewer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
-                event.setDensity(opacity);
-            }
+                if (data.getType() == RegenTypes.HARTNELL && data.getAnimationTicks() > 0) {
+                    event.setCanceled(true);
+                    float opacity = MathHelper.clamp(MathHelper.sin((viewer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
+                    event.setDensity(opacity);
+                }
 
-        });
+            });
+        }
     }
 
     @OnlyIn(Dist.CLIENT)

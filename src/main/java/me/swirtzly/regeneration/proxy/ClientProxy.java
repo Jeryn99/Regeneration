@@ -17,15 +17,12 @@ import me.swirtzly.regeneration.handlers.ClientHandler;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.FileUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -67,7 +64,7 @@ public class ClientProxy extends CommonProxy {
 
         AnimationManager.registerAnimations(new GeneralAnimations(), new FieryRenderer(), new TypeLayFadeRenderer());
 
-        ClientRegistry.bindTileEntitySpecialRenderer(HandInJarTile.class, new RenderTileEntityHand());
+		ClientRegistry.bindTileEntitySpecialRenderer(HandInJarTile.class, new RenderTileEntityHand());
         ClientRegistry.bindTileEntitySpecialRenderer(ArchTile.class, new ArchRender());
 
     }

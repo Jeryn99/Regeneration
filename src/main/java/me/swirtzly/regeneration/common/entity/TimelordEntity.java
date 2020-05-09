@@ -4,8 +4,8 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
 import me.swirtzly.regeneration.common.item.GunItem;
 import me.swirtzly.regeneration.common.trades.TimelordTrades;
-import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.common.types.RegenTypes;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.*;
@@ -44,12 +44,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
-    public static final DataParameter<Integer> SKIN = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.VARINT);
-    public static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Integer> SKIN = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
 
-    protected final SwimmerPathNavigator waterNavigator;
-    protected final GroundPathNavigator groundNavigator;
+    private final SwimmerPathNavigator waterNavigator;
+    private final GroundPathNavigator groundNavigator;
+
+    private int timelordAmount = 11;
 
     public TimelordEntity(World world) {
         this(RegenObjects.EntityEntries.TIMELORD.get(), world);
@@ -64,7 +66,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     @Override
     protected void registerData() {
         super.registerData();
-        getDataManager().register(SKIN, rand.nextInt(11));
+        getDataManager().register(SKIN, rand.nextInt(timelordAmount));
         getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
         getDataManager().register(SWINGING_ARMS, false);
     }
@@ -82,11 +84,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 this.setSwimming(false);
             }
         }
-    }
-
-    private boolean func_204715_dF() {
-            LivingEntity livingentity = this.getAttackTarget();
-            return livingentity != null && livingentity.isInWater();
     }
 
     public void setSwingingArms(boolean swingingArms) {
@@ -212,7 +209,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 
                     if (data.getAnimationTicks() == 100) {
-                        setSkin(rand.nextInt(11));
+                        setSkin(rand.nextInt(timelordAmount));
                     }
 
                     setNoAI(true);
@@ -255,42 +252,45 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     @Override
     public boolean processInteract(PlayerEntity player, Hand hand) {
-        AtomicBoolean atomicBoolean = new AtomicBoolean();
-        atomicBoolean.set(false);
+        if (getTimelordType() == TimelordType.COUNCIL) {
+            AtomicBoolean atomicBoolean = new AtomicBoolean();
+            atomicBoolean.set(false);
 
-        RegenCap.get(this).ifPresent((data) -> {
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                atomicBoolean.set(true);
-            }
-        });
-
-        if (atomicBoolean.get()) {
-            return true;
-        }
-
-        ItemStack itemstack = player.getHeldItem(hand);
-        boolean flag = itemstack.getItem() == Items.NAME_TAG;
-        if (flag) {
-            itemstack.interactWithEntity(player, this, hand);
-            return true;
-        } else if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.func_213716_dX() && !this.isChild()) {
-            if (hand == Hand.MAIN_HAND) {
-                player.addStat(Stats.TALKED_TO_VILLAGER);
-            }
-
-            if (this.getOffers().isEmpty()) {
-                return super.processInteract(player, hand);
-            } else {
-                if (!this.world.isRemote) {
-                    this.setCustomer(player);
-                    this.func_213707_a(player, this.getDisplayName(), 1);
+            RegenCap.get(this).ifPresent((data) -> {
+                if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
+                    atomicBoolean.set(true);
                 }
+            });
 
+            if (atomicBoolean.get()) {
                 return true;
             }
-        } else {
-            return super.processInteract(player, hand);
+
+            ItemStack itemstack = player.getHeldItem(hand);
+            boolean flag = itemstack.getItem() == Items.NAME_TAG;
+            if (flag) {
+                itemstack.interactWithEntity(player, this, hand);
+                return true;
+            } else if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.func_213716_dX() && !this.isChild()) {
+                if (hand == Hand.MAIN_HAND) {
+                    player.addStat(Stats.TALKED_TO_VILLAGER);
+                }
+
+                if (this.getOffers().isEmpty()) {
+                    return super.processInteract(player, hand);
+                } else {
+                    if (!this.world.isRemote) {
+                        this.setCustomer(player);
+                        this.func_213707_a(player, this.getDisplayName(), 1);
+                    }
+
+                    return true;
+                }
+            } else {
+                return super.processInteract(player, hand);
+            }
         }
+        return super.processInteract(player, hand);
     }
 
     @Override
@@ -316,10 +316,12 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     @Override
     protected void populateTradeData() {
-        VillagerTrades.ITrade[] trades = TimelordTrades.genTrades();
-        if (trades != null) {
-            MerchantOffers merchantoffers = this.getOffers();
-            this.addTrades(merchantoffers, trades, 5);
+        if (getTimelordType() == TimelordType.COUNCIL) {
+            VillagerTrades.ITrade[] trades = TimelordTrades.genTrades();
+            if (trades != null) {
+                MerchantOffers merchantoffers = this.getOffers();
+                this.addTrades(merchantoffers, trades, 5);
+            }
         }
 
       /*  if(ModList.get().isLoaded("tardis")) {
