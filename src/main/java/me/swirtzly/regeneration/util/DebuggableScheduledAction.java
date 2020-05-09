@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.util;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import net.minecraft.entity.LivingEntity;
 
 public class DebuggableScheduledAction extends ScheduledAction {
@@ -16,7 +16,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 	@Override
 	public boolean tick() {
         if (scheduledTick == -1)
-            RegenerationMod.LOG.warn(player.getName() + ": Ticking finsished/canceled ScheduledAction (" + transition + ")");
+            Regeneration.LOG.warn(player.getName() + ": Ticking finsished/canceled ScheduledAction (" + transition + ")");
 		
 		boolean willExecute = currentTick == scheduledTick;
 		
@@ -35,7 +35,7 @@ public class DebuggableScheduledAction extends ScheduledAction {
 	@Override
 	public double getProgress() {
         if (scheduledTick == -1)
-            RegenerationMod.LOG.warn(player.getName() + ": Querying progress of canceled/finished transition");
+            Regeneration.LOG.warn(player.getName() + ": Querying progress of canceled/finished transition");
 		return super.getProgress();
 	}
 	

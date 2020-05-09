@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.common.dimension.features;
 
 import com.mojang.datafixers.Dynamic;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -37,7 +37,7 @@ public class GallifreyanTreeFeature extends Feature<NoFeatureConfig> {
     };
 
     public static ResourceLocation createTreeLocation(String name) {
-        return new ResourceLocation(RegenerationMod.MODID, "regeneration/structures/gallifrey/trees/" + name);
+        return new ResourceLocation(Regeneration.MODID, "regeneration/structures/gallifrey/trees/" + name);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package me.swirtzly.animateme;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
@@ -18,13 +18,13 @@ public class AnimationManager {
 
     public static void registerAnimation(IAnimate animation) {
         ANIMATIONS.add(animation);
-        RegenerationMod.LOG.info("Registered Animation Handler {}", animation.getClass().getName());
+        Regeneration.LOG.info("Registered Animation Handler {}", animation.getClass().getName());
     }
 
     public static void registerAnimations(IAnimate... animations) {
         for (IAnimate animation : animations) {
             ANIMATIONS.add(animation);
-            RegenerationMod.LOG.info("Registered Animation Handler {}", animation.getClass().getName());
+            Regeneration.LOG.info("Registered Animation Handler {}", animation.getClass().getName());
         }
     }
 

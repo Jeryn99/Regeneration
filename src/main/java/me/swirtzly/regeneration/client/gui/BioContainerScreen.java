@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,7 +16,7 @@ import java.awt.*;
  */
 public class BioContainerScreen extends ContainerScreen<BioContainerContainer> {
 
-    private ResourceLocation GUI = new ResourceLocation(RegenerationMod.MODID, "textures/gui/hij.png");
+    private ResourceLocation GUI = new ResourceLocation(Regeneration.MODID, "textures/gui/hij.png");
 
     public BioContainerScreen(BioContainerContainer container, PlayerInventory inv, ITextComponent name) {
         super(container, inv, name);

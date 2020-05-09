@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
@@ -10,7 +10,7 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateTypeMessage;
-import me.swirtzly.regeneration.registries.RRRegenType;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -24,8 +24,8 @@ import java.awt.*;
 
 public class GuiPreferences extends ContainerScreen {
 
-	private static final ResourceLocation BACKGROUND = new ResourceLocation(RegenerationMod.MODID, "textures/gui/pref_back.png");
-	private static RRRegenType SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getType();
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(Regeneration.MODID, "textures/gui/pref_back.png");
+	private static RegenTypes SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getType();
 	private static SkinManipulation.EnumChoices CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getPreferredModel();
 	private float ROTATION = 0;
 
@@ -49,12 +49,12 @@ public class GuiPreferences extends ContainerScreen {
 		GuiButtonExt btnRegenType = new GuiButtonExt(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regentype." + SELECTED_TYPE.getRegistryName()).getUnformattedComponentText(), new Button.IPressable() {
 			@Override
 			public void onPress(Button button) {
-                int pos = RRRegenType.getPosition(SELECTED_TYPE) + 1;
+                int pos = RegenTypes.getPosition(SELECTED_TYPE) + 1;
 
-                if (pos < 0 || pos >= RRRegenType.TYPES.length) {
+                if (pos < 0 || pos >= RegenTypes.TYPES.length) {
                     pos = 0;
                 }
-                SELECTED_TYPE = RRRegenType.TYPES[pos];
+                SELECTED_TYPE = RegenTypes.TYPES[pos];
 				button.setMessage(new TranslationTextComponent("regeneration.gui.type", SELECTED_TYPE.create().getTranslation()).getUnformattedComponentText());
 				NetworkDispatcher.sendToServer(new UpdateTypeMessage(SELECTED_TYPE.getRegistryName().toString()));
 			}

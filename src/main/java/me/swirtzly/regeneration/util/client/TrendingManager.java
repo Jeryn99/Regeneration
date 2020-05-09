@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.util.client;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.util.FileUtil;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
@@ -28,7 +28,7 @@ public class TrendingManager {
 
 	public static void downloadPreviousSkins() {
 		if (!RegenConfig.CLIENT.downloadPreviousSkins.get()) return;
-		RegenerationMod.LOG.warn("Refreshing users past skins");
+		Regeneration.LOG.warn("Refreshing users past skins");
 
 		if (!USER_ALEX.exists()) {
 			USER_ALEX.mkdirs();
@@ -37,15 +37,13 @@ public class TrendingManager {
 		long attr = USER_ALEX.lastModified();
 
 		if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(USER_ALEX.list()).length == 0) {
-			for (int i = 0; i < 5; i++) {
-				try {
-					String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getInstance().getSession().getPlayerID() + "?page=" + i;
-					for (String skin : getSkins(url)) {
-						FileUtil.downloadSkins(new URL(skin), Minecraft.getInstance().getSession().getUsername() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
-					}
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
+					String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getInstance().getSession().getPlayerID();
+			try {
+				for (String skin : getSkins(url)) {
+					FileUtil.downloadSkins(new URL(skin), Minecraft.getInstance().getSession().getUsername() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -85,7 +83,7 @@ public class TrendingManager {
 		long attr = trendingDir.lastModified();
 		if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
 			FileUtils.deleteDirectory(trendingDir);
-			RegenerationMod.LOG.warn("Refreshing Trending skins");
+			Regeneration.LOG.warn("Refreshing Trending skins");
 			for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
 				String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
 				FileUtil.downloadSkins(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);

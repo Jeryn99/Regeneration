@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.client;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.ForceRegenerationMessage;
@@ -26,10 +26,10 @@ public class RegenKeyBinds {
 	
 	public static void init() {
 
-        REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", GLFW.GLFW_KEY_R, RegenerationMod.NAME);
+        REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", GLFW.GLFW_KEY_R, Regeneration.NAME);
         ClientRegistry.registerKeyBinding(REGEN_NOW);
 		
-		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", GLFW.GLFW_KEY_Y, RegenerationMod.NAME);
+		REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", GLFW.GLFW_KEY_Y, Regeneration.NAME);
 		ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
 	}
 	

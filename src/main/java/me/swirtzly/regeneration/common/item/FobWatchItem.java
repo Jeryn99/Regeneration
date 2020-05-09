@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
@@ -130,7 +130,7 @@ public class FobWatchItem extends SolidItem {
 				}
 
                 if (used < 0)
-                    RegenerationMod.LOG.warn(player.getName().getUnformattedComponentText() + " Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + stack.getDamage() + ", regens:" + cap.getRegenerationsLeft());
+                    Regeneration.LOG.warn(player.getName().getUnformattedComponentText() + " Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + stack.getDamage() + ", regens:" + cap.getRegenerationsLeft());
 
 				if (cap.getLivingEntity() instanceof PlayerEntity) {
 					PlayerEntity playerEntity = (PlayerEntity) cap.getLivingEntity();

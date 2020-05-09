@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.types;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.rendering.types.TypeLayFadeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.handlers.RegenObjects;
@@ -72,7 +72,7 @@ public class TypeLayFade implements RegenType {
 
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RegenerationMod.MODID, "hartnell");
+        return new ResourceLocation(Regeneration.MODID, "hartnell");
     }
 
 }

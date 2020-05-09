@@ -44,17 +44,17 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(RegenerationMod.MODID)
-public class RegenerationMod {
+@Mod(Regeneration.MODID)
+public class Regeneration {
 	
 	public static final String MODID = "regeneration";
 	public static final String NAME = "Regeneration";
 	
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public static RegenerationMod INSTANCE;
+    public static Regeneration INSTANCE;
 
-    public RegenerationMod() {
+    public Regeneration() {
 		INSTANCE = this;
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -119,7 +119,7 @@ public class RegenerationMod {
 	}
 	
 	@SubscribeEvent
-	public void serverStart(FMLServerStartingEvent event) {
+    public void onServerStart(FMLServerStartingEvent event) {
 		RegenCommand.register(event.getCommandDispatcher());
 	}
 	

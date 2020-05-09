@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.client.gui;
 
-import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
+import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -19,11 +19,11 @@ import net.minecraftforge.items.wrapper.InvWrapper;
  */
 public class BioContainerContainer extends Container {
 
-    private TileEntityHandInJar tileEntity;
+    private HandInJarTile tileEntity;
     private PlayerEntity playerEntity;
     private IItemHandler playerInventory;
 
-    public BioContainerContainer(int windowId, PlayerInventory playerInventory, PlayerEntity player, TileEntityHandInJar tileEntityHandInJar) {
+    public BioContainerContainer(int windowId, PlayerInventory playerInventory, PlayerEntity player, HandInJarTile tileEntityHandInJar) {
         super(RegenObjects.Containers.BIO_CONTAINER.get(), windowId);
         tileEntity = tileEntityHandInJar;
         this.playerEntity = player;
@@ -65,7 +65,7 @@ public class BioContainerContainer extends Container {
 
     }
 
-    public TileEntityHandInJar getTileEntity() {
+    public HandInJarTile getTileEntity() {
         return tileEntity;
     }
 

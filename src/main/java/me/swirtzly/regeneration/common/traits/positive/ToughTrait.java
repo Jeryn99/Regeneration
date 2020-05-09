@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.traits.positive;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager.IDna;
 import net.minecraft.entity.LivingEntity;
@@ -19,7 +19,7 @@ public class ToughTrait extends IDna {
     private final AttributeModifier TOUGH_MODIFIER = new AttributeModifier(TOUGH_ID, "TOUGH", 0.95, AttributeModifier.Operation.MULTIPLY_BASE);
 	private final UUID ATTACK_ID = UUID.fromString("e9e9b6a4-1f41-4569-88a4-34a4b06693bb");
     private final AttributeModifier ATTACK_MODIFIER = new AttributeModifier(ATTACK_ID, "ATTACK", 1, AttributeModifier.Operation.MULTIPLY_BASE);
-	private ResourceLocation LOCATION = new ResourceLocation(RegenerationMod.MODID, "tough");
+	private ResourceLocation LOCATION = new ResourceLocation(Regeneration.MODID, "tough");
 
     public ToughTrait() {
         super("tough");

@@ -23,7 +23,6 @@ import net.minecraft.util.HandSide;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,13 +144,7 @@ public class PlayerUtil {
 		}
 		
 		public enum Transition {
-            HAND_GLOW_START(Color.YELLOW.darker()), HAND_GLOW_TRIGGER(Color.ORANGE), ENTER_CRITICAL(Color.BLUE), CRITICAL_DEATH(Color.RED), FINISH_REGENERATION(Color.GREEN.darker()), END_POST(Color.PINK.darker());
-			
-			public final Color color;
-			
-			Transition(Color col) {
-				this.color = col;
-			}
+            HAND_GLOW_START, HAND_GLOW_TRIGGER, ENTER_CRITICAL, CRITICAL_DEATH, FINISH_REGENERATION, END_POST;
 		}
 	}
 }

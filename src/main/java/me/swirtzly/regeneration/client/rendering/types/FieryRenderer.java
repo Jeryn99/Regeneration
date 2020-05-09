@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.FieryType;
-import me.swirtzly.regeneration.registries.RRRegenType;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -18,8 +18,6 @@ import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-
-import static me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer.playerModelSteve;
 
 public class FieryRenderer extends ATypeRenderer<FieryType> {
 	
@@ -186,7 +184,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 	@Override
 	public void postAnimation(BipedModel playerModel, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		RegenCap.get(entity).ifPresent((data) -> {
-			if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RRRegenType.FIERY) {
+			if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RegenTypes.FIERY) {
 
                 double animationProgress = data.getAnimationTicks();
 				double arm_shake = entity.getRNG().nextDouble();

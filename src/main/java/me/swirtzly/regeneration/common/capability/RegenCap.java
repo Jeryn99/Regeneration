@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.common.capability;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
@@ -11,7 +11,7 @@ import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.SyncClientPlayerMessage;
 import me.swirtzly.regeneration.network.messages.SyncDataMessage;
-import me.swirtzly.regeneration.registries.RRRegenType;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.DebuggableScheduledAction;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
@@ -45,29 +45,29 @@ public class RegenCap implements IRegen {
 
     @CapabilityInject(IRegen.class)
     public static final Capability<IRegen> CAPABILITY = null;
-	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RegenerationMod.MODID, "regeneration");
+	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(Regeneration.MODID, "regeneration");
+
+	private ResourceLocation traitLocation = new ResourceLocation(Regeneration.MODID, "boring");
 
 	private final LivingEntity player;
     private final RegenStateManager stateManager;
-	public String deathSource = "";
+	private String deathSource = "";
 	private boolean didSetup = false, traitActive = true;
-	private int regenerationsLeft = 0;
 	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
-	private RRRegenType regenType = RRRegenType.FIERY;
 
     private String BASE64_SKIN = RegenUtil.NO_SKIN;
-	
+	private String nextSkin = RegenUtil.NO_SKIN;
+	private RegenTypes regenType = RegenTypes.FIERY;
+
+	private HandSide cutOffHand = HandSide.LEFT;
 	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
-    private SkinManipulation.EnumChoices preferredModel = SkinManipulation.EnumChoices.EITHER;
+	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
+	private SkinManipulation.EnumChoices preferredModel = SkinManipulation.EnumChoices.EITHER;
+
 	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
 	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
-	private ResourceLocation traitLocation = new ResourceLocation(RegenerationMod.MODID, "boring");
-    private int ticksAnimating = 0;
-	private boolean syncingToJar = false;
-	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
-	private String nextSkin = RegenUtil.NO_SKIN;
-	private HandSide cutOffHand = HandSide.LEFT;
-	private boolean hasDroppedHand = false;
+    private int ticksAnimating = 0, regenerationsLeft = 0;
+	private boolean hasDroppedHand = false, syncingToJar = false;
 
     /**
      * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client. This property is synced over to the client to solve this
@@ -121,7 +121,7 @@ public class RegenCap implements IRegen {
 
         if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
 			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
-			RegenerationMod.LOG.info("Correcting the amount of Regenerations {} has, from {} to {}", player.getName(), getRegenerationsLeft(), RegenConfig.COMMON.regenCapacity.get());
+			Regeneration.LOG.info("Correcting the amount of Regenerations {} has, from {} to {}", player.getName(), getRegenerationsLeft(), RegenConfig.COMMON.regenCapacity.get());
 		}
 
         TraitManager.getDnaEntry(getDnaType()).onUpdate(this);
@@ -155,7 +155,7 @@ public class RegenCap implements IRegen {
 		if (regenType != null) {
 			nbt.putString("regen_type", regenType.getRegistryName().toString());
 		} else {
-			regenType = RRRegenType.FIERY;
+			regenType = RegenTypes.FIERY;
 		}
 		nbt.putString("base64_skin", BASE64_SKIN);
 		nbt.putString("skinType", skinType.name());
@@ -222,9 +222,9 @@ public class RegenCap implements IRegen {
 		setStyle(nbt.contains("style") ? (CompoundNBT) nbt.get("style") : nbt);
 
 		if (nbt.contains("regen_type")) // v1.3+ saves have a type tag
-			regenType = RRRegenType.REGISTRY.getValue(new ResourceLocation(nbt.getString("regen_type")));
+			regenType = RegenTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString("regen_type")));
 		else // for previous save versions set to default 'fiery' type
-			regenType = RRRegenType.FIERY;
+			regenType = RegenTypes.FIERY;
 		
 		state = nbt.contains("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
 		setEncodedSkin(nbt.getString("base64_skin"));
@@ -457,12 +457,12 @@ public class RegenCap implements IRegen {
 	}
 
 	@Override
-	public RRRegenType getType() {
+	public RegenTypes getType() {
 		return regenType;
 	}
 
 	@Override
-	public void setType(RRRegenType type) {
+	public void setType(RegenTypes type) {
 		this.regenType = type;
 	}
 

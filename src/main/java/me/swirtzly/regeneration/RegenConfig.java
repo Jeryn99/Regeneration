@@ -28,7 +28,6 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue changeHand;
 		public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
         public final ForgeConfigSpec.BooleanValue downloadPreviousSkins;
-		public final ForgeConfigSpec.BooleanValue fovChange;
 		public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
 
         Client(ForgeConfigSpec.Builder builder) {
@@ -42,7 +41,6 @@ public class RegenConfig {
 			downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
             downloadPreviousSkins = builder.comment("Toggle whether the mod downloads your past skins from NameMC").translation("config.regeneration.downloadPreviousSkins").define("downloadPastSkins", true);
 			downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
-			fovChange = builder.comment("Toggle whether a zoom effect happens during the Regeneration period").translation("config.regeneration.fov").define("fovChange", false);
 			builder.pop();
 		}
 
@@ -57,7 +55,6 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue infiniteRegeneration;
 		public final ForgeConfigSpec.BooleanValue sendRegenDeathMessages;
 		public final ForgeConfigSpec.IntValue regenerativeKillRange;
-		public final ForgeConfigSpec.BooleanValue regenKillsPlayers;
         public final ForgeConfigSpec.ConfigValue<Double> regenerativeKnockback;
 		public final ForgeConfigSpec.IntValue regenKnockbackRange;
 		public final ForgeConfigSpec.BooleanValue regenerationKnocksbackPlayers;
@@ -71,8 +68,6 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue resetHunger;
 		public final ForgeConfigSpec.BooleanValue resetOxygen;
 		public final ForgeConfigSpec.IntValue absorbtionLevel;
-		public final ForgeConfigSpec.ConfigValue<String> lootRegex;
-		public final ForgeConfigSpec.BooleanValue disableLoot;
         public final ForgeConfigSpec.BooleanValue genCrater;
 		
 		Common(ForgeConfigSpec.Builder builder) {
@@ -93,11 +88,6 @@ public class RegenConfig {
 			absorbtionLevel = builder.comment("The amount of absorption hearts you get when regenerating").translation("config.regeneration.absorbtion_level").defineInRange("absorbtionLevel", 10, 0, Integer.MAX_VALUE);
 			builder.pop();
 
-            builder.comment("Loot Settings").push("loot");
-			lootRegex = builder.worldRestart().comment("The loot pool for chameleon arch's will only be added to loot tables whose name matches this regular expression").translation("config.regeneration.loot_regex").define("lootRegex", "minecraft:chests\\/.*");
-			disableLoot = builder.comment("If this is true there won't be any Fob Watches spawned naturally").translation("config.regeneration.disable_loot").define("disableLoot", false);
-			builder.pop();
-
             builder.comment("Grace Settings").push("grace");
 			gracePhaseLength = builder.comment("The time in seconds before your grace period enters a critical phase").translation("config.regeneration.grace.gracePeriodLength").define("gracePhaseLength", 15 * 60);
 			criticalDamageChance = builder.comment("Chance that a player in critical phase gets damaged at a given tick. Higher number means more damage.").translation("config.regeneration.grace.criticalDamageChance").defineInRange("criticalDamageChance", 1, 0, Integer.MAX_VALUE);
@@ -108,7 +98,6 @@ public class RegenConfig {
 
             builder.comment("Mid Regen Settings").push("onRegen");
 			regenerativeKillRange = builder.comment("Upon regeneration every mob inside of this radius is immediately killed. Keep in mind that you should round up to accommodate for mobs that aren't standing in the center of a block").translation("config.regeneration.regenerative_kill_range").defineInRange("regenKillRange", 4, 0, Integer.MAX_VALUE);
-			regenKillsPlayers = builder.comment("Players can be killed when too close to a regeneration").translation("config.regeneration.regeneration_kills_players").define("regenKillsPlayers", false);
             regenerativeKnockback = builder.comment("The amount of knockback every mob inside of the knock back radius gets").translation("config.regeneration.regenerative_knockback").define("regenerativeKnockback", 2.5D);
 			regenKnockbackRange = builder.comment("Range wherein every mob is knocked back upon regeneration").translation("config.regeneration.regenerative_knockback_range").defineInRange("regenerativeKnockbackRange", 7, 0, Integer.MAX_VALUE);
 			regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);

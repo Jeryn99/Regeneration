@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.common.types;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.handlers.RegenObjects;
@@ -24,7 +24,7 @@ import static net.minecraft.util.math.BlockPos.getAllInBox;
  */
 public class FieryType implements RegenType<FieryRenderer> {
 
-    private SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0.get(), RegenObjects.Sounds.REGENERATION_1.get(), RegenObjects.Sounds.REGENERATION_2.get(), RegenObjects.Sounds.REGENERATION_3.get(), RegenObjects.Sounds.REGENERATION_4.get(), RegenObjects.Sounds.REGENERATION_5.get(), RegenObjects.Sounds.REGENERATION_6.get(),};
+    private SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0.get(), RegenObjects.Sounds.REGENERATION_1.get(), RegenObjects.Sounds.REGENERATION_2.get(), RegenObjects.Sounds.REGENERATION_3.get(), RegenObjects.Sounds.REGENERATION_4.get(), RegenObjects.Sounds.REGENERATION_5.get(), RegenObjects.Sounds.REGENERATION_6.get(), RegenObjects.Sounds.REGENERATION_7.get()};
 	
 	@Override
 	public void onUpdateMidRegen(IRegen capability) {
@@ -97,7 +97,7 @@ public class FieryType implements RegenType<FieryRenderer> {
 
 	@Override
 	public ResourceLocation getRegistryName() {
-		return new ResourceLocation(RegenerationMod.MODID, "fiery");
+		return new ResourceLocation(Regeneration.MODID, "fiery");
 	}
 
 	@Override

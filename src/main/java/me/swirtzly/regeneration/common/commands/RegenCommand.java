@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.common.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.commands.subcommands.FastForwardCommand;
 import me.swirtzly.regeneration.common.commands.subcommands.GlowCommand;
 import me.swirtzly.regeneration.common.commands.subcommands.SetRegensCommand;
@@ -14,7 +14,7 @@ public class RegenCommand {
 
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(
-                Commands.literal(RegenerationMod.MODID)
+                Commands.literal(Regeneration.MODID)
                         .requires(commandSource -> commandSource.hasPermissionLevel(ServerLifecycleHooks.getCurrentServer().getOpPermissionLevel()))
                             .then(SetRegensCommand.register(dispatcher))
                             .then(GlowCommand.register(dispatcher))

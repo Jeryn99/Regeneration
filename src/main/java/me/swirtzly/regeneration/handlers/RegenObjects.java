@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.handlers;
 
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.BioContainerContainer;
 import me.swirtzly.regeneration.common.block.ArchBlock;
 import me.swirtzly.regeneration.common.block.BlockHandInJar;
@@ -16,7 +16,7 @@ import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.item.*;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
-import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
+import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.OreBlock;
@@ -61,7 +61,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import static me.swirtzly.regeneration.RegenerationMod.MODID;
+import static me.swirtzly.regeneration.Regeneration.MODID;
 
 /**
  * Created by Sub on 16/09/2018.
@@ -77,14 +77,14 @@ public class RegenObjects {
 			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit").setDamageAllowedInCreativeMode(), REGEN_DMG_KILLED = new RegenDamageSource("regen_killed"), REGEN_DMG_FORCED = new RegenDamageSource("forced").setDamageAllowedInCreativeMode();
     
 	public static class Blocks {
-		public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, RegenerationMod.MODID);
-		public static final DeferredRegister<Item> BLOCK_ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, RegenerationMod.MODID);
+		public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, Regeneration.MODID);
+		public static final DeferredRegister<Item> BLOCK_ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Regeneration.MODID);
 		public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
         public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
 		public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
 	}
 	public static class Items {
-		public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, RegenerationMod.MODID);
+		public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Regeneration.MODID);
 		
 		public static final RegistryObject<Item> FOB_WATCH = ITEMS.register("fob_watch", FobWatchItem::new);
 		public static final RegistryObject<Item> HAND = ITEMS.register("hand", HandItem::new);
@@ -96,7 +96,7 @@ public class RegenObjects {
 	
 
 	public static class Sounds {
-		public static final DeferredRegister<SoundEvent> SOUNDS = new DeferredRegister<>(ForgeRegistries.SOUND_EVENTS, RegenerationMod.MODID);
+		public static final DeferredRegister<SoundEvent> SOUNDS = new DeferredRegister<>(ForgeRegistries.SOUND_EVENTS, Regeneration.MODID);
 		
 		public static final RegistryObject<SoundEvent> FOB_WATCH = SOUNDS.register("fob_watch", () -> setUpSound("fob_watch"));
 		public static final RegistryObject<SoundEvent> FOB_WATCH_DIALOGUE = SOUNDS.register("fob_watch_dialogue", () -> setUpSound("fob_watch_dialogue"));
@@ -115,6 +115,7 @@ public class RegenObjects {
 		public static final RegistryObject<SoundEvent> REGENERATION_4 = SOUNDS.register("regeneration_4", () -> setUpSound("regeneration_4"));
 		public static final RegistryObject<SoundEvent> REGENERATION_5 = SOUNDS.register("regeneration_5", () -> setUpSound("regeneration_5"));
 		public static final RegistryObject<SoundEvent> REGENERATION_6 = SOUNDS.register("regeneration_6", () -> setUpSound("regeneration_6"));
+		public static final RegistryObject<SoundEvent> REGENERATION_7 = SOUNDS.register("regeneration_7", () -> setUpSound("regeneration_7"));
 		public static final RegistryObject<SoundEvent> STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
 		public static final RegistryObject<SoundEvent> RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));
 	}
@@ -122,32 +123,32 @@ public class RegenObjects {
 	public static class EntityEntries {
 
 
-		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, RegenerationMod.MODID);
+		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Regeneration.MODID);
 		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
         public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
 		public static RegistryObject<EntityType<LaserEntity>> LASER = ENTITIES.register("laser", () -> registerMob(LaserEntity::new, LaserEntity::new, EntityClassification.MISC, 0.5F, 0.5F, "laser", true));
 	}
 
 	public static class Tiles {
-    	public static final DeferredRegister<TileEntityType<?>> TILES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, RegenerationMod.MODID);
+    	public static final DeferredRegister<TileEntityType<?>> TILES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, Regeneration.MODID);
     	
-		public static final RegistryObject<TileEntityType<TileEntityHandInJar>> HAND_JAR = TILES.register("hand_jar", () -> registerTiles(TileEntityHandInJar::new, Blocks.HAND_JAR.get()));
+		public static final RegistryObject<TileEntityType<HandInJarTile>> HAND_JAR = TILES.register("hand_jar", () -> registerTiles(HandInJarTile::new, Blocks.HAND_JAR.get()));
         public static final RegistryObject<TileEntityType<ArchTile>> ARCH = TILES.register("arch", () -> registerTiles(ArchTile::new, Blocks.ARCH.get()));
 	}
 
 	public static class Containers {
-		public static final DeferredRegister<ContainerType<?>> CONTAINERS = new DeferredRegister<>(ForgeRegistries.CONTAINERS,RegenerationMod.MODID);
+		public static final DeferredRegister<ContainerType<?>> CONTAINERS = new DeferredRegister<>(ForgeRegistries.CONTAINERS, Regeneration.MODID);
 		
 		//Sorry if this is hacky, needed a way to register your custom parameters, so doing this for now until I can make a helper method
 		public static final RegistryObject<ContainerType<BioContainerContainer>> BIO_CONTAINER = CONTAINERS.register("bio_container", 
 				() -> IForgeContainerType.create((windowId, inv, data) -> {
 					BlockPos pos = data.readBlockPos();
-		            return new BioContainerContainer(windowId, inv, RegenerationMod.proxy.getClientPlayer(), (TileEntityHandInJar) Minecraft.getInstance().world.getTileEntity(pos));
+		            return new BioContainerContainer(windowId, inv, Regeneration.proxy.getClientPlayer(), (HandInJarTile) Minecraft.getInstance().world.getTileEntity(pos));
 				}));
 	}
 	
 	public static class Biomes {
-		public static final DeferredRegister<Biome> BIOMES = new DeferredRegister<>(ForgeRegistries.BIOMES,RegenerationMod.MODID);
+		public static final DeferredRegister<Biome> BIOMES = new DeferredRegister<>(ForgeRegistries.BIOMES, Regeneration.MODID);
 		
 		public static final RegistryObject<Biome> GALLIFREY_MOUNTAINS = BIOMES.register("gallifreyan_mountains", GallifreyanMountainsBiome::new);
 		public static final RegistryObject<Biome> GALLIFREYAN_RIVER = BIOMES.register("gallifreyan_river", GallifreyanRiver::new);
@@ -172,7 +173,7 @@ public class RegenObjects {
 	 	}
 	}
 	public static class ChunkGeneratorTypes{
-		public static final DeferredRegister<ChunkGeneratorType<?,?>> CHUNK_GENERATOR_TYPES = new DeferredRegister<>(ForgeRegistries.CHUNK_GENERATOR_TYPES,RegenerationMod.MODID);
+		public static final DeferredRegister<ChunkGeneratorType<?,?>> CHUNK_GENERATOR_TYPES = new DeferredRegister<>(ForgeRegistries.CHUNK_GENERATOR_TYPES, Regeneration.MODID);
 		
 		public static IChunkGeneratorFactory<OverworldGenSettings, GallifreyChunkGenerator> factory = GallifreyChunkGenerator::new;
 		
@@ -182,7 +183,7 @@ public class RegenObjects {
 	}
 	
 	public static class Dimensions{
-		public static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS,RegenerationMod.MODID);
+		public static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, Regeneration.MODID);
 		
 		public static final RegistryObject<ModDimension> GALLIFREY = DIMENSIONS.register("gallifrey", () -> registerDimensions(new DimSingle(GallifreyDimension::new)));
 	}
@@ -238,13 +239,13 @@ public class RegenObjects {
  	//Container Creation
  	private static <T extends Container> ContainerType<T> registerContainer(IContainerFactory<T> fact, String name){
 		ContainerType<T> type = new ContainerType<T>(fact);
-		type.setRegistryName(new ResourceLocation(RegenerationMod.MODID, name));
+		type.setRegistryName(new ResourceLocation(Regeneration.MODID, name));
 		return type;
 	}
 	
  	private static <T extends Container> ContainerType<T> registerContainerSpecial(IContainerFactory<T> fact, int windowId, PlayerInventory playerInv, PlayerEntity player, PacketBuffer buf ,TileEntity te, String name){
 		ContainerType<T> type = new ContainerType<T>(fact);
-		type.setRegistryName(new ResourceLocation(RegenerationMod.MODID, name));
+		type.setRegistryName(new ResourceLocation(Regeneration.MODID, name));
 		return type;
 	}
 	
@@ -254,7 +255,7 @@ public class RegenObjects {
  	
  	// Entity Creation
 	private static <T extends Entity> EntityType<T> registerNoSpawnerBase(EntityType.IFactory<T> factory, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
- 		ResourceLocation loc = new ResourceLocation(RegenerationMod.MODID, name);
+ 		ResourceLocation loc = new ResourceLocation(Regeneration.MODID, name);
  		EntityType.Builder<T> builder = EntityType.Builder.create(factory, classification);
  		builder.setShouldReceiveVelocityUpdates(sendUpdate);
  		builder.setTrackingRange(trackingRange);
@@ -265,7 +266,7 @@ public class RegenObjects {
  	}
 	
  	private static <T extends Entity> EntityType<T> registerBase(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
- 		ResourceLocation loc = new ResourceLocation(RegenerationMod.MODID, name);
+ 		ResourceLocation loc = new ResourceLocation(Regeneration.MODID, name);
  		EntityType.Builder<T> builder = EntityType.Builder.create(factory, classification);
  		builder.setShouldReceiveVelocityUpdates(sendUpdate);
  		builder.setTrackingRange(trackingRange);
@@ -278,7 +279,7 @@ public class RegenObjects {
  	
  	// Fire Resistant Entity Creation
  	private static <T extends Entity> EntityType<T> registerFireImmuneBase(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
- 		ResourceLocation loc = new ResourceLocation(RegenerationMod.MODID, name);
+ 		ResourceLocation loc = new ResourceLocation(Regeneration.MODID, name);
  		EntityType.Builder<T> builder = EntityType.Builder.create(factory, classification);
  		builder.setShouldReceiveVelocityUpdates(sendUpdate);
  		builder.setTrackingRange(trackingRange);

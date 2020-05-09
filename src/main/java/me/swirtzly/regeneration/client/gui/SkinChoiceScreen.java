@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.client.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.RegenCap;
@@ -29,7 +29,7 @@ import static me.swirtzly.regeneration.util.client.RenderUtil.drawModelToGui;
 
 public class SkinChoiceScreen extends ContainerScreen {
 
-    private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
+    private static final ResourceLocation background = new ResourceLocation(Regeneration.MODID, "textures/gui/customizer_background.png");
     public static boolean isAlex = true;
     private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
     private static SkinManipulation.EnumChoices choices = null;

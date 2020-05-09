@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.client.sound;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
@@ -39,7 +39,7 @@ public final class ReverbHandler {
     private static void setupEffects() {
         available = AL.getCapabilities().ALC_EXT_EFX;
         if (!available) {
-            RegenerationMod.LOG.warn("Unable to setup reverb effects, AL EFX not supported!");
+            Regeneration.LOG.warn("Unable to setup reverb effects, AL EFX not supported!");
             return;
         }
 

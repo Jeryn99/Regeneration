@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -29,7 +29,7 @@ public class RegenUtil {
 	};
 
 	public static String[] downloadNames() {
-		String[] names = RegenerationMod.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/timelord-names.json"), String[].class);
+		String[] names = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/timelord-names.json"), String[].class);
 		for (String name : names) {
 			System.out.println(name);
 		}

@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.image.ImageDownloader;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.TrendingManager;
@@ -32,8 +32,10 @@ public class FileUtil {
 	
 	public static void handleDownloads() throws IOException {
 		if (!RegenConfig.CLIENT.downloadInteralSkins.get()) return;
-		String PACKS_URL = "https://raw.githubusercontent.com/Suffril/Regeneration/skins/index.json";
-		String[] links = RegenerationMod.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
+
+
+		String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
+		String[] links = Regeneration.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
 		for (String link : links) {
 			unzipSkinPack(link);
 		}
@@ -69,7 +71,7 @@ public class FileUtil {
 		uc.connect();
 		uc = url.openConnection();
 		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-		RegenerationMod.LOG.warn("Downloading Skin from: {}", url.toString());
+		Regeneration.LOG.warn("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
 		img = ClientUtil.ImageFixer.convertSkinTo64x64(img);
 
@@ -100,16 +102,16 @@ public class FileUtil {
 					TrendingManager.downloadPreviousSkins();
 					notDownloaded.set(false);
 				} catch (Exception e) {
-					System.out.println("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");
+					Regeneration.LOG.error("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");
 					throw new RuntimeException(e);
 				}
 			}
-		}, RegenerationMod.NAME + " Download Daemon").start();
+		}, Regeneration.NAME + " Download Daemon").start();
 	}
 
 	public static void unzipSkinPack(String url) throws IOException {
 		File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
-		RegenerationMod.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
+		Regeneration.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
 		FileUtils.copyURLToFile(new URL(url), tempZip);
 		try (ZipFile file = new ZipFile(tempZip)) {
 			FileSystem fileSystem = FileSystems.getDefault();
@@ -123,10 +125,10 @@ public class FileUtil {
 					BufferedInputStream bis = new BufferedInputStream(is);
 					String uncompressedFileName = SKIN_DIRECTORY + File.separator + entry.getName();
 					Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
-					RegenerationMod.LOG.info("Extracting file: " + uncompressedFilePath);
+					Regeneration.LOG.info("Extracting file: " + uncompressedFilePath);
 					File temp = uncompressedFilePath.toFile();
 					if (temp.exists()) {
-						RegenerationMod.LOG.info(uncompressedFilePath + " exists, deleting and remaking!");
+						Regeneration.LOG.info(uncompressedFilePath + " exists, deleting and remaking!");
 						temp.delete();
 					}
 					Files.createFile(uncompressedFilePath);
@@ -184,7 +186,7 @@ public class FileUtil {
 			uc.connect();
 			uc = url.openConnection();
 			uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-			RegenerationMod.LOG.warn("Downloading Skin from: {}", url.toString());
+			Regeneration.LOG.warn("Downloading Skin from: {}", url.toString());
 			image = NativeImage.read(uc.getInputStream());
 			return Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("mojang_", new DynamicTexture(image));
 		} catch (IOException e) {

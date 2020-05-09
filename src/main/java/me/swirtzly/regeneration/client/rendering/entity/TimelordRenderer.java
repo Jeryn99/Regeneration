@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.client.rendering.entity;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.rendering.layers.HandsLayer;
 import me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer;
 import me.swirtzly.regeneration.client.rendering.model.TimelordGuardModel;
@@ -10,7 +10,6 @@ import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -74,6 +73,6 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(TimelordEntity entity) {
-        return new ResourceLocation(RegenerationMod.MODID, "textures/entity/timelords/" + entity.getTimelordType().getName() + "/" + entity.getTimelordType().getName() + "_" + entity.getSkin() + ".png");
+        return new ResourceLocation(Regeneration.MODID, "textures/entity/timelords/" + entity.getTimelordType().getName() + "/" + entity.getTimelordType().getName() + "_" + entity.getSkin() + ".png");
     }
 }

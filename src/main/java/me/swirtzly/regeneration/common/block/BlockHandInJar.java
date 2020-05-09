@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.common.block;
 
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
+import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenShapes;
@@ -14,9 +14,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SPlaySoundPacket;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -98,8 +98,14 @@ public class BlockHandInJar extends DirectionalBlock {
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (worldIn.isRemote) return false;
 
-		if (worldIn.getTileEntity(pos) instanceof TileEntityHandInJar) {
-			TileEntityHandInJar jar = (TileEntityHandInJar) worldIn.getTileEntity(pos);
+		if(player instanceof ServerPlayerEntity){
+			ServerPlayerEntity playerEntity = (ServerPlayerEntity) player;
+			//ResourceLocation p_i47939_1_, SoundCategory p_i47939_2_, Vec3d p_i47939_3_, float p_i47939_4_, float p_i47939_5_
+			playerEntity.connection.sendPacket(new SPlaySoundPacket());
+		}
+
+		if (worldIn.getTileEntity(pos) instanceof HandInJarTile) {
+			HandInJarTile jar = (HandInJarTile) worldIn.getTileEntity(pos);
 
 			RegenCap.get(player).ifPresent((data) -> {
 
@@ -129,7 +135,7 @@ public class BlockHandInJar extends DirectionalBlock {
 	@Nullable
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TileEntityHandInJar();
+		return new HandInJarTile();
 	}
 
 	@Override
@@ -149,9 +155,9 @@ public class BlockHandInJar extends DirectionalBlock {
 
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		TileEntityHandInJar te = (TileEntityHandInJar) worldIn.getTileEntity(pos);
+		HandInJarTile te = (HandInJarTile) worldIn.getTileEntity(pos);
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-//			InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntityHandInJar)te);
+//			InventoryHelper.dropInventoryItems(worldIn, pos, (HandInJarTile)te);
 			//TODO: Make TE implement IInventory so we can make it drop its items
 	         worldIn.removeTileEntity(pos);
 	      }

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.client.rendering.model.HandModel;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.item.HandItem;
-import me.swirtzly.regeneration.common.tiles.TileEntityHandInJar;
+import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -17,16 +17,16 @@ import java.util.HashMap;
 /**
  * Created by Swirtzly on 22/08/2019 @ 16:30
  */
-public class RenderTileEntityHand extends TileEntityRenderer<TileEntityHandInJar> {
+public class RenderTileEntityHand extends TileEntityRenderer<HandInJarTile> {
 
     private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
-    public static HashMap<TileEntityHandInJar, ResourceLocation> TEXTURES = new HashMap<>();
+    public static HashMap<HandInJarTile, ResourceLocation> TEXTURES = new HashMap<>();
     public static EntityModel STEVE_ARM = new HandModel(false);
     public static EntityModel ALEX_ARM = new HandModel(true);
 
     @Override
-    public void render(TileEntityHandInJar tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(HandInJarTile tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage) {
         GlStateManager.pushMatrix();
         GlStateManager.translated(x, y, z);
 
@@ -48,7 +48,7 @@ public class RenderTileEntityHand extends TileEntityRenderer<TileEntityHandInJar
         GlStateManager.popMatrix();
     }
 
-    public ResourceLocation getOrCreateTexture(TileEntityHandInJar tileEntityHandInJar) {
+    public ResourceLocation getOrCreateTexture(HandInJarTile tileEntityHandInJar) {
 
         if (HandItem.getTextureString(tileEntityHandInJar.getHand()).equalsIgnoreCase("NONE")) {
             boolean isAlex = HandItem.getSkinType(tileEntityHandInJar.getHand()).equalsIgnoreCase("ALEX");

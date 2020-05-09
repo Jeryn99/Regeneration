@@ -1,9 +1,10 @@
 package me.swirtzly.regeneration.handlers;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.Entity;
@@ -43,7 +44,7 @@ public class CommonHandler {
 
     @SubscribeEvent
     public void registerDim(RegisterDimensionsEvent event) {
-        RegenObjects.GALLIFREY_TYPE = DimensionManager.registerOrGetDimension(new ResourceLocation(RegenerationMod.MODID, "gallifrey"), RegenObjects.Dimensions.GALLIFREY.get(), null, true);
+        RegenObjects.GALLIFREY_TYPE = DimensionManager.registerOrGetDimension(new ResourceLocation(Regeneration.MODID, "gallifrey"), RegenObjects.Dimensions.GALLIFREY.get(), null, true);
     }
 
 
@@ -77,7 +78,14 @@ public class CommonHandler {
 	@SubscribeEvent
 	public void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof PlayerEntity) {
-			RegenCap.get(e.getEntityLiving()).ifPresent(IRegen::synchronise);
+			RegenCap.get(e.getEntityLiving()).ifPresent((data) -> {
+				data.synchronise();
+				if(data.getRegenerationsLeft() == 0){
+					TraitManager.IDna trait = TraitManager.getDnaEntry(data.getDnaType());
+					trait.onRemoved(data);
+					trait.onAdded(data);
+				}
+			});
 		}
 	}
 	

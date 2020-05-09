@@ -3,9 +3,9 @@ package me.swirtzly.regeneration.common.entity;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
 import me.swirtzly.regeneration.common.item.GunItem;
-import me.swirtzly.regeneration.common.trades.Trades;
+import me.swirtzly.regeneration.common.trades.TimelordTrades;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.registries.RRRegenType;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.*;
@@ -13,7 +13,6 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.entity.monster.DrownedEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,7 +29,6 @@ import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
@@ -152,7 +150,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 nbt.putFloat("SecondaryGreen", rand.nextInt(255) / 255.0F);
                 nbt.putFloat("SecondaryBlue", rand.nextInt(255) / 255.0F);
                 data.setStyle(nbt);
-                data.setType(rand.nextBoolean() ? RRRegenType.FIERY : RRRegenType.HARTNELL);
+                data.setType(rand.nextBoolean() ? RegenTypes.FIERY : RegenTypes.HARTNELL);
             });
 
 
@@ -318,7 +316,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     @Override
     protected void populateTradeData() {
-        VillagerTrades.ITrade[] trades = Trades.genTrades();
+        VillagerTrades.ITrade[] trades = TimelordTrades.genTrades();
         if (trades != null) {
             MerchantOffers merchantoffers = this.getOffers();
             this.addTrades(merchantoffers, trades, 5);

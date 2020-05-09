@@ -1,15 +1,17 @@
 package me.swirtzly.regeneration.common.capability;
 
 import me.swirtzly.regeneration.RegenConfig;
+import me.swirtzly.regeneration.api.RegenerationEvent;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
-import me.swirtzly.regeneration.registries.RRRegenType;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
@@ -45,7 +47,7 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	 * Returns if the player is currently <i>able to</i> regenerate
 	 */
 	default boolean canRegenerate() {
-		return (RegenConfig.COMMON.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getLivingEntity().posY > 0;// && !MinecraftForge.EVENT_BUS.post(new RegenerationEvent(getPlayer()));
+		return (RegenConfig.COMMON.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getLivingEntity().posY > 0 && !MinecraftForge.EVENT_BUS.post(new RegenerationEvent(getLivingEntity()));
 	}
 	
 	void receiveRegenerations(int amount);
@@ -54,9 +56,9 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	
 	PlayerUtil.RegenState getState();
 
-    RRRegenType getType();
+    RegenTypes getType();
 
-    void setType(RRRegenType type);
+    void setType(RegenTypes type);
 
     IRegenStateManager getStateManager();
 	

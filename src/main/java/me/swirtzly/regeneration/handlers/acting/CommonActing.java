@@ -7,7 +7,7 @@ import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.PlaySFXMessage;
-import me.swirtzly.regeneration.registries.RRRegenType;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.entity.LivingEntity;
@@ -53,7 +53,7 @@ class CommonActing implements Acting {
 				float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
 				player.heal(stateProgress * 0.3F * dm);
 				player.setArrowCountInEntity(0);
-				if(cap.getType() == RRRegenType.FIERY) {
+				if(cap.getType() == RegenTypes.FIERY) {
 					RegenUtil.regenerationExplosion(player);
 				}
 				break;

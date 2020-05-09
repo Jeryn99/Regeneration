@@ -1,14 +1,13 @@
 package me.swirtzly.regeneration.client.gui;
 
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.parts.ColorSliderWidget;
 import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.RegenType;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateColorMessage;
-import me.swirtzly.regeneration.registries.RRRegenType;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -24,7 +23,7 @@ import java.awt.*;
 
 public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
 
-    private static final ResourceLocation background = new ResourceLocation(RegenerationMod.MODID, "textures/gui/customizer_background.png");
+    private static final ResourceLocation background = new ResourceLocation(Regeneration.MODID, "textures/gui/customizer_background.png");
 
     private static ColorSliderWidget slidePrimaryRed;
     private static ColorSliderWidget slidePrimaryGreen;

@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.util.client;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderUtil {
 	
-	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(RegenerationMod.MODID, "textures/misc/vignette.png");
+	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(Regeneration.MODID, "textures/misc/vignette.png");
 	public static float renderTick = Minecraft.getInstance().getRenderPartialTicks();
 
     private static float lastBrightnessX = GLX.lastBrightnessX;

@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.client.skinhandling;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.swirtzly.regeneration.RegenConfig;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.image.ImageDownloadBuffer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
@@ -43,8 +43,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @OnlyIn(Dist.CLIENT)
 public class SkinManipulation {
 
-    // public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "./Regeneration Data/skins/");
-	public static final File SKIN_DIRECTORY = new File("./mods/Regeneration Data/skins/");
+    public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "/Regeneration Data/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
@@ -88,7 +87,7 @@ public class SkinManipulation {
                 if (data.getNextSkin().equals(RegenUtil.NO_SKIN)) {
                     boolean isAlex = data.getPreferredModel().isAlex();
                     skin = SkinManipulation.chooseRandomSkin(random, isAlex);
-                    RegenerationMod.LOG.info(skin + " was choosen");
+                    Regeneration.LOG.info(skin + " was choosen");
                     try {
                         pixelData = SkinManipulation.imageToPixelData(ImageIO.read(skin));
                     } catch (IOException e) {
@@ -330,7 +329,7 @@ public class SkinManipulation {
 				skinInfo = SkinManipulation.getSkinInfo(player, data);
 			} catch (IOException e1) {
 				if (!data.getEncodedSkin().equals(RegenUtil.NO_SKIN)) {
-					RegenerationMod.LOG.error("Error creating skin for: " + player.getName().getUnformattedComponentText() + " " + e1.getMessage());
+					Regeneration.LOG.error("Error creating skin for: " + player.getName().getUnformattedComponentText() + " " + e1.getMessage());
 				}
 			}
 			if (skinInfo != null) {

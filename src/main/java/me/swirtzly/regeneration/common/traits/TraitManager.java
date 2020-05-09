@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.traits;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.traits.negative.HungerTrait;
@@ -26,7 +26,7 @@ import java.util.Random;
 /**
  * Created by Suffril on 24/01/2019.
  */
-@Mod.EventBusSubscriber(modid = RegenerationMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Regeneration.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TraitManager {
 	
 	public static IDna DNA_ATHLETE = new AthleteTrait();
@@ -122,7 +122,7 @@ public class TraitManager {
 
         public IDna(String name) {
 			localName = "trait." + name;
-            resourceLocation = new ResourceLocation(RegenerationMod.MODID, name);
+            resourceLocation = new ResourceLocation(Regeneration.MODID, name);
 			localDesc = "trait." + name + ".desc";
         }
 

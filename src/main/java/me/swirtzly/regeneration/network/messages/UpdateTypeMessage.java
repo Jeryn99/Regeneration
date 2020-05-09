@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.network.messages;
 
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.registries.RRRegenType;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -27,7 +27,7 @@ public class UpdateTypeMessage {
     public static class Handler {
         public static void handle(UpdateTypeMessage message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
-                cap.setType(RRRegenType.REGISTRY.getValue(new ResourceLocation(message.type)));
+                cap.setType(RegenTypes.REGISTRY.getValue(new ResourceLocation(message.type)));
                 cap.synchronise();
             }));
             ctx.get().setPacketHandled(true);

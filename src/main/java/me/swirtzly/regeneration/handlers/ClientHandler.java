@@ -1,13 +1,13 @@
 package me.swirtzly.regeneration.handlers;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.registries.RRRegenType;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -53,7 +53,7 @@ import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
  */
 public class ClientHandler {
 
-    private static final ResourceLocation BUTTON_TEX = new ResourceLocation(RegenerationMod.MODID, "textures/gui/gui_button_customize.png");
+    private static final ResourceLocation BUTTON_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/gui_button_customize.png");
 
     public static String getColoredText(String msg) {
         return msg.replaceAll("&", String.valueOf('\u00a7'));
@@ -79,7 +79,7 @@ public class ClientHandler {
             if (SkinManipulation.PLAYER_SKINS.size() > 0) {
                 SkinManipulation.PLAYER_SKINS.forEach(((uuid, skinInfo) -> Minecraft.getInstance().getTextureManager().deleteTexture(skinInfo.getTextureLocation())));
                 SkinManipulation.PLAYER_SKINS.clear();
-                RegenerationMod.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
+                Regeneration.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
             }
         }
     }
@@ -189,7 +189,7 @@ public class ClientHandler {
     public void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
         if (Minecraft.getInstance().getRenderViewEntity() instanceof PlayerEntity) {
             RegenCap.get(Minecraft.getInstance().getRenderViewEntity()).ifPresent((data) -> {
-                if (data.getType() == RRRegenType.HARTNELL && data.getState() == REGENERATING) {
+                if (data.getType() == RegenTypes.HARTNELL && data.getState() == REGENERATING) {
                     e.setRed((float) data.getPrimaryColor().x);
                     e.setGreen((float) data.getPrimaryColor().y);
                     e.setBlue((float) data.getPrimaryColor().z);
@@ -208,7 +208,7 @@ public class ClientHandler {
                 event.setDensity(amount);
             }
 
-            if (data.getType() == RRRegenType.HARTNELL && data.getAnimationTicks() > 0) {
+            if (data.getType() == RegenTypes.HARTNELL && data.getAnimationTicks() > 0) {
                 event.setCanceled(true);
                 float opacity = MathHelper.clamp(MathHelper.sin((viewer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
                 event.setDensity(opacity);

@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.network.messages;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -23,11 +23,11 @@ public class RegenerateMessage {
         public static void handle(RegenerateMessage message, Supplier<NetworkEvent.Context> ctx) {
             Objects.requireNonNull(ctx.get().getSender()).getServer().deferTask(() -> {
                 ServerPlayerEntity player = ctx.get().getSender();
-                RegenerationMod.LOG.warn("Regeneration keybind pressed");
+                Regeneration.LOG.warn("Regeneration keybind pressed");
                 if (player != null) {
                     RegenCap.get(player).ifPresent((cap) -> {
                         if (!cap.getState().isGraceful()) {
-                            RegenerationMod.LOG.warn("Trigger packet was sent when not in a graceful period");
+                            Regeneration.LOG.warn("Trigger packet was sent when not in a graceful period");
                             return;
                         }
                         cap.triggerRegeneration();

@@ -122,6 +122,16 @@
       }
     ]
   },
+  "regeneration_7": {
+    "category": "ambient",
+    "subtitle": "regeneration.subtitles.regeneration",
+    "sounds": [
+      {
+        "name": "regeneration:regeneration/regeneration_7",
+        "stream": true
+      }
+    ]
+  },
   "fob_watch_dialogue": {
     "category": "ambient",
     "subtitle": "regeneration.subtitles.fob_watch_dialogue",

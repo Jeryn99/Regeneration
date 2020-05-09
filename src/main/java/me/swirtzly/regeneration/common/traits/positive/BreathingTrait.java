@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.traits.positive;
 
-import me.swirtzly.regeneration.RegenerationMod;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.util.PlayerUtil;
@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class BreathingTrait extends TraitManager.IDna {
 	
-	private ResourceLocation ID = new ResourceLocation(RegenerationMod.MODID, "swimmer");
+	private ResourceLocation ID = new ResourceLocation(Regeneration.MODID, "swimmer");
 
     public BreathingTrait() {
         super("swimmer");
