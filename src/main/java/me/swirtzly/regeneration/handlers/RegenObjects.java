@@ -11,6 +11,7 @@ import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
 import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.dimension.features.FeatureSpikeyBoys;
 import me.swirtzly.regeneration.common.dimension.features.GallifreyanTreeFeature;
+import me.swirtzly.regeneration.common.entity.CrackEntity;
 import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
@@ -178,6 +179,7 @@ public class RegenObjects {
 		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
         public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
 		public static RegistryObject<EntityType<LaserEntity>> LASER = ENTITIES.register("laser", () -> registerMob(LaserEntity::new, LaserEntity::new, EntityClassification.MISC, 0.5F, 0.5F, "laser", true));
+		public static RegistryObject<EntityType<CrackEntity>> CRACK = ENTITIES.register("crack", () -> registerMob((entityTypeIn, worldIn) -> new CrackEntity(worldIn), CrackEntity::new, EntityClassification.MISC, 0.6F, 1.95F, "crack", true));
 	}
 
 	public static final GallifreyanTreeFeature TREES = new GallifreyanTreeFeature(NoFeatureConfig::deserialize);

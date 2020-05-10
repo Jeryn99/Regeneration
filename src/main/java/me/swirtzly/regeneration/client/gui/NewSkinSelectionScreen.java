@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
@@ -25,7 +26,7 @@ import java.util.List;
 
 import static me.swirtzly.regeneration.util.client.RenderUtil.drawModelToGui;
 
-public class SkinChoiceScreen extends ContainerScreen {
+public class NewSkinSelectionScreen extends ContainerScreen {
 
     private static final ResourceLocation background = new ResourceLocation(Regeneration.MODID, "textures/gui/customizer_background.png");
     public static boolean isAlex = true;
@@ -38,15 +39,19 @@ public class SkinChoiceScreen extends ContainerScreen {
     private static PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
     private float rotation = 0;
 
-    public SkinChoiceScreen() {
+    public NewSkinSelectionScreen() {
         super(new ContainerBlank(), null, new TranslationTextComponent("Regeneration"));
         xSize = 176;
         ySize = 186;
     }
 
     public static void updateModels() {
-        isAlex = skins.get(position).toPath().startsWith(SkinManipulation.SKIN_DIRECTORY_ALEX.toPath().toString());
+        isAlex = isPosAlex(position);
         choices = isAlex ? SkinManipulation.EnumChoices.ALEX : SkinManipulation.EnumChoices.STEVE;
+    }
+
+    public static boolean isPosAlex(int position) {
+        return skins.get(position).toPath().startsWith(SkinManipulation.SKIN_DIRECTORY_ALEX.toPath().toString());
     }
 
     @Override
@@ -134,27 +139,62 @@ public class SkinChoiceScreen extends ContainerScreen {
         this.renderBackground();
         Minecraft.getInstance().getTextureManager().bindTexture(background);
         blit(guiLeft, guiTop, 0, 0, xSize, ySize);
+
         GlStateManager.pushMatrix();
+
         ALEX_MODEL.isChild = false;
         STEVE_MODEL.isChild = false;
         Minecraft.getInstance().getTextureManager().bindTexture(PLAYER_TEXTURE);
-        switch (choices) {
-            case ALEX:
-                drawModelToGui(ALEX_MODEL, width / 2, height / 2 - 50, 1.0f, rotation);
-                break;
-            case STEVE:
-                drawModelToGui(STEVE_MODEL, width / 2, height / 2 - 50, 1.0f, rotation);
-                break;
-            case EITHER:
-                drawModelToGui(ALEX_MODEL, width / 2 - 40, height / 2 - 50, 1.0f, rotation);
-                drawModelToGui(STEVE_MODEL, width / 2 + 40, height / 2 - 50, 1.0f, rotation);
-                break;
+
+        int offset = 0;
+        for (int i = 0; i < skins.size(); i++) {
+            if (i % 4 == 0) {
+                offset += 10;
+            }
+            GlStateManager.pushMatrix();
+            Minecraft.getInstance().getTextureManager().bindTexture(SkinManipulation.createGuiTexture(skins.get(getPosition(i))));
+            drawModelToGui(isPosAlex(getPosition(i)) ? ALEX_MODEL : STEVE_MODEL, width / 2 + 20 * i, height / 2 + offset, 1.5f, rotation);
+            GlStateManager.popMatrix();
         }
+
+   /*     GlStateManager.pushMatrix();
+        Minecraft.getInstance().getTextureManager().bindTexture(SkinManipulation.createGuiTexture(skins.get(getPosition(0))));
+        drawModelToGui(isPosAlex(getPosition(0)) ? ALEX_MODEL : STEVE_MODEL, width / 2, height / 2 - 10, 1.5f, rotation);
+        GlStateManager.popMatrix();*/
+
+
+       /* //Left First
+        GlStateManager.pushMatrix();
+        Minecraft.getInstance().getTextureManager().bindTexture(SkinManipulation.createGuiTexture(skins.get(getPosition(1))));
+        drawModelToGui(isPosAlex(getPosition(1)) ? ALEX_MODEL : STEVE_MODEL, width / 2 - 90, height / 2 - 10, 1.3f, 200);
+        GlStateManager.popMatrix();
+
+        //Right First
+        GlStateManager.pushMatrix();
+        Minecraft.getInstance().getTextureManager().bindTexture(SkinManipulation.createGuiTexture(skins.get(getPosition(3))));
+        drawModelToGui(isPosAlex(getPosition(3)) ? ALEX_MODEL : STEVE_MODEL, width / 2 + 90, height / 2 - 10, 1.3f, -200);
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        Minecraft.getInstance().getTextureManager().bindTexture(SkinManipulation.createGuiTexture(skins.get(getPosition(4))));
+        drawModelToGui(isPosAlex(getPosition(4)) ? ALEX_MODEL : STEVE_MODEL, width / 2 - 170, height / 2 - 10, 1.2f, 200);
+        GlStateManager.popMatrix();*/
+
+
+        GlStateManager.pushMatrix();
+        Minecraft.getInstance().getTextureManager().bindTexture(SkinManipulation.createGuiTexture(skins.get(getPosition(2))));
+        drawModelToGui(isPosAlex(getPosition(2)) ? ALEX_MODEL : STEVE_MODEL, width / 2 + 170, height / 2 - 10, 1.2f, -200);
+        GlStateManager.popMatrix();
+
         GlStateManager.popMatrix();
 
         drawCenteredString(Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regeneration.gui.current_skin").getUnformattedComponentText(), width / 2, height / 2 + 5, Color.WHITE.getRGB());
         drawCenteredString(Minecraft.getInstance().fontRenderer, new TranslationTextComponent(skins.get(position).getName().replaceAll(".png", "")).getUnformattedComponentText(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
 
+    }
+
+    public int getPosition(int increase) {
+        return MathHelper.clamp(position + increase, 0, skins.size() - 1);
     }
 
     @Override

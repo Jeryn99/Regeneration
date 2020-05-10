@@ -30,6 +30,7 @@ public class RegenUtil {
 
 	public static String[] downloadNames() {
 		String[] names = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/timelord-names.json"), String[].class);
+        if (names == null) return new String[]{"TIMELORD"};
 		for (String name : names) {
 			System.out.println(name);
 		}

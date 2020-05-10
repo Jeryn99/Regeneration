@@ -23,7 +23,6 @@ public class RegenerateMessage {
         public static void handle(RegenerateMessage message, Supplier<NetworkEvent.Context> ctx) {
             Objects.requireNonNull(ctx.get().getSender()).getServer().deferTask(() -> {
                 ServerPlayerEntity player = ctx.get().getSender();
-                Regeneration.LOG.warn("Regeneration keybind pressed");
                 if (player != null) {
                     RegenCap.get(player).ifPresent((cap) -> {
                         if (!cap.getState().isGraceful()) {

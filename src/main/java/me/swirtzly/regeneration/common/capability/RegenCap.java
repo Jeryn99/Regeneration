@@ -157,7 +157,7 @@ public class RegenCap implements IRegen {
 		} else {
             regenType = RegenTypes.FIERY;
 		}
-		nbt.putString("base64_skin", BASE64_SKIN);
+		nbt.putString("encoded_data", BASE64_SKIN);
 		nbt.putString("skinType", skinType.name());
 		nbt.putString("preferredModel", preferredModel.name());
 		nbt.putBoolean("handsAreGlowing", handsAreGlowingClient);
@@ -227,7 +227,7 @@ public class RegenCap implements IRegen {
             regenType = RegenTypes.FIERY;
 		
 		state = nbt.contains("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
-		setEncodedSkin(nbt.getString("base64_skin"));
+		setEncodedSkin(nbt.getString("encoded_data"));
 
         if (nbt.contains("stateManager")) if (stateManager != null) {
             stateManager.deserializeNBT((CompoundNBT) nbt.get("stateManager"));

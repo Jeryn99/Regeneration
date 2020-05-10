@@ -66,7 +66,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     @Override
     protected void registerData() {
         super.registerData();
-        getDataManager().register(SKIN, rand.nextInt(timelordAmount));
+        getDataManager().register(SKIN, rand.nextInt(11));
         getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
         getDataManager().register(SWINGING_ARMS, false);
     }

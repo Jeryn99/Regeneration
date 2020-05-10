@@ -31,10 +31,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -50,17 +47,23 @@ public class SkinManipulation {
 	private static final HashMap<UUID, ResourceLocation> MOJANG = new HashMap<>();
 	private static final Random RAND = new Random();
 
-    public static String imageToPixelData(final BufferedImage img) {
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+    public static String imageToPixelData(File file) {
+        String encodedfile = null;
 		try {
-			ImageIO.write(img, "PNG", Base64.getEncoder().wrap(os));
-			return os.toString(StandardCharsets.ISO_8859_1.name());
-		} catch (final IOException ioe) {
-			throw new UncheckedIOException(ioe);
-		}
-	}
+            FileInputStream fileInputStreamReader = new FileInputStream(file);
+            byte[] bytes = new byte[(int) file.length()];
+            fileInputStreamReader.read(bytes);
+            encodedfile = Base64.getEncoder().encodeToString(bytes);
+            System.out.println(encodedfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    public static NativeImage decodeToImage(final String base64String) {
+        return encodedfile;
+    }
+
+    public static NativeImage decodeToImage(String base64String) {
+
 		try {
 			return NativeImage.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64String)));
 		} catch (final IOException ioe) {
@@ -88,11 +91,7 @@ public class SkinManipulation {
                     boolean isAlex = data.getPreferredModel().isAlex();
                     skin = SkinManipulation.chooseRandomSkin(random, isAlex);
                     Regeneration.LOG.info(skin + " was choosen");
-                    try {
-                        pixelData = SkinManipulation.imageToPixelData(ImageIO.read(skin));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    pixelData = SkinManipulation.imageToPixelData(skin);
                     data.setEncodedSkin(pixelData);
                     NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, isAlex));
                 } else {

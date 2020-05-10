@@ -216,7 +216,6 @@ public class RenderUtil {
 		BufferBuilder bufferBuilder = tessellator.getBuffer();
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture();
-        // I think the below is my lad
 		GlStateManager.blendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color4f(red, green, blue, alpha);
 		bufferBuilder.begin(7, DefaultVertexFormats.POSITION);

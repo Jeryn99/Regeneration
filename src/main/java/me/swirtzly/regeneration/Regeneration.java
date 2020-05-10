@@ -2,6 +2,7 @@ package me.swirtzly.regeneration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.swirtzly.regeneration.client.rendering.entity.CrackRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.LaserRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.TimelordRenderer;
@@ -10,6 +11,7 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.capability.RegenStorage;
 import me.swirtzly.regeneration.common.commands.RegenCommand;
+import me.swirtzly.regeneration.common.entity.CrackEntity;
 import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
@@ -76,6 +78,7 @@ public class Regeneration {
 		RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(TimelordEntity.class, TimelordRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(LaserEntity.class, LaserRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(CrackEntity.class, CrackRenderer::new);
 	}
 
     private void setup(final FMLCommonSetupEvent event) {
