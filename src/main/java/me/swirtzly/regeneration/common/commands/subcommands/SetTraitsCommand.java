@@ -47,4 +47,6 @@ public class SetTraitsCommand implements Command<CommandSource> {
         });
         return Command.SINGLE_SUCCESS;
     }
+
+
 }

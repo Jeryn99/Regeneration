@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
-import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -15,7 +14,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -28,7 +26,7 @@ public class GunItem extends SolidItem {
     private int cooldown, damage;
 
     public GunItem(int shotsPerRound, int cooldown, int damage) {
-        super(new Properties().group(ItemGroups.REGEN_TAB).maxDamage(shotsPerRound));
+        super(new Properties().group(ItemGroups.REGEN_TAB).maxDamage(shotsPerRound).setNoRepair());
         this.cooldown = cooldown;
         this.damage = damage;
     }

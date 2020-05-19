@@ -46,7 +46,7 @@ public class TimelordGuardModel extends BipedModel<TimelordEntity> {
 
         helment = new RendererModel(this);
         helment.setRotationPoint(0.0F, 24.0F, 0.0F);
-        head.addChild(helment);
+        bipedHead.addChild(helment);
         helment.cubeList.add(new ModelBox(helment, 58, 32, -4.45F, -29.75F, -0.65F, 1, 2, 2, 0.0F, false));
         helment.cubeList.add(new ModelBox(helment, 62, 22, 3.45F, -29.75F, -0.65F, 1, 2, 2, 0.0F, false));
         helment.cubeList.add(new ModelBox(helment, 66, 41, 1.0F, -30.0F, -4.35F, 3, 1, 1, 0.0F, false));
@@ -247,16 +247,19 @@ public class TimelordGuardModel extends BipedModel<TimelordEntity> {
         skirt2.cubeList.add(new ModelBox(skirt2, 0, 50, 2.9F, -11.5F, -1.9F, 1, 1, 1, 0.0F, false));
         skirt2.cubeList.add(new ModelBox(skirt2, 68, 19, 1.9F, -12.25F, -1.95F, 2, 1, 1, 0.0F, false));
         skirt2.cubeList.add(new ModelBox(skirt2, 64, 62, 1.0F, -13.0F, -2.0F, 3, 1, 1, 0.0F, false));
+
     }
 
     @Override
     public void render(TimelordEntity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        head.render(f5);
+        // head.render(f5);
+        bipedHead.render(f5);
         body.render(f5);
         right_arm.render(f5);
         left_arm.render(f5);
         right_leg.render(f5);
         left_leg.render(f5);
+        head.isHidden = true;
     }
 
     @Override

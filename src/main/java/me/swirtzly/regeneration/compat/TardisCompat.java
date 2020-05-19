@@ -72,6 +72,10 @@ public class TardisCompat {
             TimelordEntity timelordEntity = (TimelordEntity) entityJoinWorldEvent.getEntity();
             timelordEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(timelordEntity, DalekEntity.class, false));
         }
+
+        if (entityJoinWorldEvent.getEntity() instanceof DalekEntity) {
+
+        }
     }
 
     @SubscribeEvent

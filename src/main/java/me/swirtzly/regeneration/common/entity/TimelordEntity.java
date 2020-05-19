@@ -1,8 +1,10 @@
 package me.swirtzly.regeneration.common.entity;
 
+import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
 import me.swirtzly.regeneration.common.item.GunItem;
+import me.swirtzly.regeneration.common.skin.HandleSkins;
 import me.swirtzly.regeneration.common.trades.TimelordTrades;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
@@ -34,8 +36,14 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import org.apache.commons.io.FileUtils;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -44,9 +52,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
-    private static final DataParameter<Integer> SKIN = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.VARINT);
     private static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> VILLAGER = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
 
     private final SwimmerPathNavigator waterNavigator;
     private final GroundPathNavigator groundNavigator;
@@ -66,7 +74,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     @Override
     protected void registerData() {
         super.registerData();
-        getDataManager().register(SKIN, rand.nextInt(11));
+        getDataManager().register(VILLAGER, false);
         getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
         getDataManager().register(SWINGING_ARMS, false);
     }
@@ -148,6 +156,20 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 nbt.putFloat("SecondaryBlue", rand.nextInt(255) / 255.0F);
                 data.setStyle(nbt);
                 data.setType(rand.nextBoolean() ? RegenTypes.FIERY : RegenTypes.HARTNELL);
+
+                long current = System.currentTimeMillis();
+                URLConnection openConnection = null;
+                try {
+                    openConnection = new URL(HandleSkins.SKINS.get(world.rand.nextInt(HandleSkins.SKINS.size() - 1))).openConnection();
+                    openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+                    InputStream is = openConnection.getInputStream();
+                    File file = new File("./temp/" + current + ".png");
+                    FileUtils.copyInputStreamToFile(is, file);
+                    data.setEncodedSkin(SkinManipulation.imageToPixelData(file));
+                    file.delete();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
 
 
@@ -209,7 +231,23 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 
                     if (data.getAnimationTicks() == 100) {
-                        setSkin(rand.nextInt(timelordAmount));
+                        if (false) {
+                            setVillager(true);
+                        } else {
+                            try {
+                                setVillager(false);
+                                long current = System.currentTimeMillis();
+                                URLConnection openConnection = new URL(HandleSkins.SKINS.get(world.rand.nextInt(HandleSkins.SKINS.size() - 1))).openConnection();
+                                openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+                                InputStream is = openConnection.getInputStream();
+                                File file = new File("./temp/" + current + ".png");
+                                FileUtils.copyInputStreamToFile(is, file);
+                                data.setEncodedSkin(SkinManipulation.imageToPixelData(file));
+                                file.delete();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
 
                     setNoAI(true);
@@ -222,12 +260,12 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         });
     }
 
-    public int getSkin() {
-        return getDataManager().get(SKIN);
+    public Boolean isVillagerModel() {
+        return getDataManager().get(VILLAGER);
     }
 
-    public void setSkin(int skin) {
-        getDataManager().set(SKIN, skin);
+    public void setVillager(boolean villager) {
+        getDataManager().set(VILLAGER, villager);
     }
 
     @Nullable
@@ -301,14 +339,14 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.putInt("skin", getSkin());
+        compound.putBoolean("villager", isVillagerModel());
         compound.putString("timelord_type", getTimelordType().name());
     }
 
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        setSkin(compound.getInt("skin"));
+        setVillager(compound.getBoolean("villager"));
         if (compound.contains("timelord_type")) {
             setTimelordType(TimelordType.valueOf(compound.getString("timelord_type")));
         }

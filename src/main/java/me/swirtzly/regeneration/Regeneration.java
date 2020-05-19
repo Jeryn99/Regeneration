@@ -2,7 +2,6 @@ package me.swirtzly.regeneration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import me.swirtzly.regeneration.client.rendering.entity.CrackRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.LaserRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.TimelordRenderer;
@@ -11,10 +10,10 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.capability.RegenStorage;
 import me.swirtzly.regeneration.common.commands.RegenCommand;
-import me.swirtzly.regeneration.common.entity.CrackEntity;
 import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
+import me.swirtzly.regeneration.common.skin.HandleSkins;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.compat.TardisCompat;
 import me.swirtzly.regeneration.handlers.CommonHandler;
@@ -45,6 +44,9 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Mod(Regeneration.MODID)
 public class Regeneration {
@@ -78,7 +80,6 @@ public class Regeneration {
 		RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(TimelordEntity.class, TimelordRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(LaserEntity.class, LaserRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(CrackEntity.class, CrackRenderer::new);
 	}
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -118,7 +119,18 @@ public class Regeneration {
     private void processIMC(final InterModProcessEvent event) {
 		proxy.postInit();
 		PlayerUtil.createPostList();
+
 		RegenUtil.TIMELORD_NAMES = RegenUtil.downloadNames();
+
+        Timer timer = new Timer();
+        TimerTask hourlyTask = new TimerTask() {
+            @Override
+            public void run() {
+                HandleSkins.downloadSkins();
+            }
+        };
+
+        timer.schedule(hourlyTask, 0L, 1000 * 60 * 60);
 	}
 	
 	@SubscribeEvent

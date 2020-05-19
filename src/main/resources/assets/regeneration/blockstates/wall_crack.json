@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "": {
+      "model": "regeneration:block/wall_crack"
+    },
+    "facing=north": {
+      "model": "regeneration:block/wall_crack"
+    },
+    "facing=south": {
+      "model": "regeneration:block/wall_crack",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "regeneration:block/wall_crack",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "regeneration:block/wall_crack",
+      "y": 90
+    },
+    "facing=up": {
+      "model": "regeneration:block/wall_crack"
+    },
+    "facing=down": {
+      "model": "regeneration:block/wall_crack"
+    }
+  }
+}

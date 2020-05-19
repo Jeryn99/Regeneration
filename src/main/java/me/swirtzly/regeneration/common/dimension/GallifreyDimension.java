@@ -21,6 +21,8 @@ import net.minecraft.world.gen.OverworldGenSettings;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 
@@ -197,5 +199,20 @@ public class GallifreyDimension extends Dimension {
     public Vec3d getCloudColor(float partialTicks) {
         return new Vec3d(0.9, 0.3, 0.1);
         // return new Vec3d(255 / 255.0F, 153/ 255.0, 204/ 255.0);
+    }
+
+
+    @SubscribeEvent
+    public static void onCreated(WorldEvent.CreateSpawnPosition event) {
+
+    }
+
+    public static void createCitadell() {
+
+    }
+
+    @Override
+    public long getSeed() {
+        return -3968030346439409757L;
     }
 }

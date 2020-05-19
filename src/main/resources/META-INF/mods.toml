@@ -44,3 +44,9 @@ The mod that brings a Doctor Who regeneration experience to Minecraft!
     versionRange="[1.14.4]"
     ordering="NONE"
     side="BOTH"
+[[dependencies.regeneration]]
+    modId="tardis"
+    mandatory=false
+    versionRange="[1.2.0,)"
+    ordering="AFTER"
+    side="BOTH"

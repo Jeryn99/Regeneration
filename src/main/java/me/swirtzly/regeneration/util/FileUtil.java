@@ -128,7 +128,7 @@ public class FileUtil {
 					Regeneration.LOG.info("Extracting file: " + uncompressedFilePath);
 					File temp = uncompressedFilePath.toFile();
 					if (temp.exists()) {
-						Regeneration.LOG.info(uncompressedFilePath + " exists, deleting and remaking!");
+						Regeneration.LOG.info("Recreating: " + uncompressedFilePath);
 						temp.delete();
 					}
 					Files.createFile(uncompressedFilePath);

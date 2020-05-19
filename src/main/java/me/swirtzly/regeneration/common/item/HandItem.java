@@ -37,12 +37,12 @@ public class HandItem extends Item {
         return getStackTag(stack).getLong("created");
     }
 
-    public static void setTextureString(ItemStack stack, String textureString) {
-        getStackTag(stack).putString("textureString", textureString);
+    public static void setTextureString(ItemStack stack, String encodedTexture) {
+        getStackTag(stack).putString("encodedTexture", encodedTexture);
     }
 
     public static String getTextureString(ItemStack stack) {
-        return getStackTag(stack).getString("textureString");
+        return getStackTag(stack).getString("encodedTexture");
     }
 
     public static void setSkinType(ItemStack stack, String skinType) {
@@ -72,7 +72,7 @@ public class HandItem extends Item {
     public static CompoundNBT getStackTag(ItemStack stack) {
         if (stack.getTag() == null) {
             stack.setTag(new CompoundNBT());
-            stack.getTag().putString("textureString", "NONE");
+            stack.getTag().putString("encodedTexture", "NONE");
             stack.getTag().putString("skinType", SkinInfo.SkinType.ALEX.name());
             stack.getTag().putUniqueId("owner", UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39"));
             stack.getTag().putLong("created", 0);

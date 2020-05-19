@@ -11,7 +11,6 @@ import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
 import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.dimension.features.FeatureSpikeyBoys;
 import me.swirtzly.regeneration.common.dimension.features.GallifreyanTreeFeature;
-import me.swirtzly.regeneration.common.entity.CrackEntity;
 import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
@@ -45,7 +44,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.*;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ModDimension;
@@ -128,12 +126,9 @@ public class RegenObjects {
  		return type;
  	}
 
-	public static class Blocks {
-		public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, Regeneration.MODID);
-		public static final DeferredRegister<Item> BLOCK_ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Regeneration.MODID);
-		public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
-        public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
-		public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
+    //Registry Methods
+    private static Item setUpItem(Item item) {
+        return item;
 	}
 	
 	public static class Items {
@@ -179,7 +174,6 @@ public class RegenObjects {
 		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
         public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
 		public static RegistryObject<EntityType<LaserEntity>> LASER = ENTITIES.register("laser", () -> registerMob(LaserEntity::new, LaserEntity::new, EntityClassification.MISC, 0.5F, 0.5F, "laser", true));
-		public static RegistryObject<EntityType<CrackEntity>> CRACK = ENTITIES.register("crack", () -> registerMob((entityTypeIn, worldIn) -> new CrackEntity(worldIn), CrackEntity::new, EntityClassification.MISC, 0.6F, 1.95F, "crack", true));
 	}
 
 	public static final GallifreyanTreeFeature TREES = new GallifreyanTreeFeature(NoFeatureConfig::deserialize);
@@ -192,20 +186,18 @@ public class RegenObjects {
         event.getRegistry().registerAll(SPIKEYS.setRegistryName(MODID, "spikeys"));
 	}
 
-
-	private static <C extends IFeatureConfig, F extends Feature<C>> F registerFeatures(F value) {
-		return value;
-	}
-
 	@SubscribeEvent
 	public static void regBlockItems(RegistryEvent.Register<Item> e) {
 		genBlockItems(Blocks.BLOCKS.getEntries());
 	}
-	
-	
-	//Registry Methods
-	private static Item setUpItem(Item item) {
-		return item;
+
+    public static class Blocks {
+        public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, Regeneration.MODID);
+        public static final DeferredRegister<Item> BLOCK_ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Regeneration.MODID);
+        public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
+        public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
+        // public static final RegistryObject<Block> CRACK = BLOCKS.register("wall_crack", () -> setUpBlock(new CrackBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(9, 9))));
+        public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
 	}
 	
 	private static Block setUpBlock(Block block) {

@@ -22,8 +22,6 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,7 +35,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-@OnlyIn(Dist.CLIENT)
+import static me.swirtzly.regeneration.util.RegenUtil.NO_SKIN;
+
 public class SkinManipulation {
 
     public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "/Regeneration Data/skins/");
@@ -48,13 +47,12 @@ public class SkinManipulation {
 	private static final Random RAND = new Random();
 
     public static String imageToPixelData(File file) {
-        String encodedfile = null;
+		String encodedfile = NO_SKIN;
 		try {
             FileInputStream fileInputStreamReader = new FileInputStream(file);
             byte[] bytes = new byte[(int) file.length()];
             fileInputStreamReader.read(bytes);
             encodedfile = Base64.getEncoder().encodeToString(bytes);
-            System.out.println(encodedfile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,10 +61,13 @@ public class SkinManipulation {
     }
 
     public static NativeImage decodeToImage(String base64String) {
-
+		if (base64String.equalsIgnoreCase(NO_SKIN)) {
+			return null;
+		}
 		try {
-			return NativeImage.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64String)));
+			return NativeImage.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64String.replaceAll("-", ""))));
 		} catch (final IOException ioe) {
+			Regeneration.LOG.error("ERROR MAKING IMAGE FOR: " + base64String);
 			throw new UncheckedIOException(ioe);
 		}
 	}
@@ -84,10 +85,10 @@ public class SkinManipulation {
 
             if (RegenConfig.CLIENT.changeMySkin.get()) {
 
-                String pixelData = RegenUtil.NO_SKIN;
+				String pixelData = NO_SKIN;
                 File skin = null;
 
-                if (data.getNextSkin().equals(RegenUtil.NO_SKIN)) {
+				if (data.getNextSkin().equals(NO_SKIN)) {
                     boolean isAlex = data.getPreferredModel().isAlex();
                     skin = SkinManipulation.chooseRandomSkin(random, isAlex);
                     Regeneration.LOG.info(skin + " was choosen");
@@ -128,7 +129,7 @@ public class SkinManipulation {
 		if (data == null || player.getName() == null || player.getUniqueID() == null) {
 			return new SkinInfo(player, null, getSkinType(player, true));
 		}
-		if (data.getEncodedSkin().equals(RegenUtil.NO_SKIN) || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
+		if (data.getEncodedSkin().equals(NO_SKIN) || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
 			resourceLocation = MOJANG.get(player.getUniqueID());//getTextureForPlayer(player.getName().getUnformattedComponentText());
 			skinType = getSkinType(player, true);
 		} else {
@@ -327,7 +328,7 @@ public class SkinManipulation {
 			try {
 				skinInfo = SkinManipulation.getSkinInfo(player, data);
 			} catch (IOException e1) {
-				if (!data.getEncodedSkin().equals(RegenUtil.NO_SKIN)) {
+				if (!data.getEncodedSkin().equals(NO_SKIN)) {
                     Regeneration.LOG.error("Error creating skin for: " + player.getName().getUnformattedComponentText() + " " + e1.getMessage());
 				}
 			}

@@ -2,19 +2,11 @@ package me.swirtzly.regeneration.compat;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-
-import java.util.List;
 
 /**
  * Created by Swirtzly
  * on 22/04/2020 @ 13:56
  */
-@Mod.EventBusSubscriber
 public class ArchHelper {
 
     public static boolean storeRegenerations(ItemStack stack, int amount) {
