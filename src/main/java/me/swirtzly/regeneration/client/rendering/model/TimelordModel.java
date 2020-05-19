@@ -11,7 +11,6 @@ import net.minecraft.util.HandSide;
 
 public class TimelordModel extends BipedModel<TimelordEntity> {
 
-    private final RendererModel head;
     private final RendererModel timelord_hat;
     private final RendererModel body;
     private final RendererModel timelordcape;
@@ -37,10 +36,24 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         textureWidth = 80;
         textureHeight = 80;
 
-        head = new RendererModel(this);
-        head.setRotationPoint(0.0F, 0.0F, 0.0F);
-        head.cubeList.add(new ModelBox(head, 0, 16, -4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F, false));
-        head.cubeList.add(new ModelBox(head, 0, 0, -4.0F, -8.0F, -4.0F, 8, 8, 8, 0.5F, false));
+        timelord_hat = new RendererModel(this);
+        timelord_hat.setRotationPoint(0.0F, 0.0F, 0.0F);
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -5.0F, -3.0F, 1, 1, 7, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.25F, -5.0F, -3.0F, 1, 1, 7, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -4.0F, 1.0F, 1, 2, 3, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.25F, -4.0F, 1.0F, 1, 2, 3, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.0F, -8.0F, 3.25F, 8, 6, 1, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -4.0F, -2.5F, 1, 2, 1, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.25F, -4.0F, -2.5F, 1, 2, 1, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.0F, -8.0F, -4.25F, 1, 3, 1, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.0F, -8.0F, -4.25F, 1, 3, 1, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -2.5F, -7.5F, -4.25F, 5, 1, 1, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -1.5F, -7.0F, -4.25F, 3, 1, 1, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -1.0F, -6.5F, -4.25F, 2, 1, 1, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.0F, -8.0F, -4.25F, 8, 1, 1, 0.0F, false));
+        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 13, 58, -4.0F, -8.25F, -4.0F, 8, 1, 8, 0.0F, false));
 
         body = new RendererModel(this);
         body.setRotationPoint(0.0F, 0.0F, 0.0F);
@@ -173,6 +186,7 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, -1.0F, 0.5F, 2.0F, 2, 1, 1, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 1.25F, -3.5F, -3.0F, 1, 3, 1, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 1.25F, -3.5F, -2.0F, 1, 1, 4, 0.0F, false));
+        timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 1.25F, -3.5F, -2.0F, 1, 1, 4, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 1.25F, -3.5F, 2.0F, 1, 3, 1, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 16, 71, -1.0F, -0.5F, -3.25F, 1, 1, 1, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 16, 71, 0.0F, -3.5F, -3.25F, 1, 3, 1, 0.0F, false));
@@ -228,24 +242,6 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         robs.cubeList.add(new ModelBox(robs, 50, 71, -3.25F, -3.0F, 2.75F, 1, 2, 1, 0.0F, true));
         robs.cubeList.add(new ModelBox(robs, 50, 73, -3.0F, -3.0F, 3.0F, 4, 2, 1, 0.0F, true));
 
-        timelord_hat = new RendererModel(this);
-        timelord_hat.setRotationPoint(0.0F, 0.0F, 0.0F);
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -5.0F, -3.0F, 1, 1, 7, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.25F, -5.0F, -3.0F, 1, 1, 7, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -4.0F, 1.0F, 1, 2, 3, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.25F, -4.0F, 1.0F, 1, 2, 3, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.0F, -8.0F, 3.25F, 8, 6, 1, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -4.0F, -2.5F, 1, 2, 1, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.25F, -4.0F, -2.5F, 1, 2, 1, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.0F, -8.0F, -4.25F, 1, 3, 1, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.0F, -8.0F, -4.25F, 1, 3, 1, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -2.5F, -7.5F, -4.25F, 5, 1, 1, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -1.5F, -7.0F, -4.25F, 3, 1, 1, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -1.0F, -6.5F, -4.25F, 2, 1, 1, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.0F, -8.0F, -4.25F, 8, 1, 1, 0.0F, false));
-        timelord_hat.cubeList.add(new ModelBox(timelord_hat, 13, 58, -4.0F, -8.25F, -4.0F, 8, 1, 8, 0.0F, false));
         villagerHead = new RendererModel(this);
         villagerHead.setRotationPoint(0.0F, 0.0F, 0.0F);
         villagerHead.cubeList.add(new ModelBox(villagerHead, 0, 15, -4.0F, -10.0F, -4.0F, 8, 10, 8, 0.0F, false));
@@ -275,23 +271,21 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.0F, -4.25F, 8, 1, 1, 0.0F, false));
         villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.25F, -4.0F, 8, 1, 8, 0.0F, false));
 
-
     }
 
     @Override
-    public void render(TimelordEntity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(TimelordEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         GlStateManager.pushMatrix();
         if (entity.isVillagerModel()) {
-            villagerHead.render(f5);
+            villagerHead.render(scale);
         } else {
-            timelord_hat.render(f5);
+            timelord_hat.render(scale);
         }
-
-        body.render(f5);
-        right_arm.render(f5);
-        left_arm.render(f5);
-        right_leg.render(f5);
-        left_leg.render(f5);
+        body.render(scale);
+        right_arm.render(scale);
+        left_arm.render(scale);
+        right_leg.render(scale);
+        left_leg.render(scale);
         GlStateManager.popMatrix();
     }
 
@@ -306,19 +300,6 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         RenderUtil.copyModelAngles(bipedRightArm, right_arm);
         RenderUtil.copyModelAngles(bipedRightLeg, right_leg);
         RenderUtil.copyModelAngles(bipedLeftLeg, left_leg);
-    }
-
-    protected float func_205060_a(float p_205060_1_, float p_205060_2_, float p_205060_3_) {
-        float f = (p_205060_2_ - p_205060_1_) % ((float) Math.PI * 2F);
-        if (f < -(float) Math.PI) {
-            f += ((float) Math.PI * 2F);
-        }
-
-        if (f >= (float) Math.PI) {
-            f -= ((float) Math.PI * 2F);
-        }
-
-        return p_205060_1_ + p_205060_3_ * f;
     }
 
     @Override

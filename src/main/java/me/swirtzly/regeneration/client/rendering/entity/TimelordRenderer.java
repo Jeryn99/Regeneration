@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.client.rendering.entity;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.rendering.layers.HandsLayer;
 import me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer;
@@ -39,7 +40,7 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
     public static EntityModel<TimelordEntity> mainModel = new TimelordModel();
     public static EntityModel<TimelordEntity> councilModel = new TimelordModel();
     public static EntityModel<TimelordEntity> guardModel = new TimelordGuardModel();
-    public static PlayerModel<TimelordEntity> bipedModel = new PlayerModel<>(0.1f, true);
+    public static PlayerModel<TimelordEntity> bipedModel = new PlayerModel<>(0.05f, true);
 
     public static ResourceLocation TIMELORD = new ResourceLocation(Regeneration.MODID, "textures/entity/timelords/timelord/timelord_villager.png");
 
@@ -118,7 +119,7 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
                 }
 
                 bipedModel.bipedHead.isHidden = false;
-                bipedModel.bipedHeadwear.isHidden = false;
+                bipedModel.bipedHeadwear.isHidden = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
 
                 bipedModel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
                 bipedModel.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
@@ -138,9 +139,9 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
     protected ResourceLocation getEntityTexture(TimelordEntity entity) {
         switch (entity.getTimelordType()) {
             case COUNCIL:
-                return new ResourceLocation(Regeneration.MODID, "textures/entity/timelords/timelord/timelord_0.png");
+                return new ResourceLocation(Regeneration.MODID, "textures/entity/timelords/timelord/timelord_council.png");
             case GUARD:
-                return new ResourceLocation(Regeneration.MODID, "textures/entity/timelords/guards/guards_0.png");
+                return new ResourceLocation(Regeneration.MODID, "textures/entity/timelords/guards/timelord_guard.png");
         }
         return null;
     }

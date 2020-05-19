@@ -29,6 +29,7 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
         public final ForgeConfigSpec.BooleanValue downloadPreviousSkins;
 		public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
+		public final ForgeConfigSpec.BooleanValue renderTimelordHeadwear;
 
         Client(ForgeConfigSpec.Builder builder) {
 
@@ -41,6 +42,8 @@ public class RegenConfig {
 			downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
             downloadPreviousSkins = builder.comment("Toggle whether the mod downloads your past skins from NameMC").translation("config.regeneration.downloadPreviousSkins").define("downloadPastSkins", true);
 			downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
+			builder.comment("Misc Settings").push("misc");
+			renderTimelordHeadwear = builder.comment("Toggle whether Timelords second head layers render, as some look good without and some look good with, I just leave this decision up to you").translation("config.regeneration.timelordRenderSecondLayers").define("timelordRenderSecondLayers", true);
 			builder.pop();
 		}
 
