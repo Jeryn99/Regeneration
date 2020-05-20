@@ -1,10 +1,10 @@
 package me.swirtzly.regeneration.util;
 
+import me.swirtzly.regeneration.api.ZeroRoomEvent;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.HandItem;
-import me.swirtzly.regeneration.compat.ZeroRoomEvent;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.ThirdPersonMessage;
@@ -32,6 +32,8 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static me.swirtzly.regeneration.util.RegenUtil.NO_SKIN;
 
 /**
  * Created by Sub on 20/09/2018.
@@ -117,17 +119,18 @@ public class PlayerUtil {
 
     public static void createHand(LivingEntity player) {
         RegenCap.get(player).ifPresent((data) -> {
-            ItemStack hand = new ItemStack(RegenObjects.Items.HAND.get());
-            HandItem.setTextureString(hand, data.getEncodedSkin());
-            HandItem.setSkinType(hand, data.getSkinType().name());
-            HandItem.setOwner(hand, player.getUniqueID());
-            HandItem.setTimeCreated(hand, System.currentTimeMillis());
-            HandItem.setTrait(hand, data.getDnaType().toString());
-            data.setDroppedHand(true);
-            // RegenTriggers.HAND.trigger((EntityPlayerMP) player);
-            data.setCutOffHand(player.getPrimaryHand() == HandSide.LEFT ? HandSide.RIGHT : HandSide.LEFT);
-            data.setDroppedHand(true);
-            InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
+            if (!data.getEncodedSkin().equalsIgnoreCase(NO_SKIN) && player instanceof PlayerEntity) {
+                ItemStack hand = new ItemStack(RegenObjects.Items.HAND.get());
+                HandItem.setTextureString(hand, data.getEncodedSkin());
+                HandItem.setSkinType(hand, data.getSkinType().name());
+                HandItem.setOwner(hand, player.getUniqueID());
+                HandItem.setTimeCreated(hand, System.currentTimeMillis());
+                HandItem.setTrait(hand, data.getDnaType().toString());
+                data.setDroppedHand(true);
+                data.setCutOffHand(player.getPrimaryHand() == HandSide.LEFT ? HandSide.RIGHT : HandSide.LEFT);
+                data.setDroppedHand(true);
+                InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
+            }
         });
     }
 

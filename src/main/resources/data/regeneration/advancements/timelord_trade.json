@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "regeneration:gal_ingot"
+    },
+    "title": {
+      "text": "Gallifreyan...?"
+    },
+    "description": {
+      "text": "Meet a Council Timelord!"
+    }
+  },
+  "parent": "regeneration:change_refusal",
+  "criteria": {
+    "timelord": {
+      "trigger": "timelord_trade"
+    }
+  }
+}

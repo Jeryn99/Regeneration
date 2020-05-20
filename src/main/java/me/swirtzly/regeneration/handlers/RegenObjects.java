@@ -139,6 +139,7 @@ public class RegenObjects {
 		public static final RegistryObject<Item> HAND = ITEMS.register("hand", HandItem::new);
 		public static final RegistryObject<Item> ARCH_PART = ITEMS.register("arch_part", ComponentItem::new);
 		public static final RegistryObject<Item> GAL_INGOT = ITEMS.register("gal_ingot", IngotItem::new);
+		public static final RegistryObject<Item> DIAL = ITEMS.register("confession_dial", ConfessionDialItem::new);
 		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 5));
 		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 2));
 	}

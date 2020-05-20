@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.common.entity;
 
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
 import me.swirtzly.regeneration.common.item.GunItem;
@@ -18,6 +19,7 @@ import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.MerchantOffer;
@@ -275,8 +277,8 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     }
 
     @Override
-    protected void func_213713_b(MerchantOffer p_213713_1_) {
-        if (p_213713_1_.func_222221_q()) {
+    protected void func_213713_b(MerchantOffer merchantOffer) {
+        if (merchantOffer.func_222221_q()) {
             int i = 3 + this.rand.nextInt(4);
             this.world.addEntity(new ExperienceOrbEntity(this.world, this.posX, this.posY + 0.5D, this.posZ, i));
         }
@@ -291,6 +293,11 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     @Override
     public boolean processInteract(PlayerEntity player, Hand hand) {
         if (getTimelordType() == TimelordType.COUNCIL) {
+
+            if (!world.isRemote) {
+                TriggerManager.TIMELORD_TRADE.trigger((ServerPlayerEntity) player);
+            }
+
             AtomicBoolean atomicBoolean = new AtomicBoolean();
             atomicBoolean.set(false);
 
@@ -361,13 +368,5 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 this.addTrades(merchantoffers, trades, 5);
             }
         }
-
-      /*  if(ModList.get().isLoaded("tardis")) {
-            VillagerTrades.ITrade[] tardisTrades = TardisCompat.genTrades();
-            if (trades != null) {
-                MerchantOffers merchantoffers = this.getOffers();
-                this.addTrades(merchantoffers, tardisTrades, 5);
-            }
-        }*/
     }
 }

@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.compat;
 
 import me.swirtzly.regeneration.Regeneration;
+import me.swirtzly.regeneration.api.ZeroRoomEvent;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.types.RegenTypes;

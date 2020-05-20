@@ -1,0 +1,21 @@
+{
+  "display": {
+    "description": {
+      "text": "Regenerate for the First time!"
+    },
+    "title": {
+      "text": "Change my dear..."
+    },
+    "icon": {
+      "item": "regeneration:fob_watch"
+    },
+    "announce_to_chat": true,
+    "show_toast": true,
+    "background": "regeneration:textures/gui/roundel.png"
+  },
+  "criteria": {
+    "first_regen": {
+      "trigger": "first_regen"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.compat;
+package me.swirtzly.regeneration.api;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingEvent;
