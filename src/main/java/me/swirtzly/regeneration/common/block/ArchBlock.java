@@ -6,6 +6,7 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.compat.ArchHelper;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.util.ICompatObject;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
  * Created by Swirtzly
  * on 22/04/2020 @ 11:46
  */
-public class ArchBlock extends DirectionalBlock {
+public class ArchBlock extends DirectionalBlock implements ICompatObject {
     public ArchBlock(Properties properties) {
         super(properties);
     }

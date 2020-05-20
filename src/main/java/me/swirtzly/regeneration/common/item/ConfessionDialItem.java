@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.util.ICompatObject;
 import me.swirtzly.regeneration.util.client.TeleportUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -20,10 +21,10 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
  * Created by Swirtzly
  * on 20/05/2020 @ 20:39
  */
-public class ConfessionDialItem extends Item {
+public class ConfessionDialItem extends Item implements ICompatObject {
 
     public ConfessionDialItem() {
-        super(new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
+        super(new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB).maxDamage(10).setNoRepair());
     }
 
     @Override

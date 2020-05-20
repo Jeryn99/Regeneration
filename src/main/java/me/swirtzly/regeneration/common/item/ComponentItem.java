@@ -1,14 +1,12 @@
 package me.swirtzly.regeneration.common.item;
 
+import me.swirtzly.regeneration.util.ICompatObject;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nullable;
@@ -18,7 +16,7 @@ import java.util.List;
  * Created by Swirtzly
  * on 29/04/2020 @ 12:04
  */
-public class ComponentItem extends SolidItem {
+public class ComponentItem extends SolidItem implements ICompatObject {
     public ComponentItem() {
         super(new Properties().maxStackSize(1).maxDamage(2));
     }

@@ -61,8 +61,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     private final SwimmerPathNavigator waterNavigator;
     private final GroundPathNavigator groundNavigator;
 
-    private int timelordAmount = 11;
-
     public TimelordEntity(World world) {
         this(RegenObjects.EntityEntries.TIMELORD.get(), world);
     }

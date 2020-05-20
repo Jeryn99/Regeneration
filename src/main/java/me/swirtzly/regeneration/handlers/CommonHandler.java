@@ -189,7 +189,6 @@ public class CommonHandler {
 		}
 	}
 
-
     @SubscribeEvent
     public void onCut(PlayerInteractEvent.RightClickItem event) {
         if (PlayerUtil.isSharp(event.getItemStack())) {

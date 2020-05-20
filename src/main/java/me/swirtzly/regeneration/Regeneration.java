@@ -94,6 +94,7 @@ public class Regeneration {
 			TardisCompat.addTardisCompat();
 		}
 
+
 	}
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -108,7 +109,8 @@ public class Regeneration {
 		RegenObjects.ChunkGeneratorTypes.CHUNK_GENERATOR_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		RegenObjects.Biomes.BIOMES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		RegenObjects.Dimensions.DIMENSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
-    }
+
+	}
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
 		proxy.init();

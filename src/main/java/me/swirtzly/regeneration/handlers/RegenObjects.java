@@ -18,6 +18,7 @@ import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.item.*;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.HandInJarTile;
+import me.swirtzly.regeneration.util.ICompatObject;
 import me.swirtzly.regeneration.util.RegenDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.OreBlock;
@@ -54,6 +55,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -97,8 +99,7 @@ public class RegenObjects {
  		builder.setTrackingRange(trackingRange);
  		builder.setUpdateInterval(updateFreq);
  		builder.size(width, height);
- 		EntityType<T> type = builder.build(loc.toString());
- 		return type;
+		return builder.build(loc.toString());
  	}
 
  	private static <T extends Entity> EntityType<T> registerBase(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
@@ -168,14 +169,16 @@ public class RegenObjects {
 		public static final RegistryObject<SoundEvent> STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
 		public static final RegistryObject<SoundEvent> RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));
 	}
-	
-	public static class EntityEntries {
 
-
-		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Regeneration.MODID);
-		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
-        public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
-		public static RegistryObject<EntityType<LaserEntity>> LASER = ENTITIES.register("laser", () -> registerMob(LaserEntity::new, LaserEntity::new, EntityClassification.MISC, 0.5F, 0.5F, "laser", true));
+	private static void genBlockItems(Collection<RegistryObject<Block>> collection) {
+		for (RegistryObject<Block> block : collection) {
+			if (block.get() instanceof ICompatObject && !ModList.get().isLoaded("tardis")) {
+				itemGroup = null;
+			} else {
+				itemGroup = ItemGroups.REGEN_TAB;
+				Blocks.BLOCK_ITEMS.register(block.get().getRegistryName().getPath(), () -> setUpItem(new BlockItem(block.get(), new Item.Properties().group(itemGroup))));
+			}
+		}
 	}
 
 	public static final GallifreyanTreeFeature TREES = new GallifreyanTreeFeature(NoFeatureConfig::deserialize);
@@ -198,7 +201,6 @@ public class RegenObjects {
         public static final DeferredRegister<Item> BLOCK_ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Regeneration.MODID);
         public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
         public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
-        // public static final RegistryObject<Block> CRACK = BLOCKS.register("wall_crack", () -> setUpBlock(new CrackBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(9, 9))));
         public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
 		public static final RegistryObject<Block> ZERO_ROOM = BLOCKS.register("zeroroom", () -> setUpBlock(new ZeroRoomBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
 	}
@@ -206,17 +208,12 @@ public class RegenObjects {
 	private static Block setUpBlock(Block block) {
 		return block;
 	}
-	
-	private static void genBlockItems(Collection<RegistryObject<Block>> collection) {
-		for (RegistryObject<Block> block : collection) {
-			if (block.get() == Blocks.ARCH.get() && !ModList.get().isLoaded("tardis")) {
-			itemGroup = null;
-			}
-			else {
-			itemGroup = ItemGroups.REGEN_TAB;
-			Blocks.BLOCK_ITEMS.register(block.get().getRegistryName().getPath(), () -> setUpItem(new BlockItem(block.get(), new Item.Properties().group(itemGroup))));
-			}
-		}
+
+	@SubscribeEvent
+	public static void addSpawns(FMLLoadCompleteEvent e) {
+		RegenObjects.Biomes.GALLIFREY_MOUNTAINS.get().getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), 5, 1, 1));
+		RegenObjects.Biomes.REDLANDS_FOREST.get().getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), 5, 1, 1));
+		RegenObjects.Biomes.REDLANDS.get().getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), 5, 1, 1));
 	}
     
     // Tile Creation
@@ -244,6 +241,15 @@ public class RegenObjects {
 	
 	private static SoundEvent setUpSound(String soundName) {
 		return new SoundEvent(new ResourceLocation(MODID, soundName));
+	}
+
+	public static class EntityEntries {
+
+
+		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Regeneration.MODID);
+		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
+		public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.AMBIENT, 0.6F, 1.95F, 128, 1, true, "timelord"));
+		public static RegistryObject<EntityType<LaserEntity>> LASER = ENTITIES.register("laser", () -> registerMob(LaserEntity::new, LaserEntity::new, EntityClassification.MISC, 0.5F, 0.5F, "laser", true));
 	}
  	
 	public static class Biomes {
