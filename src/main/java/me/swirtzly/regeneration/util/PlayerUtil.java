@@ -1,12 +1,15 @@
 package me.swirtzly.regeneration.util;
 
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.HandItem;
+import me.swirtzly.regeneration.compat.ZeroRoomEvent;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.ThirdPersonMessage;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMapMessage;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -20,10 +23,14 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.HandSide;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -134,7 +141,27 @@ public class PlayerUtil {
             }
         });
     }
-	
+
+    public static boolean isZeroRoom(LivingEntity livingEntity) {
+        AxisAlignedBB box = livingEntity.getBoundingBox().grow(25);
+        for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
+            BlockPos pos = iterator.next();
+            BlockState blockState = livingEntity.world.getBlockState(pos);
+            if (blockState.getBlock() instanceof ZeroRoomBlock) {
+                boolean isTardis = livingEntity.world.dimension.getClass().getName().contains("TardisDimension");
+                if (isTardis) {
+                    ZeroRoomEvent zeroRoomEvent = new ZeroRoomEvent(livingEntity);
+                    MinecraftForge.EVENT_BUS.post(zeroRoomEvent);
+                    if (!zeroRoomEvent.isCanceled()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
 	public enum RegenState {
 
         ALIVE, GRACE, GRACE_CRIT, POST, REGENERATING;
@@ -144,7 +171,7 @@ public class PlayerUtil {
 		}
 		
 		public enum Transition {
-            HAND_GLOW_START, HAND_GLOW_TRIGGER, ENTER_CRITICAL, CRITICAL_DEATH, FINISH_REGENERATION, END_POST;
-		}
+            HAND_GLOW_START, HAND_GLOW_TRIGGER, ENTER_CRITICAL, CRITICAL_DEATH, FINISH_REGENERATION, END_POST
+        }
 	}
 }

@@ -8,6 +8,7 @@ import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.RegenTypes;
+import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -202,7 +203,7 @@ public class ClientHandler {
     @SubscribeEvent
     public void onClientChatRecieved(ClientChatReceivedEvent e) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (e.getType() != ChatType.CHAT) return;
+        if (e.getType() != ChatType.CHAT || PlayerUtil.isZeroRoom(player)) return;
 
         IRegen data = RegenCap.get(player).orElse(null);
         if (data.getState() != POST) return;

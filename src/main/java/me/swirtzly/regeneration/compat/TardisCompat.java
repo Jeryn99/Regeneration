@@ -8,12 +8,14 @@ import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -79,6 +81,31 @@ public class TardisCompat {
     }
 
     @SubscribeEvent
+    public void onZeroRoom(ZeroRoomEvent event) {
+        World world = event.getEntityLiving().world;
+        TardisHelper.getConsoleInWorld(world).ifPresent((consoleTile -> {
+            if (consoleTile.getArtron() < 5F) {
+                event.setCanceled(true);
+            }
+        }));
+    }
+
+    @SubscribeEvent
+    public void onServerChat(ServerChatEvent event) {
+        ServerPlayerEntity player = event.getPlayer();
+        RegenCap.get(player).ifPresent((data) -> {
+            if (data.getState() == PlayerUtil.RegenState.POST) {
+                World world = player.world;
+                if (world.dimension instanceof TardisDimension) {
+                    if (PlayerUtil.isZeroRoom(player)) {
+                        TardisHelper.getConsoleInWorld(world).ifPresent((consoleTile -> consoleTile.setArtron(consoleTile.getArtron() - 5F)));
+                    }
+                }
+            }
+        });
+    }
+
+    @SubscribeEvent
     public void onLive(LivingEvent.LivingUpdateEvent event) {
         World world = event.getEntityLiving().world;
         if (world.isRemote) return;
@@ -117,7 +144,6 @@ public class TardisCompat {
                         }
                     }
                 }
-
             });
 
         }

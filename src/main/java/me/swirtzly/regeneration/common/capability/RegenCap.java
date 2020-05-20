@@ -625,11 +625,13 @@ public class RegenCap implements IRegen {
 		private void triggerRegeneration() {
 			// We're starting a regeneration!
 			state = PlayerUtil.RegenState.REGENERATING;
-			
+
 			if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
-				TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_chat_message", player.getName());
-				text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathSource())));
-				PlayerUtil.sendMessageToAll(text);
+				if (getLivingEntity() instanceof PlayerEntity) {
+					TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_chat_message", player.getName());
+					text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathSource())));
+					PlayerUtil.sendMessageToAll(text);
+				}
 			}
 			
 			nextTransition.cancel(); // ... cancel any state shift we had planned
@@ -696,16 +698,14 @@ public class RegenCap implements IRegen {
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForward() {
-            while (!nextTransition.tick())
-                ;
+			while (!nextTransition.tick()) ;
 		}
 		
 		@Override
 		@Deprecated
 		/** @deprecated Debug purposes */
 		public void fastForwardHandGlow() {
-            while (!handGlowTimer.tick())
-                ;
+			while (!handGlowTimer.tick()) ;
 		}
 		
 		@Override

@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.BioContainerContainer;
 import me.swirtzly.regeneration.common.block.ArchBlock;
 import me.swirtzly.regeneration.common.block.BlockHandInJar;
+import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.dimension.DimSingle;
 import me.swirtzly.regeneration.common.dimension.GallifreyChunkGenerator;
 import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
@@ -198,6 +199,7 @@ public class RegenObjects {
         public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
         // public static final RegistryObject<Block> CRACK = BLOCKS.register("wall_crack", () -> setUpBlock(new CrackBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(9, 9))));
         public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
+		public static final RegistryObject<Block> ZERO_ROOM = BLOCKS.register("zeroroom", () -> setUpBlock(new ZeroRoomBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
 	}
 	
 	private static Block setUpBlock(Block block) {

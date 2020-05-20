@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "regeneration:hand_jar"
+    "regeneration:hand_jar",
+    "regeneration:zeroroom"
   ]
 }

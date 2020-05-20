@@ -18,6 +18,7 @@ import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.fml.ModList;
 
 public class FieryRenderer extends ATypeRenderer<FieryType> {
 	
@@ -61,7 +62,8 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		}
 	}
 
-	public static void renderConeAtArms(LivingEntity player, LivingRenderer renderLivingBase, HandSide side) {
+    public static void renderConeAtArms(LivingEntity player, HandSide side) {
+        GlStateManager.pushMatrix();
 		RegenCap.get(player).ifPresent((data) -> {
             double x = data.getType().create().getAnimationProgress(data);
             double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
@@ -80,13 +82,30 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
             GlStateManager.disableTexture();
             GlStateManager.enableAlphaTest();
             GlStateManager.enableBlend();
-            // GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.SourceFactor.CONSTANT_ALPHA.value);
             GlStateManager.depthMask(true);
             RenderUtil.setLightmapTextureCoords(65, 65);
 
             if (data.isSyncingToJar()) {
                 GlStateManager.rotatef(-20, 1, 0, 0);
+            }
+
+
+            double animationProgress = data.getAnimationTicks();
+            float armRotY = (float) animationProgress * 1.5F;
+            float armRotZ = (float) animationProgress * 1.5F;
+
+            if (armRotY > 90) {
+                armRotY = 90;
+            }
+
+            if (armRotZ > 95) {
+                armRotZ = 95;
+            }
+            if (ModList.get().isLoaded("quark")) {
+                GlStateManager.translatef(0, 0.10F, 0);
+                GlStateManager.rotated(side == HandSide.LEFT ? armRotZ : -armRotZ, 0, 0, 1);
+                GlStateManager.rotated(side == HandSide.LEFT ? armRotY : -armRotY, 0, 1, 0);
             }
 
             renderCone(player, primaryScale, primaryScale, primaryColor);
@@ -101,6 +120,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
             GlStateManager.enableTexture();
             GlStateManager.popAttributes();
         });
+        GlStateManager.popMatrix();
     }
 	
 	@Override
@@ -114,7 +134,9 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 
     @Override
 	public void renderHand(LivingEntity player, HandSide handSide, LivingRenderer render) {
-        renderConeAtArms(player, render, handSide);
+        if (!ModList.get().isLoaded("quark")) {
+            renderConeAtArms(player, handSide);
+        }
     }
 
     @Override
@@ -169,6 +191,11 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		GlStateManager.color4f(255, 255, 255, 255);
         GlStateManager.enableTexture();
         GlStateManager.popAttributes();
+
+        if (ModList.get().isLoaded("quark")) {
+            renderConeAtArms(entityPlayer, HandSide.LEFT);
+            renderConeAtArms(entityPlayer, HandSide.RIGHT);
+        }
     }
 
     @Override
