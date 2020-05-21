@@ -2,6 +2,7 @@ package me.swirtzly.regeneration.common.dimension.features;
 
 import com.mojang.datafixers.Dynamic;
 import me.swirtzly.regeneration.Regeneration;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -48,7 +49,9 @@ public class GallifreyanTreeFeature extends Feature<NoFeatureConfig> {
             if (temp != null) {
                 pos = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);
                 PlacementSettings set = new PlacementSettings();
-                temp.addBlocksToWorld(reg, pos, set);
+                if (worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK) {
+                    temp.addBlocksToWorld(reg, pos, set);
+                }
                 return true;
             }
         }
