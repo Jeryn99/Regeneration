@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.network.messages;
 
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.ClientUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;

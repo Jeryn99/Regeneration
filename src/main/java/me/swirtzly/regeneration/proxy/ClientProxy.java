@@ -15,7 +15,7 @@ import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import me.swirtzly.regeneration.handlers.ClientHandler;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.FileUtil;
+import me.swirtzly.regeneration.util.common.FileUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.PlayerRenderer;

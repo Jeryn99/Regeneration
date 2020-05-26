@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.util;
+package me.swirtzly.regeneration.util.common;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;

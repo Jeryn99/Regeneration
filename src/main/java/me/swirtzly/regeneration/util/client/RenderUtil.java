@@ -3,7 +3,7 @@ package me.swirtzly.regeneration.util.client;
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.Regeneration;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;

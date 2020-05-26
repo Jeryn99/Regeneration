@@ -9,8 +9,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
 
-import static me.swirtzly.regeneration.util.FileUtil.getJsonFromURL;
-import static me.swirtzly.regeneration.util.RegenUtil.NO_SKIN;
+import static me.swirtzly.regeneration.util.common.FileUtil.getJsonFromURL;
+import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
 /**
  * Created by Swirtzly
@@ -48,10 +48,6 @@ public class HandleSkins {
             SKINS.addAll(getSkins("https://namemc.com/minecraft-skins"));
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        for (String skin : SKINS) {
-            System.out.println("Timelord Skin: " + skin);
         }
     }
 

@@ -8,9 +8,9 @@ import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.types.RegenTypes;
-import me.swirtzly.regeneration.util.PlayerUtil;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
@@ -47,7 +47,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import static me.swirtzly.regeneration.compat.ArchHelper.getRegenerations;
-import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.*;
+import static me.swirtzly.regeneration.util.common.PlayerUtil.RegenState.*;
 
 /**
  * Created by Sub on 16/09/2018.

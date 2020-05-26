@@ -1,9 +1,11 @@
 package me.swirtzly.regeneration.client.rendering.model;
 
+import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.item.GunItem;
 import me.swirtzly.regeneration.util.client.RenderUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
@@ -264,9 +266,17 @@ public class TimelordGuardModel extends BipedModel<TimelordEntity> {
 
     @Override
     public void setRotationAngles(TimelordEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
-        if (entityIn.getHeldItemMainhand().getItem() instanceof GunItem) {
+
+        IRegen regenData = RegenCap.get(entityIn).orElseGet(null);
+
+        if (entityIn.getHeldItemMainhand().getItem() instanceof GunItem && regenData.getState() != PlayerUtil.RegenState.REGENERATING) {
             rightArmPose = ArmPose.BOW_AND_ARROW;
         }
+
+        if (regenData.getState() == PlayerUtil.RegenState.REGENERATING) {
+            rightArmPose = ArmPose.EMPTY;
+        }
+
         super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
         RegenCap.get(entityIn).ifPresent((data) -> data.getType().create().getRenderer().postAnimation(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
         RenderUtil.copyModelAngles(bipedHead, head);

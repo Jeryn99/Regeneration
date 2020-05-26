@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.util;
+package me.swirtzly.regeneration.util.common;
 
 import me.swirtzly.regeneration.api.ZeroRoomEvent;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static me.swirtzly.regeneration.util.RegenUtil.NO_SKIN;
+import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
 /**
  * Created by Sub on 20/09/2018.

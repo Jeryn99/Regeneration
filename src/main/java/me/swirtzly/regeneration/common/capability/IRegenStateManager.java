@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.capability;
 
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.util.INBTSerializable;

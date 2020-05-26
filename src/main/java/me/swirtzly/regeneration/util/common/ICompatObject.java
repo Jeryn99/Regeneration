@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.util;
+package me.swirtzly.regeneration.util.common;
 
 /**
  * Created by Swirtzly

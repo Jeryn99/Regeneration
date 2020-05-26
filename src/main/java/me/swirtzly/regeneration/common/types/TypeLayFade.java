@@ -4,7 +4,7 @@ import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.rendering.types.TypeLayFadeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;

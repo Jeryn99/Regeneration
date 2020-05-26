@@ -9,6 +9,7 @@ import me.swirtzly.regeneration.common.skin.HandleSkins;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.NextSkinMessage;
 import me.swirtzly.regeneration.util.client.ClientUtil;
+import me.swirtzly.regeneration.util.client.TexUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -68,7 +69,7 @@ public class SkinChoiceScreen extends ContainerScreen {
                         position++;
                     }
                     textureManager.deleteTexture(PLAYER_TEXTURE);
-                    PLAYER_TEXTURE = SkinManipulation.createGuiTexture(skins.get(position));
+                    PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
                     updateModels();
                 }
             }
@@ -84,7 +85,7 @@ public class SkinChoiceScreen extends ContainerScreen {
                         position = skins.size() - 1;
                     }
                     textureManager.deleteTexture(PLAYER_TEXTURE);
-                    PLAYER_TEXTURE = SkinManipulation.createGuiTexture(skins.get(position));
+                    PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
                     updateModels();
                 }
             }
@@ -125,7 +126,7 @@ public class SkinChoiceScreen extends ContainerScreen {
         RegenCap.get(minecraft.player).ifPresent((data) -> choices = data.getPreferredModel());
 
         skins = SkinManipulation.listAllSkins(choices);
-        PLAYER_TEXTURE = SkinManipulation.createGuiTexture(skins.get(position));
+        PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> choices = data.getPreferredModel());
         updateModels();
     }

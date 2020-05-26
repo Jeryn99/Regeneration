@@ -9,6 +9,7 @@ import me.swirtzly.regeneration.common.skin.HandleSkins;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.NextSkinMessage;
 import me.swirtzly.regeneration.util.client.ClientUtil;
+import me.swirtzly.regeneration.util.client.TexUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -73,7 +74,7 @@ public class NewSkinSelectionScreen extends ContainerScreen {
                         position++;
                     }
                     textureManager.deleteTexture(PLAYER_TEXTURE);
-                    PLAYER_TEXTURE = SkinManipulation.createGuiTexture(skins.get(position));
+                    PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
                     updateModels();
                 }
             }
@@ -89,7 +90,7 @@ public class NewSkinSelectionScreen extends ContainerScreen {
                         position = skins.size() - 1;
                     }
                     textureManager.deleteTexture(PLAYER_TEXTURE);
-                    PLAYER_TEXTURE = SkinManipulation.createGuiTexture(skins.get(position));
+                    PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
                     updateModels();
                 }
             }
@@ -130,7 +131,7 @@ public class NewSkinSelectionScreen extends ContainerScreen {
         RegenCap.get(minecraft.player).ifPresent((data) -> choices = data.getPreferredModel());
 
         skins = SkinManipulation.listAllSkins(choices);
-        PLAYER_TEXTURE = SkinManipulation.createGuiTexture(skins.get(position));
+        PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> choices = data.getPreferredModel());
         updateModels();
     }
@@ -153,7 +154,7 @@ public class NewSkinSelectionScreen extends ContainerScreen {
                 offset += 10;
             }
             GlStateManager.pushMatrix();
-            Minecraft.getInstance().getTextureManager().bindTexture(SkinManipulation.createGuiTexture(skins.get(getPosition(i))));
+            Minecraft.getInstance().getTextureManager().bindTexture(TexUtil.fileTotexture(skins.get(getPosition(i))));
             drawModelToGui(isPosAlex(getPosition(i)) ? ALEX_MODEL : STEVE_MODEL, width / 2 + 20 * i, height / 2 + offset, 1.5f, rotation);
             GlStateManager.popMatrix();
         }
@@ -183,7 +184,7 @@ public class NewSkinSelectionScreen extends ContainerScreen {
 
 
         GlStateManager.pushMatrix();
-        Minecraft.getInstance().getTextureManager().bindTexture(SkinManipulation.createGuiTexture(skins.get(getPosition(2))));
+        Minecraft.getInstance().getTextureManager().bindTexture(TexUtil.fileTotexture(skins.get(getPosition(2))));
         drawModelToGui(isPosAlex(getPosition(2)) ? ALEX_MODEL : STEVE_MODEL, width / 2 + 170, height / 2 - 10, 1.2f, -200);
         GlStateManager.popMatrix();
 

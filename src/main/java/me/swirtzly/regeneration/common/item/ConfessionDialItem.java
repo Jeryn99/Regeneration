@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.ICompatObject;
-import me.swirtzly.regeneration.util.client.TeleportUtil;
+import me.swirtzly.regeneration.util.client.Worldutil;
+import me.swirtzly.regeneration.util.common.ICompatObject;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
@@ -43,7 +43,7 @@ public class ConfessionDialItem extends Item implements ICompatObject {
                     stack.setCount(0);
                 }
                 ServerWorld targetDimension = playerEntity.dimension == RegenObjects.GALLIFREY_TYPE ? overworld : gallifrey;
-                playerEntity.teleport(targetDimension, playerEntity.posX, TeleportUtil.yCoordSanity(targetDimension, new BlockPos(playerEntity.posX, 35, playerEntity.posZ)), playerEntity.posZ, playerEntity.rotationYaw, playerEntity.rotationPitch);
+                playerEntity.teleport(targetDimension, playerEntity.posX, Worldutil.getTopBlockForPos(targetDimension, new BlockPos(playerEntity.posX, 35, playerEntity.posZ)), playerEntity.posZ, playerEntity.rotationYaw, playerEntity.rotationPitch);
                 playerEntity.getCooldownTracker().setCooldown(stack.getItem().getItem(), 200);
             }
         }

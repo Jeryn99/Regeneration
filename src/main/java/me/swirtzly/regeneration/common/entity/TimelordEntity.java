@@ -8,8 +8,8 @@ import me.swirtzly.regeneration.common.skin.HandleSkins;
 import me.swirtzly.regeneration.common.trades.TimelordTrades;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
+import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
@@ -32,6 +32,7 @@ import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
@@ -156,6 +157,8 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 data.setStyle(nbt);
                 data.setType(rand.nextBoolean() ? RegenTypes.FIERY : RegenTypes.HARTNELL);
 
+
+                //WOAH WOAH WOAH, MAKE A METHOD FOR THIS FUTURE ME, THIS SHOULDNT BE HERE
                 long current = System.currentTimeMillis();
                 URLConnection openConnection = null;
                 try {
@@ -186,7 +189,11 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
             LaserEntity laserEntity = new LaserEntity(RegenObjects.EntityEntries.LASER.get(), this, this.world);
             laserEntity.setColor(new Vec3d(1, 0, 0));
             laserEntity.setDamage(gunItem.getDamage());
-            laserEntity.shoot(this, this.rotationPitch, this.rotationYaw, 0.0F, 1.5F, 0F);
+            double d0 = target.posX - this.posX;
+            double d1 = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - laserEntity.posY;
+            double d2 = target.posZ - this.posZ;
+            double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+            laserEntity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
             this.world.playSound(null, this.posX, this.posY, this.posZ, this.getHeldItemMainhand().getItem() == RegenObjects.Items.PISTOL.get() ? RegenObjects.Sounds.STASER.get() : RegenObjects.Sounds.RIFLE.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
             this.world.addEntity(laserEntity);
         }

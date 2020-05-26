@@ -5,7 +5,7 @@ import me.swirtzly.regeneration.api.RegenerationEvent;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.types.RegenTypes;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.HandSide;

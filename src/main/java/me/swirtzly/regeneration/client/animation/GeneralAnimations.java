@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;

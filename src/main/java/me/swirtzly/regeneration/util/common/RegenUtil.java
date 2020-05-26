@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.util;
+package me.swirtzly.regeneration.util.common;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 import java.util.UUID;
 
-import static me.swirtzly.regeneration.util.FileUtil.getJsonFromURL;
+import static me.swirtzly.regeneration.util.common.FileUtil.getJsonFromURL;
 
 public class RegenUtil {
 

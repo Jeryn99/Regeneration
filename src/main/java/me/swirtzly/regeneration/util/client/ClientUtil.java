@@ -5,7 +5,7 @@ import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
-import me.swirtzly.regeneration.util.RegenUtil;
+import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.toasts.SystemToast;

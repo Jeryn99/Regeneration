@@ -1,13 +1,13 @@
-package me.swirtzly.regeneration.util;
+package me.swirtzly.regeneration.util.common;
 
 import me.swirtzly.regeneration.Regeneration;
 import net.minecraft.entity.LivingEntity;
 
-public class DebuggableScheduledAction extends ScheduledAction {
+public class RegenerationScheduledAction extends ScheduledAction {
 	public final PlayerUtil.RegenState.Transition transition;
     private final LivingEntity player;
 
-    public DebuggableScheduledAction(PlayerUtil.RegenState.Transition transition, LivingEntity player, Runnable callback, long inTicks) {
+    public RegenerationScheduledAction(PlayerUtil.RegenState.Transition transition, LivingEntity player, Runnable callback, long inTicks) {
 		super(callback, inTicks);
 		this.transition = transition;
 		this.player = player;

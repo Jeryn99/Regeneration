@@ -5,25 +5,24 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.image.ImageDownloadBuffer;
+import me.swirtzly.regeneration.client.rendering.types.ATypeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.skin.HandleSkins;
 import me.swirtzly.regeneration.common.types.RegenType;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
-import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenUtil;
 import me.swirtzly.regeneration.util.client.ClientUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
+import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.client.renderer.DownloadImageBuffer;
-import net.minecraft.client.renderer.texture.*;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,13 +33,16 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static me.swirtzly.regeneration.util.RegenUtil.NO_SKIN;
+import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
 @OnlyIn(Dist.CLIENT)
 public class SkinManipulation {
@@ -85,7 +87,7 @@ public class SkinManipulation {
 				if (data.getNextSkin().equals(NO_SKIN)) {
 					boolean isAlex = data.getPreferredModel().isAlex();
 					skin = SkinManipulation.chooseRandomSkin(random, isAlex);
-					Regeneration.LOG.info(skin + " was choosen");
+					Regeneration.LOG.info(skin + " was selected");
 					pixelData = HandleSkins.imageToPixelData(skin);
 					data.setEncodedSkin(pixelData);
 					NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, isAlex));
@@ -110,23 +112,14 @@ public class SkinManipulation {
 		return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
 	}
 
-	/**
-	 * Creates a SkinInfo object for later use
-	 *
-	 * @param player - Player instance involved
-	 * @param data - The players regeneration capability instance
-	 * @return SkinInfo - A class that contains the SkinType and the resource location to use as a skin
-	 * @throws IOException
-	 */
-
-	private static SkinInfo getSkinInfo(AbstractClientPlayerEntity player, IRegen data) throws IOException {
+	private static SkinInfo getSkinInfo(AbstractClientPlayerEntity player, IRegen data) {
 		ResourceLocation resourceLocation;
-		SkinInfo.SkinType skinType = null;
-		if (data == null || player.getName() == null || player.getUniqueID() == null) {
+		SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
+		if (data == null) {
 			return new SkinInfo(player, null, getSkinType(player, true));
 		}
-		if (data.getEncodedSkin().equals(NO_SKIN) || data.getEncodedSkin().equals(" ") || data.getEncodedSkin().equals("")) {
-			resourceLocation = MOJANG.get(player.getUniqueID());//getTextureForPlayer(player.getName().getUnformattedComponentText());
+		if (data.getEncodedSkin().equals(NO_SKIN)) {
+			resourceLocation = MOJANG.get(player.getUniqueID());
 			skinType = getSkinType(player, true);
 		} else {
 			NativeImage nativeImage = decodeToImage(data.getEncodedSkin());
@@ -170,26 +163,6 @@ public class SkinManipulation {
 		return skinType.get();
 	}
 
-	public static ResourceLocation getTextureForPlayer(String username) {
-		ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
-		resourcelocation = ClientPlayerEntity.getLocationSkin(username);
-		getDownloadImageSkin(resourcelocation, username);
-		return resourcelocation;
-	}
-
-
-	public static DownloadingTexture getDownloadImageSkin(ResourceLocation resourceLocationIn, String username) {
-		TextureManager texturemanager = Minecraft.getInstance().getTextureManager();
-		ITextureObject itextureobject = texturemanager.getTexture(resourceLocationIn);
-
-		if (itextureobject == null) {
-			itextureobject = new DownloadingTexture(null, String.format("https://visage.surgeplay.com/skin/%s.png", StringUtils.stripControlCodes(username)), DefaultPlayerSkin.getDefaultSkin(AbstractClientPlayerEntity.getOfflineUUID(username)), new DownloadImageBuffer());
-			texturemanager.loadTexture(resourceLocationIn, itextureobject);
-		}
-
-		return (DownloadingTexture) itextureobject;
-	}
-
 
 	public static Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> getVanillaMap(AbstractClientPlayerEntity player) {
 		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
@@ -198,13 +171,6 @@ public class SkinManipulation {
 		}
 		return map;
 	}
-
-	/**
-	 * Changes the ResourceLocation of a Players skin
-	 *
-	 * @param player - Player instance involved
-	 * @param texture - ResourceLocation of intended texture
-	 */
 
 	public static void setPlayerSkin(AbstractClientPlayerEntity player, ResourceLocation texture) {
 		if (player.getLocationSkin() == texture) {
@@ -251,98 +217,78 @@ public class SkinManipulation {
 		return resultList;
 	}
 
-	public static ResourceLocation createGuiTexture(File file) {
-		NativeImage nativeImage = null;
-		try {
-			nativeImage = NativeImage.read(new FileInputStream(file));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("gui_skin_" + System.currentTimeMillis(), new DynamicTexture(nativeImage));
-	}
-
-	/**
-	 * Subscription to RenderPlayerEvent.Pre to set players model and texture from hashmap
-	 *
-	 * @param e - RenderPlayer Pre Event
-	 */
 	@SubscribeEvent
-	public void onRenderPlayer(RenderPlayerEvent.Pre e) {
-		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) e.getEntityPlayer();
+	public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
+		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
 
+		//TODO: THIS SHOULD NOT EXIST AND NEEDS TO BE REPLACED AS SOON AS POSSIBLE
 		if (!MOJANG.containsKey(player.getUniqueID())) {
 			MOJANG.put(player.getUniqueID(), player.getLocationSkin());
 		}
 
 		RegenCap.get(player).ifPresent((cap) -> {
 
+			/* When the player is in a Post Regenerative state and above a 3x3 grid of Zero Rounde Blocks,
+			 *  We want them to float up and down slightly*/
 			if (cap.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(player)) {
-				float floating = MathHelper.cos(player.ticksExisted * 0.1F) * -0.09F + 0.5F;
-				GlStateManager.translated(0, floating, 0);
+				float floatingOffset = MathHelper.cos(player.ticksExisted * 0.1F) * -0.09F + 0.5F;
+				GlStateManager.translated(0, floatingOffset, 0);
 			}
 
+			/* Sometimes when the player is teleported, the Mojang skin becomes re-downloaded and resets to either Steve,
+			 or the Mojang Skin, so once they have been re-created, we remove the cache we have on them, causing it to be renewed */
 			if (player.ticksExisted == 20) {
 				PLAYER_SKINS.remove(player.getUniqueID());
 			}
 
-			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
-
-				if (cap.getAnimationTicks() > 100) {
-					setSkinFromData(player, RegenCap.get(player));
-				}
-
-				cap.getType().create().getRenderer().onRenderRegeneratingPlayerPre(cap.getType().create(), e, cap);
-
-			} else if (!PLAYER_SKINS.containsKey(player.getUniqueID())) {
-				setSkinFromData(player, RegenCap.get(player));
-			} else {
-				SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
-
-				if (skin == null) {
-					return;
-				}
-
-				setPlayerSkin(player, skin.getTextureLocation());
-
-				if (skin.getSkintype() != null) {
-					setPlayerSkinType(player, skin.getSkintype());
-				}
+			/* 	When the player regenerates, we want the skin to change midway through Regeneration
+			 *	We only do this midway through, we will destroy the data and re-create it */
+			boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
+			if (isMidRegeneration) {
+				createSkinData(player, RegenCap.get(player));
 			}
+
+			/* Render the living entities Pre-Regeneration effect */
+			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
+				RegenType typeInstance = cap.getType().create();
+				ATypeRenderer typeRenderer = typeInstance.getRenderer();
+				typeRenderer.onRenderRegeneratingPlayerPre(typeInstance, renderPlayerEvent, cap);
+			}
+
+
+
+			/* Grab the SkinInfo of a player and set their SkinType and Skin location from it */
+			SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
+			if (skin != null) {
+				setPlayerSkin(player, skin.getTextureLocation());
+				setPlayerSkinType(player, skin.getSkintype());
+			} else {
+				createSkinData(player, RegenCap.get(player));
+			}
+
 		});
 	}
 
 	@SubscribeEvent
-	public void onRenderPlayer(RenderPlayerEvent.Post e) {
-		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) e.getEntityPlayer();
+	public void onRenderPlayer(RenderPlayerEvent.Post renderPlayerEventPost) {
+		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEventPost.getPlayer();
 		RegenCap.get(player).ifPresent((cap) -> {
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 				RegenType type = cap.getType().create();
-				type.getRenderer().onRenderRegeneratingPlayerPost(type, e, cap);
+				ATypeRenderer typeRenderer = type.getRenderer();
+				typeRenderer.onRenderRegeneratingPlayerPost(type, renderPlayerEventPost, cap);
 			}
 		});
 	}
 
-	/**
-	 * Called by onRenderPlayer, sets model, sets texture, adds player and SkinInfo to map
-	 *
-	 * @param player - Player instance
-	 * @param cap - Players Regen capability instance
-	 */
-	private void setSkinFromData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
+	private void createSkinData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
 		cap.ifPresent((data) -> {
-			SkinInfo skinInfo = null;
-			try {
-				skinInfo = SkinManipulation.getSkinInfo(player, data);
-			} catch (IOException e1) {
-				if (!data.getEncodedSkin().equals(NO_SKIN)) {
-					Regeneration.LOG.error("Error creating skin for: " + player.getName().getUnformattedComponentText() + " " + e1.getMessage());
-				}
-			}
-			if (skinInfo != null) {
-				SkinManipulation.setPlayerSkin(player, skinInfo.getTextureLocation());
-				SkinManipulation.setPlayerSkinType(player, skinInfo.getSkintype());
-				PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
-			}
+			SkinInfo skinInfo = SkinManipulation.getSkinInfo(player, data);
+
+			/* Set player skin and SkinType and cache it so we don't keep re-making it */
+			SkinManipulation.setPlayerSkin(player, skinInfo.getTextureLocation());
+			SkinManipulation.setPlayerSkinType(player, skinInfo.getSkintype());
+			PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 		});
 	}
 

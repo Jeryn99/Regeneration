@@ -3,7 +3,7 @@ package me.swirtzly.regeneration.common.traits.positive;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;

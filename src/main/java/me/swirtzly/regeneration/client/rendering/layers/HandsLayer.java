@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.client.rendering.layers;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;

@@ -1,15 +1,10 @@
-package me.swirtzly.regeneration.util;
+package me.swirtzly.regeneration.util.common;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.image.ImageDownloader;
 import me.swirtzly.regeneration.util.client.ClientUtil;
-import me.swirtzly.regeneration.util.client.TrendingManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.util.ResourceLocation;
+import me.swirtzly.regeneration.util.client.SkinDownloadManager;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
@@ -99,8 +94,8 @@ public class FileUtil {
 				try {
 					createDefaultFolders();
 					handleDownloads();
-					TrendingManager.downloadTrendingSkins();
-					TrendingManager.downloadPreviousSkins();
+                    SkinDownloadManager.downloadTrendingSkins();
+                    SkinDownloadManager.downloadPreviousSkins();
 					notDownloaded.set(false);
 				} catch (Exception e) {
 					Regeneration.LOG.error("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");
@@ -179,21 +174,5 @@ public class FileUtil {
 		return builder.toString();
 	}
 
-	public static ResourceLocation urlToTexture(URL url) {
-		URLConnection uc = null;
-		NativeImage image = null;
-		try {
-			uc = url.openConnection();
-			uc.connect();
-			uc = url.openConnection();
-			uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-			Regeneration.LOG.warn("Downloading Skin from: {}", url.toString());
-			image = NativeImage.read(uc.getInputStream());
-			return Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("mojang_", new DynamicTexture(image));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return DefaultPlayerSkin.getDefaultSkinLegacy();
-	}
 
 }

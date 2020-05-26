@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.network.messages;
 
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;

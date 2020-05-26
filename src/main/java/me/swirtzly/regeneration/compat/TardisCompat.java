@@ -6,7 +6,7 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.player.ServerPlayerEntity;

@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.item;
 
-import me.swirtzly.regeneration.util.ICompatObject;
+import me.swirtzly.regeneration.util.common.ICompatObject;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;

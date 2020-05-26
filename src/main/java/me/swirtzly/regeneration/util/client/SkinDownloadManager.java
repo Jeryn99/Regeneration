@@ -2,7 +2,7 @@ package me.swirtzly.regeneration.util.client;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
-import me.swirtzly.regeneration.util.FileUtil;
+import me.swirtzly.regeneration.util.common.FileUtil;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
 
@@ -15,7 +15,7 @@ import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN
 import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_STEVE;
 import static me.swirtzly.regeneration.common.skin.HandleSkins.getSkins;
 
-public class TrendingManager {
+public class SkinDownloadManager {
 
 	public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
 	public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
@@ -23,12 +23,21 @@ public class TrendingManager {
 	public static File USER_ALEX = new File(SKIN_DIRECTORY_ALEX + "/the_past");
 	public static File USER_STEVE = new File(SKIN_DIRECTORY_STEVE + "/the_past");
 
+
 	public static void downloadPreviousSkins() {
 		if (!RegenConfig.CLIENT.downloadPreviousSkins.get()) return;
 		Regeneration.LOG.warn("Refreshing users past skins");
 
 		if (!USER_ALEX.exists()) {
-			USER_ALEX.mkdirs();
+			if (USER_ALEX.mkdirs()) {
+				Regeneration.LOG.info("Creating Directory: " + USER_ALEX);
+			}
+		}
+
+		if (!USER_STEVE.exists()) {
+			if (USER_STEVE.mkdirs()) {
+				Regeneration.LOG.info("Creating Directory: " + USER_STEVE);
+			}
 		}
 
 		long attr = USER_ALEX.lastModified();
@@ -50,7 +59,11 @@ public class TrendingManager {
 		if (!RegenConfig.CLIENT.downloadTrendingSkins.get()) return;
 		File trendingDir = TRENDING_ALEX;
 		if (!trendingDir.exists()) {
-			trendingDir.mkdirs();
+			if (trendingDir.mkdirs()) {
+				Regeneration.LOG.info("Creating Directory: " + trendingDir);
+				Regeneration.LOG.info("Creating Directory: " + TRENDING_ALEX);
+				Regeneration.LOG.info("Creating Directory: " + TRENDING_STEVE);
+			}
 		}
 		long attr = trendingDir.lastModified();
 		if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {

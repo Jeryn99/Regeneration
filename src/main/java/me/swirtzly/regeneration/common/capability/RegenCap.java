@@ -12,9 +12,9 @@ import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.SyncClientPlayerMessage;
 import me.swirtzly.regeneration.network.messages.SyncDataMessage;
-import me.swirtzly.regeneration.util.DebuggableScheduledAction;
-import me.swirtzly.regeneration.util.PlayerUtil;
-import me.swirtzly.regeneration.util.RegenUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
+import me.swirtzly.regeneration.util.common.RegenUtil;
+import me.swirtzly.regeneration.util.common.RegenerationScheduledAction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -22,7 +22,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effect;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
@@ -37,7 +37,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -103,18 +102,11 @@ public class RegenCap implements IRegen {
 			}
 		}
 
-
 		if (PlayerUtil.isAboveZeroGrid(player) && state == PlayerUtil.RegenState.POST) {
-			Iterator<EffectInstance> iterator = player.getActivePotionEffects().iterator();
-			while (iterator.hasNext()) {
-				EffectInstance potion = iterator.next();
-				if (PlayerUtil.POTIONS.contains(potion.getPotion())) {
-					player.removePotionEffect(potion.getPotion());
-				}
+			for (Effect potion : PlayerUtil.POTIONS) {
+				player.removePotionEffect(potion);
 			}
 		}
-
-
 
         if (!player.world.isRemote) {
 			if (isSyncingToJar() && ticksAnimating >= 250) {
@@ -494,7 +486,7 @@ public class RegenCap implements IRegen {
     public class RegenStateManager implements IRegenStateManager {
 		
 		private final Map<PlayerUtil.RegenState.Transition, Runnable> transitionCallbacks;
-		private DebuggableScheduledAction nextTransition, handGlowTimer;
+		private RegenerationScheduledAction nextTransition, handGlowTimer;
 
         private RegenStateManager() {
 			this.transitionCallbacks = new HashMap<>();
@@ -517,8 +509,8 @@ public class RegenCap implements IRegen {
 
             if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START || transition == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER)
                 throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
-			
-			nextTransition = new DebuggableScheduledAction(transition, player, transitionCallbacks.get(transition), inTicks);
+
+			nextTransition = new RegenerationScheduledAction(transition, player, transitionCallbacks.get(transition), inTicks);
 		}
 		
 		private void scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition transition, long inSeconds) {
@@ -529,7 +521,7 @@ public class RegenCap implements IRegen {
 		private void scheduleNextHandGlow() {
             if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
                 throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.COMMON.handGlowInterval.get() * 20);
+			handGlowTimer = new RegenerationScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.COMMON.handGlowInterval.get() * 20);
 			synchronise();
 		}
 		
@@ -537,7 +529,7 @@ public class RegenCap implements IRegen {
 		private void scheduleHandGlowTrigger() {
             if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
                 throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new DebuggableScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
+			handGlowTimer = new RegenerationScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
             ActingForwarder.onHandsStartGlowing(RegenCap.this);
 			synchronise();
 		}
@@ -759,8 +751,8 @@ public class RegenCap implements IRegen {
 					callback = this::triggerRegeneration;
 				else
 					throw new IllegalStateException("Illegal hand glow timer transition");
-				
-				handGlowTimer = new DebuggableScheduledAction(transition, player, callback, nbt.getLong("handGlowScheduledTicks"));
+
+				handGlowTimer = new RegenerationScheduledAction(transition, player, callback, nbt.getLong("handGlowScheduledTicks"));
 			}
 		}
 		

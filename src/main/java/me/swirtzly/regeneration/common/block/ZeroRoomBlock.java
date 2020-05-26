@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.block;
 
-import me.swirtzly.regeneration.util.ICompatObject;
+import me.swirtzly.regeneration.util.common.ICompatObject;
 import net.minecraft.block.Block;
 
 /**

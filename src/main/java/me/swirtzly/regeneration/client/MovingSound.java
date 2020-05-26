@@ -1,7 +1,7 @@
 package me.swirtzly.regeneration.client;
 
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.RegenUtil;
+import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.client.audio.TickableSound;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;

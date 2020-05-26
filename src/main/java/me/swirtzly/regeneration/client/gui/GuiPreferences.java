@@ -11,7 +11,7 @@ import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateTypeMessage;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;

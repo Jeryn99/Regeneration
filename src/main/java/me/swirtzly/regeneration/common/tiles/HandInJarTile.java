@@ -3,7 +3,7 @@ package me.swirtzly.regeneration.common.tiles;
 import me.swirtzly.regeneration.client.gui.BioContainerContainer;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
