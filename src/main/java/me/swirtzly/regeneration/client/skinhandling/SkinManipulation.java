@@ -13,6 +13,7 @@ import me.swirtzly.regeneration.common.types.RegenType;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
 import me.swirtzly.regeneration.util.client.ClientUtil;
+import me.swirtzly.regeneration.util.client.TexUtil;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.client.Minecraft;
@@ -37,6 +38,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -119,7 +122,11 @@ public class SkinManipulation {
 			return new SkinInfo(player, null, getSkinType(player, true));
 		}
 		if (data.getEncodedSkin().equals(NO_SKIN)) {
-			resourceLocation = MOJANG.get(player.getUniqueID());
+			try {
+				resourceLocation = TexUtil.urlToTexture(new URL("https://crafatar.com/skins/" + player.getUniqueID()));//MOJANG.get(player.getUniqueID());
+			} catch (MalformedURLException e) {
+				resourceLocation = MOJANG.get(player.getUniqueID());
+			}
 			skinType = getSkinType(player, true);
 		} else {
 			NativeImage nativeImage = decodeToImage(data.getEncodedSkin());
