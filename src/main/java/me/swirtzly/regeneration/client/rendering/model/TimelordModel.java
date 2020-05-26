@@ -126,11 +126,11 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         head_part_armor.cubeList.add(new ModelBox(head_part_armor, 68, 70, -6.0F, -9.0F, 4.5F, 2, 1, 1, 0.0F, false));
 
         right_arm = new RendererModel(this);
-        right_arm.setRotationPoint(-5.0F, 2.5F, 0.0F);
-        right_arm.cubeList.add(new ModelBox(right_arm, 48, 16, -2.0F, -2.5F, -2.0F, 3, 12, 4, 0.0F, false));
+        right_arm.setRotationPoint(-5.0F, 2.0F, 0.0F);
+        right_arm.cubeList.add(new ModelBox(right_arm, 48, 16, -2.0F, -2.0F, -2.0F, 3, 12, 4, 0.0F, false));
 
         rist2 = new RendererModel(this);
-        rist2.setRotationPoint(5.0F, 21.25F, 0.25F);
+        rist2.setRotationPoint(5.0F, 21.75F, 0.25F);
         right_arm.addChild(rist2);
         rist2.cubeList.add(new ModelBox(rist2, 49, 73, -7.25F, -17.0F, -2.25F, 1, 3, 4, 0.0F, true));
         rist2.cubeList.add(new ModelBox(rist2, 49, 73, -7.0F, -17.0F, -2.5F, 3, 3, 1, 0.0F, true));
@@ -138,7 +138,7 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         rist2.cubeList.add(new ModelBox(rist2, 49, 73, -7.0F, -17.0F, 1.0F, 3, 3, 1, 0.0F, true));
 
         timelord_shoulder_right = new RendererModel(this);
-        timelord_shoulder_right.setRotationPoint(0.0F, 0.0F, 0.0F);
+        timelord_shoulder_right.setRotationPoint(0.0F, 0.5F, 0.0F);
         right_arm.addChild(timelord_shoulder_right);
         timelord_shoulder_right.cubeList.add(new ModelBox(timelord_shoulder_right, 62, 62, -2.0F, -0.5F, -3.0F, 2, 1, 1, 0.0F, false));
         timelord_shoulder_right.cubeList.add(new ModelBox(timelord_shoulder_right, 62, 62, -2.0F, -0.5F, 2.0F, 2, 1, 1, 0.0F, false));
@@ -160,11 +160,11 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         timelord_shoulder_right.cubeList.add(new ModelBox(timelord_shoulder_right, 62, 62, -2.25F, -3.5F, -3.0F, 1, 3, 1, 0.0F, false));
 
         left_arm = new RendererModel(this);
-        left_arm.setRotationPoint(5.0F, 2.5F, 0.0F);
-        left_arm.cubeList.add(new ModelBox(left_arm, 48, 48, -1.0F, -2.5F, -2.0F, 3, 12, 4, 0.0F, false));
+        left_arm.setRotationPoint(5.0F, 2.0F, 0.0F);
+        left_arm.cubeList.add(new ModelBox(left_arm, 48, 48, -1.0F, -2.0F, -2.0F, 3, 12, 4, 0.0F, false));
 
         rist = new RendererModel(this);
-        rist.setRotationPoint(-5.0F, 21.25F, 0.25F);
+        rist.setRotationPoint(-5.0F, 21.75F, 0.25F);
         left_arm.addChild(rist);
         rist.cubeList.add(new ModelBox(rist, 49, 73, 6.25F, -17.0F, -2.25F, 1, 3, 4, 0.0F, false));
         rist.cubeList.add(new ModelBox(rist, 49, 73, 4.0F, -17.0F, -2.5F, 3, 3, 1, 0.0F, false));
@@ -172,7 +172,7 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         rist.cubeList.add(new ModelBox(rist, 49, 73, 4.0F, -17.0F, 1.0F, 3, 3, 1, 0.0F, false));
 
         timelord_shoulder_left = new RendererModel(this);
-        timelord_shoulder_left.setRotationPoint(0.0F, 0.0F, 0.0F);
+        timelord_shoulder_left.setRotationPoint(0.0F, 0.5F, 0.0F);
         left_arm.addChild(timelord_shoulder_left);
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 0.0F, -0.5F, -3.0F, 2, 1, 1, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 0.0F, -0.5F, 2.0F, 2, 1, 1, 0.0F, false));
@@ -185,7 +185,6 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, -1.0F, 0.5F, -3.0F, 2, 1, 1, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, -1.0F, 0.5F, 2.0F, 2, 1, 1, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 1.25F, -3.5F, -3.0F, 1, 3, 1, 0.0F, false));
-        timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 1.25F, -3.5F, -2.0F, 1, 1, 4, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 1.25F, -3.5F, -2.0F, 1, 1, 4, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 62, 62, 1.25F, -3.5F, 2.0F, 1, 3, 1, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 16, 71, -1.0F, -0.5F, -3.25F, 1, 1, 1, 0.0F, false));
@@ -242,6 +241,8 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
         robs.cubeList.add(new ModelBox(robs, 50, 71, -3.25F, -3.0F, 2.75F, 1, 2, 1, 0.0F, true));
         robs.cubeList.add(new ModelBox(robs, 50, 73, -3.0F, -3.0F, 3.0F, 4, 2, 1, 0.0F, true));
 
+
+        //Villager Stuff 
         villagerHead = new RendererModel(this);
         villagerHead.setRotationPoint(0.0F, 0.0F, 0.0F);
         villagerHead.cubeList.add(new ModelBox(villagerHead, 0, 15, -4.0F, -10.0F, -4.0F, 8, 10, 8, 0.0F, false));

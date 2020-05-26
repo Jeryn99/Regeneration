@@ -211,5 +211,6 @@
   "biome.regeneration.redlands": "Gallifreyan Redlands",
   "biome.regeneration.redlands_forest": "Gallifreyan Redlands Forest",
   "biome.regeneration.wastelands": "Gallifreyan Wastelands",
-  "item.regeneration.arch_part": "Bio-Component"
+  "item.regeneration.arch_part": "Bio-Component",
+  "item.regeneration.rassilon_seal": "Seal of Rassilon"
 }

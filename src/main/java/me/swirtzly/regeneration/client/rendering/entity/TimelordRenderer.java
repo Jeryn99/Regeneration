@@ -57,6 +57,7 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
         addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5F), new BipedModel<>(1.0F)));
     }
 
+
     public static ResourceLocation getTimelordFace(TimelordEntity timelordEntity) {
 
         IRegen data = RegenCap.get(timelordEntity).orElseGet(null);
@@ -85,7 +86,6 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
 
     @Override
     protected void renderModel(TimelordEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
-
         switch (entitylivingbaseIn.getTimelordType()){
             case GUARD:
                 mainModel = guardModel;

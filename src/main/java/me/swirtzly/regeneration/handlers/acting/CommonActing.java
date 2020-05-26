@@ -4,7 +4,6 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
-import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.PlaySFXMessage;
@@ -53,9 +52,6 @@ class CommonActing implements Acting {
 				float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
 				player.heal(stateProgress * 0.3F * dm);
 				player.setArrowCountInEntity(0);
-				if (cap.getType() == RegenTypes.FIERY) {
-					RegenUtil.regenerationExplosion(player);
-				}
 				break;
 			
 			case GRACE_CRIT:

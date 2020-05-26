@@ -3,11 +3,14 @@ package me.swirtzly.regeneration.common.skin;
 import me.swirtzly.regeneration.Regeneration;
 import net.minecraftforge.fml.common.Mod;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Base64;
 
 import static me.swirtzly.regeneration.util.FileUtil.getJsonFromURL;
-import static me.swirtzly.regeneration.util.client.TrendingManager.getSkins;
+import static me.swirtzly.regeneration.util.RegenUtil.NO_SKIN;
 
 /**
  * Created by Swirtzly
@@ -18,6 +21,19 @@ public class HandleSkins {
 
     public static ArrayList<String> SKINS = new ArrayList<>();
 
+    public static String imageToPixelData(File file) {
+        String encodedfile = NO_SKIN;
+        try {
+            FileInputStream fileInputStreamReader = new FileInputStream(file);
+            byte[] bytes = new byte[(int) file.length()];
+            fileInputStreamReader.read(bytes);
+            encodedfile = Base64.getEncoder().encodeToString(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return encodedfile;
+    }
 
     public static void downloadSkins() {
         SKINS.clear();
@@ -35,8 +51,34 @@ public class HandleSkins {
         }
 
         for (String skin : SKINS) {
-            System.out.println(skin);
+            System.out.println("Timelord Skin: " + skin);
         }
+    }
+
+    public static ArrayList<String> getSkins(String downloadUrl) throws IOException {
+        ArrayList<String> skins = new ArrayList<>();
+        BufferedReader br = null;
+
+        try {
+            URL url = new URL(downloadUrl);
+            URLConnection uc = url.openConnection();
+            uc.connect();
+            uc = url.openConnection();
+            uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
+            br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.contains("<a href=\"/skin/")) {
+                    String downloadLine = line.replaceAll("<a href=\"/skin/", "").replaceAll("\">", "").replaceAll("        ", "");
+                    skins.add("https://namemc.com/texture/" + downloadLine + ".png");
+                }
+            }
+        } finally {
+            if (br != null) {
+                br.close();
+            }
+        }
+        return skins;
     }
 
 }

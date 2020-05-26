@@ -6,6 +6,7 @@ import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.PlayerUtil;
+import me.swirtzly.regeneration.util.RegenUtil;
 import net.minecraft.block.FireBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -30,7 +31,6 @@ public class FieryType implements RegenType<FieryRenderer> {
 	public void onUpdateMidRegen(IRegen capability) {
 
 		LivingEntity livingEntity = capability.getLivingEntity();
-
 		livingEntity.extinguish();
 		
 		if (!livingEntity.world.isRemote) {
@@ -43,22 +43,22 @@ public class FieryType implements RegenType<FieryRenderer> {
 
         if (livingEntity.world.getBlockState(livingEntity.getPosition()).getBlock() instanceof FireBlock)
 			livingEntity.world.removeBlock(livingEntity.getPosition(), false);
-		
-		double x = livingEntity.posX + livingEntity.getRNG().nextGaussian() * 2;
-		double y = livingEntity.posY + 0.5 + livingEntity.getRNG().nextGaussian() * 2;
-		double z = livingEntity.posZ + livingEntity.getRNG().nextGaussian() * 2;
-		livingEntity.world.createExplosion(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
 
-        Iterator<BlockPos> iterator = getAllInBox(livingEntity.getPosition().north().west(), livingEntity.getPosition().south().east()).iterator();
-
-        while (iterator.hasNext()) {
-			iterator.forEachRemaining((blockPos -> {
-				if (livingEntity.world.getBlockState(blockPos).getBlock() instanceof FireBlock) {
-					livingEntity.world.removeBlock(blockPos, false);
-				}
-			}));
+		if (!PlayerUtil.isAboveZeroGrid(livingEntity)) {
+			RegenUtil.regenerationExplosion(livingEntity);
+			double x = livingEntity.posX + livingEntity.getRNG().nextGaussian() * 2;
+			double y = livingEntity.posY + 0.5 + livingEntity.getRNG().nextGaussian() * 2;
+			double z = livingEntity.posZ + livingEntity.getRNG().nextGaussian() * 2;
+			livingEntity.world.createExplosion(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
+			Iterator<BlockPos> iterator = getAllInBox(livingEntity.getPosition().north().west(), livingEntity.getPosition().south().east()).iterator();
+			while (iterator.hasNext()) {
+				iterator.forEachRemaining((blockPos -> {
+					if (livingEntity.world.getBlockState(blockPos).getBlock() instanceof FireBlock) {
+						livingEntity.world.removeBlock(blockPos, false);
+					}
+				}));
+			}
 		}
-
     }
 	
 	@Override

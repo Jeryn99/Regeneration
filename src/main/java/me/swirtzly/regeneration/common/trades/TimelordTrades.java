@@ -16,9 +16,9 @@ public class TimelordTrades {
 
     private static Random RANDOM = new Random();
 
-    private static TimelordTrade ARCH_TRADE = new TimelordTrade(new ItemStack(RegenObjects.Items.GAL_INGOT.get(), 25), new ItemStack(RegenObjects.Items.ARCH_PART.get()), RANDOM.nextInt(100), RANDOM.nextInt(100));
-    private static TimelordTrade FOB_TRADE = new TimelordTrade(new ItemStack(RegenObjects.Items.GAL_INGOT.get(), 55), new ItemStack(RegenObjects.Items.GAL_INGOT.get(), 55), new ItemStack(RegenObjects.Items.FOB_WATCH.get()), RANDOM.nextInt(100), RANDOM.nextInt(100));
-    private static TimelordTrade BIOCONTAINER_TRADE = new TimelordTrade(new ItemStack(RegenObjects.Items.GAL_INGOT.get(), 45), new ItemStack(RegenObjects.Blocks.HAND_JAR.get().asItem()), RANDOM.nextInt(100), RANDOM.nextInt(100));
+    private static TimelordTrade ARCH_TRADE = new TimelordTrade(new ItemStack(RegenObjects.Items.SEAL.get(), 10), new ItemStack(RegenObjects.Items.ARCH_PART.get()), RANDOM.nextInt(100), RANDOM.nextInt(100));
+    private static TimelordTrade FOB_TRADE = new TimelordTrade(new ItemStack(RegenObjects.Items.SEAL.get(), 10), new ItemStack(RegenObjects.Items.FOB_WATCH.get()), RANDOM.nextInt(100), RANDOM.nextInt(100));
+    private static TimelordTrade BIOCONTAINER_TRADE = new TimelordTrade(new ItemStack(RegenObjects.Items.SEAL.get(), 7), new ItemStack(RegenObjects.Blocks.HAND_JAR.get().asItem()), RANDOM.nextInt(100), RANDOM.nextInt(100));
 
     public static VillagerTrades.ITrade[] genTrades() {
         return new VillagerTrades.ITrade[]{ARCH_TRADE, FOB_TRADE, BIOCONTAINER_TRADE};

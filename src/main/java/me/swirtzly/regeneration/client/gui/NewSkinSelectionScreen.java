@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.skin.HandleSkins;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.NextSkinMessage;
 import me.swirtzly.regeneration.util.client.ClientUtil;
@@ -109,7 +110,7 @@ public class NewSkinSelectionScreen extends ContainerScreen {
             @Override
             public void onPress(Button button) {
                 updateModels();
-                NetworkDispatcher.sendToServer(new NextSkinMessage(SkinManipulation.imageToPixelData(skins.get(position)), isAlex));
+                NetworkDispatcher.sendToServer(new NextSkinMessage(HandleSkins.imageToPixelData(skins.get(position)), isAlex));
             }
         });
         GuiButtonExt btnResetSkin = new GuiButtonExt(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin").getFormattedText(), new Button.IPressable() {

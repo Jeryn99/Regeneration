@@ -1,6 +1,5 @@
 package me.swirtzly.regeneration.common.entity;
 
-import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
@@ -165,7 +164,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                     InputStream is = openConnection.getInputStream();
                     File file = new File("./temp/" + current + ".png");
                     FileUtils.copyInputStreamToFile(is, file);
-                    data.setEncodedSkin(SkinManipulation.imageToPixelData(file));
+                    data.setEncodedSkin(HandleSkins.imageToPixelData(file));
                     file.delete();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -242,7 +241,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                                 InputStream is = openConnection.getInputStream();
                                 File file = new File("./temp/" + current + ".png");
                                 FileUtils.copyInputStreamToFile(is, file);
-                                data.setEncodedSkin(SkinManipulation.imageToPixelData(file));
+                                data.setEncodedSkin(HandleSkins.imageToPixelData(file));
                                 file.delete();
                             } catch (IOException e) {
                                 e.printStackTrace();

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " G ",
+    "G G",
+    " G "
+  ],
+  "key": {
+    "G": {
+      "item": "regeneration:gal_ingot"
+    }
+  },
+  "result": {
+    "item": "regeneration:rassilon_seal",
+    "count": 2
+  }
+}

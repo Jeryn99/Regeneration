@@ -140,10 +140,12 @@ public class RegenObjects {
 		public static final RegistryObject<Item> HAND = ITEMS.register("hand", HandItem::new);
 		public static final RegistryObject<Item> ARCH_PART = ITEMS.register("arch_part", ComponentItem::new);
 		public static final RegistryObject<Item> GAL_INGOT = ITEMS.register("gal_ingot", IngotItem::new);
+        public static final RegistryObject<Item> SEAL = ITEMS.register("rassilon_seal", SealItem::new);
 		public static final RegistryObject<Item> DIAL = ITEMS.register("confession_dial", ConfessionDialItem::new);
 		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 5));
 		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 2));
-	}
+
+    }
 
 	public static class Sounds {
 		public static final DeferredRegister<SoundEvent> SOUNDS = new DeferredRegister<>(ForgeRegistries.SOUND_EVENTS, Regeneration.MODID);
@@ -202,7 +204,8 @@ public class RegenObjects {
         public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
         public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
         public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
-		public static final RegistryObject<Block> ZERO_ROOM = BLOCKS.register("zeroroom", () -> setUpBlock(new ZeroRoomBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
+        public static final RegistryObject<Block> ZERO_ROOM = BLOCKS.register("zero_roundel_one", () -> setUpBlock(new ZeroRoomBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
+        public static final RegistryObject<Block> ZERO_ROOM_TWO = BLOCKS.register("zero_roundel_two", () -> setUpBlock(new ZeroRoomBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
 	}
 	
 	private static Block setUpBlock(Block block) {

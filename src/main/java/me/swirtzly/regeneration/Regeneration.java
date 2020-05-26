@@ -123,12 +123,17 @@ public class Regeneration {
 		PlayerUtil.createPostList();
 
 		RegenUtil.TIMELORD_NAMES = RegenUtil.downloadNames();
-
+        HandleSkins.downloadSkins();
         Timer timer = new Timer();
         TimerTask hourlyTask = new TimerTask() {
             @Override
             public void run() {
                 HandleSkins.downloadSkins();
+
+                //Intellji is going to open here
+                //You need to fix the Skins array, because it doesn't work on a serber
+                //well it does, but not really but also it does
+                //Just look into it okay
             }
         };
 

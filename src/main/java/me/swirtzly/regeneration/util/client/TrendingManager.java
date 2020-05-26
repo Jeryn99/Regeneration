@@ -6,17 +6,14 @@ import me.swirtzly.regeneration.util.FileUtil;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Objects;
 
 import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_ALEX;
 import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_STEVE;
+import static me.swirtzly.regeneration.common.skin.HandleSkins.getSkins;
 
 public class TrendingManager {
 
@@ -48,31 +45,6 @@ public class TrendingManager {
 		}
 	}
 
-	public static ArrayList<String> getSkins(String downloadUrl) throws IOException {
-		ArrayList<String> skins = new ArrayList<>();
-		BufferedReader br = null;
-
-		try {
-			URL url = new URL(downloadUrl);
-			URLConnection uc = url.openConnection();
-			uc.connect();
-			uc = url.openConnection();
-			uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-			br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-			String line;
-			while ((line = br.readLine()) != null) {
-				if (line.contains("<a href=\"/skin/")) {
-					String downloadLine = line.replaceAll("<a href=\"/skin/", "").replaceAll("\">", "").replaceAll("        ", "");
-					skins.add("https://namemc.com/texture/" + downloadLine + ".png");
-				}
-			}
-		} finally {
-			if (br != null) {
-				br.close();
-			}
-		}
-		return skins;
-	}
 
 	public static void downloadTrendingSkins() throws IOException {
 		if (!RegenConfig.CLIENT.downloadTrendingSkins.get()) return;

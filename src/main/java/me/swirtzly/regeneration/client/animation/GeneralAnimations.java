@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.client.animation;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
@@ -38,7 +39,15 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
                     modelPlayer.bipedLeftArm.isHidden = false;
                     modelPlayer.bipedRightArm.isHidden = false;
                 }
+
+
+                if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
+                    GlStateManager.rotatef(15, 1, 0, 0);
+                }
+
             });
+
+
     }
 
     @Override
@@ -80,8 +89,15 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
                     modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(45);
                     copyAnglesToWear(modelBiped);
                 }
+
+            if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
+                modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(0);
+                modelBiped.bipedHead.rotateAngleY = (float) Math.toRadians(0);
+                modelBiped.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
+            }
             });
     }
+
 
     @Override
     public boolean useVanilla() {

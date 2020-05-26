@@ -165,7 +165,21 @@ public class PlayerUtil {
     }
 
 
-	public enum RegenState {
+    public static boolean isAboveZeroGrid(LivingEntity livingEntity) {
+        BlockPos livingPos = livingEntity.getPosition().down();
+        AxisAlignedBB grid = new AxisAlignedBB(livingPos.north().west(), livingPos.south().east());
+        for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
+            BlockPos pos = iterator.next();
+            BlockState state = livingEntity.world.getBlockState(pos);
+            if (!(state.getBlock() instanceof ZeroRoomBlock)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public enum RegenState {
 
         ALIVE, GRACE, GRACE_CRIT, POST, REGENERATING;
 		

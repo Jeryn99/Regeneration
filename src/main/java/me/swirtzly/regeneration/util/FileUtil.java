@@ -29,8 +29,9 @@ import java.util.zip.ZipFile;
 import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.*;
 
 public class FileUtil {
-	
-	public static void handleDownloads() throws IOException {
+
+
+    public static void handleDownloads() throws IOException {
 		if (!RegenConfig.CLIENT.downloadInteralSkins.get()) return;
 
 

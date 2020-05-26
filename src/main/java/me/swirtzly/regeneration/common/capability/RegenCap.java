@@ -22,6 +22,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
@@ -36,6 +37,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -95,8 +97,21 @@ public class RegenCap implements IRegen {
 	@Override
 	public void tick() {
 		if (!didSetup && player.world.isRemote) {
-			NetworkDispatcher.INSTANCE.sendToServer(new SyncDataMessage(player));
-			didSetup = true;
+			if (player.world.dimension.getType() != null && player.world.dimension.getType().getRegistryName() != null) {
+				NetworkDispatcher.INSTANCE.sendToServer(new SyncDataMessage(player));
+				didSetup = true;
+			}
+		}
+
+
+		if (PlayerUtil.isAboveZeroGrid(player) && state == PlayerUtil.RegenState.POST) {
+			Iterator<EffectInstance> iterator = player.getActivePotionEffects().iterator();
+			while (iterator.hasNext()) {
+				EffectInstance potion = iterator.next();
+				if (PlayerUtil.POTIONS.contains(potion.getPotion())) {
+					player.removePotionEffect(potion.getPotion());
+				}
+			}
 		}
 
 
