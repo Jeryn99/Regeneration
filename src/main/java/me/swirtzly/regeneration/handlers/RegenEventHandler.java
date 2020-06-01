@@ -35,10 +35,7 @@ import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -125,6 +122,19 @@ public class RegenEventHandler {
         CapabilityRegeneration.getForPlayer(e.getEntityPlayer()).getStateManager().onPunchBlock(e);
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void painless(LivingAttackEvent event) {
+        if (!(event.getEntity() instanceof EntityPlayer))
+            return;
+
+        EntityPlayer player = (EntityPlayer) event.getEntity();
+        IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+
+        if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
+            event.setCanceled(true);
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onHurt(LivingHurtEvent event) {
         Entity trueSource = event.getSource().getTrueSource();
@@ -179,12 +189,17 @@ public class RegenEventHandler {
                 event.setAmount(0.5F);
                 PlayerUtil.sendMessage(player, new TextComponentTranslation("regeneration.messages.reduced_dmg"), true);
             }
-            return;
         }
 
-        if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.regenFireImmune && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
-            event.setCanceled(true); // TODO still "hurts" the client view
-        } else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void adMortemInimicus(LivingDamageEvent event) {
+        if (!(event.getEntity() instanceof EntityPlayer) || event.getSource() == RegenObjects.REGEN_DMG_CRITICAL || event.getSource() == RegenObjects.REGEN_DMG_KILLED)
+            return;
+        EntityPlayer player = (EntityPlayer) event.getEntity();
+        IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+        if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
             boolean notDead = cap.getStateManager().onKilled(event.getSource());
             event.setCanceled(notDead);
         }
@@ -277,5 +292,5 @@ public class RegenEventHandler {
             }
         }
     }
-	
+
 }
