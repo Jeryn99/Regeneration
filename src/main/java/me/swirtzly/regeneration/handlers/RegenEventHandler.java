@@ -194,15 +194,15 @@ public class RegenEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void adMortemInimicus(LivingDamageEvent event) {
+    public static void adMortemInimicus(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof EntityPlayer) || event.getSource() == RegenObjects.REGEN_DMG_CRITICAL || event.getSource() == RegenObjects.REGEN_DMG_KILLED)
             return;
         EntityPlayer player = (EntityPlayer) event.getEntity();
         IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
-        if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
+        //if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
             boolean notDead = cap.getStateManager().onKilled(event.getSource());
             event.setCanceled(notDead);
-        }
+        //}
     }
 
     @SubscribeEvent
