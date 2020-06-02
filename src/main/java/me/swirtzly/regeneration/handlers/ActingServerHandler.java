@@ -42,6 +42,12 @@ class ActingServerHandler implements IActingHandler {
                 if (player.ticksExisted % 210 == 0) {
                     PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.world.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
                 }
+                if (RegenConfig.postRegen.postRegenerationLindosInterval != 0 && player.ticksExisted % (RegenConfig.postRegen.postRegenerationLindosInterval*20) == 0 && player.world.rand.nextDouble()<RegenConfig.postRegen.lindosChancePerInterval) {
+                    EntityLindos lindos = new EntityLindos(player.world);
+                    lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
+                    player.world.spawnEntity(lindos);
+                    player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
+                }
                 break;
             case REGENERATING:
                 float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
@@ -118,6 +124,27 @@ class ActingServerHandler implements IActingHandler {
     }
 
     @Override
+    public void onRegenTrigger(IRegeneration cap) {
+        EntityPlayer player = cap.getPlayer();
+        NetworkHandler.INSTANCE.sendToAllAround(new MessagePlayRegenerationSound(RegenUtil.getRandomSound(TypeHandler.getTypeInstance(cap.getType()).getRegeneratingSounds(), player.world.rand), player.getUniqueID().toString()), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 40));
+        player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
+        player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
+        player.setHealth(Math.max(player.getHealth(), 8));
+        player.setAbsorptionAmount(0);
+
+        player.extinguish();
+        player.removePassengers();
+        player.clearActivePotions();
+        player.dismountRidingEntity();
+
+        if (RegenConfig.postRegen.resetHunger) player.getFoodStats().setFoodLevel(20);
+
+        if (RegenConfig.postRegen.resetOxygen) player.setAir(300);
+
+        cap.extractRegeneration(1);
+    }
+
+    @Override
     public void onRegenFinish(IRegeneration cap) {
         EntityPlayer player = cap.getPlayer();
         RegenTriggers.FIRST_REGENERATION.trigger((EntityPlayerMP) cap.getPlayer());
@@ -142,7 +169,12 @@ class ActingServerHandler implements IActingHandler {
     @Override
     public void onProcessDone(IRegeneration cap) {
         EntityPlayer player = cap.getPlayer();
-        if (player.world.rand.nextBoolean()) {
+        if (player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getModifier(MAX_HEALTH_ID) != null) {//this can only happen if regeneration is forcibly interrupted by anti-death methods that don't properly check for creative damage ._.
+            player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
+            player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
+            player.setAbsorptionAmount(0);
+            //clearing here to force update
+        } else if (player.world.rand.nextDouble() < RegenConfig.postRegen.lindosChance) {
             EntityLindos lindos = new EntityLindos(player.world);
             lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
             player.world.spawnEntity(lindos);
@@ -151,25 +183,4 @@ class ActingServerHandler implements IActingHandler {
         cap.setDroppedHand(false);
     }
 
-    @Override
-    public void onRegenTrigger(IRegeneration cap) {
-        EntityPlayer player = cap.getPlayer();
-        NetworkHandler.INSTANCE.sendToAllAround(new MessagePlayRegenerationSound(RegenUtil.getRandomSound(TypeHandler.getTypeInstance(cap.getType()).getRegeneratingSounds(), player.world.rand), player.getUniqueID().toString()), new NetworkRegistry.TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 40));
-        player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
-        player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
-        player.setHealth(Math.max(player.getHealth(), 8));
-        player.setAbsorptionAmount(0);
-
-        player.extinguish();
-        player.removePassengers();
-        player.clearActivePotions();
-        player.dismountRidingEntity();
-
-        if (RegenConfig.postRegen.resetHunger) player.getFoodStats().setFoodLevel(20);
-
-        if (RegenConfig.postRegen.resetOxygen) player.setAir(300);
-
-        cap.extractRegeneration(1);
-    }
-	
 }

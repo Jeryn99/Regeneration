@@ -61,7 +61,7 @@ public class RegenClientHooks {
                         break;
                     case GRACE:
                     case GRACE_CRIT:
-                        entityRender.loadShader(SHADERS_TEXTURES[16]);
+                        entityRender.loadShader(SHADERS_TEXTURES[16]);//desaturate.json
                         break;
                     case ALIVE:
                     case REGENERATING:
