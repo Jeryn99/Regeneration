@@ -132,7 +132,7 @@ public class RegenConfig {
         @Config.RangeInt(min = 0)
         public int postRegenerationLindosInterval = 80;
 
-        @Config.LangKey("config.regeneration.post_regenerationLindos_chance")
+        @Config.LangKey("config.regeneration.post_regenerationLindos_chance_extra")
         @Config.Comment("The chance for a lindos particle to be \"burped\" out every interval")
         @Config.RangeDouble(min = 0, max=1)
         public double lindosChancePerInterval = 0.5;
