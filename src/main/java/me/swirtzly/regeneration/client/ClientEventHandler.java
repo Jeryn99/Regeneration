@@ -363,7 +363,7 @@ public class ClientEventHandler {
     public static void onRenderGameOverlayPre(RenderGameOverlayEvent.Pre e) {
         IRegeneration data = CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player);
         if (RegenConfig.coolCustomBarThings) {
-            if (data.getRegenerationsLeft() > 0 && data.getState() != ALIVE && data.getState() != POST) {
+            if (data.getRegenerationsLeft() > 0 && data.getState() != ALIVE) {
                 if (e.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
                     GlStateManager.pushMatrix();
                     Minecraft mc = Minecraft.getMinecraft();

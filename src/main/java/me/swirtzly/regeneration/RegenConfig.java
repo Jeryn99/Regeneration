@@ -127,6 +127,11 @@ public class RegenConfig {
         @Config.RangeInt(min = 0)
         public int postRegenerationLevel = 4;
 
+        @Config.LangKey("config.regeneration.post_regenerationLindos_chance")
+        @Config.Comment("The chance for a lindos particle to spawn when the post phase ends")
+        @Config.RangeDouble(min = 0, max=1)
+        public double lindosChance = 0.5;
+
         @Config.LangKey("config.regeneration.reset_hunger")
         @Config.Comment("Regenerate hunger bars")
         public boolean resetHunger = true;

@@ -680,26 +680,23 @@ public class CapabilityRegeneration implements IRegeneration {
 		}
 
 		private void midSequenceKill() {
-			state = PlayerUtil.RegenState.ALIVE;
-			nextTransition = null;
-			handGlowTimer = null;
-			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
 			if (state == PlayerUtil.RegenState.GRACE_CRIT) {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
 			} else {
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
 			}
-			setDnaType(DnaHandler.DNA_BORING.getRegistryName());
-			if (RegenConfig.loseRegensOnDeath) {
-				extractRegeneration(getRegenerationsLeft());
-			}
+			state = PlayerUtil.RegenState.ALIVE;
+			nextTransition = null;
+			handGlowTimer = null;
+			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
 			synchronise();
+			ActingForwarder.onProcessDone(CapabilityRegeneration.this);
 		}
 
 		private void finishRegeneration() {
 			state = PlayerUtil.RegenState.POST;
 			ActingForwarder.onStartPost(CapabilityRegeneration.this);
-			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
+			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, RegenConfig.postRegen.postRegenerationDuration);
 			handGlowTimer = null;
 			TypeHandler.getTypeInstance(regenType).onFinishRegeneration(player, CapabilityRegeneration.this);
 			ActingForwarder.onRegenFinish(CapabilityRegeneration.this);

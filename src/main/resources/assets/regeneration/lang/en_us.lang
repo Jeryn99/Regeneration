@@ -102,6 +102,7 @@ config.regeneration.regenerative_knockback_range=Regeneration knockback range
 
 config.regeneration.post_regen_duration=Post-regeneration effect duration
 config.regeneration.post_regenerationEffect_level=Post-regeneration effect level
+config.regeneration.post_regenerationLindos_chance=Post-regeneration Lindos spawn chance
 config.regeneration.reset_hunger=Reset hunger
 config.regeneration.reset_oxygen=Reset oxygen
 config.regeneration.absorbtion_level=Amount of extra hearts post-regen
