@@ -26,6 +26,8 @@ import javax.annotation.Nullable;
 public class TileEntityHandInJar extends TileEntity implements ITickable, IInventory {
 
 	public int lindosAmont = 0;
+	private int othersAround=0;
+	private static final int SEARCHRADIUS=16;
 	private NonNullList<ItemStack> handInv = NonNullList.withSize(7, ItemStack.EMPTY);
 
 	public int getLindosAmont() {
@@ -42,12 +44,25 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
 		if (world.getWorldTime() % 77 == 0 && hasHand()) {
 			world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES, SoundCategory.PLAYERS, 0.2F, 0.2F);
 		}
+		if(world.getWorldTime()%200==0){//update nearby containers
+			othersAround=0;
+			for(int x=-SEARCHRADIUS; x<=SEARCHRADIUS;x++){
+				for(int y=-SEARCHRADIUS; y<=SEARCHRADIUS;y++){
+					for(int z=-SEARCHRADIUS; z<=SEARCHRADIUS;z++){
+						BlockPos bp=new BlockPos(x,y,z);
+						if(world.isBlockLoaded(bp)&&world.getTileEntity(bp) instanceof TileEntityHandInJar){
+							othersAround++;
+						}
+					}
+				}
+			}
+		}
 
-		EntityPlayer player = world.getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 56, false);
+		EntityPlayer player = world.getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 8, false);
 		if (player != null) {
 			IRegeneration data = CapabilityRegeneration.getForPlayer(player);
 			if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-				if (world.rand.nextInt(90) < 10) {
+				if (world.rand.nextInt(90+othersAround*5) < 10) {
 					lindosAmont = lindosAmont + 1;
 				}
 			}

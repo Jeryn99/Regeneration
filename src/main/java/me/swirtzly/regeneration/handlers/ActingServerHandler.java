@@ -42,6 +42,12 @@ class ActingServerHandler implements IActingHandler {
                 if (player.ticksExisted % 210 == 0) {
                     PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.world.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
                 }
+                if (RegenConfig.postRegen.postRegenerationLindosInterval != 0 && player.ticksExisted % (RegenConfig.postRegen.postRegenerationLindosInterval*20) == 0 && player.world.rand.nextDouble()<RegenConfig.postRegen.lindosChancePerInterval) {
+                    EntityLindos lindos = new EntityLindos(player.world);
+                    lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
+                    player.world.spawnEntity(lindos);
+                    player.world.playSound(null, player.getPosition(), RegenObjects.Sounds.REGEN_BREATH, SoundCategory.PLAYERS, 1, 1);
+                }
                 break;
             case REGENERATING:
                 float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
@@ -163,12 +169,12 @@ class ActingServerHandler implements IActingHandler {
     @Override
     public void onProcessDone(IRegeneration cap) {
         EntityPlayer player = cap.getPlayer();
-        if (player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getModifier(MAX_HEALTH_ID)!=null) {//this can only happen if regeneration is forcibly interrupted by anti-death methods that don't properly check for creative damage ._.
+        if (player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getModifier(MAX_HEALTH_ID) != null) {//this can only happen if regeneration is forcibly interrupted by anti-death methods that don't properly check for creative damage ._.
             player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
             player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
             player.setAbsorptionAmount(0);
             //clearing here to force update
-        } else if (player.world.rand.nextDouble()<RegenConfig.postRegen.lindosChance) {
+        } else if (player.world.rand.nextDouble() < RegenConfig.postRegen.lindosChance) {
             EntityLindos lindos = new EntityLindos(player.world);
             lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
             player.world.spawnEntity(lindos);
