@@ -63,7 +63,7 @@ public class TileEntityHandInJar extends TileEntity implements ITickable, IInven
         if (player != null) {
             IRegeneration data = CapabilityRegeneration.getForPlayer(player);
             if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                if (world.rand.nextInt(90 + othersAround * 10) < 10) {
+                if (world.rand.nextInt(90 + othersAround * 30) < 10) {
                     lindosAmont = lindosAmont + 1;
                 }
             }

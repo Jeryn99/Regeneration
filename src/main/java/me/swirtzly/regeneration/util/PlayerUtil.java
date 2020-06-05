@@ -146,31 +146,31 @@ public class PlayerUtil {
         me.rotationYaw = (float) yaw;
     }
 
-    public static boolean isInHand(EnumHand hand, EntityLivingBase holder, Item item) {
+    public static boolean isInHand(EnumHand hand, EntityLivingBase holder, ItemStack item) {
         ItemStack heldItem = holder.getHeldItem(hand);
-        return heldItem.getItem() == item;
+        return heldItem == item;
     }
 
-    public static boolean isInMainHand(EntityLivingBase holder, Item item) {
+    public static boolean isInMainHand(EntityLivingBase holder, ItemStack item) {
         return isInHand(EnumHand.MAIN_HAND, holder, item);
     }
 
     /**
      * Checks if player has item in offhand
      */
-    public static boolean isInOffHand(EntityLivingBase holder, Item item) {
+    public static boolean isInOffHand(EntityLivingBase holder, ItemStack item) {
         return isInHand(EnumHand.OFF_HAND, holder, item);
     }
 
     /**
      * Checks if player has item in either hand
      */
-    public static boolean isInEitherHand(EntityLivingBase holder, Item item) {
+    public static boolean isInEitherHand(EntityLivingBase holder, ItemStack item) {
         return isInMainHand(holder, item) || isInOffHand(holder, item);
     }
 
     // MAIN_HAND xor OFF_HAND
-    public static boolean isInOneHand(EntityLivingBase holder, Item item) {
+    public static boolean isInOneHand(EntityLivingBase holder, ItemStack item) {
         boolean mainHand = (isInMainHand(holder, item) && !isInOffHand(holder, item));
         boolean offHand = (isInOffHand(holder, item) && !isInMainHand(holder, item));
         return mainHand || offHand;

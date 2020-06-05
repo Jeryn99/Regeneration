@@ -163,7 +163,7 @@ public class ItemLindos extends ItemOverrideBase implements IDontStore {
             worldIn.getEntitiesWithinAABB(EntityPlayer.class, entityIn.getEntityBoundingBox().expand(10, 10, 10)).forEach(player -> {
                 IRegeneration data = CapabilityRegeneration.getForPlayer((EntityPlayer) entityIn);
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                    if (hasWater(stack) && worldIn.rand.nextInt(100) > 70 && PlayerUtil.isInEitherHand(player, this)) {
+                    if (hasWater(stack) && worldIn.rand.nextInt(100) > 70 && PlayerUtil.isInEitherHand(player, stack)) {
                         setAmount(stack, getAmount(stack) + 1);
                     }
                 }
@@ -172,7 +172,7 @@ public class ItemLindos extends ItemOverrideBase implements IDontStore {
             // Player glowing
             if (entityIn instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) entityIn;
-                if (PlayerUtil.isInEitherHand(player, this)) {
+                if (PlayerUtil.isInEitherHand(player, stack)) {
                     if (hasWater(stack) && CapabilityRegeneration.getForPlayer(player).areHandsGlowing() && player.ticksExisted % 100 == 0) {
                         setAmount(stack, getAmount(stack) + 2);
                     }
