@@ -47,6 +47,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
+import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.GRACE;
 import static me.swirtzly.regeneration.util.PlayerUtil.RegenState.POST;
 
 /**
@@ -195,8 +196,20 @@ public class RegenEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void adMortemInimicus(LivingDeathEvent event) {
+    public static void adMortemInimicusButForGrace(LivingDamageEvent event) {
+        if (!(event.getEntity() instanceof EntityPlayer))
+            return;
+        EntityPlayer player = (EntityPlayer) event.getEntity();
+        IRegeneration cap = CapabilityRegeneration.getForPlayer(player);
+        if ((cap.getState() == GRACE) && player.getHealth() - event.getAmount() < 0) {
+            //uh oh, we're dying in grace. Forcibly regenerate before all (?) death prevention mods
+            boolean notDead = cap.getStateManager().onKilled(event.getSource());
+            event.setCanceled(notDead);
+        }
+    }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void adMortemInimicus(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof EntityPlayer))
             return;
         EntityPlayer player = (EntityPlayer) event.getEntity();
@@ -207,6 +220,7 @@ public class RegenEventHandler {
                 cap.extractRegeneration(cap.getRegenerationsLeft());
             }
             cap.synchronise();
+            return;
         }
         boolean notDead = cap.getStateManager().onKilled(event.getSource());
         event.setCanceled(notDead);
