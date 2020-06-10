@@ -70,14 +70,6 @@ public class SkinManipulation {
 		}
 	}
 
-	/**
-	 * Choosens a random png file from Steve/Alex Directory (This really depends on the Clients preference) It also checks image size of the select file, if it's too large, we'll just reset the player back to their Mojang skin, else they will be kicked from their server. If the player has disabled skin changing on the client, it will just send a reset packet
-	 *
-	 * @param random - This kinda explains itself, doesn't it?
-	 * @param player - Player instance, used to check UUID to ensure it is the client player being involved in the scenario
-	 * @throws IOException
-	 */
-
 	public static void sendSkinUpdate(Random random, PlayerEntity player) {
 		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID()) return;
 		RegenCap.get(player).ifPresent((data) -> {
@@ -149,12 +141,9 @@ public class SkinManipulation {
 			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
 		}
 		MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
-
 		AtomicReference<SkinInfo.SkinType> skinType = new AtomicReference<>();
 		skinType.set(SkinInfo.SkinType.ALEX);
-
 		RegenCap.get(player).ifPresent((data) -> {
-
 			if (data.getEncodedSkin().toLowerCase().equals("none") || forceMojang) {
 				if (profile == null) {
 					skinType.set(SkinInfo.SkinType.STEVE);
@@ -259,7 +248,7 @@ public class SkinManipulation {
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 				RegenType typeInstance = cap.getType().create();
 				ATypeRenderer typeRenderer = typeInstance.getRenderer();
-				typeRenderer.onRenderRegeneratingPlayerPre(typeInstance, renderPlayerEvent, cap);
+                typeRenderer.onRenderPre(typeInstance, renderPlayerEvent, cap);
 			}
 
 
@@ -283,7 +272,7 @@ public class SkinManipulation {
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 				RegenType type = cap.getType().create();
 				ATypeRenderer typeRenderer = type.getRenderer();
-				typeRenderer.onRenderRegeneratingPlayerPost(type, renderPlayerEventPost, cap);
+                typeRenderer.onRenderPost(type, renderPlayerEventPost, cap);
 			}
 		});
 	}

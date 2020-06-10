@@ -293,7 +293,7 @@ public class TimelordModel extends BipedModel<TimelordEntity> {
     @Override
     public void setRotationAngles(TimelordEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
         super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-        RegenCap.get(entityIn).ifPresent((data) -> data.getType().create().getRenderer().postAnimation(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
+        RegenCap.get(entityIn).ifPresent((data) -> data.getType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
         RenderUtil.copyModelAngles(bipedHead, timelord_hat);
         RenderUtil.copyModelAngles(bipedHead, villagerHead);
         RenderUtil.copyModelAngles(bipedBody, body);

@@ -29,13 +29,10 @@ public class AnimationManager {
     }
 
     public interface IAnimate {
+        /* This method is used to make render changes to the LivingEntity before it is renderered */
+        void preRenderCallback(LivingRenderer renderer, LivingEntity entity);
 
-        void preRenderCallBack(LivingRenderer renderer, LivingEntity entity);
-
-        void preAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
-
-        void postAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
-
-        boolean useVanilla();
+        /* This method is used animate the BipedModel of the LivingEntity (if it has one) using standard vanilla animating */
+        void animateEntity(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
     }
 }

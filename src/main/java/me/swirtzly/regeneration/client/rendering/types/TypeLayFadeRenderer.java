@@ -24,43 +24,38 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
     public TypeLayFadeRenderer() {
     }
 
-    @Override
-    protected void renderRegeneratingPlayerPre(TypeLayFade type, RenderPlayerEvent.Pre event, IRegen capability) {
 
+    @Override
+    protected void onRenderPre(TypeLayFade type, RenderPlayerEvent.Pre event, IRegen capability) {
+        /* This method has no implementation for this Regeneration type */
     }
 
     @Override
-    protected void renderRegeneratingPlayerPost(TypeLayFade type, RenderPlayerEvent.Post event, IRegen capability) {
-
+    protected void onRenderPost(TypeLayFade type, RenderPlayerEvent.Post event, IRegen capability) {
+        /* This method has no implementation for this Regeneration type */
     }
 
     @Override
-    protected void renderRegenerationLayer(TypeLayFade type, LivingRenderer renderLivingBase, IRegen capability, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    protected void onRenderLayer(TypeLayFade type, LivingRenderer renderLivingBase, IRegen capability, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         FieryRenderer.renderOverlay(renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
     @Override
     public void renderHand(LivingEntity player, HandSide handSide, LivingRenderer render) {
-
+        /* This method has no implementation for this Regeneration type */
     }
 
     @Override
-    public void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
+    public void preRenderCallback(LivingRenderer renderer, LivingEntity entity) {
         RegenCap.get(entity).ifPresent((data) -> {
             if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RegenTypes.HARTNELL) {
                 GlStateManager.rotatef(15, 1, 0, 0);
-                // GlStateManager.translatef(0, 1, 0);
             }
         });
     }
 
     @Override
-    public void preAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-
-    }
-
-    @Override
-    public void postAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void animateEntity(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(entity).ifPresent((data) -> {
             if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RegenTypes.HARTNELL) {
                 model.bipedHead.rotateAngleX = (float) Math.toRadians(0);
@@ -77,10 +72,5 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
                 }
             }
         });
-    }
-
-    @Override
-    public boolean useVanilla() {
-        return false;
     }
 }

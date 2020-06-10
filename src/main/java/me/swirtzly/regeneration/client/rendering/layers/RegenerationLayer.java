@@ -60,7 +60,7 @@ public class RegenerationLayer extends LayerRenderer {
         RegenCap.get(player).ifPresent((data) -> {
             RegenType type = data.getType().create();
             if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                type.getRenderer().onRenderRegenerationLayer(type, livingEntityRenderer, data, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+                type.getRenderer().onRenderLayer(type, livingEntityRenderer, data, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
             }
 
             if (data.getState() == PlayerUtil.RegenState.POST && player.hurtTime > 0) {

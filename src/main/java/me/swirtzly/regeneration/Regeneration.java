@@ -31,6 +31,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -44,7 +45,9 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
 
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -67,7 +70,6 @@ public class Regeneration {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new CommonHandler());
-
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
 	}
@@ -88,13 +90,6 @@ public class Regeneration {
 		ActingForwarder.init();
 		TriggerManager.init();
 		RegenObjects.Biomes.registerBiomeTypes();
-
-
-		if (ModList.get().isLoaded("tardis")) {
-			TardisCompat.addTardisCompat();
-		}
-
-
 	}
     
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -116,6 +111,22 @@ public class Regeneration {
 		proxy.init();
 		NetworkDispatcher.init();
 		TraitManager.init();
+
+
+		/* This is bad dumb code, but in order to release at the moment, it needs to exist
+		 * in future versions, this will be gutted out and version comparisons like this should never
+		 * be used again, it is just a temp thing
+		 */
+		if (ModList.get().isLoaded("tardis")) {
+			Optional<? extends ModContainer> optionalModContainer = ModList.get().getModContainerById("tardis");
+			ModContainer tardisContainer = optionalModContainer.get();
+			ArtifactVersion version = tardisContainer.getModInfo().getVersion();
+			if (version.getMajorVersion() == 1 && version.getMinorVersion() >= 3) {
+				TardisCompat.addTardisCompat();
+			} else {
+				LOG.error("Version " + version.getMajorVersion() + "." + version.getMinorVersion() + " is too low for use with the compatible features of Regeneration, please be on at minimum: 1.3");
+			}
+		}
 	}
 
     private void processIMC(final InterModProcessEvent event) {
@@ -129,11 +140,6 @@ public class Regeneration {
             @Override
             public void run() {
                 HandleSkins.downloadSkins();
-
-                //Intellji is going to open here
-                //You need to fix the Skins array, because it doesn't work on a serber
-                //well it does, but not really but also it does
-                //Just look into it okay
             }
         };
 

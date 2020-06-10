@@ -28,7 +28,7 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
     }
 
     @Override
-    public void preRenderCallBack(LivingRenderer renderer, LivingEntity entity) {
+    public void preRenderCallback(LivingRenderer renderer, LivingEntity entity) {
             RegenCap.get(entity).ifPresent((data) -> {
                 if (!(renderer.getEntityModel() instanceof BipedModel)) return;
                 BipedModel modelPlayer = (BipedModel) renderer.getEntityModel();
@@ -40,23 +40,14 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
                     modelPlayer.bipedRightArm.isHidden = false;
                 }
 
-
                 if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
                     GlStateManager.rotatef(15, 1, 0, 0);
                 }
-
             });
-
-
     }
 
     @Override
-    public void preAnimation(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-
-    }
-
-    @Override
-    public void postAnimation(BipedModel modelBiped, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void animateEntity(BipedModel modelBiped, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         ItemStack stack = entity.getHeldItemMainhand();
         ItemStack offStack = entity.getHeldItemOffhand();
 
@@ -98,9 +89,4 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
             });
     }
 
-
-    @Override
-    public boolean useVanilla() {
-        return false;
-    }
 }
