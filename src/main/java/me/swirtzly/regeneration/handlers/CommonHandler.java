@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.handlers;
 
+import com.google.gson.JsonObject;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.IRegen;
@@ -18,12 +19,17 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.storage.loot.ItemLootEntry;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.conditions.ILootCondition;
+import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -65,7 +71,26 @@ public class CommonHandler {
 		}));
 	}
 
-    @SubscribeEvent
+	@SubscribeEvent
+	public void onLootTableLoad(LootTableLoadEvent e) {
+		if (e.getName().toString().toLowerCase().contains("minecraft:chests/")) {
+
+			JsonObject jsonObject = new JsonObject();
+			jsonObject.addProperty("chance", 0.5F);
+
+			ILootCondition.IBuilder conditionBuilder = new ILootCondition.IBuilder() {
+				@Override
+				public ILootCondition build() {
+					return LootConditionManager.getSerializerForName(new ResourceLocation("random_chance")).deserialize(jsonObject, null);
+				}
+			};
+			e.getTable().addPool(LootPool.builder().addEntry(ItemLootEntry.builder(RegenObjects.Items.DIAL.get()).quality(1).weight(10).acceptCondition(conditionBuilder)).acceptCondition(conditionBuilder).build());
+		}
+
+	}
+
+
+	@SubscribeEvent
 	public void onPlayerTracked(PlayerEvent.StartTracking event) {
 		RegenCap.get(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
