@@ -7,6 +7,8 @@
   "item.regeneration.hand": "%s's hand",
   "argument.regeneration.invalid": "This trait is invalid!",
   "block.regeneration.gal_ore": "Unknown Ore",
+  "block.regeneration.zero_roundel_one": "Zero Room Roundel",
+  "block.regeneration.zero_roundel_two": "Zero Room Roundel",
   "item.regeneration.gal_ingot": "Unknown Ingot",
   "regeneration.gui.red": "Red ",
   "regeneration.gui.green": "Green ",
@@ -212,5 +214,6 @@
   "biome.regeneration.redlands_forest": "Gallifreyan Redlands Forest",
   "biome.regeneration.wastelands": "Gallifreyan Wastelands",
   "item.regeneration.arch_part": "Bio-Component",
-  "item.regeneration.rassilon_seal": "Seal of Rassilon"
+  "item.regeneration.rassilon_seal": "Seal of Rassilon",
+  "item.regeneration.confession_dial": "Confession Dial"
 }
