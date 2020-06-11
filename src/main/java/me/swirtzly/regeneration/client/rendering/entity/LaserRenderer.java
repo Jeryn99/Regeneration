@@ -2,13 +2,13 @@ package me.swirtzly.regeneration.client.rendering.entity;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.entity.LaserEntity;
+import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.tardis.mod.helper.RenderUtil;
 
 import javax.annotation.Nullable;
 

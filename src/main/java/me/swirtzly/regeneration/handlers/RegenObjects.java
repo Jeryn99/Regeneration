@@ -110,8 +110,7 @@ public class RegenObjects {
  		builder.setUpdateInterval(updateFreq);
  		builder.size(width, height);
  		builder.setCustomClientFactory((spawnEntity, world) -> client.spawn(world));
- 		EntityType<T> type = builder.build(loc.toString());
- 		return type;
+		return builder.build(loc.toString());
  	}
 
  	// Fire Resistant Entity Creation
