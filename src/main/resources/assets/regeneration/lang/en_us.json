@@ -157,7 +157,7 @@
   "trait.nightvision.desc": "You can see in the Dark!",
   "trait.wallclimbing.desc": "You can climb walls!",
   "trait.repel_arrow.desc": "Arrows bounce off you!",
-  "tardis.protocol.arch": "Deploy Chameleon Arch",
+  "tardis.protocol.arch": "Toggle Chameleon Arch",
   "nbt.item.lindos": "Lindos Energy: %s",
   "regeneration.messages.item_taken_regens": "You have gained %s regenerations from %s",
   "regeneration.messages.no_water": "This Vial has no water...",

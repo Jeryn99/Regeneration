@@ -38,8 +38,7 @@ public class GuiPreferences extends ContainerScreen {
 	@Override
 	public void init() {
 		super.init();
-		// TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabRegeneration.class);
-		// TabRegistry.addTabsToList(this.buttonList);
+
 		int cx = (width - xSize) / 2;
 		int cy = (height - ySize) / 2;
 		final int btnW = 66, btnH = 18;
@@ -59,8 +58,6 @@ public class GuiPreferences extends ContainerScreen {
 				NetworkDispatcher.sendToServer(new UpdateTypeMessage(SELECTED_TYPE.getRegistryName().toString()));
 			}
 		});
-
-        //btnRegenType.active = false;
 
 		GuiButtonExt btnSkinType = new GuiButtonExt(width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText(), new Button.IPressable() {
 			@Override

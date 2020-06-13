@@ -21,8 +21,6 @@ import net.minecraft.world.gen.OverworldGenSettings;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IRenderHandler;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 
@@ -41,6 +39,19 @@ public class GallifreyDimension extends Dimension {
         OverworldGenSettings gensettings = new OverworldGenSettings();
         GalBiomeProvider biomes = new GalBiomeProvider(BiomeProviderType.VANILLA_LAYERED.createSettings().setWorldInfo(this.world.getWorldInfo()).setGeneratorSettings(gensettings));
         return RegenObjects.ChunkGeneratorTypes.GALLIFREY_CHUNKS.get().create(this.world, biomes, gensettings);
+    }
+
+    @Override
+    public void resetRainAndThunder() {
+        world.getWorldInfo().setRainTime(0);
+        world.getWorldInfo().setRaining(false);
+        world.getWorldInfo().setThunderTime(0);
+        world.getWorldInfo().setThundering(false);
+    }
+
+    @Override
+    public void updateWeather(Runnable defaultLogic) {
+        super.updateWeather(defaultLogic);
     }
 
     @Override
@@ -112,7 +123,7 @@ public class GallifreyDimension extends Dimension {
         f1 = f1 * (f * 0.94F + 0.06F);
         f2 = f2 * (f * 0.94F + 0.06F);
         f3 = f3 * (f * 0.91F + 0.09F);
-        return new Vec3d((double) f1, (double) f2, (double) f3);
+        return new Vec3d(f1, f2, f3);
         // return new Vec3d(0.7, 0.4, 0.2);
     }
 
@@ -175,7 +186,7 @@ public class GallifreyDimension extends Dimension {
             f5 = f5 * (1.0F - f12) + 1.0F * f12;
         }
 
-        return new Vec3d((double) f3, (double) f4, (double) f5);
+        return new Vec3d(f3, f4, f5);
     }
 
     @Nullable
@@ -201,14 +212,9 @@ public class GallifreyDimension extends Dimension {
         // return new Vec3d(255 / 255.0F, 153/ 255.0, 204/ 255.0);
     }
 
-
-    @SubscribeEvent
-    public static void onCreated(WorldEvent.CreateSpawnPosition event) {
-
-    }
-
-    public static void createCitadell() {
-
+    @Override
+    public boolean hasSkyLight() {
+        return true;
     }
 
     @Override

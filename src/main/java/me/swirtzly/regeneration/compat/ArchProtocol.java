@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.compat;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -16,7 +17,7 @@ import net.tardis.mod.tileentities.ConsoleTile;
  */
 public class ArchProtocol extends Protocol {
 
-    private static TranslationTextComponent ARCH = new TranslationTextComponent("tardis.protocol.arch");
+    private static final TranslationTextComponent ARCH = new TranslationTextComponent("tardis.protocol.arch");
 
 
     public static BlockPos getGoodArchPlacement(World world, BlockPos consolePos) {
@@ -57,10 +58,10 @@ public class ArchProtocol extends Protocol {
                         consoleTile.setArtron(consoleTile.getArtron() - 10);
                     }
                 } else {
-                    BlockState console = world.getBlockState(pos);
-                    for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, console.getCollisionShape(world, pos).getBoundingBox().grow(25))) {
+                    world.setBlockState(placePos, Blocks.AIR.getDefaultState());
+                    /*   for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, console.getCollisionShape(world, pos).getBoundingBox().grow(25))) {
                         PlayerUtil.sendMessage(playerEntity, new TranslationTextComponent("message.regeneration.arch_no_space"), false);
-                    }
+                    }*/
                 }
             } else {
                 BlockState console = world.getBlockState(consoleTile.getPos());
@@ -73,10 +74,12 @@ public class ArchProtocol extends Protocol {
 
     }
 
+
     @Override
     public String getSubmenu() {
         return "interior";
     }
+
 
     @Override
     public String getDisplayName() {

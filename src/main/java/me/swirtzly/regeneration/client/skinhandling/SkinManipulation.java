@@ -38,8 +38,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -114,11 +112,7 @@ public class SkinManipulation {
 			return new SkinInfo(player, null, getSkinType(player, true));
 		}
 		if (data.getEncodedSkin().equals(NO_SKIN)) {
-			try {
-				resourceLocation = TexUtil.urlToTexture(new URL("https://crafatar.com/skins/" + player.getUniqueID()));//MOJANG.get(player.getUniqueID());
-			} catch (MalformedURLException e) {
-				resourceLocation = MOJANG.get(player.getUniqueID());
-			}
+			resourceLocation = TexUtil.getSkinFromGameProfile(player.getGameProfile());
 			skinType = getSkinType(player, true);
 		} else {
 			NativeImage nativeImage = decodeToImage(data.getEncodedSkin());
@@ -237,28 +231,31 @@ public class SkinManipulation {
 				PLAYER_SKINS.remove(player.getUniqueID());
 			}
 
-			/* 	When the player regenerates, we want the skin to change midway through Regeneration
-			 *	We only do this midway through, we will destroy the data and re-create it */
-			boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
-			if (isMidRegeneration) {
-				createSkinData(player, RegenCap.get(player));
-			}
-
 			/* Render the living entities Pre-Regeneration effect */
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 				RegenType typeInstance = cap.getType().create();
 				ATypeRenderer typeRenderer = typeInstance.getRenderer();
-                typeRenderer.onRenderPre(typeInstance, renderPlayerEvent, cap);
+				typeRenderer.onRenderPre(typeInstance, renderPlayerEvent, cap);
 			}
 
 
 
 			/* Grab the SkinInfo of a player and set their SkinType and Skin location from it */
-			SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
-			if (skin != null) {
-				setPlayerSkin(player, skin.getTextureLocation());
-				setPlayerSkinType(player, skin.getSkintype());
-			} else {
+
+			if (cap.getState() != PlayerUtil.RegenState.REGENERATING) {
+				SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
+				if (skin != null) {
+					setPlayerSkin(player, skin.getTextureLocation());
+					setPlayerSkinType(player, skin.getSkintype());
+				} else {
+					createSkinData(player, RegenCap.get(player));
+				}
+			}
+
+			/* 	When the player regenerates, we want the skin to change midway through Regeneration
+			 *	We only do this midway through, we will destroy the data and re-create it */
+			boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
+			if (isMidRegeneration) {
 				createSkinData(player, RegenCap.get(player));
 			}
 
@@ -291,7 +288,7 @@ public class SkinManipulation {
 	public enum EnumChoices implements RegenUtil.IEnum {
 		ALEX(true), STEVE(false), EITHER(true);
 
-		private boolean isAlex;
+		private final boolean isAlex;
 
 		EnumChoices(boolean isAlex) {
 			this.isAlex = isAlex;

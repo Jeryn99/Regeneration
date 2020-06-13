@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.client.sound;
 
 import me.swirtzly.regeneration.Regeneration;
+import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
@@ -56,6 +57,9 @@ public final class ReverbHandler {
 
     private static boolean shouldEcho() {
         if (Minecraft.getInstance().player == null) return false;
-        return RegenCap.get(Minecraft.getInstance().player).orElse(null).getState().isGraceful();
+        IRegen data = RegenCap.get(Minecraft.getInstance().player).orElse(null);
+        if (data != null) {
+            return data.getState().isGraceful();
+        } else return false;
     }
 }
