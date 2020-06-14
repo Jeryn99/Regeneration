@@ -21,6 +21,8 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 
 import java.awt.*;
 
+import static me.swirtzly.regeneration.util.client.ClientUtil.colorToHex;
+
 public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
 
     private static final ResourceLocation background = new ResourceLocation(Regeneration.MODID, "textures/gui/customizer_background.png");
@@ -68,11 +70,8 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
         }));
 
         this.minecraft.keyboardListener.enableRepeatEvents(true);
-        this.inputPrimaryColor = new TextFieldWidget(this.font, cx + 25, cy + 21, btnW, btnH, this.inputPrimaryColor, I18n.format("selectWorld.search"));
-        this.inputSecondColor = new TextFieldWidget(this.font, cx + 90, cy + 21, btnW, btnH, this.inputPrimaryColor, I18n.format("selectWorld.search"));
-
-        inputPrimaryColor.setText("HEX PRIMARY");
-        inputSecondColor.setText("HEX SECONDARY");
+        this.inputPrimaryColor = new TextFieldWidget(this.font, cx + 25, cy + 21, btnW, btnH, this.inputPrimaryColor, I18n.format("Input"));
+        this.inputSecondColor = new TextFieldWidget(this.font, cx + 90, cy + 21, btnW, btnH, this.inputPrimaryColor, I18n.format("Input"));
 
         this.children.add(this.inputPrimaryColor);
         this.children.add(this.inputSecondColor);
@@ -170,6 +169,10 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
 
         this.func_212928_a(this.inputPrimaryColor);
         this.func_212928_a(this.inputSecondColor);
+
+        inputPrimaryColor.setText(colorToHex(new Color((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue())));
+        inputSecondColor.setText(colorToHex(new Color((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue())));
+
     }
 
     @Override
@@ -229,6 +232,8 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
         nbt.putFloat("SecondaryGreen", (float) slideSecondaryGreen.getValue());
         nbt.putFloat("SecondaryBlue", (float) slideSecondaryBlue.getValue());
         NetworkDispatcher.sendToServer(new UpdateColorMessage(nbt));
+        inputPrimaryColor.setText(colorToHex(new Color((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue())));
+        inputSecondColor.setText(colorToHex(new Color((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue())));
     }
 
     @Override

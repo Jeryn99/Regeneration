@@ -41,15 +41,23 @@ public class ClientUtil {
 	public static void sendSkinResetPacket() {
 		NetworkDispatcher.sendToServer(new UpdateSkinMessage(RegenUtil.NO_SKIN, SkinManipulation.getSkinType(Minecraft.getInstance().player, true) == SkinInfo.SkinType.ALEX));
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
 		Minecraft.getInstance().getSoundHandler().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
 	}
-	
+
+	public static String colorToHex(Color color) {
+		StringBuilder hex = new StringBuilder(Integer.toHexString(color.getRGB() & 0xffffff));
+		while (hex.length() < 6) {
+			hex.insert(0, "0");
+		}
+		return "#" + hex;
+	}
+
 	/**
 	 * Helper method that copy pastes the angles of the ModelPlayer limbs to the players wear
-	 * 
+	 *
 	 * @param biped
 	 */
 	public static void copyAnglesToWear(PlayerModel biped) {
