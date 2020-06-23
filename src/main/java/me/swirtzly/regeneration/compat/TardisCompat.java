@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
@@ -21,6 +22,8 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.tardis.mod.ars.ARSPiece;
+import net.tardis.mod.ars.ARSPieces;
 import net.tardis.mod.dimensions.TardisDimension;
 import net.tardis.mod.entity.DalekEntity;
 import net.tardis.mod.helper.TardisHelper;
@@ -47,6 +50,7 @@ public class TardisCompat {
         TardisRegistries.registerRegisters(TardisCompat::registerAllUpgrades);
         Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), false, RegenObjects.Items.HAND.get(), TItems.CIRCUITS));
         Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), true, RegenObjects.Items.ARCH_PART.get(), TItems.CIRCUITS, RegenObjects.Items.HAND.get()));
+        TardisRegistries.registerRegisters(TardisCompat::registerAllRooms);
         MinecraftForge.EVENT_BUS.register(new TardisCompat());
     }
 
@@ -58,6 +62,9 @@ public class TardisCompat {
         TardisRegistries.PROTOCOL_REGISTRY.register(new ResourceLocation(Regeneration.MODID, "arch_protocol"), new ArchProtocol());
     }
 
+    public static void registerAllRooms() {
+        ARSPieces.register("zero_room", new ARSPiece(new ResourceLocation(Regeneration.MODID,"regeneration/structures/ars/zero_room"),new BlockPos(9, 5, 19)));
+    }
 
     public static void damageSubsystem(World world) {
         getTardis(world).getUpgrade(ArchUpgrade.class).ifPresent((archUpgrade -> {

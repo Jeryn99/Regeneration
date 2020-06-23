@@ -215,5 +215,6 @@
   "biome.regeneration.wastelands": "Gallifreyan Wastelands",
   "item.regeneration.arch_part": "Bio-Component",
   "item.regeneration.rassilon_seal": "Seal of Rassilon",
-  "item.regeneration.confession_dial": "Confession Dial"
+  "item.regeneration.confession_dial": "Confession Dial",
+  "ars.piece.tardis.zero_room":"Regeneration: Zero Room"
 }
