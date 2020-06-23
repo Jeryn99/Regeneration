@@ -64,7 +64,7 @@ public class TexUtil {
             uc.connect();
             uc = url.openConnection();
             uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-            Regeneration.LOG.warn("Downloading Skin from: {}", url.toString());
+            Regeneration.LOG.warn("Downloading Image from: {}", url.toString());
             image = NativeImage.read(uc.getInputStream());
             return Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("download_", new DynamicTexture(image));
         } catch (IOException e) {

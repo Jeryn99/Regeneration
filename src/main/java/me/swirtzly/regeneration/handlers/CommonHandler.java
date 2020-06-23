@@ -6,12 +6,14 @@ import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.traits.TraitManager;
+import me.swirtzly.regeneration.compat.ArchHelper;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
@@ -89,14 +91,37 @@ public class CommonHandler {
 
 	}
 
+	/* This is used for gifting LivingEntities Regenerations!
+	 * TODO: This is not nice, I'll finish it next update, no-one will know this exists :)
+	 */
+	@SubscribeEvent
+	public void onRightClickEntity(PlayerInteractEvent.EntityInteract entityInteract) {
+		LivingEntity interactor = entityInteract.getEntityLiving();
+		Entity interactedWith = entityInteract.getTarget();
+
+		if (interactedWith instanceof LivingEntity) {
+			LivingEntity toBeTimelord = (LivingEntity) interactedWith;
+			ItemStack interactorsItem = interactor.getHeldItemMainhand();
+
+			if (!toBeTimelord.world.isRemote && interactorsItem.getItem() == RegenObjects.Items.ARCH_PART.get() && ArchHelper.getRegenerations(interactorsItem) > 0) {
+				if (interactor.isSneaking()) {
+					entityInteract.setCanceled(true);
+					RegenCap.get(toBeTimelord).ifPresent((data) -> {
+						data.receiveRegenerations(ArchHelper.getRegenerations(interactorsItem));
+						ArchHelper.storeRegenerations(interactorsItem, 0);
+					});
+				}
+			}
+		}
+	}
 
 	@SubscribeEvent
 	public void onPlayerTracked(PlayerEvent.StartTracking event) {
 		RegenCap.get(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
-	
+
 	@SubscribeEvent
-    public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+	public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
 		RegenCap.get(event.getPlayer()).ifPresent(IRegen::synchronise);
 	}
 	

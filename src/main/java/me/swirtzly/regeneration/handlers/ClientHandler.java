@@ -35,7 +35,6 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -157,13 +156,6 @@ public class ClientHandler {
             if (warning != null)
                 Minecraft.getInstance().fontRenderer.drawString(warning, Minecraft.getInstance().mainWindow.getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
         });
-
-    }
-
-    @SubscribeEvent
-    public void onPlaySound(PlaySoundEvent e) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.world == null) return;
 
     }
 

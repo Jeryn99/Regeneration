@@ -31,14 +31,14 @@ import static me.swirtzly.regeneration.util.client.RenderUtil.drawModelToGui;
 public class NewSkinSelectionScreen extends ContainerScreen {
 
     private static final ResourceLocation background = new ResourceLocation(Regeneration.MODID, "textures/gui/customizer_background.png");
-    public static boolean isAlex = true;
+    private static final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
     private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
     private static SkinManipulation.EnumChoices choices = null;
     private static List<File> skins = null;
     private static int position = 0;
-    private static TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-    private static PlayerModel ALEX_MODEL = new PlayerModel(0.1f, true);
-    private static PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
+    private static final PlayerModel ALEX_MODEL = new PlayerModel(0.1f, true);
+    private static final PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
+    private static boolean isAlex = true;
     private float rotation = 0;
 
     public NewSkinSelectionScreen() {

@@ -74,7 +74,6 @@ public class ArchProtocol extends Protocol {
 
     }
 
-
     @Override
     public String getSubmenu() {
         return "interior";

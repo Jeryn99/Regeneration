@@ -29,9 +29,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -45,95 +45,81 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.maven.artifact.versioning.ArtifactVersion;
 
-import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
 @Mod(Regeneration.MODID)
 public class Regeneration {
-	
-	public static final String MODID = "regeneration";
-	public static final String NAME = "Regeneration";
-	
-	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    public static final String MODID = "regeneration";
+    public static final String NAME = "Regeneration";
+
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static Regeneration INSTANCE;
+    public static Logger LOG = LogManager.getLogger(NAME);
 
     public Regeneration() {
-		INSTANCE = this;
-		FMLJavaModLoadingContext.get().getModEventBus().register(this);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(new CommonHandler());
+        INSTANCE = this;
+        FMLJavaModLoadingContext.get().getModEventBus().register(this);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new CommonHandler());
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
-	}
-	
-	public static Logger LOG = LogManager.getLogger(NAME);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
+    }
 
     public static Proxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-		RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(TimelordEntity.class, TimelordRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(LaserEntity.class, LaserRenderer::new);
-	}
+    }
 
     private void setup(final FMLCommonSetupEvent event) {
-		proxy.preInit();
+        proxy.preInit();
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
-		ActingForwarder.init();
-		TriggerManager.init();
-		RegenObjects.Biomes.registerBiomeTypes();
-	}
-    
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onNewRegistries(RegistryEvent.NewRegistry e) {
-    	RegenObjects.Blocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		RegenObjects.Blocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		RegenObjects.Items.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		RegenObjects.Sounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		RegenObjects.EntityEntries.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
-		RegenObjects.Tiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
-		RegenObjects.Containers.CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		RegenObjects.ChunkGeneratorTypes.CHUNK_GENERATOR_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-		RegenObjects.Biomes.BIOMES.register(FMLJavaModLoadingContext.get().getModEventBus());
-		RegenObjects.Dimensions.DIMENSIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ActingForwarder.init();
+        TriggerManager.init();
+        RegenObjects.Biomes.registerBiomeTypes();
 
-	}
+        if (ModList.get().isLoaded("tardis")) {
+            TardisCompat.addTardisCompat();
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onNewRegistries(RegistryEvent.NewRegistry e) {
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        RegenObjects.Blocks.BLOCKS.register(eventBus);
+        RegenObjects.Blocks.BLOCK_ITEMS.register(eventBus);
+        RegenObjects.Items.ITEMS.register(eventBus);
+        RegenObjects.Sounds.SOUNDS.register(eventBus);
+        RegenObjects.EntityEntries.ENTITIES.register(eventBus);
+        RegenObjects.Tiles.TILES.register(eventBus);
+        RegenObjects.Containers.CONTAINERS.register(eventBus);
+        RegenObjects.ChunkGeneratorTypes.CHUNK_GENERATOR_TYPES.register(eventBus);
+        RegenObjects.Biomes.BIOMES.register(eventBus);
+        RegenObjects.Dimensions.DIMENSIONS.register(eventBus);
+
+    }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
-		proxy.init();
-		NetworkDispatcher.init();
-		TraitManager.init();
-
-
-		/* This is bad dumb code, but in order to release at the moment, it needs to exist
-		 * in future versions, this will be gutted out and version comparisons like this should never
-		 * be used again, it is just a temp thing
-		 */
-		if (ModList.get().isLoaded("tardis")) {
-			Optional<? extends ModContainer> optionalModContainer = ModList.get().getModContainerById("tardis");
-			ModContainer tardisContainer = optionalModContainer.get();
-			ArtifactVersion version = tardisContainer.getModInfo().getVersion();
-			if (version.getMajorVersion() == 1 && version.getMinorVersion() >= 3) {
-				TardisCompat.addTardisCompat();
-			} else {
-				LOG.error("Version " + version.getMajorVersion() + "." + version.getMinorVersion() + " is too low for use with the compatible features of Regeneration, please be on at minimum: 1.3");
-			}
-		}
-	}
+        proxy.init();
+        NetworkDispatcher.init();
+        TraitManager.init();
+    }
 
     private void processIMC(final InterModProcessEvent event) {
-		proxy.postInit();
-		PlayerUtil.createPostList();
+        proxy.postInit();
+        PlayerUtil.createPostList();
 
-		RegenUtil.TIMELORD_NAMES = RegenUtil.downloadNames();
+        RegenUtil.TIMELORD_NAMES = RegenUtil.downloadNames();
         HandleSkins.downloadSkins();
         Timer timer = new Timer();
         TimerTask hourlyTask = new TimerTask() {
@@ -144,11 +130,11 @@ public class Regeneration {
         };
 
         timer.schedule(hourlyTask, 0L, 1000 * 60 * 60);
-	}
-	
-	@SubscribeEvent
+    }
+
+    @SubscribeEvent
     public void onServerStart(FMLServerStartingEvent event) {
-		RegenCommand.register(event.getCommandDispatcher());
-	}
-	
+        RegenCommand.register(event.getCommandDispatcher());
+    }
+
 }
