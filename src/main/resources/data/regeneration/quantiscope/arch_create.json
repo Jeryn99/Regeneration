@@ -1,7 +1,6 @@
 {
-  "repair": "true",
+  "repair": "false",
   "ingredients": [
-    "regeneration:arch_part",
     "tardis:circuits",
     "regeneration:hand"
   ],
