@@ -120,39 +120,38 @@ public class TardisCompat {
 
         if (world.dimension.getDimension() instanceof TardisDimension) {
             MinecraftServer minecraftServer = ServerLifecycleHooks.getCurrentServer();
-            TardisHelper.getConsole(minecraftServer, world.dimension.getType()).ifPresent(tile -> {
-                ConsoleTile console = tile;
-                LivingEntity playerEntity = event.getEntityLiving();
-                RegenCap.get(playerEntity).ifPresent((data) -> {
-                    //Regenerating
-                    if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                        if (data.getType() == RegenTypes.FIERY && playerEntity.ticksExisted % 10 == 0) {
-                            for (Subsystem subSystem : console.getSubSystems()) {
-                                subSystem.damage(null, world.rand.nextInt(5));
-                            }
-                        }
-
-                        if (console.isInFlight()) {
-                            console.getInteriorManager().setAlarmOn(true);
-                            console.getInteriorManager().setLight(0);
-
-                            if (console.isInFlight() && data.getType() == RegenTypes.FIERY) {
-                                if (world.rand.nextInt(50) < 10) {
-                                    console.crash();
-                                }
-                            }
+            ConsoleTile console = TardisHelper.getConsole(minecraftServer, world.dimension.getType());
+            if (console == null) return;
+            LivingEntity playerEntity = event.getEntityLiving();
+            RegenCap.get(playerEntity).ifPresent((data) -> {
+                //Regenerating
+                if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
+                    if (data.getType() == RegenTypes.FIERY && playerEntity.ticksExisted % 10 == 0) {
+                        for (Subsystem subSystem : console.getSubSystems()) {
+                            subSystem.damage(null, world.rand.nextInt(5));
                         }
                     }
 
-                    //Grace
-                    if (data.getState().isGraceful()) {
-                        for (TileEntity tileEntity : playerEntity.world.loadedTileEntityList) {
-                            if (playerEntity.getDistanceSq(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()) < 40 && tileEntity instanceof ConsoleTile && data.getLivingEntity().ticksExisted % 25 == 0) {
-                                tileEntity.getWorld().playSound(null, tileEntity.getPos(), RegenObjects.Sounds.ALARM.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    if (console.isInFlight()) {
+                        console.getInteriorManager().setAlarmOn(true);
+                        console.getInteriorManager().setLight(0);
+
+                        if (console.isInFlight() && data.getType() == RegenTypes.FIERY) {
+                            if (world.rand.nextInt(50) < 10) {
+                                console.crash();
                             }
                         }
                     }
-                });
+                }
+
+                //Grace
+                if (data.getState().isGraceful()) {
+                    for (TileEntity tileEntity : playerEntity.world.loadedTileEntityList) {
+                        if (playerEntity.getDistanceSq(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()) < 40 && tileEntity instanceof ConsoleTile && data.getLivingEntity().ticksExisted % 25 == 0) {
+                            tileEntity.getWorld().playSound(null, tileEntity.getPos(), RegenObjects.Sounds.ALARM.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                        }
+                    }
+                }
             });
         }
     }
