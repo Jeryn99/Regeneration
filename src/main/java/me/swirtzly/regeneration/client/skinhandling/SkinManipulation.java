@@ -21,7 +21,6 @@ import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -118,7 +117,7 @@ public class SkinManipulation {
 			NativeImage nativeImage = decodeToImage(data.getEncodedSkin());
 			nativeImage = ImageDownloadBuffer.convert(nativeImage);
 			if (nativeImage == null) {
-				resourceLocation = DefaultPlayerSkin.getDefaultSkin(player.getUniqueID());
+				resourceLocation = MOJANG.get(player.getUniqueID());
 			} else {
 				DynamicTexture tex = new DynamicTexture(nativeImage);
 				resourceLocation = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
@@ -138,7 +137,7 @@ public class SkinManipulation {
 		AtomicReference<SkinInfo.SkinType> skinType = new AtomicReference<>();
 		skinType.set(SkinInfo.SkinType.ALEX);
 		RegenCap.get(player).ifPresent((data) -> {
-			if (data.getEncodedSkin().toLowerCase().equals("none") || forceMojang) {
+			if (data.getEncodedSkin().toLowerCase().equals(NO_SKIN) || forceMojang) {
 				if (profile == null) {
 					skinType.set(SkinInfo.SkinType.STEVE);
 				}
@@ -227,7 +226,7 @@ public class SkinManipulation {
 
 			/* Sometimes when the player is teleported, the Mojang skin becomes re-downloaded and resets to either Steve,
 			 or the Mojang Skin, so once they have been re-created, we remove the cache we have on them, causing it to be renewed */
-			if (player.ticksExisted == 20) {
+			if (player.ticksExisted < 20) {
 				PLAYER_SKINS.remove(player.getUniqueID());
 			}
 
@@ -241,7 +240,6 @@ public class SkinManipulation {
 
 
 			/* Grab the SkinInfo of a player and set their SkinType and Skin location from it */
-
 			if (cap.getState() != PlayerUtil.RegenState.REGENERATING) {
 				SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
 				if (skin != null) {
@@ -255,7 +253,7 @@ public class SkinManipulation {
 			/* 	When the player regenerates, we want the skin to change midway through Regeneration
 			 *	We only do this midway through, we will destroy the data and re-create it */
 			boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
-			if (isMidRegeneration) {
+			if (isMidRegeneration || player.ticksExisted < 20) {
 				createSkinData(player, RegenCap.get(player));
 			}
 
