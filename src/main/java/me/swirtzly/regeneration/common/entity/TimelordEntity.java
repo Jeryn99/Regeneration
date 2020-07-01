@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.common.entity;
 
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
+import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.ai.TimelordMelee;
 import me.swirtzly.regeneration.common.item.GunItem;
@@ -108,7 +109,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(1, new TradeWithPlayerGoal(this));
-        this.goalSelector.addGoal(1, new TimelordMelee(this, (double) 1.2F, true));
+        this.goalSelector.addGoal(1, new TimelordMelee(this, 1.2F, true));
         this.goalSelector.addGoal(1, new SwimGoal(this));
         if (getTimelordType() == TimelordType.GUARD) {
             this.goalSelector.addGoal(1, new RangedAttackGoal(this, 1.25D, 15, 20.0F));
@@ -127,7 +128,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double) 0.23F);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23F);
         this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
@@ -156,30 +157,29 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 nbt.putFloat("SecondaryBlue", rand.nextInt(255) / 255.0F);
                 data.setStyle(nbt);
                 data.setType(rand.nextBoolean() ? RegenTypes.FIERY : RegenTypes.HARTNELL);
-
-
-                //WOAH WOAH WOAH, MAKE A METHOD FOR THIS FUTURE ME, THIS SHOULDNT BE HERE
-                long current = System.currentTimeMillis();
-                URLConnection openConnection = null;
-                try {
-                    openConnection = new URL(HandleSkins.SKINS.get(world.rand.nextInt(HandleSkins.SKINS.size() - 1))).openConnection();
-                    openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
-                    InputStream is = openConnection.getInputStream();
-                    File file = new File("./temp/" + current + ".png");
-                    FileUtils.copyInputStreamToFile(is, file);
-                    data.setEncodedSkin(HandleSkins.imageToPixelData(file));
-                    file.delete();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                initSkin(data);
             });
-
-
         }
-
         setCustomName(new StringTextComponent(RegenUtil.TIMELORD_NAMES[rand.nextInt(RegenUtil.TIMELORD_NAMES.length)]));
 
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
+
+    /*Setup initial skins for the timelords*/
+    public void initSkin(IRegen data) {
+        long current = System.currentTimeMillis();
+        URLConnection openConnection = null;
+        try {
+            openConnection = new URL(HandleSkins.SKINS.get(world.rand.nextInt(HandleSkins.SKINS.size() - 1))).openConnection();
+            openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+            InputStream is = openConnection.getInputStream();
+            File file = new File("./temp/" + current + ".png");
+            FileUtils.copyInputStreamToFile(is, file);
+            data.setEncodedSkin(HandleSkins.imageToPixelData(file));
+            file.delete();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -192,7 +192,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
             double d0 = target.posX - this.posX;
             double d1 = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - laserEntity.posY;
             double d2 = target.posZ - this.posZ;
-            double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+            double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
             laserEntity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
             this.world.playSound(null, this.posX, this.posY, this.posZ, this.getHeldItemMainhand().getItem() == RegenObjects.Items.PISTOL.get() ? RegenObjects.Sounds.STASER.get() : RegenObjects.Sounds.RIFLE.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
             this.world.addEntity(laserEntity);
@@ -237,13 +237,13 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 
                     if (data.getAnimationTicks() == 100) {
-                        if (false) {
+                        if (false) { //Ignore this, I need to re-implement something without breaking things
                             setVillager(true);
                         } else {
                             try {
                                 setVillager(false);
                                 long current = System.currentTimeMillis();
-                                URLConnection openConnection = new URL(HandleSkins.SKINS.get(world.rand.nextInt(HandleSkins.SKINS.size() - 1))).openConnection();
+                                URLConnection openConnection = new URL(getRandomSkinURL()).openConnection();
                                 openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
                                 InputStream is = openConnection.getInputStream();
                                 File file = new File("./temp/" + current + ".png");
@@ -264,6 +264,17 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 }
             }
         });
+    }
+
+    private String getRandomSkinURL() {
+        int skinSize = HandleSkins.SKINS.size() - 1;
+        int randomPos = world.rand.nextInt(skinSize);
+        if (randomPos > skinSize || randomPos < 0 /*why would this ever happen though*/) {
+            /*fallback url, I hope this never happens. Sometimes peoples skins won't download when they play offline
+            So I need to have something to return else game gets upset :(*/
+            return "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/Skinpacks/ms_fallback.png";
+        }
+        return HandleSkins.SKINS.get(randomPos);
     }
 
     public Boolean isVillagerModel() {

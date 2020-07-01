@@ -36,8 +36,8 @@ public class HandleSkins {
     }
 
     public static void downloadSkins() {
+        Regeneration.LOG.info("Refreshing Skins for Timelords");
         SKINS.clear();
-
         try {
             String[] uuids = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/donators.json"), String[].class);
 

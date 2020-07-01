@@ -61,8 +61,6 @@ public class GallifrayanWastelands extends Biome {
             BlockPos sstonePos = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (pos.add(random.nextInt(16), 0, random.nextInt(16))));
             if (worldIn.getBlockState(sstonePos.down()).getBlock() == Blocks.SAND) {
                 worldIn.setBlockState(sstonePos.down(), SANDSTONE, 7);
-
-
             }
         }
 
