@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.entity;
 
+import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.common.item.ItemLindos;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.ClientUtil;
@@ -34,7 +35,7 @@ public class EntityLindos extends EntityFlying {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		getDataManager().register(AMOUNT, rand.nextInt(100));
+		getDataManager().register(AMOUNT, RegenConfig.postRegen.minimumLindos+ rand.nextInt(Math.max(0, RegenConfig.postRegen.maximumLindos-RegenConfig.postRegen.minimumLindos)));
 	}
 
 	public int getAmount() {
@@ -112,5 +113,5 @@ public class EntityLindos extends EntityFlying {
 		this.getEntityAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue(0.4000000059604645D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20000000298023224D);
 	}
-	
+
 }
