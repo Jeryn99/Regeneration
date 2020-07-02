@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.common.dimension.util.GalBiomeProvider;
 import me.swirtzly.regeneration.common.dimension.util.GallifreyanSkyRenderer;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.audio.MusicTicker;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -220,5 +221,11 @@ public class GallifreyDimension extends Dimension {
     @Override
     public long getSeed() {
         return -3968030346439409757L;
+    }
+
+    @Nullable
+    @Override
+    public MusicTicker.MusicType getMusicType() {
+        return null;
     }
 }

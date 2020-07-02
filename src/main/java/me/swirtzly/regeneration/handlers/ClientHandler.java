@@ -7,6 +7,7 @@ import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifrayanWastelands;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
@@ -17,14 +18,19 @@ import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ChatType;
@@ -291,13 +297,46 @@ public class ClientHandler {
         });
     }
 
+    private static void createWorldAmbience(PlayerEntity player) {
+        Random random = player.world.rand;
+        double originX = player.posX;
+        double originY = player.posY;
+        double originZ = player.posZ;
+        for (int i = 0; i < 55; i++) {
+            double particleX = originX + (random.nextInt(24) - random.nextInt(24));
+            double particleY = originY + (random.nextInt(24) - random.nextInt(24));
+            double particleZ = originZ + (random.nextInt(24) - random.nextInt(24));
+            double velocityX = (random.nextDouble() - 0.5) * 0.02;
+            double velocityY = (random.nextDouble() - 0.5) * 0.02;
+            double velocityZ = (random.nextDouble() - 0.5) * 0.02;
+
+            BasicParticleType[] TYPES = new BasicParticleType[]{ParticleTypes.SMOKE, ParticleTypes.CRIT, ParticleTypes.BARRIER};
+            IParticleData currentType = TYPES[player.world.rand.nextInt(TYPES.length - 1)];
+            player.world.addParticle(currentType, particleX, particleY, particleZ, velocityX, velocityY, velocityZ);
+            if (player.world.rand.nextInt(30) < 10 && player.world.rand.nextBoolean()) {
+                BlockPos pos = new BlockPos(particleX + random.nextInt(500), particleY + random.nextInt(500), particleZ + random.nextInt(500));
+                player.world.addEntity(new LightningBoltEntity(player.world, pos.getX(), pos.getY(), pos.getZ(), true));
+            }
+        }
+    }
+
     @SubscribeEvent
-    public static void onItemToolTip(ItemTooltipEvent event) {
+    public void onItemToolTip(ItemTooltipEvent event) {
         List<ITextComponent> tooltip = event.getToolTip();
         ItemStack stack = event.getItemStack();
         if (getRegenerations(stack) > 0) {
             tooltip.add(new TranslationTextComponent("stored.regens", getRegenerations(stack)));
         }
     }
-	
+
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (Minecraft.getInstance().player == null) return;
+        PlayerEntity player = Minecraft.getInstance().player;
+
+        if (player.world.getBiome(player.getPosition()) instanceof GallifrayanWastelands) {
+            createWorldAmbience(player);
+        }
+    }
+
 }

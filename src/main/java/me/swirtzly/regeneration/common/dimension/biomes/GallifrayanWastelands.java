@@ -9,7 +9,10 @@ import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
-import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
+import java.awt.*;
+
+import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.WASTELAND_LEAVES;
+import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.WASTELAND_WATER;
 
 /**
  * Created by Swirtzly
@@ -22,7 +25,7 @@ public class GallifrayanWastelands extends Biome {
     }
 
     public GallifrayanWastelands() {
-        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.WOODED_BADLANDS, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.SANDSTONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(6F).waterColor(WASTELAND_WATER).waterFogColor(WASTELAND_WATER).scale(0.5F).parent(null));
+        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.SANDSTONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(6F).waterColor(WASTELAND_WATER).waterFogColor(WASTELAND_WATER).scale(0.5F).parent(null));
         DefaultBiomeFeatures.addSwampClayDisks(this);
         DefaultBiomeFeatures.addSwampVegetation(this);
         DefaultBiomeFeatures.addDeadBushes(this);
@@ -33,11 +36,13 @@ public class GallifrayanWastelands extends Biome {
 
     @Override
     public int getGrassColor(BlockPos pos) {
-        return WASTELAND_GRASS;
+        return new Color(156 / 255F, 108 / 255F, 61 / 255F).getRGB();
     }
 
     @Override
     public int getFoliageColor(BlockPos pos) {
         return WASTELAND_LEAVES;
     }
+
+
 }
