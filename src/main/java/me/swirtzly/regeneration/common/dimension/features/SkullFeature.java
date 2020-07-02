@@ -1,11 +1,9 @@
 package me.swirtzly.regeneration.common.dimension.features;
 
-import java.util.Random;
-import java.util.function.Function;
-
 import com.mojang.datafixers.Dynamic;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SkullBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -14,28 +12,27 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.ProbabilityConfig;
 
-public class SkullFeature extends Feature<ProbabilityConfig>{
+import java.util.Random;
+import java.util.function.Function;
 
-	public SkullFeature(Function<Dynamic<?>, ? extends ProbabilityConfig> configFactoryIn) {
-		super(configFactoryIn);
-	}
+public class SkullFeature extends Feature<ProbabilityConfig> {
 
-	@Override
-	public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand,
-			BlockPos pos, ProbabilityConfig config) {
-		BlockPos skullPos = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);	
-		if (worldIn.getBlockState(skullPos.down()).getFluidState().isSource()) {
-        	return false;
+    public SkullFeature(Function<Dynamic<?>, ? extends ProbabilityConfig> configFactoryIn) {
+        super(configFactoryIn);
+    }
+
+    @Override
+    public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, ProbabilityConfig config) {
+        BlockPos skullPos = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);
+        if (worldIn.getBlockState(skullPos.down()).getFluidState().isSource()) {
+            return false;
+        } else if (worldIn.getBlockState(skullPos).isAir(worldIn, skullPos) && worldIn.getBlockState(skullPos).isAir(worldIn, skullPos.up())) {
+            if (worldIn.getRandom().nextInt() / 100 < 500 && worldIn.getRandom().nextInt() > 0) {
+                BlockState skullToPlace = Blocks.SKELETON_SKULL.getDefaultState().with(SkullBlock.ROTATION, worldIn.getRandom().nextInt(14));
+                worldIn.setBlockState(skullPos, skullToPlace, 7);
+            }
         }
-        else if (worldIn.getBlockState(skullPos).isAir(worldIn, skullPos) && worldIn.getBlockState(skullPos).isAir(worldIn, skullPos.up())){
-        	System.out.println(worldIn.getRandom().nextInt());
-        	if (worldIn.getRandom().nextInt() / 100 < 500 && worldIn.getRandom().nextInt()  > 0) {
-	        	worldIn.setBlockState(skullPos, Blocks.SKELETON_SKULL.getDefaultState(), 7);
-        	}
-        }
-		
-		
-		return true;
-	}
+        return true;
+    }
 
 }

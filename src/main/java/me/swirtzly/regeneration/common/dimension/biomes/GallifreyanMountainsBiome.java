@@ -43,12 +43,12 @@ public class GallifreyanMountainsBiome extends Biome {
 
     @Override
     public int getGrassColor(BlockPos pos) {
-        return WASTELAND_GRASS;
+        return RED_GRASS_COLOR;
     }
 
     @Override
     public int getFoliageColor(BlockPos pos) {
-        return WASTELAND_LEAVES;
+        return GREY_LEAVES_COLOR;
     }
 
 

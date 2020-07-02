@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.dimension.biomes;
 
+import me.swirtzly.regeneration.common.dimension.features.BiomeHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -12,11 +13,10 @@ import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
-import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.GREY_LEAVES_COLOR;
-import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.RED_GRASS_COLOR;
-import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.WASTELAND_WATER;
+import java.awt.*;
 
-import me.swirtzly.regeneration.common.dimension.features.BiomeHelper;
+import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.GREY_LEAVES_COLOR;
+import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.WASTELAND_WATER;
 
 /**
  * Created by Swirtzly
@@ -48,7 +48,7 @@ public class GallifreyanWastelandsMountains extends GallifrayanWastelands {
     
     @Override
     public int getGrassColor(BlockPos pos) {
-        return RED_GRASS_COLOR;
+        return new Color(156 / 255F, 108 / 255F, 61 / 255F).getRGB();
     }
 
     @Override
