@@ -70,6 +70,11 @@ public class ClientProxy extends CommonProxy {
     }
 	
 	@Override
+	public void closeGui() {
+		Minecraft.getInstance().displayGuiScreen(null);
+	}
+
+	@Override
 	public World getClientWorld() {
 		return Minecraft.getInstance().world;
 	}

@@ -1,10 +1,11 @@
 package me.swirtzly.regeneration.compat;
 
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -18,7 +19,7 @@ import net.tardis.mod.tileentities.ConsoleTile;
 public class ArchProtocol extends Protocol {
 
     private static final TranslationTextComponent ARCH = new TranslationTextComponent("tardis.protocol.arch");
-
+    private static AxisAlignedBB BOX = new AxisAlignedBB(-20, -20, -20, 20, 20, 20);
 
     public static BlockPos getGoodArchPlacement(World world, BlockPos consolePos) {
         BlockPos northPos = consolePos.north(2).up(2);
@@ -46,32 +47,36 @@ public class ArchProtocol extends Protocol {
 
     @Override
     public void call(World world, ConsoleTile consoleTile) {
-        consoleTile.getUpgrade(ArchUpgrade.class).ifPresent((archSubSystem -> {
-            if (archSubSystem.isUsable()) {
-                BlockPos pos = consoleTile.getPos();
-                BlockPos placePos = pos.north(2).up(2);
-
-                if (world.isAirBlock(placePos)) {
-                    world.setBlockState(placePos, RegenObjects.Blocks.ARCH.get().getDefaultState());
-                    TardisCompat.damageSubsystem(world);
-                    if (consoleTile.getArtron() > 10) {
-                        consoleTile.setArtron(consoleTile.getArtron() - 10);
+    	if (!world.isRemote()) {
+            consoleTile.getUpgrade(ArchUpgrade.class).ifPresent((archSubSystem -> {
+                if (archSubSystem.isUsable()) {
+                    BlockPos pos = consoleTile.getPos();
+                    BlockPos placePos = pos.north(2).up(2);
+                    if (world.isAirBlock(placePos)) {
+                        world.setBlockState(placePos, RegenObjects.Blocks.ARCH.get().getDefaultState());
+                        if (consoleTile.getArtron() > 10) {
+                            consoleTile.setArtron(consoleTile.getArtron() - 10);
+                        }
+                        for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, BOX.offset(consoleTile.getPos()))) {
+                             PlayerUtil.sendMessage(playerEntity, "message.regeneration.arch_placed", true);
+                        }
+                    } 
+                    else {
+                        world.setBlockState(placePos, Blocks.AIR.getDefaultState());
+                        TardisCompat.damageSubsystem(world); //Only damage after you retract the arch
+                        for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, BOX.offset(consoleTile.getPos()))) {
+                        	PlayerUtil.sendMessage(playerEntity, "message.regeneration.arch_removed", true);
+                        }
+                   }
+                } 
+                else {
+                    for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, BOX.offset(consoleTile.getPos()))) {
+                        PlayerUtil.sendMessage(playerEntity, new TranslationTextComponent("message.regeneration.arch_system_dead"), true);
                     }
-                } else {
-                    world.setBlockState(placePos, Blocks.AIR.getDefaultState());
-                    /*   for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, console.getCollisionShape(world, pos).getBoundingBox().grow(25))) {
-                        PlayerUtil.sendMessage(playerEntity, new TranslationTextComponent("message.regeneration.arch_no_space"), false);
-                    }*/
                 }
-            } else {
-                BlockState console = world.getBlockState(consoleTile.getPos());
-                for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, console.getCollisionShape(world, consoleTile.getPos()).getBoundingBox().grow(25))) {
-                    PlayerUtil.sendMessage(playerEntity, new TranslationTextComponent("message.regeneration.arch_system_dead"), false);
-                }
-            }
-        }));
-
-
+          }));
+    	}
+    	else Regeneration.proxy.closeGui();
     }
 
     @Override

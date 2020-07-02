@@ -20,7 +20,7 @@ import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
 public class GallifreyanMountainsBiome extends Biome {
 
     public GallifreyanMountainsBiome() {
-        super((new Biome.Builder()).surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG)).precipitation(Biome.RainType.RAIN).category(Biome.Category.EXTREME_HILLS).depth(1.3F).scale(0.3F).temperature(0.3F).downfall(0.3F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent(null));
+        super((new Biome.Builder()).surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG)).precipitation(Biome.RainType.RAIN).category(Biome.Category.EXTREME_HILLS).depth(1.3F).scale(0.3F).temperature(0.3F).downfall(0.3F).waterColor(WASTELAND_WATER).waterFogColor(WASTELAND_WATER).parent(null));
         this.addStructure(Feature.MINESHAFT, new MineshaftConfig(0.004D, MineshaftStructure.Type.NORMAL));
         this.addStructure(Feature.STRONGHOLD, IFeatureConfig.NO_FEATURE_CONFIG);
         DefaultBiomeFeatures.addCarvers(this);
@@ -43,12 +43,12 @@ public class GallifreyanMountainsBiome extends Biome {
 
     @Override
     public int getGrassColor(BlockPos pos) {
-        return RED_GRASS_COLOR;
+        return WASTELAND_GRASS;
     }
 
     @Override
     public int getFoliageColor(BlockPos pos) {
-        return GREY_LEAVES_COLOR;
+        return WASTELAND_LEAVES;
     }
 
 

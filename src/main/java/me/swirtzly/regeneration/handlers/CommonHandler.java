@@ -76,9 +76,9 @@ public class CommonHandler {
 	@SubscribeEvent
 	public void onLootTableLoad(LootTableLoadEvent e) {
 		if (e.getName().toString().toLowerCase().contains("minecraft:chests/")) {
-
+			float chance = RegenConfig.COMMON.confessionDialSpawnChance.get() / 100;
 			JsonObject jsonObject = new JsonObject();
-			jsonObject.addProperty("chance", 0.5F);
+			jsonObject.addProperty("chance", chance);
 
 			ILootCondition.IBuilder conditionBuilder = new ILootCondition.IBuilder() {
 				@Override

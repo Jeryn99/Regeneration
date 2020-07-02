@@ -1,6 +1,12 @@
 package me.swirtzly.regeneration.handlers;
 
 
+
+import static me.swirtzly.regeneration.Regeneration.MODID;
+
+import java.util.Collection;
+import java.util.function.Supplier;
+
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.BioContainerContainer;
 import me.swirtzly.regeneration.common.block.ArchBlock;
@@ -9,13 +15,27 @@ import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.dimension.DimSingle;
 import me.swirtzly.regeneration.common.dimension.GallifreyChunkGenerator;
 import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
-import me.swirtzly.regeneration.common.dimension.biomes.*;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifrayanWastelands;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanMountainsBiome;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanOcean;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanRedLands;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanRedlandsForest;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanRiver;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanWastelandsMountains;
 import me.swirtzly.regeneration.common.dimension.features.FeatureSpikeyBoys;
 import me.swirtzly.regeneration.common.dimension.features.GallifreyanTreeFeature;
+import me.swirtzly.regeneration.common.dimension.features.SkullFeature;
 import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
-import me.swirtzly.regeneration.common.item.*;
+import me.swirtzly.regeneration.common.item.ComponentItem;
+import me.swirtzly.regeneration.common.item.ConfessionDialItem;
+import me.swirtzly.regeneration.common.item.FobWatchItem;
+import me.swirtzly.regeneration.common.item.GunItem;
+import me.swirtzly.regeneration.common.item.HandItem;
+import me.swirtzly.regeneration.common.item.IngotItem;
+import me.swirtzly.regeneration.common.item.ItemGroups;
+import me.swirtzly.regeneration.common.item.SealItem;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import me.swirtzly.regeneration.util.common.ICompatObject;
@@ -44,9 +64,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.*;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.ChunkGeneratorType;
+import net.minecraft.world.gen.GenerationSettings;
+import net.minecraft.world.gen.IChunkGeneratorFactory;
+import net.minecraft.world.gen.OverworldGenSettings;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.ProbabilityConfig;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -59,11 +85,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Collection;
-import java.util.function.Supplier;
-
-import static me.swirtzly.regeneration.Regeneration.MODID;
 
 /**
  * Created by Sub on 16/09/2018.
@@ -126,6 +147,10 @@ public class RegenObjects {
  		EntityType<T> type = builder.build(loc.toString());
  		return type;
  	}
+ 	
+ 	private static <C extends IFeatureConfig, F extends Feature<C>> F registerFeatures(F value) {
+		return value;
+	}
 
     //Registry Methods
     private static Item setUpItem(Item item) {
@@ -181,17 +206,7 @@ public class RegenObjects {
 			}
 		}
 	}
-
-	public static final GallifreyanTreeFeature TREES = new GallifreyanTreeFeature(NoFeatureConfig::deserialize);
-    public static final FeatureSpikeyBoys SPIKEYS = new FeatureSpikeyBoys(NoFeatureConfig::deserialize);
-
-
-	@SubscribeEvent
-	public static void registerFeature(RegistryEvent.Register<Feature<?>> event) {
-		event.getRegistry().registerAll(TREES.setRegistryName(MODID, "trees"));
-        event.getRegistry().registerAll(SPIKEYS.setRegistryName(MODID, "spikeys"));
-	}
-
+	
 	@SubscribeEvent
 	public static void regBlockItems(RegistryEvent.Register<Item> e) {
 		genBlockItems(Blocks.BLOCKS.getEntries());
@@ -246,9 +261,8 @@ public class RegenObjects {
 	}
 
 	public static class EntityEntries {
-
-
 		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Regeneration.MODID);
+		
 		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
 		public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.AMBIENT, 0.6F, 1.95F, 128, 1, true, "timelord"));
 		public static RegistryObject<EntityType<LaserEntity>> LASER = ENTITIES.register("laser", () -> registerMob(LaserEntity::new, LaserEntity::new, EntityClassification.MISC, 0.5F, 0.5F, "laser", true));
@@ -294,6 +308,21 @@ public class RegenObjects {
 		public static final DeferredRegister<ModDimension> DIMENSIONS = new DeferredRegister<>(ForgeRegistries.MOD_DIMENSIONS, Regeneration.MODID);
 
 		public static final RegistryObject<ModDimension> GALLIFREY = DIMENSIONS.register("gallifrey", () -> registerDimensions(new DimSingle(GallifreyDimension::new)));
+	}
+	
+	public static class WorldGenEntries {
+		
+	    public static final GallifreyanTreeFeature TREES = new GallifreyanTreeFeature(NoFeatureConfig::deserialize);
+	    public static final FeatureSpikeyBoys SPIKEYS = new FeatureSpikeyBoys(NoFeatureConfig::deserialize);
+	    public static final SkullFeature SKULLS = new SkullFeature(ProbabilityConfig::deserialize);
+	    
+	}
+	
+	@SubscribeEvent
+	public static void registerFeature(RegistryEvent.Register<Feature<?>> event) {
+		event.getRegistry().register(WorldGenEntries.TREES.setRegistryName(MODID, "trees"));
+		event.getRegistry().register(WorldGenEntries.SPIKEYS.setRegistryName(MODID, "spikeys"));
+		event.getRegistry().register(WorldGenEntries.SKULLS.setRegistryName(MODID, "skulls"));
 	}
  	
  	private static <T extends Entity> EntityType<T> registerFireResistMob(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name, boolean velocity) {
