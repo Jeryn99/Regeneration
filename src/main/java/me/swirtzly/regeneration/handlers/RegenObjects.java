@@ -37,8 +37,11 @@ public class RegenObjects {
 
 	public static List<Item> ITEM_BLOCKS = new ArrayList<>();
 
-	public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"), REGEN_DMG_HEALING = new RegenDamageSource("regen_heal").setDamageAllowedInCreativeMode(), // The irony lmao
-			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit").setDamageAllowedInCreativeMode(), REGEN_DMG_KILLED = new RegenDamageSource("regen_killed").setDamageAllowedInCreativeMode(), REGEN_DMG_LINDOS = new RegenDamageSource("lindos").setDamageAllowedInCreativeMode();
+	public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"),
+			REGEN_DMG_HEALING = new RegenDamageSource("regen_heal").setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(), // The irony lmao
+			REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit").setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(),
+			REGEN_DMG_KILLED = new RegenDamageSource("regen_killed").setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute(),
+			REGEN_DMG_LINDOS = new RegenDamageSource("lindos").setDamageAllowedInCreativeMode().setDamageBypassesArmor().setDamageIsAbsolute();
 
 	@SubscribeEvent
 	public static void addItems(RegistryEvent.Register<Item> e) {

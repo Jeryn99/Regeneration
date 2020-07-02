@@ -127,6 +127,16 @@ public class RegenConfig {
         @Config.RangeInt(min = 0)
         public int postRegenerationLevel = 4;
 
+        @Config.LangKey("config.regeneration.post_regenerationMinimum_lindos")
+        @Config.Comment("Minimum amount of Lindos per particle")
+        @Config.RangeInt(min = 0, max = 100)
+        public int minimumLindos = 0;
+
+        @Config.LangKey("config.regeneration.post_regenerationMaximum_lindos")
+        @Config.Comment("Maximum amount of Lindos per particle. This is ignored if it is less than the minimum")
+        @Config.RangeInt(min = 0, max = 100)
+        public int maximumLindos = 100;
+
         @Config.LangKey("config.regeneration.post_regenerationLindos_interval")
         @Config.Comment("Amount of seconds between each check for \"burping\" out a Lindos particle, 0 to disable")
         @Config.RangeInt(min = 0)
