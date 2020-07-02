@@ -2,7 +2,9 @@ package me.swirtzly.regeneration.common.dimension.util;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.Regeneration;
+import me.swirtzly.regeneration.common.dimension.biomes.GallifrayanWastelands;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderHelper;
@@ -29,7 +31,7 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
     private static GallifreyanSkyRenderer INSTANCE;
     private final TextureManager renderEngine;
     private final VertexFormat vertexBufferFormat;
-    private boolean vboEnabled;
+    private final boolean vboEnabled;
     private VertexBuffer starVBO;
     private VertexBuffer skyVBO;
     private VertexBuffer sky2VBO;
@@ -312,38 +314,6 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
         bufferbuilder.pos(-f17, -100.0D, -f17).tex(f24, f23).endVertex();
         tessellator.draw();
 
-        /*// ------------------------------------------------------------------------------------------------------------------
-        GlStateManager.pushMatrix();
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.rotatef(world.getCelestialAngle(partialTicks) * -360.0F, 1.0F, 0.0F, 0.0F);
-        GlStateManager.rotatef(45, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotatef(90, 0.0F, 1.0F, 0.0F);
-        this.renderEngine.bindTexture(CELIOS_STATION_TEXTURES);
-        long worldTime = world.getGameTime() % 24000L;
-
-        float opacity = worldTime > 500 && worldTime < 11500 ? 1F : (worldTime > 12500 && worldTime < 23500 ? 0F : (worldTime >= 11500 && worldTime <= 12500 ? 1F - (worldTime - 11500) / 1000F : (worldTime >= 23500 ? worldTime - 23500 : worldTime + 500) / 1000F));
-        //System.out.println(worldTime + " - " + opacity);
-        GlStateManager.color4f(1, 1, 1, opacity);
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(-f17, 100.0D, -f17).tex(0.0D, 0.0D).endVertex();
-        bufferbuilder.pos(f17, 100.0D, -f17).tex(0.5D, 0.0D).endVertex();
-        bufferbuilder.pos(f17, 100.0D, f17).tex(0.5D, 1.0D).endVertex();
-        bufferbuilder.pos(-f17, 100.0D, f17).tex(0.0D, 1.0D).endVertex();
-        tessellator.draw();
-
-        GlStateManager.color4f(1, 1, 1, 1F - opacity);
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(-f17, 100.0D, -f17).tex(0.5D, 0.0D).endVertex();
-        bufferbuilder.pos(f17, 100.0D, -f17).tex(1.0D, 0.0D).endVertex();
-        bufferbuilder.pos(f17, 100.0D, f17).tex(1.0D, 1.0D).endVertex();
-        bufferbuilder.pos(-f17, 100.0D, f17).tex(0.5D, 1.0D).endVertex();
-        tessellator.draw();
-
-        GlStateManager.color4f(1, 1, 1, 1);
-
-        GlStateManager.popMatrix();
-        // ------------------------------------------------------------------------------------------------------------------
-*/
         GlStateManager.disableTexture();
         float f15 = world.getStarBrightness(partialTicks) * f16;
 
@@ -410,6 +380,13 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
             bufferbuilder.pos(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
             bufferbuilder.pos(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
             tessellator.draw();
+        }
+
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (player.world.getBiome(player.getPosition()) instanceof GallifrayanWastelands) {
+            f = 0.14F;
+            f1 = 0.15F;
+            f2 = 0.22F;
         }
 
         if (!world.dimension.isSkyColored()) {

@@ -12,14 +12,14 @@ import java.util.function.Supplier;
 
 public class SyncDataMessage {
 
-	private Entity player;
-	private DimensionType dimensionType;
+	private final Entity player;
+	private final DimensionType dimensionType;
 
 	public SyncDataMessage(Entity player) {
 		this.player = player;
 		this.dimensionType = player.world.dimension.getType();
 	}
-	
+
 	public static void encode(SyncDataMessage message, PacketBuffer packetBuffer) {
 		packetBuffer.writeInt(message.player.getEntityId());
 		packetBuffer.writeResourceLocation(message.dimensionType.getRegistryName());
@@ -29,7 +29,10 @@ public class SyncDataMessage {
 	public static SyncDataMessage decode(PacketBuffer buffer) {
 		int entityID = buffer.readInt();
 		DimensionType type = DimensionType.byName(buffer.readResourceLocation());
-		return new SyncDataMessage(ServerLifecycleHooks.getCurrentServer().getWorld(type).getEntityByID(entityID));
+		if (ServerLifecycleHooks.getCurrentServer().getWorld(type) == null) {
+			return new SyncDataMessage(ServerLifecycleHooks.getCurrentServer().getWorld(type).getEntityByID(entityID));
+		}
+		return null;
 	}
 	
 	public static class Handler {
