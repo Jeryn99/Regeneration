@@ -16,6 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -37,6 +39,7 @@ import net.tardis.mod.upgrades.Upgrade;
 import net.tardis.mod.upgrades.UpgradeEntry;
 
 import static me.swirtzly.regeneration.Regeneration.LOG;
+import static net.tardis.mod.helper.TardisHelper.TARDIS_POS;
 
 /**
  * Created by Swirtzly
@@ -63,7 +66,7 @@ public class TardisCompat {
     }
 
     public static void registerAllRooms() {
-        ARSPieces.register("zero_room", new ARSPiece(new ResourceLocation(Regeneration.MODID,"regeneration/structures/ars/zero_room"),new BlockPos(9, 5, 19)));
+        ARSPieces.register("zero_room", new ARSPiece(new ResourceLocation(Regeneration.MODID, "regeneration/structures/ars/zero_room"), new BlockPos(9, 5, 19)));
     }
 
     public static void damageSubsystem(World world) {
@@ -73,18 +76,14 @@ public class TardisCompat {
     }
 
     private static ConsoleTile getTardis(World world) {
-        return (ConsoleTile) world.getTileEntity(TardisHelper.TARDIS_POS);
+        return (ConsoleTile) world.getTileEntity(TARDIS_POS);
     }
 
     @SubscribeEvent
-    public void onJoin(EntityJoinWorldEvent entityJoinWorldEvent){
-        if(entityJoinWorldEvent.getEntity() instanceof TimelordEntity){
+    public void onJoin(EntityJoinWorldEvent entityJoinWorldEvent) {
+        if (entityJoinWorldEvent.getEntity() instanceof TimelordEntity) {
             TimelordEntity timelordEntity = (TimelordEntity) entityJoinWorldEvent.getEntity();
             timelordEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(timelordEntity, DalekEntity.class, false));
-        }
-
-        if (entityJoinWorldEvent.getEntity() instanceof DalekEntity) {
-
         }
     }
 
@@ -119,8 +118,7 @@ public class TardisCompat {
         if (world.isRemote) return;
 
         if (world.dimension.getDimension() instanceof TardisDimension) {
-            MinecraftServer minecraftServer = ServerLifecycleHooks.getCurrentServer();
-            ConsoleTile console = TardisHelper.getConsole(minecraftServer, world.dimension.getType());
+            ConsoleTile console = findConsole(world.dimension.getType());
             if (console == null) return;
             LivingEntity playerEntity = event.getEntityLiving();
             RegenCap.get(playerEntity).ifPresent((data) -> {
@@ -156,5 +154,17 @@ public class TardisCompat {
         }
     }
 
+    /* I'm aware this is not how to do this, and I will fix it in the due course of time */
+    public ConsoleTile findConsole(DimensionType type) {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        ServerWorld world = server.getWorld(type);
+        if (world != null) {
+            TileEntity te = world.getTileEntity(TARDIS_POS);
+            if (te instanceof ConsoleTile) {
+                return (ConsoleTile) te;
+            }
+        }
+        return null;
+    }
 
 }
