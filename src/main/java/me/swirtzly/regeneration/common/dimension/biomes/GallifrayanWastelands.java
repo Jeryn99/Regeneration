@@ -1,15 +1,10 @@
 package me.swirtzly.regeneration.common.dimension.biomes;
 
 import me.swirtzly.regeneration.common.dimension.features.BiomeHelper;
-import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.ProbabilityConfig;
-import net.minecraft.world.gen.placement.FrequencyConfig;
-import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
@@ -38,6 +33,7 @@ public class GallifrayanWastelands extends Biome {
         BiomeHelper.addBlackSpikes(this);
         BiomeHelper.addGallifreyOres(this);
         BiomeHelper.addSkulls(this);
+        BiomeHelper.addHut(this);
     }
 
     @Override

@@ -32,6 +32,7 @@ public final class GallifreyanOcean extends Biome {
         DefaultBiomeFeatures.func_222320_ai(this);
         DefaultBiomeFeatures.func_222287_ah(this);
         DefaultBiomeFeatures.addFreezeTopLayer(this);
+
     }
 
     @Override

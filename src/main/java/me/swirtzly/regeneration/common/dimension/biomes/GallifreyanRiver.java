@@ -24,16 +24,18 @@ public class GallifreyanRiver extends Biome {
             DefaultBiomeFeatures.addMonsterRooms(this);
             DefaultBiomeFeatures.addStoneVariants(this);
             DefaultBiomeFeatures.addOres(this);
-            DefaultBiomeFeatures.addSedimentDisks(this);
-            DefaultBiomeFeatures.func_222296_u(this);
-            DefaultBiomeFeatures.addDefaultFlowers(this);
-            DefaultBiomeFeatures.func_222348_W(this);
-            DefaultBiomeFeatures.addMushrooms(this);
-            DefaultBiomeFeatures.addReedsAndPumpkins(this);
-            DefaultBiomeFeatures.addSprings(this);
-            this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, createDecoratedFeature(Feature.SEAGRASS, new SeaGrassConfig(48, 0.4D), Placement.TOP_SOLID_HEIGHTMAP, IPlacementConfig.NO_PLACEMENT_CONFIG));
-            DefaultBiomeFeatures.addFreezeTopLayer(this);
+        DefaultBiomeFeatures.addSedimentDisks(this);
+        DefaultBiomeFeatures.func_222296_u(this);
+        DefaultBiomeFeatures.addDefaultFlowers(this);
+        DefaultBiomeFeatures.func_222348_W(this);
+        DefaultBiomeFeatures.addMushrooms(this);
+        DefaultBiomeFeatures.addReedsAndPumpkins(this);
+        DefaultBiomeFeatures.addSprings(this);
+        this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, createDecoratedFeature(Feature.SEAGRASS, new SeaGrassConfig(48, 0.4D), Placement.TOP_SOLID_HEIGHTMAP, IPlacementConfig.NO_PLACEMENT_CONFIG));
+        DefaultBiomeFeatures.addFreezeTopLayer(this);
         BiomeHelper.addGallifreyOres(this);
+        BiomeHelper.addHut(this);
+
 
     }
 

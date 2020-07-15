@@ -30,6 +30,8 @@ public class GallifreyanRedLands extends Biome {
         BiomeHelper.restoreVanillaStuff(this);
         BiomeHelper.addGallifreyTress(this);
         BiomeHelper.addGallifreyOres(this);
+        BiomeHelper.addHut(this);
+
     }
 
     @Override

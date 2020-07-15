@@ -1,6 +1,6 @@
 package me.swirtzly.regeneration.common.dimension;
 
-import me.swirtzly.regeneration.common.dimension.util.GalBiomeProvider;
+import me.swirtzly.regeneration.common.dimension.util.GallifreyBiomeProviderNew;
 import me.swirtzly.regeneration.common.dimension.util.GallifreyanSkyRenderer;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
@@ -12,7 +12,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.provider.BiomeProviderType;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
@@ -24,6 +23,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IRenderHandler;
 
 import javax.annotation.Nullable;
+
+import static me.swirtzly.regeneration.handlers.RegenObjects.Biomes.getBiomes;
 
 /**
  * Created by Swirtzly
@@ -38,7 +39,7 @@ public class GallifreyDimension extends Dimension {
     @Override
     public ChunkGenerator<?> createChunkGenerator() {
         OverworldGenSettings gensettings = new OverworldGenSettings();
-        GalBiomeProvider biomes = new GalBiomeProvider(BiomeProviderType.VANILLA_LAYERED.createSettings().setWorldInfo(this.world.getWorldInfo()).setGeneratorSettings(gensettings));
+        GallifreyBiomeProviderNew biomes = new GallifreyBiomeProviderNew(world, getBiomes());
         return RegenObjects.ChunkGeneratorTypes.GALLIFREY_CHUNKS.get().create(this.world, biomes, gensettings);
     }
 

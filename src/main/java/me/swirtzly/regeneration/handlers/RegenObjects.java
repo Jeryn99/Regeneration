@@ -1,12 +1,6 @@
 package me.swirtzly.regeneration.handlers;
 
 
-
-import static me.swirtzly.regeneration.Regeneration.MODID;
-
-import java.util.Collection;
-import java.util.function.Supplier;
-
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.BioContainerContainer;
 import me.swirtzly.regeneration.common.block.ArchBlock;
@@ -15,27 +9,15 @@ import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.dimension.DimSingle;
 import me.swirtzly.regeneration.common.dimension.GallifreyChunkGenerator;
 import me.swirtzly.regeneration.common.dimension.GallifreyDimension;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifrayanWastelands;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanMountainsBiome;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanOcean;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanRedLands;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanRedlandsForest;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanRiver;
-import me.swirtzly.regeneration.common.dimension.biomes.GallifreyanWastelandsMountains;
+import me.swirtzly.regeneration.common.dimension.biomes.*;
 import me.swirtzly.regeneration.common.dimension.features.FeatureSpikeyBoys;
+import me.swirtzly.regeneration.common.dimension.features.GallifreyanHuts;
 import me.swirtzly.regeneration.common.dimension.features.GallifreyanTreeFeature;
 import me.swirtzly.regeneration.common.dimension.features.SkullFeature;
 import me.swirtzly.regeneration.common.entity.LaserEntity;
 import me.swirtzly.regeneration.common.entity.OverrideEntity;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
-import me.swirtzly.regeneration.common.item.ComponentItem;
-import me.swirtzly.regeneration.common.item.ConfessionDialItem;
-import me.swirtzly.regeneration.common.item.FobWatchItem;
-import me.swirtzly.regeneration.common.item.GunItem;
-import me.swirtzly.regeneration.common.item.HandItem;
-import me.swirtzly.regeneration.common.item.IngotItem;
-import me.swirtzly.regeneration.common.item.ItemGroups;
-import me.swirtzly.regeneration.common.item.SealItem;
+import me.swirtzly.regeneration.common.item.*;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import me.swirtzly.regeneration.util.common.ICompatObject;
@@ -64,11 +46,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.ChunkGeneratorType;
-import net.minecraft.world.gen.GenerationSettings;
-import net.minecraft.world.gen.IChunkGeneratorFactory;
-import net.minecraft.world.gen.OverworldGenSettings;
+import net.minecraft.world.gen.*;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -86,6 +64,11 @@ import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Collection;
+import java.util.function.Supplier;
+
+import static me.swirtzly.regeneration.Regeneration.MODID;
+
 /**
  * Created by Sub on 16/09/2018.
  */
@@ -93,7 +76,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class RegenObjects {
 
 	public static DimensionType GALLIFREY_TYPE;
-	
+
 	private static ItemGroup itemGroup = ItemGroups.REGEN_TAB;
 
     public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"), REGEN_DMG_HEALING = new RegenDamageSource("regen_heal").setDamageAllowedInCreativeMode(), // The irony lmao
@@ -280,14 +263,26 @@ public class RegenObjects {
 		public static final RegistryObject<Biome> REDLANDS_FOREST = BIOMES.register("redlands_forest", GallifreyanRedlandsForest::new);
 		public static final RegistryObject<Biome> WASTELANDS_MOUNTAINS = BIOMES.register("wasteland_mountains", GallifreyanWastelandsMountains::new);
 
+		public static Biome[] getBiomes() {
+			return new Biome[]{
+					GALLIFREY_MOUNTAINS.get(),
+					GALLIFREYAN_RIVER.get(),
+					GALLIFREYAN_OCEAN.get(),
+					REDLANDS.get(),
+					WASTELANDS.get(),
+					REDLANDS_FOREST.get(),
+					WASTELANDS_MOUNTAINS.get(),
+			};
+		}
+
 		public static void registerBiomeTypes() {
 			addBiomeTypes(GALLIFREY_MOUNTAINS, BiomeDictionary.Type.MOUNTAIN);
-			addBiomeTypes(GALLIFREYAN_RIVER,BiomeDictionary.Type.RIVER);
-			addBiomeTypes(GALLIFREYAN_OCEAN,BiomeDictionary.Type.OCEAN);
-			addBiomeTypes(REDLANDS,BiomeDictionary.Type.PLAINS);
-			addBiomeTypes(WASTELANDS,BiomeDictionary.Type.SANDY);
-			addBiomeTypes(REDLANDS_FOREST,BiomeDictionary.Type.PLAINS);
-	    }
+			addBiomeTypes(GALLIFREYAN_RIVER, BiomeDictionary.Type.RIVER);
+			addBiomeTypes(GALLIFREYAN_OCEAN, BiomeDictionary.Type.OCEAN);
+			addBiomeTypes(REDLANDS, BiomeDictionary.Type.PLAINS);
+			addBiomeTypes(WASTELANDS, BiomeDictionary.Type.SANDY);
+			addBiomeTypes(REDLANDS_FOREST, BiomeDictionary.Type.PLAINS);
+		}
 
 		public static void addBiomeTypes(RegistryObject<Biome> biome, BiomeDictionary.Type biomeType) {
 	 		BiomeDictionary.addTypes(biome.get(), biomeType);
@@ -309,13 +304,14 @@ public class RegenObjects {
 
 		public static final RegistryObject<ModDimension> GALLIFREY = DIMENSIONS.register("gallifrey", () -> registerDimensions(new DimSingle(GallifreyDimension::new)));
 	}
-	
+
 	public static class WorldGenEntries {
-		
-	    public static final GallifreyanTreeFeature TREES = new GallifreyanTreeFeature(NoFeatureConfig::deserialize);
-	    public static final FeatureSpikeyBoys SPIKEYS = new FeatureSpikeyBoys(NoFeatureConfig::deserialize);
-	    public static final SkullFeature SKULLS = new SkullFeature(ProbabilityConfig::deserialize);
-	    
+
+		public static final GallifreyanTreeFeature TREES = new GallifreyanTreeFeature(NoFeatureConfig::deserialize);
+		public static final FeatureSpikeyBoys SPIKEYS = new FeatureSpikeyBoys(NoFeatureConfig::deserialize);
+		public static final SkullFeature SKULLS = new SkullFeature(ProbabilityConfig::deserialize);
+		public static final GallifreyanHuts HUT = new GallifreyanHuts(NoFeatureConfig::deserialize);
+
 	}
 	
 	@SubscribeEvent

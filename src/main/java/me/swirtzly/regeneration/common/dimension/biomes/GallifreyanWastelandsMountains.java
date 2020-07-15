@@ -44,6 +44,8 @@ public class GallifreyanWastelandsMountains extends GallifrayanWastelands {
         DefaultBiomeFeatures.addInfestedStone(this);
         DefaultBiomeFeatures.addFreezeTopLayer(this);
         BiomeHelper.addGallifreyTress(this);
+        BiomeHelper.addHut(this);
+
     }
     
     @Override

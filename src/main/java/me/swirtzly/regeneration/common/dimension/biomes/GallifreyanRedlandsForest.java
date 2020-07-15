@@ -27,6 +27,8 @@ public final class GallifreyanRedlandsForest extends Biome {
         DefaultBiomeFeatures.addFreezeTopLayer(this);
         BiomeHelper.addGallifreyTress(this);
         BiomeHelper.addGallifreyOres(this);
+        BiomeHelper.addHut(this);
+
     }
 
     @Override

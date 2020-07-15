@@ -12,6 +12,7 @@ import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.WorldGenRegion;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 
@@ -28,7 +29,7 @@ public class GallifreyanTreeFeature extends Feature<NoFeatureConfig> {
         super(configFactoryIn);
     }
 
-    private ResourceLocation[] TREE_LIST = new ResourceLocation[]{
+    private final ResourceLocation[] TREE_LIST = new ResourceLocation[]{
             createTreeLocation("gal_normal_large"),
             createTreeLocation("gal_pine_normal"),
             createTreeLocation("gal_skinny_large"),
@@ -48,7 +49,7 @@ public class GallifreyanTreeFeature extends Feature<NoFeatureConfig> {
             Template temp = reg.getWorld().getStructureTemplateManager().getTemplate(TREE_LIST[rand.nextInt(TREE_LIST.length)]);
             if (temp != null) {
                 pos = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);
-                PlacementSettings set = new PlacementSettings();
+                PlacementSettings set = new PlacementSettings().addProcessor(BlockIgnoreStructureProcessor.AIR);
                 if (worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK) {
                     temp.addBlocksToWorld(reg, pos, set);
                 }
