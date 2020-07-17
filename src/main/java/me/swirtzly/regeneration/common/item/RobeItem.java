@@ -1,12 +1,7 @@
 package me.swirtzly.regeneration.common.item;
 
-import com.google.common.collect.Maps;
 import me.swirtzly.regeneration.Regeneration;
-import me.swirtzly.regeneration.client.rendering.model.RobeModel;
-import me.swirtzly.regeneration.client.rendering.model.TimelordModel;
 import me.swirtzly.regeneration.proxy.ClientProxy;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -14,13 +9,9 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import org.jline.utils.Colors;
 
 import javax.annotation.Nullable;
-
 import java.awt.*;
-
-import static net.tardis.mod.tileentities.ConsoleTile.rand;
 
 public class RobeItem extends ArmorItem implements IDyeableArmorItem {
 

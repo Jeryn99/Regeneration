@@ -23,7 +23,8 @@ import net.minecraft.world.World;
  */
 public class GunItem extends SolidItem {
 
-    private int cooldown, damage;
+    private final int cooldown;
+    private final int damage;
 
     public GunItem(int shotsPerRound, int cooldown, int damage) {
         super(new Properties().group(ItemGroups.REGEN_TAB).maxDamage(shotsPerRound).setNoRepair());
@@ -32,8 +33,7 @@ public class GunItem extends SolidItem {
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context)
-    {
+    public ActionResultType onItemUse(ItemUseContext context) {
         return super.onItemUse(context);
     }
 

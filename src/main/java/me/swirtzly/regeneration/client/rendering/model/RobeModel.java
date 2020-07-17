@@ -1,15 +1,11 @@
 package me.swirtzly.regeneration.client.rendering.model;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.util.client.RenderUtil;
-import net.minecraft.client.renderer.entity.layers.ArmorLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.IDyeableArmorItem;
 
 public class RobeModel extends BipedModel {
@@ -173,12 +169,12 @@ public class RobeModel extends BipedModel {
     @Override
     public void render(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
-        if(entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof IDyeableArmorItem) {
-            IDyeableArmorItem iDyeableArmorItem = (IDyeableArmorItem) entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem();
-            int color = iDyeableArmorItem.getColor(entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD));
-            float red = (float)(color >> 16 & 255) / 255.0F;
-            float green = (float)(color >> 8 & 255) / 255.0F;
-            float blue = (float)(color & 255) / 255.0F;
+        if (entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof IDyeableArmorItem) {
+            IDyeableArmorItem iDyeableArmorItem = (IDyeableArmorItem) entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem();
+            int color = iDyeableArmorItem.getColor(entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST));
+            float red = (float) (color >> 16 & 255) / 255.0F;
+            float green = (float) (color >> 8 & 255) / 255.0F;
+            float blue = (float) (color & 255) / 255.0F;
             GlStateManager.color4f(1.0F * red, 1.0F * green, 1.0F * blue, 1.0F);
         }
 

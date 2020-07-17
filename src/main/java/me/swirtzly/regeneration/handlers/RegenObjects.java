@@ -35,6 +35,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.IDyeableArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.network.PacketBuffer;
@@ -52,6 +53,7 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.ProbabilityConfig;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -131,30 +133,23 @@ public class RegenObjects {
  		EntityType<T> type = builder.build(loc.toString());
  		return type;
  	}
- 	
- 	private static <C extends IFeatureConfig, F extends Feature<C>> F registerFeatures(F value) {
+
+	private static <C extends IFeatureConfig, F extends Feature<C>> F registerFeatures(F value) {
 		return value;
 	}
 
-    //Registry Methods
-    private static Item setUpItem(Item item) {
-        return item;
+	//Registry Methods
+	private static Item setUpItem(Item item) {
+		return item;
 	}
-	
-	public static class Items {
-		public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Regeneration.MODID);
 
-		public static final RegistryObject<Item> FOB_WATCH = ITEMS.register("fob_watch", FobWatchItem::new);
-		public static final RegistryObject<Item> HAND = ITEMS.register("hand", HandItem::new);
-		public static final RegistryObject<Item> ARCH_PART = ITEMS.register("arch_part", ComponentItem::new);
-		public static final RegistryObject<Item> GAL_INGOT = ITEMS.register("gal_ingot", IngotItem::new);
-        public static final RegistryObject<Item> SEAL = ITEMS.register("rassilon_seal", SealItem::new);
-		public static final RegistryObject<Item> DIAL = ITEMS.register("confession_dial", ConfessionDialItem::new);
-		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 5));
-		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 2));
-		public static final RegistryObject<Item> ROBES = ITEMS.register("robes", () -> new RobeItem(EquipmentSlotType.HEAD));
-
-    }
+	@SubscribeEvent
+	public static void registerFeature(RegistryEvent.Register<Feature<?>> event) {
+		event.getRegistry().register(WorldGenEntries.TREES.setRegistryName(MODID, "trees"));
+		event.getRegistry().register(WorldGenEntries.SPIKEYS.setRegistryName(MODID, "spikeys"));
+		event.getRegistry().register(WorldGenEntries.SKULLS.setRegistryName(MODID, "skulls"));
+		event.getRegistry().register(WorldGenEntries.HUT.setRegistryName(MODID, "huts"));
+	}
 
 	public static class Sounds {
 		public static final DeferredRegister<SoundEvent> SOUNDS = new DeferredRegister<>(ForgeRegistries.SOUND_EVENTS, Regeneration.MODID);
@@ -315,23 +310,38 @@ public class RegenObjects {
 		public static final GallifreyanHuts HUT = new GallifreyanHuts(NoFeatureConfig::deserialize);
 
 	}
-	
+
+	//Move
 	@SubscribeEvent
-	public static void registerFeature(RegistryEvent.Register<Feature<?>> event) {
-		event.getRegistry().register(WorldGenEntries.TREES.setRegistryName(MODID, "trees"));
-		event.getRegistry().register(WorldGenEntries.SPIKEYS.setRegistryName(MODID, "spikeys"));
-		event.getRegistry().register(WorldGenEntries.SKULLS.setRegistryName(MODID, "skulls"));
+	public static void registerItemColor(ColorHandlerEvent.Item event) {
+		event.getItemColors().register((p_getColor_1_, p_getColor_2_) -> p_getColor_2_ > 0 ? -1 : ((IDyeableArmorItem) p_getColor_1_.getItem()).getColor(p_getColor_1_), RegenObjects.Items.ROBES.get());
 	}
- 	
- 	private static <T extends Entity> EntityType<T> registerFireResistMob(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name, boolean velocity) {
- 		return registerFireImmuneBase(factory, client, classification, width, height, 80, 3, velocity, name);
- 	}
- 	
- 	private static <T extends Entity> EntityType<T> registerStatic(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name) {
- 		return registerBase(factory, client, classification, width, height, 64, 40, false, name);
- 	}
- 	
- 	private static <T extends Entity> EntityType<T> registerMob(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name, boolean velocity) {
+
+	public static class Items {
+		public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Regeneration.MODID);
+
+		public static final RegistryObject<Item> FOB_WATCH = ITEMS.register("fob_watch", FobWatchItem::new);
+		public static final RegistryObject<Item> HAND = ITEMS.register("hand", HandItem::new);
+		public static final RegistryObject<Item> ARCH_PART = ITEMS.register("arch_part", ComponentItem::new);
+		public static final RegistryObject<Item> GAL_INGOT = ITEMS.register("gal_ingot", IngotItem::new);
+		public static final RegistryObject<Item> SEAL = ITEMS.register("rassilon_seal", SealItem::new);
+		public static final RegistryObject<Item> DIAL = ITEMS.register("confession_dial", ConfessionDialItem::new);
+		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 5));
+		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 2));
+		public static final RegistryObject<Item> ROBES = ITEMS.register("robes", () -> new RobeItem(EquipmentSlotType.CHEST));
+		//public static final RegistryObject<Item> HEAD = ITEMS.register("robes_hat", () -> new RobeItem(EquipmentSlotType.HEAD));
+
+	}
+
+	private static <T extends Entity> EntityType<T> registerFireResistMob(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name, boolean velocity) {
+		return registerFireImmuneBase(factory, client, classification, width, height, 80, 3, velocity, name);
+	}
+
+	private static <T extends Entity> EntityType<T> registerStatic(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name) {
+		return registerBase(factory, client, classification, width, height, 64, 40, false, name);
+	}
+
+	private static <T extends Entity> EntityType<T> registerMob(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, String name, boolean velocity) {
  		return registerBase(factory, client, classification, width, height, 80, 3, velocity, name);
  	}
  	

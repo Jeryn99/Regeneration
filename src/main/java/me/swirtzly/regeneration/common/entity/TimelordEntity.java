@@ -271,8 +271,11 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     private String getRandomSkinURL() {
         int skinSize = HandleSkins.SKINS.size() - 1;
+        if (skinSize <= 0) {
+            return "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/Skinpacks/ms_fallback.png";
+        }
         int randomPos = world.rand.nextInt(skinSize);
-        if (randomPos > skinSize || randomPos < 0 /*why would this ever happen though*/) {
+        if (randomPos >= skinSize || randomPos < 0 /*why would this ever happen though*/) {
             /*fallback url, I hope this never happens. Sometimes peoples skins won't download when they play offline
             So I need to have something to return else game gets upset :(*/
             return "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/Skinpacks/ms_fallback.png";

@@ -17,7 +17,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 
-
 /**
  * Created by Sub on 16/09/2018.
  */
@@ -93,6 +92,20 @@ public class FobWatchItem extends SolidItem {
     @Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
+/*
+
+		int zOffset = 0;
+		for (DyeColor value : DyeColor.values()) {
+			ItemStack y = new ItemStack(this);
+			Color color = new Color(value.getColorValue());
+			if(!world.isRemote){
+				ArmorStandEntity armorStandEntity = new ArmorStandEntity(EntityType.ARMOR_STAND, world);
+				armorStandEntity.setPosition(player.getPosition().getX() + zOffset, player.getPosition().getY(), player.getPosition().getZ());
+				world.addEntity(armorStandEntity);
+				zOffset = zOffset + 1;
+			}
+		}
+*/
 
         RegenCap.get(player).ifPresent((cap) -> {
 
