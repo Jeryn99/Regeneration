@@ -1,44 +1,39 @@
 package me.swirtzly.regeneration.client.rendering.model;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.util.client.RenderUtil;
+import net.minecraft.client.renderer.entity.layers.ArmorLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.HandSide;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.IDyeableArmorItem;
 
-public class TimelordModel extends BipedModel {
-
+public class RobeModel extends BipedModel {
     private final RendererModel timelord_hat;
     private final RendererModel body;
     private final RendererModel timelordcape;
     private final RendererModel timelord_body_armor;
     private final RendererModel head_part_armor;
     private final RendererModel right_arm;
-    private final RendererModel rist2;
     private final RendererModel timelord_shoulder_right;
     private final RendererModel left_arm;
-    private final RendererModel rist;
     private final RendererModel timelord_shoulder_left;
-    private final RendererModel right_leg;
-    private final RendererModel shoes2;
-    private final RendererModel robes;
-    private final RendererModel left_leg;
-    private final RendererModel shoes;
-    private final RendererModel robs;
-    private final RendererModel villagerHead;
-    private final RendererModel villagerNose;
-    private final RendererModel villagerTimeHat;
+    public final RendererModel head;
 
-    public TimelordModel() {
+    public RobeModel() {
         textureWidth = 80;
         textureHeight = 80;
 
+        head = new RendererModel(this);
+        head.setRotationPoint(0.0F, 0.0F, 0.0F);
+
         timelord_hat = new RendererModel(this);
         timelord_hat.setRotationPoint(0.0F, 0.0F, 0.0F);
+        head.addChild(timelord_hat);
         timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
         timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, -4.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
         timelord_hat.cubeList.add(new ModelBox(timelord_hat, 62, 69, 3.25F, -5.0F, -3.0F, 1, 1, 7, 0.0F, false));
@@ -58,11 +53,9 @@ public class TimelordModel extends BipedModel {
 
         body = new RendererModel(this);
         body.setRotationPoint(0.0F, 0.0F, 0.0F);
-        body.cubeList.add(new ModelBox(body, 32, 0, -4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F, false));
 
         timelordcape = new RendererModel(this);
         timelordcape.setRotationPoint(0.0F, 4.0F, 2.5F);
-        body.addChild(timelordcape);
         timelordcape.cubeList.add(new ModelBox(timelordcape, 0, 32, -5.0F, 0.0F, 0.0F, 10, 19, 0, 0.0F, false));
 
         timelord_body_armor = new RendererModel(this);
@@ -127,19 +120,10 @@ public class TimelordModel extends BipedModel {
         head_part_armor.cubeList.add(new ModelBox(head_part_armor, 68, 70, -6.0F, -9.0F, 4.5F, 2, 1, 1, 0.0F, false));
 
         right_arm = new RendererModel(this);
-        right_arm.setRotationPoint(-5.0F, 2.0F, 0.0F);
-        right_arm.cubeList.add(new ModelBox(right_arm, 48, 16, -2.0F, -2.0F, -2.0F, 3, 12, 4, 0.0F, false));
-
-        rist2 = new RendererModel(this);
-        rist2.setRotationPoint(5.0F, 21.75F, 0.25F);
-        right_arm.addChild(rist2);
-        rist2.cubeList.add(new ModelBox(rist2, 49, 73, -7.25F, -17.0F, -2.25F, 1, 3, 4, 0.0F, true));
-        rist2.cubeList.add(new ModelBox(rist2, 49, 73, -7.0F, -17.0F, -2.5F, 3, 3, 1, 0.0F, true));
-        rist2.cubeList.add(new ModelBox(rist2, 49, 73, -4.75F, -17.0F, -2.25F, 1, 3, 4, 0.0F, true));
-        rist2.cubeList.add(new ModelBox(rist2, 49, 73, -7.0F, -17.0F, 1.0F, 3, 3, 1, 0.0F, true));
+        right_arm.setRotationPoint(-5.0F, 2.5F, 0.0F);
 
         timelord_shoulder_right = new RendererModel(this);
-        timelord_shoulder_right.setRotationPoint(0.0F, 0.5F, 0.0F);
+        timelord_shoulder_right.setRotationPoint(0.0F, 0.0F, 0.0F);
         right_arm.addChild(timelord_shoulder_right);
         timelord_shoulder_right.cubeList.add(new ModelBox(timelord_shoulder_right, 62, 62, -2.0F, -0.5F, -3.0F, 2, 1, 1, 0.0F, false));
         timelord_shoulder_right.cubeList.add(new ModelBox(timelord_shoulder_right, 62, 62, -2.0F, -0.5F, 2.0F, 2, 1, 1, 0.0F, false));
@@ -162,15 +146,6 @@ public class TimelordModel extends BipedModel {
 
         left_arm = new RendererModel(this);
         left_arm.setRotationPoint(5.0F, 2.0F, 0.0F);
-        left_arm.cubeList.add(new ModelBox(left_arm, 48, 48, -1.0F, -2.0F, -2.0F, 3, 12, 4, 0.0F, false));
-
-        rist = new RendererModel(this);
-        rist.setRotationPoint(-5.0F, 21.75F, 0.25F);
-        left_arm.addChild(rist);
-        rist.cubeList.add(new ModelBox(rist, 49, 73, 6.25F, -17.0F, -2.25F, 1, 3, 4, 0.0F, false));
-        rist.cubeList.add(new ModelBox(rist, 49, 73, 4.0F, -17.0F, -2.5F, 3, 3, 1, 0.0F, false));
-        rist.cubeList.add(new ModelBox(rist, 49, 73, 3.75F, -17.0F, -2.25F, 1, 3, 4, 0.0F, false));
-        rist.cubeList.add(new ModelBox(rist, 49, 73, 4.0F, -17.0F, 1.0F, 3, 3, 1, 0.0F, false));
 
         timelord_shoulder_left = new RendererModel(this);
         timelord_shoulder_left.setRotationPoint(0.0F, 0.5F, 0.0F);
@@ -193,119 +168,62 @@ public class TimelordModel extends BipedModel {
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 16, 71, 0.0F, -3.75F, -3.0F, 1, 1, 6, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 16, 71, 0.0F, -3.5F, 2.25F, 1, 3, 1, 0.0F, false));
         timelord_shoulder_left.cubeList.add(new ModelBox(timelord_shoulder_left, 16, 71, -1.0F, -0.5F, 2.25F, 1, 1, 1, 0.0F, false));
-
-        right_leg = new RendererModel(this);
-        right_leg.setRotationPoint(-1.9F, 12.0F, 0.0F);
-        right_leg.cubeList.add(new ModelBox(right_leg, 36, 36, -2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F, false));
-
-        shoes2 = new RendererModel(this);
-        shoes2.setRotationPoint(1.9F, 11.5F, 0.5F);
-        right_leg.addChild(shoes2);
-        shoes2.cubeList.add(new ModelBox(shoes2, 0, 73, -3.9F, -0.5F, -3.25F, 4, 1, 1, 0.0F, true));
-        shoes2.cubeList.add(new ModelBox(shoes2, 0, 73, -3.9F, -1.0F, -3.0F, 4, 1, 1, 0.0F, true));
-
-        robes = new RendererModel(this);
-        robes.setRotationPoint(-1.0F, 10.0F, -2.25F);
-        right_leg.addChild(robes);
-        robes.cubeList.add(new ModelBox(robes, 34, 73, 2.25F, -4.0F, 2.25F, 1, 3, 1, 0.0F, false));
-        robes.cubeList.add(new ModelBox(robes, 50, 71, 2.25F, -3.0F, 3.25F, 1, 2, 1, 0.0F, false));
-        robes.cubeList.add(new ModelBox(robes, 34, 73, 2.25F, -1.0F, 2.25F, 1, 1, 2, 0.0F, false));
-        robes.cubeList.add(new ModelBox(robes, 35, 73, -1.0F, -1.0F, 3.5F, 4, 1, 1, 0.0F, false));
-        robes.cubeList.add(new ModelBox(robes, 50, 73, -1.0F, -3.0F, 3.5F, 4, 2, 1, 0.0F, false));
-        robes.cubeList.add(new ModelBox(robes, 50, 71, -1.25F, -4.0F, 0.25F, 1, 3, 4, 0.0F, false));
-        robes.cubeList.add(new ModelBox(robes, 34, 73, -1.25F, -1.0F, 0.25F, 2, 1, 4, 0.0F, false));
-        robes.cubeList.add(new ModelBox(robes, 34, 73, -1.0F, -1.0F, 0.0F, 2, 1, 1, 0.0F, false));
-        robes.cubeList.add(new ModelBox(robes, 52, 73, -1.0F, -5.0F, 0.0F, 1, 4, 1, 0.0F, false));
-        robes.cubeList.add(new ModelBox(robes, 35, 73, 0.0F, -6.0F, 0.0F, 1, 5, 1, 0.0F, false));
-
-        left_leg = new RendererModel(this);
-        left_leg.setRotationPoint(1.9F, 12.0F, 0.0F);
-        left_leg.cubeList.add(new ModelBox(left_leg, 20, 33, -2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F, false));
-
-        shoes = new RendererModel(this);
-        shoes.setRotationPoint(-1.9F, 12.0F, 0.25F);
-        left_leg.addChild(shoes);
-        shoes.cubeList.add(new ModelBox(shoes, 0, 73, -0.1F, -1.5F, -2.75F, 4, 1, 1, 0.0F, false));
-        shoes.cubeList.add(new ModelBox(shoes, 0, 73, -0.1F, -1.0F, -3.0F, 4, 1, 1, 0.0F, false));
-
-        robs = new RendererModel(this);
-        robs.setRotationPoint(1.0F, 10.0F, -1.75F);
-        left_leg.addChild(robs);
-        robs.cubeList.add(new ModelBox(robs, 35, 73, -3.0F, -1.0F, 3.0F, 4, 1, 1, 0.0F, true));
-        robs.cubeList.add(new ModelBox(robs, 34, 73, -0.75F, -1.0F, -0.25F, 2, 1, 4, 0.0F, true));
-        robs.cubeList.add(new ModelBox(robs, 34, 73, -3.25F, -1.0F, 1.75F, 1, 1, 2, 0.0F, true));
-        robs.cubeList.add(new ModelBox(robs, 34, 73, -3.25F, -4.0F, 1.75F, 1, 3, 1, 0.0F, true));
-        robs.cubeList.add(new ModelBox(robs, 34, 73, -1.0F, -1.0F, -0.5F, 2, 1, 1, 0.0F, true));
-        robs.cubeList.add(new ModelBox(robs, 35, 73, -1.0F, -6.0F, -0.5F, 1, 5, 1, 0.0F, true));
-        robs.cubeList.add(new ModelBox(robs, 52, 73, 0.0F, -5.0F, -0.5F, 1, 4, 1, 0.0F, true));
-        robs.cubeList.add(new ModelBox(robs, 50, 71, 0.25F, -4.0F, -0.25F, 1, 3, 4, 0.0F, true));
-        robs.cubeList.add(new ModelBox(robs, 50, 71, -3.25F, -3.0F, 2.75F, 1, 2, 1, 0.0F, true));
-        robs.cubeList.add(new ModelBox(robs, 50, 73, -3.0F, -3.0F, 3.0F, 4, 2, 1, 0.0F, true));
-
-
-        //Villager Stuff 
-        villagerHead = new RendererModel(this);
-        villagerHead.setRotationPoint(0.0F, 0.0F, 0.0F);
-        villagerHead.cubeList.add(new ModelBox(villagerHead, 0, 15, -4.0F, -10.0F, -4.0F, 8, 10, 8, 0.0F, false));
-
-        villagerNose = new RendererModel(this);
-        villagerNose.setRotationPoint(0.0F, 24.0F, 0.0F);
-        villagerHead.addChild(villagerNose);
-        villagerNose.cubeList.add(new ModelBox(villagerNose, 24, 15, -1.0F, -27.0F, -6.0F, 2, 4, 2, 0.0F, false));
-
-        villagerTimeHat = new RendererModel(this);
-        villagerTimeHat.setRotationPoint(0.0F, -2.0F, 0.0F);
-        villagerHead.addChild(villagerTimeHat);
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.25F, -8.0F, -4.0F, 1, 3, 8, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.25F, -5.0F, -3.0F, 1, 1, 7, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.25F, -5.0F, -3.0F, 1, 1, 7, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.25F, -4.0F, 1.0F, 1, 2, 3, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.25F, -4.0F, 1.0F, 1, 2, 3, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.0F, 3.25F, 8, 6, 1, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.25F, -4.0F, -2.5F, 1, 2, 1, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.25F, -4.0F, -2.5F, 1, 2, 1, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, 3.0F, -8.0F, -4.25F, 1, 3, 1, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.0F, -4.25F, 1, 3, 1, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -2.5F, -7.5F, -4.25F, 5, 1, 1, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -1.5F, -7.0F, -4.25F, 3, 1, 1, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -1.0F, -6.5F, -4.25F, 2, 1, 1, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.0F, -4.25F, 8, 1, 1, 0.0F, false));
-        villagerTimeHat.cubeList.add(new ModelBox(villagerTimeHat, 62, 69, -4.0F, -8.25F, -4.0F, 8, 1, 8, 0.0F, false));
-
     }
 
     @Override
-    public void render(LivingEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void render(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+
+        if(entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() instanceof IDyeableArmorItem) {
+            IDyeableArmorItem iDyeableArmorItem = (IDyeableArmorItem) entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem();
+            int color = iDyeableArmorItem.getColor(entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD));
+            float red = (float)(color >> 16 & 255) / 255.0F;
+            float green = (float)(color >> 8 & 255) / 255.0F;
+            float blue = (float)(color & 255) / 255.0F;
+            GlStateManager.color4f(1.0F * red, 1.0F * green, 1.0F * blue, 1.0F);
+        }
+
+        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+        bipedLeftLeg.showModel = false;
+        bipedRightLeg.showModel = false;
+
         GlStateManager.pushMatrix();
-    /*    if (entity.isVillagerModel()) {
-            villagerHead.render(scale);
-        } else {*/
-            timelord_hat.render(scale);
-      //  }
-        body.render(scale);
-        right_arm.render(scale);
-        left_arm.render(scale);
-        right_leg.render(scale);
-        left_leg.render(scale);
+        bipedHead.postRender(scale);
+
+        if(entityIn.isSneaking()){
+            GlStateManager.translatef(0,0.2F,0);
+        }
+
+        head.render(scale);
         GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        bipedBody.postRender(scale);
+        body.render(scale);
+        timelordcape.render(scale);
+        GlStateManager.popMatrix();
+
+
+        GlStateManager.pushMatrix();
+        bipedLeftArm.postRender(scale);
+        if(entityIn.isSneaking()){
+            GlStateManager.translatef(0,0.2F,0);
+        }
+        left_arm.render(scale);
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        bipedRightArm.postRender(scale);
+        if(entityIn.isSneaking()){
+            GlStateManager.translatef(0,0.2F,0);
+        }
+        right_arm.render(scale);
+        GlStateManager.popMatrix();
+
+
     }
 
     @Override
     public void setRotationAngles(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
         super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-        RegenCap.get(entityIn).ifPresent((data) -> data.getType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
-        RenderUtil.copyModelAngles(bipedHead, timelord_hat);
-        RenderUtil.copyModelAngles(bipedHead, villagerHead);
-        RenderUtil.copyModelAngles(bipedBody, body);
-        RenderUtil.copyModelAngles(bipedLeftArm, left_arm);
-        RenderUtil.copyModelAngles(bipedRightArm, right_arm);
-        RenderUtil.copyModelAngles(bipedRightLeg, right_leg);
-        RenderUtil.copyModelAngles(bipedLeftLeg, left_leg);
-    }
-
-    @Override
-    protected RendererModel getArmForSide(HandSide side) {
-        return side == HandSide.LEFT ? this.left_arm : this.right_arm;
     }
 }

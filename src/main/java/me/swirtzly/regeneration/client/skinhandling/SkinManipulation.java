@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.image.ImageDownloadBuffer;
+import me.swirtzly.regeneration.client.rendering.model.RobeModel;
 import me.swirtzly.regeneration.client.rendering.types.ATypeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
@@ -19,6 +20,7 @@ import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
@@ -206,6 +208,8 @@ public class SkinManipulation {
 		return resultList;
 	}
 
+	private static RobeModel robeModel = new RobeModel();
+
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
 		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
@@ -262,7 +266,9 @@ public class SkinManipulation {
 
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Post renderPlayerEventPost) {
+
 		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEventPost.getPlayer();
+
 		RegenCap.get(player).ifPresent((cap) -> {
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
 				RegenType type = cap.getType().create();

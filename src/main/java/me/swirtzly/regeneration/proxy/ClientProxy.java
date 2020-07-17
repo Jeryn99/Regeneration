@@ -6,6 +6,7 @@ import me.swirtzly.regeneration.client.animation.GeneralAnimations;
 import me.swirtzly.regeneration.client.gui.BioContainerScreen;
 import me.swirtzly.regeneration.client.rendering.layers.HandsLayer;
 import me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer;
+import me.swirtzly.regeneration.client.rendering.model.RobeModel;
 import me.swirtzly.regeneration.client.rendering.tiles.ArchRender;
 import me.swirtzly.regeneration.client.rendering.tiles.HandTileRenderer;
 import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
@@ -19,20 +20,24 @@ import me.swirtzly.regeneration.util.common.FileUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Sub on 17/09/2018.
  */
 public class ClientProxy extends CommonProxy {
-	
+
 	@Override
 	public void preInit() {
 		super.preInit();
@@ -82,6 +87,12 @@ public class ClientProxy extends CommonProxy {
     @Override
 	public PlayerEntity getClientPlayer() {
 		return Minecraft.getInstance().player;
+	}
+
+	private static RobeModel ROBES = new RobeModel();
+
+	public static BipedModel getArmorModel(){
+		return ROBES;
 	}
 
 }

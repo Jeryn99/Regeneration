@@ -170,7 +170,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     public void initSkin(IRegen data) {
         long current = System.currentTimeMillis();
         URLConnection openConnection = null;
-        String skinurl = HandleSkins.SKINS.get(world.rand.nextInt(HandleSkins.SKINS.size() - 1));
+        String skinurl = getRandomSkinURL();
         try {
             openConnection = new URL(skinurl).openConnection();
             openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");

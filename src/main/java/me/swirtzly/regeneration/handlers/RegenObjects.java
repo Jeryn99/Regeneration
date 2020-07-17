@@ -31,6 +31,7 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -151,6 +152,7 @@ public class RegenObjects {
 		public static final RegistryObject<Item> DIAL = ITEMS.register("confession_dial", ConfessionDialItem::new);
 		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 5));
 		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 2));
+		public static final RegistryObject<Item> ROBES = ITEMS.register("robes", () -> new RobeItem(EquipmentSlotType.HEAD));
 
     }
 
