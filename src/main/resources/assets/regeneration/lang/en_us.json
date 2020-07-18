@@ -219,9 +219,11 @@
   "biome.regeneration.redlands": "Gallifreyan Redlands",
   "biome.regeneration.redlands_forest": "Gallifreyan Redlands Forest",
   "biome.regeneration.wastelands": "Gallifreyan Wastelands",
-  "biome.regeneration.wasteland_mountains":"Gallifreyan Wasteland Mountains",
+  "biome.regeneration.wasteland_mountains": "Gallifreyan Wasteland Mountains",
   "item.regeneration.arch_part": "Bio-Component",
   "item.regeneration.rassilon_seal": "Seal of Rassilon",
   "item.regeneration.confession_dial": "Confession Dial",
-  "ars.piece.tardis.zero_room":"Regeneration: Zero Room"
+  "item.regeneration.robes": "Gallifreyan Robes",
+  "item.regeneration.robes_hat": "Gallifreyan Hat",
+  "ars.piece.tardis.zero_room": "Regeneration: Zero Room"
 }

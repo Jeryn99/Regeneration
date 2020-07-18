@@ -21,9 +21,7 @@ public class BiomeHelper {
     public static final int RED_WATER_COLOR = 0xEB623D;
     public static final int GREY_LEAVES_COLOR = 0xEAEDED;
     public static final int RED_GRASS_COLOR = 0xE74C3C;
-    public static final int WASTELAND_GRASS = 0xAFA469;
     public static final int WASTELAND_WATER = 0xF78F00;
-    public static final int WASTELAND_LEAVES = 0xEAEDED;
 
     public static void restoreVanillaStuff(Biome biome) {
         biome.addStructure(Feature.MINESHAFT, new MineshaftConfig(0.004D, biome == RegenObjects.Biomes.WASTELANDS.get() ? MineshaftStructure.Type.MESA : MineshaftStructure.Type.NORMAL));

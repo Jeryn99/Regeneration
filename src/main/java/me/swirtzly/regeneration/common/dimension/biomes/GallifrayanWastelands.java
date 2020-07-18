@@ -11,7 +11,7 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
 import java.awt.*;
 
-import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.WASTELAND_LEAVES;
+import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.GREY_LEAVES_COLOR;
 import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.WASTELAND_WATER;
 
 /**
@@ -43,7 +43,7 @@ public class GallifrayanWastelands extends Biome {
 
     @Override
     public int getFoliageColor(BlockPos pos) {
-        return WASTELAND_LEAVES;
+        return GREY_LEAVES_COLOR;
     }
 
 

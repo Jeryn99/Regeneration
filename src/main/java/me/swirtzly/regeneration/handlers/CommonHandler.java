@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.compat.ArchHelper;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
@@ -79,14 +80,8 @@ public class CommonHandler {
 			float chance = RegenConfig.COMMON.confessionDialSpawnChance.get() / 100;
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("chance", chance);
-
-			ILootCondition.IBuilder conditionBuilder = new ILootCondition.IBuilder() {
-				@Override
-				public ILootCondition build() {
-					return LootConditionManager.getSerializerForName(new ResourceLocation("random_chance")).deserialize(jsonObject, null);
-				}
-			};
-			e.getTable().addPool(LootPool.builder().addEntry(ItemLootEntry.builder(RegenObjects.Items.DIAL.get()).quality(1).weight(10).acceptCondition(conditionBuilder)).acceptCondition(conditionBuilder).build());
+			ILootCondition.IBuilder conditionBuilder = () -> LootConditionManager.getSerializerForName(new ResourceLocation("random_chance")).deserialize(jsonObject, null);
+			e.getTable().addPool(LootPool.builder().addEntry(ItemLootEntry.builder(RegenObjects.Items.SEAL.get()).quality(1).weight(10).acceptCondition(conditionBuilder)).acceptCondition(conditionBuilder).build());
 		}
 
 	}
@@ -182,17 +177,23 @@ public class CommonHandler {
                     if (event.getSource().getTrueSource() instanceof LivingEntity) {
                         LivingEntity livingEntity = (LivingEntity) event.getSource().getTrueSource();
                         if (PlayerUtil.isSharp(livingEntity.getHeldItemMainhand())) {
-                            if (!cap.hasDroppedHand() && cap.getState() == PlayerUtil.RegenState.POST) {
-                                PlayerUtil.createHand(player);
-                            }
-                        }
-                    }
-					
+							if (!cap.hasDroppedHand() && cap.getState() == PlayerUtil.RegenState.POST) {
+								PlayerUtil.createHand(player);
+							}
+						}
+					}
+
 				}
 				return;
 			}
 
-            if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
+			if (cap.getLivingEntity() instanceof TimelordEntity) {
+				if (event.getSource() == DamageSource.FALL) {
+					return;
+				}
+			}
+
+			if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
 				event.setCanceled(true); // TODO still "hurts" the client view
 			} else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
 				boolean notDead = cap.getStateManager().onKilled(event.getSource());

@@ -311,10 +311,10 @@ public class RegenObjects {
 
 	}
 
-	//Move
+
 	@SubscribeEvent
 	public static void registerItemColor(ColorHandlerEvent.Item event) {
-		event.getItemColors().register((p_getColor_1_, p_getColor_2_) -> p_getColor_2_ > 0 ? -1 : ((IDyeableArmorItem) p_getColor_1_.getItem()).getColor(p_getColor_1_), RegenObjects.Items.ROBES.get());
+		event.getItemColors().register((p_getColor_1_, p_getColor_2_) -> p_getColor_2_ > 0 ? -1 : ((IDyeableArmorItem) p_getColor_1_.getItem()).getColor(p_getColor_1_), RegenObjects.Items.ROBES.get(), Items.HEAD.get());
 	}
 
 	public static class Items {
@@ -329,7 +329,7 @@ public class RegenObjects {
 		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 5));
 		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 2));
 		public static final RegistryObject<Item> ROBES = ITEMS.register("robes", () -> new RobeItem(EquipmentSlotType.CHEST));
-		//public static final RegistryObject<Item> HEAD = ITEMS.register("robes_hat", () -> new RobeItem(EquipmentSlotType.HEAD));
+		public static final RegistryObject<Item> HEAD = ITEMS.register("robes_hat", () -> new RobeItem(EquipmentSlotType.HEAD));
 
 	}
 

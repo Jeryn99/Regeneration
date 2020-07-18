@@ -11,7 +11,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 public class RobeItem extends ArmorItem implements IDyeableArmorItem {
 
@@ -29,8 +28,7 @@ public class RobeItem extends ArmorItem implements IDyeableArmorItem {
         if(isInGroup(group)) {
             for (DyeColor value : DyeColor.values()) {
                 ItemStack stack = new ItemStack(this);
-                Color color = new Color(value.getColorValue());
-                setColor(stack, color.getRGB());
+                setColor(stack, value.getColorValue());
                 items.add(stack);
             }
         }

@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.client.rendering.model;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
@@ -169,53 +170,61 @@ public class RobeModel extends BipedModel {
     @Override
     public void render(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
-        if (entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() instanceof IDyeableArmorItem) {
+        boolean isWearingHat = entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == RegenObjects.Items.HEAD.get();
+        boolean isWearingChest = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES.get();
+
+        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+        bipedLeftLeg.showModel = false;
+        bipedRightLeg.showModel = false;
+
+        bipedRightArm.showModel = isWearingChest;
+        bipedLeftArm.showModel = isWearingChest;
+        bipedBody.showModel = isWearingChest;
+        bipedHead.showModel = isWearingHat;
+
+        //head
+        if (isWearingHat) {
+            GlStateManager.pushMatrix();
+
+            //Color
+            IDyeableArmorItem iDyeableArmorItem = (IDyeableArmorItem) entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem();
+            int color = iDyeableArmorItem.getColor(entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD));
+            float red = (float) (color >> 16 & 255) / 255.0F;
+            float green = (float) (color >> 8 & 255) / 255.0F;
+            float blue = (float) (color & 255) / 255.0F;
+            GlStateManager.color4f(1.0F * red, 1.0F * green, 1.0F * blue, 1.0F);
+            if (entityIn.isSneaking()) {
+                GlStateManager.translatef(0, 0.2F, 0);
+            }
+            bipedHead.postRender(scale);
+            head.render(scale);
+            GlStateManager.popMatrix();
+        }
+
+        //Body
+        if (isWearingChest) {
+
+            //Color
             IDyeableArmorItem iDyeableArmorItem = (IDyeableArmorItem) entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem();
             int color = iDyeableArmorItem.getColor(entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST));
             float red = (float) (color >> 16 & 255) / 255.0F;
             float green = (float) (color >> 8 & 255) / 255.0F;
             float blue = (float) (color & 255) / 255.0F;
             GlStateManager.color4f(1.0F * red, 1.0F * green, 1.0F * blue, 1.0F);
+
+
+            GlStateManager.pushMatrix();
+            if (entityIn.isSneaking()) {
+                GlStateManager.translatef(0, 0.2F, 0);
+            }
+            bipedBody.postRender(scale);
+            body.render(scale);
+            timelordcape.render(scale);
+            right_arm.render(scale);
+            left_arm.render(scale);
+            GlStateManager.popMatrix();
+
         }
-
-        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-        bipedLeftLeg.showModel = false;
-        bipedRightLeg.showModel = false;
-
-        GlStateManager.pushMatrix();
-        bipedHead.postRender(scale);
-
-        if(entityIn.isSneaking()){
-            GlStateManager.translatef(0,0.2F,0);
-        }
-
-        head.render(scale);
-        GlStateManager.popMatrix();
-
-        GlStateManager.pushMatrix();
-        bipedBody.postRender(scale);
-        body.render(scale);
-        timelordcape.render(scale);
-        GlStateManager.popMatrix();
-
-
-        GlStateManager.pushMatrix();
-        bipedLeftArm.postRender(scale);
-        if(entityIn.isSneaking()){
-            GlStateManager.translatef(0,0.2F,0);
-        }
-        left_arm.render(scale);
-        GlStateManager.popMatrix();
-
-        GlStateManager.pushMatrix();
-        bipedRightArm.postRender(scale);
-        if(entityIn.isSneaking()){
-            GlStateManager.translatef(0,0.2F,0);
-        }
-        right_arm.render(scale);
-        GlStateManager.popMatrix();
-
-
     }
 
     @Override
