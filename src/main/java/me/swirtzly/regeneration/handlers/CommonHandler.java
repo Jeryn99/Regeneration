@@ -1,6 +1,5 @@
 package me.swirtzly.regeneration.handlers;
 
-import com.google.gson.JsonObject;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.capability.IRegen;
@@ -8,6 +7,7 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.compat.ArchHelper;
+import me.swirtzly.regeneration.util.common.LootUtils;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.entity.Entity;
@@ -22,10 +22,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.storage.loot.ItemLootEntry;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
-import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
@@ -78,10 +74,15 @@ public class CommonHandler {
 	public void onLootTableLoad(LootTableLoadEvent e) {
 		if (e.getName().toString().toLowerCase().contains("minecraft:chests/")) {
 			float chance = RegenConfig.COMMON.confessionDialSpawnChance.get() / 100;
-			JsonObject jsonObject = new JsonObject();
+
+			LootUtils.addItemToTable(e.getTable(), RegenObjects.Items.ROBES.get(), 10, 1f, 1, 2, "robes");
+			LootUtils.addItemToTable(e.getTable(), RegenObjects.Items.SEAL.get(), 10, 1f, 1, 2, "seal");
+			LootUtils.addItemToTable(e.getTable(), RegenObjects.Items.HEAD.get(), 10, 1f, 1, 2, "hat");
+
+			/*JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("chance", chance);
 			ILootCondition.IBuilder conditionBuilder = () -> LootConditionManager.getSerializerForName(new ResourceLocation("random_chance")).deserialize(jsonObject, null);
-			e.getTable().addPool(LootPool.builder().addEntry(ItemLootEntry.builder(RegenObjects.Items.SEAL.get()).quality(1).weight(10).acceptCondition(conditionBuilder)).acceptCondition(conditionBuilder).build());
+			e.getTable().addPool(LootPool.builder().addEntry(ItemLootEntry.builder(RegenObjects.Items.SEAL.get()).quality(1).weight(10).acceptCondition(conditionBuilder)).acceptCondition(conditionBuilder).build());*/
 		}
 
 	}
