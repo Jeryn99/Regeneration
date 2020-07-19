@@ -86,7 +86,7 @@ public class Regeneration {
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
         ActingForwarder.init();
         TriggerManager.init();
-        RegenObjects.Biomes.registerBiomeTypes();
+        RegenObjects.GallifreyBiomes.registerBiomeTypes();
 
         if (ModList.get().isLoaded("tardis")) {
             TardisCompat.addTardisCompat();
@@ -104,7 +104,7 @@ public class Regeneration {
         RegenObjects.Tiles.TILES.register(eventBus);
         RegenObjects.Containers.CONTAINERS.register(eventBus);
         RegenObjects.ChunkGeneratorTypes.CHUNK_GENERATOR_TYPES.register(eventBus);
-        RegenObjects.Biomes.BIOMES.register(eventBus);
+        RegenObjects.GallifreyBiomes.BIOMES.register(eventBus);
         RegenObjects.Dimensions.DIMENSIONS.register(eventBus);
 
     }

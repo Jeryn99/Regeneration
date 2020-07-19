@@ -46,6 +46,7 @@ public class GallifreyanHuts extends Feature<NoFeatureConfig> {
                     return false;
                 }
                 template.addBlocksToWorldChunk(iworld, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunk(null).setIgnoreEntities(false));
+
             }
         }
         return true;

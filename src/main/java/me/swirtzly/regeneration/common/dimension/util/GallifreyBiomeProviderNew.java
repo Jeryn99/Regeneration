@@ -58,7 +58,7 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
     private Layer[] makeTheWorld(long seed) {
         LongFunction<IExtendedNoiseRandom<LazyArea>> contextFactory = l -> new LazyAreaLayerContext(25, seed, l);
         IAreaFactory<LazyArea> parentLayer = IslandLayer.INSTANCE.apply(contextFactory.apply(1));
-        IAreaFactory<LazyArea> biomeLayer = (new BiomeLayerCustom(RegenObjects.Biomes.getBiomes())).apply(contextFactory.apply(200), parentLayer);
+        IAreaFactory<LazyArea> biomeLayer = (new BiomeLayerCustom(RegenObjects.GallifreyBiomes.getBiomes())).apply(contextFactory.apply(200), parentLayer);
         biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1000), biomeLayer);
         biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1001), biomeLayer);
         biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1002), biomeLayer);

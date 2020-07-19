@@ -1,5 +1,7 @@
 package me.swirtzly.regeneration.util.common;
 
+import me.swirtzly.regeneration.RegenConfig;
+import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.api.ZeroRoomEvent;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
@@ -21,13 +23,14 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.HandSide;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -39,18 +42,20 @@ import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
  * Created by Sub on 20/09/2018.
  */
 public class PlayerUtil {
-	
+
 	public static ArrayList<Effect> POTIONS = new ArrayList<>();
-	
-	public static void createPostList() {
-		POTIONS.add(Effects.WEAKNESS);
-		POTIONS.add(Effects.MINING_FATIGUE);
-		POTIONS.add(Effects.RESISTANCE);
-		POTIONS.add(Effects.HEALTH_BOOST);
-		POTIONS.add(Effects.HUNGER);
-		POTIONS.add(Effects.WATER_BREATHING);
-		POTIONS.add(Effects.HASTE);
-	}
+
+    public static void createPostList() {
+        for (String potionName : RegenConfig.COMMON.postRegenEffects.get()) {
+            Effect potion = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionName));
+            if (potion != null) {
+                POTIONS.add(potion);
+                System.out.println("ADDED: " + potionName);
+            } else {
+                Regeneration.LOG.error(potionName + " is not a Valid Potion/Effect! Not adding this time around!");
+            }
+        }
+    }
 
     public static void lookAt(double px, double py, double pz, PlayerEntity me) {
         double dirx = me.getPosition().getX() - px;

@@ -208,9 +208,9 @@ public class RegenObjects {
 
 	@SubscribeEvent
 	public static void addSpawns(FMLLoadCompleteEvent e) {
-		RegenObjects.Biomes.GALLIFREY_MOUNTAINS.get().getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), 5, 1, 1));
-		RegenObjects.Biomes.REDLANDS_FOREST.get().getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), 5, 1, 1));
-		RegenObjects.Biomes.REDLANDS.get().getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), 5, 1, 1));
+		RegenObjects.GallifreyBiomes.GALLIFREY_MOUNTAINS.get().getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), 5, 1, 1));
+		RegenObjects.GallifreyBiomes.REDLANDS_FOREST.get().getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), 5, 1, 1));
+		RegenObjects.GallifreyBiomes.REDLANDS.get().getSpawns(EntityClassification.AMBIENT).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), 5, 1, 1));
 	}
     
     // Tile Creation
@@ -242,13 +242,13 @@ public class RegenObjects {
 
 	public static class EntityEntries {
 		public static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Regeneration.MODID);
-		
+
 		public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
 		public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.AMBIENT, 0.6F, 1.95F, 128, 1, true, "timelord"));
 		public static RegistryObject<EntityType<LaserEntity>> LASER = ENTITIES.register("laser", () -> registerMob(LaserEntity::new, LaserEntity::new, EntityClassification.MISC, 0.5F, 0.5F, "laser", true));
 	}
- 	
-	public static class Biomes {
+
+	public static class GallifreyBiomes {
 		public static final DeferredRegister<Biome> BIOMES = new DeferredRegister<>(ForgeRegistries.BIOMES, Regeneration.MODID);
 
 		public static final RegistryObject<Biome> GALLIFREY_MOUNTAINS = BIOMES.register("gallifreyan_mountains", GallifreyanMountainsBiome::new);
@@ -259,6 +259,7 @@ public class RegenObjects {
 		public static final RegistryObject<Biome> WASTELANDS = BIOMES.register("wastelands", GallifrayanWastelands::new);
 		public static final RegistryObject<Biome> REDLANDS_FOREST = BIOMES.register("redlands_forest", GallifreyanRedlandsForest::new);
 		public static final RegistryObject<Biome> WASTELANDS_MOUNTAINS = BIOMES.register("wasteland_mountains", GallifreyanWastelandsMountains::new);
+		public static final RegistryObject<Biome> GOLDEN_FIELDS = BIOMES.register("golden_fields", GallifreyanGoldenFields::new);
 
 		public static Biome[] getBiomes() {
 			return new Biome[]{
@@ -269,6 +270,7 @@ public class RegenObjects {
 					WASTELANDS.get(),
 					REDLANDS_FOREST.get(),
 					WASTELANDS_MOUNTAINS.get(),
+					GOLDEN_FIELDS.get()
 			};
 		}
 

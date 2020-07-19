@@ -97,9 +97,9 @@ public class FileUtil {
                     SkinDownloadManager.downloadPreviousSkins();
 					notDownloaded.set(false);
 				} catch (Exception e) {
-					Regeneration.LOG.error("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");
-					throw new RuntimeException(e);
-				}
+                    Regeneration.LOG.error("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");
+                    Regeneration.LOG.error(e.getMessage());
+                }
 			}
 		}, Regeneration.NAME + " Download Daemon").start();
 	}

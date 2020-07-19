@@ -24,7 +24,7 @@ public class BiomeHelper {
     public static final int WASTELAND_WATER = 0xF78F00;
 
     public static void restoreVanillaStuff(Biome biome) {
-        biome.addStructure(Feature.MINESHAFT, new MineshaftConfig(0.004D, biome == RegenObjects.Biomes.WASTELANDS.get() ? MineshaftStructure.Type.MESA : MineshaftStructure.Type.NORMAL));
+        biome.addStructure(Feature.MINESHAFT, new MineshaftConfig(0.004D, biome == RegenObjects.GallifreyBiomes.WASTELANDS.get() ? MineshaftStructure.Type.MESA : MineshaftStructure.Type.NORMAL));
         biome.addStructure(Feature.STRONGHOLD, IFeatureConfig.NO_FEATURE_CONFIG);
         DefaultBiomeFeatures.addStoneVariants(biome);
         DefaultBiomeFeatures.addOres(biome);

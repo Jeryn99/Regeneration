@@ -7,6 +7,7 @@ import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
+import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -21,6 +22,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
@@ -151,6 +153,17 @@ public class TardisCompat {
                     }
                 }
             });
+        }
+    }
+
+    @SubscribeEvent
+    public void onBreed(BabyEntitySpawnEvent entitySpawnEvent) {
+        AgeableEntity kid = entitySpawnEvent.getChild();
+        if (kid.getEntityWorld().dimension instanceof TardisDimension) {
+            ConsoleTile tardis = getTardis(kid.getEntityWorld());
+            if (tardis.isInFlight()) {
+                RegenCap.get(kid).ifPresent(iRegen -> iRegen.receiveRegenerations(kid.world.rand.nextInt(12)));
+            }
         }
     }
 
