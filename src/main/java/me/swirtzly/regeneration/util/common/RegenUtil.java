@@ -17,6 +17,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.net.Socket;
 import java.util.Random;
 import java.util.UUID;
 
@@ -30,11 +31,11 @@ public class RegenUtil {
 
 	public static String[] downloadNames() {
 		String[] names = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/timelord-names.json"), String[].class);
-        if (names == null) return new String[]{"TIMELORD"};
+		if (names == null) return new String[]{"TIMELORD"};
 		return names;
 	}
 
-	private static Random rand = new Random();
+	private static final Random rand = new Random();
 
 	public static boolean isSlimSkin(UUID playerUUID) {
 		return (playerUUID.hashCode() & 1) == 1;
@@ -103,36 +104,44 @@ public class RegenUtil {
 			if (entity instanceof LivingEntity && exploder.isAlive()) {
 				LivingEntity victim = (LivingEntity) entity;
 
-                if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.isNonBoss())
-                    return;
+				if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.isNonBoss())
+					return;
 
-                // float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
+				// float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
 
 				float densMod = 1;
 
-                int xr, zr;
+				int xr, zr;
 				xr = (int) -(victim.posX - exploder.posX);
 				zr = (int) -(victim.posZ - exploder.posZ);
 
-                victim.knockBack(exploder, (float) (knockback * densMod), xr, zr);
-            }
+				victim.knockBack(exploder, (float) (knockback * densMod), xr, zr);
+			}
 		});
 	}
 
+	public static boolean doesHaveInternet() {
+		try {
+			Socket socket = new Socket("www.google.com", 80);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 
-    public interface IEnum<E extends Enum<E>> {
+	public interface IEnum<E extends Enum<E>> {
 		int ordinal();
 
-        default E next() {
+		default E next() {
 			E[] ies = this.getAllValues();
 			return this.ordinal() != ies.length - 1 ? ies[this.ordinal() + 1] : null;
 		}
 
-        default E previous() {
+		default E previous() {
 			return this.ordinal() != 0 ? this.getAllValues()[this.ordinal() - 1] : null;
 		}
 
-        @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		default E[] getAllValues() {
 			IEnum[] ies = this.getClass().getEnumConstants();
 			return (E[]) ies;

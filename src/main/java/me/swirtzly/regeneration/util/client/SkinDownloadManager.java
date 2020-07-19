@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.util.client;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.util.common.FileUtil;
+import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
 
@@ -25,7 +26,7 @@ public class SkinDownloadManager {
 
 
 	public static void downloadPreviousSkins() {
-		if (!RegenConfig.CLIENT.downloadPreviousSkins.get()) return;
+		if (!RegenConfig.CLIENT.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
 		Regeneration.LOG.warn("Refreshing users past skins");
 
 		if (!USER_ALEX.exists()) {
@@ -56,7 +57,7 @@ public class SkinDownloadManager {
 
 
 	public static void downloadTrendingSkins() throws IOException {
-		if (!RegenConfig.CLIENT.downloadTrendingSkins.get()) return;
+		if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
 		File trendingDir = TRENDING_ALEX;
 		if (!trendingDir.exists()) {
 			if (trendingDir.mkdirs()) {

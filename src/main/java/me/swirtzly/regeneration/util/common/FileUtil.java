@@ -27,8 +27,7 @@ public class FileUtil {
 
 
     public static void handleDownloads() throws IOException {
-		if (!RegenConfig.CLIENT.downloadInteralSkins.get()) return;
-
+		if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
 
 		String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
 		String[] links = Regeneration.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);

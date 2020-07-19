@@ -20,7 +20,6 @@ import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,8 +31,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -69,42 +66,8 @@ public class SkinManipulation {
 		}
 	}
 
-	public static void sendSkinUpdate(Random random, PlayerEntity player) {
-		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID()) return;
-		RegenCap.get(player).ifPresent((data) -> {
+	private static final RobeModel robeModel = new RobeModel();
 
-			if (RegenConfig.CLIENT.changeMySkin.get()) {
-
-				String pixelData = NO_SKIN;
-				File skin = null;
-
-				if (data.getNextSkin().equals(NO_SKIN)) {
-					boolean isAlex = data.getPreferredModel().isAlex();
-					skin = SkinManipulation.chooseRandomSkin(random, isAlex);
-					Regeneration.LOG.info(skin + " was selected");
-					pixelData = HandleSkins.imageToPixelData(skin);
-					data.setEncodedSkin(pixelData);
-					NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, isAlex));
-				} else {
-					pixelData = data.getNextSkin();
-					data.setEncodedSkin(pixelData);
-					NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, data.getNextSkinType().getMojangType().equals("slim")));
-				}
-			} else {
-				ClientUtil.sendSkinResetPacket();
-			}
-		});
-	}
-
-
-	private static File chooseRandomSkin(Random rand, boolean isAlex) {
-		File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
-		Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
-		if (folderFiles.isEmpty()) {
-			folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
-		}
-		return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
-	}
 
 	private static SkinInfo getSkinInfo(AbstractClientPlayerEntity player, IRegen data) {
 		ResourceLocation resourceLocation;
@@ -208,7 +171,32 @@ public class SkinManipulation {
 		return resultList;
 	}
 
-	private static RobeModel robeModel = new RobeModel();
+	public static void sendSkinUpdate(Random random, PlayerEntity player) {
+		if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID()) return;
+		RegenCap.get(player).ifPresent((data) -> {
+
+			if (RegenConfig.CLIENT.changeMySkin.get()) {
+
+				String pixelData = NO_SKIN;
+				File skin = null;
+
+				if (data.getNextSkin().equals(NO_SKIN)) {
+					boolean isAlex = data.getPreferredModel().isAlex();
+					skin = HandleSkins.chooseRandomSkin(random, isAlex);
+					Regeneration.LOG.info(skin + " was selected");
+					pixelData = HandleSkins.imageToPixelData(skin);
+					data.setEncodedSkin(pixelData);
+					NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, isAlex));
+				} else {
+					pixelData = data.getNextSkin();
+					data.setEncodedSkin(pixelData);
+					NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, data.getNextSkinType().getMojangType().equals("slim")));
+				}
+			} else {
+				ClientUtil.sendSkinResetPacket();
+			}
+		});
+	}
 
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {

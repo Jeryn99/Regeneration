@@ -22,6 +22,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
@@ -73,16 +74,13 @@ public class CommonHandler {
 	@SubscribeEvent
 	public void onLootTableLoad(LootTableLoadEvent e) {
 		if (e.getName().toString().toLowerCase().contains("minecraft:chests/")) {
-			float chance = RegenConfig.COMMON.confessionDialSpawnChance.get() / 100;
-
-			LootUtils.addItemToTable(e.getTable(), RegenObjects.Items.ROBES.get(), 10, 1f, 1, 2, "robes");
-			LootUtils.addItemToTable(e.getTable(), RegenObjects.Items.SEAL.get(), 10, 1f, 1, 2, "seal");
-			LootUtils.addItemToTable(e.getTable(), RegenObjects.Items.HEAD.get(), 10, 1f, 1, 2, "hat");
-
-			/*JsonObject jsonObject = new JsonObject();
-			jsonObject.addProperty("chance", chance);
-			ILootCondition.IBuilder conditionBuilder = () -> LootConditionManager.getSerializerForName(new ResourceLocation("random_chance")).deserialize(jsonObject, null);
-			e.getTable().addPool(LootPool.builder().addEntry(ItemLootEntry.builder(RegenObjects.Items.SEAL.get()).quality(1).weight(10).acceptCondition(conditionBuilder)).acceptCondition(conditionBuilder).build());*/
+/*
+            float chance = RegenConfig.COMMON.confessionDialSpawnChance.get() / 100;
+*/
+			LootTable lootTable = e.getTable();
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES.get(), 10, 1f, 0, 2, "robes");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.SEAL.get(), 10, 1f, 0, 1, "seal");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.HEAD.get(), 10, 1f, 0, 2, "hat");
 		}
 
 	}
@@ -129,7 +127,8 @@ public class CommonHandler {
 				if (data.getRegenerationsLeft() == 0) {
 					TraitManager.IDna trait = TraitManager.getDnaEntry(data.getDnaType());
 					trait.onRemoved(data);
-					trait.onAdded(data);
+					data.setDnaType(TraitManager.DNA_BORING.getRegistryName());
+					TraitManager.DNA_BORING.onAdded(data);
 				}
 			});
 		}
@@ -139,7 +138,6 @@ public class CommonHandler {
 	public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
         if (e.getPlayer().world.isRemote) return;
         RegenCap.get(e.getPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
-		
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)

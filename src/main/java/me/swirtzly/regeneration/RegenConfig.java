@@ -71,9 +71,11 @@ public class RegenConfig {
 		public final ForgeConfigSpec.BooleanValue resetHunger;
 		public final ForgeConfigSpec.BooleanValue resetOxygen;
 		public final ForgeConfigSpec.IntValue absorbtionLevel;
-        public final ForgeConfigSpec.BooleanValue genCrater;
+		public final ForgeConfigSpec.BooleanValue genCrater;
+/*
         public final ForgeConfigSpec.ConfigValue<Integer> confessionDialSpawnChance;
-		
+*/
+
 		Common(ForgeConfigSpec.Builder builder) {
 			builder.comment("General Regeneration Settings").push("common");
 			regenCapacity = builder.comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.").translation("config.regeneration.max_regens").defineInRange("regenCapacity", 12, 0, Integer.MAX_VALUE);
@@ -82,7 +84,9 @@ public class RegenConfig {
 			regenFireImmune = builder.comment("Players are immune to fire damage while regenerating").translation("config.regeneration.regeneration_fire_immunity").define("fireImmunity", false);
 			infiniteRegeneration = builder.comment("config.regeneration.infinite_regenerations").translation("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.").define("infiniteRegeneration", false);
 			sendRegenDeathMessages = builder.comment("Sends a message to chat to say that a player is regenerating, and the reason for it").translation("config.regeneration.regen_messages").define("sendRegenDeathMessages", true);
+/*
 			confessionDialSpawnChance = builder.comment("Sets the percentage change of a Confession Dial to spawn in chests").translation("config.regeneration.confession_dial_spawn").define("confessionDialSpawnChance", 50, Integer.class::isInstance);
+*/
 			builder.pop();
 
             builder.comment("Post Regen Settings").push("post");

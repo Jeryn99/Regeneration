@@ -181,7 +181,9 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
             file.delete();
         } catch (IOException e) {
             Regeneration.LOG.error("Something went wrong connecting to: " + skinurl);
-            e.printStackTrace();
+            Regeneration.LOG.error("Attempting to try and use local skins!");
+            /* This seems safe enough as servers NEED a internet connection to function */
+            data.setEncodedSkin(HandleSkins.imageToPixelData(HandleSkins.chooseRandomSkin(world.rand, rand.nextBoolean())));
         }
     }
 

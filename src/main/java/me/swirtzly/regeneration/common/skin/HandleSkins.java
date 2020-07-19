@@ -1,14 +1,21 @@
 package me.swirtzly.regeneration.common.skin;
 
 import me.swirtzly.regeneration.Regeneration;
+import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraftforge.fml.common.Mod;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.Random;
 
+import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_ALEX;
+import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_STEVE;
 import static me.swirtzly.regeneration.util.common.FileUtil.getJsonFromURL;
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
@@ -36,18 +43,22 @@ public class HandleSkins {
     }
 
     public static void downloadSkins() {
-        Regeneration.LOG.info("Refreshing Skins for Timelords");
-        SKINS.clear();
-        try {
-            String[] uuids = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/donators.json"), String[].class);
+        if (RegenUtil.doesHaveInternet()) {
+            Regeneration.LOG.info("Refreshing Skins for Timelords");
+            SKINS.clear();
+            try {
+                String[] uuids = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/donators.json"), String[].class);
 
-            for (String uuid : uuids) {
-                SKINS.addAll(getSkins("https://namemc.com/minecraft-skins/profile/" + uuid));
+                for (String uuid : uuids) {
+                    SKINS.addAll(getSkins("https://namemc.com/minecraft-skins/profile/" + uuid));
+                }
+
+                SKINS.addAll(getSkins("https://namemc.com/minecraft-skins"));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            SKINS.addAll(getSkins("https://namemc.com/minecraft-skins"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            Regeneration.LOG.error("Could not refresh skins for Timelords! We're in offline mode!");
         }
     }
 
@@ -75,6 +86,15 @@ public class HandleSkins {
             }
         }
         return skins;
+    }
+
+    public static File chooseRandomSkin(Random rand, boolean isAlex) {
+        File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
+        Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        if (folderFiles.isEmpty()) {
+            folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        }
+        return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
 }
