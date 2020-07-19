@@ -238,7 +238,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
         RegenCap.get(this).ifPresent((data) -> {
             if (!world.isRemote) {
-                data.synchronise();
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 
                     if (data.getAnimationTicks() == 100) {
