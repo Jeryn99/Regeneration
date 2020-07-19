@@ -162,7 +162,11 @@ public class TardisCompat {
         if (kid.getEntityWorld().dimension instanceof TardisDimension) {
             ConsoleTile tardis = getTardis(kid.getEntityWorld());
             if (tardis.isInFlight()) {
-                RegenCap.get(kid).ifPresent(iRegen -> iRegen.receiveRegenerations(kid.world.rand.nextInt(12)));
+                RegenCap.get(kid).ifPresent(iRegen -> {
+                    iRegen.receiveRegenerations(kid.world.rand.nextInt(12));
+                    iRegen.setType(RegenTypes.HARTNELL);
+                });
+
             }
         }
     }

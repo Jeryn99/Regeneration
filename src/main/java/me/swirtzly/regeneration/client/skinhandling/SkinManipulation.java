@@ -245,7 +245,7 @@ public class SkinManipulation {
 			/* 	When the player regenerates, we want the skin to change midway through Regeneration
 			 *	We only do this midway through, we will destroy the data and re-create it */
 			boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
-			if (isMidRegeneration || player.ticksExisted < 20) {
+			if (isMidRegeneration || player.ticksExisted < 10) {
 				createSkinData(player, RegenCap.get(player));
 			}
 

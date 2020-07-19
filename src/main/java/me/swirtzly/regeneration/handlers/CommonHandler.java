@@ -79,7 +79,7 @@ public class CommonHandler {
 */
 			LootTable lootTable = e.getTable();
 			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES.get(), 10, 1f, 0, 2, "robes");
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.SEAL.get(), 10, 1f, 0, 1, "seal");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.DIAL.get(), 10, 1f, 0, 1, "seal");
 			LootUtils.addItemToTable(lootTable, RegenObjects.Items.HEAD.get(), 10, 1f, 0, 2, "hat");
 		}
 
