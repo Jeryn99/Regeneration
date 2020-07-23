@@ -3,7 +3,6 @@ package me.swirtzly.regeneration.handlers;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.GuiPreferences;
-import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
@@ -128,11 +127,6 @@ public class ClientHandler {
 
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player == null) return;
-
-        SkinInfo skin = SkinManipulation.PLAYER_SKINS.get(player.getUniqueID());
-        if (skin != null) {
-            SkinManipulation.setPlayerSkin(player, skin.getTextureLocation());
-        }
 
         RegenCap.get(player).ifPresent((cap) -> {
             String warning = null;

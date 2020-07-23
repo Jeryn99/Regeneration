@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 public class UpdateTypeMessage {
 
-    private String type;
+    private final String type;
 
     public UpdateTypeMessage(String type) {
         this.type = type;
@@ -21,7 +21,7 @@ public class UpdateTypeMessage {
     }
 
     public static UpdateTypeMessage decode(PacketBuffer buffer) {
-        return new UpdateTypeMessage(buffer.readString(1000));
+        return new UpdateTypeMessage(buffer.readString(32767));
     }
 
     public static class Handler {

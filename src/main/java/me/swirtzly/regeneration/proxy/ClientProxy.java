@@ -6,6 +6,7 @@ import me.swirtzly.regeneration.client.animation.GeneralAnimations;
 import me.swirtzly.regeneration.client.gui.BioContainerScreen;
 import me.swirtzly.regeneration.client.rendering.layers.HandsLayer;
 import me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer;
+import me.swirtzly.regeneration.client.rendering.model.GuardModel;
 import me.swirtzly.regeneration.client.rendering.model.RobeModel;
 import me.swirtzly.regeneration.client.rendering.tiles.ArchRender;
 import me.swirtzly.regeneration.client.rendering.tiles.HandTileRenderer;
@@ -21,7 +22,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
@@ -30,7 +30,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -84,15 +83,19 @@ public class ClientProxy extends CommonProxy {
 		return Minecraft.getInstance().world;
 	}
 
-    @Override
+	@Override
 	public PlayerEntity getClientPlayer() {
 		return Minecraft.getInstance().player;
 	}
 
-	private static RobeModel ROBES = new RobeModel();
+	private static final RobeModel ROBES = new RobeModel();
+	private static final GuardModel GUARD_MODEL = new GuardModel();
 
-	public static BipedModel getArmorModel(){
-		return ROBES;
+	public static BipedModel getArmorModel(Item item) {
+		if (item.getRegistryName().toString().contains("robes")) {
+			return ROBES;
+		}
+		return GUARD_MODEL;
 	}
 
 }

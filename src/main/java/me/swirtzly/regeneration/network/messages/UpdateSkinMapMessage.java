@@ -7,20 +7,20 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class UpdateSkinMapMessage {
-	
-	private String preferred;
-	
-	public UpdateSkinMapMessage(String preferred) {
-		this.preferred = preferred;
-	}
-	
-	public static void encode(UpdateSkinMapMessage model, PacketBuffer buf) {
-		buf.writeString(model.preferred);
-	}
-	
-	public static UpdateSkinMapMessage decode(PacketBuffer buffer) {
-		return new UpdateSkinMapMessage(buffer.readString(10));
-	}
+
+    private final String preferred;
+
+    public UpdateSkinMapMessage(String preferred) {
+        this.preferred = preferred;
+    }
+
+    public static void encode(UpdateSkinMapMessage model, PacketBuffer buf) {
+        buf.writeString(model.preferred);
+    }
+
+    public static UpdateSkinMapMessage decode(PacketBuffer buffer) {
+        return new UpdateSkinMapMessage(buffer.readString(32767));
+    }
 	
 	public static class Handler {
 		public static void handle(UpdateSkinMapMessage message, Supplier<NetworkEvent.Context> ctx) {

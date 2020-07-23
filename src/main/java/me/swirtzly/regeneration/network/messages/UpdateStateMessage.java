@@ -11,22 +11,22 @@ import java.util.function.Supplier;
 
 public class UpdateStateMessage {
 
-	private Entity player;
-	private String event;
+    private final Entity player;
+    private final String event;
 
-	public UpdateStateMessage(Entity player, String event) {
-		this.player = player;
-		this.event = event;
-	}
-	
-	public static void encode(UpdateStateMessage event, PacketBuffer packetBuffer) {
-		packetBuffer.writeInt(event.player.getEntityId());
-		packetBuffer.writeString(event.event);
-	}
+    public UpdateStateMessage(Entity player, String event) {
+        this.player = player;
+        this.event = event;
+    }
+
+    public static void encode(UpdateStateMessage event, PacketBuffer packetBuffer) {
+        packetBuffer.writeInt(event.player.getEntityId());
+        packetBuffer.writeString(event.event);
+    }
 	
 	public static UpdateStateMessage decode(PacketBuffer buffer) {
-		return new UpdateStateMessage(Minecraft.getInstance().player.world.getEntityByID(buffer.readInt()), buffer.readString(600));
-	}
+        return new UpdateStateMessage(Minecraft.getInstance().player.world.getEntityByID(buffer.readInt()), buffer.readString(32767));
+    }
 	
 	public static class Handler {
 		public static void handle(UpdateStateMessage message, Supplier<NetworkEvent.Context> ctx) {

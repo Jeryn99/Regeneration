@@ -170,8 +170,8 @@ public class RobeModel extends BipedModel {
     @Override
     public void render(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
-        boolean isWearingHat = entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == RegenObjects.Items.HEAD.get();
-        boolean isWearingChest = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES.get();
+        boolean isWearingHat = entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == RegenObjects.Items.ROBES_HEAD.get();
+        boolean isWearingChest = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES_CHEST.get();
 
         super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
         bipedLeftLeg.showModel = false;

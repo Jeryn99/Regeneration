@@ -222,15 +222,6 @@ public class SkinManipulation {
 				PLAYER_SKINS.remove(player.getUniqueID());
 			}
 
-			/* Render the living entities Pre-Regeneration effect */
-			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
-				RegenType typeInstance = cap.getType().create();
-				ATypeRenderer typeRenderer = typeInstance.getRenderer();
-				typeRenderer.onRenderPre(typeInstance, renderPlayerEvent, cap);
-			}
-
-
-
 			/* Grab the SkinInfo of a player and set their SkinType and Skin location from it */
 			if (cap.getState() != PlayerUtil.RegenState.REGENERATING) {
 				SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
@@ -239,17 +230,25 @@ public class SkinManipulation {
 					setPlayerSkinType(player, skin.getSkintype());
 				} else {
 					createSkinData(player, RegenCap.get(player));
-				}
-			}
+                }
+            }
 
-			/* 	When the player regenerates, we want the skin to change midway through Regeneration
-			 *	We only do this midway through, we will destroy the data and re-create it */
-			boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
-			if (isMidRegeneration || player.ticksExisted < 10) {
-				createSkinData(player, RegenCap.get(player));
-			}
+            /* 	When the player regenerates, we want the skin to change midway through Regeneration
+             *	We only do this midway through, we will destroy the data and re-create it */
+            boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
+            if (isMidRegeneration || player.ticksExisted < 10) {
+                createSkinData(player, RegenCap.get(player));
+            }
 
-		});
+            /* Render the living entities Pre-Regeneration effect */
+            if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
+                RegenType typeInstance = cap.getType().create();
+                ATypeRenderer typeRenderer = typeInstance.getRenderer();
+                typeRenderer.onRenderPre(typeInstance, renderPlayerEvent, cap);
+            }
+
+
+        });
 	}
 
 	@SubscribeEvent
