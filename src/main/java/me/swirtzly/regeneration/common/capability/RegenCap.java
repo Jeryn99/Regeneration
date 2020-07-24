@@ -150,7 +150,7 @@ public class RegenCap implements IRegen {
 		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
 		CompoundNBT nbt = serializeNBT();
 		nbt.remove("stateManager");
-		NetworkDispatcher.sendPacketToAll(new SyncClientPlayerMessage(player, nbt));
+		NetworkDispatcher.sendPacketToDimension(player.dimension, new SyncClientPlayerMessage(player, nbt));
 	}
 	
 	@Override

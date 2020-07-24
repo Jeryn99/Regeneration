@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.network.messages.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -51,6 +52,14 @@ public class NetworkDispatcher {
     public static void sendTo(Object msg, ServerPlayerEntity player) {
         if (!(player instanceof FakePlayer)) {
             INSTANCE.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+        }
+    }
+
+    public static void sendPacketToDimension(DimensionType dimensionType, Object packet) {
+        for (ServerPlayerEntity player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
+            if (player.dimension == dimensionType) {
+                sendTo(packet, player);
+            }
         }
     }
 

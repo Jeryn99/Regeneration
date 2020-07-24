@@ -73,7 +73,7 @@ public class LaserEntity extends ThrowableEntity {
         }
 
 
-        if (!this.removed) {
+        if (isAlive()) {
             super.tick();
         }
 
@@ -96,7 +96,7 @@ public class LaserEntity extends ThrowableEntity {
                 if (block.getBlock() instanceof TNTBlock) {
                     BlockPos pos = blockResult.getPos();
                     this.world.removeBlock(pos, true);
-                    TNTEntity tntEntity = new TNTEntity(this.world, (double) ((float) pos.getX() + 0.5F), (double) pos.getY(), (double) ((float) pos.getZ() + 0.5F), this.getThrower());
+                    TNTEntity tntEntity = new TNTEntity(this.world, (float) pos.getX() + 0.5F, pos.getY(), (float) pos.getZ() + 0.5F, this.getThrower());
                     tntEntity.setFuse(0);
                     this.world.addEntity(tntEntity);
                     this.world.playSound(null, tntEntity.posX, tntEntity.posY, tntEntity.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);

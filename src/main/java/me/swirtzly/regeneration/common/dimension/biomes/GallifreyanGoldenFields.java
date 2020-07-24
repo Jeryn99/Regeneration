@@ -4,14 +4,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.FoliageColors;
 
-import java.awt.*;
-
 public class GallifreyanGoldenFields extends GallifreyanRedLands {
 
     @Override
     public int getGrassColor(BlockPos pos) {
-        Color color = new Color(255, 223, 0);
-        return color.getRGB();
+        return -8448;
     }
 
     @Override

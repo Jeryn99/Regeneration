@@ -28,41 +28,39 @@ import java.util.Random;
  */
 @Mod.EventBusSubscriber(modid = Regeneration.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TraitManager {
-	
-	public static IDna DNA_ATHLETE = new AthleteTrait();
+
+    public static IDna DNA_ATHLETE = new AthleteTrait();
     public static IDna DNA_BORING = new BaseTrait("boring");
     public static IDna DNA_DUMB = new BaseTrait("dumb");
-	public static IDna DNA_TOUGH = new ToughTrait();
-	public static IDna DNA_LUCKY = new LuckyTrait();
-	public static IDna DNA_SWIMMER = new BreathingTrait();
-	public static IDna DNA_SCARED_OF_WATER = new HydrophobicTrait();
-	public static IDna DNA_FIRE_RESISTANT = new FireResistantTrait();
-	public static IDna DNA_HUNGER = new HungerTrait();
-	public static IDna DNA_NIGHTVISION = new NightVisionTrait();
+    private static final ArrayList<IDna> DNA_LIST = new ArrayList<>();
+    public static IDna DNA_TOUGH = new ToughTrait();
+    public static IDna DNA_SWIMMER = new BreathingTrait();
+    public static IDna DNA_SCARED_OF_WATER = new HydrophobicTrait();
+    public static IDna DNA_FIRE_RESISTANT = new FireResistantTrait();
+    public static IDna DNA_HUNGER = new HungerTrait();
     public static IDna DNA_WALLCLIMB = new WallClimbingTrait();
-	public static IDna DNA_REPEL_ARROW = new BaseTrait("repel_arrow");
-	public static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
-	private static ArrayList<IDna> DNA_LIST = new ArrayList<>();
-	
-	public static void init() {
-		register(DNA_ATHLETE);
-		register(DNA_BORING);
-		register(DNA_DUMB);
-		register(DNA_TOUGH);
-		register(DNA_LUCKY);
-		register(DNA_SWIMMER);
-		register(DNA_SCARED_OF_WATER);
-		register(DNA_FIRE_RESISTANT);
-		register(DNA_HUNGER);
-		register(DNA_NIGHTVISION);
+    public static IDna DNA_NIGHTVISION = new NightVisionTrait();
+    public static IDna DNA_REPEL_ARROW = new BaseTrait("repel_arrow");
+    public static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
+
+    public static void init() {
+        register(DNA_ATHLETE);
+        register(DNA_BORING);
+        register(DNA_DUMB);
+        register(DNA_TOUGH);
+        register(DNA_SWIMMER);
+        register(DNA_SCARED_OF_WATER);
+        register(DNA_FIRE_RESISTANT);
+        register(DNA_HUNGER);
+        register(DNA_NIGHTVISION);
         register(DNA_WALLCLIMB);
-		register(DNA_REPEL_ARROW);
-	}
-	
-	public static void register(IDna dna) {
-		DNA_ENTRIES.put(dna.getRegistryName(), dna);
-		DNA_LIST.add(dna);
-	}
+        register(DNA_REPEL_ARROW);
+    }
+
+    public static void register(IDna dna) {
+        DNA_ENTRIES.put(dna.getRegistryName(), dna);
+        DNA_LIST.add(dna);
+    }
 	
 	public static IDna getDnaEntry(ResourceLocation resourceLocation) {
 		if (DNA_ENTRIES.containsKey(resourceLocation)) {
@@ -116,14 +114,14 @@ public class TraitManager {
 
     public static abstract class IDna {
 
-		private ResourceLocation resourceLocation;
+        private final ResourceLocation resourceLocation;
         public String localName;
-		public String localDesc;
+        public String localDesc;
 
         public IDna(String name) {
-			localName = "trait." + name;
             resourceLocation = new ResourceLocation(Regeneration.MODID, name);
-			localDesc = "trait." + name + ".desc";
+            localName = "trait." + resourceLocation.getNamespace() + "." + name;
+            localDesc = "trait." + resourceLocation.getNamespace() + "." + name + ".desc";
         }
 
         public abstract void onUpdate(IRegen cap);

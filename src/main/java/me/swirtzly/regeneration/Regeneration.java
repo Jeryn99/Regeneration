@@ -2,6 +2,7 @@ package me.swirtzly.regeneration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.swirtzly.data.LangProvider;
 import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.LaserRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.TimelordRenderer;
@@ -37,10 +38,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -106,8 +104,14 @@ public class Regeneration {
         RegenObjects.ChunkGeneratorTypes.CHUNK_GENERATOR_TYPES.register(eventBus);
         RegenObjects.GallifreyBiomes.BIOMES.register(eventBus);
         RegenObjects.Dimensions.DIMENSIONS.register(eventBus);
-
     }
+
+
+    @SubscribeEvent
+    public void gatherData(GatherDataEvent e) {
+        e.getGenerator().addProvider(new LangProvider(e.getGenerator()));
+    }
+
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
         proxy.init();

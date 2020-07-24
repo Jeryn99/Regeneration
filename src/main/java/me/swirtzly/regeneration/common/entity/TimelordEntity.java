@@ -159,6 +159,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 data.setStyle(nbt);
                 data.setType(rand.nextBoolean() ? RegenTypes.FIERY : RegenTypes.HARTNELL);
                 initSkin(data);
+                data.synchronise();
             });
         }
         setCustomName(new StringTextComponent(RegenUtil.TIMELORD_NAMES[rand.nextInt(RegenUtil.TIMELORD_NAMES.length)]));
@@ -179,11 +180,13 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
             FileUtils.copyInputStreamToFile(is, file);
             data.setEncodedSkin(HandleSkins.imageToPixelData(file));
             file.delete();
+            data.synchronise();
         } catch (IOException e) {
             Regeneration.LOG.error("Something went wrong connecting to: " + skinurl);
             Regeneration.LOG.error("Attempting to try and use local skins!");
             /* This seems safe enough as servers NEED a internet connection to function */
             data.setEncodedSkin(HandleSkins.imageToPixelData(HandleSkins.chooseRandomSkin(world.rand, rand.nextBoolean())));
+            data.synchronise();
         }
     }
 
@@ -238,8 +241,12 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
         RegenCap.get(this).ifPresent((data) -> {
             if (!world.isRemote) {
-                if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
 
+                if (ticksExisted < 20) {
+                    data.synchronise();
+                }
+
+                if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
                     if (data.getAnimationTicks() == 100) {
                         if (false) { //Ignore this, I need to re-implement something without breaking things
                             setVillager(true);
@@ -254,6 +261,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                                 FileUtils.copyInputStreamToFile(is, file);
                                 data.setEncodedSkin(HandleSkins.imageToPixelData(file));
                                 file.delete();
+                                data.synchronise();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

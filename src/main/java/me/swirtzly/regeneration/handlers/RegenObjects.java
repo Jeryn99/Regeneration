@@ -321,8 +321,8 @@ public class RegenObjects {
 		public static final RegistryObject<Item> GAL_INGOT = ITEMS.register("gal_ingot", IngotItem::new);
 		public static final RegistryObject<Item> SEAL = ITEMS.register("rassilon_seal", SealItem::new);
 		public static final RegistryObject<Item> DIAL = ITEMS.register("confession_dial", ConfessionDialItem::new);
-		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 5));
-		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 2));
+		public static final RegistryObject<Item> RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 10.0F));
+		public static final RegistryObject<Item> PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 4.0F));
 		public static final RegistryObject<Item> ROBES_CHEST = ITEMS.register("robes", () -> new DyeableClothingItem(EquipmentSlotType.CHEST));
 		public static final RegistryObject<Item> ROBES_HEAD = ITEMS.register("robes_hat", () -> new DyeableClothingItem(EquipmentSlotType.HEAD));
 

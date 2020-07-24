@@ -1,7 +1,6 @@
 package me.swirtzly.regeneration.common.dimension.util;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.dimension.biomes.GallifrayanWastelands;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -25,8 +24,6 @@ import java.util.Random;
 public class GallifreyanSkyRenderer implements IRenderHandler {
 
     private static final ResourceLocation MOON_PHASES_TEXTURES = new ResourceLocation("textures/environment/moon_phases.png");
-    private static final ResourceLocation SUN_TEXTURES = new ResourceLocation(Regeneration.MODID, "textures/environment/sun1.png");
-    private static final ResourceLocation SUN2_TEXTURES = new ResourceLocation(Regeneration.MODID, "textures/environment/sun2.png");
     private static final ResourceLocation OG = new ResourceLocation("textures/environment/sun.png");
     private static GallifreyanSkyRenderer INSTANCE;
     private final TextureManager renderEngine;

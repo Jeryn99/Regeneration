@@ -10,6 +10,7 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.skin.HandleSkins;
 import me.swirtzly.regeneration.common.types.RegenType;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
 import me.swirtzly.regeneration.util.client.ClientUtil;
@@ -19,10 +20,12 @@ import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -201,6 +204,16 @@ public class SkinManipulation {
 	public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
 		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
 
+		PlayerModel<AbstractClientPlayerEntity> model = renderPlayerEvent.getRenderer().getEntityModel();
+
+		boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
+		model.bipedBody.isHidden = isWearingChest;
+		model.bipedBodyWear.isHidden = isWearingChest;
+/*
+		model.bipedRightArm = ClientProxy.getArmorModel(RegenObjects.Items.GUARD_CHEST.get()).bipedRightArm;
+		model.bipedLeftArm = ClientProxy.getArmorModel(RegenObjects.Items.GUARD_CHEST.get()).bipedLeftArm;
+*/
+
 		RegenCap.get(player).ifPresent((cap) -> {
 
 			/* When the player is in a Post Regenerative state and above a 3x3 grid of Zero Rounde Blocks,
@@ -257,6 +270,8 @@ public class SkinManipulation {
                 typeRenderer.onRenderPost(type, renderPlayerEventPost, cap);
 			}
 		});
+
+
 	}
 
 	private void createSkinData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {

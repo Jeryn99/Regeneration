@@ -77,7 +77,7 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
         this.children.add(this.inputSecondColor);
 
         // Color input Primary button 
-        this.addButton(new GuiButtonExt(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.input").getFormattedText(), button -> {
+        this.addButton(new GuiButtonExt(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.input_color").getFormattedText(), button -> {
             String primaryColorText = inputPrimaryColor.getText();
             String secondColourText = inputSecondColor.getText();
 

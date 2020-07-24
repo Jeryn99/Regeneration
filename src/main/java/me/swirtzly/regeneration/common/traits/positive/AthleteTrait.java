@@ -58,9 +58,4 @@ public class AthleteTrait extends TraitManager.IDna {
 		}
 	}
 
-    @Override
-	public String getLocalDesc() {
-		return "asdsa";
-	}
-
 }

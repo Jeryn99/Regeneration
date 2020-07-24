@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.common.dimension.util;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -44,7 +43,6 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
         this.biomeFactoryLayer = aLayer[1];
         this.biomes = dimensionBiomes;
         for (Biome biome : this.biomes) {
-            Regeneration.LOG.debug(biome.getRegistryName());
             biome.addCarver(GenerationStage.Carving.AIR, Biome.createCarver(new CaveWorldCarver(ProbabilityConfig::deserialize, 256) {
                 {
                     carvableBlocks = ImmutableSet.of(Blocks.DIRT.getDefaultState().getBlock(),
@@ -70,9 +68,6 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
     }
 
     @Override
-    /**
-     * Gets the biome from the provided coordinates
-     */
     public Biome getBiome(int x, int y) {
         return this.biomeFactoryLayer.func_215738_a(x, y);
     }

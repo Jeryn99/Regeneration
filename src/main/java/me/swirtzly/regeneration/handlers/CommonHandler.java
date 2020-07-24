@@ -91,9 +91,9 @@ public class CommonHandler {
             float chance = RegenConfig.COMMON.confessionDialSpawnChance.get() / 100;
 */
 			LootTable lootTable = e.getTable();
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_HEAD.get(), 10, 1f, 0, 2, "robes");
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.DIAL.get(), 10, 1f, 0, 1, "seal");
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_CHEST.get(), 10, 1f, 0, 2, "hat");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_HEAD.get(), 6, 0.5f, 0, 2, "robes");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.DIAL.get(), 4, 0.3f, 0, 1, "seal");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_CHEST.get(), 6, 0.5f, 0, 2, "hat");
 		}
 
 	}

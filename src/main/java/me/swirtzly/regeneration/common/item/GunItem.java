@@ -24,9 +24,9 @@ import net.minecraft.world.World;
 public class GunItem extends SolidItem {
 
     private final int cooldown;
-    private final int damage;
+    private final float damage;
 
-    public GunItem(int shotsPerRound, int cooldown, int damage) {
+    public GunItem(int shotsPerRound, int cooldown, float damage) {
         super(new Properties().group(ItemGroups.REGEN_TAB).maxDamage(shotsPerRound).setNoRepair());
         this.cooldown = cooldown;
         this.damage = damage;
@@ -83,7 +83,7 @@ public class GunItem extends SolidItem {
         }
     }
 
-    public int getDamage() {
+    public float getDamage() {
         return damage;
     }
 

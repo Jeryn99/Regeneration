@@ -48,13 +48,13 @@ public class GuiPreferences extends ContainerScreen {
 		GuiButtonExt btnRegenType = new GuiButtonExt(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regentype." + SELECTED_TYPE.getRegistryName()).getUnformattedComponentText(), new Button.IPressable() {
 			@Override
 			public void onPress(Button button) {
-                int pos = RegenTypes.getPosition(SELECTED_TYPE) + 1;
+				int pos = RegenTypes.getPosition(SELECTED_TYPE) + 1;
 
-                if (pos < 0 || pos >= RegenTypes.TYPES.length) {
-                    pos = 0;
-                }
-                SELECTED_TYPE = RegenTypes.TYPES[pos];
-				button.setMessage(new TranslationTextComponent("regeneration.gui.type", SELECTED_TYPE.create().getTranslation()).getUnformattedComponentText());
+				if (pos < 0 || pos >= RegenTypes.TYPES.length) {
+					pos = 0;
+				}
+				SELECTED_TYPE = RegenTypes.TYPES[pos];
+				button.setMessage(new TranslationTextComponent("regeneration.gui.regen_type", SELECTED_TYPE.create().getTranslation()).getUnformattedComponentText());
 				NetworkDispatcher.sendToServer(new UpdateTypeMessage(SELECTED_TYPE.getRegistryName().toString()));
 			}
 		});
@@ -71,7 +71,7 @@ public class GuiPreferences extends ContainerScreen {
 				PlayerUtil.updateModel(CHOICES);
 			}
 		});
-		btnRegenType.setMessage(new TranslationTextComponent("regeneration.gui.type", SELECTED_TYPE.create().getTranslation()).getUnformattedComponentText());
+		btnRegenType.setMessage(new TranslationTextComponent("regeneration.gui.regen_type", SELECTED_TYPE.create().getTranslation()).getUnformattedComponentText());
 
 		GuiButtonExt btnColor = new GuiButtonExt(width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.color_gui").getUnformattedComponentText(), new Button.IPressable() {
 			@Override
