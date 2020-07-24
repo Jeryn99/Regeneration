@@ -5,7 +5,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.image.ImageDownloadBuffer;
-import me.swirtzly.regeneration.client.rendering.model.RobeModel;
 import me.swirtzly.regeneration.client.rendering.types.ATypeRenderer;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
@@ -22,6 +21,7 @@ import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -36,6 +36,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -50,7 +52,7 @@ public class SkinManipulation {
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
 	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-	private static final HashMap<UUID, ResourceLocation> MOJANG = new HashMap<>();
+	public static final HashMap<UUID, ResourceLocation> MOJANG = new HashMap<>();
 	private static final Random RAND = new Random();
 
 
@@ -66,8 +68,6 @@ public class SkinManipulation {
 		}
 	}
 
-	private static final RobeModel robeModel = new RobeModel();
-
 
 	private static SkinInfo getSkinInfo(AbstractClientPlayerEntity player, IRegen data) {
 		ResourceLocation resourceLocation;
@@ -76,7 +76,7 @@ public class SkinManipulation {
 			return new SkinInfo(player, null, getSkinType(player, true));
 		}
 		if (data.getEncodedSkin().equals(NO_SKIN)) {
-			resourceLocation = TexUtil.getSkinFromGameProfile(player.getGameProfile());
+			resourceLocation = MOJANG.get(player.getUniqueID());
 			skinType = getSkinType(player, true);
 		} else {
 			NativeImage nativeImage = decodeToImage(data.getEncodedSkin());
@@ -115,15 +115,6 @@ public class SkinManipulation {
 		});
 
 		return skinType.get();
-	}
-
-
-	public static Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> getVanillaMap(AbstractClientPlayerEntity player) {
-		Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
-		if (map.isEmpty()) {
-			map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
-		}
-		return map;
 	}
 
 	public static void setPlayerSkin(AbstractClientPlayerEntity player, ResourceLocation texture) {
@@ -198,14 +189,17 @@ public class SkinManipulation {
 		});
 	}
 
+	public static void createSkin(UUID uuid) {
+		try {
+			MOJANG.put(uuid, TexUtil.urlToTexture(new URL("https://crafatar.com/skins/" + uuid.toString())));
+		} catch (MalformedURLException e) {
+			MOJANG.put(uuid, DefaultPlayerSkin.getDefaultSkin(uuid));
+		}
+	}
+
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
 		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
-
-		//TODO: THIS SHOULD NOT EXIST AND NEEDS TO BE REPLACED AS SOON AS POSSIBLE
-		if (!MOJANG.containsKey(player.getUniqueID())) {
-			MOJANG.put(player.getUniqueID(), player.getLocationSkin());
-		}
 
 		RegenCap.get(player).ifPresent((cap) -> {
 

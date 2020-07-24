@@ -7,6 +7,8 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.compat.ArchHelper;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
+import me.swirtzly.regeneration.network.messages.MessageCacheMojangSkin;
 import me.swirtzly.regeneration.util.common.LootUtils;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
@@ -48,10 +50,21 @@ import javax.annotation.Nonnull;
 public class CommonHandler {
 
 
-    @SubscribeEvent
-    public void registerDim(RegisterDimensionsEvent event) {
+	@SubscribeEvent
+	public void registerDim(RegisterDimensionsEvent event) {
 		RegenObjects.GALLIFREY_TYPE = DimensionManager.registerOrGetDimension(new ResourceLocation(Regeneration.MODID, "gallifrey"), RegenObjects.Dimensions.GALLIFREY.get(), null, true);
-    }
+	}
+
+
+	@SubscribeEvent
+	public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+		NetworkDispatcher.sendPacketToAll(new MessageCacheMojangSkin(event.getPlayer().getUniqueID(), false));
+	}
+
+	@SubscribeEvent
+	public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+		NetworkDispatcher.sendPacketToAll(new MessageCacheMojangSkin(event.getPlayer().getUniqueID(), true));
+	}
 
 
 	// =========== CAPABILITY HANDLING =============
@@ -61,7 +74,7 @@ public class CommonHandler {
 		RegenCap.get(event.getEntityLiving()).ifPresent(IRegen::tick);
 	}
 
-    @SubscribeEvent
+	@SubscribeEvent
 	public void onPlayerClone(PlayerEvent.Clone event) {
 		IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
 		event.getOriginal().revive();

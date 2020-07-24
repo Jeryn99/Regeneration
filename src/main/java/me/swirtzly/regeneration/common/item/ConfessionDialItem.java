@@ -1,8 +1,8 @@
 package me.swirtzly.regeneration.common.item;
 
 import me.swirtzly.regeneration.handlers.RegenObjects;
-import me.swirtzly.regeneration.util.client.Worldutil;
 import me.swirtzly.regeneration.util.common.ICompatObject;
+import me.swirtzly.regeneration.util.common.Worldutil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;

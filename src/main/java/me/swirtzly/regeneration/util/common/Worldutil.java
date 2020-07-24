@@ -1,4 +1,4 @@
-package me.swirtzly.regeneration.util.client;
+package me.swirtzly.regeneration.util.common;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

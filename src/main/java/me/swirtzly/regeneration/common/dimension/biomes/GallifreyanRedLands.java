@@ -5,8 +5,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
@@ -31,7 +29,6 @@ public class GallifreyanRedLands extends Biome {
         BiomeHelper.addGallifreyTress(this);
         BiomeHelper.addGallifreyOres(this);
         BiomeHelper.addHut(this);
-
     }
 
     @Override
@@ -42,10 +39,5 @@ public class GallifreyanRedLands extends Biome {
     @Override
     public int getFoliageColor(BlockPos pos) {
         return GREY_LEAVES_COLOR;
-    }
-
-    @Override
-    public <C extends IFeatureConfig> boolean hasStructure(Structure<C> structureIn) {
-        return super.hasStructure(structureIn);
     }
 }
