@@ -37,7 +37,12 @@ public class DyeableClothingItem extends ArmorItem implements IDyeableArmorItem 
     @Nullable
     @Override
     public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
-        return (A) ClientProxy.getArmorModel(this);
+        return (A) ClientProxy.getArmorModel(itemStack);
+    }
+
+    @Override
+    public EquipmentSlotType getEquipmentSlot() {
+        return this.slot;
     }
 
     @Nullable

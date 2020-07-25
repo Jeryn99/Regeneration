@@ -3,7 +3,10 @@ package me.swirtzly.regeneration.client.rendering.model;// Made with Blockbench 
 // Paste this class into your mod and generate all required imports
 
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
@@ -33,7 +36,10 @@ public class GuardModel extends BipedModel {
     private final RendererModel right_boot;
     private final RendererModel left_boot;
 
-    public GuardModel() {
+    EquipmentSlotType type = EquipmentSlotType.CHEST;
+
+    public GuardModel(EquipmentSlotType type) {
+        this.type = type;
         textureWidth = 80;
         textureHeight = 80;
 
@@ -193,7 +199,7 @@ public class GuardModel extends BipedModel {
 
         right_leg = new RendererModel(this);
         right_leg.setRotationPoint(-1.9F, 12.0F, 0.0F);
-        right_leg.cubeList.add(new ModelBox(right_leg, 24, 33, -2.0F, 0.0F, -2.0F, 4, 6, 4, 0.25F, false));
+        right_leg.cubeList.add(new ModelBox(right_leg, 24, 33, -2.0F, 0.0F, -2.0F, 4, 6, 4, 0.1F, false));
 
         shoes_knee_pads = new RendererModel(this);
         shoes_knee_pads.setRotationPoint(1.9F, 12.0F, -0.75F);
@@ -203,71 +209,117 @@ public class GuardModel extends BipedModel {
         skirt = new RendererModel(this);
         skirt.setRotationPoint(1.9F, 13.0F, -0.15F);
         right_leg.addChild(skirt);
-        skirt.cubeList.add(new ModelBox(skirt, 60, 44, -4.0F, -13.0F, 1.3F, 3, 1, 1, 0.25F, false));
-        skirt.cubeList.add(new ModelBox(skirt, 36, 60, -4.15F, -13.0F, -1.85F, 1, 1, 4, 0.25F, false));
-        skirt.cubeList.add(new ModelBox(skirt, 33, 16, -3.9F, -12.25F, 1.25F, 2, 1, 1, 0.25F, false));
-        skirt.cubeList.add(new ModelBox(skirt, 30, 59, -4.0F, -12.25F, -1.85F, 1, 1, 4, 0.25F, false));
-        skirt.cubeList.add(new ModelBox(skirt, 58, 56, -3.95F, -11.5F, -1.85F, 1, 1, 4, 0.25F, false));
-        skirt.cubeList.add(new ModelBox(skirt, 24, 49, -3.9F, -11.5F, 1.2F, 1, 1, 1, 0.25F, false));
-        skirt.cubeList.add(new ModelBox(skirt, 0, 48, -3.9F, -11.5F, -1.9F, 1, 1, 1, 0.25F, false));
-        skirt.cubeList.add(new ModelBox(skirt, 24, 21, -3.9F, -12.25F, -1.95F, 2, 1, 1, 0.25F, false));
-        skirt.cubeList.add(new ModelBox(skirt, 60, 37, -4.0F, -13.0F, -2.0F, 3, 1, 1, 0.25F, false));
+        skirt.cubeList.add(new ModelBox(skirt, 60, 44, -4.0F, -13.0F, 1.3F, 3, 1, 1, 0.1F, false));
+        skirt.cubeList.add(new ModelBox(skirt, 36, 60, -4.15F, -13.0F, -1.85F, 1, 1, 4, 0.1F, false));
+        skirt.cubeList.add(new ModelBox(skirt, 33, 16, -3.9F, -12.25F, 1.25F, 2, 1, 1, 0.1F, false));
+        skirt.cubeList.add(new ModelBox(skirt, 30, 59, -4.0F, -12.25F, -1.85F, 1, 1, 4, 0.1F, false));
+        skirt.cubeList.add(new ModelBox(skirt, 58, 56, -3.95F, -11.5F, -1.85F, 1, 1, 4, 0.1F, false));
+        skirt.cubeList.add(new ModelBox(skirt, 24, 49, -3.9F, -11.5F, 1.2F, 1, 1, 1, 0.1F, false));
+        skirt.cubeList.add(new ModelBox(skirt, 0, 48, -3.9F, -11.5F, -1.9F, 1, 1, 1, 0.1F, false));
+        skirt.cubeList.add(new ModelBox(skirt, 24, 21, -3.9F, -12.25F, -1.95F, 2, 1, 1, 0.1F, false));
+        skirt.cubeList.add(new ModelBox(skirt, 60, 37, -4.0F, -13.0F, -2.0F, 3, 1, 1, 0.1F, false));
 
         right_boot = new RendererModel(this);
         right_boot.setRotationPoint(0.0F, 0.0F, 0.0F);
         right_leg.addChild(right_boot);
         right_boot.cubeList.add(new ModelBox(right_boot, 51, 70, -2.0F, 6.0F, -2.0F, 4, 6, 4, 0.25F, false));
-        right_boot.cubeList.add(new ModelBox(right_boot, 50, 22, -0.5F, 6.0F, -2.05F, 1, 1, 1, 0.25F, false));
-        right_boot.cubeList.add(new ModelBox(right_boot, 34, 51, -0.75F, 5.5F, -2.15F, 1, 1, 1, 0.25F, false));
-        right_boot.cubeList.add(new ModelBox(right_boot, 24, 51, -0.25F, 5.5F, -2.15F, 1, 1, 1, 0.25F, false));
-        right_boot.cubeList.add(new ModelBox(right_boot, 62, 51, -1.0F, 4.0F, -2.2F, 2, 2, 1, 0.25F, false));
+        right_boot.cubeList.add(new ModelBox(right_boot, 50, 22, -0.5F, 6.0F, -2.3F, 1, 1, 1, 0.1F, false));
+        right_boot.cubeList.add(new ModelBox(right_boot, 34, 51, -0.75F, 5.5F, -2.4F, 1, 1, 1, 0.1F, false));
+        right_boot.cubeList.add(new ModelBox(right_boot, 24, 51, -0.25F, 5.5F, -2.4F, 1, 1, 1, 0.1F, false));
+        right_boot.cubeList.add(new ModelBox(right_boot, 62, 51, -1.0F, 4.0F, -2.45F, 2, 2, 1, 0.1F, false));
         right_boot.cubeList.add(new ModelBox(right_boot, 50, 13, -2.0F, 10.5F, -2.5F, 4, 1, 1, 0.25F, false));
         right_boot.cubeList.add(new ModelBox(right_boot, 24, 54, -2.0F, 11.0F, -2.75F, 4, 1, 1, 0.25F, false));
 
         left_leg = new RendererModel(this);
         left_leg.setRotationPoint(1.9F, 12.0F, 0.0F);
-        left_leg.cubeList.add(new ModelBox(left_leg, 32, 0, -2.0F, 0.0F, -2.0F, 4, 6, 4, 0.25F, false));
+        left_leg.cubeList.add(new ModelBox(left_leg, 32, 0, -2.0F, 0.0F, -2.0F, 4, 6, 4, 0.1F, false));
 
         skirt2 = new RendererModel(this);
         skirt2.setRotationPoint(-1.9F, 13.0F, -0.15F);
         left_leg.addChild(skirt2);
-        skirt2.cubeList.add(new ModelBox(skirt2, 6, 64, 1.0F, -13.0F, 1.3F, 3, 1, 1, 0.25F, false));
-        skirt2.cubeList.add(new ModelBox(skirt2, 58, 61, 3.15F, -13.0F, -1.85F, 1, 1, 4, 0.25F, false));
-        skirt2.cubeList.add(new ModelBox(skirt2, 62, 66, 1.9F, -12.25F, 1.25F, 2, 1, 1, 0.25F, false));
-        skirt2.cubeList.add(new ModelBox(skirt2, 60, 6, 3.0F, -12.25F, -1.85F, 1, 1, 4, 0.25F, false));
-        skirt2.cubeList.add(new ModelBox(skirt2, 60, 32, 2.95F, -11.5F, -1.85F, 1, 1, 4, 0.25F, false));
-        skirt2.cubeList.add(new ModelBox(skirt2, 34, 49, 2.9F, -11.5F, 1.2F, 1, 1, 1, 0.25F, false));
-        skirt2.cubeList.add(new ModelBox(skirt2, 0, 50, 2.9F, -11.5F, -1.9F, 1, 1, 1, 0.25F, false));
-        skirt2.cubeList.add(new ModelBox(skirt2, 68, 19, 1.9F, -12.25F, -1.95F, 2, 1, 1, 0.25F, false));
-        skirt2.cubeList.add(new ModelBox(skirt2, 64, 62, 1.0F, -13.0F, -2.0F, 3, 1, 1, 0.25F, false));
+        skirt2.cubeList.add(new ModelBox(skirt2, 6, 64, 1.0F, -13.0F, 1.3F, 3, 1, 1, 0.1F, false));
+        skirt2.cubeList.add(new ModelBox(skirt2, 58, 61, 3.15F, -13.0F, -1.85F, 1, 1, 4, 0.1F, false));
+        skirt2.cubeList.add(new ModelBox(skirt2, 62, 66, 1.9F, -12.25F, 1.25F, 2, 1, 1, 0.1F, false));
+        skirt2.cubeList.add(new ModelBox(skirt2, 60, 6, 3.0F, -12.25F, -1.85F, 1, 1, 4, 0.1F, false));
+        skirt2.cubeList.add(new ModelBox(skirt2, 60, 32, 2.95F, -11.5F, -1.85F, 1, 1, 4, 0.1F, false));
+        skirt2.cubeList.add(new ModelBox(skirt2, 34, 49, 2.9F, -11.5F, 1.2F, 1, 1, 1, 0.1F, false));
+        skirt2.cubeList.add(new ModelBox(skirt2, 0, 50, 2.9F, -11.5F, -1.9F, 1, 1, 1, 0.1F, false));
+        skirt2.cubeList.add(new ModelBox(skirt2, 68, 19, 1.9F, -12.25F, -1.95F, 2, 1, 1, 0.1F, false));
+        skirt2.cubeList.add(new ModelBox(skirt2, 64, 62, 1.0F, -13.0F, -2.0F, 3, 1, 1, 0.1F, false));
 
         left_boot = new RendererModel(this);
         left_boot.setRotationPoint(0.0F, 0.0F, 0.0F);
         left_leg.addChild(left_boot);
         left_boot.cubeList.add(new ModelBox(left_boot, 51, 70, -2.0F, 6.0F, -2.0F, 4, 6, 4, 0.25F, false));
-        left_boot.cubeList.add(new ModelBox(left_boot, 50, 20, -0.5F, 6.0F, -2.05F, 1, 1, 1, 0.25F, false));
-        left_boot.cubeList.add(new ModelBox(left_boot, 50, 10, -0.75F, 5.5F, -2.15F, 1, 1, 1, 0.25F, false));
-        left_boot.cubeList.add(new ModelBox(left_boot, 50, 8, -0.25F, 5.5F, -2.15F, 1, 1, 1, 0.25F, false));
-        left_boot.cubeList.add(new ModelBox(left_boot, 48, 4, -1.0F, 4.0F, -2.2F, 2, 2, 1, 0.25F, false));
+        left_boot.cubeList.add(new ModelBox(left_boot, 50, 20, -0.5F, 6.0F, -2.3F, 1, 1, 1, 0.1F, false));
+        left_boot.cubeList.add(new ModelBox(left_boot, 50, 10, -0.75F, 5.5F, -2.4F, 1, 1, 1, 0.1F, false));
+        left_boot.cubeList.add(new ModelBox(left_boot, 50, 8, -0.25F, 5.5F, -2.4F, 1, 1, 1, 0.1F, false));
+        left_boot.cubeList.add(new ModelBox(left_boot, 48, 4, -1.0F, 4.0F, -2.45F, 2, 2, 1, 0.1F, false));
         left_boot.cubeList.add(new ModelBox(left_boot, 10, 50, -2.0F, 10.5F, -2.5F, 4, 1, 1, 0.25F, false));
         left_boot.cubeList.add(new ModelBox(left_boot, 10, 48, -2.0F, 11.0F, -2.75F, 4, 1, 1, 0.25F, false));
-        bipedLeftLeg = left_leg;
-        bipedRightLeg = right_leg;
-        bipedBody = body;
-        bipedHead = head;
-        bipedRightArm = right_arm;
-        bipedLeftArm = left_arm;
-        bipedHeadwear.isHidden = true;
     }
 
     @Override
     public void render(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 
-        boolean isWearingBoots = entityIn.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == RegenObjects.Items.GUARD_FEET.get();
-        left_boot.isHidden = !isWearingBoots;
-        right_boot.isHidden = !isWearingBoots;
+        boolean isWearingHelmet = entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == RegenObjects.Items.GUARD_HEAD.get() && type == EquipmentSlotType.HEAD;
+        boolean isWearingChest = entityIn.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get() && type == EquipmentSlotType.CHEST;
+        boolean isWearingLeggings = entityIn.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegenObjects.Items.GUARD_LEGGINGS.get() && type == EquipmentSlotType.LEGS;
+        boolean isWearingBoots = entityIn.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == RegenObjects.Items.GUARD_FEET.get() && type == EquipmentSlotType.FEET;
 
-        super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+
+        this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+        GlStateManager.pushMatrix();
+        if (entityIn.shouldRenderSneaking()) {
+            GlStateManager.translatef(0.0F, 0.2F, 0.0F);
+        }
+        if (isWearingHelmet) {
+            this.head.render(scale);
+        }
+        if (isWearingChest) {
+            GlStateManager.pushMatrix();
+            bipedBody = body;
+            bipedBody.render(scale);
+            GlStateManager.popMatrix();
+            this.right_arm.render(scale);
+            this.left_arm.render(scale);
+        }
+
+        if (isWearingBoots) {
+            GlStateManager.pushMatrix();
+            right_leg.postRender(scale);
+            right_boot.render(scale);
+            GlStateManager.popMatrix();
+
+            GlStateManager.pushMatrix();
+            left_leg.postRender(scale);
+            left_boot.render(scale);
+            GlStateManager.popMatrix();
+        }
+
+        if (isWearingLeggings) {
+            this.right_leg.render(scale);
+            this.left_leg.render(scale);
+            left_boot.isHidden = true;
+            right_boot.isHidden = true;
+        }
+
+        GlStateManager.popMatrix();
+
+    }
+
+
+    @Override
+    public void setRotationAngles(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
+        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+        RegenCap.get(entityIn).ifPresent(iRegen -> {
+            iRegen.getType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, Minecraft.getInstance().getRenderPartialTicks(), ageInTicks, netHeadYaw, headPitch);
+        });
+        this.head.copyModelAngles(this.bipedHead);
+        this.left_arm.copyModelAngles(this.bipedLeftArm);
+        this.right_arm.copyModelAngles(this.bipedRightArm);
+        this.left_leg.copyModelAngles(this.bipedLeftLeg);
+        this.right_leg.copyModelAngles(this.bipedRightLeg);
     }
 
     public void setRotationAngle(RendererModel modelRenderer, float x, float y, float z) {

@@ -202,26 +202,29 @@ public class SkinManipulation {
 
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
-		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
+        AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
 
-		PlayerModel<AbstractClientPlayerEntity> model = renderPlayerEvent.getRenderer().getEntityModel();
+        PlayerModel<AbstractClientPlayerEntity> model = renderPlayerEvent.getRenderer().getEntityModel();
 
-		boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
-		model.bipedBody.isHidden = isWearingChest;
-		model.bipedBodyWear.isHidden = isWearingChest;
-/*
-		model.bipedRightArm = ClientProxy.getArmorModel(RegenObjects.Items.GUARD_CHEST.get()).bipedRightArm;
-		model.bipedLeftArm = ClientProxy.getArmorModel(RegenObjects.Items.GUARD_CHEST.get()).bipedLeftArm;
-*/
+        boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
+        model.bipedBody.isHidden = isWearingChest;
+        model.bipedBodyWear.isHidden = isWearingChest;
+        model.bipedLeftArm.isHidden = isWearingChest;
+        model.bipedRightArm.isHidden = isWearingChest;
 
-		RegenCap.get(player).ifPresent((cap) -> {
+        boolean isWearingLeggings = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegenObjects.Items.GUARD_LEGGINGS.get();
+        model.bipedRightLegwear.isHidden = isWearingLeggings;
+        model.bipedLeftLegwear.isHidden = isWearingLeggings;
 
-			/* When the player is in a Post Regenerative state and above a 3x3 grid of Zero Rounde Blocks,
-			 *  We want them to float up and down slightly*/
-			if (cap.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(player)) {
-				float floatingOffset = MathHelper.cos(player.ticksExisted * 0.1F) * -0.09F + 0.5F;
-				GlStateManager.translated(0, floatingOffset, 0);
-			}
+
+        RegenCap.get(player).ifPresent((cap) -> {
+
+            /* When the player is in a Post Regenerative state and above a 3x3 grid of Zero Rounde Blocks,
+             *  We want them to float up and down slightly*/
+            if (cap.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(player)) {
+                float floatingOffset = MathHelper.cos(player.ticksExisted * 0.1F) * -0.09F + 0.5F;
+                GlStateManager.translated(0, floatingOffset, 0);
+            }
 
 			/* Sometimes when the player is teleported, the Mojang skin becomes re-downloaded and resets to either Steve,
 			 or the Mojang Skin, so once they have been re-created, we remove the cache we have on them, causing it to be renewed */

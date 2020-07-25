@@ -319,7 +319,7 @@ public class ClientHandler {
         List<ITextComponent> tooltip = event.getToolTip();
         ItemStack stack = event.getItemStack();
         if (getRegenerations(stack) > 0) {
-            tooltip.add(new TranslationTextComponent("stored.regens", getRegenerations(stack)));
+            tooltip.add(new TranslationTextComponent("nbt.regeneration.item.stored_regens", getRegenerations(stack)));
         }
     }
 

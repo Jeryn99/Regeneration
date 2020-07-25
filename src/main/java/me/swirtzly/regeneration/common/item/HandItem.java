@@ -93,7 +93,7 @@ public class HandItem extends Item {
         DateFormat formatter = new SimpleDateFormat("dd/MM/YYYY @ HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
         String dateFormatted = formatter.format(date);
-        tooltip.add(new TranslationTextComponent("nbt.created", dateFormatted));
+        tooltip.add(new TranslationTextComponent("nbt.regeneration.created", dateFormatted));
         tooltip.add(new TranslationTextComponent(TraitManager.getDnaEntry(new ResourceLocation(getTrait(stack))).getLangKey()));
 
     }

@@ -23,7 +23,8 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -89,13 +90,33 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	private static final RobeModel ROBES = new RobeModel();
-	private static final GuardModel GUARD_MODEL = new GuardModel();
+	private static final GuardModel GUARD_HEAD = new GuardModel(EquipmentSlotType.HEAD);
+	private static final GuardModel GUARD_CHEST = new GuardModel(EquipmentSlotType.CHEST);
+	private static final GuardModel GUARD_LEGGINGS = new GuardModel(EquipmentSlotType.LEGS);
+	private static final GuardModel GUARD_FEET = new GuardModel(EquipmentSlotType.FEET);
 
-	public static BipedModel getArmorModel(Item item) {
-		if (item.getRegistryName().toString().contains("robes")) {
+	public static BipedModel getArmorModel(ItemStack item) {
+		if (item.getItem().getRegistryName().toString().contains("robes")) {
 			return ROBES;
 		}
-		return GUARD_MODEL;
+
+		if (item.getItem() == RegenObjects.Items.GUARD_HEAD.get()) {
+			return GUARD_HEAD;
+		}
+
+		if (item.getItem() == RegenObjects.Items.GUARD_CHEST.get()) {
+			return GUARD_CHEST;
+		}
+
+		if (item.getItem() == RegenObjects.Items.GUARD_LEGGINGS.get()) {
+			return GUARD_LEGGINGS;
+		}
+
+		if (item.getItem() == RegenObjects.Items.GUARD_FEET.get()) {
+			return GUARD_FEET;
+		}
+
+		return GUARD_HEAD;
 	}
 
 }

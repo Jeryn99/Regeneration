@@ -162,7 +162,7 @@ public class RegenCap implements IRegen {
 		if (regenType != null) {
 			nbt.putString("regen_type", regenType.getRegistryName().toString());
 		} else {
-            regenType = RegenTypes.FIERY;
+			regenType = RegenTypes.FIERY;
 		}
 		nbt.putString("encoded_data", BASE64_SKIN);
 		nbt.putString("skinType", skinType.name());
@@ -176,7 +176,7 @@ public class RegenCap implements IRegen {
 		nbt.putBoolean("traitActive", traitActive);
 		nbt.putInt("ticks_animating", ticksAnimating);
 		nbt.putBoolean("jar", syncingToJar);
-        if (!player.world.isRemote) nbt.put("stateManager", stateManager.serializeNBT());
+		if (!player.world.isRemote) nbt.put("stateManager", stateManager.serializeNBT());
 		nbt.putString("nextSkinType", nextSkinType.name());
 		nbt.putString("nextSkin", nextSkin);
 		nbt.putString("cutOffHand", cutOffHand.name());
@@ -188,74 +188,74 @@ public class RegenCap implements IRegen {
 	public void deserializeNBT(CompoundNBT nbt) {
 		regenerationsLeft = Math.min(RegenConfig.COMMON.regenCapacity.get(), nbt.getInt(nbt.contains("livesLeft") ? "livesLeft" : "regenerationsLeft"));
 
-        // TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
+		// TODO could probably use a utility method that checks is a key exists and returns a default value if it doesn't
 		if (nbt.contains("skinType")) {
 			setSkinType(nbt.getString("skinType"));
 		} else {
 			setSkinType(RegenUtil.isSlimSkin(player.getUniqueID()) ? "ALEX" : "STEVE");
 		}
-		
+
 		if (nbt.contains("preferredModel")) {
 			setPreferredModel(nbt.getString("preferredModel"));
 		} else {
 			setPreferredModel("ALEX");
 		}
-		
+
 		if (nbt.contains("regenerationsLeft")) {
 			regenerationsLeft = nbt.getInt("regenerationsLeft");
 		}
-		
+
 		if (nbt.contains("traitActive")) {
 			setDnaActive(nbt.getBoolean("traitAlive"));
 		} else {
 			setDnaActive(true);
 		}
-		
+
 		if (nbt.contains("regen_dna")) {
 			setDnaType(new ResourceLocation(nbt.getString("regen_dna")));
 		} else {
 			setDnaType(TraitManager.DNA_BORING.getRegistryName());
 		}
-		
+
 		if (nbt.contains("handsAreGlowing")) {
 			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
 		}
-		
+
 		if (nbt.contains("ticks_animating")) {
 			ticksAnimating = nbt.getInt("ticks_animating");
 		}
-		
+
 		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
 		setStyle(nbt.contains("style") ? (CompoundNBT) nbt.get("style") : nbt);
 
 		if (nbt.contains("regen_type")) // v1.3+ saves have a type tag
-            regenType = RegenTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString("regen_type")));
+			regenType = RegenTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString("regen_type")));
 		else // for previous save versions set to default 'fiery' type
-            regenType = RegenTypes.FIERY;
-		
+			regenType = RegenTypes.FIERY;
+
 		state = nbt.contains("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
 		setEncodedSkin(nbt.getString("encoded_data"));
 
-        if (nbt.contains("stateManager")) if (stateManager != null) {
-            stateManager.deserializeNBT((CompoundNBT) nbt.get("stateManager"));
-        }
-		
+		if (nbt.contains("stateManager")) if (stateManager != null) {
+			stateManager.deserializeNBT((CompoundNBT) nbt.get("stateManager"));
+		}
+
 		if (nbt.contains("jar")) {
 			syncingToJar = nbt.getBoolean("jar");
 		}
 
-        if (nbt.contains("nextSkin")) {
+		if (nbt.contains("nextSkin")) {
 			nextSkin = nbt.getString("nextSkin");
 		}
 		if (nbt.contains("nextSkinType")) {
 			nextSkinType = SkinInfo.SkinType.valueOf(nbt.getString("nextSkinType"));
 		}
 
-        if (nbt.contains("cutOffhand")) {
+		if (nbt.contains("cutOffhand")) {
 			cutOffHand = HandSide.valueOf(nbt.getString("cutOffHand"));
 		}
 
-        if (nbt.contains("hasCutOff")) {
+		if (nbt.contains("hasCutOff")) {
 			hasDroppedHand = nbt.getBoolean("hasCutOff");
 		}
 	}
@@ -292,7 +292,7 @@ public class RegenCap implements IRegen {
 		nbt.putFloat("PrimaryRed", primaryRed);
 		nbt.putFloat("PrimaryGreen", primaryGreen);
 		nbt.putFloat("PrimaryBlue", primaryBlue);
-		
+
 		nbt.putFloat("SecondaryRed", secondaryRed);
 		nbt.putFloat("SecondaryGreen", secondaryGreen);
 		nbt.putFloat("SecondaryBlue", secondaryBlue);
@@ -304,7 +304,7 @@ public class RegenCap implements IRegen {
 		primaryRed = nbt.getFloat("PrimaryRed");
 		primaryGreen = nbt.getFloat("PrimaryGreen");
 		primaryBlue = nbt.getFloat("PrimaryBlue");
-		
+
 		secondaryRed = nbt.getFloat("SecondaryRed");
 		secondaryGreen = nbt.getFloat("SecondaryGreen");
 		secondaryBlue = nbt.getFloat("SecondaryBlue");
@@ -584,7 +584,7 @@ public class RegenCap implements IRegen {
 				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
 				entity.heal(healthNeeded);
 				if (player instanceof PlayerEntity) {
-					PlayerUtil.sendMessage(player, new TranslationTextComponent("message.regeneration.healed", entity.getName()), true);
+					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.healed", entity.getName()), true);
 				}
 				event.setAmount(0.0F);
 				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
@@ -738,12 +738,12 @@ public class RegenCap implements IRegen {
 		
 		@Override
 		public void deserializeNBT(CompoundNBT nbt) {
-            if (nbt.contains("transitionId"))
-                scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
-			
+			if (nbt.contains("transitionId"))
+				scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
+
 			if (nbt.contains("handGlowState")) {
 				PlayerUtil.RegenState.Transition transition = PlayerUtil.RegenState.Transition.valueOf(nbt.getString("handGlowState"));
-				
+
 				Runnable callback;
 				if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START)
 					callback = this::scheduleHandGlowTrigger;

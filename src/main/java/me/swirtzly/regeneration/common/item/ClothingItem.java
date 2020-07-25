@@ -22,6 +22,11 @@ public class ClothingItem extends ArmorItem {
     }
 
     @Override
+    public EquipmentSlotType getEquipmentSlot() {
+        return this.slot;
+    }
+
+    @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         super.fillItemGroup(group, items);
     }
@@ -29,7 +34,7 @@ public class ClothingItem extends ArmorItem {
     @Nullable
     @Override
     public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
-        return (A) ClientProxy.getArmorModel(this);
+        return (A) ClientProxy.getArmorModel(itemStack);
     }
 
     @Nullable
