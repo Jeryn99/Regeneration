@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.UseAction;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -80,6 +81,13 @@ public class GunItem extends SolidItem {
             if (getDamage(stack) > 0) {
                 setDamage(stack, getDamage(stack) - 1);
             }
+        }
+
+        if (stack.getTag() == null) {
+            stack.setTag(new CompoundNBT());
+            stack.getTag().putBoolean("live", true);
+        } else {
+            stack.getTag().putBoolean("live", true);
         }
     }
 

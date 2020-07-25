@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 
 public class GuardModel extends BipedModel {
@@ -274,7 +275,12 @@ public class GuardModel extends BipedModel {
             GlStateManager.translatef(0.0F, 0.2F, 0.0F);
         }
         if (isWearingHelmet) {
+            GlStateManager.pushMatrix();
+            if (entityIn instanceof ArmorStandEntity) {
+                GlStateManager.rotatef(-90, 0F, 1, 0F);
+            }
             this.head.render(scale);
+            GlStateManager.popMatrix();
         }
         if (isWearingChest) {
             GlStateManager.pushMatrix();

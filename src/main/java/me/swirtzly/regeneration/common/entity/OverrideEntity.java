@@ -98,6 +98,12 @@ public class OverrideEntity extends Entity {
 
 	@Override
 	public void tick() {
+
+        if (getItem().getTag() == null || getItem().getTag().isEmpty() || !getItem().isEmpty() && !getItem().getTag().contains("live")) {
+            this.remove();
+            return;
+        }
+
         if (getItem().getItem() instanceof SolidItem && ((SolidItem) getItem().getItem()).onSolidEntityItemUpdate(this))
             return;
         if (this.getItem().isEmpty()) {
