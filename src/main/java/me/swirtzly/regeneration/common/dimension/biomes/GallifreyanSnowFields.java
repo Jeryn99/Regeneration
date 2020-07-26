@@ -7,9 +7,9 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 
 import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
 
-public class GallifraynSnowFields extends Biome {
+public class GallifreyanSnowFields extends Biome {
 
-    public GallifraynSnowFields() {
+    public GallifreyanSnowFields() {
         super((new Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(RainType.SNOW).category(Category.TAIGA).depth(0.2F).scale(0.2F).temperature(-0.5F).downfall(0.4F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent((String)null));
         DefaultBiomeFeatures.addCarvers(this);
         DefaultBiomeFeatures.addStructures(this);
