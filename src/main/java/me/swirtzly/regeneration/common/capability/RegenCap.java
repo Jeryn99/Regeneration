@@ -10,8 +10,8 @@ import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.messages.SyncClientPlayerMessage;
 import me.swirtzly.regeneration.network.messages.SyncDataMessage;
+import me.swirtzly.regeneration.network.messages.SyncRegenDataToClientMessage;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
 import me.swirtzly.regeneration.util.common.RegenerationScheduledAction;
@@ -50,18 +50,18 @@ public class RegenCap implements IRegen {
 
     private ResourceLocation traitLocation = new ResourceLocation(Regeneration.MODID, "boring");
 
-	private final LivingEntity player;
-    private final RegenStateManager stateManager;
+    private final LivingEntity player;
+    private final StateManager stateManager;
     private String deathSource = "";
-	private boolean didSetup = false, traitActive = true;
-	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
+    private boolean didSetup = false, traitActive = true;
+    private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
 
     private String BASE64_SKIN = RegenUtil.NO_SKIN;
     private String nextSkin = RegenUtil.NO_SKIN;
     private RegenTypes regenType = RegenTypes.FIERY;
 
     private HandSide cutOffHand = HandSide.LEFT;
-	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
+    private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
     private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
     private SkinManipulation.EnumChoices preferredModel = SkinManipulation.EnumChoices.EITHER;
 
@@ -82,10 +82,10 @@ public class RegenCap implements IRegen {
 
 	public RegenCap(LivingEntity player) {
 		this.player = player;
-		if (!player.world.isRemote)
-            this.stateManager = new RegenStateManager();
-		else
-			this.stateManager = null;
+        if (!player.world.isRemote)
+            this.stateManager = new StateManager();
+        else
+            this.stateManager = null;
 	}
 
     @Nonnull
@@ -145,13 +145,13 @@ public class RegenCap implements IRegen {
 	
 	@Override
 	public void synchronise() {
-		if (player != null && player.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
+        if (player != null && player.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
 
-		handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
-		CompoundNBT nbt = serializeNBT();
-		nbt.remove("stateManager");
-		NetworkDispatcher.sendPacketToDimension(player.dimension, new SyncClientPlayerMessage(player, nbt));
-	}
+        handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
+        CompoundNBT nbt = serializeNBT();
+        nbt.remove("stateManager");
+        NetworkDispatcher.sendPacketToDimension(player.dimension, new SyncRegenDataToClientMessage(player, nbt));
+    }
 	
 	@Override
 	public CompoundNBT serializeNBT() {
@@ -444,26 +444,26 @@ public class RegenCap implements IRegen {
 	}
 
     @Override
-	public HandSide getCutoffHand() {
-		return cutOffHand;
-	}
+    public HandSide getCutoffHand() {
+        return cutOffHand;
+    }
 
     @Override
-	public void setCutOffHand(HandSide side) {
-		cutOffHand = side;
-	}
+    public void setCutOffHand(HandSide side) {
+        cutOffHand = side;
+    }
 
     @Override
-    public IRegenStateManager getStateManager() {
-		return stateManager;
-	}
-	
-	@Override
-	public PlayerUtil.RegenState getState() {
-		return state;
-	}
+    public IStateManager getStateManager() {
+        return stateManager;
+    }
 
-	@Override
+    @Override
+    public PlayerUtil.RegenState getState() {
+        return state;
+    }
+
+    @Override
     public RegenTypes getType() {
 		return regenType;
 	}
@@ -479,26 +479,26 @@ public class RegenCap implements IRegen {
             throw new IllegalStateException("Triggering regeneration via capability instance on the client side");
 		stateManager.triggerRegeneration();
 	}
-	
-	/**
-	 * ONLY EXISTS ON THE SERVER SIDE
-	 */
-    public class RegenStateManager implements IRegenStateManager {
-		
-		private final Map<PlayerUtil.RegenState.Transition, Runnable> transitionCallbacks;
-		private RegenerationScheduledAction nextTransition, handGlowTimer;
 
-        private RegenStateManager() {
-			this.transitionCallbacks = new HashMap<>();
-			transitionCallbacks.put(PlayerUtil.RegenState.Transition.ENTER_CRITICAL, this::enterCriticalPhase);
-			transitionCallbacks.put(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, this::midSequenceKill);
-			transitionCallbacks.put(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, this::finishRegeneration);
-			transitionCallbacks.put(PlayerUtil.RegenState.Transition.END_POST, this::endPost);
-			
-			Runnable err = () -> {
-				throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
-			};
-			transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_START, err);
+    /**
+     * ONLY EXISTS ON THE SERVER SIDE
+     */
+    public class StateManager implements IStateManager {
+
+        private final Map<PlayerUtil.RegenState.Transition, Runnable> transitionCallbacks;
+        private RegenerationScheduledAction nextTransition, handGlowTimer;
+
+        private StateManager() {
+            this.transitionCallbacks = new HashMap<>();
+            transitionCallbacks.put(PlayerUtil.RegenState.Transition.ENTER_CRITICAL, this::enterCriticalPhase);
+            transitionCallbacks.put(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, this::midSequenceKill);
+            transitionCallbacks.put(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, this::finishRegeneration);
+            transitionCallbacks.put(PlayerUtil.RegenState.Transition.END_POST, this::endPost);
+
+            Runnable err = () -> {
+                throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
+            };
+            transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_START, err);
 			transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, err);
 		}
 

@@ -202,26 +202,25 @@ public class SkinManipulation {
 
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
-        AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
+		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
 
-        PlayerModel<AbstractClientPlayerEntity> model = renderPlayerEvent.getRenderer().getEntityModel();
+		PlayerModel<AbstractClientPlayerEntity> model = renderPlayerEvent.getRenderer().getEntityModel();
 
-        boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
-        model.bipedBody.isHidden = isWearingChest;
-        model.bipedBodyWear.isHidden = isWearingChest;
-        model.bipedLeftArm.isHidden = isWearingChest;
-        model.bipedRightArm.isHidden = isWearingChest;
+		boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
+		model.bipedBody.isHidden = isWearingChest;
+		model.bipedBodyWear.isHidden = isWearingChest;
+		model.bipedLeftArmwear.isHidden = isWearingChest;
+		model.bipedRightArmwear.isHidden = isWearingChest;
 
-        boolean isWearingLeggings = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegenObjects.Items.GUARD_LEGGINGS.get();
-        model.bipedRightLegwear.isHidden = isWearingLeggings;
-        model.bipedLeftLegwear.isHidden = isWearingLeggings;
+		boolean isWearingLeggings = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegenObjects.Items.GUARD_LEGGINGS.get();
+		model.bipedRightLegwear.isHidden = isWearingLeggings;
+		model.bipedLeftLegwear.isHidden = isWearingLeggings;
 
+		RegenCap.get(player).ifPresent((cap) -> {
 
-        RegenCap.get(player).ifPresent((cap) -> {
-
-            /* When the player is in a Post Regenerative state and above a 3x3 grid of Zero Rounde Blocks,
-             *  We want them to float up and down slightly*/
-            if (cap.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(player)) {
+			/* When the player is in a Post Regenerative state and above a 3x3 grid of Zero Rounde Blocks,
+			 *  We want them to float up and down slightly*/
+			if (cap.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(player)) {
                 float floatingOffset = MathHelper.cos(player.ticksExisted * 0.1F) * -0.09F + 0.5F;
                 GlStateManager.translated(0, floatingOffset, 0);
             }

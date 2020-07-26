@@ -258,6 +258,7 @@ public class RegenObjects {
 		public static final RegistryObject<Biome> REDLANDS_FOREST = BIOMES.register("redlands_forest", GallifreyanRedlandsForest::new);
 		public static final RegistryObject<Biome> WASTELANDS_MOUNTAINS = BIOMES.register("wasteland_mountains", GallifreyanWastelandsMountains::new);
 		public static final RegistryObject<Biome> GOLDEN_FIELDS = BIOMES.register("golden_fields", GallifreyanGoldenFields::new);
+		public static final RegistryObject<Biome> SNOWY = BIOMES.register("snowy", GallifreyanSnowFields::new);
 
 		public static Biome[] getBiomes() {
 			return new Biome[]{
@@ -268,7 +269,8 @@ public class RegenObjects {
 					WASTELANDS.get(),
 					REDLANDS_FOREST.get(),
 					WASTELANDS_MOUNTAINS.get(),
-					GOLDEN_FIELDS.get()
+					GOLDEN_FIELDS.get(),
+					SNOWY.get()
 			};
 		}
 

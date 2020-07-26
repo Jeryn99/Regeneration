@@ -26,7 +26,7 @@ public class NetworkDispatcher {
         INSTANCE.registerMessage(id++, UpdateStateMessage.class, UpdateStateMessage::encode, UpdateStateMessage::decode, UpdateStateMessage.Handler::handle);
         INSTANCE.registerMessage(id++, RegenerateMessage.class, RegenerateMessage::encode, RegenerateMessage::decode, RegenerateMessage.Handler::handle);
         INSTANCE.registerMessage(id++, SyncDataMessage.class, SyncDataMessage::encode, SyncDataMessage::decode, SyncDataMessage.Handler::handle);
-        INSTANCE.registerMessage(id++, SyncClientPlayerMessage.class, SyncClientPlayerMessage::encode, SyncClientPlayerMessage::decode, SyncClientPlayerMessage.Handler::handle);
+        INSTANCE.registerMessage(id++, SyncRegenDataToClientMessage.class, SyncRegenDataToClientMessage::encode, SyncRegenDataToClientMessage::decode, SyncRegenDataToClientMessage.Handler::handle);
         INSTANCE.registerMessage(id++, UpdateSkinMessage.class, UpdateSkinMessage::encode, UpdateSkinMessage::decode, UpdateSkinMessage.Handler::handle);
         INSTANCE.registerMessage(id++, InvalidatePlayerDataMessage.class, InvalidatePlayerDataMessage::encode, InvalidatePlayerDataMessage::decode, InvalidatePlayerDataMessage.Handler::handle);
         INSTANCE.registerMessage(id++, PlaySFXMessage.class, PlaySFXMessage::encode, PlaySFXMessage::decode, PlaySFXMessage.Handler::handle);

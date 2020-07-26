@@ -4,10 +4,13 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.animateme.AnimationManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
+import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 
@@ -32,13 +35,20 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
             RegenCap.get(entity).ifPresent((data) -> {
                 if (!(renderer.getEntityModel() instanceof BipedModel)) return;
                 BipedModel modelPlayer = (BipedModel) renderer.getEntityModel();
+                boolean isWearingChest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
                 if (data.hasDroppedHand() && data.getState() == PlayerUtil.RegenState.POST) {
                     modelPlayer.bipedRightArm.isHidden = data.getCutoffHand() == HandSide.RIGHT;
                     modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
                 } else {
-                    modelPlayer.bipedLeftArm.isHidden = false;
-                    modelPlayer.bipedRightArm.isHidden = false;
+
+                    if (entity.getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
+                        boolean isFirstPerson = Minecraft.getInstance().gameSettings.thirdPersonView == 0;
+                        modelPlayer.bipedLeftArm.isHidden = !isFirstPerson && isWearingChest;
+                        modelPlayer.bipedRightArm.isHidden = !isFirstPerson && isWearingChest;
+                    }
+
                 }
+
 
                 if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
                     GlStateManager.rotatef(15, 1, 0, 0);

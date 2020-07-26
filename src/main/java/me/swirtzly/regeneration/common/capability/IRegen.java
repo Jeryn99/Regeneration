@@ -60,7 +60,7 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 
     void setType(RegenTypes type);
 
-    IRegenStateManager getStateManager();
+    IStateManager getStateManager();
 	
 	String getEncodedSkin();
 	

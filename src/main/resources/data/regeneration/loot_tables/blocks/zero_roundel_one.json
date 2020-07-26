@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "name": "regeneration:zero_roundel_one",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "regeneration:zero_roundel_one"
+        }
+      ]
+    }
+  ]
+}
+    

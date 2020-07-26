@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.api.ZeroRoomEvent;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.common.block.RegenTags;
 import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.HandItem;
@@ -19,8 +20,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.SwordItem;
-import net.minecraft.item.ToolItem;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.HandSide;
@@ -50,7 +49,7 @@ public class PlayerUtil {
             Effect potion = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionName));
             if (potion != null) {
                 POTIONS.add(potion);
-                System.out.println("ADDED: " + potionName);
+                Regeneration.LOG.info("ADDED: " + potionName);
             } else {
                 Regeneration.LOG.error(potionName + " is not a Valid Potion/Effect! Not adding this time around!");
             }
@@ -119,7 +118,7 @@ public class PlayerUtil {
 	}
 
     public static boolean isSharp(ItemStack stack) {
-        return stack.getItem() instanceof ToolItem || stack.getItem() instanceof SwordItem;
+        return stack.getItem().isIn(RegenTags.SHARP_ITEMS);
     }
 
     public static void createHand(LivingEntity player) {

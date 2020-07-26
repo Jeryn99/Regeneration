@@ -6,11 +6,11 @@
     "IGI"
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
     "G": {
       "item": "minecraft:ghast_tear"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
     },
     "E": {
       "item": "minecraft:ender_eye"
@@ -23,7 +23,6 @@
     }
   },
   "result": {
-    "item": "regeneration:fob_watch",
-    "count": 1
+    "item": "regeneration:fob_watch"
   }
 }

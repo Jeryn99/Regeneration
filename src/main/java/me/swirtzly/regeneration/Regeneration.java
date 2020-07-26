@@ -2,7 +2,10 @@ package me.swirtzly.regeneration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.swirtzly.data.BlockTagCreation;
+import me.swirtzly.data.ItemsTagCreation;
 import me.swirtzly.data.LangProvider;
+import me.swirtzly.data.RecipeCreation;
 import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.LaserRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.TimelordRenderer;
@@ -110,6 +113,9 @@ public class Regeneration {
     @SubscribeEvent
     public void gatherData(GatherDataEvent e) {
         e.getGenerator().addProvider(new LangProvider(e.getGenerator()));
+        e.getGenerator().addProvider(new RecipeCreation(e.getGenerator()));
+        e.getGenerator().addProvider(new ItemsTagCreation(e.getGenerator()));
+        e.getGenerator().addProvider(new BlockTagCreation(e.getGenerator()));
     }
 
 

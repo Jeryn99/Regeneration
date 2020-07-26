@@ -2,6 +2,7 @@ package me.swirtzly.data;
 
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.traits.TraitManager;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -48,6 +49,7 @@ public LangProvider(DataGenerator gen) {
         this.add(RegenObjects.GallifreyBiomes.GOLDEN_FIELDS.get(), "Galliffreyan Golden Fields");
         this.add(RegenObjects.GallifreyBiomes.GALLIFREYAN_RIVER.get(), "Galliffreyan River");
         this.add(RegenObjects.GallifreyBiomes.WASTELANDS_MOUNTAINS.get(), "Galliffreyan Wastelands Mountains");
+        this.add(RegenObjects.GallifreyBiomes.SNOWY.get(), "Galliffreyan Snowy Redlands");
 
         // === Blocks ===
         this.add(RegenObjects.Blocks.GAL_ORE.get(), "Unknown Ore");
@@ -140,8 +142,8 @@ public LangProvider(DataGenerator gen) {
         add("nbt.regeneration.created", "Created on: %s");
 
         // === Regen ===
-        add("type.regeneration.hartnell", "Hartnell");
-        add("type.regeneration.fiery", "Fiery");
+        add(RegenTypes.HARTNELL.create().getTranslation().getKey(), "Hartnell");
+        add(RegenTypes.FIERY.create().getTranslation().getKey(), "Fiery");
 
         // === Item Groups ===
         add("itemGroup.regeneration", Regeneration.MODID);
