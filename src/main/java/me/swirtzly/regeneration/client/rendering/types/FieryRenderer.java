@@ -76,7 +76,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
     private static void renderConeAtArms(LivingEntity player, HandSide side) {
         GlStateManager.pushMatrix();
 		RegenCap.get(player).ifPresent((data) -> {
-            double x = data.getType().create().getAnimationProgress(data);
+            double x = data.getRegenType().create().getAnimationProgress(data);
             double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
             double r = 0.09890109890109888;
             double f = p * Math.pow(x, 2) - r;
@@ -226,9 +226,9 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 		RegenCap.get(entity).ifPresent((data) -> {
 
             /* We want the player to go into a "T-Pose" type animation while they are Regenerating in this Fiery Type */
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RegenTypes.FIERY) {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getRegenType() == RegenTypes.FIERY) {
                 double animationProgress = data.getAnimationTicks();
-				double arm_shake = entity.getRNG().nextDouble();
+                double arm_shake = entity.getRNG().nextDouble();
                 float armRotY = (float) animationProgress * 1.5F;
                 float armRotZ = (float) animationProgress * 1.5F;
                 float headRot = (float) animationProgress * 1.5F;

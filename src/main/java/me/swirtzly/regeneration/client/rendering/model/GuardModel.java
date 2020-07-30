@@ -319,7 +319,7 @@ public class GuardModel extends BipedModel {
     public void setRotationAngles(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
         super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
         RegenCap.get(entityIn).ifPresent(iRegen -> {
-            iRegen.getType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, Minecraft.getInstance().getRenderPartialTicks(), ageInTicks, netHeadYaw, headPitch);
+            iRegen.getRegenType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, Minecraft.getInstance().getRenderPartialTicks(), ageInTicks, netHeadYaw, headPitch);
         });
         this.head.copyModelAngles(this.bipedHead);
         this.left_arm.copyModelAngles(this.bipedLeftArm);

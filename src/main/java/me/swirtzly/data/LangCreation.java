@@ -4,14 +4,15 @@ import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 
-public class LangProvider extends LanguageProvider {
+public class LangCreation extends LanguageProvider {
 
-public LangProvider(DataGenerator gen) {
-    super(gen, Regeneration.MODID, "en_us");
-}
+    public LangCreation(DataGenerator gen) {
+        super(gen, Regeneration.MODID, "en_us");
+    }
 
     @Override
     protected void addTranslations() {
@@ -113,7 +114,7 @@ public LangProvider(DataGenerator gen) {
         add("regeneration.gui.next", ">");
         add("regeneration.gui.default", "Default");
         add("regeneration.gui.open_folder", "Skin Dir");
-        add("regeneration.gui.skin_choice", "Select next incarnation");
+        add("regeneration.gui.skin_choice", "Skin Settings");
         add("regeneration.gui.save", "Save");
         add("regeneration.gui.next_incarnation", "Select next incarnation");
         add("regeneration.gui.reset_skin", "Reset Skin");
@@ -121,9 +122,13 @@ public LangProvider(DataGenerator gen) {
         add("regeneration.gui.remaining_regens.status", "Remaining Regenerations,");
         add("regeneration.gui.color_gui", "Color selection");
         add("regeneration.gui.current_skin", "Select next Incarnation");
-        add("regeneration.gui.skintype", "Model: %s");
+        add("regeneration.gui.skintype", "Preference: %s");
         add("regeneration.gui.back", "Back");
         add("regeneration.gui.preferences", "Preferences");
+
+        for (PlayerUtil.EnumChoices value : PlayerUtil.EnumChoices.values()) {
+            add("regeneration.skin_type." + value.name().toLowerCase(), grammerNazi(value.name().toLowerCase()));
+        }
 
         // === Tardis Compat ===
         add("tardis.protocol.arch", "Toggle Chameleon Arch");
@@ -134,9 +139,6 @@ public LangProvider(DataGenerator gen) {
         add("message.regeneration.arch_no_space", "There is not enough space to deploy!");
 
         // === NBT ===
-        add("nbt.regeneration.item.water", "Has water: %s");
-        add("nbt.regeneration.item.water_filled", "You have now filled this Vial with Water");
-        add("nbt.regeneration.item.water_already_filled", "This Vial already has water in it");
         add("nbt.regeneration.item.lindos", "Lindos Energy: %s");
         add("nbt.regeneration.item.stored_regens", "Stored Regenerations: %s");
         add("nbt.regeneration.created", "Created on: %s");
@@ -167,6 +169,15 @@ public LangProvider(DataGenerator gen) {
         add("regeneration.keybinds.regenerate_forced", "Force Regen/Sync to hand!");
         add("regeneration.keybinds.regenerate", "Regenerate");
 
+        // === Toasts ===
+        add("regeneration.toast.regenerated", "You have regenerated!");
+        add("regeneration.toast.regenerations_left", "%s regenerations left");
+        add("regeneration.toast.enter_critical", "You are going critical");
+        add("regeneration.toast.enter_critical.sub", "%s minutes left...");
+        add("regeneration.toast.timelord", "You are now a Time lord!");
+        add("regeneration.toast.to_use", "You have %s lives now!");
+
+
         // === Damages Sources ===
         add("regeneration.damagesrc.regen_energy", "%s was blasted by Regeneration Energy!");
         add("regeneration.damagesrc.regen_heal", "%s died by donating too much Regeneration energy...");
@@ -175,27 +186,25 @@ public LangProvider(DataGenerator gen) {
         add("regeneration.damagesrc.lindos", "%s consumed lindos hormones! They are reborn!");
         add("regeneration.damagesrc.regen_killed", "%s was killed mid-regeneration....");
 
-        // === Toast ===
-        add("regeneration.toast.regenerated", "You have regenerated!");
-        add("regeneration.toast.regenerations_left", "%s regenerations left");
-        add("regeneration.toast.enter_critical", "You are going critical");
-        add("regeneration.toast.enter_critical.sub", "%s minutes left...");
-        add("regeneration.toast.timelord", "You are now a Time lord!");
-        add("regeneration.toast.to_use", "You have %s lives now!");
-
-        // === Advancements ===
-        add("regeneration.advancement.regeneration", "Change my dear...");
-        add("regeneration.advancement.regeneration.desc", "Regenerate for the First time!");
-        add("regeneration.advancement.change_refusal", "I. WILL. NOT. CHANGE!");
-        add("regeneration.advancement.change_refusal.desc", "Punch a block to delay your regeneration!");
-        add("regeneration.advancement.critical", "Your song is ending...");
-        add("regeneration.advancement.critical.desc", "Refuse to Regenerate up till the point of near death...");
-        add("regeneration.advancement.lindos_vial", "Lindos!");
-        add("regeneration.advancement.lindos_vial.desc", "Craft a Lindos Vial!");
+        // === "advancements ===
+        add("advancements.regeneration.title.change_refusal", "I. WILL. NOT. CHANGE!");
+        add("advancements.regeneration.desc.change_refusal", "Punch a block to delay your regeneration!");
+        add("advancements.regeneration.title.critical_period", "Your song is ending...");
+        add("advancements.regeneration.desc.critical_period", "Refuse to Regenerate up till the point of near death...");
+        add("advancements.regeneration.title.first_regen", "Change my dear...");
+        add("advancements.regeneration.desc.first_regen", "Regenerate for the First time!");
+        add("advancements.regeneration.title.robes", "Member of the High Council");
+        add("advancements.regeneration.desc.robes", "Wear Gallifreyan Robes");
+        add("advancements.regeneration.title.gallifrey", "Constellation of kasterborous");
+        add("advancements.regeneration.desc.gallifrey", "Step foot on Gallifrey");
+        add("advancements.regeneration.title.gallifreyan_weapon", "There's no Stun Setting...");
+        add("advancements.regeneration.desc.gallifreyan_weapon", "Hold a Gallifreyan Weapon");
+        add("advancements.regeneration.title.timelord_trade", "Galactic Fortune");
+        add("advancements.regeneration.desc.timelord_trade", "Trade with a Timelord");
 
         // === Messages ===
         add("regeneration.messages.now_timelord", "You are now a Time lord!");
-        add("regeneration.messages.gained_regens", "You've received %s regenerations from the Fob Watch");
+        add("regeneration.messages.gained_regens", "Recieved Regenerations!");
         add("regeneration.messages.new_skin", "Your skin will change next Regeneration!");
         add("regeneration.messages.transfer.success", "You've transferred one of your regenerations into the watch");
         add("regeneration.messages.transfer.full_watch", "You can't store anymore regenerations in this watch!");
@@ -209,13 +218,11 @@ public LangProvider(DataGenerator gen) {
         add("regeneration.messages.warning.grace_critical", "You are near death, press %s to regenerate!");
         add("regeneration.messages.regen_delayed", "Regeneration delayed!");
         add("regeneration.messages.regen_warning", "Punch a block to delay your regeneration further");
-        add("regeneration.messages.theft", "You stole the body of %s!");
         add("regeneration.messages.jar", "You have gained a Regeneration from harvested lindos!");
         add("regeneration.messages.jar_not_enough", "There is not enough Lindos in this jar! [100 Lindos = 1 free Regeneration]");
         add("regeneration.messages.jar_no_break", "You cannot break this Jar while it has %s Lindos Energy!");
         add("regeneration.messages.not_alive", "You cannot transfer regens in this state!");
         add("regeneration.messages.item_taken_regens", "You have gained %s regenerations from %s");
-        add("regeneration.messages.no_water", "This Vial has no water...");
         add("regeneration.messages.cannot_use", "You cannot use this right now!");
         add("regeneration.messages.healed", "You have given %s some of your Regeneration Energy!");
         add("regeneration.messages.reduced_dmg", "Reduced Damage due to Post Regen State!");
@@ -230,5 +237,10 @@ public LangProvider(DataGenerator gen) {
         add("regeneration.messages.item_invalid", "This item either contains no Regenerations and you have no regenerations to store!");
         add("regeneration.messages.stored_item", "%s Regenerations have been stored into %s");
 
+    }
+
+    public String grammerNazi(String text) {
+        String firstLetter = text.substring(0, 1).toUpperCase();
+        return firstLetter + text.substring(1);
     }
 }

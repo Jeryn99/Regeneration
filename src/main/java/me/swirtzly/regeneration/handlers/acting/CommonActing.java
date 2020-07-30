@@ -33,7 +33,7 @@ class CommonActing implements Acting {
     }
 
 	public static SoundEvent getRandomSound(Random random, IRegen cap) {
-		SoundEvent[] SOUNDS = cap.getType().create().getRegeneratingSounds();
+		SoundEvent[] SOUNDS = cap.getRegenType().create().getRegeneratingSounds();
 		return SOUNDS[random.nextInt(SOUNDS.length)];
 	}
 	
@@ -88,15 +88,15 @@ class CommonActing implements Acting {
     public void onEnterGrace(IRegen cap) {
 		LivingEntity player = cap.getLivingEntity();
 		RegenUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
-		
+
 		// Reduce number of hearts, but compensate with absorption
 		player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
-		
+
 		if (!player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).hasModifier(heartModifier)) {
 			player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
 		}
-		
-		TraitManager.IDna dna = TraitManager.getDnaEntry(cap.getDnaType());
+
+		TraitManager.IDna dna = TraitManager.getDnaEntry(cap.getTrait());
 		dna.onRemoved(cap);
 		cap.setDnaActive(false);
 		player.setHealth(player.getMaxHealth());
@@ -128,13 +128,13 @@ class CommonActing implements Acting {
 		player.addPotionEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
 		player.setHealth(player.getMaxHealth());
 		player.setAbsorptionAmount(RegenConfig.COMMON.absorbtionLevel.get() * 2);
-		
-		cap.setDnaType(TraitManager.getRandomDna(player.world.rand).getRegistryName());
-		TraitManager.IDna newDna = TraitManager.getDnaEntry(cap.getDnaType());
+
+		cap.setTrait(TraitManager.getRandomDna(player.world.rand).getRegistryName());
+		TraitManager.IDna newDna = TraitManager.getDnaEntry(cap.getTrait());
 		newDna.onAdded(cap);
 		cap.setDnaActive(true);
 		PlayerUtil.sendMessage(player, new TranslationTextComponent(newDna.getLangKey()), true);
-        cap.setNextSkin(RegenUtil.NO_SKIN);
+		cap.setNextSkin(RegenUtil.NO_SKIN);
 	}
 	
 	@Override

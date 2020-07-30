@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.*;
+import static me.swirtzly.regeneration.common.skin.HandleSkins.*;
 
 public class FileUtil {
 
@@ -68,6 +68,7 @@ public class FileUtil {
 		uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
 		Regeneration.LOG.warn("Downloading Skin from: {}", url.toString());
 		BufferedImage img = ImageIO.read(uc.getInputStream());
+
 		img = ClientUtil.ImageFixer.convertSkinTo64x64(img);
 
 		File file = ImageDownloader.isAlexSkin(img) ? alexDir : steveDir;
@@ -83,6 +84,9 @@ public class FileUtil {
 		if (!alexDir.exists()) {
 			alexDir.mkdirs();
 		}
+
+		Regeneration.LOG.warn("Saving Skin to: {}", file.getPath());
+
 		ImageIO.write(img, "png", new File(file, filename + ".png"));
 	}
 	

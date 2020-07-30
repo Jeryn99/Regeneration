@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.common.block;
 
+import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import me.swirtzly.regeneration.handlers.RegenObjects;
@@ -16,7 +17,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.SPlaySoundPacket;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -98,17 +98,13 @@ public class BlockHandInJar extends DirectionalBlock {
 	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (worldIn.isRemote) return false;
 
-        if (player instanceof ServerPlayerEntity) {
-            ServerPlayerEntity playerEntity = (ServerPlayerEntity) player;
-            //ResourceLocation p_i47939_1_, SoundCategory p_i47939_2_, Vec3d p_i47939_3_, float p_i47939_4_, float p_i47939_5_
-            playerEntity.connection.sendPacket(new SPlaySoundPacket());
-        }
-
         if (worldIn.getTileEntity(pos) instanceof HandInJarTile) {
-            HandInJarTile jar = (HandInJarTile) worldIn.getTileEntity(pos);
+			HandInJarTile jar = (HandInJarTile) worldIn.getTileEntity(pos);
 
-			RegenCap.get(player).ifPresent((data) -> {
+			boolean dataThere = RegenCap.get(player).isPresent();
 
+			if (dataThere) {
+				IRegen data = RegenCap.get(player).orElseGet(null);
 				if (jar.getLindosAmont() >= 100 && data.getState() == PlayerUtil.RegenState.ALIVE && player.isSneaking() && jar.hasHand()) {
 					PlayerUtil.lookAt(jar.getPos().getX(), jar.getPos().getY(), jar.getPos().getZ(), player);
 					jar.setLindosAmont(jar.getLindosAmont() - 100);
@@ -118,17 +114,17 @@ public class BlockHandInJar extends DirectionalBlock {
 					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), RegenObjects.Sounds.HAND_GLOW.get(), SoundCategory.PLAYERS, 1.0F, 0.7F);
 					data.synchronise();
 					jar.sendUpdates();
-					// return true;
+					return true;
 				}
 
 				if (data.getState() != PlayerUtil.RegenState.REGENERATING && !player.isSneaking()) {
 					NetworkHooks.openGui((ServerPlayerEntity) player, jar, jar.getPos());
-					// return true;
+					return true;
 				}
-				// return false;
-			});
-
+				return false;
+			}
 		}
+
 		return true; //This means you can't accidentally place another block when you click this
 	}
 

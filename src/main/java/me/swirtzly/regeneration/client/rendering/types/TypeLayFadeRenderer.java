@@ -48,7 +48,7 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
     @Override
     public void preRenderCallback(LivingRenderer renderer, LivingEntity entity) {
         RegenCap.get(entity).ifPresent((data) -> {
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RegenTypes.HARTNELL) {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getRegenType() == RegenTypes.HARTNELL) {
                 GlStateManager.rotatef(15, 1, 0, 0);
             }
         });
@@ -57,7 +57,7 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
     @Override
     public void animateEntity(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(entity).ifPresent((data) -> {
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getType() == RegenTypes.HARTNELL) {
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getRegenType() == RegenTypes.HARTNELL) {
                 model.bipedHead.rotateAngleX = (float) Math.toRadians(0);
                 model.bipedHead.rotateAngleY = (float) Math.toRadians(0);
                 model.bipedHead.rotateAngleZ = (float) Math.toRadians(0);

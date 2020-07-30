@@ -76,7 +76,7 @@ public class TraitManager {
 	@SubscribeEvent
 	public static void onXpPickup(PlayerPickupXpEvent e) {
         RegenCap.get(e.getEntityPlayer()).ifPresent((data) -> {
-            IDna dna = TraitManager.getDnaEntry(data.getDnaType());
+            IDna dna = TraitManager.getDnaEntry(data.getTrait());
             if (dna.getRegistryName().equals(TraitManager.DNA_DUMB.getRegistryName()) && data.isDnaActive()) {
                 e.getOrb().xpValue *= 0.5;
             }
@@ -89,7 +89,7 @@ public class TraitManager {
 			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             RegenCap.get(player).ifPresent((data) -> {
                 if (player.world.isRemote) return;
-                if (data.isDnaActive() && data.getDnaType().equals(DNA_ATHLETE.getRegistryName())) {
+                if (data.isDnaActive() && data.getTrait().equals(DNA_ATHLETE.getRegistryName())) {
                     player.getMotion().add(0, 0.1, 0);
                     player.velocityChanged = true;
                 }
@@ -104,8 +104,8 @@ public class TraitManager {
 		if (source != null && attacked != null && source.getImmediateSource() != null) {
 			if (attacked instanceof PlayerEntity && source.getImmediateSource() instanceof AbstractArrowEntity) {
 				if (!attacked.world.isRemote) {
-					PlayerEntity player = (PlayerEntity) attacked;
-                    boolean flag = RegenCap.get(player).orElse(null).getDnaType().toString().equals(DNA_REPEL_ARROW.getRegistryName().toString());
+                    PlayerEntity player = (PlayerEntity) attacked;
+                    boolean flag = RegenCap.get(player).orElse(null).getTrait().toString().equals(DNA_REPEL_ARROW.getRegistryName().toString());
 					event.setCanceled(flag);
 				}
 			}

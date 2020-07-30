@@ -3,7 +3,6 @@ package me.swirtzly.regeneration.common.capability;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.api.RegenerationEvent;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
-import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
@@ -22,27 +21,29 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	LivingEntity getLivingEntity();
 	
 	int getRegenerationsLeft();
-	
+
 	/**
 	 * Only for debug purposes!
 	 */
 	@Deprecated
 	void setRegenerationsLeft(int amount);
-	
+
 	void triggerRegeneration();
-	
+
 	void tick();
-	
+
 	void synchronise();
-	
+
+	void setEncodedSkin(String string);
+
 	CompoundNBT getStyle();
-	
+
 	void setStyle(CompoundNBT nbt);
-	
+
 	Vec3d getPrimaryColor();
-	
+
 	Vec3d getSecondaryColor();
-	
+
 	/**
 	 * Returns if the player is currently <i>able to</i> regenerate
 	 */
@@ -56,42 +57,40 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	
 	PlayerUtil.RegenState getState();
 
-    RegenTypes getType();
+	RegenTypes getRegenType();
 
-    void setType(RegenTypes type);
+	void setRegenType(RegenTypes type);
 
     IStateManager getStateManager();
 	
 	String getEncodedSkin();
 	
-	void setEncodedSkin(String string);
-	
 	SkinInfo.SkinType getSkinType();
 	
 	void setSkinType(String skinType);
 
-    SkinManipulation.EnumChoices getPreferredModel();
-	
+	PlayerUtil.EnumChoices getPreferredModel();
+
 	void setPreferredModel(String skinType);
-	
+
 	boolean areHandsGlowing();
-	
+
 	String getDeathSource();
-	
+
 	void setDeathSource(String source);
-	
-	ResourceLocation getDnaType();
-	
-	void setDnaType(ResourceLocation resgitryName);
-	
+
+	ResourceLocation getTrait();
+
+	void setTrait(ResourceLocation registryName);
+
 	boolean isDnaActive();
-	
+
 	void setDnaActive(boolean alive);
-	
+
 	int getAnimationTicks();
 
-    void setAnimationTicks(int ticks);
-	
+	void setAnimationTicks(int ticks);
+
 	void setSyncingFromJar(boolean syncing);
 	
 	boolean isSyncingToJar();

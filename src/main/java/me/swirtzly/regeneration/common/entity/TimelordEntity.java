@@ -1,6 +1,5 @@
 package me.swirtzly.regeneration.common.entity;
 
-import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
@@ -40,14 +39,9 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import org.apache.commons.io.FileUtils;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -157,7 +151,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 nbt.putFloat("SecondaryGreen", rand.nextInt(255) / 255.0F);
                 nbt.putFloat("SecondaryBlue", rand.nextInt(255) / 255.0F);
                 data.setStyle(nbt);
-                data.setType(rand.nextBoolean() ? RegenTypes.FIERY : RegenTypes.HARTNELL);
+                data.setRegenType(rand.nextBoolean() ? RegenTypes.FIERY : RegenTypes.HARTNELL);
                 initSkin(data);
                 data.synchronise();
             });
@@ -167,27 +161,11 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
+
     /*Setup initial skins for the timelords*/
     public void initSkin(IRegen data) {
-        long current = System.currentTimeMillis();
-        URLConnection openConnection = null;
-        String skinurl = getRandomSkinURL();
-        try {
-            openConnection = new URL(skinurl).openConnection();
-            openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
-            InputStream is = openConnection.getInputStream();
-            File file = new File("./temp/" + current + ".png");
-            FileUtils.copyInputStreamToFile(is, file);
-            data.setEncodedSkin(HandleSkins.imageToPixelData(file));
-            file.delete();
-            data.synchronise();
-        } catch (IOException e) {
-            Regeneration.LOG.error("Something went wrong connecting to: " + skinurl);
-            Regeneration.LOG.error("Attempting to try and use local skins!");
-            /* This seems safe enough as servers NEED a internet connection to function */
-            data.setEncodedSkin(HandleSkins.imageToPixelData(HandleSkins.chooseRandomSkin(world.rand, rand.nextBoolean())));
-            data.synchronise();
-        }
+        File file = HandleSkins.chooseRandomTimelordSkin(world.rand);
+        data.setEncodedSkin(HandleSkins.imageToPixelData(file));
     }
 
     @Override
@@ -251,23 +229,10 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                         if (false) { //Ignore this, I need to re-implement something without breaking things
                             setVillager(true);
                         } else {
-                            try {
-                                setVillager(false);
-                                long current = System.currentTimeMillis();
-                                URLConnection openConnection = new URL(getRandomSkinURL()).openConnection();
-                                openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
-                                InputStream is = openConnection.getInputStream();
-                                File file = new File("./temp/" + current + ".png");
-                                FileUtils.copyInputStreamToFile(is, file);
-                                data.setEncodedSkin(HandleSkins.imageToPixelData(file));
-                                file.delete();
-                                data.synchronise();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            setVillager(false);
+                            initSkin(data);
                         }
                     }
-
                     setNoAI(true);
                     setInvulnerable(true);
                 } else {
@@ -276,20 +241,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 }
             }
         });
-    }
-
-    private String getRandomSkinURL() {
-        int skinSize = HandleSkins.SKINS.size() - 1;
-        if (skinSize <= 0) {
-            return "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/Skinpacks/ms_fallback.png";
-        }
-        int randomPos = world.rand.nextInt(skinSize);
-        if (randomPos >= skinSize || randomPos < 0 /*why would this ever happen though*/) {
-            /*fallback url, I hope this never happens. Sometimes peoples skins won't download when they play offline
-            So I need to have something to return else game gets upset :(*/
-            return "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/Skinpacks/ms_fallback.png";
-        }
-        return HandleSkins.SKINS.get(randomPos);
     }
 
     public Boolean isVillagerModel() {

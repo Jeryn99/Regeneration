@@ -12,9 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
-import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_ALEX;
-import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_STEVE;
-import static me.swirtzly.regeneration.common.skin.HandleSkins.getSkins;
+import static me.swirtzly.regeneration.common.skin.HandleSkins.*;
 
 public class SkinDownloadManager {
 

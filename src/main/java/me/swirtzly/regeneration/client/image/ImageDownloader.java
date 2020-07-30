@@ -8,8 +8,6 @@ import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.DefaultUncaughtExceptionHandler;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +23,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@OnlyIn(Dist.CLIENT)
 public class ImageDownloader extends SimpleTexture {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final AtomicInteger TEXTURE_DOWNLOADER_THREAD_ID = new AtomicInteger(0);

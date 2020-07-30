@@ -127,7 +127,7 @@ public class ColorScreen extends ContainerScreen implements GuiSlider.ISlider {
         // Default Button
         this.addButton(new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.default").getFormattedText(), button -> {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
-                RegenType regenType = data.getType().create();
+                RegenType regenType = data.getRegenType().create();
                 slidePrimaryRed.setValue(regenType.getDefaultPrimaryColor().x);
                 slidePrimaryGreen.setValue(regenType.getDefaultPrimaryColor().y);
                 slidePrimaryBlue.setValue(regenType.getDefaultPrimaryColor().z);

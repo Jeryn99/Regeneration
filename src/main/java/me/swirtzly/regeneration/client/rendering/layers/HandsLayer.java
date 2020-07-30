@@ -61,7 +61,7 @@ public class HandsLayer extends LayerRenderer {
 			}
 
             if (type == EnumHandRenderType.REGEN) {
-				data.getType().create().getRenderer().renderHand(player, handSide, (LivingRenderer) livingEntityRenderer);
+				data.getRegenType().create().getRenderer().renderHand(player, handSide, (LivingRenderer) livingEntityRenderer);
 			}
 
         });

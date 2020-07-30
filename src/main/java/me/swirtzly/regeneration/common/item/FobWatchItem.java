@@ -104,14 +104,16 @@ public class FobWatchItem extends SolidItem {
 			int supply = RegenConfig.COMMON.regenCapacity.get() - stack.getDamage(), needed = RegenConfig.COMMON.regenCapacity.get() - cap.getRegenerationsLeft(), used = Math.min(supply, needed);
 
 			if (cap.canRegenerate()) {
-				setOpen(stack, 1);
-				ClientUtil.createToast(new TranslationTextComponent("regeneration.messages.gained_regens", used), new TranslationTextComponent("regeneration.toast.to_use", cap.getRegenerationsLeft()));
-			} else {
+                setOpen(stack, 1);
+                if (world.isRemote) {
+                    PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.gained_regens", used), true);
+                }
+            } else {
 				if (!world.isRemote) {
 					setOpen(stack, 1);
 				} else {
-					ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.timelord"), new TranslationTextComponent("regeneration.toast.to_use", cap.getRegenerationsLeft()));
-				}
+                    PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.now_timelord"), true);
+                }
 			}
 
 			if (used < 0)

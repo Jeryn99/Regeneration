@@ -16,14 +16,12 @@ import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.TexUtil;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
-import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
@@ -39,25 +37,18 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static me.swirtzly.regeneration.common.skin.HandleSkins.*;
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
 @OnlyIn(Dist.CLIENT)
 public class SkinManipulation {
 
-	public static final File SKIN_DIRECTORY = new File(RegenConfig.CLIENT.skinDir.get() + "/Regeneration Data/skins/");
 	public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
-	public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
-	public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-	public static final HashMap<UUID, ResourceLocation> MOJANG = new HashMap<>();
-	private static final Random RAND = new Random();
-
 
 	public static NativeImage decodeToImage(String base64String) {
 		if (base64String.equalsIgnoreCase(NO_SKIN)) {
@@ -78,20 +69,23 @@ public class SkinManipulation {
 		if (data == null) {
 			return new SkinInfo(player, null, getSkinType(player, true));
 		}
-		if (data.getEncodedSkin().equals(NO_SKIN)) {
-			resourceLocation = MOJANG.get(player.getUniqueID());
-			skinType = getSkinType(player, true);
-		} else {
-			NativeImage nativeImage = decodeToImage(data.getEncodedSkin());
-			nativeImage = ImageDownloadBuffer.convert(nativeImage);
-			if (nativeImage == null) {
-				resourceLocation = MOJANG.get(player.getUniqueID());
-			} else {
-				DynamicTexture tex = new DynamicTexture(nativeImage);
-				resourceLocation = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
-				skinType = data.getSkinType();
-			}
+
+		String skin = data.getEncodedSkin();
+
+		if (NO_SKIN.equals(skin)) {
+			skin = TexUtil.getEncodedSkinFromPlayer(player);
 		}
+
+		NativeImage nativeImage = decodeToImage(skin);
+
+		if (nativeImage == null) {
+			return new SkinInfo(player, null, getSkinType(player, true));
+		}
+
+		nativeImage = ImageDownloadBuffer.convert(nativeImage);
+		DynamicTexture tex = new DynamicTexture(nativeImage);
+		resourceLocation = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
+		skinType = data.getSkinType();
 		return new SkinInfo(player, resourceLocation, skinType);
 	}
 
@@ -142,7 +136,7 @@ public class SkinManipulation {
 	}
 
 
-	public static List<File> listAllSkins(EnumChoices choices) {
+	public static List<File> listAllSkins(PlayerUtil.EnumChoices choices) {
 		List<File> resultList = new ArrayList<>();
 		File directory = null;
 
@@ -192,14 +186,6 @@ public class SkinManipulation {
 		});
 	}
 
-	public static void createSkin(UUID uuid) {
-		try {
-			MOJANG.put(uuid, TexUtil.urlToTexture(new URL("https://crafatar.com/skins/" + uuid.toString())));
-		} catch (MalformedURLException e) {
-			MOJANG.put(uuid, DefaultPlayerSkin.getDefaultSkin(uuid));
-		}
-	}
-
 	@SubscribeEvent
 	public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
 		AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
@@ -239,25 +225,23 @@ public class SkinManipulation {
 					setPlayerSkinType(player, skin.getSkintype());
 				} else {
 					createSkinData(player, RegenCap.get(player));
-                }
-            }
+				}
+			}
 
-            /* 	When the player regenerates, we want the skin to change midway through Regeneration
-             *	We only do this midway through, we will destroy the data and re-create it */
-            boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
-            if (isMidRegeneration || player.ticksExisted < 10) {
-                createSkinData(player, RegenCap.get(player));
-            }
+			/* 	When the player regenerates, we want the skin to change midway through Regeneration
+			 *	We only do this midway through, we will destroy the data and re-create it */
+			boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
+			if (isMidRegeneration || player.ticksExisted < 10) {
+				createSkinData(player, RegenCap.get(player));
+			}
 
-            /* Render the living entities Pre-Regeneration effect */
-            if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
-                RegenType typeInstance = cap.getType().create();
-                ATypeRenderer typeRenderer = typeInstance.getRenderer();
-                typeRenderer.onRenderPre(typeInstance, renderPlayerEvent, cap);
-            }
-
-
-        });
+			/* Render the living entities Pre-Regeneration effect */
+			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
+				RegenType typeInstance = cap.getRegenType().create();
+				ATypeRenderer typeRenderer = typeInstance.getRenderer();
+				typeRenderer.onRenderPre(typeInstance, renderPlayerEvent, cap);
+			}
+		});
 	}
 
 	@SubscribeEvent
@@ -267,9 +251,9 @@ public class SkinManipulation {
 
 		RegenCap.get(player).ifPresent((cap) -> {
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {
-				RegenType type = cap.getType().create();
+				RegenType type = cap.getRegenType().create();
 				ATypeRenderer typeRenderer = type.getRenderer();
-                typeRenderer.onRenderPost(type, renderPlayerEventPost, cap);
+				typeRenderer.onRenderPost(type, renderPlayerEventPost, cap);
 			}
 		});
 
@@ -279,29 +263,11 @@ public class SkinManipulation {
 	private void createSkinData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
 		cap.ifPresent((data) -> {
 			SkinInfo skinInfo = SkinManipulation.getSkinInfo(player, data);
-
 			/* Set player skin and SkinType and cache it so we don't keep re-making it */
 			SkinManipulation.setPlayerSkin(player, skinInfo.getTextureLocation());
 			SkinManipulation.setPlayerSkinType(player, skinInfo.getSkintype());
 			PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
 		});
-	}
-
-	public enum EnumChoices implements RegenUtil.IEnum {
-		ALEX(true), STEVE(false), EITHER(true);
-
-		private final boolean isAlex;
-
-		EnumChoices(boolean isAlex) {
-			this.isAlex = isAlex;
-		}
-
-		public boolean isAlex() {
-			if (this == EITHER) {
-				return RAND.nextBoolean();
-			}
-			return isAlex;
-		}
 	}
 
 }

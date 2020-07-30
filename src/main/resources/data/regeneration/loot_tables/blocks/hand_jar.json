@@ -2,7 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
-    "name":"regeneration:hand_jar",
+      "name": "regeneration:hand_jar",
       "rolls": 1,
       "entries": [
         {
@@ -13,4 +13,3 @@
     }
   ]
 }
-    

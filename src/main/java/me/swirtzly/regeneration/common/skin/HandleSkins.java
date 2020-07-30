@@ -1,11 +1,13 @@
 package me.swirtzly.regeneration.common.skin;
 
+import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
-import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -14,8 +16,6 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.Random;
 
-import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_ALEX;
-import static me.swirtzly.regeneration.client.skinhandling.SkinManipulation.SKIN_DIRECTORY_STEVE;
 import static me.swirtzly.regeneration.util.common.FileUtil.getJsonFromURL;
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
@@ -25,6 +25,11 @@ import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
  */
 @Mod.EventBusSubscriber
 public class HandleSkins {
+
+    public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/skins/");
+    public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
+    public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
+
 
     public static ArrayList<String> SKINS = new ArrayList<>();
 
@@ -42,23 +47,39 @@ public class HandleSkins {
         return encodedfile;
     }
 
-    public static void downloadSkins() {
-        if (RegenUtil.doesHaveInternet()) {
-            Regeneration.LOG.info("Refreshing Skins for Timelords");
-            SKINS.clear();
-            try {
-                String[] uuids = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/donators.json"), String[].class);
+    public static File TIMELORDS = new File(SKIN_DIRECTORY + "/timelords");
 
-                for (String uuid : uuids) {
-                    SKINS.addAll(getSkins("https://namemc.com/minecraft-skins/profile/" + uuid));
-                }
+    public static void downloadTimelordSkins() throws IOException {
 
-                SKINS.addAll(getSkins("https://namemc.com/minecraft-skins"));
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (!TIMELORDS.exists()) {
+            TIMELORDS.mkdirs();
+        }
+
+        FileUtils.cleanDirectory(TIMELORDS);
+        Regeneration.LOG.info("Refreshing Skins for Timelords");
+        SKINS.clear();
+        try {
+            String[] uuids = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/donators.json"), String[].class);
+
+            for (String uuid : uuids) {
+                SKINS.addAll(getSkins("https://namemc.com/minecraft-skins/profile/" + uuid));
             }
-        } else {
-            Regeneration.LOG.error("Could not refresh skins for Timelords! We're in offline mode!");
+
+            SKINS.addAll(getSkins("https://namemc.com/minecraft-skins"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        for (String skin : SKINS) {
+            String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
+            File file = new File(TIMELORDS + "/" + cleanName + ".png");
+            URL url = new URL(skin);
+            URLConnection openConnection = url.openConnection();
+            openConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+            openConnection.connect();
+            BufferedImage img = ImageIO.read(openConnection.getInputStream());
+            ImageIO.write(img, "png", file);
         }
     }
 
@@ -86,6 +107,14 @@ public class HandleSkins {
             }
         }
         return skins;
+    }
+
+    public static File chooseRandomTimelordSkin(Random rand) {
+        Collection<File> folderFiles = FileUtils.listFiles(TIMELORDS, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        if (folderFiles.isEmpty()) {
+            folderFiles = FileUtils.listFiles(TIMELORDS, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        }
+        return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
     public static File chooseRandomSkin(Random rand, boolean isAlex) {

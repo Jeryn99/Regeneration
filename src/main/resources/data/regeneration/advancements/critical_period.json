@@ -1,19 +1,29 @@
 {
+  "parent": "regeneration:change_refusal",
   "display": {
     "icon": {
       "item": "regeneration:fob_watch"
     },
     "title": {
-      "text": "Your song is ending..."
+      "translate": "advancements.regeneration.title.critical_period"
     },
     "description": {
-      "text": "Refuse to Regenerate up till the point of near death..."
+      "translate": "advancements.regeneration.desc.critical_period"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regeneration:textures/gui/roundel.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:critical_period"
     }
   },
-  "parent": "regeneration:change_refusal",
-  "criteria": {
-    "critical_period": {
-      "trigger": "critical_period"
-    }
-  }
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
 }

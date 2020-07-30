@@ -3,7 +3,6 @@ package me.swirtzly.regeneration.util.common;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.api.ZeroRoomEvent;
-import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.block.RegenTags;
 import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.capability.RegenCap;
@@ -34,6 +33,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
@@ -42,7 +42,13 @@ import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
  */
 public class PlayerUtil {
 
-	public static ArrayList<Effect> POTIONS = new ArrayList<>();
+    private static final Random RAND = new Random();
+
+    public static ArrayList<Effect> POTIONS = new ArrayList<>();
+
+    public static void updateModel(EnumChoices choice) {
+        NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMapMessage(choice.name()));
+    }
 
     public static void createPostList() {
         for (String potionName : RegenConfig.COMMON.postRegenEffects.get()) {
@@ -104,23 +110,6 @@ public class PlayerUtil {
 		NetworkDispatcher.sendTo(new ThirdPersonMessage(thirdperson), player);
 	}
 
-    public static void updateModel(SkinManipulation.EnumChoices choice) {
-		NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMapMessage(choice.name()));
-	}
-
-    public static boolean applyPotionIfAbsent(LivingEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
-		if (potion == null) return false;
-		if (player.getActivePotionEffect(potion) == null) {
-			player.addPotionEffect(new EffectInstance(potion, length, amplifier, ambient, showParticles));
-			return true;
-		}
-		return false;
-	}
-
-    public static boolean isSharp(ItemStack stack) {
-        return stack.getItem().isIn(RegenTags.SHARP_ITEMS);
-    }
-
     public static void createHand(LivingEntity player) {
         RegenCap.get(player).ifPresent((data) -> {
             if (!data.getEncodedSkin().equalsIgnoreCase(NO_SKIN) && player instanceof PlayerEntity) {
@@ -129,13 +118,43 @@ public class PlayerUtil {
                 HandItem.setSkinType(hand, data.getSkinType().name());
                 HandItem.setOwner(hand, player.getUniqueID());
                 HandItem.setTimeCreated(hand, System.currentTimeMillis());
-                HandItem.setTrait(hand, data.getDnaType().toString());
+                HandItem.setTrait(hand, data.getTrait().toString());
                 data.setDroppedHand(true);
                 data.setCutOffHand(player.getPrimaryHand() == HandSide.LEFT ? HandSide.RIGHT : HandSide.LEFT);
                 data.setDroppedHand(true);
                 InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
             }
         });
+    }
+
+    public static boolean applyPotionIfAbsent(LivingEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
+        if (potion == null) return false;
+        if (player.getActivePotionEffect(potion) == null) {
+            player.addPotionEffect(new EffectInstance(potion, length, amplifier, ambient, showParticles));
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isSharp(ItemStack stack) {
+        return stack.getItem().isIn(RegenTags.SHARP_ITEMS);
+    }
+
+    public enum EnumChoices implements RegenUtil.IEnum {
+        ALEX(true), STEVE(false), EITHER(true);
+
+        private final boolean isAlex;
+
+        EnumChoices(boolean isAlex) {
+            this.isAlex = isAlex;
+        }
+
+        public boolean isAlex() {
+            if (this == EITHER) {
+                return RAND.nextBoolean();
+            }
+            return isAlex;
+        }
     }
 
     public static void handleCutOffhand(LivingEntity player) {

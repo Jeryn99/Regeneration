@@ -1,0 +1,39 @@
+{
+  "parent": "regeneration:gallifrey",
+  "display": {
+    "icon": {
+      "item": "regeneration:robes"
+    },
+    "title": {
+      "translate": "advancements.regeneration.title.robes"
+    },
+    "description": {
+      "translate": "advancements.regeneration.desc.robes"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regeneration:textures/gui/roundel.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "regeneration:robes_hat"
+          },
+          {
+            "item": "regeneration:robes"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

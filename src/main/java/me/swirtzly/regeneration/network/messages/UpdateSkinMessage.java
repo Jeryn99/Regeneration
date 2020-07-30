@@ -12,19 +12,19 @@ import java.util.function.Supplier;
  * Created by Sub on 20/09/2018.
  */
 public class UpdateSkinMessage {
-	
-	private boolean isAlex;
-	private String encodedSkin;
-	
-	public UpdateSkinMessage(String pixelData, boolean isAlex) {
-		this.isAlex = isAlex;
-		encodedSkin = pixelData;
-	}
-	
-	public static void encode(UpdateSkinMessage skin, PacketBuffer buf) {
-		buf.writeString(skin.encodedSkin);
-		buf.writeBoolean(skin.isAlex);
-	}
+
+    private final boolean isAlex;
+    private final String encodedSkin;
+
+    public UpdateSkinMessage(String pixelData, boolean isAlex) {
+        this.isAlex = isAlex;
+        encodedSkin = pixelData;
+    }
+
+    public static void encode(UpdateSkinMessage skin, PacketBuffer buf) {
+        buf.writeString(skin.encodedSkin);
+        buf.writeBoolean(skin.isAlex);
+    }
 	
 	public static UpdateSkinMessage decode(PacketBuffer buf) {
 		return new UpdateSkinMessage(buf.readString(32767), buf.readBoolean());

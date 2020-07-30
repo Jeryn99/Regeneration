@@ -126,7 +126,7 @@ public class TardisCompat {
             RegenCap.get(playerEntity).ifPresent((data) -> {
                 //Regenerating
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                    if (data.getType() == RegenTypes.FIERY && playerEntity.ticksExisted % 10 == 0) {
+                    if (data.getRegenType() == RegenTypes.FIERY && playerEntity.ticksExisted % 10 == 0) {
                         for (Subsystem subSystem : console.getSubSystems()) {
                             subSystem.damage(null, world.rand.nextInt(5));
                         }
@@ -136,7 +136,7 @@ public class TardisCompat {
                         console.getInteriorManager().setAlarmOn(true);
                         console.getInteriorManager().setLight(0);
 
-                        if (console.isInFlight() && data.getType() == RegenTypes.FIERY) {
+                        if (console.isInFlight() && data.getRegenType() == RegenTypes.FIERY) {
                             if (world.rand.nextInt(50) < 10) {
                                 console.crash();
                             }
@@ -164,7 +164,7 @@ public class TardisCompat {
             if (tardis.isInFlight()) {
                 RegenCap.get(kid).ifPresent(iRegen -> {
                     iRegen.receiveRegenerations(kid.world.rand.nextInt(12));
-                    iRegen.setType(RegenTypes.HARTNELL);
+                    iRegen.setRegenType(RegenTypes.HARTNELL);
                 });
 
             }

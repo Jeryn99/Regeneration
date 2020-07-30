@@ -10,6 +10,7 @@ import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.NextSkinMessage;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.TexUtil;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -32,12 +33,12 @@ public class SkinChoiceScreen extends ContainerScreen {
     private static final ResourceLocation background = new ResourceLocation(Regeneration.MODID, "textures/gui/customizer_background.png");
     public static boolean isAlex = true;
     private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
-    private static SkinManipulation.EnumChoices choices = null;
+    private static final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
     private static List<File> skins = null;
     private static int position = 0;
-    private static TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-    private static PlayerModel ALEX_MODEL = new PlayerModel(0.1f, true);
-    private static PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
+    private static final PlayerModel ALEX_MODEL = new PlayerModel(0.1f, true);
+    private static final PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
+    private static PlayerUtil.EnumChoices choices = null;
     private float rotation = 0;
 
     public SkinChoiceScreen() {
@@ -47,8 +48,8 @@ public class SkinChoiceScreen extends ContainerScreen {
     }
 
     public static void updateModels() {
-        isAlex = skins.get(position).toPath().startsWith(SkinManipulation.SKIN_DIRECTORY_ALEX.toPath().toString());
-        choices = isAlex ? SkinManipulation.EnumChoices.ALEX : SkinManipulation.EnumChoices.STEVE;
+        isAlex = skins.get(position).toPath().startsWith(HandleSkins.SKIN_DIRECTORY_ALEX.toPath().toString());
+        choices = isAlex ? PlayerUtil.EnumChoices.ALEX : PlayerUtil.EnumChoices.STEVE;
     }
 
     @Override
@@ -99,7 +100,7 @@ public class SkinChoiceScreen extends ContainerScreen {
         GuiButtonExt btnOpenFolder = new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder").getFormattedText(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                Util.getOSType().openFile(SkinManipulation.SKIN_DIRECTORY);
+                Util.getOSType().openFile(HandleSkins.SKIN_DIRECTORY);
             }
         });
         GuiButtonExt btnSave = new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.save").getFormattedText(), new Button.IPressable() {

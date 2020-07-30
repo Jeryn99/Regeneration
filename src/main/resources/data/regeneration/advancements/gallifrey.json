@@ -1,13 +1,14 @@
 {
+  "parent": "regeneration:timelord_trade",
   "display": {
     "icon": {
-      "item": "regeneration:fob_watch"
+      "item": "regeneration:rassilon_seal"
     },
     "title": {
-      "translate": "advancements.regeneration.title.first_regen"
+      "translate": "advancements.regeneration.title.gallifrey"
     },
     "description": {
-      "translate": "advancements.regeneration.desc.first_regen"
+      "translate": "advancements.regeneration.desc.gallifrey"
     },
     "frame": "task",
     "show_toast": true,
@@ -17,7 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:first_regen"
+      "trigger": "minecraft:location",
+      "conditions": {}
     }
   },
   "requirements": [

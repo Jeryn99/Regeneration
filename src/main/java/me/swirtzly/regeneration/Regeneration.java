@@ -2,10 +2,7 @@ package me.swirtzly.regeneration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import me.swirtzly.data.BlockTagCreation;
-import me.swirtzly.data.ItemsTagCreation;
-import me.swirtzly.data.LangProvider;
-import me.swirtzly.data.RecipeCreation;
+import me.swirtzly.data.*;
 import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.LaserRenderer;
 import me.swirtzly.regeneration.client.rendering.entity.TimelordRenderer;
@@ -47,8 +44,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.IOException;
 
 @Mod(Regeneration.MODID)
 public class Regeneration {
@@ -112,10 +108,12 @@ public class Regeneration {
 
     @SubscribeEvent
     public void gatherData(GatherDataEvent e) {
-        e.getGenerator().addProvider(new LangProvider(e.getGenerator()));
+        e.getGenerator().addProvider(new LangCreation(e.getGenerator()));
         e.getGenerator().addProvider(new RecipeCreation(e.getGenerator()));
         e.getGenerator().addProvider(new ItemsTagCreation(e.getGenerator()));
         e.getGenerator().addProvider(new BlockTagCreation(e.getGenerator()));
+        e.getGenerator().addProvider(new LootTableCreation(e.getGenerator()));
+        e.getGenerator().addProvider(new AdvancementCreation(e.getGenerator()));
     }
 
 
@@ -128,18 +126,15 @@ public class Regeneration {
     private void processIMC(final InterModProcessEvent event) {
         proxy.postInit();
         PlayerUtil.createPostList();
-
         RegenUtil.TIMELORD_NAMES = RegenUtil.downloadNames();
-        HandleSkins.downloadSkins();
-        Timer timer = new Timer();
-        TimerTask hourlyTask = new TimerTask() {
-            @Override
-            public void run() {
-                HandleSkins.downloadSkins();
-            }
-        };
 
-        timer.schedule(hourlyTask, 0L, 1000 * 60 * 60);
+        new Thread(() -> {
+            try {
+                HandleSkins.downloadTimelordSkins();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }, Regeneration.NAME + " Timelord Download Daemon").start();
     }
 
     @SubscribeEvent

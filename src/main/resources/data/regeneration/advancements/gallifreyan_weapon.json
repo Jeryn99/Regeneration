@@ -1,0 +1,39 @@
+{
+  "parent": "regeneration:robes",
+  "display": {
+    "icon": {
+      "item": "regeneration:time_lord_gun"
+    },
+    "title": {
+      "translate": "advancements.regeneration.title.gallifreyan_weapon"
+    },
+    "description": {
+      "translate": "advancements.regeneration.desc.gallifreyan_weapon"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regeneration:textures/gui/roundel.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "regeneration:time_lord_gun"
+          },
+          {
+            "item": "regeneration:time_lord_rifle"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

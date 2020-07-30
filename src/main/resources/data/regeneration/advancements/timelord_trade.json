@@ -1,19 +1,29 @@
 {
+  "parent": "regeneration:critical_period",
   "display": {
     "icon": {
-      "item": "regeneration:gal_ingot"
+      "item": "regeneration:robes"
     },
     "title": {
-      "text": "Gallifreyan...?"
+      "translate": "advancements.regeneration.title.timelord_trade"
     },
     "description": {
-      "text": "Meet a Council Timelord!"
+      "translate": "advancements.regeneration.desc.timelord_trade"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regeneration:textures/gui/roundel.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:timelord_trade"
     }
   },
-  "parent": "regeneration:change_refusal",
-  "criteria": {
-    "timelord": {
-      "trigger": "timelord_trade"
-    }
-  }
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
 }

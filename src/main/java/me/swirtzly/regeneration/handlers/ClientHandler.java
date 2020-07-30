@@ -162,7 +162,7 @@ public class ClientHandler {
     @SubscribeEvent
     public void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
             RegenCap.get(Minecraft.getInstance().getRenderViewEntity()).ifPresent((data) -> {
-                if (data.getType() == RegenTypes.HARTNELL && data.getState() == REGENERATING) {
+                if (data.getRegenType() == RegenTypes.HARTNELL && data.getState() == REGENERATING) {
                     e.setRed((float) data.getPrimaryColor().x);
                     e.setGreen((float) data.getPrimaryColor().y);
                     e.setBlue((float) data.getPrimaryColor().z);
@@ -181,7 +181,7 @@ public class ClientHandler {
                     event.setDensity(amount);
                 }
 
-                if (data.getType() == RegenTypes.HARTNELL && data.getAnimationTicks() > 0) {
+                if (data.getRegenType() == RegenTypes.HARTNELL && data.getAnimationTicks() > 0) {
                     event.setCanceled(true);
                     float opacity = MathHelper.clamp(MathHelper.sin((viewer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
                     event.setDensity(opacity);

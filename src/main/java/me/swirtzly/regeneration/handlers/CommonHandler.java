@@ -7,8 +7,6 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.compat.ArchHelper;
-import me.swirtzly.regeneration.network.NetworkDispatcher;
-import me.swirtzly.regeneration.network.messages.MessageCacheMojangSkin;
 import me.swirtzly.regeneration.util.common.LootUtils;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
@@ -55,18 +53,6 @@ public class CommonHandler {
 		RegenObjects.GALLIFREY_TYPE = DimensionManager.registerOrGetDimension(new ResourceLocation(Regeneration.MODID, "gallifrey"), RegenObjects.Dimensions.GALLIFREY.get(), null, true);
 	}
 
-
-	@SubscribeEvent
-	public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-		NetworkDispatcher.sendPacketToAll(new MessageCacheMojangSkin(event.getPlayer().getUniqueID(), false));
-	}
-
-	@SubscribeEvent
-	public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
-		NetworkDispatcher.sendPacketToAll(new MessageCacheMojangSkin(event.getPlayer().getUniqueID(), true));
-	}
-
-
 	// =========== CAPABILITY HANDLING =============
 
 	@SubscribeEvent
@@ -78,7 +64,7 @@ public class CommonHandler {
 	public void onPlayerClone(PlayerEvent.Clone event) {
 		IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
 		event.getOriginal().revive();
-        RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
+		RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
 			CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
 			storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
 		}));
@@ -138,9 +124,9 @@ public class CommonHandler {
 			RegenCap.get(e.getEntityLiving()).ifPresent((data) -> {
 				data.synchronise();
 				if (data.getRegenerationsLeft() == 0) {
-					TraitManager.IDna trait = TraitManager.getDnaEntry(data.getDnaType());
+					TraitManager.IDna trait = TraitManager.getDnaEntry(data.getTrait());
 					trait.onRemoved(data);
-					data.setDnaType(TraitManager.DNA_BORING.getRegistryName());
+					data.setTrait(TraitManager.DNA_BORING.getRegistryName());
 					TraitManager.DNA_BORING.onAdded(data);
 				}
 			});

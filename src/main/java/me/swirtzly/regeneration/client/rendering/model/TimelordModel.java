@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.client.rendering.model;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
@@ -294,7 +293,7 @@ public class TimelordModel extends BipedModel {
     @Override
     public void setRotationAngles(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
         super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-        RegenCap.get(entityIn).ifPresent((data) -> data.getType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
+        RegenCap.get(entityIn).ifPresent((data) -> data.getRegenType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
         RenderUtil.copyModelAngles(bipedHead, timelord_hat);
         RenderUtil.copyModelAngles(bipedHead, villagerHead);
         RenderUtil.copyModelAngles(bipedBody, body);

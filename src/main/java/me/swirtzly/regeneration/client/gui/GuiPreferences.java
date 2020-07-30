@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.gui.parts.ContainerBlank;
-import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.traits.TraitManager;
@@ -24,9 +23,9 @@ import java.awt.*;
 
 public class GuiPreferences extends ContainerScreen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(Regeneration.MODID, "textures/gui/pref_back.png");
-    private static RegenTypes SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getType();
-	private static SkinManipulation.EnumChoices CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getPreferredModel();
+	private static final ResourceLocation BACKGROUND = new ResourceLocation(Regeneration.MODID, "textures/gui/pref_back.png");
+	private static RegenTypes SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getRegenType();
+	private static PlayerUtil.EnumChoices CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getPreferredModel();
 	private float ROTATION = 0;
 
 	public GuiPreferences() {
@@ -59,15 +58,15 @@ public class GuiPreferences extends ContainerScreen {
 			}
 		});
 
-		GuiButtonExt btnSkinType = new GuiButtonExt(width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText(), new Button.IPressable() {
+		GuiButtonExt btnSkinType = new GuiButtonExt(width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase())).getUnformattedComponentText(), new Button.IPressable() {
 			@Override
 			public void onPress(Button button) {
 				if (CHOICES.next() != null) {
-					CHOICES = (SkinManipulation.EnumChoices) CHOICES.next();
+					CHOICES = (PlayerUtil.EnumChoices) CHOICES.next();
 				} else {
-					CHOICES = SkinManipulation.EnumChoices.ALEX;
+					CHOICES = PlayerUtil.EnumChoices.ALEX;
 				}
-				button.setMessage(new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("skintype." + CHOICES.name().toLowerCase())).getUnformattedComponentText());
+				button.setMessage(new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase())).getUnformattedComponentText());
 				PlayerUtil.updateModel(CHOICES);
 			}
 		});
@@ -92,7 +91,7 @@ public class GuiPreferences extends ContainerScreen {
 		addButton(btnColor);
 		addButton(btnSkinType);
 
-		SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getType();
+		SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getRegenType();
 	}
 
 	@Override
@@ -120,10 +119,10 @@ public class GuiPreferences extends ContainerScreen {
 		length = minecraft.fontRenderer.getStringWidth(str);
 		font.drawStringWithShadow(str, cx + 170 - length / 2, cy + 21, Color.WHITE.getRGB());
 
-		TranslationTextComponent traitLang = new TranslationTextComponent(TraitManager.getDnaEntry(data.getDnaType()).getLangKey());
+		TranslationTextComponent traitLang = new TranslationTextComponent(TraitManager.getDnaEntry(data.getTrait()).getLangKey());
 		font.drawStringWithShadow(traitLang.getUnformattedComponentText(), cx + 170 - length / 2, cy + 40, Color.WHITE.getRGB());
 
-		TranslationTextComponent traitLangDesc = new TranslationTextComponent(TraitManager.getDnaEntry(data.getDnaType()).getLocalDesc());
+		TranslationTextComponent traitLangDesc = new TranslationTextComponent(TraitManager.getDnaEntry(data.getTrait()).getLocalDesc());
 		font.drawStringWithShadow(traitLangDesc.getUnformattedComponentText(), cx + 170 - length / 2, cy + 50, Color.WHITE.getRGB());
 
 	}

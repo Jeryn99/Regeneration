@@ -58,7 +58,7 @@ public class RegenerationLayer extends LayerRenderer {
     public void render(Entity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         LivingEntity player = (LivingEntity) entity;
         RegenCap.get(player).ifPresent((data) -> {
-            RegenType type = data.getType().create();
+            RegenType type = data.getRegenType().create();
             if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
                 type.getRenderer().onRenderLayer(type, livingEntityRenderer, data, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
             }

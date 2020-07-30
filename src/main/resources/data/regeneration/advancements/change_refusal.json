@@ -1,19 +1,29 @@
 {
+  "parent": "regeneration:first_regen",
   "display": {
     "icon": {
-      "item": "regeneration:fob_watch"
+      "item": "regeneration:hand_jar"
     },
     "title": {
-      "text": "Time Enough."
+      "translate": "advancements.regeneration.title.change_refusal"
     },
     "description": {
-      "text": "Delay your Regeneration!"
+      "translate": "advancements.regeneration.desc.change_refusal"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regeneration:textures/gui/roundel.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:change_refusal"
     }
   },
-  "parent": "regeneration:first_regen",
-  "criteria": {
-    "change_refusal": {
-      "trigger": "change_refusal"
-    }
-  }
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
 }

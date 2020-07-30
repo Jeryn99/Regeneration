@@ -278,7 +278,7 @@ public class TimelordGuardModel extends BipedModel<TimelordEntity> {
         }
 
         super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-        RegenCap.get(entityIn).ifPresent((data) -> data.getType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
+        RegenCap.get(entityIn).ifPresent((data) -> data.getRegenType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
         RenderUtil.copyModelAngles(bipedHead, head);
         RenderUtil.copyModelAngles(bipedBody, body);
         RenderUtil.copyModelAngles(bipedLeftArm, left_arm);

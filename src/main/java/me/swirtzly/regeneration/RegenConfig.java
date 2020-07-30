@@ -26,7 +26,6 @@ public class RegenConfig {
     public static class Client {
 
         public final ForgeConfigSpec.BooleanValue changeMySkin;
-		public final ForgeConfigSpec.ConfigValue<String> skinDir;
 		public final ForgeConfigSpec.BooleanValue changePerspective;
 		public final ForgeConfigSpec.BooleanValue changeHand;
 		public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
@@ -39,7 +38,6 @@ public class RegenConfig {
             builder.comment("Client Regeneration Settings").push("client");
 			builder.comment("Skin Settings").push("skin");
 			changeMySkin = builder.comment("Disabling this will disable skin changing for you and you will retain your Mojang one").translation("config.regeneration.skins.changemyskin").define("changeMySkin", true);
-			skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './', the path MUST NOT end in /").translation("config.regeneration.skins.skindir").define("skinDir", ".");
 			changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
 			changeHand = builder.comment("Toggle whether your hand has the chance of inverting after a regen").translation("config.regeneration.hand_change").define("changeHand", true);
 			downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
@@ -76,6 +74,7 @@ public class RegenConfig {
         public final ForgeConfigSpec.IntValue absorbtionLevel;
         public final ForgeConfigSpec.BooleanValue genCrater;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
+        public final ForgeConfigSpec.ConfigValue<String> skinDir;
 
 /*
         public final ForgeConfigSpec.ConfigValue<Integer> confessionDialSpawnChance;
@@ -86,9 +85,11 @@ public class RegenConfig {
             regenCapacity = builder.comment("The maximum regeneration capacity. This affects the durability of a Fob Watch and the amount of regenerations in a full cycle. Use 0 for infinite regenerations.").translation("config.regeneration.max_regens").defineInRange("regenCapacity", 12, 0, Integer.MAX_VALUE);
             loseRegensOnDeath = builder.comment("If this is false you won't lose your regenerations if you get killed during regeneration").translation("config.regeneration.lose_regens_on_death").define("loseRegensOnDeath", false);
             fieryRegen = builder.comment("Spawn fire during regeneration").translation("config.regeneration.fiery_regen").define("fieryRegen", true);
-			regenFireImmune = builder.comment("Players are immune to fire damage while regenerating").translation("config.regeneration.regeneration_fire_immunity").define("fireImmunity", false);
-			infiniteRegeneration = builder.comment("config.regeneration.infinite_regenerations").translation("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.").define("infiniteRegeneration", false);
-			sendRegenDeathMessages = builder.comment("Sends a message to chat to say that a player is regenerating, and the reason for it").translation("config.regeneration.regen_messages").define("sendRegenDeathMessages", true);
+            regenFireImmune = builder.comment("Players are immune to fire damage while regenerating").translation("config.regeneration.regeneration_fire_immunity").define("fireImmunity", false);
+            infiniteRegeneration = builder.comment("config.regeneration.infinite_regenerations").translation("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.").define("infiniteRegeneration", false);
+            sendRegenDeathMessages = builder.comment("Sends a message to chat to say that a player is regenerating, and the reason for it").translation("config.regeneration.regen_messages").define("sendRegenDeathMessages", true);
+            skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './', the path MUST NOT end in /").translation("config.regeneration.skins.skindir").define("skinDir", ".");
+
 /*
 			confessionDialSpawnChance = builder.comment("Sets the percentage change of a Confession Dial to spawn in chests").translation("config.regeneration.confession_dial_spawn").define("confessionDialSpawnChance", 50, Integer.class::isInstance);
 */
