@@ -39,11 +39,11 @@ public class HandleSkins {
             FileInputStream fileInputStreamReader = new FileInputStream(file);
             byte[] bytes = new byte[(int) file.length()];
             fileInputStreamReader.read(bytes);
-            encodedfile = Base64.getEncoder().encodeToString(bytes);
+            encodedfile = Base64.getMimeEncoder().encodeToString(bytes);
         } catch (IOException e) {
+            Regeneration.LOG.error("Error creating image for: " + encodedfile);
             e.printStackTrace();
         }
-
         return encodedfile;
     }
 

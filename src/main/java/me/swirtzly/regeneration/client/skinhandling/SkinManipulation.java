@@ -55,8 +55,8 @@ public class SkinManipulation {
 			return null;
 		}
 		try {
-			return NativeImage.read(new ByteArrayInputStream(Base64.getDecoder().decode(base64String.replaceAll("-", ""))));
-		} catch (final IOException ioe) {
+			return NativeImage.read(new ByteArrayInputStream(Base64.getMimeDecoder().decode(base64String.replaceAll("-", ""))));
+		} catch (IOException ioe) {
 			Regeneration.LOG.error("ERROR MAKING IMAGE FOR: " + base64String);
 			throw new UncheckedIOException(ioe);
 		}
@@ -72,8 +72,9 @@ public class SkinManipulation {
 
 		String skin = data.getEncodedSkin();
 
-		if (NO_SKIN.equals(skin)) {
-			skin = TexUtil.getEncodedSkinFromPlayer(player);
+
+		if (NO_SKIN.equalsIgnoreCase(skin)) {
+			skin = TexUtil.getEncodedMojangSkin(player);
 		}
 
 		NativeImage nativeImage = decodeToImage(skin);
@@ -99,7 +100,7 @@ public class SkinManipulation {
 		AtomicReference<SkinInfo.SkinType> skinType = new AtomicReference<>();
 		skinType.set(SkinInfo.SkinType.ALEX);
 		RegenCap.get(player).ifPresent((data) -> {
-			if (data.getEncodedSkin().toLowerCase().equals(NO_SKIN) || forceMojang) {
+			if (data.getEncodedSkin().equalsIgnoreCase(NO_SKIN) || forceMojang) {
 				if (profile == null) {
 					skinType.set(SkinInfo.SkinType.STEVE);
 				}
@@ -168,16 +169,14 @@ public class SkinManipulation {
 				String pixelData = NO_SKIN;
 				File skin = null;
 
-				if (data.getNextSkin().equals(NO_SKIN)) {
+				if (data.getNextSkin().equalsIgnoreCase(NO_SKIN)) {
 					boolean isAlex = data.getPreferredModel().isAlex();
 					skin = HandleSkins.chooseRandomSkin(random, isAlex);
 					Regeneration.LOG.info(skin + " was selected");
 					pixelData = HandleSkins.imageToPixelData(skin);
-					data.setEncodedSkin(pixelData);
 					NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, isAlex));
 				} else {
 					pixelData = data.getNextSkin();
-					data.setEncodedSkin(pixelData);
 					NetworkDispatcher.sendToServer(new UpdateSkinMessage(pixelData, data.getNextSkinType().getMojangType().equals("slim")));
 				}
 			} else {
@@ -262,11 +261,13 @@ public class SkinManipulation {
 
 	private void createSkinData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
 		cap.ifPresent((data) -> {
-			SkinInfo skinInfo = SkinManipulation.getSkinInfo(player, data);
-			/* Set player skin and SkinType and cache it so we don't keep re-making it */
-			SkinManipulation.setPlayerSkin(player, skinInfo.getTextureLocation());
-			SkinManipulation.setPlayerSkinType(player, skinInfo.getSkintype());
-			PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
+			Minecraft.getInstance().deferTask(() -> {
+				SkinInfo skinInfo = SkinManipulation.getSkinInfo(player, data);
+				/* Set player skin and SkinType and cache it so we don't keep re-making it */
+				SkinManipulation.setPlayerSkin(player, skinInfo.getTextureLocation());
+				SkinManipulation.setPlayerSkinType(player, skinInfo.getSkintype());
+				PLAYER_SKINS.put(player.getGameProfile().getId(), skinInfo);
+			});
 		});
 	}
 

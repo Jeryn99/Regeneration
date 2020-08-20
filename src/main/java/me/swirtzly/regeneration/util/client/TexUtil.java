@@ -77,7 +77,7 @@ public class TexUtil {
         return DefaultPlayerSkin.getDefaultSkinLegacy();
     }
 
-    public static String getEncodedSkinFromPlayer(AbstractClientPlayerEntity pl) {
+    public static String getEncodedMojangSkin(AbstractClientPlayerEntity pl) {
         try {
             long current = System.currentTimeMillis();
             URL url = new URL("https://crafatar.com/skins/" + pl.getUniqueID().toString());

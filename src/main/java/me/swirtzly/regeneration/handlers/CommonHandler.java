@@ -210,7 +210,8 @@ public class CommonHandler {
 			});
 	}
 
-    @SubscribeEvent
+
+	@SubscribeEvent
 	public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof LivingEntity) {
 			event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {

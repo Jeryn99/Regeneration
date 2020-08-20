@@ -38,11 +38,6 @@ public class LootTableCreation implements IDataProvider {
         }
     }
 
-    public void generateSelfTables(DirectoryCache cache, Path base, Block... blocks) throws IOException {
-        for (Block b : blocks)
-            this.generateSelfTable(b, cache, base);
-    }
-
     @Override
     public String getName() {
         return "Loot Tables";

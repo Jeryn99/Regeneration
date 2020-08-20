@@ -54,7 +54,7 @@ public class AdvancementCreation implements IDataProvider {
         this.createAdvancement(
                 "gallifrey",
                 new ItemStack(RegenObjects.Items.SEAL.get()),
-                PositionTrigger.Instance.forLocation(LocationPredicate.forDimension(RegenObjects.GALLIFREY_TYPE)));
+                PositionTrigger.Instance.forLocation(LocationPredicate.forBiome(RegenObjects.GallifreyBiomes.REDLANDS.get())));
 
         this.createAdvancement(
                 "robes",

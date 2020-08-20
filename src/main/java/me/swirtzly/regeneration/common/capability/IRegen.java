@@ -22,10 +22,6 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 	
 	int getRegenerationsLeft();
 
-	/**
-	 * Only for debug purposes!
-	 */
-	@Deprecated
 	void setRegenerationsLeft(int amount);
 
 	void triggerRegeneration();

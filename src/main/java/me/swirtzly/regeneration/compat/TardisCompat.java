@@ -7,6 +7,7 @@ import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
@@ -30,6 +31,7 @@ import net.tardis.mod.ars.ARSPiece;
 import net.tardis.mod.ars.ARSPieces;
 import net.tardis.mod.dimensions.TardisDimension;
 import net.tardis.mod.entity.DalekEntity;
+import net.tardis.mod.enums.EnumDoorState;
 import net.tardis.mod.helper.TardisHelper;
 import net.tardis.mod.items.TItems;
 import net.tardis.mod.recipe.Recipes;
@@ -141,6 +143,21 @@ public class TardisCompat {
                                 console.crash();
                             }
                         }
+                    } else {
+                        console.getDoor().ifPresent(doorEntity -> {
+                            if (doorEntity.getOpenState() != EnumDoorState.CLOSED) {
+                                BlockPos loc = console.getLocation();
+                                ServerWorld currentWorld = ServerLifecycleHooks.getCurrentServer().getWorld(console.getDimension());
+                                for (int i = 0; i < 5; i++) {
+                                    int xOffset = world.rand.nextInt(5);
+                                    int zOffset = world.rand.nextInt(5);
+/*
+                                    int y = world.getChunk(loc.getX() + xOffset, loc.getZ() + zOffset).getTopBlockY(Heightmap.Type.MOTION_BLOCKING, spawn.getX(), spawn.getZ()
+*/
+                                    currentWorld.setBlockState(loc.add(xOffset, 0, zOffset), Blocks.FIRE.getDefaultState());
+                                }
+                            }
+                        });
                     }
                 }
 

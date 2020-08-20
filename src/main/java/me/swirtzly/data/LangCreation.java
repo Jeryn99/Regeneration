@@ -148,7 +148,7 @@ public class LangCreation extends LanguageProvider {
         add(RegenTypes.FIERY.create().getTranslation().getKey(), "Fiery");
 
         // === Item Groups ===
-        add("itemGroup.regeneration", Regeneration.MODID);
+        add("itemGroup.regeneration", grammerNazi(Regeneration.MODID));
 
         // === Command ===
         add("argument.regeneration.invalid", "This trait is invalid!");
