@@ -19,7 +19,9 @@
   "criteria": {
     "0": {
       "trigger": "minecraft:location",
-      "conditions": {}
+      "conditions": {
+        "biome": "regeneration:redlands"
+      }
     }
   },
   "requirements": [

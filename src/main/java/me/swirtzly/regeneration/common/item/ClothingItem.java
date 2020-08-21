@@ -18,7 +18,7 @@ public class ClothingItem extends ArmorItem {
     public static ResourceLocation TIMELORD = new ResourceLocation(Regeneration.MODID, "textures/entity/armour/gaurd_armour.png");
 
     public ClothingItem(EquipmentSlotType slot) {
-        super(ItemGroups.MATERIAL_GUARD, slot, new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
+        super(ArmorMaterial.GOLD, slot, new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
     }
 
     @Override

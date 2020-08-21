@@ -6,6 +6,7 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
+import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.compat.ArchHelper;
 import me.swirtzly.regeneration.util.common.LootUtils;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
@@ -30,10 +31,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.RegisterDimensionsEvent;
@@ -72,21 +70,14 @@ public class CommonHandler {
 
 	@SubscribeEvent
 	public void onLootTableLoad(LootTableLoadEvent e) {
-		if (e.getName().toString().toLowerCase().contains("minecraft:chests/")) {
-/*
-            float chance = RegenConfig.COMMON.confessionDialSpawnChance.get() / 100;
-*/
+		if (e.getName().toString().equalsIgnoreCase("minecraft:chests/")) {
 			LootTable lootTable = e.getTable();
 			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_HEAD.get(), 6, 0.5f, 0, 2, "robes");
 			LootUtils.addItemToTable(lootTable, RegenObjects.Items.DIAL.get(), 4, 0.3f, 0, 1, "seal");
 			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_CHEST.get(), 6, 0.5f, 0, 2, "hat");
 		}
-
 	}
 
-	/* This is used for gifting LivingEntities Regenerations!
-	 * TODO: This is not nice, I'll finish it next update, no-one will know this exists :)
-	 */
 	@SubscribeEvent
 	public void onRightClickEntity(PlayerInteractEvent.EntityInteract entityInteract) {
 		LivingEntity interactor = entityInteract.getEntityLiving();
@@ -100,8 +91,12 @@ public class CommonHandler {
 				if (interactor.isSneaking()) {
 					entityInteract.setCanceled(true);
 					RegenCap.get(toBeTimelord).ifPresent((data) -> {
-						data.receiveRegenerations(ArchHelper.getRegenerations(interactorsItem));
+						int amount = ArchHelper.getRegenerations(interactorsItem);
 						ArchHelper.storeRegenerations(interactorsItem, 0);
+						data.receiveRegenerations(amount);
+						data.setRegenType(RegenTypes.HARTNELL);
+						data.synchronise();
+						PlayerUtil.sendMessage(interactor, new TranslationTextComponent("message.regeneration.transferred_regens", interactedWith.getName(), amount), true);
 					});
 				}
 			}
@@ -122,13 +117,13 @@ public class CommonHandler {
 	public void onDeathEvent(LivingDeathEvent e) {
 		if (e.getEntityLiving() instanceof PlayerEntity) {
 			RegenCap.get(e.getEntityLiving()).ifPresent((data) -> {
-				data.synchronise();
 				if (data.getRegenerationsLeft() == 0) {
 					TraitManager.IDna trait = TraitManager.getDnaEntry(data.getTrait());
 					trait.onRemoved(data);
 					data.setTrait(TraitManager.DNA_BORING.getRegistryName());
 					TraitManager.DNA_BORING.onAdded(data);
 				}
+				data.synchronise();
 			});
 		}
 	}
@@ -230,24 +225,33 @@ public class CommonHandler {
 					return regen.serializeNBT();
 				}
 
-                @Override
+				@Override
 				public void deserializeNBT(CompoundNBT nbt) {
 					regen.deserializeNBT(nbt);
 				}
 
-            });
+			});
 		}
 	}
 
-    @SubscribeEvent
-    public void onCut(PlayerInteractEvent.RightClickItem event) {
-        if (PlayerUtil.isSharp(event.getItemStack())) {
-            PlayerEntity player = event.getPlayer();
-            RegenCap.get(player).ifPresent((data) -> {
-                if (data.getState() == PlayerUtil.RegenState.POST && !data.hasDroppedHand()) {
-                    PlayerUtil.createHand(player);
-                }
-            });
+	//I hate this.
+	@SubscribeEvent
+	public void fix(LivingSpawnEvent event) {
+		LivingEntity living = event.getEntityLiving();
+		if (!(living instanceof TimelordEntity)) {
+			RegenCap.get(living).ifPresent(iRegen -> iRegen.setRegenerationsLeft(0));
+		}
+	}
+
+	@SubscribeEvent
+	public void onCut(PlayerInteractEvent.RightClickItem event) {
+		if (PlayerUtil.isSharp(event.getItemStack())) {
+			PlayerEntity player = event.getPlayer();
+			RegenCap.get(player).ifPresent((data) -> {
+				if (data.getState() == PlayerUtil.RegenState.POST && !data.hasDroppedHand()) {
+					PlayerUtil.createHand(player);
+				}
+			});
 		}
 	}
 

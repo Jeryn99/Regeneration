@@ -10,8 +10,6 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemGroups {
 
-    public static final MaterialGuard MATERIAL_GUARD = new MaterialGuard();
-
     public static final ItemGroup REGEN_TAB = new ItemGroup("regeneration") {
         @Override
         public ItemStack createIcon() {
@@ -19,7 +17,7 @@ public class ItemGroups {
         }
     };
 
-    public static final ItemGroup REGEN_CLOTHING = new ItemGroup("regeneration") {
+    public static final ItemGroup REGEN_CLOTHING = new ItemGroup("regeneration_clothes") {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(RegenObjects.Items.ROBES_CHEST.get());

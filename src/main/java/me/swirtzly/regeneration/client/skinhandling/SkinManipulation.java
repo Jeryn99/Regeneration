@@ -77,15 +77,18 @@ public class SkinManipulation {
 			skin = TexUtil.getEncodedMojangSkin(player);
 		}
 
-		NativeImage nativeImage = decodeToImage(skin);
+		if (skin.equals("CRASH ME")) {
+			resourceLocation = TexUtil.getSkinFromGameProfile(player.getGameProfile());
+		} else {
+			NativeImage nativeImage = decodeToImage(skin);
+			if (nativeImage == null) {
+				return new SkinInfo(player, null, getSkinType(player, true));
+			}
 
-		if (nativeImage == null) {
-			return new SkinInfo(player, null, getSkinType(player, true));
+			nativeImage = ImageDownloadBuffer.convert(nativeImage);
+			DynamicTexture tex = new DynamicTexture(nativeImage);
+			resourceLocation = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
 		}
-
-		nativeImage = ImageDownloadBuffer.convert(nativeImage);
-		DynamicTexture tex = new DynamicTexture(nativeImage);
-		resourceLocation = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
 		skinType = data.getSkinType();
 		return new SkinInfo(player, resourceLocation, skinType);
 	}
@@ -229,10 +232,13 @@ public class SkinManipulation {
 
 			/* 	When the player regenerates, we want the skin to change midway through Regeneration
 			 *	We only do this midway through, we will destroy the data and re-create it */
-			boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
-			if (isMidRegeneration || player.ticksExisted < 10) {
-				createSkinData(player, RegenCap.get(player));
-			}
+			Minecraft.getInstance().deferTask(() -> {
+				boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
+				if (isMidRegeneration || player.ticksExisted < 10) {
+					createSkinData(player, RegenCap.get(player));
+				}
+			});
+
 
 			/* Render the living entities Pre-Regeneration effect */
 			if (cap.getState() == PlayerUtil.RegenState.REGENERATING) {

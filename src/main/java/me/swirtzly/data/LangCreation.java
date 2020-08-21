@@ -137,6 +137,7 @@ public class LangCreation extends LanguageProvider {
         add("message.regeneration.arch_placed", "Chameleon Arch Deployed!");
         add("message.regeneration.arch_system_dead", "Biocomponent Upgrade is not in a functional state or is not installed...");
         add("message.regeneration.arch_no_space", "There is not enough space to deploy!");
+        add("message.regeneration.transferred_regens", "You have given %s %s Regenerations!");
 
         // === NBT ===
         add("nbt.regeneration.item.lindos", "Lindos Energy: %s");
@@ -149,6 +150,7 @@ public class LangCreation extends LanguageProvider {
 
         // === Item Groups ===
         add("itemGroup.regeneration", grammerNazi(Regeneration.MODID));
+        add("itemGroup.regeneration_clothes", grammerNazi(Regeneration.MODID + " clothes"));
 
         // === Command ===
         add("argument.regeneration.invalid", "This trait is invalid!");
