@@ -46,7 +46,7 @@ public class ArchProtocol extends Protocol {
     }
 
     @Override
-    public void call(World world, ConsoleTile consoleTile) {
+    public void call(World world, PlayerEntity player, ConsoleTile consoleTile) {
     	if (!world.isRemote()) {
             consoleTile.getUpgrade(ArchUpgrade.class).ifPresent((archSubSystem -> {
                 if (archSubSystem.isUsable()) {
