@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "regeneration:gal_ore"
+  },
+  "result": "regeneration:gal_ingot",
+  "experience": 3.1,
+  "cookingtime": 100
+}
