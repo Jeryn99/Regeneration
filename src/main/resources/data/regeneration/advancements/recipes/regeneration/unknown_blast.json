@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "regeneration:unknown_blast"
+    ]
+  },
+  "criteria": {
+    "has_block": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "regeneration:gal_ore"
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "regeneration:unknown_blast"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_block",
+      "has_the_recipe"
+    ]
+  ]
+}
