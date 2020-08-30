@@ -34,6 +34,7 @@ import net.tardis.mod.entity.DalekEntity;
 import net.tardis.mod.enums.EnumDoorState;
 import net.tardis.mod.helper.TardisHelper;
 import net.tardis.mod.items.TItems;
+import net.tardis.mod.recipe.Recipes; //Change this to net.tardis.mod.recipe.WeldRecipe for Tardis Mod 1.4
 import net.tardis.mod.recipe.WeldRecipe;
 import net.tardis.mod.registries.TardisRegistries;
 import net.tardis.mod.subsystem.Subsystem;
@@ -54,8 +55,8 @@ public class TardisCompat {
         LOG.info("Loading Tardis Compatibility");
         TardisRegistries.registerRegisters(TardisCompat::registerAllProtocols);
         TardisRegistries.registerRegisters(TardisCompat::registerAllUpgrades);
-        WeldRecipe.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), false, RegenObjects.Items.HAND.get(), TItems.CIRCUITS));
-        WeldRecipe.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), true, RegenObjects.Items.ARCH_PART.get(), TItems.CIRCUITS, RegenObjects.Items.HAND.get()));
+        Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), false, RegenObjects.Items.HAND.get(), TItems.CIRCUITS));
+        Recipes.WELD_RECIPE.add(new WeldRecipe(RegenObjects.Items.ARCH_PART.get(), true, RegenObjects.Items.ARCH_PART.get(), TItems.CIRCUITS, RegenObjects.Items.HAND.get()));
         TardisRegistries.registerRegisters(TardisCompat::registerAllRooms);
         MinecraftForge.EVENT_BUS.register(new TardisCompat());
     }
