@@ -46,7 +46,7 @@ public class ArchProtocol extends Protocol {
     }
 
     @Override
-    public void call(World world, ConsoleTile consoleTile) { //Add a PlayerEntity parameter for Tardis Mod 1.4
+    public void call(World world, PlayerEntity player, ConsoleTile consoleTile) { //Add a PlayerEntity parameter for Tardis Mod 1.4
     	if (!world.isRemote()) {
             consoleTile.getUpgrade(ArchUpgrade.class).ifPresent((archSubSystem -> {
                 if (archSubSystem.isUsable()) {
