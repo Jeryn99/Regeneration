@@ -45,9 +45,12 @@ public class RegenCap implements IRegen {
     @CapabilityInject(IRegen.class)
     public static final Capability<IRegen> CAPABILITY = null;
 
+    //Don't save to disk
+    private boolean didSetup = false;
+
     //Data
     private final LivingEntity livingEntity;
-    private int regensLeft = 0;
+    private int regensLeft = 0, ticksAnimating = 0;
 
     //State
     private final StateManager stateManager;
@@ -86,8 +89,32 @@ public class RegenCap implements IRegen {
 
     @Override
     public void tick() {
+        if(!livingEntity.world.isRemote) {
+            if (!didSetup) {
+                syncToClients(null);
+                didSetup = true;
+            }
+
+            if (currentState != RegenStates.ALIVE) {
+                if (stateManager != null) {
+                    stateManager.tick();
+                }
+            }
+        }
+
 
     }
+
+    @Override
+    public int getTicksAnimating() {
+        return ticksAnimating;
+    }
+
+    @Override
+    public void setAnimationTicks(int ticksAnimating) {
+        this.ticksAnimating = ticksAnimating;
+    }
+
 
     @Override
     public boolean canRegenerate() {
@@ -169,15 +196,16 @@ public class RegenCap implements IRegen {
         compoundNBT.putInt(RConstants.REGENS_LEFT, regensLeft);
         compoundNBT.putString(RConstants.CURRENT_STATE, currentState.name());
         compoundNBT.put(RConstants.STYLE, getOrWriteStyle());
+        compoundNBT.putInt(RConstants.ANIMATION_TICKS, ticksAnimating);
         return compoundNBT;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        serializeNBT();
         setRegens(nbt.getInt(RConstants.REGENS_LEFT));
         currentState = nbt.contains(RConstants.CURRENT_STATE) ? RegenStates.valueOf(nbt.getString(RConstants.CURRENT_STATE)) : RegenStates.ALIVE;
-       //TODO crashes readStyle((CompoundNBT) Objects.requireNonNull(nbt.get(RConstants.STYLE)));
+        setAnimationTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
+        //TODO crashes readStyle((CompoundNBT) Objects.requireNonNull(nbt.get(RConstants.STYLE)));
     }
 
     @Override

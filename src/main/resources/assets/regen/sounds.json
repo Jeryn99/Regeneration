@@ -9,27 +9,6 @@
       }
     ]
   },
-  "staser": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.staser",
-    "sounds": [
-      {
-        "name": "regen:gun/staser",
-        "stream": false
-      }
-    ]
-  },
-  "rifle": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.rifle",
-    "sounds": [
-      {
-        "name": "regen:gun/rifle",
-        "stream": false
-      }
-    ]
-  },
-
   "grace_hum": {
     "category": "ambient",
     "subtitle": "regen.subtitles.hum",

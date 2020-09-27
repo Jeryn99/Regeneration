@@ -23,6 +23,7 @@ public class RenderFieryArms extends LayerRenderer {
         super(entityRendererIn);
     }
 
+    //TODO Move to the TransitionRenderer
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         EntityModel model = getEntityModel();
@@ -36,8 +37,8 @@ public class RenderFieryArms extends LayerRenderer {
                 for (HandSide handSide : HandSide.values()) {
                     matrixStackIn.push();
                     bipedModel.translateHand(handSide, matrixStackIn);
-                    renderCone(matrixStackIn, bufferIn, packedLightIn, (LivingEntity) entitylivingbaseIn, 1.5F, 1.5F, primaryColors);
-                    renderCone(matrixStackIn, bufferIn, packedLightIn, (LivingEntity) entitylivingbaseIn, 1, 1, secondaryColors);
+                    renderCone(matrixStackIn, bufferIn, packedLightIn, (LivingEntity) entitylivingbaseIn, 1F, 1F, primaryColors);
+                    renderCone(matrixStackIn, bufferIn, packedLightIn, (LivingEntity) entitylivingbaseIn, 1.5F, 1.5F, secondaryColors);
                     matrixStackIn.pop();
                 }
             });

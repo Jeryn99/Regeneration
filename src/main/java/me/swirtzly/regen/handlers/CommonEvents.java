@@ -11,6 +11,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -57,6 +58,11 @@ public class CommonEvents {
                 event.setCanceled(diedFully);
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void onLive(LivingEvent.LivingUpdateEvent livingUpdateEvent){
+        RegenCap.get(livingUpdateEvent.getEntityLiving()).ifPresent(IRegen::tick);
     }
 
 }

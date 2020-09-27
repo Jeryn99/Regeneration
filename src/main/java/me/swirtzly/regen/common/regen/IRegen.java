@@ -15,6 +15,11 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
     int getRegens();
 
     void tick();
+
+    int getTicksAnimating();
+
+    void setAnimationTicks(int ticksAnimating);
+
     boolean canRegenerate();
     boolean areHandsGlowing();
     RegenStates getCurrentState();

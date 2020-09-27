@@ -17,6 +17,7 @@ public class RConstants {
     public static String SECONDARY_GREEN = "s_green";
     public static String SECONDARY_BLUE = "s_blue";
     public static String STYLE = "style";
+    public static String ANIMATION_TICKS = "ticks_animating";
 
 
     //ResourceLocations
