@@ -1,7 +1,7 @@
 package me.swirtzly.regen.handlers;
 
-import me.swirtzly.regen.common.cap.IRegen;
-import me.swirtzly.regen.common.cap.RegenCap;
+import me.swirtzly.regen.common.regen.IRegen;
+import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -43,7 +43,6 @@ public class CommonEvents {
                 public void deserializeNBT(CompoundNBT nbt) {
                     regen.deserializeNBT(nbt);
                 }
-
             });
         }
     }

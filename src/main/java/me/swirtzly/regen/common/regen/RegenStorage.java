@@ -1,4 +1,4 @@
-package me.swirtzly.regen.common.cap;
+package me.swirtzly.regen.common.regen;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

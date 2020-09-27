@@ -1,0 +1,205 @@
+{
+  "jar_bubbles": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen_bubbles",
+    "sounds": [
+      {
+        "name": "regen:jar_bubbles",
+        "stream": true
+      }
+    ]
+  },
+  "staser": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.staser",
+    "sounds": [
+      {
+        "name": "regen:gun/staser",
+        "stream": false
+      }
+    ]
+  },
+  "rifle": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.rifle",
+    "sounds": [
+      {
+        "name": "regen:gun/rifle",
+        "stream": false
+      }
+    ]
+  },
+
+  "grace_hum": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.hum",
+    "sounds": [
+      {
+        "name": "regen:hum/grace_hum_1",
+        "stream": false
+      },
+      {
+        "name": "regen:hum/grace_hum_2",
+        "stream": false
+      },
+      {
+        "name": "regen:hum/grace_hum_3",
+        "stream": false
+      },
+      {
+        "name": "regen:hum/grace_hum_4",
+        "stream": false
+      }
+    ]
+  },
+  "regen_0": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen",
+    "sounds": [
+      {
+        "name": "regen:regen/regen_0",
+        "stream": true
+      }
+    ]
+  },
+  "regen_1": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen",
+    "sounds": [
+      {
+        "name": "regen:regen/regen_1",
+        "stream": true
+      }
+    ]
+  },
+  "regen_2": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen",
+    "sounds": [
+      {
+        "name": "regen:regen/regen_2",
+        "stream": true
+      }
+    ]
+  },
+  "regen_3": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen",
+    "sounds": [
+      {
+        "name": "regen:regen/regen_3",
+        "stream": true
+      }
+    ]
+  },
+  "regen_4": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen",
+    "sounds": [
+      {
+        "name": "regen:regen/regen_4",
+        "stream": true
+      }
+    ]
+  },
+  "regen_5": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen",
+    "sounds": [
+      {
+        "name": "regen:regen/regen_5",
+        "stream": true
+      }
+    ]
+  },
+  "regen_6": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen",
+    "sounds": [
+      {
+        "name": "regen:regen/regen_6",
+        "stream": true
+      }
+    ]
+  },
+  "regen_7": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen",
+    "sounds": [
+      {
+        "name": "regen:regen/regen_7",
+        "stream": true
+      }
+    ]
+  },
+  "fob_watch_dialogue": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.fob_watch_dialogue",
+    "sounds": [
+      {
+        "name": "regen:fob_watch_dialogue",
+        "stream": false
+      }
+    ]
+  },
+  "critical_stage": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.critical_stage",
+    "sounds": [
+      {
+        "name": "regen:critical_stage",
+        "stream": true
+      }
+    ]
+  },
+  "heart_beat": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.heart_beat",
+    "sounds": [
+      {
+        "name": "regen:heart_beat",
+        "stream": false
+      }
+    ]
+  },
+  "hand_glow": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.hand_glow",
+    "sounds": [
+      {
+        "name": "regen:hand_glow",
+        "stream": false
+      }
+    ]
+  },
+  "fob_watch": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.fob_watch",
+    "sounds": [
+      {
+        "name": "regen:fob_watch",
+        "stream": false
+      }
+    ]
+  },
+  "regen_breath": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.regen_breath",
+    "sounds": [
+      {
+        "name": "regen:regen_breath",
+        "stream": false
+      }
+    ]
+  },
+  "alarm": {
+    "category": "ambient",
+    "subtitle": "regen.subtitles.alarm",
+    "sounds": [
+      {
+        "name": "regen:alarm",
+        "stream": false
+      }
+    ]
+  }
+}
