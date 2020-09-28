@@ -3,6 +3,8 @@ package me.swirtzly.regen.common.regen.acting;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.messages.SFXMessage;
+import me.swirtzly.regen.network.messages.SyncMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +16,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Random;
 import java.util.UUID;
@@ -119,24 +122,24 @@ class CommonActing implements Acting {
 
     @Override
     public void onRegenTrigger(IRegen cap) {
-        LivingEntity player = cap.getLiving();
-        //TODO Dispatcher.sendPacketToAll(new PlaySFXMessage(getRandomSound(player.world.rand, cap).getRegistryName(), player.getUniqueID()));
-        player.getAttribute(Attributes.field_233818_a_).removeModifier(MAX_HEALTH_ID);
-        player.getAttribute(Attributes.field_233821_d_).removeModifier(SLOWNESS_ID);
-        player.setHealth(Math.max(player.getHealth(), 8));
-        player.setAbsorptionAmount(0);
+        LivingEntity living = cap.getLiving();
+        Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.noArg(), new SFXMessage(getRandomSound(living.getRNG(), cap).getRegistryName(), living.getUniqueID()));
+        living.getAttribute(Attributes.field_233818_a_).removeModifier(MAX_HEALTH_ID);
+        living.getAttribute(Attributes.field_233821_d_).removeModifier(SLOWNESS_ID);
+        living.setHealth(Math.max(living.getHealth(), 8));
+        living.setAbsorptionAmount(0);
 
-        player.extinguish();
-        player.removePassengers();
-        player.clearActivePotions();
-        player.stopRiding();
+        living.extinguish();
+        living.removePassengers();
+        living.clearActivePotions();
+        living.stopRiding();
 
-        if (player instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity) player;
+        if (living instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) living;
             if (RegenConfig.COMMON.resetHunger.get()) playerEntity.getFoodStats().setFoodLevel(20);
         }
 
-        if (RegenConfig.COMMON.resetOxygen.get()) player.setAir(300);
+        if (RegenConfig.COMMON.resetOxygen.get()) living.setAir(300);
 
         cap.extractRegens(1);
     }

@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -52,12 +53,17 @@ public class CommonEvents {
     public static void onLivingHurt(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
-            boolean diedFully = livingEntity.getHealth() + livingEntity.getAbsorptionAmount() - event.getAmount() <= 0;
-            if(iRegen.getRegens() > 0) {
-                iRegen.setRegens(iRegen.getRegens() - 1);
-                event.setCanceled(diedFully);
+            if(iRegen.canRegenerate()) {
+                boolean notDead = iRegen.getStateManager().onKilled(event.getSource());
+                event.setCanceled(notDead);
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
+        if (e.getPlayer().world.isRemote) return;
+        RegenCap.get(e.getPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
     }
 
     @SubscribeEvent

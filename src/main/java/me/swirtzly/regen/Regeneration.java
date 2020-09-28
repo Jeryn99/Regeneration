@@ -1,11 +1,12 @@
 package me.swirtzly.regen;
 
 import me.swirtzly.regen.client.rendering.layers.HandGlowLayer;
-import me.swirtzly.regen.client.rendering.layers.RenderFieryArms;
+import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
 import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
+import me.swirtzly.regen.common.regen.acting.ActingForwarder;
 import me.swirtzly.regen.data.EnglishLang;
 import me.swirtzly.regen.network.Dispatcher;
 import net.minecraft.client.Minecraft;
@@ -39,6 +40,7 @@ public class Regeneration {
 
     private void doCommonStuff(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
+        ActingForwarder.init();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -47,7 +49,7 @@ public class Regeneration {
         Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
         for (PlayerRenderer renderPlayer : skinMap.values()) {
             renderPlayer.addLayer(new HandGlowLayer(renderPlayer));
-            renderPlayer.addLayer(new RenderFieryArms(renderPlayer));
+            renderPlayer.addLayer(new RenderRegenLayer(renderPlayer));
         }
     }
 

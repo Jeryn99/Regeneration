@@ -8,6 +8,8 @@ public class RConstants {
     public static final String MODID = "regen";
 
     //NBT
+    public static final String STATE_MANAGER = "state_manager";
+    public static final String TRANSITION_TYPE = "transition_type";
     public static String REGENS_LEFT = "regens_left";
     public static String CURRENT_STATE = "current_state";
     public static String PRIMARY_RED = "p_red";

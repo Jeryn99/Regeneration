@@ -14,11 +14,11 @@ public class RenderTypes extends RenderType {
         super(name, vertexFormat, drawMode, bufferSize, useDelegate, needsSorting, setupTask, clearTask);
     }
 
-    public static final RenderType LASER = makeType(RConstants.MODID + ":laser", DefaultVertexFormats.POSITION_COLOR_LIGHTMAP, GL11.GL_QUADS, 256, false, false, RenderType.State.getBuilder()
+    public static final RenderType REGEN_FLAMES = makeType(RConstants.MODID + ":laser", DefaultVertexFormats.POSITION_COLOR_LIGHTMAP, GL11.GL_QUADS, 256, false, false, RenderType.State.getBuilder()
             .texture(RenderState.NO_TEXTURE)
             .cull(RenderState.CULL_ENABLED)
             .alpha(DEFAULT_ALPHA)
-            .transparency(RenderState.LIGHTNING_TRANSPARENCY)
+            .transparency(RenderState.ADDITIVE_TRANSPARENCY)
             .build(true));
 
     public static RenderType getGlowing(ResourceLocation locationIn) {

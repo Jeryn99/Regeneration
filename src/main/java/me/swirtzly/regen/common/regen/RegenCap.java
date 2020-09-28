@@ -3,11 +3,10 @@ package me.swirtzly.regen.common.regen;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
 import me.swirtzly.regen.common.regen.state.IStateManager;
 import me.swirtzly.regen.common.regen.state.RegenStates;
-import me.swirtzly.regen.common.regen.transitions.TransitionType;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.Dispatcher;
-import me.swirtzly.regen.network.SyncMessage;
+import me.swirtzly.regen.network.messages.SyncMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenSources;
@@ -21,9 +20,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
@@ -36,7 +33,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class RegenCap implements IRegen {
@@ -89,16 +85,21 @@ public class RegenCap implements IRegen {
 
     @Override
     public void tick() {
-        if(!livingEntity.world.isRemote) {
+        if (!livingEntity.world.isRemote) {
             if (!didSetup) {
                 syncToClients(null);
                 didSetup = true;
             }
 
+            //Tick State Manager
             if (currentState != RegenStates.ALIVE) {
                 if (stateManager != null) {
                     stateManager.tick();
                 }
+            }
+
+            if (currentState == RegenStates.REGENERATING) {
+                transitionType.create().onUpdateMidRegen(this);
             }
         }
 
@@ -176,10 +177,15 @@ public class RegenCap implements IRegen {
 
     @Override
     public void syncToClients(@Nullable ServerPlayerEntity serverPlayerEntity) {
+        if (livingEntity != null && livingEntity.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
+
+        CompoundNBT nbt = serializeNBT();
+        nbt.remove(RConstants.STATE_MANAGER);
+
         if (serverPlayerEntity == null) {
-            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncMessage(this.livingEntity.getEntityId(), this.serializeNBT()));
+            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncMessage(this.livingEntity.getEntityId(), nbt));
         } else {
-            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getEntityId(), this.serializeNBT()));
+            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getEntityId(), nbt));
         }
     }
 
@@ -197,6 +203,8 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.CURRENT_STATE, currentState.name());
         compoundNBT.put(RConstants.STYLE, getOrWriteStyle());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, ticksAnimating);
+        compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
+        if (!livingEntity.world.isRemote) {compoundNBT.put(RConstants.STATE_MANAGER, stateManager.serializeNBT()); }
         return compoundNBT;
     }
 
@@ -205,6 +213,7 @@ public class RegenCap implements IRegen {
         setRegens(nbt.getInt(RConstants.REGENS_LEFT));
         currentState = nbt.contains(RConstants.CURRENT_STATE) ? RegenStates.valueOf(nbt.getString(RConstants.CURRENT_STATE)) : RegenStates.ALIVE;
         setAnimationTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
+
         //TODO crashes readStyle((CompoundNBT) Objects.requireNonNull(nbt.get(RConstants.STYLE)));
     }
 
@@ -364,7 +373,10 @@ public class RegenCap implements IRegen {
             if (currentState.isGraceful()) handGlowTimer.tick();
 
             ActingForwarder.onRegenTick(RegenCap.this);
-            nextTransition.tick();
+
+            if(nextTransition != null){
+                nextTransition.tick();
+            }
 
             if (currentState == RegenStates.POST) {
                 ActingForwarder.onPerformingPost(RegenCap.this);

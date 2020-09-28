@@ -1,4 +1,4 @@
-package me.swirtzly.regen.network;
+package me.swirtzly.regen.network.messages;
 
 import me.swirtzly.regen.common.regen.RegenCap;
 import net.minecraft.client.Minecraft;

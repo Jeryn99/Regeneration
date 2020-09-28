@@ -1,5 +1,7 @@
 package me.swirtzly.regen.network;
 
+import me.swirtzly.regen.network.messages.SFXMessage;
+import me.swirtzly.regen.network.messages.SyncMessage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -13,6 +15,7 @@ public class Dispatcher {
     public static void setUp() {
         int id = 0;
         NETWORK_CHANNEL.registerMessage(id++, SyncMessage.class, SyncMessage::toBytes, SyncMessage::new, SyncMessage::handle);
+        NETWORK_CHANNEL.registerMessage(id++, SFXMessage.class, SFXMessage::toBytes, SFXMessage::new, SFXMessage::handle);
     }
 
 }

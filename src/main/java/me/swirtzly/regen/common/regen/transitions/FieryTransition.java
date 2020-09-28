@@ -42,7 +42,7 @@ public class FieryTransition implements TransitionType<FieryTransitionRenderer> 
         if (capability.getLiving() instanceof ServerPlayerEntity) {
             //TODO PlayerUtil.setPerspective((ServerPlayerEntity) capability.getLiving() , false, true);
         }
-        //TODO capability.setAnimationTicks(0);
+        capability.setAnimationTicks(0);
     }
 
     @Override
@@ -52,8 +52,7 @@ public class FieryTransition implements TransitionType<FieryTransitionRenderer> 
 
     @Override
     public double getAnimationProgress(IRegen cap) {
-        return 10;
-        //TODO return Math.min(1, cap.getAnimationTicks() / (double) getAnimationLength());
+        return Math.min(1, cap.getTicksAnimating() / (double) getAnimationLength());
     }
 
 
