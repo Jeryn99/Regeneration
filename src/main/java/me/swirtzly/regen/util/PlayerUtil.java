@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -20,7 +21,13 @@ import java.util.List;
 
 public class PlayerUtil {
 
+    //TODO Fix
     public static ArrayList<Effect> POTIONS = new ArrayList();
+
+    static {
+        POTIONS.add(Effects.HASTE);
+    }
+
 
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
         if (!(livingEntity instanceof PlayerEntity)) return;

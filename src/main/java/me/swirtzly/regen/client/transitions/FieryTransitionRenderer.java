@@ -32,16 +32,16 @@ public class FieryTransitionRenderer implements TransitionRenderer {
             LivingEntity livingEntity = (LivingEntity) entitylivingbaseIn;
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
-                double x = iRegen.getTicksAnimating();
-                double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
-                double r = 0.09890109890109888;
-                double f = p * Math.pow(x, 2) - r;
-
-                float cf = MathHelper.clamp((float) f, 0F, 1F);
-                float primaryScale = cf * 4F;
-                float secondaryScale = cf * 6.4F;
-
                 if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+                    double x = iRegen.getTicksAnimating();
+                    double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
+                    double r = 0.09890109890109888;
+                    double f = p * Math.pow(x, 2) - r;
+
+                    float cf = MathHelper.clamp((float) f, 0F, 1F);
+                    float primaryScale = cf * 4F;
+                    float secondaryScale = cf * 6.4F;
+
                     CompoundNBT colorTag = iRegen.getOrWriteStyle();
                     Vector3d primaryColors = new Vector3d(colorTag.getFloat(RConstants.PRIMARY_RED), colorTag.getFloat(RConstants.PRIMARY_GREEN), colorTag.getFloat(RConstants.PRIMARY_BLUE));
                     Vector3d secondaryColors = new Vector3d(colorTag.getFloat(RConstants.SECONDARY_RED), colorTag.getFloat(RConstants.SECONDARY_GREEN), colorTag.getFloat(RConstants.SECONDARY_BLUE));

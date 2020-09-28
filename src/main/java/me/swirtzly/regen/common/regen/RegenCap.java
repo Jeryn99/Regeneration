@@ -18,6 +18,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -85,6 +86,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public void tick() {
+
         if (!livingEntity.world.isRemote) {
             if (!didSetup) {
                 syncToClients(null);
@@ -177,7 +179,8 @@ public class RegenCap implements IRegen {
 
     @Override
     public void syncToClients(@Nullable ServerPlayerEntity serverPlayerEntity) {
-        if (livingEntity != null && livingEntity.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
+        if (livingEntity != null && livingEntity.world.isRemote)
+            throw new IllegalStateException("Don't sync client -> server");
 
         CompoundNBT nbt = serializeNBT();
         nbt.remove(RConstants.STATE_MANAGER);
@@ -204,7 +207,11 @@ public class RegenCap implements IRegen {
         compoundNBT.put(RConstants.STYLE, getOrWriteStyle());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, ticksAnimating);
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
-        if (!livingEntity.world.isRemote) {compoundNBT.put(RConstants.STATE_MANAGER, stateManager.serializeNBT()); }
+        if (!livingEntity.world.isRemote) {
+            if (stateManager != null) {
+                compoundNBT.put(RConstants.STATE_MANAGER, stateManager.serializeNBT());
+            }
+        }
         return compoundNBT;
     }
 
@@ -214,7 +221,17 @@ public class RegenCap implements IRegen {
         currentState = nbt.contains(RConstants.CURRENT_STATE) ? RegenStates.valueOf(nbt.getString(RConstants.CURRENT_STATE)) : RegenStates.ALIVE;
         setAnimationTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
 
+        //RegenType
+        if(nbt.contains(RConstants.TRANSITION_TYPE)){
+            transitionType = TransitionTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString(RConstants.TRANSITION_TYPE)));
+        }
+
+        //Statemanager
+        if (nbt.contains(RConstants.STATE_MANAGER)) if (stateManager != null) {
+            stateManager.deserializeNBT((CompoundNBT) nbt.get(RConstants.STATE_MANAGER));
+        }
         //TODO crashes readStyle((CompoundNBT) Objects.requireNonNull(nbt.get(RConstants.STYLE)));
+
     }
 
     @Override
@@ -235,6 +252,13 @@ public class RegenCap implements IRegen {
     @Override
     public String getDeathMessage() {
         return this.deathMessage;
+    }
+
+    @Override
+    public void regen() {
+        if (stateManager != null) {
+            stateManager.triggerRegeneration();
+        }
     }
 
     public class StateManager implements IStateManager {
@@ -290,7 +314,6 @@ public class RegenCap implements IRegen {
 
         @Override
         public boolean onKilled(DamageSource source) {
-
             if (source == DamageSource.IN_WALL || source == DamageSource.CRAMMING) {
                 return false;
             }
@@ -374,7 +397,7 @@ public class RegenCap implements IRegen {
 
             ActingForwarder.onRegenTick(RegenCap.this);
 
-            if(nextTransition != null){
+            if (nextTransition != null) {
                 nextTransition.tick();
             }
 
@@ -471,7 +494,10 @@ public class RegenCap implements IRegen {
 
         @Override
         public double getStateProgress() {
-            return nextTransition.getProgress();
+            if (nextTransition != null) {
+                return nextTransition.getProgress();
+            }
+            return 0;
         }
 
         @SuppressWarnings("deprecation")

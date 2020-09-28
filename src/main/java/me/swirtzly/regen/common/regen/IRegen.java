@@ -34,4 +34,5 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
     void setTransitionType(TransitionTypes transitionType);
     void setDeathMessage(String deathMessage);
     String getDeathMessage();
+    void regen();
 }
