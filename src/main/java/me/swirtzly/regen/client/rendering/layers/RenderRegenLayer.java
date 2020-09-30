@@ -35,10 +35,9 @@ public class RenderRegenLayer extends LayerRenderer {
     }
 
 
-    public static void renderCone(MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int combinedLightIn, LivingEntity entityPlayer, float scale, float scale2, Vector3d color) {
+    public static void renderCone(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, LivingEntity entityPlayer, float scale, float scale2, Vector3d color) {
         matrixStack.push();
         RegenCap.get(entityPlayer).ifPresent(iRegen -> {
-            IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderTypes.REGEN_FLAMES);
             for (int i = 0; i < 10; i++) {
                 matrixStack.rotate(Vector3f.YP.rotation(entityPlayer.ticksExisted * 4 + i * 45));
                 matrixStack.scale(1.0f, 1.0f, 0.65f);

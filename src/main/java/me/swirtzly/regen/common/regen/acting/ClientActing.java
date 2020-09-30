@@ -1,12 +1,20 @@
 package me.swirtzly.regen.common.regen.acting;
 
+import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.config.RegenConfig;
+import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.messages.SkinMessage;
 import me.swirtzly.regen.util.ClientUtil;
+import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TranslationTextComponent;
+
+import java.io.File;
 
 class ClientActing implements Acting {
 
@@ -33,9 +41,6 @@ class ClientActing implements Acting {
 
     @Override
     public void onRegenFinish(IRegen cap) {
-        if (RegenConfig.CLIENT.changeHand.get() && cap.getLiving().getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
-           //TODO ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.regenerated"), new TranslationTextComponent("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()));
-        }
 
     }
 
@@ -47,7 +52,8 @@ class ClientActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLiving().getUniqueID())) {
-            //TODO  SkinManipulation.sendSkinUpdate(cap.getLiving().world.rand, (PlayerEntity) cap.getLiving());
+            File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRNG(), cap.getLiving().getRNG().nextBoolean()); //Implement Preferred type
+            Dispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage((PlayerEntity) cap.getLiving(), RegenUtil.fileToBytes(file)));
         }
     }
 

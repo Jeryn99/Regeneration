@@ -1,8 +1,10 @@
 package me.swirtzly.regen;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import me.swirtzly.regen.client.rendering.layers.HandGlowLayer;
 import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
-import me.swirtzly.regen.common.objects.RSounds;
+import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
@@ -16,8 +18,6 @@ import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -33,6 +33,7 @@ import java.util.Map;
 public class Regeneration {
 
     public static final Logger LOG = LogManager.getLogger("Regeneration");
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public Regeneration() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
@@ -59,6 +60,8 @@ public class Regeneration {
             renderPlayer.addLayer(new HandGlowLayer(renderPlayer));
             renderPlayer.addLayer(new RenderRegenLayer(renderPlayer));
         }
+
+        CommonSkin.doSetupOnThread();
     }
 
     @SubscribeEvent

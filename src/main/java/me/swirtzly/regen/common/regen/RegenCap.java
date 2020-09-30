@@ -23,7 +23,10 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
@@ -34,6 +37,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,16 +54,18 @@ public class RegenCap implements IRegen {
     //Data
     private final LivingEntity livingEntity;
     private int regensLeft = 0, ticksAnimating = 0;
+    private byte[] skinArray = new byte[0];
+
+    // Color Data
+    private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
+    private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
+    private String deathMessage = "";
 
     //State
     private final StateManager stateManager;
     private RegenStates currentState = RegenStates.ALIVE;
     private TransitionTypes transitionType = TransitionTypes.FIERY;
 
-    // Color Data
-    private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
-    private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
-    private String deathMessage = "";
 
     public RegenCap() {
         this.livingEntity = null;
@@ -107,6 +113,7 @@ public class RegenCap implements IRegen {
             if (currentState == RegenStates.REGENERATING) {
                 ticksAnimating++;
                 transitionType.create().onUpdateMidRegen(this);
+                syncToClients(null);
             }
         }
 
@@ -191,7 +198,7 @@ public class RegenCap implements IRegen {
         nbt.remove(RConstants.STATE_MANAGER);
 
         if (serverPlayerEntity == null) {
-            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncMessage(this.livingEntity.getEntityId(), nbt));
+            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> livingEntity.getEntityWorld().func_234923_W_()), new SyncMessage(this.livingEntity.getEntityId(), nbt));
         } else {
             Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getEntityId(), nbt));
         }
@@ -212,6 +219,9 @@ public class RegenCap implements IRegen {
         compoundNBT.put(RConstants.STYLE, getOrWriteStyle());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, ticksAnimating);
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
+        if (isSkinValidForUse()) {
+            compoundNBT.putByteArray(RConstants.SKIN, skinArray);
+        }
         if (!livingEntity.world.isRemote) {
             if (stateManager != null) {
                 compoundNBT.put(RConstants.STATE_MANAGER, stateManager.serializeNBT());
@@ -225,11 +235,13 @@ public class RegenCap implements IRegen {
         setRegens(nbt.getInt(RConstants.REGENS_LEFT));
         currentState = nbt.contains(RConstants.CURRENT_STATE) ? RegenStates.valueOf(nbt.getString(RConstants.CURRENT_STATE)) : RegenStates.ALIVE;
         setAnimationTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
+        setSkin(nbt.getByteArray(RConstants.SKIN));
 
         //RegenType
-        if(nbt.contains(RConstants.TRANSITION_TYPE)){
+        if (nbt.contains(RConstants.TRANSITION_TYPE)) {
             transitionType = TransitionTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString(RConstants.TRANSITION_TYPE)));
         }
+
 
         //Statemanager
         if (nbt.contains(RConstants.STATE_MANAGER)) if (stateManager != null) {
@@ -264,6 +276,21 @@ public class RegenCap implements IRegen {
         if (stateManager != null) {
             stateManager.triggerRegeneration();
         }
+    }
+
+    @Override
+    public void setSkin(byte[] skin) {
+        this.skinArray = skin;
+    }
+
+    @Override
+    public byte[] getSkin() {
+        return skinArray;
+    }
+
+    @Override
+    public boolean isSkinValidForUse() {
+        return !Arrays.equals(skinArray, new byte[0]);
     }
 
     public class StateManager implements IStateManager {
@@ -417,8 +444,8 @@ public class RegenCap implements IRegen {
 
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
                 if (livingEntity instanceof PlayerEntity) {
-                    TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_chat_message", livingEntity.getName());
-                    //TODO Objects.requireNonNull(text.getStyle().getHoverEvent()).func_240662_a_(new HoverEvent(HoverEvent.Action.field_230552_c_, new StringTextComponent(getDeathMessage()));
+                    TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_death_msg", livingEntity.getName());
+                    text.func_230530_a_(text.getStyle().func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, new StringTextComponent(getDeathMessage()))));
                     PlayerUtil.sendMessageToAll(text);
                 }
             }

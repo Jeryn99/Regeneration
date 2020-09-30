@@ -69,11 +69,9 @@ class CommonActing implements Acting {
 
             case GRACE:
                 float weaknessPercentage = 0.5F;
-
                 if (stateProgress > weaknessPercentage) {
                     PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false);
                 }
-
                 break;
 
             case ALIVE:
@@ -90,7 +88,7 @@ class CommonActing implements Acting {
         // Reduce number of hearts, but compensate with absorption
         player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
         if (!player.getAttribute(Attributes.field_233818_a_).hasModifier(heartModifier)) {
-            player.getAttribute(Attributes.field_233818_a_).func_233769_c_(heartModifier); //TODO Check if correct
+            player.getAttribute(Attributes.field_233818_a_).func_233769_c_(heartModifier);
         }
         player.setHealth(player.getMaxHealth());
     }
@@ -103,7 +101,7 @@ class CommonActing implements Acting {
     @Override
     public void onGoCritical(IRegen cap) {
         if (!cap.getLiving().getAttribute(Attributes.field_233821_d_).hasModifier(slownessModifier)) {
-            cap.getLiving().getAttribute(Attributes.field_233821_d_).func_233769_c_(slownessModifier);//TODO Check if correct
+            cap.getLiving().getAttribute(Attributes.field_233821_d_).func_233769_c_(slownessModifier);
         }
     }
 
@@ -113,7 +111,7 @@ class CommonActing implements Acting {
         player.addPotionEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
         player.setHealth(player.getMaxHealth());
         player.setAbsorptionAmount(RegenConfig.COMMON.absorbtionLevel.get() * 2);
-       //TODO Skin cap.setNextSkin(RegenUtil.NO_SKIN);
+        //cap.setNextSkin(RegenUtil.NO_SKIN);
     }
 
     @Override
@@ -123,7 +121,7 @@ class CommonActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.noArg(), new SFXMessage(getRandomSound(living.getRNG(), cap).getRegistryName(), living.getUniqueID()));
+        Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getEntityWorld().func_234923_W_()), new SFXMessage(getRandomSound(living.getRNG(), cap).getRegistryName(), living.getUniqueID()));
         living.getAttribute(Attributes.field_233818_a_).removeModifier(MAX_HEALTH_ID);
         living.getAttribute(Attributes.field_233821_d_).removeModifier(SLOWNESS_ID);
         living.setHealth(Math.max(living.getHealth(), 8));

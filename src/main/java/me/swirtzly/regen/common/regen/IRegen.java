@@ -13,13 +13,9 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 
     void setRegens(int regens);
     int getRegens();
-
     void tick();
-
     int getTicksAnimating();
-
     void setAnimationTicks(int ticksAnimating);
-
     boolean canRegenerate();
     boolean areHandsGlowing();
     RegenStates getCurrentState();
@@ -35,4 +31,7 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
     void setDeathMessage(String deathMessage);
     String getDeathMessage();
     void regen();
+    void setSkin(byte[] skin);
+    byte[] getSkin();
+    boolean isSkinValidForUse();
 }

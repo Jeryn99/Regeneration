@@ -2,9 +2,15 @@ package me.swirtzly.regen.handlers;
 
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
+import me.swirtzly.regen.common.regen.state.RegenStates;
+import me.swirtzly.regen.config.RegenConfig;
+import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
+import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -13,6 +19,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -54,7 +61,26 @@ public class CommonEvents {
     public static void onLivingHurt(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
-            if(iRegen.canRegenerate()) {
+
+            Entity trueSource = event.getSource().getTrueSource();
+
+            if (trueSource instanceof PlayerEntity && event.getEntityLiving() != null) {
+                PlayerEntity player = (PlayerEntity) trueSource;
+                RegenCap.get(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
+                return;
+            }
+
+            if (event.getSource() == RegenSources.REGEN_DMG_CRITICAL || event.getSource() == RegenSources.REGEN_DMG_KILLED)
+                return;
+
+
+            iRegen.setDeathMessage(event.getSource().getDeathMessage(livingEntity).getUnformattedComponentText());
+
+
+            //Handle Death
+            if (iRegen.getCurrentState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage() || iRegen.getCurrentState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
+                event.setCanceled(true);
+            } else if (livingEntity.getHealth() + livingEntity.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
                 boolean notDead = iRegen.getStateManager().onKilled(event.getSource());
                 event.setCanceled(notDead);
             }
@@ -62,7 +88,29 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onTrackPlayer(PlayerEvent.StartTracking startTracking){
+    public static void onKnockback(LivingKnockBackEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
+        RegenCap.get(livingEntity).ifPresent((data) -> {
+            if (data.getCurrentState() == RegenStates.REGENERATING) {
+                event.setCanceled(true);
+            }
+        });
+    }
+
+
+
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        Capability.IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
+        event.getOriginal().revive();
+        RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
+            CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
+            storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
+        }));
+    }
+
+    @SubscribeEvent
+    public static void onTrackPlayer(PlayerEvent.StartTracking startTracking) {
         RegenCap.get(startTracking.getPlayer()).ifPresent(iRegen -> {
             iRegen.syncToClients(null);
         });
@@ -75,7 +123,7 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onLive(LivingEvent.LivingUpdateEvent livingUpdateEvent){
+    public static void onLive(LivingEvent.LivingUpdateEvent livingUpdateEvent) {
         RegenCap.get(livingUpdateEvent.getEntityLiving()).ifPresent(IRegen::tick);
     }
 

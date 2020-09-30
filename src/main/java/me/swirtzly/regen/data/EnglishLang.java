@@ -34,5 +34,8 @@ public class EnglishLang extends LanguageProvider {
         add("regen.subtitles.regen_breath", "Regeneration exhale");
         add("regen.subtitles.alarm", "Regeneration Alarm");
 
+        //Messages
+        add("regeneration.messages.regen_death_msg", "%s is regenerating...");
+
     }
 }

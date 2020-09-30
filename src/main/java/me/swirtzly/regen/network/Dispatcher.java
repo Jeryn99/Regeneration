@@ -1,9 +1,6 @@
 package me.swirtzly.regen.network;
 
-import me.swirtzly.regen.network.messages.POVMessage;
-import me.swirtzly.regen.network.messages.SFXMessage;
-import me.swirtzly.regen.network.messages.StateMessage;
-import me.swirtzly.regen.network.messages.SyncMessage;
+import me.swirtzly.regen.network.messages.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -20,6 +17,7 @@ public class Dispatcher {
         NETWORK_CHANNEL.registerMessage(id++, SFXMessage.class, SFXMessage::toBytes, SFXMessage::new, SFXMessage::handle);
         NETWORK_CHANNEL.registerMessage(id++, POVMessage.class, POVMessage::toBytes, POVMessage::new, POVMessage::handle);
         NETWORK_CHANNEL.registerMessage(id++, StateMessage.class, StateMessage::toBytes, StateMessage::new, StateMessage::handle);
+        NETWORK_CHANNEL.registerMessage(id++, SkinMessage.class, SkinMessage::toBytes, SkinMessage::new, SkinMessage::handle);
     }
 
 }

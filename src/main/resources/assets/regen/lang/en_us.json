@@ -15,6 +15,7 @@
   "regen.subtitles.hum": "Calming hums",
   "regen.subtitles.regen_breath": "Regeneration exhale",
   "regen.subtitles.regen_bubble": "Jar bubbles",
+  "regeneration.messages.regen_death_msg": "%s is regenerating...",
   "source.regen.lindos": "%s consumed lindos hormones! They are reborn!",
   "source.regen.regen_crit": "%s died from holding in their regeneration for too long",
   "source.regen.regen_energy": "%s was blasted by Regeneration Energy!",
