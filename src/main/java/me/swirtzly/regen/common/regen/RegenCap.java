@@ -5,7 +5,7 @@ import me.swirtzly.regen.common.regen.state.IStateManager;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.config.RegenConfig;
-import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.SyncMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
@@ -21,6 +21,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -194,9 +195,9 @@ public class RegenCap implements IRegen {
         nbt.remove(RConstants.STATE_MANAGER);
 
         if (serverPlayerEntity == null) {
-            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> livingEntity.getEntityWorld().func_234923_W_()), new SyncMessage(this.livingEntity.getEntityId(), nbt));
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> livingEntity.getEntityWorld().func_234923_W_()), new SyncMessage(this.livingEntity.getEntityId(), nbt));
         } else {
-            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getEntityId(), nbt));
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getEntityId(), nbt));
         }
     }
 
@@ -205,7 +206,6 @@ public class RegenCap implements IRegen {
         CompoundNBT compoundNBT = new CompoundNBT();
         compoundNBT.putInt(RConstants.REGENS_LEFT, regensLeft);
         compoundNBT.putString(RConstants.CURRENT_STATE, currentState.name());
-        compoundNBT.put(RConstants.STYLE, getOrWriteStyle());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, ticksAnimating);
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
         if (isSkinValidForUse()) {
@@ -216,6 +216,9 @@ public class RegenCap implements IRegen {
                 compoundNBT.put(RConstants.STATE_MANAGER, stateManager.serializeNBT());
             }
         }
+
+        compoundNBT.put(RConstants.COLORS, getOrWriteStyle());
+
         return compoundNBT;
     }
 
@@ -236,8 +239,10 @@ public class RegenCap implements IRegen {
         if (nbt.contains(RConstants.STATE_MANAGER)) if (stateManager != null) {
             stateManager.deserializeNBT((CompoundNBT) nbt.get(RConstants.STATE_MANAGER));
         }
-        //TODO crashes readStyle((CompoundNBT) Objects.requireNonNull(nbt.get(RConstants.STYLE)));
 
+        if(nbt.contains(RConstants.COLORS)) {
+            readStyle((CompoundNBT) nbt.get(RConstants.COLORS));
+        }
     }
 
     @Override
@@ -280,6 +285,16 @@ public class RegenCap implements IRegen {
     @Override
     public boolean isSkinValidForUse() {
         return !Arrays.equals(skinArray, new byte[0]);
+    }
+
+    @Override
+    public Vector3d getPrimaryColors() {
+        return new Vector3d(primaryRed, primaryGreen, primaryBlue);
+    }
+
+    @Override
+    public Vector3d getSecondaryColors() {
+        return new Vector3d(secondaryRed, secondaryGreen, secondaryBlue);
     }
 
     public class StateManager implements IStateManager {

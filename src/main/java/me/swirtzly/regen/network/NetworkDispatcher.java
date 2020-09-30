@@ -7,7 +7,7 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 import static me.swirtzly.regen.util.RConstants.MODID;
 
-public class Dispatcher {
+public class NetworkDispatcher {
 
     public static SimpleChannel NETWORK_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> "1.0", "1.0"::equals, "1.0"::equals);
 

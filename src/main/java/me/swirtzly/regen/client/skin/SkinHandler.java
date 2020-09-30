@@ -4,7 +4,7 @@ package me.swirtzly.regen.client.skin;
 import com.google.common.base.MoreObjects;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.swirtzly.regen.common.regen.RegenCap;
-import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.SkinMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -52,7 +52,7 @@ public class SkinHandler {
 
     public static void sendResetMessage() {
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        Dispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(player, new byte[0]));
+        NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(player, new byte[0]));
     }
 
     public static ResourceLocation loadImage(NativeImage nativeImage) {

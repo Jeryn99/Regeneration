@@ -5,6 +5,7 @@ import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -56,4 +57,7 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
     void setSkin(byte[] skin);
 
     boolean isSkinValidForUse();
+
+    Vector3d getPrimaryColors();
+    Vector3d getSecondaryColors();
 }

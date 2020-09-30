@@ -3,7 +3,7 @@ package me.swirtzly.regen.common.regen.transitions;
 import me.swirtzly.regen.client.rendering.transitions.FieryTransitionRenderer;
 import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
-import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.POVMessage;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.block.FireBlock;
@@ -27,7 +27,7 @@ public class FieryTransition implements TransitionType<FieryTransitionRenderer> 
 
         if (!livingEntity.world.isRemote) {
             if (capability.getLiving() instanceof ServerPlayerEntity) {
-                Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(PointOfView.THIRD_PERSON_FRONT));
+                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(PointOfView.THIRD_PERSON_FRONT));
             }
         }
 
@@ -41,7 +41,7 @@ public class FieryTransition implements TransitionType<FieryTransitionRenderer> 
     @Override
     public void onFinishRegeneration(IRegen capability) {
         if (capability.getLiving() instanceof ServerPlayerEntity) {
-            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(PointOfView.FIRST_PERSON));
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(PointOfView.FIRST_PERSON));
         }
         capability.setAnimationTicks(0);
     }

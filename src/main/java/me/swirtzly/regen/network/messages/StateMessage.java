@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 public class StateMessage {
 
-    private int livingEntity;
-    private String event;
+    private final int livingEntity;
+    private final String event;
 
     public StateMessage(LivingEntity livingEntity, ActingForwarder.RegenEvent event) {
         this.livingEntity = livingEntity.getEntityId();

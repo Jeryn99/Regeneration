@@ -2,7 +2,7 @@ package me.swirtzly.regen.common.regen.acting;
 
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.config.RegenConfig;
-import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.SFXMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RegenSources;
@@ -120,7 +120,7 @@ class CommonActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getEntityWorld().func_234923_W_()), new SFXMessage(getRandomSound(living.getRNG(), cap).getRegistryName(), living.getUniqueID()));
+        NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getEntityWorld().func_234923_W_()), new SFXMessage(getRandomSound(living.getRNG(), cap).getRegistryName(), living.getUniqueID()));
         living.getAttribute(Attributes.field_233818_a_).removeModifier(MAX_HEALTH_ID);
         living.getAttribute(Attributes.field_233821_d_).removeModifier(SLOWNESS_ID);
         living.setHealth(Math.max(living.getHealth(), 8));

@@ -10,8 +10,8 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class SkinMessage {
-    private byte[] skinByteArray;
-    private UUID playerUUID;
+    private final byte[] skinByteArray;
+    private final UUID playerUUID;
 
     public SkinMessage(PlayerEntity playerEntity, byte[] skinByteArray) {
         this.skinByteArray = skinByteArray;

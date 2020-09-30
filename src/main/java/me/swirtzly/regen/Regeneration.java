@@ -12,7 +12,7 @@ import me.swirtzly.regen.common.regen.acting.ActingForwarder;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.EnglishLang;
 import me.swirtzly.regen.data.RSoundsGen;
-import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.NetworkDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.data.DataGenerator;
@@ -42,7 +42,7 @@ public class Regeneration {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doCommonStuff);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
-        Dispatcher.setUp();
+        NetworkDispatcher.setUp();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);

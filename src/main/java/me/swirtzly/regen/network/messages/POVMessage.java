@@ -9,7 +9,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class POVMessage {
-    private String pointOfView;
+    private final String pointOfView;
 
     public POVMessage(PointOfView pointOfView) {
         this.pointOfView = pointOfView.name();

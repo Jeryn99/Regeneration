@@ -14,8 +14,8 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class SFXMessage {
-    private ResourceLocation sound;
-    private UUID playerUUID;
+    private final ResourceLocation sound;
+    private final UUID playerUUID;
 
     public SFXMessage(ResourceLocation sound, UUID playerUUID) {
         this.playerUUID = playerUUID;
