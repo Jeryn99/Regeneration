@@ -24,6 +24,8 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
     public static final TransitionTypes HARTNELL = new TransitionTypes(LayFadeTransition::new);
     public static IForgeRegistry<TransitionTypes> REGISTRY;
     public static TransitionTypes[] TYPES = new TransitionTypes[]{FIERY, HARTNELL};
+    //==================================
+    private Supplier<TransitionType> supplier;
 
     public TransitionTypes(Supplier<TransitionType> supplier) {
         this.supplier = supplier;
@@ -45,10 +47,6 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
         }
         return 0;
     }
-
-
-    //==================================
-    private Supplier<TransitionType> supplier;
 
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register<TransitionTypes> e) {

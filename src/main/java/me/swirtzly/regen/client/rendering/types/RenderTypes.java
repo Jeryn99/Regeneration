@@ -10,16 +10,16 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderTypes extends RenderType {
 
-    public RenderTypes(String name, VertexFormat vertexFormat, int drawMode, int bufferSize, boolean useDelegate, boolean needsSorting, Runnable setupTask, Runnable clearTask) {
-        super(name, vertexFormat, drawMode, bufferSize, useDelegate, needsSorting, setupTask, clearTask);
-    }
-
     public static final RenderType REGEN_FLAMES = makeType(RConstants.MODID + ":laser", DefaultVertexFormats.POSITION_COLOR_LIGHTMAP, GL11.GL_QUADS, 256, false, false, RenderType.State.getBuilder()
             .texture(RenderState.NO_TEXTURE)
             .cull(RenderState.CULL_ENABLED)
             .alpha(DEFAULT_ALPHA)
             .transparency(RenderState.ADDITIVE_TRANSPARENCY)
             .build(true));
+
+    public RenderTypes(String name, VertexFormat vertexFormat, int drawMode, int bufferSize, boolean useDelegate, boolean needsSorting, Runnable setupTask, Runnable clearTask) {
+        super(name, vertexFormat, drawMode, bufferSize, useDelegate, needsSorting, setupTask, clearTask);
+    }
 
     public static RenderType getGlowing(ResourceLocation locationIn) {
         RenderState.TextureState textureState = new RenderState.TextureState(locationIn, false, false);

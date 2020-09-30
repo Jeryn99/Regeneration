@@ -22,14 +22,9 @@ public class SFXMessage {
         this.sound = sound;
     }
 
-    public SFXMessage(PacketBuffer buffer){
+    public SFXMessage(PacketBuffer buffer) {
         sound = buffer.readResourceLocation();
         playerUUID = buffer.readUniqueId();
-    }
-
-    public void toBytes(PacketBuffer buffer) {
-        buffer.writeResourceLocation(this.sound);
-        buffer.writeUniqueId(this.playerUUID);
     }
 
     public static void handle(SFXMessage message, Supplier<NetworkEvent.Context> ctx) {
@@ -40,6 +35,11 @@ public class SFXMessage {
             }
         });
         ctx.get().setPacketHandled(true);
+    }
+
+    public void toBytes(PacketBuffer buffer) {
+        buffer.writeResourceLocation(this.sound);
+        buffer.writeUniqueId(this.playerUUID);
     }
 
 }

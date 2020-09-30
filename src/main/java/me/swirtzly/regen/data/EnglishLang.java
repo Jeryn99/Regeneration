@@ -22,7 +22,7 @@ public class EnglishLang extends LanguageProvider {
 
         //Sounds
         for (int i = 0; i < 7; i++) {
-            add("regen.sound.regeneration_"+i, "Regeneration");
+            add("regen.sound.regeneration_" + i, "Regeneration");
         }
         add("regen.subtitles.regen_bubble", "Jar bubbles");
         add("regen.subtitles.hum", "Calming hums");

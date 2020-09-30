@@ -1,6 +1,5 @@
 package me.swirtzly.regen.common.objects;
 
-import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;

@@ -11,6 +11,8 @@ public class RConstants {
     public static final String STATE_MANAGER = "state_manager";
     public static final String TRANSITION_TYPE = "transition_type";
     public static final String SKIN = "skin";
+    //ResourceLocations
+    public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RConstants.MODID, RConstants.MODID);
     public static String REGENS_LEFT = "regens_left";
     public static String CURRENT_STATE = "current_state";
     public static String PRIMARY_RED = "p_red";
@@ -21,9 +23,5 @@ public class RConstants {
     public static String SECONDARY_BLUE = "s_blue";
     public static String STYLE = "style";
     public static String ANIMATION_TICKS = "ticks_animating";
-
-
-    //ResourceLocations
-    public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RConstants.MODID, RConstants.MODID);
 
 }

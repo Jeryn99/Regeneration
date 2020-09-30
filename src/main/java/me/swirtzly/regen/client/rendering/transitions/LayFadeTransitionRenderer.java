@@ -9,7 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.HandSide;
 import net.minecraftforge.client.event.RenderHandEvent;
 
-public class LayFadeTransitionRenderer implements TransitionRenderer{
+public class LayFadeTransitionRenderer implements TransitionRenderer {
 
     public static final LayFadeTransitionRenderer INSTANCE = new LayFadeTransitionRenderer();
 

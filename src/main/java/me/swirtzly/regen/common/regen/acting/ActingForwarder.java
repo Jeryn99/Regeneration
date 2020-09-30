@@ -5,7 +5,6 @@ import me.swirtzly.regen.network.Dispatcher;
 import me.swirtzly.regen.network.messages.StateMessage;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.network.PacketDispatcher;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.ArrayList;

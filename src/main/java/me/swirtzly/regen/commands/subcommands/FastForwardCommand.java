@@ -12,7 +12,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class FastForwardCommand implements Command<CommandSource>{
+public class FastForwardCommand implements Command<CommandSource> {
     private static final FastForwardCommand CMD = new FastForwardCommand();
 
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {

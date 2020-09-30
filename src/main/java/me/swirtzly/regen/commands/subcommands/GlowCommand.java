@@ -14,7 +14,7 @@ public class GlowCommand implements Command<CommandSource> {
 
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("glow")
-                        .executes(CMD);
+                .executes(CMD);
     }
 
     @Override

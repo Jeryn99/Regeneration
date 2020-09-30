@@ -38,8 +38,8 @@ public interface TransitionType<R extends TransitionRenderer> {
 
     Vector3d getDefaultSecondaryColor();
 
-    default TranslationTextComponent getTranslation(){
-        return new TranslationTextComponent("type.regeneration."+getRegistryName().getPath());
+    default TranslationTextComponent getTranslation() {
+        return new TranslationTextComponent("type.regeneration." + getRegistryName().getPath());
     }
 
     ResourceLocation getRegistryName();

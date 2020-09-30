@@ -6,7 +6,6 @@ import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.Dispatcher;
-import me.swirtzly.regen.network.messages.POVMessage;
 import me.swirtzly.regen.network.messages.SyncMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
@@ -14,7 +13,6 @@ import me.swirtzly.regen.util.RegenSources;
 import me.swirtzly.regen.util.schedule.RegenScheduledAction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -24,7 +22,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -47,22 +44,18 @@ public class RegenCap implements IRegen {
     //Injection
     @CapabilityInject(IRegen.class)
     public static final Capability<IRegen> CAPABILITY = null;
-
-    //Don't save to disk
-    private boolean didSetup = false;
-
     //Data
     private final LivingEntity livingEntity;
+    //State
+    private final StateManager stateManager;
+    //Don't save to disk
+    private boolean didSetup = false;
     private int regensLeft = 0, ticksAnimating = 0;
     private byte[] skinArray = new byte[0];
-
     // Color Data
     private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
     private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
     private String deathMessage = "";
-
-    //State
-    private final StateManager stateManager;
     private RegenStates currentState = RegenStates.ALIVE;
     private TransitionTypes transitionType = TransitionTypes.FIERY;
 
@@ -80,16 +73,20 @@ public class RegenCap implements IRegen {
             this.stateManager = null;
     }
 
-
-    // ==== Setters and Getters ====
-    @Override
-    public void setRegens(int regens) {
-        this.regensLeft = regens;
+    @Nonnull
+    public static LazyOptional<IRegen> get(LivingEntity player) {
+        return player.getCapability(RegenCap.CAPABILITY, null);
     }
 
     @Override
     public int getRegens() {
         return regensLeft;
+    }
+
+    // ==== Setters and Getters ====
+    @Override
+    public void setRegens(int regens) {
+        this.regensLeft = regens;
     }
 
     @Override
@@ -129,7 +126,6 @@ public class RegenCap implements IRegen {
     public void setAnimationTicks(int ticksAnimating) {
         this.ticksAnimating = ticksAnimating;
     }
-
 
     @Override
     public boolean canRegenerate() {
@@ -204,13 +200,6 @@ public class RegenCap implements IRegen {
         }
     }
 
-
-    @Nonnull
-    public static LazyOptional<IRegen> get(LivingEntity player) {
-        return player.getCapability(RegenCap.CAPABILITY, null);
-    }
-
-
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT compoundNBT = new CompoundNBT();
@@ -262,13 +251,13 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public void setDeathMessage(String deathMessage) {
-        this.deathMessage = deathMessage;
+    public String getDeathMessage() {
+        return this.deathMessage;
     }
 
     @Override
-    public String getDeathMessage() {
-        return this.deathMessage;
+    public void setDeathMessage(String deathMessage) {
+        this.deathMessage = deathMessage;
     }
 
     @Override
@@ -279,13 +268,13 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public void setSkin(byte[] skin) {
-        this.skinArray = skin;
+    public byte[] getSkin() {
+        return skinArray;
     }
 
     @Override
-    public byte[] getSkin() {
-        return skinArray;
+    public void setSkin(byte[] skin) {
+        this.skinArray = skin;
     }
 
     @Override

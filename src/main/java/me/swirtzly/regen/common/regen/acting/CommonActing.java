@@ -4,7 +4,6 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.Dispatcher;
 import me.swirtzly.regen.network.messages.SFXMessage;
-import me.swirtzly.regen.network.messages.SyncMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.entity.LivingEntity;

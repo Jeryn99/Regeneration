@@ -6,7 +6,6 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.network.Dispatcher;
 import me.swirtzly.regen.network.messages.SkinMessage;
-import me.swirtzly.regen.util.FileHandle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -15,11 +14,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.SkinManager;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,6 +24,9 @@ import java.util.UUID;
 
 public class SkinHandler {
 
+
+    //Skin Storage
+    private static final HashMap<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
 
     public static void tick(AbstractClientPlayerEntity playerEntity) {
         RegenCap.get(playerEntity).ifPresent(iRegen -> {
@@ -71,7 +69,6 @@ public class SkinHandler {
         return null;
     }
 
-
     //Set players skin
     public static void setPlayerSkin(AbstractClientPlayerEntity player, ResourceLocation texture) {
         if (player.getLocationSkin().equals(texture)) {
@@ -85,10 +82,6 @@ public class SkinHandler {
             playerInfo.playerTexturesLoaded = false;
         }
     }
-
-
-    //Skin Storage
-    private static final HashMap<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
 
     public static void addPlayerSkin(UUID uuid, ResourceLocation texture) {
         PLAYER_SKINS.put(uuid, texture);

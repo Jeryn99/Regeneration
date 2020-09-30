@@ -1,6 +1,7 @@
 package me.swirtzly.regen.common.regen.acting;
 
 import me.swirtzly.regen.client.skin.CommonSkin;
+import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.state.RegenStates;
@@ -12,7 +13,6 @@ import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import java.io.File;
 
@@ -53,7 +53,11 @@ class ClientActing implements Acting {
     public void onRegenTrigger(IRegen cap) {
         if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLiving().getUniqueID())) {
             File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRNG(), cap.getLiving().getRNG().nextBoolean()); //Implement Preferred type
-            Dispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage((PlayerEntity) cap.getLiving(), RegenUtil.fileToBytes(file)));
+            if (RegenConfig.CLIENT.changeMySkin.get()) {
+                Dispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage((PlayerEntity) cap.getLiving(), RegenUtil.fileToBytes(file)));
+            } else {
+                SkinHandler.sendResetMessage();
+            }
         }
     }
 

@@ -57,7 +57,7 @@ public class RegenUtil {
         return builder.toString();
     }
 
-    public static byte[] fileToBytes(File file){
+    public static byte[] fileToBytes(File file) {
         try {
             return FileUtils.readFileToByteArray(file);
         } catch (IOException e) {

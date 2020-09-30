@@ -1,24 +1,16 @@
 package me.swirtzly.regen.data;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import org.apache.commons.lang3.text.translate.JavaUnicodeEscaper;
 
-import javax.annotation.*;
-import java.io.BufferedWriter;
+import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 @SuppressWarnings("deprecation")
@@ -68,19 +60,18 @@ public abstract class BaseSoundsProvider implements IDataProvider {
 
     public static class SoundEventBuilder {
 
-        public static SoundEventBuilder create(SoundEvent soundEvent) {
-            return new SoundEventBuilder(soundEvent);
-        }
-
         private final String path;
         private boolean replace;
         private String subtitle;
         private Map<ResourceLocation, SoundBuilder> soundBuilders = new HashMap<>();
-
         public SoundEventBuilder(SoundEvent soundEvent) {
 
             path = soundEvent.getRegistryName().getPath();
 
+        }
+
+        public static SoundEventBuilder create(SoundEvent soundEvent) {
+            return new SoundEventBuilder(soundEvent);
         }
 
         public String getPath() {

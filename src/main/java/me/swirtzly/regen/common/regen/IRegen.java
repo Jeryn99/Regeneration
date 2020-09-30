@@ -11,27 +11,49 @@ import javax.annotation.Nullable;
 
 public interface IRegen extends INBTSerializable<CompoundNBT> {
 
-    void setRegens(int regens);
     int getRegens();
+
+    void setRegens(int regens);
+
     void tick();
+
     int getTicksAnimating();
+
     void setAnimationTicks(int ticksAnimating);
+
     boolean canRegenerate();
+
     boolean areHandsGlowing();
+
     RegenStates getCurrentState();
+
     RegenCap.StateManager getStateManager();
+
     void readStyle(CompoundNBT compoundNBT);
+
     CompoundNBT getOrWriteStyle();
+
     void extractRegens(int amount);
+
     void addRegens(int amount);
+
     LivingEntity getLiving();
+
     void syncToClients(@Nullable ServerPlayerEntity serverPlayerEntity);
+
     TransitionTypes getTransitionType();
+
     void setTransitionType(TransitionTypes transitionType);
-    void setDeathMessage(String deathMessage);
+
     String getDeathMessage();
+
+    void setDeathMessage(String deathMessage);
+
     void regen();
-    void setSkin(byte[] skin);
+
     byte[] getSkin();
+
+    void setSkin(byte[] skin);
+
     boolean isSkinValidForUse();
 }

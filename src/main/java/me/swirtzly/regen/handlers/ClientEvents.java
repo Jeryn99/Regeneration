@@ -16,7 +16,7 @@ import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
 public class ClientEvents {
 
     @SubscribeEvent
-    public static void onRenderPlayer(RenderPlayerEvent.Pre playerEvent){
+    public static void onRenderPlayer(RenderPlayerEvent.Pre playerEvent) {
         SkinHandler.tick((AbstractClientPlayerEntity) playerEvent.getPlayer());
     }
 

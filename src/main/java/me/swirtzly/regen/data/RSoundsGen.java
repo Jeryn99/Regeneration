@@ -15,16 +15,16 @@ public class RSoundsGen extends BaseSoundsProvider {
     @Override
     protected void addSounds() {
         for (SoundEvent soundEvent : ForgeRegistries.SOUND_EVENTS.getValues()) {
-            if(soundEvent.getName().getNamespace().contains(RConstants.MODID)){
+            if (soundEvent.getName().getNamespace().contains(RConstants.MODID)) {
 
                 ResourceLocation rl = soundEvent.getName();
 
-                if(rl.getPath().contains("regeneration")){
+                if (rl.getPath().contains("regeneration")) {
                     String newPath = rl.getPath().replace("regeneration", "regen");
-                    rl = new ResourceLocation(RConstants.MODID, "regen/"+newPath);
+                    rl = new ResourceLocation(RConstants.MODID, "regen/" + newPath);
                 }
 
-                addSoundEvent(new SoundEventBuilder(soundEvent).subtitle("regen.sound."+soundEvent.getName().getPath()).addSounds(new SoundBuilder(rl)));
+                addSoundEvent(new SoundEventBuilder(soundEvent).subtitle("regen.sound." + soundEvent.getName().getPath()).addSounds(new SoundBuilder(rl)));
             }
         }
     }

@@ -2,12 +2,9 @@ package me.swirtzly.regen.client.animation;
 
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionType;
-import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class AnimationHandler {
 
@@ -18,8 +15,8 @@ public class AnimationHandler {
         });
     }
 
-    public static void correctPlayerModel(BipedModel bipedModel){
-        if(bipedModel instanceof PlayerModel){
+    public static void correctPlayerModel(BipedModel bipedModel) {
+        if (bipedModel instanceof PlayerModel) {
             PlayerModel playerModel = (PlayerModel) bipedModel;
             playerModel.bipedHeadwear.copyModelAngles(playerModel.bipedHead);
             playerModel.bipedLeftArmwear.copyModelAngles(playerModel.bipedLeftArm);

@@ -19,15 +19,15 @@ public class POVMessage {
         pointOfView = buffer.readString();
     }
 
-    public void toBytes(PacketBuffer buffer) {
-        buffer.writeString(this.pointOfView);
-    }
-
     public static void handle(POVMessage message, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().deferTask(() -> {
             ClientUtil.setPlayerPerspective(PointOfView.valueOf(message.pointOfView));
         });
         ctx.get().setPacketHandled(true);
+    }
+
+    public void toBytes(PacketBuffer buffer) {
+        buffer.writeString(this.pointOfView);
     }
 
 }

@@ -2,7 +2,6 @@ package me.swirtzly.regen.client.skin;
 
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.config.RegenConfig;
-import me.swirtzly.regen.util.ClientUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
 import org.apache.commons.io.FileUtils;

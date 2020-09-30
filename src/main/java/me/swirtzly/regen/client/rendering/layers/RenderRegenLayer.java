@@ -2,19 +2,14 @@ package me.swirtzly.regen.client.rendering.layers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import me.swirtzly.regen.client.rendering.types.RenderTypes;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionType;
-import me.swirtzly.regen.util.RConstants;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.HandSide;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 
@@ -23,17 +18,6 @@ public class RenderRegenLayer extends LayerRenderer {
     public RenderRegenLayer(IEntityRenderer entityRendererIn) {
         super(entityRendererIn);
     }
-
-    @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if(entitylivingbaseIn instanceof LivingEntity) {
-            RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
-                TransitionType<?> type = iRegen.getTransitionType().create();
-                type.getRenderer().layer((BipedModel<?>) getEntityModel(), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
-            });
-        }
-    }
-
 
     public static void renderCone(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, LivingEntity entityPlayer, float scale, float scale2, Vector3d color) {
         matrixStack.push();
@@ -50,5 +34,15 @@ public class RenderRegenLayer extends LayerRenderer {
             }
             matrixStack.pop();
         });
+    }
+
+    @Override
+    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        if (entitylivingbaseIn instanceof LivingEntity) {
+            RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
+                TransitionType<?> type = iRegen.getTransitionType().create();
+                type.getRenderer().layer((BipedModel<?>) getEntityModel(), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+            });
+        }
     }
 }

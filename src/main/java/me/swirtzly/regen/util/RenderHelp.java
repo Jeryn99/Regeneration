@@ -56,11 +56,10 @@ public class RenderHelp {
         AxisAlignedBB box = new AxisAlignedBB(-width / 2F, 0, -width / 2F, width / 2F, length, width / 2F);
         renderFilledBox(matrix, builder, box, 1F, 1F, 1F, alpha, combinedLightIn);
 
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             renderFilledBox(matrix, builder, box.grow(i * 0.5F * 0.0625F), red, green, blue, (1F / i / 2) * alpha, combinedLightIn);
         }
     }
-
 
 
 }

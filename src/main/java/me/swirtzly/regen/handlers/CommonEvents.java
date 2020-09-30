@@ -6,13 +6,11 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.config.RegenConfig;
-import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -102,7 +100,6 @@ public class CommonEvents {
     }
 
 
-
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         Capability.IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
@@ -132,7 +129,7 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onServerStart(FMLServerStartingEvent event){
+    public static void onServerStart(FMLServerStartingEvent event) {
         CommandDispatcher<CommandSource> dispatcher = event.getServer().getCommandManager().getDispatcher();
         RegenCommand.register(dispatcher);
     }

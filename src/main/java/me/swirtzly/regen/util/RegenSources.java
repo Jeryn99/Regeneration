@@ -14,8 +14,8 @@ public class RegenSources extends DamageSource {
             REGEN_DMG_FORCED = new RegenSources("forced").setDamageAllowedInCreativeMode();
 
 
-
     private String message = "";
+
     public RegenSources(String damageTypeIn) {
         super(damageTypeIn);
         message = damageTypeIn;
@@ -23,6 +23,6 @@ public class RegenSources extends DamageSource {
 
     @Override
     public ITextComponent getDeathMessage(LivingEntity entityLivingBaseIn) {
-        return new TranslationTextComponent("source.regen."+message, entityLivingBaseIn.getName());
+        return new TranslationTextComponent("source.regen." + message, entityLivingBaseIn.getName());
     }
 }

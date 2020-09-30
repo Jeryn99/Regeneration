@@ -22,7 +22,7 @@ public class SetRegensCommand implements Command<CommandSource> {
         return Commands.literal("set-regens")
                 .then(Commands.argument("username", StringArgumentType.string())
                         .suggests((context, builder) -> ISuggestionProvider.suggest(ServerLifecycleHooks.getCurrentServer().getOnlinePlayerNames(), builder))
-                            .then(Commands.argument("amount", IntegerArgumentType.integer(1))
+                        .then(Commands.argument("amount", IntegerArgumentType.integer(1))
                                 .executes(CMD)));
     }
 
@@ -36,8 +36,7 @@ public class SetRegensCommand implements Command<CommandSource> {
 
         if (player != null) {
             RegenCap.get(player).ifPresent((cap) -> cap.setRegens(amount));
-        }
-        else{
+        } else {
             source.sendErrorMessage(new StringTextComponent("No player found for this username."));
         }
         return Command.SINGLE_SUCCESS;
