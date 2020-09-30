@@ -2,7 +2,7 @@ package me.swirtzly.regen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import me.swirtzly.regen.client.rendering.layers.HandGlowLayer;
+import me.swirtzly.regen.client.rendering.layers.HandLayer;
 import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
 import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.regen.IRegen;
@@ -57,7 +57,7 @@ public class Regeneration {
         /* Attach RenderLayers to Renderers */
         Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
         for (PlayerRenderer renderPlayer : skinMap.values()) {
-            renderPlayer.addLayer(new HandGlowLayer(renderPlayer));
+            renderPlayer.addLayer(new HandLayer(renderPlayer));
             renderPlayer.addLayer(new RenderRegenLayer(renderPlayer));
         }
 
@@ -70,5 +70,6 @@ public class Regeneration {
         generator.addProvider(new EnglishLang(generator));
         generator.addProvider(new RSoundsGen(generator));
     }
+
 
 }

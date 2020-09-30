@@ -3,6 +3,7 @@ package me.swirtzly.regen.client.rendering.transitions;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.client.animation.AnimationHandler;
+import me.swirtzly.regen.client.model.ModelGlow;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
@@ -10,12 +11,14 @@ import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
@@ -30,12 +33,12 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     private static final PlayerModel<LivingEntity> steve = new PlayerModel<>(0, false);
 
     @Override
-    public void firstPersonHand(IRegen iRegen, RenderHandEvent renderHandEvent) {
+    public void firstPersonHand(HandSide side, IRegen iRegen, RenderHandEvent renderHandEvent) {
 
     }
 
     @Override
-    public void thirdPersonHand(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void thirdPersonHand(HandSide side, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entitylivingbaseIn instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entitylivingbaseIn;
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
@@ -58,6 +61,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                     renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, livingEntity, primaryScale, primaryScale, primaryColors);
                     renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, livingEntity, secondaryScale, secondaryScale, secondaryColors);
                 }
+
             });
         }
 

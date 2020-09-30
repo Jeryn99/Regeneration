@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.HandSide;
 import net.minecraftforge.client.event.RenderHandEvent;
 
 public class LayFadeTransitionRenderer implements TransitionRenderer{
@@ -14,12 +15,12 @@ public class LayFadeTransitionRenderer implements TransitionRenderer{
 
 
     @Override
-    public void firstPersonHand(IRegen iRegen, RenderHandEvent renderHandEvent) {
+    public void firstPersonHand(HandSide side, IRegen iRegen, RenderHandEvent renderHandEvent) {
 
     }
 
     @Override
-    public void thirdPersonHand(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void thirdPersonHand(HandSide side, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 
