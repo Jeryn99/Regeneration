@@ -6,6 +6,7 @@ import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.messages.POVMessage;
 import me.swirtzly.regen.network.messages.SyncMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
@@ -13,6 +14,7 @@ import me.swirtzly.regen.util.RegenSources;
 import me.swirtzly.regen.util.schedule.RegenScheduledAction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -93,6 +95,8 @@ public class RegenCap implements IRegen {
                 didSetup = true;
             }
 
+            addRegens(1);
+
             //Tick State Manager
             if (currentState != RegenStates.ALIVE) {
                 if (stateManager != null) {
@@ -101,6 +105,7 @@ public class RegenCap implements IRegen {
             }
 
             if (currentState == RegenStates.REGENERATING) {
+                ticksAnimating++;
                 transitionType.create().onUpdateMidRegen(this);
             }
         }
@@ -126,7 +131,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public boolean areHandsGlowing() {
-        return false;
+        return false; //TODO Implement
     }
 
     @Override

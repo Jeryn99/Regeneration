@@ -1,184 +1,104 @@
 {
-  "jar_bubbles": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen_bubbles",
+  "alarm": {
+    "subtitle": "regen.sound.alarm",
     "sounds": [
-      {
-        "name": "regen:jar_bubbles",
-        "stream": true
-      }
-    ]
-  },
-  "grace_hum": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.hum",
-    "sounds": [
-      {
-        "name": "regen:hum/grace_hum_1",
-        "stream": false
-      },
-      {
-        "name": "regen:hum/grace_hum_2",
-        "stream": false
-      },
-      {
-        "name": "regen:hum/grace_hum_3",
-        "stream": false
-      },
-      {
-        "name": "regen:hum/grace_hum_4",
-        "stream": false
-      }
-    ]
-  },
-  "regen_0": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen",
-    "sounds": [
-      {
-        "name": "regen:regen/regen_0",
-        "stream": true
-      }
-    ]
-  },
-  "regen_1": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen",
-    "sounds": [
-      {
-        "name": "regen:regen/regen_1",
-        "stream": true
-      }
-    ]
-  },
-  "regen_2": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen",
-    "sounds": [
-      {
-        "name": "regen:regen/regen_2",
-        "stream": true
-      }
-    ]
-  },
-  "regen_3": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen",
-    "sounds": [
-      {
-        "name": "regen:regen/regen_3",
-        "stream": true
-      }
-    ]
-  },
-  "regen_4": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen",
-    "sounds": [
-      {
-        "name": "regen:regen/regen_4",
-        "stream": true
-      }
-    ]
-  },
-  "regen_5": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen",
-    "sounds": [
-      {
-        "name": "regen:regen/regen_5",
-        "stream": true
-      }
-    ]
-  },
-  "regen_6": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen",
-    "sounds": [
-      {
-        "name": "regen:regen/regen_6",
-        "stream": true
-      }
-    ]
-  },
-  "regen_7": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen",
-    "sounds": [
-      {
-        "name": "regen:regen/regen_7",
-        "stream": true
-      }
-    ]
-  },
-  "fob_watch_dialogue": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.fob_watch_dialogue",
-    "sounds": [
-      {
-        "name": "regen:fob_watch_dialogue",
-        "stream": false
-      }
+      "regen:alarm"
     ]
   },
   "critical_stage": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.critical_stage",
+    "subtitle": "regen.sound.critical_stage",
     "sounds": [
-      {
-        "name": "regen:critical_stage",
-        "stream": true
-      }
-    ]
-  },
-  "heart_beat": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.heart_beat",
-    "sounds": [
-      {
-        "name": "regen:heart_beat",
-        "stream": false
-      }
-    ]
-  },
-  "hand_glow": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.hand_glow",
-    "sounds": [
-      {
-        "name": "regen:hand_glow",
-        "stream": false
-      }
+      "regen:critical_stage"
     ]
   },
   "fob_watch": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.fob_watch",
+    "subtitle": "regen.sound.fob_watch",
     "sounds": [
-      {
-        "name": "regen:fob_watch",
-        "stream": false
-      }
+      "regen:fob_watch"
+    ]
+  },
+  "fob_watch_dialogue": {
+    "subtitle": "regen.sound.fob_watch_dialogue",
+    "sounds": [
+      "regen:fob_watch_dialogue"
+    ]
+  },
+  "grace_hum": {
+    "subtitle": "regen.sound.grace_hum",
+    "sounds": [
+      "regen:grace_hum"
+    ]
+  },
+  "hand_glow": {
+    "subtitle": "regen.sound.hand_glow",
+    "sounds": [
+      "regen:hand_glow"
+    ]
+  },
+  "heart_beat": {
+    "subtitle": "regen.sound.heart_beat",
+    "sounds": [
+      "regen:heart_beat"
+    ]
+  },
+  "jar_bubbles": {
+    "subtitle": "regen.sound.jar_bubbles",
+    "sounds": [
+      "regen:jar_bubbles"
     ]
   },
   "regen_breath": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.regen_breath",
+    "subtitle": "regen.sound.regen_breath",
     "sounds": [
-      {
-        "name": "regen:regen_breath",
-        "stream": false
-      }
+      "regen:regen_breath"
     ]
   },
-  "alarm": {
-    "category": "ambient",
-    "subtitle": "regen.subtitles.alarm",
+  "regeneration_0": {
+    "subtitle": "regen.sound.regeneration_0",
     "sounds": [
-      {
-        "name": "regen:alarm",
-        "stream": false
-      }
+      "regen:regen/regen_0"
+    ]
+  },
+  "regeneration_1": {
+    "subtitle": "regen.sound.regeneration_1",
+    "sounds": [
+      "regen:regen/regen_1"
+    ]
+  },
+  "regeneration_2": {
+    "subtitle": "regen.sound.regeneration_2",
+    "sounds": [
+      "regen:regen/regen_2"
+    ]
+  },
+  "regeneration_3": {
+    "subtitle": "regen.sound.regeneration_3",
+    "sounds": [
+      "regen:regen/regen_3"
+    ]
+  },
+  "regeneration_4": {
+    "subtitle": "regen.sound.regeneration_4",
+    "sounds": [
+      "regen:regen/regen_4"
+    ]
+  },
+  "regeneration_5": {
+    "subtitle": "regen.sound.regeneration_5",
+    "sounds": [
+      "regen:regen/regen_5"
+    ]
+  },
+  "regeneration_6": {
+    "subtitle": "regen.sound.regeneration_6",
+    "sounds": [
+      "regen:regen/regen_6"
+    ]
+  },
+  "regeneration_7": {
+    "subtitle": "regen.sound.regeneration_7",
+    "sounds": [
+      "regen:regen/regen_7"
     ]
   }
 }

@@ -1,7 +1,6 @@
 package me.swirtzly.regen.common.regen.transitions;
 
-import me.swirtzly.regen.client.transitions.FieryTransitionRenderer;
-import me.swirtzly.regen.client.transitions.LayFadeTransitionRenderer;
+import me.swirtzly.regen.client.rendering.transitions.LayFadeTransitionRenderer;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;

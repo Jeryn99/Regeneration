@@ -1,19 +1,20 @@
 package me.swirtzly.regen.common.regen.transitions;
 
-import me.swirtzly.regen.client.transitions.FieryTransitionRenderer;
+import me.swirtzly.regen.client.rendering.transitions.FieryTransitionRenderer;
 import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
-import me.swirtzly.regen.config.RegenConfig;
-import me.swirtzly.regen.util.PlayerUtil;
+import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.messages.POVMessage;
 import me.swirtzly.regen.util.RConstants;
-import net.minecraft.block.Block;
 import net.minecraft.block.FireBlock;
+import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public class FieryTransition implements TransitionType<FieryTransitionRenderer> {
 
@@ -26,7 +27,7 @@ public class FieryTransition implements TransitionType<FieryTransitionRenderer> 
 
         if (!livingEntity.world.isRemote) {
             if (capability.getLiving() instanceof ServerPlayerEntity) {
-                //TODO PlayerUtil.setPerspective((ServerPlayerEntity) livingEntity, true, false);
+                Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(PointOfView.THIRD_PERSON_FRONT));
             }
         }
 
@@ -40,7 +41,7 @@ public class FieryTransition implements TransitionType<FieryTransitionRenderer> 
     @Override
     public void onFinishRegeneration(IRegen capability) {
         if (capability.getLiving() instanceof ServerPlayerEntity) {
-            //TODO PlayerUtil.setPerspective((ServerPlayerEntity) capability.getLiving() , false, true);
+            Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(PointOfView.FIRST_PERSON));
         }
         capability.setAnimationTicks(0);
     }

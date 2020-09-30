@@ -32,10 +32,6 @@ public class SFXMessage {
         buffer.writeUniqueId(this.playerUUID);
     }
 
-    public SFXMessage fromBytes(PacketBuffer buffer) {
-        return new SFXMessage(buffer.readResourceLocation(), buffer.readUniqueId());
-    }
-
     public static void handle(SFXMessage message, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().deferTask(() -> {
             PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.playerUUID);

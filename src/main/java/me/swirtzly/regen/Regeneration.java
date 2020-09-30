@@ -7,7 +7,9 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
+import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.EnglishLang;
+import me.swirtzly.regen.data.RSoundsGen;
 import me.swirtzly.regen.network.Dispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
@@ -17,7 +19,9 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -33,8 +37,12 @@ public class Regeneration {
     public Regeneration() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doCommonStuff);
+        FMLJavaModLoadingContext.get().getModEventBus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
         Dispatcher.setUp();
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
     }
 
 
@@ -57,11 +65,7 @@ public class Regeneration {
     public void gatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
         generator.addProvider(new EnglishLang(generator));
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onNewRegistries(RegistryEvent.NewRegistry e) {
-        RSounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        generator.addProvider(new RSoundsGen(generator));
     }
 
 }

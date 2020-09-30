@@ -1,8 +1,12 @@
 package me.swirtzly.regen.common.regen.acting;
 
 import me.swirtzly.regen.common.regen.IRegen;
+import me.swirtzly.regen.network.Dispatcher;
+import me.swirtzly.regen.network.messages.StateMessage;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.network.PacketDispatcher;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +119,8 @@ public class ActingForwarder {
     private static void checkAndForward(IRegen cap, RegenEvent event) {
         if (cap.getLiving().world.isRemote)
             throw new IllegalStateException("'Posting' \"acting\" `event` from client");
-        //TODO   Dispatcher.sendPacketToAll(new UpdateStateMessage(cap.getLivingEntity(), event.name()));
+
+        Dispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new StateMessage(cap.getLiving(), event));
     }
 
     public enum RegenEvent {

@@ -45,7 +45,7 @@ public class HandGlowLayer extends LayerRenderer<AbstractClientPlayerEntity, Pla
                 for (HandSide handSide : HandSide.values()) {
                     matrixStackIn.push();
                     bipedModel.translateHand(handSide, matrixStackIn);
-                    iRegen.getTransitionType().create().getRenderer().layer(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+                    iRegen.getTransitionType().create().getRenderer().thirdPersonHand(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
                     matrixStackIn.pop();
                 }
             });

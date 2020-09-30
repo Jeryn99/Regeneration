@@ -1,7 +1,6 @@
 package me.swirtzly.regen.common.regen.transitions;
 
-import me.swirtzly.regen.client.transitions.FieryTransitionRenderer;
-import me.swirtzly.regen.client.transitions.TransitionRenderer;
+import me.swirtzly.regen.client.rendering.transitions.TransitionRenderer;
 import me.swirtzly.regen.common.regen.IRegen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;

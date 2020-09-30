@@ -1,10 +1,12 @@
 package me.swirtzly.regen.common.regen.transitions;
 
+import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
@@ -31,6 +33,8 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
     @SubscribeEvent
     public static void onRegisterNewRegistries(RegistryEvent.NewRegistry e) {
         REGISTRY = new RegistryBuilder<TransitionTypes>().setName(new ResourceLocation(RConstants.MODID, "regeneration_types")).setType(TransitionTypes.class).setIDRange(0, 2048).create();
+        //TODO move somewhere better
+        RSounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     public static int getPosition(TransitionTypes rrRegenType) {

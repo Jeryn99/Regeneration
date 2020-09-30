@@ -1,4 +1,4 @@
-package me.swirtzly.regen.client.transitions;
+package me.swirtzly.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.swirtzly.regen.common.regen.IRegen;
@@ -12,7 +12,7 @@ public interface TransitionRenderer {
 
     void firstPersonHand(IRegen iRegen, RenderHandEvent renderHandEvent);
     void thirdPersonHand(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
-    void layer(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
-    void animation(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch);
+    void layer(BipedModel<?> bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch);
+    void animation(BipedModel<?> bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch);
 
 }

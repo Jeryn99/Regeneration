@@ -1,4 +1,4 @@
-package me.swirtzly.regen.client.transitions;
+package me.swirtzly.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.swirtzly.regen.common.regen.IRegen;
@@ -24,7 +24,7 @@ public class LayFadeTransitionRenderer implements TransitionRenderer{
     }
 
     @Override
-    public void layer(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void layer(BipedModel<?> bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 

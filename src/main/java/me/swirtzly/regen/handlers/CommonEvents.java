@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -57,6 +58,13 @@ public class CommonEvents {
                 boolean notDead = iRegen.getStateManager().onKilled(event.getSource());
                 event.setCanceled(notDead);
             }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onTrackPlayer(PlayerEvent.StartTracking startTracking){
+        RegenCap.get(startTracking.getPlayer()).ifPresent(iRegen -> {
+            iRegen.syncToClients(null);
         });
     }
 

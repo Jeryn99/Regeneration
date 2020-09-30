@@ -29,7 +29,7 @@ public class RenderRegenLayer extends LayerRenderer {
         if(entitylivingbaseIn instanceof LivingEntity) {
             RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
                 TransitionType<?> type = iRegen.getTransitionType().create();
-                type.getRenderer().layer(matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+                type.getRenderer().layer((BipedModel<?>) getEntityModel(), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
             });
         }
     }
@@ -39,7 +39,7 @@ public class RenderRegenLayer extends LayerRenderer {
         matrixStack.push();
         RegenCap.get(entityPlayer).ifPresent(iRegen -> {
             IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderTypes.REGEN_FLAMES);
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 10; i++) {
                 matrixStack.rotate(Vector3f.YP.rotation(entityPlayer.ticksExisted * 4 + i * 45));
                 matrixStack.scale(1.0f, 1.0f, 0.65f);
                 float red = (float) color.x, green = (float) color.y, blue = (float) color.z, alpha = 55;

@@ -1,8 +1,12 @@
 package me.swirtzly.regen.common.regen.acting;
 
+import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
+import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.config.RegenConfig;
+import me.swirtzly.regen.util.ClientUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.SoundCategory;
 
 class ClientActing implements Acting {
 
@@ -18,13 +22,13 @@ class ClientActing implements Acting {
 
     @Override
     public void onEnterGrace(IRegen cap) {
-        //TODO   ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
-        //TODO   ClientUtil.playSound(cap.getLiving(), RSounds.GRACE_HUM.get().getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE, 1.5F);
+        ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getCurrentState().isGraceful(), 0.2F);
+        ClientUtil.playSound(cap.getLiving(), RSounds.GRACE_HUM.get().getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getCurrentState() != RegenStates.GRACE, 1.5F);
     }
 
     @Override
     public void onHandsStartGlowing(IRegen cap) {
-        //TODO  ClientUtil.playSound(cap.getLiving(), RSounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 1.0F);
+        ClientUtil.playSound(cap.getLiving(), RSounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 1.0F);
     }
 
     @Override
@@ -51,7 +55,7 @@ class ClientActing implements Acting {
     public void onGoCritical(IRegen cap) {
         if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLiving().getUniqueID())) {
             //TODO  ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.enter_critical"), new TranslationTextComponent("regeneration.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
-            //TODO    ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE_CRIT, 1.0F);
+            ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getCurrentState() != RegenStates.GRACE_CRIT, 1.0F);
         }
     }
 
