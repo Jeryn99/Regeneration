@@ -35,8 +35,6 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
     @SubscribeEvent
     public static void onRegisterNewRegistries(RegistryEvent.NewRegistry e) {
         REGISTRY = new RegistryBuilder<TransitionTypes>().setName(new ResourceLocation(RConstants.MODID, "regeneration_types")).setType(TransitionTypes.class).setIDRange(0, 2048).create();
-        //TODO move somewhere better
-        RSounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     public static int getPosition(TransitionTypes rrRegenType) {

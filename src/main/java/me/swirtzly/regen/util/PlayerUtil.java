@@ -1,6 +1,7 @@
 package me.swirtzly.regen.util;
 
 import me.swirtzly.regen.config.RegenConfig;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -79,4 +80,17 @@ public class PlayerUtil {
             }
         });
     }
+
+    public static void regenerationExplosion(LivingEntity player) {
+        explodeKnockback(player, player.world, new BlockPos(player.getPositionVec()), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
+        explodeKill(player, player.world, new BlockPos(player.getPositionVec()), RegenConfig.COMMON.regenerativeKillRange.get());
+    }
+
+    public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
+        world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
+            if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
+                entity.attackEntityFrom(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
+        });
+    }
+
 }

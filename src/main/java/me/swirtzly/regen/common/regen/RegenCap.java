@@ -99,8 +99,6 @@ public class RegenCap implements IRegen {
                 didSetup = true;
             }
 
-            addRegens(1);
-
             //Tick State Manager
             if (currentState != RegenStates.ALIVE) {
                 if (stateManager != null) {

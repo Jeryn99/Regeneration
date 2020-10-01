@@ -14,6 +14,8 @@ public class RenderTypes extends RenderType {
             .texture(RenderState.NO_TEXTURE)
             .cull(RenderState.CULL_ENABLED)
             .alpha(DEFAULT_ALPHA)
+            .shadeModel(RenderState.SHADE_ENABLED)
+            .lightmap(RenderState.LIGHTMAP_ENABLED)
             .transparency(RenderState.ADDITIVE_TRANSPARENCY)
             .build(true));
 

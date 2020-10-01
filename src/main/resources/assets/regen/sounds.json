@@ -26,7 +26,10 @@
   "grace_hum": {
     "subtitle": "regen.sound.grace_hum",
     "sounds": [
-      "regen:grace_hum"
+      "regen:hum/grace_hum_1",
+      "regen:hum/grace_hum_2",
+      "regen:hum/grace_hum_3",
+      "regen:hum/grace_hum_4"
     ]
   },
   "hand_glow": {

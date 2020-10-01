@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -33,17 +34,26 @@ public class SkinHandler {
             boolean forceUpdate = false;
 
             byte[] skin = iRegen.getSkin();
-            if (iRegen.isSkinValidForUse()) {
+            UUID uuid = playerEntity.getUniqueID();
+
+            boolean validSkin = iRegen.isSkinValidForUse();
+
+            // Check if the player has a MOD skin and if the cache is present
+            // if these conditions are true, we want to generate and cache the skin
+            if(validSkin && !hasPlayerSkin(uuid)){
                 NativeImage skinImage = genSkinNative(skin);
                 addPlayerSkin(playerEntity.getUniqueID(), loadImage(skinImage));
-            } else {
+                forceUpdate = true;
+            }
+
+            //If the skin is invalid, we want to remove it and revert to Mojang
+            if(!validSkin || iRegen.getTicksAnimating() >= 140){
                 removePlayerSkin(playerEntity.getUniqueID());
                 forceUpdate = true;
             }
 
-            boolean shouldUpdate = forceUpdate || playerEntity.ticksExisted < 20 || iRegen.getTicksAnimating() >= 100;
-
-            if (shouldUpdate) {
+            //Update the skin if required.
+            if (forceUpdate) {
                 ResourceLocation skinTexture = getSkinToUse(playerEntity);
                 setPlayerSkin(playerEntity, skinTexture);
             }
@@ -83,8 +93,12 @@ public class SkinHandler {
         }
     }
 
+    public static boolean hasPlayerSkin(UUID uuid){
+        return PLAYER_SKINS.containsKey(uuid);
+    }
+
     public static void addPlayerSkin(UUID uuid, ResourceLocation texture) {
-        PLAYER_SKINS.put(uuid, texture);
+        PLAYER_SKINS.put(uuid, texture); //TODO WTF
     }
 
     public static void removePlayerSkin(UUID uuid) {

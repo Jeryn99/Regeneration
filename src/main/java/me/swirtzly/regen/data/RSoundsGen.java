@@ -19,12 +19,22 @@ public class RSoundsGen extends BaseSoundsProvider {
 
                 ResourceLocation rl = soundEvent.getName();
 
+                if (rl.getPath().contains("grace_hum")) {
+                    SoundEventBuilder f = new SoundEventBuilder(soundEvent).subtitle("regen.sound." + soundEvent.getName().getPath());
+
+                    for (int i = 1; i < 5; i++) {
+                        f.addSounds(new SoundBuilder(new ResourceLocation(rl.getNamespace(), "hum/" + rl.getPath() + "_" + i)));
+                    }
+                    addSoundEvent(f);
+                }
+
                 if (rl.getPath().contains("regeneration")) {
                     String newPath = rl.getPath().replace("regeneration", "regen");
                     rl = new ResourceLocation(RConstants.MODID, "regen/" + newPath);
                 }
-
-                addSoundEvent(new SoundEventBuilder(soundEvent).subtitle("regen.sound." + soundEvent.getName().getPath()).addSounds(new SoundBuilder(rl)));
+                if (!rl.getPath().contains("grace_hum")) {
+                    addSoundEvent(new SoundEventBuilder(soundEvent).subtitle("regen.sound." + soundEvent.getName().getPath()).addSounds(new SoundBuilder(rl)));
+                }
             }
         }
     }

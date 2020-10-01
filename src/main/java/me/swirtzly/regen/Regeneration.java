@@ -2,34 +2,55 @@ package me.swirtzly.regen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.swirtzly.regen.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regen.client.rendering.layers.HandLayer;
 import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
 import me.swirtzly.regen.client.skin.CommonSkin;
+import me.swirtzly.regen.common.item.FobWatchItem;
+import me.swirtzly.regen.common.objects.REntities;
+import me.swirtzly.regen.common.objects.RItems;
+import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
+import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.EnglishLang;
 import me.swirtzly.regen.data.RSoundsGen;
 import me.swirtzly.regen.network.NetworkDispatcher;
+import me.swirtzly.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.IItemPropertyGetter;
+import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+
+import static me.swirtzly.regen.common.item.FobWatchItem.getEngrave;
+import static me.swirtzly.regen.common.item.FobWatchItem.getOpen;
 
 @Mod("regen")
 public class Regeneration {
@@ -64,14 +85,36 @@ public class Regeneration {
         }
 
         CommonSkin.doSetupOnThread();
+
+        RenderingRegistry.registerEntityRenderingHandler(REntities.ITEM_OVERRIDE_ENTITY_TYPE.get(), ItemOverrideRenderer::new);
+
+        ItemModelsProperties.func_239418_a_(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "is_open"), (stack, p_call_2_, p_call_3_) -> {
+            if (FobWatchItem.getStackTag(stack) == null || !FobWatchItem.getStackTag(stack).contains("is_open")) {
+                return 0F; // Closed
+            }
+            return getOpen(stack);
+        });
+
+        ItemModelsProperties.func_239418_a_(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "is_gold"), (stack, p_call_2_, p_call_3_) -> {
+            if (FobWatchItem.getStackTag(stack) == null || !FobWatchItem.getStackTag(stack).contains("is_gold")) {
+                return 0F; // Closed
+            }
+            return getEngrave(stack);
+        });
     }
 
     @SubscribeEvent
-    public void gatherData(GatherDataEvent e) {
+    public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
         generator.addProvider(new EnglishLang(generator));
         generator.addProvider(new RSoundsGen(generator));
     }
 
+    @SubscribeEvent
+    public void onRegisterNewRegistries(RegistryEvent.NewRegistry e) {
+        RSounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        REntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
 
 }

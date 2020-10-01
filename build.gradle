@@ -90,7 +90,8 @@ minecraft {
 }
 
 dependencies {
-   minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
+    compileOnly 'org.jetbrains:annotations:15.0' //I need to remove this as soon as my intellji behaves, for some reason it doesnt see annotations without
 }
 
 mixin {
@@ -108,7 +109,7 @@ jar {
                 "Implementation-Version"  : "${version}",
                 "Implementation-Vendor"   : "who-craft",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "regen.refmap.json"
+                "MixinConfigs"            : "regen.refmap.json"
         ])
     }
 }
