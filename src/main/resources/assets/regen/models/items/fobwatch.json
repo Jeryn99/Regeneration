@@ -1,0 +1,33 @@
+{
+  "overrides": [
+    
+	{
+      "predicate": {
+        "is_open": 0,
+        "is_gold": 0
+      },
+      "model": "regeneration:item/fobwatch/fob_closed_silver"
+    },
+	{
+      "predicate": {
+        "is_open": 1,
+        "is_gold": 0
+      },
+      "model": "regeneration:item/fobwatch/fob_open_silver"
+    },
+	{
+      "predicate": {
+        "is_open": 0,
+        "is_gold": 1
+      },
+      "model": "regeneration:item/fobwatch/fob_closed_gold"
+    },
+	{
+      "predicate": {
+        "is_open": 1,
+        "is_gold": 1
+      },
+      "model": "regeneration:item/fobwatch/fob_open_gold"
+    }	
+  ]
+}
