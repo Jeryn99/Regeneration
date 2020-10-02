@@ -60,4 +60,7 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 
     Vector3d getPrimaryColors();
     Vector3d getSecondaryColors();
+
+    boolean isAlexSkinCurrently();
+    void setAlexSkin(boolean isAlex);
 }

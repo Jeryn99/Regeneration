@@ -6,11 +6,14 @@ public class RConstants {
 
     //Internal
     public static final String MODID = "regen";
+    public static final String STEVE_SKINTYPE = "default";
+    public static final String ALEX_SKINTYPE = "alex";
 
     //NBT
     public static final String STATE_MANAGER = "state_manager";
     public static final String TRANSITION_TYPE = "transition_type";
     public static final String SKIN = "skin";
+    public static final String IS_ALEX = "is_alex";
     //ResourceLocations
     public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RConstants.MODID, RConstants.MODID);
     public static final String COLORS = "colors";

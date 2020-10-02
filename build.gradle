@@ -16,7 +16,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0'
+version = '2.0'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Regeneration'
 
@@ -97,7 +97,6 @@ dependencies {
 mixin {
     add sourceSets.main, "regen.refmap.json"
 }
-
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
@@ -109,7 +108,7 @@ jar {
                 "Implementation-Version"  : "${version}",
                 "Implementation-Vendor"   : "who-craft",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : "regen.refmap.json"
+                "MixinConfigs": "regen.mixins.json"
         ])
     }
 }

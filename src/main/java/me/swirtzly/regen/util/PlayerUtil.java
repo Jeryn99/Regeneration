@@ -15,6 +15,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,14 @@ public class PlayerUtil {
     public static ArrayList<Effect> POTIONS = new ArrayList();
 
     static {
-        POTIONS.add(Effects.HASTE);
+        for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
+            for (Effect effect : ForgeRegistries.POTIONS.getValues()) {
+                if(name.contentEquals(effect.getRegistryName().toString())){
+                    POTIONS.add(effect);
+                    System.out.println("ADDED: " + name);
+                }
+            }
+        }
     }
 
 

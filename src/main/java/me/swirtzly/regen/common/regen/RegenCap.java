@@ -45,17 +45,18 @@ public class RegenCap implements IRegen {
     //Injection
     @CapabilityInject(IRegen.class)
     public static final Capability<IRegen> CAPABILITY = null;
-    //Data
-    private final LivingEntity livingEntity;
     //State
     private final StateManager stateManager;
     //Don't save to disk
     private boolean didSetup = false;
-    private int regensLeft = 0, ticksAnimating = 0;
-    private byte[] skinArray = new byte[0];
     // Color Data
     private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
     private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
+    //Data
+    private final LivingEntity livingEntity;
+    private boolean isAlex = false;
+    private byte[] skinArray = new byte[0];
+    private int regensLeft = 0, ticksAnimating = 0;
     private String deathMessage = "";
     private RegenStates currentState = RegenStates.ALIVE;
     private TransitionTypes transitionType = TransitionTypes.FIERY;
@@ -133,7 +134,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public boolean areHandsGlowing() {
-        return false; //TODO Implement
+        return true; //TODO Implement
     }
 
     @Override
@@ -206,6 +207,7 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.CURRENT_STATE, currentState.name());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, ticksAnimating);
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
+        compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skinArray);
         }
@@ -226,7 +228,7 @@ public class RegenCap implements IRegen {
         currentState = nbt.contains(RConstants.CURRENT_STATE) ? RegenStates.valueOf(nbt.getString(RConstants.CURRENT_STATE)) : RegenStates.ALIVE;
         setAnimationTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
         setSkin(nbt.getByteArray(RConstants.SKIN));
-
+        setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
         //RegenType
         if (nbt.contains(RConstants.TRANSITION_TYPE)) {
             transitionType = TransitionTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString(RConstants.TRANSITION_TYPE)));
@@ -295,6 +297,16 @@ public class RegenCap implements IRegen {
         return new Vector3d(secondaryRed, secondaryGreen, secondaryBlue);
     }
 
+    @Override
+    public boolean isAlexSkinCurrently() {
+        return isAlex;
+    }
+
+    @Override
+    public void setAlexSkin(boolean isAlex) {
+        this.isAlex = isAlex;
+    }
+
     public class StateManager implements IStateManager {
 
         private final Map<RegenStates.Transition, Runnable> transitionCallbacks;
@@ -303,7 +315,9 @@ public class RegenCap implements IRegen {
         private StateManager() {
             this.transitionCallbacks = new HashMap<>();
             transitionCallbacks.put(RegenStates.Transition.ENTER_CRITICAL, this::enterCriticalPhase);
-            transitionCallbacks.put(RegenStates.Transition.CRITICAL_DEATH, this::midSequenceKill);
+            transitionCallbacks.put(RegenStates.Transition.CRITICAL_DEATH, () -> {
+                midSequenceKill(true);
+            });
             transitionCallbacks.put(RegenStates.Transition.FINISH_REGENERATION, this::finishRegeneration);
             transitionCallbacks.put(RegenStates.Transition.END_POST, this::endPost);
 
@@ -365,7 +379,7 @@ public class RegenCap implements IRegen {
                 ActingForwarder.onEnterGrace(RegenCap.this);
                 return true;
 
-            } else if (currentState == RegenStates.GRACE || currentState == RegenStates.GRACE_CRIT) {
+            } else if (currentState == RegenStates.GRACE) {
                 // We're being forced to regenerate...
                 triggerRegeneration();
                 return true;
@@ -373,13 +387,13 @@ public class RegenCap implements IRegen {
             } else if (currentState == RegenStates.REGENERATING) {
                 // We've been killed mid regeneration!
                 nextTransition.cancel(); // ... cancel the finishing of the regeneration
-                midSequenceKill();
+                midSequenceKill(false);
                 return false;
 
-            } else if (currentState == RegenStates.POST) {
+            } else if (currentState == RegenStates.POST || currentState == RegenStates.GRACE_CRIT) {
                 currentState = RegenStates.ALIVE;
                 nextTransition.cancel();
-                midSequenceKill();
+                midSequenceKill(currentState == RegenStates.GRACE_CRIT);
                 return false;
             } else
                 throw new IllegalStateException("Unknown state: " + currentState);
@@ -469,12 +483,12 @@ public class RegenCap implements IRegen {
             syncToClients(null);
         }
 
-        private void midSequenceKill() {
+        private void midSequenceKill(boolean isGrace) {
             currentState = RegenStates.ALIVE;
             nextTransition = null;
             handGlowTimer = null;
             transitionType.create().onFinishRegeneration(RegenCap.this);
-            if (currentState == RegenStates.GRACE_CRIT) {
+            if (isGrace) {
                 livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
             } else {
                 livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
@@ -483,6 +497,7 @@ public class RegenCap implements IRegen {
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(getRegens());
             }
+            setSkin(new byte[0]);
             syncToClients(null);
         }
 
@@ -493,7 +508,6 @@ public class RegenCap implements IRegen {
             if (livingEntity instanceof PlayerEntity) {
                 PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.post_ended"), true);
             }
-            //TODO setDroppedHand(false);
         }
 
         private void finishRegeneration() {

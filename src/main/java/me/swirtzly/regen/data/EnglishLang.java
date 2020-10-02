@@ -21,6 +21,9 @@ public class EnglishLang extends LanguageProvider {
         add("source.regen.lindos", "%s consumed lindos hormones! They are reborn!");
         add("source.regen.regen_killed", "%s was killed mid-regeneration...");
 
+        //Item Group
+        add("itemGroup.regen", "Regeneration");
+
         //Sounds
         for (int i = 0; i < 7; i++) {
             add("regen.sound.regeneration_" + i, "Regeneration");

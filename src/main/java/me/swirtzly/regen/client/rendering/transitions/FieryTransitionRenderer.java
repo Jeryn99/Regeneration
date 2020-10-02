@@ -11,7 +11,6 @@ import me.swirtzly.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -27,22 +26,18 @@ import static me.swirtzly.regen.client.rendering.layers.RenderRegenLayer.renderC
 public class FieryTransitionRenderer implements TransitionRenderer {
 
     public static final FieryTransitionRenderer INSTANCE = new FieryTransitionRenderer();
-    private static final PlayerModel<LivingEntity> alex = new PlayerModel<>(0, true);
-    private static final PlayerModel<LivingEntity> steve = new PlayerModel<>(0, false);
 
-    public static void renderOverlay(MatrixStack matrixStack, IVertexBuilder buffer, int packedlight, BipedModel renderer, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public static void renderOverlay(MatrixStack matrixStack, IVertexBuilder buffer, int packedlight, BipedModel bipedModel, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(entityPlayer).ifPresent((data) -> {
+            matrixStack.push();
             CompoundNBT colorTag = data.getOrWriteStyle();
             Vector3d color = new Vector3d(colorTag.getFloat(RConstants.PRIMARY_RED), colorTag.getFloat(RConstants.PRIMARY_GREEN), colorTag.getFloat(RConstants.PRIMARY_BLUE));
             float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
-            steve.isChild = false;
-            steve.setRotationAngles(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-            steve.isSneak = entityPlayer.isSneaking();
-            if (entityPlayer.isSneaking()) {
-                matrixStack.translate(0, -0.2, 0);
-            }
-            steve.render(matrixStack, buffer, packedlight, OverlayTexture.NO_OVERLAY, (float) color.x, (float) color.y, (float) color.z, opacity);
+            bipedModel.setRotationAngles(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            bipedModel.render(matrixStack, buffer, packedlight, OverlayTexture.NO_OVERLAY, (float) color.x, (float) color.y, (float) color.z, opacity);
+            matrixStack.pop();
         });
+
     }
 
     @Override
@@ -66,13 +61,10 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                     float primaryScale = cf * 4F;
                     float secondaryScale = cf * 6.4F;
 
-                    CompoundNBT colorTag = iRegen.getOrWriteStyle();
-                    Vector3d primaryColors = new Vector3d(colorTag.getFloat(RConstants.PRIMARY_RED), colorTag.getFloat(RConstants.PRIMARY_GREEN), colorTag.getFloat(RConstants.PRIMARY_BLUE));
-                    Vector3d secondaryColors = new Vector3d(colorTag.getFloat(RConstants.SECONDARY_RED), colorTag.getFloat(RConstants.SECONDARY_GREEN), colorTag.getFloat(RConstants.SECONDARY_BLUE));
+                    Vector3d primaryColors = iRegen.getPrimaryColors();
+                    Vector3d secondaryColors = iRegen.getSecondaryColors();
                     renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, primaryScale, primaryScale, primaryColors);
                     renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, secondaryScale, secondaryScale, secondaryColors);
-                    renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, livingEntity, primaryScale, primaryScale, primaryColors);
-                    renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, livingEntity, secondaryScale, secondaryScale, secondaryColors);
                 }
 
             });
@@ -85,7 +77,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 // === Head Cone ===
-
+                matrixStackIn.push();
                 bipedModel.bipedHead.translateRotate(matrixStackIn);
                 matrixStackIn.translate(0.0f, 0.09f, 0.2f);
                 matrixStackIn.rotate(Vector3f.XP.rotation(180));
@@ -103,8 +95,13 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                 Vector3d secondaryColors = new Vector3d(colorTag.getFloat(RConstants.SECONDARY_RED), colorTag.getFloat(RConstants.SECONDARY_GREEN), colorTag.getFloat(RConstants.SECONDARY_BLUE));
                 renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), primaryScale, primaryScale, primaryColors);
                 renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), secondaryScale, secondaryScale, secondaryColors);
+                matrixStackIn.pop();
                 // === End Head Cone ===
             }
+
+           /* matrixStackIn.push();
+            renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(DefaultPlayerSkin.getDefaultSkinLegacy())), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            matrixStackIn.pop();*/
 
             //Render player overlay
             if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.getCurrentState() == RegenStates.POST || iRegen.getCurrentState() == RegenStates.REGENERATING) {

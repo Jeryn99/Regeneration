@@ -4,6 +4,7 @@ import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
+import net.minecraft.client.renderer.texture.NativeImage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
@@ -42,6 +43,8 @@ public class CommonSkin {
         }
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
+
+
 
 
     //Get a list of skins from namemc url

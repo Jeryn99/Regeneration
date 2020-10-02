@@ -15,8 +15,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class RItems {
 
-    private static final Item.Properties PROP = new Item.Properties().group(RItems.MAIN);
-
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RConstants.MODID);
 
     public static RegistryObject<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
@@ -27,7 +25,7 @@ public class RItems {
     public static ItemGroup MAIN = new ItemGroup("regen") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(Items.PUMPKIN);
+            return new ItemStack(RItems.FOB.get());
         }
     };
 
