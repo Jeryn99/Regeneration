@@ -33,8 +33,8 @@
   "regeneration.gui.previous": "<",
   "regeneration.gui.primary": "Primary",
   "regeneration.gui.red": "Red: ",
-  "regeneration.gui.regen_type": "Type, %s",
-  "regeneration.gui.remaining_regens.status": "Remaining Regenerations,",
+  "regeneration.gui.regen_type": "Type: %s",
+  "regeneration.gui.remaining_regens.status": "Remaining Regenerations: %s",
   "regeneration.gui.reset_skin": "Reset Skin",
   "regeneration.gui.save": "Save",
   "regeneration.gui.secondary": "Secondary",
@@ -69,10 +69,15 @@
   "regeneration.messages.transfer.success": "You've transferred one of your regenerations into the watch",
   "regeneration.messages.warning.grace": "You are in a state of grace, press %s to regenerate!",
   "regeneration.messages.warning.grace_critical": "You are near death, press %s to regenerate!",
+  "regeneration.skin_type.alex": "Alex",
+  "regeneration.skin_type.either": "Either",
+  "regeneration.skin_type.steve": "Steve",
   "source.regen.lindos": "%s consumed lindos hormones! They are reborn!",
   "source.regen.regen_crit": "%s died from holding in their regeneration for too long",
   "source.regen.regen_energy": "%s was blasted by Regeneration Energy!",
   "source.regen.regen_heal": "%s died by donating too much Regeneration energy...",
   "source.regen.regen_killed": "%s was killed mid-regeneration...",
-  "source.regen.theft": "%s had their body stolen!"
+  "source.regen.theft": "%s had their body stolen!",
+  "type.regeneration.fiery": "Fiery",
+  "type.regeneration.lay_fade": "Hartnell"
 }

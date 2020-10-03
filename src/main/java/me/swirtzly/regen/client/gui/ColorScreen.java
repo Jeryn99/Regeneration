@@ -217,10 +217,10 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
 
         //TODO For some reason, this text doesnt render on the screen
         RegenCap.get(getMinecraft().player).ifPresent((cap) -> {
-            String str = new TranslationTextComponent("regeneration.gui.primary").getUnformattedComponentText();
+            String str = new TranslationTextComponent("regeneration.gui.primary").getString();
             int length = getMinecraft().fontRenderer.getStringWidth(str);
             this.font.func_243248_b(p_230450_1_, new StringTextComponent(str), (float) cx + 45 - length / 2, cy + 49, 4210752);
-            str = new TranslationTextComponent("regeneration.gui.secondary").getUnformattedComponentText();
+            str = new TranslationTextComponent("regeneration.gui.secondary").getString();
             length = font.getStringWidth(str);
             this.font.func_243248_b(p_230450_1_, new StringTextComponent(str), cx + 131 - length / 2, cy + 49, 4210752);
         });

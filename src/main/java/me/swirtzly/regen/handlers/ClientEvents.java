@@ -1,6 +1,7 @@
 package me.swirtzly.regen.handlers;
 
 import me.swirtzly.regen.Regeneration;
+import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
@@ -50,7 +51,8 @@ public class ClientEvents {
             if (SkinHandler.PLAYER_SKINS.size() > 0) {
                 SkinHandler.PLAYER_SKINS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().deleteTexture(texture)));
                 SkinHandler.PLAYER_SKINS.clear();
-                Regeneration.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
+                TimelordRenderer.TIMELORDS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().deleteTexture(texture)));
+                Regeneration.LOG.warn("Cleared Regeneration texture cache.");
             }
         }
     }
@@ -90,12 +92,12 @@ public class ClientEvents {
                     case GRACE:
                         RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
                         //TODO FIX NULL TRANSLATIONS
-                        warning = new TranslationTextComponent("regeneration.messages.warning.grace", new TranslationTextComponent("ClientUtil.keyBind")).getUnformattedComponentText();
+                        warning = new TranslationTextComponent("regeneration.messages.warning.grace", new TranslationTextComponent("ClientUtil.keyBind")).getString();
                         break;
 
                     case GRACE_CRIT:
                         RenderHelp.renderVig(new Vector3d(1, 0, 0), 0.5F);
-                        warning = new TranslationTextComponent("regeneration.messages.warning.grace_critical", "ClientUtil.keyBind").getUnformattedComponentText();
+                        warning = new TranslationTextComponent("regeneration.messages.warning.grace_critical", "ClientUtil.keyBind").getString();
                         break;
 
                     case REGENERATING:

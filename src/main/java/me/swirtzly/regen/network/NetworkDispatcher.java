@@ -5,6 +5,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
+import java.lang.reflect.Type;
+
 import static me.swirtzly.regen.util.RConstants.MODID;
 
 public class NetworkDispatcher {
@@ -19,6 +21,8 @@ public class NetworkDispatcher {
         NETWORK_CHANNEL.registerMessage(id++, StateMessage.class, StateMessage::toBytes, StateMessage::new, StateMessage::handle);
         NETWORK_CHANNEL.registerMessage(id++, SkinMessage.class, SkinMessage::toBytes, SkinMessage::new, SkinMessage::handle);
         NETWORK_CHANNEL.registerMessage(id++, ColorChangeMessage.class, ColorChangeMessage::toBytes, ColorChangeMessage::new, ColorChangeMessage::handle);
+        NETWORK_CHANNEL.registerMessage(id++, TypeMessage.class, TypeMessage::toBytes, TypeMessage::new, TypeMessage::handle);
+        NETWORK_CHANNEL.registerMessage(id++, ModelMessage.class, ModelMessage::toBytes, ModelMessage::new, ModelMessage::handle);
     }
 
 }

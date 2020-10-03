@@ -1,6 +1,8 @@
 package me.swirtzly.regen.data;
 
 import me.swirtzly.regen.common.objects.RItems;
+import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
+import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -79,7 +81,7 @@ public class EnglishLang extends LanguageProvider {
         add("regeneration.gui.primary", "Primary");
         add("regeneration.gui.secondary", "Secondary");
         add("regeneration.gui.undo", "Undo");
-        add("regeneration.gui.regen_type", "Type, %s");
+        add("regeneration.gui.regen_type", "Type: %s");
         add("regeneration.gui.close", "Close");
         add("regeneration.gui.input_color", "Hex");
         add("regeneration.gui.previous", "<");
@@ -91,11 +93,25 @@ public class EnglishLang extends LanguageProvider {
         add("regeneration.gui.next_incarnation", "Select next incarnation");
         add("regeneration.gui.reset_skin", "Reset Skin");
         add("regeneration.gui.infinite_regenerations", "Infinite Regeneration Mode");
-        add("regeneration.gui.remaining_regens.status", "Remaining Regenerations,");
+        add("regeneration.gui.remaining_regens.status", "Remaining Regenerations: %s");
         add("regeneration.gui.color_gui", "Color selection");
         add("regeneration.gui.current_skin", "Select next Incarnation");
         add("regeneration.gui.skintype", "Preference: %s");
         add("regeneration.gui.back", "Back");
         add("regeneration.gui.preferences", "Preferences");
+
+        for (PlayerUtil.SkinType value : PlayerUtil.SkinType.values()) {
+            add("regeneration.skin_type." + value.name().toLowerCase(), grammerNazi(value.name().toLowerCase()));
+        }
+
+        // === Regen ===
+        add("type.regeneration.lay_fade", "Hartnell");
+        add("type.regeneration.fiery", "Fiery");
+    }
+
+
+    public String grammerNazi(String text) {
+        String firstLetter = text.substring(0, 1).toUpperCase();
+        return firstLetter + text.substring(1);
     }
 }

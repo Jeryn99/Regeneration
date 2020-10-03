@@ -61,7 +61,8 @@ public class RegenCap implements IRegen {
     private String deathMessage = "";
     private RegenStates currentState = RegenStates.ALIVE;
     private TransitionTypes transitionType = TransitionTypes.FIERY;
-
+    private boolean areHandsGlowing = false;
+    private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
 
     public RegenCap() {
         this.livingEntity = null;
@@ -116,8 +117,6 @@ public class RegenCap implements IRegen {
                 syncToClients(null);
             }
         }
-
-
     }
 
     @Override
@@ -137,7 +136,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public boolean areHandsGlowing() {
-        return true; //TODO Implement
+        return areHandsGlowing; //TODO Implement
     }
 
     @Override
@@ -308,6 +307,16 @@ public class RegenCap implements IRegen {
     @Override
     public void setAlexSkin(boolean isAlex) {
         this.isAlex = isAlex;
+    }
+
+    @Override
+    public PlayerUtil.SkinType getPreferredModel() {
+        return preferredSkinType;
+    }
+
+    @Override
+    public void setPreferredModel(PlayerUtil.SkinType skinType) {
+        this.preferredSkinType = skinType;
     }
 
     public class StateManager implements IStateManager {

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BlankContainer extends net.minecraft.inventory.container.Container {
 
-    protected BlankContainer() {
+    public BlankContainer() {
         super(null, 999);
     }
 

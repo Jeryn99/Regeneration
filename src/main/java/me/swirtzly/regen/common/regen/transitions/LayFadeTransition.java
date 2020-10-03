@@ -57,11 +57,6 @@ public class LayFadeTransition implements TransitionType<LayFadeTransitionRender
     }
 
     @Override
-    public TranslationTextComponent getTranslation() {
-        return null;
-    }
-
-    @Override
     public ResourceLocation getRegistryName() {
         return new ResourceLocation(RConstants.MODID, "lay_fade");
     }

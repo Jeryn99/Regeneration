@@ -1,6 +1,8 @@
 package me.swirtzly.regen.util;
 
 import me.swirtzly.regen.config.RegenConfig;
+import me.swirtzly.regen.network.NetworkDispatcher;
+import me.swirtzly.regen.network.messages.ModelMessage;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -8,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -22,12 +23,13 @@ import java.util.List;
 
 public class PlayerUtil {
 
+
     public static ArrayList<Effect> POTIONS = new ArrayList();
 
     public static void setupPotions() {
         for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
             for (Effect effect : ForgeRegistries.POTIONS.getValues()) {
-                if(name.contentEquals(effect.getRegistryName().toString())){
+                if (name.contentEquals(effect.getRegistryName().toString())) {
                     POTIONS.add(effect);
                 }
             }
@@ -97,6 +99,23 @@ public class PlayerUtil {
             if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
                 entity.attackEntityFrom(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
         });
+    }
+
+    public static void updateModel(SkinType choices) {
+        NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ModelMessage(choices));
+    }
+
+    public enum SkinType implements RegenUtil.IEnum<SkinType> {
+        ALEX, STEVE, EITHER;
+
+        public boolean isAlex() {
+
+            if(this == EITHER){
+                return RegenUtil.RAND.nextBoolean();
+            }
+
+            return this == ALEX;
+        }
     }
 
 }

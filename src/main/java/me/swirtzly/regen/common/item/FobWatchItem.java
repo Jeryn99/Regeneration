@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.item;
 
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.client.gui.ColorScreen;
+import me.swirtzly.regen.client.gui.GuiPreferences;
 import me.swirtzly.regen.common.entities.OverrideEntity;
 import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.common.objects.RSounds;
@@ -85,7 +86,7 @@ public class FobWatchItem extends SolidItem {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 
         Minecraft.getInstance().deferTask(() -> {
-            Minecraft.getInstance().displayGuiScreen(new ColorScreen()); //TODO NO NO
+            Minecraft.getInstance().displayGuiScreen(new GuiPreferences()); //TODO NO NO
         });
 
         ItemStack stack = player.getHeldItem(hand);

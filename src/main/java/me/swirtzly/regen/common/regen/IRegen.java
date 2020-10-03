@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.regen;
 
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
+import me.swirtzly.regen.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -63,4 +64,7 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
 
     boolean isAlexSkinCurrently();
     void setAlexSkin(boolean isAlex);
+
+    PlayerUtil.SkinType getPreferredModel();
+    void setPreferredModel(PlayerUtil.SkinType skinType);
 }

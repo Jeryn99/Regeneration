@@ -77,7 +77,7 @@ public class CommonEvents {
                 return;
 
 
-            iRegen.setDeathMessage(event.getSource().getDeathMessage(livingEntity).getUnformattedComponentText());
+            iRegen.setDeathMessage(event.getSource().getDeathMessage(livingEntity).getString());
 
 
             //Handle Post

@@ -57,7 +57,7 @@ class ClientActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLiving().getUniqueID())) {
-            File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRNG(), cap.getLiving().getRNG().nextBoolean()); //Implement Preferred type
+            File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRNG(), cap.getPreferredModel().isAlex()); //Implement Preferred type
             boolean isAlex = file.getAbsolutePath().contains(CommonSkin.SKIN_DIRECTORY_ALEX.getAbsolutePath());
             if (RegenConfig.CLIENT.changeMySkin.get()) {
                 NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage((PlayerEntity) cap.getLiving(), RegenUtil.fileToBytes(file), isAlex));

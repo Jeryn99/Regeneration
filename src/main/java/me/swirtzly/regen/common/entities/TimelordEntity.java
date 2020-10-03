@@ -134,8 +134,7 @@ public class TimelordEntity extends CreatureEntity {
 
     /*Setup initial skins for the timelords*/
     public void initSkin(IRegen data) {
-        //TODO Implement isAlex
-        File file = CommonSkin.chooseRandomSkin(world.rand, true);
+        File file = CommonSkin.chooseRandomSkin(world.rand, rand.nextBoolean());
         data.setSkin(RegenUtil.fileToBytes(file));
         data.setAlexSkin(true);
         data.syncToClients(null);
