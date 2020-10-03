@@ -70,5 +70,32 @@ public class EnglishLang extends LanguageProvider {
         add("regeneration.messages.post_ended", "Your Regeneration process is now entirely completed!");
         add("regeneration.messages.fast_forward_cmd_fail", "Nothing to fast forward to.");
         add("regeneration.messages.cant_glow", "You cannot activate a glowing hand without being in a grace period");
+
+
+        // === GUI Elements ===
+        add("regeneration.gui.red", "Red: ");
+        add("regeneration.gui.green", "Green: ");
+        add("regeneration.gui.blue", "Blue: ");
+        add("regeneration.gui.primary", "Primary");
+        add("regeneration.gui.secondary", "Secondary");
+        add("regeneration.gui.undo", "Undo");
+        add("regeneration.gui.regen_type", "Type, %s");
+        add("regeneration.gui.close", "Close");
+        add("regeneration.gui.input_color", "Hex");
+        add("regeneration.gui.previous", "<");
+        add("regeneration.gui.next", ">");
+        add("regeneration.gui.default", "Default");
+        add("regeneration.gui.open_folder", "Skin Dir");
+        add("regeneration.gui.skin_choice", "Skin Settings");
+        add("regeneration.gui.save", "Save");
+        add("regeneration.gui.next_incarnation", "Select next incarnation");
+        add("regeneration.gui.reset_skin", "Reset Skin");
+        add("regeneration.gui.infinite_regenerations", "Infinite Regeneration Mode");
+        add("regeneration.gui.remaining_regens.status", "Remaining Regenerations,");
+        add("regeneration.gui.color_gui", "Color selection");
+        add("regeneration.gui.current_skin", "Select next Incarnation");
+        add("regeneration.gui.skintype", "Preference: %s");
+        add("regeneration.gui.back", "Back");
+        add("regeneration.gui.preferences", "Preferences");
     }
 }

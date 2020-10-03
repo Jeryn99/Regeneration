@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.objects;
 
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.common.entities.OverrideEntity;
+import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
@@ -12,13 +13,14 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.sql.Time;
+
 public class REntities {
 
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, RConstants.MODID);
     public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
-
-
+    public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC,  0.6F, 1.95F, 128, 1, true, "timelord"));
 
 
     // Entity Creation

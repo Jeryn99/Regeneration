@@ -86,8 +86,8 @@ class CommonActing implements Acting {
         PlayerUtil.explodeKnockback(player, player.world, new BlockPos(player.getPositionVec()), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
         // Reduce number of hearts, but compensate with absorption
         player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
-        if (!player.getAttribute(Attributes.field_233818_a_).hasModifier(heartModifier)) {
-            player.getAttribute(Attributes.field_233818_a_).func_233769_c_(heartModifier);
+        if (!player.getAttribute(Attributes.MAX_HEALTH).hasModifier(heartModifier)) {
+            player.getAttribute(Attributes.MAX_HEALTH).removeModifier(heartModifier);
         }
         player.setHealth(player.getMaxHealth());
     }
@@ -99,8 +99,8 @@ class CommonActing implements Acting {
 
     @Override
     public void onGoCritical(IRegen cap) {
-        if (!cap.getLiving().getAttribute(Attributes.field_233821_d_).hasModifier(slownessModifier)) {
-            cap.getLiving().getAttribute(Attributes.field_233821_d_).func_233769_c_(slownessModifier);
+        if (!cap.getLiving().getAttribute(Attributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
+            cap.getLiving().getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(slownessModifier);
         }
     }
 
@@ -120,9 +120,9 @@ class CommonActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getEntityWorld().func_234923_W_()), new SFXMessage(getRandomSound(living.getRNG(), cap).getRegistryName(), living.getUniqueID()));
-        living.getAttribute(Attributes.field_233818_a_).removeModifier(MAX_HEALTH_ID);
-        living.getAttribute(Attributes.field_233821_d_).removeModifier(SLOWNESS_ID);
+        NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getEntityWorld().getDimensionKey()), new SFXMessage(getRandomSound(living.getRNG(), cap).getRegistryName(), living.getUniqueID()));
+        living.getAttribute(Attributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
+        living.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
         living.setHealth(Math.max(living.getHealth(), 8));
         living.setAbsorptionAmount(0);
 

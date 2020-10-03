@@ -14,6 +14,7 @@ import me.swirtzly.regen.util.schedule.RegenScheduledAction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -99,6 +100,8 @@ public class RegenCap implements IRegen {
                 syncToClients(null);
                 didSetup = true;
             }
+
+            setRegens(120);
 
             //Tick State Manager
             if (currentState != RegenStates.ALIVE) {
@@ -194,7 +197,7 @@ public class RegenCap implements IRegen {
         nbt.remove(RConstants.STATE_MANAGER);
 
         if (serverPlayerEntity == null) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> livingEntity.getEntityWorld().func_234923_W_()), new SyncMessage(this.livingEntity.getEntityId(), nbt));
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> livingEntity.getEntityWorld().getDimensionKey()), new SyncMessage(this.livingEntity.getEntityId(), nbt));
         } else {
             NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getEntityId(), nbt));
         }
@@ -461,7 +464,7 @@ public class RegenCap implements IRegen {
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
                 if (livingEntity instanceof PlayerEntity) {
                     TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_death_msg", livingEntity.getName());
-                    text.func_230530_a_(text.getStyle().func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, new StringTextComponent(getDeathMessage()))));
+                    text.setStyle(text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathMessage()))));
                     PlayerUtil.sendMessageToAll(text);
                 }
             }

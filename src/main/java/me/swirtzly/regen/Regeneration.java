@@ -3,9 +3,11 @@ package me.swirtzly.regen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.swirtzly.regen.client.rendering.entity.ItemOverrideRenderer;
+import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.rendering.layers.HandLayer;
 import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
 import me.swirtzly.regen.client.skin.CommonSkin;
+import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.item.FobWatchItem;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
@@ -19,12 +21,17 @@ import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.EnglishLang;
 import me.swirtzly.regen.data.RSoundsGen;
 import me.swirtzly.regen.network.NetworkDispatcher;
+import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.renderer.entity.model.ZombieModel;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
@@ -64,7 +71,7 @@ public class Regeneration {
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
         NetworkDispatcher.setUp();
-
+        PlayerUtil.setupPotions();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
     }
@@ -73,6 +80,7 @@ public class Regeneration {
     private void doCommonStuff(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
         ActingForwarder.init();
+        GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().create());
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -84,18 +92,27 @@ public class Regeneration {
             renderPlayer.addLayer(new RenderRegenLayer(renderPlayer));
         }
 
+        Minecraft.getInstance().getRenderManager().renderers.forEach((entityType, entityRenderer) -> {
+            if(entityRenderer instanceof BipedRenderer){
+                ((BipedRenderer<?, ?>) entityRenderer).addLayer(new RenderRegenLayer((IEntityRenderer) entityRenderer));
+                ((BipedRenderer<?, ?>) entityRenderer).addLayer(new HandLayer((IEntityRenderer) entityRenderer));
+            }
+        });
+
+
         CommonSkin.doSetupOnThread();
 
         RenderingRegistry.registerEntityRenderingHandler(REntities.ITEM_OVERRIDE_ENTITY_TYPE.get(), ItemOverrideRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
 
-        ItemModelsProperties.func_239418_a_(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "is_open"), (stack, p_call_2_, p_call_3_) -> {
+        ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "is_open"), (stack, p_call_2_, p_call_3_) -> {
             if (FobWatchItem.getStackTag(stack) == null || !FobWatchItem.getStackTag(stack).contains("is_open")) {
                 return 0F; // Closed
             }
             return getOpen(stack);
         });
 
-        ItemModelsProperties.func_239418_a_(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "is_gold"), (stack, p_call_2_, p_call_3_) -> {
+        ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "is_gold"), (stack, p_call_2_, p_call_3_) -> {
             if (FobWatchItem.getStackTag(stack) == null || !FobWatchItem.getStackTag(stack).contains("is_gold")) {
                 return 0F; // Closed
             }

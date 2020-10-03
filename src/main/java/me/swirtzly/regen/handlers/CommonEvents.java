@@ -6,6 +6,7 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.config.RegenConfig;
+import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.command.CommandSource;
@@ -14,6 +15,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -69,7 +71,6 @@ public class CommonEvents {
             if (trueSource instanceof PlayerEntity && event.getEntityLiving() != null) {
                 PlayerEntity player = (PlayerEntity) trueSource;
                 RegenCap.get(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
-                return;
             }
 
             if (event.getSource() == RegenSources.REGEN_DMG_CRITICAL || event.getSource() == RegenSources.REGEN_DMG_KILLED)
@@ -78,6 +79,12 @@ public class CommonEvents {
 
             iRegen.setDeathMessage(event.getSource().getDeathMessage(livingEntity).getUnformattedComponentText());
 
+
+            //Handle Post
+            if(iRegen.getCurrentState() == RegenStates.POST){
+                event.setAmount(1.5F);
+                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.reduced_dmg"), true);
+            }
 
             //Handle Death
             if (iRegen.getCurrentState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage() || iRegen.getCurrentState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {

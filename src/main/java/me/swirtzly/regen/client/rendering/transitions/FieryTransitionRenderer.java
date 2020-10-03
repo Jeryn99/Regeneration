@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.client.animation.AnimationHandler;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
+import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
@@ -30,8 +31,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     public static void renderOverlay(MatrixStack matrixStack, IVertexBuilder buffer, int packedlight, BipedModel bipedModel, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(entityPlayer).ifPresent((data) -> {
             matrixStack.push();
-            CompoundNBT colorTag = data.getOrWriteStyle();
-            Vector3d color = new Vector3d(colorTag.getFloat(RConstants.PRIMARY_RED), colorTag.getFloat(RConstants.PRIMARY_GREEN), colorTag.getFloat(RConstants.PRIMARY_BLUE));
+            Vector3d color = data.getPrimaryColors();
             float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
             bipedModel.setRotationAngles(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             bipedModel.render(matrixStack, buffer, packedlight, OverlayTexture.NO_OVERLAY, (float) color.x, (float) color.y, (float) color.z, opacity);
@@ -42,7 +42,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
     @Override
     public void firstPersonHand(HandSide side, IRegen iRegen, RenderHandEvent renderHandEvent) {
-
+        //TODO Glowy hands
     }
 
     @Override
@@ -105,6 +105,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
             //Render player overlay
             if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.getCurrentState() == RegenStates.POST || iRegen.getCurrentState() == RegenStates.REGENERATING) {
+                if(entitylivingbaseIn instanceof TimelordEntity) return;
                 renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
                 renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             }

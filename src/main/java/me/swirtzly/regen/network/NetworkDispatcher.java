@@ -18,6 +18,7 @@ public class NetworkDispatcher {
         NETWORK_CHANNEL.registerMessage(id++, POVMessage.class, POVMessage::toBytes, POVMessage::new, POVMessage::handle);
         NETWORK_CHANNEL.registerMessage(id++, StateMessage.class, StateMessage::toBytes, StateMessage::new, StateMessage::handle);
         NETWORK_CHANNEL.registerMessage(id++, SkinMessage.class, SkinMessage::toBytes, SkinMessage::new, SkinMessage::handle);
+        NETWORK_CHANNEL.registerMessage(id++, ColorChangeMessage.class, ColorChangeMessage::toBytes, ColorChangeMessage::new, ColorChangeMessage::handle);
     }
 
 }

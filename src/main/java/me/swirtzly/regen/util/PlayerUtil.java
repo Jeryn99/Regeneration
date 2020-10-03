@@ -22,15 +22,13 @@ import java.util.List;
 
 public class PlayerUtil {
 
-    //TODO Fix
     public static ArrayList<Effect> POTIONS = new ArrayList();
 
-    static {
+    public static void setupPotions() {
         for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
             for (Effect effect : ForgeRegistries.POTIONS.getValues()) {
                 if(name.contentEquals(effect.getRegistryName().toString())){
                     POTIONS.add(effect);
-                    System.out.println("ADDED: " + name);
                 }
             }
         }

@@ -9,17 +9,19 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.HandSide;
 
-public class HandLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> {
+public class HandLayer extends LayerRenderer {
 
-    public HandLayer(IEntityRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> renderPlayer) {
-        super(renderPlayer);
+
+    public HandLayer(IEntityRenderer entityRendererIn) {
+        super(entityRendererIn);
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, AbstractClientPlayerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-
+    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         EntityModel<?> model = getEntityModel();
 
         if (entitylivingbaseIn.isSneaking()) {
@@ -27,7 +29,7 @@ public class HandLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerM
         }
 
         BipedModel<?> bipedModel = (BipedModel) model;
-        RegenCap.get(entitylivingbaseIn).ifPresent(iRegen -> {
+        RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             for (HandSide handSide : HandSide.values()) {
                 matrixStackIn.push();
                 bipedModel.translateHand(handSide, matrixStackIn);
@@ -36,5 +38,4 @@ public class HandLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerM
             }
         });
     }
-
 }

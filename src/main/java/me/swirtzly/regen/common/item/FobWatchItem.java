@@ -1,6 +1,7 @@
 package me.swirtzly.regen.common.item;
 
 import me.swirtzly.regen.Regeneration;
+import me.swirtzly.regen.client.gui.ColorScreen;
 import me.swirtzly.regen.common.entities.OverrideEntity;
 import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.common.objects.RSounds;
@@ -10,12 +11,14 @@ import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.ClientUtil;
 import me.swirtzly.regen.util.PlayerUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -80,6 +83,11 @@ public class FobWatchItem extends SolidItem {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+
+        Minecraft.getInstance().deferTask(() -> {
+            Minecraft.getInstance().displayGuiScreen(new ColorScreen()); //TODO NO NO
+        });
+
         ItemStack stack = player.getHeldItem(hand);
         IRegen cap = RegenCap.get(player).orElseGet(null);
 

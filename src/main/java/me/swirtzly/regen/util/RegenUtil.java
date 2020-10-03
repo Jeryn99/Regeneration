@@ -2,6 +2,7 @@ package me.swirtzly.regen.util;
 
 import org.apache.commons.io.FileUtils;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -65,5 +66,15 @@ public class RegenUtil {
             return new byte[0];
         }
     }
+
+
+    public static String colorToHex(Color color) {
+        StringBuilder hex = new StringBuilder(Integer.toHexString(color.getRGB() & 0xffffff));
+        while (hex.length() < 6) {
+            hex.insert(0, "0");
+        }
+        return "#" + hex;
+    }
+
 
 }

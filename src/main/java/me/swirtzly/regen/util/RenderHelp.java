@@ -67,7 +67,7 @@ public class RenderHelp {
         }
     }
 
-    private static ResourceLocation VIG = new ResourceLocation("regen:textures/vignette.png");
+    private static final ResourceLocation VIG = new ResourceLocation("regen:textures/vignette.png");
 
     public static void renderVig(Vector3d vector3d, float alpha) {
         RenderSystem.disableDepthTest();
@@ -91,6 +91,35 @@ public class RenderHelp {
         RenderSystem.enableDepthTest();
         RenderSystem.enableAlphaTest();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
+        if (left < right) {
+            int i = left;
+            left = right;
+            right = i;
+        }
+
+        if (top < bottom) {
+            int j = top;
+            top = bottom;
+            bottom = j;
+        }
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.blendFuncSeparate(770, 771, 1, 0);
+        RenderSystem.color4f(red, green, blue, alpha);
+        bufferBuilder.begin(7, DefaultVertexFormats.POSITION);
+        bufferBuilder.pos(left, bottom, 0.0D).endVertex();
+        bufferBuilder.pos(right, bottom, 0.0D).endVertex();
+        bufferBuilder.pos(right, top, 0.0D).endVertex();
+        bufferBuilder.pos(left, top, 0.0D).endVertex();
+        tessellator.draw();
+        RenderSystem.enableTexture();
+        RenderSystem.disableBlend();
     }
 
 }
