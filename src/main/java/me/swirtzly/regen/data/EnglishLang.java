@@ -1,5 +1,6 @@
 package me.swirtzly.regen.data;
 
+import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
@@ -106,6 +107,11 @@ public class EnglishLang extends LanguageProvider {
         // === Regen ===
         add("type.regeneration.troughton", "Troughton");
         add("type.regeneration.fiery", "Fiery");
+        add("type.regeneration.watcher", "Watcher");
+
+        //Entity
+        add(REntities.TIMELORD.get(), "Timelord");
+        add(REntities.ITEM_OVERRIDE_ENTITY_TYPE.get(), "Item");
     }
 
 

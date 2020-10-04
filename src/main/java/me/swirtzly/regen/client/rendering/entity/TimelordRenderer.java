@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.resources.DefaultPlayerSkin;
@@ -43,10 +42,6 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
     public static EntityModel<TimelordEntity> mainModel = new TimelordModel();
     public static EntityModel<TimelordEntity> councilModel = new TimelordModel();
     public static EntityModel<TimelordEntity> guardModel = new TimelordGuardModel();
-    public static PlayerModel<TimelordEntity> bipedModel = new PlayerModel<>(0.5F, true);
-
-    public static ResourceLocation TIMELORD = new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_villager.png");
-
 
     public static HashMap<UUID, ResourceLocation> TIMELORDS = new HashMap<>();
 
@@ -65,10 +60,6 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
     public static ResourceLocation getTimelordFace(TimelordEntity timelordEntity) {
 
         IRegen data = RegenCap.get(timelordEntity).orElseGet(null);
-
-        if (timelordEntity.isVillagerModel()) {
-            return TIMELORD;
-        }
 
         if (data.getTicksAnimating() > 100) {
             TIMELORDS.remove(timelordEntity.getUniqueID());

@@ -103,5 +103,11 @@
     "sounds": [
       "regen:regen/regen_7"
     ]
+  },
+  "regeneration_troughton": {
+    "subtitle": "regen.sound.regeneration_troughton",
+    "sounds": [
+      "regen:regen/regen_troughton"
+    ]
   }
 }

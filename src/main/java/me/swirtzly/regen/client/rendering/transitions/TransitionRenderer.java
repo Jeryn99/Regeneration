@@ -12,6 +12,7 @@ import net.minecraftforge.client.event.RenderHandEvent;
 public interface TransitionRenderer {
 
     void onBefore(LivingEntity entityIn, MatrixStack matrixStackIn, float partialTicks);
+
     void onAfter(LivingEntity entityIn, MatrixStack matrixStackIn, float partialTicks);
 
     void firstPersonHand(HandSide side, IRegen iRegen, RenderHandEvent renderHandEvent);

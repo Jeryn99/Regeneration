@@ -11,7 +11,6 @@ import me.swirtzly.regen.network.messages.NextSkinMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
-import me.swirtzly.regen.util.image.TexUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -105,7 +104,7 @@ public class IncarnationScreen extends ContainerScreen {
                 } else {
                     position++;
                 }
-                PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
+                PLAYER_TEXTURE = CommonSkin.fileTotexture(skins.get(position));
                 updateModels();
             }
         });
@@ -118,7 +117,7 @@ public class IncarnationScreen extends ContainerScreen {
                 } else {
                     position = skins.size() - 1;
                 }
-                PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
+                PLAYER_TEXTURE = CommonSkin.fileTotexture(skins.get(position));
                 updateModels();
             }
         });
@@ -157,7 +156,7 @@ public class IncarnationScreen extends ContainerScreen {
 
         RegenCap.get(minecraft.player).ifPresent((data) -> choices = data.getPreferredModel());
 
-        PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
+        PLAYER_TEXTURE = CommonSkin.fileTotexture(skins.get(position));
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> choices = data.getPreferredModel());
         updateModels();
     }

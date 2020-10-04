@@ -4,6 +4,7 @@ import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
+import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.entity.CreatureEntity;
@@ -39,7 +40,6 @@ public class TimelordEntity extends CreatureEntity {
 
     private static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> VILLAGER = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
 
     private final SwimmerPathNavigator waterNavigator;
     private final GroundPathNavigator groundNavigator;
@@ -67,7 +67,6 @@ public class TimelordEntity extends CreatureEntity {
     @Override
     protected void registerData() {
         super.registerData();
-        getDataManager().register(VILLAGER, false);
         getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
         getDataManager().register(SWINGING_ARMS, false);
     }
@@ -120,8 +119,7 @@ public class TimelordEntity extends CreatureEntity {
                 nbt.putFloat(RConstants.SECONDARY_GREEN, rand.nextInt(255) / 255.0F);
                 nbt.putFloat(RConstants.SECONDARY_BLUE, rand.nextInt(255) / 255.0F);
                 data.readStyle(nbt);
-                //TODO Uncomment when layfade is done
-                //data.setTransitionType(rand.nextBoolean() ? TransitionTypes.FIERY : TransitionTypes.HARTNELL);
+                data.setTransitionType(rand.nextBoolean() ? TransitionTypes.FIERY : TransitionTypes.TROUGHTON);
                 initSkin(data);
             });
         }
@@ -164,12 +162,7 @@ public class TimelordEntity extends CreatureEntity {
 
                 if (data.getCurrentState() == REGENERATING) {
                     if (data.getTicksAnimating() == 100) {
-                        if (false) { //Ignore this, I need to re-implement something without breaking things
-                            setVillager(true);
-                        } else {
-                            setVillager(false);
-                            initSkin(data);
-                        }
+                        initSkin(data);
                     }
                     setNoAI(true);
                     setInvulnerable(true);
@@ -181,13 +174,6 @@ public class TimelordEntity extends CreatureEntity {
         });
     }
 
-    public Boolean isVillagerModel() {
-        return getDataManager().get(VILLAGER);
-    }
-
-    public void setVillager(boolean villager) {
-        getDataManager().set(VILLAGER, villager);
-    }
 
     @Override
     public void onKillCommand() {
@@ -197,14 +183,12 @@ public class TimelordEntity extends CreatureEntity {
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.putBoolean("villager", isVillagerModel());
         compound.putString("timelord_type", getTimelordType().name());
     }
 
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        setVillager(compound.getBoolean("villager"));
         if (compound.contains("timelord_type")) {
             setTimelordType(TimelordType.valueOf(compound.getString("timelord_type")));
         }

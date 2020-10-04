@@ -5,6 +5,8 @@ import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
+import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
@@ -28,6 +30,15 @@ public class CommonSkin {
     public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 
+    public static ResourceLocation fileTotexture(File file) {
+        NativeImage nativeImage = null;
+        try {
+            nativeImage = NativeImage.read(new FileInputStream(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return SkinHandler.loadImage(nativeImage);
+    }
 
     //Choose a random PNG from a folder
     public static File chooseRandomSkin(Random rand, boolean isAlex) {
@@ -117,10 +128,17 @@ public class CommonSkin {
     public static void handleDownloads() throws IOException {
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
 
-        String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
-        String[] links = Regeneration.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
-        for (String link : links) {
-            unzipSkinPack(link);
+        File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
+
+        long attr = drWhoDir.lastModified();
+        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(drWhoDir.list()).length == 0) {
+            Regeneration.LOG.info("Re-Downloading Internal Skins");
+            FileUtils.cleanDirectory(drWhoDir);
+            String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
+            String[] links = Regeneration.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
+            for (String link : links) {
+                unzipSkinPack(link);
+            }
         }
     }
 

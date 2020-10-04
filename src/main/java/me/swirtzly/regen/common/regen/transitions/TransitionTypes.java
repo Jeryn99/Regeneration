@@ -20,6 +20,7 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
 
     public static final TransitionTypes FIERY = new TransitionTypes(FieryTransition::new);
     public static final TransitionTypes TROUGHTON = new TransitionTypes(TroughtonTransition::new);
+    public static final TransitionTypes WATCHER = new TransitionTypes(WatcherTransition::new);
     public static IForgeRegistry<TransitionTypes> REGISTRY;
     public static TransitionTypes[] TYPES = new TransitionTypes[]{FIERY, TROUGHTON};
     //==================================
@@ -46,10 +47,11 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
 
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register<TransitionTypes> e) {
-        e.getRegistry().registerAll(FIERY, TROUGHTON);
+        e.getRegistry().registerAll(FIERY, TROUGHTON, WATCHER);
+        TYPES = e.getRegistry().getValues().toArray(new TransitionTypes[0]);
     }
 
-    public TransitionType create() {
+    public TransitionType get() {
         return this.supplier.get();
     }
 

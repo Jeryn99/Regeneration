@@ -51,8 +51,8 @@ public class PreferencesScreen extends ContainerScreen {
                     pos = 0;
                 }
                 SELECTED_TYPE = TransitionTypes.TYPES[pos];
-                button.setMessage(new TranslationTextComponent("regeneration.gui.regen_type", SELECTED_TYPE.create().getTranslation()));
-                NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(SELECTED_TYPE.create()));
+                button.setMessage(new TranslationTextComponent("regeneration.gui.regen_type", SELECTED_TYPE.get().getTranslation()));
+                NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(SELECTED_TYPE.get()));
             }
         });
 
@@ -65,7 +65,7 @@ public class PreferencesScreen extends ContainerScreen {
             button.setMessage(new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase())));
             PlayerUtil.updateModel(CHOICES);
         });
-        btnRegenType.setMessage(new TranslationTextComponent("regeneration.gui.regen_type", SELECTED_TYPE.create().getTranslation()));
+        btnRegenType.setMessage(new TranslationTextComponent("regeneration.gui.regen_type", SELECTED_TYPE.get().getTranslation()));
 
         Button btnColor = new Button(width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.color_gui"), button -> Minecraft.getInstance().displayGuiScreen(new ColorScreen()));
         Button btnSkinChoice = new Button(width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.skin_choice"), p_onPress_1_ -> {

@@ -7,11 +7,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class RegenSources extends DamageSource {
 
-    public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenSources("regen_energy"),
-            REGEN_DMG_HEALING = new RegenSources("regen_heal").setDamageAllowedInCreativeMode(), // The irony lmao
-            REGEN_DMG_CRITICAL = new RegenSources("regen_crit").setDamageAllowedInCreativeMode(),
-            REGEN_DMG_KILLED = new RegenSources("regen_killed"),
-            REGEN_DMG_FORCED = new RegenSources("forced").setDamageAllowedInCreativeMode();
+    public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenSources("regen_energy").setDamageAllowedInCreativeMode().setDamageBypassesArmor(),
+            REGEN_DMG_HEALING = new RegenSources("regen_heal").setDamageAllowedInCreativeMode().setDamageBypassesArmor(), // The irony lmao
+            REGEN_DMG_CRITICAL = new RegenSources("regen_crit").setDamageAllowedInCreativeMode().setDamageBypassesArmor(),
+            REGEN_DMG_KILLED = new RegenSources("regen_killed").setDamageAllowedInCreativeMode().setDamageBypassesArmor(),
+            REGEN_DMG_FORCED = new RegenSources("forced").setDamageAllowedInCreativeMode().setDamageBypassesArmor();
 
 
     private String message = "";

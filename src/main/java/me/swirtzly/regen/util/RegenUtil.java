@@ -33,10 +33,7 @@ public class RegenUtil {
         try {
             url = new URL(URL);
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line = bufferedReaderToString(in);
-            line = line.replace("<pre>", "");
-            line = line.replace("</pre>", "");
-            return line;
+            return bufferedReaderToString(in);
         } catch (Exception e) {
             e.printStackTrace();
         }

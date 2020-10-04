@@ -1,4 +1,6 @@
 {
+  "entity.regen.item_override": "Item",
+  "entity.regen.timelord": "Timelord",
   "item.regen.fobwatch": "Fob watch",
   "itemGroup.regen": "Regeneration",
   "regen.sound.regeneration_0": "Regeneration",
@@ -79,5 +81,6 @@
   "source.regen.regen_killed": "%s was killed mid-regeneration...",
   "source.regen.theft": "%s had their body stolen!",
   "type.regeneration.fiery": "Fiery",
-  "type.regeneration.lay_fade": "Hartnell"
+  "type.regeneration.troughton": "Troughton",
+  "type.regeneration.watcher": "Watcher"
 }

@@ -12,11 +12,11 @@ public class RenderingASM {
 
     @OnlyIn(Dist.CLIENT)
     public static void preRenderCallback(Entity entityIn, MatrixStack matrixStackIn, float partialTicks) {
-        if(entityIn instanceof LivingEntity) {
+        if (entityIn instanceof LivingEntity) {
             matrixStackIn.push();
             LivingEntity livingEntity = (LivingEntity) entityIn;
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
-                TransitionType<?> type = iRegen.getTransitionType().create();
+                TransitionType<?> type = iRegen.getTransitionType().get();
                 type.getRenderer().onBefore(livingEntity, matrixStackIn, partialTicks);
             });
         }
@@ -25,10 +25,10 @@ public class RenderingASM {
 
     @OnlyIn(Dist.CLIENT)
     public static void postRenderCallback(Entity entityIn, MatrixStack matrixStackIn, float partialTicks) {
-        if(entityIn instanceof LivingEntity) {
+        if (entityIn instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entityIn;
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
-                TransitionType<?> type = iRegen.getTransitionType().create();
+                TransitionType<?> type = iRegen.getTransitionType().get();
                 type.getRenderer().onAfter(livingEntity, matrixStackIn, partialTicks);
             });
             matrixStackIn.pop();

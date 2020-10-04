@@ -31,8 +31,8 @@ class CommonActing implements Acting {
     }
 
     public static SoundEvent getRandomSound(Random random, IRegen cap) {
-        SoundEvent[] SOUNDS = cap.getTransitionType().create().getRegeneratingSounds();
-        return SOUNDS[random.nextInt(SOUNDS.length)];
+        SoundEvent[] soundEvents = cap.getTransitionType().get().getRegeneratingSounds();
+        return soundEvents[random.nextInt(soundEvents.length)];
     }
 
     @Override

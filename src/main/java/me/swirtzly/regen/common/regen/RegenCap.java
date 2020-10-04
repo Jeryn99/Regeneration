@@ -112,8 +112,10 @@ public class RegenCap implements IRegen {
 
             if (currentState == RegenStates.REGENERATING) {
                 ticksAnimating++;
-                transitionType.create().onUpdateMidRegen(this);
+                transitionType.get().onUpdateMidRegen(this);
                 syncToClients(null);
+            } else {
+                ticksAnimating = 0;
             }
         }
     }
@@ -207,7 +209,7 @@ public class RegenCap implements IRegen {
         compoundNBT.putInt(RConstants.REGENS_LEFT, regensLeft);
         compoundNBT.putString(RConstants.CURRENT_STATE, currentState.name());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, ticksAnimating);
-        compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
+        compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.get().getRegistryName().toString());
         compoundNBT.putString(RConstants.PREFERENCE, preferredSkinType.name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
@@ -516,10 +518,10 @@ public class RegenCap implements IRegen {
 
             nextTransition.cancel(); // ... cancel any state shift we had planned
             if (currentState.isGraceful()) handGlowTimer.cancel();
-            scheduleTransitionInTicks(RegenStates.Transition.FINISH_REGENERATION, transitionType.create().getAnimationLength());
+            scheduleTransitionInTicks(RegenStates.Transition.FINISH_REGENERATION, transitionType.get().getAnimationLength());
 
             ActingForwarder.onRegenTrigger(RegenCap.this);
-            transitionType.create().onStartRegeneration(RegenCap.this);
+            transitionType.get().onStartRegeneration(RegenCap.this);
             syncToClients(null);
         }
 
@@ -535,7 +537,7 @@ public class RegenCap implements IRegen {
             currentState = RegenStates.ALIVE;
             nextTransition = null;
             handGlowTimer = null;
-            transitionType.create().onFinishRegeneration(RegenCap.this);
+            transitionType.get().onFinishRegeneration(RegenCap.this);
             if (isGrace) {
                 livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
             } else {
@@ -562,7 +564,7 @@ public class RegenCap implements IRegen {
             currentState = RegenStates.POST;
             scheduleTransitionInSeconds(RegenStates.Transition.END_POST, livingEntity.world.rand.nextInt(300));
             handGlowTimer = null;
-            transitionType.create().onFinishRegeneration(RegenCap.this);
+            transitionType.get().onFinishRegeneration(RegenCap.this);
             ActingForwarder.onRegenFinish(RegenCap.this);
             syncToClients(null);
         }

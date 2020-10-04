@@ -99,11 +99,7 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onKnockback(LivingKnockBackEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
-        RegenCap.get(livingEntity).ifPresent((data) -> {
-            if (data.getCurrentState() == RegenStates.REGENERATING) {
-                event.setCanceled(true);
-            }
-        });
+        RegenCap.get(livingEntity).ifPresent((data) -> event.setCanceled(data.getCurrentState() == RegenStates.REGENERATING));
     }
 
 
