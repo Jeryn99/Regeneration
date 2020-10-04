@@ -1,6 +1,7 @@
 package me.swirtzly.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.client.animation.AnimationHandler;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
 import me.swirtzly.regen.common.entities.TimelordEntity;
@@ -27,19 +28,12 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
 
     public static final TroughtonTransitionRenderer INSTANCE = new TroughtonTransitionRenderer();
 
-
     @Override
-    public void onBefore(LivingEntity entityIn, MatrixStack matrixStackIn, float partialTicks) {
-
+    public void onBefore(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
     }
 
     @Override
-    public void onAfter(LivingEntity entityIn, MatrixStack matrixStackIn, float partialTicks) {
-
-    }
-
-    @Override
-    public void firstPersonHand(HandSide side, IRegen iRegen, RenderHandEvent renderHandEvent) {
+    public void firstPersonHand(RenderHandEvent renderHandEvent) {
 
     }
 

@@ -193,6 +193,8 @@ public class RegenCap implements IRegen {
         if (livingEntity != null && livingEntity.world.isRemote)
             throw new IllegalStateException("Don't sync client -> server");
 
+        areHandsGlowing = getCurrentState().isGraceful() && stateManager.handGlowTimer.getTransition() == RegenStates.Transition.HAND_GLOW_TRIGGER;
+
         CompoundNBT nbt = serializeNBT();
         nbt.remove(RConstants.STATE_MANAGER);
 
@@ -212,6 +214,7 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.get().getRegistryName().toString());
         compoundNBT.putString(RConstants.PREFERENCE, preferredSkinType.name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
+        compoundNBT.putBoolean(RConstants.GLOWING, areHandsGlowing());
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skinArray);
@@ -241,6 +244,7 @@ public class RegenCap implements IRegen {
         setNextSkin(nbt.getByteArray("next_" + RConstants.SKIN));
         setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
+        areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
         if (nbt.contains(RConstants.PREFERENCE)) {
             setPreferredModel(PlayerUtil.SkinType.valueOf(nbt.getString(RConstants.PREFERENCE)));
         }

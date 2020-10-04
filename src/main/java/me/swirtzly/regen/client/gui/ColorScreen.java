@@ -24,7 +24,6 @@ import java.awt.*;
 
 import static me.swirtzly.regen.util.RegenUtil.colorToHex;
 
-//TODO Finish
 public class ColorScreen extends ContainerScreen implements Slider.ISlider {
 
     private static final ResourceLocation background = new ResourceLocation(RConstants.MODID, "textures/gui/customizer_background.png");
@@ -215,7 +214,6 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
         RenderHelp.drawRect(cx + 95, cy + 44, cx + 166, cy + 61, 0.1F, 0.1F, 0.1F, 1);
         RenderHelp.drawRect(cx + 96, cy + 45, cx + 165, cy + 60, (float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue(), 1);
 
-        //TODO For some reason, this text doesnt render on the screen
         RegenCap.get(getMinecraft().player).ifPresent((cap) -> {
             String str = new TranslationTextComponent("regeneration.gui.primary").getString();
             int length = getMinecraft().fontRenderer.getStringWidth(str);

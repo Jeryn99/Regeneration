@@ -1,4 +1,2 @@
 {
-  "sounds-reverb": "asm/sound-reverb.js",
-  "pre-render": "asm/pre-render.js"
-}
+  "sounds-reverb": "asm/sound-reverb.js"}

@@ -3,20 +3,28 @@ package me.swirtzly.regen.client.rendering.transitions;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.client.animation.AnimationHandler;
+import me.swirtzly.regen.client.rendering.layers.HandLayer;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
 import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.util.RConstants;
+import me.swirtzly.regen.util.RenderHelp;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.HandSide;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
@@ -39,19 +47,15 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void onBefore(LivingEntity entityIn, MatrixStack matrixStackIn, float partialTicks) {
+    public void onBefore(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
 
     }
 
     @Override
-    public void onAfter(LivingEntity entityIn, MatrixStack matrixStackIn, float partialTicks) {
+    public void firstPersonHand(RenderHandEvent renderHandEvent) {
 
     }
 
-    @Override
-    public void firstPersonHand(HandSide side, IRegen iRegen, RenderHandEvent renderHandEvent) {
-        //TODO Glowy hands
-    }
 
     @Override
     public void thirdPersonHand(HandSide side, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
@@ -122,7 +126,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     public void animation(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
-                double arm_shake = livingEntity.getRNG().nextDouble();
+                double armShake = livingEntity.getRNG().nextDouble();
                 float armRotY = (float) iRegen.getTicksAnimating() * 1.5F;
                 float armRotZ = (float) iRegen.getTicksAnimating() * 1.5F;
                 float headRot = (float) iRegen.getTicksAnimating() * 1.5F;
@@ -147,8 +151,8 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                 bipedModel.bipedLeftArm.rotateAngleX = 0;
                 bipedModel.bipedRightArm.rotateAngleX = 0;
 
-                bipedModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRotZ + arm_shake);
-                bipedModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRotZ + arm_shake);
+                bipedModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRotZ + armShake);
+                bipedModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRotZ + armShake);
                 bipedModel.bipedLeftArm.rotateAngleY = (float) -Math.toRadians(armRotY);
                 bipedModel.bipedRightArm.rotateAngleY = (float) Math.toRadians(armRotY);
 

@@ -4,6 +4,7 @@ import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.regen.RegenCap;
+import me.swirtzly.regen.common.regen.transitions.TransitionType;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.util.RenderHelp;
 import net.minecraft.client.Minecraft;
@@ -21,10 +22,7 @@ import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -40,6 +38,11 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRenderPlayer(RenderPlayerEvent.Pre playerEvent) {
         SkinHandler.tick((AbstractClientPlayerEntity) playerEvent.getPlayer());
+    }
+
+    @SubscribeEvent
+    public static void onRenderHand(RenderHandEvent event){
+        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.getTransitionType().get().getRenderer().firstPersonHand(event));
     }
 
     @SubscribeEvent
@@ -67,9 +70,9 @@ public class ClientEvents {
         RegenCap.get((LivingEntity) renderView).ifPresent((data) -> {
 
             if (data.getCurrentState() == GRACE_CRIT) {
-                e.setRed(0);
-                e.setBlue(0);
-                e.setGreen(0);
+                e.setRed(0.5F);
+                e.setBlue(0.5F);
+                e.setGreen(0.5F);
             }
 
             if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.getCurrentState() == REGENERATING) {
@@ -92,12 +95,12 @@ public class ClientEvents {
                     case GRACE:
                         RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
                         //TODO FIX NULL TRANSLATIONS
-                        warning = new TranslationTextComponent("regeneration.messages.warning.grace", new TranslationTextComponent("ClientUtil.keyBind")).getString();
+                       // warning = new TranslationTextComponent("regeneration.messages.warning.grace", new TranslationTextComponent("ClientUtil.keyBind")).getString();
                         break;
 
                     case GRACE_CRIT:
                         RenderHelp.renderVig(new Vector3d(1, 0, 0), 0.5F);
-                        warning = new TranslationTextComponent("regeneration.messages.warning.grace_critical", "ClientUtil.keyBind").getString();
+                     //   warning = new TranslationTextComponent("regeneration.messages.warning.grace_critical", "ClientUtil.keyBind").getString();
                         break;
 
                     case REGENERATING:
@@ -109,6 +112,10 @@ public class ClientEvents {
                             RenderHelp.renderVig(cap.getSecondaryColors(), 0.5F);
                         }
                         break;
+                }
+
+                if(cap.areHandsGlowing()){
+                    RenderHelp.renderVig(TransitionTypes.FIERY.get().getDefaultPrimaryColor(), 0.5F);
                 }
 
                 IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());

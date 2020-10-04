@@ -99,20 +99,13 @@ public class PreferencesScreen extends ContainerScreen {
         int length = minecraft.fontRenderer.getStringWidth(str);
 
         if (RegenConfig.COMMON.infiniteRegeneration.get())
-            str = new TranslationTextComponent("regeneration.gui.infinite_regenerations").getString(); // TODO this should be optimized
+            str = new TranslationTextComponent("regeneration.gui.infinite_regenerations").getString();
         else
             str = new TranslationTextComponent("regeneration.gui.remaining_regens.status", data.getRegens()).getString();
 
         length = minecraft.fontRenderer.getStringWidth(str);
         font.drawStringWithShadow(matrixStack, str, cx + 170 - length / 2, cy + 21, Color.WHITE.getRGB());
 
-        //TODO Traits might be dead, so I dont know if I will retain
-
-/*        TranslationTextComponent traitLang = new TranslationTextComponent(TraitManager.getDnaEntry(data.getTrait()).getLangKey());
-        font.drawStringWithShadow(matrixStack, traitLang.getString(), cx + 170 - length / 2, cy + 40, Color.WHITE.getRGB());
-
-        TranslationTextComponent traitLangDesc = new TranslationTextComponent(TraitManager.getDnaEntry(data.getTrait()).getLocalDesc());
-        font.drawStringWithShadow(matrixStack, traitLangDesc.getString(), cx + 170 - length / 2, cy + 50, Color.WHITE.getRGB());*/
 
     }
 

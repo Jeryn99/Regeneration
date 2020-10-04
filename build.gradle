@@ -16,9 +16,9 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.0'
+version = '3.0'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'Regeneration'
+archivesBaseName = 'Regeneration-Beta-'+getDate()
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -111,6 +111,10 @@ jar {
                 "MixinConfigs": "regen.mixins.json"
         ])
     }
+}
+
+def getDate() {
+    return new Date().format('dd-MM-yyyy')
 }
 
 // Example configuration to allow publishing using the maven-publish task

@@ -18,6 +18,7 @@ public class RConstants {
     public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(RConstants.MODID, RConstants.MODID);
     public static final String COLORS = "colors";
     public static final String PREFERENCE = "model_pref";
+    public static final String GLOWING = "glowing";
     public static String REGENS_LEFT = "regens_left";
     public static String CURRENT_STATE = "current_state";
     public static String PRIMARY_RED = "p_red";
