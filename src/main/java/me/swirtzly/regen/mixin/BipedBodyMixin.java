@@ -1,9 +1,6 @@
 package me.swirtzly.regen.mixin;
 
 import me.swirtzly.regen.client.animation.AnimationHandler;
-import me.swirtzly.regen.common.regen.IRegen;
-import me.swirtzly.regen.common.regen.RegenCap;
-import me.swirtzly.regen.common.regen.state.RegenStates;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;

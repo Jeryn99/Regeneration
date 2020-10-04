@@ -110,7 +110,7 @@ class CommonActing implements Acting {
         player.addPotionEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
         player.setHealth(player.getMaxHealth());
         player.setAbsorptionAmount(RegenConfig.COMMON.absorbtionLevel.get() * 2);
-        //cap.setNextSkin(RegenUtil.NO_SKIN);
+        cap.setNextSkin(new byte[0]);
     }
 
     @Override

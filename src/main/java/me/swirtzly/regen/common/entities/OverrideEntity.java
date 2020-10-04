@@ -3,7 +3,6 @@ package me.swirtzly.regen.common.entities;
 import me.swirtzly.regen.common.item.SolidItem;
 import me.swirtzly.regen.common.objects.REntities;
 import net.minecraft.entity.*;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

@@ -1,9 +1,6 @@
 package me.swirtzly.regen.network.messages;
 
 import me.swirtzly.regen.common.regen.RegenCap;
-import me.swirtzly.regen.util.ClientUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.PointOfView;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;

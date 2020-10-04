@@ -1,7 +1,6 @@
 package me.swirtzly.regen.data;
 
 import me.swirtzly.regen.common.objects.RItems;
-import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;

@@ -12,7 +12,6 @@ import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
@@ -55,6 +54,16 @@ public class TimelordEntity extends CreatureEntity {
         this.groundNavigator = new GroundPathNavigator(this, world);
     }
 
+    public static AttributeModifierMap.MutableAttribute createAttributes() {
+        return MonsterEntity.func_234295_eP_().
+
+                createMutableAttribute(Attributes.FOLLOW_RANGE, 35D).
+                createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.23F).
+                createMutableAttribute(Attributes.ATTACK_DAMAGE, 3F).
+                createMutableAttribute(Attributes.MAX_HEALTH, 20D).
+                createMutableAttribute(Attributes.ARMOR, 2.0D);
+    }
+
     @Override
     protected void registerData() {
         super.registerData();
@@ -62,7 +71,6 @@ public class TimelordEntity extends CreatureEntity {
         getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
         getDataManager().register(SWINGING_ARMS, false);
     }
-
 
     @Override
     public void updateSwimming() {
@@ -95,17 +103,6 @@ public class TimelordEntity extends CreatureEntity {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
     }
-
-    public static AttributeModifierMap.MutableAttribute createAttributes() {
-        return MonsterEntity.func_234295_eP_().
-
-                createMutableAttribute(Attributes.FOLLOW_RANGE, 35D).
-                createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.23F).
-                createMutableAttribute(Attributes.ATTACK_DAMAGE, 3F).
-                createMutableAttribute(Attributes.MAX_HEALTH, 20D).
-                createMutableAttribute(Attributes.ARMOR, 2.0D);
-    }
-
 
     @Override
     public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @org.jetbrains.annotations.Nullable ILivingEntityData spawnDataIn, @org.jetbrains.annotations.Nullable CompoundNBT dataTag) {
@@ -140,25 +137,6 @@ public class TimelordEntity extends CreatureEntity {
         data.syncToClients(null);
     }
 
-
-    public enum TimelordType {
-        COUNCIL("timelord"), GUARD("guards");
-
-        private final String name;
-
-        TimelordType(String guard) {
-            this.name = guard;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    public void setTimelordType(TimelordType type) {
-        getDataManager().set(TYPE, type.name());
-    }
-
     public TimelordType getTimelordType() {
         String type = getDataManager().get(TYPE);
         for (TimelordType value : TimelordType.values()) {
@@ -167,6 +145,10 @@ public class TimelordEntity extends CreatureEntity {
             }
         }
         return TimelordType.GUARD;
+    }
+
+    public void setTimelordType(TimelordType type) {
+        getDataManager().set(TYPE, type.name());
     }
 
     @Override
@@ -225,6 +207,20 @@ public class TimelordEntity extends CreatureEntity {
         setVillager(compound.getBoolean("villager"));
         if (compound.contains("timelord_type")) {
             setTimelordType(TimelordType.valueOf(compound.getString("timelord_type")));
+        }
+    }
+
+    public enum TimelordType {
+        COUNCIL("timelord"), GUARD("guards");
+
+        private final String name;
+
+        TimelordType(String guard) {
+            this.name = guard;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }

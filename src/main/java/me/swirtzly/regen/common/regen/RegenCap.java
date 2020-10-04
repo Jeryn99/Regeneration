@@ -14,7 +14,6 @@ import me.swirtzly.regen.util.schedule.RegenScheduledAction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -48,13 +47,13 @@ public class RegenCap implements IRegen {
     public static final Capability<IRegen> CAPABILITY = null;
     //State
     private final StateManager stateManager;
+    //Data
+    private final LivingEntity livingEntity;
     //Don't save to disk
     private boolean didSetup = false;
     // Color Data
     private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
     private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
-    //Data
-    private final LivingEntity livingEntity;
     private boolean isAlex = false;
     private byte[] skinArray = new byte[0];
     private int regensLeft = 0, ticksAnimating = 0;
@@ -63,6 +62,8 @@ public class RegenCap implements IRegen {
     private TransitionTypes transitionType = TransitionTypes.FIERY;
     private boolean areHandsGlowing = false;
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
+    private boolean nextSkinTypeAlex = false;
+    private byte[] nextSkin = new byte[0];
 
     public RegenCap() {
         this.livingEntity = null;
@@ -101,8 +102,6 @@ public class RegenCap implements IRegen {
                 syncToClients(null);
                 didSetup = true;
             }
-
-            setRegens(120);
 
             //Tick State Manager
             if (currentState != RegenStates.ALIVE) {
@@ -209,10 +208,17 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.CURRENT_STATE, currentState.name());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, ticksAnimating);
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
+        compoundNBT.putString(RConstants.PREFERENCE, preferredSkinType.name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
+        compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skinArray);
         }
+
+        if (isNextSkinValid()) {
+            compoundNBT.putByteArray("next_" + RConstants.SKIN, nextSkin);
+        }
+
         if (!livingEntity.world.isRemote) {
             if (stateManager != null) {
                 compoundNBT.put(RConstants.STATE_MANAGER, stateManager.serializeNBT());
@@ -230,7 +236,12 @@ public class RegenCap implements IRegen {
         currentState = nbt.contains(RConstants.CURRENT_STATE) ? RegenStates.valueOf(nbt.getString(RConstants.CURRENT_STATE)) : RegenStates.ALIVE;
         setAnimationTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
         setSkin(nbt.getByteArray(RConstants.SKIN));
+        setNextSkin(nbt.getByteArray("next_" + RConstants.SKIN));
         setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
+        setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
+        if (nbt.contains(RConstants.PREFERENCE)) {
+            setPreferredModel(PlayerUtil.SkinType.valueOf(nbt.getString(RConstants.PREFERENCE)));
+        }
         //RegenType
         if (nbt.contains(RConstants.TRANSITION_TYPE)) {
             transitionType = TransitionTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString(RConstants.TRANSITION_TYPE)));
@@ -242,7 +253,7 @@ public class RegenCap implements IRegen {
             stateManager.deserializeNBT((CompoundNBT) nbt.get(RConstants.STATE_MANAGER));
         }
 
-        if(nbt.contains(RConstants.COLORS)) {
+        if (nbt.contains(RConstants.COLORS)) {
             readStyle((CompoundNBT) nbt.get(RConstants.COLORS));
         }
     }
@@ -317,6 +328,31 @@ public class RegenCap implements IRegen {
     @Override
     public void setPreferredModel(PlayerUtil.SkinType skinType) {
         this.preferredSkinType = skinType;
+    }
+
+    @Override
+    public byte[] getNextSkin() {
+        return nextSkin;
+    }
+
+    @Override
+    public void setNextSkin(byte[] bytes) {
+        this.nextSkin = bytes;
+    }
+
+    @Override
+    public boolean isNextSkinValid() {
+        return !Arrays.equals(nextSkin, new byte[0]);
+    }
+
+    @Override
+    public void setNextSkinType(boolean isAlex) {
+        this.nextSkinTypeAlex = isAlex;
+    }
+
+    @Override
+    public boolean isNextSkinTypeAlex() {
+        return nextSkinTypeAlex;
     }
 
     public class StateManager implements IStateManager {

@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+
 public class SolidItem extends Item {
 
     public SolidItem(Item.Properties properties) {

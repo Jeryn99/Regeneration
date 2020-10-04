@@ -60,11 +60,25 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
     boolean isSkinValidForUse();
 
     Vector3d getPrimaryColors();
+
     Vector3d getSecondaryColors();
 
     boolean isAlexSkinCurrently();
+
     void setAlexSkin(boolean isAlex);
 
     PlayerUtil.SkinType getPreferredModel();
+
     void setPreferredModel(PlayerUtil.SkinType skinType);
+
+    byte[] getNextSkin();
+
+    //Next Skin
+    void setNextSkin(byte[] bytes);
+
+    boolean isNextSkinValid();
+
+    void setNextSkinType(boolean isAlex);
+
+    boolean isNextSkinTypeAlex();
 }

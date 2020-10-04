@@ -11,15 +11,9 @@ import me.swirtzly.regen.network.messages.SkinMessage;
 import me.swirtzly.regen.util.ClientUtil;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.SoundCategory;
 
-import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 class ClientActing implements Acting {
 
@@ -57,10 +51,15 @@ class ClientActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLiving().getUniqueID())) {
-            File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRNG(), cap.getPreferredModel().isAlex()); //Implement Preferred type
-            boolean isAlex = file.getAbsolutePath().contains(CommonSkin.SKIN_DIRECTORY_ALEX.getAbsolutePath());
+
             if (RegenConfig.CLIENT.changeMySkin.get()) {
-                NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage((PlayerEntity) cap.getLiving(), RegenUtil.fileToBytes(file), isAlex));
+                if (cap.isNextSkinValid()) {
+                    NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(cap.getNextSkin(), cap.isNextSkinTypeAlex()));
+                    return;
+                }
+                File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRNG(), cap.getPreferredModel().isAlex()); //Implement Preferred type
+                boolean isAlex = file.getAbsolutePath().contains(CommonSkin.SKIN_DIRECTORY_ALEX.getAbsolutePath());
+                NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(RegenUtil.fileToBytes(file), isAlex));
             } else {
                 SkinHandler.sendResetMessage();
             }

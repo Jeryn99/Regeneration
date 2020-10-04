@@ -6,11 +6,8 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.POVMessage;
-import static net.minecraft.util.math.BlockPos.getAllInBox;
-
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
-import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.block.FireBlock;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.LivingEntity;
@@ -23,6 +20,8 @@ import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Iterator;
+
+import static net.minecraft.util.math.BlockPos.getAllInBox;
 
 public class FieryTransition implements TransitionType<FieryTransitionRenderer> {
 

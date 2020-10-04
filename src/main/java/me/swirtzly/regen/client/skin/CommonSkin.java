@@ -2,9 +2,9 @@ package me.swirtzly.regen.client.skin;
 
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.config.RegenConfig;
+import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
-import net.minecraft.client.renderer.texture.NativeImage;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
@@ -14,13 +14,8 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Random;
+import java.nio.file.*;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -43,9 +38,6 @@ public class CommonSkin {
         }
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
-
-
-
 
     //Get a list of skins from namemc url
     public static ArrayList<String> getSkins(String downloadUrl) throws IOException {
@@ -199,4 +191,25 @@ public class CommonSkin {
     }
 
 
+    public static List<File> listAllSkins(PlayerUtil.SkinType choices) {
+        List<File> resultList = new ArrayList<>();
+        File directory = null;
+        switch (choices) {
+            case EITHER:
+                directory = SKIN_DIRECTORY;
+                break;
+            case ALEX:
+                directory = SKIN_DIRECTORY_ALEX;
+                break;
+            case STEVE:
+                directory = SKIN_DIRECTORY_STEVE;
+                break;
+        }
+        try {
+            Files.find(Paths.get(directory.toString()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile()).forEach((file) -> resultList.add(file.toFile()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return resultList;
+    }
 }

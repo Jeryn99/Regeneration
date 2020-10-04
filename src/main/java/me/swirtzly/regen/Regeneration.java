@@ -16,7 +16,6 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
-import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.EnglishLang;
 import me.swirtzly.regen.data.RSoundsGen;
@@ -24,24 +23,18 @@ import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.*;
-import net.minecraft.client.renderer.entity.model.ZombieModel;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.renderer.entity.BipedRenderer;
+import net.minecraft.client.renderer.entity.IEntityRenderer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -49,10 +42,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -93,7 +84,7 @@ public class Regeneration {
         }
 
         Minecraft.getInstance().getRenderManager().renderers.forEach((entityType, entityRenderer) -> {
-            if(entityRenderer instanceof BipedRenderer){
+            if (entityRenderer instanceof BipedRenderer) {
                 ((BipedRenderer<?, ?>) entityRenderer).addLayer(new RenderRegenLayer((IEntityRenderer) entityRenderer));
                 ((BipedRenderer<?, ?>) entityRenderer).addLayer(new HandLayer((IEntityRenderer) entityRenderer));
             }

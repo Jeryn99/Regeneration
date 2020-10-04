@@ -81,7 +81,7 @@ public class CommonEvents {
 
 
             //Handle Post
-            if(iRegen.getCurrentState() == RegenStates.POST){
+            if (iRegen.getCurrentState() == RegenStates.POST) {
                 event.setAmount(1.5F);
                 PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.reduced_dmg"), true);
             }

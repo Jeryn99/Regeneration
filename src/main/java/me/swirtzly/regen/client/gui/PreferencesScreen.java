@@ -2,8 +2,6 @@ package me.swirtzly.regen.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regen.client.gui.BlankContainer;
-import me.swirtzly.regen.client.gui.ColorScreen;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
@@ -21,14 +19,14 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.awt.*;
 
-public class GuiPreferences extends ContainerScreen {
+public class PreferencesScreen extends ContainerScreen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/pref_back.png");
     private static TransitionTypes SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTransitionType();
     private static PlayerUtil.SkinType CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getPreferredModel();
     private float ROTATION = 0;
 
-    public GuiPreferences() {
+    public PreferencesScreen() {
         super(new BlankContainer(), null, new TranslationTextComponent("Regeneration"));
         xSize = 256;
         ySize = 173;
@@ -71,9 +69,9 @@ public class GuiPreferences extends ContainerScreen {
 
         Button btnColor = new Button(width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.color_gui"), button -> Minecraft.getInstance().displayGuiScreen(new ColorScreen()));
         Button btnSkinChoice = new Button(width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.skin_choice"), p_onPress_1_ -> {
-            //TODO Minecraft.getInstance().displayGuiScreen(new SkinChoiceScreen());
+            Minecraft.getInstance().displayGuiScreen(new IncarnationScreen());
         });
-        btnSkinChoice.active = false;
+
         addButton(btnRegenType);
         addButton(btnSkinChoice);
         addButton(btnClose);
@@ -120,7 +118,7 @@ public class GuiPreferences extends ContainerScreen {
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        this.font.func_243248_b(matrixStack, this.title, (float)this.titleX, (float)this.titleY, 4210752);
+        this.font.func_243248_b(matrixStack, this.title, (float) this.titleX, (float) this.titleY, 4210752);
     }
 
     @Override

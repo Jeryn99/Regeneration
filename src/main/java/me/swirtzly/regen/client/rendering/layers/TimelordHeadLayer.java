@@ -13,11 +13,11 @@ import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 public class TimelordHeadLayer extends LayerRenderer<TimelordEntity, BipedModel<TimelordEntity>> {
+    private static final PlayerModel<TimelordEntity> entitymodel = new PlayerModel<>(0.5F, true);
+
     public TimelordHeadLayer(IEntityRenderer<TimelordEntity, BipedModel<TimelordEntity>> entityRendererIn) {
         super(entityRendererIn);
     }
-
-    private static final PlayerModel<TimelordEntity> entitymodel = new PlayerModel<>(0.5F, true);
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, TimelordEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {

@@ -1,8 +1,7 @@
 package me.swirtzly.regen.common.item;
 
 import me.swirtzly.regen.Regeneration;
-import me.swirtzly.regen.client.gui.ColorScreen;
-import me.swirtzly.regen.client.gui.GuiPreferences;
+import me.swirtzly.regen.client.gui.PreferencesScreen;
 import me.swirtzly.regen.common.entities.OverrideEntity;
 import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.common.objects.RSounds;
@@ -19,7 +18,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
-import net.minecraft.util.text.Color;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -86,7 +84,7 @@ public class FobWatchItem extends SolidItem {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 
         Minecraft.getInstance().deferTask(() -> {
-            Minecraft.getInstance().displayGuiScreen(new GuiPreferences()); //TODO NO NO
+            Minecraft.getInstance().displayGuiScreen(new PreferencesScreen()); //TODO NO NO
         });
 
         ItemStack stack = player.getHeldItem(hand);
@@ -111,7 +109,7 @@ public class FobWatchItem extends SolidItem {
             }
 
             if (used < 0)
-                Regeneration.LOG.warn(player.getName() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + getDamage(stack) + ", regens:" + cap.getRegens());
+                Regeneration.LOG.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + getDamage(stack) + ", regens:" + cap.getRegens());
 
             setDamage(stack, stack.getDamage() + used);
 

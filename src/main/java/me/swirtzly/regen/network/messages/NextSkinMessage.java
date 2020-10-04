@@ -7,26 +7,26 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SkinMessage {
+public class NextSkinMessage {
     private final byte[] skinByteArray;
     private final boolean isAlex;
 
-    public SkinMessage(byte[] skinByteArray, boolean isAlex) {
+    public NextSkinMessage(byte[] skinByteArray, boolean isAlex) {
         this.skinByteArray = skinByteArray;
         this.isAlex = isAlex;
     }
 
-    public SkinMessage(PacketBuffer buffer) {
+    public NextSkinMessage(PacketBuffer buffer) {
         skinByteArray = buffer.readByteArray(Integer.MAX_VALUE);
         isAlex = buffer.readBoolean();
     }
 
-    public static void handle(SkinMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(NextSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity serverPlayer = ctx.get().getSender();
             RegenCap.get(serverPlayer).ifPresent(iRegen -> {
-                iRegen.setSkin(message.skinByteArray);
-                iRegen.setAlexSkin(message.isAlex);
+                iRegen.setNextSkin(message.skinByteArray);
+                iRegen.setNextSkinType(message.isAlex);
                 iRegen.syncToClients(null);
             });
         });

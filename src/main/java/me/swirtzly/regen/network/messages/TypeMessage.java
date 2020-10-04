@@ -21,15 +21,15 @@ public class TypeMessage {
         type = buffer.readString();
     }
 
-    public void toBytes(PacketBuffer buf) {
-        buf.writeString(this.type);
-    }
-
     public static void handle(TypeMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
             cap.setTransitionType(TransitionTypes.REGISTRY.getValue(new ResourceLocation(message.type)));
             cap.syncToClients(null);
         }));
         ctx.get().setPacketHandled(true);
+    }
+
+    public void toBytes(PacketBuffer buf) {
+        buf.writeString(this.type);
     }
 }

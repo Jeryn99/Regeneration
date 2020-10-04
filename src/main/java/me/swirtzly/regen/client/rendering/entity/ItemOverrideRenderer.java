@@ -22,7 +22,7 @@ public class ItemOverrideRenderer extends EntityRenderer<OverrideEntity> {
     public void render(OverrideEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         if (entityIn.getItem().isEmpty()) return;
         matrixStackIn.push();
-        matrixStackIn.translate(0,0.17F, 0);
+        matrixStackIn.translate(0, 0.17F, 0);
         matrixStackIn.rotate(Vector3f.YP.rotation(-entityIn.rotationYaw));
         IBakedModel ibakedmodel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(entityIn.getItem(), entityIn.world, Minecraft.getInstance().player);
         Minecraft.getInstance().getItemRenderer().renderItem(entityIn.getItem(), ItemCameraTransforms.TransformType.GROUND, false, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, ibakedmodel);

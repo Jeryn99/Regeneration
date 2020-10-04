@@ -16,6 +16,8 @@ import net.minecraft.util.math.vector.Vector3d;
 
 public class RenderHelp {
 
+    private static final ResourceLocation VIG = new ResourceLocation("regen:textures/vignette.png");
+
     public static void renderFilledBox(Matrix4f matrix, IVertexBuilder builder, AxisAlignedBB boundingBox, float red, float green, float blue, float alpha, int combinedLightIn) {
         renderFilledBox(matrix, builder, (float) boundingBox.minX, (float) boundingBox.minY, (float) boundingBox.minZ, (float) boundingBox.maxX, (float) boundingBox.maxY, (float) boundingBox.maxZ, red, green, blue, alpha, combinedLightIn);
     }
@@ -67,13 +69,11 @@ public class RenderHelp {
         }
     }
 
-    private static final ResourceLocation VIG = new ResourceLocation("regen:textures/vignette.png");
-
     public static void renderVig(Vector3d vector3d, float alpha) {
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-        GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+                GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.color4f((float) vector3d.x, (float) vector3d.y, (float) vector3d.z, alpha);
         RenderSystem.disableAlphaTest();
         Minecraft.getInstance().getTextureManager().bindTexture(VIG);

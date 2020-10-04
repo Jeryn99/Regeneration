@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -49,6 +48,7 @@ public class SkinHandler {
             //If the skin is invalid, we want to remove it and revert to Mojang
             if (!validSkin) {
                 removePlayerSkin(playerEntity.getUniqueID());
+                forceUpdate = true;
             }
 
             //Update the skin if required.
@@ -59,7 +59,7 @@ public class SkinHandler {
 
             boolean isAlex = false;
 
-            if(iRegen.isSkinValidForUse()){
+            if (iRegen.isSkinValidForUse()) {
                 isAlex = iRegen.isAlexSkinCurrently();
             } else {
                 playerEntity.playerInfo.loadPlayerTextures();
@@ -81,7 +81,7 @@ public class SkinHandler {
         if (player != null) {
             player.playerInfo.loadPlayerTextures();
             boolean isAlex = player.playerInfo.getSkinType().equals("slim");
-            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(player, new byte[0], isAlex));
+            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(new byte[0], isAlex));
         }
     }
 
@@ -130,12 +130,9 @@ public class SkinHandler {
             return PLAYER_SKINS.get(playerEntity.getGameProfile().getId());
         }
         NetworkPlayerInfo info = playerEntity.playerInfo;
+        info.playerTexturesLoaded = false;
         info.loadPlayerTextures();
         return MoreObjects.firstNonNull(info.playerTextures.get(MinecraftProfileTexture.Type.SKIN), DefaultPlayerSkin.getDefaultSkin(info.gameProfile.getId()));
     }
-
-
-    //File
-
 
 }

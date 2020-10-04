@@ -64,6 +64,7 @@ public abstract class BaseSoundsProvider implements IDataProvider {
         private boolean replace;
         private String subtitle;
         private Map<ResourceLocation, SoundBuilder> soundBuilders = new HashMap<>();
+
         public SoundEventBuilder(SoundEvent soundEvent) {
 
             path = soundEvent.getRegistryName().getPath();

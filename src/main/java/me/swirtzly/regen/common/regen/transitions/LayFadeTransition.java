@@ -6,7 +6,6 @@ import me.swirtzly.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
 
 public class LayFadeTransition implements TransitionType<LayFadeTransitionRenderer> {
 

@@ -110,7 +110,7 @@ public class PlayerUtil {
 
         public boolean isAlex() {
 
-            if(this == EITHER){
+            if (this == EITHER) {
                 return RegenUtil.RAND.nextBoolean();
             }
 
