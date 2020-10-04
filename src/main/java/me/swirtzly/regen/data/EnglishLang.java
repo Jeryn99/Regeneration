@@ -104,7 +104,7 @@ public class EnglishLang extends LanguageProvider {
         }
 
         // === Regen ===
-        add("type.regeneration.lay_fade", "Hartnell");
+        add("type.regeneration.troughton", "Troughton");
         add("type.regeneration.fiery", "Fiery");
     }
 

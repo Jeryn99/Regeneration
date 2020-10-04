@@ -21,10 +21,7 @@ import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -72,11 +69,11 @@ public class ClientEvents {
                 e.setGreen(0);
             }
 
-            if (data.getTransitionType() == TransitionTypes.HARTNELL && data.getCurrentState() == REGENERATING) {
-                e.setRed((float) data.getPrimaryColors().x);
-                e.setGreen((float) data.getPrimaryColors().y);
-                e.setBlue((float) data.getPrimaryColors().z);
-            }
+          //  if (data.getTransitionType() == TransitionTypes.HARTNELL && data.getCurrentState() == REGENERATING) {
+                e.setRed(0);
+                e.setGreen(0);
+                e.setBlue(0);
+        //    }
         });
     }
 
@@ -119,7 +116,6 @@ public class ClientEvents {
         }
     }
 
-
     @SubscribeEvent
     public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
         Entity viewer = Minecraft.getInstance().getRenderViewEntity();
@@ -130,13 +126,10 @@ public class ClientEvents {
                     float amount = MathHelper.cos(data.getLiving().ticksExisted * 0.02F) * -0.10F;
                     event.setDensity(amount);
                 }
-
-                if (data.getTransitionType() == TransitionTypes.HARTNELL && data.getTicksAnimating() > 0) {
+              //  if (data.getTransitionType() == TransitionTypes.HARTNELL && data.getTicksAnimating() > 0) {
                     event.setCanceled(true);
-                    float opacity = MathHelper.clamp(MathHelper.sin((viewer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
-                    event.setDensity(opacity);
-                }
-
+                    event.setDensity(0.3F);
+              //  }
             });
         }
     }

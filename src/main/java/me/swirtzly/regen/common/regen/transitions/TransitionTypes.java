@@ -19,9 +19,9 @@ import java.util.function.Supplier;
 public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
 
     public static final TransitionTypes FIERY = new TransitionTypes(FieryTransition::new);
-    public static final TransitionTypes HARTNELL = new TransitionTypes(LayFadeTransition::new);
+    public static final TransitionTypes TROUGHTON = new TransitionTypes(TroughtonTransition::new);
     public static IForgeRegistry<TransitionTypes> REGISTRY;
-    public static TransitionTypes[] TYPES = new TransitionTypes[]{FIERY, HARTNELL};
+    public static TransitionTypes[] TYPES = new TransitionTypes[]{FIERY, TROUGHTON};
     //==================================
     private Supplier<TransitionType> supplier;
 
@@ -46,7 +46,7 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
 
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register<TransitionTypes> e) {
-        e.getRegistry().registerAll(FIERY, HARTNELL);
+        e.getRegistry().registerAll(FIERY, TROUGHTON);
     }
 
     public TransitionType create() {
