@@ -2,6 +2,7 @@ package me.swirtzly.regen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.swirtzly.regen.client.RKeybinds;
 import me.swirtzly.regen.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.rendering.layers.HandLayer;
@@ -96,6 +97,8 @@ public class Regeneration {
 
         RenderingRegistry.registerEntityRenderingHandler(REntities.ITEM_OVERRIDE_ENTITY_TYPE.get(), ItemOverrideRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
+
+        RKeybinds.init();
 
         ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "is_open"), (stack, p_call_2_, p_call_3_) -> {
             if (FobWatchItem.getStackTag(stack) == null || !FobWatchItem.getStackTag(stack).contains("is_open")) {

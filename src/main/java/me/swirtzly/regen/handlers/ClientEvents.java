@@ -1,6 +1,7 @@
 package me.swirtzly.regen.handlers;
 
 import me.swirtzly.regen.Regeneration;
+import me.swirtzly.regen.client.RKeybinds;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.regen.RegenCap;
@@ -12,17 +13,22 @@ import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.sound.PlaySoundSourceEvent;
+import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -49,6 +55,8 @@ public class ClientEvents {
     public static void onTickEvent(TickEvent.ClientTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.START)) return;
 
+        RKeybinds.tickKeybinds();
+
         //Clean up our mess we might have made!
         if (Minecraft.getInstance().world == null) {
             if (SkinHandler.PLAYER_SKINS.size() > 0) {
@@ -58,6 +66,11 @@ public class ClientEvents {
                 Regeneration.LOG.warn("Cleared Regeneration texture cache.");
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlaySound(PlaySoundSourceEvent event){
+
     }
 
     @SubscribeEvent
@@ -91,16 +104,16 @@ public class ClientEvents {
             RegenCap.get(player).ifPresent((cap) -> {
                 String warning = null;
 
+                ITextComponent forceKeybind = new TranslationTextComponent(RKeybinds.FORCE_REGEN.getTranslationKey().replace("key.keyboard.", ""));
+
                 switch (cap.getCurrentState()) {
                     case GRACE:
                         RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
-                        //TODO FIX NULL TRANSLATIONS
-                       // warning = new TranslationTextComponent("regeneration.messages.warning.grace", new TranslationTextComponent("ClientUtil.keyBind")).getString();
+                        warning = new TranslationTextComponent("regeneration.messages.warning.grace", forceKeybind.getString()).getString();
                         break;
-
                     case GRACE_CRIT:
                         RenderHelp.renderVig(new Vector3d(1, 0, 0), 0.5F);
-                     //   warning = new TranslationTextComponent("regeneration.messages.warning.grace_critical", "ClientUtil.keyBind").getString();
+                        warning = new TranslationTextComponent("regeneration.messages.warning.grace_critical", forceKeybind.getString()).getString();
                         break;
 
                     case REGENERATING:

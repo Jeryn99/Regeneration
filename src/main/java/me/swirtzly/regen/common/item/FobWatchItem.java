@@ -83,10 +83,6 @@ public class FobWatchItem extends SolidItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 
-        Minecraft.getInstance().deferTask(() -> {
-            Minecraft.getInstance().displayGuiScreen(new PreferencesScreen()); //TODO NO NO
-        });
-
         ItemStack stack = player.getHeldItem(hand);
         IRegen cap = RegenCap.get(player).orElseGet(null);
 
