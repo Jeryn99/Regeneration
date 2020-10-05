@@ -97,7 +97,7 @@ public class PlayerUtil {
     public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
         world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
             if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
-                entity.attackEntityFrom(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
+                entity.attackEntityFrom(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
         });
     }
 

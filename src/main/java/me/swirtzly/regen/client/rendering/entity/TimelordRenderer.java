@@ -11,6 +11,7 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.RConstants;
+import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -61,7 +62,7 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
 
         IRegen data = RegenCap.get(timelordEntity).orElseGet(null);
 
-        if (data.getTicksAnimating() > 100) {
+        if (data.getTicksAnimating() > 100 && data.getTicksAnimating() < 105) {
             TIMELORDS.remove(timelordEntity.getUniqueID());
         }
 
