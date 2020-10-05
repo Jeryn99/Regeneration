@@ -45,6 +45,10 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
         return 0;
     }
 
+    public static TransitionTypes getRandomType() {
+        return TYPES[(int) (System.currentTimeMillis() % TYPES.length)];
+    }
+
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register<TransitionTypes> e) {
         e.getRegistry().registerAll(FIERY, TROUGHTON);

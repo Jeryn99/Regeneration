@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.client.animation.AnimationHandler;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
-import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;

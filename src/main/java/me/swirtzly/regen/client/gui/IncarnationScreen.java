@@ -43,6 +43,7 @@ public class IncarnationScreen extends ContainerScreen {
     private static List<File> skins = null;
     private static int position = 0;
     private static PlayerUtil.SkinType choices = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).getPreferredModel();
+    private static PlayerUtil.SkinType renderChoice = choices;
 
     public IncarnationScreen() {
         super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).inventory, new TranslationTextComponent("Next Incarnation"));
@@ -52,7 +53,7 @@ public class IncarnationScreen extends ContainerScreen {
 
     public static void updateModels() {
         isAlex = skins.get(position).toPath().startsWith(CommonSkin.SKIN_DIRECTORY_ALEX.toPath().toString());
-        //choices = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
+        renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
     }
 
     //TODO Seems to clip out the left arm of the models wear, not a high priority
@@ -168,7 +169,7 @@ public class IncarnationScreen extends ContainerScreen {
         blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize);
         ALEX_MODEL.isChild = false;
         STEVE_MODEL.isChild = false;
-        switch (choices) {
+        switch (renderChoice) {
             case ALEX:
                 drawModelToGui(ALEX_MODEL, matrixStack);
                 break;

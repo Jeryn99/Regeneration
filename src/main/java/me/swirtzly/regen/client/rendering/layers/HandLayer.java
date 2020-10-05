@@ -22,6 +22,17 @@ public class HandLayer extends LayerRenderer {
         super(entityRendererIn);
     }
 
+    public static void renderGlowingHands(LivingEntity livingEntity, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        RegenCap.get(livingEntity).ifPresent(iRegen -> {
+            if (iRegen.areHandsGlowing()) {
+                Vector3d primaryColors = iRegen.getPrimaryColors();
+                Vector3d secondaryColors = iRegen.getSecondaryColors();
+                renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.5F, 0.5F, primaryColors);
+                renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.7F, 0.7F, secondaryColors);
+            }
+        });
+    }
+
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         EntityModel<?> model = getEntityModel();
@@ -40,17 +51,6 @@ public class HandLayer extends LayerRenderer {
                 renderGlowingHands((LivingEntity) entitylivingbaseIn, matrixStackIn, bufferIn, packedLightIn);
                 iRegen.getTransitionType().get().getRenderer().thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
                 matrixStackIn.pop();
-            }
-        });
-    }
-
-    public static void renderGlowingHands(LivingEntity livingEntity, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        RegenCap.get(livingEntity).ifPresent(iRegen -> {
-            if(iRegen.areHandsGlowing()){
-                Vector3d primaryColors = iRegen.getPrimaryColors();
-                Vector3d secondaryColors = iRegen.getSecondaryColors();
-                renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.5F,  0.5F, primaryColors);
-                renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.7F,  0.7F, secondaryColors);
             }
         });
     }

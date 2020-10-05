@@ -9,7 +9,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class RKeybinds {
     public static KeyBinding FORCE_REGEN = new KeyBinding("Force Regeneration", 89, "Regeneration");
-    public static KeyBinding REGEN_GUI = new KeyBinding("Open Preferences", 301, "Regeneration");
+    public static KeyBinding REGEN_GUI = new KeyBinding("Open Preferences", 299, "Regeneration");
 
     public static void init() {
         ClientRegistry.registerKeyBinding(FORCE_REGEN);

@@ -137,7 +137,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public boolean areHandsGlowing() {
-        return areHandsGlowing; //TODO Implement
+        return areHandsGlowing;
     }
 
     @Override

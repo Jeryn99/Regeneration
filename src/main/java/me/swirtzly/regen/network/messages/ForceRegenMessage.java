@@ -2,11 +2,8 @@ package me.swirtzly.regen.network.messages;
 
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
-import me.swirtzly.regen.common.regen.transitions.TransitionType;
-import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -21,9 +18,9 @@ public class ForceRegenMessage {
 
     public static void handle(ForceRegenMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
-           if(cap.getCurrentState() == RegenStates.ALIVE || cap.getCurrentState().isGraceful()){
-               ctx.get().getSender().attackEntityFrom(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
-           }
+            if (cap.getCurrentState() == RegenStates.ALIVE || cap.getCurrentState().isGraceful()) {
+                cap.regen();
+            }
         }));
         ctx.get().setPacketHandled(true);
     }

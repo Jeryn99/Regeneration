@@ -7,9 +7,9 @@ import me.swirtzly.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 
-public class EnglishLang extends LanguageProvider {
+public class EnglishLangGen extends LanguageProvider {
 
-    public EnglishLang(DataGenerator gen) {
+    public EnglishLangGen(DataGenerator gen) {
         super(gen, RConstants.MODID, "en_us");
     }
 
@@ -22,6 +22,7 @@ public class EnglishLang extends LanguageProvider {
         add("source.regen.theft", "%s had their body stolen!");
         add("source.regen.lindos", "%s consumed lindos hormones! They are reborn!");
         add("source.regen.regen_killed", "%s was killed mid-regeneration...");
+        add("source.regen.forced", "%s forced themselves to regenerate!");
 
         //Item Group
         add("itemGroup.regen", "Regeneration");
@@ -73,6 +74,13 @@ public class EnglishLang extends LanguageProvider {
         add("regeneration.messages.fast_forward_cmd_fail", "Nothing to fast forward to.");
         add("regeneration.messages.cant_glow", "You cannot activate a glowing hand without being in a grace period");
 
+        // === Toasts ===
+        add("regeneration.toast.regenerated", "You have regenerated!");
+        add("regeneration.toast.regenerations_left", "%s regenerations left");
+        add("regeneration.toast.enter_critical", "You are going critical");
+        add("regeneration.toast.enter_critical.sub", "%s minutes left...");
+        add("regeneration.toast.timelord", "You are now a Time lord!");
+        add("regeneration.toast.to_use", "You have %s lives now!");
 
         // === GUI Elements ===
         add("regeneration.gui.red", "Red: ");

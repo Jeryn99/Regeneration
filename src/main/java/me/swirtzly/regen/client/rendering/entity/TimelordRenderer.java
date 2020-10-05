@@ -11,7 +11,6 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.RConstants;
-import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

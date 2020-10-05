@@ -2,24 +2,28 @@ package me.swirtzly.regen.handlers;
 
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.client.RKeybinds;
+import me.swirtzly.regen.client.gui.PreferencesScreen;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.regen.RegenCap;
-import me.swirtzly.regen.common.regen.transitions.TransitionType;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
+import me.swirtzly.regen.util.RConstants;
+import me.swirtzly.regen.util.RegenSources;
 import me.swirtzly.regen.util.RenderHelp;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.util.math.vector.Vector3d;
@@ -28,7 +32,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.sound.PlaySoundSourceEvent;
-import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -41,13 +44,29 @@ import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEvents {
 
+    private static final ResourceLocation BUTTON_TEX = new ResourceLocation(RConstants.MODID, "textures/gui/gui_button_customize.png");
+
+
+    @SubscribeEvent
+    public static void onGui(GuiScreenEvent.InitGuiEvent event) {
+        if (event.getGui() instanceof InventoryScreen) {
+            RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
+                if (data.canRegenerate()) {
+                    event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, BUTTON_TEX, 32, 64, (p_213088_1_) -> {
+                        Minecraft.getInstance().displayGuiScreen(new PreferencesScreen());
+                    }));
+                }
+            });
+        }
+    }
+
     @SubscribeEvent
     public static void onRenderPlayer(RenderPlayerEvent.Pre playerEvent) {
         SkinHandler.tick((AbstractClientPlayerEntity) playerEvent.getPlayer());
     }
 
     @SubscribeEvent
-    public static void onRenderHand(RenderHandEvent event){
+    public static void onRenderHand(RenderHandEvent event) {
         RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.getTransitionType().get().getRenderer().firstPersonHand(event));
     }
 
@@ -68,10 +87,7 @@ public class ClientEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void onPlaySound(PlaySoundSourceEvent event){
 
-    }
 
     @SubscribeEvent
     public static void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
@@ -127,7 +143,7 @@ public class ClientEvents {
                         break;
                 }
 
-                if(cap.areHandsGlowing()){
+                if (cap.areHandsGlowing()) {
                     RenderHelp.renderVig(TransitionTypes.FIERY.get().getDefaultPrimaryColor(), 0.5F);
                 }
 

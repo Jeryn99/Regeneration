@@ -12,6 +12,7 @@ import me.swirtzly.regen.util.ClientUtil;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.io.File;
 
@@ -70,7 +71,7 @@ class ClientActing implements Acting {
     @Override
     public void onGoCritical(IRegen cap) {
         if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLiving().getUniqueID())) {
-            //TODO  ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.enter_critical"), new TranslationTextComponent("regeneration.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
+            ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.enter_critical"), new TranslationTextComponent("regeneration.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
             ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getCurrentState() != RegenStates.GRACE_CRIT, 1.0F);
         }
     }

@@ -10,8 +10,8 @@ import net.minecraft.item.Items;
 
 import java.util.function.Consumer;
 
-public class RRecipe extends RecipeProvider {
-    public RRecipe(DataGenerator generatorIn) {
+public class RRecipeGen extends RecipeProvider {
+    public RRecipeGen(DataGenerator generatorIn) {
         super(generatorIn);
     }
 

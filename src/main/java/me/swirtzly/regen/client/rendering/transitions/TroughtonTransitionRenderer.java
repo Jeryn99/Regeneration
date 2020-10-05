@@ -58,14 +58,14 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                 EntityRenderer<? super Entity> entityRenderer = Minecraft.getInstance().getRenderManager().getRenderer(entitylivingbaseIn);
                 PlayerRenderer playerRenderer = (PlayerRenderer) Minecraft.getInstance().getRenderManager().getRenderer(Minecraft.getInstance().player);
                 ResourceLocation headTexture = entityRenderer.getEntityTexture(entitylivingbaseIn);
-              
-                if(entitylivingbaseIn instanceof TimelordEntity){
+
+                if (entitylivingbaseIn instanceof TimelordEntity) {
                     TimelordEntity timelordEntity = (TimelordEntity) entitylivingbaseIn;
                     headTexture = TimelordRenderer.getTimelordFace(timelordEntity);
                     isTimelord = true;
                 }
 
-                if(!isTimelord) {
+                if (!isTimelord) {
                     renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
                     renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
                 }
