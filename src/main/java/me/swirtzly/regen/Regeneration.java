@@ -10,6 +10,7 @@ import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
 import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.item.FobWatchItem;
+import me.swirtzly.regen.common.objects.RBlocks;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.common.objects.RSounds;
@@ -18,6 +19,7 @@ import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
 import me.swirtzly.regen.config.RegenConfig;
+import me.swirtzly.regen.data.BlockstateGen;
 import me.swirtzly.regen.data.EnglishLangGen;
 import me.swirtzly.regen.data.RRecipeGen;
 import me.swirtzly.regen.data.RSoundsGen;
@@ -25,6 +27,8 @@ import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
@@ -114,6 +118,8 @@ public class Regeneration {
             }
             return getEngrave(stack);
         });
+
+        RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.getCutoutMipped());
     }
 
     @SubscribeEvent
@@ -122,6 +128,7 @@ public class Regeneration {
         generator.addProvider(new EnglishLangGen(generator));
         generator.addProvider(new RSoundsGen(generator));
         generator.addProvider(new RRecipeGen(generator));
+        generator.addProvider(new BlockstateGen(generator));
     }
 
     @SubscribeEvent
@@ -129,6 +136,8 @@ public class Regeneration {
         RSounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         REntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
 }

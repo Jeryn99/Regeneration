@@ -447,7 +447,7 @@ public class RegenCap implements IRegen {
             } else if (currentState == RegenStates.POST || currentState == RegenStates.GRACE_CRIT) {
                 currentState = RegenStates.ALIVE;
                 nextTransition.cancel();
-                if(source == RegenSources.REGEN_DMG_FORCED){
+                if (source == RegenSources.REGEN_DMG_FORCED) {
                     triggerRegeneration();
                     return true;
                 }
