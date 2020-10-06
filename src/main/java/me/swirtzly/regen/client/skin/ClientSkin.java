@@ -70,7 +70,7 @@ public class ClientSkin {
         }
         long attr = trendingDir.lastModified();
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
-            FileUtils.deleteDirectory(trendingDir);
+            FileUtils.cleanDirectory(trendingDir);
             Regeneration.LOG.warn("Refreshing Trending skins");
             for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
                 String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");

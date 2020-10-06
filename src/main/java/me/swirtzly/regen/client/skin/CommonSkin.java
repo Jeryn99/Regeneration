@@ -142,7 +142,6 @@ public class CommonSkin {
         long attr = drWhoDir.lastModified();
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(drWhoDir.list()).length == 0) {
             Regeneration.LOG.info("Re-Downloading Internal Skins");
-            FileUtils.cleanDirectory(drWhoDir);
             String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
             String[] links = Regeneration.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
             for (String link : links) {
