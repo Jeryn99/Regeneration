@@ -44,11 +44,20 @@ public class CommonSkin {
     public static File chooseRandomSkin(Random rand, boolean isAlex) {
         File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
         Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
-        if (folderFiles.isEmpty()) {
-            folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
-        }
+        folderFiles.removeIf(file -> !file.getName().endsWith(".png") || !isActuallyAImage(file));
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
+
+    public static boolean isActuallyAImage(File file) {
+        String mimetype = null;
+        try {
+            mimetype = Files.probeContentType(file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mimetype != null && mimetype.split("/")[0].equals("image");
+    }
+
 
     //Get a list of skins from namemc url
     public static ArrayList<String> getSkins(String downloadUrl) throws IOException {
@@ -126,7 +135,7 @@ public class CommonSkin {
 
 
     public static void handleDownloads() throws IOException {
-        if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
+        if (!RegenConfig.SKIN.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
 
         File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
 

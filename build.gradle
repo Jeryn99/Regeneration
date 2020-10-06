@@ -16,9 +16,9 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '3.0'
+version = '1.0.1'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'Regeneration-Beta-'+getDate()
+archivesBaseName = 'Regeneration-1.16.3'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -34,7 +34,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-
+            arg "-mixin.config=regen.mixins.json"
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 

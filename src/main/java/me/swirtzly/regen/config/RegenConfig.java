@@ -12,6 +12,10 @@ public class RegenConfig {
     public static Client CLIENT;
     public static ForgeConfigSpec CLIENT_SPEC;
 
+    public static Skin SKIN;
+    public static ForgeConfigSpec SKIN_SPEC;
+
+
     static {
         Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
@@ -21,26 +25,37 @@ public class RegenConfig {
         Pair<Client, ForgeConfigSpec> specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
         CLIENT_SPEC = specClientPair.getRight();
         CLIENT = specClientPair.getLeft();
+
+        Pair<Skin, ForgeConfigSpec> specSkinPair = new ForgeConfigSpec.Builder().configure(Skin::new);
+        SKIN_SPEC = specSkinPair.getRight();
+        SKIN = specSkinPair.getLeft();
+    }
+
+    public static class Skin {
+        public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
+        public final ForgeConfigSpec.BooleanValue downloadPreviousSkins;
+        public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
+
+        Skin(ForgeConfigSpec.Builder builder) {
+            builder.comment("Skin Settings").push("skin");
+            downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
+            downloadPreviousSkins = builder.comment("Toggle whether the mod downloads your past skins from NameMC").translation("config.regeneration.downloadPreviousSkins").define("downloadPastSkins", true);
+            downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
+            builder.pop();
+        }
     }
 
     public static class Client {
 
         public final ForgeConfigSpec.BooleanValue changeMySkin;
         public final ForgeConfigSpec.BooleanValue changePerspective;
-        public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
-        public final ForgeConfigSpec.BooleanValue downloadPreviousSkins;
-        public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
         public final ForgeConfigSpec.BooleanValue renderTimelordHeadwear;
 
         Client(ForgeConfigSpec.Builder builder) {
-
             builder.comment("Client Regeneration Settings").push("client");
             builder.comment("Skin Settings").push("skin");
             changeMySkin = builder.comment("Disabling this will disable skin changing for you and you will retain your Mojang one").translation("config.regeneration.skins.changemyskin").define("changeMySkin", true);
             changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
-            downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
-            downloadPreviousSkins = builder.comment("Toggle whether the mod downloads your past skins from NameMC").translation("config.regeneration.downloadPreviousSkins").define("downloadPastSkins", true);
-            downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
             builder.comment("Misc Settings").push("misc");
             renderTimelordHeadwear = builder.comment("Toggle whether Timelords second head layers render, as some look good without and some look good with, I just leave this decision up to you").translation("config.regeneration.timelordRenderSecondLayers").define("timelordRenderSecondLayers", true);
             builder.pop();

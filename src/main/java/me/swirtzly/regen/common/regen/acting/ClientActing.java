@@ -1,5 +1,6 @@
 package me.swirtzly.regen.common.regen.acting;
 
+import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.objects.RSounds;
@@ -59,8 +60,9 @@ class ClientActing implements Acting {
                     NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(cap.getNextSkin(), cap.isNextSkinTypeAlex()));
                     return;
                 }
-                File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRNG(), cap.getPreferredModel().isAlex()); //Implement Preferred type
+                File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRNG(), cap.getPreferredModel().isAlex());
                 boolean isAlex = file.getAbsolutePath().contains(CommonSkin.SKIN_DIRECTORY_ALEX.getAbsolutePath());
+                Regeneration.LOG.info("Choosen Skin: " + file);
                 NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(RegenUtil.fileToBytes(file), isAlex));
             } else {
                 SkinHandler.sendResetMessage();

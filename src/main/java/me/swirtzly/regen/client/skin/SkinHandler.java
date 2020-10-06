@@ -3,9 +3,11 @@ package me.swirtzly.regen.client.skin;
 
 import com.google.common.base.MoreObjects;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.SkinMessage;
+import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -14,10 +16,14 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.crash.ReportedException;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,8 +47,10 @@ public class SkinHandler {
             // if these conditions are true, we want to generate and cache the skin
             if (validSkin && !hasPlayerSkin(uuid) || iRegen.getTicksAnimating() >= 140) {
                 NativeImage skinImage = genSkinNative(skin);
-                addPlayerSkin(playerEntity.getUniqueID(), loadImage(skinImage));
-                forceUpdate = true;
+                if(skinImage != null) {
+                    addPlayerSkin(playerEntity.getUniqueID(), loadImage(skinImage));
+                    forceUpdate = true;
+                }
             }
 
             //If the skin is invalid, we want to remove it and revert to Mojang
@@ -94,9 +102,12 @@ public class SkinHandler {
         try {
             return NativeImage.read(new ByteArrayInputStream(skinArray));
         } catch (IOException e) {
-            e.printStackTrace();
+            CrashReport crashreport = CrashReport.makeCrashReport(e, "Regeneration Skin Creation");
+            crashreport = RegenUtil.crashReport(crashreport);
+            CrashReportCategory crashreportcategory = crashreport.makeCategory("Skin Creation");
+            crashreportcategory.addDetail("Skin bytes", Arrays.toString(skinArray));
+            throw new ReportedException(crashreport);
         }
-        return null;
     }
 
     //Set players skin

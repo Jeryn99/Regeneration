@@ -22,7 +22,7 @@ public class ClientSkin {
     public static File USER_STEVE = new File(SKIN_DIRECTORY_STEVE + "/the_past");
 
     public static void downloadPreviousSkins() {
-        if (!RegenConfig.CLIENT.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
+        if (!RegenConfig.SKIN.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
         Regeneration.LOG.warn("Refreshing users past skins");
 
         if (!USER_ALEX.exists()) {
@@ -40,6 +40,12 @@ public class ClientSkin {
         long attr = USER_ALEX.lastModified();
 
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(USER_ALEX.list()).length == 0) {
+            try {
+                FileUtils.cleanDirectory(USER_ALEX);
+                FileUtils.cleanDirectory(USER_STEVE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getInstance().getSession().getPlayerID();
             try {
                 for (String skin : getSkins(url)) {
@@ -53,7 +59,7 @@ public class ClientSkin {
 
 
     public static void downloadTrendingSkins() throws IOException {
-        if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
+        if (!RegenConfig.SKIN.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
         File trendingDir = TRENDING_ALEX;
         if (!trendingDir.exists()) {
             if (trendingDir.mkdirs()) {

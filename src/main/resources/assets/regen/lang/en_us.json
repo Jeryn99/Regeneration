@@ -80,6 +80,7 @@
   "regeneration.toast.regenerations_left": "%s regenerations left",
   "regeneration.toast.timelord": "You are now a Time lord!",
   "regeneration.toast.to_use": "You have %s lives now!",
+  "source.regen.forced": "%s forced themselves to regenerate!",
   "source.regen.lindos": "%s consumed lindos hormones! They are reborn!",
   "source.regen.regen_crit": "%s died from holding in their regeneration for too long",
   "source.regen.regen_energy": "%s was blasted by Regeneration Energy!",
