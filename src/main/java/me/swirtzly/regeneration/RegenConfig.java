@@ -75,6 +75,7 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue genCrater;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
         public final ForgeConfigSpec.ConfigValue<String> skinDir;
+        public final ForgeConfigSpec.BooleanValue mobsHaveRegens;
 
 /*
         public final ForgeConfigSpec.ConfigValue<Integer> confessionDialSpawnChance;
@@ -88,6 +89,7 @@ public class RegenConfig {
             regenFireImmune = builder.comment("Players are immune to fire damage while regenerating").translation("config.regeneration.regeneration_fire_immunity").define("fireImmunity", false);
             infiniteRegeneration = builder.comment("config.regeneration.infinite_regenerations").translation("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.").define("infiniteRegeneration", false);
             sendRegenDeathMessages = builder.comment("Sends a message to chat to say that a player is regenerating, and the reason for it").translation("config.regeneration.regen_messages").define("sendRegenDeathMessages", true);
+            mobsHaveRegens = builder.comment("Allows mobs to have Regenerations").translation("config.regeneration.regen_messages").define("mobsHaveRegens", true);
             skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './', the path MUST NOT end in /").translation("config.regeneration.skins.skindir").define("skinDir", ".");
 
 /*

@@ -4,6 +4,7 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
+import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
@@ -45,109 +46,116 @@ import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
  */
 public class RegenCap implements IRegen {
 
-	@CapabilityInject(IRegen.class)
-	public static final Capability<IRegen> CAPABILITY = null;
-	public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(Regeneration.MODID, "regeneration");
-	private final LivingEntity player;
-	private final StateManager stateManager;
-	private ResourceLocation traitLocation = new ResourceLocation(Regeneration.MODID, "boring");
-	private String deathSource = "";
-	private boolean didSetup = false, traitActive = true;
-	private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
+    @CapabilityInject(IRegen.class)
+    public static final Capability<IRegen> CAPABILITY = null;
+    public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(Regeneration.MODID, "regeneration");
+    private final LivingEntity player;
+    private final StateManager stateManager;
+    private ResourceLocation traitLocation = new ResourceLocation(Regeneration.MODID, "boring");
+    private String deathSource = "";
+    private boolean didSetup = false, traitActive = true;
+    private PlayerUtil.RegenState state = PlayerUtil.RegenState.ALIVE;
 
-	private String encodedSkin = NO_SKIN;
-	private String nextSkin = NO_SKIN;
+    private String encodedSkin = NO_SKIN;
+    private String nextSkin = NO_SKIN;
 
-	private RegenTypes regenType = RegenTypes.FIERY;
+    private RegenTypes regenType = RegenTypes.FIERY;
 
-	private HandSide cutOffHand = HandSide.LEFT;
-	private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
-	private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
-	private PlayerUtil.EnumChoices preferredModel = PlayerUtil.EnumChoices.EITHER;
+    private HandSide cutOffHand = HandSide.LEFT;
+    private SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
+    private SkinInfo.SkinType nextSkinType = SkinInfo.SkinType.ALEX;
+    private PlayerUtil.EnumChoices preferredModel = PlayerUtil.EnumChoices.EITHER;
 
-	private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
-	private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
-	private int ticksAnimating = 0, regenerationsLeft = 0;
-	private boolean hasDroppedHand = false, syncingToJar = false;
+    private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
+    private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
+    private int ticksAnimating = 0, regenerationsLeft = 0;
+    private boolean hasDroppedHand = false, syncingToJar = false;
 
-	/**
-	 * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client. This property is synced over to the client to solve this
-	 */
-	private boolean handsAreGlowingClient;
+    /**
+     * WHY THIS IS A SEPARATE FIELD: the hands are glowing if <code>stateManager.handGlowTimer.getTransition() == Transition.HAND_GLOW_TRIGGER</code>, however the state manager isn't available on the client. This property is synced over to the client to solve this
+     */
+    private boolean handsAreGlowingClient;
 
 
-	public RegenCap() {
-		this.player = null;
-		this.stateManager = null;
-	}
+    public RegenCap() {
+        this.player = null;
+        this.stateManager = null;
+    }
 
-	public RegenCap(LivingEntity player) {
-		this.player = player;
-		if (!player.world.isRemote)
-			this.stateManager = new StateManager();
-		else
-			this.stateManager = null;
-	}
+    public RegenCap(LivingEntity player) {
+        this.player = player;
+        if (!player.world.isRemote)
+            this.stateManager = new StateManager();
+        else
+            this.stateManager = null;
+    }
 
     @Nonnull
     public static LazyOptional<IRegen> get(Entity player) {
         return player.getCapability(RegenCap.CAPABILITY, null);
-	}
-	
-	@Override
-	public void tick() {
-		if (!didSetup && player.world.isRemote) {
-			if (player.world.dimension.getType() != null && player.world.dimension.getType().getRegistryName() != null) {
-				NetworkDispatcher.INSTANCE.sendToServer(new SyncDataMessage(player));
-				didSetup = true;
-			}
-		}
+    }
 
-		if (PlayerUtil.isAboveZeroGrid(player) && state == PlayerUtil.RegenState.POST) {
-			for (Effect potion : PlayerUtil.POTIONS) {
-				player.removePotionEffect(potion);
-			}
-		}
+    @Override
+    public void tick() {
+        if (!didSetup && player.world.isRemote) {
+            if (player.world.dimension.getType() != null && player.world.dimension.getType().getRegistryName() != null) {
+                NetworkDispatcher.INSTANCE.sendToServer(new SyncDataMessage(player));
+                didSetup = true;
+            }
+        }
+
+        if (!RegenConfig.COMMON.mobsHaveRegens.get()) {
+            boolean isValid = getLivingEntity() instanceof TimelordEntity || getLivingEntity() instanceof PlayerEntity;
+            if(!isValid){
+                setRegenerationsLeft(0);
+            }
+        }
+
+        if (PlayerUtil.isAboveZeroGrid(player) && state == PlayerUtil.RegenState.POST) {
+            for (Effect potion : PlayerUtil.POTIONS) {
+                player.removePotionEffect(potion);
+            }
+        }
 
         if (!player.world.isRemote) {
-			if (isSyncingToJar() && ticksAnimating >= 250) {
+            if (isSyncingToJar() && ticksAnimating >= 250) {
                 setSyncingFromJar(false);
                 ticksAnimating = 0;
                 synchronise();
             } else {
                 if (isSyncingToJar()) {
-					PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
-				}
-			}
-		}
+                    PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
+                }
+            }
+        }
 
-		if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
-			ticksAnimating = 0;
-		} else {
-			ticksAnimating++;
-		}
+        if (state != PlayerUtil.RegenState.REGENERATING && !isSyncingToJar()) {
+            ticksAnimating = 0;
+        } else {
+            ticksAnimating++;
+        }
 
-		if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
-			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
-			Regeneration.LOG.info("Correcting the amount of Regenerations {} has, from {} to {}", player.getName(), getRegenerationsLeft(), RegenConfig.COMMON.regenCapacity.get());
-		}
+        if (getRegenerationsLeft() > RegenConfig.COMMON.regenCapacity.get() && !RegenConfig.COMMON.infiniteRegeneration.get()) {
+            regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
+            Regeneration.LOG.info("Correcting the amount of Regenerations {} has, from {} to {}", player.getName(), getRegenerationsLeft(), RegenConfig.COMMON.regenCapacity.get());
+        }
 
-		TraitManager.getDnaEntry(getTrait()).onUpdate(this);
+        TraitManager.getDnaEntry(getTrait()).onUpdate(this);
 
-		if (!player.world.isRemote && state != PlayerUtil.RegenState.ALIVE) { // ticking only on the server for simplicity
-			if (stateManager != null) {
-				stateManager.tick();
-			}
-		}
+        if (!player.world.isRemote && state != PlayerUtil.RegenState.ALIVE) { // ticking only on the server for simplicity
+            if (stateManager != null) {
+                stateManager.tick();
+            }
+        }
 
-		if (state == PlayerUtil.RegenState.REGENERATING) {
-			regenType.create().onUpdateMidRegen(this);
-		}
+        if (state == PlayerUtil.RegenState.REGENERATING) {
+            regenType.create().onUpdateMidRegen(this);
+        }
 
-	}
-	
-	@Override
-	public void synchronise() {
+    }
+
+    @Override
+    public void synchronise() {
         if (player != null && player.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
 
         handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
@@ -155,333 +163,333 @@ public class RegenCap implements IRegen {
         nbt.remove("stateManager");
         NetworkDispatcher.sendPacketToDimension(player.dimension, new SyncRegenDataToClientMessage(player, nbt));
     }
-	
-	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT nbt = new CompoundNBT();
-		nbt.putString("state", state.toString());
-		nbt.putInt("regenerationsLeft", regenerationsLeft);
-		nbt.put("style", getStyle());
-		if (regenType != null) {
-			nbt.putString("regen_type", regenType.getRegistryName().toString());
-		} else {
-			regenType = RegenTypes.FIERY;
-		}
-		nbt.putString("encoded_data", encodedSkin);
-		nbt.putString("skinType", skinType.name());
-		nbt.putString("preferredModel", preferredModel.name());
-		nbt.putBoolean("handsAreGlowing", handsAreGlowingClient);
-		if (traitLocation != null) {
-			nbt.putString("regen_dna", traitLocation.toString());
-		} else {
-			nbt.putString("regen_dna", TraitManager.DNA_BORING.getRegistryName().toString());
-		}
-		nbt.putBoolean("traitActive", traitActive);
-		nbt.putInt("ticks_animating", ticksAnimating);
-		nbt.putBoolean("jar", syncingToJar);
-		if (!player.world.isRemote) nbt.put("stateManager", stateManager.serializeNBT());
-		nbt.putString("nextSkinType", nextSkinType.name());
-		nbt.putString("nextSkin", nextSkin);
-		nbt.putString("cutOffHand", cutOffHand.name());
-		nbt.putBoolean("hasCutOff", hasDroppedHand);
-		return nbt;
-	}
-	
-	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
-		regenerationsLeft = Math.min(RegenConfig.COMMON.regenCapacity.get(), nbt.getInt(nbt.contains("livesLeft") ? "livesLeft" : "regenerationsLeft"));
-
-		if (nbt.contains("skinType")) {
-			setSkinType(nbt.getString("skinType"));
-		} else {
-			setSkinType(RegenUtil.isSlimSkin(player.getUniqueID()) ? "ALEX" : "STEVE");
-		}
-
-		if (nbt.contains("preferredModel")) {
-			setPreferredModel(nbt.getString("preferredModel"));
-		} else {
-			setPreferredModel("ALEX");
-		}
-
-		if (nbt.contains("regenerationsLeft")) {
-			regenerationsLeft = nbt.getInt("regenerationsLeft");
-		}
-
-		if (nbt.contains("traitActive")) {
-			setDnaActive(nbt.getBoolean("traitAlive"));
-		} else {
-			setDnaActive(true);
-		}
-
-		if (nbt.contains("regen_dna")) {
-			setTrait(new ResourceLocation(nbt.getString("regen_dna")));
-		} else {
-			setTrait(TraitManager.DNA_BORING.getRegistryName());
-		}
-
-		if (nbt.contains("handsAreGlowing")) {
-			handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
-		}
-
-		if (nbt.contains("ticks_animating")) {
-			ticksAnimating = nbt.getInt("ticks_animating");
-		}
-
-		// v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
-		setStyle((CompoundNBT) nbt.get("style"));
-
-		if (nbt.contains("regen_type")) {
-			setRegenType(RegenTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString("regen_type"))));
-		}
-
-		state = nbt.contains("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
-
-
-		setEncodedSkin(nbt.getString("encoded_data"));
-
-		if (nbt.contains("stateManager")) if (stateManager != null) {
-			stateManager.deserializeNBT((CompoundNBT) nbt.get("stateManager"));
-		}
-
-		if (nbt.contains("jar")) {
-			syncingToJar = nbt.getBoolean("jar");
-		}
-
-		if (nbt.contains("nextSkin")) {
-			nextSkin = nbt.getString("nextSkin");
-		}
-		if (nbt.contains("nextSkinType")) {
-			nextSkinType = SkinInfo.SkinType.valueOf(nbt.getString("nextSkinType"));
-		}
-
-		if (nbt.contains("cutOffhand")) {
-			cutOffHand = HandSide.valueOf(nbt.getString("cutOffHand"));
-		}
-
-		if (nbt.contains("hasCutOff")) {
-			hasDroppedHand = nbt.getBoolean("hasCutOff");
-		}
-	}
-	
-	@Override
-	public int getRegenerationsLeft() {
-		return regenerationsLeft;
-	}
-	
-	@Deprecated
-	@Override
-	public void setRegenerationsLeft(int amount) {
-		regenerationsLeft = amount;
-	}
-	
-	@Override
-	public LivingEntity getLivingEntity() {
-		return player;
-	}
 
     @Override
-	public String getEncodedSkin() {
-		return encodedSkin;
-	}
-
-	@Override
-	public void setEncodedSkin(String string) {
-		encodedSkin = string;
-	}
-	
-	@Override
-	public CompoundNBT getStyle() {
-		CompoundNBT nbt = new CompoundNBT();
-		nbt.putFloat("PrimaryRed", primaryRed);
-		nbt.putFloat("PrimaryGreen", primaryGreen);
-		nbt.putFloat("PrimaryBlue", primaryBlue);
-
-		nbt.putFloat("SecondaryRed", secondaryRed);
-		nbt.putFloat("SecondaryGreen", secondaryGreen);
-		nbt.putFloat("SecondaryBlue", secondaryBlue);
-		return nbt;
-	}
-	
-	@Override
-	public void setStyle(CompoundNBT nbt) {
-		primaryRed = nbt.getFloat("PrimaryRed");
-		primaryGreen = nbt.getFloat("PrimaryGreen");
-		primaryBlue = nbt.getFloat("PrimaryBlue");
-
-		secondaryRed = nbt.getFloat("SecondaryRed");
-		secondaryGreen = nbt.getFloat("SecondaryGreen");
-		secondaryBlue = nbt.getFloat("SecondaryBlue");
-	}
-	
-	@Override
-	public Vec3d getPrimaryColor() {
-		return new Vec3d(primaryRed, primaryGreen, primaryBlue);
-	}
-	
-	@Override
-	public Vec3d getSecondaryColor() {
-		return new Vec3d(secondaryRed, secondaryGreen, secondaryBlue);
-	}
-	
-	@Override
-	public void receiveRegenerations(int amount) {
-		if (RegenConfig.COMMON.infiniteRegeneration.get())
-			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
-		else
-			regenerationsLeft += amount;
-		synchronise();
-	}
-	
-	@Override
-	public void extractRegeneration(int amount) {
-		if (RegenConfig.COMMON.infiniteRegeneration.get())
-			regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
-		else
-			regenerationsLeft -= amount;
-		synchronise();
-	}
-	
-	@Override
-	public SkinInfo.SkinType getSkinType() {
-		return skinType;
-	}
-	
-	@Override
-	public void setSkinType(String skinType) {
-		this.skinType = SkinInfo.SkinType.valueOf(skinType);
-	}
-
-	@Override
-	public PlayerUtil.EnumChoices getPreferredModel() {
-		return preferredModel;
-	}
-	
-	@Override
-	public void setPreferredModel(String skinType) {
-		this.preferredModel = PlayerUtil.EnumChoices.valueOf(skinType);
-	}
-	
-	@Override
-	public boolean areHandsGlowing() {
-		return handsAreGlowingClient;
-	}
-	
-	@Override
-	public String getDeathSource() {
-		return deathSource;
-	}
-	
-	@Override
-	public void setDeathSource(String source) {
-		deathSource = source;
-	}
-
-	@Override
-	public ResourceLocation getTrait() {
-		return traitLocation;
-	}
-
-	@Override
-	public void setTrait(ResourceLocation resgitryName) {
-		this.traitLocation = resgitryName;
-	}
-	
-	@Override
-	public boolean isDnaActive() {
-		return traitActive;
-	}
-	
-	@Override
-	public void setDnaActive(boolean alive) {
-		traitActive = alive;
-	}
-	
-	@Override
-	public int getAnimationTicks() {
-		return ticksAnimating;
-	}
-	
-	@Override
-	public void setAnimationTicks(int ticks) {
-		ticksAnimating = ticks;
-	}
-	
-	@Override
-	public void setSyncingFromJar(boolean syncing) {
-		syncingToJar = syncing;
-	}
-	
-	@Override
-	public boolean isSyncingToJar() {
-		return syncingToJar;
-	}
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putString("state", state.toString());
+        nbt.putInt("regenerationsLeft", regenerationsLeft);
+        nbt.put("style", getStyle());
+        if (regenType != null) {
+            nbt.putString("regen_type", regenType.getRegistryName().toString());
+        } else {
+            regenType = RegenTypes.FIERY;
+        }
+        nbt.putString("encoded_data", encodedSkin);
+        nbt.putString("skinType", skinType.name());
+        nbt.putString("preferredModel", preferredModel.name());
+        nbt.putBoolean("handsAreGlowing", handsAreGlowingClient);
+        if (traitLocation != null) {
+            nbt.putString("regen_dna", traitLocation.toString());
+        } else {
+            nbt.putString("regen_dna", TraitManager.DNA_BORING.getRegistryName().toString());
+        }
+        nbt.putBoolean("traitActive", traitActive);
+        nbt.putInt("ticks_animating", ticksAnimating);
+        nbt.putBoolean("jar", syncingToJar);
+        if (!player.world.isRemote) nbt.put("stateManager", stateManager.serializeNBT());
+        nbt.putString("nextSkinType", nextSkinType.name());
+        nbt.putString("nextSkin", nextSkin);
+        nbt.putString("cutOffHand", cutOffHand.name());
+        nbt.putBoolean("hasCutOff", hasDroppedHand);
+        return nbt;
+    }
 
     @Override
-	public SkinInfo.SkinType getNextSkinType() {
-		return nextSkinType;
-	}
+    public void deserializeNBT(CompoundNBT nbt) {
+        regenerationsLeft = Math.min(RegenConfig.COMMON.regenCapacity.get(), nbt.getInt(nbt.contains("livesLeft") ? "livesLeft" : "regenerationsLeft"));
+
+        if (nbt.contains("skinType")) {
+            setSkinType(nbt.getString("skinType"));
+        } else {
+            setSkinType(RegenUtil.isSlimSkin(player.getUniqueID()) ? "ALEX" : "STEVE");
+        }
+
+        if (nbt.contains("preferredModel")) {
+            setPreferredModel(nbt.getString("preferredModel"));
+        } else {
+            setPreferredModel("ALEX");
+        }
+
+        if (nbt.contains("regenerationsLeft")) {
+            regenerationsLeft = nbt.getInt("regenerationsLeft");
+        }
+
+        if (nbt.contains("traitActive")) {
+            setDnaActive(nbt.getBoolean("traitAlive"));
+        } else {
+            setDnaActive(true);
+        }
+
+        if (nbt.contains("regen_dna")) {
+            setTrait(new ResourceLocation(nbt.getString("regen_dna")));
+        } else {
+            setTrait(TraitManager.DNA_BORING.getRegistryName());
+        }
+
+        if (nbt.contains("handsAreGlowing")) {
+            handsAreGlowingClient = nbt.getBoolean("handsAreGlowing");
+        }
+
+        if (nbt.contains("ticks_animating")) {
+            ticksAnimating = nbt.getInt("ticks_animating");
+        }
+
+        // v1.3+ has a sub-tag 'style' for styles. If it exists we pull the data from this tag, otherwise we pull it from the parent tag
+        setStyle((CompoundNBT) nbt.get("style"));
+
+        if (nbt.contains("regen_type")) {
+            setRegenType(RegenTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString("regen_type"))));
+        }
+
+        state = nbt.contains("state") ? PlayerUtil.RegenState.valueOf(nbt.getString("state")) : PlayerUtil.RegenState.ALIVE; // I need to check for versions before the new state-ticking system
+
+
+        setEncodedSkin(nbt.getString("encoded_data"));
+
+        if (nbt.contains("stateManager")) if (stateManager != null) {
+            stateManager.deserializeNBT((CompoundNBT) nbt.get("stateManager"));
+        }
+
+        if (nbt.contains("jar")) {
+            syncingToJar = nbt.getBoolean("jar");
+        }
+
+        if (nbt.contains("nextSkin")) {
+            nextSkin = nbt.getString("nextSkin");
+        }
+        if (nbt.contains("nextSkinType")) {
+            nextSkinType = SkinInfo.SkinType.valueOf(nbt.getString("nextSkinType"));
+        }
+
+        if (nbt.contains("cutOffhand")) {
+            cutOffHand = HandSide.valueOf(nbt.getString("cutOffHand"));
+        }
+
+        if (nbt.contains("hasCutOff")) {
+            hasDroppedHand = nbt.getBoolean("hasCutOff");
+        }
+    }
 
     @Override
-	public void setNextSkinType(SkinInfo.SkinType skinType) {
-		nextSkinType = skinType;
-	}
+    public int getRegenerationsLeft() {
+        return regenerationsLeft;
+    }
+
+    @Deprecated
+    @Override
+    public void setRegenerationsLeft(int amount) {
+        regenerationsLeft = amount;
+    }
 
     @Override
-	public String getNextSkin() {
-		return nextSkin;
-	}
+    public LivingEntity getLivingEntity() {
+        return player;
+    }
 
     @Override
-	public void setNextSkin(String encodedSkin) {
-		nextSkin = encodedSkin;
-	}
+    public String getEncodedSkin() {
+        return encodedSkin;
+    }
 
     @Override
-	public boolean hasDroppedHand() {
-		return hasDroppedHand;
-	}
+    public void setEncodedSkin(String string) {
+        encodedSkin = string;
+    }
 
     @Override
-	public void setDroppedHand(boolean droppedHand) {
-		hasDroppedHand = droppedHand;
-	}
+    public CompoundNBT getStyle() {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putFloat("PrimaryRed", primaryRed);
+        nbt.putFloat("PrimaryGreen", primaryGreen);
+        nbt.putFloat("PrimaryBlue", primaryBlue);
 
-	@Override
-	public HandSide getCutoffHand() {
-		return cutOffHand;
-	}
+        nbt.putFloat("SecondaryRed", secondaryRed);
+        nbt.putFloat("SecondaryGreen", secondaryGreen);
+        nbt.putFloat("SecondaryBlue", secondaryBlue);
+        return nbt;
+    }
 
-	@Override
-	public void setCutOffHand(HandSide side) {
-		cutOffHand = side;
-	}
+    @Override
+    public void setStyle(CompoundNBT nbt) {
+        primaryRed = nbt.getFloat("PrimaryRed");
+        primaryGreen = nbt.getFloat("PrimaryGreen");
+        primaryBlue = nbt.getFloat("PrimaryBlue");
 
-	@Override
-	public IStateManager getStateManager() {
-		return stateManager;
-	}
+        secondaryRed = nbt.getFloat("SecondaryRed");
+        secondaryGreen = nbt.getFloat("SecondaryGreen");
+        secondaryBlue = nbt.getFloat("SecondaryBlue");
+    }
 
-	@Override
-	public PlayerUtil.RegenState getState() {
-		return state;
-	}
+    @Override
+    public Vec3d getPrimaryColor() {
+        return new Vec3d(primaryRed, primaryGreen, primaryBlue);
+    }
 
-	@Override
-	public RegenTypes getRegenType() {
-		return regenType;
-	}
+    @Override
+    public Vec3d getSecondaryColor() {
+        return new Vec3d(secondaryRed, secondaryGreen, secondaryBlue);
+    }
 
-	@Override
-	public void setRegenType(RegenTypes type) {
-		this.regenType = type;
-	}
+    @Override
+    public void receiveRegenerations(int amount) {
+        if (RegenConfig.COMMON.infiniteRegeneration.get())
+            regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
+        else
+            regenerationsLeft += amount;
+        synchronise();
+    }
 
-	@Override
-	public void triggerRegeneration() {
+    @Override
+    public void extractRegeneration(int amount) {
+        if (RegenConfig.COMMON.infiniteRegeneration.get())
+            regenerationsLeft = RegenConfig.COMMON.regenCapacity.get();
+        else
+            regenerationsLeft -= amount;
+        synchronise();
+    }
+
+    @Override
+    public SkinInfo.SkinType getSkinType() {
+        return skinType;
+    }
+
+    @Override
+    public void setSkinType(String skinType) {
+        this.skinType = SkinInfo.SkinType.valueOf(skinType);
+    }
+
+    @Override
+    public PlayerUtil.EnumChoices getPreferredModel() {
+        return preferredModel;
+    }
+
+    @Override
+    public void setPreferredModel(String skinType) {
+        this.preferredModel = PlayerUtil.EnumChoices.valueOf(skinType);
+    }
+
+    @Override
+    public boolean areHandsGlowing() {
+        return handsAreGlowingClient;
+    }
+
+    @Override
+    public String getDeathSource() {
+        return deathSource;
+    }
+
+    @Override
+    public void setDeathSource(String source) {
+        deathSource = source;
+    }
+
+    @Override
+    public ResourceLocation getTrait() {
+        return traitLocation;
+    }
+
+    @Override
+    public void setTrait(ResourceLocation resgitryName) {
+        this.traitLocation = resgitryName;
+    }
+
+    @Override
+    public boolean isDnaActive() {
+        return traitActive;
+    }
+
+    @Override
+    public void setDnaActive(boolean alive) {
+        traitActive = alive;
+    }
+
+    @Override
+    public int getAnimationTicks() {
+        return ticksAnimating;
+    }
+
+    @Override
+    public void setAnimationTicks(int ticks) {
+        ticksAnimating = ticks;
+    }
+
+    @Override
+    public void setSyncingFromJar(boolean syncing) {
+        syncingToJar = syncing;
+    }
+
+    @Override
+    public boolean isSyncingToJar() {
+        return syncingToJar;
+    }
+
+    @Override
+    public SkinInfo.SkinType getNextSkinType() {
+        return nextSkinType;
+    }
+
+    @Override
+    public void setNextSkinType(SkinInfo.SkinType skinType) {
+        nextSkinType = skinType;
+    }
+
+    @Override
+    public String getNextSkin() {
+        return nextSkin;
+    }
+
+    @Override
+    public void setNextSkin(String encodedSkin) {
+        nextSkin = encodedSkin;
+    }
+
+    @Override
+    public boolean hasDroppedHand() {
+        return hasDroppedHand;
+    }
+
+    @Override
+    public void setDroppedHand(boolean droppedHand) {
+        hasDroppedHand = droppedHand;
+    }
+
+    @Override
+    public HandSide getCutoffHand() {
+        return cutOffHand;
+    }
+
+    @Override
+    public void setCutOffHand(HandSide side) {
+        cutOffHand = side;
+    }
+
+    @Override
+    public IStateManager getStateManager() {
+        return stateManager;
+    }
+
+    @Override
+    public PlayerUtil.RegenState getState() {
+        return state;
+    }
+
+    @Override
+    public RegenTypes getRegenType() {
+        return regenType;
+    }
+
+    @Override
+    public void setRegenType(RegenTypes type) {
+        this.regenType = type;
+    }
+
+    @Override
+    public void triggerRegeneration() {
         if (player.world.isRemote)
             throw new IllegalStateException("Triggering regeneration via capability instance on the client side");
-		stateManager.triggerRegeneration();
-	}
+        stateManager.triggerRegeneration();
+    }
 
     /**
      * ONLY EXISTS ON THE SERVER SIDE
@@ -502,121 +510,121 @@ public class RegenCap implements IRegen {
                 throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
             };
             transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_START, err);
-			transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, err);
-		}
+            transitionCallbacks.put(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, err);
+        }
 
         @SuppressWarnings("deprecation")
-		private void scheduleTransitionInTicks(PlayerUtil.RegenState.Transition transition, long inTicks) {
+        private void scheduleTransitionInTicks(PlayerUtil.RegenState.Transition transition, long inTicks) {
             if (nextTransition != null && nextTransition.getTicksLeft() > 0)
                 throw new IllegalStateException("Overwriting non-completed/cancelled transition: " + "\n Attempted Transition: " + transition.name() + "\n Current: " + nextTransition.transition.name() + "\n Affected Player: " + player.getName());
 
             if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START || transition == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER)
                 throw new IllegalStateException("Can't use HAND_GLOW_* transitions as state transitions");
 
-			nextTransition = new RegenerationScheduledAction(transition, player, transitionCallbacks.get(transition), inTicks);
-		}
-		
-		private void scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition transition, long inSeconds) {
-			scheduleTransitionInTicks(transition, inSeconds * 20);
-		}
-		
-		@SuppressWarnings("deprecation")
-		private void scheduleNextHandGlow() {
+            nextTransition = new RegenerationScheduledAction(transition, player, transitionCallbacks.get(transition), inTicks);
+        }
+
+        private void scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition transition, long inSeconds) {
+            scheduleTransitionInTicks(transition, inSeconds * 20);
+        }
+
+        @SuppressWarnings("deprecation")
+        private void scheduleNextHandGlow() {
             if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
                 throw new IllegalStateException("Overwriting running hand-glow timer with new next hand glow");
-			handGlowTimer = new RegenerationScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.COMMON.handGlowInterval.get() * 20);
-			synchronise();
-		}
-		
-		@SuppressWarnings("deprecation")
-		private void scheduleHandGlowTrigger() {
+            handGlowTimer = new RegenerationScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_START, player, this::scheduleHandGlowTrigger, RegenConfig.COMMON.handGlowInterval.get() * 20);
+            synchronise();
+        }
+
+        @SuppressWarnings("deprecation")
+        private void scheduleHandGlowTrigger() {
             if (state.isGraceful() && handGlowTimer.getTicksLeft() > 0)
                 throw new IllegalStateException("Overwriting running hand-glow timer with trigger timer prematurely");
-			handGlowTimer = new RegenerationScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
+            handGlowTimer = new RegenerationScheduledAction(PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER, player, this::triggerRegeneration, RegenConfig.COMMON.handGlowTriggerDelay.get() * 20);
             ActingForwarder.onHandsStartGlowing(RegenCap.this);
-			synchronise();
-		}
-		
-		@Override
-		public boolean onKilled(DamageSource source) {
-			
-			if (source == DamageSource.IN_WALL || source == DamageSource.CRAMMING) {
-				return false;
-			}
-			
-			if (state == PlayerUtil.RegenState.ALIVE) {
-				if (!canRegenerate()) // that's too bad :(
-					return false;
-				
-				// We're entering grace period...
-				scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
-				scheduleHandGlowTrigger();
-				
-				state = PlayerUtil.RegenState.GRACE;
-				synchronise();
-                ActingForwarder.onEnterGrace(RegenCap.this);
-				return true;
+            synchronise();
+        }
 
-			} else if (state == PlayerUtil.RegenState.GRACE || state == PlayerUtil.RegenState.GRACE_CRIT) {
-				
-				// We're being forced to regenerate...
-				triggerRegeneration();
-				return true;
-				
-			} else if (state == PlayerUtil.RegenState.REGENERATING) {
-				
-				// We've been killed mid regeneration!
-				nextTransition.cancel(); // ... cancel the finishing of the regeneration
-				midSequenceKill();
-				return false;
-				
-			} else if (state == PlayerUtil.RegenState.POST) {
-				state = PlayerUtil.RegenState.ALIVE;
-				nextTransition.cancel();
-				midSequenceKill();
-				return false;
-			} else
-				throw new IllegalStateException("Unknown state: " + state);
-		}
-		
-		@Override
-		public void onPunchEntity(LivingHurtEvent event) {
-			LivingEntity entity = event.getEntityLiving();
-			// We're healing mobs...
-			if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && player.isSneaking()) { // ... check if we're in grace and if the mob needs health
-				float healthNeeded = entity.getMaxHealth() - entity.getHealth();
-				entity.heal(healthNeeded);
-				if (player instanceof PlayerEntity) {
-					PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.healed", entity.getName()), true);
-				}
-				event.setAmount(0.0F);
-				player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
-			}
-		}
-		
-		@Override
-		public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-			if (getState().isGraceful() && areHandsGlowing()) {
-				
-				BlockState block = e.getWorld().getBlockState(e.getPos());
-				
-				if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_BLOCK) {
-					e.getWorld().playSound(null, e.getPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
-				}
-				
-				handGlowTimer.cancel();
-				scheduleNextHandGlow();
-				if (!player.world.isRemote) {
-					if (player instanceof PlayerEntity) {
-						TriggerManager.CHANGE_REFUSAL.trigger((ServerPlayerEntity) player);
-						PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.regen_delayed"), true);
-					}
-				}
+        @Override
+        public boolean onKilled(DamageSource source) {
+
+            if (source == DamageSource.IN_WALL || source == DamageSource.CRAMMING) {
+                return false;
+            }
+
+            if (state == PlayerUtil.RegenState.ALIVE) {
+                if (!canRegenerate()) // that's too bad :(
+                    return false;
+
+                // We're entering grace period...
+                scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
+                scheduleHandGlowTrigger();
+
+                state = PlayerUtil.RegenState.GRACE;
+                synchronise();
+                ActingForwarder.onEnterGrace(RegenCap.this);
+                return true;
+
+            } else if (state == PlayerUtil.RegenState.GRACE || state == PlayerUtil.RegenState.GRACE_CRIT) {
+
+                // We're being forced to regenerate...
+                triggerRegeneration();
+                return true;
+
+            } else if (state == PlayerUtil.RegenState.REGENERATING) {
+
+                // We've been killed mid regeneration!
+                nextTransition.cancel(); // ... cancel the finishing of the regeneration
+                midSequenceKill();
+                return false;
+
+            } else if (state == PlayerUtil.RegenState.POST) {
+                state = PlayerUtil.RegenState.ALIVE;
+                nextTransition.cancel();
+                midSequenceKill();
+                return false;
+            } else
+                throw new IllegalStateException("Unknown state: " + state);
+        }
+
+        @Override
+        public void onPunchEntity(LivingHurtEvent event) {
+            LivingEntity entity = event.getEntityLiving();
+            // We're healing mobs...
+            if (state.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && player.isSneaking()) { // ... check if we're in grace and if the mob needs health
+                float healthNeeded = entity.getMaxHealth() - entity.getHealth();
+                entity.heal(healthNeeded);
+                if (player instanceof PlayerEntity) {
+                    PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.healed", entity.getName()), true);
+                }
+                event.setAmount(0.0F);
+                player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
+            }
+        }
+
+        @Override
+        public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
+            if (getState().isGraceful() && areHandsGlowing()) {
+
+                BlockState block = e.getWorld().getBlockState(e.getPos());
+
+                if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_BLOCK) {
+                    e.getWorld().playSound(null, e.getPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
+                }
+
+                handGlowTimer.cancel();
+                scheduleNextHandGlow();
+                if (!player.world.isRemote) {
+                    if (player instanceof PlayerEntity) {
+                        TriggerManager.CHANGE_REFUSAL.trigger((ServerPlayerEntity) player);
+                        PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.regen_delayed"), true);
+                    }
+                }
                 e.setCanceled(true); // It got annoying in creative to break something
-			}
-		}
-		
-		private void tick() {
+            }
+        }
+
+        private void tick() {
             if (player.world.isRemote)
                 throw new IllegalStateException("Ticking state manager on the client"); // the state manager shouldn't even exist on the client
             if (state == PlayerUtil.RegenState.ALIVE)
@@ -625,140 +633,140 @@ public class RegenCap implements IRegen {
             if (state.isGraceful()) handGlowTimer.tick();
 
             ActingForwarder.onRegenTick(RegenCap.this);
-			nextTransition.tick();
-			
-			if (state == PlayerUtil.RegenState.POST) {
-                ActingForwarder.onPerformingPost(RegenCap.this);
-			}
-		}
-		
-		private void triggerRegeneration() {
-			// We're starting a regeneration!
-			state = PlayerUtil.RegenState.REGENERATING;
+            nextTransition.tick();
 
-			if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
-				if (getLivingEntity() instanceof PlayerEntity) {
-					TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_chat_message", player.getName());
-					text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathSource())));
-					PlayerUtil.sendMessageToAll(text);
-				}
-			}
-			
-			nextTransition.cancel(); // ... cancel any state shift we had planned
+            if (state == PlayerUtil.RegenState.POST) {
+                ActingForwarder.onPerformingPost(RegenCap.this);
+            }
+        }
+
+        private void triggerRegeneration() {
+            // We're starting a regeneration!
+            state = PlayerUtil.RegenState.REGENERATING;
+
+            if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
+                if (getLivingEntity() instanceof PlayerEntity) {
+                    TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_chat_message", player.getName());
+                    text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathSource())));
+                    PlayerUtil.sendMessageToAll(text);
+                }
+            }
+
+            nextTransition.cancel(); // ... cancel any state shift we had planned
             if (state.isGraceful()) handGlowTimer.cancel();
-			scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, regenType.create().getAnimationLength());
+            scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.FINISH_REGENERATION, regenType.create().getAnimationLength());
 
             ActingForwarder.onRegenTrigger(RegenCap.this);
-			regenType.create().onStartRegeneration(RegenCap.this);
-			synchronise();
-		}
-		
-		private void enterCriticalPhase() {
-			// We're entering critical phase...
-			state = PlayerUtil.RegenState.GRACE_CRIT;
-			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, RegenConfig.COMMON.criticalPhaseLength.get());
+            regenType.create().onStartRegeneration(RegenCap.this);
+            synchronise();
+        }
+
+        private void enterCriticalPhase() {
+            // We're entering critical phase...
+            state = PlayerUtil.RegenState.GRACE_CRIT;
+            scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.CRITICAL_DEATH, RegenConfig.COMMON.criticalPhaseLength.get());
             ActingForwarder.onGoCritical(RegenCap.this);
-			synchronise();
-		}
-		
-		private void midSequenceKill() {
-			state = PlayerUtil.RegenState.ALIVE;
-			nextTransition = null;
-			handGlowTimer = null;
-			regenType.create().onFinishRegeneration(RegenCap.this);
-			if (state == PlayerUtil.RegenState.GRACE_CRIT) {
-				player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
-			} else {
-				player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
-			}
-			setTrait(TraitManager.DNA_BORING.getRegistryName());
-			if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
-				extractRegeneration(getRegenerationsLeft());
-			}
-			synchronise();
-		}
-		
-		private void endPost() {
-			state = PlayerUtil.RegenState.ALIVE;
-			synchronise();
-			nextTransition = null;
-			if (player instanceof PlayerEntity) {
-				PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.post_ended"), true);
-			}
-			setDroppedHand(false);
-		}
-		
-		private void finishRegeneration() {
-			state = PlayerUtil.RegenState.POST;
-			scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
-			handGlowTimer = null;
-			regenType.create().onFinishRegeneration(RegenCap.this);
+            synchronise();
+        }
+
+        private void midSequenceKill() {
+            state = PlayerUtil.RegenState.ALIVE;
+            nextTransition = null;
+            handGlowTimer = null;
+            regenType.create().onFinishRegeneration(RegenCap.this);
+            if (state == PlayerUtil.RegenState.GRACE_CRIT) {
+                player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
+            } else {
+                player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
+            }
+            setTrait(TraitManager.DNA_BORING.getRegistryName());
+            if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
+                extractRegeneration(getRegenerationsLeft());
+            }
+            synchronise();
+        }
+
+        private void endPost() {
+            state = PlayerUtil.RegenState.ALIVE;
+            synchronise();
+            nextTransition = null;
+            if (player instanceof PlayerEntity) {
+                PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.post_ended"), true);
+            }
+            setDroppedHand(false);
+        }
+
+        private void finishRegeneration() {
+            state = PlayerUtil.RegenState.POST;
+            scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
+            handGlowTimer = null;
+            regenType.create().onFinishRegeneration(RegenCap.this);
             ActingForwarder.onRegenFinish(RegenCap.this);
-			synchronise();
-		}
-		
-		@Override
-		@Deprecated
-		/** @deprecated Debug purposes */
-		public Pair<PlayerUtil.RegenState.Transition, Long> getScheduledEvent() {
-			return nextTransition == null ? null : Pair.of(nextTransition.transition, nextTransition.getTicksLeft());
-		}
-		
-		@Override
-		@Deprecated
-		/** @deprecated Debug purposes */
-		public void fastForward() {
-			while (!nextTransition.tick()) ;
-		}
-		
-		@Override
-		@Deprecated
-		/** @deprecated Debug purposes */
-		public void fastForwardHandGlow() {
-			while (!handGlowTimer.tick()) ;
-		}
-		
-		@Override
-		public double getStateProgress() {
-			return nextTransition.getProgress();
-		}
-		
-		@SuppressWarnings("deprecation")
-		@Override
-		public CompoundNBT serializeNBT() {
-			CompoundNBT nbt = new CompoundNBT();
-			if (nextTransition != null && nextTransition.getTicksLeft() >= 0) {
-				nbt.putString("transitionId", nextTransition.transition.toString());
-				nbt.putLong("transitionInTicks", nextTransition.getTicksLeft());
-			}
-			
-			if (handGlowTimer != null && handGlowTimer.getTicksLeft() >= 0) {
-				nbt.putString("handGlowState", handGlowTimer.transition.toString());
-				nbt.putLong("handGlowScheduledTicks", handGlowTimer.getTicksLeft());
-			}
-			return nbt;
-		}
-		
-		@Override
-		public void deserializeNBT(CompoundNBT nbt) {
-			if (nbt.contains("transitionId"))
-				scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
+            synchronise();
+        }
 
-			if (nbt.contains("handGlowState")) {
-				PlayerUtil.RegenState.Transition transition = PlayerUtil.RegenState.Transition.valueOf(nbt.getString("handGlowState"));
+        @Override
+        @Deprecated
+        /** @deprecated Debug purposes */
+        public Pair<PlayerUtil.RegenState.Transition, Long> getScheduledEvent() {
+            return nextTransition == null ? null : Pair.of(nextTransition.transition, nextTransition.getTicksLeft());
+        }
 
-				Runnable callback;
-				if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START)
-					callback = this::scheduleHandGlowTrigger;
-				else if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER)
-					callback = this::triggerRegeneration;
-				else
-					throw new IllegalStateException("Illegal hand glow timer transition");
+        @Override
+        @Deprecated
+        /** @deprecated Debug purposes */
+        public void fastForward() {
+            while (!nextTransition.tick()) ;
+        }
 
-				handGlowTimer = new RegenerationScheduledAction(transition, player, callback, nbt.getLong("handGlowScheduledTicks"));
-			}
-		}
-		
-	}
-	
+        @Override
+        @Deprecated
+        /** @deprecated Debug purposes */
+        public void fastForwardHandGlow() {
+            while (!handGlowTimer.tick()) ;
+        }
+
+        @Override
+        public double getStateProgress() {
+            return nextTransition.getProgress();
+        }
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public CompoundNBT serializeNBT() {
+            CompoundNBT nbt = new CompoundNBT();
+            if (nextTransition != null && nextTransition.getTicksLeft() >= 0) {
+                nbt.putString("transitionId", nextTransition.transition.toString());
+                nbt.putLong("transitionInTicks", nextTransition.getTicksLeft());
+            }
+
+            if (handGlowTimer != null && handGlowTimer.getTicksLeft() >= 0) {
+                nbt.putString("handGlowState", handGlowTimer.transition.toString());
+                nbt.putLong("handGlowScheduledTicks", handGlowTimer.getTicksLeft());
+            }
+            return nbt;
+        }
+
+        @Override
+        public void deserializeNBT(CompoundNBT nbt) {
+            if (nbt.contains("transitionId"))
+                scheduleTransitionInTicks(PlayerUtil.RegenState.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
+
+            if (nbt.contains("handGlowState")) {
+                PlayerUtil.RegenState.Transition transition = PlayerUtil.RegenState.Transition.valueOf(nbt.getString("handGlowState"));
+
+                Runnable callback;
+                if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_START)
+                    callback = this::scheduleHandGlowTrigger;
+                else if (transition == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER)
+                    callback = this::triggerRegeneration;
+                else
+                    throw new IllegalStateException("Illegal hand glow timer transition");
+
+                handGlowTimer = new RegenerationScheduledAction(transition, player, callback, nbt.getLong("handGlowScheduledTicks"));
+            }
+        }
+
+    }
+
 }

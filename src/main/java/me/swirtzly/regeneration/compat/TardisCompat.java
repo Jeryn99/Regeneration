@@ -1,5 +1,6 @@
 package me.swirtzly.regeneration.compat;
 
+import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.api.ZeroRoomEvent;
 import me.swirtzly.regeneration.common.capability.RegenCap;
@@ -174,15 +175,16 @@ public class TardisCompat {
 
     @SubscribeEvent
     public void onBreed(BabyEntitySpawnEvent entitySpawnEvent) {
-        AgeableEntity kid = entitySpawnEvent.getChild();
-        if (kid.getEntityWorld().dimension instanceof TardisDimension) {
-            ConsoleTile tardis = getTardis(kid.getEntityWorld());
-            if (tardis.isInFlight()) {
-                RegenCap.get(kid).ifPresent(iRegen -> {
-                    iRegen.receiveRegenerations(kid.world.rand.nextInt(12));
-                    iRegen.setRegenType(RegenTypes.HARTNELL);
-                });
-
+        if(RegenConfig.COMMON.mobsHaveRegens.get()) {
+            AgeableEntity kid = entitySpawnEvent.getChild();
+            if (kid.getEntityWorld().dimension instanceof TardisDimension) {
+                ConsoleTile tardis = getTardis(kid.getEntityWorld());
+                if (tardis.isInFlight()) {
+                    RegenCap.get(kid).ifPresent(iRegen -> {
+                        iRegen.receiveRegenerations(kid.world.rand.nextInt(12));
+                        iRegen.setRegenType(RegenTypes.HARTNELL);
+                    });
+                }
             }
         }
     }
