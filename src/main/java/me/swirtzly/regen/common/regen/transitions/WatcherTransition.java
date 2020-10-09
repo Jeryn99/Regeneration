@@ -13,7 +13,7 @@ public class WatcherTransition implements TransitionType<WatcherTransitionRender
 
     @Override
     public int getAnimationLength() {
-        return 200;
+        return 270;
     }
 
     @Override

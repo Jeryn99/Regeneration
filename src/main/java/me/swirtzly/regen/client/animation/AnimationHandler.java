@@ -12,6 +12,7 @@ public class AnimationHandler {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             TransitionType<?> type = iRegen.getTransitionType().get();
             type.getRenderer().animation(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            correctPlayerModel(bipedModel);
         });
     }
 
