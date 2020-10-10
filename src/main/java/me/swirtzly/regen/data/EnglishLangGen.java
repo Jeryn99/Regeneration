@@ -1,5 +1,6 @@
 package me.swirtzly.regen.data;
 
+import me.swirtzly.regen.common.objects.RBlocks;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.util.PlayerUtil;
@@ -23,6 +24,9 @@ public class EnglishLangGen extends LanguageProvider {
         add("source.regen.lindos", "%s consumed lindos hormones! They are reborn!");
         add("source.regen.regen_killed", "%s was killed mid-regeneration...");
         add("source.regen.forced", "%s forced themselves to regenerate!");
+
+        //Block
+        add(RBlocks.BIO_CONTAINER.get(), "Bio-Container");
 
         //Item Group
         add("itemGroup.regen", "Regeneration");

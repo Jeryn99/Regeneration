@@ -6,6 +6,7 @@ import me.swirtzly.regen.client.gui.PreferencesScreen;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.regen.RegenCap;
+import me.swirtzly.regen.common.regen.transitions.TransitionType;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RenderHelp;
@@ -43,7 +44,6 @@ public class ClientEvents {
 
     private static final ResourceLocation BUTTON_TEX = new ResourceLocation(RConstants.MODID, "textures/gui/gui_button_customize.png");
 
-
     @SubscribeEvent
     public static void onGui(GuiScreenEvent.InitGuiEvent event) {
         if (event.getGui() instanceof InventoryScreen) {
@@ -58,13 +58,39 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderPlayer(RenderPlayerEvent.Pre playerEvent) {
+    public static void onRenderPlayerPre(RenderPlayerEvent.Pre playerEvent) {
+        PlayerEntity player = playerEvent.getPlayer();
         SkinHandler.tick((AbstractClientPlayerEntity) playerEvent.getPlayer());
+        RegenCap.get(player).ifPresent(iRegen -> {
+            TransitionType<?> type = iRegen.getTransitionType().get();
+            type.getRenderer().onPlayerRenderPre(playerEvent);
+        });
     }
+
+    @SubscribeEvent
+    public static void onRenderPlayerPost(RenderPlayerEvent.Post playerEvent) {
+        PlayerEntity player = playerEvent.getPlayer();
+        RegenCap.get(player).ifPresent(iRegen -> {
+            TransitionType<?> type = iRegen.getTransitionType().get();
+            type.getRenderer().onPlayerRenderPost(playerEvent);
+        });
+    }
+
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
         RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.getTransitionType().get().getRenderer().firstPersonHand(event));
+    }
+
+    @SubscribeEvent
+    public static void onRenderOverlayk(RenderGameOverlayEvent event) {
+        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> {
+            if (iRegen.getCurrentState() == REGENERATING) {
+                if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+                    event.setCanceled(true);
+                }
+            }
+        });
     }
 
     @SubscribeEvent
@@ -116,7 +142,7 @@ public class ClientEvents {
             RegenCap.get(player).ifPresent((cap) -> {
                 String warning = null;
 
-                ITextComponent forceKeybind = new TranslationTextComponent(RKeybinds.FORCE_REGEN.getTranslationKey().replace("key.keyboard.", ""));
+                ITextComponent forceKeybind = new TranslationTextComponent(RKeybinds.FORCE_REGEN.getTranslationKey().replace("key.keyboard.", "").toUpperCase());
 
                 switch (cap.getCurrentState()) {
                     case GRACE:

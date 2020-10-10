@@ -1,21 +1,25 @@
 package me.swirtzly.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.client.animation.AnimationHandler;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
+import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.util.RConstants;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 
 import static me.swirtzly.regen.client.rendering.transitions.FieryTransitionRenderer.renderOverlay;
 import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
@@ -25,9 +29,29 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
     public static final WatcherTransitionRenderer INSTANCE = new WatcherTransitionRenderer();
     private static final ResourceLocation texture = new ResourceLocation(RConstants.MODID, "textures/entity/watcher.png");
 
-    @Override
-    public void onBefore(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
 
+    @Override
+    public void onPlayerRenderPre(RenderPlayerEvent.Pre pre) {
+        PlayerEntity player = pre.getPlayer();
+
+        RegenCap.get(player).ifPresent(iRegen -> {
+            if (iRegen.getCurrentState() == REGENERATING) {
+                MatrixStack maxtrix = pre.getMatrixStack();
+                player.renderYawOffset = player.prevRenderYawOffset = 0;
+                maxtrix.translate(0, 0.1, 0);
+                maxtrix.rotate(Vector3f.XN.rotationDegrees(90));
+            }
+        });
+    }
+
+    @Override
+    public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
+        PlayerEntity player = post.getPlayer();
+        RegenCap.get(player).ifPresent(iRegen -> {
+            if (iRegen.getCurrentState() == REGENERATING) {
+                player.renderYawOffset = player.prevRenderYawOffset = player.rotationYaw;
+            }
+        });
     }
 
     @Override
@@ -66,8 +90,12 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
 
                 bipedModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(5);
                 bipedModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(5);
-                AnimationHandler.correctPlayerModel(bipedModel);
             }
         });
+    }
+
+    @Override
+    public boolean isLaying(IRegen data) {
+        return false;
     }
 }

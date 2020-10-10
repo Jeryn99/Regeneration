@@ -5,11 +5,14 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.client.animation.AnimationHandler;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
 import me.swirtzly.regen.common.entities.TimelordEntity;
+import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.util.RConstants;
+import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.OverlayRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.Entity;
@@ -20,6 +23,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 
 import static me.swirtzly.regen.client.rendering.layers.RenderRegenLayer.renderCone;
 
@@ -38,7 +42,12 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void onBefore(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void onPlayerRenderPre(RenderPlayerEvent.Pre pre) {
+
+    }
+
+    @Override
+    public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
 
     }
 
@@ -114,6 +123,11 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
+    public boolean isLaying(IRegen data) {
+        return false;
+    }
+
+    @Override
     public void animation(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
@@ -165,7 +179,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                 bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
                 bipedModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
                 bipedModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
-                AnimationHandler.correctPlayerModel(bipedModel);
+
             }
         });
     }

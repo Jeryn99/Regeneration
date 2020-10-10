@@ -51,8 +51,7 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
 
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register<TransitionTypes> e) {
-        e.getRegistry().registerAll(FIERY, TROUGHTON);
-        //TODO Finish WATCHER laying down so we can register it
+        e.getRegistry().registerAll(FIERY, TROUGHTON, WATCHER);
         TYPES = e.getRegistry().getValues().toArray(new TransitionTypes[0]);
     }
 

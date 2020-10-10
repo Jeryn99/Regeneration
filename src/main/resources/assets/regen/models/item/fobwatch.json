@@ -2,45 +2,26 @@
   "overrides": [
     {
       "predicate": {
-        "regen:is_open": 0,
-        "regen:is_gold": 0
+        "regen:model": 0.1
       },
       "model": "regen:item/fobwatch/fob_closed_gold"
     },
     {
       "predicate": {
-        "regen:is_open": 1,
-        "regen:is_gold": 0
+        "regen:model": 0.2
       },
       "model": "regen:item/fobwatch/fob_open_gold"
     },
     {
       "predicate": {
-        "regen:is_open": 0,
-        "regen:is_gold": 1
-      },
-      "model": "regen:item/fobwatch/fob_closed_gold"
-    },
-    {
-      "predicate": {
-        "regen:is_open": 1,
-        "regen:is_gold": 1
-      },
-      "model": "regen:item/fobwatch/fob_open_gold"
-    },
-    {
-      "predicate": {
-        "regen:is_open": 0,
-        "regen:is_gold": 2
+        "regen:model": 0.3
       },
       "model": "regen:item/fobwatch/fob_closed_silver"
     },
     {
       "predicate": {
-        "regen:is_open": 1,
-        "regen:is_gold": 2
+        "regen:model": 0.4
       },
       "model": "regen:item/fobwatch/fob_open_silver"
-    }
-  ]
+    }]
 }

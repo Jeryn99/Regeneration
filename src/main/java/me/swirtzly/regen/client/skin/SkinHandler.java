@@ -3,7 +3,6 @@ package me.swirtzly.regen.client.skin;
 
 import com.google.common.base.MoreObjects;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.SkinMessage;
@@ -47,7 +46,7 @@ public class SkinHandler {
             // if these conditions are true, we want to generate and cache the skin
             if (validSkin && !hasPlayerSkin(uuid) || iRegen.getTicksAnimating() >= 140) {
                 NativeImage skinImage = genSkinNative(skin);
-                if(skinImage != null) {
+                if (skinImage != null) {
                     addPlayerSkin(playerEntity.getUniqueID(), loadImage(skinImage));
                     forceUpdate = true;
                 }

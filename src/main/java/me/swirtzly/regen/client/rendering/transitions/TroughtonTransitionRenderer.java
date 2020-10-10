@@ -6,6 +6,7 @@ import me.swirtzly.regen.client.animation.AnimationHandler;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
 import me.swirtzly.regen.common.entities.TimelordEntity;
+import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 
 import static me.swirtzly.regen.client.rendering.transitions.FieryTransitionRenderer.renderOverlay;
 import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
@@ -32,7 +34,13 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
     public static final TroughtonTransitionRenderer INSTANCE = new TroughtonTransitionRenderer();
 
     @Override
-    public void onBefore(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void onPlayerRenderPre(RenderPlayerEvent.Pre pre) {
+
+    }
+
+    @Override
+    public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
+
     }
 
     @Override
@@ -112,6 +120,11 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
+    public boolean isLaying(IRegen data) {
+        return false;
+    }
+
+    @Override
     public void animation(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
 
@@ -126,7 +139,6 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
 
                 bipedModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(5);
                 bipedModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(5);
-                AnimationHandler.correctPlayerModel(bipedModel);
             }
         });
     }
