@@ -1,7 +1,6 @@
 package me.swirtzly.regen.client.rendering.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
 import me.swirtzly.regen.common.entities.WatcherEntity;
 import me.swirtzly.regen.util.RConstants;

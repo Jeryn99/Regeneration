@@ -46,6 +46,7 @@ public interface TransitionType<R extends TransitionRenderer> {
 
     ResourceLocation getRegistryName();
 
-    default void tick(IRegen cap){}
+    default void tick(IRegen cap) {
+    }
 
 }

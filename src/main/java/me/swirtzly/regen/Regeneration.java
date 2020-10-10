@@ -10,11 +10,7 @@ import me.swirtzly.regen.client.rendering.layers.HandLayer;
 import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
 import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.entities.TimelordEntity;
-import me.swirtzly.regen.common.item.FobWatchItem;
-import me.swirtzly.regen.common.objects.RBlocks;
-import me.swirtzly.regen.common.objects.REntities;
-import me.swirtzly.regen.common.objects.RItems;
-import me.swirtzly.regen.common.objects.RSounds;
+import me.swirtzly.regen.common.objects.*;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
@@ -111,22 +107,21 @@ public class Regeneration {
         ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
             boolean isGold = getEngrave(stack);
             boolean isOpen = getOpen(stack);
-            if(isOpen && isGold){
+            if (isOpen && isGold) {
                 return 0.2F;
             }
 
-            if(!isOpen && !isGold){
+            if (!isOpen && !isGold) {
                 return 0.3F;
             }
 
-            if(isOpen){
+            if (isOpen) {
                 return 0.4F;
             }
 
 
             return 0.1F;
         });
-
 
 
         RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.getCutoutMipped());
@@ -148,6 +143,7 @@ public class Regeneration {
         REntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
 }

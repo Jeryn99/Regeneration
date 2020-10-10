@@ -31,18 +31,18 @@ public class WatcherEntity extends MobEntity {
         super.tick();
 
         setNoAI(true);
-        setMotion(new Vector3d(0,0,0));
+        setMotion(new Vector3d(0, 0, 0));
         RegenCap.get(this).ifPresent(iRegen -> iRegen.setRegens(0));
 
         if (getAttackTarget() == null) {
             for (PlayerEntity worldPlayer : world.getPlayers()) {
                 RegenCap.get(worldPlayer).ifPresent(iRegen -> {
-                    if(iRegen.getCurrentState().isGraceful() && iRegen.getTransitionType() == TransitionTypes.WATCHER){
+                    if (iRegen.getCurrentState().isGraceful() && iRegen.getTransitionType() == TransitionTypes.WATCHER) {
                         setAttackTarget(worldPlayer);
                     }
                 });
 
-                if(getAttackTarget() == null){
+                if (getAttackTarget() == null) {
                     remove();
                 }
             }
@@ -89,7 +89,7 @@ public class WatcherEntity extends MobEntity {
 
     @Override
     protected AxisAlignedBB getBoundingBox(Pose pose) {
-        return new AxisAlignedBB(0,0,0,0,0,0);
+        return new AxisAlignedBB(0, 0, 0, 0, 0, 0);
     }
 
     @Override

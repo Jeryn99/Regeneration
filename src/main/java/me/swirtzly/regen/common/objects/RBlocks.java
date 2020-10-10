@@ -12,6 +12,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import static me.swirtzly.regen.common.objects.RItems.MAIN;
+
 @Mod.EventBusSubscriber(modid = RConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RBlocks {
 
@@ -23,7 +25,7 @@ public class RBlocks {
 
     private static void genBlockItems(Block... blocks) {
         for (Block block : blocks) {
-            BLOCK_ITEMS.register(block.getRegistryName().getPath(), () -> new BlockItem(block, new Item.Properties()));
+            BLOCK_ITEMS.register(block.getRegistryName().getPath(), () -> new BlockItem(block, new Item.Properties().group(MAIN)));
         }
     }
 

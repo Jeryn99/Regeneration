@@ -1,8 +1,6 @@
 package me.swirtzly.regen.common.regen.acting;
 
-import me.swirtzly.regen.common.entities.WatcherEntity;
 import me.swirtzly.regen.common.regen.IRegen;
-import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.common.regen.transitions.WatcherTransition;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
@@ -15,7 +13,6 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;

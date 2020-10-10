@@ -24,17 +24,6 @@ import java.util.List;
 
 public final class WatcherTransition implements TransitionType<WatcherTransitionRenderer> {
 
-    @Override
-    public void tick(IRegen cap) {
-        LivingEntity living = cap.getLiving();
-        World world = living.world;
-        List<WatcherEntity> watchers = world.getEntitiesWithinAABB(REntities.WATCHER.get(), living.getBoundingBox().grow(64), watcherEntity -> watcherEntity.getAttackTarget() == living);
-
-        if (watchers.isEmpty()) {
-            WatcherTransition.createWatcher(living);
-        }
-    }
-
     public static void createWatcher(LivingEntity player) {
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.getTransitionType() == TransitionTypes.WATCHER) {
@@ -47,6 +36,17 @@ public final class WatcherTransition implements TransitionType<WatcherTransition
                 player.world.addEntity(watcherEntity);
             }
         });
+    }
+
+    @Override
+    public void tick(IRegen cap) {
+        LivingEntity living = cap.getLiving();
+        World world = living.world;
+        List<WatcherEntity> watchers = world.getEntitiesWithinAABB(REntities.WATCHER.get(), living.getBoundingBox().grow(64), watcherEntity -> watcherEntity.getAttackTarget() == living);
+
+        if (watchers.isEmpty()) {
+            WatcherTransition.createWatcher(living);
+        }
     }
 
     @Override
