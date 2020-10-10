@@ -35,10 +35,7 @@ public class BlockstateGen implements IDataProvider {
             ResourceLocation key = block.getRegistryName();
 
             JsonObject variants = new JsonObject();
-            Iterator<Direction> it = Direction.Plane.HORIZONTAL.iterator();
-            while (it.hasNext()) {
-                Direction dir = it.next();
-
+            for (Direction dir : Direction.Plane.HORIZONTAL) {
                 JsonObject dirObj = new JsonObject();
 
                 dirObj.add("model", new JsonPrimitive(key.getNamespace() + ":block/" + key.getPath()));

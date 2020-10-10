@@ -1,16 +1,19 @@
 package me.swirtzly.regen.client.skin;
 
+import com.google.gson.JsonObject;
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.data.IDataProvider;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
@@ -18,6 +21,7 @@ import java.net.URLConnection;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -109,6 +113,7 @@ public class CommonSkin {
      */
     public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
 
+
         URLConnection uc = url.openConnection();
         uc.connect();
         uc = url.openConnection();
@@ -151,7 +156,14 @@ public class CommonSkin {
     }
 
     public static boolean isAlexSkin(BufferedImage image) {
-        return hasAlpha(55, 20, image) && hasAlpha(55, 21, image) && hasAlpha(55, 22, image) && hasAlpha(55, 23, image) && hasAlpha(55, 24, image) && hasAlpha(55, 25, image) && hasAlpha(55, 26, image) && hasAlpha(55, 27, image) && hasAlpha(55, 28, image) && hasAlpha(55, 29, image) && hasAlpha(55, 30, image) && hasAlpha(55, 31, image) && hasAlpha(54, 20, image) && hasAlpha(54, 21, image) && hasAlpha(54, 22, image) && hasAlpha(54, 23, image) && hasAlpha(54, 24, image) && hasAlpha(54, 25, image) && hasAlpha(54, 26, image) && hasAlpha(54, 27, image) && hasAlpha(54, 28, image) && hasAlpha(54, 29, image) && hasAlpha(54, 30, image) && hasAlpha(54, 31, image) || hasAlpha(46, 52, image) && hasAlpha(46, 53, image) && hasAlpha(46, 54, image) && hasAlpha(46, 54, image) && hasAlpha(46, 55, image) && hasAlpha(46, 56, image) && hasAlpha(46, 57, image) && hasAlpha(46, 58, image) && hasAlpha(46, 59, image) && hasAlpha(46, 60, image) && hasAlpha(46, 61, image) && hasAlpha(46, 63, image) && hasAlpha(46, 53, image);
+
+        for (int i = 0; i < 8; i++) {
+            if(!hasAlpha(54, i + 20, image) || !hasAlpha(55, i + 20, image)){
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static boolean hasAlpha(int x, int y, BufferedImage image) {

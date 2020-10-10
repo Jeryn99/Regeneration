@@ -27,6 +27,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.*;
@@ -36,8 +37,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static me.swirtzly.regen.common.regen.state.RegenStates.GRACE_CRIT;
-import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
+import static me.swirtzly.regen.common.regen.state.RegenStates.*;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEvents {
@@ -55,6 +55,16 @@ public class ClientEvents {
                 }
             });
         }
+    }
+
+    @SubscribeEvent
+    public static void onName(RenderNameplateEvent event) {
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        RegenCap.get(player).ifPresent(iRegen -> {
+            if (iRegen.getCurrentState() == POST || iRegen.getCurrentState() == GRACE_CRIT) {
+                event.setContent(new StringTextComponent(TextFormatting.OBFUSCATED + event.getContent().getString()));
+            }
+        });
     }
 
     @SubscribeEvent
@@ -169,10 +179,10 @@ public class ClientEvents {
                     RenderHelp.renderVig(TransitionTypes.FIERY.get().getDefaultPrimaryColor(), 0.5F);
                 }
 
-                IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+                IRenderTypeBuffer.Impl renderImpl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
                 if (warning != null)
-                    Minecraft.getInstance().fontRenderer.renderString(warning, Minecraft.getInstance().getMainWindow().getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, TextFormatting.WHITE.getColor(), false, TransformationMatrix.identity().getMatrix(), irendertypebuffer$impl, false, 0, 15728880);
-                irendertypebuffer$impl.finish();
+                    Minecraft.getInstance().fontRenderer.renderString(warning, Minecraft.getInstance().getMainWindow().getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, TextFormatting.WHITE.getColor(), false, TransformationMatrix.identity().getMatrix(), renderImpl, false, 0, 15728880);
+                renderImpl.finish();
             });
         }
     }
