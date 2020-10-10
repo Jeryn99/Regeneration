@@ -30,51 +30,53 @@ public class FobWatchItem extends SolidItem {
     }
 
     public static CompoundNBT getStackTag(ItemStack stack) {
-        if (stack.getTag() == null) {
+        if (stack.getTag() == null || !stack.getTag().contains("is_open") || !stack.getTag().contains("is_gold")) {
             stack.setTag(new CompoundNBT());
-            stack.getTag().putInt("open", 0);
-            stack.getTag().putInt("engrave", random.nextInt(2));
+            stack.getTag().putBoolean("is_open", false);
+            stack.getTag().putBoolean("is_gold", random.nextBoolean());
         }
         return stack.getTag();
     }
 
-    public static int getEngrave(ItemStack stack) {
-        return getStackTag(stack).getInt("engrave");
+    public static boolean getEngrave(ItemStack stack) {
+        return getStackTag(stack).getBoolean("is_gold");
     }
 
-    public static void setEngrave(ItemStack stack, int engrave) {
-        getStackTag(stack).putInt("engrave", engrave);
+    public static void setEngrave(ItemStack stack, boolean isGold) {
+        getStackTag(stack).putBoolean("is_gold", isGold);
     }
 
-    public static int getOpen(ItemStack stack) {
-        return getStackTag(stack).getInt("open");
+    public static boolean getOpen(ItemStack stack) {
+        return getStackTag(stack).getBoolean("is_open");
     }
 
-    public static void setOpen(ItemStack stack, int amount) {
-        getStackTag(stack).putInt("open", amount);
+    public static void setOpen(ItemStack stack, boolean isOpen) {
+        getStackTag(stack).putBoolean("is_open", isOpen);
     }
 
     @Override
     public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
         super.onCreated(stack, worldIn, playerIn);
         setDamage(stack, 0);
+        setOpen(stack, false);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if (stack.getTag() == null) {
-            stack.setTag(new CompoundNBT());
-            stack.getTag().putBoolean("live", true);
-        } else {
-            stack.getTag().putBoolean("live", true);
-        }
+        if (stack.getItem() instanceof FobWatchItem) {
+            if (stack.getTag() == null) {
+                stack.setTag(new CompoundNBT());
+                stack.getTag().putBoolean("live", true);
+            } else {
+                stack.getTag().putBoolean("live", true);
+            }
 
-        if (getOpen(stack) == 1) {
-            if (entityIn.ticksExisted % 600 == 0) {
-                setOpen(stack, 0);
+            if (getOpen(stack)) {
+                if (entityIn.ticksExisted % 600 == 0) {
+                    setOpen(stack, false);
+                }
             }
         }
-
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
     }
 
@@ -83,6 +85,7 @@ public class FobWatchItem extends SolidItem {
 
         ItemStack stack = player.getHeldItem(hand);
         IRegen cap = RegenCap.get(player).orElseGet(null);
+
 
         if (!player.isSneaking()) { // transferring watch->player
             if (getDamage(stack) == RegenConfig.COMMON.regenCapacity.get())
@@ -93,11 +96,11 @@ public class FobWatchItem extends SolidItem {
             int supply = RegenConfig.COMMON.regenCapacity.get() - getDamage(stack), needed = RegenConfig.COMMON.regenCapacity.get() - cap.getRegens(), used = Math.min(supply, needed);
 
             if (cap.canRegenerate()) {
-                setOpen(stack, 1);
+                setOpen(stack, true);
                 PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.gained_regens", used), true);
             } else {
                 if (!world.isRemote) {
-                    setOpen(stack, 1);
+                    setOpen(stack, true);
                     PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.now_timelord"), true);
                 }
             }
@@ -108,9 +111,9 @@ public class FobWatchItem extends SolidItem {
             setDamage(stack, stack.getDamage() + used);
 
             if (world.isRemote) {
-                setOpen(stack, 1);
                 ClientUtil.playPositionedSoundRecord(RSounds.FOB_WATCH.get(), 1.0F, 2.0F);
             } else {
+                setOpen(stack, true);
                 cap.addRegens(used);
             }
 
@@ -131,7 +134,7 @@ public class FobWatchItem extends SolidItem {
             if (world.isRemote) {
                 ClientUtil.playPositionedSoundRecord(SoundEvents.BLOCK_FIRE_EXTINGUISH, 5.0F, 2.0F);
             } else {
-                setOpen(stack, 1);
+                setOpen(stack, true);
                 cap.extractRegens(1);
             }
 
@@ -154,6 +157,31 @@ public class FobWatchItem extends SolidItem {
                 ClientUtil.playSound(itemOverride, RSounds.FOB_WATCH_DIALOGUE.get().getRegistryName(), SoundCategory.AMBIENT, false, () -> !itemOverride.isAlive(), 1.5F);
             }
         }
+        return true;
+    }
+
+    @Override
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+        return false;
+    }
+
+    @Override
+    public boolean isRepairable(ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean isDamageable() {
+        return super.isDamageable();
+    }
+
+    @Override
+    public boolean shouldSyncTag() {
+        return true;
+    }
+
+    @Override
+    public boolean isDamageable(ItemStack stack) {
         return true;
     }
 

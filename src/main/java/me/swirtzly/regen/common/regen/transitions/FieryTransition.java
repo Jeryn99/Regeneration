@@ -23,7 +23,7 @@ import java.util.Iterator;
 
 import static net.minecraft.util.math.BlockPos.getAllInBox;
 
-public class FieryTransition implements TransitionType<FieryTransitionRenderer> {
+public final class FieryTransition implements TransitionType<FieryTransitionRenderer> {
 
 
     @Override
@@ -74,12 +74,6 @@ public class FieryTransition implements TransitionType<FieryTransitionRenderer> 
     public int getAnimationLength() {
         return 280; // 14 seconds of 20 ticks
     }
-
-    @Override
-    public double getAnimationProgress(IRegen cap) {
-        return Math.min(1, cap.getTicksAnimating() / (double) getAnimationLength());
-    }
-
 
     @Override
     public SoundEvent[] getRegeneratingSounds() {

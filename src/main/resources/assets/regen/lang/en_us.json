@@ -1,4 +1,5 @@
 {
+  "block.regen.bio_container": "Bio-Container",
   "entity.regen.item_override": "Item",
   "entity.regen.timelord": "Timelord",
   "item.regen.fobwatch": "Fob watch",

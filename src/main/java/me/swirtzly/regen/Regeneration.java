@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import me.swirtzly.regen.client.RKeybinds;
 import me.swirtzly.regen.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
+import me.swirtzly.regen.client.rendering.entity.WatcherRenderer;
 import me.swirtzly.regen.client.rendering.layers.HandLayer;
 import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
 import me.swirtzly.regen.client.skin.CommonSkin;
@@ -79,6 +80,7 @@ public class Regeneration {
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
         ActingForwarder.init();
         GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().create());
+        GlobalEntityTypeAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().create());
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -102,22 +104,30 @@ public class Regeneration {
 
         RenderingRegistry.registerEntityRenderingHandler(REntities.ITEM_OVERRIDE_ENTITY_TYPE.get(), ItemOverrideRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);
 
         RKeybinds.init();
 
-        ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "is_open"), (stack, p_call_2_, p_call_3_) -> {
-            if (FobWatchItem.getStackTag(stack) == null || !FobWatchItem.getStackTag(stack).contains("is_open")) {
-                return 0F; // Closed
+        ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
+            boolean isGold = getEngrave(stack);
+            boolean isOpen = getOpen(stack);
+            if(isOpen && isGold){
+                return 0.2F;
             }
-            return getOpen(stack);
+
+            if(!isOpen && !isGold){
+                return 0.3F;
+            }
+
+            if(isOpen){
+                return 0.4F;
+            }
+
+
+            return 0.1F;
         });
 
-        ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "is_gold"), (stack, p_call_2_, p_call_3_) -> {
-            if (FobWatchItem.getStackTag(stack) == null || !FobWatchItem.getStackTag(stack).contains("is_gold")) {
-                return 0F; // Closed
-            }
-            return getEngrave(stack);
-        });
+
 
         RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.getCutoutMipped());
     }

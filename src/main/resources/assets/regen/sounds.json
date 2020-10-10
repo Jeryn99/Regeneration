@@ -109,5 +109,11 @@
     "sounds": [
       "regen:regen/regen_troughton"
     ]
+  },
+  "regeneration_watcher": {
+    "subtitle": "regen.sound.regeneration_watcher",
+    "sounds": [
+      "regen:regen/regen_watcher"
+    ]
   }
 }

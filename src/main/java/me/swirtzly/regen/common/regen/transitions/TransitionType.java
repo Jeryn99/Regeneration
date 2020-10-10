@@ -30,7 +30,9 @@ public interface TransitionType<R extends TransitionRenderer> {
     default void onFinishRegeneration(IRegen cap) {
     }
 
-    double getAnimationProgress(IRegen cap);
+    default double getAnimationProgress(IRegen cap) {
+        return Math.min(1, cap.getTicksAnimating() / (double) getAnimationLength());
+    }
 
     SoundEvent[] getRegeneratingSounds();
 
@@ -43,4 +45,7 @@ public interface TransitionType<R extends TransitionRenderer> {
     }
 
     ResourceLocation getRegistryName();
+
+    default void tick(IRegen cap){}
+
 }

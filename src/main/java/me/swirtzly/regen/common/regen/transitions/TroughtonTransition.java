@@ -14,11 +14,11 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class TroughtonTransition implements TransitionType<TroughtonTransitionRenderer> {
+public final class TroughtonTransition implements TransitionType<TroughtonTransitionRenderer> {
 
     @Override
     public int getAnimationLength() {
-        return 350;
+        return 330;
     }
 
     @Override
@@ -45,11 +45,6 @@ public class TroughtonTransition implements TransitionType<TroughtonTransitionRe
         }
         cap.setAnimationTicks(0);
         cap.syncToClients(null);
-    }
-
-    @Override
-    public double getAnimationProgress(IRegen cap) {
-        return Math.min(1, cap.getTicksAnimating() / (double) getAnimationLength());
     }
 
     @Override

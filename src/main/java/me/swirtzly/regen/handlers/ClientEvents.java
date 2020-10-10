@@ -44,7 +44,6 @@ public class ClientEvents {
 
     private static final ResourceLocation BUTTON_TEX = new ResourceLocation(RConstants.MODID, "textures/gui/gui_button_customize.png");
 
-
     @SubscribeEvent
     public static void onGui(GuiScreenEvent.InitGuiEvent event) {
         if (event.getGui() instanceof InventoryScreen) {
@@ -84,9 +83,9 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderOverlayk(RenderGameOverlayEvent event){
+    public static void onRenderOverlayk(RenderGameOverlayEvent event) {
         RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> {
-            if(iRegen.getCurrentState() == REGENERATING) {
+            if (iRegen.getCurrentState() == REGENERATING) {
                 if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
                     event.setCanceled(true);
                 }

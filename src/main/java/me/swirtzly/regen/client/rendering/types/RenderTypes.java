@@ -27,5 +27,10 @@ public class RenderTypes extends RenderType {
         RenderState.TextureState textureState = new RenderState.TextureState(locationIn, false, false);
         return makeType(RConstants.MODID + ":glowing", DefaultVertexFormats.ENTITY, 7, 256, false, true, RenderType.State.getBuilder().transparency(TRANSLUCENT_TRANSPARENCY).alpha(DEFAULT_ALPHA).cull(CULL_DISABLED).overlay(OVERLAY_ENABLED).texture(textureState).fog(BLACK_FOG).build(false));
     }
+
+    public static RenderType getGlowingTransparent(ResourceLocation locationIn) {
+        RenderState.TextureState textureState = new RenderState.TextureState(locationIn, false, false);
+        return makeType(RConstants.MODID + ":glowing_transparent", DefaultVertexFormats.ENTITY, 7, 256, false, true, RenderType.State.getBuilder().transparency(RenderState.TRANSLUCENT_TRANSPARENCY).alpha(RenderState.HALF_ALPHA).cull(RenderState.CULL_ENABLED).overlay(RenderState.OVERLAY_DISABLED).texture(textureState).fog(BLACK_FOG).build(true));
+    }
 }
 
