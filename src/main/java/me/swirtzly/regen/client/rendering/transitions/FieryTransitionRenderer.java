@@ -119,10 +119,6 @@ public class FieryTransitionRenderer implements TransitionRenderer {
         });
     }
 
-    @Override
-    public boolean isLaying(IRegen data) {
-        return false;
-    }
 
     @Override
     public void animation(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {

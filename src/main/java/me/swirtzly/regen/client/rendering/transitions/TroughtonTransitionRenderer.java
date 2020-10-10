@@ -57,7 +57,6 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
 
 
             float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
-            boolean isTimelord = false;
 
             if (iRegen.getCurrentState() == REGENERATING) {
 
@@ -68,14 +67,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                 if (entitylivingbaseIn instanceof TimelordEntity) {
                     TimelordEntity timelordEntity = (TimelordEntity) entitylivingbaseIn;
                     headTexture = TimelordRenderer.getTimelordFace(timelordEntity);
-                    isTimelord = true;
                 }
-
-                if (!isTimelord) {
-                    renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
-                    renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
-                }
-
                 Vector3d color = new Vector3d(1, 1, 1);
                 PlayerModel<AbstractClientPlayerEntity> headModel = playerRenderer.getEntityModel();
 
@@ -115,11 +107,6 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                 matrixStackIn.pop();
             }
         });
-    }
-
-    @Override
-    public boolean isLaying(IRegen data) {
-        return false;
     }
 
     @Override

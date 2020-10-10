@@ -24,6 +24,4 @@ public interface TransitionRenderer {
 
     void animation(BipedModel<?> bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch);
 
-    boolean isLaying(IRegen data);
-
 }

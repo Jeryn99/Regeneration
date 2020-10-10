@@ -120,6 +120,7 @@ public class EnglishLangGen extends LanguageProvider {
         add("type.regeneration.troughton", "Troughton");
         add("type.regeneration.fiery", "Fiery");
         add("type.regeneration.watcher", "Watcher");
+        add("type.regeneration.sparkle", "Sparkle");
 
         //Entity
         add(REntities.TIMELORD.get(), "Timelord");
