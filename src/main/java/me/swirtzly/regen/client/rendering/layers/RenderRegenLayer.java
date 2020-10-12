@@ -9,8 +9,10 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
@@ -21,7 +23,7 @@ public class RenderRegenLayer extends LayerRenderer {
         super(entityRendererIn);
     }
 
-    public static void renderCone(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, LivingEntity entityPlayer, float scale, float scale2, Vector3d color) {
+    public static void renderColorCone(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, LivingEntity entityPlayer, float scale, float scale2, Vector3d color) {
         RegenCap.get(entityPlayer).ifPresent(iRegen -> {
             matrixStack.push();
             for (int i = 0; i < 10; i++) {
@@ -38,6 +40,7 @@ public class RenderRegenLayer extends LayerRenderer {
             matrixStack.pop();
         });
     }
+
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {

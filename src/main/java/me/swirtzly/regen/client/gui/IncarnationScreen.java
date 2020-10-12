@@ -1,5 +1,6 @@
 package me.swirtzly.regen.client.gui;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -12,7 +13,10 @@ import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -25,10 +29,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.awt.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,6 +51,10 @@ public class IncarnationScreen extends ContainerScreen {
     private static int position = 0;
     private static PlayerUtil.SkinType choices = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).getPreferredModel();
     private static PlayerUtil.SkinType renderChoice = choices;
+
+    private TextFieldWidget searchField;
+    private ArrayList<DescButton> descButtons = new ArrayList();
+
 
     public IncarnationScreen() {
         super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).inventory, new TranslationTextComponent("Next Incarnation"));
@@ -91,14 +102,32 @@ public class IncarnationScreen extends ContainerScreen {
     @Override
     public void init() {
         super.init();
+        this.searchField = new TextFieldWidget(this.font, this.width / 2 - 100, 212, 200, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
         final int btnW = 60, btnH = 18;
         position = 0;
         skins = CommonSkin.listAllSkins(choices);
-        Button btnNext = new Button(cx + 25, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.previous"), button -> {
-            skins = CommonSkin.listAllSkins(choices);
 
+        this.searchField.setResponder((p_214329_1_) -> {
+            position = 0;
+            skins.removeIf(file -> !file.getName().contains(searchField.getText()));
+            if (skins.isEmpty() || searchField.getText().isEmpty()) {
+                skins = CommonSkin.listAllSkins(choices);
+            }
+            Collections.sort(skins);
+            PLAYER_TEXTURE = CommonSkin.fileTotexture(skins.get(position));
+            updateModels();
+        });
+
+        this.children.add(this.searchField);
+        this.setFocusedDefault(this.searchField);
+
+
+        DescButton btnNext = new DescButton(cx + 25, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.previous"), button -> {
+            if (searchField.getText().isEmpty()) {
+                skins = CommonSkin.listAllSkins(choices);
+            }
             if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
                 if (position >= skins.size() - 1) {
                     position = 0;
@@ -109,9 +138,11 @@ public class IncarnationScreen extends ContainerScreen {
                 updateModels();
             }
         });
-        Button btnPrevious = new Button(cx + 130, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.next"), button -> {
+        DescButton btnPrevious = new DescButton(cx + 130, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.next"), button -> {
             // Previous
-            skins = CommonSkin.listAllSkins(choices);
+            if (searchField.getText().isEmpty()) {
+                skins = CommonSkin.listAllSkins(choices);
+            }
             if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
                 if (position > 0) {
                     position--;
@@ -122,30 +153,55 @@ public class IncarnationScreen extends ContainerScreen {
                 updateModels();
             }
         });
-        Button btnBack = new Button(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.back"), new Button.IPressable() {
+        DescButton btnBack = new DescButton(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.back"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 Minecraft.getInstance().displayGuiScreen(new PreferencesScreen());
             }
         });
-        Button btnOpenFolder = new Button(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder"), new Button.IPressable() {
+        DescButton btnOpenFolder = new DescButton(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 Util.getOSType().openFile(CommonSkin.SKIN_DIRECTORY);
             }
         });
-        Button btnSave = new Button(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.save"), new Button.IPressable() {
+        DescButton btnSave = new DescButton(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.save"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 updateModels();
                 NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex));
             }
         });
-        Button btnResetSkin = new Button(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin"), new Button.IPressable() {
+        DescButton btnResetSkin = new DescButton(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 SkinHandler.sendResetMessage();
             }
+        });
+
+        //TODO Translate
+        btnResetSkin.setDescription(new TranslationTextComponent[]{
+                new TranslationTextComponent("Resets your Skin to Mojang Skin")
+        });
+
+        btnPrevious.setDescription(new TranslationTextComponent[]{
+                new TranslationTextComponent("Previous Skin")
+        });
+
+        btnNext.setDescription(new TranslationTextComponent[]{
+                new TranslationTextComponent("Next Skin")
+        });
+
+        btnSave.setDescription(new TranslationTextComponent[]{
+                new TranslationTextComponent("Upload information")
+        });
+
+        btnOpenFolder.setDescription(new TranslationTextComponent[]{
+                new TranslationTextComponent("Open Local Skins Folder")
+        });
+
+        btnBack.setDescription(new TranslationTextComponent[]{
+                new TranslationTextComponent("Return to Preferences menu")
         });
 
         addButton(btnNext);
@@ -154,6 +210,12 @@ public class IncarnationScreen extends ContainerScreen {
         addButton(btnBack);
         addButton(btnSave);
         addButton(btnResetSkin);
+
+        for (Widget widget : buttons) {
+            if(widget instanceof DescButton){
+                descButtons.add((DescButton) widget);
+            }
+        }
 
         RegenCap.get(minecraft.player).ifPresent((data) -> choices = data.getPreferredModel());
 
@@ -183,12 +245,43 @@ public class IncarnationScreen extends ContainerScreen {
         }
 
         drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regeneration.gui.current_skin").getString(), width / 2, height / 2 + 5, Color.WHITE.getRGB());
-        drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent(skins.get(position).getName().replaceAll(".png", "")).getString(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
+        if (!skins.isEmpty() && position < skins.size()) {
+            drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent(skins.get(position).getName().replaceAll(".png", "")).getString(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
+        }
+    }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        this.searchField.keyPressed(keyCode, scanCode, modifiers);
+        if (keyCode == 256 && this.shouldCloseOnEsc()) {
+            this.closeScreen();
+            return true;
+        }
+        return false;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
         this.font.func_243248_b(matrixStack, this.title, (float) this.titleX, (float) this.titleY, 4210752);
+    }
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        for (DescButton descButton : descButtons) {
+            if(descButton.isHovered()){
+                renderToolTip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().fontRenderer);
+            }
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.searchField.tick();
+
+
     }
 }

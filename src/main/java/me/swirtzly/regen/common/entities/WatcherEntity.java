@@ -6,13 +6,12 @@ import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.util.ViewUtil;
 import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.Pose;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -53,8 +52,7 @@ public class WatcherEntity extends MobEntity {
                 } else {
 
                     if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
-                        setPositionAndUpdate(getAttackTarget().getPosX(), getAttackTarget().getPosY(), getAttackTarget().getPosZ());
-                        lookAt(EntityAnchorArgument.Type.EYES, getAttackTarget().getPositionVec());
+                       remove();
                     } else {
                         lookAt(EntityAnchorArgument.Type.EYES, getAttackTarget().getPositionVec());
                         if (ticksExisted % 100 == 0 && !ViewUtil.isInSight(getAttackTarget(), this)) {

@@ -1,8 +1,8 @@
 package me.swirtzly.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import me.swirtzly.regen.client.animation.AnimationHandler;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
-import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
@@ -18,6 +18,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.gui.ScrollPanel;
 
 import static me.swirtzly.regen.client.rendering.transitions.FieryTransitionRenderer.renderOverlay;
 import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
@@ -71,15 +72,28 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
                 float opacity = iRegen.getTicksAnimating();
                 renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(texture)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, new Vector3d(1, 1, 1));
                 matrixStackIn.pop();
+
+                matrixStackIn.push();
+                matrixStackIn.rotate(Vector3f.XN.rotationDegrees(-90));
+                matrixStackIn.translate(0, -1.5, 1);
+                renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(texture)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.5F, new Vector3d(1, 1, 1), new AnimationHandler.Animation() {
+                    @Override
+                    public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+                        bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(40);
+                        bipedModel.bipedHeadwear.rotateAngleX = (float) Math.toRadians(40);
+                    }
+                });
+                matrixStackIn.pop();
             }
         });
+
     }
 
     @Override
     public void animation(BipedModel<?> bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
             if (data.getCurrentState() == REGENERATING && data.getTransitionType() == TransitionTypes.WATCHER) {
-                bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(-20);
+                bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(0);
                 bipedModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
                 bipedModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
 

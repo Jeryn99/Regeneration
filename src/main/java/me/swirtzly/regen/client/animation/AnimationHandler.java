@@ -27,4 +27,8 @@ public class AnimationHandler {
         }
     }
 
+    public interface Animation {
+        void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch);
+    }
+
 }

@@ -13,7 +13,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.vector.Vector3d;
 
-import static me.swirtzly.regen.client.rendering.layers.RenderRegenLayer.renderCone;
+import static me.swirtzly.regen.client.rendering.layers.RenderRegenLayer.renderColorCone;
 
 public class HandLayer extends LayerRenderer {
 
@@ -27,8 +27,8 @@ public class HandLayer extends LayerRenderer {
             if (iRegen.areHandsGlowing()) {
                 Vector3d primaryColors = iRegen.getPrimaryColors();
                 Vector3d secondaryColors = iRegen.getSecondaryColors();
-                renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.5F, 0.5F, primaryColors);
-                renderCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.7F, 0.7F, secondaryColors);
+                renderColorCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.5F, 0.5F, primaryColors);
+                renderColorCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.7F, 0.7F, secondaryColors);
             }
         });
     }

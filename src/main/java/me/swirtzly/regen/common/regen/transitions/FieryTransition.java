@@ -23,7 +23,7 @@ import java.util.Iterator;
 
 import static net.minecraft.util.math.BlockPos.getAllInBox;
 
-public final class FieryTransition implements TransitionType<FieryTransitionRenderer> {
+public class FieryTransition implements TransitionType<FieryTransitionRenderer> {
 
 
     @Override
