@@ -185,11 +185,11 @@ public class IncarnationScreen extends ContainerScreen {
         });
 
         btnPrevious.setDescription(new TranslationTextComponent[]{
-                new TranslationTextComponent("Previous Skin")
+                new TranslationTextComponent("Next Skin")
         });
 
         btnNext.setDescription(new TranslationTextComponent[]{
-                new TranslationTextComponent("Next Skin")
+                new TranslationTextComponent("Previous Skin")
         });
 
         btnSave.setDescription(new TranslationTextComponent[]{

@@ -11,7 +11,7 @@ public class AnimationHandler {
     public static void setRotationAnglesCallback(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             TransitionType<?> type = iRegen.getTransitionType().get();
-            type.getRenderer().animation(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            type.getRenderer().animate(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             correctPlayerModel(bipedModel);
         });
     }

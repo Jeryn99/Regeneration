@@ -36,7 +36,7 @@ public class CommonEvents {
 
     /* Attach Capability to all LivingEntities */
     @SubscribeEvent
-    public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof LivingEntity) {
             event.addCapability(RConstants.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
                 final RegenCap regen = new RegenCap((LivingEntity) event.getObject());

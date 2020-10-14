@@ -99,4 +99,9 @@ public final class WatcherTransition implements TransitionType<WatcherTransition
     public ResourceLocation getRegistryName() {
         return new ResourceLocation(RConstants.MODID, "watcher");
     }
+
+    @Override
+    public boolean isPlayerOnly() {
+        return true;
+    }
 }

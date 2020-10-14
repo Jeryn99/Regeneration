@@ -100,4 +100,8 @@ public class FieryTransition implements TransitionType<FieryTransitionRenderer> 
         return FieryTransitionRenderer.INSTANCE;
     }
 
+    @Override
+    public boolean isPlayerOnly() {
+        return false;
+    }
 }

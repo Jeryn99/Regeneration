@@ -49,4 +49,8 @@ public interface TransitionType<R extends TransitionRenderer> {
     default void tick(IRegen cap) {
     }
 
+    default boolean isPlayerOnly(){
+        return false;
+    }
+
 }

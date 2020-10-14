@@ -8,6 +8,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SkinMessage {
+
     private final byte[] skinByteArray;
     private final boolean isAlex;
 
