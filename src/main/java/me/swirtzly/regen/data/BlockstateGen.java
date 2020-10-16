@@ -19,7 +19,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.function.Function;
 
 public class BlockstateGen implements IDataProvider {

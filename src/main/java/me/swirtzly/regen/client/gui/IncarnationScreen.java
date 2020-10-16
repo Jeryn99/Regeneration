@@ -1,6 +1,5 @@
 package me.swirtzly.regen.client.gui;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -13,7 +12,6 @@ import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
@@ -29,7 +27,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.awt.*;
@@ -212,7 +209,7 @@ public class IncarnationScreen extends ContainerScreen {
         addButton(btnResetSkin);
 
         for (Widget widget : buttons) {
-            if(widget instanceof DescButton){
+            if (widget instanceof DescButton) {
                 descButtons.add((DescButton) widget);
             }
         }
@@ -246,7 +243,27 @@ public class IncarnationScreen extends ContainerScreen {
 
         drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regeneration.gui.current_skin").getString(), width / 2, height / 2 + 5, Color.WHITE.getRGB());
         if (!skins.isEmpty() && position < skins.size()) {
-            drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent(skins.get(position).getName().replaceAll(".png", "")).getString(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
+            matrixStack.push();
+            String name = skins.get(position).getName().replaceAll(".png", "");
+            matrixStack.scale(0.4F, 0.4F, 0.4F);
+            drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent(name), width / 2, height / 2 + 15, Color.WHITE.getRGB());
+            matrixStack.pop();
+
+            //new
+
+/*            int textScale = (width - xSize) / 2;
+            double linePos = 0;
+            matrixStack.push();
+            matrixStack.translate(width / 2,height / 2 + 15,0);
+            float scale = (width - xSize) / font.getStringWidth(name);
+            scale = MathHelper.clamp(scale, 0, textScale);
+            if (scale > textScale)
+                scale = textScale;
+            matrixStack.translate(0, linePos, 0);
+            matrixStack.scale(scale, scale, scale);
+            drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent(name), 0, 0, Color.WHITE.getRGB());
+            matrixStack.pop();*/
+
         }
     }
 
@@ -271,7 +288,7 @@ public class IncarnationScreen extends ContainerScreen {
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
 
         for (DescButton descButton : descButtons) {
-            if(descButton.isHovered()){
+            if (descButton.isHovered()) {
                 renderToolTip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().fontRenderer);
             }
         }

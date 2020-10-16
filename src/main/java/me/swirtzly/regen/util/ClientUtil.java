@@ -1,19 +1,84 @@
 package me.swirtzly.regen.util;
 
+import me.swirtzly.regen.Regeneration;
+import me.swirtzly.regen.client.RKeybinds;
+import me.swirtzly.regen.client.rendering.entity.ItemOverrideRenderer;
+import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
+import me.swirtzly.regen.client.rendering.entity.WatcherRenderer;
+import me.swirtzly.regen.client.rendering.layers.HandLayer;
+import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
+import me.swirtzly.regen.common.objects.RBlocks;
+import me.swirtzly.regen.common.objects.REntities;
+import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.sound.MovingSound;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.toasts.SystemToast;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.entity.BipedRenderer;
+import net.minecraft.client.renderer.entity.IEntityRenderer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.settings.PointOfView;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
+import static me.swirtzly.regen.common.item.FobWatchItem.getEngrave;
+import static me.swirtzly.regen.common.item.FobWatchItem.getOpen;
+
 public class ClientUtil {
+
+    public static void doClientStuff() {
+        /* Attach RenderLayers to Renderers */
+        Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
+        for (PlayerRenderer renderPlayer : skinMap.values()) {
+            renderPlayer.addLayer(new HandLayer(renderPlayer));
+            renderPlayer.addLayer(new RenderRegenLayer(renderPlayer));
+        }
+
+        Minecraft.getInstance().getRenderManager().renderers.forEach((entityType, entityRenderer) -> {
+            if (entityRenderer instanceof BipedRenderer) {
+                ((BipedRenderer<?, ?>) entityRenderer).addLayer(new RenderRegenLayer((IEntityRenderer) entityRenderer));
+                ((BipedRenderer<?, ?>) entityRenderer).addLayer(new HandLayer((IEntityRenderer) entityRenderer));
+            }
+        });
+
+        RenderingRegistry.registerEntityRenderingHandler(REntities.ITEM_OVERRIDE_ENTITY_TYPE.get(), ItemOverrideRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);
+
+        RKeybinds.init();
+
+        ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
+            boolean isGold = getEngrave(stack);
+            boolean isOpen = getOpen(stack);
+            if (isOpen && isGold) {
+                return 0.2F;
+            }
+
+            if (!isOpen && !isGold) {
+                return 0.3F;
+            }
+
+            if (isOpen) {
+                return 0.4F;
+            }
+
+
+            return 0.1F;
+        });
+
+
+        RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.getCutoutMipped());
+    }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
         Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(sound, pitch, volume));
@@ -33,7 +98,7 @@ public class ClientUtil {
     }
 
     public static void setPlayerPerspective(PointOfView pointOfView) {
-        if (RegenConfig.CLIENT.changePerspective.get()) {
+        if (RegenConfig.CLIENT.changePerspective.get() && !Regeneration.reflector.isVRPlayer(Minecraft.getInstance().player)) {
             Minecraft.getInstance().gameSettings.setPointOfView(pointOfView);
         }
     }

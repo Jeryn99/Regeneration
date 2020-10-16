@@ -99,7 +99,7 @@ public class RegenCap implements IRegen {
 
         if (!livingEntity.world.isRemote) {
 
-            if(transitionType.get().isPlayerOnly() && !(getLiving() instanceof PlayerEntity)){
+            if (transitionType.get().isPlayerOnly() && !(getLiving() instanceof PlayerEntity)) {
                 setTransitionType(TransitionTypes.FIERY);
             }
 

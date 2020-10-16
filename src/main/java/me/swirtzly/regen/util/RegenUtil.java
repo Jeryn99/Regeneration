@@ -78,15 +78,6 @@ public class RegenUtil {
         return "#" + hex;
     }
 
-    public static CrashReport crashReport(CrashReport crashReport) {
-        CrashReportCategory crashreportcategory = crashReport.makeCategory("Regen Client Info");
-        crashreportcategory.addDetail("Alex Skins", CommonSkin.listAllSkins(PlayerUtil.SkinType.ALEX).size());
-        crashreportcategory.addDetail("Steve Skins", CommonSkin.listAllSkins(PlayerUtil.SkinType.STEVE).size());
-
-        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> crashreportcategory.addDetail("Preferred Model", iRegen.getPreferredModel().name()));
-        return crashReport;
-    }
-
     public interface IEnum<E extends Enum<E>> {
         int ordinal();
 

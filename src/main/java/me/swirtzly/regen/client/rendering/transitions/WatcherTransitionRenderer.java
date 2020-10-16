@@ -18,7 +18,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.gui.ScrollPanel;
 
 import static me.swirtzly.regen.client.rendering.transitions.FieryTransitionRenderer.renderOverlay;
 import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
@@ -73,7 +72,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
                 renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(TEXTURE)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, new Vector3d(1, 1, 1));
                 matrixStackIn.pop();
 
-                if(iRegen.getTicksAnimating() < 150) {
+                if (iRegen.getTicksAnimating() < 150) {
                     matrixStackIn.push();
                     matrixStackIn.rotate(Vector3f.XN.rotationDegrees(-90));
                     matrixStackIn.translate(0, -1.5, 1);

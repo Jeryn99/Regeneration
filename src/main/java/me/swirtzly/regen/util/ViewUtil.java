@@ -1,5 +1,6 @@
 package me.swirtzly.regen.util;
 
+import me.swirtzly.regen.Regeneration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
@@ -24,7 +25,17 @@ public class ViewUtil {
 
     public static boolean isInFrontOfEntity(LivingEntity entity, Entity target, boolean vr) {
         Vector3d vecTargetsPos = target.getPositionVec();
-        Vector3d vecLook = entity.getLookVec();
+        Vector3d vecLook;
+
+        if (vr) {
+            if (entity instanceof PlayerEntity) {
+                vecLook = Regeneration.reflector.getHMDRot((PlayerEntity) entity);
+            } else {
+                throw new RuntimeException("Attempted to use a non-player entity with VRSupport: " + entity.getPersistentData());
+            }
+        } else {
+            vecLook = entity.getLookVec();
+        }
         Vector3d vecFinal = vecTargetsPos.subtractReverse(new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())).normalize();
         vecFinal = new Vector3d(vecFinal.x, 0.0D, vecFinal.z);
         return vecFinal.dotProduct(vecLook) < 0.0;
@@ -94,6 +105,9 @@ public class ViewUtil {
         if (viewBlocked(livingBase, angel)) {
             return false;
         }
+        if (livingBase instanceof PlayerEntity) {
+            return isInFrontOfEntity(livingBase, angel, Regeneration.reflector.isVRPlayer((PlayerEntity) livingBase));
+        }
         return isInFrontOfEntity(livingBase, angel, false);
     }
 
@@ -104,7 +118,10 @@ public class ViewUtil {
 
         if (viewer instanceof PlayerEntity) {
             Vector3d pos;
-            pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
+            if (Regeneration.reflector.isVRPlayer((PlayerEntity) viewer))
+                pos = Regeneration.reflector.getHMDPos((PlayerEntity) viewer);
+            else
+                pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
             viewerPoints[0] = pos.add(-headSize, -headSize, -headSize);
             viewerPoints[1] = pos.add(-headSize, -headSize, headSize);
             viewerPoints[2] = pos.add(-headSize, headSize, -headSize);
@@ -144,7 +161,10 @@ public class ViewUtil {
 
         if (viewer instanceof PlayerEntity) {
             Vector3d pos;
-            pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
+            if (Regeneration.reflector.isVRPlayer((PlayerEntity) viewer))
+                pos = Regeneration.reflector.getHMDPos((PlayerEntity) viewer);
+            else
+                pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
             viewerPoints[0] = pos.add(-headSize, -headSize, -headSize);
             viewerPoints[1] = pos.add(-headSize, -headSize, headSize);
             viewerPoints[2] = pos.add(-headSize, headSize, -headSize);
