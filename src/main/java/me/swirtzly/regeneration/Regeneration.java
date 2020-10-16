@@ -85,7 +85,7 @@ public class Regeneration {
         TriggerManager.init();
         RegenObjects.GallifreyBiomes.registerBiomeTypes();
 
-        if (ModList.get().isLoaded("tardis")) {
+        if (ModList.get().isLoaded("tardis") && RegenConfig.COMMON.tardisModCompatFeatures.get()) {
             TardisCompat.addTardisCompat();
         }
     }

@@ -19,7 +19,7 @@ import net.tardis.mod.tileentities.ConsoleTile;
 public class ArchProtocol extends Protocol {
 
     private static final TranslationTextComponent ARCH = new TranslationTextComponent("tardis.protocol.arch");
-    private static AxisAlignedBB BOX = new AxisAlignedBB(-20, -20, -20, 20, 20, 20);
+    private static final AxisAlignedBB BOX = new AxisAlignedBB(-20, -20, -20, 20, 20, 20);
 
     public static BlockPos getGoodArchPlacement(World world, BlockPos consolePos) {
         BlockPos northPos = consolePos.north(2).up(2);
@@ -86,7 +86,7 @@ public class ArchProtocol extends Protocol {
 
 
     @Override
-    public String getDisplayName() {
+    public String getDisplayName(ConsoleTile consoleTile) {
         return ARCH.getUnformattedComponentText();
     }
 }

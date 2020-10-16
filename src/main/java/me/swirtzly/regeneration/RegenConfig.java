@@ -76,6 +76,7 @@ public class RegenConfig {
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
         public final ForgeConfigSpec.ConfigValue<String> skinDir;
         public final ForgeConfigSpec.BooleanValue mobsHaveRegens;
+        public final ForgeConfigSpec.BooleanValue tardisModCompatFeatures;
 
 /*
         public final ForgeConfigSpec.ConfigValue<Integer> confessionDialSpawnChance;
@@ -121,7 +122,11 @@ public class RegenConfig {
 			regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);
             genCrater = builder.comment("Generate graters in the ground if a player falls from a great height?").translation("config.regeneration.regeneration_craters").define("genCrater", true);
 			builder.pop();
-		}
+
+			builder.comment("Mod Compatibilities").push("tardis");
+            tardisModCompatFeatures = builder.comment("Toggle Features that interface with the Tardis Mod").define("tardisModCompatFeatures", true);
+            builder.pop();
+        }
 	}
 
 }

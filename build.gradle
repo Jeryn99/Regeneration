@@ -95,8 +95,8 @@ minecraft {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
-    //compile fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:master-SNAPSHOT')
-    compile fg.deobf("com.gitlab.Spectre0987:TardisMod-1-14:${tm_tag}") //Use stable version of Tardis Mod
+    compile fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:master-SNAPSHOT')
+    //compile fg.deobf("com.gitlab.Spectre0987:TardisMod-1-14:${tm_tag}") //Use stable version of Tardis Mod
 }
 
 jar {
