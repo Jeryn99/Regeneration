@@ -84,9 +84,14 @@ public class ArchProtocol extends Protocol {
         return "interior";
     }
 
-
     @Override
-    public String getDisplayName(ConsoleTile consoleTile) {
+    public String getDisplayName() {
         return ARCH.getUnformattedComponentText();
     }
+
+    /* Uncomment for Tardis Mod 1.5 */
+//    @Override
+//    public String getDisplayName(ConsoleTile consoleTile) {
+//        return ARCH.getUnformattedComponentText();
+//    }
 }

@@ -259,14 +259,4 @@ public class CommonHandler {
 			});
 		}
 	}
-
-    @SubscribeEvent
-	public void onRegenerate(RegenerationEvent event) {
-	    Entity ent = event.getEntity();
-	    if (!(ent instanceof TimelordEntity || ent instanceof PlayerEntity)) {
-	        if (!RegenConfig.COMMON.mobsHaveRegens.get()) //If mobs don't get regens cancel this
-	               event.setCanceled(true);
-	    }
-	}
-
 }
