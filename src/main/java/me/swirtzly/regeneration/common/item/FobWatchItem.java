@@ -74,16 +74,18 @@ public class FobWatchItem extends SolidItem {
 
     @Override
 	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-		if (stack.getTag() == null) {
-			stack.setTag(new CompoundNBT());
-			stack.getTag().putBoolean("live", true);
-		} else {
-			stack.getTag().putBoolean("live", true);
-		}
+		if(stack.getItem() instanceof FobWatchItem) {
+			if (stack.getTag() == null) {
+				stack.setTag(new CompoundNBT());
+				stack.getTag().putBoolean("live", true);
+			} else {
+				stack.getTag().putBoolean("live", true);
+			}
 
-        if (getOpen(stack) == 1) {
-			if (entityIn.ticksExisted % 600 == 0) {
-				setOpen(stack, 0);
+			if (getOpen(stack) == 1) {
+				if (entityIn.ticksExisted % 600 == 0) {
+					setOpen(stack, 0);
+				}
 			}
 		}
 
