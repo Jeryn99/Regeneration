@@ -121,7 +121,7 @@ public class IncarnationScreen extends ContainerScreen {
         this.setFocusedDefault(this.searchField);
 
 
-        DescButton btnNext = new DescButton(cx + 25, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.previous"), button -> {
+        DescButton btnNext = new DescButton(cx + 25, cy + 75, 20, 20, new TranslationTextComponent("regen.gui.previous"), button -> {
             if (searchField.getText().isEmpty()) {
                 skins = CommonSkin.listAllSkins(choices);
             }
@@ -135,7 +135,7 @@ public class IncarnationScreen extends ContainerScreen {
                 updateModels();
             }
         });
-        DescButton btnPrevious = new DescButton(cx + 130, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.next"), button -> {
+        DescButton btnPrevious = new DescButton(cx + 130, cy + 75, 20, 20, new TranslationTextComponent("regen.gui.next"), button -> {
             // Previous
             if (searchField.getText().isEmpty()) {
                 skins = CommonSkin.listAllSkins(choices);
@@ -150,26 +150,26 @@ public class IncarnationScreen extends ContainerScreen {
                 updateModels();
             }
         });
-        DescButton btnBack = new DescButton(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.back"), new Button.IPressable() {
+        DescButton btnBack = new DescButton(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regen.gui.back"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 Minecraft.getInstance().displayGuiScreen(new PreferencesScreen());
             }
         });
-        DescButton btnOpenFolder = new DescButton(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder"), new Button.IPressable() {
+        DescButton btnOpenFolder = new DescButton(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regen.gui.open_folder"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 Util.getOSType().openFile(CommonSkin.SKIN_DIRECTORY);
             }
         });
-        DescButton btnSave = new DescButton(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.save"), new Button.IPressable() {
+        DescButton btnSave = new DescButton(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regen.gui.save"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 updateModels();
                 NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex));
             }
         });
-        DescButton btnResetSkin = new DescButton(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin"), new Button.IPressable() {
+        DescButton btnResetSkin = new DescButton(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regen.gui.reset_skin"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 SkinHandler.sendResetMessage();
@@ -241,11 +241,10 @@ public class IncarnationScreen extends ContainerScreen {
                 break;
         }
 
-        drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regeneration.gui.current_skin").getString(), width / 2, height / 2 + 5, Color.WHITE.getRGB());
+        drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regen.gui.current_skin").getString(), width / 2, height / 2 + 5, Color.WHITE.getRGB());
         if (!skins.isEmpty() && position < skins.size()) {
             matrixStack.push();
             String name = skins.get(position).getName().replaceAll(".png", "");
-            matrixStack.scale(0.4F, 0.4F, 0.4F);
             drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent(name), width / 2, height / 2 + 15, Color.WHITE.getRGB());
             matrixStack.pop();
 

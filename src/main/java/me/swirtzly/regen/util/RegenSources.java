@@ -23,6 +23,6 @@ public class RegenSources extends DamageSource {
 
     @Override
     public ITextComponent getDeathMessage(LivingEntity entityLivingBaseIn) {
-        return new TranslationTextComponent("source.regen." + message, entityLivingBaseIn.getName());
+        return new TranslationTextComponent("regen.source." + message, entityLivingBaseIn.getName());
     }
 }

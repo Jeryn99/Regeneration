@@ -97,7 +97,7 @@ class CommonActing implements Acting {
 
     @Override
     public void onHandsStartGlowing(IRegen cap) {
-        PlayerUtil.sendMessage(cap.getLiving(), new TranslationTextComponent("regeneration.messages.regen_warning"), true);
+        PlayerUtil.sendMessage(cap.getLiving(), new TranslationTextComponent("regen.messages.regen_warning"), true);
     }
 
     @Override
@@ -119,9 +119,16 @@ class CommonActing implements Acting {
         player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(slownessModifier);
 
         //Trait
-        cap.getTrait().reset(cap);
-        cap.setTrait(Traits.getRandomTrait(player.getRNG(), !(player instanceof PlayerEntity)));
-        cap.getTrait().apply(cap);
+        if(RegenConfig.COMMON.traitsEnabled.get()) {
+            cap.getTrait().reset(cap);
+            cap.setTrait(Traits.getRandomTrait(player.getRNG(), !(player instanceof PlayerEntity)));
+            cap.getTrait().apply(cap);
+            PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", cap.getTrait().getTranslation().getString()), true);
+        } else {
+            cap.getTrait().reset(cap);
+            cap.setTrait(Traits.BORING.get());
+            cap.getTrait().apply(cap);
+        }
     }
 
     @Override

@@ -487,7 +487,7 @@ public class RegenCap implements IRegen {
                 float healthNeeded = entity.getMaxHealth() - entity.getHealth();
                 entity.heal(healthNeeded);
                 if (livingEntity instanceof PlayerEntity) {
-                    PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.healed", entity.getName()), true);
+                    PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.healed", entity.getName()), true);
                 }
                 event.setAmount(0.0F);
                 livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_HEALING, healthNeeded);
@@ -508,7 +508,7 @@ public class RegenCap implements IRegen {
                 scheduleNextHandGlow();
                 if (!livingEntity.world.isRemote) {
                     if (livingEntity instanceof PlayerEntity) {
-                        PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.regen_delayed"), true);
+                        PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.regen_delayed"), true);
                     }
                 }
                 e.setCanceled(true); // It got annoying in creative to break something
@@ -540,7 +540,7 @@ public class RegenCap implements IRegen {
 
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
                 if (livingEntity instanceof PlayerEntity) {
-                    TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_death_msg", livingEntity.getName());
+                    TranslationTextComponent text = new TranslationTextComponent("regen.messages.regen_death_msg", livingEntity.getName());
                     text.setStyle(text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathMessage()))));
                     PlayerUtil.sendMessageToAll(text);
                 }
@@ -586,7 +586,7 @@ public class RegenCap implements IRegen {
             syncToClients(null);
             nextTransition = null;
             if (livingEntity instanceof PlayerEntity) {
-                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.post_ended"), true);
+                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.post_ended"), true);
             }
         }
 

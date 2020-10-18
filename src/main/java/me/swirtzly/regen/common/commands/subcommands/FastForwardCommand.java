@@ -28,7 +28,7 @@ public class FastForwardCommand implements Command<CommandSource> {
             if (cap.getCurrentState() != RegenStates.ALIVE) {
                 cap.getStateManager().fastForward();
             } else {
-                throw new CommandException(new TranslationTextComponent("regeneration.messages.fast_forward_cmd_fail"));
+                throw new CommandException(new TranslationTextComponent("regen.messages.fast_forward_cmd_fail"));
             }
         });
         return Command.SINGLE_SUCCESS;

@@ -1,5 +1,6 @@
 package me.swirtzly.regen.util;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.client.RKeybinds;
 import me.swirtzly.regen.client.rendering.entity.ItemOverrideRenderer;
@@ -14,6 +15,7 @@ import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.sound.MovingSound;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.toasts.SystemToast;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -22,12 +24,15 @@ import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -100,6 +105,25 @@ public class ClientUtil {
     public static void setPlayerPerspective(PointOfView pointOfView) {
         if (RegenConfig.CLIENT.changePerspective.get() && !Regeneration.reflector.isVRPlayer(Minecraft.getInstance().player)) {
             Minecraft.getInstance().gameSettings.setPointOfView(pointOfView);
+        }
+    }
+
+    public static void drawSplitString(MatrixStack ms, FontRenderer fontRenderer, List<ITextComponent> list, float x, float y, int maxWidth, int color)
+    {
+        for(ITextComponent t : list)
+        {
+            if(t.getUnformattedComponentText().isEmpty() && t.getSiblings().isEmpty())
+            {
+                y += fontRenderer.FONT_HEIGHT;
+            }
+            else
+            {
+                for(IReorderingProcessor p : fontRenderer.trimStringToWidth(t, maxWidth))
+                {
+                    fontRenderer.func_238407_a_(ms, p, x, y, color);
+                    y += fontRenderer.FONT_HEIGHT;
+                }
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 import java.util.function.Supplier;
@@ -18,13 +19,23 @@ import java.util.function.Supplier;
 public class Traits extends ForgeRegistryEntry<Traits> {
 
 
-    public static final Traits QUICK = new Traits(TraitQuick::new);
-    public static final Traits BORING = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "boring")));
-    public static final Traits SMART = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "smart")));
-    public static final Traits LONG_ARMS = new Traits(TraitLongArms::new);
-    public static final Traits STRONG = new Traits(TraitStrong::new);
-    public static final Traits SWIM_SPEED = new Traits(TraitSwimSpeed::new);
+    public static final Traits QUICK = addTrait(new Traits(TraitQuick::new));
+    public static final Traits BORING = addTrait(new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "boring"))));
+    public static final Traits SMART = addTrait(new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "smart"))));
+    public static final Traits DUMB = addTrait(new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "dumb"))));
+    public static final Traits KNOCKBACK = addTrait(new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "knockback"))));
+    public static final Traits LONG_ARMS = addTrait(new Traits(TraitLongArms::new));
+    public static final Traits STRONG = addTrait(new Traits(TraitStrong::new));
+    public static final Traits SWIM_SPEED = addTrait(new Traits(TraitSwimSpeed::new));
 
+    private static final ArrayList<Traits> TRAITS = new ArrayList<>();
+
+    public static Traits addTrait(Traits traits){
+        if (TRAITS != null) {
+            TRAITS.add(traits);
+        }
+        return traits;
+    }
 
     //Create Registry
     public static IForgeRegistry<ITrait> REGISTRY;
@@ -36,13 +47,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
 
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register<ITrait> e) {
-        e.getRegistry().registerAll(
-                QUICK.get(),
-                BORING.get(),
-                LONG_ARMS.get(),
-                STRONG.get(),
-                SMART.get(),
-                SWIM_SPEED.get());
+       e.getRegistry().registerAll(QUICK.get(), BORING.get(), SMART.get(), DUMB.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get()/*, KNOCKBACK.get()*/);
     }
 
     private Supplier<ITrait> supplier;
@@ -65,7 +70,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
 
     public static ITrait getRandomTrait(Random random, boolean isMob) {
         Collection<ITrait> value = REGISTRY.getValues();
-        value.removeIf(trait -> trait.isPlayerOnly() && isMob);
+        //value.removeIf(trait -> trait.isPlayerOnly() && isMob);
         int i = random.nextInt(value.size());
         return Iterables.get(value, i);
     }

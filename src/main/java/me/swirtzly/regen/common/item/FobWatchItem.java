@@ -89,19 +89,19 @@ public class FobWatchItem extends SolidItem {
 
         if (!player.isSneaking()) { // transferring watch->player
             if (getDamage(stack) == RegenConfig.COMMON.regenCapacity.get())
-                return msgUsageFailed(player, "regeneration.messages.transfer.empty_watch", stack);
+                return msgUsageFailed(player, "regen.messages.transfer.empty_watch", stack);
             else if (cap.getRegens() == RegenConfig.COMMON.regenCapacity.get())
-                return msgUsageFailed(player, "regeneration.messages.transfer.max_regens", stack);
+                return msgUsageFailed(player, "regen.messages.transfer.max_regens", stack);
 
             int supply = RegenConfig.COMMON.regenCapacity.get() - getDamage(stack), needed = RegenConfig.COMMON.regenCapacity.get() - cap.getRegens(), used = Math.min(supply, needed);
 
             if (cap.canRegenerate()) {
                 setOpen(stack, true);
-                PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.gained_regens", used), true);
+                PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.gained_regens", used), true);
             } else {
                 if (!world.isRemote) {
                     setOpen(stack, true);
-                    PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.now_timelord"), true);
+                    PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.now_timelord"), true);
                 }
             }
 
@@ -119,17 +119,17 @@ public class FobWatchItem extends SolidItem {
 
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         } else { // transferring player->watch
-            if (!cap.canRegenerate()) return msgUsageFailed(player, "regeneration.messages.transfer.no_regens", stack);
+            if (!cap.canRegenerate()) return msgUsageFailed(player, "regen.messages.transfer.no_regens", stack);
 
             if (cap.getCurrentState() != RegenStates.ALIVE) {
-                return msgUsageFailed(player, "regeneration.messages.not_alive", stack);
+                return msgUsageFailed(player, "regen.messages.not_alive", stack);
             }
 
             if (getDamage(stack) == 0)
-                return msgUsageFailed(player, "regeneration.messages.transfer.full_watch", stack);
+                return msgUsageFailed(player, "regen.messages.transfer.full_watch", stack);
 
             setDamage(stack, getDamage(stack) - 1);
-            PlayerUtil.sendMessage(player, "regeneration.messages.transfer.success", true);
+            PlayerUtil.sendMessage(player, "regen.messages.transfer.success", true);
 
             if (world.isRemote) {
                 ClientUtil.playPositionedSoundRecord(SoundEvents.BLOCK_FIRE_EXTINGUISH, 5.0F, 2.0F);

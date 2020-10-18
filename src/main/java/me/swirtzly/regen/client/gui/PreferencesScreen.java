@@ -42,7 +42,7 @@ public class PreferencesScreen extends ContainerScreen {
         final int btnW = 66, btnH = 18;
         ROTATION = 0;
 
-        Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regeneration.gui.close"), onPress -> Minecraft.getInstance().displayGuiScreen(null));
+        Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regen.gui.close"), onPress -> Minecraft.getInstance().displayGuiScreen(null));
         Button btnRegenType = new Button(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regentype." + SELECTED_TYPE.getRegistryName()), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
@@ -52,24 +52,24 @@ public class PreferencesScreen extends ContainerScreen {
                     pos = 0;
                 }
                 SELECTED_TYPE = TransitionTypes.TYPES[pos];
-                button.setMessage(new TranslationTextComponent("regeneration.gui.regen_type", SELECTED_TYPE.get().getTranslation()));
+                button.setMessage(new TranslationTextComponent("regen.gui.regen_type", SELECTED_TYPE.get().getTranslation()));
                 NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(SELECTED_TYPE.get()));
             }
         });
 
-        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase())), button -> {
+        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TranslationTextComponent("regen.gui.skintype", new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase())), button -> {
             if (CHOICES.next() != null) {
                 CHOICES = CHOICES.next();
             } else {
                 CHOICES = PlayerUtil.SkinType.ALEX;
             }
-            button.setMessage(new TranslationTextComponent("regeneration.gui.skintype", new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase())));
+            button.setMessage(new TranslationTextComponent("regen.gui.skintype", new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase())));
             PlayerUtil.updateModel(CHOICES);
         });
-        btnRegenType.setMessage(new TranslationTextComponent("regeneration.gui.regen_type", SELECTED_TYPE.get().getTranslation()));
+        btnRegenType.setMessage(new TranslationTextComponent("regen.gui.regen_type", SELECTED_TYPE.get().getTranslation()));
 
-        Button btnColor = new Button(width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.color_gui"), button -> Minecraft.getInstance().displayGuiScreen(new ColorScreen()));
-        Button btnSkinChoice = new Button(width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TranslationTextComponent("regeneration.gui.skin_choice"), p_onPress_1_ -> {
+        Button btnColor = new Button(width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().displayGuiScreen(new ColorScreen()));
+        Button btnSkinChoice = new Button(width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TranslationTextComponent("regen.gui.skin_choice"), p_onPress_1_ -> {
             Minecraft.getInstance().displayGuiScreen(new IncarnationScreen());
         });
 
@@ -94,15 +94,15 @@ public class PreferencesScreen extends ContainerScreen {
         InventoryScreen.drawEntityOnScreen(width / 2 - 75, height / 2 + 45, 55, (float) (guiLeft + 51) - x, (float) (guiTop + 75 - 50) - y, Minecraft.getInstance().player);
         GlStateManager.popMatrix();
 
-        drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regeneration.gui.preferences").getString(), width / 2, height / 2 - 80, Color.WHITE.getRGB());
+        drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regen.gui.preferences").getString(), width / 2, height / 2 - 80, Color.WHITE.getRGB());
 
         String str = "Banana Phone";
         int length = minecraft.fontRenderer.getStringWidth(str);
 
         if (RegenConfig.COMMON.infiniteRegeneration.get())
-            str = new TranslationTextComponent("regeneration.gui.infinite_regenerations").getString();
+            str = new TranslationTextComponent("regen.gui.infinite_regenerations").getString();
         else
-            str = new TranslationTextComponent("regeneration.gui.remaining_regens.status", data.getRegens()).getString();
+            str = new TranslationTextComponent("regen.gui.remaining_regens.status", data.getRegens()).getString();
 
         length = minecraft.fontRenderer.getStringWidth(str);
         font.drawStringWithShadow(matrixStack, str, cx + 170 - length / 2, cy + 21, Color.WHITE.getRGB());
