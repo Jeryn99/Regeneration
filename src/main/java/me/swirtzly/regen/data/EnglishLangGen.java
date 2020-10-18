@@ -3,6 +3,7 @@ package me.swirtzly.regen.data;
 import me.swirtzly.regen.common.objects.RBlocks;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
+import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
@@ -125,6 +126,13 @@ public class EnglishLangGen extends LanguageProvider {
         //Entity
         add(REntities.TIMELORD.get(), "Timelord");
         add(REntities.ITEM_OVERRIDE_ENTITY_TYPE.get(), "Item");
+
+        //Traits
+        add(Traits.BORING.get().getTranslation().getKey(), "Boring");
+        add(Traits.BORING.get().getDescription().getKey(), "There's really nothing Special about you. Plain Human!");
+
+        add(Traits.QUICK.get().getTranslation().getKey(), "Quick");
+        add(Traits.QUICK.get().getDescription().getKey(), "You sprint way faster! Watch you don't trip!");
     }
 
 

@@ -19,6 +19,7 @@ public class RConstants {
     public static final String COLORS = "colors";
     public static final String PREFERENCE = "model_pref";
     public static final String GLOWING = "glowing";
+    public static final String CURRENT_TRAIT = "current_trait";
     public static String REGENS_LEFT = "regens_left";
     public static String CURRENT_STATE = "current_state";
     public static String PRIMARY_RED = "p_red";

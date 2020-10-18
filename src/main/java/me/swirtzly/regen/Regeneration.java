@@ -9,6 +9,7 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
+import me.swirtzly.regen.common.traits.RegenAttributes;
 import me.swirtzly.regen.compat.ServerReflector;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.BlockstateGen;
@@ -89,6 +90,7 @@ public class Regeneration {
         RBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RegenAttributes.ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
 }

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
+import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.TypeMessage;
@@ -106,6 +107,11 @@ public class PreferencesScreen extends ContainerScreen {
         length = minecraft.fontRenderer.getStringWidth(str);
         font.drawStringWithShadow(matrixStack, str, cx + 170 - length / 2, cy + 21, Color.WHITE.getRGB());
 
+        TranslationTextComponent traitLang = data.getTrait().getTranslation();
+        font.drawStringWithShadow(matrixStack, traitLang.getString(), cx + 170 - length / 2, cy + 40, Color.WHITE.getRGB());
+
+        TranslationTextComponent traitLangDesc = data.getTrait().getDescription();
+        font.drawStringWithShadow(matrixStack, traitLangDesc.getString(), cx + 170 - length / 2, cy + 50, Color.WHITE.getRGB());
 
     }
 

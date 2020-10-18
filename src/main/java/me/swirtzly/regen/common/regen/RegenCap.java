@@ -4,6 +4,7 @@ import me.swirtzly.regen.common.regen.acting.ActingForwarder;
 import me.swirtzly.regen.common.regen.state.IStateManager;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
+import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.SyncMessage;
@@ -64,6 +65,7 @@ public class RegenCap implements IRegen {
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
     private byte[] nextSkin = new byte[0];
+    private Traits.ITrait currentTrait = Traits.BORING.get();
 
     public RegenCap() {
         this.livingEntity = null;
@@ -102,6 +104,8 @@ public class RegenCap implements IRegen {
             if (transitionType.get().isPlayerOnly() && !(getLiving() instanceof PlayerEntity)) {
                 setTransitionType(TransitionTypes.FIERY);
             }
+
+            currentTrait.tick(this);
 
             if (!didSetup) {
                 syncToClients(null);
@@ -220,6 +224,7 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.PREFERENCE, preferredSkinType.name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
         compoundNBT.putBoolean(RConstants.GLOWING, areHandsGlowing());
+        compoundNBT.putString(RConstants.CURRENT_TRAIT, currentTrait.getRegistryName().toString());
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skinArray);
@@ -250,6 +255,8 @@ public class RegenCap implements IRegen {
         setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
         areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
+        setTrait(Traits.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
+
         if (nbt.contains(RConstants.PREFERENCE)) {
             setPreferredModel(PlayerUtil.SkinType.valueOf(nbt.getString(RConstants.PREFERENCE)));
         }
@@ -364,6 +371,16 @@ public class RegenCap implements IRegen {
     @Override
     public boolean isNextSkinTypeAlex() {
         return nextSkinTypeAlex;
+    }
+
+    @Override
+    public Traits.ITrait getTrait() {
+        return currentTrait;
+    }
+
+    @Override
+    public void setTrait(Traits.ITrait trait) {
+        this.currentTrait = trait;
     }
 
     public class StateManager implements IStateManager {

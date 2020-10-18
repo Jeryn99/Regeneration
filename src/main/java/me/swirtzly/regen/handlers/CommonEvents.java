@@ -1,7 +1,7 @@
 package me.swirtzly.regen.handlers;
 
 import com.mojang.brigadier.CommandDispatcher;
-import me.swirtzly.regen.commands.RegenCommand;
+import me.swirtzly.regen.common.commands.RegenCommand;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;

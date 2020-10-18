@@ -1,4 +1,4 @@
-package me.swirtzly.regen.commands.subcommands;
+package me.swirtzly.regen.common.commands.subcommands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
