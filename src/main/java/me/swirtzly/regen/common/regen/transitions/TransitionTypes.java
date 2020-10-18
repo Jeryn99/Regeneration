@@ -23,6 +23,7 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
     public static final TransitionTypes WATCHER = new TransitionTypes(WatcherTransition::new);
     public static final TransitionTypes SPARKLE = new TransitionTypes(SparkleTransition::new);
     public static final TransitionTypes ENDER_DRAGON = new TransitionTypes(EnderDragonTransition::new);
+
     public static IForgeRegistry<TransitionTypes> REGISTRY;
     public static TransitionTypes[] TYPES = new TransitionTypes[]{FIERY, TROUGHTON};
     //==================================
