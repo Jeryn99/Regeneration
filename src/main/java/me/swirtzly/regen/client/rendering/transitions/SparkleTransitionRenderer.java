@@ -69,7 +69,7 @@ public class SparkleTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void animation(BipedModel<?> bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
             if (data.getCurrentState() == REGENERATING && data.getTransitionType() == TransitionTypes.SPARKLE) {
                 bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(-20);
@@ -84,4 +84,5 @@ public class SparkleTransitionRenderer implements TransitionRenderer {
             }
         });
     }
+
 }

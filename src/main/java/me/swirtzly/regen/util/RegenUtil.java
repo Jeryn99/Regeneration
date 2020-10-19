@@ -1,10 +1,5 @@
 package me.swirtzly.regen.util;
 
-import me.swirtzly.regen.client.skin.CommonSkin;
-import me.swirtzly.regen.common.regen.RegenCap;
-import net.minecraft.client.Minecraft;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.crash.CrashReportCategory;
 import org.apache.commons.io.FileUtils;
 
 import java.awt.*;
@@ -76,15 +71,6 @@ public class RegenUtil {
             hex.insert(0, "0");
         }
         return "#" + hex;
-    }
-
-    public static CrashReport crashReport(CrashReport crashReport) {
-        CrashReportCategory crashreportcategory = crashReport.makeCategory("Regen Client Info");
-        crashreportcategory.addDetail("Alex Skins", CommonSkin.listAllSkins(PlayerUtil.SkinType.ALEX).size());
-        crashreportcategory.addDetail("Steve Skins", CommonSkin.listAllSkins(PlayerUtil.SkinType.STEVE).size());
-
-        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> crashreportcategory.addDetail("Preferred Model", iRegen.getPreferredModel().name()));
-        return crashReport;
     }
 
     public interface IEnum<E extends Enum<E>> {

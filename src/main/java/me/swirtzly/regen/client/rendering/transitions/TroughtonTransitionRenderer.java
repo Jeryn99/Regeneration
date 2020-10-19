@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.rendering.types.RenderTypes;
 import me.swirtzly.regen.common.entities.TimelordEntity;
-import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.Minecraft;
@@ -110,7 +109,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void animation(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
 
             if (data.getCurrentState() == REGENERATING && data.getTransitionType() == TransitionTypes.TROUGHTON) {

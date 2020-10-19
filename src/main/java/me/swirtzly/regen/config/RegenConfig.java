@@ -21,7 +21,6 @@ public class RegenConfig {
         COMMON_SPEC = specPair.getRight();
         COMMON = specPair.getLeft();
 
-
         Pair<Client, ForgeConfigSpec> specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
         CLIENT_SPEC = specClientPair.getRight();
         CLIENT = specClientPair.getLeft();
@@ -85,7 +84,7 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue resetHunger;
         public final ForgeConfigSpec.BooleanValue resetOxygen;
         public final ForgeConfigSpec.IntValue absorbtionLevel;
-        public final ForgeConfigSpec.BooleanValue genCrater;
+        public final ForgeConfigSpec.BooleanValue traitsEnabled;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
         public final ForgeConfigSpec.ConfigValue<String> skinDir;
 
@@ -122,7 +121,8 @@ public class RegenConfig {
             regenerativeKnockback = builder.comment("The amount of knockback every mob inside of the knock back radius gets").translation("config.regeneration.regenerative_knockback").define("regenerativeKnockback", 2.5D);
             regenKnockbackRange = builder.comment("Range wherein every mob is knocked back upon regeneration").translation("config.regeneration.regenerative_knockback_range").defineInRange("regenerativeKnockbackRange", 7, 0, Integer.MAX_VALUE);
             regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);
-            genCrater = builder.comment("Generate graters in the ground if a player falls from a great height?").translation("config.regeneration.regeneration_craters").define("genCrater", true);
+            traitsEnabled = builder.comment("Toggle whether traits are enabled").translation("config.regeneration.traitsenabled").define("traitsEnabled", true);
+
             builder.pop();
         }
     }

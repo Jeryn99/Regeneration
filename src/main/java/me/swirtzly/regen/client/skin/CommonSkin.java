@@ -1,19 +1,18 @@
 package me.swirtzly.regen.client.skin;
 
-import com.google.gson.JsonObject;
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.data.IDataProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
@@ -21,7 +20,6 @@ import java.net.URLConnection;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -112,8 +110,6 @@ public class CommonSkin {
      * @throws IOException
      */
     public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
-
-
         URLConnection uc = url.openConnection();
         uc.connect();
         uc = url.openConnection();
@@ -158,7 +154,7 @@ public class CommonSkin {
     public static boolean isAlexSkin(BufferedImage image) {
 
         for (int i = 0; i < 8; i++) {
-            if(!hasAlpha(54, i + 20, image) || !hasAlpha(55, i + 20, image)){
+            if (!hasAlpha(54, i + 20, image) || !hasAlpha(55, i + 20, image)) {
                 return false;
             }
         }
@@ -171,15 +167,23 @@ public class CommonSkin {
         return pixel >> 24 == 0x00 || ((pixel & 0x00FFFFFF) == 0);
     }
 
-    public static void doSetupOnThread() {
+    public static void doSetupOnThread(boolean isClient) {
         AtomicBoolean notDownloaded = new AtomicBoolean(true);
         new Thread(() -> {
             while (notDownloaded.get()) {
                 try {
                     createDefaultFolders();
                     handleDownloads();
-                    ClientSkin.downloadTrendingSkins();
-                    ClientSkin.downloadPreviousSkins();
+                    if (isClient) {
+                        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+                            try {
+                                ClientSkin.downloadTrendingSkins();
+                                ClientSkin.downloadPreviousSkins();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
                     notDownloaded.set(false);
                 } catch (Exception e) {
                     Regeneration.LOG.error("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");

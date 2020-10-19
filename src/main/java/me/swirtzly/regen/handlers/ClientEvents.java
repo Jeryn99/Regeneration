@@ -23,6 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.util.math.vector.Vector3d;
@@ -30,6 +31,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -39,7 +41,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import static me.swirtzly.regen.common.regen.state.RegenStates.*;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
 
     private static final ResourceLocation BUTTON_TEX = new ResourceLocation(RConstants.MODID, "textures/gui/gui_button_customize.png");
@@ -157,11 +159,11 @@ public class ClientEvents {
                 switch (cap.getCurrentState()) {
                     case GRACE:
                         RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
-                        warning = new TranslationTextComponent("regeneration.messages.warning.grace", forceKeybind.getString()).getString();
+                        warning = new TranslationTextComponent("regen.messages.warning.grace", forceKeybind.getString()).getString();
                         break;
                     case GRACE_CRIT:
                         RenderHelp.renderVig(new Vector3d(1, 0, 0), 0.5F);
-                        warning = new TranslationTextComponent("regeneration.messages.warning.grace_critical", forceKeybind.getString()).getString();
+                        warning = new TranslationTextComponent("regen.messages.warning.grace_critical", forceKeybind.getString()).getString();
                         break;
 
                     case REGENERATING:
@@ -217,11 +219,10 @@ public class ClientEvents {
         }
     }
 
-
     @SubscribeEvent
     public static void keyInput(InputUpdateEvent e) {
         if (Minecraft.getInstance().player == null) return;
-
+        ClientPlayerEntity player = Minecraft.getInstance().player;
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data -> {
             if (data.getCurrentState() == REGENERATING) { // locking user
                 MovementInput moveType = e.getMovementInput();
@@ -232,6 +233,15 @@ public class ClientEvents {
                 moveType.moveForward = 0.0F;
                 moveType.sneaking = false;
                 moveType.moveStrafe = 0.0F;
+
+                if (data.getTransitionType() == TransitionTypes.ENDER_DRAGON) {
+                    if (player.getPosition().getY() <= 100) {
+                        BlockPos upwards = player.getPosition().up(2);
+                        BlockPos pos = upwards.subtract(player.getPosition());
+                        Vector3d vec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).normalize();
+                        player.setMotion(player.getMotion().add(vec.scale(0.10D)));
+                    }
+                }
             }
         }));
     }

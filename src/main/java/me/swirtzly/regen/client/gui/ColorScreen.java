@@ -35,7 +35,7 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
     private Vector3d initialPrimary, initialSecondary;
 
     public ColorScreen() {
-        super(new BlankContainer(), Minecraft.getInstance().player.inventory, new TranslationTextComponent("regeneration.gui.color_gui"));
+        super(new BlankContainer(), Minecraft.getInstance().player.inventory, new TranslationTextComponent("regen.gui.color_gui"));
         xSize = 176;
         ySize = 186;
     }
@@ -59,7 +59,7 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
 
 
         // Reset Style Button
-        this.addButton(new Button(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.undo"), button -> {
+        this.addButton(new Button(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regen.gui.undo"), button -> {
             slidePrimaryRed.setValue(initialPrimary.x);
             slidePrimaryGreen.setValue(initialPrimary.y);
             slidePrimaryBlue.setValue(initialPrimary.z);
@@ -77,7 +77,7 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
         addButton(this.inputSecondColor);
 
         // Color input Primary button
-        this.addButton(new Button(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.input_color"), button -> {
+        this.addButton(new Button(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regen.gui.input_color"), button -> {
             String primaryColorText = inputPrimaryColor.getText();
             String secondColourText = inputSecondColor.getText();
 
@@ -122,10 +122,10 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
         }));
 
         // Customize Button
-        this.addButton(new Button(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.close"), button -> Minecraft.getInstance().displayGuiScreen(null)));
+        this.addButton(new Button(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regen.gui.close"), button -> Minecraft.getInstance().displayGuiScreen(null)));
 
         // Default Button
-        this.addButton(new Button(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.default"), button -> {
+        this.addButton(new Button(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regen.gui.default"), button -> {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
                 TransitionType regenType = data.getTransitionType().get();
                 slidePrimaryRed.setValue(regenType.getDefaultPrimaryColor().x);
@@ -140,22 +140,22 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
             onChangeSliderValue(null);
         }));
 
-        slidePrimaryRed = new Slider(cx + 10, cy + 65, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.red"), StringTextComponent.EMPTY, 0, 1, primaryRed, true, true, button -> {
+        slidePrimaryRed = new Slider(cx + 10, cy + 65, sliderW, sliderH, new TranslationTextComponent("regen.gui.red"), StringTextComponent.EMPTY, 0, 1, primaryRed, true, true, button -> {
 
         }, this);
-        slidePrimaryGreen = new Slider(cx + 10, cy + 84, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.green"), StringTextComponent.EMPTY, 0, 1, primaryGreen, true, true, p_onPress_1_ -> {
+        slidePrimaryGreen = new Slider(cx + 10, cy + 84, sliderW, sliderH, new TranslationTextComponent("regen.gui.green"), StringTextComponent.EMPTY, 0, 1, primaryGreen, true, true, p_onPress_1_ -> {
 
         }, this);
-        slidePrimaryBlue = new Slider(cx + 10, cy + 103, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.blue"), StringTextComponent.EMPTY, 0, 1, primaryBlue, true, true, p_onPress_1_ -> {
+        slidePrimaryBlue = new Slider(cx + 10, cy + 103, sliderW, sliderH, new TranslationTextComponent("regen.gui.blue"), StringTextComponent.EMPTY, 0, 1, primaryBlue, true, true, p_onPress_1_ -> {
 
         }, this);
-        slideSecondaryRed = new Slider(cx + 96, cy + 65, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.red"), StringTextComponent.EMPTY, 0, 1, secondaryRed, true, true, p_onPress_1_ -> {
+        slideSecondaryRed = new Slider(cx + 96, cy + 65, sliderW, sliderH, new TranslationTextComponent("regen.gui.red"), StringTextComponent.EMPTY, 0, 1, secondaryRed, true, true, p_onPress_1_ -> {
 
         }, this);
-        slideSecondaryGreen = new Slider(cx + 96, cy + 84, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.green"), StringTextComponent.EMPTY, 0, 1, secondaryGreen, true, true, p_onPress_1_ -> {
+        slideSecondaryGreen = new Slider(cx + 96, cy + 84, sliderW, sliderH, new TranslationTextComponent("regen.gui.green"), StringTextComponent.EMPTY, 0, 1, secondaryGreen, true, true, p_onPress_1_ -> {
 
         }, this);
-        slideSecondaryBlue = new Slider(cx + 96, cy + 103, sliderW, sliderH, new TranslationTextComponent("regeneration.gui.blue"), StringTextComponent.EMPTY, 0, 1, secondaryBlue, true, true, p_onPress_1_ -> {
+        slideSecondaryBlue = new Slider(cx + 96, cy + 103, sliderW, sliderH, new TranslationTextComponent("regen.gui.blue"), StringTextComponent.EMPTY, 0, 1, secondaryBlue, true, true, p_onPress_1_ -> {
 
         }, this);
 
@@ -215,10 +215,10 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
         RenderHelp.drawRect(cx + 96, cy + 45, cx + 165, cy + 60, (float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue(), 1);
 
         RegenCap.get(getMinecraft().player).ifPresent((cap) -> {
-            String str = new TranslationTextComponent("regeneration.gui.primary").getString();
+            String str = new TranslationTextComponent("regen.gui.primary").getString();
             int length = getMinecraft().fontRenderer.getStringWidth(str);
             this.font.func_243248_b(p_230450_1_, new StringTextComponent(str), (float) cx + 45 - length / 2, cy + 49, 4210752);
-            str = new TranslationTextComponent("regeneration.gui.secondary").getString();
+            str = new TranslationTextComponent("regen.gui.secondary").getString();
             length = font.getStringWidth(str);
             this.font.func_243248_b(p_230450_1_, new StringTextComponent(str), cx + 131 - length / 2, cy + 49, 4210752);
         });

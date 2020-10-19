@@ -1,4 +1,4 @@
-package me.swirtzly.regen.commands.subcommands;
+package me.swirtzly.regen.common.commands.subcommands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -28,7 +28,7 @@ public class FastForwardCommand implements Command<CommandSource> {
             if (cap.getCurrentState() != RegenStates.ALIVE) {
                 cap.getStateManager().fastForward();
             } else {
-                throw new CommandException(new TranslationTextComponent("regeneration.messages.fast_forward_cmd_fail"));
+                throw new CommandException(new TranslationTextComponent("regen.messages.fast_forward_cmd_fail"));
             }
         });
         return Command.SINGLE_SUCCESS;

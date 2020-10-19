@@ -1,9 +1,11 @@
 package me.swirtzly.regen.common.regen;
 
+import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
 import me.swirtzly.regen.common.regen.state.IStateManager;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
+import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.SyncMessage;
@@ -64,6 +66,7 @@ public class RegenCap implements IRegen {
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
     private byte[] nextSkin = new byte[0];
+    private Traits.ITrait currentTrait = Traits.BORING.get();
 
     public RegenCap() {
         this.livingEntity = null;
@@ -98,6 +101,13 @@ public class RegenCap implements IRegen {
     public void tick() {
 
         if (!livingEntity.world.isRemote) {
+
+            if (!(getLiving() instanceof PlayerEntity)) {
+                setTransitionType(TransitionTypes.FIERY);
+            }
+
+            currentTrait.tick(this);
+
             if (!didSetup) {
                 syncToClients(null);
                 didSetup = true;
@@ -215,6 +225,7 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.PREFERENCE, preferredSkinType.name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
         compoundNBT.putBoolean(RConstants.GLOWING, areHandsGlowing());
+        compoundNBT.putString(RConstants.CURRENT_TRAIT, currentTrait.getRegistryName().toString());
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skinArray);
@@ -245,6 +256,8 @@ public class RegenCap implements IRegen {
         setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
         areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
+        setTrait(Traits.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
+
         if (nbt.contains(RConstants.PREFERENCE)) {
             setPreferredModel(PlayerUtil.SkinType.valueOf(nbt.getString(RConstants.PREFERENCE)));
         }
@@ -361,6 +374,16 @@ public class RegenCap implements IRegen {
         return nextSkinTypeAlex;
     }
 
+    @Override
+    public Traits.ITrait getTrait() {
+        return currentTrait;
+    }
+
+    @Override
+    public void setTrait(Traits.ITrait trait) {
+        this.currentTrait = trait;
+    }
+
     public class StateManager implements IStateManager {
 
         private final Map<RegenStates.Transition, Runnable> transitionCallbacks;
@@ -465,7 +488,7 @@ public class RegenCap implements IRegen {
                 float healthNeeded = entity.getMaxHealth() - entity.getHealth();
                 entity.heal(healthNeeded);
                 if (livingEntity instanceof PlayerEntity) {
-                    PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.healed", entity.getName()), true);
+                    PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.healed", entity.getName()), true);
                 }
                 event.setAmount(0.0F);
                 livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_HEALING, healthNeeded);
@@ -486,7 +509,7 @@ public class RegenCap implements IRegen {
                 scheduleNextHandGlow();
                 if (!livingEntity.world.isRemote) {
                     if (livingEntity instanceof PlayerEntity) {
-                        PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.regen_delayed"), true);
+                        PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.regen_delayed"), true);
                     }
                 }
                 e.setCanceled(true); // It got annoying in creative to break something
@@ -518,7 +541,7 @@ public class RegenCap implements IRegen {
 
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
                 if (livingEntity instanceof PlayerEntity) {
-                    TranslationTextComponent text = new TranslationTextComponent("regeneration.messages.regen_death_msg", livingEntity.getName());
+                    TranslationTextComponent text = new TranslationTextComponent("regen.messages.regen_death_msg", livingEntity.getName());
                     text.setStyle(text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathMessage()))));
                     PlayerUtil.sendMessageToAll(text);
                 }
@@ -564,7 +587,7 @@ public class RegenCap implements IRegen {
             syncToClients(null);
             nextTransition = null;
             if (livingEntity instanceof PlayerEntity) {
-                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.post_ended"), true);
+                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.post_ended"), true);
             }
         }
 

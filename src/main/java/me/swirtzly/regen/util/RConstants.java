@@ -19,14 +19,15 @@ public class RConstants {
     public static final String COLORS = "colors";
     public static final String PREFERENCE = "model_pref";
     public static final String GLOWING = "glowing";
-    public static String REGENS_LEFT = "regens_left";
-    public static String CURRENT_STATE = "current_state";
-    public static String PRIMARY_RED = "p_red";
-    public static String PRIMARY_GREEN = "p_green";
-    public static String PRIMARY_BLUE = "p_blue";
-    public static String SECONDARY_RED = "s_red";
-    public static String SECONDARY_GREEN = "s_green";
-    public static String SECONDARY_BLUE = "s_blue";
-    public static String ANIMATION_TICKS = "ticks_animating";
+    public static final String CURRENT_TRAIT = "current_trait";
+    public static final String REGENS_LEFT = "regens_left";
+    public static final String CURRENT_STATE = "current_state";
+    public static final String PRIMARY_RED = "p_red";
+    public static final String PRIMARY_GREEN = "p_green";
+    public static final String PRIMARY_BLUE = "p_blue";
+    public static final String SECONDARY_RED = "s_red";
+    public static final String SECONDARY_GREEN = "s_green";
+    public static final String SECONDARY_BLUE = "s_blue";
+    public static final String ANIMATION_TICKS = "ticks_animating";
 
 }

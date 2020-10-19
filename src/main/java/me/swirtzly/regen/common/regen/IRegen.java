@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.regen;
 
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
+import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -81,4 +82,8 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
     void setNextSkinType(boolean isAlex);
 
     boolean isNextSkinTypeAlex();
+
+    Traits.ITrait getTrait();
+
+    void setTrait(Traits.ITrait trait);
 }

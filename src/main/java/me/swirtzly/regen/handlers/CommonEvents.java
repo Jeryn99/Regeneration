@@ -1,10 +1,11 @@
 package me.swirtzly.regen.handlers;
 
 import com.mojang.brigadier.CommandDispatcher;
-import me.swirtzly.regen.commands.RegenCommand;
+import me.swirtzly.regen.common.commands.RegenCommand;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
+import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
@@ -14,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -36,7 +38,7 @@ public class CommonEvents {
 
     /* Attach Capability to all LivingEntities */
     @SubscribeEvent
-    public static void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof LivingEntity) {
             event.addCapability(RConstants.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
                 final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
@@ -79,11 +81,17 @@ public class CommonEvents {
 
             iRegen.setDeathMessage(event.getSource().getDeathMessage(livingEntity).getString());
 
+            if (iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
+                if (event.getSource() == DamageSource.FALL) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
 
             //Handle Post
             if (iRegen.getCurrentState() == RegenStates.POST) {
                 event.setAmount(1.5F);
-                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regeneration.messages.reduced_dmg"), true);
+                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.reduced_dmg"), true);
             }
 
             //Handle Death

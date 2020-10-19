@@ -18,7 +18,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.gui.ScrollPanel;
 
 import static me.swirtzly.regen.client.rendering.transitions.FieryTransitionRenderer.renderOverlay;
 import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
@@ -26,7 +25,7 @@ import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
 public class WatcherTransitionRenderer implements TransitionRenderer {
 
     public static final WatcherTransitionRenderer INSTANCE = new WatcherTransitionRenderer();
-    private static final ResourceLocation texture = new ResourceLocation(RConstants.MODID, "textures/entity/watcher.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(RConstants.MODID, "textures/entity/watcher.png");
 
 
     @Override
@@ -70,27 +69,29 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
                 matrixStackIn.push();
                 matrixStackIn.scale(1.2F, 1.2F, 1.2F);
                 float opacity = iRegen.getTicksAnimating();
-                renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(texture)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, new Vector3d(1, 1, 1));
+                renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(TEXTURE)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, new Vector3d(1, 1, 1));
                 matrixStackIn.pop();
 
-                matrixStackIn.push();
-                matrixStackIn.rotate(Vector3f.XN.rotationDegrees(-90));
-                matrixStackIn.translate(0, -1.5, 1);
-                renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(texture)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.5F, new Vector3d(1, 1, 1), new AnimationHandler.Animation() {
-                    @Override
-                    public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-                        bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(40);
-                        bipedModel.bipedHeadwear.rotateAngleX = (float) Math.toRadians(40);
-                    }
-                });
-                matrixStackIn.pop();
+                if (iRegen.getTicksAnimating() < 150) {
+                    matrixStackIn.push();
+                    matrixStackIn.rotate(Vector3f.XN.rotationDegrees(-90));
+                    matrixStackIn.translate(0, -1.5, 1);
+                    renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(TEXTURE)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.5F, new Vector3d(1, 1, 1), new AnimationHandler.Animation() {
+                        @Override
+                        public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+                            bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(40);
+                            bipedModel.bipedHeadwear.rotateAngleX = (float) Math.toRadians(40);
+                        }
+                    });
+                    matrixStackIn.pop();
+                }
             }
         });
 
     }
 
     @Override
-    public void animation(BipedModel<?> bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
             if (data.getCurrentState() == REGENERATING && data.getTransitionType() == TransitionTypes.WATCHER) {
                 bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(0);

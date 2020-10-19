@@ -38,4 +38,5 @@ public class SparkleTransition implements TransitionType<SparkleTransitionRender
     public ResourceLocation getRegistryName() {
         return new ResourceLocation(RConstants.MODID, "sparkle");
     }
+
 }

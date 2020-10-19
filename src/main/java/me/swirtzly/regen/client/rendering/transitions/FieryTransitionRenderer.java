@@ -62,7 +62,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
 
     @Override
-    public void thirdPersonHand(HandSide side, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void thirdPersonHand(HandSide side, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entitylivingbaseIn instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entitylivingbaseIn;
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
@@ -79,8 +79,8 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
                     Vector3d primaryColors = iRegen.getPrimaryColors();
                     Vector3d secondaryColors = iRegen.getSecondaryColors();
-                    renderColorCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, primaryScale, primaryScale, primaryColors);
-                    renderColorCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, secondaryScale, secondaryScale, secondaryColors);
+                    renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, primaryScale, primaryScale, primaryColors);
+                    renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, secondaryScale, secondaryScale, secondaryColors);
                 }
 
             });
@@ -89,14 +89,14 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void layer(BipedModel<?> bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void layer(BipedModel<?> bipedModel, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 // === Head Cone ===
-                matrixStackIn.push();
-                bipedModel.bipedHead.translateRotate(matrixStackIn);
-                matrixStackIn.translate(0.0f, 0.09f, 0.2f);
-                matrixStackIn.rotate(Vector3f.XP.rotation(180));
+                matrix.push();
+                bipedModel.bipedHead.translateRotate(matrix);
+                matrix.translate(0.0f, 0.09f, 0.2f);
+                matrix.rotate(Vector3f.XP.rotation(180));
                 double x = iRegen.getTicksAnimating();
                 double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
                 double r = 0.09890109890109888;
@@ -109,9 +109,9 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                 CompoundNBT colorTag = iRegen.getOrWriteStyle();
                 Vector3d primaryColors = new Vector3d(colorTag.getFloat(RConstants.PRIMARY_RED), colorTag.getFloat(RConstants.PRIMARY_GREEN), colorTag.getFloat(RConstants.PRIMARY_BLUE));
                 Vector3d secondaryColors = new Vector3d(colorTag.getFloat(RConstants.SECONDARY_RED), colorTag.getFloat(RConstants.SECONDARY_GREEN), colorTag.getFloat(RConstants.SECONDARY_BLUE));
-                renderColorCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), primaryScale, primaryScale, primaryColors);
-                renderColorCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), secondaryScale, secondaryScale, secondaryColors);
-                matrixStackIn.pop();
+                renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), primaryScale, primaryScale, primaryColors);
+                renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), secondaryScale, secondaryScale, secondaryColors);
+                matrix.pop();
                 // === End Head Cone ===
             }
 
@@ -119,8 +119,8 @@ public class FieryTransitionRenderer implements TransitionRenderer {
             if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.getCurrentState() == RegenStates.POST || iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 if (entitylivingbaseIn instanceof TimelordEntity) return;
                 float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
-                renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
-                renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
+                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.getEndPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
+                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
             }
 
         });
@@ -128,7 +128,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
 
     @Override
-    public void animation(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 double armShake = livingEntity.getRNG().nextDouble();
@@ -136,8 +136,8 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                 float armRotZ = (float) iRegen.getTicksAnimating() * 1.5F;
                 float headRot = (float) iRegen.getTicksAnimating() * 1.5F;
 
-                if (armRotY > 90) {
-                    armRotY = 90;
+                if (armRotY > 95) {
+                    armRotY = 95;
                 }
 
                 if (armRotZ > 95) {

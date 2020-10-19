@@ -31,7 +31,7 @@ public class RBlocks {
 
     @SubscribeEvent
     public static void regBlockItems(RegistryEvent.Register<Item> e) {
-        genBlockItems(BIO_CONTAINER.get());
+        //TODO Disabled: genBlockItems(BIO_CONTAINER.get());
     }
 
 }

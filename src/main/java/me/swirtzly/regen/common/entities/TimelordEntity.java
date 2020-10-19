@@ -119,7 +119,7 @@ public class TimelordEntity extends CreatureEntity {
                 nbt.putFloat(RConstants.SECONDARY_GREEN, rand.nextInt(255) / 255.0F);
                 nbt.putFloat(RConstants.SECONDARY_BLUE, rand.nextInt(255) / 255.0F);
                 data.readStyle(nbt);
-                data.setTransitionType(TransitionTypes.getRandomType());
+                data.setTransitionType(TransitionTypes.FIERY);
                 initSkin(data);
             });
         }
