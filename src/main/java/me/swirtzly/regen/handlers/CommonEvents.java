@@ -5,6 +5,7 @@ import me.swirtzly.regen.common.commands.RegenCommand;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
+import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
@@ -14,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -79,6 +81,12 @@ public class CommonEvents {
 
             iRegen.setDeathMessage(event.getSource().getDeathMessage(livingEntity).getString());
 
+            if (iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
+                if (event.getSource() == DamageSource.FALL) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
 
             //Handle Post
             if (iRegen.getCurrentState() == RegenStates.POST) {

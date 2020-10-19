@@ -67,8 +67,4 @@ public final class TroughtonTransition implements TransitionType<TroughtonTransi
         return new ResourceLocation(RConstants.MODID, "troughton");
     }
 
-    @Override
-    public boolean isPlayerOnly() {
-        return false;
-    }
 }

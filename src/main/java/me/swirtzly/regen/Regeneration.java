@@ -19,7 +19,6 @@ import me.swirtzly.regen.data.RSoundsGen;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.util.ClientUtil;
 import me.swirtzly.regen.util.PlayerUtil;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,7 +35,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

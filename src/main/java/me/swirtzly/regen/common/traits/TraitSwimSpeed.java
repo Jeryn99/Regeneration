@@ -4,7 +4,6 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeMod;
 

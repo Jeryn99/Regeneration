@@ -108,18 +108,12 @@ public class ClientUtil {
         }
     }
 
-    public static void drawSplitString(MatrixStack ms, FontRenderer fontRenderer, List<ITextComponent> list, float x, float y, int maxWidth, int color)
-    {
-        for(ITextComponent t : list)
-        {
-            if(t.getUnformattedComponentText().isEmpty() && t.getSiblings().isEmpty())
-            {
+    public static void drawSplitString(MatrixStack ms, FontRenderer fontRenderer, List<ITextComponent> list, float x, float y, int maxWidth, int color) {
+        for (ITextComponent t : list) {
+            if (t.getUnformattedComponentText().isEmpty() && t.getSiblings().isEmpty()) {
                 y += fontRenderer.FONT_HEIGHT;
-            }
-            else
-            {
-                for(IReorderingProcessor p : fontRenderer.trimStringToWidth(t, maxWidth))
-                {
+            } else {
+                for (IReorderingProcessor p : fontRenderer.trimStringToWidth(t, maxWidth)) {
                     fontRenderer.func_238407_a_(ms, p, x, y, color);
                     y += fontRenderer.FONT_HEIGHT;
                 }

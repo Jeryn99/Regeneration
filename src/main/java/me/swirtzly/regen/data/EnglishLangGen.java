@@ -120,7 +120,6 @@ public class EnglishLangGen extends LanguageProvider {
         }
 
 
-
         // === Regen ===
         add(TransitionTypes.ENDER_DRAGON.get().getTranslation().getKey(), "Ender-Dragon");
         add(TransitionTypes.SPARKLE.get().getTranslation().getKey(), "Sparkle");
@@ -154,8 +153,14 @@ public class EnglishLangGen extends LanguageProvider {
         add(Traits.STRONG.get().getTranslation().getKey(), "Strong");
         add(Traits.STRONG.get().getDescription().getKey(), "Punch Harder!");
 
-     /*   add(Traits.KNOCKBACK.get().getTranslation().getKey(), "KnockBack");
-        add(Traits.KNOCKBACK.get().getDescription().getKey(), "Don't get flung back!");*/
+        add(Traits.KNOCKBACK.get().getTranslation().getKey(), "KnockBack");
+        add(Traits.KNOCKBACK.get().getDescription().getKey(), "Don't get flung back!");
+
+        add(Traits.FISH.get().getTranslation().getKey(), "Fish");
+        add(Traits.FISH.get().getDescription().getKey(), "Infinite Oxygen under water");
+
+        add(Traits.LEAP.get().getTranslation().getKey(), "Leap");
+        add(Traits.LEAP.get().getDescription().getKey(), "Jump a little higher");
     }
 
 

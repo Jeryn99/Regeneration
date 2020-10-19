@@ -119,7 +119,7 @@ class CommonActing implements Acting {
         player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(slownessModifier);
 
         //Trait
-        if(RegenConfig.COMMON.traitsEnabled.get()) {
+        if (RegenConfig.COMMON.traitsEnabled.get()) {
             cap.getTrait().reset(cap);
             cap.setTrait(Traits.getRandomTrait(player.getRNG(), !(player instanceof PlayerEntity)));
             cap.getTrait().apply(cap);

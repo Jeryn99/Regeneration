@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.traits;
 
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.util.RConstants;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
@@ -34,6 +35,15 @@ public class TraitHandler {
         RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
             if (iRegen.getTrait().getRegistryName().toString().equals(Traits.KNOCKBACK.get().getRegistryName().toString())) {
                 event.setCanceled(true);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onJump(LivingEvent.LivingJumpEvent event){
+        RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
+            if(iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())){
+                event.getEntityLiving().setMotion(event.getEntityLiving().getMotion().x, event.getEntityLiving().getMotion().y + 0.1F * 2, event.getEntityLiving().getEntity().getMotion().z);
             }
         });
     }

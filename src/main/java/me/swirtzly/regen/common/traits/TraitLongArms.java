@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class TraitLongArms extends Traits.ITrait {
 
-    private static final ResourceLocation LOCATION = new ResourceLocation(RConstants.MODID, "long_arms");
     public static final UUID REACH_UUID = UUID.fromString("4a204916-e836-4b7c-b133-0da469f8b9ec");
+    private static final ResourceLocation LOCATION = new ResourceLocation(RConstants.MODID, "long_arms");
 
     @Override
     public void apply(IRegen data) {

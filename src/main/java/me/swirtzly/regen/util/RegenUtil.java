@@ -1,10 +1,5 @@
 package me.swirtzly.regen.util;
 
-import me.swirtzly.regen.client.skin.CommonSkin;
-import me.swirtzly.regen.common.regen.RegenCap;
-import net.minecraft.client.Minecraft;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.crash.CrashReportCategory;
 import org.apache.commons.io.FileUtils;
 
 import java.awt.*;

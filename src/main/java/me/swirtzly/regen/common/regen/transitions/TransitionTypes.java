@@ -34,10 +34,6 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
         this.setRegistryName(supplier.get().getRegistryName());
     }
 
-    public TransitionType get() {
-        return this.supplier.get();
-    }
-
     @SubscribeEvent
     public static void onRegisterNewRegistries(RegistryEvent.NewRegistry e) {
         REGISTRY = new RegistryBuilder<TransitionTypes>().setName(new ResourceLocation(RConstants.MODID, "regeneration_types")).setType(TransitionTypes.class).setIDRange(0, 2048).create();
@@ -62,6 +58,9 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
         TYPES = e.getRegistry().getValues().toArray(new TransitionTypes[0]);
     }
 
+    public TransitionType get() {
+        return this.supplier.get();
+    }
 
 
 }

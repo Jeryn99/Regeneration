@@ -17,8 +17,7 @@ import java.util.concurrent.CompletableFuture;
 public class TraitsArgumentType implements ArgumentType<Traits.ITrait> {
     public static final DynamicCommandExceptionType INVALID_TRAIT_EXCEPTION = new DynamicCommandExceptionType((trait) -> new TranslationTextComponent("argument.regeneration.trait.invalid", new Object[]{trait}));
 
-    public static TraitsArgumentType createArgument()
-    {
+    public static TraitsArgumentType createArgument() {
         return new TraitsArgumentType();
     }
 
@@ -26,7 +25,7 @@ public class TraitsArgumentType implements ArgumentType<Traits.ITrait> {
     public Traits.ITrait parse(StringReader reader) throws CommandSyntaxException {
         ResourceLocation location = ResourceLocation.read(reader);
         Traits.ITrait trait = Traits.REGISTRY.getValue(location);
-        if (trait != null){
+        if (trait != null) {
             return trait;
         }
         throw INVALID_TRAIT_EXCEPTION.create(location);

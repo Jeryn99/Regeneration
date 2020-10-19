@@ -39,8 +39,4 @@ public class SparkleTransition implements TransitionType<SparkleTransitionRender
         return new ResourceLocation(RConstants.MODID, "sparkle");
     }
 
-    @Override
-    public boolean isPlayerOnly() {
-        return false;
-    }
 }

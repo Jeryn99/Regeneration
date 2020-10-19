@@ -84,5 +84,6 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
     boolean isNextSkinTypeAlex();
 
     Traits.ITrait getTrait();
+
     void setTrait(Traits.ITrait trait);
 }

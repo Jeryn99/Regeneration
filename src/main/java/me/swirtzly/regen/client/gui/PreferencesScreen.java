@@ -5,7 +5,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
-import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.TypeMessage;

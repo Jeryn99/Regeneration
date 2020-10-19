@@ -1,5 +1,6 @@
 package me.swirtzly.regen.common.regen;
 
+import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
 import me.swirtzly.regen.common.regen.state.IStateManager;
 import me.swirtzly.regen.common.regen.state.RegenStates;
@@ -101,7 +102,7 @@ public class RegenCap implements IRegen {
 
         if (!livingEntity.world.isRemote) {
 
-            if (transitionType.get().isPlayerOnly() && !(getLiving() instanceof PlayerEntity)) {
+            if (!(getLiving() instanceof PlayerEntity)) {
                 setTransitionType(TransitionTypes.FIERY);
             }
 
