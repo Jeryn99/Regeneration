@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public class TraitBase extends Traits.ITrait {
-    private static ResourceLocation LOCATION;
+    private ResourceLocation LOCATION;
 
     public TraitBase(ResourceLocation resourceLocation) {
         LOCATION = resourceLocation;

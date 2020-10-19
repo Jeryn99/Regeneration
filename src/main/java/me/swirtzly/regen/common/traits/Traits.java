@@ -22,7 +22,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
     public static final Traits QUICK = addTrait(new Traits(TraitQuick::new));
     public static final Traits BORING = addTrait(new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "boring"))));
     public static final Traits SMART = addTrait(new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "smart"))));
-    public static final Traits DUMB = addTrait(new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "dumb"))));
+    public static final Traits FAST_MINE = addTrait(new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "fast_mine"))));
     public static final Traits KNOCKBACK = addTrait(new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "knockback"))));
     public static final Traits LONG_ARMS = addTrait(new Traits(TraitLongArms::new));
     public static final Traits STRONG = addTrait(new Traits(TraitStrong::new));
@@ -47,7 +47,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
 
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register<ITrait> e) {
-       e.getRegistry().registerAll(QUICK.get(), BORING.get(), SMART.get(), DUMB.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get()/*, KNOCKBACK.get()*/);
+       e.getRegistry().registerAll(QUICK.get(), BORING.get(), SMART.get(), FAST_MINE.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get(), KNOCKBACK.get());
     }
 
     private Supplier<ITrait> supplier;

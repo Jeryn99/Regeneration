@@ -142,8 +142,8 @@ public class EnglishLangGen extends LanguageProvider {
         add(Traits.SWIM_SPEED.get().getTranslation().getKey(), "Mermaid");
         add(Traits.SWIM_SPEED.get().getDescription().getKey(), "Swim Faster!");
 
-        add(Traits.DUMB.get().getTranslation().getKey(), "Dumb");
-        add(Traits.DUMB.get().getDescription().getKey(), "Less XP Pickup!");
+        add(Traits.FAST_MINE.get().getTranslation().getKey(), "Fast Mine");
+        add(Traits.FAST_MINE.get().getDescription().getKey(), "Mine Faster!");
 
         add(Traits.SMART.get().getTranslation().getKey(), "Smart");
         add(Traits.SMART.get().getDescription().getKey(), "More XP Pickup!");
