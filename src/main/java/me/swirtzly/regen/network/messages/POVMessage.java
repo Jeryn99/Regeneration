@@ -16,7 +16,7 @@ public class POVMessage {
     }
 
     public POVMessage(PacketBuffer buffer) {
-        pointOfView = buffer.readString();
+        pointOfView = buffer.readString(32767);
     }
 
     public static void handle(POVMessage message, Supplier<NetworkEvent.Context> ctx) {
