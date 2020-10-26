@@ -46,19 +46,10 @@ public class CommonSkin {
     public static File chooseRandomSkin(Random rand, boolean isAlex) {
         File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
         Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
-        folderFiles.removeIf(file -> !file.getName().endsWith(".png") || !isActuallyAImage(file));
+        folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
-    public static boolean isActuallyAImage(File file) {
-        String mimetype = null;
-        try {
-            mimetype = Files.probeContentType(file.toPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return mimetype != null && mimetype.split("/")[0].equals("image");
-    }
 
 
     //Get a list of skins from namemc url

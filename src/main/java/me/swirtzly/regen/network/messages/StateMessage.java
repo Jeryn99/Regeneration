@@ -22,7 +22,7 @@ public class StateMessage {
 
     public StateMessage(PacketBuffer buffer) {
         livingEntity = buffer.readInt();
-        event = buffer.readString();
+        event = buffer.readString(32767);
     }
 
     public static void handle(StateMessage message, Supplier<NetworkEvent.Context> ctx) {

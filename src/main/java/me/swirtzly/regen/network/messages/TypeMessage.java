@@ -18,7 +18,7 @@ public class TypeMessage {
     }
 
     public TypeMessage(PacketBuffer buffer) {
-        type = buffer.readString();
+        type = buffer.readString(32767);
     }
 
     public static void handle(TypeMessage message, Supplier<NetworkEvent.Context> ctx) {

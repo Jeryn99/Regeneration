@@ -16,7 +16,7 @@ public class ModelMessage {
     }
 
     public ModelMessage(PacketBuffer buffer) {
-        type = buffer.readString();
+        type = buffer.readString(32767);
     }
 
     public static void handle(ModelMessage message, Supplier<NetworkEvent.Context> ctx) {
