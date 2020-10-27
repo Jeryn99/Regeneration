@@ -87,7 +87,6 @@ public class Regeneration {
         RBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RegenAttributes.ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
 }
