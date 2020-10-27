@@ -22,16 +22,16 @@ public class TraitHandler {
     }
 
     @SubscribeEvent
-    public static void onMineBlock(PlayerEvent.BreakSpeed event){
+    public static void onMineBlock(PlayerEvent.BreakSpeed event) {
         RegenCap.get(event.getPlayer()).ifPresent(iRegen -> {
-            if(iRegen.getTrait().getRegistryName().toString().equals(Traits.FAST_MINE.get().getRegistryName().toString())){
+            if (iRegen.getTrait().getRegistryName().toString().equals(Traits.FAST_MINE.get().getRegistryName().toString())) {
                 event.setNewSpeed(event.getOriginalSpeed() * 5);
             }
         });
     }
 
     @SubscribeEvent
-    public static void onKnockback(LivingKnockBackEvent event){
+    public static void onKnockback(LivingKnockBackEvent event) {
         RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
             if (iRegen.getTrait().getRegistryName().toString().equals(Traits.KNOCKBACK.get().getRegistryName().toString())) {
                 event.setCanceled(true);
@@ -40,9 +40,9 @@ public class TraitHandler {
     }
 
     @SubscribeEvent
-    public static void onJump(LivingEvent.LivingJumpEvent event){
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
         RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
-            if(iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())){
+            if (iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
                 event.getEntityLiving().setMotion(event.getEntityLiving().getMotion().x, event.getEntityLiving().getMotion().y + 0.1F * 2, event.getEntityLiving().getEntity().getMotion().z);
             }
         });

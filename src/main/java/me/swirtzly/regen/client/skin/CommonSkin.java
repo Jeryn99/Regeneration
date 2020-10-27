@@ -51,7 +51,6 @@ public class CommonSkin {
     }
 
 
-
     //Get a list of skins from namemc url
     public static ArrayList<String> getSkins(String downloadUrl) throws IOException {
         ArrayList<String> skins = new ArrayList<>();

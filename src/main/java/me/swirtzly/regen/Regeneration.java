@@ -9,7 +9,6 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
-import me.swirtzly.regen.common.traits.RegenAttributes;
 import me.swirtzly.regen.compat.ServerReflector;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.BlockstateGen;

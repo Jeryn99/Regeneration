@@ -161,6 +161,9 @@ public class EnglishLangGen extends LanguageProvider {
 
         add(Traits.LEAP.get().getTranslation().getKey(), "Leap");
         add(Traits.LEAP.get().getDescription().getKey(), "Jump a little higher");
+
+        add(Traits.FIRE.get().getTranslation().getKey(), "Fire Immune");
+        add(Traits.FIRE.get().getDescription().getKey(), "Immune to fire");
     }
 
 
@@ -168,4 +171,5 @@ public class EnglishLangGen extends LanguageProvider {
         String firstLetter = text.substring(0, 1).toUpperCase();
         return firstLetter + text.substring(1);
     }
+
 }

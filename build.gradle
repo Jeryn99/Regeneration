@@ -16,7 +16,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0.4'
+version = '1.0.5'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Regeneration-1.16.3'
 
@@ -92,7 +92,12 @@ minecraft {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
     compileOnly 'org.jetbrains:annotations:15.0' //I need to remove this as soon as my intellji behaves, for some reason it doesnt see annotations without
+    compile fg.deobf('software.bernie.geckolib:forge-1.16.3-geckolib:2.1.2')
 
+}
+
+repositories{
+    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
 }
 
 mixin {

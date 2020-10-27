@@ -5,7 +5,6 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.POVMessage;
 import me.swirtzly.regen.util.RConstants;
-import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -26,7 +25,7 @@ public class EnderDragonTransition implements TransitionType<EnderDragonTransiti
 
         if (!cap.getLiving().world.isRemote) {
             if (cap.getLiving() instanceof ServerPlayerEntity) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(PointOfView.THIRD_PERSON_FRONT));
+                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
             }
         }
 
@@ -52,7 +51,7 @@ public class EnderDragonTransition implements TransitionType<EnderDragonTransiti
             serverPlayerEntity.abilities.isFlying = false;
 
             if (cap.getLiving() instanceof ServerPlayerEntity) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(PointOfView.FIRST_PERSON));
+                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
             }
         }
 
