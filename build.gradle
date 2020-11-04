@@ -16,7 +16,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0.5'
+version = '1.0.6'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Regeneration-1.16.3'
 

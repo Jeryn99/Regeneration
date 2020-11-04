@@ -8,7 +8,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class ColorChangeMessage {
-    private CompoundNBT style;
+    private final CompoundNBT style;
 
     public ColorChangeMessage(CompoundNBT style) {
         this.style = style;
