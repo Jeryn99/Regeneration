@@ -1,9 +1,12 @@
 package me.swirtzly.regeneration;
 
 import com.google.common.collect.Lists;
+import me.swirtzly.regeneration.handlers.RegenObjects;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RegenConfig {
@@ -76,6 +79,15 @@ public class RegenConfig {
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
         public final ForgeConfigSpec.ConfigValue<String> skinDir;
         public final ForgeConfigSpec.BooleanValue mobsHaveRegens;
+
+        public final ForgeConfigSpec.BooleanValue spawnTimelords;
+        public final ForgeConfigSpec.IntValue maxSpawn;
+        public final ForgeConfigSpec.IntValue spawnWeight;
+        public final ForgeConfigSpec.IntValue minSpawn;
+        public final ForgeConfigSpec.ConfigValue<String> spawnType;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedBiomes;
+
+
         public final ForgeConfigSpec.BooleanValue tardisModCompatFeatures;
 
 /*
@@ -123,10 +135,30 @@ public class RegenConfig {
             genCrater = builder.comment("Generate graters in the ground if a player falls from a great height?").translation("config.regeneration.regeneration_craters").define("genCrater", true);
 			builder.pop();
 
+            builder.push("spawn");
+            minSpawn = builder.translation("config.regeneration.min_spawn").comment("The minimum amount of Timelords per biome").defineInRange("minimumSpawn", 1, 1, 100);
+            maxSpawn = builder.translation("config.regeneration.max_spawn").comment("The maximum amount of Timelords per biome").defineInRange("maximumSpawn", 1, 1, 100);
+            spawnWeight = builder.translation("config.regeneration.spawnWeight").comment("The angel spawn spawn weight").defineInRange("spawnWeight", 5, 1, 100);
+            spawnType = builder.translation("config.regeneration.spawntype").comment("This will only accept: MONSTER || CREATURE || AMBIENT || MISC || Anything else WILL crash your game.").worldRestart().define("spawnType", "AMBIENT");
+            allowedBiomes = builder.translation("config.regeneration.allowedBiomes").comment("Note: A list of biomes where Timelords should spawn.").defineList("allowedBiomes", genBiomesForSpawn(), String.class::isInstance);
+            spawnTimelords = builder.translation("config.regeneration.spawnTimelords").comment("Whether Timelords should spawn").define("spawnTimelords", true);
+            builder.pop();
+			
 			builder.comment("Mod Compatibilities").push("tardis");
             tardisModCompatFeatures = builder.comment("Toggle Features that interface with the Tardis Mod").define("tardisModCompatFeatures", true);
             builder.pop();
         }
 	}
+
+    public static ArrayList<String> genBiomesForSpawn() {
+        ArrayList<String> BIOMES = new ArrayList<>();
+        BIOMES.add("regeneration:gallifreyan_mountains");
+        BIOMES.add("regeneration:gallifreyan_river");
+        BIOMES.add("regeneration:redlands");
+        BIOMES.add("regeneration:redlands_forest");
+        BIOMES.add("regeneration:golden_fields");
+        BIOMES.add("regeneration:snowy");
+        return BIOMES;
+    }
 
 }

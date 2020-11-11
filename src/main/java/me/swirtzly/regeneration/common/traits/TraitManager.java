@@ -39,7 +39,6 @@ public class TraitManager {
     public static IDna DNA_FIRE_RESISTANT = new FireResistantTrait();
     public static IDna DNA_HUNGER = new HungerTrait();
     public static IDna DNA_WALLCLIMB = new WallClimbingTrait();
-    public static IDna DNA_NIGHTVISION = new NightVisionTrait();
     public static IDna DNA_REPEL_ARROW = new BaseTrait("repel_arrow");
     public static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
 
@@ -52,7 +51,6 @@ public class TraitManager {
         register(DNA_SCARED_OF_WATER);
         register(DNA_FIRE_RESISTANT);
         register(DNA_HUNGER);
-        register(DNA_NIGHTVISION);
         register(DNA_WALLCLIMB);
         register(DNA_REPEL_ARROW);
     }

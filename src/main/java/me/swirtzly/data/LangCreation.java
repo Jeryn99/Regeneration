@@ -93,9 +93,6 @@ public class LangCreation extends LanguageProvider {
         add(TraitManager.DNA_SCARED_OF_WATER.getLangKey(), "Aquaphobic Genes!");
         add(TraitManager.DNA_SCARED_OF_WATER.getLocalDesc(), "Any kind of water makes you unwell...");
 
-        add(TraitManager.DNA_NIGHTVISION.getLangKey(), "Might-vision Genes!");
-        add(TraitManager.DNA_NIGHTVISION.getLocalDesc(), "You can see better in dark places!");
-
         add(TraitManager.DNA_SWIMMER.getLangKey(), "Swimmer Genes!");
         add(TraitManager.DNA_SWIMMER.getLocalDesc(), "You don't need to hold your breath anymore!");
 
