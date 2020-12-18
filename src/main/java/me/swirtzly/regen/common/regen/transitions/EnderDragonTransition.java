@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.regen.transitions;
 
 import me.swirtzly.regen.client.rendering.transitions.EnderDragonTransitionRenderer;
 import me.swirtzly.regen.common.regen.IRegen;
+import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.POVMessage;
 import me.swirtzly.regen.util.RConstants;
@@ -31,10 +32,10 @@ public class EnderDragonTransition implements TransitionType<EnderDragonTransiti
 
         if (cap.getLiving() instanceof PlayerEntity) {
             PlayerEntity serverPlayerEntity = (PlayerEntity) cap.getLiving();
-            serverPlayerEntity.abilities.allowFlying = true;
-            serverPlayerEntity.abilities.isFlying = true;
+            serverPlayerEntity.abilities.allowFlying = RegenConfig.COMMON.allowUpwardsMotion.get();
+            serverPlayerEntity.abilities.isFlying = RegenConfig.COMMON.allowUpwardsMotion.get();
         } else {
-            if (cap.getLiving().getPosition().getY() <= 100) {
+            if (cap.getLiving().getPosition().getY() <= 100 && RegenConfig.COMMON.allowUpwardsMotion.get()) {
                 BlockPos upwards = cap.getLiving().getPosition().up(2);
                 BlockPos pos = upwards.subtract(cap.getLiving().getPosition());
                 Vector3d vec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).normalize();
