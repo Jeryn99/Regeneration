@@ -102,9 +102,9 @@ public class ClientUtil {
         return Minecraft.getInstance().gameSettings.getPointOfView();
     }
 
-    public static void setPlayerPerspective(PointOfView pointOfView) {
-        if (RegenConfig.CLIENT.changePerspective.get() && !Regeneration.reflector.isVRPlayer(Minecraft.getInstance().player)) {
-            Minecraft.getInstance().gameSettings.setPointOfView(pointOfView);
+    public static void setPlayerPerspective(String pointOfView) {
+        if (RegenConfig.CLIENT.changePerspective.get() && !Regeneration.VR_REFLECTOR.isVRPlayer(Minecraft.getInstance().player)) {
+            Minecraft.getInstance().gameSettings.setPointOfView(PointOfView.valueOf(pointOfView));
         }
     }
 

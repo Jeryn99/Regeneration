@@ -2,12 +2,14 @@ buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
         maven { url = 'https://dist.creeper.host/Sponge/maven' }
+        maven { url = "https://plugins.gradle.org/m2/"}
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -15,8 +17,10 @@ apply plugin: 'org.spongepowered.mixin'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: "com.matthewprenger.cursegradle"
 
-version = '1.0.4'
+
+version = '1.0.6'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Regeneration-1.16.3'
 
@@ -89,10 +93,27 @@ minecraft {
     }
 }
 
+curseforge {
+    apiKey = rootProject.curseforge
+    project {
+        id = rootProject.regen
+        changelog = 'Some changes'
+        releaseType = 'release'
+        mainArtifact(jar) {
+            displayName = "Regeneration - ${minecraft_version} -  $project.version"
+        }
+    }
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
     compileOnly 'org.jetbrains:annotations:15.0' //I need to remove this as soon as my intellji behaves, for some reason it doesnt see annotations without
+    compile fg.deobf('software.bernie.geckolib:forge-1.16.3-geckolib:2.1.2')
 
+}
+
+repositories{
+    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
 }
 
 mixin {

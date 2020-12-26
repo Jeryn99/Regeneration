@@ -1,4 +1,4 @@
-package me.swirtzly.regen.compat;
+package me.swirtzly.regen.compat.vivecraft;
 
 import me.swirtzly.regen.Regeneration;
 import net.minecraft.entity.player.PlayerEntity;

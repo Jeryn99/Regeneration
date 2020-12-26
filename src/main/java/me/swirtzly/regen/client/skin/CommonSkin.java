@@ -51,7 +51,6 @@ public class CommonSkin {
     }
 
 
-
     //Get a list of skins from namemc url
     public static ArrayList<String> getSkins(String downloadUrl) throws IOException {
         ArrayList<String> skins = new ArrayList<>();
@@ -225,7 +224,6 @@ public class CommonSkin {
 
 
     public static List<File> listAllSkins(PlayerUtil.SkinType choices) {
-        List<File> resultList = new ArrayList<>();
         File directory = null;
         switch (choices) {
             case EITHER:
@@ -238,11 +236,8 @@ public class CommonSkin {
                 directory = SKIN_DIRECTORY_STEVE;
                 break;
         }
-        try {
-            Files.find(Paths.get(directory.toString()), Integer.MAX_VALUE, (filePath, fileAttr) -> fileAttr.isRegularFile()).forEach((file) -> resultList.add(file.toFile()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return resultList;
+        Collection<File> folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
+        return new ArrayList<>(folderFiles);
     }
 }

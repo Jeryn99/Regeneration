@@ -6,7 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-public class TraitFish extends Traits.ITrait {
+public class TraitFireResistant extends Traits.ITrait {
     @Override
     public void apply(IRegen data) {
 
@@ -20,8 +20,8 @@ public class TraitFish extends Traits.ITrait {
     @Override
     public void tick(IRegen data) {
         LivingEntity living = data.getLiving();
-        if (living.isInWater()) {
-            living.setAir(300);
+        if(living.isBurning()){
+            living.extinguish();
         }
     }
 
@@ -33,6 +33,6 @@ public class TraitFish extends Traits.ITrait {
     @Nullable
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RConstants.MODID, "fish");
+        return new ResourceLocation(RConstants.MODID, "fire_resistant");
     }
 }

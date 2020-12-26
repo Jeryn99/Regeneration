@@ -1,6 +1,5 @@
 package me.swirtzly.regen.common.regen;
 
-import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
 import me.swirtzly.regen.common.regen.state.IStateManager;
 import me.swirtzly.regen.common.regen.state.RegenStates;

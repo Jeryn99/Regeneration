@@ -2,11 +2,14 @@ package me.swirtzly.regen.common.traits;
 
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.util.RConstants;
+import me.swirtzly.regen.util.ViewUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 

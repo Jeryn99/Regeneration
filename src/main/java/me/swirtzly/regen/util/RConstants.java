@@ -30,4 +30,6 @@ public class RConstants {
     public static final String SECONDARY_BLUE = "s_blue";
     public static final String ANIMATION_TICKS = "ticks_animating";
 
+    public static final String FIRST_PERSON = "FIRST_PERSON";
+    public static final String THIRD_PERSON_FRONT = "THIRD_PERSON_FRONT";
 }

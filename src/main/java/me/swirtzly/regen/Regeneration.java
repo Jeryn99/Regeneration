@@ -9,8 +9,7 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
-import me.swirtzly.regen.common.traits.RegenAttributes;
-import me.swirtzly.regen.compat.ServerReflector;
+import me.swirtzly.regen.compat.vivecraft.ServerReflector;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.BlockstateGen;
 import me.swirtzly.regen.data.EnglishLangGen;
@@ -43,7 +42,7 @@ public class Regeneration {
 
     public static final Logger LOG = LogManager.getLogger("Regeneration");
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    public static final ServerReflector reflector = new ServerReflector();
+    public static final ServerReflector VR_REFLECTOR = new ServerReflector();
 
     public Regeneration() {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff));
@@ -63,7 +62,7 @@ public class Regeneration {
         ActingForwarder.init();
         GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().create());
         GlobalEntityTypeAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().create());
-        reflector.init();
+        VR_REFLECTOR.init();
         CommonSkin.doSetupOnThread(FMLEnvironment.dist == Dist.CLIENT);
     }
 
@@ -88,7 +87,6 @@ public class Regeneration {
         RBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RegenAttributes.ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
 }

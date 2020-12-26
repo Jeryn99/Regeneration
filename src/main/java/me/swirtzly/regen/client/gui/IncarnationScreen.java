@@ -108,7 +108,7 @@ public class IncarnationScreen extends ContainerScreen {
 
         this.searchField.setResponder((p_214329_1_) -> {
             position = 0;
-            skins.removeIf(file -> !file.getName().contains(searchField.getText()));
+            skins.removeIf(file -> !file.getName().toLowerCase().contains(searchField.getText().toLowerCase()));
             if (skins.isEmpty() || searchField.getText().isEmpty()) {
                 skins = CommonSkin.listAllSkins(choices);
             }

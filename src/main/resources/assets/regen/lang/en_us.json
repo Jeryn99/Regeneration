@@ -93,6 +93,8 @@
   "trait.regen.boring.description": "Plain Human!",
   "trait.regen.fast_mine": "Fast Mine",
   "trait.regen.fast_mine.description": "Mine Faster!",
+  "trait.regen.fire_resistant": "Fire Immune",
+  "trait.regen.fire_resistant.description": "Immune to fire",
   "trait.regen.fish": "Fish",
   "trait.regen.fish.description": "Infinite Oxygen under water",
   "trait.regen.knockback": "KnockBack",

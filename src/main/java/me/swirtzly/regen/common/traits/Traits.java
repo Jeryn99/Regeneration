@@ -32,6 +32,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
     public static final Traits STRONG = new Traits(TraitStrong::new);
     public static final Traits SWIM_SPEED = new Traits(TraitSwimSpeed::new);
     public static final Traits FISH = new Traits(TraitFish::new);
+    public static final Traits FIRE = new Traits(TraitFireResistant::new);
 
 
     //Create Registry
@@ -50,7 +51,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
 
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register<ITrait> e) {
-        e.getRegistry().registerAll(LEAP.get(), FISH.get(), QUICK.get(), BORING.get(), SMART.get(), FAST_MINE.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get(), KNOCKBACK.get());
+        e.getRegistry().registerAll(FIRE.get(), LEAP.get(), FISH.get(), QUICK.get(), BORING.get(), SMART.get(), FAST_MINE.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get(), KNOCKBACK.get());
     }
 
     public static ITrait fromID(String location) {

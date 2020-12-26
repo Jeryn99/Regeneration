@@ -87,6 +87,8 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue traitsEnabled;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
         public final ForgeConfigSpec.ConfigValue<String> skinDir;
+        public final ForgeConfigSpec.BooleanValue allowUpwardsMotion;
+
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.comment("General Regeneration Settings").push("common");
@@ -122,7 +124,7 @@ public class RegenConfig {
             regenKnockbackRange = builder.comment("Range wherein every mob is knocked back upon regeneration").translation("config.regeneration.regenerative_knockback_range").defineInRange("regenerativeKnockbackRange", 7, 0, Integer.MAX_VALUE);
             regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);
             traitsEnabled = builder.comment("Toggle whether traits are enabled").translation("config.regeneration.traitsenabled").define("traitsEnabled", true);
-
+            allowUpwardsMotion = builder.comment("Toggle whether the server allows for players to fly upwards during certain Regeneration transitions").translation("config.regeneration.upwards_motion").define("upwardsMotion", true);
             builder.pop();
         }
     }

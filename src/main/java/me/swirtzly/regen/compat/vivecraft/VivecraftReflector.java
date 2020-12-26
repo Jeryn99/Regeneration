@@ -1,4 +1,4 @@
-package me.swirtzly.regen.compat;
+package me.swirtzly.regen.compat.vivecraft;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;

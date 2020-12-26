@@ -2,10 +2,10 @@ package me.swirtzly.regen.common.regen.transitions;
 
 import me.swirtzly.regen.client.rendering.transitions.EnderDragonTransitionRenderer;
 import me.swirtzly.regen.common.regen.IRegen;
+import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.POVMessage;
 import me.swirtzly.regen.util.RConstants;
-import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -26,16 +26,16 @@ public class EnderDragonTransition implements TransitionType<EnderDragonTransiti
 
         if (!cap.getLiving().world.isRemote) {
             if (cap.getLiving() instanceof ServerPlayerEntity) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(PointOfView.THIRD_PERSON_FRONT));
+                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
             }
         }
 
         if (cap.getLiving() instanceof PlayerEntity) {
             PlayerEntity serverPlayerEntity = (PlayerEntity) cap.getLiving();
-            serverPlayerEntity.abilities.allowFlying = true;
-            serverPlayerEntity.abilities.isFlying = true;
+            serverPlayerEntity.abilities.allowFlying = RegenConfig.COMMON.allowUpwardsMotion.get();
+            serverPlayerEntity.abilities.isFlying = RegenConfig.COMMON.allowUpwardsMotion.get();
         } else {
-            if (cap.getLiving().getPosition().getY() <= 100) {
+            if (cap.getLiving().getPosition().getY() <= 100 && RegenConfig.COMMON.allowUpwardsMotion.get()) {
                 BlockPos upwards = cap.getLiving().getPosition().up(2);
                 BlockPos pos = upwards.subtract(cap.getLiving().getPosition());
                 Vector3d vec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).normalize();
@@ -52,7 +52,7 @@ public class EnderDragonTransition implements TransitionType<EnderDragonTransiti
             serverPlayerEntity.abilities.isFlying = false;
 
             if (cap.getLiving() instanceof ServerPlayerEntity) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(PointOfView.FIRST_PERSON));
+                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
             }
         }
 
