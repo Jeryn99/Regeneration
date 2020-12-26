@@ -223,5 +223,7 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
             this.font.func_243248_b(p_230450_1_, new StringTextComponent(str), cx + 131 - length / 2, cy + 49, 4210752);
         });
 
+        this.renderBackground(p_230450_1_);
+
     }
 }

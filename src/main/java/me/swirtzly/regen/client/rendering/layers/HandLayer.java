@@ -44,7 +44,7 @@ public class HandLayer extends LayerRenderer {
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         EntityModel<?> model = getEntityModel();
 
-        BlockPos blockpos = entitylivingbaseIn.getPosition().north(8);
+   /*     BlockPos blockpos = entitylivingbaseIn.getPosition().north(8);
         if (blockpos != null) {
             float f3 = (float)blockpos.getX() + 0.5F;
             float f4 = (float)blockpos.getY() + 0.5F;
@@ -54,7 +54,7 @@ public class HandLayer extends LayerRenderer {
             float f8 = (float)((double)f5 - entitylivingbaseIn.getPosZ());
             matrixStackIn.translate((double)f6, (double)f7, (double)f8);
             EnderDragonRenderer.func_229059_a_(-f6, -f7, -f8, partialTicks, 0, matrixStackIn, bufferIn, packedLightIn);
-        }
+        }*/
 
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
 

@@ -69,18 +69,18 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
             return TIMELORDS.get(timelordEntity.getUniqueID());
         }
 
-        NativeImage bufferedImage = null;
+        NativeImage nativeImage = null;
         try {
             if (data.isSkinValidForUse()) {
-                bufferedImage = NativeImage.read(new ByteArrayInputStream(data.getSkin()));
+                nativeImage = NativeImage.read(new ByteArrayInputStream(data.getSkin()));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (bufferedImage == null) {
+        if (nativeImage == null) {
             return DefaultPlayerSkin.getDefaultSkinLegacy();
         }
-        ResourceLocation location = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("timelord_", new DynamicTexture(bufferedImage));
+        ResourceLocation location = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("timelord_", new DynamicTexture(nativeImage));
         TIMELORDS.put(timelordEntity.getUniqueID(), location);
         return location;
 
