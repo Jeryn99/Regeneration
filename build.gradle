@@ -20,15 +20,15 @@ apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
 
 
-version = '1.0.6'
+version = '1.0.7'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'Regeneration-1.16.3'
+archivesBaseName = 'Regeneration-1.16.x'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: 'snapshot', version: '20200916-1.16.2'
+    mappings channel: 'snapshot', version: '20201028-1.16.3'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -97,8 +97,10 @@ curseforge {
     apiKey = rootProject.curseforge
     project {
         id = rootProject.regen
-        changelog = 'Some changes'
+        changelog = 'Fixes Perspective issues!'
         releaseType = 'release'
+        addGameVersion '1.16.3'
+        addGameVersion '1.16.4'
         mainArtifact(jar) {
             displayName = "Regeneration - ${minecraft_version} -  $project.version"
         }
@@ -106,14 +108,7 @@ curseforge {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
-    compileOnly 'org.jetbrains:annotations:15.0' //I need to remove this as soon as my intellji behaves, for some reason it doesnt see annotations without
-    compile fg.deobf('software.bernie.geckolib:forge-1.16.3-geckolib:2.1.2')
-
-}
-
-repositories{
-    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
+    minecraft 'net.minecraftforge:forge:1.16.4-35.1.15'
 }
 
 mixin {
