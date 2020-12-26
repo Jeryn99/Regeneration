@@ -1,11 +1,13 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = "https://plugins.gradle.org/m2/"}
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
     }
 }
 
@@ -14,6 +16,7 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: "com.matthewprenger.cursegradle"
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
@@ -97,6 +100,18 @@ dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
     //compile fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:master-SNAPSHOT')
     compile fg.deobf("com.gitlab.Spectre0987:TardisMod-1-14:${tm_tag}") //Use stable version of Tardis Mod
+}
+
+curseforge {
+    apiKey = rootProject.curseforge
+    project {
+        id = rootProject.regen
+        changelog = 'Fixed issues where loot would not happen.'
+        releaseType = 'release'
+        mainArtifact(jar) {
+            displayName = "Regeneration - ${minecraft_version} -  $project.version"
+        }
+    }
 }
 
 jar {
