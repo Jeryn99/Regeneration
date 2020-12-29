@@ -11,6 +11,7 @@ import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.command.CommandSource;
+import net.minecraft.command.impl.KillCommand;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -75,12 +76,14 @@ public class CommonEvents {
                 RegenCap.get(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
             }
 
+            // Stop certain damages
             if (event.getSource() == RegenSources.REGEN_DMG_CRITICAL || event.getSource() == RegenSources.REGEN_DMG_KILLED)
                 return;
 
-
+            //Update Death Message
             iRegen.setDeathMessage(event.getSource().getDeathMessage(livingEntity).getString());
 
+            //Stop falling for leap trait
             if (iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
                 if (event.getSource() == DamageSource.FALL) {
                     event.setCanceled(true);
@@ -89,7 +92,7 @@ public class CommonEvents {
             }
 
             //Handle Post
-            if (iRegen.getCurrentState() == RegenStates.POST) {
+            if (iRegen.getCurrentState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD) {
                 event.setAmount(1.5F);
                 PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.reduced_dmg"), true);
             }

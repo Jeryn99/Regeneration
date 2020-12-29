@@ -109,6 +109,7 @@ curseforge {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.4-35.1.15'
+    compileOnly 'org.jetbrains:annotations:15.0'
 }
 
 mixin {
@@ -119,11 +120,11 @@ jar {
     manifest {
         attributes([
                 "Specification-Title"     : "regen",
-                "Specification-Vendor"    : "who-craft",
+                "Specification-Vendor"    : "swirtzly",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : "${version}",
-                "Implementation-Vendor"   : "who-craft",
+                "Implementation-Vendor"   : "swirtzly",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "MixinConfigs": "regen.mixins.json"
         ])
