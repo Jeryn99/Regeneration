@@ -5,7 +5,6 @@ import me.swirtzly.regen.client.rendering.types.RenderTypes;
 import me.swirtzly.regen.common.regen.RegenCap;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EnderDragonRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -13,7 +12,6 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.HandSide;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
 import static me.swirtzly.regen.client.rendering.layers.RenderRegenLayer.renderColorCone;
@@ -21,6 +19,8 @@ import static net.minecraft.client.renderer.entity.EnderDragonRenderer.ENDERCRYS
 
 public class HandLayer extends LayerRenderer {
 
+
+    private static final RenderType field_229056_k_ = RenderType.getEntitySmoothCutout(ENDERCRYSTAL_BEAM_TEXTURES);
 
     public HandLayer(IEntityRenderer entityRendererIn) {
         super(entityRendererIn);
@@ -36,9 +36,6 @@ public class HandLayer extends LayerRenderer {
             }
         });
     }
-
-    private static final RenderType field_229056_k_ = RenderType.getEntitySmoothCutout(ENDERCRYSTAL_BEAM_TEXTURES);
-
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {

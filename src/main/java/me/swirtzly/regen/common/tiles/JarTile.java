@@ -3,7 +3,6 @@ package me.swirtzly.regen.common.tiles;
 import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.objects.RTiles;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;

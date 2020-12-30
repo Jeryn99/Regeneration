@@ -23,7 +23,7 @@ public class ClientSkin {
 
     public static void downloadPreviousSkins() {
         if (!RegenConfig.SKIN.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
-        Regeneration.LOG.warn("Refreshing users past skins");
+        Regeneration.LOG.warn("Refreshing users past skins for {}", Minecraft.getInstance().getSession().getUsername());
 
         if (!USER_ALEX.exists()) {
             if (USER_ALEX.mkdirs()) {
@@ -52,6 +52,7 @@ public class ClientSkin {
                     downloadSkins(new URL(skin), Minecraft.getInstance().getSession().getUsername() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
                 }
             } catch (IOException e) {
+                Regeneration.LOG.warn("Could not download player skins for {}, Are you a legitimate user? Are you online?", Minecraft.getInstance().getSession().getUsername());
                 e.printStackTrace();
             }
         }

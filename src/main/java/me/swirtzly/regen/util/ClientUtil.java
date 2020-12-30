@@ -3,7 +3,6 @@ package me.swirtzly.regen.util;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.client.RKeybinds;
-import me.swirtzly.regen.client.rendering.entity.ItemOverrideRenderer;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.rendering.entity.WatcherRenderer;
 import me.swirtzly.regen.client.rendering.layers.HandLayer;
@@ -56,7 +55,6 @@ public class ClientUtil {
             }
         });
 
-        RenderingRegistry.registerEntityRenderingHandler(REntities.ITEM_OVERRIDE_ENTITY_TYPE.get(), ItemOverrideRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);
 

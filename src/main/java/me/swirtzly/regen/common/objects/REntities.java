@@ -1,6 +1,5 @@
 package me.swirtzly.regen.common.objects;
 
-import me.swirtzly.regen.common.entities.OverrideEntity;
 import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.entities.WatcherEntity;
 import me.swirtzly.regen.util.RConstants;
@@ -17,7 +16,6 @@ public class REntities {
 
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, RConstants.MODID);
-    public static RegistryObject<EntityType<OverrideEntity>> ITEM_OVERRIDE_ENTITY_TYPE = ENTITIES.register("item_override", () -> registerNoSpawnerBase(OverrideEntity::new, EntityClassification.MISC, 0.5F, 0.2F, 128, 1, true, "item_override"));
     public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
     public static RegistryObject<EntityType<WatcherEntity>> WATCHER = ENTITIES.register("watcher", () -> registerNoSpawnerBase(WatcherEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "watcher"));
 

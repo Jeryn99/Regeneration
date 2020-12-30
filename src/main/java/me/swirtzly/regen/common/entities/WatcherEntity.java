@@ -5,7 +5,6 @@ import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.util.ViewUtil;
-import net.minecraft.client.renderer.entity.EnderCrystalRenderer;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

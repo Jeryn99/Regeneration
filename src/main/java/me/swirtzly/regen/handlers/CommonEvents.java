@@ -11,7 +11,6 @@ import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.command.CommandSource;
-import net.minecraft.command.impl.KillCommand;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

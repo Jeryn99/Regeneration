@@ -129,7 +129,6 @@ public class EnglishLangGen extends LanguageProvider {
 
         //Entity
         add(REntities.TIMELORD.get(), "Timelord");
-        add(REntities.ITEM_OVERRIDE_ENTITY_TYPE.get(), "Item");
 
         //Traits
         add(Traits.BORING.get().getTranslation().getKey(), "Boring");

@@ -1,7 +1,6 @@
 package me.swirtzly.regen.common.item;
 
 import me.swirtzly.regen.Regeneration;
-import me.swirtzly.regen.common.entities.OverrideEntity;
 import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
@@ -10,24 +9,23 @@ import me.swirtzly.regen.common.regen.state.RegenStates;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.ClientUtil;
 import me.swirtzly.regen.util.PlayerUtil;
-import me.swirtzly.regen.util.ViewUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-
-import java.util.Arrays;
 
 
 /**
  * Created by Sub on 16/09/2018.
  */
-public class FobWatchItem extends SolidItem {
+public class FobWatchItem extends Item {
 
     public FobWatchItem() {
         super(new Item.Properties().setNoRepair().group(RItems.MAIN).maxStackSize(1));
@@ -68,21 +66,12 @@ public class FobWatchItem extends SolidItem {
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (stack.getItem() instanceof FobWatchItem) {
-            if (stack.getTag() == null) {
-                stack.setTag(new CompoundNBT());
-                stack.getTag().putBoolean("live", true);
-            } else {
-                stack.getTag().putBoolean("live", true);
-            }
-
             if (getOpen(stack)) {
                 if (entityIn.ticksExisted % 600 == 0) {
                     setOpen(stack, false);
                 }
             }
         }
-
-
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
     }
 
@@ -151,18 +140,6 @@ public class FobWatchItem extends SolidItem {
     private ActionResult<ItemStack> msgUsageFailed(PlayerEntity player, String message, ItemStack stack) {
         PlayerUtil.sendMessage(player, message, true);
         return ActionResult.resultFail(stack);
-    }
-
-    @Override
-    public boolean onSolidEntityItemUpdate(OverrideEntity itemOverride) {
-        if (!itemOverride.world.isRemote) return false;
-        ItemStack itemStack = itemOverride.getItem();
-        if (itemStack.getItem() == this && getDamage(itemStack) != RegenConfig.COMMON.regenCapacity.get()) {
-            if (itemOverride.ticksExisted % 5000 == 0 || itemOverride.ticksExisted == 2) {
-                ClientUtil.playSound(itemOverride, RSounds.FOB_WATCH_DIALOGUE.get().getRegistryName(), SoundCategory.AMBIENT, false, () -> !itemOverride.isAlive(), 1.5F);
-            }
-        }
-        return true;
     }
 
     @Override

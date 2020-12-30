@@ -3,12 +3,9 @@ package me.swirtzly.regen.client.skin;
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.PlayerUtil;
-import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
@@ -18,9 +15,10 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.FileSystem;
-import java.nio.file.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -104,7 +102,6 @@ public class CommonSkin {
         uc.connect();
         uc = url.openConnection();
         uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-        Regeneration.LOG.warn("Downloading Skin from: {}", url.toString());
         BufferedImage img = ImageIO.read(uc.getInputStream());
         File file = isAlexSkin(img) ? alexDir : steveDir;
         if (!file.exists()) {
@@ -119,13 +116,12 @@ public class CommonSkin {
             alexDir.mkdirs();
         }
 
-        Regeneration.LOG.warn("Saving Skin to: {}", file.getPath());
-
+        Regeneration.LOG.warn("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
         ImageIO.write(img, "png", new File(file, filename + ".png"));
     }
 
 
-    public static void handleDownloads() throws IOException {
+    public static void internalSkinsDownload() throws IOException {
         if (!RegenConfig.SKIN.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
 
         File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
@@ -155,32 +151,6 @@ public class CommonSkin {
     public static boolean hasAlpha(int x, int y, BufferedImage image) {
         int pixel = image.getRGB(x, y);
         return pixel >> 24 == 0x00 || ((pixel & 0x00FFFFFF) == 0);
-    }
-
-    public static void doSetupOnThread(boolean isClient) {
-        AtomicBoolean notDownloaded = new AtomicBoolean(true);
-        new Thread(() -> {
-            while (notDownloaded.get()) {
-                try {
-                    createDefaultFolders();
-                    handleDownloads();
-                    if (isClient) {
-                        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-                            try {
-                                ClientSkin.downloadTrendingSkins();
-                                ClientSkin.downloadPreviousSkins();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
-                    }
-                    notDownloaded.set(false);
-                } catch (Exception e) {
-                    Regeneration.LOG.error("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");
-                    Regeneration.LOG.error(e.getMessage());
-                }
-            }
-        }, RConstants.MODID + " Download Daemon").start();
     }
 
     public static void unzipSkinPack(String url) throws IOException {
