@@ -21,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
@@ -158,6 +159,39 @@ public class SkinChoiceScreen extends ContainerScreen {
         drawCenteredString(Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regeneration.gui.current_skin").getUnformattedComponentText(), width / 2, height / 2 + 5, Color.WHITE.getRGB());
         drawCenteredString(Minecraft.getInstance().fontRenderer, new TranslationTextComponent(skins.get(position).getName().replaceAll(".png", "")).getUnformattedComponentText(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
 
+    }
+
+    @Override
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+
+        if(p_keyPressed_1_ == GLFW.GLFW_KEY_RIGHT){
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+                if (position >= skins.size() - 1) {
+                    position = 0;
+                } else {
+                    position++;
+                }
+                textureManager.deleteTexture(PLAYER_TEXTURE);
+                PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
+                updateModels();
+            }
+        }
+
+        if(p_keyPressed_1_ == GLFW.GLFW_KEY_LEFT){
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+                if (position > 0) {
+                    position--;
+                } else {
+                    position = skins.size() - 1;
+                }
+                textureManager.deleteTexture(PLAYER_TEXTURE);
+                PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
+                updateModels();
+            }
+        }
+
+
+        return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
     }
 
     @Override
