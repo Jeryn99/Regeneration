@@ -28,6 +28,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
@@ -269,6 +270,31 @@ public class IncarnationScreen extends ContainerScreen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         this.searchField.keyPressed(keyCode, scanCode, modifiers);
+        if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+                if (position >= skins.size() - 1) {
+                    position = 0;
+                } else {
+                    position++;
+                }
+                Minecraft.getInstance().getTextureManager().deleteTexture(PLAYER_TEXTURE);
+                PLAYER_TEXTURE = CommonSkin.fileTotexture(skins.get(position));
+                updateModels();
+            }
+        }
+
+        if (keyCode == GLFW.GLFW_KEY_LEFT) {
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+                if (position > 0) {
+                    position--;
+                } else {
+                    position = skins.size() - 1;
+                }
+                PLAYER_TEXTURE = CommonSkin.fileTotexture(skins.get(position));
+                updateModels();
+            }
+        }
+
         if (keyCode == 256 && this.shouldCloseOnEsc()) {
             this.closeScreen();
             return true;
