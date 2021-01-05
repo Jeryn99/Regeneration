@@ -8,6 +8,7 @@ import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionType;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
+import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RenderHelp;
 import net.minecraft.client.Minecraft;
@@ -234,7 +235,7 @@ public class ClientEvents {
                 moveType.sneaking = false;
                 moveType.moveStrafe = 0.0F;
 
-                if (data.getTransitionType() == TransitionTypes.ENDER_DRAGON) {
+                if (data.getTransitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
                     if (player.getPosition().getY() <= 100) {
                         BlockPos upwards = player.getPosition().up(2);
                         BlockPos pos = upwards.subtract(player.getPosition());

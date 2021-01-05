@@ -22,7 +22,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 
 version = '1.0.7'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'Regeneration-1.16.x'
+archivesBaseName = '[Issue #294]-Regeneration-1.16.x'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 

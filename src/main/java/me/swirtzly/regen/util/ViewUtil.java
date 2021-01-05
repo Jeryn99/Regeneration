@@ -23,19 +23,10 @@ public class ViewUtil {
 
     private static final float headSize = 0.15f;
 
-    public static boolean isInFrontOfEntity(LivingEntity entity, Entity target, boolean vr) {
+    public static boolean isInFrontOfEntity(LivingEntity entity, Entity target) {
         Vector3d vecTargetsPos = target.getPositionVec();
         Vector3d vecLook;
-
-        if (vr) {
-            if (entity instanceof PlayerEntity) {
-                vecLook = Regeneration.VR_REFLECTOR.getHMDRot((PlayerEntity) entity);
-            } else {
-                throw new RuntimeException("Attempted to use a non-player entity with VRSupport: " + entity.getPersistentData());
-            }
-        } else {
-            vecLook = entity.getLookVec();
-        }
+        vecLook = entity.getLookVec();
         Vector3d vecFinal = vecTargetsPos.subtractReverse(new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())).normalize();
         vecFinal = new Vector3d(vecFinal.x, 0.0D, vecFinal.z);
         return vecFinal.dotProduct(vecLook) < 0.0;
@@ -106,9 +97,9 @@ public class ViewUtil {
             return false;
         }
         if (livingBase instanceof PlayerEntity) {
-            return isInFrontOfEntity(livingBase, angel, Regeneration.VR_REFLECTOR.isVRPlayer((PlayerEntity) livingBase));
+            return isInFrontOfEntity(livingBase, angel);
         }
-        return isInFrontOfEntity(livingBase, angel, false);
+        return isInFrontOfEntity(livingBase, angel);
     }
 
     public static boolean viewBlocked(LivingEntity viewer, LivingEntity angel) {
@@ -117,11 +108,7 @@ public class ViewUtil {
         Vector3d[] viewerPoints = {new Vector3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.minZ),};
 
         if (viewer instanceof PlayerEntity) {
-            Vector3d pos;
-            if (Regeneration.VR_REFLECTOR.isVRPlayer((PlayerEntity) viewer))
-                pos = Regeneration.VR_REFLECTOR.getHMDPos((PlayerEntity) viewer);
-            else
-                pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
+            Vector3d pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
             viewerPoints[0] = pos.add(-headSize, -headSize, -headSize);
             viewerPoints[1] = pos.add(-headSize, -headSize, headSize);
             viewerPoints[2] = pos.add(-headSize, headSize, -headSize);
@@ -160,11 +147,7 @@ public class ViewUtil {
         Vector3d[] viewerPoints = {new Vector3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.minX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.minZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.maxY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.maxZ), new Vector3d(viewerBoundBox.maxX, viewerBoundBox.minY, viewerBoundBox.minZ),};
 
         if (viewer instanceof PlayerEntity) {
-            Vector3d pos;
-            if (Regeneration.VR_REFLECTOR.isVRPlayer((PlayerEntity) viewer))
-                pos = Regeneration.VR_REFLECTOR.getHMDPos((PlayerEntity) viewer);
-            else
-                pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
+            Vector3d pos = new Vector3d(viewer.getPosX(), viewer.getPosY() + 1.62f, viewer.getPosZ());
             viewerPoints[0] = pos.add(-headSize, -headSize, -headSize);
             viewerPoints[1] = pos.add(-headSize, -headSize, headSize);
             viewerPoints[2] = pos.add(-headSize, headSize, -headSize);

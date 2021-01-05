@@ -44,8 +44,10 @@ class CommonActing implements Acting {
 
         switch (cap.getCurrentState()) {
             case POST:
-                if (player.ticksExisted % 210 == 0) {
-                    PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.world.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
+                if(!PlayerUtil.POTIONS.isEmpty()) {
+                    if (player.ticksExisted % 210 == 0) {
+                        PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.world.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
+                    }
                 }
                 break;
             case REGENERATING:
@@ -110,7 +112,7 @@ class CommonActing implements Acting {
     @Override
     public void onRegenFinish(IRegen cap) {
         LivingEntity player = cap.getLiving();
-        player.addPotionEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
+        player.addPotionEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get(), RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
         player.setHealth(player.getMaxHealth());
         player.setAbsorptionAmount(RegenConfig.COMMON.absorbtionLevel.get() * 2);
         cap.setNextSkin(new byte[0]);

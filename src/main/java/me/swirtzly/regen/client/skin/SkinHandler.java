@@ -135,10 +135,13 @@ public class SkinHandler {
         if (PLAYER_SKINS.containsKey(playerEntity.getGameProfile().getId())) {
             return PLAYER_SKINS.get(playerEntity.getGameProfile().getId());
         }
-        NetworkPlayerInfo info = playerEntity.playerInfo;
-        info.playerTexturesLoaded = false;
-        info.loadPlayerTextures();
-        return MoreObjects.firstNonNull(info.playerTextures.get(MinecraftProfileTexture.Type.SKIN), DefaultPlayerSkin.getDefaultSkin(info.gameProfile.getId()));
+        if (playerEntity.playerInfo != null) {
+            NetworkPlayerInfo info = playerEntity.playerInfo;
+            info.playerTexturesLoaded = false;
+            info.loadPlayerTextures();
+            return MoreObjects.firstNonNull(info.playerTextures.get(MinecraftProfileTexture.Type.SKIN), DefaultPlayerSkin.getDefaultSkin(info.gameProfile.getId()));
+        }
+        return playerEntity.getLocationSkin();
     }
 
 }

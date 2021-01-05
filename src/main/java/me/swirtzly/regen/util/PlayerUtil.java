@@ -27,10 +27,12 @@ public class PlayerUtil {
     public static ArrayList<Effect> POTIONS = new ArrayList();
 
     public static void setupPotions() {
-        for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
-            for (Effect effect : ForgeRegistries.POTIONS.getValues()) {
-                if (name.contentEquals(effect.getRegistryName().toString())) {
-                    POTIONS.add(effect);
+        if (!RegenConfig.COMMON.postRegenEffects.get().isEmpty()) {
+            for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
+                for (Effect effect : ForgeRegistries.POTIONS.getValues()) {
+                    if (name.contentEquals(effect.getRegistryName().toString())) {
+                        POTIONS.add(effect);
+                    }
                 }
             }
         }
