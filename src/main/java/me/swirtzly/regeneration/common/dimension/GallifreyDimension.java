@@ -5,6 +5,7 @@ import me.swirtzly.regeneration.common.dimension.util.GallifreyanSkyRenderer;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.audio.MusicTicker;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -109,7 +110,7 @@ public class GallifreyDimension extends Dimension {
 
     @Override
     public boolean isSurfaceWorld() {
-        return true;
+        return false;
     }
 
     @Override
@@ -128,8 +129,13 @@ public class GallifreyDimension extends Dimension {
     }
 
     @Override
+    public SleepResult canSleepAt(PlayerEntity player, BlockPos pos) {
+        return SleepResult.ALLOW;
+    }
+
+    @Override
     public boolean canRespawnHere() {
-        return true;
+        return false;
     }
 
     @Override
@@ -209,7 +215,6 @@ public class GallifreyDimension extends Dimension {
     @Override
     public Vec3d getCloudColor(float partialTicks) {
         return new Vec3d(0.9, 0.3, 0.1);
-        // return new Vec3d(255 / 255.0F, 153/ 255.0, 204/ 255.0);
     }
 
     @Override
@@ -219,7 +224,7 @@ public class GallifreyDimension extends Dimension {
 
     @Override
     public long getSeed() {
-        return -3968030346439409757L;
+        return super.getSeed();
     }
 
     @Nullable
