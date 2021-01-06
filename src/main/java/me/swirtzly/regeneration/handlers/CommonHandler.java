@@ -77,13 +77,13 @@ public class CommonHandler {
 	public void onLootTableLoad(LootTableLoadEvent e) {
 		if (e.getName().toString().toLowerCase().contains("minecraft:chests/")) {
 			LootTable lootTable = e.getTable();
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_HEAD.get(), 6, 0.5f, 0, 2, "robes");
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.GUARD_CHEST.get(), 6, 0.2f, 0, 1, "robes");
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.GUARD_FEET.get(), 6, 0.3f, 0, 1, "robes");
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.GUARD_LEGGINGS.get(), 6, 0.3f, 0, 1, "robes");
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.GUARD_HEAD.get(), 6, 0.2f, 0, 2, "robes");
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.DIAL.get(), 4, 0.3f, 0, 1, "seal");
-			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_CHEST.get(), 6, 0.5f, 0, 2, "hat");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_HEAD.get(), 6, 0.5f, 0, 2, "robes_head");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.GUARD_CHEST.get(), 6, 0.2f, 0, 1, "guard_chest");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.GUARD_FEET.get(), 6, 0.3f, 0, 1, "guard_feet");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.GUARD_LEGGINGS.get(), 6, 0.3f, 0, 1, "guard_leggings");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.GUARD_HEAD.get(), 6, 0.2f, 0, 2, "guard_head");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.DIAL.get(), 4, 0.3f, 0, 1, "dial");
+			LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_CHEST.get(), 6, 0.5f, 0, 2, "robes_chest");
 		}
 	}
 
