@@ -27,6 +27,8 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.tardis.mod.ars.ARSPiece;
 import net.tardis.mod.ars.ARSPieces;
@@ -41,6 +43,8 @@ import net.tardis.mod.subsystem.Subsystem;
 import net.tardis.mod.tileentities.ConsoleTile;
 import net.tardis.mod.upgrades.Upgrade;
 import net.tardis.mod.upgrades.UpgradeEntry;
+
+import java.util.Optional;
 
 import static me.swirtzly.regeneration.Regeneration.LOG;
 import static net.tardis.mod.helper.TardisHelper.TARDIS_POS;
@@ -66,7 +70,12 @@ public class TardisCompat {
     }
 
     public static void registerAllProtocols() {
-        TardisRegistries.PROTOCOL_REGISTRY.register(new ResourceLocation(Regeneration.MODID, "arch_protocol"), new ArchProtocol());
+      //  Optional<? extends ModContainer> tardis = ModList.get().getModContainerById("tardis");
+      //  if (tardis.get().getModInfo().getVersion().getMajorVersion() >= 5) {
+            TardisRegistries.PROTOCOL_REGISTRY.register(new ResourceLocation(Regeneration.MODID, "arch_protocol"), new ArchProtocol());
+     //   } else {
+    //        LOG.error("Tardis Mod Version is too low to Register Arch Protocol! This is fine");
+    //    }
     }
 
     public static void registerAllRooms() {

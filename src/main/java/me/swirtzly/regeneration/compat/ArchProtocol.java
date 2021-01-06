@@ -47,7 +47,7 @@ public class ArchProtocol extends Protocol {
 
     @Override
     public void call(World world, PlayerEntity player, ConsoleTile consoleTile) { //Add a PlayerEntity parameter for Tardis Mod 1.4
-    	if (!world.isRemote()) {
+        if (!world.isRemote()) {
             consoleTile.getUpgrade(ArchUpgrade.class).ifPresent((archSubSystem -> {
                 if (archSubSystem.isUsable()) {
                     BlockPos pos = consoleTile.getPos();
@@ -58,25 +58,22 @@ public class ArchProtocol extends Protocol {
                             consoleTile.setArtron(consoleTile.getArtron() - 10);
                         }
                         for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, BOX.offset(consoleTile.getPos()))) {
-                             PlayerUtil.sendMessage(playerEntity, "message.regeneration.arch_placed", true);
+                            PlayerUtil.sendMessage(playerEntity, "message.regeneration.arch_placed", true);
                         }
-                    } 
-                    else {
+                    } else {
                         world.setBlockState(placePos, Blocks.AIR.getDefaultState());
                         TardisCompat.damageSubsystem(world); //Only damage after you retract the arch
                         for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, BOX.offset(consoleTile.getPos()))) {
-                        	PlayerUtil.sendMessage(playerEntity, "message.regeneration.arch_removed", true);
+                            PlayerUtil.sendMessage(playerEntity, "message.regeneration.arch_removed", true);
                         }
-                   }
-                } 
-                else {
+                    }
+                } else {
                     for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, BOX.offset(consoleTile.getPos()))) {
                         PlayerUtil.sendMessage(playerEntity, new TranslationTextComponent("message.regeneration.arch_system_dead"), true);
                     }
                 }
-          }));
-    	}
-    	else Regeneration.proxy.closeGui();
+            }));
+        } else Regeneration.proxy.closeGui();
     }
 
     @Override
@@ -84,14 +81,13 @@ public class ArchProtocol extends Protocol {
         return "interior";
     }
 
-    @Override
+    //Left here
     public String getDisplayName() {
         return ARCH.getUnformattedComponentText();
     }
 
-    /* Uncomment for Tardis Mod 1.5 */
-//    @Override
-//    public String getDisplayName(ConsoleTile consoleTile) {
-//        return ARCH.getUnformattedComponentText();
-//    }
+    @Override
+    public String getDisplayName(ConsoleTile consoleTile) {
+        return ARCH.getUnformattedComponentText();
+    }
 }

@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = "https://plugins.gradle.org/m2/"}
+        maven { url = "https://plugins.gradle.org/m2/" }
         jcenter()
         mavenCentral()
     }
@@ -95,21 +95,20 @@ minecraft {
 }
 
 
-
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
-    //compile fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:master-SNAPSHOT')
-    compile fg.deobf("com.gitlab.Spectre0987:TardisMod-1-14:${tm_tag}") //Use stable version of Tardis Mod
+    compile fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:-SNAPSHOT')
+    //compile fg.deobf("com.gitlab.Spectre0987:TardisMod-1-14:${tm_tag}") //Use stable version of Tardis Mod
 }
 
 curseforge {
     apiKey = rootProject.curseforge
     project {
         id = rootProject.regen
-        changelog = 'Fixed issues where loot would not happen.'
+        changelog = 'Fixed issue where loot broke other mods chests. Fixed issue where players would be stranded on Gallifrey. Added Keyboard support to Screen GUI. Fixed TARDIS Mod Support (Supports 1.4.1 and 1.5.1 [When releases])'
         releaseType = 'release'
         mainArtifact(jar) {
-            displayName = "Regeneration - ${minecraft_version} -  $project.version"
+            displayName = "[${minecraft_version}] Regeneration - $project.version"
         }
     }
 }
@@ -117,12 +116,12 @@ curseforge {
 jar {
     manifest {
         attributes([
-                "Specification-Title": "regeneration",
-                "Specification-Vendor": "Swirtzly",
-                "Specification-Version": "${version}",
-                "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"Swirtzly",
+                "Specification-Title"     : "regeneration",
+                "Specification-Vendor"    : "Swirtzly",
+                "Specification-Version"   : "${version}",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "Swirtzly",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
