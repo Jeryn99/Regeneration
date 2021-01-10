@@ -82,13 +82,7 @@ public class GunItem extends SolidItem {
                 setDamage(stack, getDamage(stack) - 1);
             }
         }
-
-        if (stack.getTag() == null) {
-            stack.setTag(new CompoundNBT());
-            stack.getTag().putBoolean("live", true);
-        } else {
-            stack.getTag().putBoolean("live", true);
-        }
+        stack.getOrCreateTag().putBoolean("live", true);
     }
 
     public float getDamage() {

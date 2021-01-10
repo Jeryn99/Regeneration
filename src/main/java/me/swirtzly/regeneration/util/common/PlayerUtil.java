@@ -173,7 +173,7 @@ public class PlayerUtil {
         for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
             BlockState blockState = livingEntity.world.getBlockState(pos);
-            if (blockState.getBlock() instanceof ZeroRoomBlock) {
+            if (blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM.get() || blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM_TWO.get()) {
                 boolean isTardis = livingEntity.world.dimension.getClass().getName().contains("TardisDimension");
                 if (isTardis) {
                     ZeroRoomEvent zeroRoomEvent = new ZeroRoomEvent(livingEntity);
@@ -194,7 +194,7 @@ public class PlayerUtil {
         for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
             BlockState state = livingEntity.world.getBlockState(pos);
-            if (!(state.getBlock() instanceof ZeroRoomBlock)) {
+            if (state.getBlock() != RegenObjects.Blocks.ZERO_ROOM.get() || state.getBlock() != RegenObjects.Blocks.ZERO_ROOM_TWO.get()) {
                 return false;
             }
         }

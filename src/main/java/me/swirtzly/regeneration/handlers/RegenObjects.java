@@ -21,6 +21,7 @@ import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.item.*;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.HandInJarTile;
+import me.swirtzly.regeneration.compat.TardisCompat;
 import me.swirtzly.regeneration.util.common.ICompatObject;
 import me.swirtzly.regeneration.util.common.RegenDamageSource;
 import net.minecraft.block.Block;
@@ -197,12 +198,19 @@ public class RegenObjects {
         public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
         public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
         public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
-        public static final RegistryObject<Block> ZERO_ROOM = BLOCKS.register("zero_roundel_one", () -> setUpBlock(new ZeroRoomBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
-        public static final RegistryObject<Block> ZERO_ROOM_TWO = BLOCKS.register("zero_roundel_two", () -> setUpBlock(new ZeroRoomBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
+        public static final RegistryObject<Block> ZERO_ROOM = BLOCKS.register("zero_roundel_one", RegenObjects::createBlock);
+        public static final RegistryObject<Block> ZERO_ROOM_TWO = BLOCKS.register("zero_roundel_two", RegenObjects::createBlock);
     }
 
-    private static Block setUpBlock(Block block) {
+    public static Block setUpBlock(Block block) {
         return block;
+    }
+
+    private static Block createBlock(){
+        if(ModList.get().isLoaded("tardis")){
+            return TardisCompat.createBlock();
+        }
+        return setUpBlock(new ZeroRoomBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F)));
     }
 
     @SubscribeEvent

@@ -86,7 +86,7 @@ public class ArchBlock extends DirectionalBlock implements ICompatObject {
         if (mainHandItem.isEmpty()) return false;
         if (handIn == Hand.MAIN_HAND && cap.getState() == PlayerUtil.RegenState.ALIVE) {
 
-            if (mainHandItem.getItem() == this.asItem() || mainHandItem.getItem() == Item.getItemFromBlock(RegenObjects.Blocks.HAND_JAR.get())) {
+            if (mainHandItem.getItem() == this.asItem() || mainHandItem.getItem() == RegenObjects.Blocks.HAND_JAR.get().asItem()) {
                 PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.item_invalid"), true);
                 return true;
             }

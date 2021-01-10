@@ -3,12 +3,16 @@ package me.swirtzly.regeneration.compat;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.api.ZeroRoomEvent;
+import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.types.RegenTypes;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
@@ -32,6 +36,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.tardis.mod.ars.ARSPiece;
 import net.tardis.mod.ars.ARSPieces;
+import net.tardis.mod.blocks.RoundelBlock;
 import net.tardis.mod.dimensions.TardisDimension;
 import net.tardis.mod.entity.DalekEntity;
 import net.tardis.mod.enums.EnumDoorState;
@@ -47,6 +52,7 @@ import net.tardis.mod.upgrades.UpgradeEntry;
 import java.util.Optional;
 
 import static me.swirtzly.regeneration.Regeneration.LOG;
+import static me.swirtzly.regeneration.handlers.RegenObjects.setUpBlock;
 import static net.tardis.mod.helper.TardisHelper.TARDIS_POS;
 
 /**
@@ -90,6 +96,10 @@ public class TardisCompat {
 
     private static ConsoleTile getTardis(World world) {
         return (ConsoleTile) world.getTileEntity(TARDIS_POS);
+    }
+
+    public static Block createBlock() {
+        return setUpBlock(new RoundelBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F), SoundType.CORAL, 3,3));
     }
 
     @SubscribeEvent

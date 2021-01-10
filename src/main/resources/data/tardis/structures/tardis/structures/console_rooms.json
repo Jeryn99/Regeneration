@@ -1,0 +1,12 @@
+[
+  {
+    "schematic_resource_location": "regeneration:tardis/structures/show/mccoy",
+    "namespaced_id": "regeneration:mccoy",
+    "display_name": "McCoy Interior",
+    "image_resource_location": "regeneration:textures/gui/mccoy.png",
+    "unlocked_by_default": true,
+    "x_offset": 11,
+    "y_offset": 1,
+    "z_offset": 30
+  }
+]

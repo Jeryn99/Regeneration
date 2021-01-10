@@ -99,7 +99,9 @@ public class OverrideEntity extends Entity {
 	@Override
 	public void tick() {
 
-        if (getItem().getTag() == null || getItem().getTag().isEmpty() || !getItem().isEmpty() && !getItem().getTag().contains("live")) {
+        CompoundNBT stackTag = getItem().getOrCreateTag();
+
+        if (!getItem().isEmpty() && !stackTag.contains("live")) {
             this.remove();
             return;
         }

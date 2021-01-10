@@ -70,15 +70,13 @@ public class HandItem extends Item {
     }
 
     public static CompoundNBT getStackTag(ItemStack stack) {
-        if (stack.getTag() == null) {
-            stack.setTag(new CompoundNBT());
-            stack.getTag().putString("encodedTexture", "NONE");
-            stack.getTag().putString("skinType", SkinInfo.SkinType.ALEX.name());
-            stack.getTag().putUniqueId("owner", UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39"));
-            stack.getTag().putLong("created", 0);
-            stack.getTag().putString("trait", TraitManager.DNA_BORING.getRegistryName().toString());
-        }
-        return stack.getTag();
+        CompoundNBT stackTag = stack.getOrCreateTag();
+        stackTag.putString("encodedTexture", "NONE");
+        stackTag.putString("skinType", SkinInfo.SkinType.ALEX.name());
+        stackTag.putUniqueId("owner", UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39"));
+        stackTag.putLong("created", 0);
+        stackTag.putString("trait", TraitManager.DNA_BORING.getRegistryName().toString());
+        return stackTag;
     }
 
     @Override
@@ -95,7 +93,6 @@ public class HandItem extends Item {
         String dateFormatted = formatter.format(date);
         tooltip.add(new TranslationTextComponent("nbt.regeneration.created", dateFormatted));
         tooltip.add(new TranslationTextComponent(TraitManager.getDnaEntry(new ResourceLocation(getTrait(stack))).getLangKey()));
-
     }
-	
+
 }
