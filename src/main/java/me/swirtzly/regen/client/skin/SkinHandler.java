@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.NBTIngredient;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

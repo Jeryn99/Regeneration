@@ -56,7 +56,6 @@ public class TimelordEntity extends CreatureEntity {
 
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return MonsterEntity.func_234295_eP_().
-
                 createMutableAttribute(Attributes.FOLLOW_RANGE, 35D).
                 createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.23F).
                 createMutableAttribute(Attributes.ATTACK_DAMAGE, 3F).

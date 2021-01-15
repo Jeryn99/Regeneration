@@ -1,5 +1,6 @@
 package me.swirtzly.regen.common.objects;
 
+import me.swirtzly.regen.common.item.ElixirItem;
 import me.swirtzly.regen.common.item.FobWatchItem;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.item.Item;
@@ -20,5 +21,6 @@ public class RItems {
         }
     };
     public static RegistryObject<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
+    public static RegistryObject<Item> ELIXIR = ITEMS.register("elixir", ElixirItem::new);
 
 }

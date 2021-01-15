@@ -65,7 +65,7 @@ public class RegenCap implements IRegen {
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
     private byte[] nextSkin = new byte[0];
-    private Traits.ITrait currentTrait = Traits.BORING.get();
+    private Traits.ITrait currentTrait = Traits.BORING.get(), nextTrait = Traits.BORING.get();
 
     public RegenCap() {
         this.livingEntity = null;
@@ -141,7 +141,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public boolean canRegenerate() {
-        return getRegens() > 0 && livingEntity.getPosY() > 0;
+        return getRegens() > 0 && livingEntity.getPosY() > 0 && currentState != RegenStates.POST;
     }
 
     @Override
@@ -225,6 +225,9 @@ public class RegenCap implements IRegen {
         compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
         compoundNBT.putBoolean(RConstants.GLOWING, areHandsGlowing());
         compoundNBT.putString(RConstants.CURRENT_TRAIT, currentTrait.getRegistryName().toString());
+        if(compoundNBT.contains(RConstants.NEXT_TRAIT)){
+        compoundNBT.putString(RConstants.NEXT_TRAIT, nextTrait.getRegistryName().toString());
+        }
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skinArray);
@@ -256,7 +259,9 @@ public class RegenCap implements IRegen {
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
         areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
         setTrait(Traits.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
-
+        if (nextTrait.getRegistryName() != Traits.BORING.get().getRegistryName()) {
+            setNextTrait(Traits.fromID(nbt.getString(RConstants.NEXT_TRAIT)));
+        }
         if (nbt.contains(RConstants.PREFERENCE)) {
             setPreferredModel(PlayerUtil.SkinType.valueOf(nbt.getString(RConstants.PREFERENCE)));
         }
@@ -298,8 +303,8 @@ public class RegenCap implements IRegen {
 
     @Override
     public void regen() {
-        if (stateManager != null) {
-            stateManager.triggerRegeneration();
+        if (livingEntity != null) {
+            livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
         }
     }
 
@@ -383,6 +388,19 @@ public class RegenCap implements IRegen {
         this.currentTrait = trait;
     }
 
+    @Override
+    public Traits.ITrait getNextTrait() {
+        if (nextTrait.getRegistryName() != Traits.BORING.get().getRegistryName()) {
+            return nextTrait;
+        }
+        return Traits.getRandomTrait(livingEntity.getRNG(), !(livingEntity instanceof PlayerEntity));
+    }
+
+    @Override
+    public void setNextTrait(Traits.ITrait trait) {
+        this.nextTrait = trait;
+    }
+
     public class StateManager implements IStateManager {
 
         private final Map<RegenStates.Transition, Runnable> transitionCallbacks;
@@ -391,9 +409,7 @@ public class RegenCap implements IRegen {
         private StateManager() {
             this.transitionCallbacks = new HashMap<>();
             transitionCallbacks.put(RegenStates.Transition.ENTER_CRITICAL, this::enterCriticalPhase);
-            transitionCallbacks.put(RegenStates.Transition.CRITICAL_DEATH, () -> {
-                midSequenceKill(true);
-            });
+            transitionCallbacks.put(RegenStates.Transition.CRITICAL_DEATH, () -> midSequenceKill(true));
             transitionCallbacks.put(RegenStates.Transition.FINISH_REGENERATION, this::finishRegeneration);
             transitionCallbacks.put(RegenStates.Transition.END_POST, this::endPost);
 
@@ -568,12 +584,7 @@ public class RegenCap implements IRegen {
             nextTransition = null;
             handGlowTimer = null;
             transitionType.get().onFinishRegeneration(RegenCap.this);
-            if (isGrace) {
-                livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
-            } else {
-                livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
-            }
-
+            livingEntity.attackEntityFrom(isGrace ? RegenSources.REGEN_DMG_CRITICAL : RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(getRegens());
             }

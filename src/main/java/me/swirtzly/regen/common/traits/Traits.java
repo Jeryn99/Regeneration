@@ -57,7 +57,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
     public static ITrait fromID(String location) {
         ResourceLocation resourceLocation = new ResourceLocation(location);
         ITrait value = REGISTRY.getValue(resourceLocation);
-
+        System.out.println(location);
         if (value != null) {
             return value;
         }

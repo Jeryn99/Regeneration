@@ -42,7 +42,6 @@ public class DownloadSkinsThread extends Thread {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-        ;
     }
 
 }

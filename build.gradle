@@ -22,7 +22,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 
 version = '1.0.7'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = '[Issue #294]-Regeneration-1.16.x'
+archivesBaseName = '[1.16.4] Regeneration'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -101,8 +101,9 @@ curseforge {
         releaseType = 'release'
         addGameVersion '1.16.3'
         addGameVersion '1.16.4'
+        addGameVersion '1.16.5'
         mainArtifact(jar) {
-            displayName = "Regeneration - ${minecraft_version} -  $project.version"
+            displayName = "[${minecraft_version}] - Regeneration -  $project.version"
         }
     }
 }

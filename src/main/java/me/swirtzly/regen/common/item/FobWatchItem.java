@@ -32,12 +32,12 @@ public class FobWatchItem extends Item {
     }
 
     public static CompoundNBT getStackTag(ItemStack stack) {
-        if (stack.getTag() == null || !stack.getTag().contains("is_open") || !stack.getTag().contains("is_gold")) {
-            stack.setTag(new CompoundNBT());
-            stack.getTag().putBoolean("is_open", false);
-            stack.getTag().putBoolean("is_gold", random.nextBoolean());
+        CompoundNBT stackTag = stack.getOrCreateTag();
+        if (!stackTag.contains("is_open") || !stackTag.contains("is_gold")) {
+            stackTag.putBoolean("is_open", false);
+            stackTag.putBoolean("is_gold", random.nextBoolean());
         }
-        return stack.getTag();
+        return stackTag;
     }
 
     public static boolean getEngrave(ItemStack stack) {
@@ -111,7 +111,6 @@ public class FobWatchItem extends Item {
                 cap.addRegens(used);
             }
 
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
         } else { // transferring player->watch
             if (!cap.canRegenerate()) return msgUsageFailed(player, "regen.messages.transfer.no_regens", stack);
 
@@ -132,8 +131,8 @@ public class FobWatchItem extends Item {
                 cap.extractRegens(1);
             }
 
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
+        return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
 

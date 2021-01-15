@@ -123,7 +123,7 @@ class CommonActing implements Acting {
         //Trait
         if (RegenConfig.COMMON.traitsEnabled.get()) {
             cap.getTrait().reset(cap);
-            cap.setTrait(Traits.getRandomTrait(player.getRNG(), !(player instanceof PlayerEntity)));
+            cap.setTrait(cap.getNextTrait());
             cap.getTrait().apply(cap);
             PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", cap.getTrait().getTranslation().getString()), true);
         } else {
