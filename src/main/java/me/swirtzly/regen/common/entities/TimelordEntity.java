@@ -10,7 +10,6 @@ import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
-import net.minecraft.client.gui.screen.inventory.MerchantScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
@@ -236,20 +235,6 @@ public class TimelordEntity extends VillagerEntity {
         }
     }
 
-    public enum TimelordType {
-        COUNCIL("timelord"), GUARD("guards");
-
-        private final String name;
-
-        TimelordType(String guard) {
-            this.name = guard;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
     @Override
     protected void populateTradeData() {
         if (getTimelordType() == TimelordType.COUNCIL) {
@@ -267,6 +252,20 @@ public class TimelordEntity extends VillagerEntity {
     @Override
     public ITextComponent getName() {
         return new TranslationTextComponent("Timelord");
+    }
+
+    public enum TimelordType {
+        COUNCIL("timelord"), GUARD("guards");
+
+        private final String name;
+
+        TimelordType(String guard) {
+            this.name = guard;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     public static class TimelordTrade implements VillagerTrades.ITrade {

@@ -11,7 +11,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -21,17 +24,16 @@ import java.util.List;
 
 public class ElixirItem extends Item {
 
+    public ElixirItem() {
+        super(new Item.Properties().setNoRepair().group(RItems.MAIN).maxStackSize(1));
+    }
+
     public static Traits.ITrait getTrait(ItemStack stack) {
         return Traits.fromID(stack.getOrCreateTag().getString("trait"));
     }
 
     public static void setTrait(ItemStack stack, Traits.ITrait iTrait) {
         stack.getOrCreateTag().putString("trait", iTrait.getRegistryName().toString());
-    }
-
-
-    public ElixirItem() {
-        super(new Item.Properties().setNoRepair().group(RItems.MAIN).maxStackSize(1));
     }
 
     @Override
@@ -83,7 +85,7 @@ public class ElixirItem extends Item {
                 iRegen.syncToClients(null);
                 entityLiving.attackEntityFrom(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
                 stack.shrink(1);
-                entityLiving.playSound(SoundEvents.ENTITY_GENERIC_DRINK, 0.3F,1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.4F);
+                entityLiving.playSound(SoundEvents.ENTITY_GENERIC_DRINK, 0.3F, 1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.4F);
             }
         });
         return super.onItemUseFinish(stack, worldIn, entityLiving);

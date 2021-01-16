@@ -3,8 +3,6 @@ package me.swirtzly.regen.common.traits;
 import com.google.common.collect.Iterables;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.util.RConstants;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegistryEvent;
@@ -100,7 +98,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
 
         public abstract boolean isPlayerOnly();
 
-        public int getColor(){
+        public int getColor() {
             return 2293580;
         }
 

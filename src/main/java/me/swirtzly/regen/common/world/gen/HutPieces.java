@@ -1,8 +1,9 @@
 package me.swirtzly.regen.common.world.gen;
 
 import com.google.common.collect.ImmutableMap;
+import me.swirtzly.regen.common.entities.TimelordEntity;
+import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.util.RConstants;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
@@ -78,14 +79,23 @@ public class HutPieces {
         @Override
         protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
 
-            if ("cobweb".equals(function)) {
-                Block block = rand.nextBoolean() ? Blocks.COBWEB : Blocks.AIR;
-                worldIn.setBlockState(pos, block.getDefaultState(), 2);
+            if ("timelord".equals(function)) {
+                TimelordEntity timelordEntity = new TimelordEntity(worldIn.getWorld());
+                timelordEntity.setTimelordType(TimelordEntity.TimelordType.COUNCIL);
+                timelordEntity.initSkin(RegenCap.get(timelordEntity).orElseGet(null));
+                timelordEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
+                worldIn.addEntity(timelordEntity);
+                worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
             }
 
-            if ("chest".equals(function)) {
-                LockableLootTileEntity.setLootTable(worldIn, rand, pos.down(), LootTables.CHESTS_STRONGHOLD_LIBRARY);
-                worldIn.removeBlock(pos, false);
+            if ("chest_stone".equals(function)) {
+                LockableLootTileEntity.setLootTable(worldIn, rand, pos.up(), LootTables.CHESTS_STRONGHOLD_LIBRARY);
+                worldIn.setBlockState(pos, Blocks.STONE.getDefaultState(), 2);
+            }
+
+            if ("chest_stone".equals(function)) {
+                LockableLootTileEntity.setLootTable(worldIn, rand, pos.up(), LootTables.CHESTS_STRONGHOLD_LIBRARY);
+                worldIn.setBlockState(pos, Blocks.STONE.getDefaultState(), 2);
             }
         }
     }

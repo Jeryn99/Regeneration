@@ -44,7 +44,7 @@ class CommonActing implements Acting {
 
         switch (cap.getCurrentState()) {
             case POST:
-                if(!PlayerUtil.POTIONS.isEmpty()) {
+                if (!PlayerUtil.POTIONS.isEmpty()) {
                     if (player.ticksExisted % 210 == 0) {
                         PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.world.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
                     }

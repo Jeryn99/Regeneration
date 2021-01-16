@@ -1,6 +1,5 @@
 package me.swirtzly.regen.util;
 
-import me.swirtzly.regen.Regeneration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
