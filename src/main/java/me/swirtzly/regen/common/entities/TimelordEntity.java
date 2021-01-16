@@ -1,34 +1,45 @@
 package me.swirtzly.regen.common.entities;
 
 import me.swirtzly.regen.client.skin.CommonSkin;
+import me.swirtzly.regen.common.item.ElixirItem;
 import me.swirtzly.regen.common.objects.REntities;
+import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
+import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.MerchantOffer;
+import net.minecraft.item.MerchantOffers;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 
 import java.io.File;
+import java.util.Random;
 
 import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
 
@@ -36,7 +47,7 @@ import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
  * Created by Swirtzly
  * on 03/05/2020 @ 18:50
  */
-public class TimelordEntity extends CreatureEntity {
+public class TimelordEntity extends VillagerEntity {
 
     private static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
@@ -100,6 +111,29 @@ public class TimelordEntity extends CreatureEntity {
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(TimelordEntity.class));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
+    }
+
+    @Override
+    public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
+        ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
+        if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.hasCustomer() && !this.isChild()) {
+            if (p_230254_2_ == Hand.MAIN_HAND) {
+                p_230254_1_.addStat(Stats.TALKED_TO_VILLAGER);
+            }
+
+            if (this.getOffers().isEmpty()) {
+                return ActionResultType.func_233537_a_(this.world.isRemote);
+            } else {
+                if (!this.world.isRemote) {
+                    this.setCustomer(p_230254_1_);
+                    this.openMerchantContainer(p_230254_1_, this.getDisplayName(), 1);
+                }
+
+                return ActionResultType.func_233537_a_(this.world.isRemote);
+            }
+        } else {
+            return super.func_230254_b_(p_230254_1_, p_230254_2_);
+        }
     }
 
     @Override
@@ -206,4 +240,44 @@ public class TimelordEntity extends CreatureEntity {
             return name;
         }
     }
+
+    @Override
+    protected void populateTradeData() {
+      MerchantOffers merchantoffers = this.getOffers();
+        Traits.ITrait trait = Traits.getRandomTrait(rand, false);
+        ItemStack item = new ItemStack(RItems.ELIXIR.get());
+        ElixirItem.setTrait(item, trait);
+        VillagerTrades.ITrade[] trades = new VillagerTrades.ITrade[]{new TimelordEntity.TimelordTrade(new ItemStack(Items.EMERALD, 3), item, 1, 5)};
+        this.addTrades(merchantoffers, trades, 5);
+
+    }
+
+
+    public static class TimelordTrade implements VillagerTrades.ITrade {
+
+        private ItemStack coin2;
+        private ItemStack coin;
+        private ItemStack wares;
+
+        private int xp;
+        private int stock;
+
+        public TimelordTrade(ItemStack coin, ItemStack coin2, ItemStack wares, int stock, int xp) {
+            this.xp = xp;
+            this.stock = stock;
+            this.wares = wares;
+            this.coin = coin;
+            this.coin2 = coin2;
+        }
+
+        public TimelordTrade(ItemStack coin, ItemStack wares, int stock, int xp) {
+            this(coin, ItemStack.EMPTY, wares, stock, xp);
+        }
+
+        @Override
+        public MerchantOffer getOffer(Entity trader, Random rand) {
+            return new MerchantOffer(coin, coin2, wares, stock, xp, 0F);
+        }
+    }
+
 }

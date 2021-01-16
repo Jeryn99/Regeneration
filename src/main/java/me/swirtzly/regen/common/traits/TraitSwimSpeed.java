@@ -49,4 +49,9 @@ public class TraitSwimSpeed extends Traits.ITrait {
     public boolean isPlayerOnly() {
         return false;
     }
+
+    @Override
+    public int getColor() {
+        return 2039713;
+    }
 }

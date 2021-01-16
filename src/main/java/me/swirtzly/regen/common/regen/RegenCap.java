@@ -65,7 +65,8 @@ public class RegenCap implements IRegen {
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
     private byte[] nextSkin = new byte[0];
-    private Traits.ITrait currentTrait = Traits.BORING.get(), nextTrait = Traits.BORING.get();
+    private Traits.ITrait currentTrait = Traits.BORING.get();
+    private Traits.ITrait nextTrait = Traits.BORING.get();
 
     public RegenCap() {
         this.livingEntity = null;
@@ -225,8 +226,8 @@ public class RegenCap implements IRegen {
         compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
         compoundNBT.putBoolean(RConstants.GLOWING, areHandsGlowing());
         compoundNBT.putString(RConstants.CURRENT_TRAIT, currentTrait.getRegistryName().toString());
-        if(compoundNBT.contains(RConstants.NEXT_TRAIT)){
-        compoundNBT.putString(RConstants.NEXT_TRAIT, nextTrait.getRegistryName().toString());
+        if (nextTrait.getRegistryName() != Traits.BORING.get().getRegistryName()) {
+            compoundNBT.putString(RConstants.NEXT_TRAIT, nextTrait.getRegistryName().toString());
         }
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
@@ -259,9 +260,7 @@ public class RegenCap implements IRegen {
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
         areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
         setTrait(Traits.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
-        if (nextTrait.getRegistryName() != Traits.BORING.get().getRegistryName()) {
-            setNextTrait(Traits.fromID(nbt.getString(RConstants.NEXT_TRAIT)));
-        }
+        setNextTrait(Traits.fromID(nbt.getString(RConstants.NEXT_TRAIT)));
         if (nbt.contains(RConstants.PREFERENCE)) {
             setPreferredModel(PlayerUtil.SkinType.valueOf(nbt.getString(RConstants.PREFERENCE)));
         }
@@ -390,10 +389,10 @@ public class RegenCap implements IRegen {
 
     @Override
     public Traits.ITrait getNextTrait() {
-        if (nextTrait.getRegistryName() != Traits.BORING.get().getRegistryName()) {
-            return nextTrait;
+        if (nextTrait.getRegistryName() == Traits.BORING.get().getRegistryName()) {
+            return Traits.getRandomTrait(livingEntity.getRNG(), !(livingEntity instanceof PlayerEntity));
         }
-        return Traits.getRandomTrait(livingEntity.getRNG(), !(livingEntity instanceof PlayerEntity));
+        return nextTrait;
     }
 
     @Override

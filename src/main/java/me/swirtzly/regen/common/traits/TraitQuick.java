@@ -5,6 +5,13 @@ import me.swirtzly.regen.util.RConstants;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.potion.Effects;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Objects;
@@ -54,4 +61,10 @@ public class TraitQuick extends Traits.ITrait {
     public boolean isPlayerOnly() {
         return true;
     }
+
+    @Override
+    public int getColor() {
+        return 8171462;
+    }
+
 }

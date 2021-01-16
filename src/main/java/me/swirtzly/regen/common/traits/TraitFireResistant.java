@@ -35,4 +35,9 @@ public class TraitFireResistant extends Traits.ITrait {
     public ResourceLocation getRegistryName() {
         return new ResourceLocation(RConstants.MODID, "fire_resistant");
     }
+
+    @Override
+    public int getColor() {
+        return 14981690;
+    }
 }

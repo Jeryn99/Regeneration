@@ -35,4 +35,9 @@ public class TraitFish extends Traits.ITrait {
     public ResourceLocation getRegistryName() {
         return new ResourceLocation(RConstants.MODID, "fish");
     }
+
+    @Override
+    public int getColor() {
+        return 8954814;
+    }
 }

@@ -44,4 +44,9 @@ public class TraitStrong extends Traits.ITrait {
     public ResourceLocation getRegistryName() {
         return new ResourceLocation(RConstants.MODID, "strong");
     }
+
+    @Override
+    public int getColor() {
+        return 9643043;
+    }
 }

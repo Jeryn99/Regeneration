@@ -13,15 +13,17 @@ import me.swirtzly.regen.data.BlockstateGen;
 import me.swirtzly.regen.data.EnglishLangGen;
 import me.swirtzly.regen.data.RRecipeGen;
 import me.swirtzly.regen.data.RSoundsGen;
+import me.swirtzly.regen.handlers.CommonEvents;
 import me.swirtzly.regen.network.NetworkDispatcher;
-import me.swirtzly.regen.util.ClientUtil;
-import me.swirtzly.regen.util.DownloadSkinsThread;
-import me.swirtzly.regen.util.PlayerUtil;
+import me.swirtzly.regen.util.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.crafting.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -86,4 +88,8 @@ public class Regeneration {
         RTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
+    @SubscribeEvent
+    public void registerRecipeSerialziers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+        CraftingHelper.register(new ResourceLocation(RConstants.MODID, "nbt"), NBTRecipeIngredient.Serializer.INSTANCE);
+    }
 }

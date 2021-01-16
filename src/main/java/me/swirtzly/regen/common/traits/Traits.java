@@ -3,6 +3,8 @@ package me.swirtzly.regen.common.traits;
 import com.google.common.collect.Iterables;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.util.RConstants;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegistryEvent;
@@ -23,11 +25,11 @@ public class Traits extends ForgeRegistryEntry<Traits> {
 
 
     public static final Traits QUICK = new Traits(TraitQuick::new);
-    public static final Traits BORING = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "boring")));
-    public static final Traits SMART = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "smart")));
-    public static final Traits FAST_MINE = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "fast_mine")));
-    public static final Traits KNOCKBACK = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "knockback")));
-    public static final Traits LEAP = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "leap")));
+    public static final Traits BORING = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "boring"), 3484199));
+    public static final Traits SMART = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "smart"), 3381504));
+    public static final Traits FAST_MINE = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "fast_mine"), 16773073));
+    public static final Traits KNOCKBACK = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "knockback"), 1950417));
+    public static final Traits LEAP = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "leap"), 2293580));
     public static final Traits LONG_ARMS = new Traits(TraitLongArms::new);
     public static final Traits STRONG = new Traits(TraitStrong::new);
     public static final Traits SWIM_SPEED = new Traits(TraitSwimSpeed::new);
@@ -57,7 +59,6 @@ public class Traits extends ForgeRegistryEntry<Traits> {
     public static ITrait fromID(String location) {
         ResourceLocation resourceLocation = new ResourceLocation(location);
         ITrait value = REGISTRY.getValue(resourceLocation);
-        System.out.println(location);
         if (value != null) {
             return value;
         }
@@ -98,6 +99,10 @@ public class Traits extends ForgeRegistryEntry<Traits> {
         }
 
         public abstract boolean isPlayerOnly();
+
+        public int getColor(){
+            return 2293580;
+        }
 
         @Override
         public Traits.ITrait setRegistryName(ResourceLocation name) {

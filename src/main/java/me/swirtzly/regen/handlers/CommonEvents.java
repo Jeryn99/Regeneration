@@ -2,6 +2,7 @@ package me.swirtzly.regen.handlers;
 
 import com.mojang.brigadier.CommandDispatcher;
 import me.swirtzly.regen.common.commands.RegenCommand;
+import me.swirtzly.regen.common.item.ElixirItem;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
@@ -14,6 +15,8 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -66,6 +69,9 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
+
+        if (livingEntity == null) return;
+
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
             Entity trueSource = event.getSource().getTrueSource();
@@ -146,5 +152,6 @@ public class CommonEvents {
         CommandDispatcher<CommandSource> dispatcher = event.getServer().getCommandManager().getDispatcher();
         RegenCommand.register(dispatcher);
     }
+
 
 }

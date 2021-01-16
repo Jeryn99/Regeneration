@@ -6,9 +6,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class TraitBase extends Traits.ITrait {
     private ResourceLocation LOCATION;
+    private int color;
 
-    public TraitBase(ResourceLocation resourceLocation) {
+    public TraitBase(ResourceLocation resourceLocation, int color) {
         LOCATION = resourceLocation;
+        this.color = color;
     }
 
     @Override
@@ -45,5 +47,10 @@ public class TraitBase extends Traits.ITrait {
     @Override
     public Class<Traits.ITrait> getRegistryType() {
         return Traits.ITrait.class;
+    }
+
+    @Override
+    public int getColor() {
+        return color;
     }
 }

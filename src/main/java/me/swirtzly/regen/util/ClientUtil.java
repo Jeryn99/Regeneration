@@ -7,6 +7,7 @@ import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.rendering.entity.WatcherRenderer;
 import me.swirtzly.regen.client.rendering.layers.HandLayer;
 import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
+import me.swirtzly.regen.common.item.ElixirItem;
 import me.swirtzly.regen.common.objects.RBlocks;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
@@ -23,6 +24,8 @@ import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -81,6 +84,8 @@ public class ClientUtil {
 
 
         RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.getCutoutMipped());
+
+        Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).getColor(), RItems.ELIXIR.get());
     }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {

@@ -48,4 +48,9 @@ public class TraitLongArms extends Traits.ITrait {
     public ResourceLocation getRegistryName() {
         return LOCATION;
     }
+
+    @Override
+    public int getColor() {
+        return 9740385;
+    }
 }

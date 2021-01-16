@@ -5,14 +5,13 @@ import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -45,14 +44,24 @@ public class ElixirItem extends Item {
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         if (isInGroup(group)) {
             for (Traits.ITrait trait : Traits.REGISTRY.getValues()) {
-                if (trait != Traits.BORING.get()) {
+                if (trait.getRegistryName() != Traits.BORING.get().getRegistryName()) {
                     ItemStack stack = new ItemStack(this);
                     setTrait(stack, trait);
                     items.add(stack);
                 }
             }
         }
-        super.fillItemGroup(group, items);
+        items.removeIf(stack -> getTrait(stack).getRegistryName() == Traits.BORING.get().getRegistryName());
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getHeldItem(handIn);
+        if (itemstack.getItem() instanceof ElixirItem) {
+            playerIn.setActiveHand(handIn);
+            return ActionResult.resultConsume(itemstack);
+        }
+        return ActionResult.resultFail(itemstack);
     }
 
     @Override
@@ -61,17 +70,25 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        RegenCap.get(playerIn).ifPresent(iRegen -> {
+    public int getUseDuration(ItemStack stack) {
+        return 32;
+    }
+
+    @Override
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+        if (worldIn.isRemote) return super.onItemUseFinish(stack, worldIn, entityLiving);
+        RegenCap.get(entityLiving).ifPresent(iRegen -> {
             if (iRegen.canRegenerate()) {
-                ItemStack stack = playerIn.getActiveItemStack();
                 iRegen.setNextTrait(getTrait(stack));
-                playerIn.attackEntityFrom(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
+                iRegen.syncToClients(null);
+                entityLiving.attackEntityFrom(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
                 stack.shrink(1);
+                entityLiving.playSound(SoundEvents.ENTITY_GENERIC_DRINK, 0.3F,1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.4F);
             }
         });
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.onItemUseFinish(stack, worldIn, entityLiving);
     }
+
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
