@@ -36,6 +36,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.world.StructureSpawnListGatherEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -95,16 +96,6 @@ public class ClientEvents {
         RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.getTransitionType().get().getRenderer().firstPersonHand(event));
     }
 
-    @SubscribeEvent
-    public static void onRenderOverlayk(RenderGameOverlayEvent event) {
-        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == REGENERATING) {
-                if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-                    event.setCanceled(true);
-                }
-            }
-        });
-    }
 
     @SubscribeEvent
     public static void onTickEvent(TickEvent.ClientTickEvent event) {
@@ -154,6 +145,11 @@ public class ClientEvents {
 
             RegenCap.get(player).ifPresent((cap) -> {
                 String warning = null;
+
+                if (cap.getCurrentState() == REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+                    event.setCanceled(true);
+                }
+
 
                 ITextComponent forceKeybind = new TranslationTextComponent(RKeybinds.FORCE_REGEN.getTranslationKey().replace("key.keyboard.", "").toUpperCase());
 

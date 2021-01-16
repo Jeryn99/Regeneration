@@ -17,7 +17,7 @@ public class RegenScheduledAction extends ScheduledAction {
     @Override
     public boolean tick() {
         if (scheduledTick == -1)
-            Regeneration.LOG.warn(player.getName() + ": Ticking finsished/canceled ScheduledAction (" + transition + ")");
+            Regeneration.LOG.warn(player.getName() + ": Ticking finished/canceled ScheduledAction (" + transition + ")");
 
         boolean willExecute = currentTick == scheduledTick;
 

@@ -8,6 +8,7 @@ import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.RegenStorage;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
+import me.swirtzly.regen.common.world.gen.RStructures;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.BlockstateGen;
 import me.swirtzly.regen.data.EnglishLangGen;
@@ -58,6 +59,13 @@ public class Regeneration {
 
 
     private void doCommonStuff(final FMLCommonSetupEvent event) {
+
+        event.enqueueWork(() ->
+        {
+            RStructures.setupStructures();
+            RStructures.ConfiguredStructures.registerConfiguredStructures();
+        });
+
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
         ActingForwarder.init();
         GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().create());
@@ -86,6 +94,7 @@ public class Regeneration {
         RBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RStructures.Structures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent

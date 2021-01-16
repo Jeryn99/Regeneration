@@ -10,16 +10,23 @@ import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
-import net.minecraft.entity.*;
+import net.minecraft.client.gui.screen.inventory.MerchantScreen;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.merchant.villager.VillagerData;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.MerchantOffer;
@@ -33,7 +40,9 @@ import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -125,10 +134,10 @@ public class TimelordEntity extends VillagerEntity {
                 return ActionResultType.func_233537_a_(this.world.isRemote);
             } else {
                 if (!this.world.isRemote) {
+                    this.setVillagerData(new VillagerData(VillagerType.DESERT, VillagerProfession.ARMORER, 100));
                     this.setCustomer(p_230254_1_);
                     this.openMerchantContainer(p_230254_1_, this.getDisplayName(), 1);
                 }
-
                 return ActionResultType.func_233537_a_(this.world.isRemote);
             }
         } else {
@@ -243,15 +252,22 @@ public class TimelordEntity extends VillagerEntity {
 
     @Override
     protected void populateTradeData() {
-      MerchantOffers merchantoffers = this.getOffers();
-        Traits.ITrait trait = Traits.getRandomTrait(rand, false);
-        ItemStack item = new ItemStack(RItems.ELIXIR.get());
-        ElixirItem.setTrait(item, trait);
-        VillagerTrades.ITrade[] trades = new VillagerTrades.ITrade[]{new TimelordEntity.TimelordTrade(new ItemStack(Items.EMERALD, 3), item, 1, 5)};
-        this.addTrades(merchantoffers, trades, 5);
-
+        if (getTimelordType() == TimelordType.COUNCIL) {
+            for (int i = rand.nextInt(4); i > 0; i--) {
+                MerchantOffers merchantoffers = this.getOffers();
+                Traits.ITrait trait = Traits.getRandomTrait(rand, false);
+                ItemStack item = new ItemStack(RItems.ELIXIR.get());
+                ElixirItem.setTrait(item, trait);
+                VillagerTrades.ITrade[] trades = new VillagerTrades.ITrade[]{new TimelordEntity.TimelordTrade(new ItemStack(Items.GOLD_INGOT, MathHelper.clamp(rand.nextInt(20), 6, 20)), item, rand.nextInt(7), 5)};
+                this.addTrades(merchantoffers, trades, 5);
+            }
+        }
     }
 
+    @Override
+    public ITextComponent getName() {
+        return new TranslationTextComponent("Timelord");
+    }
 
     public static class TimelordTrade implements VillagerTrades.ITrade {
 

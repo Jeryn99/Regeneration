@@ -11,12 +11,10 @@ public class RSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, RConstants.MODID);
 
     public static final RegistryObject<SoundEvent> FOB_WATCH = SOUNDS.register("fob_watch", () -> setUpSound("fob_watch"));
-    public static final RegistryObject<SoundEvent> FOB_WATCH_DIALOGUE = SOUNDS.register("fob_watch_dialogue", () -> setUpSound("fob_watch_dialogue"));
     public static final RegistryObject<SoundEvent> CRITICAL_STAGE = SOUNDS.register("critical_stage", () -> setUpSound("critical_stage"));
     public static final RegistryObject<SoundEvent> HEART_BEAT = SOUNDS.register("heart_beat", () -> setUpSound("heart_beat"));
     public static final RegistryObject<SoundEvent> HAND_GLOW = SOUNDS.register("hand_glow", () -> setUpSound("hand_glow"));
     public static final RegistryObject<SoundEvent> GRACE_HUM = SOUNDS.register("grace_hum", () -> setUpSound("grace_hum"));
-    public static final RegistryObject<SoundEvent> REGEN_BREATH = SOUNDS.register("regen_breath", () -> setUpSound("regen_breath"));
     public static final RegistryObject<SoundEvent> ALARM = SOUNDS.register("alarm", () -> setUpSound("alarm"));
     public static final RegistryObject<SoundEvent> JAR_BUBBLES = SOUNDS.register("jar_bubbles", () -> setUpSound("jar_bubbles"));
 

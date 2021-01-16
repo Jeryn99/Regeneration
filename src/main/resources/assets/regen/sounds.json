@@ -17,12 +17,6 @@
       "regen:fob_watch"
     ]
   },
-  "fob_watch_dialogue": {
-    "subtitle": "regen.sound.fob_watch_dialogue",
-    "sounds": [
-      "regen:fob_watch_dialogue"
-    ]
-  },
   "grace_hum": {
     "subtitle": "regen.sound.grace_hum",
     "sounds": [
@@ -48,12 +42,6 @@
     "subtitle": "regen.sound.jar_bubbles",
     "sounds": [
       "regen:jar_bubbles"
-    ]
-  },
-  "regen_breath": {
-    "subtitle": "regen.sound.regen_breath",
-    "sounds": [
-      "regen:regen_breath"
     ]
   },
   "regeneration_0": {
