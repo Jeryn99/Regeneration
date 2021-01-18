@@ -103,7 +103,7 @@ curseforge {
         addGameVersion '1.16.4'
         addGameVersion '1.16.5'
         mainArtifact(jar) {
-            displayName = "[${minecraft_version}] - Regeneration -  $project.version"
+            displayName = "[${minecraft_version}] Regeneration -  $project.version"
         }
     }
 }

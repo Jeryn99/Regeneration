@@ -181,11 +181,10 @@ public class CommonEvents {
              * Also, vanilla superflat is really tricky and buggy to work with as mentioned in WAObjects#registerConfiguredStructure
              * BiomeModificationEvent does not seem to fire for superflat biomes...you can't add structures to superflat without mixin it seems.
              * */
-            if (serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator &&
-                    serverWorld.getDimensionKey().equals(World.OVERWORLD)) {
+            if (serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator && serverWorld.getDimensionKey().equals(World.OVERWORLD)) {
                 return;
             }
-            //Only spawn Graveyards in the Overworld structure list
+            //Only spawn Huts in the Overworld structure list
             if (serverWorld.getDimensionKey().equals(World.OVERWORLD)) {
                 Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
                 tempMap.put(RStructures.Structures.HUTS.get(), DimensionStructuresSettings.field_236191_b_.get(RStructures.Structures.HUTS.get()));

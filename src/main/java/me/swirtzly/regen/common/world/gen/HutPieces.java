@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.world.gen;
 
 import com.google.common.collect.ImmutableMap;
 import me.swirtzly.regen.common.entities.TimelordEntity;
+import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.block.Blocks;
@@ -81,8 +82,10 @@ public class HutPieces {
 
             if ("timelord".equals(function)) {
                 TimelordEntity timelordEntity = new TimelordEntity(worldIn.getWorld());
+                IRegen cap = RegenCap.get(timelordEntity).orElseGet(null);
                 timelordEntity.setTimelordType(TimelordEntity.TimelordType.COUNCIL);
-                timelordEntity.initSkin(RegenCap.get(timelordEntity).orElseGet(null));
+                timelordEntity.initSkin(cap);
+                cap.setRegens(rand.nextInt(12));
                 timelordEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
                 worldIn.addEntity(timelordEntity);
                 worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
@@ -93,10 +96,6 @@ public class HutPieces {
                 worldIn.setBlockState(pos, Blocks.STONE.getDefaultState(), 2);
             }
 
-            if ("chest_stone".equals(function)) {
-                LockableLootTileEntity.setLootTable(worldIn, rand, pos.up(), LootTables.CHESTS_STRONGHOLD_LIBRARY);
-                worldIn.setBlockState(pos, Blocks.STONE.getDefaultState(), 2);
-            }
         }
     }
 
