@@ -1,9 +1,13 @@
 package me.swirtzly.regeneration.common.block;
 
+import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.item.HandItem;
 import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.network.NetworkDispatcher;
+import me.swirtzly.regeneration.network.messages.InvalidatePlayerDataMessage;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenShapes;
 import me.swirtzly.regeneration.util.common.VoxelShapeUtils;
@@ -110,6 +114,11 @@ public class BlockHandInJar extends DirectionalBlock {
 					jar.setLindosAmont(jar.getLindosAmont() - 100);
 					data.receiveRegenerations(1);
 					data.setSyncingFromJar(true);
+					data.setTrait(new ResourceLocation(HandItem.getTrait(jar.getHand())));
+					data.setEncodedSkin(HandItem.getTextureString(jar.getHand()));
+					data.setSkinType(HandItem.getSkinType(jar.getHand()));
+					data.synchronise();
+					NetworkDispatcher.sendPacketToAll(new InvalidatePlayerDataMessage(data.getLivingEntity().getUniqueID()));
 					jar.destroyHand();
 					worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), RegenObjects.Sounds.HAND_GLOW.get(), SoundCategory.PLAYERS, 1.0F, 0.7F);
 					data.synchronise();

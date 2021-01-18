@@ -41,6 +41,11 @@ public class FobWatchItem extends SolidItem {
 
     }
 
+    @Override
+    public ItemStack getDefaultInstance() {
+        return super.getDefaultInstance();
+    }
+
     public static CompoundNBT getStackTag(ItemStack stack) {
         CompoundNBT tag = stack.getOrCreateTag();
         tag.putInt("open", 0);

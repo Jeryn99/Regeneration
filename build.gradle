@@ -105,7 +105,7 @@ curseforge {
     apiKey = rootProject.curseforge
     project {
         id = rootProject.regen
-        changelog = 'Fixed issue where loot broke other mods chests. Fixed issue where players would be stranded on Gallifrey. Added Keyboard support to Screen GUI. Fixed TARDIS Mod Support (Supports 1.4.1 and 1.5.1 [When releases])'
+        changelog = 'Hand now changes skin and trait'
         releaseType = 'release'
         mainArtifact(jar) {
             displayName = "[${minecraft_version}] Regeneration - $project.version"
