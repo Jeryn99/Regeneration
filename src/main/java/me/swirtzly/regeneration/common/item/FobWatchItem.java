@@ -48,8 +48,12 @@ public class FobWatchItem extends SolidItem {
 
     public static CompoundNBT getStackTag(ItemStack stack) {
         CompoundNBT tag = stack.getOrCreateTag();
-        tag.putInt("open", 0);
-        tag.putInt("engrave", random.nextInt(2));
+        if (!tag.contains("open")) {
+            tag.putInt("open", 0);
+        }
+        if (!tag.contains("engrave")) {
+            tag.putInt("engrave", random.nextInt(2));
+        }
         return tag;
     }
 

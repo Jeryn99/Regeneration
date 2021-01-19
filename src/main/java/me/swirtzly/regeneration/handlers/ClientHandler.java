@@ -51,6 +51,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import static me.swirtzly.regeneration.compat.ArchHelper.getRegenerations;
+import static me.swirtzly.regeneration.compat.ArchHelper.hasRegenerations;
 import static me.swirtzly.regeneration.util.common.PlayerUtil.RegenState.*;
 
 /**
@@ -318,7 +319,7 @@ public class ClientHandler {
     public void onItemToolTip(ItemTooltipEvent event) {
         List<ITextComponent> tooltip = event.getToolTip();
         ItemStack stack = event.getItemStack();
-        if (getRegenerations(stack) > 0) {
+        if (hasRegenerations(stack)) {
             tooltip.add(new TranslationTextComponent("nbt.regeneration.item.stored_regens", getRegenerations(stack)));
         }
     }

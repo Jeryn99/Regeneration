@@ -19,6 +19,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.HandSide;
@@ -194,7 +195,7 @@ public class PlayerUtil {
         for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
             BlockState state = livingEntity.world.getBlockState(pos);
-            if (state.getBlock() != RegenObjects.Blocks.ZERO_ROOM.get() || state.getBlock() != RegenObjects.Blocks.ZERO_ROOM_TWO.get()) {
+            if (!state.getBlock().getRegistryName().getPath().contains("zero_roundel")) {
                 return false;
             }
         }

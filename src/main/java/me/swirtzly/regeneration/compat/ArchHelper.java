@@ -15,6 +15,10 @@ public class ArchHelper {
         return true;
     }
 
+    public static boolean hasRegenerations(ItemStack stack){
+        return stack.getOrCreateTag().contains("storedRegens");
+    }
+
     public static int getRegenerations(ItemStack stack) {
         CompoundNBT tag = stack.getOrCreateTag();
         if (tag.contains("storedRegens")) {
