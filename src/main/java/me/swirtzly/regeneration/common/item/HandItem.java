@@ -71,11 +71,21 @@ public class HandItem extends Item {
 
     public static CompoundNBT getStackTag(ItemStack stack) {
         CompoundNBT stackTag = stack.getOrCreateTag();
-        stackTag.putString("encodedTexture", "NONE");
-        stackTag.putString("skinType", SkinInfo.SkinType.ALEX.name());
-        stackTag.putUniqueId("owner", UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39"));
-        stackTag.putLong("created", 0);
-        stackTag.putString("trait", TraitManager.DNA_BORING.getRegistryName().toString());
+        if (!stackTag.contains("encodedTexture")) {
+            stackTag.putString("encodedTexture", "NONE");
+        }
+        if (!stackTag.contains("skinType")) {
+            stackTag.putString("skinType", SkinInfo.SkinType.ALEX.name());
+        }
+        if (!stackTag.contains("owner")) {
+            stackTag.putUniqueId("owner", UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39"));
+        }
+        if (!stackTag.contains("created")) {
+            stackTag.putLong("created", 0);
+        }
+        if (!stackTag.contains("trait")) {
+            stackTag.putString("trait", TraitManager.DNA_BORING.getRegistryName().toString());
+        }
         return stackTag;
     }
 
@@ -85,10 +95,10 @@ public class HandItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         Date date = new Date(HandItem.getTimeCreated(stack));
-        DateFormat formatter = new SimpleDateFormat("dd/MM/YYYY @ HH:mm");
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy @ HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
         String dateFormatted = formatter.format(date);
         tooltip.add(new TranslationTextComponent("nbt.regeneration.created", dateFormatted));
