@@ -22,7 +22,7 @@ public class SkinMessage {
         isAlex = buffer.readBoolean();
     }
 
-    public static void handle(SkinMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(SkinMessage message, Supplier< NetworkEvent.Context > ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity serverPlayer = ctx.get().getSender();
             RegenCap.get(serverPlayer).ifPresent(iRegen -> {

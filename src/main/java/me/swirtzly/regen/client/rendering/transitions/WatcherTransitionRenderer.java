@@ -63,7 +63,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void layer(BipedModel<?> bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 matrixStackIn.push();

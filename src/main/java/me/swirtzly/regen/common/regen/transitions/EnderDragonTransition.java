@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class EnderDragonTransition implements TransitionType<EnderDragonTransitionRenderer> {
+public class EnderDragonTransition implements TransitionType< EnderDragonTransitionRenderer > {
     @Override
     public int getAnimationLength() {
         return 300;

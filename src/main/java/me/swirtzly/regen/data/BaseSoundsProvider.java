@@ -16,7 +16,7 @@ import java.util.TreeMap;
 @SuppressWarnings("deprecation")
 public abstract class BaseSoundsProvider implements IDataProvider {
     private final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
-    private final Map<String, SoundEventBuilder> data = new TreeMap<>();
+    private final Map< String, SoundEventBuilder > data = new TreeMap<>();
     private final DataGenerator gen;
     private final String modid;
 
@@ -33,7 +33,7 @@ public abstract class BaseSoundsProvider implements IDataProvider {
         addSounds();
         if (!data.isEmpty()) {
             JsonObject jsonObject = new JsonObject();
-            for (Map.Entry<String, SoundEventBuilder> entry : data.entrySet()) {
+            for (Map.Entry< String, SoundEventBuilder > entry : data.entrySet()) {
                 jsonObject.add(entry.getKey(), entry.getValue().toJson());
             }
             try {
@@ -63,7 +63,7 @@ public abstract class BaseSoundsProvider implements IDataProvider {
         private final String path;
         private boolean replace;
         private String subtitle;
-        private Map<ResourceLocation, SoundBuilder> soundBuilders = new HashMap<>();
+        private Map< ResourceLocation, SoundBuilder > soundBuilders = new HashMap<>();
 
         public SoundEventBuilder(SoundEvent soundEvent) {
 

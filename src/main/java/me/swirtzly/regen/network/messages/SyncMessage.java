@@ -29,7 +29,7 @@ public class SyncMessage {
         buf.writeCompoundTag(this.nbt);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
+    public void handle(Supplier< NetworkEvent.Context > ctx) {
         Entity entity = Minecraft.getInstance().world.getEntityByID(this.entityID);
 
         ctx.get().enqueueWork(() -> {

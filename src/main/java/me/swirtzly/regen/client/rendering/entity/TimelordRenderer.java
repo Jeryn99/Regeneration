@@ -37,13 +37,13 @@ import java.util.UUID;
  * Created by Swirtzly
  * on 03/05/2020 @ 19:02
  */
-public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<TimelordEntity>> {
+public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel< TimelordEntity > > {
 
-    public static EntityModel<TimelordEntity> mainModel = new TimelordModel();
-    public static EntityModel<TimelordEntity> councilModel = new TimelordModel();
-    public static EntityModel<TimelordEntity> guardModel = new TimelordGuardModel();
+    public static EntityModel< TimelordEntity > mainModel = new TimelordModel();
+    public static EntityModel< TimelordEntity > councilModel = new TimelordModel();
+    public static EntityModel< TimelordEntity > guardModel = new TimelordGuardModel();
 
-    public static HashMap<UUID, ResourceLocation> TIMELORDS = new HashMap<>();
+    public static HashMap< UUID, ResourceLocation > TIMELORDS = new HashMap<>();
 
     public TimelordRenderer(EntityRendererManager entityRendererManager) {
         super(entityRendererManager, new BipedModel(1), 0.1F);
@@ -96,7 +96,7 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
                 mainModel = councilModel;
                 break;
         }
-        entityModel = (BipedModel<TimelordEntity>) mainModel;
+        entityModel = (BipedModel< TimelordEntity >) mainModel;
         entityModel.bipedHead.showModel = false;
         entityModel.bipedHeadwear.showModel = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
 

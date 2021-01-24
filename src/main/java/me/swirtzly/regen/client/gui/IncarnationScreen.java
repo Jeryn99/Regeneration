@@ -41,17 +41,17 @@ import java.util.Objects;
 public class IncarnationScreen extends ContainerScreen {
 
     private static final ResourceLocation background = new ResourceLocation(RConstants.MODID, "textures/gui/customizer_background.png");
-    private static final PlayerModel<?> ALEX_MODEL = new PlayerModel<>(0.1f, true);
-    private static final PlayerModel<?> STEVE_MODEL = new PlayerModel<>(0.1f, false);
+    private static final PlayerModel< ? > ALEX_MODEL = new PlayerModel<>(0.1f, true);
+    private static final PlayerModel< ? > STEVE_MODEL = new PlayerModel<>(0.1f, false);
     public static boolean isAlex = true;
     private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
-    private static List<File> skins = null;
+    private static List< File > skins = null;
     private static int position = 0;
     private static PlayerUtil.SkinType choices = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).getPreferredModel();
     private static PlayerUtil.SkinType renderChoice = choices;
 
     private TextFieldWidget searchField;
-    private ArrayList<DescButton> descButtons = new ArrayList();
+    private ArrayList< DescButton > descButtons = new ArrayList();
 
 
     public IncarnationScreen() {

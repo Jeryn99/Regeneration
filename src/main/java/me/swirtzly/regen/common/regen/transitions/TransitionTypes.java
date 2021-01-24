@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * on 06/05/2020 @ 14:09
  */
 @Mod.EventBusSubscriber(modid = RConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
+public class TransitionTypes extends ForgeRegistryEntry< TransitionTypes > {
 
     public static final TransitionTypes FIERY = new TransitionTypes(FieryTransition::new);
     public static final TransitionTypes TROUGHTON = new TransitionTypes(TroughtonTransition::new);
@@ -24,19 +24,19 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
     public static final TransitionTypes SPARKLE = new TransitionTypes(SparkleTransition::new);
     public static final TransitionTypes ENDER_DRAGON = new TransitionTypes(EnderDragonTransition::new);
 
-    public static IForgeRegistry<TransitionTypes> REGISTRY;
+    public static IForgeRegistry< TransitionTypes > REGISTRY;
     public static TransitionTypes[] TYPES = new TransitionTypes[]{FIERY, TROUGHTON};
     //==================================
-    private Supplier<TransitionType> supplier;
+    private Supplier< TransitionType > supplier;
 
-    public TransitionTypes(Supplier<TransitionType> supplier) {
+    public TransitionTypes(Supplier< TransitionType > supplier) {
         this.supplier = supplier;
         this.setRegistryName(supplier.get().getRegistryName());
     }
 
     @SubscribeEvent
     public static void onRegisterNewRegistries(RegistryEvent.NewRegistry e) {
-        REGISTRY = new RegistryBuilder<TransitionTypes>().setName(new ResourceLocation(RConstants.MODID, "regeneration_types")).setType(TransitionTypes.class).setIDRange(0, 2048).create();
+        REGISTRY = new RegistryBuilder< TransitionTypes >().setName(new ResourceLocation(RConstants.MODID, "regeneration_types")).setType(TransitionTypes.class).setIDRange(0, 2048).create();
     }
 
     public static int getPosition(TransitionTypes rrRegenType) {
@@ -53,7 +53,7 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
     }
 
     @SubscribeEvent
-    public static void onRegisterTypes(RegistryEvent.Register<TransitionTypes> e) {
+    public static void onRegisterTypes(RegistryEvent.Register< TransitionTypes > e) {
         e.getRegistry().registerAll(FIERY, TROUGHTON, WATCHER, SPARKLE, ENDER_DRAGON);
         TYPES = e.getRegistry().getValues().toArray(new TransitionTypes[0]);
     }

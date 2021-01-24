@@ -19,7 +19,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = RConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class Traits extends ForgeRegistryEntry<Traits> {
+public class Traits extends ForgeRegistryEntry< Traits > {
 
 
     public static final Traits QUICK = new Traits(TraitQuick::new);
@@ -36,21 +36,21 @@ public class Traits extends ForgeRegistryEntry<Traits> {
 
 
     //Create Registry
-    public static IForgeRegistry<ITrait> REGISTRY;
-    private Supplier<ITrait> supplier;
+    public static IForgeRegistry< ITrait > REGISTRY;
+    private Supplier< ITrait > supplier;
 
-    public Traits(Supplier<ITrait> supplier) {
+    public Traits(Supplier< ITrait > supplier) {
         this.supplier = supplier;
         this.setRegistryName(supplier.get().getRegistryName());
     }
 
     @SubscribeEvent
     public static void onRegisterNewRegistries(RegistryEvent.NewRegistry e) {
-        REGISTRY = new RegistryBuilder<ITrait>().setName(new ResourceLocation(RConstants.MODID, "regeneration_traits")).setType(ITrait.class).setIDRange(0, 2048).create();
+        REGISTRY = new RegistryBuilder< ITrait >().setName(new ResourceLocation(RConstants.MODID, "regeneration_traits")).setType(ITrait.class).setIDRange(0, 2048).create();
     }
 
     @SubscribeEvent
-    public static void onRegisterTypes(RegistryEvent.Register<ITrait> e) {
+    public static void onRegisterTypes(RegistryEvent.Register< ITrait > e) {
         e.getRegistry().registerAll(FIRE.get(), LEAP.get(), FISH.get(), QUICK.get(), BORING.get(), SMART.get(), FAST_MINE.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get(), KNOCKBACK.get());
     }
 
@@ -65,9 +65,9 @@ public class Traits extends ForgeRegistryEntry<Traits> {
 
 
     public static ITrait getRandomTrait(Random random, boolean isMob) {
-        Collection<ITrait> value = REGISTRY.getValues();
-        ArrayList<ITrait> traits = new ArrayList<>(value);
-        traits.removeIf(trait -> trait.isPlayerOnly() && isMob);
+        Collection< ITrait > value = REGISTRY.getValues();
+        ArrayList< ITrait > traits = new ArrayList<>(value);
+        traits.removeIf(trait -> trait.isPlayerOnly() && isMob || trait.getRegistryName().equals(Traits.BORING.getRegistryName()));
         int i = random.nextInt(value.size());
         return Iterables.get(value, i);
     }
@@ -79,7 +79,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
 
 
     //Base
-    public static abstract class ITrait implements IForgeRegistryEntry<ITrait> {
+    public static abstract class ITrait implements IForgeRegistryEntry< ITrait > {
         public abstract void apply(IRegen data);
 
         public abstract void reset(IRegen data);
@@ -108,7 +108,7 @@ public class Traits extends ForgeRegistryEntry<Traits> {
         }
 
         @Override
-        public Class<ITrait> getRegistryType() {
+        public Class< ITrait > getRegistryType() {
             return ITrait.class;
         }
     }

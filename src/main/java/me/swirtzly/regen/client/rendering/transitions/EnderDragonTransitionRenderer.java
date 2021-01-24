@@ -53,7 +53,7 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
         LivingEntity player = post.getEntityLiving();
         IRenderTypeBuffer bufferIn = post.getBuffers();
         MatrixStack matrix = post.getMatrixStack();
-        PlayerModel<AbstractClientPlayerEntity> model = post.getRenderer().getEntityModel();
+        PlayerModel< AbstractClientPlayerEntity > model = post.getRenderer().getEntityModel();
 
         RegenCap.get(player).ifPresent(iRegen -> {
             int ticksAnimating = iRegen.getTicksAnimating() / 2;
@@ -103,7 +103,7 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void layer(BipedModel<?> bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 

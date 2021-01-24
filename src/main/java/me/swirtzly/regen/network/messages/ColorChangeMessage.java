@@ -18,7 +18,7 @@ public class ColorChangeMessage {
         style = buffer.readCompoundTag();
     }
 
-    public static void handle(ColorChangeMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(ColorChangeMessage message, Supplier< NetworkEvent.Context > ctx) {
         ctx.get().getSender().getServer().deferTask(() -> {
             RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
                 cap.readStyle(message.style);

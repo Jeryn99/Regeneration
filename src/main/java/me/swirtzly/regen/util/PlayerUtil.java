@@ -24,7 +24,7 @@ import java.util.List;
 public class PlayerUtil {
 
 
-    public static ArrayList<Effect> POTIONS = new ArrayList();
+    public static ArrayList< Effect > POTIONS = new ArrayList();
 
     public static void setupPotions() {
         if (!RegenConfig.COMMON.postRegenEffects.get().isEmpty()) {
@@ -56,7 +56,7 @@ public class PlayerUtil {
     }
 
     public static void sendMessageToAll(TranslationTextComponent translation) {
-        List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+        List< ServerPlayerEntity > players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
         players.forEach(playerMP -> sendMessage(playerMP, translation, false));
     }
 
@@ -107,7 +107,7 @@ public class PlayerUtil {
         NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ModelMessage(choices));
     }
 
-    public enum SkinType implements RegenUtil.IEnum<SkinType> {
+    public enum SkinType implements RegenUtil.IEnum< SkinType > {
         ALEX, STEVE, EITHER;
 
         public boolean isAlex() {
@@ -115,7 +115,6 @@ public class PlayerUtil {
             if (this == EITHER) {
                 return RegenUtil.RAND.nextBoolean();
             }
-
             return this == ALEX;
         }
     }

@@ -25,7 +25,7 @@ public class StateMessage {
         event = buffer.readString(32767);
     }
 
-    public static void handle(StateMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(StateMessage message, Supplier< NetworkEvent.Context > ctx) {
         Minecraft.getInstance().deferTask(() -> {
 
             Entity entity = Minecraft.getInstance().world.getEntityByID(message.livingEntity);

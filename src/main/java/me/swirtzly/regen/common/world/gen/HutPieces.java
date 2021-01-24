@@ -31,9 +31,9 @@ public class HutPieces {
 
     private static final ResourceLocation[] ALL_STRUCTURES = new ResourceLocation[]{HUT};
 
-    private static final Map<ResourceLocation, BlockPos> OFFSET = ImmutableMap.of(HUT, BlockPos.ZERO);
+    private static final Map< ResourceLocation, BlockPos > OFFSET = ImmutableMap.of(HUT, BlockPos.ZERO);
 
-    public static void start(TemplateManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random) {
+    public static void start(TemplateManager templateManager, BlockPos pos, Rotation rotation, List< StructurePiece > pieceList, Random random) {
         int x = pos.getX();
         int z = pos.getZ();
         BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);

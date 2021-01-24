@@ -25,7 +25,7 @@ public class BlockstateGen implements IDataProvider {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private final DataGenerator generator;
-    private HashMap<Property<?>, Function<Block, JsonObject>> serializers = Maps.newHashMap();
+    private HashMap< Property< ? >, Function< Block, JsonObject > > serializers = Maps.newHashMap();
 
     public BlockstateGen(DataGenerator generator) {
         this.generator = generator;
@@ -88,8 +88,8 @@ public class BlockstateGen implements IDataProvider {
 
         boolean hasSpecificSerializer = false;
 
-        for (Property<?> prop : this.serializers.keySet()) {
-            for (Property<?> otherProp : block.getStateContainer().getProperties()) {
+        for (Property< ? > prop : this.serializers.keySet()) {
+            for (Property< ? > otherProp : block.getStateContainer().getProperties()) {
                 if (prop == otherProp) {
 
                     root.add("variants", this.serializers.get(prop).apply(block));

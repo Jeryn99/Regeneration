@@ -43,7 +43,7 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+    public void fillItemGroup(ItemGroup group, NonNullList< ItemStack > items) {
         if (isInGroup(group)) {
             for (Traits.ITrait trait : Traits.REGISTRY.getValues()) {
                 if (trait.getRegistryName() != Traits.BORING.get().getRegistryName()) {
@@ -57,7 +57,7 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public ActionResult< ItemStack > onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
         if (itemstack.getItem() instanceof ElixirItem) {
             playerIn.setActiveHand(handIn);
@@ -93,7 +93,7 @@ public class ElixirItem extends Item {
 
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         tooltip.add(getTrait(stack).getDescription());
     }

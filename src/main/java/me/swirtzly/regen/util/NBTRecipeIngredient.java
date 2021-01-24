@@ -32,7 +32,7 @@ public class NBTRecipeIngredient extends Ingredient {
     }
 
     @Override
-    public IIngredientSerializer<? extends Ingredient> getSerializer() {
+    public IIngredientSerializer< ? extends Ingredient > getSerializer() {
         return Serializer.INSTANCE;
     }
 
@@ -47,7 +47,7 @@ public class NBTRecipeIngredient extends Ingredient {
         return json;
     }
 
-    public static class Serializer implements IIngredientSerializer<NBTRecipeIngredient> {
+    public static class Serializer implements IIngredientSerializer< NBTRecipeIngredient > {
         public static final Serializer INSTANCE = new Serializer();
 
         @Override

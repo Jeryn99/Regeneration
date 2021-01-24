@@ -21,7 +21,7 @@ public class TypeMessage {
         type = buffer.readString(32767);
     }
 
-    public static void handle(TypeMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(TypeMessage message, Supplier< NetworkEvent.Context > ctx) {
         ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
             cap.setTransitionType(TransitionTypes.REGISTRY.getValue(new ResourceLocation(message.type)));
             cap.syncToClients(null);

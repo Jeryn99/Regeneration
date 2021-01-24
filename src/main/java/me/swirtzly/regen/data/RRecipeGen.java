@@ -16,7 +16,7 @@ public class RRecipeGen extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void registerRecipes(Consumer< IFinishedRecipe > consumer) {
         ShapedRecipeBuilder.shapedRecipe(RItems.FOB.get()).patternLine("QIG").patternLine("SES").patternLine("IGI").key('G', Items.GHAST_TEAR).key('I', Items.IRON_INGOT).key('E', Items.ENDER_EYE).key('S', Items.SPIDER_EYE).key('Q', Items.BLAZE_ROD).setGroup("regen").addCriterion("has_crafting_table", hasItem(Blocks.CRAFTING_TABLE)).build(consumer);
     }
 }

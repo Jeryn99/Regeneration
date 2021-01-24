@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 import static net.minecraft.util.math.BlockPos.getAllInBox;
 
-public class FieryTransition implements TransitionType<FieryTransitionRenderer> {
+public class FieryTransition implements TransitionType< FieryTransitionRenderer > {
 
 
     @Override
@@ -49,7 +49,7 @@ public class FieryTransition implements TransitionType<FieryTransitionRenderer> 
         double y = livingEntity.getPosY() + 0.5 + livingEntity.getRNG().nextGaussian() * 2;
         double z = livingEntity.getPosZ() + livingEntity.getRNG().nextGaussian() * 2;
         livingEntity.world.createExplosion(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
-        Iterator<BlockPos> iterator = getAllInBox(new BlockPos(livingEntity.getPositionVec()).north().west(), new BlockPos(livingEntity.getPositionVec()).south().east()).iterator();
+        Iterator< BlockPos > iterator = getAllInBox(new BlockPos(livingEntity.getPositionVec()).north().west(), new BlockPos(livingEntity.getPositionVec()).south().east()).iterator();
         while (iterator.hasNext()) {
             iterator.forEachRemaining((blockPos -> {
                 if (livingEntity.world.getBlockState(blockPos).getBlock() instanceof FireBlock) {

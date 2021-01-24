@@ -97,7 +97,7 @@ public class Regeneration {
     }
 
     @SubscribeEvent
-    public void registerRecipeSerialziers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+    public void registerRecipeSerialziers(RegistryEvent.Register< IRecipeSerializer< ? > > event) {
         CraftingHelper.register(new ResourceLocation(RConstants.MODID, "nbt"), NBTRecipeIngredient.Serializer.INSTANCE);
     }
 }

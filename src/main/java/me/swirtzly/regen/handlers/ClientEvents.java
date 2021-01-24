@@ -75,7 +75,7 @@ public class ClientEvents {
         PlayerEntity player = playerEvent.getPlayer();
         SkinHandler.tick((AbstractClientPlayerEntity) playerEvent.getPlayer());
         RegenCap.get(player).ifPresent(iRegen -> {
-            TransitionType<?> type = iRegen.getTransitionType().get();
+            TransitionType< ? > type = iRegen.getTransitionType().get();
             type.getRenderer().onPlayerRenderPre(playerEvent);
         });
     }
@@ -84,7 +84,7 @@ public class ClientEvents {
     public static void onRenderPlayerPost(RenderPlayerEvent.Post playerEvent) {
         PlayerEntity player = playerEvent.getPlayer();
         RegenCap.get(player).ifPresent(iRegen -> {
-            TransitionType<?> type = iRegen.getTransitionType().get();
+            TransitionType< ? > type = iRegen.getTransitionType().get();
             type.getRenderer().onPlayerRenderPost(playerEvent);
         });
     }

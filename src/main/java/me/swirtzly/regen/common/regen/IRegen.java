@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 
-public interface IRegen extends INBTSerializable<CompoundNBT> {
+public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     int getRegens();
 

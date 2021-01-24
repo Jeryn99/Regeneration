@@ -17,10 +17,10 @@ import static me.swirtzly.regen.common.objects.RItems.MAIN;
 @Mod.EventBusSubscriber(modid = RConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RBlocks {
 
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RConstants.MODID);
-    public static final DeferredRegister<Item> BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RConstants.MODID);
+    public static final DeferredRegister< Block > BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RConstants.MODID);
+    public static final DeferredRegister< Item > BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RConstants.MODID);
 
-    public static final RegistryObject<Block> BIO_CONTAINER = BLOCKS.register("bio_container", JarBlock::new);
+    public static final RegistryObject< Block > BIO_CONTAINER = BLOCKS.register("bio_container", JarBlock::new);
 
 
     private static void genBlockItems(Block... blocks) {
@@ -30,7 +30,7 @@ public class RBlocks {
     }
 
     @SubscribeEvent
-    public static void regBlockItems(RegistryEvent.Register<Item> e) {
+    public static void regBlockItems(RegistryEvent.Register< Item > e) {
         //TODO Disabled: genBlockItems(BIO_CONTAINER.get());
     }
 

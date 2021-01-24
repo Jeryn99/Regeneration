@@ -13,7 +13,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SparkleTransition implements TransitionType<SparkleTransitionRenderer> {
+public class SparkleTransition implements TransitionType< SparkleTransitionRenderer > {
 
     @Override
     public int getAnimationLength() {

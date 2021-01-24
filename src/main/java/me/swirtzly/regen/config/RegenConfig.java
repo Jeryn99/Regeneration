@@ -17,15 +17,15 @@ public class RegenConfig {
 
 
     static {
-        Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+        Pair< Common, ForgeConfigSpec > specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
         COMMON = specPair.getLeft();
 
-        Pair<Client, ForgeConfigSpec> specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
+        Pair< Client, ForgeConfigSpec > specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
         CLIENT_SPEC = specClientPair.getRight();
         CLIENT = specClientPair.getLeft();
 
-        Pair<Skin, ForgeConfigSpec> specSkinPair = new ForgeConfigSpec.Builder().configure(Skin::new);
+        Pair< Skin, ForgeConfigSpec > specSkinPair = new ForgeConfigSpec.Builder().configure(Skin::new);
         SKIN_SPEC = specSkinPair.getRight();
         SKIN = specSkinPair.getLeft();
     }
@@ -71,12 +71,12 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue infiniteRegeneration;
         public final ForgeConfigSpec.BooleanValue sendRegenDeathMessages;
         public final ForgeConfigSpec.IntValue regenerativeKillRange;
-        public final ForgeConfigSpec.ConfigValue<Double> regenerativeKnockback;
+        public final ForgeConfigSpec.ConfigValue< Double > regenerativeKnockback;
         public final ForgeConfigSpec.IntValue regenKnockbackRange;
         public final ForgeConfigSpec.BooleanValue regenerationKnocksbackPlayers;
-        public final ForgeConfigSpec.ConfigValue<Integer> gracePhaseLength;
+        public final ForgeConfigSpec.ConfigValue< Integer > gracePhaseLength;
         public final ForgeConfigSpec.IntValue criticalDamageChance;
-        public final ForgeConfigSpec.ConfigValue<Integer> criticalPhaseLength;
+        public final ForgeConfigSpec.ConfigValue< Integer > criticalPhaseLength;
         public final ForgeConfigSpec.IntValue handGlowInterval;
         public final ForgeConfigSpec.IntValue handGlowTriggerDelay;
         public final ForgeConfigSpec.IntValue postRegenerationDuration;
@@ -85,8 +85,8 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue resetOxygen;
         public final ForgeConfigSpec.IntValue absorbtionLevel;
         public final ForgeConfigSpec.BooleanValue traitsEnabled;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
-        public final ForgeConfigSpec.ConfigValue<String> skinDir;
+        public final ForgeConfigSpec.ConfigValue< List< ? extends String > > postRegenEffects;
+        public final ForgeConfigSpec.ConfigValue< String > skinDir;
         public final ForgeConfigSpec.BooleanValue allowUpwardsMotion;
 
 

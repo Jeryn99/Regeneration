@@ -39,7 +39,7 @@ public class HandLayer extends LayerRenderer {
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        EntityModel<?> model = getEntityModel();
+        EntityModel< ? > model = getEntityModel();
 
    /*     BlockPos blockpos = entitylivingbaseIn.getPosition().north(8);
         if (blockpos != null) {
@@ -59,7 +59,7 @@ public class HandLayer extends LayerRenderer {
                 matrixStackIn.translate(0.0F, 0.2F, 0.0F);
             }
 
-            BipedModel<?> bipedModel = (BipedModel) model;
+            BipedModel< ? > bipedModel = (BipedModel) model;
 
             //For Regen Layers
             for (HandSide handSide : HandSide.values()) {

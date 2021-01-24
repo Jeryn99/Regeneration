@@ -13,7 +13,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public final class TroughtonTransition implements TransitionType<TroughtonTransitionRenderer> {
+public final class TroughtonTransition implements TransitionType< TroughtonTransitionRenderer > {
 
     @Override
     public int getAnimationLength() {

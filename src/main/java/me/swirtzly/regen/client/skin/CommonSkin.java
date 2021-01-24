@@ -43,15 +43,15 @@ public class CommonSkin {
     //Choose a random PNG from a folder
     public static File chooseRandomSkin(Random rand, boolean isAlex) {
         File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
-        Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        Collection< File > folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
 
     //Get a list of skins from namemc url
-    public static ArrayList<String> getSkins(String downloadUrl) throws IOException {
-        ArrayList<String> skins = new ArrayList<>();
+    public static ArrayList< String > getSkins(String downloadUrl) throws IOException {
+        ArrayList< String > skins = new ArrayList<>();
         BufferedReader br = null;
 
         try {
@@ -159,7 +159,7 @@ public class CommonSkin {
         FileUtils.copyURLToFile(new URL(url), tempZip);
         try (ZipFile file = new ZipFile(tempZip)) {
             FileSystem fileSystem = FileSystems.getDefault();
-            Enumeration<? extends ZipEntry> entries = file.entries();
+            Enumeration< ? extends ZipEntry > entries = file.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 if (entry.isDirectory()) {
@@ -193,7 +193,7 @@ public class CommonSkin {
     }
 
 
-    public static List<File> listAllSkins(PlayerUtil.SkinType choices) {
+    public static List< File > listAllSkins(PlayerUtil.SkinType choices) {
         File directory = null;
         switch (choices) {
             case EITHER:
@@ -206,7 +206,7 @@ public class CommonSkin {
                 directory = SKIN_DIRECTORY_STEVE;
                 break;
         }
-        Collection<File> folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        Collection< File > folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
         return new ArrayList<>(folderFiles);
     }

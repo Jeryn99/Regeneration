@@ -46,7 +46,7 @@ public class TraitQuick extends Traits.ITrait {
     }
 
     @Override
-    public Class<Traits.ITrait> getRegistryType() {
+    public Class< Traits.ITrait > getRegistryType() {
         return Traits.ITrait.class;
     }
 

@@ -57,8 +57,8 @@ import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
  */
 public class TimelordEntity extends VillagerEntity {
 
-    private static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
-    private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter< String > TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
+    private static final DataParameter< Boolean > SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
 
     private final SwimmerPathNavigator waterNavigator;
     private final GroundPathNavigator groundNavigator;
@@ -67,7 +67,7 @@ public class TimelordEntity extends VillagerEntity {
         this(REntities.TIMELORD.get(), world);
     }
 
-    public TimelordEntity(EntityType<TimelordEntity> entityEntityType, World world) {
+    public TimelordEntity(EntityType< TimelordEntity > entityEntityType, World world) {
         super(entityEntityType, world);
         this.waterNavigator = new SwimmerPathNavigator(this, world);
         this.groundNavigator = new GroundPathNavigator(this, world);

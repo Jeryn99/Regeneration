@@ -12,7 +12,7 @@ import net.minecraft.util.text.TranslationTextComponent;
  * <p>
  * Created by Sub on 16/09/2018.
  */
-public interface TransitionType<R extends TransitionRenderer> {
+public interface TransitionType< R extends TransitionRenderer > {
 
     /**
      * @return in ticks

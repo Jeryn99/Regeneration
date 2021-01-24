@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
 
-public final class WatcherTransition implements TransitionType<WatcherTransitionRenderer> {
+public final class WatcherTransition implements TransitionType< WatcherTransitionRenderer > {
 
     public static void createWatcher(LivingEntity player) {
         RegenCap.get(player).ifPresent(iRegen -> {
@@ -41,7 +41,7 @@ public final class WatcherTransition implements TransitionType<WatcherTransition
     public void tick(IRegen cap) {
         LivingEntity living = cap.getLiving();
         World world = living.world;
-        List<WatcherEntity> watchers = world.getEntitiesWithinAABB(REntities.WATCHER.get(), living.getBoundingBox().grow(64), watcherEntity -> watcherEntity.getAttackTarget() == living);
+        List< WatcherEntity > watchers = world.getEntitiesWithinAABB(REntities.WATCHER.get(), living.getBoundingBox().grow(64), watcherEntity -> watcherEntity.getAttackTarget() == living);
 
         if (watchers.isEmpty()) {
             WatcherTransition.createWatcher(living);

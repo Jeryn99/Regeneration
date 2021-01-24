@@ -52,16 +52,16 @@ public class CommonEvents {
 
     /* Attach Capability to all LivingEntities */
     @SubscribeEvent
-    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public static void onAttachCapabilities(AttachCapabilitiesEvent< Entity > event) {
         if (event.getObject() instanceof LivingEntity) {
-            event.addCapability(RConstants.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
+            event.addCapability(RConstants.CAP_REGEN_ID, new ICapabilitySerializable< CompoundNBT >() {
                 final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
-                final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
+                final LazyOptional< IRegen > regenInstance = LazyOptional.of(() -> regen);
 
                 @Nonnull
                 @Override
-                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-                    return cap == RegenCap.CAPABILITY ? (LazyOptional<T>) regenInstance : LazyOptional.empty();
+                public < T > LazyOptional< T > getCapability(@Nonnull Capability< T > cap, @javax.annotation.Nullable Direction side) {
+                    return cap == RegenCap.CAPABILITY ? (LazyOptional< T >) regenInstance : LazyOptional.empty();
                 }
 
                 @Override
@@ -132,7 +132,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        Capability.IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
+        Capability.IStorage< IRegen > storage = RegenCap.CAPABILITY.getStorage();
         event.getOriginal().revive();
         RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
             CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
@@ -160,7 +160,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onServerStart(FMLServerStartingEvent event) {
-        CommandDispatcher<CommandSource> dispatcher = event.getServer().getCommandManager().getDispatcher();
+        CommandDispatcher< CommandSource > dispatcher = event.getServer().getCommandManager().getDispatcher();
         RegenCommand.register(dispatcher);
     }
 
@@ -186,7 +186,7 @@ public class CommonEvents {
             }
             //Only spawn Huts in the Overworld structure list
             if (serverWorld.getDimensionKey().equals(World.OVERWORLD)) {
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
+                Map< Structure< ? >, StructureSeparationSettings > tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
                 tempMap.put(RStructures.Structures.HUTS.get(), DimensionStructuresSettings.field_236191_b_.get(RStructures.Structures.HUTS.get()));
                 serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
             }

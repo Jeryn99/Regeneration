@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 
 import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
 
-public class TimelordGuardModel extends PlayerModel<TimelordEntity> {
+public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
     private final ModelRenderer head;
     private final ModelRenderer helment;
     private final ModelRenderer curves2;

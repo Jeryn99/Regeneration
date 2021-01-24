@@ -22,30 +22,30 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 
 import java.util.List;
 
-public class GallifreyanHuts extends Structure<ProbabilityConfig> {
+public class GallifreyanHuts extends Structure< ProbabilityConfig > {
 
-    private static final List<MobSpawnInfo.Spawners> STRUCTURE_CREATURES = ImmutableList.of(
+    private static final List< MobSpawnInfo.Spawners > STRUCTURE_CREATURES = ImmutableList.of(
             new MobSpawnInfo.Spawners(REntities.TIMELORD.get(), 30, 10, 15),
             new MobSpawnInfo.Spawners(EntityType.CAT, 100, 1, 2)
     );
 
-    public GallifreyanHuts(Codec<ProbabilityConfig> codec) {
+    public GallifreyanHuts(Codec< ProbabilityConfig > codec) {
         super(codec);
     }
 
     @Override
-    public List<MobSpawnInfo.Spawners> getDefaultSpawnList() {
+    public List< MobSpawnInfo.Spawners > getDefaultSpawnList() {
         return STRUCTURE_CREATURES;
     }
 
     @Override
-    public List<MobSpawnInfo.Spawners> getDefaultCreatureSpawnList() {
+    public List< MobSpawnInfo.Spawners > getDefaultCreatureSpawnList() {
         return STRUCTURE_CREATURES;
     }
 
     //Required, sets the Structure Start settings
     @Override
-    public IStartFactory<ProbabilityConfig> getStartFactory() {
+    public IStartFactory< ProbabilityConfig > getStartFactory() {
         return GallifreyanHuts.Start::new;
     }
 
@@ -56,9 +56,9 @@ public class GallifreyanHuts extends Structure<ProbabilityConfig> {
     }
 
 
-    public static class Start extends StructureStart<ProbabilityConfig> {
+    public static class Start extends StructureStart< ProbabilityConfig > {
 
-        public Start(Structure<ProbabilityConfig> structureIn, int chunkX, int chunkZ, MutableBoundingBox mutableBoundingBox, int referenceIn, long seedIn) {
+        public Start(Structure< ProbabilityConfig > structureIn, int chunkX, int chunkZ, MutableBoundingBox mutableBoundingBox, int referenceIn, long seedIn) {
             super(structureIn, chunkX, chunkZ, mutableBoundingBox, referenceIn, seedIn);
         }
 

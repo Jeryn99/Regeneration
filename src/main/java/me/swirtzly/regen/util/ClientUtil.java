@@ -42,7 +42,7 @@ public class ClientUtil {
 
     public static void doClientStuff() {
         /* Attach RenderLayers to Renderers */
-        Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
+        Map< String, PlayerRenderer > skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
         for (PlayerRenderer renderPlayer : skinMap.values()) {
             renderPlayer.addLayer(new HandLayer(renderPlayer));
             renderPlayer.addLayer(new RenderRegenLayer(renderPlayer));
@@ -50,8 +50,8 @@ public class ClientUtil {
 
         Minecraft.getInstance().getRenderManager().renderers.forEach((entityType, entityRenderer) -> {
             if (entityRenderer instanceof BipedRenderer) {
-                ((BipedRenderer<?, ?>) entityRenderer).addLayer(new RenderRegenLayer((IEntityRenderer) entityRenderer));
-                ((BipedRenderer<?, ?>) entityRenderer).addLayer(new HandLayer((IEntityRenderer) entityRenderer));
+                ((BipedRenderer< ?, ? >) entityRenderer).addLayer(new RenderRegenLayer((IEntityRenderer) entityRenderer));
+                ((BipedRenderer< ?, ? >) entityRenderer).addLayer(new HandLayer((IEntityRenderer) entityRenderer));
             }
         });
 
@@ -89,7 +89,7 @@ public class ClientUtil {
         Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(sound, pitch, volume));
     }
 
-    public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
+    public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier< Boolean > stopCondition, float volume) {
         Minecraft.getInstance().getSoundHandler().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
     }
 
@@ -108,7 +108,7 @@ public class ClientUtil {
         }
     }
 
-    public static void drawSplitString(MatrixStack ms, FontRenderer fontRenderer, List<ITextComponent> list, float x, float y, int maxWidth, int color) {
+    public static void drawSplitString(MatrixStack ms, FontRenderer fontRenderer, List< ITextComponent > list, float x, float y, int maxWidth, int color) {
         for (ITextComponent t : list) {
             if (t.getUnformattedComponentText().isEmpty() && t.getSiblings().isEmpty()) {
                 y += fontRenderer.FONT_HEIGHT;

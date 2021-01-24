@@ -73,7 +73,7 @@ public class RegenUtil {
         return "#" + hex;
     }
 
-    public interface IEnum<E extends Enum<E>> {
+    public interface IEnum< E extends Enum< E > > {
         int ordinal();
 
         default E next() {
