@@ -18,12 +18,12 @@ public class GallifreyanRiver extends Biome {
 
     public GallifreyanRiver() {
         super((new Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(RainType.RAIN).category(Category.RIVER).depth(-0.5F).scale(0.0F).temperature(6f).downfall(0.5F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent(null));
-            DefaultBiomeFeatures.addCarvers(this);
-            DefaultBiomeFeatures.addStructures(this);
-            DefaultBiomeFeatures.addLakes(this);
-            DefaultBiomeFeatures.addMonsterRooms(this);
-            DefaultBiomeFeatures.addStoneVariants(this);
-            DefaultBiomeFeatures.addOres(this);
+        DefaultBiomeFeatures.addCarvers(this);
+        DefaultBiomeFeatures.addStructures(this);
+        DefaultBiomeFeatures.addLakes(this);
+        DefaultBiomeFeatures.addMonsterRooms(this);
+        DefaultBiomeFeatures.addStoneVariants(this);
+        DefaultBiomeFeatures.addOres(this);
         DefaultBiomeFeatures.addSedimentDisks(this);
         DefaultBiomeFeatures.func_222296_u(this);
         DefaultBiomeFeatures.addDefaultFlowers(this);

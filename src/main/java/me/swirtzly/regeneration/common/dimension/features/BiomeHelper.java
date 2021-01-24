@@ -48,7 +48,7 @@ public class BiomeHelper {
     }
 
     public static void addSkulls(Biome biomeIn) {
-    	biomeIn.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, Biome.createDecoratedFeature(RegenObjects.WorldGenEntries.SKULLS, new ProbabilityConfig(0.01F), Placement.COUNT_CHANCE_HEIGHTMAP, new HeightWithChanceConfig(8, 0.125F)));
+        biomeIn.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, Biome.createDecoratedFeature(RegenObjects.WorldGenEntries.SKULLS, new ProbabilityConfig(0.01F), Placement.COUNT_CHANCE_HEIGHTMAP, new HeightWithChanceConfig(8, 0.125F)));
     }
 
 }

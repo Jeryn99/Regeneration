@@ -3,7 +3,6 @@ package me.swirtzly.regeneration.compat;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.api.ZeroRoomEvent;
-import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.types.RegenTypes;
@@ -31,8 +30,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.tardis.mod.ars.ARSPiece;
 import net.tardis.mod.ars.ARSPieces;
@@ -48,8 +45,6 @@ import net.tardis.mod.subsystem.Subsystem;
 import net.tardis.mod.tileentities.ConsoleTile;
 import net.tardis.mod.upgrades.Upgrade;
 import net.tardis.mod.upgrades.UpgradeEntry;
-
-import java.util.Optional;
 
 import static me.swirtzly.regeneration.Regeneration.LOG;
 import static me.swirtzly.regeneration.handlers.RegenObjects.setUpBlock;
@@ -76,12 +71,12 @@ public class TardisCompat {
     }
 
     public static void registerAllProtocols() {
-      //  Optional<? extends ModContainer> tardis = ModList.get().getModContainerById("tardis");
-      //  if (tardis.get().getModInfo().getVersion().getMajorVersion() >= 5) {
-            TardisRegistries.PROTOCOL_REGISTRY.register(new ResourceLocation(Regeneration.MODID, "arch_protocol"), new ArchProtocol());
-     //   } else {
-    //        LOG.error("Tardis Mod Version is too low to Register Arch Protocol! This is fine");
-    //    }
+        //  Optional<? extends ModContainer> tardis = ModList.get().getModContainerById("tardis");
+        //  if (tardis.get().getModInfo().getVersion().getMajorVersion() >= 5) {
+        TardisRegistries.PROTOCOL_REGISTRY.register(new ResourceLocation(Regeneration.MODID, "arch_protocol"), new ArchProtocol());
+        //   } else {
+        //        LOG.error("Tardis Mod Version is too low to Register Arch Protocol! This is fine");
+        //    }
     }
 
     public static void registerAllRooms() {
@@ -99,7 +94,7 @@ public class TardisCompat {
     }
 
     public static Block createBlock() {
-        return setUpBlock(new RoundelBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F), SoundType.CORAL, 3,3));
+        return setUpBlock(new RoundelBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F), SoundType.CORAL, 3, 3));
     }
 
     @SubscribeEvent
@@ -194,7 +189,7 @@ public class TardisCompat {
 
     @SubscribeEvent
     public void onBreed(BabyEntitySpawnEvent entitySpawnEvent) {
-        if(RegenConfig.COMMON.mobsHaveRegens.get()) {
+        if (RegenConfig.COMMON.mobsHaveRegens.get()) {
             AgeableEntity kid = entitySpawnEvent.getChild();
             if (kid.getEntityWorld().dimension instanceof TardisDimension) {
                 ConsoleTile tardis = getTardis(kid.getEntityWorld());

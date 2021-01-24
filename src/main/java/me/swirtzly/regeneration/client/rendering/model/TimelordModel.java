@@ -280,8 +280,8 @@ public class TimelordModel extends BipedModel {
     /*    if (entity.isVillagerModel()) {
             villagerHead.render(scale);
         } else {*/
-            timelord_hat.render(scale);
-      //  }
+        timelord_hat.render(scale);
+        //  }
         body.render(scale);
         right_arm.render(scale);
         left_arm.render(scale);

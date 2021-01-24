@@ -29,10 +29,10 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = Regeneration.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TraitManager {
 
+    private static final ArrayList< IDna > DNA_LIST = new ArrayList<>();
     public static IDna DNA_ATHLETE = new AthleteTrait();
     public static IDna DNA_BORING = new BaseTrait("boring");
     public static IDna DNA_DUMB = new BaseTrait("dumb");
-    private static final ArrayList<IDna> DNA_LIST = new ArrayList<>();
     public static IDna DNA_TOUGH = new ToughTrait();
     public static IDna DNA_SWIMMER = new BreathingTrait();
     public static IDna DNA_SCARED_OF_WATER = new HydrophobicTrait();
@@ -40,7 +40,7 @@ public class TraitManager {
     public static IDna DNA_HUNGER = new HungerTrait();
     public static IDna DNA_WALLCLIMB = new WallClimbingTrait();
     public static IDna DNA_REPEL_ARROW = new BaseTrait("repel_arrow");
-    public static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
+    public static HashMap< ResourceLocation, IDna > DNA_ENTRIES = new HashMap<>();
 
     public static void init() {
         register(DNA_ATHLETE);
@@ -59,32 +59,32 @@ public class TraitManager {
         DNA_ENTRIES.put(dna.getRegistryName(), dna);
         DNA_LIST.add(dna);
     }
-	
-	public static IDna getDnaEntry(ResourceLocation resourceLocation) {
-		if (DNA_ENTRIES.containsKey(resourceLocation)) {
-			return DNA_ENTRIES.get(resourceLocation);
-		}
-		return DNA_BORING;
-	}
-	
-	public static IDna getRandomDna(Random random) {
-		return DNA_LIST.get(random.nextInt(DNA_LIST.size()));
-	}
-	
-	@SubscribeEvent
-	public static void onXpPickup(PlayerPickupXpEvent e) {
+
+    public static IDna getDnaEntry(ResourceLocation resourceLocation) {
+        if (DNA_ENTRIES.containsKey(resourceLocation)) {
+            return DNA_ENTRIES.get(resourceLocation);
+        }
+        return DNA_BORING;
+    }
+
+    public static IDna getRandomDna(Random random) {
+        return DNA_LIST.get(random.nextInt(DNA_LIST.size()));
+    }
+
+    @SubscribeEvent
+    public static void onXpPickup(PlayerPickupXpEvent e) {
         RegenCap.get(e.getEntityPlayer()).ifPresent((data) -> {
             IDna dna = TraitManager.getDnaEntry(data.getTrait());
             if (dna.getRegistryName().equals(TraitManager.DNA_DUMB.getRegistryName()) && data.isDnaActive()) {
                 e.getOrb().xpValue *= 0.5;
             }
         });
-	}
-	
-	@SubscribeEvent
-	public static void onJump(LivingEvent.LivingJumpEvent event) {
-		if (event.getEntityLiving() instanceof PlayerEntity) {
-			PlayerEntity player = (PlayerEntity) event.getEntityLiving();
+    }
+
+    @SubscribeEvent
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
+        if (event.getEntityLiving() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             RegenCap.get(player).ifPresent((data) -> {
                 if (player.world.isRemote) return;
                 if (data.isDnaActive() && data.getTrait().equals(DNA_ATHLETE.getRegistryName())) {
@@ -92,23 +92,23 @@ public class TraitManager {
                     player.velocityChanged = true;
                 }
             });
-		}
-	}
+        }
+    }
 
     @SubscribeEvent
-	public static void onArrow(LivingAttackEvent event) {
-		DamageSource source = event.getSource();
-		Entity attacked = event.getEntity();
-		if (source != null && attacked != null && source.getImmediateSource() != null) {
-			if (attacked instanceof PlayerEntity && source.getImmediateSource() instanceof AbstractArrowEntity) {
-				if (!attacked.world.isRemote) {
+    public static void onArrow(LivingAttackEvent event) {
+        DamageSource source = event.getSource();
+        Entity attacked = event.getEntity();
+        if (source != null && attacked != null && source.getImmediateSource() != null) {
+            if (attacked instanceof PlayerEntity && source.getImmediateSource() instanceof AbstractArrowEntity) {
+                if (!attacked.world.isRemote) {
                     PlayerEntity player = (PlayerEntity) attacked;
                     boolean flag = RegenCap.get(player).orElse(null).getTrait().toString().equals(DNA_REPEL_ARROW.getRegistryName().toString());
-					event.setCanceled(flag);
-				}
-			}
-		}
-	}
+                    event.setCanceled(flag);
+                }
+            }
+        }
+    }
 
     public static abstract class IDna {
 
@@ -135,16 +135,16 @@ public class TraitManager {
         public ResourceLocation getRegistryName() {
             return resourceLocation;
         }
-		
-		public String getLocalDesc() {
-			return localDesc;
-		}
 
-		public void registerAttributeIfAbsent(LivingEntity livingEntity, IAttribute attributes) {
-			if (livingEntity.getAttributes().getAttributeInstance(attributes) == null) {
-				livingEntity.getAttributes().registerAttribute(attributes);
-			}
-		}
-	}
-	
+        public String getLocalDesc() {
+            return localDesc;
+        }
+
+        public void registerAttributeIfAbsent(LivingEntity livingEntity, IAttribute attributes) {
+            if (livingEntity.getAttributes().getAttributeInstance(attributes) == null) {
+                livingEntity.getAttributes().registerAttribute(attributes);
+            }
+        }
+    }
+
 }

@@ -11,20 +11,20 @@ public class BaseTrait extends TraitManager.IDna {
     public BaseTrait(String name) {
         super(name);
     }
-	
-	@Override
+
+    @Override
     public void onUpdate(IRegen cap) {
-		
-	}
-	
-	@Override
+
+    }
+
+    @Override
     public void onAdded(IRegen cap) {
-		
-	}
-	
-	@Override
+
+    }
+
+    @Override
     public void onRemoved(IRegen cap) {
-		
-	}
+
+    }
 
 }

@@ -15,7 +15,7 @@ public class ArchHelper {
         return true;
     }
 
-    public static boolean hasRegenerations(ItemStack stack){
+    public static boolean hasRegenerations(ItemStack stack) {
         return stack.getOrCreateTag().contains("storedRegens");
     }
 

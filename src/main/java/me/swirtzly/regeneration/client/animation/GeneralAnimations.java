@@ -32,28 +32,28 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
 
     @Override
     public void preRenderCallback(LivingRenderer renderer, LivingEntity entity) {
-            RegenCap.get(entity).ifPresent((data) -> {
-                if (!(renderer.getEntityModel() instanceof BipedModel)) return;
-                BipedModel modelPlayer = (BipedModel) renderer.getEntityModel();
-                boolean isWearingChest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
-                if (data.hasDroppedHand() && data.getState() == PlayerUtil.RegenState.POST) {
-                    modelPlayer.bipedRightArm.isHidden = data.getCutoffHand() == HandSide.RIGHT;
-                    modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
-                } else {
+        RegenCap.get(entity).ifPresent((data) -> {
+            if (!(renderer.getEntityModel() instanceof BipedModel)) return;
+            BipedModel modelPlayer = (BipedModel) renderer.getEntityModel();
+            boolean isWearingChest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
+            if (data.hasDroppedHand() && data.getState() == PlayerUtil.RegenState.POST) {
+                modelPlayer.bipedRightArm.isHidden = data.getCutoffHand() == HandSide.RIGHT;
+                modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
+            } else {
 
-                    if (entity.getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
-                        boolean isFirstPerson = Minecraft.getInstance().gameSettings.thirdPersonView == 0;
-                        modelPlayer.bipedLeftArm.isHidden = !isFirstPerson && isWearingChest;
-                        modelPlayer.bipedRightArm.isHidden = !isFirstPerson && isWearingChest;
-                    }
-
+                if (entity.getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
+                    boolean isFirstPerson = Minecraft.getInstance().gameSettings.thirdPersonView == 0;
+                    modelPlayer.bipedLeftArm.isHidden = !isFirstPerson && isWearingChest;
+                    modelPlayer.bipedRightArm.isHidden = !isFirstPerson && isWearingChest;
                 }
 
+            }
 
-                if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
-                    GlStateManager.rotatef(15, 1, 0, 0);
-                }
-            });
+
+            if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
+                GlStateManager.rotatef(15, 1, 0, 0);
+            }
+        });
     }
 
     @Override
@@ -61,42 +61,42 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
         ItemStack stack = entity.getHeldItemMainhand();
         ItemStack offStack = entity.getHeldItemOffhand();
 
-            // ==============FOB WATCH & JAR START==============
-            boolean isOpen;
+        // ==============FOB WATCH & JAR START==============
+        boolean isOpen;
 
-            // MAINHAND
-            if (stack.getItem() instanceof FobWatchItem) {
-                isOpen = FobWatchItem.getOpen(stack) == 1;
-                if (isOpen) {
-                    makeZombieArms(modelBiped);
-                    copyAnglesToWear(modelBiped);
-                }
+        // MAINHAND
+        if (stack.getItem() instanceof FobWatchItem) {
+            isOpen = FobWatchItem.getOpen(stack) == 1;
+            if (isOpen) {
+                makeZombieArms(modelBiped);
+                copyAnglesToWear(modelBiped);
             }
+        }
 
-            // OFFHAND
-            if (offStack.getItem() instanceof FobWatchItem) {
-                isOpen = FobWatchItem.getOpen(stack) == 1;
-                if (isOpen) {
-                    makeZombieArms(modelBiped);
-                    copyAnglesToWear(modelBiped);
-                }
+        // OFFHAND
+        if (offStack.getItem() instanceof FobWatchItem) {
+            isOpen = FobWatchItem.getOpen(stack) == 1;
+            if (isOpen) {
+                makeZombieArms(modelBiped);
+                copyAnglesToWear(modelBiped);
             }
-            // ==============FOB WATCH END==============
+        }
+        // ==============FOB WATCH END==============
 
         RegenCap.get(entity).ifPresent((data) -> {
-                // JAR SYNCING
-                if (data.isSyncingToJar()) {
-                    makeZombieArms(modelBiped);
-                    modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(45);
-                    copyAnglesToWear(modelBiped);
-                }
+            // JAR SYNCING
+            if (data.isSyncingToJar()) {
+                makeZombieArms(modelBiped);
+                modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(45);
+                copyAnglesToWear(modelBiped);
+            }
 
             if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
                 modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(0);
                 modelBiped.bipedHead.rotateAngleY = (float) Math.toRadians(0);
                 modelBiped.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
             }
-            });
+        });
     }
 
 }

@@ -15,14 +15,14 @@ import net.minecraft.world.gen.feature.ProbabilityConfig;
 import java.util.Random;
 import java.util.function.Function;
 
-public class SkullFeature extends Feature<ProbabilityConfig> {
+public class SkullFeature extends Feature< ProbabilityConfig > {
 
-    public SkullFeature(Function<Dynamic<?>, ? extends ProbabilityConfig> configFactoryIn) {
+    public SkullFeature(Function< Dynamic< ? >, ? extends ProbabilityConfig > configFactoryIn) {
         super(configFactoryIn);
     }
 
     @Override
-    public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, ProbabilityConfig config) {
+    public boolean place(IWorld worldIn, ChunkGenerator< ? extends GenerationSettings > generator, Random rand, BlockPos pos, ProbabilityConfig config) {
         BlockPos skullPos = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);
         if (worldIn.getBlockState(skullPos.down()).getFluidState().isSource()) {
             return false;

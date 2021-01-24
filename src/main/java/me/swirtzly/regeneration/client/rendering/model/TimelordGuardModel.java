@@ -15,7 +15,7 @@ import net.minecraft.util.HandSide;
  * Created by Swirtzly
  * on 08/05/2020 @ 11:28
  */
-public class TimelordGuardModel extends BipedModel<TimelordEntity> {
+public class TimelordGuardModel extends BipedModel< TimelordEntity > {
     private final RendererModel head;
     private final RendererModel helment;
     private final RendererModel curves2;

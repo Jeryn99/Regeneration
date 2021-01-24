@@ -20,7 +20,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.ModList;
 
-public class FieryRenderer extends ATypeRenderer<FieryType> {
+public class FieryRenderer extends ATypeRenderer< FieryType > {
 
 
     /* Note 1#: Quark does this weird thing, where it appears to break the Regeneration Effect Staying at the arms
@@ -75,7 +75,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
      * assist in fixing Note #1 */
     private static void renderConeAtArms(LivingEntity player, HandSide side) {
         GlStateManager.pushMatrix();
-		RegenCap.get(player).ifPresent((data) -> {
+        RegenCap.get(player).ifPresent((data) -> {
             double x = data.getRegenType().create().getAnimationProgress(data);
             double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
             double r = 0.09890109890109888;
@@ -93,7 +93,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
             GlStateManager.disableTexture();
             GlStateManager.enableAlphaTest();
             GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.SourceFactor.CONSTANT_ALPHA.value);
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.SourceFactor.CONSTANT_ALPHA.value);
             GlStateManager.depthMask(true);
             RenderUtil.setLightmapTextureCoords(65, 65);
 
@@ -137,7 +137,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
     }
 
     @Override
-	public void renderHand(LivingEntity player, HandSide handSide, LivingRenderer render) {
+    public void renderHand(LivingEntity player, HandSide handSide, LivingRenderer render) {
 
         /* See Note #1 at top of class*/
         if (!ModList.get().isLoaded("quark")) {
@@ -157,54 +157,54 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 
     @Override
     public void onRenderLayer(FieryType type, LivingRenderer renderLivingBase, IRegen capability, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		
-		// State manager changes
+
+        // State manager changes
         GlStateManager.pushTextureAttributes();
         GlStateManager.disableTexture();
-		GlStateManager.enableAlphaTest();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-		GlStateManager.depthMask(true);
-		RenderUtil.setLightmapTextureCoords(65, 65);
-		
-		CompoundNBT style = capability.getStyle();
-		Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
-		Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
-		
-		double x = type.getAnimationProgress(capability);
-		double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
-		double r = 0.09890109890109888;
-		double f = p * Math.pow(x, 2) - r;
-		
-		float cf = MathHelper.clamp((float) f, 0F, 1F);
-		float primaryScale = cf * 4F;
-		float secondaryScale = cf * 6.4F;
-		
-		// Render head cone
-		GlStateManager.pushMatrix();
+        GlStateManager.enableAlphaTest();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        GlStateManager.depthMask(true);
+        RenderUtil.setLightmapTextureCoords(65, 65);
 
-		if (renderLivingBase.getEntityModel() instanceof BipedModel) {
-			BipedModel player = (BipedModel) renderLivingBase.getEntityModel();
-			player.bipedHead.postRender(scale);
-		}
+        CompoundNBT style = capability.getStyle();
+        Vec3d primaryColor = new Vec3d(style.getFloat("PrimaryRed"), style.getFloat("PrimaryGreen"), style.getFloat("PrimaryBlue"));
+        Vec3d secondaryColor = new Vec3d(style.getFloat("SecondaryRed"), style.getFloat("SecondaryGreen"), style.getFloat("SecondaryBlue"));
+
+        double x = type.getAnimationProgress(capability);
+        double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
+        double r = 0.09890109890109888;
+        double f = p * Math.pow(x, 2) - r;
+
+        float cf = MathHelper.clamp((float) f, 0F, 1F);
+        float primaryScale = cf * 4F;
+        float secondaryScale = cf * 6.4F;
+
+        // Render head cone
+        GlStateManager.pushMatrix();
+
+        if (renderLivingBase.getEntityModel() instanceof BipedModel) {
+            BipedModel player = (BipedModel) renderLivingBase.getEntityModel();
+            player.bipedHead.postRender(scale);
+        }
 
         GlStateManager.translatef(0f, 0.09f, 0f);
         GlStateManager.rotatef(180, 1.0f, 0.0f, 0.0f);
-		
-		renderCone(entityPlayer, primaryScale / 1.6F, primaryScale * .75F, primaryColor);
-		renderCone(entityPlayer, secondaryScale / 1.6F, secondaryScale / 1.5F, secondaryColor);
-		GlStateManager.popMatrix();
-		
-		if (!capability.isSyncingToJar()) {
-			// Render glowing overlay
-			renderOverlay(renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-		}
-		// Undo state manager changes
-		RenderUtil.restoreLightMap();
-		GlStateManager.depthMask(false);
-		GlStateManager.disableBlend();
-		GlStateManager.disableAlphaTest();
-		GlStateManager.color4f(255, 255, 255, 255);
+
+        renderCone(entityPlayer, primaryScale / 1.6F, primaryScale * .75F, primaryColor);
+        renderCone(entityPlayer, secondaryScale / 1.6F, secondaryScale / 1.5F, secondaryColor);
+        GlStateManager.popMatrix();
+
+        if (!capability.isSyncingToJar()) {
+            // Render glowing overlay
+            renderOverlay(renderLivingBase, entityPlayer, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+        }
+        // Undo state manager changes
+        RenderUtil.restoreLightMap();
+        GlStateManager.depthMask(false);
+        GlStateManager.disableBlend();
+        GlStateManager.disableAlphaTest();
+        GlStateManager.color4f(255, 255, 255, 255);
         GlStateManager.enableTexture();
         GlStateManager.popAttributes();
 
@@ -220,10 +220,10 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
     public void preRenderCallback(LivingRenderer renderer, LivingEntity entity) {
         /* This method has no implementation for this Regeneration type */
     }
-	
-	@Override
+
+    @Override
     public void animateEntity(BipedModel playerModel, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		RegenCap.get(entity).ifPresent((data) -> {
+        RegenCap.get(entity).ifPresent((data) -> {
 
             /* We want the player to go into a "T-Pose" type animation while they are Regenerating in this Fiery Type */
             if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getRegenType() == RegenTypes.FIERY) {
@@ -239,18 +239,18 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
 
                 if (armRotZ > 95) {
                     armRotZ = 95;
-				}
+                }
 
                 if (headRot > 45) {
-					headRot = 45;
-				}
+                    headRot = 45;
+                }
 
                 // ARMS
-				playerModel.bipedLeftArm.rotateAngleY = 0;
-				playerModel.bipedRightArm.rotateAngleY = 0;
+                playerModel.bipedLeftArm.rotateAngleY = 0;
+                playerModel.bipedRightArm.rotateAngleY = 0;
 
                 playerModel.bipedLeftArm.rotateAngleX = 0;
-				playerModel.bipedRightArm.rotateAngleX = 0;
+                playerModel.bipedRightArm.rotateAngleX = 0;
 
                 playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRotZ + arm_shake);
                 playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRotZ + arm_shake);
@@ -258,26 +258,26 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
                 playerModel.bipedRightArm.rotateAngleY = (float) Math.toRadians(armRotY);
 
                 // BODY
-				playerModel.bipedBody.rotateAngleX = 0;
-				playerModel.bipedBody.rotateAngleY = 0;
-				playerModel.bipedBody.rotateAngleZ = 0;
+                playerModel.bipedBody.rotateAngleX = 0;
+                playerModel.bipedBody.rotateAngleY = 0;
+                playerModel.bipedBody.rotateAngleZ = 0;
 
                 // LEGS
-				playerModel.bipedLeftLeg.rotateAngleY = 0;
-				playerModel.bipedRightLeg.rotateAngleY = 0;
+                playerModel.bipedLeftLeg.rotateAngleY = 0;
+                playerModel.bipedRightLeg.rotateAngleY = 0;
 
                 playerModel.bipedLeftLeg.rotateAngleX = 0;
-				playerModel.bipedRightLeg.rotateAngleX = 0;
+                playerModel.bipedRightLeg.rotateAngleX = 0;
 
                 playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-				playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+                playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
 
 
                 playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
                 playerModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
                 playerModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
 
-			}
-		});
-	}
+            }
+        });
+    }
 }

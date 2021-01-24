@@ -20,7 +20,7 @@ import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.WAS
  */
 public class GallifrayanWastelands extends Biome {
 
-    public GallifrayanWastelands(Biome.Builder biomeBuilder){
+    public GallifrayanWastelands(Biome.Builder biomeBuilder) {
         super(biomeBuilder);
     }
 

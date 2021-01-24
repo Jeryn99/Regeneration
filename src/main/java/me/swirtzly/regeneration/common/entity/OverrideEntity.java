@@ -33,14 +33,14 @@ import java.util.UUID;
 
 public class OverrideEntity extends Entity {
 
-    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(OverrideEntity.class, DataSerializers.ITEMSTACK);
+    private static final DataParameter< ItemStack > ITEM = EntityDataManager.createKey(OverrideEntity.class, DataSerializers.ITEMSTACK);
 
     private UUID thrower;
     private UUID owner;
     private int health = 5;
 
 
-    public OverrideEntity(EntityType<? extends OverrideEntity> entityTypeIn, World worldIn) {
+    public OverrideEntity(EntityType< ? extends OverrideEntity > entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -60,17 +60,17 @@ public class OverrideEntity extends Entity {
         this.setItem(stack);
     }
 
-	@Override
-	protected boolean canTriggerWalking() {
-		return false;
-	}
+    @Override
+    protected boolean canTriggerWalking() {
+        return false;
+    }
 
-	@Override
+    @Override
     public void registerData() {
         this.getDataManager().register(ITEM, ItemStack.EMPTY);
-	}
+    }
 
-	@Override
+    @Override
     public ITextComponent getName() {
         ITextComponent itextcomponent = this.getCustomName();
         return (itextcomponent != null ? itextcomponent : new TranslationTextComponent(this.getItem().getTranslationKey()));
@@ -86,18 +86,18 @@ public class OverrideEntity extends Entity {
         return super.getSize(poseIn);
     }
 
-	@Override
-	public ActionResultType applyPlayerInteraction(PlayerEntity player, Vec3d vec, Hand hand) {
+    @Override
+    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vec3d vec, Hand hand) {
         if (player.getHeldItem(hand).isEmpty() && this.isAlive()) {
             player.setHeldItem(hand, this.getItem());
             this.remove();
             return ActionResultType.SUCCESS;
         }
         return super.applyPlayerInteraction(player, vec, hand);
-	}
+    }
 
-	@Override
-	public void tick() {
+    @Override
+    public void tick() {
 
         CompoundNBT stackTag = getItem().getOrCreateTag();
 
@@ -230,7 +230,7 @@ public class OverrideEntity extends Entity {
 
     @Nonnull
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket< ? > createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -268,5 +268,5 @@ public class OverrideEntity extends Entity {
 
     public void setThrowerId(@Nullable UUID throwerUUID) {
         this.thrower = throwerUUID;
-	}
+    }
 }

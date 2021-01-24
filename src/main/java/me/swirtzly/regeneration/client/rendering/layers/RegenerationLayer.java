@@ -35,24 +35,24 @@ public class RegenerationLayer extends LayerRenderer {
     }
 
     public static void renderGlowingHands(LivingEntity player, IRegen handler, float scale, HandSide side) {
-		Vec3d primaryColor = handler.getPrimaryColor();
-		Vec3d secondaryColor = handler.getSecondaryColor();
-		
-		Minecraft mc = Minecraft.getInstance();
-		Random rand = player.world.rand;
-		float factor = 0.2F;
-		
-		RenderUtil.setupRenderLightning();
+        Vec3d primaryColor = handler.getPrimaryColor();
+        Vec3d secondaryColor = handler.getSecondaryColor();
+
+        Minecraft mc = Minecraft.getInstance();
+        Random rand = player.world.rand;
+        float factor = 0.2F;
+
+        RenderUtil.setupRenderLightning();
         GlStateManager.scalef(scale, scale, scale);
         GlStateManager.translatef(0, 0.3F, 0);
         GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
-		for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
-			drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, primaryColor, 0);
-			drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, secondaryColor, 0);
-		}
-		RenderUtil.finishRenderLightning();
-	}
+            drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, primaryColor, 0);
+            drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, secondaryColor, 0);
+        }
+        RenderUtil.finishRenderLightning();
+    }
 
     @Override
     public void render(Entity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
@@ -72,8 +72,8 @@ public class RegenerationLayer extends LayerRenderer {
     }
 
     @Override
-	public boolean shouldCombineTextures() {
-		return false;
-	}
-	
+    public boolean shouldCombineTextures() {
+        return false;
+    }
+
 }

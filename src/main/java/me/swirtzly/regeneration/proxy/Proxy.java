@@ -16,13 +16,13 @@ public interface Proxy {
 
     default void postInit() {
     }
-    
+
     default void closeGui() {
-    	
+
     }
 
     World getClientWorld();
 
     PlayerEntity getClientPlayer();
-	
+
 }

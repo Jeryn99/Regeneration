@@ -65,7 +65,7 @@ public class TypeLayFade implements RegenType {
         return new Vec3d(1, 1, 1);
     }
 
-        @Override
+    @Override
     public Vec3d getDefaultSecondaryColor() {
         return new Vec3d(1, 1, 1);
     }

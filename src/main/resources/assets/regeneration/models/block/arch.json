@@ -6,7 +6,7 @@
   ],
   "textures": {
     "1": "regeneration:items/arch",
-    "particle":"regeneration:items/arch"
+    "particle": "regeneration:items/arch"
   },
   "elements": [
     {

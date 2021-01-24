@@ -27,7 +27,7 @@ public class ComponentItem extends SolidItem implements ICompatObject {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (!ModList.get().isLoaded("tardis")) {
             tooltip.add(new StringTextComponent("This item is useless without the New Tardis Mod Installed."));

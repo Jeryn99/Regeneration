@@ -16,80 +16,80 @@ import net.minecraftforge.common.util.INBTSerializable;
 /**
  * Created by Sub on 16/09/2018.
  */
-public interface IRegen extends INBTSerializable<CompoundNBT> {
+public interface IRegen extends INBTSerializable< CompoundNBT > {
 
-	LivingEntity getLivingEntity();
-	
-	int getRegenerationsLeft();
+    LivingEntity getLivingEntity();
 
-	void setRegenerationsLeft(int amount);
+    int getRegenerationsLeft();
 
-	void triggerRegeneration();
+    void setRegenerationsLeft(int amount);
 
-	void tick();
+    void triggerRegeneration();
 
-	void synchronise();
+    void tick();
 
-	void setEncodedSkin(String string);
+    void synchronise();
 
-	CompoundNBT getStyle();
+    CompoundNBT getStyle();
 
-	void setStyle(CompoundNBT nbt);
+    void setStyle(CompoundNBT nbt);
 
-	Vec3d getPrimaryColor();
+    Vec3d getPrimaryColor();
 
-	Vec3d getSecondaryColor();
+    Vec3d getSecondaryColor();
 
-	/**
-	 * Returns if the player is currently <i>able to</i> regenerate
-	 */
-	default boolean canRegenerate() {
+    /**
+     * Returns if the player is currently <i>able to</i> regenerate
+     */
+    default boolean canRegenerate() {
         return (RegenConfig.COMMON.infiniteRegeneration.get() || getRegenerationsLeft() > 0) && getLivingEntity().posY > 0 && !MinecraftForge.EVENT_BUS.post(new RegenerationEvent(getLivingEntity()));
-	}
-	
-	void receiveRegenerations(int amount);
-	
-	void extractRegeneration(int amount);
-	
-	PlayerUtil.RegenState getState();
+    }
 
-	RegenTypes getRegenType();
+    void receiveRegenerations(int amount);
 
-	void setRegenType(RegenTypes type);
+    void extractRegeneration(int amount);
+
+    PlayerUtil.RegenState getState();
+
+    RegenTypes getRegenType();
+
+    void setRegenType(RegenTypes type);
 
     IStateManager getStateManager();
-	
-	String getEncodedSkin();
-	
-	SkinInfo.SkinType getSkinType();
-	
-	void setSkinType(String skinType);
 
-	PlayerUtil.EnumChoices getPreferredModel();
+    String getEncodedSkin();
 
-	void setPreferredModel(String skinType);
+    void setEncodedSkin(String string);
 
-	boolean areHandsGlowing();
+    SkinInfo.SkinType getSkinType();
 
-	String getDeathSource();
+    void setSkinType(String skinType);
 
-	void setDeathSource(String source);
+    PlayerUtil.EnumChoices getPreferredModel();
 
-	ResourceLocation getTrait();
+    void setPreferredModel(String skinType);
 
-	void setTrait(ResourceLocation registryName);
+    boolean areHandsGlowing();
 
-	boolean isDnaActive();
+    String getDeathSource();
 
-	void setDnaActive(boolean alive);
+    void setDeathSource(String source);
 
-	int getAnimationTicks();
+    ResourceLocation getTrait();
 
-	void setAnimationTicks(int ticks);
+    void setTrait(ResourceLocation registryName);
 
-	void setSyncingFromJar(boolean syncing);
-	
-	boolean isSyncingToJar();
+    boolean isDnaActive();
+
+    void setDnaActive(boolean alive);
+
+    int getAnimationTicks();
+
+    void setAnimationTicks(int ticks);
+
+    void setSyncingFromJar(boolean syncing);
+
+    boolean isSyncingToJar();
 
     SkinInfo.SkinType getNextSkinType();
 
@@ -106,5 +106,5 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
     HandSide getCutoffHand();
 
     void setCutOffHand(HandSide side);
-	
+
 }

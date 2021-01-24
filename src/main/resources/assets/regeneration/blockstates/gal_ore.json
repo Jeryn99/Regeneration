@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "": { "model": "regeneration:block/gal_ore" }
+  "variants": {
+    "": {
+      "model": "regeneration:block/gal_ore"
     }
+  }
 }

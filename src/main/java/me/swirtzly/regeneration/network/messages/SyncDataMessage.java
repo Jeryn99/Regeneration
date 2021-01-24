@@ -12,39 +12,39 @@ import java.util.function.Supplier;
 
 public class SyncDataMessage {
 
-	private final Entity player;
-	private final DimensionType dimensionType;
+    private final Entity player;
+    private final DimensionType dimensionType;
 
-	public SyncDataMessage(Entity player) {
-		this.player = player;
-		this.dimensionType = player.world.dimension.getType();
-	}
+    public SyncDataMessage(Entity player) {
+        this.player = player;
+        this.dimensionType = player.world.dimension.getType();
+    }
 
-	public static void encode(SyncDataMessage message, PacketBuffer packetBuffer) {
-		packetBuffer.writeInt(message.player.getEntityId());
-		packetBuffer.writeResourceLocation(message.dimensionType.getRegistryName());
+    public static void encode(SyncDataMessage message, PacketBuffer packetBuffer) {
+        packetBuffer.writeInt(message.player.getEntityId());
+        packetBuffer.writeResourceLocation(message.dimensionType.getRegistryName());
 
-	}
-	
-	public static SyncDataMessage decode(PacketBuffer buffer) {
-		int entityID = buffer.readInt();
-		DimensionType type = DimensionType.byName(buffer.readResourceLocation());
-		if (ServerLifecycleHooks.getCurrentServer().getWorld(type) == null) {
-			return new SyncDataMessage(ServerLifecycleHooks.getCurrentServer().getWorld(type).getEntityByID(entityID));
-		}
-		return null;
-	}
-	
-	public static class Handler {
-		public static void handle(SyncDataMessage message, Supplier<NetworkEvent.Context> ctx) {
-			Entity player = message.player;
+    }
+
+    public static SyncDataMessage decode(PacketBuffer buffer) {
+        int entityID = buffer.readInt();
+        DimensionType type = DimensionType.byName(buffer.readResourceLocation());
+        if (ServerLifecycleHooks.getCurrentServer().getWorld(type) == null) {
+            return new SyncDataMessage(ServerLifecycleHooks.getCurrentServer().getWorld(type).getEntityByID(entityID));
+        }
+        return null;
+    }
+
+    public static class Handler {
+        public static void handle(SyncDataMessage message, Supplier< NetworkEvent.Context > ctx) {
+            Entity player = message.player;
             ctx.get().getSender().getServer().deferTask(() -> {
-				if (player != null) {
+                if (player != null) {
                     RegenCap.get(player).ifPresent(IRegen::synchronise);
-				}
-			});
-			ctx.get().setPacketHandled(true);
-		}
-	}
-	
+                }
+            });
+            ctx.get().setPacketHandled(true);
+        }
+    }
+
 }

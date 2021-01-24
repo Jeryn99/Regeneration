@@ -50,9 +50,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
-    private static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
-    private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> VILLAGER = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter< String > TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
+    private static final DataParameter< Boolean > SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter< Boolean > VILLAGER = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
 
     private final SwimmerPathNavigator waterNavigator;
     private final GroundPathNavigator groundNavigator;
@@ -61,7 +61,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         this(RegenObjects.EntityEntries.TIMELORD.get(), world);
     }
 
-    public TimelordEntity(EntityType<TimelordEntity> entityEntityType, World world) {
+    public TimelordEntity(EntityType< TimelordEntity > entityEntityType, World world) {
         super(entityEntityType, world);
         this.waterNavigator = new SwimmerPathNavigator(this, world);
         this.groundNavigator = new GroundPathNavigator(this, world);
@@ -74,7 +74,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
         getDataManager().register(SWINGING_ARMS, false);
     }
-
 
 
     @Override
@@ -90,14 +89,13 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         }
     }
 
-    public void setSwingingArms(boolean swingingArms) {
-        this.getDataManager().set(SWINGING_ARMS, swingingArms);
-    }
-
     public boolean isSwingingArms() {
         return this.getDataManager().get(SWINGING_ARMS);
     }
 
+    public void setSwingingArms(boolean swingingArms) {
+        this.getDataManager().set(SWINGING_ARMS, swingingArms);
+    }
 
     @Override
     protected void registerGoals() {
@@ -136,7 +134,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
         if (!worldIn.isRemote()) {
 
-            if(getTimelordType() == TimelordType.GUARD){
+            if (getTimelordType() == TimelordType.GUARD) {
                 setHeldItem(Hand.MAIN_HAND, new ItemStack(rand.nextBoolean() ? RegenObjects.Items.PISTOL.get() : RegenObjects.Items.RIFLE.get()));
             }
 
@@ -185,32 +183,18 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         }
     }
 
-    public enum TimelordType{
-        COUNCIL("timelord"), GUARD("guards");
-
-        private final String name;
-
-        TimelordType(String guard) {
-            this.name = guard;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    public void setTimelordType(TimelordType type){
-        getDataManager().set(TYPE, type.name());
-    }
-
-    public TimelordType getTimelordType(){
+    public TimelordType getTimelordType() {
         String type = getDataManager().get(TYPE);
         for (TimelordType value : TimelordType.values()) {
-            if(value.name().equals(type)){
+            if (value.name().equals(type)) {
                 return value;
             }
         }
         return TimelordType.GUARD;
+    }
+
+    public void setTimelordType(TimelordType type) {
+        getDataManager().set(TYPE, type.name());
     }
 
     @Override
@@ -348,6 +332,20 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 MerchantOffers merchantoffers = this.getOffers();
                 this.addTrades(merchantoffers, trades, 5);
             }
+        }
+    }
+
+    public enum TimelordType {
+        COUNCIL("timelord"), GUARD("guards");
+
+        private final String name;
+
+        TimelordType(String guard) {
+            this.name = guard;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }

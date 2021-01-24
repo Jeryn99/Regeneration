@@ -4,7 +4,6 @@ import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.api.ZeroRoomEvent;
 import me.swirtzly.regeneration.common.block.RegenTags;
-import me.swirtzly.regeneration.common.block.ZeroRoomBlock;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.HandItem;
 import me.swirtzly.regeneration.handlers.RegenObjects;
@@ -19,7 +18,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.HandSide;
@@ -45,7 +43,7 @@ public class PlayerUtil {
 
     private static final Random RAND = new Random();
 
-    public static ArrayList<Effect> POTIONS = new ArrayList<>();
+    public static ArrayList< Effect > POTIONS = new ArrayList<>();
 
     public static void updateModel(EnumChoices choice) {
         NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMapMessage(choice.name()));
@@ -89,27 +87,27 @@ public class PlayerUtil {
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
         if (!(livingEntity instanceof PlayerEntity)) return;
         PlayerEntity player = (PlayerEntity) livingEntity;
-		if (!player.world.isRemote) {
-			player.sendStatusMessage(new TranslationTextComponent(message), hotBar);
-		}
-	}
+        if (!player.world.isRemote) {
+            player.sendStatusMessage(new TranslationTextComponent(message), hotBar);
+        }
+    }
 
     public static void sendMessage(LivingEntity livingEntity, TranslationTextComponent translation, boolean hotBar) {
         if (!(livingEntity instanceof PlayerEntity)) return;
         PlayerEntity player = (PlayerEntity) livingEntity;
-		if (!player.world.isRemote) {
-			player.sendStatusMessage(translation, hotBar);
-		}
-	}
-	
-	public static void sendMessageToAll(TranslationTextComponent translation) {
-		List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-		players.forEach(playerMP -> sendMessage(playerMP, translation, false));
-	}
-	
-	public static void setPerspective(ServerPlayerEntity player, boolean thirdperson, boolean resetPitch) {
-		NetworkDispatcher.sendTo(new ThirdPersonMessage(thirdperson), player);
-	}
+        if (!player.world.isRemote) {
+            player.sendStatusMessage(translation, hotBar);
+        }
+    }
+
+    public static void sendMessageToAll(TranslationTextComponent translation) {
+        List< ServerPlayerEntity > players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+        players.forEach(playerMP -> sendMessage(playerMP, translation, false));
+    }
+
+    public static void setPerspective(ServerPlayerEntity player, boolean thirdperson, boolean resetPitch) {
+        NetworkDispatcher.sendTo(new ThirdPersonMessage(thirdperson), player);
+    }
 
     public static void createHand(LivingEntity player) {
         RegenCap.get(player).ifPresent((data) -> {
@@ -141,6 +139,50 @@ public class PlayerUtil {
         return stack.getItem().isIn(RegenTags.SHARP_ITEMS);
     }
 
+    public static void handleCutOffhand(LivingEntity player) {
+        RegenCap.get(player).ifPresent((data) -> {
+            if (data.hasDroppedHand()) {
+                if (!player.getHeldItemOffhand().isEmpty()) {
+                    player.entityDropItem(player.getHeldItemOffhand());
+                    player.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.AIR));
+                }
+            }
+        });
+    }
+
+    public static boolean isZeroRoom(LivingEntity livingEntity) {
+        AxisAlignedBB box = livingEntity.getBoundingBox().grow(25);
+        for (Iterator< BlockPos > iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
+            BlockPos pos = iterator.next();
+            BlockState blockState = livingEntity.world.getBlockState(pos);
+            if (blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM.get() || blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM_TWO.get()) {
+                boolean isTardis = livingEntity.world.dimension.getClass().getName().contains("TardisDimension");
+                if (isTardis) {
+                    ZeroRoomEvent zeroRoomEvent = new ZeroRoomEvent(livingEntity);
+                    MinecraftForge.EVENT_BUS.post(zeroRoomEvent);
+                    if (!zeroRoomEvent.isCanceled()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isAboveZeroGrid(LivingEntity livingEntity) {
+        BlockPos livingPos = livingEntity.getPosition().down();
+        AxisAlignedBB grid = new AxisAlignedBB(livingPos.north().west(), livingPos.south().east());
+        for (Iterator< BlockPos > iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
+            BlockPos pos = iterator.next();
+            BlockState state = livingEntity.world.getBlockState(pos);
+            if (!state.getBlock().getRegistryName().getPath().contains("zero_roundel")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     public enum EnumChoices implements RegenUtil.IEnum {
         ALEX(true), STEVE(false), EITHER(true);
 
@@ -158,61 +200,17 @@ public class PlayerUtil {
         }
     }
 
-    public static void handleCutOffhand(LivingEntity player) {
-        RegenCap.get(player).ifPresent((data) -> {
-            if (data.hasDroppedHand()) {
-                if (!player.getHeldItemOffhand().isEmpty()) {
-                    player.entityDropItem(player.getHeldItemOffhand());
-                    player.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.AIR));
-                }
-            }
-        });
-    }
-
-    public static boolean isZeroRoom(LivingEntity livingEntity) {
-        AxisAlignedBB box = livingEntity.getBoundingBox().grow(25);
-        for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
-            BlockPos pos = iterator.next();
-            BlockState blockState = livingEntity.world.getBlockState(pos);
-            if (blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM.get() || blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM_TWO.get()) {
-                boolean isTardis = livingEntity.world.dimension.getClass().getName().contains("TardisDimension");
-                if (isTardis) {
-                    ZeroRoomEvent zeroRoomEvent = new ZeroRoomEvent(livingEntity);
-                    MinecraftForge.EVENT_BUS.post(zeroRoomEvent);
-                    if (!zeroRoomEvent.isCanceled()) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-
-    public static boolean isAboveZeroGrid(LivingEntity livingEntity) {
-        BlockPos livingPos = livingEntity.getPosition().down();
-        AxisAlignedBB grid = new AxisAlignedBB(livingPos.north().west(), livingPos.south().east());
-        for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
-            BlockPos pos = iterator.next();
-            BlockState state = livingEntity.world.getBlockState(pos);
-            if (!state.getBlock().getRegistryName().getPath().contains("zero_roundel")) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 
     public enum RegenState {
 
         ALIVE, GRACE, GRACE_CRIT, POST, REGENERATING;
-		
-		public boolean isGraceful() {
-			return this == GRACE || this == GRACE_CRIT;
-		}
-		
-		public enum Transition {
+
+        public boolean isGraceful() {
+            return this == GRACE || this == GRACE_CRIT;
+        }
+
+        public enum Transition {
             HAND_GLOW_START, HAND_GLOW_TRIGGER, ENTER_CRITICAL, CRITICAL_DEATH, FINISH_REGENERATION, END_POST
         }
-	}
+    }
 }

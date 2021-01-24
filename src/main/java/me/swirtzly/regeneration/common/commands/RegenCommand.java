@@ -12,14 +12,14 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class RegenCommand {
 
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
+    public static void register(CommandDispatcher< CommandSource > dispatcher) {
         dispatcher.register(
                 Commands.literal(Regeneration.MODID)
                         .requires(commandSource -> commandSource.hasPermissionLevel(ServerLifecycleHooks.getCurrentServer().getOpPermissionLevel()))
-                            .then(SetRegensCommand.register(dispatcher))
-                            .then(GlowCommand.register(dispatcher))
-                            .then(FastForwardCommand.register(dispatcher))
-                            .then(SetTraitsCommand.register(dispatcher))
+                        .then(SetRegensCommand.register(dispatcher))
+                        .then(GlowCommand.register(dispatcher))
+                        .then(FastForwardCommand.register(dispatcher))
+                        .then(SetTraitsCommand.register(dispatcher))
         );
 
     }

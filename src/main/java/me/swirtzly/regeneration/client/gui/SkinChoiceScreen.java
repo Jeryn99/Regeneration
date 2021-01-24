@@ -32,13 +32,13 @@ import static me.swirtzly.regeneration.util.client.RenderUtil.drawModelToGui;
 public class SkinChoiceScreen extends ContainerScreen {
 
     private static final ResourceLocation background = new ResourceLocation(Regeneration.MODID, "textures/gui/customizer_background.png");
-    public static boolean isAlex = true;
-    private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
     private static final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-    private static List<File> skins = null;
-    private static int position = 0;
     private static final PlayerModel ALEX_MODEL = new PlayerModel(0.1f, true);
     private static final PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
+    public static boolean isAlex = true;
+    private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
+    private static List< File > skins = null;
+    private static int position = 0;
     private static PlayerUtil.EnumChoices choices = null;
     private float rotation = 0;
 
@@ -164,7 +164,7 @@ public class SkinChoiceScreen extends ContainerScreen {
     @Override
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
 
-        if(p_keyPressed_1_ == GLFW.GLFW_KEY_RIGHT){
+        if (p_keyPressed_1_ == GLFW.GLFW_KEY_RIGHT) {
             if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
                 if (position >= skins.size() - 1) {
                     position = 0;
@@ -177,7 +177,7 @@ public class SkinChoiceScreen extends ContainerScreen {
             }
         }
 
-        if(p_keyPressed_1_ == GLFW.GLFW_KEY_LEFT){
+        if (p_keyPressed_1_ == GLFW.GLFW_KEY_LEFT) {
             if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
                 if (position > 0) {
                     position--;

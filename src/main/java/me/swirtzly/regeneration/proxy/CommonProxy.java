@@ -7,8 +7,8 @@ import net.minecraft.world.World;
  * Created by Sub on 17/09/2018.
  */
 public class CommonProxy implements Proxy {
-	
-	@Override
+
+    @Override
     public void postInit() {
 
     }

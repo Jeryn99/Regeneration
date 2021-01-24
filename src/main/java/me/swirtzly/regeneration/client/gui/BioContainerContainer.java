@@ -70,7 +70,7 @@ public class BioContainerContainer extends Container {
     }
 
     @Override
-    public ContainerType<?> getType() {
+    public ContainerType< ? > getType() {
         return RegenObjects.Containers.BIO_CONTAINER.get();
     }
 

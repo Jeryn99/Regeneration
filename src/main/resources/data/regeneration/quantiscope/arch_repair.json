@@ -1,6 +1,6 @@
 {
   "repair": "true",
-  "repair_item":"regeneration:arch_part",
+  "repair_item": "regeneration:arch_part",
   "ingredients": [
     "tardis:circuits"
   ]

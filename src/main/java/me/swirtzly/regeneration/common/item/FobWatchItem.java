@@ -41,11 +41,6 @@ public class FobWatchItem extends SolidItem {
 
     }
 
-    @Override
-    public ItemStack getDefaultInstance() {
-        return super.getDefaultInstance();
-    }
-
     public static CompoundNBT getStackTag(ItemStack stack) {
         CompoundNBT tag = stack.getOrCreateTag();
         if (!tag.contains("open")) {
@@ -74,6 +69,11 @@ public class FobWatchItem extends SolidItem {
     }
 
     @Override
+    public ItemStack getDefaultInstance() {
+        return super.getDefaultInstance();
+    }
+
+    @Override
     public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
         super.onCreated(stack, worldIn, playerIn);
         stack.setDamage(0);
@@ -94,7 +94,7 @@ public class FobWatchItem extends SolidItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+    public ActionResult< ItemStack > onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
         IRegen cap = RegenCap.get(player).orElseGet(null);
 
@@ -157,7 +157,7 @@ public class FobWatchItem extends SolidItem {
     }
 
 
-    private ActionResult<ItemStack> msgUsageFailed(PlayerEntity player, String message, ItemStack stack) {
+    private ActionResult< ItemStack > msgUsageFailed(PlayerEntity player, String message, ItemStack stack) {
         PlayerUtil.sendMessage(player, message, true);
         return ActionResult.newResult(ActionResultType.FAIL, stack);
     }

@@ -14,7 +14,7 @@ import java.awt.*;
 /**
  * Created by Swirtzly on 22/08/2019 @ 14:47
  */
-public class BioContainerScreen extends ContainerScreen<BioContainerContainer> {
+public class BioContainerScreen extends ContainerScreen< BioContainerContainer > {
 
     private ResourceLocation GUI = new ResourceLocation(Regeneration.MODID, "textures/gui/hij.png");
 

@@ -22,7 +22,7 @@ import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.WAS
  */
 public class GallifreyanWastelandsMountains extends GallifrayanWastelands {
 
-    public GallifreyanWastelandsMountains(){
+    public GallifreyanWastelandsMountains() {
         super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.SANDSTONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(3.6F).temperature(6F).waterColor(WASTELAND_WATER).waterFogColor(WASTELAND_WATER).scale(3.6F).parent(null));
         this.addStructure(Feature.MINESHAFT, new MineshaftConfig(0.004D, MineshaftStructure.Type.NORMAL));
         this.addStructure(Feature.STRONGHOLD, IFeatureConfig.NO_FEATURE_CONFIG);
@@ -44,7 +44,7 @@ public class GallifreyanWastelandsMountains extends GallifrayanWastelands {
         BiomeHelper.addGallifreyTress(this);
         BiomeHelper.addHut(this);
     }
-    
+
     @Override
     public int getGrassColor(BlockPos pos) {
         return -6525891;

@@ -17,7 +17,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 /**
  * Created by Swirtzly on 29/08/2019 @ 15:18
  */
-public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
+public class TypeLayFadeRenderer extends ATypeRenderer< TypeLayFade > {
 
     public static final TypeLayFadeRenderer INSTANCE = new TypeLayFadeRenderer();
 

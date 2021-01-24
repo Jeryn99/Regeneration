@@ -21,43 +21,43 @@ import org.lwjgl.glfw.GLFW;
  */
 @EventBusSubscriber(Dist.CLIENT)
 public class RegenKeyBinds {
-	public static KeyBinding REGEN_NOW;
-	public static KeyBinding REGEN_FORCEFULLY;
-	
-	public static void init() {
+    public static KeyBinding REGEN_NOW;
+    public static KeyBinding REGEN_FORCEFULLY;
+
+    public static void init() {
 
         REGEN_NOW = new KeyBinding("regeneration.keybinds.regenerate", GLFW.GLFW_KEY_R, Regeneration.NAME);
         ClientRegistry.registerKeyBinding(REGEN_NOW);
 
         REGEN_FORCEFULLY = new KeyBinding("regeneration.keybinds.regenerate_forced", GLFW.GLFW_KEY_Y, Regeneration.NAME);
-		ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
-	}
-	
-	@SubscribeEvent
-	public static void keyInput(InputUpdateEvent e) {
-		PlayerEntity player = Minecraft.getInstance().player;
+        ClientRegistry.registerKeyBinding(REGEN_FORCEFULLY);
+    }
+
+    @SubscribeEvent
+    public static void keyInput(InputUpdateEvent e) {
+        PlayerEntity player = Minecraft.getInstance().player;
         if (player == null || Minecraft.getInstance().currentScreen != null) return;
-		
-		Minecraft minecraft = Minecraft.getInstance();
-		if (minecraft.currentScreen == null && minecraft.player != null) {
-			ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
-		}
+
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.currentScreen == null && minecraft.player != null) {
+            ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
+        }
 
         RegenCap.get(player).ifPresent((data) -> {
-			if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
-				NetworkDispatcher.INSTANCE.sendToServer(new RegenerateMessage());
-			}
-		});
+            if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
+                NetworkDispatcher.INSTANCE.sendToServer(new RegenerateMessage());
+            }
+        });
 
         if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
-			NetworkDispatcher.sendToServer(new ForceRegenerationMessage());
-		}
+            NetworkDispatcher.sendToServer(new ForceRegenerationMessage());
+        }
 
     }
 
     @Deprecated
-	public static String getRegenerateNowDisplayName() {
-		return REGEN_NOW.getKey().toString().replace("key.keyboard.", "").toUpperCase();
-	}
-	
+    public static String getRegenerateNowDisplayName() {
+        return REGEN_NOW.getKey().toString().replace("key.keyboard.", "").toUpperCase();
+    }
+
 }

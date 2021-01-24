@@ -28,7 +28,7 @@ public class NextSkinMessage {
     }
 
     public static class Handler {
-        public static void handle(NextSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
+        public static void handle(NextSkinMessage message, Supplier< NetworkEvent.Context > ctx) {
             ctx.get().getSender().getServer().deferTask(() -> {
                 ServerPlayerEntity player = ctx.get().getSender();
                 RegenCap.get(player).ifPresent((data) -> {
@@ -41,5 +41,5 @@ public class NextSkinMessage {
             ctx.get().setPacketHandled(true);
         }
     }
-	
+
 }

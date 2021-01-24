@@ -5,7 +5,7 @@
     "2": "minecraft:block/cyan_stained_glass",
     "3": "minecraft:block/cyan_terracotta",
     "4": "minecraft:block/stonecutter_bottom",
-    "particle":"minecraft:block/cauldron_side"
+    "particle": "minecraft:block/cauldron_side"
   },
   "elements": [
     {

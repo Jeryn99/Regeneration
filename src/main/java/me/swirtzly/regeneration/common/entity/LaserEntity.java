@@ -56,7 +56,7 @@ public class LaserEntity extends ThrowableEntity {
         this(RegenObjects.EntityEntries.LASER.get(), world);
     }
 
-    public <T extends Entity> LaserEntity(EntityType tEntityType, World world) {
+    public < T extends Entity > LaserEntity(EntityType tEntityType, World world) {
         super(tEntityType, world);
         this.damage = 10.0F;
         this.scale = 0.5F;
@@ -173,7 +173,7 @@ public class LaserEntity extends ThrowableEntity {
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket< ? > createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

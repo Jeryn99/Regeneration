@@ -36,7 +36,7 @@ public class GallifreyDimension extends Dimension {
     }
 
     @Override
-    public ChunkGenerator<?> createChunkGenerator() {
+    public ChunkGenerator< ? > createChunkGenerator() {
         OverworldGenSettings gensettings = new OverworldGenSettings();
         GallifreyBiomeProviderNew biomes = new GallifreyBiomeProviderNew(world, RegenObjects.GallifreyBiomes.getBiomes());
         return RegenObjects.ChunkGeneratorTypes.GALLIFREY_CHUNKS.get().create(this.world, biomes, gensettings);

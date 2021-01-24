@@ -46,7 +46,7 @@ public class TexUtil {
         ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
         if (gameProfile != null) {
             Minecraft minecraft = Minecraft.getInstance();
-            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(gameProfile);
+            Map< MinecraftProfileTexture.Type, MinecraftProfileTexture > map = minecraft.getSkinManager().loadSkinFromCache(gameProfile);
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 resourcelocation = minecraft.getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
             } else {

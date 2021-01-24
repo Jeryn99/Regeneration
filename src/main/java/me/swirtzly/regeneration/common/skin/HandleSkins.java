@@ -31,7 +31,8 @@ public class HandleSkins {
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
 
 
-    public static ArrayList<String> SKINS = new ArrayList<>();
+    public static ArrayList< String > SKINS = new ArrayList<>();
+    public static File TIMELORDS = new File(SKIN_DIRECTORY + "/timelords");
 
     public static String imageToPixelData(File file) {
         String encodedfile = NO_SKIN;
@@ -46,8 +47,6 @@ public class HandleSkins {
         }
         return encodedfile;
     }
-
-    public static File TIMELORDS = new File(SKIN_DIRECTORY + "/timelords");
 
     public static void downloadTimelordSkins() throws IOException {
 
@@ -83,8 +82,8 @@ public class HandleSkins {
         }
     }
 
-    public static ArrayList<String> getSkins(String downloadUrl) throws IOException {
-        ArrayList<String> skins = new ArrayList<>();
+    public static ArrayList< String > getSkins(String downloadUrl) throws IOException {
+        ArrayList< String > skins = new ArrayList<>();
         BufferedReader br = null;
 
         try {
@@ -110,7 +109,7 @@ public class HandleSkins {
     }
 
     public static File chooseRandomTimelordSkin(Random rand) {
-        Collection<File> folderFiles = FileUtils.listFiles(TIMELORDS, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        Collection< File > folderFiles = FileUtils.listFiles(TIMELORDS, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         if (folderFiles.isEmpty()) {
             folderFiles = FileUtils.listFiles(TIMELORDS, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         }
@@ -119,7 +118,7 @@ public class HandleSkins {
 
     public static File chooseRandomSkin(Random rand, boolean isAlex) {
         File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
-        Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        Collection< File > folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         if (folderFiles.isEmpty()) {
             folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         }

@@ -6,12 +6,12 @@ import net.minecraft.inventory.container.Container;
 public class ContainerBlank extends Container {
 
     public ContainerBlank() {
-		super(null, 0);
-	}
+        super(null, 0);
+    }
 
     @Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
-		return false;
-	}
-	
+    public boolean canInteractWith(PlayerEntity playerIn) {
+        return false;
+    }
+
 }

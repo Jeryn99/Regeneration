@@ -47,7 +47,7 @@ import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 public class RegenCap implements IRegen {
 
     @CapabilityInject(IRegen.class)
-    public static final Capability<IRegen> CAPABILITY = null;
+    public static final Capability< IRegen > CAPABILITY = null;
     public static final ResourceLocation CAP_REGEN_ID = new ResourceLocation(Regeneration.MODID, "regeneration");
     private final LivingEntity player;
     private final StateManager stateManager;
@@ -91,7 +91,7 @@ public class RegenCap implements IRegen {
     }
 
     @Nonnull
-    public static LazyOptional<IRegen> get(Entity player) {
+    public static LazyOptional< IRegen > get(Entity player) {
         return player.getCapability(RegenCap.CAPABILITY, null);
     }
 
@@ -106,7 +106,7 @@ public class RegenCap implements IRegen {
 
         if (!RegenConfig.COMMON.mobsHaveRegens.get()) {
             boolean isValid = getLivingEntity() instanceof TimelordEntity || getLivingEntity() instanceof PlayerEntity;
-            if(!isValid){
+            if (!isValid) {
                 setRegenerationsLeft(0);
             }
         }
@@ -496,7 +496,7 @@ public class RegenCap implements IRegen {
      */
     public class StateManager implements IStateManager {
 
-        private final Map<PlayerUtil.RegenState.Transition, Runnable> transitionCallbacks;
+        private final Map< PlayerUtil.RegenState.Transition, Runnable > transitionCallbacks;
         private RegenerationScheduledAction nextTransition, handGlowTimer;
 
         private StateManager() {
@@ -708,7 +708,7 @@ public class RegenCap implements IRegen {
         @Override
         @Deprecated
         /** @deprecated Debug purposes */
-        public Pair<PlayerUtil.RegenState.Transition, Long> getScheduledEvent() {
+        public Pair< PlayerUtil.RegenState.Transition, Long > getScheduledEvent() {
             return nextTransition == null ? null : Pair.of(nextTransition.transition, nextTransition.getTicksLeft());
         }
 

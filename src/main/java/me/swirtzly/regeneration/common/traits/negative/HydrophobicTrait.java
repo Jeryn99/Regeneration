@@ -15,26 +15,26 @@ public class HydrophobicTrait extends TraitManager.IDna {
     public HydrophobicTrait() {
         super("hydrophobic");
     }
-	
-	@Override
+
+    @Override
     public void onUpdate(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-		
-		if (player.isInWater() || player.world.isRaining() && player.world.canBlockSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ))) {
+
+        if (player.isInWater() || player.world.isRaining() && player.world.canBlockSeeSky(new BlockPos(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ))) {
             PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, 300, 2, false, false);
             PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, 300, 2, false, false);
         }
-		
-	}
-	
-	@Override
+
+    }
+
+    @Override
     public void onAdded(IRegen cap) {
-		
-	}
-	
-	@Override
+
+    }
+
+    @Override
     public void onRemoved(IRegen cap) {
-		
-	}
+
+    }
 
 }

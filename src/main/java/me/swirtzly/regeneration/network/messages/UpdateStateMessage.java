@@ -23,16 +23,16 @@ public class UpdateStateMessage {
         packetBuffer.writeInt(event.player.getEntityId());
         packetBuffer.writeString(event.event);
     }
-	
-	public static UpdateStateMessage decode(PacketBuffer buffer) {
+
+    public static UpdateStateMessage decode(PacketBuffer buffer) {
         return new UpdateStateMessage(Minecraft.getInstance().player.world.getEntityByID(buffer.readInt()), buffer.readString(32767));
     }
-	
-	public static class Handler {
-		public static void handle(UpdateStateMessage message, Supplier<NetworkEvent.Context> ctx) {
+
+    public static class Handler {
+        public static void handle(UpdateStateMessage message, Supplier< NetworkEvent.Context > ctx) {
             Minecraft.getInstance().deferTask(() -> RegenCap.get(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
-			ctx.get().setPacketHandled(true);
-		}
-	}
-	
+            ctx.get().setPacketHandled(true);
+        }
+    }
+
 }

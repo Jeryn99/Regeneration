@@ -47,7 +47,7 @@ public class LootTableCreation implements IDataProvider {
         this.generateTable(cache, getPath(base, block.getRegistryName()), () -> this.createBlockDropSelf(block));
     }
 
-    public void generateTable(DirectoryCache cache, Path path, Supplier<JsonElement> element) throws IOException {
+    public void generateTable(DirectoryCache cache, Path path, Supplier< JsonElement > element) throws IOException {
         IDataProvider.save(GSON, cache, element.get(), path);
     }
 

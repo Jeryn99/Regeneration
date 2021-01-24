@@ -13,7 +13,7 @@ public class WallClimbingTrait extends TraitManager.IDna {
     @Override
     public void onUpdate(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-		if (player.collidedHorizontally && player.moveForward > 0) {
+        if (player.collidedHorizontally && player.moveForward > 0) {
             player.getMotion().add(0, 0.2F, 0);
         }
     }
@@ -27,5 +27,5 @@ public class WallClimbingTrait extends TraitManager.IDna {
     public void onRemoved(IRegen cap) {
 
     }
-	
+
 }

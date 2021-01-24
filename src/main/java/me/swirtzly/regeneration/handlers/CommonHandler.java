@@ -60,7 +60,7 @@ public class CommonHandler {
 
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
-        IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
+        IStorage< IRegen > storage = RegenCap.CAPABILITY.getStorage();
         event.getOriginal().revive();
         RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
             CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
@@ -211,16 +211,16 @@ public class CommonHandler {
 
 
     @SubscribeEvent
-    public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public void attachCapabilities(AttachCapabilitiesEvent< Entity > event) {
         if (event.getObject() instanceof LivingEntity) {
-            event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
+            event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable< CompoundNBT >() {
                 final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
-                final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
+                final LazyOptional< IRegen > regenInstance = LazyOptional.of(() -> regen);
 
                 @Nonnull
                 @Override
-                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-                    if (cap == RegenCap.CAPABILITY) return (LazyOptional<T>) regenInstance;
+                public < T > LazyOptional< T > getCapability(@Nonnull Capability< T > cap, @javax.annotation.Nullable Direction side) {
+                    if (cap == RegenCap.CAPABILITY) return (LazyOptional< T >) regenInstance;
                     return LazyOptional.empty();
                 }
 

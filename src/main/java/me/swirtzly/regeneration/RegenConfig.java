@@ -1,8 +1,6 @@
 package me.swirtzly.regeneration;
 
 import com.google.common.collect.Lists;
-import me.swirtzly.regeneration.handlers.RegenObjects;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -16,58 +14,69 @@ public class RegenConfig {
     public static ForgeConfigSpec CLIENT_SPEC;
 
     static {
-        Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+        Pair< Common, ForgeConfigSpec > specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
-		COMMON = specPair.getLeft();
+        COMMON = specPair.getLeft();
 
 
-        Pair<Client, ForgeConfigSpec> specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
-		CLIENT_SPEC = specClientPair.getRight();
-		CLIENT = specClientPair.getLeft();
-	}
+        Pair< Client, ForgeConfigSpec > specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
+        CLIENT_SPEC = specClientPair.getRight();
+        CLIENT = specClientPair.getLeft();
+    }
+
+    public static ArrayList< String > genBiomesForSpawn() {
+        ArrayList< String > BIOMES = new ArrayList<>();
+        BIOMES.add("regeneration:gallifreyan_mountains");
+        BIOMES.add("regeneration:gallifreyan_river");
+        BIOMES.add("regeneration:redlands");
+        BIOMES.add("regeneration:redlands_forest");
+        BIOMES.add("regeneration:golden_fields");
+        BIOMES.add("regeneration:snowy");
+        return BIOMES;
+    }
 
     public static class Client {
 
         public final ForgeConfigSpec.BooleanValue changeMySkin;
-		public final ForgeConfigSpec.BooleanValue changePerspective;
-		public final ForgeConfigSpec.BooleanValue changeHand;
-		public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
+        public final ForgeConfigSpec.BooleanValue changePerspective;
+        public final ForgeConfigSpec.BooleanValue changeHand;
+        public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
         public final ForgeConfigSpec.BooleanValue downloadPreviousSkins;
-		public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
-		public final ForgeConfigSpec.BooleanValue renderTimelordHeadwear;
+        public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
+        public final ForgeConfigSpec.BooleanValue renderTimelordHeadwear;
 
         Client(ForgeConfigSpec.Builder builder) {
 
             builder.comment("Client Regeneration Settings").push("client");
-			builder.comment("Skin Settings").push("skin");
-			changeMySkin = builder.comment("Disabling this will disable skin changing for you and you will retain your Mojang one").translation("config.regeneration.skins.changemyskin").define("changeMySkin", true);
-			changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
-			changeHand = builder.comment("Toggle whether your hand has the chance of inverting after a regen").translation("config.regeneration.hand_change").define("changeHand", true);
-			downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
+            builder.comment("Skin Settings").push("skin");
+            changeMySkin = builder.comment("Disabling this will disable skin changing for you and you will retain your Mojang one").translation("config.regeneration.skins.changemyskin").define("changeMySkin", true);
+            changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
+            changeHand = builder.comment("Toggle whether your hand has the chance of inverting after a regen").translation("config.regeneration.hand_change").define("changeHand", true);
+            downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
             downloadPreviousSkins = builder.comment("Toggle whether the mod downloads your past skins from NameMC").translation("config.regeneration.downloadPreviousSkins").define("downloadPastSkins", true);
-			downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
-			builder.comment("Misc Settings").push("misc");
-			renderTimelordHeadwear = builder.comment("Toggle whether Timelords second head layers render, as some look good without and some look good with, I just leave this decision up to you").translation("config.regeneration.timelordRenderSecondLayers").define("timelordRenderSecondLayers", true);
-			builder.pop();
-		}
+            downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
+            builder.comment("Misc Settings").push("misc");
+            renderTimelordHeadwear = builder.comment("Toggle whether Timelords second head layers render, as some look good without and some look good with, I just leave this decision up to you").translation("config.regeneration.timelordRenderSecondLayers").define("timelordRenderSecondLayers", true);
+            builder.pop();
+        }
 
     }
-	
-	public static class Common {
+
+    public static class Common {
 
         public final ForgeConfigSpec.IntValue regenCapacity;
-		public final ForgeConfigSpec.BooleanValue loseRegensOnDeath;
-		public final ForgeConfigSpec.BooleanValue fieryRegen;
-		public final ForgeConfigSpec.BooleanValue regenFireImmune;
-		public final ForgeConfigSpec.BooleanValue infiniteRegeneration;
-		public final ForgeConfigSpec.BooleanValue sendRegenDeathMessages;
-		public final ForgeConfigSpec.IntValue regenerativeKillRange;
-        public final ForgeConfigSpec.ConfigValue<Double> regenerativeKnockback;
-		public final ForgeConfigSpec.IntValue regenKnockbackRange;
-		public final ForgeConfigSpec.BooleanValue regenerationKnocksbackPlayers;
-		public final ForgeConfigSpec.ConfigValue<Integer> gracePhaseLength;
+        public final ForgeConfigSpec.BooleanValue loseRegensOnDeath;
+        public final ForgeConfigSpec.BooleanValue fieryRegen;
+        public final ForgeConfigSpec.BooleanValue regenFireImmune;
+        public final ForgeConfigSpec.BooleanValue infiniteRegeneration;
+        public final ForgeConfigSpec.BooleanValue sendRegenDeathMessages;
+        public final ForgeConfigSpec.IntValue regenerativeKillRange;
+        public final ForgeConfigSpec.ConfigValue< Double > regenerativeKnockback;
+        public final ForgeConfigSpec.IntValue regenKnockbackRange;
+        public final ForgeConfigSpec.BooleanValue regenerationKnocksbackPlayers;
+        public final ForgeConfigSpec.ConfigValue< Integer > gracePhaseLength;
         public final ForgeConfigSpec.IntValue criticalDamageChance;
-        public final ForgeConfigSpec.ConfigValue<Integer> criticalPhaseLength;
+        public final ForgeConfigSpec.ConfigValue< Integer > criticalPhaseLength;
         public final ForgeConfigSpec.IntValue handGlowInterval;
         public final ForgeConfigSpec.IntValue handGlowTriggerDelay;
         public final ForgeConfigSpec.IntValue postRegenerationDuration;
@@ -76,16 +85,16 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue resetOxygen;
         public final ForgeConfigSpec.IntValue absorbtionLevel;
         public final ForgeConfigSpec.BooleanValue genCrater;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
-        public final ForgeConfigSpec.ConfigValue<String> skinDir;
+        public final ForgeConfigSpec.ConfigValue< List< ? extends String > > postRegenEffects;
+        public final ForgeConfigSpec.ConfigValue< String > skinDir;
         public final ForgeConfigSpec.BooleanValue mobsHaveRegens;
 
         public final ForgeConfigSpec.BooleanValue spawnTimelords;
         public final ForgeConfigSpec.IntValue maxSpawn;
         public final ForgeConfigSpec.IntValue spawnWeight;
         public final ForgeConfigSpec.IntValue minSpawn;
-        public final ForgeConfigSpec.ConfigValue<String> spawnType;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedBiomes;
+        public final ForgeConfigSpec.ConfigValue< String > spawnType;
+        public final ForgeConfigSpec.ConfigValue< List< ? extends String > > allowedBiomes;
 
 
         public final ForgeConfigSpec.BooleanValue tardisModCompatFeatures;
@@ -128,12 +137,12 @@ public class RegenConfig {
             builder.pop();
 
             builder.comment("Mid Regen Settings").push("onRegen");
-			regenerativeKillRange = builder.comment("Upon regeneration every mob inside of this radius is immediately killed. Keep in mind that you should round up to accommodate for mobs that aren't standing in the center of a block").translation("config.regeneration.regenerative_kill_range").defineInRange("regenKillRange", 4, 0, Integer.MAX_VALUE);
+            regenerativeKillRange = builder.comment("Upon regeneration every mob inside of this radius is immediately killed. Keep in mind that you should round up to accommodate for mobs that aren't standing in the center of a block").translation("config.regeneration.regenerative_kill_range").defineInRange("regenKillRange", 4, 0, Integer.MAX_VALUE);
             regenerativeKnockback = builder.comment("The amount of knockback every mob inside of the knock back radius gets").translation("config.regeneration.regenerative_knockback").define("regenerativeKnockback", 2.5D);
-			regenKnockbackRange = builder.comment("Range wherein every mob is knocked back upon regeneration").translation("config.regeneration.regenerative_knockback_range").defineInRange("regenerativeKnockbackRange", 7, 0, Integer.MAX_VALUE);
-			regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);
+            regenKnockbackRange = builder.comment("Range wherein every mob is knocked back upon regeneration").translation("config.regeneration.regenerative_knockback_range").defineInRange("regenerativeKnockbackRange", 7, 0, Integer.MAX_VALUE);
+            regenerationKnocksbackPlayers = builder.comment("Players can be knocked back when too close to a regeneration").translation("config.regeneration.regeneration_knocksback_players").define("regenerationKnocksbackPlayers", true);
             genCrater = builder.comment("Generate graters in the ground if a player falls from a great height?").translation("config.regeneration.regeneration_craters").define("genCrater", true);
-			builder.pop();
+            builder.pop();
 
             builder.push("spawn");
             minSpawn = builder.translation("config.regeneration.min_spawn").comment("The minimum amount of Timelords per biome").defineInRange("minimumSpawn", 1, 1, 100);
@@ -143,22 +152,11 @@ public class RegenConfig {
             allowedBiomes = builder.translation("config.regeneration.allowedBiomes").comment("Note: A list of biomes where Timelords should spawn.").defineList("allowedBiomes", genBiomesForSpawn(), String.class::isInstance);
             spawnTimelords = builder.translation("config.regeneration.spawnTimelords").comment("Whether Timelords should spawn").define("spawnTimelords", true);
             builder.pop();
-			
-			builder.comment("Mod Compatibilities").push("tardis");
+
+            builder.comment("Mod Compatibilities").push("tardis");
             tardisModCompatFeatures = builder.comment("Toggle Features that interface with the Tardis Mod").define("tardisModCompatFeatures", true);
             builder.pop();
         }
-	}
-
-    public static ArrayList<String> genBiomesForSpawn() {
-        ArrayList<String> BIOMES = new ArrayList<>();
-        BIOMES.add("regeneration:gallifreyan_mountains");
-        BIOMES.add("regeneration:gallifreyan_river");
-        BIOMES.add("regeneration:redlands");
-        BIOMES.add("regeneration:redlands_forest");
-        BIOMES.add("regeneration:golden_fields");
-        BIOMES.add("regeneration:snowy");
-        return BIOMES;
     }
 
 }

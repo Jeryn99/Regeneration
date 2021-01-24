@@ -10,6 +10,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IDyeableArmorItem;
 
 public class RobeModel extends BipedModel {
+    public final RendererModel head;
     private final RendererModel timelord_hat;
     private final RendererModel body;
     private final RendererModel timelordcape;
@@ -19,7 +20,6 @@ public class RobeModel extends BipedModel {
     private final RendererModel timelord_shoulder_right;
     private final RendererModel left_arm;
     private final RendererModel timelord_shoulder_left;
-    public final RendererModel head;
 
     public RobeModel() {
         textureWidth = 80;

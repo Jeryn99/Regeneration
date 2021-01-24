@@ -1,52 +1,52 @@
-modLoader="javafml" #mandatory
+modLoader = "javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[28,)" #mandatory (26 is current forge version)
+loaderVersion = "[28,)" #mandatory (26 is current forge version)
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="https://github.com/Swirtzly/Regeneration/issues" #optional
+issueTrackerURL = "https://github.com/Swirtzly/Regeneration/issues" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="regeneration" #mandatory
+modId = "regeneration" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="4.0.5" #mandatory
- # A display name for the mod
-displayName="Regeneration" #mandatory
+version = "4.0.5" #mandatory
+# A display name for the mod
+displayName = "Regeneration" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/update.json" #optional
+updateJSONURL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="https://www.curseforge.com/minecraft/mc-mods/regeneration" #optional
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="logo.png" #optional
+logoFile = "logo.png" #optional
 # A text field displayed in the mod UI
-credits="Dhi_Awesome, Mel, End-Pheonix, See authors for coders" #optional
+credits = "Dhi_Awesome, Mel, End-Pheonix, See authors for coders" #optional
 # A text field displayed in the mod UI
-authors="Swirtzly, HoldYourWaffle, Nictogen, Cadiboo" #optional
+authors = "Swirtzly, HoldYourWaffle, Nictogen, Cadiboo" #optional
 # The description text for the mod (multi line!) (#mandatory)
-description='''
+description = '''
 The mod that brings a Doctor Who regeneration experience to Minecraft!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.regeneration]] #optional
-    # the modid of the dependency
-    modId="forge" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
-    mandatory=true #mandatory
-    # The version range of the dependency
-    versionRange="[28,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
-    ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT or SERVER
-    side="BOTH"
+# the modid of the dependency
+modId = "forge" #mandatory
+# Does this dependency have to exist - if not, ordering below must be specified
+mandatory = true #mandatory
+# The version range of the dependency
+versionRange = "[28,)" #mandatory
+# An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+ordering = "NONE"
+# Side this dependency is applied on - BOTH, CLIENT or SERVER
+side = "BOTH"
 # Here's another dependency
 [[dependencies.regeneration]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.14.4]"
-    ordering="NONE"
-    side="BOTH"
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.14.4]"
+ordering = "NONE"
+side = "BOTH"
 [[dependencies.regeneration]]
-    modId="tardis"
-    mandatory=false
-    versionRange="[1.2.0,)"
-    ordering="AFTER"
-    side="BOTH"
+modId = "tardis"
+mandatory = false
+versionRange = "[1.2.0,)"
+ordering = "AFTER"
+side = "BOTH"

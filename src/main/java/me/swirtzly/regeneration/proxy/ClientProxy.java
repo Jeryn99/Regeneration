@@ -38,85 +38,85 @@ import java.util.Map;
  */
 public class ClientProxy extends CommonProxy {
 
-	@Override
-	public void preInit() {
-		super.preInit();
-	}
-	
-	@Override
-	public void init() {
-		super.init();
-		ScreenManager.registerFactory(RegenObjects.Containers.BIO_CONTAINER.get(), BioContainerScreen::new);
-	}
-	
-	@Override
-	public void postInit() {
-		if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) return;
-		super.postInit();
-		RegenKeyBinds.init();
+    private static final RobeModel ROBES = new RobeModel();
+    private static final GuardModel GUARD_HEAD = new GuardModel(EquipmentSlotType.HEAD);
+    private static final GuardModel GUARD_CHEST = new GuardModel(EquipmentSlotType.CHEST);
+    private static final GuardModel GUARD_LEGGINGS = new GuardModel(EquipmentSlotType.LEGS);
+    private static final GuardModel GUARD_FEET = new GuardModel(EquipmentSlotType.FEET);
+
+    public static BipedModel getArmorModel(ItemStack item) {
+        if (item.getItem().getRegistryName().toString().contains("robes")) {
+            return ROBES;
+        }
+
+        if (item.getItem() == RegenObjects.Items.GUARD_HEAD.get()) {
+            return GUARD_HEAD;
+        }
+
+        if (item.getItem() == RegenObjects.Items.GUARD_CHEST.get()) {
+            return GUARD_CHEST;
+        }
+
+        if (item.getItem() == RegenObjects.Items.GUARD_LEGGINGS.get()) {
+            return GUARD_LEGGINGS;
+        }
+
+        if (item.getItem() == RegenObjects.Items.GUARD_FEET.get()) {
+            return GUARD_FEET;
+        }
+
+        return GUARD_HEAD;
+    }
+
+    @Override
+    public void preInit() {
+        super.preInit();
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        ScreenManager.registerFactory(RegenObjects.Containers.BIO_CONTAINER.get(), BioContainerScreen::new);
+    }
+
+    @Override
+    public void postInit() {
+        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) return;
+        super.postInit();
+        RegenKeyBinds.init();
 
         // Render layers ===========================================
-		Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
-		for (PlayerRenderer renderPlayer : skinMap.values()) {
-			renderPlayer.addLayer(new RegenerationLayer(renderPlayer)); // Add Regeneration Layer
-			renderPlayer.addLayer(new HandsLayer(renderPlayer));
-		}
+        Map< String, PlayerRenderer > skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
+        for (PlayerRenderer renderPlayer : skinMap.values()) {
+            renderPlayer.addLayer(new RegenerationLayer(renderPlayer)); // Add Regeneration Layer
+            renderPlayer.addLayer(new HandsLayer(renderPlayer));
+        }
 
 
-		FileUtil.doSetupOnThread();
-		MinecraftForge.EVENT_BUS.register(new SkinManipulation());
-		MinecraftForge.EVENT_BUS.register(new ClientHandler());
+        FileUtil.doSetupOnThread();
+        MinecraftForge.EVENT_BUS.register(new SkinManipulation());
+        MinecraftForge.EVENT_BUS.register(new ClientHandler());
 
         AnimationManager.registerAnimations(new GeneralAnimations(), new FieryRenderer(), new TypeLayFadeRenderer());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(HandInJarTile.class, new HandTileRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(HandInJarTile.class, new HandTileRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(ArchTile.class, new ArchRender());
 
     }
-	
-	@Override
-	public void closeGui() {
-		Minecraft.getInstance().displayGuiScreen(null);
-	}
 
-	@Override
-	public World getClientWorld() {
-		return Minecraft.getInstance().world;
-	}
+    @Override
+    public void closeGui() {
+        Minecraft.getInstance().displayGuiScreen(null);
+    }
 
-	@Override
-	public PlayerEntity getClientPlayer() {
-		return Minecraft.getInstance().player;
-	}
+    @Override
+    public World getClientWorld() {
+        return Minecraft.getInstance().world;
+    }
 
-	private static final RobeModel ROBES = new RobeModel();
-	private static final GuardModel GUARD_HEAD = new GuardModel(EquipmentSlotType.HEAD);
-	private static final GuardModel GUARD_CHEST = new GuardModel(EquipmentSlotType.CHEST);
-	private static final GuardModel GUARD_LEGGINGS = new GuardModel(EquipmentSlotType.LEGS);
-	private static final GuardModel GUARD_FEET = new GuardModel(EquipmentSlotType.FEET);
-
-	public static BipedModel getArmorModel(ItemStack item) {
-		if (item.getItem().getRegistryName().toString().contains("robes")) {
-			return ROBES;
-		}
-
-		if (item.getItem() == RegenObjects.Items.GUARD_HEAD.get()) {
-			return GUARD_HEAD;
-		}
-
-		if (item.getItem() == RegenObjects.Items.GUARD_CHEST.get()) {
-			return GUARD_CHEST;
-		}
-
-		if (item.getItem() == RegenObjects.Items.GUARD_LEGGINGS.get()) {
-			return GUARD_LEGGINGS;
-		}
-
-		if (item.getItem() == RegenObjects.Items.GUARD_FEET.get()) {
-			return GUARD_FEET;
-		}
-
-		return GUARD_HEAD;
-	}
+    @Override
+    public PlayerEntity getClientPlayer() {
+        return Minecraft.getInstance().player;
+    }
 
 }

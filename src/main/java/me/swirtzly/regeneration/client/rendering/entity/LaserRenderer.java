@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
 
-public class LaserRenderer extends EntityRenderer<LaserEntity> {
+public class LaserRenderer extends EntityRenderer< LaserEntity > {
 
     public LaserRenderer(EntityRendererManager renderManager) {
         super(renderManager);

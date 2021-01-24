@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -33,7 +32,6 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.tardis.mod.helper.TardisHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -50,7 +48,7 @@ import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 @OnlyIn(Dist.CLIENT)
 public class SkinManipulation {
 
-    public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
+    public static final Map< UUID, SkinInfo > PLAYER_SKINS = new HashMap<>();
 
     public static NativeImage decodeToImage(String base64String) {
         if (base64String.equalsIgnoreCase(NO_SKIN)) {
@@ -97,12 +95,12 @@ public class SkinManipulation {
 
 
     public static SkinInfo.SkinType getSkinType(PlayerEntity player, boolean forceMojang) {
-        Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
+        Map< MinecraftProfileTexture.Type, MinecraftProfileTexture > map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
         if (map.isEmpty()) {
             map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
         }
         MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
-        AtomicReference<SkinInfo.SkinType> skinType = new AtomicReference<>();
+        AtomicReference< SkinInfo.SkinType > skinType = new AtomicReference<>();
         skinType.set(SkinInfo.SkinType.ALEX);
         RegenCap.get(player).ifPresent((data) -> {
             if (data.getEncodedSkin().equalsIgnoreCase(NO_SKIN) || forceMojang) {
@@ -126,7 +124,7 @@ public class SkinManipulation {
         }
         NetworkPlayerInfo playerInfo = player.playerInfo;
         if (playerInfo == null) return;
-        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
+        Map< MinecraftProfileTexture.Type, ResourceLocation > playerTextures = playerInfo.playerTextures;
         playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
         if (texture == null) {
             ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
@@ -142,8 +140,8 @@ public class SkinManipulation {
     }
 
 
-    public static List<File> listAllSkins(PlayerUtil.EnumChoices choices) {
-        List<File> resultList = new ArrayList<>();
+    public static List< File > listAllSkins(PlayerUtil.EnumChoices choices) {
+        List< File > resultList = new ArrayList<>();
         File directory = null;
 
         switch (choices) {
@@ -194,7 +192,7 @@ public class SkinManipulation {
     public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
         AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
 
-        PlayerModel<AbstractClientPlayerEntity> model = renderPlayerEvent.getRenderer().getEntityModel();
+        PlayerModel< AbstractClientPlayerEntity > model = renderPlayerEvent.getRenderer().getEntityModel();
 
         boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
         model.bipedBody.isHidden = isWearingChest;
@@ -264,12 +262,12 @@ public class SkinManipulation {
             }
 
             if (cap.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(player)) {
-				GlStateManager.popMatrix();
+                GlStateManager.popMatrix();
             }
         });
     }
 
-    private void createSkinData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
+    private void createSkinData(AbstractClientPlayerEntity player, LazyOptional< IRegen > cap) {
         cap.ifPresent((data) -> {
             Minecraft.getInstance().deferTask(() -> {
                 SkinInfo skinInfo = SkinManipulation.getSkinInfo(player, data);

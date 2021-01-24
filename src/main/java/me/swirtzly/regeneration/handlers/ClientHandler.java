@@ -65,6 +65,29 @@ public class ClientHandler {
         return msg.replaceAll("&", String.valueOf('\u00a7'));
     }
 
+    private static void createWorldAmbience(PlayerEntity player) {
+        Random random = player.world.rand;
+        double originX = player.posX;
+        double originY = player.posY;
+        double originZ = player.posZ;
+        for (int i = 0; i < 55; i++) {
+            double particleX = originX + (random.nextInt(24) - random.nextInt(24));
+            double particleY = originY + (random.nextInt(24) - random.nextInt(24));
+            double particleZ = originZ + (random.nextInt(24) - random.nextInt(24));
+            double velocityX = (random.nextDouble() - 0.5) * 0.02;
+            double velocityY = (random.nextDouble() - 0.5) * 0.02;
+            double velocityZ = (random.nextDouble() - 0.5) * 0.02;
+
+            BasicParticleType[] TYPES = new BasicParticleType[]{ParticleTypes.SMOKE, ParticleTypes.CRIT, ParticleTypes.BARRIER};
+            IParticleData currentType = TYPES[player.world.rand.nextInt(TYPES.length - 1)];
+            player.world.addParticle(currentType, particleX, particleY, particleZ, velocityX, velocityY, velocityZ);
+            if (player.world.rand.nextInt(30) < 10 && player.world.rand.nextBoolean()) {
+                BlockPos pos = new BlockPos(particleX + random.nextInt(500), particleY + random.nextInt(500), particleZ + random.nextInt(500));
+                player.world.addEntity(new LightningBoltEntity(player.world, pos.getX(), pos.getY(), pos.getZ(), true));
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onGui(GuiScreenEvent.InitGuiEvent event) {
         if (event.getGui() instanceof InventoryScreen) {
@@ -162,13 +185,13 @@ public class ClientHandler {
 
     @SubscribeEvent
     public void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
-            RegenCap.get(Minecraft.getInstance().getRenderViewEntity()).ifPresent((data) -> {
-                if (data.getRegenType() == RegenTypes.HARTNELL && data.getState() == REGENERATING) {
-                    e.setRed((float) data.getPrimaryColor().x);
-                    e.setGreen((float) data.getPrimaryColor().y);
-                    e.setBlue((float) data.getPrimaryColor().z);
-                }
-            });
+        RegenCap.get(Minecraft.getInstance().getRenderViewEntity()).ifPresent((data) -> {
+            if (data.getRegenType() == RegenTypes.HARTNELL && data.getState() == REGENERATING) {
+                e.setRed((float) data.getPrimaryColor().x);
+                e.setGreen((float) data.getPrimaryColor().y);
+                e.setBlue((float) data.getPrimaryColor().z);
+            }
+        });
     }
 
     @SubscribeEvent
@@ -292,32 +315,9 @@ public class ClientHandler {
         });
     }
 
-    private static void createWorldAmbience(PlayerEntity player) {
-        Random random = player.world.rand;
-        double originX = player.posX;
-        double originY = player.posY;
-        double originZ = player.posZ;
-        for (int i = 0; i < 55; i++) {
-            double particleX = originX + (random.nextInt(24) - random.nextInt(24));
-            double particleY = originY + (random.nextInt(24) - random.nextInt(24));
-            double particleZ = originZ + (random.nextInt(24) - random.nextInt(24));
-            double velocityX = (random.nextDouble() - 0.5) * 0.02;
-            double velocityY = (random.nextDouble() - 0.5) * 0.02;
-            double velocityZ = (random.nextDouble() - 0.5) * 0.02;
-
-            BasicParticleType[] TYPES = new BasicParticleType[]{ParticleTypes.SMOKE, ParticleTypes.CRIT, ParticleTypes.BARRIER};
-            IParticleData currentType = TYPES[player.world.rand.nextInt(TYPES.length - 1)];
-            player.world.addParticle(currentType, particleX, particleY, particleZ, velocityX, velocityY, velocityZ);
-            if (player.world.rand.nextInt(30) < 10 && player.world.rand.nextBoolean()) {
-                BlockPos pos = new BlockPos(particleX + random.nextInt(500), particleY + random.nextInt(500), particleZ + random.nextInt(500));
-                player.world.addEntity(new LightningBoltEntity(player.world, pos.getX(), pos.getY(), pos.getZ(), true));
-            }
-        }
-    }
-
     @SubscribeEvent
     public void onItemToolTip(ItemTooltipEvent event) {
-        List<ITextComponent> tooltip = event.getToolTip();
+        List< ITextComponent > tooltip = event.getToolTip();
         ItemStack stack = event.getItemStack();
         if (hasRegenerations(stack)) {
             tooltip.add(new TranslationTextComponent("nbt.regeneration.item.stored_regens", getRegenerations(stack)));

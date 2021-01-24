@@ -25,7 +25,7 @@ public class UpdateTypeMessage {
     }
 
     public static class Handler {
-        public static void handle(UpdateTypeMessage message, Supplier<NetworkEvent.Context> ctx) {
+        public static void handle(UpdateTypeMessage message, Supplier< NetworkEvent.Context > ctx) {
             ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
                 cap.setRegenType(RegenTypes.REGISTRY.getValue(new ResourceLocation(message.type)));
                 cap.synchronise();
