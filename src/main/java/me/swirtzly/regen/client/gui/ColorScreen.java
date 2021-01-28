@@ -196,6 +196,8 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+        this.renderBackground(p_230450_1_);
+
         //  RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.minecraft != null) {
             this.minecraft.getTextureManager().bindTexture(background);
@@ -221,8 +223,6 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
             length = font.getStringWidth(str);
             this.font.func_243248_b(p_230450_1_, new StringTextComponent(str), cx + 131 - length / 2, cy + 49, 4210752);
         });
-
-        this.renderBackground(p_230450_1_);
 
     }
 }
