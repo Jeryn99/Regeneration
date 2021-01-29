@@ -8,9 +8,13 @@ import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.common.types.RegenTypes;
+import me.swirtzly.regeneration.handlers.ClientHandler;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateTypeMessage;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
+import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
+import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
+import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
@@ -37,11 +41,15 @@ public class GuiPreferences extends ContainerScreen {
     @Override
     public void init() {
         super.init();
-
+        TabRegistry.updateTabValues(guiLeft + 2, guiTop, RegenPrefTab.class);
+        for (AbstractTab button : TabRegistry.tabList) {
+            addButton(button);
+        }
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
         final int btnW = 66, btnH = 18;
         ROTATION = 0;
+
 
         GuiButtonExt btnClose = new GuiButtonExt(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regeneration.gui.close").getFormattedText(), onPress -> Minecraft.getInstance().displayGuiScreen(null));
         GuiButtonExt btnRegenType = new GuiButtonExt(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regentype." + SELECTED_TYPE.getRegistryName()).getUnformattedComponentText(), new Button.IPressable() {

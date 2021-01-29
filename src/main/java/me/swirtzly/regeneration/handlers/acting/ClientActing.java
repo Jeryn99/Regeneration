@@ -27,13 +27,15 @@ class ClientActing implements Acting {
 
     @Override
     public void onEnterGrace(IRegen cap) {
-        ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
-        ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.GRACE_HUM.get().getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE, 1.5F);
+        if (cap.getLivingEntity().getUniqueID().equals(Minecraft.getInstance().player.getUniqueID())) {
+            ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
+            ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.GRACE_HUM.get().getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE, 1.5F);
+        }
     }
 
     @Override
     public void onHandsStartGlowing(IRegen cap) {
-        ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 1.0F);
+        ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 0.2F);
     }
 
     @Override

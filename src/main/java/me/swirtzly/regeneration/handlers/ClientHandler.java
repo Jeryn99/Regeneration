@@ -59,8 +59,6 @@ import static me.swirtzly.regeneration.util.common.PlayerUtil.RegenState.*;
  */
 public class ClientHandler {
 
-    private static final ResourceLocation BUTTON_TEX = new ResourceLocation(Regeneration.MODID, "textures/gui/gui_button_customize.png");
-
     public static String getColoredText(String msg) {
         return msg.replaceAll("&", String.valueOf('\u00a7'));
     }
@@ -89,19 +87,6 @@ public class ClientHandler {
     }
 
     @SubscribeEvent
-    public void onGui(GuiScreenEvent.InitGuiEvent event) {
-        if (event.getGui() instanceof InventoryScreen) {
-            RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
-                if (data.canRegenerate()) {
-                    event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, BUTTON_TEX, 32, 64, (p_213088_1_) -> {
-                        Minecraft.getInstance().displayGuiScreen(new GuiPreferences());
-                    }, I18n.format("Regeneration")));
-                }
-            });
-        }
-    }
-
-    @SubscribeEvent
     public void onTickEvent(TickEvent.ClientTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.START)) return;
         if (Minecraft.getInstance().world == null) {
@@ -125,7 +110,7 @@ public class ClientHandler {
                 UUID clientUUID = Minecraft.getInstance().player.getUniqueID();
                 RegenCap.get(player).ifPresent((data) -> {
                     if (data.areHandsGlowing()) {
-                        ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.areHandsGlowing(), 0.5F);
+                        ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.areHandsGlowing(), 0.2F);
                     }
 
                     if (data.getState() == REGENERATING) {

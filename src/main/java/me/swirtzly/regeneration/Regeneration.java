@@ -26,6 +26,9 @@ import me.swirtzly.regeneration.proxy.CommonProxy;
 import me.swirtzly.regeneration.proxy.Proxy;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
+import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
+import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
+import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
@@ -75,6 +78,12 @@ public class Regeneration {
         RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(TimelordEntity.class, TimelordRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(LaserEntity.class, LaserRenderer::new);
+        MinecraftForge.EVENT_BUS.register(new TabRegistry());
+
+        if (TabRegistry.getTabList().size() < 2){
+            TabRegistry.registerTab(new InventoryTabVanilla());
+        }
+        TabRegistry.registerTab(new RegenPrefTab());
     }
 
     private void setup(final FMLCommonSetupEvent event) {

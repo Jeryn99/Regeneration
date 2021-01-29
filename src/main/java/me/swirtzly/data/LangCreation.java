@@ -104,7 +104,7 @@ public class LangCreation extends LanguageProvider {
         add("regeneration.gui.primary", "Primary");
         add("regeneration.gui.secondary", "Secondary");
         add("regeneration.gui.undo", "Undo");
-        add("regeneration.gui.regen_type", "Type, %s");
+        add("regeneration.gui.regen_type", "Type: %s");
         add("regeneration.gui.close", "Close");
         add("regeneration.gui.input_color", "Hex");
         add("regeneration.gui.previous", "<");
