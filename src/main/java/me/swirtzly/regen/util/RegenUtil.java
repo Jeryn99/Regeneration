@@ -1,19 +1,57 @@
 package me.swirtzly.regen.util;
 
+import me.swirtzly.regen.Regeneration;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.io.FileUtils;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.Random;
 
+import static me.swirtzly.regen.Regeneration.GSON;
+
 public class RegenUtil {
 
     public static Random RAND = new Random();
+
+    public static String[] USERNAMES = new String[]{};
+
+    public static void setupNames(){
+        if (USERNAMES.length == 0) {
+            try {
+
+                ResourceLocation resourceLocation = new ResourceLocation(RConstants.MODID, "names.json");
+
+                InputStream stream = ServerLifecycleHooks.getCurrentServer().getDataPackRegistries().getResourceManager().getResource(resourceLocation).getInputStream();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuilder sb = new StringBuilder();
+
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                reader.close();
+                stream.close();
+
+                String[] splashes = GSON.fromJson(sb.toString(), String[].class);
+
+                if (splashes != null) {
+                    USERNAMES = splashes;
+                }
+
+            } catch (IOException e) {
+                Regeneration.LOG.catching(e);
+            }
+
+        }
+
+    }
+
 
     public static float randFloat(float min, float max) {
         return RAND.nextFloat() * (max - min) + min;

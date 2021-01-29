@@ -85,6 +85,8 @@ public class HutPieces {
                 IRegen cap = RegenCap.get(timelordEntity).orElseGet(null);
                 timelordEntity.setTimelordType(TimelordEntity.TimelordType.COUNCIL);
                 timelordEntity.initSkin(cap);
+                timelordEntity.genName();
+                timelordEntity.setHomePosAndDistance(pos, 10);
                 cap.setRegens(rand.nextInt(12));
                 timelordEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
                 worldIn.addEntity(timelordEntity);

@@ -198,7 +198,6 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
     protected void drawGuiContainerBackgroundLayer(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
         this.renderBackground(p_230450_1_);
 
-        //  RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.minecraft != null) {
             this.minecraft.getTextureManager().bindTexture(background);
             int i = (this.width - this.xSize) / 2;

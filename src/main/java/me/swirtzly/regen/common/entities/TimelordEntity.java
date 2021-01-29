@@ -50,6 +50,7 @@ import java.io.File;
 import java.util.Random;
 
 import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
+import static me.swirtzly.regen.util.RegenUtil.USERNAMES;
 
 /**
  * Created by Swirtzly
@@ -162,10 +163,18 @@ public class TimelordEntity extends VillagerEntity {
                 data.readStyle(nbt);
                 data.setTransitionType(TransitionTypes.FIERY);
                 initSkin(data);
+                genName();
             });
         }
 
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }
+
+    public void genName(){
+        if(USERNAMES.length <=0){
+            RegenUtil.setupNames();
+        }
+        setCustomName(new TranslationTextComponent(USERNAMES[rand.nextInt(USERNAMES.length - 1)]));
     }
 
     /*Setup initial skins for the timelords*/
@@ -247,11 +256,6 @@ public class TimelordEntity extends VillagerEntity {
                 this.addTrades(merchantoffers, trades, 5);
             }
         }
-    }
-
-    @Override
-    public ITextComponent getName() {
-        return new TranslationTextComponent("Timelord");
     }
 
     public enum TimelordType {
