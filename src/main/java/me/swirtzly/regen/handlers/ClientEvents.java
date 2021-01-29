@@ -45,21 +45,6 @@ import static me.swirtzly.regen.common.regen.state.RegenStates.*;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
 
-    private static final ResourceLocation BUTTON_TEX = new ResourceLocation(RConstants.MODID, "textures/gui/gui_button_customize.png");
-
-    @SubscribeEvent
-    public static void onGui(GuiScreenEvent.InitGuiEvent event) {
-        if (event.getGui() instanceof InventoryScreen) {
-            RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
-                if (data.canRegenerate()) {
-                    event.addWidget(new ImageButton(((InventoryScreen) event.getGui()).getGuiLeft() + 134, event.getGui().height / 2 - 22, 20, 20, 0, 0, 20, BUTTON_TEX, 32, 64, (p_213088_1_) -> {
-                        Minecraft.getInstance().displayGuiScreen(new PreferencesScreen());
-                    }));
-                }
-            });
-        }
-    }
-
     @SubscribeEvent
     public static void onName(RenderNameplateEvent event) {
         ClientPlayerEntity player = Minecraft.getInstance().player;

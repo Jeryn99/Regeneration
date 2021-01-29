@@ -12,6 +12,9 @@ import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.sound.MovingSound;
+import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
+import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
+import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.FontRenderer;
@@ -29,6 +32,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import java.util.List;
@@ -83,6 +87,15 @@ public class ClientUtil {
         RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.getCutoutMipped());
 
         Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).getColor(), RItems.ELIXIR.get());
+
+        MinecraftForge.EVENT_BUS.register(new TabRegistry());
+
+        if (TabRegistry.getTabList().size() < 2){
+            TabRegistry.registerTab(new InventoryTabVanilla());
+        }
+        TabRegistry.registerTab(new RegenPrefTab());
+
+
     }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
