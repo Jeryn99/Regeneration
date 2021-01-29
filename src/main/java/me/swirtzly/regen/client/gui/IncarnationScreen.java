@@ -47,8 +47,8 @@ public class IncarnationScreen extends ContainerScreen {
     private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
     private static List< File > skins = null;
     private static int position = 0;
-    private static PlayerUtil.SkinType choices = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).getPreferredModel();
-    private static PlayerUtil.SkinType renderChoice = choices;
+    private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).getPreferredModel();
+    private static PlayerUtil.SkinType renderChoice = currentSkinType;
 
     private TextFieldWidget searchField;
     private ArrayList< DescButton > descButtons = new ArrayList();
@@ -100,18 +100,19 @@ public class IncarnationScreen extends ContainerScreen {
     @Override
     public void init() {
         super.init();
-        this.searchField = new TextFieldWidget(this.font, this.width / 2 - 100, 212, 200, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
         final int btnW = 60, btnH = 18;
         position = 0;
-        skins = CommonSkin.listAllSkins(choices);
+        skins = CommonSkin.listAllSkins(currentSkinType);
+
+        this.searchField = new TextFieldWidget(this.font, cx - 10, cy + 175, 200, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
 
         this.searchField.setResponder((p_214329_1_) -> {
             position = 0;
             skins.removeIf(file -> !file.getName().toLowerCase().contains(searchField.getText().toLowerCase()));
             if (skins.isEmpty() || searchField.getText().isEmpty()) {
-                skins = CommonSkin.listAllSkins(choices);
+                skins = CommonSkin.listAllSkins(currentSkinType);
             }
             Collections.sort(skins);
             PLAYER_TEXTURE = CommonSkin.fileTotexture(skins.get(position));
@@ -121,10 +122,11 @@ public class IncarnationScreen extends ContainerScreen {
         this.children.add(this.searchField);
         this.setFocusedDefault(this.searchField);
 
+        
 
         DescButton btnNext = new DescButton(cx + 25, cy + 75, 20, 20, new TranslationTextComponent("regen.gui.previous"), button -> {
             if (searchField.getText().isEmpty()) {
-                skins = CommonSkin.listAllSkins(choices);
+                skins = CommonSkin.listAllSkins(currentSkinType);
             }
             if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
                 if (position >= skins.size() - 1) {
@@ -139,7 +141,7 @@ public class IncarnationScreen extends ContainerScreen {
         DescButton btnPrevious = new DescButton(cx + 130, cy + 75, 20, 20, new TranslationTextComponent("regen.gui.next"), button -> {
             // Previous
             if (searchField.getText().isEmpty()) {
-                skins = CommonSkin.listAllSkins(choices);
+                skins = CommonSkin.listAllSkins(currentSkinType);
             }
             if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
                 if (position > 0) {
@@ -215,10 +217,10 @@ public class IncarnationScreen extends ContainerScreen {
             }
         }
 
-        RegenCap.get(minecraft.player).ifPresent((data) -> choices = data.getPreferredModel());
+        RegenCap.get(minecraft.player).ifPresent((data) -> currentSkinType = data.getPreferredModel());
 
         PLAYER_TEXTURE = CommonSkin.fileTotexture(skins.get(position));
-        RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> choices = data.getPreferredModel());
+        RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> currentSkinType = data.getPreferredModel());
         updateModels();
     }
 

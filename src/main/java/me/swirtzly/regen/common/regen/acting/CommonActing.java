@@ -122,10 +122,23 @@ class CommonActing implements Acting {
 
         //Trait
         if (RegenConfig.COMMON.traitsEnabled.get()) {
-            cap.getTrait().reset(cap);
-            cap.setTrait(cap.getNextTrait());
-            cap.getTrait().apply(cap);
-            PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", cap.getTrait().getTranslation().getString()), true);
+
+            //Reset old Trait
+            Traits.ITrait old = cap.getTrait();
+            old.reset(cap);
+
+            //Get the new Trait
+            Traits.ITrait next = cap.getNextTrait();
+            if(next.getRegistryName().toString().equals(Traits.BORING.getRegistryName().toString())){
+                next = Traits.getRandomTrait(cap.getLiving().getRNG(), !(cap.getLiving() instanceof PlayerEntity));
+            }
+            next.apply(cap);
+
+            //Set new Trait & reset next trait
+            cap.setTrait(next);
+            cap.setNextTrait(Traits.BORING.get());
+
+            PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", next.getTranslation().getString()), true);
         } else {
             cap.getTrait().reset(cap);
             cap.setTrait(Traits.BORING.get());

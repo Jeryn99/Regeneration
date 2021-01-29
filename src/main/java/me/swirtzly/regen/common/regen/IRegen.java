@@ -90,4 +90,11 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
     Traits.ITrait getNextTrait();
 
     void setNextTrait(Traits.ITrait trait);
+
+    TimelordSound getTimelordSound();
+    void setTimelordSound(TimelordSound timelordSound);
+
+    enum TimelordSound {
+        DRUM, HUM
+    }
 }

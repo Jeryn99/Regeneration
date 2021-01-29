@@ -7,6 +7,7 @@ import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
+import me.swirtzly.regen.network.messages.ChangeSoundScheme;
 import me.swirtzly.regen.network.messages.TypeMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
@@ -23,6 +24,7 @@ public class PreferencesScreen extends ContainerScreen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/pref_back.png");
     private static TransitionTypes SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTransitionType();
+    private static IRegen.TimelordSound SOUND_SCHEME = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
     private static PlayerUtil.SkinType CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getPreferredModel();
     private float ROTATION = 0;
 
@@ -42,32 +44,39 @@ public class PreferencesScreen extends ContainerScreen {
         ROTATION = 0;
 
         Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regen.gui.close"), onPress -> Minecraft.getInstance().displayGuiScreen(null));
-        Button btnRegenType = new Button(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regentype." + SELECTED_TYPE.getRegistryName()), new Button.IPressable() {
-            @Override
-            public void onPress(Button button) {
-                int pos = TransitionTypes.getPosition(SELECTED_TYPE) + 1;
 
-                if (pos < 0 || pos >= TransitionTypes.TYPES.length) {
-                    pos = 0;
-                }
-                SELECTED_TYPE = TransitionTypes.TYPES[pos];
-                button.setMessage(new TranslationTextComponent("regen.gui.regen_type", SELECTED_TYPE.get().getTranslation()));
-                NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(SELECTED_TYPE.get()));
-            }
+        Button btnScheme = new Button(width / 2 + 50 - 66, cy + 65, btnW * 2, btnH, new TranslationTextComponent("regen.gui.sound_scheme." + SOUND_SCHEME.name().toLowerCase()), button -> {
+            IRegen.TimelordSound newOne = SOUND_SCHEME == IRegen.TimelordSound.DRUM ? IRegen.TimelordSound.HUM : IRegen.TimelordSound.DRUM;
+            SOUND_SCHEME = newOne;
+            button.setMessage(new TranslationTextComponent("regen.gui.sound_scheme." + newOne.name().toLowerCase()));
+            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ChangeSoundScheme(newOne));
         });
 
-        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TranslationTextComponent("regen.gui.skintype", new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase())), button -> {
+
+        Button btnRegenType = new Button(width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, SELECTED_TYPE.get().getTranslation(), button -> {
+            int pos = TransitionTypes.getPosition(SELECTED_TYPE) + 1;
+
+            if (pos < 0 || pos >= TransitionTypes.TYPES.length) {
+                pos = 0;
+            }
+            SELECTED_TYPE = TransitionTypes.TYPES[pos];
+            button.setMessage(SELECTED_TYPE.get().getTranslation());
+            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(SELECTED_TYPE.get()));
+        });
+
+        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase()), button -> {
             if (CHOICES.next() != null) {
                 CHOICES = CHOICES.next();
             } else {
                 CHOICES = PlayerUtil.SkinType.ALEX;
             }
-            button.setMessage(new TranslationTextComponent("regen.gui.skintype", new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase())));
+            button.setMessage(new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase()));
             PlayerUtil.updateModel(CHOICES);
         });
-        btnRegenType.setMessage(new TranslationTextComponent("regen.gui.regen_type", SELECTED_TYPE.get().getTranslation()));
+        btnRegenType.setMessage(SELECTED_TYPE.get().getTranslation());
 
-        Button btnColor = new Button(width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().displayGuiScreen(new ColorScreen()));
+        Button btnColor = new Button(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().displayGuiScreen(new ColorScreen()));
+
         Button btnSkinChoice = new Button(width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TranslationTextComponent("regen.gui.skin_choice"), p_onPress_1_ -> {
             Minecraft.getInstance().displayGuiScreen(new IncarnationScreen());
         });
@@ -77,6 +86,7 @@ public class PreferencesScreen extends ContainerScreen {
         addButton(btnClose);
         addButton(btnColor);
         addButton(btnSkinType);
+        addButton(btnScheme);
 
         SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTransitionType();
     }

@@ -28,6 +28,7 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > REGENERATION_7 = SOUNDS.register("regeneration_7", () -> setUpSound("regeneration_7"));
     public static final RegistryObject< SoundEvent > REGENERATION_TROUGHTON = SOUNDS.register("regeneration_troughton", () -> setUpSound("regeneration_troughton"));
     public static final RegistryObject< SoundEvent > REGENERATION_WATCHER = SOUNDS.register("regeneration_watcher", () -> setUpSound("regeneration_watcher"));
+    public static final RegistryObject< SoundEvent > DRUM_BEAT = SOUNDS.register("drum_beat", () -> setUpSound("drum_beat"));
 
 
     private static SoundEvent setUpSound(String soundName) {

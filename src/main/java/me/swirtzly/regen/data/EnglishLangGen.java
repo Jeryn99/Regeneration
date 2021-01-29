@@ -96,7 +96,6 @@ public class EnglishLangGen extends LanguageProvider {
         add("regen.gui.primary", "Primary");
         add("regen.gui.secondary", "Secondary");
         add("regen.gui.undo", "Undo");
-        add("regen.gui.regen_type", "Type: %s");
         add("regen.gui.close", "Close");
         add("regen.gui.input_color", "Hex");
         add("regen.gui.previous", "<");
@@ -111,7 +110,6 @@ public class EnglishLangGen extends LanguageProvider {
         add("regen.gui.remaining_regens.status", "Remaining Regenerations: %s");
         add("regen.gui.color_gui", "Color selection");
         add("regen.gui.current_skin", "Select next Incarnation");
-        add("regen.gui.skintype", "Preference: %s");
         add("regen.gui.back", "Back");
         add("regen.gui.preferences", "Preferences");
 
@@ -119,6 +117,8 @@ public class EnglishLangGen extends LanguageProvider {
             add("regeneration.skin_type." + value.name().toLowerCase(), grammerNazi(value.name().toLowerCase()));
         }
 
+        add("regen.gui.sound_scheme.hum", "Graceful Hum");
+        add("regen.gui.sound_scheme.drum", "Resistant Drums");
 
         // === Regen ===
         add(TransitionTypes.ENDER_DRAGON.get().getTranslation().getKey(), "Ender-Dragon");

@@ -13,6 +13,7 @@ import me.swirtzly.regen.util.ClientUtil;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.io.File;
@@ -31,8 +32,9 @@ class ClientActing implements Acting {
 
     @Override
     public void onEnterGrace(IRegen cap) {
+        SoundEvent ambientSound = cap.getTimelordSound() == IRegen.TimelordSound.DRUM ? RSounds.DRUM_BEAT.get() : RSounds.GRACE_HUM.get();
         ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getCurrentState().isGraceful(), 0.2F);
-        ClientUtil.playSound(cap.getLiving(), RSounds.GRACE_HUM.get().getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getCurrentState() != RegenStates.GRACE, 1.5F);
+        ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getCurrentState() != RegenStates.GRACE, 1.5F);
         //TODO - LP - STOP MUSIC PLAYING IN GRACE Minecraft.getInstance().getSoundHandler().stop(null, SoundCategory.MUSIC);
     }
 

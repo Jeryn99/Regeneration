@@ -11,6 +11,12 @@
       "regen:critical_stage"
     ]
   },
+  "drum_beat": {
+    "subtitle": "regen.sound.drum_beat",
+    "sounds": [
+      "regen:drum_beat"
+    ]
+  },
   "fob_watch": {
     "subtitle": "regen.sound.fob_watch",
     "sounds": [

@@ -23,6 +23,7 @@ public class NetworkDispatcher {
         NETWORK_CHANNEL.registerMessage(id++, ModelMessage.class, ModelMessage::toBytes, ModelMessage::new, ModelMessage::handle);
         NETWORK_CHANNEL.registerMessage(id++, NextSkinMessage.class, NextSkinMessage::toBytes, NextSkinMessage::new, NextSkinMessage::handle);
         NETWORK_CHANNEL.registerMessage(id++, ForceRegenMessage.class, ForceRegenMessage::toBytes, ForceRegenMessage::new, ForceRegenMessage::handle);
+        NETWORK_CHANNEL.registerMessage(id++, ChangeSoundScheme.class, ChangeSoundScheme::toBytes, ChangeSoundScheme::new, ChangeSoundScheme::handle);
     }
 
 }

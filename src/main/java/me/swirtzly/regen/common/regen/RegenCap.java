@@ -67,6 +67,7 @@ public class RegenCap implements IRegen {
     private byte[] nextSkin = new byte[0];
     private Traits.ITrait currentTrait = Traits.BORING.get();
     private Traits.ITrait nextTrait = Traits.BORING.get();
+    private TimelordSound timelordSound = TimelordSound.DRUM;
 
     public RegenCap() {
         this.livingEntity = null;
@@ -226,9 +227,8 @@ public class RegenCap implements IRegen {
         compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
         compoundNBT.putBoolean(RConstants.GLOWING, areHandsGlowing());
         compoundNBT.putString(RConstants.CURRENT_TRAIT, currentTrait.getRegistryName().toString());
-        if (nextTrait.getRegistryName() != Traits.BORING.get().getRegistryName()) {
-            compoundNBT.putString(RConstants.NEXT_TRAIT, nextTrait.getRegistryName().toString());
-        }
+        compoundNBT.putString(RConstants.NEXT_TRAIT, nextTrait.getRegistryName().toString());
+        compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skinArray);
@@ -258,6 +258,9 @@ public class RegenCap implements IRegen {
         setNextSkin(nbt.getByteArray("next_" + RConstants.SKIN));
         setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
+        if (nbt.contains(RConstants.SOUND_SCHEME)) {
+            setTimelordSound(TimelordSound.valueOf(nbt.getString(RConstants.SOUND_SCHEME)));
+        }
         areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
         setTrait(Traits.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
         setNextTrait(Traits.fromID(nbt.getString(RConstants.NEXT_TRAIT)));
@@ -389,15 +392,22 @@ public class RegenCap implements IRegen {
 
     @Override
     public Traits.ITrait getNextTrait() {
-        if (nextTrait.getRegistryName() == Traits.BORING.get().getRegistryName()) {
-            return Traits.getRandomTrait(livingEntity.getRNG(), !(livingEntity instanceof PlayerEntity));
-        }
         return nextTrait;
     }
 
     @Override
     public void setNextTrait(Traits.ITrait trait) {
         this.nextTrait = trait;
+    }
+
+    @Override
+    public TimelordSound getTimelordSound() {
+        return timelordSound;
+    }
+
+    @Override
+    public void setTimelordSound(TimelordSound timelordSound) {
+        this.timelordSound = timelordSound;
     }
 
     public class StateManager implements IStateManager {
@@ -484,7 +494,7 @@ public class RegenCap implements IRegen {
             } else if (currentState == RegenStates.POST || currentState == RegenStates.GRACE_CRIT) {
                 currentState = RegenStates.ALIVE;
                 nextTransition.cancel();
-                if (source == RegenSources.REGEN_DMG_FORCED) {
+                if (source == RegenSources.REGEN_DMG_FORCED && currentState == RegenStates.GRACE_CRIT) {
                     triggerRegeneration();
                     return true;
                 }
