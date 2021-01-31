@@ -126,6 +126,7 @@ public class EnglishLangGen extends LanguageProvider {
         add(TransitionTypes.WATCHER.get().getTranslation().getKey(), "Watcher");
         add(TransitionTypes.FIERY.get().getTranslation().getKey(), "Fiery");
         add(TransitionTypes.TROUGHTON.get().getTranslation().getKey(), "Troughton");
+        add(TransitionTypes.BLAZE.get().getTranslation().getKey(), "Blaze");
 
         //Entity
         add(REntities.TIMELORD.get(), "Timelord");

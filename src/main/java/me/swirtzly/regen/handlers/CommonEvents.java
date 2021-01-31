@@ -93,7 +93,7 @@ public class CommonEvents {
             }
 
             // Stop certain damages
-            if (event.getSource() == RegenSources.REGEN_DMG_CRITICAL || event.getSource() == RegenSources.REGEN_DMG_KILLED)
+            if (event.getSource() == RegenSources.REGEN_DMG_KILLED)
                 return;
 
             //Update Death Message

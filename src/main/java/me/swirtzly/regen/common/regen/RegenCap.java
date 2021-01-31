@@ -467,6 +467,13 @@ public class RegenCap implements IRegen {
                 return false;
             }
 
+            if(source == RegenSources.REGEN_DMG_CRITICAL){
+                if(nextTransition != null){
+                    nextTransition.cancel();
+                }
+                return false;
+            }
+
             if (currentState == RegenStates.ALIVE) {
                 if (!canRegenerate()) // that's too bad :(
                     return false;
@@ -491,18 +498,25 @@ public class RegenCap implements IRegen {
                 midSequenceKill(false);
                 return false;
 
-            } else if (currentState == RegenStates.POST || currentState == RegenStates.GRACE_CRIT) {
-                currentState = RegenStates.ALIVE;
+            } else if (currentState == RegenStates.GRACE_CRIT) {
+                System.out.println(source.getDeathMessage(livingEntity));
                 nextTransition.cancel();
-                if (source == RegenSources.REGEN_DMG_FORCED && currentState == RegenStates.GRACE_CRIT) {
+                if (source == RegenSources.REGEN_DMG_FORCED) {
                     triggerRegeneration();
                     return true;
+                } else {
+                    midSequenceKill(true);
+                    return false;
                 }
-                midSequenceKill(currentState == RegenStates.GRACE_CRIT);
+            } else if (currentState == RegenStates.POST) {
+                currentState = RegenStates.ALIVE;
+                nextTransition.cancel();
                 return false;
             } else
                 throw new IllegalStateException("Unknown state: " + currentState);
         }
+
+
 
         @Override
         public void onPunchEntity(LivingHurtEvent event) {

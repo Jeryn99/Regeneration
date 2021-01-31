@@ -32,9 +32,11 @@ class ClientActing implements Acting {
 
     @Override
     public void onEnterGrace(IRegen cap) {
-        SoundEvent ambientSound = cap.getTimelordSound() == IRegen.TimelordSound.DRUM ? RSounds.DRUM_BEAT.get() : RSounds.GRACE_HUM.get();
-        ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getCurrentState().isGraceful(), 0.2F);
-        ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getCurrentState() != RegenStates.GRACE, 1.5F);
+        if(cap.getLiving().getUniqueID().equals(Minecraft.getInstance().player.getUniqueID())) {
+            SoundEvent ambientSound = cap.getTimelordSound() == IRegen.TimelordSound.DRUM ? RSounds.DRUM_BEAT.get() : RSounds.GRACE_HUM.get();
+            ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getCurrentState().isGraceful(), 0.2F);
+            ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getCurrentState() != RegenStates.GRACE, 1.5F);
+        }
         //TODO - LP - STOP MUSIC PLAYING IN GRACE Minecraft.getInstance().getSoundHandler().stop(null, SoundCategory.MUSIC);
     }
 
