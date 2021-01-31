@@ -46,7 +46,6 @@ public class TabRegistry {
         if (event.getGui() instanceof InventoryScreen) {
             int guiLeft = (event.getGui().width - 176) / 2;
             int guiTop = (event.getGui().height - 166) / 2;
-            guiLeft += getPotionOffset();
 
             TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabVanilla.class);
             for (AbstractTab tab : TabRegistry.tabList) {
@@ -57,7 +56,6 @@ public class TabRegistry {
         }
     }
 
-    private static boolean initWithPotion;
 
     public static void openInventoryGui() {
         Minecraft mc = Minecraft.getInstance();
@@ -76,54 +74,10 @@ public class TabRegistry {
                 t.x = cornerX + (count - 2) * 28;
                 t.y = cornerY - 28;
                 t.active = !t.getClass().equals(selectedButton);
-                t.potionOffsetLast = getPotionOffsetNEI();
                 count++;
             }
         }
     }
 
-    public static int getPotionOffset() {
-        return 0;
-    }
 
-    public static int getPotionOffsetJEI() {
-        if (clazzJEIConfig != null) {
-            try {
-                Object enabled = clazzJEIConfig.getMethod("isOverlayEnabled").invoke(null);
-                if (enabled instanceof Boolean) {
-                    if (!((Boolean) enabled)) {
-                        // If JEI is disabled, no special change to getPotionOffset()
-                        return 0;
-                    }
-                    //Active JEI undoes the standard potion offset (they listen for ScreenEvent.PotionShiftEvent)
-                    return -60;
-                }
-            } catch (Exception ignore) {
-                //no log spam
-            }
-        }
-        return 0;
-    }
-
-    public static int getPotionOffsetNEI() {
-        if (initWithPotion && clazzNEIConfig != null) {
-            try {
-                // Check whether NEI is hidden and enabled
-                Object hidden = clazzNEIConfig.getMethod("isHidden").invoke(null);
-                Object enabled = clazzNEIConfig.getMethod("isEnabled").invoke(null);
-                if (hidden instanceof Boolean && enabled instanceof Boolean) {
-                    if ((Boolean) hidden || !((Boolean) enabled)) {
-                        // If NEI is disabled or hidden, it does not affect the tabs offset with potions
-                        return 0;
-                    }
-                    //But active NEI undoes the standard potion offset
-                    return -60;
-                }
-            } catch (Exception ignore) {
-                //no log spam
-            }
-        }
-        //No NEI, no change
-        return 0;
-    }
 }

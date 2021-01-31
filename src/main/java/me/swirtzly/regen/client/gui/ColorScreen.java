@@ -8,6 +8,9 @@ import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.ColorChangeMessage;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RenderHelp;
+import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
+import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
+import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -42,6 +45,10 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
     @Override
     public void init() {
         super.init();
+        TabRegistry.updateTabValues(guiLeft + 2, guiTop, RegenPrefTab.class);
+        for(AbstractTab button : TabRegistry.tabList){
+            addButton(button);
+        }
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
 

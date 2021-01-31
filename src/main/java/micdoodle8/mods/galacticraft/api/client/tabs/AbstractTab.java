@@ -27,11 +27,6 @@ public abstract class AbstractTab extends AbstractButton {
 
 	@Override
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		int newPotionOffset = TabRegistry.getPotionOffsetNEI();
-		if (newPotionOffset != this.potionOffsetLast) {
-			this.x += newPotionOffset - this.potionOffsetLast;
-			this.potionOffsetLast = newPotionOffset;
-		}
 		if (this.visible) {
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			Minecraft mc = Minecraft.getInstance();
