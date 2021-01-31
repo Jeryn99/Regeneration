@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.regen.RegenCap;
+import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.NextSkinMessage;
 import me.swirtzly.regen.util.PlayerUtil;
@@ -19,7 +20,6 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Tessellator;
@@ -29,7 +29,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -37,10 +36,14 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class IncarnationScreen extends ContainerScreen {
@@ -119,7 +122,7 @@ public class IncarnationScreen extends ContainerScreen {
         skins = CommonSkin.listAllSkins(currentSkinType);
 
 
-        this.searchField = new TextFieldWidget(this.font, cx + 10, cy + 145, cx, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
+        this.searchField = new TextFieldWidget(this.font, cx + 15, cy + 145, guiLeft * 2, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
 
         this.searchField.setResponder((p_214329_1_) -> {
             position = 0;
@@ -239,6 +242,30 @@ public class IncarnationScreen extends ContainerScreen {
             updateModels();
         });
         this.addButton(this.excludeTrending);
+
+
+      /*  List< Path > files;
+        AtomicInteger offset = new AtomicInteger(btnH + 5);
+        try {
+           Files.list(new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/Skins/alex").toPath())
+                    .limit(10)
+                    .forEach(path -> {
+                        System.out.println(path);
+                        RCheckbox bob = new RCheckbox(cx + 10, cy + 25 + offset.get(), 150, 20, new TranslationTextComponent(path.toString()), true, checkboxButton -> {
+                            position = 0;
+                            if (!checkboxButton.isChecked()) {
+                                skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains(path.toString()));
+                            } else {
+                                skins = CommonSkin.listAllSkins(currentSkinType);
+                            }
+                            updateModels();
+                        });
+                        offset.addAndGet(btnH + 5);
+                        addButton(bob);
+                    });
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }*/
 
 
         addButton(btnNext);

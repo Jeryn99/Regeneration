@@ -67,7 +67,7 @@ public class RegenCap implements IRegen {
     private byte[] nextSkin = new byte[0];
     private Traits.ITrait currentTrait = Traits.BORING.get();
     private Traits.ITrait nextTrait = Traits.BORING.get();
-    private TimelordSound timelordSound = TimelordSound.DRUM;
+    private TimelordSound timelordSound = TimelordSound.HUM;
 
     public RegenCap() {
         this.livingEntity = null;
@@ -499,7 +499,6 @@ public class RegenCap implements IRegen {
                 return false;
 
             } else if (currentState == RegenStates.GRACE_CRIT) {
-                System.out.println(source.getDeathMessage(livingEntity));
                 nextTransition.cancel();
                 if (source == RegenSources.REGEN_DMG_FORCED) {
                     triggerRegeneration();

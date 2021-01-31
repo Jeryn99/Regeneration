@@ -110,8 +110,6 @@ public class PreferencesScreen extends ContainerScreen {
         InventoryScreen.drawEntityOnScreen(width / 2 - 75, height / 2 + 45, 55, (float) (guiLeft + 51) - x, (float) (guiTop + 75 - 50) - y, Minecraft.getInstance().player);
         GlStateManager.popMatrix();
 
-        drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regen.gui.preferences").getString(), width / 2, height / 2 - 80, Color.WHITE.getRGB());
-
         String str = "Banana Phone";
         int length = minecraft.fontRenderer.getStringWidth(str);
 
@@ -121,13 +119,13 @@ public class PreferencesScreen extends ContainerScreen {
             str = new TranslationTextComponent("regen.gui.remaining_regens.status", data.getRegens()).getString();
 
         length = minecraft.fontRenderer.getStringWidth(str);
-        font.drawStringWithShadow(matrixStack, str, cx + 170 - length / 2, cy + 21, Color.WHITE.getRGB());
+        font.drawStringWithShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
 
         TranslationTextComponent traitLang = data.getTrait().getTranslation();
-        font.drawStringWithShadow(matrixStack, traitLang.getString(), cx + 170 - length / 2, cy + 40, Color.WHITE.getRGB());
+        font.drawStringWithShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 40, Color.WHITE.getRGB());
 
         TranslationTextComponent traitLangDesc = data.getTrait().getDescription();
-        font.drawStringWithShadow(matrixStack, traitLangDesc.getString(), cx + 170 - length / 2, cy + 50, Color.WHITE.getRGB());
+        font.drawStringWithShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 50, Color.WHITE.getRGB());
 
     }
 
