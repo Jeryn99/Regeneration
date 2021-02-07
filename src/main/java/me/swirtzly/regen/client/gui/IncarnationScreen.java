@@ -20,6 +20,7 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Tessellator;
@@ -233,13 +234,16 @@ public class IncarnationScreen extends ContainerScreen {
 
 
         this.excludeTrending = new RCheckbox(cx + 10, cy + 25, 150, 20, new TranslationTextComponent("Trending?"), true, checkboxButton -> {
-            position = 0;
-            if(!checkboxButton.isChecked()){
-                skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
-            } else {
-                skins = CommonSkin.listAllSkins(currentSkinType);
-            }
-            updateModels();
+           if(checkboxButton instanceof CheckboxButton) {
+               CheckboxButton check = (CheckboxButton) checkboxButton;
+               position = 0;
+               if (!check.isChecked()) {
+                   skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
+               } else {
+                   skins = CommonSkin.listAllSkins(currentSkinType);
+               }
+               updateModels();
+           }
         });
         this.addButton(this.excludeTrending);
 

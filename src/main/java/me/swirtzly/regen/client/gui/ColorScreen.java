@@ -1,52 +1,44 @@
 package me.swirtzly.regen.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionType;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.ColorChangeMessage;
 import me.swirtzly.regen.util.RConstants;
-import me.swirtzly.regen.util.RenderHelp;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.renderer.texture.PaintingSpriteUploader;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.client.gui.widget.Slider;
 
 import java.awt.*;
 
-import static me.swirtzly.regen.util.RegenUtil.colorToHex;
+public class ColorScreen extends ContainerScreen {
 
-public class ColorScreen extends ContainerScreen implements Slider.ISlider {
-
-    private static final ResourceLocation background = new ResourceLocation(RConstants.MODID, "textures/gui/customizer_background.png");
-
-    private static Slider slidePrimaryRed, slidePrimaryGreen, slidePrimaryBlue, slideSecondaryRed, slideSecondaryGreen, slideSecondaryBlue;
-
-    private TextFieldWidget inputPrimaryColor, inputSecondColor;
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/customizer_background.png");
 
     private Vector3d initialPrimary, initialSecondary;
+    private ColorWidget colorChooserPrimary, colorChooserSecondary;
 
     public ColorScreen() {
         super(new BlankContainer(), Minecraft.getInstance().player.inventory, new TranslationTextComponent("regen.gui.color_gui"));
-        xSize = 176;
-        ySize = 186;
+        xSize = 256;
+        ySize = 173;
     }
 
     @Override
     public void init() {
         super.init();
         TabRegistry.updateTabValues(guiLeft + 2, guiTop, RegenPrefTab.class);
-        for(AbstractTab button : TabRegistry.tabList){
+        for (AbstractTab button : TabRegistry.tabList) {
             addButton(button);
         }
         int cx = (width - xSize) / 2;
@@ -57,128 +49,43 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
             initialSecondary = data.getSecondaryColors();
         });
 
-        float primaryRed = (float) initialPrimary.x, primaryGreen = (float) initialPrimary.y, primaryBlue = (float) initialPrimary.z;
-        float secondaryRed = (float) initialSecondary.x, secondaryGreen = (float) initialSecondary.y, secondaryBlue = (float) initialSecondary.z;
 
         final int btnW = 60, btnH = 18;
-        final int sliderW = 70, sliderH = 20;
 
 
         // Reset Style Button
-        this.addButton(new Button(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regen.gui.undo"), button -> {
-            slidePrimaryRed.setValue(initialPrimary.x);
-            slidePrimaryGreen.setValue(initialPrimary.y);
-            slidePrimaryBlue.setValue(initialPrimary.z);
-
-            slideSecondaryRed.setValue(initialSecondary.x);
-            slideSecondaryGreen.setValue(initialSecondary.y);
-            slideSecondaryBlue.setValue(initialSecondary.z);
+        this.addButton(new Button(cx + 100, cy + 148, btnW, btnH, new TranslationTextComponent("regen.gui.undo"), button -> {
+            Color primaryColour = new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z);
+            Color secondaryColour = new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z);
+            colorChooserPrimary.setColor(primaryColour.getRGB());
+            colorChooserSecondary.setColor(secondaryColour.getRGB());
+            updateScreenAndServer();
         }));
 
-        this.getMinecraft().keyboardListener.enableRepeatEvents(true);
-        this.inputPrimaryColor = new TextFieldWidget(this.font, cx + 25, cy + 21, btnW, btnH, this.inputPrimaryColor, new TranslationTextComponent("Input"));
-        this.inputSecondColor = new TextFieldWidget(this.font, cx + 90, cy + 21, btnW, btnH, this.inputPrimaryColor, new TranslationTextComponent("Input"));
-
-        addButton(this.inputPrimaryColor);
-        addButton(this.inputSecondColor);
-
-        // Color input Primary button
-        this.addButton(new Button(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regen.gui.input_color"), button -> {
-            String primaryColorText = inputPrimaryColor.getText();
-            String secondColourText = inputSecondColor.getText();
-
-            if (!primaryColorText.startsWith("#") && !primaryColorText.isEmpty()) {
-                primaryColorText = "#" + primaryColorText;
-                inputPrimaryColor.setText(primaryColorText);
-            }
-
-            if (!secondColourText.startsWith("#") && !secondColourText.isEmpty()) {
-                secondColourText = "#" + secondColourText;
-                inputSecondColor.setText(secondColourText);
-            }
-
-            /* Get Primary colour from input and set it */
-            try {
-                Color color = Color.decode(primaryColorText);
-                float red = (float) color.getRed() / 255;
-                float green = (float) color.getGreen() / 255;
-                float blue = (float) color.getBlue() / 255;
-                slidePrimaryRed.setValue(red);
-                slidePrimaryGreen.setValue(green);
-                slidePrimaryBlue.setValue(blue);
-                onChangeSliderValue(null);
-            } catch (Exception e) {
-                Regeneration.LOG.error(primaryColorText + ", is not a valid Color! [Primary Colour]");
-            }
-
-            /* Get Secondary colour from input and set it */
-            try {
-                Color color = Color.decode(secondColourText);
-                float red = (float) color.getRed() / 255;
-                float green = (float) color.getGreen() / 255;
-                float blue = (float) color.getBlue() / 255;
-                slideSecondaryRed.setValue(red);
-                slideSecondaryGreen.setValue(green);
-                slideSecondaryBlue.setValue(blue);
-                onChangeSliderValue(null);
-            } catch (Exception e) {
-                Regeneration.LOG.error(secondColourText + ", is not a valid Color! [Secondary Colour]");
-            }
-
-        }));
-
-        // Customize Button
-        this.addButton(new Button(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regen.gui.close"), button -> Minecraft.getInstance().displayGuiScreen(null)));
+        // Close Button
+        this.addButton(new Button(cx + 25, cy + 148, btnW, btnH, new TranslationTextComponent("regen.gui.back"), button -> Minecraft.getInstance().displayGuiScreen(new PreferencesScreen())));
 
         // Default Button
-        this.addButton(new Button(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regen.gui.default"), button -> {
+        this.addButton(new Button(cx + (90 * 2), cy + 148, btnW, btnH, new TranslationTextComponent("regen.gui.default"), button -> {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
                 TransitionType regenType = data.getTransitionType().get();
-                slidePrimaryRed.setValue(regenType.getDefaultPrimaryColor().x);
-                slidePrimaryGreen.setValue(regenType.getDefaultPrimaryColor().y);
-                slidePrimaryBlue.setValue(regenType.getDefaultPrimaryColor().z);
-
-                slideSecondaryRed.setValue(regenType.getDefaultSecondaryColor().x);
-                slideSecondaryGreen.setValue(regenType.getDefaultSecondaryColor().y);
-                slideSecondaryBlue.setValue(regenType.getDefaultSecondaryColor().z);
+                Vector3d primColor = regenType.getDefaultPrimaryColor();
+                Vector3d secColor = regenType.getDefaultSecondaryColor();
+                Color primaryColour = new Color((float) primColor.x, (float) primColor.y, (float) primColor.z);
+                Color secondaryColour = new Color((float) secColor.x, (float) secColor.y, (float) secColor.z);
+                colorChooserPrimary.setColor(primaryColour.getRGB());
+                colorChooserSecondary.setColor(secondaryColour.getRGB());
+                updateScreenAndServer();
             });
 
-            onChangeSliderValue(null);
         }));
 
-        slidePrimaryRed = new Slider(cx + 10, cy + 65, sliderW, sliderH, new TranslationTextComponent("regen.gui.red"), StringTextComponent.EMPTY, 0, 1, primaryRed, true, true, button -> {
+        colorChooserPrimary = new ColorWidget(font, cx + 20, cy + 35, 70, 20, new StringTextComponent("Regen"), new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
 
-        }, this);
-        slidePrimaryGreen = new Slider(cx + 10, cy + 84, sliderW, sliderH, new TranslationTextComponent("regen.gui.green"), StringTextComponent.EMPTY, 0, 1, primaryGreen, true, true, p_onPress_1_ -> {
+        colorChooserSecondary = new ColorWidget(font, cx + 150, cy + 35, 70, 20, new StringTextComponent("Regen"), new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
 
-        }, this);
-        slidePrimaryBlue = new Slider(cx + 10, cy + 103, sliderW, sliderH, new TranslationTextComponent("regen.gui.blue"), StringTextComponent.EMPTY, 0, 1, primaryBlue, true, true, p_onPress_1_ -> {
-
-        }, this);
-        slideSecondaryRed = new Slider(cx + 96, cy + 65, sliderW, sliderH, new TranslationTextComponent("regen.gui.red"), StringTextComponent.EMPTY, 0, 1, secondaryRed, true, true, p_onPress_1_ -> {
-
-        }, this);
-        slideSecondaryGreen = new Slider(cx + 96, cy + 84, sliderW, sliderH, new TranslationTextComponent("regen.gui.green"), StringTextComponent.EMPTY, 0, 1, secondaryGreen, true, true, p_onPress_1_ -> {
-
-        }, this);
-        slideSecondaryBlue = new Slider(cx + 96, cy + 103, sliderW, sliderH, new TranslationTextComponent("regen.gui.blue"), StringTextComponent.EMPTY, 0, 1, secondaryBlue, true, true, p_onPress_1_ -> {
-
-        }, this);
-
-        addButton(slidePrimaryRed);
-        addButton(slidePrimaryGreen);
-        addButton(slidePrimaryBlue);
-
-        addButton(slideSecondaryRed);
-        addButton(slideSecondaryGreen);
-        addButton(slideSecondaryBlue);
-
-        this.addButton(this.inputPrimaryColor);
-        this.addButton(this.inputSecondColor);
-
-        inputPrimaryColor.setText(colorToHex(new Color((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue())));
-        inputSecondColor.setText(colorToHex(new Color((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue())));
-
+        children.add(colorChooserPrimary);
+        children.add(colorChooserSecondary);
     }
 
     @Override
@@ -186,49 +93,44 @@ public class ColorScreen extends ContainerScreen implements Slider.ISlider {
         this.font.func_243248_b(p_230451_1_, this.title, (float) this.titleX, (float) this.titleY, 4210752);
     }
 
-    @Override
-    public void onChangeSliderValue(Slider slider) {
+    public void updateScreenAndServer() {
         CompoundNBT nbt = new CompoundNBT();
-        nbt.putFloat(RConstants.PRIMARY_RED, (float) slidePrimaryRed.getValue());
-        nbt.putFloat(RConstants.PRIMARY_GREEN, (float) slidePrimaryGreen.getValue());
-        nbt.putFloat(RConstants.PRIMARY_BLUE, (float) slidePrimaryBlue.getValue());
+        Color primary = new Color(colorChooserPrimary.getColor());
+        Color secondary = new Color(colorChooserSecondary.getColor());
+        nbt.putFloat(RConstants.PRIMARY_RED, (float) primary.getRed() / 255F);
+        nbt.putFloat(RConstants.PRIMARY_GREEN, (float) primary.getGreen() / 255F);
+        nbt.putFloat(RConstants.PRIMARY_BLUE, (float) primary.getBlue() / 255F);
 
-        nbt.putFloat(RConstants.SECONDARY_RED, (float) slideSecondaryRed.getValue());
-        nbt.putFloat(RConstants.SECONDARY_GREEN, (float) slideSecondaryGreen.getValue());
-        nbt.putFloat(RConstants.SECONDARY_BLUE, (float) slideSecondaryBlue.getValue());
+        nbt.putFloat(RConstants.SECONDARY_RED, (float) secondary.getRed() / 255F);
+        nbt.putFloat(RConstants.SECONDARY_GREEN, (float) secondary.getGreen() / 255F);
+        nbt.putFloat(RConstants.SECONDARY_BLUE, (float) secondary.getBlue() / 255F);
         NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ColorChangeMessage(nbt));
-        inputPrimaryColor.setText(colorToHex(new Color((float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue())));
-        inputSecondColor.setText(colorToHex(new Color((float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue())));
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
-        this.renderBackground(p_230450_1_);
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+        this.renderBackground(matrixStack);
 
         if (this.minecraft != null) {
-            this.minecraft.getTextureManager().bindTexture(background);
+            this.minecraft.getTextureManager().bindTexture(BACKGROUND);
             int i = (this.width - this.xSize) / 2;
             int j = (this.height - this.ySize) / 2;
-            this.blit(p_230450_1_, i, j, 0, 0, this.xSize, this.ySize);
+            this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
         }
 
         int cx = (width - xSize) / 2;
         int cy = (height - ySize) / 2;
 
-        RenderHelp.drawRect(cx + 10, cy + 44, cx + 81, cy + 61, 0.1F, 0.1F, 0.1F, 1);
-        RenderHelp.drawRect(cx + 11, cy + 45, cx + 80, cy + 60, (float) slidePrimaryRed.getValue(), (float) slidePrimaryGreen.getValue(), (float) slidePrimaryBlue.getValue(), 1);
-
-        RenderHelp.drawRect(cx + 95, cy + 44, cx + 166, cy + 61, 0.1F, 0.1F, 0.1F, 1);
-        RenderHelp.drawRect(cx + 96, cy + 45, cx + 165, cy + 60, (float) slideSecondaryRed.getValue(), (float) slideSecondaryGreen.getValue(), (float) slideSecondaryBlue.getValue(), 1);
-
         RegenCap.get(getMinecraft().player).ifPresent((cap) -> {
             String str = new TranslationTextComponent("regen.gui.primary").getString();
             int length = getMinecraft().fontRenderer.getStringWidth(str);
-            this.font.func_243248_b(p_230450_1_, new StringTextComponent(str), (float) cx + 45 - length / 2, cy + 49, 4210752);
+            this.font.func_243248_b(matrixStack, new StringTextComponent(str), (float) cx + 55 - length / 2, cy + 19, 4210752);
             str = new TranslationTextComponent("regen.gui.secondary").getString();
             length = font.getStringWidth(str);
-            this.font.func_243248_b(p_230450_1_, new StringTextComponent(str), cx + 131 - length / 2, cy + 49, 4210752);
+            this.font.func_243248_b(matrixStack, new StringTextComponent(str), cx + 185 - length / 2, cy + 19, 4210752);
         });
 
+        colorChooserPrimary.render(matrixStack, x, y, partialTicks);
+        colorChooserSecondary.render(matrixStack, x, y, partialTicks);
     }
 }
