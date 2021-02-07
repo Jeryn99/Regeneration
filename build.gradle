@@ -20,9 +20,9 @@ apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
 
 
-version = '1.0.8'
+version = '1.0.9'
 group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = '[1.16.4] Regeneration'
+archivesBaseName = '[1.16] Regeneration'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -98,7 +98,16 @@ curseforge {
     project {
         id = rootProject.regen
 
-        changelog = 'Changes: </br> - Adds Gallifreyan Research Huts </br> - Adds Exlixirs </br> - Removed redundant sounds'
+        changelog = 'Version 1.0.8 </br>' +
+                '- Fixed issue where GUI background would render ontop of GUIs occasionally </br>' +
+                '- Re-designed Color and Skin Selection GUIS </br>' +
+                '- Gave timelords names again </br>' +
+                '- Adds Drum/Hum options </br>' +
+                '- Fixed a bug where you would always get the boring trait  </br>' +
+                '- Added back tabs to guis </br>' +
+                '- Added Blaze Transition </br>' +
+                '- Fixes weird death handling in critical phase  </br>' +
+                '- Added checkmark to exclude and include trending skins </br>'
         releaseType = 'release'
         addGameVersion '1.16.3'
         addGameVersion '1.16.4'
