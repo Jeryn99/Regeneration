@@ -57,25 +57,6 @@ public class TexUtil {
         return resourcelocation;
     }
 
-    /*  This loads a external link into a Native image and returns it as a ResourceLocation
-        NOTE: This is not tracked and is never cleaned up at all manually by me, it may be cleaned by
-        the Garbage collector when not used, but this is not guaranteed */
-    public static ResourceLocation urlToTexture(URL url) {
-        URLConnection uc = null;
-        NativeImage image = null;
-        try {
-            uc = url.openConnection();
-            uc.connect();
-            uc = url.openConnection();
-            uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-            Regeneration.LOG.warn("Downloading Image from: {}", url.toString());
-            image = NativeImage.read(uc.getInputStream());
-            return Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("download_", new DynamicTexture(image));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return DefaultPlayerSkin.getDefaultSkinLegacy();
-    }
 
     public static String getEncodedMojangSkin(AbstractClientPlayerEntity pl) {
         try {
@@ -87,7 +68,7 @@ public class TexUtil {
             File file = new File("./regen_temp/" + current + ".png");
             FileUtils.copyInputStreamToFile(is, file);
             String skin = HandleSkins.imageToPixelData(file);
-            file.delete();
+            FileUtils.cleanDirectory(new File("./regen_temp"));
             return skin;
         } catch (IOException e) {
             e.printStackTrace();

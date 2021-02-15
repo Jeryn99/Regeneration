@@ -41,6 +41,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static me.swirtzly.regeneration.common.skin.HandleSkins.*;
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
@@ -89,18 +90,21 @@ public class SkinManipulation {
             DynamicTexture tex = new DynamicTexture(nativeImage);
             resourceLocation = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
         }
-        skinType = data.getSkinType();
+        skinType = getSkinType(data);
         return new SkinInfo(player, resourceLocation, skinType);
     }
-
 
     public static SkinInfo.SkinType getSkinType(IRegen cap) {
         LivingEntity living = cap.getLivingEntity();
         if (living instanceof AbstractClientPlayerEntity) {
-            AbstractClientPlayerEntity playerEntity = (AbstractClientPlayerEntity) living;
-            playerEntity.playerInfo.playerTexturesLoaded = false;
-            boolean isSlim = playerEntity.playerInfo.getSkinType().equalsIgnoreCase("slim");
-            return isSlim ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE;
+            if (cap.getEncodedSkin().equalsIgnoreCase(NO_SKIN)) {
+                AbstractClientPlayerEntity playerEntity = (AbstractClientPlayerEntity) living;
+                playerEntity.playerInfo.playerTexturesLoaded = false;
+                boolean isSlim = playerEntity.playerInfo.getSkinType().equalsIgnoreCase("slim");
+                return isSlim ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE;
+            } else {
+                return cap.getSkinType();
+            }
         }
         return SkinInfo.SkinType.STEVE;
     }
