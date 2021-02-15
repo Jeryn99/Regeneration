@@ -3,6 +3,7 @@ package me.swirtzly.regeneration.util.client;
 import me.swirtzly.regeneration.client.MovingSound;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
 import me.swirtzly.regeneration.util.common.RegenUtil;
@@ -39,7 +40,7 @@ public class ClientUtil {
      * This is a method that sends a packet to the server telling the server to reset the players Player model and skin back to the ones supplied by Mojang
      */
     public static void sendSkinResetPacket() {
-        NetworkDispatcher.sendToServer(new UpdateSkinMessage(RegenUtil.NO_SKIN, SkinManipulation.getSkinType(Minecraft.getInstance().player, true) == SkinInfo.SkinType.ALEX));
+        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> NetworkDispatcher.sendToServer(new UpdateSkinMessage(RegenUtil.NO_SKIN, SkinManipulation.getSkinType(iRegen) == SkinInfo.SkinType.ALEX)));
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -22,6 +22,7 @@ import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +41,6 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static me.swirtzly.regeneration.common.skin.HandleSkins.*;
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
@@ -67,7 +67,7 @@ public class SkinManipulation {
         ResourceLocation resourceLocation;
         SkinInfo.SkinType skinType = SkinInfo.SkinType.ALEX;
         if (data == null) {
-            return new SkinInfo(player, null, getSkinType(player, true));
+            return new SkinInfo(player, null, getSkinType(data));
         }
 
         String skin = data.getEncodedSkin();
@@ -82,7 +82,7 @@ public class SkinManipulation {
         } else {
             NativeImage nativeImage = decodeToImage(skin);
             if (nativeImage == null) {
-                return new SkinInfo(player, null, getSkinType(player, true));
+                return new SkinInfo(player, null, getSkinType(data));
             }
 
             nativeImage = ImageDownloadBuffer.convert(nativeImage);
@@ -94,28 +94,15 @@ public class SkinManipulation {
     }
 
 
-    public static SkinInfo.SkinType getSkinType(PlayerEntity player, boolean forceMojang) {
-        Map< MinecraftProfileTexture.Type, MinecraftProfileTexture > map = Minecraft.getInstance().getSkinManager().loadSkinFromCache(player.getGameProfile());
-        if (map.isEmpty()) {
-            map = Minecraft.getInstance().getSessionService().getTextures(Minecraft.getInstance().getSessionService().fillProfileProperties(player.getGameProfile(), false), false);
+    public static SkinInfo.SkinType getSkinType(IRegen cap) {
+        LivingEntity living = cap.getLivingEntity();
+        if (living instanceof AbstractClientPlayerEntity) {
+            AbstractClientPlayerEntity playerEntity = (AbstractClientPlayerEntity) living;
+            playerEntity.playerInfo.playerTexturesLoaded = false;
+            boolean isSlim = playerEntity.playerInfo.getSkinType().equalsIgnoreCase("slim");
+            return isSlim ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE;
         }
-        MinecraftProfileTexture profile = map.get(MinecraftProfileTexture.Type.SKIN);
-        AtomicReference< SkinInfo.SkinType > skinType = new AtomicReference<>();
-        skinType.set(SkinInfo.SkinType.ALEX);
-        RegenCap.get(player).ifPresent((data) -> {
-            if (data.getEncodedSkin().equalsIgnoreCase(NO_SKIN) || forceMojang) {
-                if (profile == null) {
-                    skinType.set(SkinInfo.SkinType.STEVE);
-                }
-                if (profile != null && profile.getMetadata("model") == null) {
-                    skinType.set(SkinInfo.SkinType.STEVE);
-                }
-            } else {
-                skinType.set(data.getSkinType());
-            }
-        });
-
-        return skinType.get();
+        return SkinInfo.SkinType.STEVE;
     }
 
     public static void setPlayerSkin(AbstractClientPlayerEntity player, ResourceLocation texture) {

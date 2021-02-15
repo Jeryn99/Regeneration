@@ -2,6 +2,7 @@ package micdoodle8.mods.galacticraft.api.client.tabs;
 
 import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.handlers.RegenObjects;
+import me.swirtzly.regeneration.handlers.acting.ActingForwarder;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
