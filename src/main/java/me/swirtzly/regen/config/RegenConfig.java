@@ -88,6 +88,7 @@ public class RegenConfig {
         public final ForgeConfigSpec.ConfigValue< List< ? extends String > > postRegenEffects;
         public final ForgeConfigSpec.ConfigValue< String > skinDir;
         public final ForgeConfigSpec.BooleanValue allowUpwardsMotion;
+        public final ForgeConfigSpec.BooleanValue mobsHaveRegens;
 
 
         Common(ForgeConfigSpec.Builder builder) {
@@ -96,6 +97,7 @@ public class RegenConfig {
             loseRegensOnDeath = builder.comment("If this is false you won't lose your regenerations if you get killed during regeneration").translation("config.regeneration.lose_regens_on_death").define("loseRegensOnDeath", false);
             fieryRegen = builder.comment("Spawn fire during regeneration").translation("config.regeneration.fiery_regen").define("fieryRegen", true);
             regenFireImmune = builder.comment("Players are immune to fire damage while regenerating").translation("config.regeneration.regeneration_fire_immunity").define("fireImmunity", false);
+            mobsHaveRegens = builder.comment("Toggle whether mobs have regenerations. In most cases, requires a game restart.").translation("config.regeneration.mobsHaveRegens").define("mobsHaveRegens", false);
             infiniteRegeneration = builder.comment("config.regeneration.infinite_regenerations").translation("Players are always able to regenerate. Effectively makes the Fob Watch obsolete.").define("infiniteRegeneration", false);
             sendRegenDeathMessages = builder.comment("Sends a message to chat to say that a player is regenerating, and the reason for it").translation("config.regeneration.regen_messages").define("sendRegenDeathMessages", true);
             skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './', the path MUST NOT end in /").translation("config.regeneration.skins.skindir").define("skinDir", ".");

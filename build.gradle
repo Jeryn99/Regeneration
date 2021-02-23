@@ -109,6 +109,7 @@ curseforge {
                 '- Fixes weird death handling in critical phase  </br>' +
                 '- Added checkmark to exclude and include trending skins </br>'
         releaseType = 'release'
+        changelogType = 'html'
         addGameVersion '1.16.3'
         addGameVersion '1.16.4'
         addGameVersion '1.16.5'

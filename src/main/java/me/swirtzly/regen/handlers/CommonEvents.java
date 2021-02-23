@@ -3,6 +3,7 @@ package me.swirtzly.regen.handlers;
 import com.mojang.brigadier.CommandDispatcher;
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.common.commands.RegenCommand;
+import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
@@ -13,9 +14,12 @@ import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenSources;
 import net.minecraft.command.CommandSource;
+import net.minecraft.enchantment.MendingEnchantment;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -53,7 +57,7 @@ public class CommonEvents {
     /* Attach Capability to all LivingEntities */
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent< Entity > event) {
-        if (event.getObject() instanceof LivingEntity) {
+        if (canBeGiven(event.getObject())) {
             event.addCapability(RConstants.CAP_REGEN_ID, new ICapabilitySerializable< CompoundNBT >() {
                 final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
                 final LazyOptional< IRegen > regenInstance = LazyOptional.of(() -> regen);
@@ -76,6 +80,21 @@ public class CommonEvents {
             });
         }
     }
+
+    public static boolean canBeGiven(Entity entity){
+        boolean isliving = entity instanceof LivingEntity;
+        boolean ignoresConfig = entity.getType() == REntities.TIMELORD.get() || entity.getType() == EntityType.PLAYER;
+
+        if(isliving){
+            if(ignoresConfig){
+                return true;
+            } else {
+                return RegenConfig.COMMON.mobsHaveRegens.get();
+            }
+        }
+        return false;
+    }
+
 
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {

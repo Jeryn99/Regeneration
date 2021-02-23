@@ -313,6 +313,7 @@ public class IncarnationScreen extends ContainerScreen {
         }
         matrixStack.pop();
 
+
         drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regen.gui.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
         if (!skins.isEmpty() && position < skins.size()) {
             matrixStack.push();

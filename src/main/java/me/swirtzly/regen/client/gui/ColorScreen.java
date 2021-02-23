@@ -133,4 +133,11 @@ public class ColorScreen extends ContainerScreen {
         colorChooserPrimary.render(matrixStack, x, y, partialTicks);
         colorChooserSecondary.render(matrixStack, x, y, partialTicks);
     }
+
+    @Override
+    public void tick() {
+        super.tick();
+        colorChooserPrimary.tick();
+        colorChooserSecondary.tick();
+    }
 }
