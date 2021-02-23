@@ -12,6 +12,7 @@ import me.swirtzly.regeneration.util.common.LootUtils;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -212,7 +213,7 @@ public class CommonHandler {
 
     @SubscribeEvent
     public void attachCapabilities(AttachCapabilitiesEvent< Entity > event) {
-        if (event.getObject() instanceof LivingEntity) {
+        if (canBeGiven(event.getObject())) {
             event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable< CompoundNBT >() {
                 final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
                 final LazyOptional< IRegen > regenInstance = LazyOptional.of(() -> regen);
@@ -236,6 +237,20 @@ public class CommonHandler {
 
             });
         }
+    }
+
+    public static boolean canBeGiven(Entity entity){
+        boolean isliving = entity instanceof LivingEntity;
+        boolean ignoresConfig = entity.getType() == RegenObjects.EntityEntries.TIMELORD.get() || entity.getType() == EntityType.PLAYER;
+
+        if(isliving){
+            if(ignoresConfig){
+                return true;
+            } else {
+                return RegenConfig.COMMON.mobsHaveRegens.get();
+            }
+        }
+        return false;
     }
 
     //I hate this.

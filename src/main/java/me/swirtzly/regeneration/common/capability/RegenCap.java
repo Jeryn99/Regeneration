@@ -104,13 +104,6 @@ public class RegenCap implements IRegen {
             }
         }
 
-        if (!RegenConfig.COMMON.mobsHaveRegens.get()) {
-            boolean isValid = getLivingEntity() instanceof TimelordEntity || getLivingEntity() instanceof PlayerEntity;
-            if (!isValid) {
-                setRegenerationsLeft(0);
-            }
-        }
-
         if (PlayerUtil.isAboveZeroGrid(player) && state == PlayerUtil.RegenState.POST) {
             for (Effect potion : PlayerUtil.POTIONS) {
                 player.removePotionEffect(potion);

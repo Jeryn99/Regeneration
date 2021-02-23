@@ -25,20 +25,24 @@ public class FobWatchItem extends SolidItem {
 
     public FobWatchItem() {
         super(new Item.Properties().setNoRepair().group(ItemGroups.REGEN_TAB).maxStackSize(1));
-        addPropertyOverride(new ResourceLocation("open"), (stack, worldIn, entityIn) -> {
-            if (getStackTag(stack) == null || !getStackTag(stack).contains("open")) {
-                return 0F; // Closed
+        addPropertyOverride(new ResourceLocation(Regeneration.MODID, "model"), (stack, worldIn, entityIn) -> {
+            boolean isGold = getEngrave(stack) == 1;
+            boolean isOpen = getOpen(stack) == 1;
+            if (isOpen && isGold) {
+                return 0.2F;
             }
-            return getOpen(stack);
-        });
 
-        addPropertyOverride(new ResourceLocation("engrave"), (stack, worldIn, entityIn) -> {
-            if (getStackTag(stack) == null || !getStackTag(stack).contains("engrave")) {
-                return 0F; // Default
+            if (!isOpen && !isGold) {
+                return 0.3F;
             }
-            return getEngrave(stack);
-        });
 
+            if (isOpen) {
+                return 0.4F;
+            }
+
+
+            return 0.1F;
+        });
     }
 
     public static CompoundNBT getStackTag(ItemStack stack) {
