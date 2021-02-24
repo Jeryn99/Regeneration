@@ -8,6 +8,7 @@ import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.SFXMessage;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RegenSources;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -121,7 +122,7 @@ class CommonActing implements Acting {
         player.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(slownessModifier);
 
         //Trait
-        if (RegenConfig.COMMON.traitsEnabled.get()) {
+        if (RegenConfig.COMMON.traitsEnabled.get() && cap.getLiving().getType() == EntityType.PLAYER) {
 
             //Reset old Trait
             Traits.ITrait old = cap.getTrait();

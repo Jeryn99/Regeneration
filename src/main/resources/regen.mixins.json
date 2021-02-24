@@ -4,7 +4,8 @@
   "compatiblityLevel": "JAVA_8",
   "refmap": "regen.refmap.json",
   "mixins": [
-    "BipedBodyMixin"
+    "BipedBodyMixin",
+    "SoundSourceMixin"
   ],
   "minVersion": "0.8"
 }
