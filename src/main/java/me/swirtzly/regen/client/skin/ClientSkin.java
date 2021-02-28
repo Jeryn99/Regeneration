@@ -15,9 +15,6 @@ import static me.swirtzly.regen.client.skin.CommonSkin.*;
 
 public class ClientSkin {
 
-    public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
-    public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
-
     public static File USER_ALEX = new File(SKIN_DIRECTORY_ALEX + "/the_past");
     public static File USER_STEVE = new File(SKIN_DIRECTORY_STEVE + "/the_past");
 
@@ -58,27 +55,6 @@ public class ClientSkin {
         }
     }
 
-
-    public static void downloadTrendingSkins() throws IOException {
-        if (!RegenConfig.SKIN.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
-        File trendingDir = TRENDING_ALEX;
-        if (!trendingDir.exists()) {
-            if (trendingDir.mkdirs()) {
-                Regeneration.LOG.info("Creating Directory: " + trendingDir);
-                Regeneration.LOG.info("Creating Directory: " + TRENDING_ALEX);
-                Regeneration.LOG.info("Creating Directory: " + TRENDING_STEVE);
-            }
-        }
-        long attr = trendingDir.lastModified();
-        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
-            FileUtils.cleanDirectory(trendingDir);
-            Regeneration.LOG.warn("Refreshing Trending skins");
-            for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
-                String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
-                downloadSkins(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
-            }
-        }
-    }
 
 
 }

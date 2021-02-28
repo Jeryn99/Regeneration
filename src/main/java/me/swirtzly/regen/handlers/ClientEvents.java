@@ -93,6 +93,7 @@ public class ClientEvents {
                 SkinHandler.PLAYER_SKINS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().deleteTexture(texture)));
                 SkinHandler.PLAYER_SKINS.clear();
                 TimelordRenderer.TIMELORDS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().deleteTexture(texture)));
+                TimelordRenderer.TIMELORDS.clear();
                 Regeneration.LOG.warn("Cleared Regeneration texture cache.");
             }
         }

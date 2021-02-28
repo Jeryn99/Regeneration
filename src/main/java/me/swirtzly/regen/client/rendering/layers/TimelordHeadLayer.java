@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 public class TimelordHeadLayer extends LayerRenderer< TimelordEntity, BipedModel< TimelordEntity > > {
-    private static final PlayerModel< TimelordEntity > entitymodel = new PlayerModel<>(0.5F, true);
+    private static final PlayerModel< TimelordEntity > entitymodel = new PlayerModel<>(0F, true);
 
     public TimelordHeadLayer(IEntityRenderer< TimelordEntity, BipedModel< TimelordEntity > > entityRendererIn) {
         super(entityRendererIn);

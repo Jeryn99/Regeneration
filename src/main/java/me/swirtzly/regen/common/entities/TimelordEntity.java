@@ -40,7 +40,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
@@ -60,6 +59,7 @@ public class TimelordEntity extends VillagerEntity {
 
     private static final DataParameter< String > TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter< Boolean > SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter< Boolean > IS_MALE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
 
     private final SwimmerPathNavigator waterNavigator;
     private final GroundPathNavigator groundNavigator;
@@ -77,7 +77,7 @@ public class TimelordEntity extends VillagerEntity {
     public static AttributeModifierMap.MutableAttribute createAttributes() {
         return MonsterEntity.func_234295_eP_().
                 createMutableAttribute(Attributes.FOLLOW_RANGE, 35D).
-                createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.23F).
+                createMutableAttribute(Attributes.MOVEMENT_SPEED, (double) 0.23F).
                 createMutableAttribute(Attributes.ATTACK_DAMAGE, 3F).
                 createMutableAttribute(Attributes.MAX_HEALTH, 20D).
                 createMutableAttribute(Attributes.ARMOR, 2.0D);
@@ -88,6 +88,7 @@ public class TimelordEntity extends VillagerEntity {
         super.registerData();
         getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
         getDataManager().register(SWINGING_ARMS, false);
+        getDataManager().register(IS_MALE, rand.nextBoolean());
     }
 
     @Override
@@ -170,8 +171,8 @@ public class TimelordEntity extends VillagerEntity {
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
-    public void genName(){
-        if(USERNAMES.length <=0){
+    public void genName() {
+        if (USERNAMES.length <= 0) {
             RegenUtil.setupNames();
         }
         setCustomName(new TranslationTextComponent(USERNAMES[rand.nextInt(USERNAMES.length - 1)]));
@@ -179,10 +180,12 @@ public class TimelordEntity extends VillagerEntity {
 
     /*Setup initial skins for the timelords*/
     public void initSkin(IRegen data) {
-        File file = CommonSkin.chooseRandomSkin(world.rand, rand.nextBoolean());
-        data.setSkin(RegenUtil.fileToBytes(file));
-        data.setAlexSkin(true);
-        data.syncToClients(null);
+        world.getServer().runAsync(() -> {
+            File file = CommonSkin.chooseRandomSkin(world.rand, !isMale(), true);
+            data.setSkin(RegenUtil.fileToBytes(file));
+            data.setAlexSkin(true);
+            data.syncToClients(null);
+        });
     }
 
     public TimelordType getTimelordType() {
@@ -234,6 +237,7 @@ public class TimelordEntity extends VillagerEntity {
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putString("timelord_type", getTimelordType().name());
+        compound.putBoolean("is_male", getDataManager().get(IS_MALE));
     }
 
     @Override
@@ -242,6 +246,18 @@ public class TimelordEntity extends VillagerEntity {
         if (compound.contains("timelord_type")) {
             setTimelordType(TimelordType.valueOf(compound.getString("timelord_type")));
         }
+
+        if (compound.contains("is_male")) {
+            setMale(compound.getBoolean("is_male"));
+        }
+    }
+
+    public boolean isMale() {
+        return getDataManager().get(IS_MALE);
+    }
+
+    public void setMale(boolean male) {
+        getDataManager().set(IS_MALE, male);
     }
 
     @Override

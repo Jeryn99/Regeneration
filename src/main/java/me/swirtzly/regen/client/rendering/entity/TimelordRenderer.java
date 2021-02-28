@@ -107,9 +107,10 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
     @Nullable
     @Override
     public ResourceLocation getEntityTexture(TimelordEntity entity) {
+        String gender = entity.isMale() ? "male" : "female";
         switch (entity.getTimelordType()) {
             case COUNCIL:
-                return new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_council.png");
+                return new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_council_" + gender + ".png");
             case GUARD:
                 return new ResourceLocation(RConstants.MODID, "textures/entity/timelords/guards/timelord_guard.png");
         }

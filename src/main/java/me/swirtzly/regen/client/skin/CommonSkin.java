@@ -29,6 +29,8 @@ public class CommonSkin {
     public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/skins/");
     public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
+    public static final File SKIN_DIRECTORY_MALE = new File(SKIN_DIRECTORY, "/timelord/male");
+    public static final File SKIN_DIRECTORY_FEMALE = new File(SKIN_DIRECTORY, "/timelord/female");
 
     public static ResourceLocation fileTotexture(File file) {
         NativeImage nativeImage = null;
@@ -41,8 +43,11 @@ public class CommonSkin {
     }
 
     //Choose a random PNG from a folder
-    public static File chooseRandomSkin(Random rand, boolean isAlex) {
+    public static File chooseRandomSkin(Random rand, boolean isAlex, boolean isTimelord) {
         File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
+        if(isTimelord){
+            skins = isAlex ? SKIN_DIRECTORY_FEMALE : SKIN_DIRECTORY_MALE;
+        }
         Collection< File > folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
@@ -114,6 +119,21 @@ public class CommonSkin {
 
         if (!alexDir.exists()) {
             alexDir.mkdirs();
+        }
+
+        Regeneration.LOG.warn("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
+        ImageIO.write(img, "png", new File(file, filename + ".png"));
+    }
+
+    public static void downloadSkinsSpecific(URL url, String filename, File specific) throws IOException {
+        URLConnection uc = url.openConnection();
+        uc.connect();
+        uc = url.openConnection();
+        uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
+        BufferedImage img = ImageIO.read(uc.getInputStream());
+        File file = specific;
+        if (!file.exists()) {
+            file.mkdirs();
         }
 
         Regeneration.LOG.warn("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
@@ -209,5 +229,52 @@ public class CommonSkin {
         Collection< File > folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
         return new ArrayList<>(folderFiles);
+    }
+
+    public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
+    public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
+
+    public static void downloadTrendingSkins() throws IOException {
+        if (!RegenConfig.SKIN.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
+        File trendingDir = TRENDING_ALEX;
+        if (!trendingDir.exists()) {
+            if (trendingDir.mkdirs()) {
+                Regeneration.LOG.info("Creating Directory: " + trendingDir);
+                Regeneration.LOG.info("Creating Directory: " + TRENDING_ALEX);
+                Regeneration.LOG.info("Creating Directory: " + TRENDING_STEVE);
+            }
+        }
+        long attr = trendingDir.lastModified();
+        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
+            FileUtils.cleanDirectory(trendingDir);
+            Regeneration.LOG.warn("Refreshing Trending skins");
+            for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
+                String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
+                downloadSkins(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
+            }
+        }
+    }
+
+    public static void downloadTimelord() throws IOException {
+        File trendingDir = SKIN_DIRECTORY_FEMALE;
+        if (!trendingDir.exists()) {
+            if (trendingDir.mkdirs()) {
+                Regeneration.LOG.info("Creating Directory: " + SKIN_DIRECTORY_FEMALE);
+                Regeneration.LOG.info("Creating Directory: " + SKIN_DIRECTORY_MALE);
+            }
+        }
+        long attr = trendingDir.lastModified();
+        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
+            FileUtils.cleanDirectory(trendingDir);
+            Regeneration.LOG.warn("Refreshing Timelord skins");
+
+            String[] genders = new String[]{"male", "female"};
+            for (String gender : genders) {
+                for (String skin : getSkins("https://namemc.com/minecraft-skins/tag/" + gender)) {
+                    String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
+                    downloadSkinsSpecific(new URL(skin), "trending_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE : SKIN_DIRECTORY_FEMALE);
+                }
+            }
+        }
     }
 }

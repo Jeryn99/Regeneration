@@ -1,13 +1,15 @@
 package me.swirtzly.regen.util;
 
 import me.swirtzly.regen.client.skin.ClientSkin;
+import me.swirtzly.regen.client.skin.CommonSkin;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 
-import static me.swirtzly.regen.client.skin.CommonSkin.createDefaultFolders;
-import static me.swirtzly.regen.client.skin.CommonSkin.internalSkinsDownload;
+import static me.swirtzly.regen.client.skin.CommonSkin.*;
 
 public class DownloadSkinsThread extends Thread {
 
@@ -29,15 +31,14 @@ public class DownloadSkinsThread extends Thread {
         try {
             createDefaultFolders();
             internalSkinsDownload();
+            File tempZip = new File(SKIN_DIRECTORY + "/temp");
+            if(tempZip.exists()) {
+                FileUtils.cleanDirectory(tempZip);
+            }
+            CommonSkin.downloadTrendingSkins();
+            CommonSkin.downloadTimelord();
             if (isClient) {
-                DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-                    try {
-                        ClientSkin.downloadTrendingSkins();
-                        ClientSkin.downloadPreviousSkins();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+                DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientSkin::downloadPreviousSkins);
             }
         } catch (IOException exception) {
             exception.printStackTrace();

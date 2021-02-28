@@ -91,6 +91,7 @@ public class HutPieces {
                 timelordEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
                 worldIn.addEntity(timelordEntity);
                 worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                cap.syncToClients(null);
             }
 
             if ("chest_stone".equals(function)) {
