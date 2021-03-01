@@ -4,10 +4,13 @@ import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.item.ElixirItem;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
+import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
 import me.swirtzly.regen.common.traits.Traits;
+import me.swirtzly.regen.network.NetworkDispatcher;
+import me.swirtzly.regen.network.messages.RemoveTimelordSkinMessage;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.entity.Entity;
@@ -38,12 +41,15 @@ import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.io.File;
 import java.util.Random;
@@ -162,7 +168,7 @@ public class TimelordEntity extends VillagerEntity {
                 nbt.putFloat(RConstants.SECONDARY_GREEN, rand.nextInt(255) / 255.0F);
                 nbt.putFloat(RConstants.SECONDARY_BLUE, rand.nextInt(255) / 255.0F);
                 data.readStyle(nbt);
-                data.setTransitionType(TransitionTypes.FIERY);
+                data.setTransitionType(TransitionTypes.getRandomTimelordType());
                 initSkin(data);
                 genName();
             });
@@ -176,6 +182,14 @@ public class TimelordEntity extends VillagerEntity {
             RegenUtil.setupNames();
         }
         setCustomName(new TranslationTextComponent(USERNAMES[rand.nextInt(USERNAMES.length - 1)]));
+    }
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        if (!world.isRemote) {
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveTimelordSkinMessage(this));
+        }
     }
 
     /*Setup initial skins for the timelords*/
@@ -230,6 +244,9 @@ public class TimelordEntity extends VillagerEntity {
 
     @Override
     public void onKillCommand() {
+        if (!world.isRemote) {
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveTimelordSkinMessage(this));
+        }
         remove();
     }
 
@@ -272,6 +289,11 @@ public class TimelordEntity extends VillagerEntity {
                 this.addTrades(merchantoffers, trades, 5);
             }
         }
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+        return isMale() ? RSounds.M_TIMELORD_HURT.get() : RSounds.F_TIMELORD_HURT.get();
     }
 
     public enum TimelordType {

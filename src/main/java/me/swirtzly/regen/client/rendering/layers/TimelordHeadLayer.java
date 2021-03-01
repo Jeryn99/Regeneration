@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 public class TimelordHeadLayer extends LayerRenderer< TimelordEntity, BipedModel< TimelordEntity > > {
-    private static final PlayerModel< TimelordEntity > entitymodel = new PlayerModel<>(0F, true);
+    private static final PlayerModel< TimelordEntity > entitymodel = new PlayerModel<>(-0.25F, true);
 
     public TimelordHeadLayer(IEntityRenderer< TimelordEntity, BipedModel< TimelordEntity > > entityRendererIn) {
         super(entityRendererIn);
@@ -25,6 +25,11 @@ public class TimelordHeadLayer extends LayerRenderer< TimelordEntity, BipedModel
         entitymodel.setVisible(false);
         entitymodel.bipedHead.showModel = true;
         entitymodel.bipedHeadwear.showModel = true;
+        entitymodel.bipedRightArm.showModel = true;
+        entitymodel.bipedLeftArm.showModel = true;
+        entitymodel.bipedRightArmwear.showModel = false;
+        entitymodel.bipedLeftArmwear.showModel = false;
+        entitymodel.bipedBody.showModel = true;
         this.getEntityModel().copyModelAttributesTo(entitymodel);
         IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityTranslucent(TimelordRenderer.getTimelordFace(entitylivingbaseIn)));
         entitymodel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);

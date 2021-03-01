@@ -32,7 +32,7 @@ public class DownloadSkinsThread extends Thread {
             createDefaultFolders();
             internalSkinsDownload();
             File tempZip = new File(SKIN_DIRECTORY + "/temp");
-            if(tempZip.exists()) {
+            if (tempZip.exists()) {
                 FileUtils.cleanDirectory(tempZip);
             }
             CommonSkin.downloadTrendingSkins();

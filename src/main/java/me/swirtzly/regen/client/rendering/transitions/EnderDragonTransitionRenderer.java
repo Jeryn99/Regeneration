@@ -50,12 +50,23 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
     @Override
     public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
 
-        LivingEntity player = post.getEntityLiving();
-        IRenderTypeBuffer bufferIn = post.getBuffers();
-        MatrixStack matrix = post.getMatrixStack();
-        PlayerModel< AbstractClientPlayerEntity > model = post.getRenderer().getEntityModel();
+    }
 
-        RegenCap.get(player).ifPresent(iRegen -> {
+    @Override
+    public void firstPersonHand(RenderHandEvent renderHandEvent) {
+
+    }
+
+    @Override
+    public void thirdPersonHand(HandSide side, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+
+    }
+
+    @Override
+    public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        MatrixStack matrix = matrixStackIn;;
+
+        RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             int ticksAnimating = iRegen.getTicksAnimating() / 2;
             if (ticksAnimating > 0 && iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 float f5 = ((float) ticksAnimating + Minecraft.getInstance().getRenderPartialTicks()) / 200.0F;
@@ -63,8 +74,8 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
                 Random random = new Random(432L);
                 IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getLightning());
                 matrix.push();
-                model.bipedBody.translateRotate(matrix);
-                matrix.translate(0.0D, 1.0D, 0);
+                bipedModel.bipedBody.translateRotate(matrix);
+                matrix.translate(0.0D, 0.5D, 0);
 
                 for (int i = 0; (float) i < (f5 + f5 * f5) / 2.0F * 60.0F; ++i) {
                     matrix.rotate(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
@@ -90,21 +101,6 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
                 matrix.pop();
             }
         });
-    }
-
-    @Override
-    public void firstPersonHand(RenderHandEvent renderHandEvent) {
-
-    }
-
-    @Override
-    public void thirdPersonHand(HandSide side, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-
-    }
-
-    @Override
-    public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-
     }
 
     @Override

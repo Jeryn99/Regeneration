@@ -1,7 +1,6 @@
 package me.swirtzly.regen.client.gui;
 
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.util.text.ITextComponent;
 
@@ -21,7 +20,7 @@ public class RCheckbox extends CheckboxButton {
         this.onPress.onPress(this);
     }
 
-    public interface IInteraction<T extends Widget > {
+    public interface IInteraction< T extends Widget > {
         void onPress(T p_onPress_1_);
     }
 }

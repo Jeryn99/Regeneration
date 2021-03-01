@@ -29,6 +29,8 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > REGENERATION_TROUGHTON = SOUNDS.register("regeneration_troughton", () -> setUpSound("regeneration_troughton"));
     public static final RegistryObject< SoundEvent > REGENERATION_WATCHER = SOUNDS.register("regeneration_watcher", () -> setUpSound("regeneration_watcher"));
     public static final RegistryObject< SoundEvent > DRUM_BEAT = SOUNDS.register("drum_beat", () -> setUpSound("drum_beat"));
+    public static final RegistryObject< SoundEvent > F_TIMELORD_HURT = SOUNDS.register("f_timelord_hurt", () -> setUpSound("f_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > M_TIMELORD_HURT = SOUNDS.register("m_timelord_hurt", () -> setUpSound("m_timelord_hurt"));
 
 
     private static SoundEvent setUpSound(String soundName) {

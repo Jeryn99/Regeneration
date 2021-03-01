@@ -130,7 +130,7 @@ class CommonActing implements Acting {
 
             //Get the new Trait
             Traits.ITrait next = cap.getNextTrait();
-            if(next.getRegistryName().toString().equals(Traits.BORING.getRegistryName().toString())){
+            if (next.getRegistryName().toString().equals(Traits.BORING.getRegistryName().toString())) {
                 next = Traits.getRandomTrait(cap.getLiving().getRNG(), !(cap.getLiving() instanceof PlayerEntity));
             }
             next.apply(cap);

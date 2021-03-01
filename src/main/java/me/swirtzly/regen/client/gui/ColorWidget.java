@@ -5,7 +5,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -15,18 +14,18 @@ import static java.lang.Math.*;
 //Based on https://github.com/Petersil1998/utilcraft/blob/master/src/main/java/net/petersil98/utilcraft/screen/widget/ColorChooser.java
 public class ColorWidget extends Widget {
 
-    private int color;
-    private final int radius;
-    private TextFieldWidget text = null;
-    private final int textHeight;
     protected final RCheckbox.IInteraction< ColorWidget > onPress;
+    private final int radius;
+    private final int textHeight;
+    private int color;
+    private TextFieldWidget text = null;
 
 
     public ColorWidget(FontRenderer font, int x, int y, int width, int textHeight, ITextComponent title, int defaultColor, RCheckbox.IInteraction< ColorWidget > iInteraction) {
         super(x, y, width, width, title);
         radius = width / 2;
         color = defaultColor;
-        text = new TextFieldWidget(font, x, y + width + 10, width - textHeight - 5, textHeight,this.text, title);
+        text = new TextFieldWidget(font, x, y + width + 10, width - textHeight - 5, textHeight, this.text, title);
         text.setEnabled(true);
         this.textHeight = textHeight;
         this.onPress = iInteraction;

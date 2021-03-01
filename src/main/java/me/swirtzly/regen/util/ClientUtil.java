@@ -90,7 +90,7 @@ public class ClientUtil {
 
         MinecraftForge.EVENT_BUS.register(new TabRegistry());
 
-        if (TabRegistry.getTabList().size() < 2){
+        if (TabRegistry.getTabList().size() < 2) {
             TabRegistry.registerTab(new InventoryTabVanilla());
         }
         TabRegistry.registerTab(new RegenPrefTab());

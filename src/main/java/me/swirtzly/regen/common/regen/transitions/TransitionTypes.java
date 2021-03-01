@@ -53,6 +53,11 @@ public class TransitionTypes extends ForgeRegistryEntry< TransitionTypes > {
         return TYPES[(int) (System.currentTimeMillis() % TYPES.length)];
     }
 
+    public static TransitionTypes getRandomTimelordType() {
+        TransitionTypes[] timelordTypes = new TransitionTypes[]{FIERY, TROUGHTON, ENDER_DRAGON, BLAZE};
+        return timelordTypes[(int) (System.currentTimeMillis() % timelordTypes.length)];
+    }
+
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register< TransitionTypes > e) {
         e.getRegistry().registerAll(FIERY, TROUGHTON, WATCHER, SPARKLE, ENDER_DRAGON, BLAZE);

@@ -12,8 +12,8 @@ import java.util.ArrayList;
 
 public class TabRegistry {
     public static ArrayList< AbstractTab > tabList = new ArrayList< AbstractTab >();
-    private static Class< ? > clazzJEIConfig = null;
     public static Class< ? > clazzNEIConfig = null;
+    private static Class< ? > clazzJEIConfig = null;
 
     static {
         try {
@@ -40,23 +40,6 @@ public class TabRegistry {
         return TabRegistry.tabList;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    @SubscribeEvent
-    public void guiPostInit(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (event.getGui() instanceof InventoryScreen) {
-            int guiLeft = (event.getGui().width - 176) / 2;
-            int guiTop = (event.getGui().height - 166) / 2;
-
-            TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabVanilla.class);
-            for (AbstractTab tab : TabRegistry.tabList) {
-                if (tab.shouldAddToList()) {
-                    event.addWidget(tab);
-                }
-            }
-        }
-    }
-
-
     public static void openInventoryGui() {
         Minecraft mc = Minecraft.getInstance();
         mc.player.connection.sendPacket(new CCloseWindowPacket(mc.player.openContainer.windowId));
@@ -75,6 +58,22 @@ public class TabRegistry {
                 t.y = cornerY - 28;
                 t.active = !t.getClass().equals(selectedButton);
                 count++;
+            }
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public void guiPostInit(GuiScreenEvent.InitGuiEvent.Post event) {
+        if (event.getGui() instanceof InventoryScreen) {
+            int guiLeft = (event.getGui().width - 176) / 2;
+            int guiTop = (event.getGui().height - 166) / 2;
+
+            TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabVanilla.class);
+            for (AbstractTab tab : TabRegistry.tabList) {
+                if (tab.shouldAddToList()) {
+                    event.addWidget(tab);
+                }
             }
         }
     }

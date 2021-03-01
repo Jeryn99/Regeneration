@@ -83,7 +83,6 @@ public class HutPieces {
             if ("timelord".equals(function)) {
                 TimelordEntity timelordEntity = new TimelordEntity(worldIn.getWorld());
                 IRegen cap = RegenCap.get(timelordEntity).orElseGet(null);
-                timelordEntity.setTimelordType(TimelordEntity.TimelordType.COUNCIL);
                 timelordEntity.initSkin(cap);
                 timelordEntity.genName();
                 timelordEntity.setHomePosAndDistance(pos, 10);

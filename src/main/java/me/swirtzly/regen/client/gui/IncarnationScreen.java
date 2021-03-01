@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.regen.RegenCap;
-import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.NextSkinMessage;
 import me.swirtzly.regen.util.PlayerUtil;
@@ -37,14 +36,10 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class IncarnationScreen extends ContainerScreen {
@@ -113,7 +108,7 @@ public class IncarnationScreen extends ContainerScreen {
     public void init() {
         super.init();
         TabRegistry.updateTabValues(guiLeft + 2, guiTop, RegenPrefTab.class);
-        for(AbstractTab button : TabRegistry.tabList){
+        for (AbstractTab button : TabRegistry.tabList) {
             addButton(button);
         }
         int cx = (width - xSize) / 2;
@@ -132,7 +127,7 @@ public class IncarnationScreen extends ContainerScreen {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
 
-            if(!excludeTrending.isChecked()){
+            if (!excludeTrending.isChecked()) {
                 skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
             }
 
@@ -148,7 +143,7 @@ public class IncarnationScreen extends ContainerScreen {
             if (searchField.getText().isEmpty()) {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
-            if(!excludeTrending.isChecked()){
+            if (!excludeTrending.isChecked()) {
                 skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
             }
 
@@ -167,7 +162,7 @@ public class IncarnationScreen extends ContainerScreen {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
 
-            if(!excludeTrending.isChecked()){
+            if (!excludeTrending.isChecked()) {
                 skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
             }
 
@@ -187,20 +182,20 @@ public class IncarnationScreen extends ContainerScreen {
                 Minecraft.getInstance().displayGuiScreen(new PreferencesScreen());
             }
         });
-        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 145- 25, btnW, btnH, new TranslationTextComponent("regen.gui.open_folder"), new Button.IPressable() {
+        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 145 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.open_folder"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 Util.getOSType().openFile(CommonSkin.SKIN_DIRECTORY);
             }
         });
-        DescButton btnSave = new DescButton(cx + 90- 20, cy + 125- 25, btnW, btnH, new TranslationTextComponent("regen.gui.save"), new Button.IPressable() {
+        DescButton btnSave = new DescButton(cx + 90 - 20, cy + 125 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.save"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 updateModels();
                 NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex));
             }
         });
-        DescButton btnResetSkin = new DescButton(cx + 10, cy + 125- 25, btnW, btnH, new TranslationTextComponent("regen.gui.reset_skin"), new Button.IPressable() {
+        DescButton btnResetSkin = new DescButton(cx + 10, cy + 125 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.reset_skin"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 SkinHandler.sendResetMessage();
@@ -234,16 +229,16 @@ public class IncarnationScreen extends ContainerScreen {
 
 
         this.excludeTrending = new RCheckbox(cx + 10, cy + 25, 150, 20, new TranslationTextComponent("Trending?"), true, checkboxButton -> {
-           if(checkboxButton instanceof CheckboxButton) {
-               CheckboxButton check = (CheckboxButton) checkboxButton;
-               position = 0;
-               if (!check.isChecked()) {
-                   skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
-               } else {
-                   skins = CommonSkin.listAllSkins(currentSkinType);
-               }
-               updateModels();
-           }
+            if (checkboxButton instanceof CheckboxButton) {
+                CheckboxButton check = (CheckboxButton) checkboxButton;
+                position = 0;
+                if (!check.isChecked()) {
+                    skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
+                } else {
+                    skins = CommonSkin.listAllSkins(currentSkinType);
+                }
+                updateModels();
+            }
         });
         this.addButton(this.excludeTrending);
 
@@ -318,7 +313,7 @@ public class IncarnationScreen extends ContainerScreen {
         if (!skins.isEmpty() && position < skins.size()) {
             matrixStack.push();
             String name = skins.get(position).getName().replaceAll(".png", "");
-            drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent(name), width / 2  + 60, height / 2 + 40, Color.WHITE.getRGB());
+            drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent(name), width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB());
             matrixStack.pop();
         }
     }

@@ -1,6 +1,5 @@
 package me.swirtzly.regen.common.regen;
 
-import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.regen.acting.ActingForwarder;
 import me.swirtzly.regen.common.regen.state.IStateManager;
 import me.swirtzly.regen.common.regen.state.RegenStates;
@@ -15,7 +14,6 @@ import me.swirtzly.regen.util.RegenSources;
 import me.swirtzly.regen.util.schedule.RegenScheduledAction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

@@ -4,12 +4,9 @@ package me.swirtzly.regen.client.rendering.model;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.common.entities.TimelordEntity;
-import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-
-import static me.swirtzly.regen.common.regen.state.RegenStates.REGENERATING;
 
 public class TimelordModel extends PlayerModel< TimelordEntity > {
 

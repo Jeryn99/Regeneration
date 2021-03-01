@@ -19,7 +19,7 @@ public class RegenUtil {
 
     public static String[] USERNAMES = new String[]{};
 
-    public static void setupNames(){
+    public static void setupNames() {
         if (USERNAMES.length == 0) {
             try {
 
@@ -37,11 +37,11 @@ public class RegenUtil {
                 }
                 reader.close();
                 stream.close();
+                //
+                String[] names = GSON.fromJson(sb.toString(), String[].class);
 
-                String[] splashes = GSON.fromJson(sb.toString(), String[].class);
-
-                if (splashes != null) {
-                    USERNAMES = splashes;
+                if (names != null) {
+                    USERNAMES = names;
                 }
 
             } catch (IOException e) {

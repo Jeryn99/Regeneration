@@ -31,6 +31,8 @@ public class CommonSkin {
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
     public static final File SKIN_DIRECTORY_MALE = new File(SKIN_DIRECTORY, "/timelord/male");
     public static final File SKIN_DIRECTORY_FEMALE = new File(SKIN_DIRECTORY, "/timelord/female");
+    public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
+    public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
 
     public static ResourceLocation fileTotexture(File file) {
         NativeImage nativeImage = null;
@@ -45,14 +47,13 @@ public class CommonSkin {
     //Choose a random PNG from a folder
     public static File chooseRandomSkin(Random rand, boolean isAlex, boolean isTimelord) {
         File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
-        if(isTimelord){
+        if (isTimelord) {
             skins = isAlex ? SKIN_DIRECTORY_FEMALE : SKIN_DIRECTORY_MALE;
         }
         Collection< File > folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
-
 
     //Get a list of skins from namemc url
     public static ArrayList< String > getSkins(String downloadUrl) throws IOException {
@@ -140,7 +141,6 @@ public class CommonSkin {
         ImageIO.write(img, "png", new File(file, filename + ".png"));
     }
 
-
     public static void internalSkinsDownload() throws IOException {
         if (!RegenConfig.SKIN.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
 
@@ -212,7 +212,6 @@ public class CommonSkin {
         }
     }
 
-
     public static List< File > listAllSkins(PlayerUtil.SkinType choices) {
         File directory = null;
         switch (choices) {
@@ -230,9 +229,6 @@ public class CommonSkin {
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
         return new ArrayList<>(folderFiles);
     }
-
-    public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
-    public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
 
     public static void downloadTrendingSkins() throws IOException {
         if (!RegenConfig.SKIN.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;

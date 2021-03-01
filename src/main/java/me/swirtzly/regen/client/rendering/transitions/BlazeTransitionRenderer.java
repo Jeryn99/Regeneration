@@ -14,7 +14,7 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
 /* Created by Craig on 31/01/2021 */
-public class BlazeTransitionRenderer implements TransitionRenderer  {
+public class BlazeTransitionRenderer implements TransitionRenderer {
 
     public static final BlazeTransitionRenderer INSTANCE = new BlazeTransitionRenderer();
 
@@ -42,7 +42,7 @@ public class BlazeTransitionRenderer implements TransitionRenderer  {
     @Override
     public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
-            if(iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 if (entitylivingbaseIn.world.rand.nextInt(24) == 0) {
                     entitylivingbaseIn.world.playSound(entitylivingbaseIn.getPosX() + 0.5D, entitylivingbaseIn.getPosY() + 0.5D, entitylivingbaseIn.getPosZ() + 0.5D, SoundEvents.ENTITY_BLAZE_BURN, entitylivingbaseIn.getSoundCategory(), 1.0F + entitylivingbaseIn.world.rand.nextFloat(), entitylivingbaseIn.world.rand.nextFloat() * 0.7F + 0.3F, false);
                 }
