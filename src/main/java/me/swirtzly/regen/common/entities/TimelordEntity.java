@@ -50,6 +50,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Random;
@@ -177,6 +178,13 @@ public class TimelordEntity extends VillagerEntity {
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return null;
+    }
+
+
     public void genName() {
         if (USERNAMES.length <= 0) {
             RegenUtil.setupNames();
@@ -222,6 +230,11 @@ public class TimelordEntity extends VillagerEntity {
 
         RegenCap.get(this).ifPresent((data) -> {
             if (!world.isRemote) {
+
+                if(!data.isSkinValidForUse()){
+                    initSkin(data);
+                    data.syncToClients(null);
+                }
 
                 if (ticksExisted < 20) {
                     data.syncToClients(null);

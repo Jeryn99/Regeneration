@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.world.gen;
 
 import com.google.common.collect.ImmutableMap;
 import me.swirtzly.regen.common.entities.TimelordEntity;
+import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.util.RConstants;
@@ -81,16 +82,16 @@ public class HutPieces {
         protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
 
             if ("timelord".equals(function)) {
-                TimelordEntity timelordEntity = new TimelordEntity(worldIn.getWorld());
-                IRegen cap = RegenCap.get(timelordEntity).orElseGet(null);
-                timelordEntity.initSkin(cap);
-                timelordEntity.genName();
-                timelordEntity.setHomePosAndDistance(pos, 10);
-                cap.setRegens(rand.nextInt(12));
-                timelordEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
-                worldIn.addEntity(timelordEntity);
-                worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
-                cap.syncToClients(null);
+                TimelordEntity timelordEntity = REntities.TIMELORD.get().create(worldIn.getWorld());
+                RegenCap.get(timelordEntity).ifPresent(iRegen -> {
+                    timelordEntity.initSkin(iRegen);
+                    timelordEntity.genName();
+                    iRegen.setRegens(rand.nextInt(12));
+                    timelordEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
+                    worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                    iRegen.syncToClients(null);
+                    worldIn.addEntity(timelordEntity);
+                });
             }
 
             if ("chest_stone".equals(function)) {

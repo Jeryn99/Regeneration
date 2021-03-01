@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.objects;
 
 import me.swirtzly.regen.common.item.ElixirItem;
 import me.swirtzly.regen.common.item.FobWatchItem;
+import me.swirtzly.regen.common.item.SpawnItem;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -14,6 +15,7 @@ public class RItems {
 
     public static final DeferredRegister< Item > ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RConstants.MODID);
     public static RegistryObject< Item > FOB = ITEMS.register("fobwatch", FobWatchItem::new);
+    public static RegistryObject< Item > SPAWN_ITEM = ITEMS.register("timelord", SpawnItem::new);
     //Item group
     public static ItemGroup MAIN = new ItemGroup("regen") {
         @Override

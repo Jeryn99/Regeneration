@@ -26,6 +26,9 @@ public class EnglishLangGen extends LanguageProvider {
         add("regen.source.lindos", "%s consumed lindos hormones! They are reborn!");
         add("regen.source.regen_killed", "%s was killed mid-regeneration...");
         add("regen.source.forced", "%s forced themselves to regenerate!");
+        add("regen.timelord_type.female_council", "Timelord Council (Female)");
+        add("regen.timelord_type.guard", "Timelord Guard");
+        add("regen.timelord_type.male_council", "Timelord Council (Male)");
 
         //Block
         add(RBlocks.BIO_CONTAINER.get(), "Bio-Container");

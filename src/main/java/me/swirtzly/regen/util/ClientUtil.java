@@ -1,15 +1,19 @@
 package me.swirtzly.regen.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.client.RKeybinds;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.rendering.entity.WatcherRenderer;
 import me.swirtzly.regen.client.rendering.layers.HandLayer;
 import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
 import me.swirtzly.regen.common.item.ElixirItem;
+import me.swirtzly.regen.common.item.SpawnItem;
 import me.swirtzly.regen.common.objects.RBlocks;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
+import me.swirtzly.regen.common.regen.RegenCap;
+import me.swirtzly.regen.common.regen.transitions.FieryTransition;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.sound.MovingSound;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
@@ -83,6 +87,14 @@ public class ClientUtil {
             return 0.1F;
         });
 
+
+        ItemModelsProperties.registerProperty(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity) -> {
+            if (itemStack == null || itemStack.isEmpty()) {
+                return 0;
+            }
+            SpawnItem.Timelord type = SpawnItem.getType(itemStack);
+            return type.ordinal();
+        });
 
         RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.getCutoutMipped());
 
