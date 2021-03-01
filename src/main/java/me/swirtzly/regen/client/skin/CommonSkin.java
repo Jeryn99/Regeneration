@@ -96,6 +96,14 @@ public class CommonSkin {
             FileUtils.forceMkdir(SKIN_DIRECTORY_STEVE);
         }
 
+        if (!SKIN_DIRECTORY_STEVE.exists()) {
+            FileUtils.forceMkdir(SKIN_DIRECTORY_FEMALE);
+        }
+
+        if (!SKIN_DIRECTORY_STEVE.exists()) {
+            FileUtils.forceMkdir(SKIN_DIRECTORY_MALE);
+        }
+
     }
 
     /**
@@ -261,14 +269,15 @@ public class CommonSkin {
         }
         long attr = trendingDir.lastModified();
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
-            FileUtils.cleanDirectory(trendingDir);
+            FileUtils.cleanDirectory(SKIN_DIRECTORY_FEMALE);
+            FileUtils.cleanDirectory(SKIN_DIRECTORY_MALE);
             Regeneration.LOG.warn("Refreshing Timelord skins");
 
             String[] genders = new String[]{"male", "female"};
             for (String gender : genders) {
                 for (String skin : getSkins("https://namemc.com/minecraft-skins/tag/" + gender)) {
                     String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
-                    downloadSkinsSpecific(new URL(skin), "trending_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE : SKIN_DIRECTORY_FEMALE);
+                    downloadSkinsSpecific(new URL(skin), "timelord_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE : SKIN_DIRECTORY_FEMALE);
                 }
             }
         }

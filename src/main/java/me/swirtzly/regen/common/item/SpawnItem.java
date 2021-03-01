@@ -83,6 +83,7 @@ public class SpawnItem< E extends TimelordEntity > extends Item {
                 nbt.putFloat(RConstants.SECONDARY_BLUE, random.nextInt(255) / 255.0F);
                 iRegen.readStyle(nbt);
             });
+            timelord.setup();
             timelord.setPosition(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
             timelord.faceEntity(player, 90.0F, 90.0F);
             player.getHeldItem(hand).shrink(1);

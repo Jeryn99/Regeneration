@@ -12,27 +12,24 @@ import me.swirtzly.regen.common.traits.Traits;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.RemoveTimelordSkinMessage;
 import me.swirtzly.regen.util.RConstants;
+import me.swirtzly.regen.util.RegenSources;
 import me.swirtzly.regen.util.RegenUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.client.renderer.entity.SnowManRenderer;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.merchant.villager.VillagerData;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
+import net.minecraft.entity.merchant.villager.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.FireballEntity;
+import net.minecraft.entity.projectile.SnowballEntity;
 import net.minecraft.entity.villager.VillagerType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.item.MerchantOffers;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -40,15 +37,13 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,11 +57,12 @@ import static me.swirtzly.regen.util.RegenUtil.USERNAMES;
  * Created by Swirtzly
  * on 03/05/2020 @ 18:50
  */
-public class TimelordEntity extends VillagerEntity {
+public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
     private static final DataParameter< String > TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
-    private static final DataParameter< Boolean > SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter< Boolean > AIMING = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter< Boolean > IS_MALE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter< Float > AIMING_TICKS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.FLOAT);
 
     private final SwimmerPathNavigator waterNavigator;
     private final GroundPathNavigator groundNavigator;
@@ -90,12 +86,25 @@ public class TimelordEntity extends VillagerEntity {
                 createMutableAttribute(Attributes.ARMOR, 2.0D);
     }
 
+    @Nullable
+    @Override
+    public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+        return null;
+    }
+
     @Override
     protected void registerData() {
         super.registerData();
         getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
-        getDataManager().register(SWINGING_ARMS, false);
+        getDataManager().register(AIMING, false);
+        getDataManager().register(AIMING_TICKS, 0.0F);
         getDataManager().register(IS_MALE, rand.nextBoolean());
+        setup();
+    }
+
+    @Override
+    protected void onVillagerTrade(MerchantOffer offer) {
+
     }
 
     @Override
@@ -115,11 +124,12 @@ public class TimelordEntity extends VillagerEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
         this.goalSelector.addGoal(1, new SwimGoal(this));
-     /*   if (getTimelordType() == TimelordType.GUARD) {
-            this.goalSelector.addGoal(1, new RangedAttackGoal(this, 1.25D, 15, 20.0F));
-        }*/ //TODO
+        if (getTimelordType() == TimelordType.GUARD) {
+            this.goalSelector.addGoal(2, new TimelordAttacK(this, 1.0D, 20, 20.0F));
+        }else{
+            this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
+        }
         this.applyEntityAI();
     }
 
@@ -130,36 +140,11 @@ public class TimelordEntity extends VillagerEntity {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
     }
 
-    @Override
-    public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-        ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
-        if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.hasCustomer() && !this.isChild()) {
-            if (p_230254_2_ == Hand.MAIN_HAND) {
-                p_230254_1_.addStat(Stats.TALKED_TO_VILLAGER);
-            }
-
-            if (this.getOffers().isEmpty()) {
-                return ActionResultType.func_233537_a_(this.world.isRemote);
-            } else {
-                if (!this.world.isRemote) {
-                    this.setVillagerData(new VillagerData(VillagerType.DESERT, VillagerProfession.ARMORER, 100));
-                    this.setCustomer(p_230254_1_);
-                    this.openMerchantContainer(p_230254_1_, this.getDisplayName(), 1);
-                }
-                return ActionResultType.func_233537_a_(this.world.isRemote);
-            }
-        } else {
-            return super.func_230254_b_(p_230254_1_, p_230254_2_);
-        }
-    }
-
-    @Override
-    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @org.jetbrains.annotations.Nullable ILivingEntityData spawnDataIn, @org.jetbrains.annotations.Nullable CompoundNBT dataTag) {
-
-        if (!worldIn.isRemote()) {
+    public void setup(){
+        if (!world.isRemote()) {
 
             RegenCap.get(this).ifPresent((data) -> {
-                data.addRegens(worldIn.getRandom().nextInt(12));
+                data.addRegens(world.getRandom().nextInt(12));
                 CompoundNBT nbt = new CompoundNBT();
                 nbt.putFloat(RConstants.PRIMARY_RED, rand.nextInt(255) / 255.0F);
                 nbt.putFloat(RConstants.PRIMARY_GREEN, rand.nextInt(255) / 255.0F);
@@ -172,10 +157,9 @@ public class TimelordEntity extends VillagerEntity {
                 data.setTransitionType(TransitionTypes.getRandomTimelordType());
                 initSkin(data);
                 genName();
+                setEquipmentBasedOnDifficulty(world.getDifficultyForLocation(getPosition()));
             });
         }
-
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     @Nullable
@@ -231,7 +215,7 @@ public class TimelordEntity extends VillagerEntity {
         RegenCap.get(this).ifPresent((data) -> {
             if (!world.isRemote) {
 
-                if(!data.isSkinValidForUse()){
+                if (!data.isSkinValidForUse()) {
                     initSkin(data);
                     data.syncToClients(null);
                 }
@@ -290,23 +274,92 @@ public class TimelordEntity extends VillagerEntity {
         getDataManager().set(IS_MALE, male);
     }
 
-    @Override
+   @Override
     protected void populateTradeData() {
         if (getTimelordType() == TimelordType.COUNCIL) {
-            for (int i = rand.nextInt(4); i > 0; i--) {
+            for (int i = rand.nextInt(7); i > 0; i--) {
                 MerchantOffers merchantoffers = this.getOffers();
                 Traits.ITrait trait = Traits.getRandomTrait(rand, false);
                 ItemStack item = new ItemStack(RItems.ELIXIR.get());
+                Item[] currency = new Item[]{
+                        Items.GOLD_INGOT,
+                        Items.BONE,
+                        Items.EMERALD,
+                        Items.IRON_INGOT
+                };
                 ElixirItem.setTrait(item, trait);
-                VillagerTrades.ITrade[] trades = new VillagerTrades.ITrade[]{new TimelordEntity.TimelordTrade(new ItemStack(Items.GOLD_INGOT, MathHelper.clamp(rand.nextInt(20), 6, 20)), item, rand.nextInt(7), 5)};
+                TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[rand.nextInt(currency.length)], MathHelper.clamp(rand.nextInt(10), 6, 20)), item, rand.nextInt(7), 5)};
                 this.addTrades(merchantoffers, trades, 5);
             }
         }
     }
 
     @Override
+    protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
+        if (getTimelordType() == TimelordType.GUARD) {
+            Item stack = rand.nextBoolean() ? RItems.RIFLE.get() : RItems.PISTOL.get();
+            this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(stack));
+        }
+    }
+
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return isMale() ? RSounds.M_TIMELORD_HURT.get() : RSounds.F_TIMELORD_HURT.get();
+    }
+
+    @Override
+    public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
+        boolean isPistol = getItemStackFromSlot(EquipmentSlotType.MAINHAND).getItem() == RItems.PISTOL.get();
+
+        LaserProjectile laserProjectile = new LaserProjectile(REntities.LASER.get(), this, world);
+        laserProjectile.setDamage(isPistol ? 4 : 10);
+        laserProjectile.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
+        double d0 = target.getPosYEye() - (double)1.1F;
+        double d1 = target.getPosX() - this.getPosX();
+        double d2 = d0 - laserProjectile.getPosY();
+        double d3 = target.getPosZ() - this.getPosZ();
+        float f = MathHelper.sqrt(d1 * d1 + d3 * d3) * 0.2F;
+        laserProjectile.shoot(d1, d2 + (double)f, d3, 1.6F, 0);
+        this.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 1.0F, 0.4F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
+        this.world.addEntity(laserProjectile);
+    }
+
+    public void setAiming(boolean isAiming) {
+        getDataManager().set(AIMING, isAiming);
+    }
+
+    public boolean getAiming() {
+        return getDataManager().get(AIMING);
+    }
+
+    public void setAimingTicks(float isAiming) {
+        getDataManager().set(AIMING_TICKS, isAiming);
+    }
+
+    public float getAimingTicks() {
+        return getDataManager().get(AIMING_TICKS);
+    }
+
+    @Override
+    public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
+        ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
+        if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.hasCustomer() && !this.isChild()) {
+            if (p_230254_2_ == Hand.MAIN_HAND) {
+                p_230254_1_.addStat(Stats.TALKED_TO_VILLAGER);
+            }
+
+            if (this.getOffers().isEmpty()) {
+                return ActionResultType.func_233537_a_(this.world.isRemote);
+            } else {
+                if (!this.world.isRemote) {
+                    this.setCustomer(p_230254_1_);
+                    this.openMerchantContainer(p_230254_1_, this.getDisplayName(), 1);
+                }
+                return ActionResultType.func_233537_a_(this.world.isRemote);
+            }
+        } else {
+            return super.func_230254_b_(p_230254_1_, p_230254_2_);
+        }
     }
 
     public enum TimelordType {
@@ -334,7 +387,7 @@ public class TimelordEntity extends VillagerEntity {
 
         public TimelordTrade(ItemStack coin, ItemStack coin2, ItemStack wares, int stock, int xp) {
             this.xp = xp;
-            this.stock = stock;
+            this.stock = stock + 1;
             this.wares = wares;
             this.coin = coin;
             this.coin2 = coin2;

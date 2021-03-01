@@ -125,5 +125,17 @@
     "sounds": [
       "regen:regen/regen_watcher"
     ]
+  },
+  "rifle": {
+    "subtitle": "regen.sound.rifle",
+    "sounds": [
+      "regen:rifle"
+    ]
+  },
+  "staser": {
+    "subtitle": "regen.sound.staser",
+    "sounds": [
+      "regen:staser"
+    ]
   }
 }

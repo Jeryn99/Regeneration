@@ -31,7 +31,8 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > DRUM_BEAT = SOUNDS.register("drum_beat", () -> setUpSound("drum_beat"));
     public static final RegistryObject< SoundEvent > F_TIMELORD_HURT = SOUNDS.register("f_timelord_hurt", () -> setUpSound("f_timelord_hurt"));
     public static final RegistryObject< SoundEvent > M_TIMELORD_HURT = SOUNDS.register("m_timelord_hurt", () -> setUpSound("m_timelord_hurt"));
-
+    public static final RegistryObject< SoundEvent > STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
+    public static final RegistryObject< SoundEvent > RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));
 
     private static SoundEvent setUpSound(String soundName) {
         return new SoundEvent(new ResourceLocation(RConstants.MODID, soundName));

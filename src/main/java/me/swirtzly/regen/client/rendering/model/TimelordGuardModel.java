@@ -73,6 +73,21 @@ public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
 
         super.setRotationAngles(timelordEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
+
+        if(timelordEntity.getAiming()) {
+            bipedLeftArm.rotateAngleX = bipedHead.rotateAngleX;
+            bipedLeftArm.rotateAngleY = bipedHead.rotateAngleY;
+            bipedLeftArm.rotateAngleZ = bipedHead.rotateAngleZ;
+            bipedRightArm.rotateAngleX = bipedHead.rotateAngleX;
+            bipedRightArm.rotateAngleY = bipedHead.rotateAngleY;
+            bipedRightArm.rotateAngleZ = bipedHead.rotateAngleZ;
+            float aimTicks = timelordEntity.getAimingTicks();
+            bipedLeftArm.rotateAngleX = (float) Math.toRadians(-55F + aimTicks * -30F);
+            bipedLeftArm.rotateAngleY = (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
+            bipedRightArm.rotateAngleX = (float) Math.toRadians(-42F + aimTicks * -48F);
+            bipedRightArm.rotateAngleY = (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
+        }
+
         Head.copyModelAngles(bipedHead);
         Body.copyModelAngles(bipedBody);
         LeftArm.copyModelAngles(bipedLeftArm);

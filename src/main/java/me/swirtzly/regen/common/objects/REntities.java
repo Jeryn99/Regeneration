@@ -1,5 +1,6 @@
 package me.swirtzly.regen.common.objects;
 
+import me.swirtzly.regen.common.entities.LaserProjectile;
 import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.entities.WatcherEntity;
 import me.swirtzly.regen.util.RConstants;
@@ -18,6 +19,7 @@ public class REntities {
     public static final DeferredRegister< EntityType< ? > > ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, RConstants.MODID);
     public static RegistryObject< EntityType< TimelordEntity > > TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
     public static RegistryObject< EntityType< WatcherEntity > > WATCHER = ENTITIES.register("watcher", () -> registerNoSpawnerBase(WatcherEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "watcher"));
+    public static RegistryObject< EntityType< LaserProjectile > > LASER = ENTITIES.register("laser", () -> registerNoSpawnerBase(LaserProjectile::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "laser"));
 
 
     // Entity Creation

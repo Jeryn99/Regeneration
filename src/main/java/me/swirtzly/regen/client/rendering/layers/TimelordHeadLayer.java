@@ -30,9 +30,27 @@ public class TimelordHeadLayer extends LayerRenderer< TimelordEntity, BipedModel
         entitymodel.bipedRightArmwear.showModel = false;
         entitymodel.bipedLeftArmwear.showModel = false;
         entitymodel.bipedBody.showModel = true;
+
+
+
         this.getEntityModel().copyModelAttributesTo(entitymodel);
         IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityTranslucent(TimelordRenderer.getTimelordFace(entitylivingbaseIn)));
         entitymodel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        entitymodel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+
+        if(entitylivingbaseIn.getAiming()) {
+            entitymodel.bipedLeftArm.rotateAngleX = entitymodel.bipedHead.rotateAngleX;
+            entitymodel.bipedLeftArm.rotateAngleY = entitymodel.bipedHead.rotateAngleY;
+            entitymodel.bipedLeftArm.rotateAngleZ = entitymodel.bipedHead.rotateAngleZ;
+            entitymodel.bipedRightArm.rotateAngleX = entitymodel.bipedHead.rotateAngleX;
+            entitymodel.bipedRightArm.rotateAngleY = entitymodel.bipedHead.rotateAngleY;
+            entitymodel.bipedRightArm.rotateAngleZ = entitymodel.bipedHead.rotateAngleZ;
+            float aimTicks = entitylivingbaseIn.getAimingTicks();
+            entitymodel.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-55F + aimTicks * -30F);
+            entitymodel.bipedLeftArm.rotateAngleY = (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
+            entitymodel.bipedRightArm.rotateAngleX = (float) Math.toRadians(-42F + aimTicks * -48F);
+            entitymodel.bipedRightArm.rotateAngleY = (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
+        }
+
+        entitymodel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1,1,1, 1.0F);
     }
 }

@@ -25,6 +25,8 @@ public class EnglishLangGen extends LanguageProvider {
         add("regen.source.theft", "%s had their body stolen!");
         add("regen.source.lindos", "%s consumed lindos hormones! They are reborn!");
         add("regen.source.regen_killed", "%s was killed mid-regeneration...");
+        add("regen.source.staser", "%s was shot dead with a Staser");
+        add("regen.source.rifle", "%s was shot dead with a Rifle");
         add("regen.source.forced", "%s forced themselves to regenerate!");
         add("regen.timelord_type.female_council", "Timelord Council (Female)");
         add("regen.timelord_type.guard", "Timelord Guard");
@@ -52,6 +54,8 @@ public class EnglishLangGen extends LanguageProvider {
 
         //Items
         add(RItems.FOB.get(), "Fob watch");
+        add(RItems.PISTOL.get(), "Staser");
+        add(RItems.RIFLE.get(), "Staser Rifle");
 
         //Messages
         add("regen.messages.regen_death_msg", "%s is regenerating...");
