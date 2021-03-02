@@ -2,6 +2,7 @@ package me.swirtzly.regen.common.entities;
 
 import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.item.ElixirItem;
+import me.swirtzly.regen.common.item.SpawnItem;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.common.objects.RSounds;
@@ -14,20 +15,16 @@ import me.swirtzly.regen.network.messages.RemoveTimelordSkinMessage;
 import me.swirtzly.regen.util.RConstants;
 import me.swirtzly.regen.util.RegenSources;
 import me.swirtzly.regen.util.RegenUtil;
-import net.minecraft.client.renderer.entity.SnowManRenderer;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.merchant.villager.*;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.entity.projectile.SnowballEntity;
-import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -37,11 +34,14 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -126,8 +126,8 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(1, new SwimGoal(this));
         if (getTimelordType() == TimelordType.GUARD) {
-            this.goalSelector.addGoal(2, new TimelordAttacK(this, 1.0D, 20, 20.0F));
-        }else{
+            this.goalSelector.addGoal(2, new TimelordAttackGoal(this, 1.0D, 20, 20.0F));
+        } else {
             this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
         }
         this.applyEntityAI();
@@ -140,7 +140,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
     }
 
-    public void setup(){
+    public void setup() {
         if (!world.isRemote()) {
 
             RegenCap.get(this).ifPresent((data) -> {
@@ -274,11 +274,12 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         getDataManager().set(IS_MALE, male);
     }
 
-   @Override
+    @Override
     protected void populateTradeData() {
         if (getTimelordType() == TimelordType.COUNCIL) {
+            MerchantOffers merchantoffers = this.getOffers();
+
             for (int i = rand.nextInt(7); i > 0; i--) {
-                MerchantOffers merchantoffers = this.getOffers();
                 Traits.ITrait trait = Traits.getRandomTrait(rand, false);
                 ItemStack item = new ItemStack(RItems.ELIXIR.get());
                 Item[] currency = new Item[]{
@@ -291,6 +292,13 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[rand.nextInt(currency.length)], MathHelper.clamp(rand.nextInt(10), 6, 20)), item, rand.nextInt(7), 5)};
                 this.addTrades(merchantoffers, trades, 5);
             }
+
+            TimelordTrade[] tradetrades = new TimelordTrade[]{
+                    new TimelordEntity.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(Items.GUNPOWDER, 4), new ItemStack(RItems.RIFLE.get()), rand.nextInt(7), 5),
+                    new TimelordEntity.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(Items.BLAZE_ROD, 4), new ItemStack(RItems.PISTOL.get()), rand.nextInt(7), 5)
+            };
+            this.addTrades(merchantoffers, tradetrades, 5);
+
         }
     }
 
@@ -314,12 +322,12 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         LaserProjectile laserProjectile = new LaserProjectile(REntities.LASER.get(), this, world);
         laserProjectile.setDamage(isPistol ? 4 : 10);
         laserProjectile.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
-        double d0 = target.getPosYEye() - (double)1.1F;
+        double d0 = target.getPosYEye() - (double) 1.1F;
         double d1 = target.getPosX() - this.getPosX();
         double d2 = d0 - laserProjectile.getPosY();
         double d3 = target.getPosZ() - this.getPosZ();
         float f = MathHelper.sqrt(d1 * d1 + d3 * d3) * 0.2F;
-        laserProjectile.shoot(d1, d2 + (double)f, d3, 1.6F, 0);
+        laserProjectile.shoot(d1, d2 + (double) f, d3, 1.6F, 0);
         this.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 1.0F, 0.4F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
         this.world.addEntity(laserProjectile);
     }
@@ -360,6 +368,21 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         } else {
             return super.func_230254_b_(p_230254_1_, p_230254_2_);
         }
+    }
+
+    @Override
+    public ItemStack getPickedResult(RayTraceResult target) {
+        switch (getTimelordType()) {
+            case GUARD:
+                ItemStack guardStack = new ItemStack(RItems.SPAWN_ITEM.get());
+                SpawnItem.setType(guardStack, SpawnItem.Timelord.GUARD);
+                return guardStack;
+            case COUNCIL:
+                ItemStack councilStack = new ItemStack(RItems.SPAWN_ITEM.get());
+                SpawnItem.setType(councilStack, isMale() ? SpawnItem.Timelord.MALE_COUNCIL : SpawnItem.Timelord.FEMALE_COUNCIL);
+                return councilStack;
+        }
+        return null;
     }
 
     public enum TimelordType {

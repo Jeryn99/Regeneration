@@ -8,6 +8,7 @@ import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -42,6 +43,17 @@ public class LaserProjectile extends ThrowableEntity {
         this.damageSrc = damage;
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        double speed = (new Vector3d(this.getPosX(), this.getPosY(), this.getPosZ())).distanceTo(new Vector3d(this.prevPosX, this.prevPosY, this.prevPosZ));
+        if (!this.world.isRemote && (this.ticksExisted > 600 || speed < 0.01D)) {
+            this.remove();
+        }
+        if (isAlive()) {
+            super.tick();
+        }
+    }
 
     @Override
     protected void onEntityHit(EntityRayTraceResult entityRayTraceResult) {

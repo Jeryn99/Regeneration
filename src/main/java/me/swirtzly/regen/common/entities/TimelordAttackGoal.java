@@ -6,16 +6,16 @@ import net.minecraft.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.inventory.EquipmentSlotType;
 
 /* Created by Craig on 01/03/2021 */
-public class TimelordAttacK extends RangedAttackGoal {
+public class TimelordAttackGoal extends RangedAttackGoal {
 
     private final TimelordEntity timelord;
 
-    public TimelordAttacK(IRangedAttackMob attacker, double movespeed, int maxAttackTime, float maxAttackDistanceIn) {
+    public TimelordAttackGoal(IRangedAttackMob attacker, double movespeed, int maxAttackTime, float maxAttackDistanceIn) {
         super(attacker, movespeed, maxAttackTime, maxAttackDistanceIn);
         this.timelord = (TimelordEntity) attacker;
     }
 
-    public TimelordAttacK(IRangedAttackMob attacker, double movespeed, int p_i1650_4_, int maxAttackTime, float maxAttackDistanceIn) {
+    public TimelordAttackGoal(IRangedAttackMob attacker, double movespeed, int p_i1650_4_, int maxAttackTime, float maxAttackDistanceIn) {
         super(attacker, movespeed, p_i1650_4_, maxAttackTime, maxAttackDistanceIn);
         this.timelord = (TimelordEntity) attacker;
     }

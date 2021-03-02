@@ -82,7 +82,13 @@ public class GunItem extends Item {
                 setDamage(stack, getDamage(stack) - 1);
             }
         }
-        stack.getOrCreateTag().putBoolean("live", true);
+
+        if(entityIn instanceof PlayerEntity) {
+         PlayerEntity playerEntity = (PlayerEntity) entityIn;
+            if (getDamage(stack) == getMaxDamage(stack)) {
+                playerEntity.getCooldownTracker().setCooldown(this, 666);
+            }
+        }
     }
 
     public float getDamage() {
