@@ -48,6 +48,8 @@ public class DyeableClothingItem extends ArmorItem implements IDyeableArmorItem 
     @Nullable
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        return TIMELORD.toString();
+        return stack.getOrCreateTag().contains(SWIFT_KEY) ? TIMELORD.toString() : "regeneration:textures/entity/armour/robes.png";
     }
+
+    public static String SWIFT_KEY = "yOulqmuNmMtget3CxeKbWwr0FVanx90M35TlMFdmHI0Rda3y3iMCqFp";
 }

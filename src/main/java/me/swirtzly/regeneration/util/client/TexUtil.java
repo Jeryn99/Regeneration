@@ -68,7 +68,6 @@ public class TexUtil {
             File file = new File("./regen_temp/" + current + ".png");
             FileUtils.copyInputStreamToFile(is, file);
             String skin = HandleSkins.imageToPixelData(file);
-            FileUtils.cleanDirectory(new File("./regen_temp"));
             return skin;
         } catch (IOException e) {
             e.printStackTrace();

@@ -16,9 +16,16 @@ public class ClothingItem extends ArmorItem {
 
 
     public static ResourceLocation TIMELORD = new ResourceLocation(Regeneration.MODID, "textures/entity/armour/gaurd_armour.png");
+    private String prefix = null;
 
     public ClothingItem(EquipmentSlotType slot) {
         super(ArmorMaterial.GOLD, slot, new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
+        this.prefix = "guard_SLOT";
+    }
+
+    public ClothingItem(EquipmentSlotType slot, String prefix) {
+        super(ArmorMaterial.GOLD, slot, new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
+        this.prefix = prefix;
     }
 
     @Override
@@ -40,6 +47,9 @@ public class ClothingItem extends ArmorItem {
     @Nullable
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        return TIMELORD.toString();
+        String path = "regeneration:textures/entity/armour/" + prefix + ".png";
+        path = path.replaceAll("SLOT", slot.getName());
+        String result = stack.getOrCreateTag().contains(DyeableClothingItem.SWIFT_KEY) ? TIMELORD.toString() : path;
+        return result;
     }
 }

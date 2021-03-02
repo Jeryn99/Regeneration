@@ -1,18 +1,18 @@
 package me.swirtzly.regeneration.client.rendering.model;
 
-import me.swirtzly.regeneration.common.capability.RegenCap;
-import me.swirtzly.regeneration.common.entity.TimelordEntity;
-import me.swirtzly.regeneration.common.item.GunItem;
-import me.swirtzly.regeneration.util.common.PlayerUtil;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ArmorStandEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 
 /**
  * Created by Swirtzly
  * on 08/05/2020 @ 11:28
  */
-public class TimelordGuardModel extends BipedModel< TimelordEntity > {
+public class GuardArmorNew extends BipedModel {
     private final RendererModel Head;
     private final RendererModel Body;
     private final RendererModel RightArm;
@@ -20,7 +20,10 @@ public class TimelordGuardModel extends BipedModel< TimelordEntity > {
     private final RendererModel RightLeg;
     private final RendererModel LeftLeg;
 
-    public TimelordGuardModel() {
+    EquipmentSlotType type = EquipmentSlotType.CHEST;
+
+    public GuardArmorNew(EquipmentSlotType type) {
+        this.type = type;
         textureWidth = 80;
         textureHeight = 80;
 
@@ -65,31 +68,26 @@ public class TimelordGuardModel extends BipedModel< TimelordEntity > {
     }
 
     @Override
-    public void render(TimelordEntity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(LivingEntity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         // head.render(f5);
-        Head.render(f5);
-        Body.render(f5);
-        RightArm.render(f5);
-        LeftArm.render(f5);
-        RightLeg.render(f5);
-        LeftLeg.render(f5);
 
-        Head.isHidden = false;
-    }
-
-    @Override
-    public void setRotationAngles(TimelordEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
-        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-        RegenCap.get(entityIn).ifPresent((data) -> {
-            data.getRegenType().create().getRenderer().animateEntity(this, entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-
-            if (entityIn.getHeldItemMainhand().getItem() instanceof GunItem && data.getState() != PlayerUtil.RegenState.REGENERATING) {
-                rightArmPose = ArmPose.BOW_AND_ARROW;
+        setRotationAngles(entity, f, f1, f2, f3, f4, f5);
+        if (type == EquipmentSlotType.HEAD) {
+            if (entity instanceof ArmorStandEntity) {
+                GlStateManager.rotatef(90, 0F, 1, 0F);
             }
+            Head.render(f5);
+        }
 
-            if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                rightArmPose = ArmPose.EMPTY;
-            }
-        });
+        if (type == EquipmentSlotType.CHEST) {
+            Body.render(f5);
+            RightArm.render(f5);
+            LeftArm.render(f5);
+        }
+
+        if (type == EquipmentSlotType.LEGS || type == EquipmentSlotType.FEET) {
+            RightLeg.render(f5);
+            LeftLeg.render(f5);
+        }
     }
 }

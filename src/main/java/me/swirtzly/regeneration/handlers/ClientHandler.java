@@ -262,11 +262,13 @@ public class ClientHandler {
         }
     }
 
+    public static boolean render = false;
+
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent e) {
+        render = true;
         Minecraft mc = Minecraft.getInstance();
         ClientPlayerEntity player = Minecraft.getInstance().player;
-
         float factor = 0.2F;
         if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0) return;
 

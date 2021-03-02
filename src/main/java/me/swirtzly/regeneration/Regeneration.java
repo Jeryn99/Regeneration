@@ -44,9 +44,11 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 
 @Mod(Regeneration.MODID)
@@ -135,6 +137,15 @@ public class Regeneration {
         proxy.postInit();
         PlayerUtil.createPostList();
         RegenUtil.TIMELORD_NAMES = RegenUtil.downloadNames();
+
+        try {
+            File dir = new File("./regen_temp");
+            if(dir.exists()) {
+                FileUtils.cleanDirectory(new File("./regen_temp"));
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
 
         new Thread(() -> {
             try {

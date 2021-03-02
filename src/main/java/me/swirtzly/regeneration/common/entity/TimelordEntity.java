@@ -210,12 +210,8 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
                     if (data.getAnimationTicks() == 100) {
-                        if (false) { //Ignore this, I need to re-implement something without breaking things
-                            setVillager(true);
-                        } else {
-                            setVillager(false);
-                            initSkin(data);
-                        }
+                        setVillager(false);
+                        initSkin(data);
                     }
                     setNoAI(true);
                     setInvulnerable(true);

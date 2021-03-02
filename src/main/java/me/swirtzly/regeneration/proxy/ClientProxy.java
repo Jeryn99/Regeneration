@@ -6,13 +6,16 @@ import me.swirtzly.regeneration.client.animation.GeneralAnimations;
 import me.swirtzly.regeneration.client.gui.BioContainerScreen;
 import me.swirtzly.regeneration.client.rendering.layers.HandsLayer;
 import me.swirtzly.regeneration.client.rendering.layers.RegenerationLayer;
+import me.swirtzly.regeneration.client.rendering.model.GuardArmorNew;
 import me.swirtzly.regeneration.client.rendering.model.GuardModel;
 import me.swirtzly.regeneration.client.rendering.model.RobeModel;
+import me.swirtzly.regeneration.client.rendering.model.RobesNew;
 import me.swirtzly.regeneration.client.rendering.tiles.ArchRender;
 import me.swirtzly.regeneration.client.rendering.tiles.HandTileRenderer;
 import me.swirtzly.regeneration.client.rendering.types.FieryRenderer;
 import me.swirtzly.regeneration.client.rendering.types.TypeLayFadeRenderer;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
+import me.swirtzly.regeneration.common.item.DyeableClothingItem;
 import me.swirtzly.regeneration.common.tiles.ArchTile;
 import me.swirtzly.regeneration.common.tiles.HandInJarTile;
 import me.swirtzly.regeneration.handlers.ClientHandler;
@@ -22,6 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.model.ModelRotation;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -38,34 +42,53 @@ import java.util.Map;
  */
 public class ClientProxy extends CommonProxy {
 
-    private static final RobeModel ROBES = new RobeModel();
-    private static final GuardModel GUARD_HEAD = new GuardModel(EquipmentSlotType.HEAD);
-    private static final GuardModel GUARD_CHEST = new GuardModel(EquipmentSlotType.CHEST);
-    private static final GuardModel GUARD_LEGGINGS = new GuardModel(EquipmentSlotType.LEGS);
-    private static final GuardModel GUARD_FEET = new GuardModel(EquipmentSlotType.FEET);
+    private static final RobesNew ROBES = new RobesNew(EquipmentSlotType.CHEST);
+    private static final RobeModel ROBES_OLD = new RobeModel();
+    private static final RobesNew ROBES_HEAD = new RobesNew(EquipmentSlotType.HEAD);
+    private static final RobesNew ROBES_LEGS = new RobesNew(EquipmentSlotType.LEGS);
+    private static final GuardArmorNew GUARD_HEAD = new GuardArmorNew(EquipmentSlotType.HEAD);
+    private static final GuardArmorNew GUARD_CHEST = new GuardArmorNew(EquipmentSlotType.CHEST);
+    private static final GuardArmorNew GUARD_LEGGINGS = new GuardArmorNew(EquipmentSlotType.LEGS);
+    private static final GuardArmorNew GUARD_FEET = new GuardArmorNew(EquipmentSlotType.FEET);
+
+    private static final GuardModel GUARD_HEAD_OLD = new GuardModel(EquipmentSlotType.HEAD);
+    private static final GuardModel GUARD_CHEST_OLD = new GuardModel(EquipmentSlotType.CHEST);
+    private static final GuardModel GUARD_LEGGINGS_OLD = new GuardModel(EquipmentSlotType.LEGS);
+    private static final GuardModel GUARD_FEET_OLD = new GuardModel(EquipmentSlotType.FEET);
 
     public static BipedModel getArmorModel(ItemStack item) {
-        if (item.getItem().getRegistryName().toString().contains("robes")) {
-            return ROBES;
+
+        boolean swiftItem = item.getOrCreateTag().contains(DyeableClothingItem.SWIFT_KEY);
+
+        if (item.getItem() == RegenObjects.Items.ROBES_HEAD.get()) {
+            return ROBES_HEAD;
+        }
+
+        if (item.getItem() == RegenObjects.Items.ROBES_LEGS.get()) {
+            return ROBES_LEGS;
+        }
+
+        if (item.getItem() == RegenObjects.Items.ROBES_CHEST.get()) {
+            return swiftItem ? ROBES_OLD : ROBES;
         }
 
         if (item.getItem() == RegenObjects.Items.GUARD_HEAD.get()) {
-            return GUARD_HEAD;
+            return swiftItem ? GUARD_HEAD_OLD : GUARD_HEAD;
         }
 
         if (item.getItem() == RegenObjects.Items.GUARD_CHEST.get()) {
-            return GUARD_CHEST;
+            return swiftItem ? GUARD_CHEST_OLD : GUARD_CHEST;
         }
 
         if (item.getItem() == RegenObjects.Items.GUARD_LEGGINGS.get()) {
-            return GUARD_LEGGINGS;
+            return swiftItem ? GUARD_LEGGINGS_OLD : GUARD_LEGGINGS;
         }
 
         if (item.getItem() == RegenObjects.Items.GUARD_FEET.get()) {
-            return GUARD_FEET;
+            return swiftItem ? GUARD_FEET_OLD : GUARD_FEET;
         }
 
-        return GUARD_HEAD;
+        return swiftItem ? GUARD_HEAD_OLD : GUARD_HEAD;
     }
 
     @Override

@@ -367,8 +367,9 @@ public class RegenObjects {
         public static final RegistryObject< Item > DIAL = ITEMS.register("confession_dial", ConfessionDialItem::new);
         public static final RegistryObject< Item > RIFLE = ITEMS.register("time_lord_rifle", () -> new GunItem(30, 10, 10.0F));
         public static final RegistryObject< Item > PISTOL = ITEMS.register("time_lord_gun", () -> new GunItem(18, 5, 4.0F));
+        public static final RegistryObject< Item > ROBES_HEAD = ITEMS.register("robes_hat", () -> new ClothingItem(EquipmentSlotType.HEAD, "robes"));
         public static final RegistryObject< Item > ROBES_CHEST = ITEMS.register("robes", () -> new DyeableClothingItem(EquipmentSlotType.CHEST));
-        public static final RegistryObject< Item > ROBES_HEAD = ITEMS.register("robes_hat", () -> new DyeableClothingItem(EquipmentSlotType.HEAD));
+        public static final RegistryObject< Item > ROBES_LEGS = ITEMS.register("robes_legs", () -> new DyeableClothingItem(EquipmentSlotType.LEGS));
 
         public static final RegistryObject< Item > GUARD_HEAD = ITEMS.register("guard_head", () -> new ClothingItem(EquipmentSlotType.HEAD));
         public static final RegistryObject< Item > GUARD_CHEST = ITEMS.register("guard_chest", () -> new ClothingItem(EquipmentSlotType.CHEST));

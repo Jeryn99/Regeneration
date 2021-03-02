@@ -14,6 +14,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 
+import static me.swirtzly.regeneration.common.item.DyeableClothingItem.SWIFT_KEY;
+
 public class GeneralAnimations implements AnimationManager.IAnimate {
 
     public static void copyAnglesToWear(BipedModel modelBiped) {
@@ -35,16 +37,23 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
         RegenCap.get(entity).ifPresent((data) -> {
             if (!(renderer.getEntityModel() instanceof BipedModel)) return;
             BipedModel modelPlayer = (BipedModel) renderer.getEntityModel();
-            boolean isWearingChest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
+            boolean swift = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getOrCreateTag().contains(SWIFT_KEY);
+            boolean isWearingChest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get() || !swift && entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES_CHEST.get();
             if (data.hasDroppedHand() && data.getState() == PlayerUtil.RegenState.POST) {
                 modelPlayer.bipedRightArm.isHidden = data.getCutoffHand() == HandSide.RIGHT;
                 modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
             } else {
 
+                boolean oldValue = modelPlayer.bipedLeftArm.isHidden;
                 if (entity.getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
                     boolean isFirstPerson = Minecraft.getInstance().gameSettings.thirdPersonView == 0;
                     modelPlayer.bipedLeftArm.isHidden = !isFirstPerson && isWearingChest;
                     modelPlayer.bipedRightArm.isHidden = !isFirstPerson && isWearingChest;
+
+                    if(isFirstPerson){
+                        modelPlayer.bipedLeftArm.isHidden = oldValue;
+                        modelPlayer.bipedRightArm.isHidden = oldValue;
+                    }
                 }
 
             }

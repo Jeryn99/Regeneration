@@ -11,6 +11,8 @@ import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
+import me.swirtzly.regeneration.common.item.GunItem;
+import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -40,7 +42,7 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
     public static EntityModel< TimelordEntity > mainModel = new TimelordModel();
     public static EntityModel< TimelordEntity > councilModel = new TimelordModel();
     public static EntityModel< TimelordEntity > guardModel = new TimelordGuardModel();
-    public static PlayerModel< TimelordEntity > bipedModel = new PlayerModel<>(0.05f, true);
+    public static PlayerModel< TimelordEntity > bipedModel = new PlayerModel<>(-0.25F, true);
 
     public static ResourceLocation TIMELORD = new ResourceLocation(Regeneration.MODID, "textures/entity/timelords/timelord/timelord_villager.png");
 
@@ -119,9 +121,18 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
                 }
 
                 bipedModel.bipedHead.isHidden = false;
+                bipedModel.bipedRightArm.isHidden = false;
+                bipedModel.bipedLeftArm.isHidden = false;
+                bipedModel.bipedBody.isHidden = false;
+                bipedModel.bipedBodyWear.isHidden = false;
                 bipedModel.bipedHeadwear.isHidden = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
 
                 bipedModel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+
+                bipedModel.rightArmPose = entityModel.rightArmPose;
+                bipedModel.leftArmPose = entityModel.leftArmPose;
+                bipedModel.bipedRightArm.copyModelAngles(entityModel.bipedRightArm);
+                bipedModel.bipedLeftArm.copyModelAngles(entityModel.bipedLeftArm);
                 bipedModel.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
             }
 
