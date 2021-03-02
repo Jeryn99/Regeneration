@@ -86,7 +86,7 @@ public class GunItem extends Item {
         if(entityIn instanceof PlayerEntity) {
          PlayerEntity playerEntity = (PlayerEntity) entityIn;
             if (getDamage(stack) == getMaxDamage(stack)) {
-                playerEntity.getCooldownTracker().setCooldown(this, 666);
+                playerEntity.getCooldownTracker().setCooldown(this, 100 * getMaxDamage(stack));
             }
         }
     }
@@ -97,6 +97,6 @@ public class GunItem extends Item {
 
     @Override
     public UseAction getUseAction(ItemStack stack) {
-        return UseAction.BOW;
+        return UseAction.NONE;
     }
 }

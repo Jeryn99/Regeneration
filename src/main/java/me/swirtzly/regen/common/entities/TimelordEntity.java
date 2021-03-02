@@ -1,5 +1,6 @@
 package me.swirtzly.regen.common.entities;
 
+import me.swirtzly.regen.client.animation.AnimationHandler;
 import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.item.ElixirItem;
 import me.swirtzly.regen.common.item.SpawnItem;
@@ -24,6 +25,7 @@ import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -34,10 +36,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -160,6 +159,11 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 setEquipmentBasedOnDifficulty(world.getDifficultyForLocation(getPosition()));
             });
         }
+    }
+
+    @Override
+    protected SoundEvent getVillagerYesNoSound(boolean getYesSound) {
+        return super.getVillagerYesNoSound(getYesSound);
     }
 
     @Nullable
@@ -351,11 +355,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     @Override
     public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
         ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
-        if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.hasCustomer() && !this.isChild()) {
-            if (p_230254_2_ == Hand.MAIN_HAND) {
-                p_230254_1_.addStat(Stats.TALKED_TO_VILLAGER);
-            }
-
+        if (itemstack.getItem() != RItems.SPAWN_ITEM.get() && this.isAlive() && !this.hasCustomer() && !this.isChild()) {
             if (this.getOffers().isEmpty()) {
                 return ActionResultType.func_233537_a_(this.world.isRemote);
             } else {

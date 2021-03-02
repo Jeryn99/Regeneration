@@ -89,6 +89,14 @@ public class ClientUtil {
             return 0.1F;
         });
 
+        ItemModelsProperties.registerProperty(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, p_call_3_) -> {
+            return p_call_3_.getItemInUseCount() > 0 ? 1 : 0;
+        });
+
+        ItemModelsProperties.registerProperty(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, p_call_3_) -> {
+            return p_call_3_.getItemInUseCount() > 0 ? 1 : 0;
+        });
+
 
         ItemModelsProperties.registerProperty(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity) -> {
             if (itemStack == null || itemStack.isEmpty()) {

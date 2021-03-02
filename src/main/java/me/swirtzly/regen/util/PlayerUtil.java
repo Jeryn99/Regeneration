@@ -8,8 +8,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -105,6 +108,36 @@ public class PlayerUtil {
 
     public static void updateModel(SkinType choices) {
         NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ModelMessage(choices));
+    }
+
+    public static boolean isInHand(Hand hand, LivingEntity holder, Item item) {
+        ItemStack heldItem = holder.getHeldItem(hand);
+        return heldItem.getItem() == item;
+    }
+
+    public static boolean isInMainHand(LivingEntity holder, Item item) {
+        return isInHand(Hand.MAIN_HAND, holder, item);
+    }
+
+    /**
+     * Checks if player has item in offhand
+     */
+    public static boolean isInOffHand(LivingEntity holder, Item item) {
+        return isInHand(Hand.OFF_HAND, holder, item);
+    }
+
+    /**
+     * Checks if player has item in either hand
+     */
+    public static boolean isInEitherHand(LivingEntity holder, Item item) {
+        return isInMainHand(holder, item) || isInOffHand(holder, item);
+    }
+
+    // MAIN_HAND xor OFF_HAND
+    public static boolean isInOneHand(LivingEntity holder, Item item) {
+        boolean mainHand = (isInMainHand(holder, item) && !isInOffHand(holder, item));
+        boolean offHand = (isInOffHand(holder, item) && !isInMainHand(holder, item));
+        return mainHand || offHand;
     }
 
     public enum SkinType implements RegenUtil.IEnum< SkinType > {
