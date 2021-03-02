@@ -25,7 +25,7 @@ public class LangCreation extends LanguageProvider {
         this.add(RegenObjects.Items.ARCH_PART.get(), "Biological Upgrade");
         this.add(RegenObjects.Items.FOB_WATCH.get(), "Fob watch");
         this.add(RegenObjects.Items.HAND.get(), "%s's Chopped off hand");
-        this.add(RegenObjects.Items.ROBES_LEGS.get(), "Lower Robes");
+        this.add(RegenObjects.Items.ROBES_LEGS.get(), "Council Lower Robes");
 
         //Weapons
         this.add(RegenObjects.Items.PISTOL.get(), "Gallifreyan Staser");
