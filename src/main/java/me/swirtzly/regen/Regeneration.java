@@ -48,7 +48,7 @@ public class Regeneration {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doCommonStuff);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
-        NetworkDispatcher.setUp();
+        NetworkDispatcher.init();
         PlayerUtil.setupPotions();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);

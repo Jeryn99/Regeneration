@@ -154,7 +154,7 @@ class CommonActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        if(cap.getLiving() instanceof PlayerEntity) {
+        if (cap.getLiving() instanceof PlayerEntity) {
             NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getEntityWorld().getDimensionKey()), new SFXMessage(getRandomSound(living.getRNG(), cap).getRegistryName(), living.getUniqueID()));
         } else {
             living.playSound(getRandomSound(living.getRNG(), cap), 1, 1);

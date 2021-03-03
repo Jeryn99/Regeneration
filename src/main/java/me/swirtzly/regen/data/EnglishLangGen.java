@@ -57,6 +57,21 @@ public class EnglishLangGen extends LanguageProvider {
         add(RItems.PISTOL.get(), "Staser");
         add(RItems.RIFLE.get(), "Staser Rifle");
 
+        add(RItems.M_ROBES_HEAD.get(), "Timelord Collar Piece (Male)");
+        add(RItems.M_ROBES_CHEST.get(), "Timelord Suit (Male)");
+        add(RItems.M_ROBES_LEGS.get(), "Timelord Lower Robes (Male)");
+        add(RItems.M_ROBES_FEET.get(), "Timelord Shoes Robes (Male)");
+
+        add(RItems.F_ROBES_HEAD.get(), "Timelord Collar Piece (Female)");
+        add(RItems.F_ROBES_CHEST.get(), "Timelord Suit (Female)");
+        add(RItems.F_ROBES_LEGS.get(), "Timelord Lower Robes (Female)");
+        add(RItems.F_ROBES_FEET.get(), "Timelord Shoes Robes (Female)");
+
+        add(RItems.GUARD_HELMET.get(), "Timelord Solider Helmet");
+        add(RItems.GUARD_CHEST.get(), "Timelord Chest Armor");
+        add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
+        add(RItems.GUARD_FEET.get(), "Timelord Boots");
+
         //Messages
         add("regen.messages.regen_death_msg", "%s is regenerating...");
         add("regen.messages.now_timelord", "You are now a Time lord!");

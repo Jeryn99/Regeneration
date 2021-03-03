@@ -364,20 +364,20 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         this.world.addEntity(laserProjectile);
     }
 
-    public void setAiming(boolean isAiming) {
-        getDataManager().set(AIMING, isAiming);
-    }
-
     public boolean getAiming() {
         return getDataManager().get(AIMING);
     }
 
-    public void setAimingTicks(float isAiming) {
-        getDataManager().set(AIMING_TICKS, isAiming);
+    public void setAiming(boolean isAiming) {
+        getDataManager().set(AIMING, isAiming);
     }
 
     public float getAimingTicks() {
         return getDataManager().get(AIMING_TICKS);
+    }
+
+    public void setAimingTicks(float isAiming) {
+        getDataManager().set(AIMING_TICKS, isAiming);
     }
 
     @Override

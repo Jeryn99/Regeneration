@@ -74,7 +74,7 @@ public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
         super.setRotationAngles(timelordEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
 
-        if(timelordEntity.getAiming()) {
+        if (timelordEntity.getAiming()) {
             bipedLeftArm.rotateAngleX = bipedHead.rotateAngleX;
             bipedLeftArm.rotateAngleY = bipedHead.rotateAngleY;
             bipedLeftArm.rotateAngleZ = bipedHead.rotateAngleZ;

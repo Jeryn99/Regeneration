@@ -32,12 +32,11 @@ public class TimelordHeadLayer extends LayerRenderer< TimelordEntity, BipedModel
         entitymodel.bipedBody.showModel = true;
 
 
-
         this.getEntityModel().copyModelAttributesTo(entitymodel);
         IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityTranslucent(TimelordRenderer.getTimelordFace(entitylivingbaseIn)));
         entitymodel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
-        if(entitylivingbaseIn.getAiming()) {
+        if (entitylivingbaseIn.getAiming()) {
             entitymodel.bipedLeftArm.rotateAngleX = entitymodel.bipedHead.rotateAngleX;
             entitymodel.bipedLeftArm.rotateAngleY = entitymodel.bipedHead.rotateAngleY;
             entitymodel.bipedLeftArm.rotateAngleZ = entitymodel.bipedHead.rotateAngleZ;
@@ -51,6 +50,6 @@ public class TimelordHeadLayer extends LayerRenderer< TimelordEntity, BipedModel
             entitymodel.bipedRightArm.rotateAngleY = (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
         }
 
-        entitymodel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1,1,1, 1.0F);
+        entitymodel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0F);
     }
 }

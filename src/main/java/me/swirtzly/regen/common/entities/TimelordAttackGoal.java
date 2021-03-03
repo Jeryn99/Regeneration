@@ -29,9 +29,9 @@ public class TimelordAttackGoal extends RangedAttackGoal {
     @Override
     public void tick() {
         super.tick();
-        if(timelord.getAiming() && timelord.getAimingTicks() < 1.0F){
+        if (timelord.getAiming() && timelord.getAimingTicks() < 1.0F) {
             timelord.setAimingTicks(timelord.getAimingTicks() + 0.1F);
-        } else if(!timelord.getAiming() && timelord.getAimingTicks() > 0.0F) {
+        } else if (!timelord.getAiming() && timelord.getAimingTicks() > 0.0F) {
             timelord.setAimingTicks(timelord.getAimingTicks() - 0.1F);
         }
     }

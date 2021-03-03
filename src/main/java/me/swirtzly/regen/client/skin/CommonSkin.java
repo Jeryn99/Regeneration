@@ -10,7 +10,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -22,7 +21,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -144,7 +142,7 @@ public class CommonSkin {
         uc = url.openConnection();
         uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
         BufferedImage img = ImageIO.read(uc.getInputStream());
-      //  img= toBlackAndWhite(img);
+        //  img= toBlackAndWhite(img);
         File file = specific;
         if (!file.exists()) {
             file.mkdirs();
@@ -293,7 +291,7 @@ public class CommonSkin {
             for (String gender : genders) {
                 for (String skin : getSkins("https://namemc.com/minecraft-skins/tag/" + gender)) {
                     String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
-                    downloadSkinsSpecific(new URL(skin), "timelord_" +gender +"_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE : SKIN_DIRECTORY_FEMALE);
+                    downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE : SKIN_DIRECTORY_FEMALE);
                 }
             }
         }

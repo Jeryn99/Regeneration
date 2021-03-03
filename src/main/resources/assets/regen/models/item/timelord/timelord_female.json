@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "regen:item/council_female"  }
+    "layer0": "regen:item/council_female"
+  }
 }

@@ -1,20 +1,19 @@
 package me.swirtzly.regen.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.client.RKeybinds;
 import me.swirtzly.regen.client.rendering.entity.RenderLaser;
 import me.swirtzly.regen.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regen.client.rendering.entity.WatcherRenderer;
 import me.swirtzly.regen.client.rendering.layers.HandLayer;
 import me.swirtzly.regen.client.rendering.layers.RenderRegenLayer;
+import me.swirtzly.regen.client.rendering.model.armor.GuardModel;
+import me.swirtzly.regen.client.rendering.model.armor.RobesModel;
 import me.swirtzly.regen.common.item.ElixirItem;
 import me.swirtzly.regen.common.item.SpawnItem;
 import me.swirtzly.regen.common.objects.RBlocks;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
-import me.swirtzly.regen.common.regen.RegenCap;
-import me.swirtzly.regen.common.regen.transitions.FieryTransition;
 import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.util.sound.MovingSound;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
@@ -29,8 +28,11 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.settings.PointOfView;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -48,6 +50,54 @@ import static me.swirtzly.regen.common.item.FobWatchItem.getEngrave;
 import static me.swirtzly.regen.common.item.FobWatchItem.getOpen;
 
 public class ClientUtil {
+
+    private static final BipedModel<?> GUARD_HEAD = new GuardModel(EquipmentSlotType.HEAD);
+    private static final BipedModel<?> GUARD_BODY = new GuardModel(EquipmentSlotType.CHEST);
+    private static final BipedModel<?> GUARD_LEGS = new GuardModel(EquipmentSlotType.LEGS);
+    private static final BipedModel<?> GUARD_FEET = new GuardModel(EquipmentSlotType.FEET);
+
+    private static final BipedModel<?> ROBES_HEAD = new RobesModel(EquipmentSlotType.HEAD);
+    private static final BipedModel<?> ROBES_BODY = new RobesModel(EquipmentSlotType.CHEST);
+    private static final BipedModel<?> ROBES_LEGS = new RobesModel(EquipmentSlotType.LEGS);
+    private static final BipedModel<?> ROBES_FEET = new RobesModel(EquipmentSlotType.FEET);
+
+
+    //TODO maybe I should make this a hashmap
+    public static BipedModel<?> getArmorModel(ItemStack itemStack) {
+
+        if(itemStack.getItem() == RItems.F_ROBES_HEAD.get() || itemStack.getItem() == RItems.M_ROBES_HEAD.get()) {
+            return ROBES_HEAD;
+        }
+
+        if(itemStack.getItem() == RItems.F_ROBES_CHEST.get() || itemStack.getItem() == RItems.M_ROBES_CHEST.get()) {
+            return ROBES_BODY;
+        }
+
+        if(itemStack.getItem() == RItems.F_ROBES_LEGS.get() || itemStack.getItem() == RItems.M_ROBES_LEGS.get()) {
+            return ROBES_LEGS;
+        }
+
+        if(itemStack.getItem() == RItems.F_ROBES_FEET.get() || itemStack.getItem() == RItems.M_ROBES_FEET.get()) {
+            return ROBES_FEET;
+        }
+
+        if(itemStack.getItem() == RItems.GUARD_HELMET.get()) {
+            return GUARD_HEAD;
+        }
+
+        if(itemStack.getItem() == RItems.GUARD_CHEST.get()) {
+            return GUARD_BODY;
+        }
+
+        if(itemStack.getItem() == RItems.GUARD_LEGS.get()) {
+            return GUARD_LEGS;
+        }
+
+        if(itemStack.getItem() == RItems.GUARD_FEET.get()) {
+            return GUARD_FEET;
+        }
+        return GUARD_FEET;
+    }
 
     public static void doClientStuff() {
         /* Attach RenderLayers to Renderers */
@@ -90,14 +140,14 @@ public class ClientUtil {
         });
 
         ItemModelsProperties.registerProperty(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
-            if(livingEntity == null){
+            if (livingEntity == null) {
                 return 0;
             }
             return livingEntity.getItemInUseCount() > 0 ? 1 : 0;
         });
 
         ItemModelsProperties.registerProperty(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
-            if(livingEntity == null){
+            if (livingEntity == null) {
                 return 0;
             }
             return livingEntity.getItemInUseCount() > 0 ? 1 : 0;
@@ -122,8 +172,6 @@ public class ClientUtil {
             TabRegistry.registerTab(new InventoryTabVanilla());
         }
         TabRegistry.registerTab(new RegenPrefTab());
-
-
     }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {

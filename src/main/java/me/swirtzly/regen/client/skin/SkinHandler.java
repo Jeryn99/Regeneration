@@ -3,6 +3,7 @@ package me.swirtzly.regen.client.skin;
 
 import com.google.common.base.MoreObjects;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import me.swirtzly.regen.common.objects.RItems;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.network.messages.SkinMessage;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
@@ -67,7 +69,9 @@ public class SkinHandler {
                 playerEntity.playerInfo.loadPlayerTextures();
                 isAlex = playerEntity.playerInfo.getSkinType().contentEquals("slim");
             }
-
+            if(playerEntity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RItems.GUARD_CHEST.get()){
+                isAlex = true;
+            }
             setPlayerSkinType(playerEntity, isAlex);
         });
     }

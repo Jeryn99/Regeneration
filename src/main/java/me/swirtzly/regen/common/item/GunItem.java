@@ -1,6 +1,5 @@
 package me.swirtzly.regen.common.item;
 
-import me.swirtzly.regen.client.skin.SkinHandler;
 import me.swirtzly.regen.common.entities.LaserProjectile;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
@@ -84,8 +83,8 @@ public class GunItem extends Item {
             }
         }
 
-        if(entityIn instanceof PlayerEntity) {
-         PlayerEntity playerEntity = (PlayerEntity) entityIn;
+        if (entityIn instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) entityIn;
             if (getDamage(stack) == getMaxDamage(stack)) {
                 playerEntity.getCooldownTracker().setCooldown(this, getMaxDamage(stack) * cooldown * 20);
             }

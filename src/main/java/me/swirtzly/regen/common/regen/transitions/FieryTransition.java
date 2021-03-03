@@ -1,7 +1,6 @@
 package me.swirtzly.regen.common.regen.transitions;
 
 import me.swirtzly.regen.client.rendering.transitions.FieryTransitionRenderer;
-import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RSounds;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.config.RegenConfig;
@@ -41,7 +40,7 @@ public class FieryTransition implements TransitionType< FieryTransitionRenderer 
 
         if (livingEntity.world.isRemote) return;
 
-        if(livingEntity.getType() == EntityType.PLAYER) {
+        if (livingEntity.getType() == EntityType.PLAYER) {
             BlockPos livingPos = new BlockPos(livingEntity.getPositionVec());
             if (livingEntity.world.getBlockState(livingPos).getBlock() instanceof FireBlock)
                 livingEntity.world.removeBlock(livingPos, false);

@@ -41,7 +41,6 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_SCREAM = SOUNDS.register("m_alvin_timelord_scream", () -> setUpSound("m_alvin_timelord_scream"));
 
 
-
     public static final RegistryObject< SoundEvent > STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
     public static final RegistryObject< SoundEvent > RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));
 

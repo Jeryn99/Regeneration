@@ -3,7 +3,6 @@ package me.swirtzly.regen.common.world.gen;
 import com.google.common.collect.ImmutableMap;
 import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.objects.REntities;
-import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.block.Blocks;

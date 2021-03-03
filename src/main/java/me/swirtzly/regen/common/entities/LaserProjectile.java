@@ -58,7 +58,7 @@ public class LaserProjectile extends ThrowableEntity {
     @Override
     protected void onEntityHit(EntityRayTraceResult entityRayTraceResult) {
         Entity entity = entityRayTraceResult.getEntity();
-        if(entity instanceof LivingEntity){
+        if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
             livingEntity.attackEntityFrom(damageSrc, damage);
         }

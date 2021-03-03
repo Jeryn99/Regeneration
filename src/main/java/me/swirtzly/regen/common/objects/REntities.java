@@ -3,7 +3,6 @@ package me.swirtzly.regen.common.objects;
 import me.swirtzly.regen.common.entities.LaserProjectile;
 import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.entities.WatcherEntity;
-import me.swirtzly.regen.common.traits.TraitFireResistant;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;

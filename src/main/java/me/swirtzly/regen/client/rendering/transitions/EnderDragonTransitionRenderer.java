@@ -5,11 +5,9 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.state.RegenStates;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.HandSide;
@@ -64,7 +62,8 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
 
     @Override
     public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        MatrixStack matrix = matrixStackIn;;
+        MatrixStack matrix = matrixStackIn;
+        ;
 
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             int ticksAnimating = iRegen.getTicksAnimating() / 2;
