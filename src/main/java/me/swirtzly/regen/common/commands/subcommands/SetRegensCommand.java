@@ -28,7 +28,7 @@ public class SetRegensCommand implements Command< CommandSource > {
 
 
     @Override
-    public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
+    public int run(CommandContext< CommandSource > context) {
         CommandSource source = context.getSource();
         Integer amount = context.getArgument("amount", Integer.class);
         String username = context.getArgument("username", String.class);

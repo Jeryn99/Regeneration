@@ -10,7 +10,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -19,6 +22,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -140,6 +144,7 @@ public class CommonSkin {
         uc = url.openConnection();
         uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
         BufferedImage img = ImageIO.read(uc.getInputStream());
+      //  img= toBlackAndWhite(img);
         File file = specific;
         if (!file.exists()) {
             file.mkdirs();
@@ -147,6 +152,12 @@ public class CommonSkin {
 
         Regeneration.LOG.warn("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
         ImageIO.write(img, "png", new File(file, filename + ".png"));
+    }
+
+    public static BufferedImage toBlackAndWhite(BufferedImage img) {
+        BufferedImage gray = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+        return op.filter(img, gray);
     }
 
     public static void internalSkinsDownload() throws IOException {
@@ -260,15 +271,20 @@ public class CommonSkin {
     }
 
     public static void downloadTimelord() throws IOException {
-        File trendingDir = SKIN_DIRECTORY_FEMALE;
-        if (!trendingDir.exists()) {
-            if (trendingDir.mkdirs()) {
+        if (!SKIN_DIRECTORY_FEMALE.exists()) {
+            if (SKIN_DIRECTORY_FEMALE.mkdirs()) {
                 Regeneration.LOG.info("Creating Directory: " + SKIN_DIRECTORY_FEMALE);
                 Regeneration.LOG.info("Creating Directory: " + SKIN_DIRECTORY_MALE);
             }
         }
-        long attr = trendingDir.lastModified();
-        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
+        if (!SKIN_DIRECTORY_MALE.exists()) {
+            if (SKIN_DIRECTORY_MALE.mkdirs()) {
+                Regeneration.LOG.info("Creating Directory: " + SKIN_DIRECTORY_MALE);
+            }
+        }
+
+        long attr = SKIN_DIRECTORY_MALE.lastModified();
+        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(SKIN_DIRECTORY_MALE.list()).length == 0) {
             FileUtils.cleanDirectory(SKIN_DIRECTORY_FEMALE);
             FileUtils.cleanDirectory(SKIN_DIRECTORY_MALE);
             Regeneration.LOG.warn("Refreshing Timelord skins");
@@ -277,7 +293,7 @@ public class CommonSkin {
             for (String gender : genders) {
                 for (String skin : getSkins("https://namemc.com/minecraft-skins/tag/" + gender)) {
                     String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
-                    downloadSkinsSpecific(new URL(skin), "timelord_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE : SKIN_DIRECTORY_FEMALE);
+                    downloadSkinsSpecific(new URL(skin), "timelord_" +gender +"_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE : SKIN_DIRECTORY_FEMALE);
                 }
             }
         }

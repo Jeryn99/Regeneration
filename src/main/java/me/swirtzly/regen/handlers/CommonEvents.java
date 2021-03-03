@@ -104,6 +104,13 @@ public class CommonEvents {
 
             Entity trueSource = event.getSource().getTrueSource();
 
+
+            if (event.getSource().isFireDamage() && iRegen.getTrait().getRegistryName().toString().equals(Traits.FIRE.get().getRegistryName().toString())) {
+                event.setCanceled(true);
+                event.setAmount(0.0F);
+                return;
+            }
+
             if (trueSource instanceof PlayerEntity && event.getEntityLiving() != null) {
                 PlayerEntity player = (PlayerEntity) trueSource;
                 RegenCap.get(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));

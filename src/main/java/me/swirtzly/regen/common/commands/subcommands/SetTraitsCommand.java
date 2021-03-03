@@ -20,7 +20,7 @@ public class SetTraitsCommand implements Command< CommandSource > {
     private static final SetTraitsCommand CMD = new SetTraitsCommand();
 
     public static ArgumentBuilder< CommandSource, ? > register(CommandDispatcher< CommandSource > dispatcher) {
-        return Commands.literal("set-traits")
+        return Commands.literal("set-trait")
                 .then(Commands.argument("username", StringArgumentType.string())
                         .suggests((context, builder) -> ISuggestionProvider.suggest(ServerLifecycleHooks.getCurrentServer().getOnlinePlayerNames(), builder))
                         .then(Commands.argument("trait", TraitsArgumentType.createArgument())

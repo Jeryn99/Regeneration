@@ -89,12 +89,18 @@ public class ClientUtil {
             return 0.1F;
         });
 
-        ItemModelsProperties.registerProperty(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, p_call_3_) -> {
-            return p_call_3_.getItemInUseCount() > 0 ? 1 : 0;
+        ItemModelsProperties.registerProperty(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
+            if(livingEntity == null){
+                return 0;
+            }
+            return livingEntity.getItemInUseCount() > 0 ? 1 : 0;
         });
 
-        ItemModelsProperties.registerProperty(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, p_call_3_) -> {
-            return p_call_3_.getItemInUseCount() > 0 ? 1 : 0;
+        ItemModelsProperties.registerProperty(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
+            if(livingEntity == null){
+                return 0;
+            }
+            return livingEntity.getItemInUseCount() > 0 ? 1 : 0;
         });
 
 

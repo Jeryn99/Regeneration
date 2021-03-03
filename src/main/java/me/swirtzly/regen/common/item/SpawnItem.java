@@ -3,6 +3,7 @@ package me.swirtzly.regen.common.item;
 import me.swirtzly.regen.common.entities.TimelordEntity;
 import me.swirtzly.regen.common.objects.REntities;
 import me.swirtzly.regen.common.objects.RItems;
+import me.swirtzly.regen.common.objects.RSoundSchemes;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.entity.player.PlayerEntity;
@@ -64,6 +65,7 @@ public class SpawnItem< E extends TimelordEntity > extends Item {
         if (!worldIn.isRemote) {
             TimelordEntity timelord = REntities.TIMELORD.get().create(worldIn);
             timelord.setMale(getType(context.getItem()).isMale());
+            timelord.setPersonality(RSoundSchemes.getRandom(timelord.isMale()).identify().toString());
             if (getType(context.getItem()) == Timelord.GUARD) {
                 timelord.setTimelordType(TimelordEntity.TimelordType.GUARD);
             } else {

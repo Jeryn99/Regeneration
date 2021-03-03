@@ -1,12 +1,9 @@
 package me.swirtzly.regen.common.entities;
 
-import me.swirtzly.regen.client.animation.AnimationHandler;
 import me.swirtzly.regen.client.skin.CommonSkin;
 import me.swirtzly.regen.common.item.ElixirItem;
 import me.swirtzly.regen.common.item.SpawnItem;
-import me.swirtzly.regen.common.objects.REntities;
-import me.swirtzly.regen.common.objects.RItems;
-import me.swirtzly.regen.common.objects.RSounds;
+import me.swirtzly.regen.common.objects.*;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.common.regen.RegenCap;
 import me.swirtzly.regen.common.regen.transitions.TransitionTypes;
@@ -25,7 +22,6 @@ import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
@@ -35,7 +31,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -59,6 +54,7 @@ import static me.swirtzly.regen.util.RegenUtil.USERNAMES;
 public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
     private static final DataParameter< String > TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
+    private static final DataParameter< String > PERSONALITY = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter< Boolean > AIMING = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter< Boolean > IS_MALE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter< Float > AIMING_TICKS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.FLOAT);
@@ -98,6 +94,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         getDataManager().register(AIMING, false);
         getDataManager().register(AIMING_TICKS, 0.0F);
         getDataManager().register(IS_MALE, rand.nextBoolean());
+        getDataManager().register(PERSONALITY, RSoundSchemes.getRandom(isMale()).identify().toString());
         setup();
     }
 
@@ -163,7 +160,8 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     @Override
     protected SoundEvent getVillagerYesNoSound(boolean getYesSound) {
-        return super.getVillagerYesNoSound(getYesSound);
+        SoundScheme personality = getPersonality();
+        return getYesSound ? personality.getTradeAcceptSound() : personality.getTradeDeclineSound();
     }
 
     @Nullable
@@ -172,6 +170,11 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         return null;
     }
 
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return getPersonality().getDeathSound();
+    }
 
     public void genName() {
         if (USERNAMES.length <= 0) {
@@ -229,7 +232,15 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 }
 
                 if (data.getCurrentState() == REGENERATING) {
+
+                    if (data.getTicksAnimating() == 10) {
+                        if (getPersonality().getScreamSound() != null) {
+                            playSound(getPersonality().getScreamSound(), 1, 1);
+                        }
+                    }
                     if (data.getTicksAnimating() == 100) {
+                        setMale(rand.nextBoolean());
+                        setPersonality(RSoundSchemes.getRandom(isMale()).identify().toString());
                         initSkin(data);
                     }
                     setNoAI(true);
@@ -242,6 +253,10 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         });
     }
 
+    @Override
+    protected float getSoundPitch() {
+        return 1;
+    }
 
     @Override
     public void onKillCommand() {
@@ -251,11 +266,20 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         remove();
     }
 
+    public SoundScheme getPersonality() {
+        return RSoundSchemes.get(new ResourceLocation(getDataManager().get(PERSONALITY)));
+    }
+
+    public void setPersonality(String per) {
+        getDataManager().set(PERSONALITY, per);
+    }
+
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putString("timelord_type", getTimelordType().name());
-        compound.putBoolean("is_male", getDataManager().get(IS_MALE));
+        compound.putBoolean("is_male", isMale());
+        compound.putString("personality", getPersonality().identify().toString());
     }
 
     @Override
@@ -267,6 +291,10 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
         if (compound.contains("is_male")) {
             setMale(compound.getBoolean("is_male"));
+        }
+
+        if (compound.contains("personality")) {
+            setPersonality(compound.getString("personality"));
         }
     }
 
@@ -293,7 +321,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                         Items.IRON_INGOT
                 };
                 ElixirItem.setTrait(item, trait);
-                TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[rand.nextInt(currency.length)], MathHelper.clamp(rand.nextInt(10), 6, 20)), item, rand.nextInt(7), 5)};
+                TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[rand.nextInt(currency.length - 1)], MathHelper.clamp(rand.nextInt(10), 6, 20)), item, rand.nextInt(7), 5)};
                 this.addTrades(merchantoffers, trades, 5);
             }
 
@@ -316,7 +344,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return isMale() ? RSounds.M_TIMELORD_HURT.get() : RSounds.F_TIMELORD_HURT.get();
+        return getPersonality().getHurtSound();
     }
 
     @Override

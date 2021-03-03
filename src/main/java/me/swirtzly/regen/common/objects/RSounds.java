@@ -29,8 +29,19 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > REGENERATION_TROUGHTON = SOUNDS.register("regeneration_troughton", () -> setUpSound("regeneration_troughton"));
     public static final RegistryObject< SoundEvent > REGENERATION_WATCHER = SOUNDS.register("regeneration_watcher", () -> setUpSound("regeneration_watcher"));
     public static final RegistryObject< SoundEvent > DRUM_BEAT = SOUNDS.register("drum_beat", () -> setUpSound("drum_beat"));
-    public static final RegistryObject< SoundEvent > F_TIMELORD_HURT = SOUNDS.register("f_timelord_hurt", () -> setUpSound("f_timelord_hurt"));
-    public static final RegistryObject< SoundEvent > M_TIMELORD_HURT = SOUNDS.register("m_timelord_hurt", () -> setUpSound("m_timelord_hurt"));
+    //Angela Timelord
+    public static final RegistryObject< SoundEvent > F_ANGELA_TIMELORD_HURT = SOUNDS.register("f_angela_timelord_hurt", () -> setUpSound("f_angela_timelord_hurt"));
+    //Gas Timelord
+    public static final RegistryObject< SoundEvent > M_GAS_TIMELORD_HURT = SOUNDS.register("m_gas_timelord_hurt", () -> setUpSound("m_gas_timelord_hurt"));
+    //Ramen Timelord
+    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_HURT = SOUNDS.register("m_alvin_timelord_hurt", () -> setUpSound("m_alvin_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_DIE = SOUNDS.register("m_alvin_timelord_die", () -> setUpSound("m_alvin_timelord_die"));
+    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_TRADE_FAIL = SOUNDS.register("m_alvin_timelord_trade_fail", () -> setUpSound("m_alvin_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_alvin_timelord_trade_success", () -> setUpSound("m_alvin_timelord_trade_success"));
+    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_SCREAM = SOUNDS.register("m_alvin_timelord_scream", () -> setUpSound("m_alvin_timelord_scream"));
+
+
+
     public static final RegistryObject< SoundEvent > STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
     public static final RegistryObject< SoundEvent > RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));
 

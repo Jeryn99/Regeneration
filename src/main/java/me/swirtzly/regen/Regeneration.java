@@ -13,7 +13,6 @@ import me.swirtzly.regen.config.RegenConfig;
 import me.swirtzly.regen.data.BlockstateGen;
 import me.swirtzly.regen.data.EnglishLangGen;
 import me.swirtzly.regen.data.RRecipeGen;
-import me.swirtzly.regen.data.RSoundsGen;
 import me.swirtzly.regen.network.NetworkDispatcher;
 import me.swirtzly.regen.util.*;
 import net.minecraft.data.DataGenerator;
@@ -70,6 +69,7 @@ public class Regeneration {
         GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().create());
         GlobalEntityTypeAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().create());
         DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
+        RSoundSchemes.init();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -80,7 +80,6 @@ public class Regeneration {
     public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
         generator.addProvider(new EnglishLangGen(generator));
-        generator.addProvider(new RSoundsGen(generator));
         generator.addProvider(new RRecipeGen(generator));
         generator.addProvider(new BlockstateGen(generator));
     }

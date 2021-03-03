@@ -3,7 +3,7 @@
   "package": "me.swirtzly.regen.mixin",
   "compatiblityLevel": "JAVA_8",
   "refmap": "regen.refmap.json",
-  "mixins": [
+  "client": [
     "BipedBodyMixin",
     "SoundSourceMixin"
   ],

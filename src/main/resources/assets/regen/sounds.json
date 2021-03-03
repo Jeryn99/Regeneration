@@ -17,12 +17,12 @@
       "regen:drum_beat"
     ]
   },
-  "f_timelord_hurt": {
+  "f_angela_timelord_hurt": {
     "subtitle": "regen.sound.f_timelord_hurt",
     "sounds": [
-      "regen:timelord/female/f_timelord_hurt_3",
-      "regen:timelord/female/f_timelord_hurt_1",
-      "regen:timelord/female/f_timelord_hurt_2"
+      "regen:timelord/female/angela/f_timelord_hurt_3",
+      "regen:timelord/female/angela/f_timelord_hurt_1",
+      "regen:timelord/female/angela/f_timelord_hurt_2"
     ]
   },
   "fob_watch": {
@@ -58,12 +58,50 @@
       "regen:jar_bubbles"
     ]
   },
-  "m_timelord_hurt": {
+  "m_gas_timelord_hurt": {
     "subtitle": "regen.sound.m_timelord_hurt",
     "sounds": [
-      "regen:timelord/male/m_timelord_hurt_3",
-      "regen:timelord/male/m_timelord_hurt_2",
-      "regen:timelord/male/m_timelord_hurt_1"
+      "regen:timelord/male/gas/m_timelord_hurt_3",
+      "regen:timelord/male/gas/m_timelord_hurt_2",
+      "regen:timelord/male/gas/m_timelord_hurt_1"
+    ]
+  },
+  "m_alvin_timelord_hurt": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/alvin/m_timelord_hurt_3",
+      "regen:timelord/male/alvin/m_timelord_hurt_2",
+      "regen:timelord/male/alvin/m_timelord_hurt_1"
+    ]
+  },
+  "m_alvin_timelord_die": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/alvin/m_timelord_die_1"
+    ]
+  },
+  "m_alvin_timelord_trade_fail": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/alvin/m_timelord_trade_fail_1",
+      "regen:timelord/male/alvin/m_timelord_trade_fail_2",
+      "regen:timelord/male/alvin/m_timelord_trade_fail_3"
+    ]
+  },
+  "m_alvin_timelord_trade_success": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/alvin/m_timelord_trade_success_1",
+      "regen:timelord/male/alvin/m_timelord_trade_success_2",
+      "regen:timelord/male/alvin/m_timelord_trade_success_3",
+      "regen:timelord/male/alvin/m_timelord_trade_success_4"
+    ]
+  },
+  "m_alvin_timelord_scream": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/alvin/m_timelord_trade_scream_1",
+      "regen:timelord/male/alvin/m_timelord_trade_scream_2"
     ]
   },
   "regeneration_0": {

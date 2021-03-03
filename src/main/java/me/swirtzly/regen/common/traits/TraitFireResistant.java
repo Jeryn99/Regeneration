@@ -3,6 +3,7 @@ package me.swirtzly.regen.common.traits;
 import me.swirtzly.regen.common.regen.IRegen;
 import me.swirtzly.regen.util.RConstants;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
