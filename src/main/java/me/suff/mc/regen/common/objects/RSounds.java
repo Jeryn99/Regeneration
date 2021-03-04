@@ -47,6 +47,14 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > M_TOMMY_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_tommy_timelord_trade_success", () -> setUpSound("m_tommy_timelord_trade_success"));
     public static final RegistryObject< SoundEvent > M_TOMMY_TIMELORD_SCREAM = SOUNDS.register("m_tommy_timelord_scream", () -> setUpSound("m_tommy_timelord_scream"));
 
+    //Connor Timelord
+    public static final RegistryObject< SoundEvent > M_CONNOR_TIMELORD_HURT = SOUNDS.register("m_connor_timelord_hurt", () -> setUpSound("m_connor_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > M_CONNOR_TIMELORD_DIE = SOUNDS.register("m_connor_timelord_die", () -> setUpSound("m_connor_timelord_die"));
+    public static final RegistryObject< SoundEvent > M_CONNOR_TIMELORD_TRADE_FAIL = SOUNDS.register("m_connor_timelord_trade_fail", () -> setUpSound("m_connor_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > M_CONNOR_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_connor_timelord_trade_success", () -> setUpSound("m_connor_timelord_trade_success"));
+    public static final RegistryObject< SoundEvent > M_CONNOR_TIMELORD_SCREAM = SOUNDS.register("m_connor_timelord_scream", () -> setUpSound("m_connor_timelord_scream"));
+
+
     public static final RegistryObject< SoundEvent > STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
     public static final RegistryObject< SoundEvent > RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));
 

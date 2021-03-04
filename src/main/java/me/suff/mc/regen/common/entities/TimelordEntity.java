@@ -14,10 +14,12 @@ import me.suff.mc.regen.network.messages.RemoveTimelordSkinMessage;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
 import me.suff.mc.regen.util.RegenUtil;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -26,6 +28,7 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -96,10 +99,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         setup();
     }
 
-    @Override
-    protected void onVillagerTrade(MerchantOffer offer) {
-
-    }
 
     @Override
     public void updateSwimming() {
@@ -122,16 +121,40 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         if (getTimelordType() == TimelordType.GUARD) {
             this.goalSelector.addGoal(2, new TimelordAttackGoal(this, 1.0D, 20, 20.0F));
         } else {
+
+            Item[] currency = new Item[]{
+                    Items.GOLD_INGOT,
+                    Items.BONE,
+                    Items.EMERALD,
+                    RItems.ZINC.get(),
+                    Items.IRON_INGOT,
+            };
+
+            for (Item item : currency) {
+                this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.fromItems(item), false));
+            }
+            this.goalSelector.addGoal(1, new LookAtCustomerGoal(this));
+            this.goalSelector.addGoal(1, new PanicGoal(this, 0.5D));
             this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
         }
         this.applyEntityAI();
     }
+
+
 
     protected void applyEntityAI() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(TimelordEntity.class));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
+    }
+
+    @Override
+    protected void onVillagerTrade(MerchantOffer offer) {
+        if (offer.getDoesRewardExp()) {
+            int i = 3 + this.rand.nextInt(4);
+            this.world.addEntity(new ExperienceOrbEntity(this.world, this.getPosX(), this.getPosY() + 0.5D, this.getPosZ(), i));
+        }
     }
 
     public void setup() {
@@ -318,16 +341,17 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                         Items.GOLD_INGOT,
                         Items.BONE,
                         Items.EMERALD,
-                        Items.IRON_INGOT
+                        RItems.ZINC.get(),
+                        Items.IRON_INGOT,
                 };
                 ElixirItem.setTrait(item, trait);
-                TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[rand.nextInt(currency.length - 1)], MathHelper.clamp(rand.nextInt(10), 6, 20)), item, rand.nextInt(7), 5)};
+                TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[rand.nextInt(currency.length)], MathHelper.clamp(rand.nextInt(10), 6, 20)), item, rand.nextInt(7), 5)};
                 this.addTrades(merchantoffers, trades, 5);
             }
 
             TimelordTrade[] tradetrades = new TimelordTrade[]{
-                    new TimelordEntity.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(Items.GUNPOWDER, 4), new ItemStack(RItems.RIFLE.get()), rand.nextInt(7), 5),
-                    new TimelordEntity.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(Items.BLAZE_ROD, 4), new ItemStack(RItems.PISTOL.get()), rand.nextInt(7), 5)
+                    new TimelordEntity.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), rand.nextInt(7), 5),
+                    new TimelordEntity.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), rand.nextInt(7), 5)
             };
             this.addTrades(merchantoffers, tradetrades, 5);
 

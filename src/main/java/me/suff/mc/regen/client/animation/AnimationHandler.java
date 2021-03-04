@@ -2,6 +2,7 @@ package me.suff.mc.regen.client.animation;
 
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
@@ -17,10 +18,10 @@ public class AnimationHandler {
             TransitionType< ? > type = iRegen.getTransitionType().get();
             type.getRenderer().animate(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             correctPlayerModel(bipedModel);
-            handleArmor(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            if (iRegen.getCurrentState() != RegenStates.REGENERATING) {
+                handleArmor(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            }
         });
-
-
     }
 
     public static void handleArmor(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {

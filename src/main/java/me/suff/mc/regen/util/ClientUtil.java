@@ -9,6 +9,7 @@ import me.suff.mc.regen.client.rendering.layers.HandLayer;
 import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
 import me.suff.mc.regen.client.rendering.model.armor.GuardModel;
 import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
+import me.suff.mc.regen.client.sound.SoundReverb;
 import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.common.item.SpawnItem;
 import me.suff.mc.regen.common.objects.RBlocks;
@@ -212,21 +213,20 @@ public class ClientUtil {
 
     public static void renderSky(MatrixStack matrixStackIn, float partialTicks) {
         if (Minecraft.getInstance().world.getDimensionKey().getLocation().getPath().contains("gallifrey")) {
-            float scale = 30.0F;
-            BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
-            matrixStackIn.push();
-            matrixStackIn.scale(5, 5, 5);
-            matrixStackIn.translate(22, 0, 22);
-            Matrix4f matrix4f1 = matrixStackIn.getLast().getMatrix();
-            Minecraft.getInstance().getTextureManager().bindTexture(SUN_TEXTURES);
-            bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-            bufferbuilder.pos(matrix4f1, -scale, 100.0F, -scale).tex(0.0F, 0.0F).endVertex();
-            bufferbuilder.pos(matrix4f1, scale, 100.0F, -scale).tex(1.0F, 0.0F).endVertex();
-            bufferbuilder.pos(matrix4f1, scale, 100.0F, scale).tex(1.0F, 1.0F).endVertex();
-            bufferbuilder.pos(matrix4f1, -scale, 100.0F, scale).tex(0.0F, 1.0F).endVertex();
-            matrixStackIn.pop();
-            bufferbuilder.finishDrawing();
-            WorldVertexBufferUploader.draw(bufferbuilder);
+                float scale = 30.0F;
+                BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
+                matrixStackIn.push();
+                matrixStackIn.scale(5, 5, 5);
+                Matrix4f matrix4f1 = matrixStackIn.getLast().getMatrix();
+                Minecraft.getInstance().getTextureManager().bindTexture(SUN_TEXTURES);
+                bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+                bufferbuilder.pos(matrix4f1, -scale, 100.0F, -scale).tex(0.0F, 0.0F).endVertex();
+                bufferbuilder.pos(matrix4f1, scale, 100.0F, -scale).tex(1.0F, 0.0F).endVertex();
+                bufferbuilder.pos(matrix4f1, scale, 100.0F, scale).tex(1.0F, 1.0F).endVertex();
+                bufferbuilder.pos(matrix4f1, -scale, 100.0F, scale).tex(0.0F, 1.0F).endVertex();
+                matrixStackIn.pop();
+                bufferbuilder.finishDrawing();
+                WorldVertexBufferUploader.draw(bufferbuilder);
         }
     }
 }

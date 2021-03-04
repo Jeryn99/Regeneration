@@ -137,9 +137,41 @@ public class RSoundSchemes {
         }
     };
 
+    public static SoundScheme M_CONNOR = new SoundScheme() {
+        @Override
+        public SoundEvent getHurtSound() {
+            return RSounds.M_CONNOR_TIMELORD_HURT.get();
+        }
+
+        @Override
+        public SoundEvent getTradeDeclineSound() {
+            return RSounds.M_CONNOR_TIMELORD_TRADE_FAIL.get();
+        }
+
+        @Override
+        public SoundEvent getTradeAcceptSound() {
+            return RSounds.M_CONNOR_TIMELORD_TRADE_SUCCESS.get();
+        }
+
+        @Override
+        public SoundEvent getDeathSound() {
+            return RSounds.M_CONNOR_TIMELORD_DIE.get();
+        }
+
+        @Override
+        public SoundEvent getScreamSound() {
+            return RSounds.M_CONNOR_TIMELORD_SCREAM.get();
+        }
+
+        @Override
+        public ResourceLocation identify() {
+            return new ResourceLocation(RConstants.MODID, "connor");
+        }
+    };
+
     public static void init() {
         F_SCHEMES = new SoundScheme[]{RSoundSchemes.F_ANGELA};
-        M_SCHEMES = new SoundScheme[]{RSoundSchemes.M_GAS, M_ALVIN, M_TOMMY};
+        M_SCHEMES = new SoundScheme[]{RSoundSchemes.M_GAS, M_ALVIN, M_TOMMY, M_CONNOR};
     }
 
     public static SoundScheme getRandom(boolean isMale) {

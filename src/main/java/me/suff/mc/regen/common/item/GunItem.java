@@ -5,6 +5,7 @@ import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.util.RegenSources;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -17,6 +18,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 
@@ -124,5 +126,10 @@ public class GunItem extends Item {
     @Override
     public int getItemEnchantability(ItemStack stack) {
         return 0;
+    }
+
+    @Override
+    public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+        return false;
     }
 }
