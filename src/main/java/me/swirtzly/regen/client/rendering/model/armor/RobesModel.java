@@ -58,7 +58,7 @@ public class RobesModel extends BipedModel< LivingEntity > {
         Collar.setTextureOffset(0, 64).addBox(-7.5F, -36.275F, -2.5F, 15.0F, 12.0F, 8.0F, 0.0F, false);
 
         bipedHead.showModel = false;
-        bipedBody= Body;
+        bipedBody = Body;
         bipedLeftArm = LeftArm;
         bipedRightArm = RightArm;
         bipedRightLeg = RightLeg;
@@ -67,7 +67,7 @@ public class RobesModel extends BipedModel< LivingEntity > {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+    public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         if (slot == EquipmentSlotType.HEAD) {
             Collar.render(matrixStack, buffer, packedLight, packedOverlay);

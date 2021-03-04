@@ -2,13 +2,14 @@ package me.swirtzly.regen.common.world.gen;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import me.swirtzly.regen.common.objects.RBlocks;
 import me.swirtzly.regen.util.RConstants;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.FlatGenerationSettings;
-import net.minecraft.world.gen.feature.ProbabilityConfig;
-import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
@@ -21,6 +22,20 @@ import java.util.function.Supplier;
 
 public class RStructures {
 
+
+    public static final DeferredRegister< Feature< ? > > FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, RConstants.MODID);
+    public static final RegistryObject< Feature< OreFeatureConfig > > ZINC = FEATURES.register("zinc", () -> new OreFeature(OreFeatureConfig.CODEC));
+
+    public static ConfiguredFeature< ?, ? > GAl_ORE = null;
+    public static void registerConfiguredFeatures() {
+        GAl_ORE = ZINC.get().withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, RBlocks.ZINC_ORE.get().getDefaultState(), 9)).range(32).square().func_242731_b(2);
+        registerConfiguredFeature("zinc", GAl_ORE);
+    }
+
+    private static < T extends Feature< ? > > void registerConfiguredFeature(String registryName, ConfiguredFeature< ?, ? > configuredFeature) {
+        Registry< ConfiguredFeature< ?, ? > > registry = WorldGenRegistries.CONFIGURED_FEATURE;
+        Registry.register(registry, new ResourceLocation(RConstants.MODID, registryName), configuredFeature);
+    }
 
     /**
      * Setup the structure and add the rarity settings.

@@ -1,5 +1,6 @@
 package me.swirtzly.regen.common.item;
 
+import me.swirtzly.regen.common.objects.RItems;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Items;
@@ -10,7 +11,7 @@ import net.minecraft.util.SoundEvents;
 /* Created by Craig on 03/03/2021 */
 public class RMaterials {
 
-    private static final int[] DMG_TIME =  new int[]{3, 6, 8, 3};
+    private static final int[] DMG_TIME = new int[]{3, 6, 8, 3};
 
     public static IArmorMaterial TIMELORD = new IArmorMaterial() {
         @Override
@@ -35,7 +36,7 @@ public class RMaterials {
 
         @Override
         public Ingredient getRepairMaterial() {
-            return Ingredient.fromItems(Items.GOLD_INGOT);
+            return Ingredient.fromItems(RItems.ZINC.get());
         }
 
         @Override

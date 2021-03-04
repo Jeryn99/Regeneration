@@ -23,6 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -62,6 +63,7 @@ public class Regeneration {
         {
             RStructures.setupStructures();
             RStructures.ConfiguredStructures.registerConfiguredStructures();
+            RStructures.registerConfiguredFeatures();
         });
 
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
@@ -79,7 +81,9 @@ public class Regeneration {
     @SubscribeEvent
     public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
+        ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
         generator.addProvider(new EnglishLangGen(generator));
+        //  generator.addProvider(new ItemModelGen(generator, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
         generator.addProvider(new BlockstateGen(generator));
     }
@@ -93,6 +97,7 @@ public class Regeneration {
         RBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         RTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RStructures.Structures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RStructures.FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent

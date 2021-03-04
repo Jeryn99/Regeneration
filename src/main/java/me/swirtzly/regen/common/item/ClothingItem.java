@@ -19,13 +19,13 @@ public class ClothingItem extends ArmorItem {
     @Nullable
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
-        return "regen:textures/entity/armour/"+stack.getItem().getRegistryName().getPath()+".png";
+        return "regen:textures/entity/armour/" + stack.getItem().getRegistryName().getPath() + ".png";
     }
 
     @Nullable
     @Override
     public < A extends BipedModel< ? > > A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
-        BipedModel< LivingEntity> model = (BipedModel< LivingEntity >) ClientUtil.getArmorModel(itemStack);
+        BipedModel< LivingEntity > model = (BipedModel< LivingEntity >) ClientUtil.getArmorModel(itemStack);
         return (A) model;
     }
 }

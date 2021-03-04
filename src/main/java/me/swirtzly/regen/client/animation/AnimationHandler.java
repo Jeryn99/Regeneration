@@ -33,7 +33,7 @@ public class AnimationHandler {
     }
 
     public static boolean hideLegWear(ItemStack stack) {
-        Item[] items = new Item[]{RItems.F_ROBES_FEET.get(), RItems.F_ROBES_LEGS.get(),RItems.M_ROBES_LEGS.get(), RItems.GUARD_LEGS.get(), RItems.F_ROBES_FEET.get()};
+        Item[] items = new Item[]{RItems.F_ROBES_LEGS.get(), RItems.M_ROBES_LEGS.get(), RItems.GUARD_LEGS.get(), RItems.ROBES_FEET.get()};
         for (Item item : items) {
             if (item == stack.getItem()) {
                 return false;

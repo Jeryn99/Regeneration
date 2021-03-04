@@ -119,24 +119,38 @@ curseforge {
     }
 }
 
+repositories{
+    maven {
+        // location of the maven that hosts JEI files
+        url "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of the maven that hosts IE files
+        url "https://maven.blamejared.com/"
+    }
+    mavenCentral()
+}
+
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.4-35.1.15'
     compileOnly 'org.jetbrains:annotations:15.0'
+    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
 }
 
 mixin {
     add sourceSets.main, "regen.refmap.json"
 }
-// Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
                 "Specification-Title"     : "regen",
-                "Specification-Vendor"    : "swirtzly",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Vendor"    : "suff99",
+                "Specification-Version"   : "${version}", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : "${version}",
-                "Implementation-Vendor"   : "swirtzly",
+                "Implementation-Vendor"   : "suff99",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "MixinConfigs": "regen.mixins.json"
         ])

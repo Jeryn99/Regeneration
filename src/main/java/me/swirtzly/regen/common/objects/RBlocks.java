@@ -1,8 +1,12 @@
 package me.swirtzly.regen.common.objects;
 
 import me.swirtzly.regen.common.block.JarBlock;
+import me.swirtzly.regen.common.block.ROreBlock;
 import me.swirtzly.regen.util.RConstants;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.OreBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
@@ -21,6 +25,7 @@ public class RBlocks {
     public static final DeferredRegister< Item > BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RConstants.MODID);
 
     public static final RegistryObject< Block > BIO_CONTAINER = BLOCKS.register("bio_container", JarBlock::new);
+    public static final RegistryObject< Block > ZINC_ORE = BLOCKS.register("zinc_ore", ()-> new ROreBlock(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().hardnessAndResistance(3.0F, 3.0F)));
 
 
     private static void genBlockItems(Block... blocks) {
@@ -31,7 +36,7 @@ public class RBlocks {
 
     @SubscribeEvent
     public static void regBlockItems(RegistryEvent.Register< Item > e) {
-        //TODO Disabled: genBlockItems(BIO_CONTAINER.get());
+         genBlockItems(ZINC_ORE.get());
     }
 
 }

@@ -51,49 +51,49 @@ import static me.swirtzly.regen.common.item.FobWatchItem.getOpen;
 
 public class ClientUtil {
 
-    private static final BipedModel<?> GUARD_HEAD = new GuardModel(EquipmentSlotType.HEAD);
-    private static final BipedModel<?> GUARD_BODY = new GuardModel(EquipmentSlotType.CHEST);
-    private static final BipedModel<?> GUARD_LEGS = new GuardModel(EquipmentSlotType.LEGS);
-    private static final BipedModel<?> GUARD_FEET = new GuardModel(EquipmentSlotType.FEET);
+    private static final BipedModel< ? > GUARD_HEAD = new GuardModel(EquipmentSlotType.HEAD);
+    private static final BipedModel< ? > GUARD_BODY = new GuardModel(EquipmentSlotType.CHEST);
+    private static final BipedModel< ? > GUARD_LEGS = new GuardModel(EquipmentSlotType.LEGS);
+    private static final BipedModel< ? > GUARD_FEET = new GuardModel(EquipmentSlotType.FEET);
 
-    private static final BipedModel<?> ROBES_HEAD = new RobesModel(EquipmentSlotType.HEAD);
-    private static final BipedModel<?> ROBES_BODY = new RobesModel(EquipmentSlotType.CHEST);
-    private static final BipedModel<?> ROBES_LEGS = new RobesModel(EquipmentSlotType.LEGS);
-    private static final BipedModel<?> ROBES_FEET = new RobesModel(EquipmentSlotType.FEET);
+    private static final BipedModel< ? > ROBES_HEAD = new RobesModel(EquipmentSlotType.HEAD);
+    private static final BipedModel< ? > ROBES_BODY = new RobesModel(EquipmentSlotType.CHEST);
+    private static final BipedModel< ? > ROBES_LEGS = new RobesModel(EquipmentSlotType.LEGS);
+    private static final BipedModel< ? > ROBES_FEET = new RobesModel(EquipmentSlotType.FEET);
 
 
     //TODO maybe I should make this a hashmap
-    public static BipedModel<?> getArmorModel(ItemStack itemStack) {
+    public static BipedModel< ? > getArmorModel(ItemStack itemStack) {
 
-        if(itemStack.getItem() == RItems.F_ROBES_HEAD.get() || itemStack.getItem() == RItems.M_ROBES_HEAD.get()) {
+        if (itemStack.getItem() == RItems.F_ROBES_HEAD.get() || itemStack.getItem() == RItems.M_ROBES_HEAD.get()) {
             return ROBES_HEAD;
         }
 
-        if(itemStack.getItem() == RItems.F_ROBES_CHEST.get() || itemStack.getItem() == RItems.M_ROBES_CHEST.get()) {
+        if (itemStack.getItem() == RItems.F_ROBES_CHEST.get() || itemStack.getItem() == RItems.M_ROBES_CHEST.get()) {
             return ROBES_BODY;
         }
 
-        if(itemStack.getItem() == RItems.F_ROBES_LEGS.get() || itemStack.getItem() == RItems.M_ROBES_LEGS.get()) {
+        if (itemStack.getItem() == RItems.F_ROBES_LEGS.get() || itemStack.getItem() == RItems.M_ROBES_LEGS.get()) {
             return ROBES_LEGS;
         }
 
-        if(itemStack.getItem() == RItems.F_ROBES_FEET.get() || itemStack.getItem() == RItems.M_ROBES_FEET.get()) {
+        if (itemStack.getItem() == RItems.ROBES_FEET.get()) {
             return ROBES_FEET;
         }
 
-        if(itemStack.getItem() == RItems.GUARD_HELMET.get()) {
+        if (itemStack.getItem() == RItems.GUARD_HELMET.get()) {
             return GUARD_HEAD;
         }
 
-        if(itemStack.getItem() == RItems.GUARD_CHEST.get()) {
+        if (itemStack.getItem() == RItems.GUARD_CHEST.get()) {
             return GUARD_BODY;
         }
 
-        if(itemStack.getItem() == RItems.GUARD_LEGS.get()) {
+        if (itemStack.getItem() == RItems.GUARD_LEGS.get()) {
             return GUARD_LEGS;
         }
 
-        if(itemStack.getItem() == RItems.GUARD_FEET.get()) {
+        if (itemStack.getItem() == RItems.GUARD_FEET.get()) {
             return GUARD_FEET;
         }
         return GUARD_FEET;

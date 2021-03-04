@@ -2,7 +2,6 @@ package me.swirtzly.regen.client.rendering.model.armor;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import me.swirtzly.regen.client.animation.AnimationHandler;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
@@ -57,8 +56,8 @@ public class GuardModel extends BipedModel< LivingEntity > {
         LeftLeg.setTextureOffset(0, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, false);
 
         bipedHeadwear.showModel = false;
-        bipedHead= Head;
-        bipedBody= Body;
+        bipedHead = Head;
+        bipedBody = Body;
         bipedLeftArm = LeftArm;
         bipedRightArm = RightArm;
         bipedRightLeg = RightLeg;
