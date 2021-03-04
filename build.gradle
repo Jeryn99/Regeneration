@@ -133,7 +133,7 @@ repositories{
 
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.15'
+    minecraft "net.minecraftforge:forge:${forge_version}"
     compileOnly 'org.jetbrains:annotations:15.0'
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")

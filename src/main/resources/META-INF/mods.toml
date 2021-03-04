@@ -13,7 +13,7 @@ logoFile = "regen.png" #optional
 credits = "Connor Dawn, Angela, Magic Man, End Phoenix, Asher, TommyPie, HoldYourWaffle, GasMaskVA, Dhi, Violet" #optional
 authors = "Nictogen, Suff99, HoldYourWaffle, 50ap5ud5" #optional
 description = '''
-Minecraft Mod that allows for Players to given themselves the Power of Regeneration to Regenerate and change bodies like a timelord!
+Minecraft Mod that allows for players to given themselves the power of Regeneration to Regenerate and change bodies like a Time Lord!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.regen]] #optional
