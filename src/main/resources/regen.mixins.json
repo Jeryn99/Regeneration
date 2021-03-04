@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "me.swirtzly.regen.mixin",
+  "package": "me.suff.mc.regen.mixin",
   "compatiblityLevel": "JAVA_8",
   "refmap": "regen.refmap.json",
   "client": [

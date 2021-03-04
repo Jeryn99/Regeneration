@@ -1,6 +1,6 @@
 modLoader = "javafml" #mandatory
 loaderVersion = "[34,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
-license = "https://raw.githubusercontent.com/WhoCraft/Regeneration/1.16.3/LICENSE"
+license = "https://raw.githubusercontent.com/WhoCraft/Regeneration/1.16/LICENSE"
 issueTrackerURL = "https://github.com/WhoCraft/Regeneration/issues"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
@@ -10,8 +10,8 @@ displayName = "Regeneration" #mandatory
 updateJSONURL = "https://raw.githubusercontent.com/WhoCraft/Regeneration/skins/update.json" #optional
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration" #optional
 logoFile = "regen.png" #optional
-credits = "ConnorDawn (Idea), Dhi (Models)" #optional
-authors = "Nictogen, Swirtzly, HoldYourWaffle, 50ap5ud5" #optional
+credits = "Connor Dawn, Angela, Magic Man, End Phoenix, Asher, TommyPie, HoldYourWaffle, GasMaskVA, Dhi, Violet" #optional
+authors = "Nictogen, Suff99, HoldYourWaffle, 50ap5ud5" #optional
 description = '''
 Minecraft Mod that allows for Players to given themselves the Power of Regeneration to Regenerate and change bodies like a timelord!
 '''

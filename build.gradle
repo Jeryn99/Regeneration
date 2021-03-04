@@ -21,7 +21,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 
 
 version = '1.0.9'
-group = 'me.swirtzly.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = '[1.16] Regeneration'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
