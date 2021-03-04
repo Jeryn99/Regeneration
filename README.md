@@ -11,18 +11,20 @@
   <br><br>
 </p>
 
-<p align="center">
-  <b>Credits:</b><br>
-     <a href="https://twitter.com/Suff1999">Suff</a> |
-     <a href="https://twitter.com/TheConnorDawn">Connor Dawn</a> |
-     <a href="https://twitter.com/DisasterGaye">Angela</a> |
-     <a href="https://twitter.com/nictogen">Nictogen</a> |
-     <a href="https://twitter.com/Phoenix26947026">End Phoenix</a> |
-     <a href="https://twitter.com/Asher_Enterprix">Asher</a> |
-     <a href="#">TopNotchRamen</a> |
-     <a href="#">HoldYourWaffle</a> |
-     <a href="https://twitter.com/AlotOfSpareTime">GasMaskVA</a> |
-     <a href="https://twitter.com/50ap5ud5">50ap5ud5</a> |
-     <a href="https://twitter.com/holo_modeller">Dhi</a> 
-     <br><br>
-</p>
+
+
+  | Credit | Contribution |
+  | --- | --- |
+  <a href="https://twitter.com/Suff1999">Suff</a> | Code
+  <a href="https://twitter.com/TopNotchRamen">HoldYourWaffle</a> | Code
+  <a href="https://twitter.com/nictogen">Nictogen</a> | Code
+  <a href="https://twitter.com/50ap5ud5">50ap5ud5</a> | Code
+  <a href="https://twitter.com/TheConnorDawn">Connor Dawn</a> | Ideas & Sounds
+  <a href="https://twitter.com/DisasterGaye">Angela</a> | Ideas & Voices & Models/Textures
+  <a href="https://twitter.com/Phoenix26947026">End Phoenix</a> | Models/Textures
+  <a href="https://twitter.com/Asher_Enterprix">Asher</a> | Timelord Voices
+  <a href="https://www.youtube.com/channel/UCYFRnwIqr7Ps8FD_qDoWhIQ">TommyPie</a> | Timelord Voices
+  <a href="#">TopNotchRamen</a> | Timelord Voices
+  <a href="https://twitter.com/AlotOfSpareTime">GasMaskVA</a> | Timelord Voices
+  <a href="https://twitter.com/holo_modeller">Dhi</a> | Models & Textures
+  
