@@ -23,12 +23,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.toasts.SystemToast;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemModelsProperties;
@@ -37,6 +37,9 @@ import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -208,5 +211,27 @@ public class ClientUtil {
                 }
             }
         }
+    }
+
+    private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
+
+
+    public static void renderSky(MatrixStack matrixStackIn, float partialTicks) {
+
+        float scale = 30.0F;
+        BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
+        matrixStackIn.push();
+        matrixStackIn.scale(5,5,5);
+        matrixStackIn.translate(22,0,22);
+        Matrix4f matrix4f1 = matrixStackIn.getLast().getMatrix();
+        Minecraft.getInstance().getTextureManager().bindTexture(SUN_TEXTURES);
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos(matrix4f1, -scale, 100.0F, -scale).tex(0.0F, 0.0F).endVertex();
+        bufferbuilder.pos(matrix4f1, scale, 100.0F, -scale).tex(1.0F, 0.0F).endVertex();
+        bufferbuilder.pos(matrix4f1, scale, 100.0F, scale).tex(1.0F, 1.0F).endVertex();
+        bufferbuilder.pos(matrix4f1, -scale, 100.0F, scale).tex(0.0F, 1.0F).endVertex();
+        matrixStackIn.pop();
+        bufferbuilder.finishDrawing();
+        WorldVertexBufferUploader.draw(bufferbuilder);
     }
 }

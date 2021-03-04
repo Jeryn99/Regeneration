@@ -28,6 +28,7 @@ public class RStructures {
 
     public static ConfiguredFeature< ?, ? > GAl_ORE = null;
     public static void registerConfiguredFeatures() {
+
         GAl_ORE = ZINC.get().withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, RBlocks.ZINC_ORE.get().getDefaultState(), 9)).range(32).square().func_242731_b(2);
         registerConfiguredFeature("zinc", GAl_ORE);
     }
