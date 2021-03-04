@@ -13,7 +13,7 @@ public class RegenSources extends DamageSource {
             REGEN_DMG_KILLED = new RegenSources("regen_killed").setDamageAllowedInCreativeMode().setDamageBypassesArmor(),
             REGEN_DMG_FORCED = new RegenSources("forced").setDamageAllowedInCreativeMode().setDamageBypassesArmor(),
             REGEN_DMG_RIFLE = new RegenSources("rifle").setDamageAllowedInCreativeMode().setDamageBypassesArmor(),
-            REGEN_DMG_STASER = new RegenSources("staser").setDamageAllowedInCreativeMode().setDamageBypassesArmor();
+            REGEN_DMG_STASER = new RegenSources("staser");
 
 
     private String message = "";

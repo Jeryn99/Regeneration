@@ -108,7 +108,7 @@ public class SpawnItem< E extends TimelordEntity > extends Item {
         }
 
         public boolean isMale() {
-            return isMale;
+            return this == GUARD ? random.nextBoolean() : isMale;
         }
     }
 

@@ -98,6 +98,11 @@ public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        bipedBodyWear.showModel = false;
+        bipedLeftArmwear.showModel = false;
+        bipedRightArmwear.showModel = false;
+        bipedLeftLegwear.showModel = false;
+        bipedRightLegwear.showModel = false;
         //head.render(matrixStack, buffer, packedLight, packedOverlay);
         Head.render(matrixStack, buffer, packedLight, packedOverlay);
         Body.render(matrixStack, buffer, packedLight, packedOverlay);

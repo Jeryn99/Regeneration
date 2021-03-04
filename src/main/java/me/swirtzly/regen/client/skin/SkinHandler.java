@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
@@ -69,11 +70,15 @@ public class SkinHandler {
                 playerEntity.playerInfo.loadPlayerTextures();
                 isAlex = playerEntity.playerInfo.getSkinType().contentEquals("slim");
             }
-            if (playerEntity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RItems.GUARD_CHEST.get()) {
+            if (armorSlim(playerEntity.getItemStackFromSlot(EquipmentSlotType.CHEST))) {
                 isAlex = true;
             }
             setPlayerSkinType(playerEntity, isAlex);
         });
+    }
+
+    public static boolean armorSlim(ItemStack stack){
+        return stack.getItem() == RItems.F_ROBES_CHEST.get() || stack.getItem() == RItems.GUARD_CHEST.get() || stack.getItem() == RItems.M_ROBES_CHEST.get();
     }
 
     public static void setPlayerSkinType(AbstractClientPlayerEntity player, boolean isAlex) {

@@ -1,7 +1,6 @@
 package me.swirtzly.regen.common.item;
 
 import me.swirtzly.regen.util.ClientUtil;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

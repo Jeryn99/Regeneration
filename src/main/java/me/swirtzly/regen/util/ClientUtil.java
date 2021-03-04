@@ -38,8 +38,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,7 +61,7 @@ public class ClientUtil {
     private static final BipedModel< ? > ROBES_BODY = new RobesModel(EquipmentSlotType.CHEST);
     private static final BipedModel< ? > ROBES_LEGS = new RobesModel(EquipmentSlotType.LEGS);
     private static final BipedModel< ? > ROBES_FEET = new RobesModel(EquipmentSlotType.FEET);
-
+    private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
 
     //TODO maybe I should make this a hashmap
     public static BipedModel< ? > getArmorModel(ItemStack itemStack) {
@@ -189,7 +187,6 @@ public class ClientUtil {
         Minecraft.getInstance().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
     }
 
-
     public static PointOfView getPlayerPerspective() {
         return Minecraft.getInstance().gameSettings.getPointOfView();
     }
@@ -213,25 +210,23 @@ public class ClientUtil {
         }
     }
 
-    private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
-
-
     public static void renderSky(MatrixStack matrixStackIn, float partialTicks) {
-
-        float scale = 30.0F;
-        BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
-        matrixStackIn.push();
-        matrixStackIn.scale(5,5,5);
-        matrixStackIn.translate(22,0,22);
-        Matrix4f matrix4f1 = matrixStackIn.getLast().getMatrix();
-        Minecraft.getInstance().getTextureManager().bindTexture(SUN_TEXTURES);
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(matrix4f1, -scale, 100.0F, -scale).tex(0.0F, 0.0F).endVertex();
-        bufferbuilder.pos(matrix4f1, scale, 100.0F, -scale).tex(1.0F, 0.0F).endVertex();
-        bufferbuilder.pos(matrix4f1, scale, 100.0F, scale).tex(1.0F, 1.0F).endVertex();
-        bufferbuilder.pos(matrix4f1, -scale, 100.0F, scale).tex(0.0F, 1.0F).endVertex();
-        matrixStackIn.pop();
-        bufferbuilder.finishDrawing();
-        WorldVertexBufferUploader.draw(bufferbuilder);
+        if (Minecraft.getInstance().world.getDimensionKey().getLocation().getPath().contains("gallifrey")) {
+            float scale = 30.0F;
+            BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
+            matrixStackIn.push();
+            matrixStackIn.scale(5, 5, 5);
+            matrixStackIn.translate(22, 0, 22);
+            Matrix4f matrix4f1 = matrixStackIn.getLast().getMatrix();
+            Minecraft.getInstance().getTextureManager().bindTexture(SUN_TEXTURES);
+            bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+            bufferbuilder.pos(matrix4f1, -scale, 100.0F, -scale).tex(0.0F, 0.0F).endVertex();
+            bufferbuilder.pos(matrix4f1, scale, 100.0F, -scale).tex(1.0F, 0.0F).endVertex();
+            bufferbuilder.pos(matrix4f1, scale, 100.0F, scale).tex(1.0F, 1.0F).endVertex();
+            bufferbuilder.pos(matrix4f1, -scale, 100.0F, scale).tex(0.0F, 1.0F).endVertex();
+            matrixStackIn.pop();
+            bufferbuilder.finishDrawing();
+            WorldVertexBufferUploader.draw(bufferbuilder);
+        }
     }
 }

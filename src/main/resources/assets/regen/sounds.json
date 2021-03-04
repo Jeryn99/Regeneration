@@ -100,8 +100,54 @@
   "m_alvin_timelord_scream": {
     "subtitle": "regen.sound.m_timelord_hurt",
     "sounds": [
-      "regen:timelord/male/alvin/m_timelord_trade_scream_1",
-      "regen:timelord/male/alvin/m_timelord_trade_scream_2"
+      "regen:timelord/male/alvin/m_timelord_scream_1",
+      "regen:timelord/male/alvin/m_timelord_scream_2"
+    ]
+  },
+  "m_tommy_timelord_hurt": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_hurt_4",
+      "regen:timelord/male/tommy/m_timelord_hurt_3",
+      "regen:timelord/male/tommy/m_timelord_hurt_2",
+      "regen:timelord/male/tommy/m_timelord_hurt_1"
+    ]
+  },
+  "m_tommy_timelord_die": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_hurt_4"
+    ]
+  },
+  "m_tommy_timelord_trade_fail": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_trade_fail_1",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_2",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_3",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_4",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_5",
+      "regen:timelord/male/tommy/m_timelord_trade_fail_6"
+    ]
+  },
+  "m_tommy_timelord_trade_success": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_trade_success_1",
+      "regen:timelord/male/tommy/m_timelord_trade_success_2",
+      "regen:timelord/male/tommy/m_timelord_trade_success_3",
+      "regen:timelord/male/tommy/m_timelord_trade_success_4",
+      "regen:timelord/male/tommy/m_timelord_trade_success_5"
+    ]
+  },
+  "m_tommy_timelord_scream": {
+    "subtitle": "regen.sound.m_timelord_hurt",
+    "sounds": [
+      "regen:timelord/male/tommy/m_timelord_scream_1",
+      "regen:timelord/male/tommy/m_timelord_scream_2",
+      "regen:timelord/male/tommy/m_timelord_scream_3",
+      "regen:timelord/male/tommy/m_timelord_scream_4",
+      "regen:timelord/male/tommy/m_timelord_scream_5"
     ]
   },
   "regeneration_0": {

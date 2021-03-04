@@ -36,8 +36,7 @@ public class RRecipeGen extends RecipeProvider {
         ShapedRecipeBuilder.shapedRecipe(RItems.M_ROBES_HEAD.get()).patternLine("ZIZ").patternLine("ZLZ").patternLine("   ").key('L', Items.LEATHER).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
         ShapedRecipeBuilder.shapedRecipe(RItems.M_ROBES_CHEST.get()).patternLine("Z Z").patternLine("ZLZ").patternLine("ZIZ").key('L', Items.LEATHER).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
         ShapedRecipeBuilder.shapedRecipe(RItems.M_ROBES_LEGS.get()).patternLine("Z Z").patternLine("ZLZ").patternLine("ZIZ").key('L', Items.LEATHER).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RItems.ROBES_FEET.get()).patternLine("Z Z").patternLine("Z Z").patternLine("I I") .key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-
+        ShapedRecipeBuilder.shapedRecipe(RItems.ROBES_FEET.get()).patternLine("Z Z").patternLine("Z Z").patternLine("I I").key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
 
 
     }

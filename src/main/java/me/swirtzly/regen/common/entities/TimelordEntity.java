@@ -195,7 +195,9 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     public void initSkin(IRegen data) {
         world.getServer().runAsync(() -> {
             File file = CommonSkin.chooseRandomSkin(world.rand, !isMale(), true);
-            data.setSkin(RegenUtil.fileToBytes(file));
+            if(file != null) {
+                data.setSkin(RegenUtil.fileToBytes(file));
+            }
             data.setAlexSkin(true);
             data.syncToClients(null);
         });

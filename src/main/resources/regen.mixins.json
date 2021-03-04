@@ -5,8 +5,8 @@
   "refmap": "regen.refmap.json",
   "client": [
     "BipedBodyMixin",
-    "SoundSourceMixin",
-    "MakeTheSunMixin"
+    "MakeTheSunMixin",
+    "SoundSourceMixin"
   ],
   "minVersion": "0.8"
 }

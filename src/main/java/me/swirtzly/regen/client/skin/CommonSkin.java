@@ -2,10 +2,13 @@ package me.swirtzly.regen.client.skin;
 
 import me.swirtzly.regen.Regeneration;
 import me.swirtzly.regen.config.RegenConfig;
+import me.swirtzly.regen.util.DownloadSkinsThread;
 import me.swirtzly.regen.util.PlayerUtil;
 import me.swirtzly.regen.util.RegenUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
@@ -52,8 +55,23 @@ public class CommonSkin {
         if (isTimelord) {
             skins = isAlex ? SKIN_DIRECTORY_FEMALE : SKIN_DIRECTORY_MALE;
         }
+
+        if(!skins.exists()){
+            try {
+                CommonSkin.createDefaultFolders();
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+
         Collection< File > folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
+
+        if(folderFiles.isEmpty()){
+            DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
+            return null;
+        }
+
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
@@ -272,7 +290,6 @@ public class CommonSkin {
         if (!SKIN_DIRECTORY_FEMALE.exists()) {
             if (SKIN_DIRECTORY_FEMALE.mkdirs()) {
                 Regeneration.LOG.info("Creating Directory: " + SKIN_DIRECTORY_FEMALE);
-                Regeneration.LOG.info("Creating Directory: " + SKIN_DIRECTORY_MALE);
             }
         }
         if (!SKIN_DIRECTORY_MALE.exists()) {
