@@ -42,15 +42,21 @@ public class EnglishLangGen extends LanguageProvider {
         for (int i = 0; i < 7; i++) {
             add("regen.sound.regeneration_" + i, "Regeneration");
         }
-        add("regen.subtitles.regen_bubble", "Jar bubbles");
-        add("regen.subtitles.hum", "Calming hums");
-        add("regen.subtitles.fob_watch_dialogue", "Fob Watch Speaks");
-        add("regen.subtitles.critical_stage", "Critical Condition");
-        add("regen.subtitles.heart_beat", "Timelord Heartbeat");
-        add("regen.subtitles.hand_glow", "Glowing Hands");
-        add("regen.subtitles.fob_watch", "Ticking");
-        add("regen.subtitles.regen_breath", "Regeneration exhale");
-        add("regen.subtitles.alarm", "Regeneration Alarm");
+        add("regen.sound.regen_bubble", "Jar bubbles");
+        add("regen.sound.hum", "Calming hums");
+        add("regen.sound.fob_watch_dialogue", "Fob Watch Speaks");
+        add("regen.sound.critical_stage", "Critical Condition");
+        add("regen.sound.heart_beat", "Timelord Heartbeat");
+        add("regen.sound.hand_glow", "Glowing Hands");
+        add("regen.sound.fob_watch", "Ticking");
+        add("regen.sound.regen_breath", "Regeneration exhale");
+        add("regen.sound.alarm", "Regeneration Alarm");
+        add("regen.sound.m_timelord.hurt","Male Timelord Hurts");
+        add("regen.sound.f_timelord.hurt","Female Timelord Hurts");
+        add("regen.sound.m_timelord.die", "Male Timelord Dies");
+        add("regen.sound.m_timelord.trade_fail", "Male Timelord Trade Fail");
+        add("regen.sound.m_timelord.trade_success", "Male Timelord Trade Success");
+        add("regen.sound.m_timelord.scream", "Male Timelord Screams");
 
         //Items
         add(RItems.FOB.get(), "Fob watch");
