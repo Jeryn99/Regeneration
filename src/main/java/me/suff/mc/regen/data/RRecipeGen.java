@@ -19,7 +19,7 @@ public class RRecipeGen extends RecipeProvider {
 
     @Override
     protected void registerRecipes(Consumer< IFinishedRecipe > consumer) {
-        ShapedRecipeBuilder.shapedRecipe(RItems.FOB.get()).patternLine("QIG").patternLine("SES").patternLine("IGI").key('G', Items.GHAST_TEAR).key('I', Items.IRON_INGOT).key('E', Items.ENDER_EYE).key('S', Items.SPIDER_EYE).key('Q', Items.BLAZE_ROD).setGroup("regen").addCriterion("has_crafting_table", hasItem(Blocks.CRAFTING_TABLE)).build(consumer);
+        ShapedRecipeBuilder.shapedRecipe(RItems.FOB.get()).patternLine("QIG").patternLine("SES").patternLine("IGI").key('G', Items.GHAST_TEAR).key('I', Items.IRON_INGOT).key('E', RItems.ZINC.get()).key('S', Items.SPIDER_EYE).key('Q', Items.BLAZE_ROD).setGroup("regen").addCriterion("has_crafting_table", hasItem(Blocks.CRAFTING_TABLE)).build(consumer);
         CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(RBlocks.ZINC_ORE.get().asItem()), RItems.ZINC.get(), 0.7F, 300).addCriterion("has_any_kontron", hasItem(RBlocks.ZINC_ORE.get().asItem())).build(consumer, new ResourceLocation(RConstants.MODID, "smelt_zinc"));
         CookingRecipeBuilder.blastingRecipe(Ingredient.fromItems(RBlocks.ZINC_ORE.get().asItem()), RItems.ZINC.get(), 0.8F, 150).addCriterion("has_any_kontron", hasItem(RBlocks.ZINC_ORE.get().asItem())).build(consumer, new ResourceLocation(RConstants.MODID, "blast_zinc"));
 
