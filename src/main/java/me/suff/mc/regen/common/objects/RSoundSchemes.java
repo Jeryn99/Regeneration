@@ -73,30 +73,30 @@ public class RSoundSchemes {
         }
     };
 
-    public static SoundScheme M_ALVIN = new SoundScheme() {
+    public static SoundScheme M_RAMEN = new SoundScheme() {
         @Override
         public SoundEvent getHurtSound() {
-            return RSounds.M_ALVIN_TIMELORD_HURT.get();
+            return RSounds.M_RAMEN_TIMELORD_HURT.get();
         }
 
         @Override
         public SoundEvent getTradeDeclineSound() {
-            return RSounds.M_ALVIN_TIMELORD_TRADE_FAIL.get();
+            return RSounds.M_RAMEN_TIMELORD_TRADE_FAIL.get();
         }
 
         @Override
         public SoundEvent getTradeAcceptSound() {
-            return RSounds.M_ALVIN_TIMELORD_TRADE_SUCCESS.get();
+            return RSounds.M_RAMEN_TIMELORD_TRADE_SUCCESS.get();
         }
 
         @Override
         public SoundEvent getDeathSound() {
-            return RSounds.M_ALVIN_TIMELORD_DIE.get();
+            return RSounds.M_RAMEN_TIMELORD_DIE.get();
         }
 
         @Override
         public SoundEvent getScreamSound() {
-            return RSounds.M_ALVIN_TIMELORD_SCREAM.get();
+            return RSounds.M_RAMEN_TIMELORD_SCREAM.get();
         }
 
         @Override
@@ -171,7 +171,7 @@ public class RSoundSchemes {
 
     public static void init() {
         F_SCHEMES = new SoundScheme[]{RSoundSchemes.F_ANGELA};
-        M_SCHEMES = new SoundScheme[]{RSoundSchemes.M_GAS, M_ALVIN, M_TOMMY, M_CONNOR};
+        M_SCHEMES = new SoundScheme[]{RSoundSchemes.M_GAS, M_RAMEN, M_TOMMY, M_CONNOR};
     }
 
     public static SoundScheme getRandom(boolean isMale) {

@@ -34,11 +34,11 @@ public class RSounds {
     //Gas Timelord
     public static final RegistryObject< SoundEvent > M_GAS_TIMELORD_HURT = SOUNDS.register("m_gas_timelord_hurt", () -> setUpSound("m_gas_timelord_hurt"));
     //Ramen Timelord
-    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_HURT = SOUNDS.register("m_alvin_timelord_hurt", () -> setUpSound("m_alvin_timelord_hurt"));
-    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_DIE = SOUNDS.register("m_alvin_timelord_die", () -> setUpSound("m_alvin_timelord_die"));
-    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_TRADE_FAIL = SOUNDS.register("m_alvin_timelord_trade_fail", () -> setUpSound("m_alvin_timelord_trade_fail"));
-    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_alvin_timelord_trade_success", () -> setUpSound("m_alvin_timelord_trade_success"));
-    public static final RegistryObject< SoundEvent > M_ALVIN_TIMELORD_SCREAM = SOUNDS.register("m_alvin_timelord_scream", () -> setUpSound("m_alvin_timelord_scream"));
+    public static final RegistryObject< SoundEvent > M_RAMEN_TIMELORD_HURT = SOUNDS.register("m_ramen_timelord_hurt", () -> setUpSound("m_ramen_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > M_RAMEN_TIMELORD_DIE = SOUNDS.register("m_ramen_timelord_die", () -> setUpSound("m_ramen_timelord_die"));
+    public static final RegistryObject< SoundEvent > M_RAMEN_TIMELORD_TRADE_FAIL = SOUNDS.register("m_ramen_timelord_trade_fail", () -> setUpSound("m_ramen_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > M_RAMEN_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_ramen_timelord_trade_success", () -> setUpSound("m_ramen_timelord_trade_success"));
+    public static final RegistryObject< SoundEvent > M_RAMEN_TIMELORD_SCREAM = SOUNDS.register("m_ramen_timelord_scream", () -> setUpSound("m_ramen_timelord_scream"));
 
     //Tommy Timelord
     public static final RegistryObject< SoundEvent > M_TOMMY_TIMELORD_HURT = SOUNDS.register("m_tommy_timelord_hurt", () -> setUpSound("m_tommy_timelord_hurt"));
