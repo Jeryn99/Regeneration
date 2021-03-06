@@ -46,11 +46,14 @@ public class JarTileRender extends TileEntityRenderer< JarTile > {
         matrixStackIn.rotate(Minecraft.getInstance().getRenderManager().getCameraOrientation());
         matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
         Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
-        float f1 = Minecraft.getInstance().gameSettings.getTextBackgroundOpacity(0.25F);
         FontRenderer fontrenderer = Minecraft.getInstance().fontRenderer;
         float f2 = (float) (-fontrenderer.getStringPropertyWidth(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
         fontrenderer.func_243247_a(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
         matrixStackIn.pop();
+
+        if(tileEntityIn.isUpdateSkin()){
+            TEXTURES.remove(tileEntityIn);
+        }
 
         if (tileEntityIn.getHand().getItem() instanceof HandItem) {
             matrixStackIn.push();

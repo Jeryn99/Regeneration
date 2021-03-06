@@ -33,6 +33,7 @@ import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABI
 public class JarTile extends TileEntity implements ITickableTileEntity {
 
     private float lindos = 0F;
+    private boolean updateSkin = true;
     private ItemStackHandler itemHandler = createHandler();
     private LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
@@ -63,6 +64,12 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
         if (isValid(Action.CREATE) && world.getGameTime() % 77 == 0) {
             world.playSound(null, getPos(), RSounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.2F, 0.2F);
         }
+
+        if(world.getGameTime() % 100 == 0){
+            if(updateSkin){
+                setUpdateSkin(false);
+            }
+        }
     }
 
     public boolean isValid(Action action){
@@ -78,6 +85,7 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     public void dropHandIfPresent() {
         if(!getHand().isEmpty()){
             InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), getHand());
+            setHand(ItemStack.EMPTY);
         }
     }
 
@@ -109,6 +117,7 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
         if(nbt.contains("inv")) {
             itemHandler.deserializeNBT(nbt.getCompound("inv"));
         }
+        setUpdateSkin(nbt.getBoolean("update_skin"));
         super.read(state, nbt);
     }
 
@@ -116,9 +125,17 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     public CompoundNBT write(CompoundNBT compound) {
         compound.putFloat("energy", getLindos());
         compound.put("inv", itemHandler.serializeNBT());
+        compound.putBoolean("update_skin", updateSkin);
         return super.write(compound);
     }
 
+    public void setUpdateSkin(boolean updateSkin) {
+        this.updateSkin = updateSkin;
+    }
+
+    public boolean isUpdateSkin() {
+        return updateSkin;
+    }
 
     // ==== Inventory ====
 

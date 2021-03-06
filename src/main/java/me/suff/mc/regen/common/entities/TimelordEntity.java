@@ -14,7 +14,6 @@ import me.suff.mc.regen.network.messages.RemoveTimelordSkinMessage;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
 import me.suff.mc.regen.util.RegenUtil;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -58,6 +57,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     private static final DataParameter< String > PERSONALITY = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter< Boolean > AIMING = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter< Boolean > IS_MALE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter< Boolean > HAS_SETUP = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter< Float > AIMING_TICKS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.FLOAT);
 
     private final SwimmerPathNavigator waterNavigator;
@@ -88,6 +88,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         return null;
     }
 
+
     @Override
     protected void registerData() {
         super.registerData();
@@ -96,6 +97,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         getDataManager().register(AIMING_TICKS, 0.0F);
         getDataManager().register(IS_MALE, rand.nextBoolean());
         getDataManager().register(PERSONALITY, RSoundSchemes.getRandom(isMale()).identify().toString());
+        getDataManager().register(HAS_SETUP, false);
         setup();
     }
 
@@ -141,7 +143,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     }
 
 
-
     protected void applyEntityAI() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(TimelordEntity.class));
@@ -175,6 +176,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 initSkin(data);
                 genName();
                 setEquipmentBasedOnDifficulty(world.getDifficultyForLocation(getPosition()));
+                getDataManager().set(HAS_SETUP, true);
             });
         }
     }
@@ -240,6 +242,11 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     @Override
     public void tick() {
+
+        if (!getDataManager().get(HAS_SETUP)) {
+            setup();
+        }
+
         super.tick();
 
         RegenCap.get(this).ifPresent((data) -> {
@@ -302,6 +309,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         super.writeAdditional(compound);
         compound.putString("timelord_type", getTimelordType().name());
         compound.putBoolean("is_male", isMale());
+        compound.putBoolean("setup", getDataManager().get(HAS_SETUP));
         compound.putString("personality", getPersonality().identify().toString());
     }
 
@@ -318,6 +326,10 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
         if (compound.contains("personality")) {
             setPersonality(compound.getString("personality"));
+        }
+
+        if (compound.contains("setup")) {
+            getDataManager().set(HAS_SETUP, compound.getBoolean("setup"));
         }
     }
 

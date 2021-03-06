@@ -19,6 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
@@ -193,7 +194,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onCut(PlayerInteractEvent.RightClickItem event) {
-        if (event.getItemStack().getItem() instanceof ToolItem) {
+        if (event.getItemStack().getItem() instanceof ToolItem || event.getItemStack().getItem() instanceof SwordItem) {
             PlayerEntity player = event.getPlayer();
             RegenCap.get(player).ifPresent((data) -> {
                 if (data.getCurrentState() == RegenStates.POST && player.isSneaking() & data.getHandState() == IRegen.Hand.NO_GONE) {

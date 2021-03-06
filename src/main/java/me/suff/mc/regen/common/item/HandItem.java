@@ -66,6 +66,7 @@ public class HandItem extends Item {
         return Traits.fromID(stack.getOrCreateTag().getString("trait"));
     }
 
+    //TODO Finish off the benefits to the hand process  
     public static void createHand(LivingEntity livingEntity) {
         ItemStack itemStack = new ItemStack(RItems.HAND.get());
         RegenCap.get(livingEntity).ifPresent(iRegen -> {

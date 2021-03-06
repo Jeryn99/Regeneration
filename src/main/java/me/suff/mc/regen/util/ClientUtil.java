@@ -161,9 +161,7 @@ public class ClientUtil {
             return livingEntity.getItemInUseCount() > 0 ? 1 : 0;
         });
 
-        ItemModelsProperties.registerProperty(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity) -> {
-            return HandItem.isAlex(stack) ? 0 : 1;
-        });
+        ItemModelsProperties.registerProperty(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity) -> HandItem.isAlex(stack) ? 1 : 0);
 
 
         ItemModelsProperties.registerProperty(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity) -> {

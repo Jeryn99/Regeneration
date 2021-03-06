@@ -72,6 +72,7 @@ public class JarBlock extends DirectionalBlock {
                 if (player.getHeldItemMainhand().getItem() == RItems.HAND.get()) {
                     jarTile.dropHandIfPresent();
                     jarTile.setHand(player.getHeldItemMainhand().copy());
+                    jarTile.setUpdateSkin(true);
                     player.getHeldItemMainhand().shrink(1);
                 } else {
                     jarTile.dropHandIfPresent();
