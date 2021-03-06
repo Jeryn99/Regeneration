@@ -85,7 +85,6 @@ public class Regeneration {
         generator.addProvider(new EnglishLangGen(generator));
         //  generator.addProvider(new ItemModelGen(generator, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
-        generator.addProvider(new BlockstateGen(generator));
     }
 
     @SubscribeEvent

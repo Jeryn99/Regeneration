@@ -1,6 +1,7 @@
 package me.suff.mc.regen.client.animation;
 
 import me.suff.mc.regen.common.objects.RItems;
+import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
@@ -10,6 +11,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AnimationHandler {
 
@@ -30,7 +33,16 @@ public class AnimationHandler {
             playerModel.bipedBodyWear.showModel = hideBodyWear(livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST));
             playerModel.bipedLeftArmwear.showModel = playerModel.bipedRightArmwear.showModel = livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() != RItems.GUARD_CHEST.get();
             playerModel.bipedLeftLegwear.showModel = playerModel.bipedRightLegwear.showModel = hideLegWear(livingEntity.getItemStackFromSlot(EquipmentSlotType.LEGS));
+            playerModel.bipedLeftArmwear.showModel = playerModel.bipedLeftArm.showModel = showArms(livingEntity);
         }
+    }
+
+    public static boolean showArms(LivingEntity livingEntity) {
+        AtomicBoolean show = new AtomicBoolean(true);
+        RegenCap.get(livingEntity).ifPresent(iRegen -> {
+            show.set(iRegen.getHandState() == IRegen.Hand.LEFT_GONE);
+        });
+        return !show.get();
     }
 
     public static boolean hideLegWear(ItemStack stack) {

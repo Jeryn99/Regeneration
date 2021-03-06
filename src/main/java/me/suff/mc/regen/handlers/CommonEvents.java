@@ -3,6 +3,7 @@ package me.suff.mc.regen.handlers;
 import com.mojang.brigadier.CommandDispatcher;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.commands.RegenCommand;
+import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
@@ -18,6 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -133,7 +135,7 @@ public class CommonEvents {
             }
 
             //Handle Post
-            if (iRegen.getCurrentState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD) {
+            if (iRegen.getCurrentState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
                 event.setAmount(1.5F);
                 PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.reduced_dmg"), true);
             }
@@ -187,6 +189,18 @@ public class CommonEvents {
     public static void onServerStart(FMLServerStartingEvent event) {
         CommandDispatcher< CommandSource > dispatcher = event.getServer().getCommandManager().getDispatcher();
         RegenCommand.register(dispatcher);
+    }
+
+    @SubscribeEvent
+    public static void onCut(PlayerInteractEvent.RightClickItem event) {
+        if (event.getItemStack().getItem() instanceof ToolItem) {
+            PlayerEntity player = event.getPlayer();
+            RegenCap.get(player).ifPresent((data) -> {
+                if (data.getCurrentState() == RegenStates.POST && player.isSneaking() & data.getHandState() == IRegen.Hand.NO_GONE) {
+                    HandItem.createHand(player);
+                }
+            });
+        }
     }
 
 

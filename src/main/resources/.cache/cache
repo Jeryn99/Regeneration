@@ -1,6 +1,5 @@
-ed46a60f881cc5cfdbdc29209b685c39f99b0178 assets/regen/blockstates/bio_container.json
-9ff185a1ac3dee8009e19d4611f904ff90df6be1 assets/regen/blockstates/zinc_ore.json
-541740ac9af7038718a12364c553d9f1fe369bb2 assets/regen/lang/en_us.json
+92bf441b3962cb3ad9abc7ec8cf4e1148bfce7e9 assets/regen/lang/en_us.json
+ea91797e8fa4b7f92a4b9280579f1a5f2e3f683d data/regen/advancements/recipes/regen/bio_container.json
 51b0a235c20b255cf6d82ee2586083264ba80374 data/regen/advancements/recipes/regen/blast_zinc.json
 3f8347f8c2c887854992d6fec555be6cca586c30 data/regen/advancements/recipes/regen/f_robes_chest.json
 bce0a9e771ec850bfaae0a6745cbad30fe4cb9e4 data/regen/advancements/recipes/regen/f_robes_head.json
@@ -15,6 +14,7 @@ cd3a3a75b2b2d297ecb478744342eddc1461190e data/regen/advancements/recipes/regen/f
 4d974526c617ca74756de769efd5dfa712ce6250 data/regen/advancements/recipes/regen/m_robes_legs.json
 2320d2f0157233b9f95ab49487e8d81510480783 data/regen/advancements/recipes/regen/robes_feet.json
 5cab2c9aa91ccb4a5b6311081df17f290997c9fb data/regen/advancements/recipes/regen/smelt_zinc.json
+4b4c583acd8035e5b4ba2376baec8b22ccb261d0 data/regen/recipes/bio_container.json
 bdf590ad83800b25130db4abdd561a3238b6f8d8 data/regen/recipes/blast_zinc.json
 73222a902430aee315158b4bbfbe0208e84056ec data/regen/recipes/f_robes_chest.json
 753fdf2d6497be853d862fc405ffcd0f685bfbad data/regen/recipes/f_robes_head.json

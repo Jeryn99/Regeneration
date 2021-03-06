@@ -1,7 +1,25 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "regen:block/bio_container",
+      "y": 90
+    },
+    "facing=north": {
       "model": "regen:block/bio_container"
+    },
+    "facing=up": {
+      "model": "regen:block/bio_container"
+    },
+    "facing=down": {
+      "model": "regen:block/bio_container"
+    },
+    "facing=south": {
+      "model": "regen:block/bio_container",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "regen:block/bio_container",
+      "y": 270
     }
   }
 }

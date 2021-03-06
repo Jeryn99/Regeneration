@@ -34,4 +34,5 @@ public class RConstants {
     public static final String FIRST_PERSON = "FIRST_PERSON";
     public static final String THIRD_PERSON_FRONT = "THIRD_PERSON_FRONT";
     public static final String SOUND_SCHEME = "sound_scheme";
+    public static final String HAND_STATE = "hand_state";
 }

@@ -69,6 +69,7 @@ public class RegenCap implements IRegen {
     private Traits.ITrait currentTrait = Traits.BORING.get();
     private Traits.ITrait nextTrait = Traits.BORING.get();
     private TimelordSound timelordSound = TimelordSound.HUM;
+    private Hand handState = Hand.NO_GONE;
 
     public RegenCap() {
         this.livingEntity = null;
@@ -104,12 +105,14 @@ public class RegenCap implements IRegen {
 
         if (!livingEntity.world.isRemote) {
 
-            currentTrait.tick(this);
-
+            //Login setup
             if (!didSetup) {
                 syncToClients(null);
                 didSetup = true;
             }
+
+            //Tick Trait
+            currentTrait.tick(this);
 
             //Tick State Manager
             if (currentState != RegenStates.ALIVE) {
@@ -118,6 +121,7 @@ public class RegenCap implements IRegen {
                 }
             }
 
+            //Update Regeneratinh
             if (currentState == RegenStates.REGENERATING) {
                 ticksAnimating++;
                 transitionType.get().onUpdateMidRegen(this);
@@ -226,6 +230,7 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.CURRENT_TRAIT, currentTrait.getRegistryName().toString());
         compoundNBT.putString(RConstants.NEXT_TRAIT, nextTrait.getRegistryName().toString());
         compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
+        compoundNBT.putString(RConstants.HAND_STATE, getHandState().name());
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skinArray);
@@ -257,6 +262,10 @@ public class RegenCap implements IRegen {
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
         if (nbt.contains(RConstants.SOUND_SCHEME)) {
             setTimelordSound(TimelordSound.valueOf(nbt.getString(RConstants.SOUND_SCHEME)));
+        }
+
+        if (nbt.contains(RConstants.HAND_STATE)) {
+            setHandState(Hand.valueOf(nbt.getString(RConstants.HAND_STATE)));
         }
         areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
         setTrait(Traits.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
@@ -405,6 +414,16 @@ public class RegenCap implements IRegen {
     @Override
     public void setTimelordSound(TimelordSound timelordSound) {
         this.timelordSound = timelordSound;
+    }
+
+    @Override
+    public Hand getHandState() {
+        return handState;
+    }
+
+    @Override
+    public void setHandState(Hand handState) {
+        this.handState = handState;
     }
 
     public class StateManager implements IStateManager {
@@ -617,6 +636,7 @@ public class RegenCap implements IRegen {
             if (livingEntity instanceof PlayerEntity) {
                 PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.post_ended"), true);
             }
+            handState = Hand.NO_GONE;
         }
 
         private void finishRegeneration() {

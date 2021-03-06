@@ -38,6 +38,8 @@ public class RRecipeGen extends RecipeProvider {
         ShapedRecipeBuilder.shapedRecipe(RItems.M_ROBES_LEGS.get()).patternLine("Z Z").patternLine("ZLZ").patternLine("ZIZ").key('L', Items.LEATHER).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
         ShapedRecipeBuilder.shapedRecipe(RItems.ROBES_FEET.get()).patternLine("Z Z").patternLine("Z Z").patternLine("I I").key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
 
+        ShapedRecipeBuilder.shapedRecipe(RBlocks.BIO_CONTAINER.get()).patternLine("FZF").patternLine("FPF").patternLine("FOF").key('Z', RItems.ZINC.get()).key('F', Items.IRON_INGOT).key('P', Items.ROTTEN_FLESH).key('O', Items.GLOWSTONE_DUST).addCriterion("has_zinc", this.hasItem(RItems.ZINC.get())).build(consumer);
+
 
     }
 }

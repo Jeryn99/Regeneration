@@ -95,6 +95,16 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     void setTimelordSound(TimelordSound timelordSound);
 
+    Hand getHandState();
+
+    void setHandState(Hand handState);
+
+    enum Hand {
+        LEFT_GONE,
+        RIGHT_GONE,
+        NO_GONE
+    }
+
     enum TimelordSound {
         DRUM, HUM
     }

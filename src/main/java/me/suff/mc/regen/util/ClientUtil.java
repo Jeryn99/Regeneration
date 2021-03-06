@@ -2,6 +2,7 @@ package me.suff.mc.regen.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.client.RKeybinds;
+import me.suff.mc.regen.client.rendering.JarTileRender;
 import me.suff.mc.regen.client.rendering.entity.RenderLaser;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
@@ -11,10 +12,12 @@ import me.suff.mc.regen.client.rendering.model.armor.GuardModel;
 import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.client.sound.SoundReverb;
 import me.suff.mc.regen.common.item.ElixirItem;
+import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.item.SpawnItem;
 import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.objects.RItems;
+import me.suff.mc.regen.common.objects.RTiles;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.sound.MovingSound;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
@@ -42,6 +45,7 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import java.util.List;
@@ -120,6 +124,8 @@ public class ClientUtil {
         RenderingRegistry.registerEntityRenderingHandler(REntities.LASER.get(), RenderLaser::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);
 
+        ClientRegistry.bindTileEntityRenderer(RTiles.HAND_JAR.get(), JarTileRender::new);
+
         RKeybinds.init();
 
         ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
@@ -153,6 +159,10 @@ public class ClientUtil {
                 return 0;
             }
             return livingEntity.getItemInUseCount() > 0 ? 1 : 0;
+        });
+
+        ItemModelsProperties.registerProperty(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity) -> {
+            return HandItem.isAlex(stack) ? 0 : 1;
         });
 
 

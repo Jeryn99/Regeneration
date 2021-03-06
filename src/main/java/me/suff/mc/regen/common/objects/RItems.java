@@ -28,6 +28,7 @@ public class RItems {
     public static RegistryObject< Item > RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));
     public static RegistryObject< Item > ELIXIR = ITEMS.register("elixir", ElixirItem::new);
     public static RegistryObject< Item > ZINC = ITEMS.register("zinc", () -> new Item(new Item.Properties().group(RItems.MAIN)));
+    public static RegistryObject< Item > HAND = ITEMS.register("hand", () -> new HandItem(new Item.Properties().group(RItems.MAIN).maxStackSize(1)));
 
     public static Item.Properties clothing = new Item.Properties().group(RItems.MAIN).maxStackSize(1);
 

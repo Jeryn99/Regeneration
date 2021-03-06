@@ -35,7 +35,7 @@ public class RBlocks {
 
     @SubscribeEvent
     public static void regBlockItems(RegistryEvent.Register< Item > e) {
-        genBlockItems(ZINC_ORE.get());
+        genBlockItems(ZINC_ORE.get(), BIO_CONTAINER.get());
     }
 
 }

@@ -1,25 +1,33 @@
 package me.suff.mc.regen.common.regen.acting;
 
+import me.suff.mc.regen.common.block.JarBlock;
+import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.transitions.WatcherTransition;
+import me.suff.mc.regen.common.tiles.JarTile;
 import me.suff.mc.regen.common.traits.Traits;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SFXMessage;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenSources;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ToolItem;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import java.util.Iterator;
 import java.util.Random;
 import java.util.UUID;
 
@@ -55,6 +63,26 @@ class CommonActing implements Acting {
                 float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
                 player.heal(stateProgress * 0.3F * dm);
                 player.setArrowCountInEntity(0);
+
+                AxisAlignedBB box = player.getBoundingBox().grow(25);
+                for (Iterator< BlockPos > iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
+                    BlockPos pos = iterator.next();
+                    ServerWorld serverWorld = (ServerWorld) player.world;
+                    BlockState blockState = serverWorld.getBlockState(pos);
+                    if (blockState.getBlock() instanceof JarBlock) {
+                        JarTile jarTile = (JarTile) serverWorld.getTileEntity(pos);
+                        if (!jarTile.isValid(JarTile.Action.ADD)) {
+                            continue;
+                        }
+                        if (player.world.rand.nextBoolean() && serverWorld.getGameTime() % 5 == 0) {
+                            jarTile.setLindos(jarTile.getLindos() + 0.7F);
+                        }
+                        jarTile.sendUpdates();
+                        return;
+                    }
+                }
+
+
                 break;
 
             case GRACE_CRIT:
@@ -66,9 +94,9 @@ class CommonActing implements Acting {
 
                 PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
 
-                if (player.world.rand.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F))
+                if (player.world.rand.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F)) {
                     player.attackEntityFrom(RegenSources.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
-
+                }
                 break;
 
             case GRACE:
@@ -77,7 +105,6 @@ class CommonActing implements Acting {
                     PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false);
                 }
                 break;
-
             case ALIVE:
                 break;
             default:
