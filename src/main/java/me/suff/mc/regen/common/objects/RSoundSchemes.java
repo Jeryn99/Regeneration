@@ -18,22 +18,22 @@ public class RSoundSchemes {
 
         @Override
         public SoundEvent getTradeDeclineSound() {
-            return RSounds.F_ANGELA_TIMELORD_HURT.get();
+            return RSounds.M_ANGELA_TIMELORD_TRADE_FAIL.get();
         }
 
         @Override
         public SoundEvent getTradeAcceptSound() {
-            return RSounds.F_ANGELA_TIMELORD_HURT.get();
+            return RSounds.M_ANGELA_TIMELORD_TRADE_SUCCESS.get();
         }
 
         @Override
         public SoundEvent getDeathSound() {
-            return null;
+            return RSounds.M_ANGELA_TIMELORD_DIE.get();
         }
 
         @Override
         public SoundEvent getScreamSound() {
-            return null;
+            return RSounds.M_ANGELA_TIMELORD_SCREAM.get();
         }
 
         @Override

@@ -642,7 +642,7 @@ public class RegenCap implements IRegen {
 
         private void finishRegeneration() {
             currentState = RegenStates.POST;
-            scheduleTransitionInSeconds(RegenStates.Transition.END_POST, livingEntity.world.rand.nextInt(300));
+            scheduleTransitionInSeconds(RegenStates.Transition.END_POST, livingEntity.world.rand.nextInt(300) + 10);
             handGlowTimer = null;
             transitionType.get().onFinishRegeneration(RegenCap.this);
             ActingForwarder.onRegenFinish(RegenCap.this);

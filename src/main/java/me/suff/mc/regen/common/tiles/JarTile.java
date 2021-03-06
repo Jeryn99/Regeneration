@@ -1,5 +1,6 @@
 package me.suff.mc.regen.common.tiles;
 
+import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.objects.RTiles;
@@ -42,11 +43,12 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     }
 
     public void setLindos(float lindos) {
-        this.lindos = MathHelper.clamp(lindos, 0, 100);
+        lindos = MathHelper.clamp(lindos, 0, 100);
+        HandItem.setEnergy(lindos, getHand());
     }
 
     public float getLindos() {
-        return lindos;
+        return HandItem.getEnergy(getHand());
     }
 
 

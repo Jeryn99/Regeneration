@@ -19,6 +19,10 @@ public class RegenUtil {
 
     public static String[] USERNAMES = new String[]{};
 
+    public static double round(float value, int scale) {
+        return Math.round(value * Math.pow(10, scale)) / Math.pow(10, scale);
+    }
+
     public static void setupNames() {
         if (USERNAMES.length == 0) {
             try {

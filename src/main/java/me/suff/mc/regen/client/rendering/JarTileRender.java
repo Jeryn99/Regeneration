@@ -1,7 +1,6 @@
 package me.suff.mc.regen.client.rendering;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import me.suff.mc.regen.client.animation.AnimationHandler;
 import me.suff.mc.regen.client.rendering.model.AlexArmModel;
 import me.suff.mc.regen.client.rendering.model.SteveArmModel;
 import me.suff.mc.regen.client.skin.SkinHandler;
@@ -23,6 +22,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.HashMap;
 
+import static me.suff.mc.regen.util.RegenUtil.round;
+
 /* Created by Craig on 05/03/2021 */
 public class JarTileRender extends TileEntityRenderer< JarTile > {
 
@@ -41,17 +42,20 @@ public class JarTileRender extends TileEntityRenderer< JarTile > {
 
     @Override
     public void render(JarTile tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        matrixStackIn.push();
-        matrixStackIn.translate(0.5D, 1.5, 0.5D);
-        matrixStackIn.rotate(Minecraft.getInstance().getRenderManager().getCameraOrientation());
-        matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
-        Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
-        FontRenderer fontrenderer = Minecraft.getInstance().fontRenderer;
-        float f2 = (float) (-fontrenderer.getStringPropertyWidth(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
-        fontrenderer.func_243247_a(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
-        matrixStackIn.pop();
 
-        if(tileEntityIn.isUpdateSkin()){
+        if (tileEntityIn.getHand().getItem() instanceof HandItem) {
+            matrixStackIn.push();
+            matrixStackIn.translate(0.5D, 1.5, 0.5D);
+            matrixStackIn.rotate(Minecraft.getInstance().getRenderManager().getCameraOrientation());
+            matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
+            Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
+            FontRenderer fontrenderer = Minecraft.getInstance().fontRenderer;
+            float f2 = (float) (-fontrenderer.getStringPropertyWidth(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
+            fontrenderer.func_243247_a(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
+            matrixStackIn.pop();
+        }
+
+        if (tileEntityIn.isUpdateSkin()) {
             TEXTURES.remove(tileEntityIn);
         }
 
@@ -84,8 +88,4 @@ public class JarTileRender extends TileEntityRenderer< JarTile > {
         return TEXTURES.get(tileEntityHandInJar);
     }
 
-
-    public static double round(float value, int scale) {
-        return Math.round(value * Math.pow(10, scale)) / Math.pow(10, scale);
-    }
 }

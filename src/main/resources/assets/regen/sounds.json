@@ -18,11 +18,40 @@
     ]
   },
   "f_angela_timelord_hurt": {
-    "subtitle": "regen.sound.f_timelord.hurt",
+    "subtitle": "regen.sound.f_timelord_hurt",
     "sounds": [
       "regen:timelord/female/angela/f_timelord_hurt_3",
-      "regen:timelord/female/angela/f_timelord_hurt_1",
-      "regen:timelord/female/angela/f_timelord_hurt_2"
+      "regen:timelord/female/angela/f_timelord_hurt_2",
+      "regen:timelord/female/angela/f_timelord_hurt_1"
+    ]
+  },
+  "f_angela_timelord_die": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/angela/f_timelord_die_1"
+    ]
+  },
+  "f_angela_timelord_trade_fail": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/angela/f_timelord_trade_fail_1",
+      "regen:timelord/female/angela/f_timelord_trade_fail_2",
+      "regen:timelord/female/angela/f_timelord_trade_fail_3"
+    ]
+  },
+  "f_angela_timelord_trade_success": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/angela/f_timelord_trade_success_1",
+      "regen:timelord/female/angela/f_timelord_trade_success_2",
+      "regen:timelord/female/angela/f_timelord_trade_success_3"
+    ]
+  },
+  "f_angela_timelord_scream": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/angela/f_timelord_scream_1",
+      "regen:timelord/female/angela/f_timelord_scream_2"
     ]
   },
   "fob_watch": {
@@ -69,7 +98,6 @@
   "m_ramen_timelord_hurt": {
     "subtitle": "regen.sound.m_timelord.hurt",
     "sounds": [
-      "regen:timelord/male/ramen/m_timelord_hurt_3",
       "regen:timelord/male/ramen/m_timelord_hurt_2",
       "regen:timelord/male/ramen/m_timelord_hurt_1"
     ]
@@ -133,7 +161,6 @@
   "m_connor_timelord_hurt": {
     "subtitle": "regen.sound.m_timelord.hurt",
     "sounds": [
-      "regen:timelord/male/connor/m_timelord_hurt_3",
       "regen:timelord/male/connor/m_timelord_hurt_2",
       "regen:timelord/male/connor/m_timelord_hurt_1"
     ]

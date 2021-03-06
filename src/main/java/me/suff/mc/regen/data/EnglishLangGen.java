@@ -60,10 +60,11 @@ public class EnglishLangGen extends LanguageProvider {
         add("regen.sound.m_timelord.scream", "Male Timelord Screams");
 
         //Items
-        add(RItems.FOB.get(), "Fob watch");
+        add(RItems.FOB.get(), "Chameleon Arch");
         add(RItems.PISTOL.get(), "Staser");
         add(RItems.RIFLE.get(), "Staser Rifle");
         add(RItems.HAND.get(), "Hand");
+        add("item.regen.hand_with_arg", "%s Hand");
 
         add(RItems.M_ROBES_HEAD.get(), "Timelord Collar Piece (Male)");
         add(RItems.M_ROBES_CHEST.get(), "Timelord Suit (Male)");
@@ -92,8 +93,6 @@ public class EnglishLangGen extends LanguageProvider {
         add("regen.messages.transfer.empty_watch", "This watch is empty!");
         add("regen.messages.transfer.max_regens", "You already have the maximum number of regenerations");
         add("regen.messages.transfer.no_regens", "You don't have any regenerations left to transfer");
-        add("regen.messages.jar_amount", "This container currently contains %s Lindos!");
-        add("regen.messages.jar_inuse", "This is in use!");
         add("regen.messages.regen_chat_message", "%s is regenerating...");
         add("regen.messages.warning.grace", "You are in a state of grace, press %s to regenerate!");
         add("regen.messages.warning.grace_critical", "You are near death, press %s to regenerate!");

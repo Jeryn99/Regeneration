@@ -29,8 +29,14 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > REGENERATION_TROUGHTON = SOUNDS.register("regeneration_troughton", () -> setUpSound("regeneration_troughton"));
     public static final RegistryObject< SoundEvent > REGENERATION_WATCHER = SOUNDS.register("regeneration_watcher", () -> setUpSound("regeneration_watcher"));
     public static final RegistryObject< SoundEvent > DRUM_BEAT = SOUNDS.register("drum_beat", () -> setUpSound("drum_beat"));
+
     //Angela Timelord
     public static final RegistryObject< SoundEvent > F_ANGELA_TIMELORD_HURT = SOUNDS.register("f_angela_timelord_hurt", () -> setUpSound("f_angela_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > M_ANGELA_TIMELORD_DIE = SOUNDS.register("f_angela_timelord_die", () -> setUpSound("f_angela_timelord_die"));
+    public static final RegistryObject< SoundEvent > M_ANGELA_TIMELORD_TRADE_FAIL = SOUNDS.register("f_angela_timelord_trade_fail", () -> setUpSound("f_angela_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > M_ANGELA_TIMELORD_TRADE_SUCCESS = SOUNDS.register("f_angela_timelord_trade_success", () -> setUpSound("f_angela_timelord_trade_success"));
+    public static final RegistryObject< SoundEvent > M_ANGELA_TIMELORD_SCREAM = SOUNDS.register("f_angela_timelord_scream", () -> setUpSound("f_angela_timelord_scream"));
+
     //Gas Timelord
     public static final RegistryObject< SoundEvent > M_GAS_TIMELORD_HURT = SOUNDS.register("m_gas_timelord_hurt", () -> setUpSound("m_gas_timelord_hurt"));
     //Ramen Timelord

@@ -5,6 +5,8 @@ import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.commands.RegenCommand;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.REntities;
+import me.suff.mc.regen.common.objects.RSoundSchemes;
+import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;

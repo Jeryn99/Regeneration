@@ -41,7 +41,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -197,6 +199,21 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     @Override
     protected SoundEvent getDeathSound() {
         return getPersonality().getDeathSound();
+    }
+
+    @Override
+    protected void onDeathUpdate() {
+        super.onDeathUpdate();
+        if(ModList.get().isLoaded("weeping_angels") && !world.isRemote){
+            EntityType< ? > weepingAngel = ForgeRegistries.ENTITIES.getValue(new ResourceLocation("weeping_angels", "weeping_angel"));
+            if (weepingAngel != null) {
+                if(world.rand.nextInt(100) < 10) {
+                    Entity entity = weepingAngel.create(world);
+                    entity.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), rotationYaw, rotationPitch);
+                    world.addEntity(entity);
+                }
+            }
+        }
     }
 
     public void genName() {

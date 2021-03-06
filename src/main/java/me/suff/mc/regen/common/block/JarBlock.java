@@ -1,16 +1,18 @@
 package me.suff.mc.regen.common.block;
 
+import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.RItems;
+import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.tiles.JarTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
-import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -60,7 +62,7 @@ public class JarBlock extends DirectionalBlock {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder< Block, BlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder< Block, BlockState > builder) {
         builder.add(FACING);
     }
 
@@ -68,14 +70,30 @@ public class JarBlock extends DirectionalBlock {
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!worldIn.isRemote()) {
             JarTile jarTile = (JarTile) worldIn.getTileEntity(pos);
-            if(handIn == Hand.MAIN_HAND) {
-                if (player.getHeldItemMainhand().getItem() == RItems.HAND.get()) {
-                    jarTile.dropHandIfPresent();
-                    jarTile.setHand(player.getHeldItemMainhand().copy());
-                    jarTile.setUpdateSkin(true);
-                    player.getHeldItemMainhand().shrink(1);
+            if (handIn == Hand.MAIN_HAND) {
+                if (!player.isSneaking()) {
+                    if (player.getHeldItemMainhand().getItem() == RItems.HAND.get()) {
+                        jarTile.dropHandIfPresent();
+                        jarTile.setHand(player.getHeldItemMainhand().copy());
+                        jarTile.setUpdateSkin(true);
+                        player.getHeldItemMainhand().shrink(1);
+                    } else {
+                        jarTile.dropHandIfPresent();
+                    }
                 } else {
-                    jarTile.dropHandIfPresent();
+                    if (jarTile.getHand().getItem() == RItems.HAND.get() && jarTile.isValid(JarTile.Action.CREATE)) {
+                        RegenCap.get(player).ifPresent(iRegen -> {
+                            if(iRegen.getCurrentState() == RegenStates.ALIVE) {
+                                iRegen.addRegens(1);
+                                iRegen.setNextTrait(HandItem.getTrait(jarTile.getHand()));
+                                iRegen.setNextSkin(HandItem.getSkin(jarTile.getHand()));
+                                iRegen.setAlexSkin(HandItem.isAlex(jarTile.getHand()));
+                                iRegen.syncToClients(null);
+                                iRegen.regen();
+                                jarTile.setHand(ItemStack.EMPTY);
+                            }
+                        });
+                    }
                 }
                 jarTile.sendUpdates();
             }

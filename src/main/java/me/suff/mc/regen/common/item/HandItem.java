@@ -7,6 +7,7 @@ import me.suff.mc.regen.common.traits.TraitBase;
 import me.suff.mc.regen.common.traits.Traits;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenSources;
+import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -15,16 +16,27 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.UsernameCache;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 /* Created by Craig on 05/03/2021 */
 public class HandItem extends Item {
     public HandItem(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public ITextComponent getDisplayName(ItemStack stack) {
+        if(stack.getOrCreateTag().contains("user")) {
+            return new TranslationTextComponent("item.regen.hand_with_arg", UsernameCache.getLastKnownUsername(getUUID(stack))+ "'s");
+        }
+        return super.getDisplayName(stack);
     }
 
     @Override
@@ -58,7 +70,7 @@ public class HandItem extends Item {
     }
 
     //Trait
-    public static void setTrait(TraitBase traitBase, ItemStack stack) {
+    public static void setTrait(Traits.ITrait traitBase, ItemStack stack) {
         stack.getOrCreateTag().putString("trait", traitBase.getRegistryName().toString());
     }
 
@@ -66,11 +78,33 @@ public class HandItem extends Item {
         return Traits.fromID(stack.getOrCreateTag().getString("trait"));
     }
 
+    public static void setEnergy(float energy, ItemStack stack) {
+        stack.getOrCreateTag().putFloat("energy", energy);
+    }
+
+    public static float getEnergy(ItemStack stack) {
+        return stack.getOrCreateTag().getFloat("energy");
+    }
+
+    public static void setUUID(UUID uuid, ItemStack stack) {
+        stack.getOrCreateTag().putUniqueId("user", uuid);
+    }
+
+    public static UUID getUUID(ItemStack stack) {
+        if(stack.getOrCreateTag().contains("user")) {
+            return stack.getOrCreateTag().getUniqueId("user");
+        }
+        return null;
+    }
+
     //TODO Finish off the benefits to the hand process  
     public static void createHand(LivingEntity livingEntity) {
         ItemStack itemStack = new ItemStack(RItems.HAND.get());
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
+            setUUID(livingEntity.getUniqueID(), itemStack);
             setSkinType(iRegen.isAlexSkinCurrently() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
+            setTrait(iRegen.getTrait(), itemStack);
+            setEnergy(0, itemStack);
             if(iRegen.isSkinValidForUse()){
                 setSkin(iRegen.getSkin(), itemStack);
             }
@@ -84,6 +118,7 @@ public class HandItem extends Item {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent("Trait: %s", getTrait(stack).getTranslation()));
+        tooltip.add(new TranslationTextComponent(TextFormatting.WHITE + "Trait: %s", TextFormatting.GRAY + TextFormatting.ITALIC.toString() + getTrait(stack).getTranslation().getString()));
+        tooltip.add(new TranslationTextComponent(TextFormatting.WHITE + "Energy: %s", TextFormatting.GRAY + TextFormatting.ITALIC.toString() + RegenUtil.round(getEnergy(stack), 2)));
     }
 }
