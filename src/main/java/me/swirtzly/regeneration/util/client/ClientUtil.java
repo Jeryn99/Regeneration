@@ -1,12 +1,21 @@
 package me.swirtzly.regeneration.util.client;
 
 import me.swirtzly.regeneration.client.MovingSound;
+import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
+import me.swirtzly.regeneration.client.rendering.entity.LaserRenderer;
+import me.swirtzly.regeneration.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regeneration.client.skinhandling.SkinInfo;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.RegenCap;
+import me.swirtzly.regeneration.common.entity.LaserEntity;
+import me.swirtzly.regeneration.common.entity.OverrideEntity;
+import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
 import me.swirtzly.regeneration.util.common.RegenUtil;
+import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
+import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
+import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.toasts.SystemToast;
@@ -18,6 +27,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -25,6 +36,19 @@ import java.awt.image.DataBufferInt;
 import java.util.function.Supplier;
 
 public class ClientUtil {
+
+    public static void doClientStuff(){
+        RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(TimelordEntity.class, TimelordRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(LaserEntity.class, LaserRenderer::new);
+        MinecraftForge.EVENT_BUS.register(new TabRegistry());
+
+        if (TabRegistry.getTabList().size() < 2){
+            TabRegistry.registerTab(new InventoryTabVanilla());
+        }
+        TabRegistry.registerTab(new RegenPrefTab());
+    }
+
 
     public static String keyBind = "???";
 

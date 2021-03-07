@@ -24,11 +24,13 @@ import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.proxy.CommonProxy;
 import me.swirtzly.regeneration.proxy.Proxy;
+import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
@@ -65,11 +67,12 @@ public class Regeneration {
 
     public Regeneration() {
         INSTANCE = this;
-        FMLJavaModLoadingContext.get().getModEventBus().register(this);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modBus.register(this);
+        modBus.addListener(this::setup);
+        modBus.addListener(this::enqueueIMC);
+        modBus.addListener(this::processIMC);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modBus.addListener(this::doClientStuff));
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new CommonHandler());
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
@@ -77,15 +80,7 @@ public class Regeneration {
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(TimelordEntity.class, TimelordRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(LaserEntity.class, LaserRenderer::new);
-        MinecraftForge.EVENT_BUS.register(new TabRegistry());
-
-        if (TabRegistry.getTabList().size() < 2){
-            TabRegistry.registerTab(new InventoryTabVanilla());
-        }
-        TabRegistry.registerTab(new RegenPrefTab());
+        ClientUtil.doClientStuff();
     }
 
     private void setup(final FMLCommonSetupEvent event) {

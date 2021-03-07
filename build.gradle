@@ -106,7 +106,7 @@ curseforge {
     project {
         id = rootProject.regen
         changelogType = 'html'
-        changelog = 'Changes: </br> - Fixed Mobs with Regens Config </br> - Changed Timelord Models </br> -Performance increase <br> - </br> - Fixes Mojang Skins </br> - Fixed some loud noises'
+        changelog = 'Changes: </br> - Fixed Server Crash'
         releaseType = 'release'
         mainArtifact(jar) {
             displayName = "[${minecraft_version}] Regeneration - $project.version"
