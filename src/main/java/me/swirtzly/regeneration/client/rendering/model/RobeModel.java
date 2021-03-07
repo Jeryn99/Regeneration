@@ -182,24 +182,6 @@ public class RobeModel extends BipedModel {
         bipedBody.showModel = isWearingChest;
         bipedHead.showModel = isWearingHat;
 
-        //head
-        if (isWearingHat) {
-            GlStateManager.pushMatrix();
-
-            //Color
-            IDyeableArmorItem iDyeableArmorItem = (IDyeableArmorItem) entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem();
-            int color = iDyeableArmorItem.getColor(entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD));
-            float red = (float) (color >> 16 & 255) / 255.0F;
-            float green = (float) (color >> 8 & 255) / 255.0F;
-            float blue = (float) (color & 255) / 255.0F;
-            GlStateManager.color4f(1.0F * red, 1.0F * green, 1.0F * blue, 1.0F);
-            if (entityIn.isSneaking()) {
-                GlStateManager.translatef(0, 0.2F, 0);
-            }
-            bipedHead.postRender(scale);
-            head.render(scale);
-            GlStateManager.popMatrix();
-        }
 
         //Body
         if (isWearingChest) {

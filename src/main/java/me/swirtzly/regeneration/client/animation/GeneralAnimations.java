@@ -6,11 +6,12 @@ import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.item.FobWatchItem;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 
@@ -37,32 +38,47 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
         RegenCap.get(entity).ifPresent((data) -> {
             if (!(renderer.getEntityModel() instanceof BipedModel)) return;
             BipedModel modelPlayer = (BipedModel) renderer.getEntityModel();
-            boolean swift = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getOrCreateTag().contains(SWIFT_KEY);
-            boolean isWearingChest = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get() || !swift && entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES_CHEST.get();
             if (data.hasDroppedHand() && data.getState() == PlayerUtil.RegenState.POST) {
                 modelPlayer.bipedRightArm.isHidden = data.getCutoffHand() == HandSide.RIGHT;
                 modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
-            } else {
-
-                boolean oldValue = modelPlayer.bipedLeftArm.isHidden;
-                if (entity.getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
-                    boolean isFirstPerson = Minecraft.getInstance().gameSettings.thirdPersonView == 0;
-                    modelPlayer.bipedLeftArm.isHidden = !isFirstPerson && isWearingChest;
-                    modelPlayer.bipedRightArm.isHidden = !isFirstPerson && isWearingChest;
-
-                    if(isFirstPerson){
-                        modelPlayer.bipedLeftArm.isHidden = oldValue;
-                        modelPlayer.bipedRightArm.isHidden = oldValue;
-                    }
-                }
-
             }
+
+            boolean swift = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getOrCreateTag().contains(SWIFT_KEY);
+
+            if(modelPlayer instanceof PlayerModel){
+                PlayerModel playerModel = (PlayerModel) modelPlayer;
+                playerModel.bipedLeftArmwear.isHidden = playerModel.bipedRightArmwear.isHidden = playerModel.bipedBodyWear.isHidden = !showBodyWear(entity.getItemStackFromSlot(EquipmentSlotType.CHEST));
+                playerModel.bipedRightLeg.isHidden = playerModel.bipedLeftLeg.isHidden = playerModel.bipedRightLegwear.isHidden = playerModel.bipedLeftLegwear.isHidden = !showLegWear(entity.getItemStackFromSlot(EquipmentSlotType.LEGS));
+                playerModel.bipedLeftArmwear.isHidden = playerModel.bipedRightArmwear.isHidden = playerModel.bipedBodyWear.isHidden = swift;
+            }
+
+
 
 
             if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
                 GlStateManager.rotatef(15, 1, 0, 0);
             }
         });
+    }
+
+    private boolean showLegWear(ItemStack stack) {
+        Item[] items = new Item[]{RegenObjects.Items.ROBES_LEGS.get(), RegenObjects.Items.GUARD_LEGGINGS.get()};
+        for (Item item : items) {
+            if(stack.getItem() == item){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean showBodyWear(ItemStack stack){
+        Item[] items = new Item[]{RegenObjects.Items.ROBES_CHEST.get(), RegenObjects.Items.GUARD_CHEST.get()};
+        for (Item item : items) {
+            if(stack.getItem() == item){
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

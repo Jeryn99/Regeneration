@@ -2,23 +2,22 @@ package me.swirtzly.regeneration.handlers;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.Regeneration;
-import me.swirtzly.regeneration.client.gui.GuiPreferences;
 import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.dimension.biomes.GallifrayanWastelands;
 import me.swirtzly.regeneration.common.types.RegenTypes;
+import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.RenderUtil;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particles.BasicParticleType;
@@ -27,7 +26,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -262,15 +260,15 @@ public class ClientHandler {
         }
     }
 
-    public static boolean render = false;
 
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent e) {
-        render = true;
         Minecraft mc = Minecraft.getInstance();
         ClientPlayerEntity player = Minecraft.getInstance().player;
         float factor = 0.2F;
         if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0) return;
+
+        BipedModel model = ClientProxy.getArmorModel(player.getItemStackFromSlot(EquipmentSlotType.CHEST));
 
         RegenCap.get(player).ifPresent((data) -> {
 

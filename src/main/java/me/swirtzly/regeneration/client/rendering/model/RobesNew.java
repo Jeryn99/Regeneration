@@ -43,13 +43,13 @@ public class RobesNew extends BipedModel {
 
         RightArm = new RendererModel(this);
         RightArm.setRotationPoint(-5.0F, 2.0F, 0.0F);
-        RightArm.cubeList.add(new ModelBox(RightArm, 40, 16, -2.0F, -2.0F, -2.0F, 3, 12, 4, 0.0F, false));
-        RightArm.cubeList.add(new ModelBox(RightArm, 40, 32, -2.0F, -2.0F, -2.0F, 3, 12, 4, 0.25F, false));
+        RightArm.cubeList.add(new ModelBox(RightArm, 40, 16, -2.0F, -2.0F, -2.0F, 3, 12, 4, 0.25F, false));
+        RightArm.cubeList.add(new ModelBox(RightArm, 40, 32, -2.0F, -2.0F, -2.0F, 3, 12, 4, 0.25F * 2, false));
 
         LeftArm = new RendererModel(this);
         LeftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
-        LeftArm.cubeList.add(new ModelBox(LeftArm, 32, 48, -1.0F, -2.0F, -2.0F, 3, 12, 4, 0.0F, false));
-        LeftArm.cubeList.add(new ModelBox(LeftArm, 48, 48, -1.0F, -2.0F, -2.0F, 3, 12, 4, 0.25F, false));
+        LeftArm.cubeList.add(new ModelBox(LeftArm, 32, 48, -1.0F, -2.0F, -2.0F, 3, 12, 4, 0.25F, false));
+        LeftArm.cubeList.add(new ModelBox(LeftArm, 48, 48, -1.0F, -2.0F, -2.0F, 3, 12, 4, 0.25F * 2, false));
 
         RightLeg = new RendererModel(this);
         RightLeg.setRotationPoint(-1.9F, 12.0F, 0.0F);

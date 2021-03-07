@@ -13,6 +13,7 @@ import me.swirtzly.regeneration.common.types.RegenType;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
+import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.TexUtil;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
@@ -41,8 +42,8 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
+import static me.swirtzly.regeneration.common.item.DyeableClothingItem.SWIFT_KEY;
 import static me.swirtzly.regeneration.common.skin.HandleSkins.*;
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
@@ -185,11 +186,7 @@ public class SkinManipulation {
 
         PlayerModel< AbstractClientPlayerEntity > model = renderPlayerEvent.getRenderer().getEntityModel();
 
-        boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get();
-        model.bipedBody.isHidden = isWearingChest;
-        model.bipedBodyWear.isHidden = isWearingChest;
-        model.bipedLeftArmwear.isHidden = isWearingChest;
-        model.bipedRightArmwear.isHidden = isWearingChest;
+        boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get() || player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES_CHEST.get();
 
         boolean isWearingLeggings = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegenObjects.Items.GUARD_LEGGINGS.get();
         model.bipedRightLegwear.isHidden = isWearingLeggings;
@@ -204,6 +201,12 @@ public class SkinManipulation {
                 GlStateManager.translated(0, 0, -1);
             }
 
+
+            if (Minecraft.getInstance().gameSettings.thirdPersonView == 0 && isWearingChest) {
+                model.bipedLeftArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
+                model.bipedRightArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
+            }
+
 			/* Sometimes when the player is teleported, the Mojang skin becomes re-downloaded and resets to either Steve,
 			 or the Mojang Skin, so once they have been re-created, we remove the cache we have on them, causing it to be renewed */
             if (player.ticksExisted < 20) {
@@ -214,8 +217,10 @@ public class SkinManipulation {
             if (cap.getState() != PlayerUtil.RegenState.REGENERATING) {
                 SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
                 if (skin != null) {
+                    boolean swift = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getOrCreateTag().contains(SWIFT_KEY);
+                    boolean forceAlex = !swift && isWearingChest;
                     setPlayerSkin(player, skin.getTextureLocation());
-                    setPlayerSkinType(player, skin.getSkintype());
+                    setPlayerSkinType(player, forceAlex ? SkinInfo.SkinType.ALEX : skin.getSkintype());
                 } else {
                     createSkinData(player, RegenCap.get(player));
                 }

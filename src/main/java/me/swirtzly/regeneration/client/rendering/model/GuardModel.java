@@ -275,8 +275,6 @@ public class GuardModel extends BipedModel {
             GlStateManager.translatef(0.0F, 0.2F, 0.0F);
         }
 
-        System.out.println(type);
-        System.out.println(entityIn.getItemStackFromSlot(EquipmentSlotType.HEAD));
         if (isWearingHelmet) {
             GlStateManager.pushMatrix();
             if (entityIn instanceof ArmorStandEntity) {
