@@ -2,6 +2,7 @@ package me.swirtzly.regeneration.common.skin;
 
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
+import me.swirtzly.regeneration.util.common.FileUtil;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -27,12 +28,14 @@ import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 public class HandleSkins {
 
     public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/skins/");
+    public static final File BASE_DIR = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/");
     public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
+    public static final File TIMELORDS_OLD = new File(SKIN_DIRECTORY, "/timelords");
 
 
     public static ArrayList< String > SKINS = new ArrayList<>();
-    public static File TIMELORDS = new File(SKIN_DIRECTORY + "/timelords");
+    public static File TIMELORDS = new File(BASE_DIR + "/timelords");
 
     public static String imageToPixelData(File file) {
         String encodedfile = NO_SKIN;
@@ -49,6 +52,10 @@ public class HandleSkins {
     }
 
     public static void downloadTimelordSkins() throws IOException {
+
+        if(TIMELORDS_OLD.exists()){
+            FileUtils.deleteDirectory(TIMELORDS_OLD);
+        }
 
         if (!TIMELORDS.exists()) {
             TIMELORDS.mkdirs();
