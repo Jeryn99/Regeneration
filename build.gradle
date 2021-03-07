@@ -106,7 +106,7 @@ curseforge {
     project {
         id = rootProject.regen
         changelogType = 'html'
-        changelog = 'Changes: </br> - Fixed Server Crash </br> - Seperated Timelord skins from Player skins'
+        changelog = 'Changes: </br> - Fixed hand rendering garbage'
         releaseType = 'release'
         mainArtifact(jar) {
             displayName = "[${minecraft_version}] Regeneration - $project.version"
