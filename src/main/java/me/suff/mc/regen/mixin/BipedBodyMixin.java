@@ -30,10 +30,10 @@ public class BipedBodyMixin {
                 bipedModel.bipedRightArm.rotateAngleY = bipedModel.bipedHead.rotateAngleY;
                 bipedModel.bipedRightArm.rotateAngleZ = bipedModel.bipedHead.rotateAngleZ;
                 float aimTicks = MathHelper.clamp(livingEntity.getItemInUseCount() / 100F, 0, 1F);
-                bipedModel.bipedLeftArm.rotateAngleX = (float) Math.toRadians(-55F + aimTicks * -30F);
-                bipedModel.bipedLeftArm.rotateAngleY = (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
-                bipedModel.bipedRightArm.rotateAngleX = (float) Math.toRadians(-42F + aimTicks * -48F);
-                bipedModel.bipedRightArm.rotateAngleY = (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
+                bipedModel.bipedLeftArm.rotateAngleX += (float) Math.toRadians(-55F + aimTicks * -30F);
+                bipedModel.bipedLeftArm.rotateAngleY += (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
+                bipedModel.bipedRightArm.rotateAngleX += (float) Math.toRadians(-42F + aimTicks * -48F);
+                bipedModel.bipedRightArm.rotateAngleY += (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
             }
         }
     }

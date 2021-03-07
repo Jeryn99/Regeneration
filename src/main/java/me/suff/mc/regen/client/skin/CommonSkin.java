@@ -174,8 +174,8 @@ public class CommonSkin {
         return op.filter(img, gray);
     }
 
-    public static void internalSkinsDownload() throws IOException {
-        if (!RegenConfig.SKIN.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
+    public static boolean internalSkinsDownload() {
+        if (!RegenConfig.SKIN.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return false;
 
         File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
 
@@ -185,9 +185,16 @@ public class CommonSkin {
             String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
             String[] links = Regeneration.GSON.fromJson(RegenUtil.getJsonFromURL(PACKS_URL), String[].class);
             for (String link : links) {
-                unzipSkinPack(link);
+                try {
+                    unzipSkinPack(link);
+                    return true;
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                    return false;
+                }
             }
         }
+        return false;
     }
 
     public static boolean isAlexSkin(BufferedImage image) {

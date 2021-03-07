@@ -72,8 +72,8 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
         RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.getTransitionType().get().getRenderer().firstPersonHand(event));
-    }
 
+    }
 
     @SubscribeEvent
     public static void onTickEvent(TickEvent.ClientTickEvent event) {

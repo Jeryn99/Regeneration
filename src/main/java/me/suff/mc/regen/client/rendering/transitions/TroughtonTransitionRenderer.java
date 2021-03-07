@@ -1,7 +1,6 @@
 package me.suff.mc.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import me.suff.mc.regen.client.animation.AnimationHandler;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.entities.TimelordEntity;
@@ -24,7 +23,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.model.animation.Animation;
 
 public class TroughtonTransitionRenderer implements TransitionRenderer {
 

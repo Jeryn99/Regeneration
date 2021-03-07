@@ -3,7 +3,6 @@ package me.suff.mc.regen.common.item;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
-import me.suff.mc.regen.common.traits.TraitBase;
 import me.suff.mc.regen.common.traits.Traits;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenSources;
@@ -29,27 +28,6 @@ import java.util.UUID;
 public class HandItem extends Item {
     public HandItem(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        if(stack.getOrCreateTag().contains("user")) {
-            return new TranslationTextComponent("item.regen.hand_with_arg", UsernameCache.getLastKnownUsername(getUUID(stack))+ "'s");
-        }
-        return super.getDisplayName(stack);
-    }
-
-    @Override
-    public void fillItemGroup(ItemGroup group, NonNullList< ItemStack > items) {
-        if (isInGroup(group)) {
-            for (PlayerUtil.SkinType skinType : PlayerUtil.SkinType.values()) {
-                if (skinType != PlayerUtil.SkinType.EITHER) {
-                    ItemStack itemstack = new ItemStack(this);
-                    setSkinType(skinType, itemstack);
-                    items.add(itemstack);
-                }
-            }
-        }
     }
 
     //Skin Type
@@ -91,13 +69,12 @@ public class HandItem extends Item {
     }
 
     public static UUID getUUID(ItemStack stack) {
-        if(stack.getOrCreateTag().contains("user")) {
+        if (stack.getOrCreateTag().contains("user")) {
             return stack.getOrCreateTag().getUniqueId("user");
         }
         return null;
     }
 
-    //TODO Finish off the benefits to the hand process  
     public static void createHand(LivingEntity livingEntity) {
         ItemStack itemStack = new ItemStack(RItems.HAND.get());
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
@@ -105,7 +82,7 @@ public class HandItem extends Item {
             setSkinType(iRegen.isAlexSkinCurrently() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
             setTrait(iRegen.getTrait(), itemStack);
             setEnergy(0, itemStack);
-            if(iRegen.isSkinValidForUse()){
+            if (iRegen.isSkinValidForUse()) {
                 setSkin(iRegen.getSkin(), itemStack);
             }
             iRegen.setHandState(IRegen.Hand.LEFT_GONE);
@@ -114,6 +91,26 @@ public class HandItem extends Item {
         InventoryHelper.spawnItemStack(livingEntity.world, livingEntity.getPosX(), livingEntity.getPosY(), livingEntity.getPosZ(), itemStack);
     }
 
+    @Override
+    public ITextComponent getDisplayName(ItemStack stack) {
+        if (stack.getOrCreateTag().contains("user")) {
+            return new TranslationTextComponent("item.regen.hand_with_arg", UsernameCache.getLastKnownUsername(getUUID(stack)) + "'s");
+        }
+        return super.getDisplayName(stack);
+    }
+
+    @Override
+    public void fillItemGroup(ItemGroup group, NonNullList< ItemStack > items) {
+        if (isInGroup(group)) {
+            for (PlayerUtil.SkinType skinType : PlayerUtil.SkinType.values()) {
+                if (skinType != PlayerUtil.SkinType.EITHER) {
+                    ItemStack itemstack = new ItemStack(this);
+                    setSkinType(skinType, itemstack);
+                    items.add(itemstack);
+                }
+            }
+        }
+    }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {

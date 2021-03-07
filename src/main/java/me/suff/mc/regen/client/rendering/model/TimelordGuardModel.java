@@ -4,7 +4,6 @@ package me.suff.mc.regen.client.rendering.model;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.suff.mc.regen.common.entities.TimelordEntity;
-import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
@@ -58,41 +57,35 @@ public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
 
     @Override
     public void setRotationAngles(TimelordEntity timelordEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        IRegen regenData = RegenCap.get(timelordEntity).orElseGet(null);
-/*
+        RegenCap.get(timelordEntity).ifPresent(iRegen -> {
+            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+                rightArmPose = ArmPose.EMPTY;
+            }
 
-        if (timelordEntity.getHeldItemMainhand().getItem() instanceof GunItem && regenData.getState() != PlayerUtil.RegenState.REGENERATING) {
-            rightArmPose = ArmPose.BOW_AND_ARROW;
-        }
-*/
-
-        if (regenData.getCurrentState() == RegenStates.REGENERATING) {
-            rightArmPose = ArmPose.EMPTY;
-        }
-
-        super.setRotationAngles(timelordEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            super.setRotationAngles(timelordEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
 
-        if (timelordEntity.getAiming()) {
-            bipedLeftArm.rotateAngleX = bipedHead.rotateAngleX;
-            bipedLeftArm.rotateAngleY = bipedHead.rotateAngleY;
-            bipedLeftArm.rotateAngleZ = bipedHead.rotateAngleZ;
-            bipedRightArm.rotateAngleX = bipedHead.rotateAngleX;
-            bipedRightArm.rotateAngleY = bipedHead.rotateAngleY;
-            bipedRightArm.rotateAngleZ = bipedHead.rotateAngleZ;
-            float aimTicks = timelordEntity.getAimingTicks();
-            bipedLeftArm.rotateAngleX = (float) Math.toRadians(-55F + aimTicks * -30F);
-            bipedLeftArm.rotateAngleY = (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
-            bipedRightArm.rotateAngleX = (float) Math.toRadians(-42F + aimTicks * -48F);
-            bipedRightArm.rotateAngleY = (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
-        }
+            if (timelordEntity.getAiming()) {
+                bipedLeftArm.rotateAngleX = bipedHead.rotateAngleX;
+                bipedLeftArm.rotateAngleY = bipedHead.rotateAngleY;
+                bipedLeftArm.rotateAngleZ = bipedHead.rotateAngleZ;
+                bipedRightArm.rotateAngleX = bipedHead.rotateAngleX;
+                bipedRightArm.rotateAngleY = bipedHead.rotateAngleY;
+                bipedRightArm.rotateAngleZ = bipedHead.rotateAngleZ;
+                float aimTicks = timelordEntity.getAimingTicks();
+                bipedLeftArm.rotateAngleX += (float) Math.toRadians(-55F + aimTicks * -30F);
+                bipedLeftArm.rotateAngleY += (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
+                bipedRightArm.rotateAngleX += (float) Math.toRadians(-42F + aimTicks * -48F);
+                bipedRightArm.rotateAngleY += (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
+            }
 
-        Head.copyModelAngles(bipedHead);
-        Body.copyModelAngles(bipedBody);
-        LeftArm.copyModelAngles(bipedLeftArm);
-        RightArm.copyModelAngles(bipedRightArm);
-        RightLeg.copyModelAngles(bipedRightLeg);
-        LeftLeg.copyModelAngles(bipedLeftLeg);
+            Head.copyModelAngles(bipedHead);
+            Body.copyModelAngles(bipedBody);
+            LeftArm.copyModelAngles(bipedLeftArm);
+            RightArm.copyModelAngles(bipedRightArm);
+            RightLeg.copyModelAngles(bipedRightLeg);
+            LeftLeg.copyModelAngles(bipedLeftLeg);
+        });
     }
 
     @Override
@@ -109,6 +102,7 @@ public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
         LeftArm.render(matrixStack, buffer, packedLight, packedOverlay);
         RightLeg.render(matrixStack, buffer, packedLight, packedOverlay);
         LeftLeg.render(matrixStack, buffer, packedLight, packedOverlay);
+
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {

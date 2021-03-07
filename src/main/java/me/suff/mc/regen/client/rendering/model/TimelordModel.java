@@ -17,6 +17,7 @@ public class TimelordModel extends PlayerModel< TimelordEntity > {
     private final ModelRenderer LeftArm;
     private final ModelRenderer RightLeg;
     private final ModelRenderer LeftLeg;
+    private final ModelRenderer Cape;
 
 
     public TimelordModel() {
@@ -31,7 +32,6 @@ public class TimelordModel extends PlayerModel< TimelordEntity > {
 
         Body = new ModelRenderer(this);
         Body.setRotationPoint(0.0F, 0.0F, 0.0F);
-        Body.setTextureOffset(54, 16).addBox(-5.0F, -0.25F, 3.0F, 10.0F, 23.0F, 0.0F, 0.0F, false);
         Body.setTextureOffset(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, 0.0F, false);
         Body.setTextureOffset(16, 32).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, 0.25F, false);
 
@@ -60,17 +60,29 @@ public class TimelordModel extends PlayerModel< TimelordEntity > {
         LeftLeg.setRotationPoint(1.9F, 12.0F, 0.0F);
         LeftLeg.setTextureOffset(16, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
         LeftLeg.setTextureOffset(0, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, false);
+
+        Cape = new ModelRenderer(this);
+        Cape.setRotationPoint(0.0F, 24.0F, 0.0F);
+        Cape.setTextureOffset(54, 16).addBox(-5.0F, -24.25F, 3.0F, 10.0F, 23.0F, 0.0F, 0.0F, false);
     }
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        matrixStack.push();
         Head.render(matrixStack, buffer, packedLight, packedOverlay);
         Body.render(matrixStack, buffer, packedLight, packedOverlay);
         RightArm.render(matrixStack, buffer, packedLight, packedOverlay);
         LeftArm.render(matrixStack, buffer, packedLight, packedOverlay);
         RightLeg.render(matrixStack, buffer, packedLight, packedOverlay);
         LeftLeg.render(matrixStack, buffer, packedLight, packedOverlay);
+        renderCape(matrixStack, buffer, packedLight, packedOverlay);
         Head.showModel = false;
+        matrixStack.pop();
+    }
+
+    @Override
+    public void renderCape(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn) {
+        this.Cape.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
     }
 
     @Override

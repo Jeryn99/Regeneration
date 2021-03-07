@@ -2,6 +2,7 @@ package me.suff.mc.regen.common.block;
 
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.RItems;
+import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.tiles.JarTile;
@@ -73,23 +74,24 @@ public class JarBlock extends DirectionalBlock {
             if (handIn == Hand.MAIN_HAND) {
                 if (!player.isSneaking()) {
                     if (player.getHeldItemMainhand().getItem() == RItems.HAND.get()) {
-                        jarTile.dropHandIfPresent();
+                        jarTile.dropHandIfPresent(player);
                         jarTile.setHand(player.getHeldItemMainhand().copy());
                         jarTile.setUpdateSkin(true);
                         player.getHeldItemMainhand().shrink(1);
                     } else {
-                        jarTile.dropHandIfPresent();
+                        jarTile.dropHandIfPresent(player);
                     }
                 } else {
                     if (jarTile.getHand().getItem() == RItems.HAND.get() && jarTile.isValid(JarTile.Action.CREATE)) {
                         RegenCap.get(player).ifPresent(iRegen -> {
-                            if(iRegen.getCurrentState() == RegenStates.ALIVE) {
+                            if (iRegen.getCurrentState() == RegenStates.ALIVE) {
                                 iRegen.addRegens(1);
                                 iRegen.setNextTrait(HandItem.getTrait(jarTile.getHand()));
                                 iRegen.setNextSkin(HandItem.getSkin(jarTile.getHand()));
                                 iRegen.setAlexSkin(HandItem.isAlex(jarTile.getHand()));
                                 iRegen.syncToClients(null);
                                 iRegen.regen();
+                                player.playSound(RSounds.HAND_GLOW.get(), 1, 1);
                                 jarTile.setHand(ItemStack.EMPTY);
                             }
                         });
@@ -106,7 +108,7 @@ public class JarBlock extends DirectionalBlock {
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!worldIn.isRemote()) {
             JarTile jarTile = (JarTile) worldIn.getTileEntity(pos);
-            jarTile.dropHandIfPresent();
+            jarTile.dropHandIfPresent(null);
         }
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
@@ -115,7 +117,7 @@ public class JarBlock extends DirectionalBlock {
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
         if (!world.isRemote()) {
             JarTile jarTile = (JarTile) world.getTileEntity(pos);
-            jarTile.dropHandIfPresent();
+            jarTile.dropHandIfPresent(player);
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }

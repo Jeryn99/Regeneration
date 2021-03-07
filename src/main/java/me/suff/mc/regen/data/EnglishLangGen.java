@@ -52,8 +52,8 @@ public class EnglishLangGen extends LanguageProvider {
         add("regen.sound.fob_watch", "Ticking");
         add("regen.sound.regen_breath", "Regeneration exhale");
         add("regen.sound.alarm", "Regeneration Alarm");
-        add("regen.sound.m_timelord.hurt","Male Timelord Hurts");
-        add("regen.sound.f_timelord.hurt","Female Timelord Hurts");
+        add("regen.sound.m_timelord.hurt", "Male Timelord Hurts");
+        add("regen.sound.f_timelord.hurt", "Female Timelord Hurts");
         add("regen.sound.m_timelord.die", "Male Timelord Dies");
         add("regen.sound.m_timelord.trade_fail", "Male Timelord Trade Fail");
         add("regen.sound.m_timelord.trade_success", "Male Timelord Trade Success");

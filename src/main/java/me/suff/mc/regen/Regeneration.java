@@ -10,7 +10,6 @@ import me.suff.mc.regen.common.regen.RegenStorage;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.data.BlockstateGen;
 import me.suff.mc.regen.data.EnglishLangGen;
 import me.suff.mc.regen.data.RRecipeGen;
 import me.suff.mc.regen.network.NetworkDispatcher;

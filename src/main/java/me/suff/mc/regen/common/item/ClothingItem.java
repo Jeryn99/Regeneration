@@ -1,5 +1,6 @@
 package me.suff.mc.regen.common.item;
 
+import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.util.ClientUtil;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
@@ -26,6 +27,9 @@ public class ClothingItem extends ArmorItem {
     @Override
     public < A extends BipedModel< ? > > A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
         BipedModel< LivingEntity > model = (BipedModel< LivingEntity >) ClientUtil.getArmorModel(itemStack);
+        if (model instanceof RobesModel) {
+            ((RobesModel) model).setLivingEntity(entityLiving);
+        }
         return (A) model;
     }
 }

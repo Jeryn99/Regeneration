@@ -17,7 +17,9 @@ public class RobesModel extends BipedModel< LivingEntity > {
     private final ModelRenderer RightLeg;
     private final ModelRenderer LeftLeg;
     private final ModelRenderer Collar;
+    private final ModelRenderer Cape;
 
+    private LivingEntity livingEntity = null;
     private EquipmentSlotType slot = EquipmentSlotType.HEAD;
 
     public RobesModel(EquipmentSlotType slotType) {
@@ -28,7 +30,6 @@ public class RobesModel extends BipedModel< LivingEntity > {
 
         Body = new ModelRenderer(this);
         Body.setRotationPoint(0.0F, 0.0F, 0.0F);
-        Body.setTextureOffset(54, 16).addBox(-5.0F, -0.25F, 3.0F, 10.0F, 23.0F, 0.0F, 0.0F, false);
         Body.setTextureOffset(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, 0.0F, false);
         Body.setTextureOffset(16, 32).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, 0.25F, false);
 
@@ -57,6 +58,10 @@ public class RobesModel extends BipedModel< LivingEntity > {
         Collar.setTextureOffset(0, 84).addBox(-7.5F, -24.275F, -2.5F, 15.0F, 3.0F, 5.0F, 0.0F, false);
         Collar.setTextureOffset(0, 64).addBox(-7.5F, -36.275F, -2.5F, 15.0F, 12.0F, 8.0F, 0.0F, false);
 
+        Cape = new ModelRenderer(this);
+        Cape.setRotationPoint(0.0F, 0.0F, 0.0F);
+        Cape.setTextureOffset(54, 16).addBox(-5.0F, -0.25F, 3.0F, 10.0F, 23.0F, 0.0F, 0.0F, false);
+
         bipedHead.showModel = false;
         bipedBody = Body;
         bipedLeftArm = LeftArm;
@@ -66,16 +71,38 @@ public class RobesModel extends BipedModel< LivingEntity > {
 
     }
 
+    public LivingEntity getLivingEntity() {
+        return livingEntity;
+    }
+
+    public void setLivingEntity(LivingEntity livingEntity) {
+        this.livingEntity = livingEntity;
+    }
+
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
+   /*     if(livingEntity.limbSwing > 0) {
+            if (livingEntity.isSprinting()) {
+                Cape.rotateAngleX = (float) Math.toDegrees(35);
+            } else {
+                Cape.rotateAngleX = livingEntity.limbSwing;
+            }
+        }*/
+
         if (slot == EquipmentSlotType.HEAD) {
+            matrixStack.push();
+            if(livingEntity.isSneaking()) {
+                matrixStack.translate(0, 0.1, 0);
+            }
             Collar.render(matrixStack, buffer, packedLight, packedOverlay);
+            matrixStack.pop();
         }
         if (slot == EquipmentSlotType.CHEST) {
             Body.render(matrixStack, buffer, packedLight, packedOverlay);
             RightArm.render(matrixStack, buffer, packedLight, packedOverlay);
             LeftArm.render(matrixStack, buffer, packedLight, packedOverlay);
+            Cape.render(matrixStack, buffer, packedLight, packedOverlay);
         }
         if (slot == EquipmentSlotType.LEGS || slot == EquipmentSlotType.FEET) {
             RightLeg.render(matrixStack, buffer, packedLight, packedOverlay);
@@ -83,4 +110,7 @@ public class RobesModel extends BipedModel< LivingEntity > {
         }
     }
 
+    public void renderCape(MatrixStack matrixStackIn, IVertexBuilder ivertexbuilder, int packedLightIn, int noOverlay) {
+        this.Cape.render(matrixStackIn, ivertexbuilder, packedLightIn, noOverlay);
+    }
 }

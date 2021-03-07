@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-      "model": "regen:item/hand_steve"
+    "model": "regen:item/hand_steve"
   },
   "overrides": [
     {

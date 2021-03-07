@@ -30,7 +30,6 @@ public class DownloadSkinsThread extends Thread {
     public void run() {
         try {
             createDefaultFolders();
-            internalSkinsDownload();
             File tempZip = new File(SKIN_DIRECTORY + "/temp");
             if (tempZip.exists()) {
                 FileUtils.cleanDirectory(tempZip);
@@ -40,8 +39,10 @@ public class DownloadSkinsThread extends Thread {
             if (isClient) {
                 DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientSkin::downloadPreviousSkins);
             }
+            internalSkinsDownload();
         } catch (IOException exception) {
             exception.printStackTrace();
+            stop();
         }
     }
 

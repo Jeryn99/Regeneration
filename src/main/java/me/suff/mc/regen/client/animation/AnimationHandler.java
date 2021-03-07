@@ -7,6 +7,7 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
@@ -21,7 +22,7 @@ public class AnimationHandler {
             TransitionType< ? > type = iRegen.getTransitionType().get();
             type.getRenderer().animate(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             correctPlayerModel(bipedModel);
-            if (iRegen.getCurrentState() != RegenStates.REGENERATING) {
+            if (iRegen.getCurrentState() != RegenStates.REGENERATING && livingEntity.getType() == EntityType.PLAYER) {
                 handleArmor(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             }
         });

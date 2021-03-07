@@ -1,7 +1,5 @@
 package me.suff.mc.regen.common.regen;
 
-import me.suff.mc.regen.common.objects.RSounds;
-import me.suff.mc.regen.common.regen.acting.Acting;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.IStateManager;
 import me.suff.mc.regen.common.regen.state.RegenStates;
