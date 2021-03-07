@@ -5,6 +5,7 @@ package me.swirtzly.regeneration.client.rendering.model;// Made with Blockbench 
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.swirtzly.regeneration.client.animation.GeneralAnimations;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
@@ -80,6 +81,9 @@ public class RobesNew extends BipedModel {
         // head.render(f5);
 
         setRotationAngles(entity, f, f1, f2, f3, f4, f5);
+        RegenCap.get(entity).ifPresent((data) -> {
+            data.getRegenType().create().getRenderer().animateEntity(this, entity, f, f1, f2, f3, f4, f5);
+        });
         if (type == EquipmentSlotType.HEAD) {
             if (entity instanceof ArmorStandEntity) {
                 GlStateManager.rotatef(180, 0F, 1, 0F);

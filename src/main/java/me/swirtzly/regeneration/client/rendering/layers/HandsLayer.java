@@ -50,7 +50,7 @@ public class HandsLayer extends LayerRenderer {
             if (player.isSneaking()) {
                 GlStateManager.translatef(0.0F, 0.2F, 0.0F);
             }
-            // Forge: moved this call down, fixes incorrect offset while sneaking.
+
             this.translateToHand(handSide);
             boolean flag = handSide == HandSide.LEFT;
             GlStateManager.translatef((float) (flag ? -1 : 1) / 25.0F, 0.125F, -0.625F);
@@ -70,7 +70,14 @@ public class HandsLayer extends LayerRenderer {
     }
 
     protected void translateToHand(HandSide handSide) {
-        ((BipedModel) this.livingEntityRenderer.getEntityModel()).postRenderArm(0.0625F, handSide);
+        BipedModel biped = ((BipedModel) this.livingEntityRenderer.getEntityModel());
+        boolean oldValueRight = biped.bipedRightArm.isHidden;
+        boolean oldValueLeft = biped.bipedLeftArm.isHidden;
+        biped.bipedRightArm.isHidden = false;
+        biped.bipedLeftArm.isHidden = false;
+        biped.postRenderArm(0.0625F, handSide);
+        biped.bipedRightArm.isHidden = oldValueRight;
+        biped.bipedLeftArm.isHidden = oldValueLeft;
     }
 
     public boolean shouldCombineTextures() {

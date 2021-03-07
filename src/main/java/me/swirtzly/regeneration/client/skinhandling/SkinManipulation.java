@@ -202,9 +202,12 @@ public class SkinManipulation {
             }
 
 
-            if (Minecraft.getInstance().gameSettings.thirdPersonView == 0 && isWearingChest) {
-                model.bipedLeftArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
-                model.bipedRightArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
+            //Fixes First person arm
+            if(Minecraft.getInstance().player.getUniqueID() == player.getUniqueID()) {
+                if (Minecraft.getInstance().gameSettings.thirdPersonView == 0 && isWearingChest) {
+                    model.bipedLeftArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
+                    model.bipedRightArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
+                }
             }
 
 			/* Sometimes when the player is teleported, the Mojang skin becomes re-downloaded and resets to either Steve,

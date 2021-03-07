@@ -2,6 +2,7 @@ package me.swirtzly.regeneration.common.traits.positive;
 
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
+import net.minecraft.block.LadderBlock;
 import net.minecraft.entity.LivingEntity;
 
 public class WallClimbingTrait extends TraitManager.IDna {
@@ -13,7 +14,7 @@ public class WallClimbingTrait extends TraitManager.IDna {
     @Override
     public void onUpdate(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-        if (player.collidedHorizontally && player.moveForward > 0) {
+        if (player.collidedHorizontally) {
             player.getMotion().add(0, 0.2F, 0);
         }
     }

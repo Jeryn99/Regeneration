@@ -1,6 +1,7 @@
 package me.swirtzly.regeneration.client.rendering.model;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
@@ -72,7 +73,11 @@ public class GuardArmorNew extends BipedModel {
         // head.render(f5);
 
         setRotationAngles(entity, f, f1, f2, f3, f4, f5);
-        if (type == EquipmentSlotType.HEAD) {
+        RegenCap.get(entity).ifPresent((data) -> {
+            data.getRegenType().create().getRenderer().animateEntity(this, entity, f, f1, f2, f3, f4, f5);
+        });
+
+            if (type == EquipmentSlotType.HEAD) {
             if (entity instanceof ArmorStandEntity) {
                 GlStateManager.rotatef(90, 0F, 1, 0F);
             }

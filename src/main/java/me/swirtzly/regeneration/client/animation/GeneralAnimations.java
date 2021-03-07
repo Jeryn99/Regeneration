@@ -43,17 +43,11 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
                 modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
             }
 
-            boolean swift = entity.getItemStackFromSlot(EquipmentSlotType.CHEST).getOrCreateTag().contains(SWIFT_KEY);
-
             if(modelPlayer instanceof PlayerModel){
                 PlayerModel playerModel = (PlayerModel) modelPlayer;
-                playerModel.bipedLeftArmwear.isHidden = playerModel.bipedRightArmwear.isHidden = playerModel.bipedBodyWear.isHidden = !showBodyWear(entity.getItemStackFromSlot(EquipmentSlotType.CHEST));
+                playerModel.bipedLeftArmwear.isHidden = playerModel.bipedRightArmwear.isHidden = playerModel.bipedBodyWear.isHidden = hideBodyWear(entity.getItemStackFromSlot(EquipmentSlotType.CHEST));
                 playerModel.bipedRightLeg.isHidden = playerModel.bipedLeftLeg.isHidden = playerModel.bipedRightLegwear.isHidden = playerModel.bipedLeftLegwear.isHidden = !showLegWear(entity.getItemStackFromSlot(EquipmentSlotType.LEGS));
-                playerModel.bipedLeftArmwear.isHidden = playerModel.bipedRightArmwear.isHidden = playerModel.bipedBodyWear.isHidden = swift;
             }
-
-
-
 
             if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
                 GlStateManager.rotatef(15, 1, 0, 0);
@@ -71,14 +65,14 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
         return true;
     }
 
-    public boolean showBodyWear(ItemStack stack){
+    public boolean hideBodyWear(ItemStack stack){
         Item[] items = new Item[]{RegenObjects.Items.ROBES_CHEST.get(), RegenObjects.Items.GUARD_CHEST.get()};
         for (Item item : items) {
             if(stack.getItem() == item){
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     @Override
