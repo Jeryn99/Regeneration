@@ -127,23 +127,22 @@ public class ClientEvents {
 
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void onRenderOverlay(RenderGameOverlayEvent event) {
-        if (!event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.HELMET) {
+    public static void onRenderOverlay(RenderGameOverlayEvent.Pre event) {
             ClientPlayerEntity player = Minecraft.getInstance().player;
             RegenCap.get(player).ifPresent((cap) -> {
                 String warning = null;
+
                 if (player.getHeldItemMainhand().getItem() instanceof GunItem && player.getItemInUseCount() > 0) {
                     AbstractGui.GUI_ICONS_LOCATION = NEW;
-                    if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
+                    if(event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS && event.getType() != RenderGameOverlayEvent.ElementType.ALL){
                         event.setCanceled(true);
                     }
-                } else if (cap.getRegens() > 0) {
-                    AbstractGui.GUI_ICONS_LOCATION = HEARTS;
-                } else {
-                    AbstractGui.GUI_ICONS_LOCATION = OLD;
+                }  else {
+                    AbstractGui.GUI_ICONS_LOCATION = cap.getRegens() > 0 ? HEARTS : OLD;
                 }
 
 
+                if(event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
                 if (cap.getCurrentState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
                     event.setCanceled(true);
                 }
@@ -185,7 +184,6 @@ public class ClientEvents {
                     Minecraft.getInstance().fontRenderer.renderString(warning, Minecraft.getInstance().getMainWindow().getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, TextFormatting.WHITE.getColor(), false, TransformationMatrix.identity().getMatrix(), renderImpl, false, 0, 15728880);
                 renderImpl.finish();
             });
-        }
     }
 
     @SubscribeEvent
