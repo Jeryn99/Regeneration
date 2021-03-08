@@ -5,6 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.suff.mc.regen.client.skin.CommonSkin;
 import me.suff.mc.regen.client.skin.SkinHandler;
+import me.suff.mc.regen.common.objects.RSoundSchemes;
+import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.NextSkinMessage;
@@ -118,7 +120,7 @@ public class IncarnationScreen extends ContainerScreen {
         skins = CommonSkin.listAllSkins(currentSkinType);
 
 
-        this.searchField = new TextFieldWidget(this.font, cx + 15, cy + 145, guiLeft * 2, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
+        this.searchField = new TextFieldWidget(this.font, cx + 15, cy + 145, xSize - 70, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
 
         this.searchField.setResponder((p_214329_1_) -> {
             position = 0;
@@ -134,7 +136,6 @@ public class IncarnationScreen extends ContainerScreen {
             Collections.sort(skins);
             updateModels();
         });
-
         this.children.add(this.searchField);
         this.setFocusedDefault(this.searchField);
 

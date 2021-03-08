@@ -138,7 +138,7 @@ public class ClientEvents {
                         event.setCanceled(true);
                     }
                 }  else {
-                    AbstractGui.GUI_ICONS_LOCATION = cap.getRegens() > 0 ? HEARTS : OLD;
+                    AbstractGui.GUI_ICONS_LOCATION = cap.getRegens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
                 }
 
 

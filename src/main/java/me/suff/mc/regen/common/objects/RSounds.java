@@ -32,13 +32,24 @@ public class RSounds {
 
     //Angela Timelord
     public static final RegistryObject< SoundEvent > F_ANGELA_TIMELORD_HURT = SOUNDS.register("f_angela_timelord_hurt", () -> setUpSound("f_angela_timelord_hurt"));
-    public static final RegistryObject< SoundEvent > M_ANGELA_TIMELORD_DIE = SOUNDS.register("f_angela_timelord_die", () -> setUpSound("f_angela_timelord_die"));
-    public static final RegistryObject< SoundEvent > M_ANGELA_TIMELORD_TRADE_FAIL = SOUNDS.register("f_angela_timelord_trade_fail", () -> setUpSound("f_angela_timelord_trade_fail"));
-    public static final RegistryObject< SoundEvent > M_ANGELA_TIMELORD_TRADE_SUCCESS = SOUNDS.register("f_angela_timelord_trade_success", () -> setUpSound("f_angela_timelord_trade_success"));
-    public static final RegistryObject< SoundEvent > M_ANGELA_TIMELORD_SCREAM = SOUNDS.register("f_angela_timelord_scream", () -> setUpSound("f_angela_timelord_scream"));
+    public static final RegistryObject< SoundEvent > F_ANGELA_TIMELORD_DIE = SOUNDS.register("f_angela_timelord_die", () -> setUpSound("f_angela_timelord_die"));
+    public static final RegistryObject< SoundEvent > F_ANGELA_TIMELORD_TRADE_FAIL = SOUNDS.register("f_angela_timelord_trade_fail", () -> setUpSound("f_angela_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > F_ANGELA_TIMELORD_TRADE_SUCCESS = SOUNDS.register("f_angela_timelord_trade_success", () -> setUpSound("f_angela_timelord_trade_success"));
+    public static final RegistryObject< SoundEvent > F_ANGELA_TIMELORD_SCREAM = SOUNDS.register("f_angela_timelord_scream", () -> setUpSound("f_angela_timelord_scream"));
+
+    //aaliceh Timelord
+    public static final RegistryObject< SoundEvent > F_AALICEH_TIMELORD_HURT = SOUNDS.register("f_aaliceh_timelord_hurt", () -> setUpSound("f_aaliceh_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > F_AALICEH_TIMELORD_TRADE_FAIL = SOUNDS.register("f_aaliceh_timelord_trade_fail", () -> setUpSound("f_aaliceh_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > F_AALICEH_TIMELORD_TRADE_SUCCESS = SOUNDS.register("f_aaliceh_timelord_trade_success", () -> setUpSound("f_aaliceh_timelord_trade_success"));
+    public static final RegistryObject< SoundEvent > F_AALICEH_TIMELORD_SCREAM = SOUNDS.register("f_aaliceh_timelord_scream", () -> setUpSound("f_aaliceh_timelord_scream"));
 
     //Gas Timelord
     public static final RegistryObject< SoundEvent > M_GAS_TIMELORD_HURT = SOUNDS.register("m_gas_timelord_hurt", () -> setUpSound("m_gas_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > M_GAS_TIMELORD_DIE = SOUNDS.register("m_gas_timelord_die", () -> setUpSound("m_gas_timelord_die"));
+    public static final RegistryObject< SoundEvent > M_GAS_TIMELORD_TRADE_FAIL = SOUNDS.register("m_gas_timelord_trade_fail", () -> setUpSound("m_gas_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > M_GAS_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_gas_timelord_trade_success", () -> setUpSound("m_gas_timelord_trade_success"));
+    public static final RegistryObject< SoundEvent > M_GAS_TIMELORD_SCREAM = SOUNDS.register("m_gas_timelord_scream", () -> setUpSound("m_gas_timelord_scream"));
+
     //Ramen Timelord
     public static final RegistryObject< SoundEvent > M_RAMEN_TIMELORD_HURT = SOUNDS.register("m_ramen_timelord_hurt", () -> setUpSound("m_ramen_timelord_hurt"));
     public static final RegistryObject< SoundEvent > M_RAMEN_TIMELORD_DIE = SOUNDS.register("m_ramen_timelord_die", () -> setUpSound("m_ramen_timelord_die"));

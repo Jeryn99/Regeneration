@@ -18,22 +18,22 @@ public class RSoundSchemes {
 
         @Override
         public SoundEvent getTradeDeclineSound() {
-            return RSounds.M_ANGELA_TIMELORD_TRADE_FAIL.get();
+            return RSounds.F_ANGELA_TIMELORD_TRADE_FAIL.get();
         }
 
         @Override
         public SoundEvent getTradeAcceptSound() {
-            return RSounds.M_ANGELA_TIMELORD_TRADE_SUCCESS.get();
+            return RSounds.F_ANGELA_TIMELORD_TRADE_SUCCESS.get();
         }
 
         @Override
         public SoundEvent getDeathSound() {
-            return RSounds.M_ANGELA_TIMELORD_DIE.get();
+            return RSounds.F_ANGELA_TIMELORD_DIE.get();
         }
 
         @Override
         public SoundEvent getScreamSound() {
-            return RSounds.M_ANGELA_TIMELORD_SCREAM.get();
+            return RSounds.F_ANGELA_TIMELORD_SCREAM.get();
         }
 
         @Override
@@ -49,22 +49,22 @@ public class RSoundSchemes {
 
         @Override
         public SoundEvent getTradeDeclineSound() {
-            return RSounds.M_GAS_TIMELORD_HURT.get();
+            return RSounds.M_GAS_TIMELORD_TRADE_FAIL.get();
         }
 
         @Override
         public SoundEvent getTradeAcceptSound() {
-            return RSounds.M_GAS_TIMELORD_HURT.get();
+            return RSounds.M_GAS_TIMELORD_TRADE_SUCCESS.get();
         }
 
         @Override
         public SoundEvent getDeathSound() {
-            return RSounds.M_GAS_TIMELORD_HURT.get();
+            return RSounds.M_GAS_TIMELORD_DIE.get();
         }
 
         @Override
         public SoundEvent getScreamSound() {
-            return null;
+            return RSounds.M_GAS_TIMELORD_SCREAM.get();
         }
 
         @Override
@@ -169,8 +169,40 @@ public class RSoundSchemes {
         }
     };
 
+    public static SoundScheme F_AALICEH = new SoundScheme() {
+        @Override
+        public SoundEvent getHurtSound() {
+            return RSounds.F_AALICEH_TIMELORD_HURT.get();
+        }
+
+        @Override
+        public SoundEvent getTradeDeclineSound() {
+            return RSounds.F_AALICEH_TIMELORD_TRADE_FAIL.get();
+        }
+
+        @Override
+        public SoundEvent getTradeAcceptSound() {
+            return RSounds.F_AALICEH_TIMELORD_TRADE_SUCCESS.get();
+        }
+
+        @Override
+        public SoundEvent getDeathSound() {
+            return RSounds.F_AALICEH_TIMELORD_SCREAM.get();
+        }
+
+        @Override
+        public SoundEvent getScreamSound() {
+            return RSounds.F_AALICEH_TIMELORD_SCREAM.get();
+        }
+
+        @Override
+        public ResourceLocation identify() {
+            return new ResourceLocation(RConstants.MODID, "aaliceh");
+        }
+    };
+
     public static void init() {
-        F_SCHEMES = new SoundScheme[]{RSoundSchemes.F_ANGELA};
+        F_SCHEMES = new SoundScheme[]{RSoundSchemes.F_ANGELA, RSoundSchemes.F_AALICEH};
         M_SCHEMES = new SoundScheme[]{RSoundSchemes.M_GAS, M_RAMEN, M_TOMMY, M_CONNOR};
     }
 

@@ -34,13 +34,6 @@ public class EnderDragonTransition implements TransitionType< EnderDragonTransit
             PlayerEntity serverPlayerEntity = (PlayerEntity) cap.getLiving();
             serverPlayerEntity.abilities.allowFlying = RegenConfig.COMMON.allowUpwardsMotion.get();
             serverPlayerEntity.abilities.isFlying = RegenConfig.COMMON.allowUpwardsMotion.get();
-        } else {
-            if (cap.getLiving().getPosition().getY() <= 100 && RegenConfig.COMMON.allowUpwardsMotion.get()) {
-                BlockPos upwards = cap.getLiving().getPosition().up(2);
-                BlockPos pos = upwards.subtract(cap.getLiving().getPosition());
-                Vector3d vec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).normalize();
-                cap.getLiving().setMotion(cap.getLiving().getMotion().add(vec.scale(0.10D)));
-            }
         }
     }
 

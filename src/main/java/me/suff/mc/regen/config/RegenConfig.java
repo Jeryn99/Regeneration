@@ -49,6 +49,7 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue changeMySkin;
         public final ForgeConfigSpec.BooleanValue changePerspective;
         public final ForgeConfigSpec.BooleanValue renderTimelordHeadwear;
+        public final ForgeConfigSpec.BooleanValue heartIcons;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client Regeneration Settings").push("client");
@@ -57,6 +58,7 @@ public class RegenConfig {
             changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
             builder.comment("Misc Settings").push("misc");
             renderTimelordHeadwear = builder.comment("Toggle whether Timelords second head layers render, as some look good without and some look good with, I just leave this decision up to you").translation("config.regeneration.timelordRenderSecondLayers").define("timelordRenderSecondLayers", true);
+            heartIcons = builder.comment("Toggle whether re-skinned hearts render when you have Regenerations").translation("config.regeneration.heartIcons").define("timelordRenderSecondLayers", true);
             builder.pop();
         }
 
