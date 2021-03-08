@@ -11,6 +11,7 @@ import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.EnglishLangGen;
+import me.suff.mc.regen.data.RBlockTags;
 import me.suff.mc.regen.data.RRecipeGen;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.util.*;
@@ -82,6 +83,7 @@ public class Regeneration {
         DataGenerator generator = e.getGenerator();
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
         generator.addProvider(new EnglishLangGen(generator));
+        generator.addProvider(new RBlockTags(generator, existingFileHelper));
         //  generator.addProvider(new ItemModelGen(generator, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
     }

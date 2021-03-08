@@ -4,15 +4,18 @@ import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.skin.SkinHandler;
+import me.suff.mc.regen.common.item.GunItem;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.config.RegenConfig;
+import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RenderHelp;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
@@ -20,6 +23,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.TransformationMatrix;
@@ -117,13 +121,28 @@ public class ClientEvents {
         });
     }
 
+    public static ResourceLocation OLD = new ResourceLocation("textures/gui/icons.png");
+    public static ResourceLocation NEW = new ResourceLocation(RConstants.MODID, "textures/gui/icons.png");
+    public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/regen_hearts.png");
+
+
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onRenderOverlay(RenderGameOverlayEvent event) {
         if (!event.isCancelable() && event.getType() == RenderGameOverlayEvent.ElementType.HELMET) {
             ClientPlayerEntity player = Minecraft.getInstance().player;
-
             RegenCap.get(player).ifPresent((cap) -> {
                 String warning = null;
+                if (player.getHeldItemMainhand().getItem() instanceof GunItem && player.getItemInUseCount() > 0) {
+                    AbstractGui.GUI_ICONS_LOCATION = NEW;
+                    if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
+                        event.setCanceled(true);
+                    }
+                } else if (cap.getRegens() > 0) {
+                    AbstractGui.GUI_ICONS_LOCATION = HEARTS;
+                } else {
+                    AbstractGui.GUI_ICONS_LOCATION = OLD;
+                }
+
 
                 if (cap.getCurrentState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
                     event.setCanceled(true);

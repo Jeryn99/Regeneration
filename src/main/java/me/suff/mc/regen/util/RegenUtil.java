@@ -1,6 +1,9 @@
 package me.suff.mc.regen.util;
 
 import me.suff.mc.regen.Regeneration;
+import net.minecraft.block.Block;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.io.FileUtils;
@@ -15,7 +18,13 @@ import static me.suff.mc.regen.Regeneration.GSON;
 
 public class RegenUtil {
 
+    public static ITag.INamedTag< Block > BANNED_BLOCKS = makeBlock(RConstants.MODID, "angel_proof");
+
     public static Random RAND = new Random();
+
+    public static ITag.INamedTag< Block > makeBlock(String domain, String path) {
+        return BlockTags.makeWrapperTag(new ResourceLocation(domain, path).toString());
+    }
 
     public static String[] USERNAMES = new String[]{};
 
