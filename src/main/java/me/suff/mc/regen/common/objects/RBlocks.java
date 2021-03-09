@@ -30,10 +30,8 @@ public class RBlocks {
     public static final RegistryObject< Block > BIO_CONTAINER = BLOCKS.register("bio_container", JarBlock::new);
     public static final RegistryObject< Block > ZINC_ORE = BLOCKS.register("zinc_ore", () -> new ROreBlock(AbstractBlock.Properties.create(Material.ROCK).setLightLevel(getLightValueLit(9)).setRequiresTool().hardnessAndResistance(3.0F, 3.0F)));
 
-    private static ToIntFunction<BlockState> getLightValueLit(int lightValue) {
-        return (state) -> {
-            return state.get(BlockStateProperties.LIT) ? lightValue : 0;
-        };
+    private static ToIntFunction< BlockState > getLightValueLit(int lightValue) {
+        return (state) -> state.get(BlockStateProperties.LIT) ? lightValue : 0;
     }
 
     private static void genBlockItems(Block... blocks) {

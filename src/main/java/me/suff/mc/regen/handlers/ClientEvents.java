@@ -43,6 +43,10 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
 
+    public static ResourceLocation OLD = new ResourceLocation("textures/gui/icons.png");
+    public static ResourceLocation NEW = new ResourceLocation(RConstants.MODID, "textures/gui/icons.png");
+    public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/regen_hearts.png");
+
     @SubscribeEvent
     public static void onName(RenderNameplateEvent event) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
@@ -72,11 +76,9 @@ public class ClientEvents {
         });
     }
 
-
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
         RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.getTransitionType().get().getRenderer().firstPersonHand(event));
-
     }
 
     @SubscribeEvent
@@ -96,7 +98,6 @@ public class ClientEvents {
             }
         }
     }
-
 
     @SubscribeEvent
     public static void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
@@ -121,69 +122,64 @@ public class ClientEvents {
         });
     }
 
-    public static ResourceLocation OLD = new ResourceLocation("textures/gui/icons.png");
-    public static ResourceLocation NEW = new ResourceLocation(RConstants.MODID, "textures/gui/icons.png");
-    public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/regen_hearts.png");
-
-
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onRenderOverlay(RenderGameOverlayEvent.Pre event) {
-            ClientPlayerEntity player = Minecraft.getInstance().player;
-            RegenCap.get(player).ifPresent((cap) -> {
-                String warning = null;
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        RegenCap.get(player).ifPresent((cap) -> {
+            String warning = null;
 
-                if (player.getHeldItemMainhand().getItem() instanceof GunItem && player.getItemInUseCount() > 0) {
-                    AbstractGui.GUI_ICONS_LOCATION = NEW;
-                    if(event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS && event.getType() != RenderGameOverlayEvent.ElementType.ALL){
-                        event.setCanceled(true);
-                    }
-                }  else {
-                    AbstractGui.GUI_ICONS_LOCATION = cap.getRegens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
-                }
-
-
-                if(event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
-                if (cap.getCurrentState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+            if (player.getHeldItemMainhand().getItem() instanceof GunItem && player.getItemInUseCount() > 0) {
+                AbstractGui.GUI_ICONS_LOCATION = NEW;
+                if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS && event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
                     event.setCanceled(true);
                 }
+            } else {
+                AbstractGui.GUI_ICONS_LOCATION = cap.getRegens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
+            }
 
 
-                ITextComponent forceKeybind = new TranslationTextComponent(RKeybinds.FORCE_REGEN.getTranslationKey().replace("key.keyboard.", "").toUpperCase());
+            if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
+            if (cap.getCurrentState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+                event.setCanceled(true);
+            }
 
-                switch (cap.getCurrentState()) {
-                    case ALIVE:
-                        break;
-                    case GRACE:
-                        RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
-                        warning = new TranslationTextComponent("regen.messages.warning.grace", forceKeybind.getString()).getString();
-                        break;
-                    case GRACE_CRIT:
-                        RenderHelp.renderVig(new Vector3d(1, 0, 0), 0.5F);
-                        warning = new TranslationTextComponent("regen.messages.warning.grace_critical", forceKeybind.getString()).getString();
-                        break;
 
-                    case REGENERATING:
+            ITextComponent forceKeybind = new TranslationTextComponent(RKeybinds.FORCE_REGEN.getTranslationKey().replace("key.keyboard.", "").toUpperCase());
+
+            switch (cap.getCurrentState()) {
+                case ALIVE:
+                    break;
+                case GRACE:
+                    RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
+                    warning = new TranslationTextComponent("regen.messages.warning.grace", forceKeybind.getString()).getString();
+                    break;
+                case GRACE_CRIT:
+                    RenderHelp.renderVig(new Vector3d(1, 0, 0), 0.5F);
+                    warning = new TranslationTextComponent("regen.messages.warning.grace_critical", forceKeybind.getString()).getString();
+                    break;
+
+                case REGENERATING:
+                    RenderHelp.renderVig(cap.getSecondaryColors(), 0.5F);
+                    break;
+
+                case POST:
+                    if (player.hurtTime > 0 || player.getActivePotionEffect(Effects.NAUSEA) != null) {
                         RenderHelp.renderVig(cap.getSecondaryColors(), 0.5F);
-                        break;
+                    }
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + cap.getCurrentState());
+            }
 
-                    case POST:
-                        if (player.hurtTime > 0 || player.getActivePotionEffect(Effects.NAUSEA) != null) {
-                            RenderHelp.renderVig(cap.getSecondaryColors(), 0.5F);
-                        }
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + cap.getCurrentState());
-                }
+            if (cap.areHandsGlowing()) {
+                RenderHelp.renderVig(TransitionTypes.FIERY.get().getDefaultPrimaryColor(), 0.5F);
+            }
 
-                if (cap.areHandsGlowing()) {
-                    RenderHelp.renderVig(TransitionTypes.FIERY.get().getDefaultPrimaryColor(), 0.5F);
-                }
-
-                IRenderTypeBuffer.Impl renderImpl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
-                if (warning != null)
-                    Minecraft.getInstance().fontRenderer.renderString(warning, Minecraft.getInstance().getMainWindow().getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, TextFormatting.WHITE.getColor(), false, TransformationMatrix.identity().getMatrix(), renderImpl, false, 0, 15728880);
-                renderImpl.finish();
-            });
+            IRenderTypeBuffer.Impl renderImpl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+            if (warning != null)
+                Minecraft.getInstance().fontRenderer.renderString(warning, Minecraft.getInstance().getMainWindow().getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, TextFormatting.WHITE.getColor(), false, TransformationMatrix.identity().getMatrix(), renderImpl, false, 0, 15728880);
+            renderImpl.finish();
+        });
     }
 
     @SubscribeEvent

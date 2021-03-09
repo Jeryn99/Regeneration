@@ -5,8 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.suff.mc.regen.client.skin.CommonSkin;
 import me.suff.mc.regen.client.skin.SkinHandler;
-import me.suff.mc.regen.common.objects.RSoundSchemes;
-import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.NextSkinMessage;

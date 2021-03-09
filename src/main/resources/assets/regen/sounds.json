@@ -54,7 +54,6 @@
       "regen:timelord/female/angela/f_timelord_scream_2"
     ]
   },
-
   "f_aaliceh_timelord_hurt": {
     "subtitle": "regen.sound.f_timelord_hurt",
     "sounds": [
@@ -106,7 +105,25 @@
       "regen:timelord/female/aaliceh/f_timelord_scream_9"
     ]
   },
-
+  "f_asher_timelord_trade_fail": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/asher/f_timelord_trade_fail_1",
+      "regen:timelord/female/asher/f_timelord_trade_fail_2",
+      "regen:timelord/female/asher/f_timelord_trade_fail_3",
+      "regen:timelord/female/asher/f_timelord_trade_fail_4",
+      "regen:timelord/female/asher/f_timelord_trade_fail_5"
+    ]
+  },
+  "f_asher_timelord_trade_success": {
+    "subtitle": "regen.sound.f_timelord_hurt",
+    "sounds": [
+      "regen:timelord/female/asher/f_timelord_trade_success_1",
+      "regen:timelord/female/asher/f_timelord_trade_success_2",
+      "regen:timelord/female/asher/f_timelord_trade_success_3",
+      "regen:timelord/female/asher/f_timelord_trade_success_4"
+    ]
+  },
   "fob_watch": {
     "subtitle": "regen.sound.fob_watch",
     "sounds": [
@@ -178,7 +195,6 @@
       "regen:timelord/male/gas/m_timelord_die_1",
       "regen:timelord/male/gas/m_timelord_die_2",
       "regen:timelord/male/gas/m_timelord_die_3"
-
     ]
   },
   "m_ramen_timelord_hurt": {

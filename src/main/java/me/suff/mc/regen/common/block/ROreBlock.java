@@ -1,13 +1,9 @@
 package me.suff.mc.regen.common.block;
 
-import java.util.Random;
-
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RedstoneTorchBlock;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -26,12 +22,38 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.Random;
+
 public class ROreBlock extends Block {
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
 
     public ROreBlock(AbstractBlock.Properties properties) {
         super(properties);
         this.setDefaultState(this.getDefaultState().with(LIT, Boolean.valueOf(false)));
+    }
+
+    private static void activate(BlockState state, World world, BlockPos pos) {
+        spawnParticles(world, pos);
+        if (!state.get(LIT)) {
+            world.setBlockState(pos, state.with(LIT, Boolean.valueOf(true)), 3);
+        }
+
+    }
+
+    private static void spawnParticles(World world, BlockPos worldIn) {
+        Random random = world.rand;
+
+        for (Direction direction : Direction.values()) {
+            BlockPos blockpos = worldIn.offset(direction);
+            if (!world.getBlockState(blockpos).isOpaqueCube(world, blockpos)) {
+                Direction.Axis direction$axis = direction.getAxis();
+                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getXOffset() : (double) random.nextFloat();
+                double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getYOffset() : (double) random.nextFloat();
+                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getZOffset() : (double) random.nextFloat();
+                world.addParticle(RedstoneParticleData.REDSTONE_DUST, (double) worldIn.getX() + d1, (double) worldIn.getY() + d2, (double) worldIn.getZ() + d3, 0.0D, 0.0D, 0.0D);
+            }
+        }
+
     }
 
     @Override
@@ -56,15 +78,6 @@ public class ROreBlock extends Block {
 
         ItemStack itemstack = player.getHeldItem(handIn);
         return itemstack.getItem() instanceof BlockItem && (new BlockItemUseContext(player, handIn, itemstack, hit)).canPlace() ? ActionResultType.PASS : ActionResultType.SUCCESS;
-    }
-
-
-    private static void activate(BlockState state, World world, BlockPos pos) {
-        spawnParticles(world, pos);
-        if (!state.get(LIT)) {
-            world.setBlockState(pos, state.with(LIT, Boolean.valueOf(true)), 3);
-        }
-
     }
 
     @Override
@@ -97,24 +110,8 @@ public class ROreBlock extends Block {
 
     }
 
-    private static void spawnParticles(World world, BlockPos worldIn) {
-        Random random = world.rand;
-
-        for(Direction direction : Direction.values()) {
-            BlockPos blockpos = worldIn.offset(direction);
-            if (!world.getBlockState(blockpos).isOpaqueCube(world, blockpos)) {
-                Direction.Axis direction$axis = direction.getAxis();
-                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double)direction.getXOffset() : (double)random.nextFloat();
-                double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double)direction.getYOffset() : (double)random.nextFloat();
-                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double)direction.getZOffset() : (double)random.nextFloat();
-                world.addParticle(RedstoneParticleData.REDSTONE_DUST, (double)worldIn.getX() + d1, (double)worldIn.getY() + d2, (double)worldIn.getZ() + d3, 0.0D, 0.0D, 0.0D);
-            }
-        }
-
-    }
-
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder< Block, BlockState > builder) {
         builder.add(LIT);
     }
 }

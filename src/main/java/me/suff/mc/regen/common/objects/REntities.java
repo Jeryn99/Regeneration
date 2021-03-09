@@ -19,7 +19,7 @@ public class REntities {
     public static final DeferredRegister< EntityType< ? > > ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, RConstants.MODID);
     public static RegistryObject< EntityType< TimelordEntity > > TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
     public static RegistryObject< EntityType< WatcherEntity > > WATCHER = ENTITIES.register("watcher", () -> registerNoSpawnerBase(WatcherEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "watcher"));
-    public static RegistryObject< EntityType< LaserProjectile > > LASER = ENTITIES.register("laser", () -> registerNoSpawnerBase(LaserProjectile::new, EntityClassification.MISC, 1.95F, 0.6F, 128, 1, true, "laser"));
+    public static RegistryObject< EntityType< LaserProjectile > > LASER = ENTITIES.register("laser", () -> registerNoSpawnerBase(LaserProjectile::new, EntityClassification.MISC, 0.25F, 0.25F, 128, 1, true, "laser"));
 
 
     // Entity Creation

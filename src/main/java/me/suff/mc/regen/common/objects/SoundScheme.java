@@ -4,16 +4,41 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 
 /* Created by Craig on 03/03/2021 */
-public interface SoundScheme {
-    SoundEvent getHurtSound();
+public class SoundScheme {
 
-    SoundEvent getTradeDeclineSound();
+    private final SoundEvent hurtSound, tradeFail, tradeSuccess, deathSound, screamSound;
+    private final ResourceLocation location;
 
-    SoundEvent getTradeAcceptSound();
+    public SoundScheme(SoundEvent hurtSound, SoundEvent tradeFail, SoundEvent tradeSuccess, SoundEvent deathSound, SoundEvent screamSound, ResourceLocation location) {
+        this.deathSound = deathSound;
+        this.hurtSound = hurtSound;
+        this.tradeFail = tradeFail;
+        this.tradeSuccess = tradeSuccess;
+        this.screamSound = screamSound;
+        this.location = location;
+    }
 
-    SoundEvent getDeathSound();
+    public SoundEvent getHurtSound() {
+        return hurtSound;
+    }
 
-    SoundEvent getScreamSound();
+    public SoundEvent getTradeDeclineSound() {
+        return tradeFail;
+    }
 
-    ResourceLocation identify();
+    public SoundEvent getTradeAcceptSound() {
+        return tradeSuccess;
+    }
+
+    public SoundEvent getDeathSound() {
+        return deathSound;
+    }
+
+    public SoundEvent getScreamSound() {
+        return screamSound;
+    }
+
+    public ResourceLocation identify() {
+        return location;
+    }
 }

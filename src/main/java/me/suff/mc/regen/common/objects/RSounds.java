@@ -30,6 +30,14 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > REGENERATION_WATCHER = SOUNDS.register("regeneration_watcher", () -> setUpSound("regeneration_watcher"));
     public static final RegistryObject< SoundEvent > DRUM_BEAT = SOUNDS.register("drum_beat", () -> setUpSound("drum_beat"));
 
+    //Asher Timelord
+    public static final RegistryObject< SoundEvent > F_ASHER_TIMELORD_HURT = SOUNDS.register("f_asher_timelord_hurt", () -> setUpSound("f_asher_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > F_ASHER_TIMELORD_DIE = SOUNDS.register("f_asher_timelord_die", () -> setUpSound("f_asher_timelord_die"));
+    public static final RegistryObject< SoundEvent > F_ASHER_TIMELORD_TRADE_FAIL = SOUNDS.register("f_asher_timelord_trade_fail", () -> setUpSound("f_asher_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > F_ASHER_TIMELORD_TRADE_SUCCESS = SOUNDS.register("f_asher_timelord_trade_success", () -> setUpSound("f_asher_timelord_trade_success"));
+    public static final RegistryObject< SoundEvent > F_ASHER_TIMELORD_SCREAM = SOUNDS.register("f_asher_timelord_scream", () -> setUpSound("f_asher_timelord_scream"));
+
+
     //Angela Timelord
     public static final RegistryObject< SoundEvent > F_ANGELA_TIMELORD_HURT = SOUNDS.register("f_angela_timelord_hurt", () -> setUpSound("f_angela_timelord_hurt"));
     public static final RegistryObject< SoundEvent > F_ANGELA_TIMELORD_DIE = SOUNDS.register("f_angela_timelord_die", () -> setUpSound("f_angela_timelord_die"));

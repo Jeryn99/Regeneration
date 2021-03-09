@@ -6,8 +6,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.network.IPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -52,6 +54,14 @@ public class LaserProjectile extends ThrowableEntity {
         }
         if (isAlive()) {
             super.tick();
+        }
+    }
+
+    @Override
+    protected void onImpact(RayTraceResult result) {
+        super.onImpact(result);
+        if (this.world.isRemote()) {
+            this.world.addParticle(ParticleTypes.SMOKE, true, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 

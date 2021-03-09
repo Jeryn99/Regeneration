@@ -98,6 +98,7 @@ public class Regeneration {
         RTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RStructures.Structures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RStructures.FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RParticles.TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent

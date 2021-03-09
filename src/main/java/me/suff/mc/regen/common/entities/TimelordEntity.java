@@ -61,9 +61,9 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     private static final DataParameter< Boolean > IS_MALE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter< Boolean > HAS_SETUP = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter< Float > AIMING_TICKS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.FLOAT);
-
-    private final SwimmerPathNavigator waterNavigator;
-    private final GroundPathNavigator groundNavigator;
+    protected final SwimmerPathNavigator waterNavigator;
+    protected final GroundPathNavigator groundNavigator;
+    private boolean swimmingUp;
 
     public TimelordEntity(World world) {
         this(REntities.TIMELORD.get(), world);
@@ -89,7 +89,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
         return null;
     }
-
 
     @Override
     protected void registerData() {

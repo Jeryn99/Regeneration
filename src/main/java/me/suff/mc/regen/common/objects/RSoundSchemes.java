@@ -3,208 +3,27 @@ package me.suff.mc.regen.common.objects;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 
 /* Created by Craig on 03/03/2021 */
 public class RSoundSchemes {
 
     public static SoundScheme[] F_SCHEMES = null;
     public static SoundScheme[] M_SCHEMES = null;
-    public static SoundScheme F_ANGELA = new SoundScheme() {
-        @Override
-        public SoundEvent getHurtSound() {
-            return RSounds.F_ANGELA_TIMELORD_HURT.get();
-        }
 
-        @Override
-        public SoundEvent getTradeDeclineSound() {
-            return RSounds.F_ANGELA_TIMELORD_TRADE_FAIL.get();
-        }
+    public static SoundScheme M_GAS = new SoundScheme(RSounds.M_GAS_TIMELORD_HURT.get(), RSounds.M_GAS_TIMELORD_TRADE_FAIL.get(), RSounds.M_GAS_TIMELORD_TRADE_SUCCESS.get(), RSounds.M_GAS_TIMELORD_DIE.get(), RSounds.M_GAS_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "gasmaskva"));
+    public static SoundScheme M_RAMEN = new SoundScheme(RSounds.M_RAMEN_TIMELORD_HURT.get(), RSounds.M_RAMEN_TIMELORD_TRADE_FAIL.get(), RSounds.M_RAMEN_TIMELORD_TRADE_SUCCESS.get(), RSounds.M_RAMEN_TIMELORD_DIE.get(), RSounds.M_RAMEN_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "ramen"));
+    public static SoundScheme M_TOMMY = new SoundScheme(RSounds.M_TOMMY_TIMELORD_HURT.get(), RSounds.M_TOMMY_TIMELORD_TRADE_FAIL.get(), RSounds.M_TOMMY_TIMELORD_TRADE_SUCCESS.get(), RSounds.M_TOMMY_TIMELORD_DIE.get(), RSounds.M_TOMMY_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "tommy"));
+    public static SoundScheme M_CONNOR = new SoundScheme(RSounds.M_CONNOR_TIMELORD_HURT.get(), RSounds.M_CONNOR_TIMELORD_TRADE_FAIL.get(), RSounds.M_CONNOR_TIMELORD_TRADE_SUCCESS.get(), RSounds.M_CONNOR_TIMELORD_DIE.get(), RSounds.M_CONNOR_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "connor"));
+    public static SoundScheme F_AALICEH = new SoundScheme(RSounds.F_AALICEH_TIMELORD_HURT.get(), RSounds.F_AALICEH_TIMELORD_TRADE_FAIL.get(), RSounds.F_AALICEH_TIMELORD_TRADE_SUCCESS.get(), RSounds.F_AALICEH_TIMELORD_HURT.get(), RSounds.F_AALICEH_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "aaliceh"));
+    public static SoundScheme F_ANGELA = new SoundScheme(RSounds.F_ANGELA_TIMELORD_HURT.get(), RSounds.F_ANGELA_TIMELORD_TRADE_FAIL.get(), RSounds.F_ANGELA_TIMELORD_TRADE_SUCCESS.get(), RSounds.F_ANGELA_TIMELORD_DIE.get(), RSounds.F_ANGELA_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "angela"));
+    public static SoundScheme F_ASHER = new SoundScheme(RSounds.F_ANGELA_TIMELORD_HURT.get(), RSounds.F_ASHER_TIMELORD_TRADE_FAIL.get(), RSounds.F_ASHER_TIMELORD_TRADE_SUCCESS.get(), RSounds.F_ANGELA_TIMELORD_DIE.get(), RSounds.F_ANGELA_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "asher"));
 
-        @Override
-        public SoundEvent getTradeAcceptSound() {
-            return RSounds.F_ANGELA_TIMELORD_TRADE_SUCCESS.get();
-        }
-
-        @Override
-        public SoundEvent getDeathSound() {
-            return RSounds.F_ANGELA_TIMELORD_DIE.get();
-        }
-
-        @Override
-        public SoundEvent getScreamSound() {
-            return RSounds.F_ANGELA_TIMELORD_SCREAM.get();
-        }
-
-        @Override
-        public ResourceLocation identify() {
-            return new ResourceLocation(RConstants.MODID, "angela");
-        }
-    };
-    public static SoundScheme M_GAS = new SoundScheme() {
-        @Override
-        public SoundEvent getHurtSound() {
-            return RSounds.M_GAS_TIMELORD_HURT.get();
-        }
-
-        @Override
-        public SoundEvent getTradeDeclineSound() {
-            return RSounds.M_GAS_TIMELORD_TRADE_FAIL.get();
-        }
-
-        @Override
-        public SoundEvent getTradeAcceptSound() {
-            return RSounds.M_GAS_TIMELORD_TRADE_SUCCESS.get();
-        }
-
-        @Override
-        public SoundEvent getDeathSound() {
-            return RSounds.M_GAS_TIMELORD_DIE.get();
-        }
-
-        @Override
-        public SoundEvent getScreamSound() {
-            return RSounds.M_GAS_TIMELORD_SCREAM.get();
-        }
-
-        @Override
-        public ResourceLocation identify() {
-            return new ResourceLocation(RConstants.MODID, "gasmask");
-        }
-    };
-
-    public static SoundScheme M_RAMEN = new SoundScheme() {
-        @Override
-        public SoundEvent getHurtSound() {
-            return RSounds.M_RAMEN_TIMELORD_HURT.get();
-        }
-
-        @Override
-        public SoundEvent getTradeDeclineSound() {
-            return RSounds.M_RAMEN_TIMELORD_TRADE_FAIL.get();
-        }
-
-        @Override
-        public SoundEvent getTradeAcceptSound() {
-            return RSounds.M_RAMEN_TIMELORD_TRADE_SUCCESS.get();
-        }
-
-        @Override
-        public SoundEvent getDeathSound() {
-            return RSounds.M_RAMEN_TIMELORD_DIE.get();
-        }
-
-        @Override
-        public SoundEvent getScreamSound() {
-            return RSounds.M_RAMEN_TIMELORD_SCREAM.get();
-        }
-
-        @Override
-        public ResourceLocation identify() {
-            return new ResourceLocation(RConstants.MODID, "alvin");
-        }
-    };
-
-    public static SoundScheme M_TOMMY = new SoundScheme() {
-        @Override
-        public SoundEvent getHurtSound() {
-            return RSounds.M_TOMMY_TIMELORD_HURT.get();
-        }
-
-        @Override
-        public SoundEvent getTradeDeclineSound() {
-            return RSounds.M_TOMMY_TIMELORD_TRADE_FAIL.get();
-        }
-
-        @Override
-        public SoundEvent getTradeAcceptSound() {
-            return RSounds.M_TOMMY_TIMELORD_TRADE_SUCCESS.get();
-        }
-
-        @Override
-        public SoundEvent getDeathSound() {
-            return RSounds.M_TOMMY_TIMELORD_DIE.get();
-        }
-
-        @Override
-        public SoundEvent getScreamSound() {
-            return RSounds.M_TOMMY_TIMELORD_SCREAM.get();
-        }
-
-        @Override
-        public ResourceLocation identify() {
-            return new ResourceLocation(RConstants.MODID, "tommy");
-        }
-    };
-
-    public static SoundScheme M_CONNOR = new SoundScheme() {
-        @Override
-        public SoundEvent getHurtSound() {
-            return RSounds.M_CONNOR_TIMELORD_HURT.get();
-        }
-
-        @Override
-        public SoundEvent getTradeDeclineSound() {
-            return RSounds.M_CONNOR_TIMELORD_TRADE_FAIL.get();
-        }
-
-        @Override
-        public SoundEvent getTradeAcceptSound() {
-            return RSounds.M_CONNOR_TIMELORD_TRADE_SUCCESS.get();
-        }
-
-        @Override
-        public SoundEvent getDeathSound() {
-            return RSounds.M_CONNOR_TIMELORD_DIE.get();
-        }
-
-        @Override
-        public SoundEvent getScreamSound() {
-            return RSounds.M_CONNOR_TIMELORD_SCREAM.get();
-        }
-
-        @Override
-        public ResourceLocation identify() {
-            return new ResourceLocation(RConstants.MODID, "connor");
-        }
-    };
-
-    public static SoundScheme F_AALICEH = new SoundScheme() {
-        @Override
-        public SoundEvent getHurtSound() {
-            return RSounds.F_AALICEH_TIMELORD_HURT.get();
-        }
-
-        @Override
-        public SoundEvent getTradeDeclineSound() {
-            return RSounds.F_AALICEH_TIMELORD_TRADE_FAIL.get();
-        }
-
-        @Override
-        public SoundEvent getTradeAcceptSound() {
-            return RSounds.F_AALICEH_TIMELORD_TRADE_SUCCESS.get();
-        }
-
-        @Override
-        public SoundEvent getDeathSound() {
-            return RSounds.F_AALICEH_TIMELORD_SCREAM.get();
-        }
-
-        @Override
-        public SoundEvent getScreamSound() {
-            return RSounds.F_AALICEH_TIMELORD_SCREAM.get();
-        }
-
-        @Override
-        public ResourceLocation identify() {
-            return new ResourceLocation(RConstants.MODID, "aaliceh");
-        }
-    };
 
     public static void init() {
-        F_SCHEMES = new SoundScheme[]{RSoundSchemes.F_ANGELA, RSoundSchemes.F_AALICEH};
+        F_SCHEMES = new SoundScheme[]{RSoundSchemes.F_ANGELA, RSoundSchemes.F_AALICEH, RSoundSchemes.F_ASHER};
         M_SCHEMES = new SoundScheme[]{RSoundSchemes.M_GAS, M_RAMEN, M_TOMMY, M_CONNOR};
     }
+
 
     public static SoundScheme getRandom(boolean isMale) {
         SoundScheme[] array = isMale ? M_SCHEMES : F_SCHEMES;
@@ -220,6 +39,7 @@ public class RSoundSchemes {
             if (mScheme.identify().equals(resourceLocation)) {
                 return mScheme;
             }
+
         }
 
         for (SoundScheme fScheme : F_SCHEMES) {

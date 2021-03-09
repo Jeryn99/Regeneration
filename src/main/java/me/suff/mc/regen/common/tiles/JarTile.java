@@ -1,7 +1,9 @@
 package me.suff.mc.regen.common.tiles;
 
+import me.suff.mc.regen.common.block.JarBlock;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.RItems;
+import me.suff.mc.regen.common.objects.RParticles;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.objects.RTiles;
 import net.minecraft.block.BlockState;
@@ -15,7 +17,9 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -24,16 +28,31 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class JarTile extends TileEntity implements ITickableTileEntity {
 
-    private float lindos = 0F;
     private boolean updateSkin = true;
     private ItemStackHandler itemHandler = createHandler();
     private LazyOptional< IItemHandler > handler = LazyOptional.of(() -> itemHandler);
 
     public JarTile() {
         super(RTiles.HAND_JAR.get());
+    }
+
+    private static void spawnParticles(World world, BlockPos worldIn) {
+        Random random = world.rand;
+
+        for (Direction direction : Direction.values()) {
+            BlockPos blockpos = worldIn.offset(direction);
+            if (!world.getBlockState(blockpos).isOpaqueCube(world, blockpos)) {
+                Direction.Axis direction$axis = direction.getAxis();
+                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getXOffset() : (double) random.nextFloat();
+                double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getYOffset() : (double) random.nextFloat();
+                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getZOffset() : (double) random.nextFloat();
+                world.addParticle(RParticles.CONTAINER.get(), (double) worldIn.getX() + d1, (double) worldIn.getY() + d2, (double) worldIn.getZ() + d3, 0.0D, 0.0D, 0.0D);
+            }
+        }
     }
 
     public float getLindos() {
@@ -51,13 +70,17 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
         handleUpdateTag(getBlockState(), pkt.getNbtCompound());
     }
 
-
     @Override
     public void tick() {
-
+        if (isValid(Action.CREATE)) {
+            spawnParticles(world, pos);
+        }
         if (world != null && world.isRemote) return;
-        if (isValid(Action.CREATE) && world.getGameTime() % 77 == 0) {
-            world.playSound(null, getPos(), RSounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.2F, 0.2F);
+
+        if (isValid(Action.CREATE)) {
+            if (world.getGameTime() % 77 == 0) {
+                world.playSound(null, getPos(), RSounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.2F, 0.2F);
+            }
         }
 
         if (world.getGameTime() % 100 == 0) {
@@ -96,6 +119,9 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     }
 
     public void sendUpdates() {
+        if (world != null && world.getBlockState(pos).getBlock() instanceof JarBlock) {
+            world.setBlockState(pos, world.getBlockState(pos).with(JarBlock.IS_OPEN, getHand().getItem() != RItems.HAND.get()));
+        }
         world.updateComparatorOutputLevel(pos, getBlockState().getBlock());
         world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
         markDirty();

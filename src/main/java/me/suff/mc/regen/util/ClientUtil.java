@@ -1,6 +1,7 @@
 package me.suff.mc.regen.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import me.suff.mc.regen.client.JarParticle;
 import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.client.rendering.JarTileRender;
 import me.suff.mc.regen.client.rendering.entity.RenderLaser;
@@ -13,10 +14,7 @@ import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.item.SpawnItem;
-import me.suff.mc.regen.common.objects.RBlocks;
-import me.suff.mc.regen.common.objects.REntities;
-import me.suff.mc.regen.common.objects.RItems;
-import me.suff.mc.regen.common.objects.RTiles;
+import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.sound.MovingSound;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
@@ -43,9 +41,13 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,7 @@ import java.util.function.Supplier;
 import static me.suff.mc.regen.common.item.FobWatchItem.getEngrave;
 import static me.suff.mc.regen.common.item.FobWatchItem.getOpen;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientUtil {
 
     private static final BipedModel< ? > GUARD_HEAD = new GuardModel(EquipmentSlotType.HEAD);
@@ -66,6 +69,11 @@ public class ClientUtil {
     private static final BipedModel< ? > ROBES_LEGS = new RobesModel(EquipmentSlotType.LEGS);
     private static final BipedModel< ? > ROBES_FEET = new RobesModel(EquipmentSlotType.FEET);
     private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
+
+    @SubscribeEvent
+    public static void registerParticles(ParticleFactoryRegisterEvent event) {
+        Minecraft.getInstance().particles.registerFactory(RParticles.CONTAINER.get(), JarParticle.Factory::new);
+    }
 
     //TODO maybe I should make this a hashmap
     public static BipedModel< ? > getArmorModel(ItemStack itemStack) {

@@ -6,33 +6,75 @@ import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.tiles.JarTile;
+import me.suff.mc.regen.util.VoxelShapeUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class JarBlock extends DirectionalBlock {
 
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final BooleanProperty IS_OPEN = BooleanProperty.create("is_open");
+
+    public static final VoxelShape NORTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_180);
+    public static final VoxelShape EAST = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.COUNTERCLOCKWISE_90);
+    public static final VoxelShape SOUTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.NONE);
+    public static final VoxelShape WEST = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_90);
+
+    public static final VoxelShape NORTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.CLOCKWISE_180);
+    public static final VoxelShape EAST_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.COUNTERCLOCKWISE_90);
+    public static final VoxelShape SOUTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.NONE);
+    public static final VoxelShape WEST_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.CLOCKWISE_90);
+
 
     public JarBlock() {
         super(Properties.create(Material.IRON).notSolid());
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        if (state.get(IS_OPEN)) {
+            switch (state.get(BlockStateProperties.HORIZONTAL_FACING)) {
+                case EAST:
+                    return EAST_OPEN;
+                case SOUTH:
+                    return SOUTH_OPEN;
+                case WEST:
+                    return WEST_OPEN;
+                default:
+                    return NORTH_OPEN;
+            }
+        }
+        switch (state.get(BlockStateProperties.HORIZONTAL_FACING)) {
+            case EAST:
+                return EAST;
+            case SOUTH:
+                return SOUTH;
+            case WEST:
+                return WEST;
+            default:
+                return NORTH;
+        }
     }
 
 
@@ -49,7 +91,7 @@ public class JarBlock extends DirectionalBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().rotateY()).with(IS_OPEN, true);
     }
 
     @Override
@@ -64,7 +106,7 @@ public class JarBlock extends DirectionalBlock {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder< Block, BlockState > builder) {
-        builder.add(FACING);
+        builder.add(FACING, IS_OPEN);
     }
 
     @Override
@@ -78,8 +120,10 @@ public class JarBlock extends DirectionalBlock {
                         jarTile.setHand(player.getHeldItemMainhand().copy());
                         jarTile.setUpdateSkin(true);
                         player.getHeldItemMainhand().shrink(1);
+                        jarTile.sendUpdates();
                     } else {
                         jarTile.dropHandIfPresent(player);
+                        jarTile.sendUpdates();
                     }
                 } else {
                     if (jarTile.getHand().getItem() == RItems.HAND.get() && jarTile.isValid(JarTile.Action.CREATE)) {
@@ -93,11 +137,11 @@ public class JarBlock extends DirectionalBlock {
                                 iRegen.regen();
                                 player.playSound(RSounds.HAND_GLOW.get(), 1, 1);
                                 jarTile.setHand(ItemStack.EMPTY);
+                                jarTile.sendUpdates();
                             }
                         });
                     }
                 }
-                jarTile.sendUpdates();
             }
         }
 
@@ -106,9 +150,11 @@ public class JarBlock extends DirectionalBlock {
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!worldIn.isRemote()) {
-            JarTile jarTile = (JarTile) worldIn.getTileEntity(pos);
-            jarTile.dropHandIfPresent(null);
+        if (!newState.isIn(this)) {
+            if (!worldIn.isRemote()) {
+                JarTile jarTile = (JarTile) worldIn.getTileEntity(pos);
+                jarTile.dropHandIfPresent(null);
+            }
         }
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
@@ -121,4 +167,6 @@ public class JarBlock extends DirectionalBlock {
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
+
+
 }

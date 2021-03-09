@@ -4,15 +4,10 @@ import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.FireBlock;
-import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.block.material.Material;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 /* Created by Craig on 08/03/2021 */
 public class RBlockTags extends BlockTagsProvider {

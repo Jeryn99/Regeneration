@@ -21,12 +21,11 @@ public class RegenUtil {
     public static ITag.INamedTag< Block > BANNED_BLOCKS = makeBlock(RConstants.MODID, "angel_proof");
 
     public static Random RAND = new Random();
+    public static String[] USERNAMES = new String[]{};
 
     public static ITag.INamedTag< Block > makeBlock(String domain, String path) {
         return BlockTags.makeWrapperTag(new ResourceLocation(domain, path).toString());
     }
-
-    public static String[] USERNAMES = new String[]{};
 
     public static double round(float value, int scale) {
         return Math.round(value * Math.pow(10, scale)) / Math.pow(10, scale);

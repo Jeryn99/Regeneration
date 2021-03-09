@@ -92,7 +92,7 @@ public class RobesModel extends BipedModel< LivingEntity > {
 
         if (slot == EquipmentSlotType.HEAD) {
             matrixStack.push();
-            if(livingEntity.isSneaking()) {
+            if (livingEntity.isSneaking()) {
                 matrixStack.translate(0, 0.1, 0);
             }
             Collar.render(matrixStack, buffer, packedLight, packedOverlay);
