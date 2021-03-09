@@ -25,6 +25,7 @@ public class NetworkDispatcher {
         NETWORK_CHANNEL.registerMessage(id++, ForceRegenMessage.class, ForceRegenMessage::toBytes, ForceRegenMessage::new, ForceRegenMessage::handle);
         NETWORK_CHANNEL.registerMessage(id++, ChangeSoundScheme.class, ChangeSoundScheme::toBytes, ChangeSoundScheme::new, ChangeSoundScheme::handle);
         NETWORK_CHANNEL.registerMessage(id++, RemoveTimelordSkinMessage.class, RemoveTimelordSkinMessage::toBytes, RemoveTimelordSkinMessage::new, RemoveTimelordSkinMessage::handle);
+        NETWORK_CHANNEL.registerMessage(id++, RemoveSkinPlayerMessage.class, RemoveSkinPlayerMessage::toBytes, RemoveSkinPlayerMessage::new, RemoveSkinPlayerMessage::handle);
     }
 
 }

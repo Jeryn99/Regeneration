@@ -6,7 +6,6 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.ITextComponent;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 
 import static java.lang.Math.*;
@@ -43,7 +42,7 @@ public class ColorWidget extends Widget {
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             for (int x = -radius; x < radius; x++) {
                 for (int y = -radius; y < radius; y++) {

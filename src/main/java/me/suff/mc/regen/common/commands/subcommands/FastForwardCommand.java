@@ -7,10 +7,13 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
+import me.suff.mc.regen.network.NetworkDispatcher;
+import me.suff.mc.regen.network.messages.RemoveSkinPlayerMessage;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public class FastForwardCommand implements Command< CommandSource > {
     private static final FastForwardCommand CMD = new FastForwardCommand();
@@ -27,6 +30,11 @@ public class FastForwardCommand implements Command< CommandSource > {
         RegenCap.get(source.asPlayer()).ifPresent((cap) -> {
             if (cap.getCurrentState() != RegenStates.ALIVE) {
                 cap.getStateManager().fastForward();
+                try {
+                    NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveSkinPlayerMessage(source.asPlayer().getUniqueID()));
+                } catch (CommandSyntaxException e) {
+                    e.printStackTrace();
+                }
             } else {
                 throw new CommandException(new TranslationTextComponent("regen.messages.fast_forward_cmd_fail"));
             }

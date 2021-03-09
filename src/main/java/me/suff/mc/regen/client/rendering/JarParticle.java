@@ -1,4 +1,4 @@
-package me.suff.mc.regen.client;
+package me.suff.mc.regen.client.rendering;
 
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.particle.*;

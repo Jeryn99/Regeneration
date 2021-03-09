@@ -6,7 +6,11 @@
   "client": [
     "BipedBodyMixin",
     "MakeTheSunMixin",
-    "SoundSourceMixin"
+    "SoundSourceMixin",
+    "RenderPlayerMixin"
   ],
-  "minVersion": "0.8"
+  "minVersion": "0.8",
+  "mixins": [
+
+  ]
 }

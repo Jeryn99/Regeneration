@@ -3,12 +3,15 @@ package me.suff.mc.regen.client.animation;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
+import me.suff.mc.regen.util.PlayerUtil;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,11 +24,22 @@ public class AnimationHandler {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             TransitionType< ? > type = iRegen.getTransitionType().get();
             type.getRenderer().animate(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-            correctPlayerModel(bipedModel);
             if (iRegen.getCurrentState() != RegenStates.REGENERATING && livingEntity.getType() == EntityType.PLAYER) {
                 handleArmor(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             }
+
+            if (livingEntity.getType() == EntityType.PLAYER) {
+                if (PlayerUtil.isPlayerAboveZeroGrid(livingEntity) && iRegen.getCurrentState() == RegenStates.POST) {
+                    bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(20);
+                    bipedModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
+                    bipedModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
+                    bipedModel.bipedLeftLeg.rotateAngleZ = (float) Math.toRadians(-2);
+                    bipedModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(2);
+                }
+            }
+
         });
+        correctPlayerModel(bipedModel);
     }
 
     public static void handleArmor(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
@@ -77,6 +91,7 @@ public class AnimationHandler {
             playerModel.bipedRightLegwear.copyModelAngles(playerModel.bipedRightLeg);
         }
     }
+
 
     public interface Animation {
         void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch);

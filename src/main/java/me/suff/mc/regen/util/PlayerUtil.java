@@ -1,12 +1,13 @@
 package me.suff.mc.regen.util;
 
+import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.ModelMessage;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PlayerUtil {
@@ -38,6 +40,27 @@ public class PlayerUtil {
                         POTIONS.add(effect);
                     }
                 }
+            }
+        }
+    }
+
+    public static boolean isPlayerAboveZeroGrid(LivingEntity playerEntity) {
+        BlockPos livingPos = playerEntity.getPosition().down();
+        AxisAlignedBB grid = new AxisAlignedBB(livingPos.north().west(), livingPos.south().east());
+        for (Iterator< BlockPos > iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
+            BlockPos pos = iterator.next();
+            BlockState state = playerEntity.world.getBlockState(pos);
+            if (state.getBlock() != RBlocks.ZERO_ROOM_FULL.get() && state.getBlock() != RBlocks.ZERO_ROUNDEL.get()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void handleZeroGrid(LivingEntity playerEntity) {
+        for (Effect effect : PlayerUtil.POTIONS) {
+            if(playerEntity.isPotionActive(effect)){
+                playerEntity.removePotionEffect(effect);
             }
         }
     }

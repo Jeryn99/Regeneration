@@ -46,33 +46,39 @@ class CommonActing implements Acting {
 
     @Override
     public void onRegenTick(IRegen cap) {
-        LivingEntity player = cap.getLiving();
+        LivingEntity livingEntity = cap.getLiving();
         float stateProgress = (float) cap.getStateManager().getStateProgress();
 
         switch (cap.getCurrentState()) {
             case POST:
                 if (!PlayerUtil.POTIONS.isEmpty()) {
-                    if (player.ticksExisted % 210 == 0) {
-                        PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.world.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
+                    if (livingEntity.ticksExisted % 210 == 0 && !PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
+                        PlayerUtil.applyPotionIfAbsent(livingEntity, PlayerUtil.POTIONS.get(livingEntity.world.rand.nextInt(PlayerUtil.POTIONS.size())), livingEntity.world.rand.nextInt(400), 1, false, false);
                     }
                 }
+
+                if(PlayerUtil.isPlayerAboveZeroGrid(livingEntity)){
+                    PlayerUtil.handleZeroGrid(livingEntity);
+                }
+
+
                 break;
             case REGENERATING:
-                float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
-                player.heal(stateProgress * 0.3F * dm);
-                player.setArrowCountInEntity(0);
+                float dm = Math.max(1, (livingEntity.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
+                livingEntity.heal(stateProgress * 0.3F * dm);
+                livingEntity.setArrowCountInEntity(0);
 
-                AxisAlignedBB box = player.getBoundingBox().grow(25);
+                AxisAlignedBB box = livingEntity.getBoundingBox().grow(25);
                 for (Iterator< BlockPos > iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
                     BlockPos pos = iterator.next();
-                    ServerWorld serverWorld = (ServerWorld) player.world;
+                    ServerWorld serverWorld = (ServerWorld) livingEntity.world;
                     BlockState blockState = serverWorld.getBlockState(pos);
                     if (blockState.getBlock() instanceof JarBlock) {
                         JarTile jarTile = (JarTile) serverWorld.getTileEntity(pos);
                         if (!jarTile.isValid(JarTile.Action.ADD)) {
                             continue;
                         }
-                        if (player.world.rand.nextBoolean() && serverWorld.getGameTime() % 5 == 0) {
+                        if (livingEntity.world.rand.nextBoolean() && serverWorld.getGameTime() % 5 == 0) {
                             jarTile.setLindos(jarTile.getLindos() + 0.7F);
                         }
                         jarTile.sendUpdates();
@@ -87,20 +93,20 @@ class CommonActing implements Acting {
                 float nauseaPercentage = 0.5F;
 
                 if (stateProgress > nauseaPercentage) {
-                    PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false);
+                    PlayerUtil.applyPotionIfAbsent(livingEntity, Effects.NAUSEA, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false);
                 }
 
-                PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
+                PlayerUtil.applyPotionIfAbsent(livingEntity, Effects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
 
-                if (player.world.rand.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F)) {
-                    player.attackEntityFrom(RegenSources.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
+                if (livingEntity.world.rand.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F)) {
+                    livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_CRITICAL, livingEntity.world.rand.nextFloat() + .5F);
                 }
                 break;
 
             case GRACE:
                 float weaknessPercentage = 0.5F;
                 if (stateProgress > weaknessPercentage) {
-                    PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false);
+                    PlayerUtil.applyPotionIfAbsent(livingEntity, Effects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false);
                 }
                 break;
             case ALIVE:

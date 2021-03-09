@@ -2,6 +2,7 @@ package me.suff.mc.regen.handlers;
 
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.RKeybinds;
+import me.suff.mc.regen.client.rendering.JarTileRender;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import me.suff.mc.regen.common.item.GunItem;
@@ -9,6 +10,7 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
+import me.suff.mc.regen.common.tiles.JarTile;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RenderHelp;
@@ -94,6 +96,8 @@ public class ClientEvents {
                 SkinHandler.PLAYER_SKINS.clear();
                 TimelordRenderer.TIMELORDS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().deleteTexture(texture)));
                 TimelordRenderer.TIMELORDS.clear();
+                JarTileRender.TEXTURES.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().deleteTexture(texture)));
+                JarTileRender.TEXTURES.clear();
                 Regeneration.LOG.warn("Cleared Regeneration texture cache.");
             }
         }
