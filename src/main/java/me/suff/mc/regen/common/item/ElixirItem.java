@@ -39,7 +39,7 @@ public class ElixirItem extends Item {
     @Override
     public ITextComponent getDisplayName(ItemStack stack) {
         StringTextComponent prefix = new StringTextComponent("Elixir: ");
-        return prefix.append(getTrait(stack).getTranslation());
+        return prefix.appendSibling(getTrait(stack).getTranslation());
     }
 
     @Override

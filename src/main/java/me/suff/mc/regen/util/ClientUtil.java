@@ -213,19 +213,6 @@ public class ClientUtil {
         }
     }
 
-    public static void drawSplitString(MatrixStack ms, FontRenderer fontRenderer, List< ITextComponent > list, float x, float y, int maxWidth, int color) {
-        for (ITextComponent t : list) {
-            if (t.getUnformattedComponentText().isEmpty() && t.getSiblings().isEmpty()) {
-                y += fontRenderer.FONT_HEIGHT;
-            } else {
-                for (IReorderingProcessor p : fontRenderer.trimStringToWidth(t, maxWidth)) {
-                    fontRenderer.func_238407_a_(ms, p, x, y, color);
-                    y += fontRenderer.FONT_HEIGHT;
-                }
-            }
-        }
-    }
-
     public static void renderSky(MatrixStack matrixStackIn, float partialTicks) {
         if (Minecraft.getInstance().world.getDimensionKey().getLocation().getPath().contains("gallifrey")) {
             float scale = 30.0F;

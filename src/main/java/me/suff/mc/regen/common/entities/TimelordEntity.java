@@ -20,6 +20,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
@@ -86,7 +87,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     @Nullable
     @Override
-    public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+    public AgeableEntity createChild(ServerWorld world, AgeableEntity mate) {
         return null;
     }
 
@@ -185,6 +186,9 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     @Override
     protected SoundEvent getVillagerYesNoSound(boolean getYesSound) {
         SoundScheme personality = getPersonality();
+        if(!getYesSound){
+            setShakeHeadTicks(40);
+        }
         return getYesSound ? personality.getTradeAcceptSound() : personality.getTradeDeclineSound();
     }
 
@@ -432,8 +436,10 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         getDataManager().set(AIMING_TICKS, isAiming);
     }
 
+
+
     @Override
-    public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
+    public ActionResultType getEntityInteractionResult(PlayerEntity p_230254_1_, Hand p_230254_2_) {
         ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
         if (itemstack.getItem() != RItems.SPAWN_ITEM.get() && this.isAlive() && !this.hasCustomer() && !this.isChild()) {
             if (this.getOffers().isEmpty()) {
@@ -446,7 +452,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 return ActionResultType.func_233537_a_(this.world.isRemote);
             }
         } else {
-            return super.func_230254_b_(p_230254_1_, p_230254_2_);
+            return super.getEntityInteractionResult(p_230254_1_, p_230254_2_);
         }
     }
 

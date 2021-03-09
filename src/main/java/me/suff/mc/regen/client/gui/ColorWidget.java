@@ -43,7 +43,7 @@ public class ColorWidget extends Widget {
     }
 
     @Override
-    public void renderButton(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             for (int x = -radius; x < radius; x++) {
                 for (int y = -radius; y < radius; y++) {
@@ -63,7 +63,7 @@ public class ColorWidget extends Widget {
                 }
             }
         }
-        text.renderButton(matrixStack, mouseX, mouseY, partialTicks);
+        text.render(matrixStack, mouseX, mouseY, partialTicks);
         fill(matrixStack, x + width - textHeight - 1, y + width + 9, x + width, y + width + 10 + textHeight + 1, 0xFF9E9E9E);
         fill(matrixStack, x + width - textHeight, y + width + 10, x + width - 1, y + width + 10 + textHeight, color);
     }

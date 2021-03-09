@@ -6,6 +6,7 @@ import me.suff.mc.regen.network.messages.ModelMessage;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
@@ -81,7 +82,7 @@ public class PlayerUtil {
             if (entity instanceof LivingEntity && exploder.isAlive()) {
                 LivingEntity victim = (LivingEntity) entity;
 
-                if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.isNonBoss())
+                if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.canChangeDimension())
                     return;
 
                 float densMod = Explosion.getBlockDensity(entity.getPositionVec(), entity);
@@ -101,7 +102,7 @@ public class PlayerUtil {
 
     public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
         world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-            if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
+            if ((entity instanceof CreatureEntity && entity.canChangeDimension()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
                 entity.attackEntityFrom(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
         });
     }

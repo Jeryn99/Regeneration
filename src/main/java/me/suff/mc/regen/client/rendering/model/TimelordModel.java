@@ -6,7 +6,10 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.regen.RegenCap;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.client.renderer.entity.model.VillagerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.util.math.MathHelper;
 
 public class TimelordModel extends PlayerModel< TimelordEntity > {
 
@@ -88,18 +91,18 @@ public class TimelordModel extends PlayerModel< TimelordEntity > {
     @Override
     public void setRotationAngles(TimelordEntity timelordEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
-        RegenCap.get(timelordEntity).ifPresent(iRegen -> {
-            rightArmPose = ArmPose.EMPTY;
-        });
-
-
         super.setRotationAngles(timelordEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-
         Head.copyModelAngles(bipedHead);
         Body.copyModelAngles(bipedBody);
         LeftArm.copyModelAngles(bipedLeftArm);
         RightArm.copyModelAngles(bipedRightArm);
         RightLeg.copyModelAngles(bipedRightLeg);
         LeftLeg.copyModelAngles(bipedLeftLeg);
+        boolean flag = timelordEntity.getShakeHeadTicks() > 0;
+        if (flag) {
+            this.Head.rotateAngleY = 0.3F * MathHelper.sin(1.45F * ageInTicks);
+        } else {
+            this.Head.rotateAngleZ = 0.0F;
+        }
     }
 }

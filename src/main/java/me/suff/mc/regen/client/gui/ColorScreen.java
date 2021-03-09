@@ -89,7 +89,7 @@ public class ColorScreen extends ContainerScreen {
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
-        this.font.func_243248_b(p_230451_1_, this.title, (float) this.titleX, (float) this.titleY, 4210752);
+        this.font.drawStringWithShadow(p_230451_1_, this.title.getString(), (float) this.titleX, (float) this.titleY, 4210752);
     }
 
     public void updateScreenAndServer() {
@@ -123,10 +123,10 @@ public class ColorScreen extends ContainerScreen {
         RegenCap.get(getMinecraft().player).ifPresent((cap) -> {
             String str = new TranslationTextComponent("regen.gui.primary").getString();
             int length = getMinecraft().fontRenderer.getStringWidth(str);
-            this.font.func_243248_b(matrixStack, new StringTextComponent(str), (float) cx + 55 - length / 2, cy + 19, 4210752);
+            this.font.drawStringWithShadow(matrixStack, new StringTextComponent(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
             str = new TranslationTextComponent("regen.gui.secondary").getString();
             length = font.getStringWidth(str);
-            this.font.func_243248_b(matrixStack, new StringTextComponent(str), cx + 185 - length / 2, cy + 19, 4210752);
+            this.font.drawStringWithShadow(matrixStack, new StringTextComponent(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
         });
 
         colorChooserPrimary.render(matrixStack, x, y, partialTicks);

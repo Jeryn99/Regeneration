@@ -354,7 +354,7 @@ public class IncarnationScreen extends ContainerScreen {
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        this.font.func_243248_b(matrixStack, this.title, (float) this.titleX, (float) this.titleY, 4210752);
+        this.font.drawString(matrixStack, this.title.getString(), (float) this.titleX, (float) this.titleY, 4210752);
     }
 
     @Override

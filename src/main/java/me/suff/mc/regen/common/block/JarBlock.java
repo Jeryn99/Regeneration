@@ -150,7 +150,7 @@ public class JarBlock extends DirectionalBlock {
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!newState.isIn(this)) {
+        if (!newState.matchesBlock(this)) {
             if (!worldIn.isRemote()) {
                 JarTile jarTile = (JarTile) worldIn.getTileEntity(pos);
                 jarTile.dropHandIfPresent(null);
