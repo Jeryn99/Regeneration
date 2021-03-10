@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 public class FobWatchItem extends Item {
 
     public FobWatchItem() {
-        super(new Item.Properties().setNoRepair().group(RItems.MAIN).maxStackSize(1));
+        super(new Item.Properties().setNoRepair().tab(RItems.MAIN).stacksTo(1));
     }
 
     public static CompoundNBT getStackTag(ItemStack stack) {
@@ -58,8 +58,8 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
-        super.onCreated(stack, worldIn, playerIn);
+    public void onCraftedBy(ItemStack stack, World worldIn, PlayerEntity playerIn) {
+        super.onCraftedBy(stack, worldIn, playerIn);
         setDamage(stack, 0);
         setOpen(stack, false);
     }
@@ -68,7 +68,7 @@ public class FobWatchItem extends Item {
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (stack.getItem() instanceof FobWatchItem) {
             if (getOpen(stack)) {
-                if (entityIn.ticksExisted % 600 == 0) {
+                if (entityIn.tickCount % 600 == 0) {
                     setOpen(stack, false);
                 }
             }
@@ -77,12 +77,12 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public ActionResult< ItemStack > onItemRightClick(World world, PlayerEntity player, Hand hand) {
+    public ActionResult< ItemStack > use(World world, PlayerEntity player, Hand hand) {
 
-        ItemStack stack = player.getHeldItem(hand);
+        ItemStack stack = player.getItemInHand(hand);
         IRegen cap = RegenCap.get(player).orElseGet(null);
 
-        if (!player.isSneaking()) { // transferring watch->player
+        if (!player.isShiftKeyDown()) { // transferring watch->player
             if (getDamage(stack) == RegenConfig.COMMON.regenCapacity.get())
                 return msgUsageFailed(player, "regen.messages.transfer.empty_watch", stack);
             else if (cap.getRegens() == RegenConfig.COMMON.regenCapacity.get())
@@ -94,7 +94,7 @@ public class FobWatchItem extends Item {
                 setOpen(stack, true);
                 PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.gained_regens", used), true);
             } else {
-                if (!world.isRemote) {
+                if (!world.isClientSide) {
                     setOpen(stack, true);
                     PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.now_timelord"), true);
                 }
@@ -103,9 +103,9 @@ public class FobWatchItem extends Item {
             if (used < 0)
                 Regeneration.LOG.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + getDamage(stack) + ", regens:" + cap.getRegens());
 
-            setDamage(stack, stack.getDamage() + used);
+            setDamage(stack, stack.getDamageValue() + used);
 
-            if (world.isRemote) {
+            if (world.isClientSide) {
                 ClientUtil.playPositionedSoundRecord(RSounds.FOB_WATCH.get(), 1.0F, 2.0F);
             } else {
                 setOpen(stack, true);
@@ -125,8 +125,8 @@ public class FobWatchItem extends Item {
             setDamage(stack, getDamage(stack) - 1);
             PlayerUtil.sendMessage(player, "regen.messages.transfer.success", true);
 
-            if (world.isRemote) {
-                ClientUtil.playPositionedSoundRecord(SoundEvents.BLOCK_FIRE_EXTINGUISH, 5.0F, 2.0F);
+            if (world.isClientSide) {
+                ClientUtil.playPositionedSoundRecord(SoundEvents.FIRE_EXTINGUISH, 5.0F, 2.0F);
             } else {
                 setOpen(stack, true);
                 cap.extractRegens(1);
@@ -139,7 +139,7 @@ public class FobWatchItem extends Item {
 
     private ActionResult< ItemStack > msgUsageFailed(PlayerEntity player, String message, ItemStack stack) {
         PlayerUtil.sendMessage(player, message, true);
-        return ActionResult.resultFail(stack);
+        return ActionResult.fail(stack);
     }
 
     @Override
@@ -148,7 +148,7 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public int getItemEnchantability() {
+    public int getEnchantmentValue() {
         return 0;
     }
 
@@ -164,7 +164,7 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return false;
     }
 
@@ -174,12 +174,12 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public boolean isDamageable() {
-        return super.isDamageable();
+    public boolean canBeDepleted() {
+        return super.canBeDepleted();
     }
 
     @Override
-    public boolean shouldSyncTag() {
+    public boolean shouldOverrideMultiplayerNbt() {
         return true;
     }
 

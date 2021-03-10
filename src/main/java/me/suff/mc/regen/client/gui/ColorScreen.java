@@ -29,19 +29,19 @@ public class ColorScreen extends ContainerScreen {
 
     public ColorScreen() {
         super(new BlankContainer(), Minecraft.getInstance().player.inventory, new TranslationTextComponent("regen.gui.color_gui"));
-        xSize = 256;
-        ySize = 173;
+        imageWidth = 256;
+        imageHeight = 173;
     }
 
     @Override
     public void init() {
         super.init();
-        TabRegistry.updateTabValues(guiLeft + 2, guiTop, RegenPrefTab.class);
+        TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
             addButton(button);
         }
-        int cx = (width - xSize) / 2;
-        int cy = (height - ySize) / 2;
+        int cx = (width - imageWidth) / 2;
+        int cy = (height - imageHeight) / 2;
 
         RegenCap.get(getMinecraft().player).ifPresent((data) -> {
             initialPrimary = data.getPrimaryColors();
@@ -62,7 +62,7 @@ public class ColorScreen extends ContainerScreen {
         }));
 
         // Close Button
-        this.addButton(new Button(cx + 25, cy + 148, btnW, btnH, new TranslationTextComponent("regen.gui.back"), button -> Minecraft.getInstance().displayGuiScreen(new PreferencesScreen())));
+        this.addButton(new Button(cx + 25, cy + 148, btnW, btnH, new TranslationTextComponent("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
 
         // Default Button
         this.addButton(new Button(cx + (90 * 2), cy + 148, btnW, btnH, new TranslationTextComponent("regen.gui.default"), button -> {
@@ -88,8 +88,8 @@ public class ColorScreen extends ContainerScreen {
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
-        this.font.drawStringWithShadow(p_230451_1_, this.title.getString(), (float) this.titleX, (float) this.titleY, 4210752);
+    protected void renderLabels(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
+        this.font.drawShadow(p_230451_1_, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
     }
 
     public void updateScreenAndServer() {
@@ -107,26 +107,26 @@ public class ColorScreen extends ContainerScreen {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
         this.renderBackground(matrixStack);
 
         if (this.minecraft != null) {
-            this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-            int i = (this.width - this.xSize) / 2;
-            int j = (this.height - this.ySize) / 2;
-            this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
+            this.minecraft.getTextureManager().bind(BACKGROUND);
+            int i = (this.width - this.imageWidth) / 2;
+            int j = (this.height - this.imageHeight) / 2;
+            this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
         }
 
-        int cx = (width - xSize) / 2;
-        int cy = (height - ySize) / 2;
+        int cx = (width - imageWidth) / 2;
+        int cy = (height - imageHeight) / 2;
 
         RegenCap.get(getMinecraft().player).ifPresent((cap) -> {
             String str = new TranslationTextComponent("regen.gui.primary").getString();
-            int length = getMinecraft().fontRenderer.getStringWidth(str);
-            this.font.drawStringWithShadow(matrixStack, new StringTextComponent(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
+            int length = getMinecraft().font.width(str);
+            this.font.drawShadow(matrixStack, new StringTextComponent(str).getString(), (float) cx + 55 - length / 2, cy + 19, 4210752);
             str = new TranslationTextComponent("regen.gui.secondary").getString();
-            length = font.getStringWidth(str);
-            this.font.drawStringWithShadow(matrixStack, new StringTextComponent(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
+            length = font.width(str);
+            this.font.drawShadow(matrixStack, new StringTextComponent(str).getString(), cx + 185 - length / 2, cy + 19, 4210752);
         });
 
         colorChooserPrimary.render(matrixStack, x, y, partialTicks);

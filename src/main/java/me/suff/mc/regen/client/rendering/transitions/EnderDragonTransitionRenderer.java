@@ -21,23 +21,23 @@ import java.util.Random;
 public class EnderDragonTransitionRenderer implements TransitionRenderer {
     public static final EnderDragonTransitionRenderer INSTANCE = new EnderDragonTransitionRenderer();
     //Taken from vanilla
-    private static float field_229057_l_ = (float) (Math.sqrt(3.0D) / 2.0D);
+    private static float HALF_SQRT_3 = (float) (Math.sqrt(3.0D) / 2.0D);
 
-    private static void func_229061_a_(IVertexBuilder p_229061_0_, Matrix4f p_229061_1_, int p_229061_2_) {
-        p_229061_0_.pos(p_229061_1_, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
-        p_229061_0_.pos(p_229061_1_, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
+    private static void vertex01(IVertexBuilder p_229061_0_, Matrix4f p_229061_1_, int p_229061_2_) {
+        p_229061_0_.vertex(p_229061_1_, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
+        p_229061_0_.vertex(p_229061_1_, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
     }
 
-    private static void func_229060_a_(IVertexBuilder p_229060_0_, Matrix4f p_229060_1_, float p_229060_2_, float p_229060_3_) {
-        p_229060_0_.pos(p_229060_1_, -field_229057_l_ * p_229060_3_, p_229060_2_, -0.5F * p_229060_3_).color(255, 0, 255, 0).endVertex();
+    private static void vertex2(IVertexBuilder p_229060_0_, Matrix4f p_229060_1_, float p_229060_2_, float p_229060_3_) {
+        p_229060_0_.vertex(p_229060_1_, -HALF_SQRT_3 * p_229060_3_, p_229060_2_, -0.5F * p_229060_3_).color(255, 0, 255, 0).endVertex();
     }
 
-    private static void func_229062_b_(IVertexBuilder p_229062_0_, Matrix4f p_229062_1_, float p_229062_2_, float p_229062_3_) {
-        p_229062_0_.pos(p_229062_1_, field_229057_l_ * p_229062_3_, p_229062_2_, -0.5F * p_229062_3_).color(255, 0, 255, 0).endVertex();
+    private static void vertex3(IVertexBuilder p_229062_0_, Matrix4f p_229062_1_, float p_229062_2_, float p_229062_3_) {
+        p_229062_0_.vertex(p_229062_1_, HALF_SQRT_3 * p_229062_3_, p_229062_2_, -0.5F * p_229062_3_).color(255, 0, 255, 0).endVertex();
     }
 
-    private static void func_229063_c_(IVertexBuilder p_229063_0_, Matrix4f p_229063_1_, float p_229063_2_, float p_229063_3_) {
-        p_229063_0_.pos(p_229063_1_, 0.0F, p_229063_2_, 1.0F * p_229063_3_).color(255, 0, 255, 0).endVertex();
+    private static void vertex4(IVertexBuilder p_229063_0_, Matrix4f p_229063_1_, float p_229063_2_, float p_229063_3_) {
+        p_229063_0_.vertex(p_229063_1_, 0.0F, p_229063_2_, 1.0F * p_229063_3_).color(255, 0, 255, 0).endVertex();
     }
 
     @Override
@@ -68,36 +68,36 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             int ticksAnimating = iRegen.getTicksAnimating() / 2;
             if (ticksAnimating > 0 && iRegen.getCurrentState() == RegenStates.REGENERATING) {
-                float f5 = ((float) ticksAnimating + Minecraft.getInstance().getRenderPartialTicks()) / 200.0F;
+                float f5 = ((float) ticksAnimating + Minecraft.getInstance().getFrameTime()) / 200.0F;
                 float f7 = Math.min(f5 > 0.8F ? (f5 - 0.8F) / 0.2F : 0.0F, 1.0F);
                 Random random = new Random(432L);
-                IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getLightning());
-                matrix.push();
-                bipedModel.bipedBody.translateRotate(matrix);
+                IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.lightning());
+                matrix.pushPose();
+                bipedModel.body.translateAndRotate(matrix);
                 matrix.translate(0.0D, 0.5D, 0);
 
                 for (int i = 0; (float) i < (f5 + f5 * f5) / 2.0F * 60.0F; ++i) {
-                    matrix.rotate(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.rotate(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.rotate(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.rotate(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.rotate(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
-                    matrix.rotate(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F + f5 * 90.0F));
+                    matrix.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrix.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrix.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrix.mulPose(Vector3f.XP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrix.mulPose(Vector3f.YP.rotationDegrees(random.nextFloat() * 360.0F));
+                    matrix.mulPose(Vector3f.ZP.rotationDegrees(random.nextFloat() * 360.0F + f5 * 90.0F));
                     float randomFloat = random.nextFloat() * 20.0F + 5.0F + f7 * 10.0F;
                     float randomFloat2 = random.nextFloat() * 2.0F + 1.0F + f7 * 2.0F;
-                    Matrix4f matrix4f = matrix.getLast().getMatrix();
+                    Matrix4f matrix4f = matrix.last().pose();
                     int j = (int) (255.0F * (1.0F - f7));
-                    func_229061_a_(vertexBuilder, matrix4f, j);
-                    func_229060_a_(vertexBuilder, matrix4f, randomFloat, randomFloat2);
-                    func_229062_b_(vertexBuilder, matrix4f, randomFloat, randomFloat2);
-                    func_229061_a_(vertexBuilder, matrix4f, j);
-                    func_229062_b_(vertexBuilder, matrix4f, randomFloat, randomFloat2);
-                    func_229063_c_(vertexBuilder, matrix4f, randomFloat, randomFloat2);
-                    func_229061_a_(vertexBuilder, matrix4f, j);
-                    func_229063_c_(vertexBuilder, matrix4f, randomFloat, randomFloat2);
-                    func_229060_a_(vertexBuilder, matrix4f, randomFloat, randomFloat2);
+                    vertex01(vertexBuilder, matrix4f, j);
+                    vertex2(vertexBuilder, matrix4f, randomFloat, randomFloat2);
+                    vertex3(vertexBuilder, matrix4f, randomFloat, randomFloat2);
+                    vertex01(vertexBuilder, matrix4f, j);
+                    vertex3(vertexBuilder, matrix4f, randomFloat, randomFloat2);
+                    vertex4(vertexBuilder, matrix4f, randomFloat, randomFloat2);
+                    vertex01(vertexBuilder, matrix4f, j);
+                    vertex4(vertexBuilder, matrix4f, randomFloat, randomFloat2);
+                    vertex2(vertexBuilder, matrix4f, randomFloat, randomFloat2);
                 }
-                matrix.pop();
+                matrix.popPose();
             }
         });
     }
@@ -124,35 +124,35 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
 
 
                 // ARMS
-                bipedModel.bipedLeftArm.rotateAngleY = 0;
-                bipedModel.bipedRightArm.rotateAngleY = 0;
+                bipedModel.leftArm.yRot = 0;
+                bipedModel.rightArm.yRot = 0;
 
-                bipedModel.bipedLeftArm.rotateAngleX = 0;
-                bipedModel.bipedRightArm.rotateAngleX = 0;
+                bipedModel.leftArm.xRot = 0;
+                bipedModel.rightArm.xRot = 0;
 
-                bipedModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRotZ);
-                bipedModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRotZ);
-                bipedModel.bipedLeftArm.rotateAngleY = (float) -Math.toRadians(armRotY);
-                bipedModel.bipedRightArm.rotateAngleY = (float) Math.toRadians(armRotY);
+                bipedModel.leftArm.zRot = (float) -Math.toRadians(armRotZ);
+                bipedModel.rightArm.zRot = (float) Math.toRadians(armRotZ);
+                bipedModel.leftArm.yRot = (float) -Math.toRadians(armRotY);
+                bipedModel.rightArm.yRot = (float) Math.toRadians(armRotY);
 
                 // BODY
-                bipedModel.bipedBody.rotateAngleX = 0;
-                bipedModel.bipedBody.rotateAngleY = 0;
-                bipedModel.bipedBody.rotateAngleZ = 0;
+                bipedModel.body.xRot = 0;
+                bipedModel.body.yRot = 0;
+                bipedModel.body.zRot = 0;
 
                 // LEGS
-                bipedModel.bipedLeftLeg.rotateAngleY = 0;
-                bipedModel.bipedRightLeg.rotateAngleY = 0;
+                bipedModel.leftLeg.yRot = 0;
+                bipedModel.rightLeg.yRot = 0;
 
-                bipedModel.bipedLeftLeg.rotateAngleX = 0;
-                bipedModel.bipedRightLeg.rotateAngleX = 0;
+                bipedModel.leftLeg.xRot = 0;
+                bipedModel.rightLeg.xRot = 0;
 
-                bipedModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-                bipedModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+                bipedModel.leftLeg.zRot = (float) -Math.toRadians(5);
+                bipedModel.rightLeg.zRot = (float) Math.toRadians(5);
 
-                bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
-                bipedModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
-                bipedModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
+                bipedModel.head.xRot = (float) Math.toRadians(-headRot);
+                bipedModel.head.yRot = (float) Math.toRadians(0);
+                bipedModel.head.zRot = (float) Math.toRadians(0);
             }
         });
     }

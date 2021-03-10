@@ -25,22 +25,22 @@ public class REntities {
     // Entity Creation
     private static < T extends Entity > EntityType< T > registerNoSpawnerBase(EntityType.IFactory< T > factory, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
         ResourceLocation loc = new ResourceLocation(RConstants.MODID, name);
-        EntityType.Builder< T > builder = EntityType.Builder.create(factory, classification);
+        EntityType.Builder< T > builder = EntityType.Builder.of(factory, classification);
         builder.setShouldReceiveVelocityUpdates(sendUpdate);
         builder.setTrackingRange(trackingRange);
         builder.setUpdateInterval(updateFreq);
 
-        builder.size(width, height);
+        builder.sized(width, height);
         return builder.build(loc.toString());
     }
 
     private static < T extends Entity > EntityType< T > registerBase(EntityType.IFactory< T > factory, IClientSpawner< T > client, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
         ResourceLocation loc = new ResourceLocation(RConstants.MODID, name);
-        EntityType.Builder< T > builder = EntityType.Builder.create(factory, classification);
+        EntityType.Builder< T > builder = EntityType.Builder.of(factory, classification);
         builder.setShouldReceiveVelocityUpdates(sendUpdate);
         builder.setTrackingRange(trackingRange);
         builder.setUpdateInterval(updateFreq);
-        builder.size(width, height);
+        builder.sized(width, height);
         builder.setCustomClientFactory((spawnEntity, world) -> client.spawn(world));
         return builder.build(loc.toString());
     }
@@ -48,12 +48,12 @@ public class REntities {
     // Fire Resistant Entity Creation
     private static < T extends Entity > EntityType< T > registerFireImmuneBase(EntityType.IFactory< T > factory, IClientSpawner< T > client, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
         ResourceLocation loc = new ResourceLocation(RConstants.MODID, name);
-        EntityType.Builder< T > builder = EntityType.Builder.create(factory, classification);
+        EntityType.Builder< T > builder = EntityType.Builder.of(factory, classification);
         builder.setShouldReceiveVelocityUpdates(sendUpdate);
         builder.setTrackingRange(trackingRange);
         builder.setUpdateInterval(updateFreq);
-        builder.immuneToFire();
-        builder.size(width, height);
+        builder.fireImmune();
+        builder.sized(width, height);
         builder.setCustomClientFactory((spawnEntity, world) -> client.spawn(world));
         EntityType< T > type = builder.build(loc.toString());
         return type;

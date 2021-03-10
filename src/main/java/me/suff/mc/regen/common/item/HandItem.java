@@ -65,12 +65,12 @@ public class HandItem extends Item {
     }
 
     public static void setUUID(UUID uuid, ItemStack stack) {
-        stack.getOrCreateTag().putUniqueId("user", uuid);
+        stack.getOrCreateTag().putUUID("user", uuid);
     }
 
     public static UUID getUUID(ItemStack stack) {
         if (stack.getOrCreateTag().contains("user")) {
-            return stack.getOrCreateTag().getUniqueId("user");
+            return stack.getOrCreateTag().getUUID("user");
         }
         return null;
     }
@@ -78,7 +78,7 @@ public class HandItem extends Item {
     public static void createHand(LivingEntity livingEntity) {
         ItemStack itemStack = new ItemStack(RItems.HAND.get());
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
-            setUUID(livingEntity.getUniqueID(), itemStack);
+            setUUID(livingEntity.getUUID(), itemStack);
             setSkinType(iRegen.isAlexSkinCurrently() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
             setTrait(iRegen.getTrait(), itemStack);
             setEnergy(0, itemStack);
@@ -87,21 +87,21 @@ public class HandItem extends Item {
             }
             iRegen.setHandState(IRegen.Hand.LEFT_GONE);
         });
-        livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_HAND, 3);
-        InventoryHelper.spawnItemStack(livingEntity.world, livingEntity.getPosX(), livingEntity.getPosY(), livingEntity.getPosZ(), itemStack);
+        livingEntity.hurt(RegenSources.REGEN_DMG_HAND, 3);
+        InventoryHelper.dropItemStack(livingEntity.level, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), itemStack);
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
+    public ITextComponent getName(ItemStack stack) {
         if (stack.getOrCreateTag().contains("user")) {
             return new TranslationTextComponent("item.regen.hand_with_arg", UsernameCache.getLastKnownUsername(getUUID(stack)) + "'s");
         }
-        return super.getDisplayName(stack);
+        return super.getName(stack);
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList< ItemStack > items) {
-        if (isInGroup(group)) {
+    public void fillItemCategory(ItemGroup group, NonNullList< ItemStack > items) {
+        if (allowdedIn(group)) {
             for (PlayerUtil.SkinType skinType : PlayerUtil.SkinType.values()) {
                 if (skinType != PlayerUtil.SkinType.EITHER) {
                     ItemStack itemstack = new ItemStack(this);
@@ -113,8 +113,8 @@ public class HandItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(new TranslationTextComponent(TextFormatting.WHITE + "Trait: %s", TextFormatting.GRAY + TextFormatting.ITALIC.toString() + getTrait(stack).getTranslation().getString()));
         tooltip.add(new TranslationTextComponent(TextFormatting.WHITE + "Energy: %s", TextFormatting.GRAY + TextFormatting.ITALIC.toString() + RegenUtil.round(getEnergy(stack), 2)));
     }

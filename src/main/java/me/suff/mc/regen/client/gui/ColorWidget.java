@@ -25,7 +25,7 @@ public class ColorWidget extends Widget {
         radius = width / 2;
         color = defaultColor;
         text = new TextFieldWidget(font, x, y + width + 10, width - textHeight - 5, textHeight, this.text, title);
-        text.setEnabled(true);
+        text.setEditable(true);
         this.textHeight = textHeight;
         this.onPress = iInteraction;
 
@@ -83,7 +83,7 @@ public class ColorWidget extends Widget {
     }
 
     private void updateColor() {
-        text.setText(String.format("#%s", Integer.toHexString(color)).toUpperCase());
+        text.setValue(String.format("#%s", Integer.toHexString(color)).toUpperCase());
     }
 
     public int hsv2rgb(float hue, float saturation, float value) {

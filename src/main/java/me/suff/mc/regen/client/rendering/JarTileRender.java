@@ -48,15 +48,15 @@ public class JarTileRender extends TileEntityRenderer< JarTile > {
     public void render(JarTile tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         if (tileEntityIn.getHand().getItem() instanceof HandItem && !tileEntityIn.isValid(JarTile.Action.CREATE)) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5D, 1.5, 0.5D);
-            matrixStackIn.rotate(Minecraft.getInstance().getRenderManager().getCameraOrientation());
+            matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
             matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
-            Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
-            FontRenderer fontrenderer = Minecraft.getInstance().fontRenderer;
-            float f2 = (float) (-fontrenderer.getStringPropertyWidth(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
-            fontrenderer.func_243247_a(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
-            matrixStackIn.pop();
+            Matrix4f matrix4f = matrixStackIn.last().pose();
+            FontRenderer fontrenderer = Minecraft.getInstance().font;
+            float f2 = (float) (-fontrenderer.width(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
+            fontrenderer.drawInBatch(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
+            matrixStackIn.popPose();
         }
 
 
@@ -65,12 +65,12 @@ public class JarTileRender extends TileEntityRenderer< JarTile > {
         }
 
         if (tileEntityIn.getHand().getItem() instanceof HandItem) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5D, -0.6, 0.5D);
             boolean isAlex = HandItem.isAlex(tileEntityIn.getHand());
             mainModel = isAlex ? alexArmModel : steveArmModel;
-            mainModel.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntityTranslucent(getOrCreateTexture(tileEntityIn))), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
-            matrixStackIn.pop();
+            mainModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(getOrCreateTexture(tileEntityIn))), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+            matrixStackIn.popPose();
         } else {
             TEXTURES.remove(tileEntityIn);
         }
@@ -86,7 +86,7 @@ public class JarTileRender extends TileEntityRenderer< JarTile > {
 
         if (!TEXTURES.containsKey(tileEntityHandInJar)) {
             NativeImage image = SkinHandler.genSkinNative(HandItem.getSkin(tileEntityHandInJar.getHand()));
-            ResourceLocation res = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("hand_", new DynamicTexture(image));
+            ResourceLocation res = Minecraft.getInstance().getTextureManager().register("hand_", new DynamicTexture(image));
             TEXTURES.put(tileEntityHandInJar, res);
             return res;
         }
@@ -100,17 +100,17 @@ public class JarTileRender extends TileEntityRenderer< JarTile > {
         float g = (float) (i >> 8 & 255) / 255.0F;
         float b = (float) (i & 255) / 255.0F;
         int j = getCombinedAverageLight(lightReader, posIn);
-        renderer.pos(stack.getLast().getMatrix(), x, y, z)
+        renderer.vertex(stack.last().pose(), x, y, z)
                 .color(r, g, b, alpha)
-                .tex(u, v)
-                .lightmap(j & 0xffff, j >> 16 & 0xffff)
+                .uv(u, v)
+                .uv2(j & 0xffff, j >> 16 & 0xffff)
                 .normal(1, 0, 0)
                 .endVertex();
     }
 
     private int getCombinedAverageLight(IBlockDisplayReader lightReaderIn, BlockPos posIn) {
-        int i = WorldRenderer.getCombinedLight(lightReaderIn, posIn);
-        int j = WorldRenderer.getCombinedLight(lightReaderIn, posIn.up());
+        int i = WorldRenderer.getLightColor(lightReaderIn, posIn);
+        int j = WorldRenderer.getLightColor(lightReaderIn, posIn.above());
         int k = i & 255;
         int l = j & 255;
         int i1 = i >> 16 & 255;

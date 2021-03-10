@@ -17,11 +17,11 @@ public class ChangeSoundScheme {
     }
 
     public ChangeSoundScheme(PacketBuffer buffer) {
-        type = buffer.readString(32767);
+        type = buffer.readUtf(32767);
     }
 
     public static void handle(ChangeSoundScheme message, Supplier< NetworkEvent.Context > ctx) {
-        ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
+        ctx.get().getSender().getServer().submitAsync(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
             cap.setTimelordSound(IRegen.TimelordSound.valueOf(message.type));
             cap.syncToClients(null);
         }));
@@ -29,6 +29,6 @@ public class ChangeSoundScheme {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeString(this.type);
+        buf.writeUtf(this.type);
     }
 }

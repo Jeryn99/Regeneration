@@ -26,13 +26,13 @@ public final class WatcherTransition implements TransitionType< WatcherTransitio
     public static void createWatcher(LivingEntity player) {
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.getTransitionType() == TransitionTypes.WATCHER) {
-                Direction facing = player.getAdjustedHorizontalFacing();
-                BlockPos playerPos = player.getPosition();
-                BlockPos spawnPos = playerPos.offset(facing, 4);
-                WatcherEntity watcherEntity = new WatcherEntity(player.world);
-                watcherEntity.setAttackTarget(player);
-                watcherEntity.setPositionAndUpdate(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
-                player.world.addEntity(watcherEntity);
+                Direction facing = player.getMotionDirection();
+                BlockPos playerPos = player.blockPosition();
+                BlockPos spawnPos = playerPos.relative(facing, 4);
+                WatcherEntity watcherEntity = new WatcherEntity(player.level);
+                watcherEntity.setTarget(player);
+                watcherEntity.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+                player.level.addFreshEntity(watcherEntity);
             }
         });
     }
@@ -40,8 +40,8 @@ public final class WatcherTransition implements TransitionType< WatcherTransitio
     @Override
     public void tick(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        World world = living.world;
-        List< WatcherEntity > watchers = world.getEntitiesWithinAABB(REntities.WATCHER.get(), living.getBoundingBox().grow(64), watcherEntity -> watcherEntity.getAttackTarget() == living);
+        World world = living.level;
+        List< WatcherEntity > watchers = world.getEntities(REntities.WATCHER.get(), living.getBoundingBox().inflate(64), watcherEntity -> watcherEntity.getTarget() == living);
 
         if (watchers.isEmpty()) {
             WatcherTransition.createWatcher(living);

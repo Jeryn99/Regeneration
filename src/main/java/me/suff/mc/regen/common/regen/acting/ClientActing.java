@@ -33,7 +33,7 @@ class ClientActing implements Acting {
 
     @Override
     public void onEnterGrace(IRegen cap) {
-        if (cap.getLiving().getUniqueID().equals(Minecraft.getInstance().player.getUniqueID())) {
+        if (cap.getLiving().getUUID().equals(Minecraft.getInstance().player.getUUID())) {
             SoundEvent ambientSound = cap.getTimelordSound() == IRegen.TimelordSound.DRUM ? RSounds.DRUM_BEAT.get() : RSounds.GRACE_HUM.get();
             ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getCurrentState().isGraceful(), 0.2F);
             ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getCurrentState() != RegenStates.GRACE, 1.5F);
@@ -60,15 +60,15 @@ class ClientActing implements Acting {
 
     @Override
     public void onRegenTrigger(IRegen cap) {
-        if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLiving().getUniqueID())) {
+        if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
 
             if (RegenConfig.CLIENT.changeMySkin.get()) {
                 if (cap.isNextSkinValid()) {
                     NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(cap.getNextSkin(), cap.isNextSkinTypeAlex()));
                     return;
                 }
-                Minecraft.getInstance().deferTask(() -> {
-                    File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRNG(), cap.getPreferredModel().isAlex(), false);
+                Minecraft.getInstance().submitAsync(() -> {
+                    File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRandom(), cap.getPreferredModel().isAlex(), false);
                     boolean isAlex = file.getAbsolutePath().contains(CommonSkin.SKIN_DIRECTORY_ALEX.getAbsolutePath());
                     Regeneration.LOG.info("Choosen Skin: " + file);
                     NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(RegenUtil.fileToBytes(file), isAlex));
@@ -81,7 +81,7 @@ class ClientActing implements Acting {
 
     @Override
     public void onGoCritical(IRegen cap) {
-        if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLiving().getUniqueID())) {
+        if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
             if (cap.getLiving().getType() == EntityType.PLAYER) {
                 ClientUtil.createToast(new TranslationTextComponent("regen.toast.enter_critical"), new TranslationTextComponent("regen.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
                 ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getCurrentState() != RegenStates.GRACE_CRIT, 1.0F);

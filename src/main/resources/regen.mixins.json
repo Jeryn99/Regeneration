@@ -1,16 +1,14 @@
 {
   "required": true,
   "package": "me.suff.mc.regen.mixin",
-  "compatiblityLevel": "JAVA_8",
   "refmap": "regen.refmap.json",
   "client": [
     "BipedBodyMixin",
     "MakeTheSunMixin",
-    "SoundSourceMixin",
-    "RenderPlayerMixin"
+    "RenderPlayerMixin",
+    "SoundSourceMixin"
   ],
   "minVersion": "0.8",
   "mixins": [
-
   ]
 }

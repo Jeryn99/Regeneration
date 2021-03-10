@@ -22,9 +22,9 @@ public class RenderLaser extends EntityRenderer< LaserProjectile > {
 
     @Override
     public void render(LaserProjectile entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        matrixStack.push();
-        Vector3d vec1 = new Vector3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ);
-        Vector3d vec2 = new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ());
+        matrixStack.pushPose();
+        Vector3d vec1 = new Vector3d(entity.xOld, entity.yOld, entity.zOld);
+        Vector3d vec2 = new Vector3d(entity.getX(), entity.getY(), entity.getZ());
         vec1 = vec2.subtract(vec1);
         vec2 = vec2.subtract(vec2);
         vec1 = vec1.normalize();
@@ -34,16 +34,16 @@ public class RenderLaser extends EntityRenderer< LaserProjectile > {
         double diff = MathHelper.sqrt(x_ * x_ + z_ * z_);
         float yaw = (float) (Math.atan2(z_, x_) * 180.0D / 3.141592653589793D) - 90.0F;
         float pitch = (float) -(Math.atan2(y_, diff) * 180.0D / 3.141592653589793D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-yaw));
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(pitch));
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(90.0F));
-        IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getLightning());
-        RenderHelp.drawGlowingLine(matrixStack.getLast().getMatrix(), vertexBuilder, 1F, 0.05F, 0, 0, 1, 1F, 15728640);
-        matrixStack.pop();
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-yaw));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(pitch));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+        IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.lightning());
+        RenderHelp.drawGlowingLine(matrixStack.last().pose(), vertexBuilder, 1F, 0.05F, 0, 0, 1, 1F, 15728640);
+        matrixStack.popPose();
     }
 
     @Override
-    public ResourceLocation getEntityTexture(LaserProjectile entity) {
+    public ResourceLocation getTextureLocation(LaserProjectile entity) {
         return null;
     }
 

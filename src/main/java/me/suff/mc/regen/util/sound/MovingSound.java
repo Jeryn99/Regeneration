@@ -21,7 +21,7 @@ public class MovingSound extends TickableSound {
         super(soundIn, categoryIn);
         this.entity = object;
         this.stopCondition = stopCondition;
-        super.repeat = repeat;
+        super.looping = repeat;
         volume = volumeSfx;
     }
 
@@ -35,18 +35,18 @@ public class MovingSound extends TickableSound {
             }
 
             // I promise this is the only case specific thing I am putting in here ~ swirtzly
-            if (sound.getSoundLocation().equals(RSounds.GRACE_HUM.get().getRegistryName())) {
+            if (sound.getLocation().equals(RSounds.GRACE_HUM.get().getRegistryName())) {
                 volume = RegenUtil.randFloat(1.5F, 6F);
             }
 
-            super.x = (float) entityObject.getPosX();
-            super.y = (float) entityObject.getPosY();
-            super.z = (float) entityObject.getPosZ();
+            super.x = (float) entityObject.getX();
+            super.y = (float) entityObject.getY();
+            super.z = (float) entityObject.getZ();
         }
 
         if (entity instanceof TileEntity) {
             TileEntity tileObject = (TileEntity) entity;
-            BlockPos pos = tileObject.getPos();
+            BlockPos pos = tileObject.getBlockPos();
             super.x = (float) pos.getX();
             super.y = (float) pos.getY();
             super.z = (float) pos.getZ();
@@ -55,14 +55,14 @@ public class MovingSound extends TickableSound {
     }
 
     public void setDonePlaying() {
-        this.repeat = false;
+        this.looping = false;
         this.donePlaying = true;
-        this.repeatDelay = 0;
+        this.delay = 0;
     }
 
     @Override
-    public boolean canRepeat() {
-        return this.repeat;
+    public boolean isLooping() {
+        return this.looping;
     }
 
     @Override
@@ -76,17 +76,17 @@ public class MovingSound extends TickableSound {
     }
 
     @Override
-    public boolean isDonePlaying() {
+    public boolean isStopped() {
         return donePlaying;
     }
 
     @Override
-    public int getRepeatDelay() {
-        return this.repeatDelay;
+    public int getDelay() {
+        return this.delay;
     }
 
     @Override
-    public AttenuationType getAttenuationType() {
+    public AttenuationType getAttenuation() {
         return AttenuationType.LINEAR;
     }
 }

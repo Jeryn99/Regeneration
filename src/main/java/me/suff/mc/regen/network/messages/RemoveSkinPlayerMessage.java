@@ -1,6 +1,5 @@
 package me.suff.mc.regen.network.messages;
 
-import me.suff.mc.regen.client.animation.AnimationHandler;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -18,18 +17,18 @@ public class RemoveSkinPlayerMessage {
     }
 
     public RemoveSkinPlayerMessage(PacketBuffer buffer) {
-        livingEntity = buffer.readUniqueId();
+        livingEntity = buffer.readUUID();
     }
 
     public static void handle(RemoveSkinPlayerMessage message, Supplier< NetworkEvent.Context > ctx) {
-        Minecraft.getInstance().deferTask(() -> {
+        Minecraft.getInstance().submitAsync(() -> {
             SkinHandler.removePlayerSkin(message.livingEntity);
         });
         ctx.get().setPacketHandled(true);
     }
 
     public void toBytes(PacketBuffer packetBuffer) {
-        packetBuffer.writeUniqueId(livingEntity);
+        packetBuffer.writeUUID(livingEntity);
     }
 
 }

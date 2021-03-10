@@ -29,72 +29,72 @@ public class ROreBlock extends Block {
 
     public ROreBlock(AbstractBlock.Properties properties) {
         super(properties);
-        this.setDefaultState(this.getDefaultState().with(LIT, Boolean.valueOf(false)));
+        this.registerDefaultState(this.defaultBlockState().setValue(LIT, Boolean.valueOf(false)));
     }
 
     private static void activate(BlockState state, World world, BlockPos pos) {
         spawnParticles(world, pos);
-        if (!state.get(LIT)) {
-            world.setBlockState(pos, state.with(LIT, Boolean.valueOf(true)), 3);
+        if (!state.getValue(LIT)) {
+            world.setBlock(pos, state.setValue(LIT, Boolean.valueOf(true)), 3);
         }
 
     }
 
     private static void spawnParticles(World world, BlockPos worldIn) {
-        Random random = world.rand;
+        Random random = world.random;
 
         for (Direction direction : Direction.values()) {
-            BlockPos blockpos = worldIn.offset(direction);
-            if (!world.getBlockState(blockpos).isOpaqueCube(world, blockpos)) {
+            BlockPos blockpos = worldIn.relative(direction);
+            if (!world.getBlockState(blockpos).isSolidRender(world, blockpos)) {
                 Direction.Axis direction$axis = direction.getAxis();
-                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getXOffset() : (double) random.nextFloat();
-                double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getYOffset() : (double) random.nextFloat();
-                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getZOffset() : (double) random.nextFloat();
-                world.addParticle(RedstoneParticleData.REDSTONE_DUST, (double) worldIn.getX() + d1, (double) worldIn.getY() + d2, (double) worldIn.getZ() + d3, 0.0D, 0.0D, 0.0D);
+                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) random.nextFloat();
+                double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
+                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
+                world.addParticle(RedstoneParticleData.REDSTONE, (double) worldIn.getX() + d1, (double) worldIn.getY() + d2, (double) worldIn.getZ() + d3, 0.0D, 0.0D, 0.0D);
             }
         }
 
     }
 
     @Override
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+    public void attack(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
         activate(state, worldIn, pos);
-        super.onBlockClicked(state, worldIn, pos, player);
+        super.attack(state, worldIn, pos, player);
     }
 
     @Override
-    public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
+    public void stepOn(World worldIn, BlockPos pos, Entity entityIn) {
         activate(worldIn.getBlockState(pos), worldIn, pos);
-        super.onEntityWalk(worldIn, pos, entityIn);
+        super.stepOn(worldIn, pos, entityIn);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) {
             spawnParticles(worldIn, pos);
         } else {
             activate(state, worldIn, pos);
         }
 
-        ItemStack itemstack = player.getHeldItem(handIn);
+        ItemStack itemstack = player.getItemInHand(handIn);
         return itemstack.getItem() instanceof BlockItem && (new BlockItemUseContext(player, handIn, itemstack, hit)).canPlace() ? ActionResultType.PASS : ActionResultType.SUCCESS;
     }
 
     @Override
-    public boolean ticksRandomly(BlockState state) {
-        return state.get(LIT);
+    public boolean isRandomlyTicking(BlockState state) {
+        return state.getValue(LIT);
     }
 
     @Override
     public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-        if (state.get(LIT)) {
-            worldIn.setBlockState(pos, state.with(LIT, Boolean.valueOf(false)), 3);
+        if (state.getValue(LIT)) {
+            worldIn.setBlock(pos, state.setValue(LIT, Boolean.valueOf(false)), 3);
         }
     }
 
     @Override
-    public void spawnAdditionalDrops(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack stack) {
-        super.spawnAdditionalDrops(state, worldIn, pos, stack);
+    public void spawnAfterBreak(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack stack) {
+        super.spawnAfterBreak(state, worldIn, pos, stack);
     }
 
     @Override
@@ -104,14 +104,14 @@ public class ROreBlock extends Block {
 
     @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if (stateIn.get(LIT)) {
+        if (stateIn.getValue(LIT)) {
             spawnParticles(worldIn, pos);
         }
 
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder< Block, BlockState > builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder< Block, BlockState > builder) {
         builder.add(LIT);
     }
 }

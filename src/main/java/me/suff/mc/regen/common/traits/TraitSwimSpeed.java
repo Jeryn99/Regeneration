@@ -30,7 +30,7 @@ public class TraitSwimSpeed extends Traits.ITrait {
         LivingEntity living = data.getLiving();
         Objects.requireNonNull(living.getAttribute(ForgeMod.SWIM_SPEED.get())).removeModifier(SWIM_UUID);
         if (living.isSwimming()) {
-            Objects.requireNonNull(living.getAttribute(ForgeMod.SWIM_SPEED.get())).applyNonPersistentModifier(new AttributeModifier(SWIM_UUID, "SWIM modifier", 5, AttributeModifier.Operation.MULTIPLY_BASE));
+            Objects.requireNonNull(living.getAttribute(ForgeMod.SWIM_SPEED.get())).addTransientModifier(new AttributeModifier(SWIM_UUID, "SWIM modifier", 5, AttributeModifier.Operation.MULTIPLY_BASE));
         }
     }
 

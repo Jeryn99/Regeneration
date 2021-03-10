@@ -3,7 +3,6 @@ package me.suff.mc.regen.client.animation;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
-import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.util.PlayerUtil;
@@ -11,7 +10,6 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,11 +28,11 @@ public class AnimationHandler {
 
             if (livingEntity.getType() == EntityType.PLAYER) {
                 if (PlayerUtil.isPlayerAboveZeroGrid(livingEntity) && iRegen.getCurrentState() == RegenStates.POST) {
-                    bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(20);
-                    bipedModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
-                    bipedModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
-                    bipedModel.bipedLeftLeg.rotateAngleZ = (float) Math.toRadians(-2);
-                    bipedModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(2);
+                    bipedModel.head.xRot = (float) Math.toRadians(20);
+                    bipedModel.head.yRot = (float) Math.toRadians(0);
+                    bipedModel.head.zRot = (float) Math.toRadians(0);
+                    bipedModel.leftLeg.zRot = (float) Math.toRadians(-2);
+                    bipedModel.rightLeg.zRot = (float) Math.toRadians(2);
                 }
             }
 
@@ -45,10 +43,10 @@ public class AnimationHandler {
     public static void handleArmor(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         if (bipedModel instanceof PlayerModel) {
             PlayerModel playerModel = (PlayerModel) bipedModel;
-            playerModel.bipedBodyWear.showModel = hideBodyWear(livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST));
-            playerModel.bipedLeftArmwear.showModel = playerModel.bipedRightArmwear.showModel = livingEntity.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() != RItems.GUARD_CHEST.get();
-            playerModel.bipedLeftLegwear.showModel = playerModel.bipedRightLegwear.showModel = hideLegWear(livingEntity.getItemStackFromSlot(EquipmentSlotType.LEGS));
-            playerModel.bipedLeftArmwear.showModel = playerModel.bipedLeftArm.showModel = showArms(livingEntity);
+            playerModel.jacket.visible = hideBodyWear(livingEntity.getItemBySlot(EquipmentSlotType.CHEST));
+            playerModel.leftSleeve.visible = playerModel.rightSleeve.visible = livingEntity.getItemBySlot(EquipmentSlotType.CHEST).getItem() != RItems.GUARD_CHEST.get();
+            playerModel.leftPants.visible = playerModel.rightPants.visible = hideLegWear(livingEntity.getItemBySlot(EquipmentSlotType.LEGS));
+            playerModel.leftSleeve.visible = playerModel.leftArm.visible = showArms(livingEntity);
         }
     }
 
@@ -84,11 +82,11 @@ public class AnimationHandler {
     public static void correctPlayerModel(BipedModel bipedModel) {
         if (bipedModel instanceof PlayerModel) {
             PlayerModel playerModel = (PlayerModel) bipedModel;
-            playerModel.bipedHeadwear.copyModelAngles(playerModel.bipedHead);
-            playerModel.bipedLeftArmwear.copyModelAngles(playerModel.bipedLeftArm);
-            playerModel.bipedRightArmwear.copyModelAngles(playerModel.bipedRightArm);
-            playerModel.bipedLeftLegwear.copyModelAngles(playerModel.bipedLeftLeg);
-            playerModel.bipedRightLegwear.copyModelAngles(playerModel.bipedRightLeg);
+            playerModel.hat.copyFrom(playerModel.head);
+            playerModel.leftSleeve.copyFrom(playerModel.leftArm);
+            playerModel.rightSleeve.copyFrom(playerModel.rightArm);
+            playerModel.leftPants.copyFrom(playerModel.leftLeg);
+            playerModel.rightPants.copyFrom(playerModel.rightLeg);
         }
     }
 

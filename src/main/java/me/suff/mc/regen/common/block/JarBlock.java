@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class JarBlock extends DirectionalBlock {
 
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.FACING;
     public static final BooleanProperty IS_OPEN = BooleanProperty.create("is_open");
 
     public static final VoxelShape NORTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_180);
@@ -47,14 +47,14 @@ public class JarBlock extends DirectionalBlock {
 
 
     public JarBlock() {
-        super(Properties.create(Material.IRON).notSolid());
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        super(Properties.of(Material.METAL).noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        if (state.get(IS_OPEN)) {
-            switch (state.get(BlockStateProperties.HORIZONTAL_FACING)) {
+        if (state.getValue(IS_OPEN)) {
+            switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
                 case EAST:
                     return EAST_OPEN;
                 case SOUTH:
@@ -65,7 +65,7 @@ public class JarBlock extends DirectionalBlock {
                     return NORTH_OPEN;
             }
         }
-        switch (state.get(BlockStateProperties.HORIZONTAL_FACING)) {
+        switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
             case EAST:
                 return EAST;
             case SOUTH:
@@ -91,35 +91,35 @@ public class JarBlock extends DirectionalBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().rotateY()).with(IS_OPEN, true);
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getClockWise()).setValue(IS_OPEN, true);
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder< Block, BlockState > builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder< Block, BlockState > builder) {
         builder.add(FACING, IS_OPEN);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote()) {
-            JarTile jarTile = (JarTile) worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isClientSide()) {
+            JarTile jarTile = (JarTile) worldIn.getBlockEntity(pos);
             if (handIn == Hand.MAIN_HAND) {
-                if (!player.isSneaking()) {
-                    if (player.getHeldItemMainhand().getItem() == RItems.HAND.get()) {
+                if (!player.isShiftKeyDown()) {
+                    if (player.getMainHandItem().getItem() == RItems.HAND.get()) {
                         jarTile.dropHandIfPresent(player);
-                        jarTile.setHand(player.getHeldItemMainhand().copy());
+                        jarTile.setHand(player.getMainHandItem().copy());
                         jarTile.setUpdateSkin(true);
-                        player.getHeldItemMainhand().shrink(1);
+                        player.getMainHandItem().shrink(1);
                         jarTile.sendUpdates();
                     } else {
                         jarTile.dropHandIfPresent(player);
@@ -145,24 +145,24 @@ public class JarBlock extends DirectionalBlock {
             }
         }
 
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!newState.matchesBlock(this)) {
-            if (!worldIn.isRemote()) {
-                JarTile jarTile = (JarTile) worldIn.getTileEntity(pos);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!newState.is(this)) {
+            if (!worldIn.isClientSide()) {
+                JarTile jarTile = (JarTile) worldIn.getBlockEntity(pos);
                 jarTile.dropHandIfPresent(null);
             }
         }
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
-        if (!world.isRemote()) {
-            JarTile jarTile = (JarTile) world.getTileEntity(pos);
+        if (!world.isClientSide()) {
+            JarTile jarTile = (JarTile) world.getBlockEntity(pos);
             jarTile.dropHandIfPresent(player);
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);

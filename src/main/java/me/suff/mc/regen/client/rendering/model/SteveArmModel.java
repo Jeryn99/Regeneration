@@ -11,28 +11,28 @@ public class SteveArmModel extends EntityModel< Entity > {
     private final ModelRenderer RightArm;
 
     public SteveArmModel() {
-        textureWidth = 64;
-        textureHeight = 64;
+        texWidth = 64;
+        texHeight = 64;
 
         RightArm = new ModelRenderer(this);
-        RightArm.setRotationPoint(-3.0F, 2.0F, -3.0F);
-        RightArm.setTextureOffset(40, 16).addBox(0.5F, 10.0F, 0.5F, 4.0F, 12.0F, 4.0F, 0.0F, false);
-        RightArm.setTextureOffset(40, 32).addBox(0.5F, 10.0F, 0.5F, 4.0F, 12.0F, 4.0F, 0.25F, false);
+        RightArm.setPos(-3.0F, 2.0F, -3.0F);
+        RightArm.texOffs(40, 16).addBox(0.5F, 10.0F, 0.5F, 4.0F, 12.0F, 4.0F, 0.0F, false);
+        RightArm.texOffs(40, 32).addBox(0.5F, 10.0F, 0.5F, 4.0F, 12.0F, 4.0F, 0.25F, false);
     }
 
     @Override
-    public void setRotationAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         //previously the render function, render code was moved to a method below
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         RightArm.render(matrixStack, buffer, packedLight, packedOverlay);
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
+        modelRenderer.xRot = x;
+        modelRenderer.yRot = y;
+        modelRenderer.zRot = z;
     }
 }

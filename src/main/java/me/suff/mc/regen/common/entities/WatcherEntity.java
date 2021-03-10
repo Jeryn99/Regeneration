@@ -30,33 +30,33 @@ public class WatcherEntity extends MobEntity {
     public void tick() {
         super.tick();
 
-        setNoAI(true);
-        setMotion(new Vector3d(0, 0, 0));
+        setNoAi(true);
+        setDeltaMovement(new Vector3d(0, 0, 0));
         RegenCap.get(this).ifPresent(iRegen -> iRegen.setRegens(0));
 
-        if (getAttackTarget() == null) {
-            for (PlayerEntity worldPlayer : world.getPlayers()) {
+        if (getTarget() == null) {
+            for (PlayerEntity worldPlayer : level.players()) {
                 RegenCap.get(worldPlayer).ifPresent(iRegen -> {
                     if (iRegen.getCurrentState().isGraceful() && iRegen.getTransitionType() == TransitionTypes.WATCHER) {
-                        setAttackTarget(worldPlayer);
+                        setTarget(worldPlayer);
                     }
                 });
 
-                if (getAttackTarget() == null) {
+                if (getTarget() == null) {
                     remove();
                 }
             }
         } else {
-            RegenCap.get(getAttackTarget()).ifPresent(iRegen -> {
-                if (iRegen.getTransitionType() != TransitionTypes.WATCHER || iRegen.getCurrentState() == RegenStates.POST || iRegen.getCurrentState() == RegenStates.ALIVE || getAttackTarget().world.getDimensionKey() != world.getDimensionKey()) {
+            RegenCap.get(getTarget()).ifPresent(iRegen -> {
+                if (iRegen.getTransitionType() != TransitionTypes.WATCHER || iRegen.getCurrentState() == RegenStates.POST || iRegen.getCurrentState() == RegenStates.ALIVE || getTarget().level.dimension() != level.dimension()) {
                     remove();
                 } else {
 
                     if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                         remove();
                     } else {
-                        lookAt(EntityAnchorArgument.Type.EYES, getAttackTarget().getPositionVec());
-                        if (ticksExisted % 100 == 0 && !ViewUtil.isInSight(getAttackTarget(), this)) {
+                        lookAt(EntityAnchorArgument.Type.EYES, getTarget().position());
+                        if (tickCount % 100 == 0 && !ViewUtil.isInSight(getTarget(), this)) {
                             teleportRandomly();
                         }
                     }
@@ -67,41 +67,41 @@ public class WatcherEntity extends MobEntity {
     }
 
     @Override
-    protected boolean canBeRidden(Entity entityIn) {
+    protected boolean canRide(Entity entityIn) {
         return false;
     }
 
     @Override
-    public boolean canBePushed() {
+    public boolean isPushable() {
         return true;
     }
 
     @Override
-    public boolean canBeCollidedWith() {
+    public boolean isPickable() {
         return false;
     }
 
     @Override
-    public void applyKnockback(float strength, double ratioX, double ratioZ) {
+    public void knockback(float strength, double ratioX, double ratioZ) {
         //no
     }
 
     @Override
-    protected AxisAlignedBB getBoundingBox(Pose pose) {
+    protected AxisAlignedBB getBoundingBoxForPose(Pose pose) {
         return new AxisAlignedBB(0, 0, 0, 0, 0, 0);
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         return false;
     }
 
     protected boolean teleportRandomly() {
-        if (!this.world.isRemote() && this.isAlive()) {
-            double d0 = getAttackTarget().getPosX() + this.rand.nextInt(5);
-            double d1 = getAttackTarget().getPosY() + this.rand.nextInt(5);
-            double d2 = getAttackTarget().getPosZ() + this.rand.nextInt(5);
-            return this.attemptTeleport(d0, d1, d2, false);
+        if (!this.level.isClientSide() && this.isAlive()) {
+            double d0 = getTarget().getX() + this.random.nextInt(5);
+            double d1 = getTarget().getY() + this.random.nextInt(5);
+            double d2 = getTarget().getZ() + this.random.nextInt(5);
+            return this.randomTeleport(d0, d1, d2, false);
         } else {
             return false;
         }

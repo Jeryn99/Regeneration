@@ -14,22 +14,22 @@ public class RemoveTimelordSkinMessage {
     private final UUID livingEntity;
 
     public RemoveTimelordSkinMessage(TimelordEntity livingEntity) {
-        this.livingEntity = livingEntity.getUniqueID();
+        this.livingEntity = livingEntity.getUUID();
     }
 
     public RemoveTimelordSkinMessage(PacketBuffer buffer) {
-        livingEntity = buffer.readUniqueId();
+        livingEntity = buffer.readUUID();
     }
 
     public static void handle(RemoveTimelordSkinMessage message, Supplier< NetworkEvent.Context > ctx) {
-        Minecraft.getInstance().deferTask(() -> {
+        Minecraft.getInstance().submitAsync(() -> {
             TimelordRenderer.TIMELORDS.remove(message.livingEntity);
         });
         ctx.get().setPacketHandled(true);
     }
 
     public void toBytes(PacketBuffer packetBuffer) {
-        packetBuffer.writeUniqueId(livingEntity);
+        packetBuffer.writeUUID(livingEntity);
     }
 
 }

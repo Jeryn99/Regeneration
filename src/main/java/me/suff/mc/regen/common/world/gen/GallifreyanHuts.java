@@ -51,7 +51,7 @@ public class GallifreyanHuts extends Structure< ProbabilityConfig > {
 
     //Required, otherwise will cause NPE Crash
     @Override
-    public Decoration getDecorationStage() {
+    public Decoration step() {
         return Decoration.SURFACE_STRUCTURES;
     }
 
@@ -63,15 +63,15 @@ public class GallifreyanHuts extends Structure< ProbabilityConfig > {
         }
 
         @Override
-        public void func_230364_a_(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, ProbabilityConfig config) {
+        public void generatePieces(DynamicRegistries dynamicRegistryManager, ChunkGenerator chunkGenerator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, ProbabilityConfig config) {
 
-            Rotation rotation = Rotation.values()[this.rand.nextInt(Rotation.values().length)];
+            Rotation rotation = Rotation.values()[this.random.nextInt(Rotation.values().length)];
             int x = (chunkX << 4) + 7;
             int z = (chunkZ << 4) + 7;
-            int surfaceY = chunkGenerator.getHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG);
+            int surfaceY = chunkGenerator.getBaseHeight(x, z, Heightmap.Type.WORLD_SURFACE_WG);
             BlockPos blockpos = new BlockPos(x, surfaceY, z);
-            HutPieces.start(templateManagerIn, blockpos, rotation, this.components, this.rand);
-            this.recalculateStructureSize();
+            HutPieces.start(templateManagerIn, blockpos, rotation, this.pieces, this.random);
+            this.calculateBoundingBox();
             Regeneration.LOG.info("Hut at " + (blockpos.getX()) + " " + blockpos.getY() + " " + (blockpos.getZ()));
         }
 

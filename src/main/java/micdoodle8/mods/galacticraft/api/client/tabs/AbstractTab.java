@@ -33,20 +33,20 @@ public abstract class AbstractTab extends AbstractButton {
             int xOffset = this.id == 2 ? 0 : 1;
             int yPos = this.y + (this.active ? 3 : 0);
             ItemRenderer itemRender = mc.getItemRenderer();
-            mc.getTextureManager().bindTexture(this.texture);
+            mc.getTextureManager().bind(this.texture);
             this.blit(matrixStack, this.x, yPos, xOffset * 28, yTexPos, 28, ySize);
 
-            RenderHelper.enableStandardItemLighting();
+            RenderHelper.turnBackOn();
             this.setBlitOffset(this.getBlitOffset() + 30);
-            itemRender.zLevel = 10.0F;
+            itemRender.blitOffset = 10.0F;
             RenderSystem.enableLighting();
             RenderSystem.enableRescaleNormal();
-            itemRender.renderItemAndEffectIntoGUI(this.renderStack, this.x + 6, this.y + 8);
-            itemRender.renderItemOverlayIntoGUI(mc.fontRenderer, this.renderStack, this.x + 6, this.y + 8, null);
+            itemRender.renderAndDecorateItem(this.renderStack, this.x + 6, this.y + 8);
+            itemRender.renderGuiItemDecorations(mc.font, this.renderStack, this.x + 6, this.y + 8, null);
             RenderSystem.disableLighting();
-            itemRender.zLevel = 0.0F;
+            itemRender.blitOffset = 0.0F;
             this.setBlitOffset(this.getBlitOffset() - 30);
-            RenderHelper.disableStandardItemLighting();
+            RenderHelper.turnOff();
         }
     }
 

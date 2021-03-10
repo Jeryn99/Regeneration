@@ -48,7 +48,7 @@ public class IncarnationScreen extends ContainerScreen {
     private static final PlayerModel< ? > ALEX_MODEL = new PlayerModel<>(0.1f, true);
     private static final PlayerModel< ? > STEVE_MODEL = new PlayerModel<>(0.1f, false);
     public static boolean isAlex = true;
-    private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
+    private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkin();
     private static List< File > skins = null;
     private static int position = 0;
     private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).getPreferredModel();
@@ -62,8 +62,8 @@ public class IncarnationScreen extends ContainerScreen {
 
     public IncarnationScreen() {
         super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).inventory, new TranslationTextComponent("Next Incarnation"));
-        xSize = 256;
-        ySize = 173;
+        imageWidth = 256;
+        imageHeight = 173;
     }
 
     public static void updateModels() {
@@ -77,57 +77,57 @@ public class IncarnationScreen extends ContainerScreen {
         RenderSystem.matrixMode(5889);
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        int k = (int) Minecraft.getInstance().getMainWindow().getGuiScaleFactor();
+        int k = (int) Minecraft.getInstance().getWindow().getGuiScale();
         RenderSystem.scaled(1.5, 1.5, 1.5);
         RenderSystem.translated(0.6, -0.3, 0);
-        RenderSystem.viewport((Minecraft.getInstance().currentScreen.width - 320) / 2 * k, (Minecraft.getInstance().currentScreen.height - 240) / 2 * k, 320 * k, 240 * k);
+        RenderSystem.viewport((Minecraft.getInstance().screen.width - 320) / 2 * k, (Minecraft.getInstance().screen.height - 240) / 2 * k, 320 * k, 240 * k);
         RenderSystem.translatef(-0.34F, 0.23F, 0.0F);
         RenderSystem.multMatrix(Matrix4f.perspective(100.0D, 1.3333334F, 9.0F, 100.0F));
         RenderSystem.matrixMode(5888);
-        matrixStack.push();
-        MatrixStack.Entry matrixstack$entry = matrixStack.getLast();
-        matrixstack$entry.getMatrix().setIdentity();
-        matrixstack$entry.getNormal().setIdentity();
+        matrixStack.pushPose();
+        MatrixStack.Entry matrixstack$entry = matrixStack.last();
+        matrixstack$entry.pose().setIdentity();
+        matrixstack$entry.normal().setIdentity();
         matrixStack.translate(0.1D, 3.3F, 1984.0D);
         matrixStack.scale(5.0F, 5.0F, 5.0F);
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(20.0F));
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(180.0F));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(20.0F));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(180.0F));
         // matrixStack.rotate(Vector3f.YP.rotationDegrees(rotation));
         RenderSystem.enableRescaleNormal();
-        IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
-        IVertexBuilder ivertexbuilder = irendertypebuffer$impl.getBuffer(RenderType.getEntityTranslucent(PLAYER_TEXTURE));
-        entityModel.render(matrixStack, ivertexbuilder, 15728880, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        irendertypebuffer$impl.finish();
-        matrixStack.pop();
+        IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
+        IVertexBuilder ivertexbuilder = irendertypebuffer$impl.getBuffer(RenderType.entityTranslucent(PLAYER_TEXTURE));
+        entityModel.renderToBuffer(matrixStack, ivertexbuilder, 15728880, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        irendertypebuffer$impl.endBatch();
+        matrixStack.popPose();
         RenderSystem.matrixMode(5889);
-        RenderSystem.viewport(0, 0, Minecraft.getInstance().getMainWindow().getFramebufferWidth(), Minecraft.getInstance().getMainWindow().getFramebufferHeight());
+        RenderSystem.viewport(0, 0, Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
         RenderSystem.popMatrix();
     }
 
     @Override
     public void init() {
         super.init();
-        TabRegistry.updateTabValues(guiLeft + 2, guiTop, RegenPrefTab.class);
+        TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
             addButton(button);
         }
-        int cx = (width - xSize) / 2;
-        int cy = (height - ySize) / 2;
+        int cx = (width - imageWidth) / 2;
+        int cy = (height - imageHeight) / 2;
         final int btnW = 55, btnH = 18;
         position = 0;
         skins = CommonSkin.listAllSkins(currentSkinType);
 
 
-        this.searchField = new TextFieldWidget(this.font, cx + 15, cy + 145, xSize - 70, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
+        this.searchField = new TextFieldWidget(this.font, cx + 15, cy + 145, imageWidth - 70, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
 
         this.searchField.setResponder((p_214329_1_) -> {
             position = 0;
-            skins.removeIf(file -> !file.getName().toLowerCase().contains(searchField.getText().toLowerCase()));
-            if (skins.isEmpty() || searchField.getText().isEmpty()) {
+            skins.removeIf(file -> !file.getName().toLowerCase().contains(searchField.getValue().toLowerCase()));
+            if (skins.isEmpty() || searchField.getValue().isEmpty()) {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
 
-            if (!excludeTrending.isChecked()) {
+            if (!excludeTrending.selected()) {
                 skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
             }
 
@@ -135,18 +135,18 @@ public class IncarnationScreen extends ContainerScreen {
             updateModels();
         });
         this.children.add(this.searchField);
-        this.setFocusedDefault(this.searchField);
+        this.setInitialFocus(this.searchField);
 
 
         DescButton btnNext = new DescButton(cx + 125, cy + 90, 20, 20, new TranslationTextComponent("regen.gui.previous"), button -> {
-            if (searchField.getText().isEmpty()) {
+            if (searchField.getValue().isEmpty()) {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
-            if (!excludeTrending.isChecked()) {
+            if (!excludeTrending.selected()) {
                 skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
             }
 
-            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                 if (position >= skins.size() - 1) {
                     position = 0;
                 } else {
@@ -157,15 +157,15 @@ public class IncarnationScreen extends ContainerScreen {
         });
         DescButton btnPrevious = new DescButton(cx + 230, cy + 90, 20, 20, new TranslationTextComponent("regen.gui.next"), button -> {
             // Previous
-            if (searchField.getText().isEmpty()) {
+            if (searchField.getValue().isEmpty()) {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
 
-            if (!excludeTrending.isChecked()) {
+            if (!excludeTrending.selected()) {
                 skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
             }
 
-            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                 if (position > 0) {
                     position--;
                 } else {
@@ -178,13 +178,13 @@ public class IncarnationScreen extends ContainerScreen {
         DescButton btnBack = new DescButton(cx + 10, cy + 145 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.back"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                Minecraft.getInstance().displayGuiScreen(new PreferencesScreen());
+                Minecraft.getInstance().setScreen(new PreferencesScreen());
             }
         });
         DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 145 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.open_folder"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                Util.getOSType().openFile(CommonSkin.SKIN_DIRECTORY);
+                Util.getPlatform().openFile(CommonSkin.SKIN_DIRECTORY);
             }
         });
         DescButton btnSave = new DescButton(cx + 90 - 20, cy + 125 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.save"), new Button.IPressable() {
@@ -231,7 +231,7 @@ public class IncarnationScreen extends ContainerScreen {
             if (checkboxButton instanceof CheckboxButton) {
                 CheckboxButton check = (CheckboxButton) checkboxButton;
                 position = 0;
-                if (!check.isChecked()) {
+                if (!check.selected()) {
                     skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
                 } else {
                     skins = CommonSkin.listAllSkins(currentSkinType);
@@ -286,13 +286,13 @@ public class IncarnationScreen extends ContainerScreen {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
         this.renderBackground(matrixStack);
-        Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
-        blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize);
-        ALEX_MODEL.isChild = false;
-        STEVE_MODEL.isChild = false;
-        matrixStack.push();
+        Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
+        blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        ALEX_MODEL.young = false;
+        STEVE_MODEL.young = false;
+        matrixStack.pushPose();
         switch (renderChoice) {
             case ALEX:
                 drawModelToGui(ALEX_MODEL, matrixStack);
@@ -305,15 +305,15 @@ public class IncarnationScreen extends ContainerScreen {
                 drawModelToGui(STEVE_MODEL, matrixStack);
                 break;
         }
-        matrixStack.pop();
+        matrixStack.popPose();
 
 
-        drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regen.gui.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
+        drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslationTextComponent("regen.gui.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
         if (!skins.isEmpty() && position < skins.size()) {
-            matrixStack.push();
+            matrixStack.pushPose();
             String name = skins.get(position).getName().replaceAll(".png", "");
-            drawCenteredString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent(name), width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB());
-            matrixStack.pop();
+            drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslationTextComponent(name), width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB());
+            matrixStack.popPose();
         }
     }
 
@@ -321,20 +321,20 @@ public class IncarnationScreen extends ContainerScreen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         this.searchField.keyPressed(keyCode, scanCode, modifiers);
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                 if (position >= skins.size() - 1) {
                     position = 0;
                 } else {
                     position++;
                 }
-                Minecraft.getInstance().getTextureManager().deleteTexture(PLAYER_TEXTURE);
+                Minecraft.getInstance().getTextureManager().release(PLAYER_TEXTURE);
                 PLAYER_TEXTURE = CommonSkin.fileTotexture(skins.get(position));
                 updateModels();
             }
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
-            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                 if (position > 0) {
                     position--;
                 } else {
@@ -346,15 +346,15 @@ public class IncarnationScreen extends ContainerScreen {
         }
 
         if (keyCode == 256 && this.shouldCloseOnEsc()) {
-            this.closeScreen();
+            this.onClose();
             return true;
         }
         return false;
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        this.font.drawString(matrixStack, this.title.getString(), (float) this.titleX, (float) this.titleY, 4210752);
+    protected void renderLabels(MatrixStack matrixStack, int x, int y) {
+        this.font.draw(matrixStack, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
     }
 
     @Override
@@ -364,7 +364,7 @@ public class IncarnationScreen extends ContainerScreen {
 
         for (DescButton descButton : descButtons) {
             if (descButton.isHovered()) {
-                renderToolTip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().fontRenderer);
+                renderToolTip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
             }
         }
     }
@@ -373,6 +373,6 @@ public class IncarnationScreen extends ContainerScreen {
     public void tick() {
         super.tick();
         this.searchField.tick();
-        excludeTrending.active = searchField.getText().isEmpty();
+        excludeTrending.active = searchField.getValue().isEmpty();
     }
 }

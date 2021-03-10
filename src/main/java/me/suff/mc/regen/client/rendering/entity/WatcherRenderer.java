@@ -31,12 +31,12 @@ public class WatcherRenderer extends BipedRenderer< WatcherEntity, PlayerModel< 
 
     @Nullable
     @Override
-    protected RenderType func_230496_a_(WatcherEntity watcherEntity, boolean p_230496_2_, boolean p_230496_3_, boolean p_230496_4_) {
-        return RenderTypes.getEntityCutout(getEntityTexture(watcherEntity));
+    protected RenderType getRenderType(WatcherEntity watcherEntity, boolean p_230496_2_, boolean p_230496_3_, boolean p_230496_4_) {
+        return RenderTypes.entityCutout(getTextureLocation(watcherEntity));
     }
 
     @Override
-    public ResourceLocation getEntityTexture(WatcherEntity entity) {
+    public ResourceLocation getTextureLocation(WatcherEntity entity) {
         return TEXTURE;
     }
 }

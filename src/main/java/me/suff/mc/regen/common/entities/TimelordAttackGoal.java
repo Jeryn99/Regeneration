@@ -21,8 +21,8 @@ public class TimelordAttackGoal extends RangedAttackGoal {
     }
 
     @Override
-    public void resetTask() {
-        super.resetTask();
+    public void stop() {
+        super.stop();
         timelord.setAiming(false);
     }
 
@@ -37,13 +37,13 @@ public class TimelordAttackGoal extends RangedAttackGoal {
     }
 
     @Override
-    public boolean shouldExecute() {
-        return super.shouldExecute() && timelord.getItemStackFromSlot(EquipmentSlotType.MAINHAND).getItem() instanceof GunItem;
+    public boolean canUse() {
+        return super.canUse() && timelord.getItemBySlot(EquipmentSlotType.MAINHAND).getItem() instanceof GunItem;
     }
 
     @Override
-    public void startExecuting() {
-        super.startExecuting();
+    public void start() {
+        super.start();
         timelord.setAiming(true);
     }
 }

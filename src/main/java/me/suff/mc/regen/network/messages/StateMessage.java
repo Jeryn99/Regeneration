@@ -16,19 +16,19 @@ public class StateMessage {
     private final String event;
 
     public StateMessage(LivingEntity livingEntity, ActingForwarder.RegenEvent event) {
-        this.livingEntity = livingEntity.getEntityId();
+        this.livingEntity = livingEntity.getId();
         this.event = event.name();
     }
 
     public StateMessage(PacketBuffer buffer) {
         livingEntity = buffer.readInt();
-        event = buffer.readString(32767);
+        event = buffer.readUtf(32767);
     }
 
     public static void handle(StateMessage message, Supplier< NetworkEvent.Context > ctx) {
-        Minecraft.getInstance().deferTask(() -> {
+        Minecraft.getInstance().submitAsync(() -> {
 
-            Entity entity = Minecraft.getInstance().world.getEntityByID(message.livingEntity);
+            Entity entity = Minecraft.getInstance().level.getEntity(message.livingEntity);
             if (entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) entity;
                 RegenCap.get(livingEntity).ifPresent(iRegen -> {
@@ -41,7 +41,7 @@ public class StateMessage {
 
     public void toBytes(PacketBuffer packetBuffer) {
         packetBuffer.writeInt(livingEntity);
-        packetBuffer.writeString(event);
+        packetBuffer.writeUtf(event);
     }
 
 }

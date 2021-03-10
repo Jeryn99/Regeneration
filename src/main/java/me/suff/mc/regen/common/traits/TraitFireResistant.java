@@ -20,8 +20,8 @@ public class TraitFireResistant extends Traits.ITrait {
     @Override
     public void tick(IRegen data) {
         LivingEntity living = data.getLiving();
-        if (living.isBurning()) {
-            living.extinguish();
+        if (living.isOnFire()) {
+            living.clearFire();
         }
     }
 

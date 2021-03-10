@@ -32,11 +32,11 @@ public class HandLayer extends LayerRenderer {
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        EntityModel< ? > model = getEntityModel();
+        EntityModel< ? > model = getParentModel();
 
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
 
-            if (entitylivingbaseIn.isSneaking()) {
+            if (entitylivingbaseIn.isShiftKeyDown()) {
                 matrixStackIn.translate(0.0F, 0.2F, 0.0F);
             }
 
@@ -44,11 +44,11 @@ public class HandLayer extends LayerRenderer {
 
             //For Regen Layers
             for (HandSide handSide : HandSide.values()) {
-                matrixStackIn.push();
-                bipedModel.translateHand(handSide, matrixStackIn);
+                matrixStackIn.pushPose();
+                bipedModel.translateToHand(handSide, matrixStackIn);
                 renderGlowingHands((LivingEntity) entitylivingbaseIn, matrixStackIn, bufferIn, packedLightIn);
                 iRegen.getTransitionType().get().getRenderer().thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
-                matrixStackIn.pop();
+                matrixStackIn.popPose();
             }
         });
     }

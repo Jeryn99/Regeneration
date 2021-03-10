@@ -1,5 +1,6 @@
 package me.suff.mc.regen.common.regen;
 
+import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.IStateManager;
 import me.suff.mc.regen.common.regen.state.RegenStates;
@@ -40,7 +41,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class RegenCap implements IRegen {
 
     //Injection
@@ -77,7 +77,7 @@ public class RegenCap implements IRegen {
 
     public RegenCap(LivingEntity livingEntity) {
         this.livingEntity = livingEntity;
-        if (!livingEntity.world.isRemote)
+        if (!livingEntity.level.isClientSide)
             this.stateManager = new StateManager();
         else
             this.stateManager = null;
@@ -102,7 +102,7 @@ public class RegenCap implements IRegen {
     @Override
     public void tick() {
 
-        if (!livingEntity.world.isRemote) {
+        if (!livingEntity.level.isClientSide) {
 
             //Login setup
             if (!didSetup) {
@@ -143,7 +143,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public boolean canRegenerate() {
-        return getRegens() > 0 && livingEntity.getPosY() > 0 && currentState != RegenStates.POST;
+        return getRegens() > 0 && livingEntity.getY() > 0 && currentState != RegenStates.POST;
     }
 
     @Override
@@ -201,7 +201,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public void syncToClients(@Nullable ServerPlayerEntity serverPlayerEntity) {
-        if (livingEntity != null && livingEntity.world.isRemote)
+        if (livingEntity != null && livingEntity.level.isClientSide)
             throw new IllegalStateException("Don't sync client -> server");
 
         areHandsGlowing = getCurrentState().isGraceful() && stateManager.handGlowTimer.getTransition() == RegenStates.Transition.HAND_GLOW_TRIGGER;
@@ -210,9 +210,9 @@ public class RegenCap implements IRegen {
         nbt.remove(RConstants.STATE_MANAGER);
 
         if (serverPlayerEntity == null) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> livingEntity.getEntityWorld().getDimensionKey()), new SyncMessage(this.livingEntity.getEntityId(), nbt));
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> livingEntity.getCommandSenderWorld().dimension()), new SyncMessage(this.livingEntity.getId(), nbt));
         } else {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getEntityId(), nbt));
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayerEntity), new SyncMessage(this.livingEntity.getId(), nbt));
         }
     }
 
@@ -239,7 +239,7 @@ public class RegenCap implements IRegen {
             compoundNBT.putByteArray("next_" + RConstants.SKIN, nextSkin);
         }
 
-        if (!livingEntity.world.isRemote) {
+        if (!livingEntity.level.isClientSide) {
             if (stateManager != null) {
                 compoundNBT.put(RConstants.STATE_MANAGER, stateManager.serializeNBT());
             }
@@ -311,7 +311,7 @@ public class RegenCap implements IRegen {
     @Override
     public void regen() {
         if (livingEntity != null) {
-            livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
+            livingEntity.hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
         }
     }
 
@@ -535,14 +535,14 @@ public class RegenCap implements IRegen {
         public void onPunchEntity(LivingHurtEvent event) {
             LivingEntity entity = event.getEntityLiving();
             // We're healing mobs...
-            if (currentState.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && livingEntity.isSneaking()) { // ... check if we're in grace and if the mob needs health
+            if (currentState.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && livingEntity.isShiftKeyDown()) { // ... check if we're in grace and if the mob needs health
                 float healthNeeded = entity.getMaxHealth() - entity.getHealth();
                 entity.heal(healthNeeded);
                 if (livingEntity instanceof PlayerEntity) {
                     PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.healed", entity.getName()), true);
                 }
                 event.setAmount(0.0F);
-                livingEntity.attackEntityFrom(RegenSources.REGEN_DMG_HEALING, healthNeeded);
+                livingEntity.hurt(RegenSources.REGEN_DMG_HEALING, healthNeeded);
             }
         }
 
@@ -553,14 +553,18 @@ public class RegenCap implements IRegen {
                 BlockState block = e.getWorld().getBlockState(e.getPos());
 
                 if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_BLOCK) {
-                    e.getWorld().playSound(null, e.getPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
+                    e.getWorld().playSound(null, e.getPos(), SoundEvents.FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
+                }
+                if (e.getEntityLiving() instanceof ServerPlayerEntity) {
+                    ServerPlayerEntity playerEntity = (ServerPlayerEntity) livingEntity;
+                    TriggerManager.CHANGE_REFUSAL.trigger(playerEntity);
                 }
 
                 handGlowTimer.cancel();
                 scheduleNextHandGlow();
-                if (!livingEntity.world.isRemote) {
-                    if (livingEntity instanceof PlayerEntity) {
-                        PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.regen_delayed"), true);
+                if (!e.getEntityLiving().level.isClientSide) {
+                    if (e.getEntityLiving() instanceof PlayerEntity) {
+                        PlayerUtil.sendMessage(e.getEntityLiving(), new TranslationTextComponent("regen.messages.regen_delayed"), true);
                     }
                 }
                 e.setCanceled(true); // It got annoying in creative to break something
@@ -568,7 +572,7 @@ public class RegenCap implements IRegen {
         }
 
         private void tick() {
-            if (livingEntity.world.isRemote)
+            if (livingEntity.level.isClientSide)
                 throw new IllegalStateException("Ticking state manager on the client"); // the state manager shouldn't even exist on the client
             if (currentState == RegenStates.ALIVE)
                 throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
@@ -593,7 +597,7 @@ public class RegenCap implements IRegen {
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
                 if (livingEntity instanceof PlayerEntity) {
                     TranslationTextComponent text = new TranslationTextComponent("regen.messages.regen_death_msg", livingEntity.getName());
-                    text.setStyle(text.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathMessage()))));
+                    text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathMessage()))));
                     PlayerUtil.sendMessageToAll(text);
                 }
             }
@@ -612,6 +616,10 @@ public class RegenCap implements IRegen {
             currentState = RegenStates.GRACE_CRIT;
             scheduleTransitionInSeconds(RegenStates.Transition.CRITICAL_DEATH, RegenConfig.COMMON.criticalPhaseLength.get());
             ActingForwarder.onGoCritical(RegenCap.this);
+            if (livingEntity instanceof ServerPlayerEntity) {
+                ServerPlayerEntity playerEntity = (ServerPlayerEntity) livingEntity;
+                TriggerManager.CRITICAL.trigger(playerEntity);
+            }
             syncToClients(null);
         }
 
@@ -620,7 +628,7 @@ public class RegenCap implements IRegen {
             nextTransition = null;
             handGlowTimer = null;
             transitionType.get().onFinishRegeneration(RegenCap.this);
-            livingEntity.attackEntityFrom(isGrace ? RegenSources.REGEN_DMG_CRITICAL : RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
+            livingEntity.hurt(isGrace ? RegenSources.REGEN_DMG_CRITICAL : RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(getRegens());
             }
@@ -640,7 +648,7 @@ public class RegenCap implements IRegen {
 
         private void finishRegeneration() {
             currentState = RegenStates.POST;
-            scheduleTransitionInSeconds(RegenStates.Transition.END_POST, livingEntity.world.rand.nextInt(300) + 10);
+            scheduleTransitionInSeconds(RegenStates.Transition.END_POST, livingEntity.level.random.nextInt(300) + 10);
             handGlowTimer = null;
             transitionType.get().onFinishRegeneration(RegenCap.this);
             ActingForwarder.onRegenFinish(RegenCap.this);

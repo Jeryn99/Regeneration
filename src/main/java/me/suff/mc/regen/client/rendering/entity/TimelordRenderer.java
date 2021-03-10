@@ -61,11 +61,11 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
         IRegen data = RegenCap.get(timelordEntity).orElseGet(null);
 
         if (data.getTicksAnimating() > 100 && data.getTicksAnimating() < 105) {
-            TIMELORDS.remove(timelordEntity.getUniqueID());
+            TIMELORDS.remove(timelordEntity.getUUID());
         }
 
-        if (TIMELORDS.containsKey(timelordEntity.getUniqueID())) {
-            return TIMELORDS.get(timelordEntity.getUniqueID());
+        if (TIMELORDS.containsKey(timelordEntity.getUUID())) {
+            return TIMELORDS.get(timelordEntity.getUUID());
         }
 
         NativeImage nativeImage = null;
@@ -77,10 +77,10 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
             e.printStackTrace();
         }
         if (nativeImage == null) {
-            return DefaultPlayerSkin.getDefaultSkinLegacy();
+            return DefaultPlayerSkin.getDefaultSkin();
         }
-        ResourceLocation location = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("timelord_", new DynamicTexture(nativeImage));
-        TIMELORDS.put(timelordEntity.getUniqueID(), location);
+        ResourceLocation location = Minecraft.getInstance().getTextureManager().register("timelord_", new DynamicTexture(nativeImage));
+        TIMELORDS.put(timelordEntity.getUUID(), location);
         return location;
 
     }
@@ -95,9 +95,9 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
                 mainModel = councilModel;
                 break;
         }
-        entityModel = (BipedModel< TimelordEntity >) mainModel;
-        entityModel.bipedHead.showModel = false;
-        entityModel.bipedHeadwear.showModel = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
+        model = (BipedModel< TimelordEntity >) mainModel;
+        model.head.visible = false;
+        model.hat.visible = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
 
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
@@ -105,7 +105,7 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(TimelordEntity entity) {
+    public ResourceLocation getTextureLocation(TimelordEntity entity) {
         String gender = entity.isMale() ? "male" : "female";
         switch (entity.getTimelordType()) {
             case COUNCIL:

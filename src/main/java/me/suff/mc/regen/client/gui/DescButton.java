@@ -26,7 +26,7 @@ public class DescButton extends Button {
     public void setDescription(TranslationTextComponent[] description) {
         ArrayList< IReorderingProcessor > reorderingProcessors = new ArrayList<>();
         for (TranslationTextComponent textComponent : description) {
-            reorderingProcessors.add(textComponent.func_241878_f());
+            reorderingProcessors.add(textComponent.getVisualOrderText());
         }
         this.description = reorderingProcessors;
     }

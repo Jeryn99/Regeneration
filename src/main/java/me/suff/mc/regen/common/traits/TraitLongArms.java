@@ -20,7 +20,7 @@ public class TraitLongArms extends Traits.ITrait {
     public void apply(IRegen data) {
         LivingEntity living = data.getLiving();
         ModifiableAttributeInstance reach = living.getAttribute(ForgeMod.REACH_DISTANCE.get());
-        reach.applyPersistentModifier(new AttributeModifier(REACH_UUID, "Reach modifier", 15, AttributeModifier.Operation.ADDITION));
+        reach.addPermanentModifier(new AttributeModifier(REACH_UUID, "Reach modifier", 15, AttributeModifier.Operation.ADDITION));
     }
 
     @Override

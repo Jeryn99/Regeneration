@@ -45,11 +45,11 @@ public class PlayerUtil {
     }
 
     public static boolean isPlayerAboveZeroGrid(LivingEntity playerEntity) {
-        BlockPos livingPos = playerEntity.getPosition().down();
+        BlockPos livingPos = playerEntity.blockPosition().below();
         AxisAlignedBB grid = new AxisAlignedBB(livingPos.north().west(), livingPos.south().east());
-        for (Iterator< BlockPos > iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
+        for (Iterator< BlockPos > iterator = BlockPos.betweenClosedStream(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
-            BlockState state = playerEntity.world.getBlockState(pos);
+            BlockState state = playerEntity.level.getBlockState(pos);
             if (state.getBlock() != RBlocks.ZERO_ROOM_FULL.get() && state.getBlock() != RBlocks.ZERO_ROUNDEL.get()) {
                 return false;
             }
@@ -59,8 +59,8 @@ public class PlayerUtil {
 
     public static void handleZeroGrid(LivingEntity playerEntity) {
         for (Effect effect : PlayerUtil.POTIONS) {
-            if(playerEntity.isPotionActive(effect)){
-                playerEntity.removePotionEffect(effect);
+            if (playerEntity.hasEffect(effect)) {
+                playerEntity.removeEffect(effect);
             }
         }
     }
@@ -69,16 +69,16 @@ public class PlayerUtil {
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
         if (!(livingEntity instanceof PlayerEntity)) return;
         PlayerEntity player = (PlayerEntity) livingEntity;
-        if (!player.world.isRemote) {
-            player.sendStatusMessage(new TranslationTextComponent(message), hotBar);
+        if (!player.level.isClientSide) {
+            player.displayClientMessage(new TranslationTextComponent(message), hotBar);
         }
     }
 
     public static void sendMessage(LivingEntity livingEntity, TranslationTextComponent translation, boolean hotBar) {
         if (!(livingEntity instanceof PlayerEntity)) return;
         PlayerEntity player = (PlayerEntity) livingEntity;
-        if (!player.world.isRemote) {
-            player.sendStatusMessage(translation, hotBar);
+        if (!player.level.isClientSide) {
+            player.displayClientMessage(translation, hotBar);
         }
     }
 
@@ -89,44 +89,44 @@ public class PlayerUtil {
 
     public static boolean applyPotionIfAbsent(LivingEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
         if (potion == null) return false;
-        if (player.getActivePotionEffect(potion) == null) {
-            player.addPotionEffect(new EffectInstance(potion, length, amplifier, ambient, showParticles));
+        if (player.getEffect(potion) == null) {
+            player.addEffect(new EffectInstance(potion, length, amplifier, ambient, showParticles));
             return true;
         }
         return false;
     }
 
     public static AxisAlignedBB getReach(BlockPos pos, int range) {
-        return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
+        return new AxisAlignedBB(pos.above(range).north(range).west(range), pos.below(range).south(range).east(range));
     }
 
     public static void explodeKnockback(Entity exploder, World world, BlockPos pos, double knockback, int range) {
-        world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
+        world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
             if (entity instanceof LivingEntity && exploder.isAlive()) {
                 LivingEntity victim = (LivingEntity) entity;
 
-                if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.canChangeDimension())
+                if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.canChangeDimensions())
                     return;
 
-                float densMod = Explosion.getBlockDensity(entity.getPositionVec(), entity);
+                float densMod = Explosion.getSeenPercent(entity.position(), entity);
 
                 int xr, zr;
-                xr = (int) -(victim.getPosX() - exploder.getPosX());
-                zr = (int) -(victim.getPosZ() - exploder.getPosZ());
-                victim.setMotion(victim.getMotion().mul((knockback * densMod), xr, zr));
+                xr = (int) -(victim.getX() - exploder.getX());
+                zr = (int) -(victim.getZ() - exploder.getZ());
+                victim.setDeltaMovement(victim.getDeltaMovement().multiply((knockback * densMod), xr, zr));
             }
         });
     }
 
     public static void regenerationExplosion(LivingEntity player) {
-        explodeKnockback(player, player.world, new BlockPos(player.getPositionVec()), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
-        explodeKill(player, player.world, new BlockPos(player.getPositionVec()), RegenConfig.COMMON.regenerativeKillRange.get());
+        explodeKnockback(player, player.level, new BlockPos(player.position()), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
+        explodeKill(player, player.level, new BlockPos(player.position()), RegenConfig.COMMON.regenerativeKillRange.get());
     }
 
     public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
-        world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-            if ((entity instanceof CreatureEntity && entity.canChangeDimension()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
-                entity.attackEntityFrom(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
+        world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
+            if ((entity instanceof CreatureEntity && entity.canChangeDimensions()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
+                entity.hurt(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
         });
     }
 
@@ -135,7 +135,7 @@ public class PlayerUtil {
     }
 
     public static boolean isInHand(Hand hand, LivingEntity holder, Item item) {
-        ItemStack heldItem = holder.getHeldItem(hand);
+        ItemStack heldItem = holder.getItemInHand(hand);
         return heldItem.getItem() == item;
     }
 

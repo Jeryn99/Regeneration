@@ -21,7 +21,7 @@ public class TraitFish extends Traits.ITrait {
     public void tick(IRegen data) {
         LivingEntity living = data.getLiving();
         if (living.isInWater()) {
-            living.setAir(300);
+            living.setAirSupply(300);
         }
     }
 

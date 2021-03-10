@@ -30,7 +30,7 @@ public class TraitQuick extends Traits.ITrait {
         LivingEntity living = data.getLiving();
         Objects.requireNonNull(living.getAttribute(Attributes.MOVEMENT_SPEED)).removeModifier(SPRINT_UUID);
         if (living.isSprinting()) {
-            Objects.requireNonNull(living.getAttribute(Attributes.MOVEMENT_SPEED)).applyNonPersistentModifier(new AttributeModifier(SPRINT_UUID, "Sprint modifier", 1, AttributeModifier.Operation.MULTIPLY_BASE));
+            Objects.requireNonNull(living.getAttribute(Attributes.MOVEMENT_SPEED)).addTransientModifier(new AttributeModifier(SPRINT_UUID, "Sprint modifier", 1, AttributeModifier.Operation.MULTIPLY_BASE));
         }
     }
 

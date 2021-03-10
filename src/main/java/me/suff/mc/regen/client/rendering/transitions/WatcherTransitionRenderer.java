@@ -32,9 +32,9 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 MatrixStack maxtrix = pre.getMatrixStack();
-                player.renderYawOffset = player.prevRenderYawOffset = 0;
+                player.yBodyRot = player.yBodyRotO = 0;
                 maxtrix.translate(0, 0.1, 0);
-                maxtrix.rotate(Vector3f.XN.rotationDegrees(90));
+                maxtrix.mulPose(Vector3f.XN.rotationDegrees(90));
             }
         });
     }
@@ -44,7 +44,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
         PlayerEntity player = post.getPlayer();
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
-                player.renderYawOffset = player.prevRenderYawOffset = player.rotationYaw;
+                player.yBodyRot = player.yBodyRotO = player.yRot;
             }
         });
     }
@@ -63,24 +63,24 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
     public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
-                matrixStackIn.push();
+                matrixStackIn.pushPose();
                 matrixStackIn.scale(1.2F, 1.2F, 1.2F);
                 float opacity = iRegen.getTicksAnimating();
-                FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(TEXTURE)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, new Vector3d(1, 1, 1));
-                matrixStackIn.pop();
+                FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityTranslucent(TEXTURE)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, new Vector3d(1, 1, 1));
+                matrixStackIn.popPose();
 
                 if (iRegen.getTicksAnimating() < 150) {
-                    matrixStackIn.push();
-                    matrixStackIn.rotate(Vector3f.XN.rotationDegrees(-90));
+                    matrixStackIn.pushPose();
+                    matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(-90));
                     matrixStackIn.translate(0, -1.5, 1);
-                    FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getEntityTranslucent(TEXTURE)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.5F, new Vector3d(1, 1, 1), new AnimationHandler.Animation() {
+                    FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityTranslucent(TEXTURE)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.5F, new Vector3d(1, 1, 1), new AnimationHandler.Animation() {
                         @Override
                         public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-                            bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(40);
-                            bipedModel.bipedHeadwear.rotateAngleX = (float) Math.toRadians(40);
+                            bipedModel.head.xRot = (float) Math.toRadians(40);
+                            bipedModel.hat.xRot = (float) Math.toRadians(40);
                         }
                     });
-                    matrixStackIn.pop();
+                    matrixStackIn.popPose();
                 }
             }
         });
@@ -91,15 +91,15 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
             if (data.getCurrentState() == RegenStates.REGENERATING && data.getTransitionType() == TransitionTypes.WATCHER) {
-                bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(0);
-                bipedModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
-                bipedModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
+                bipedModel.head.xRot = (float) Math.toRadians(0);
+                bipedModel.head.yRot = (float) Math.toRadians(0);
+                bipedModel.head.zRot = (float) Math.toRadians(0);
 
-                bipedModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-                bipedModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+                bipedModel.leftLeg.zRot = (float) -Math.toRadians(5);
+                bipedModel.rightLeg.zRot = (float) Math.toRadians(5);
 
-                bipedModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(5);
-                bipedModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(5);
+                bipedModel.leftArm.zRot = (float) -Math.toRadians(5);
+                bipedModel.rightArm.zRot = (float) Math.toRadians(5);
             }
         });
     }

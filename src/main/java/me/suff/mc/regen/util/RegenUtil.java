@@ -18,13 +18,14 @@ import static me.suff.mc.regen.Regeneration.GSON;
 
 public class RegenUtil {
 
-    public static ITag.INamedTag< Block > BANNED_BLOCKS = makeBlock(RConstants.MODID, "angel_proof");
+    public static ITag.INamedTag< Block > BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
+    public static ITag.INamedTag< Block > ARS = makeBlock("tardis", "ars");
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};
 
     public static ITag.INamedTag< Block > makeBlock(String domain, String path) {
-        return BlockTags.makeWrapperTag(new ResourceLocation(domain, path).toString());
+        return BlockTags.bind(new ResourceLocation(domain, path).toString());
     }
 
     public static double round(float value, int scale) {

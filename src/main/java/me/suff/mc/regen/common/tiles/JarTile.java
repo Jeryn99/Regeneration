@@ -41,15 +41,15 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     }
 
     private static void spawnParticles(World world, BlockPos worldIn) {
-        Random random = world.rand;
+        Random random = world.random;
 
         for (Direction direction : Direction.values()) {
-            BlockPos blockpos = worldIn.offset(direction);
-            if (!world.getBlockState(blockpos).isOpaqueCube(world, blockpos)) {
+            BlockPos blockpos = worldIn.relative(direction);
+            if (!world.getBlockState(blockpos).isSolidRender(world, blockpos)) {
                 Direction.Axis direction$axis = direction.getAxis();
-                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getXOffset() : (double) random.nextFloat();
-                double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getYOffset() : (double) random.nextFloat();
-                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getZOffset() : (double) random.nextFloat();
+                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) random.nextFloat();
+                double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
+                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
                 world.addParticle(RParticles.CONTAINER.get(), (double) worldIn.getX() + d1, (double) worldIn.getY() + d2, (double) worldIn.getZ() + d3, 0.0D, 0.0D, 0.0D);
             }
         }
@@ -67,23 +67,23 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(getBlockState(), pkt.getNbtCompound());
+        handleUpdateTag(getBlockState(), pkt.getTag());
     }
 
     @Override
     public void tick() {
         if (isValid(Action.CREATE)) {
-            spawnParticles(world, pos);
+            spawnParticles(level, worldPosition);
         }
-        if (world != null && world.isRemote) return;
+        if (level != null && level.isClientSide) return;
 
         if (isValid(Action.CREATE)) {
-            if (world.getGameTime() % 77 == 0) {
-                world.playSound(null, getPos(), RSounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.2F, 0.2F);
+            if (level.getGameTime() % 77 == 0) {
+                level.playSound(null, getBlockPos(), RSounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.2F, 0.2F);
             }
         }
 
-        if (world.getGameTime() % 100 == 0) {
+        if (level.getGameTime() % 100 == 0) {
             if (updateSkin) {
                 setUpdateSkin(false);
             }
@@ -103,11 +103,11 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     public void dropHandIfPresent(@Nullable PlayerEntity player) {
         if (!getHand().isEmpty()) {
             if (player != null) {
-                if (!player.addItemStackToInventory(getHand())) {
-                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), getHand());
+                if (!player.addItem(getHand())) {
+                    InventoryHelper.dropItemStack(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), getHand());
                 }
             } else {
-                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), getHand());
+                InventoryHelper.dropItemStack(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), getHand());
             }
             setHand(ItemStack.EMPTY);
         }
@@ -115,39 +115,39 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
+        return save(new CompoundNBT());
     }
 
     public void sendUpdates() {
-        if (world != null && world.getBlockState(pos).getBlock() instanceof JarBlock) {
-            world.setBlockState(pos, world.getBlockState(pos).with(JarBlock.IS_OPEN, getHand().getItem() != RItems.HAND.get()));
+        if (level != null && level.getBlockState(worldPosition).getBlock() instanceof JarBlock) {
+            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(JarBlock.IS_OPEN, getHand().getItem() != RItems.HAND.get()));
         }
-        world.updateComparatorOutputLevel(pos, getBlockState().getBlock());
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        markDirty();
+        level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        setChanged();
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, 3, getUpdateTag());
+        return new SUpdateTileEntityPacket(worldPosition, 3, getUpdateTag());
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundNBT nbt) {
         setLindos(nbt.getFloat("energy"));
         if (nbt.contains("inv")) {
             itemHandler.deserializeNBT(nbt.getCompound("inv"));
         }
         setUpdateSkin(nbt.getBoolean("update_skin"));
-        super.read(state, nbt);
+        super.load(state, nbt);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.putFloat("energy", getLindos());
         compound.put("inv", itemHandler.serializeNBT());
         compound.putBoolean("update_skin", updateSkin);
-        return super.write(compound);
+        return super.save(compound);
     }
 
     public boolean isUpdateSkin() {
@@ -166,12 +166,12 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
 
     public void setHand(ItemStack stack) {
         itemHandler.setStackInSlot(0, stack);
-        markDirty();
+        setChanged();
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void setRemoved() {
+        super.setRemoved();
         handler.invalidate();
     }
 
@@ -189,7 +189,7 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
 
             @Override
             protected void onContentsChanged(int slot) {
-                markDirty();
+                setChanged();
             }
 
             @Override

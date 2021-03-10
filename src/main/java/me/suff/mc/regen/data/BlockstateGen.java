@@ -40,7 +40,7 @@ public class BlockstateGen implements IDataProvider {
                 dirObj.add("model", new JsonPrimitive(key.getNamespace() + ":block/" + key.getPath()));
                 dirObj.add("y", new JsonPrimitive((int) getAngleFromFacing(dir)));
 
-                variants.add("facing=" + dir.getName2(), dirObj);
+                variants.add("facing=" + dir.getName(), dirObj);
 
             }
             return variants;
@@ -64,7 +64,7 @@ public class BlockstateGen implements IDataProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) throws IOException {
+    public void run(DirectoryCache cache) throws IOException {
 
         final Path path = this.generator.getOutputFolder();
 
@@ -89,7 +89,7 @@ public class BlockstateGen implements IDataProvider {
         boolean hasSpecificSerializer = false;
 
         for (Property< ? > prop : this.serializers.keySet()) {
-            for (Property< ? > otherProp : block.getStateContainer().getProperties()) {
+            for (Property< ? > otherProp : block.getStateDefinition().getProperties()) {
                 if (prop == otherProp) {
 
                     root.add("variants", this.serializers.get(prop).apply(block));

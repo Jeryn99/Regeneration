@@ -29,7 +29,7 @@ public class RStructures {
 
     public static void registerConfiguredFeatures() {
 
-        GAl_ORE = ZINC.get().withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, RBlocks.ZINC_ORE.get().getDefaultState(), 9)).range(32).square().chance(2);
+        GAl_ORE = ZINC.get().configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, RBlocks.ZINC_ORE.get().defaultBlockState(), 9)).range(32).squared().chance(2);
         registerConfiguredFeature("zinc", GAl_ORE);
     }
 
@@ -49,7 +49,7 @@ public class RStructures {
     private static < T extends Structure< ? > > void registerConfiguredStructure(String registryName, Supplier< T > structure, StructureFeature< ?, ? > configuredStructure) {
         Registry< StructureFeature< ?, ? > > registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
         Registry.register(registry, new ResourceLocation(RConstants.MODID, registryName), configuredStructure);
-        FlatGenerationSettings.STRUCTURES.put(structure.get(), configuredStructure);
+        FlatGenerationSettings.STRUCTURE_FEATURES.put(structure.get(), configuredStructure);
     }
 
     private static < T extends Structure< ? > > RegistryObject< T > setupStructure(String name, Supplier< T > structure) {
@@ -66,13 +66,13 @@ public class RStructures {
          *
          * If the registration is setup properly for the structure, getRegistryName() should never return null.
          */
-        Structure.NAME_STRUCTURE_BIMAP.put(structure.getRegistryName().toString(), structure);
+        Structure.STRUCTURES_REGISTRY.put(structure.getRegistryName().toString(), structure);
         /*
          * Will add land at the base of the structure like it does for Villages and Outposts.
          * Doesn't work well on structures that have pieces stacked vertically or change in heights.
          */
         if (transformSurroundingLand) {
-            Structure.field_236384_t_ = ImmutableList.< Structure< ? > >builder().addAll(Structure.field_236384_t_).add(structure).build();
+            Structure.NOISE_AFFECTING_FEATURES = ImmutableList.< Structure< ? > >builder().addAll(Structure.NOISE_AFFECTING_FEATURES).add(structure).build();
         }
         /*
          * Adds the structure's spacing into several places so that the structure's spacing remains
@@ -82,9 +82,9 @@ public class RStructures {
          * this list beforehand. Use the WorldEvent.Load event to add
          * the structure spacing from this list into that dimension.
          */
-        DimensionStructuresSettings.field_236191_b_ =
+        DimensionStructuresSettings.DEFAULTS =
                 ImmutableMap.< Structure< ? >, StructureSeparationSettings >builder()
-                        .putAll(DimensionStructuresSettings.field_236191_b_)
+                        .putAll(DimensionStructuresSettings.DEFAULTS)
                         .put(structure, structureSeparationSettings)
                         .build();
     }
@@ -119,7 +119,7 @@ public class RStructures {
         /**
          * Static instance of our configured structure feature so we can reference it for registration
          */
-        public static StructureFeature< ?, ? > CONFIGURED_HUTS = Structures.HUTS.get().withConfiguration(new ProbabilityConfig(1));
+        public static StructureFeature< ?, ? > CONFIGURED_HUTS = Structures.HUTS.get().configured(new ProbabilityConfig(1));
 
         public static void registerConfiguredStructures() {
             registerConfiguredStructure("configured_huts", Structures.HUTS, CONFIGURED_HUTS); //We have to add this to flatGeneratorSettings to account for mods that add custom chunk generators or superflat world type

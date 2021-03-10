@@ -18,6 +18,23 @@ public class EnglishLangGen extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+
+        // === Advancements ===
+        add("advancements.regen.title.change_refusal", "I. WILL. NOT. CHANGE!");
+        add("advancements.regen.desc.change_refusal", "Punch a block to delay your Regeneration!");
+        add("advancements.regen.title.critical_period", "Your song is ending...");
+        add("advancements.regen.desc.critical_period", "Refuse to Regenerate up till the point of near death...");
+        add("advancements.regen.title.first_regen", "Change my dear...");
+        add("advancements.regen.desc.first_regen", "Regenerate for the First time!");
+        add("advancements.regen.title.robes", "Member of the High Council");
+        add("advancements.regen.desc.robes", "Wear Gallifreyan Robes");
+        add("advancements.regen.title.gallifrey", "Constellation of kasterborous");
+        add("advancements.regen.desc.gallifrey", "Step foot on Gallifrey");
+        add("advancements.regen.title.gallifreyan_weapon", "There's no Stun Setting...");
+        add("advancements.regen.desc.gallifreyan_weapon", "Hold a Gallifreyan Weapon");
+        add("advancements.regen.title.timelord_trade", "Galactic Fortune");
+        add("advancements.regen.desc.timelord_trade", "Trade with a Timelord");
+
         // === Damages Sources ===
         add("regen.source.regen_energy", "%s was blasted by Regeneration Energy!");
         add("regen.source.regen_heal", "%s died by donating too much Regeneration energy...");
@@ -35,9 +52,12 @@ public class EnglishLangGen extends LanguageProvider {
 
         //Block
         add(RBlocks.BIO_CONTAINER.get(), "Bio-Container");
+        add(RBlocks.ZERO_ROUNDEL.get(), "Zero Roundel (Half)");
+        add(RBlocks.ZERO_ROOM_FULL.get(), "Zero Roundel (Full)");
 
         //Item Group
         add("itemGroup.regen", "Regeneration");
+
 
         //Sounds
         for (int i = 0; i < 7; i++) {

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "name": "regen:zero_roundel_full",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "regen:zero_roundel_full"
+        }
+      ]
+    }
+  ]
+}

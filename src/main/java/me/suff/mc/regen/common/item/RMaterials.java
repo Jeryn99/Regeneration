@@ -14,28 +14,28 @@ public class RMaterials {
 
     public static IArmorMaterial TIMELORD = new IArmorMaterial() {
         @Override
-        public int getDurability(EquipmentSlotType slotIn) {
+        public int getDurabilityForSlot(EquipmentSlotType slotIn) {
             return 35;
         }
 
         @Override
-        public int getDamageReductionAmount(EquipmentSlotType slotIn) {
+        public int getDefenseForSlot(EquipmentSlotType slotIn) {
             return DMG_TIME[slotIn.getIndex()];
         }
 
         @Override
-        public int getEnchantability() {
+        public int getEnchantmentValue() {
             return 15;
         }
 
         @Override
-        public SoundEvent getSoundEvent() {
-            return SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND;
+        public SoundEvent getEquipSound() {
+            return SoundEvents.ARMOR_EQUIP_DIAMOND;
         }
 
         @Override
-        public Ingredient getRepairMaterial() {
-            return Ingredient.fromItems(RItems.ZINC.get());
+        public Ingredient getRepairIngredient() {
+            return Ingredient.of(RItems.ZINC.get());
         }
 
         @Override

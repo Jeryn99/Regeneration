@@ -24,12 +24,12 @@ public class SFXMessage {
 
     public SFXMessage(PacketBuffer buffer) {
         sound = buffer.readResourceLocation();
-        playerUUID = buffer.readUniqueId();
+        playerUUID = buffer.readUUID();
     }
 
     public static void handle(SFXMessage message, Supplier< NetworkEvent.Context > ctx) {
-        Minecraft.getInstance().deferTask(() -> {
-            PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.playerUUID);
+        Minecraft.getInstance().submitAsync(() -> {
+            PlayerEntity player = Minecraft.getInstance().level.getPlayerByUUID(message.playerUUID);
             if (player != null) {
                 RegenCap.get(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.getCurrentState().equals(RegenStates.REGENERATING), 1.0F));
             }
@@ -39,7 +39,7 @@ public class SFXMessage {
 
     public void toBytes(PacketBuffer buffer) {
         buffer.writeResourceLocation(this.sound);
-        buffer.writeUniqueId(this.playerUUID);
+        buffer.writeUUID(this.playerUUID);
     }
 
 }

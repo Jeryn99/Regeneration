@@ -15,11 +15,11 @@ public class ColorChangeMessage {
     }
 
     public ColorChangeMessage(PacketBuffer buffer) {
-        style = buffer.readCompoundTag();
+        style = buffer.readNbt();
     }
 
     public static void handle(ColorChangeMessage message, Supplier< NetworkEvent.Context > ctx) {
-        ctx.get().getSender().getServer().deferTask(() -> {
+        ctx.get().getSender().getServer().submitAsync(() -> {
             RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
                 cap.readStyle(message.style);
                 cap.syncToClients(null);
@@ -29,7 +29,7 @@ public class ColorChangeMessage {
     }
 
     public void toBytes(PacketBuffer buffer) {
-        buffer.writeCompoundTag(this.style);
+        buffer.writeNbt(this.style);
     }
 
 }

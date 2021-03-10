@@ -106,10 +106,10 @@ public class CommonEvents {
 
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
-            Entity trueSource = event.getSource().getTrueSource();
+            Entity trueSource = event.getSource().getEntity();
 
 
-            if (event.getSource().isFireDamage() && iRegen.getTrait().getRegistryName().toString().equals(Traits.FIRE.get().getRegistryName().toString())) {
+            if (event.getSource().isFire() && iRegen.getTrait().getRegistryName().toString().equals(Traits.FIRE.get().getRegistryName().toString())) {
                 event.setCanceled(true);
                 event.setAmount(0.0F);
                 return;
@@ -125,7 +125,7 @@ public class CommonEvents {
                 return;
 
             //Update Death Message
-            iRegen.setDeathMessage(event.getSource().getDeathMessage(livingEntity).getString());
+            iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
 
             //Stop falling for leap trait
             if (iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
@@ -142,7 +142,7 @@ public class CommonEvents {
             }
 
             //Handle Death
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage() || iRegen.getCurrentState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
+            if (iRegen.getCurrentState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.getCurrentState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
                 event.setCanceled(true);
             } else if (livingEntity.getHealth() + livingEntity.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
                 boolean notDead = iRegen.getStateManager().onKilled(event.getSource());
@@ -177,7 +177,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-        if (e.getPlayer().world.isRemote) return;
+        if (e.getPlayer().level.isClientSide) return;
         RegenCap.get(e.getPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
     }
 
@@ -188,7 +188,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onServerStart(FMLServerStartingEvent event) {
-        CommandDispatcher< CommandSource > dispatcher = event.getServer().getCommandManager().getDispatcher();
+        CommandDispatcher< CommandSource > dispatcher = event.getServer().getCommands().getDispatcher();
         RegenCommand.register(dispatcher);
     }
 
@@ -197,7 +197,7 @@ public class CommonEvents {
         if (event.getItemStack().getItem() instanceof ToolItem || event.getItemStack().getItem() instanceof SwordItem) {
             PlayerEntity player = event.getPlayer();
             RegenCap.get(player).ifPresent((data) -> {
-                if (data.getCurrentState() == RegenStates.POST && player.isSneaking() & data.getHandState() == IRegen.Hand.NO_GONE) {
+                if (data.getCurrentState() == RegenStates.POST && player.isShiftKeyDown() & data.getHandState() == IRegen.Hand.NO_GONE) {
                     HandItem.createHand(player);
                 }
             });
@@ -208,7 +208,7 @@ public class CommonEvents {
     /**
      * Adds the structure's spacing for modded code made dimensions so that the structure's spacing remains
      * correct in any dimension or worldtype instead of not spawning.
-     * In {@link RStructures#setupStructure(Structure, StructureSeparationSettings, boolean)} we call {@link DimensionStructuresSettings#field_236191_b_}
+     * In {@link RStructures#setupStructure(Structure, StructureSeparationSettings, boolean)} we call {@link DimensionStructuresSettings#DEFAULTS}
      * but this sometimes does not work in code made dimensions.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -221,14 +221,14 @@ public class CommonEvents {
              * Also, vanilla superflat is really tricky and buggy to work with as mentioned in WAObjects#registerConfiguredStructure
              * BiomeModificationEvent does not seem to fire for superflat biomes...you can't add structures to superflat without mixin it seems.
              * */
-            if (serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator && serverWorld.getDimensionKey().equals(World.OVERWORLD)) {
+            if (serverWorld.getChunkSource().getGenerator() instanceof FlatChunkGenerator && serverWorld.dimension().equals(World.OVERWORLD)) {
                 return;
             }
             //Only spawn Huts in the Overworld structure list
-            if (serverWorld.getDimensionKey().equals(World.OVERWORLD)) {
-                Map< Structure< ? >, StructureSeparationSettings > tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
-                tempMap.put(RStructures.Structures.HUTS.get(), DimensionStructuresSettings.field_236191_b_.get(RStructures.Structures.HUTS.get()));
-                serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
+            if (serverWorld.dimension().equals(World.OVERWORLD)) {
+                Map< Structure< ? >, StructureSeparationSettings > tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+                tempMap.put(RStructures.Structures.HUTS.get(), DimensionStructuresSettings.DEFAULTS.get(RStructures.Structures.HUTS.get()));
+                serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
             }
         }
     }
@@ -243,7 +243,7 @@ public class CommonEvents {
         }
 
         if (biomeCategory != Biome.Category.NETHER && biomeCategory != Biome.Category.THEEND) {
-            biomeLoadingEvent.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RStructures.GAl_ORE);
+            biomeLoadingEvent.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RStructures.GAl_ORE);
         }
     }
 

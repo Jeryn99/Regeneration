@@ -18,11 +18,11 @@ public class SoundSourceMixin {
     @Shadow
     @Final
     @Mutable
-    private int id;
+    private int source;
 
-    @Inject(at = @At("RETURN"), method = "updateSource(Lnet/minecraft/util/math/vector/Vector3d;)V")
-    private void updateSource(Vector3d vector3d, CallbackInfo callbackInfo) {
-        SoundReverb.onPlaySound(id);
+    @Inject(at = @At("RETURN"), method = "setSelfPosition(Lnet/minecraft/util/math/vector/Vector3d;)V")
+    private void setSelfPosition(Vector3d vector3d, CallbackInfo callbackInfo) {
+        SoundReverb.onPlaySound(source);
     }
 
 }

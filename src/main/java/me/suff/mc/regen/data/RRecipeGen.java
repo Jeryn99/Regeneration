@@ -18,27 +18,29 @@ public class RRecipeGen extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer< IFinishedRecipe > consumer) {
-        ShapedRecipeBuilder.shapedRecipe(RItems.FOB.get()).patternLine("QIG").patternLine("SES").patternLine("IGI").key('G', Items.GHAST_TEAR).key('I', Items.IRON_INGOT).key('E', RItems.ZINC.get()).key('S', Items.SPIDER_EYE).key('Q', Items.BLAZE_ROD).setGroup("regen").addCriterion("has_crafting_table", hasItem(Blocks.CRAFTING_TABLE)).build(consumer);
-        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(RBlocks.ZINC_ORE.get().asItem()), RItems.ZINC.get(), 0.7F, 300).addCriterion("has_any_kontron", hasItem(RBlocks.ZINC_ORE.get().asItem())).build(consumer, new ResourceLocation(RConstants.MODID, "smelt_zinc"));
-        CookingRecipeBuilder.blastingRecipe(Ingredient.fromItems(RBlocks.ZINC_ORE.get().asItem()), RItems.ZINC.get(), 0.8F, 150).addCriterion("has_any_kontron", hasItem(RBlocks.ZINC_ORE.get().asItem())).build(consumer, new ResourceLocation(RConstants.MODID, "blast_zinc"));
+    protected void buildShapelessRecipes(Consumer< IFinishedRecipe > consumer) {
+        ShapedRecipeBuilder.shaped(RItems.FOB.get()).pattern("QIG").pattern("SES").pattern("IGI").define('G', Items.GHAST_TEAR).define('I', Items.IRON_INGOT).define('E', RItems.ZINC.get()).define('S', Items.SPIDER_EYE).define('Q', Items.BLAZE_ROD).group("regen").unlockedBy("has_crafting_table", has(Blocks.CRAFTING_TABLE)).save(consumer);
+        CookingRecipeBuilder.smelting(Ingredient.of(RBlocks.ZINC_ORE.get().asItem()), RItems.ZINC.get(), 0.7F, 300).unlockedBy("has_any_kontron", has(RBlocks.ZINC_ORE.get().asItem())).save(consumer, new ResourceLocation(RConstants.MODID, "smelt_zinc"));
+        CookingRecipeBuilder.blasting(Ingredient.of(RBlocks.ZINC_ORE.get().asItem()), RItems.ZINC.get(), 0.8F, 150).unlockedBy("has_any_kontron", has(RBlocks.ZINC_ORE.get().asItem())).save(consumer, new ResourceLocation(RConstants.MODID, "blast_zinc"));
 
-        ShapedRecipeBuilder.shapedRecipe(RItems.GUARD_HELMET.get()).patternLine("ZIZ").patternLine("Z Z").patternLine("   ").key('I', Items.IRON_INGOT).key('Z', RItems.ZINC.get()).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RItems.GUARD_CHEST.get()).patternLine("Z Z").patternLine("ZIZ").patternLine("ZZZ").key('I', Items.IRON_INGOT).key('Z', RItems.ZINC.get()).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RItems.GUARD_LEGS.get()).patternLine("Z Z").patternLine("ZIZ").patternLine("ZZZ").key('I', Items.IRON_INGOT).key('Z', RItems.ZINC.get()).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RItems.GUARD_FEET.get()).patternLine("ZIZ").patternLine("Z Z").patternLine("Z Z").key('I', Items.IRON_INGOT).key('Z', RItems.ZINC.get()).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
+        ShapedRecipeBuilder.shaped(RItems.GUARD_HELMET.get()).pattern("ZIZ").pattern("Z Z").pattern("   ").define('I', Items.IRON_INGOT).define('Z', RItems.ZINC.get()).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RItems.GUARD_CHEST.get()).pattern("Z Z").pattern("ZIZ").pattern("ZZZ").define('I', Items.IRON_INGOT).define('Z', RItems.ZINC.get()).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RItems.GUARD_LEGS.get()).pattern("Z Z").pattern("ZIZ").pattern("ZZZ").define('I', Items.IRON_INGOT).define('Z', RItems.ZINC.get()).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RItems.GUARD_FEET.get()).pattern("ZIZ").pattern("Z Z").pattern("Z Z").define('I', Items.IRON_INGOT).define('Z', RItems.ZINC.get()).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
 
 
-        ShapedRecipeBuilder.shapedRecipe(RItems.F_ROBES_HEAD.get()).patternLine("ZIZ").patternLine("ZLZ").patternLine("   ").key('L', ItemTags.FLOWERS).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RItems.F_ROBES_CHEST.get()).patternLine("Z Z").patternLine("ZLZ").patternLine("ZIZ").key('L', ItemTags.FLOWERS).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RItems.F_ROBES_LEGS.get()).patternLine("Z Z").patternLine("ZLZ").patternLine("ZIZ").key('L', ItemTags.FLOWERS).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
+        ShapedRecipeBuilder.shaped(RItems.F_ROBES_HEAD.get()).pattern("ZIZ").pattern("ZLZ").pattern("   ").define('L', ItemTags.FLOWERS).define('I', RItems.ZINC.get()).define('Z', ItemTags.WOOL).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RItems.F_ROBES_CHEST.get()).pattern("Z Z").pattern("ZLZ").pattern("ZIZ").define('L', ItemTags.FLOWERS).define('I', RItems.ZINC.get()).define('Z', ItemTags.WOOL).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RItems.F_ROBES_LEGS.get()).pattern("Z Z").pattern("ZLZ").pattern("ZIZ").define('L', ItemTags.FLOWERS).define('I', RItems.ZINC.get()).define('Z', ItemTags.WOOL).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(RItems.M_ROBES_HEAD.get()).patternLine("ZIZ").patternLine("ZLZ").patternLine("   ").key('L', Items.LEATHER).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RItems.M_ROBES_CHEST.get()).patternLine("Z Z").patternLine("ZLZ").patternLine("ZIZ").key('L', Items.LEATHER).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RItems.M_ROBES_LEGS.get()).patternLine("Z Z").patternLine("ZLZ").patternLine("ZIZ").key('L', Items.LEATHER).key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RItems.ROBES_FEET.get()).patternLine("Z Z").patternLine("Z Z").patternLine("I I").key('I', RItems.ZINC.get()).key('Z', ItemTags.WOOL).setGroup("regen").addCriterion("has_zinc", hasItem(RItems.ZINC.get())).build(consumer);
+        ShapedRecipeBuilder.shaped(RItems.M_ROBES_HEAD.get()).pattern("ZIZ").pattern("ZLZ").pattern("   ").define('L', Items.LEATHER).define('I', RItems.ZINC.get()).define('Z', ItemTags.WOOL).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RItems.M_ROBES_CHEST.get()).pattern("Z Z").pattern("ZLZ").pattern("ZIZ").define('L', Items.LEATHER).define('I', RItems.ZINC.get()).define('Z', ItemTags.WOOL).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RItems.M_ROBES_LEGS.get()).pattern("Z Z").pattern("ZLZ").pattern("ZIZ").define('L', Items.LEATHER).define('I', RItems.ZINC.get()).define('Z', ItemTags.WOOL).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RItems.ROBES_FEET.get()).pattern("Z Z").pattern("Z Z").pattern("I I").define('I', RItems.ZINC.get()).define('Z', ItemTags.WOOL).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(RBlocks.BIO_CONTAINER.get()).patternLine("FZF").patternLine("FPF").patternLine("FOF").key('Z', RItems.ZINC.get()).key('F', Items.IRON_INGOT).key('P', Items.ROTTEN_FLESH).key('O', Items.GLOWSTONE_DUST).addCriterion("has_zinc", this.hasItem(RItems.ZINC.get())).build(consumer);
+        ShapedRecipeBuilder.shaped(RBlocks.ZERO_ROUNDEL.get()).pattern("   ").pattern("ZIZ").pattern("ZZZ").define('I', RItems.ZINC.get()).define('Z', ItemTags.STONE_BRICKS).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RBlocks.ZERO_ROOM_FULL.get()).pattern("ZZZ").pattern("ZIZ").pattern("ZZZ").define('I', RItems.ZINC.get()).define('Z', ItemTags.STONE_BRICKS).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RBlocks.BIO_CONTAINER.get()).pattern("FZF").pattern("FPF").pattern("FOF").define('Z', RItems.ZINC.get()).define('F', Items.IRON_INGOT).define('P', Items.ROTTEN_FLESH).define('O', Items.GLOWSTONE_DUST).unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
 
 
     }

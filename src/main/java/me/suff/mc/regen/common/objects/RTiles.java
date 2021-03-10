@@ -19,7 +19,7 @@ public class RTiles {
 
 
     private static < T extends TileEntity > TileEntityType< T > registerTiles(Supplier< T > tile, Block... validBlock) {
-        return TileEntityType.Builder.create(tile, validBlock).build(null);
+        return TileEntityType.Builder.of(tile, validBlock).build(null);
     }
 
 }

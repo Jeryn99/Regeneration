@@ -25,7 +25,7 @@ import java.util.List;
 public class ElixirItem extends Item {
 
     public ElixirItem() {
-        super(new Item.Properties().setNoRepair().group(RItems.MAIN).maxStackSize(1));
+        super(new Item.Properties().setNoRepair().tab(RItems.MAIN).stacksTo(1));
     }
 
     public static Traits.ITrait getTrait(ItemStack stack) {
@@ -37,14 +37,14 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
+    public ITextComponent getName(ItemStack stack) {
         StringTextComponent prefix = new StringTextComponent("Elixir: ");
-        return prefix.appendSibling(getTrait(stack).getTranslation());
+        return prefix.append(getTrait(stack).getTranslation());
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList< ItemStack > items) {
-        if (isInGroup(group)) {
+    public void fillItemCategory(ItemGroup group, NonNullList< ItemStack > items) {
+        if (allowdedIn(group)) {
             for (Traits.ITrait trait : Traits.REGISTRY.getValues()) {
                 if (trait.getRegistryName() != Traits.BORING.get().getRegistryName()) {
                     ItemStack stack = new ItemStack(this);
@@ -57,17 +57,17 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public ActionResult< ItemStack > onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
+    public ActionResult< ItemStack > use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (itemstack.getItem() instanceof ElixirItem) {
-            playerIn.setActiveHand(handIn);
-            return ActionResult.resultConsume(itemstack);
+            playerIn.startUsingItem(handIn);
+            return ActionResult.consume(itemstack);
         }
-        return ActionResult.resultFail(itemstack);
+        return ActionResult.fail(itemstack);
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.EAT;
     }
 
@@ -77,24 +77,24 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        if (worldIn.isRemote) return super.onItemUseFinish(stack, worldIn, entityLiving);
+    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+        if (worldIn.isClientSide) return super.finishUsingItem(stack, worldIn, entityLiving);
         RegenCap.get(entityLiving).ifPresent(iRegen -> {
             if (iRegen.canRegenerate()) {
                 iRegen.setNextTrait(getTrait(stack));
                 iRegen.syncToClients(null);
-                entityLiving.attackEntityFrom(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
+                entityLiving.hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
                 stack.shrink(1);
-                entityLiving.playSound(SoundEvents.ENTITY_GENERIC_DRINK, 0.3F, 1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.4F);
+                entityLiving.playSound(SoundEvents.GENERIC_DRINK, 0.3F, 1.0F + (worldIn.random.nextFloat() - worldIn.random.nextFloat()) * 0.4F);
             }
         });
-        return super.onItemUseFinish(stack, worldIn, entityLiving);
+        return super.finishUsingItem(stack, worldIn, entityLiving);
     }
 
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(getTrait(stack).getDescription());
     }
 }

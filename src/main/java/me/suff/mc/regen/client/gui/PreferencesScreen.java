@@ -33,24 +33,24 @@ public class PreferencesScreen extends ContainerScreen {
 
     public PreferencesScreen() {
         super(new BlankContainer(), null, new TranslationTextComponent("Regeneration"));
-        xSize = 256;
-        ySize = 173;
+        imageWidth = 256;
+        imageHeight = 173;
     }
 
     @Override
     public void init() {
         super.init();
-        TabRegistry.updateTabValues(guiLeft + 2, guiTop, RegenPrefTab.class);
+        TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
             addButton(button);
         }
 
-        int cx = (width - xSize) / 2;
-        int cy = (height - ySize) / 2;
+        int cx = (width - imageWidth) / 2;
+        int cy = (height - imageHeight) / 2;
         final int btnW = 66, btnH = 18;
         ROTATION = 0;
 
-        Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regen.gui.close"), onPress -> Minecraft.getInstance().displayGuiScreen(null));
+        Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regen.gui.close"), onPress -> Minecraft.getInstance().setScreen(null));
 
         Button btnScheme = new Button(width / 2 + 50 - 66, cy + 65, btnW * 2, btnH, new TranslationTextComponent("regen.gui.sound_scheme." + SOUND_SCHEME.name().toLowerCase()), button -> {
             IRegen.TimelordSound newOne = SOUND_SCHEME == IRegen.TimelordSound.DRUM ? IRegen.TimelordSound.HUM : IRegen.TimelordSound.DRUM;
@@ -82,10 +82,10 @@ public class PreferencesScreen extends ContainerScreen {
         });
         btnRegenType.setMessage(SELECTED_TYPE.get().getTranslation());
 
-        Button btnColor = new Button(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().displayGuiScreen(new ColorScreen()));
+        Button btnColor = new Button(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
 
         Button btnSkinChoice = new Button(width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TranslationTextComponent("regen.gui.skin_choice"), p_onPress_1_ -> {
-            Minecraft.getInstance().displayGuiScreen(new IncarnationScreen());
+            Minecraft.getInstance().setScreen(new IncarnationScreen());
         });
 
         addButton(btnRegenType);
@@ -99,39 +99,39 @@ public class PreferencesScreen extends ContainerScreen {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
-        Minecraft.getInstance().getTextureManager().bindTexture(BACKGROUND);
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
+        Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
         IRegen data = RegenCap.get(Minecraft.getInstance().player).orElseGet(null);
-        blit(matrixStack, guiLeft, guiTop, 0, 0, xSize, ySize);
-        int cx = (width - xSize) / 2;
-        int cy = (height - ySize) / 2;
+        blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        int cx = (width - imageWidth) / 2;
+        int cy = (height - imageHeight) / 2;
 
-        GlStateManager.pushMatrix();
-        InventoryScreen.drawEntityOnScreen(width / 2 - 75, height / 2 + 45, 55, (float) (guiLeft + 51) - x, (float) (guiTop + 75 - 50) - y, Minecraft.getInstance().player);
-        GlStateManager.popMatrix();
+        GlStateManager._pushMatrix();
+        InventoryScreen.renderEntityInInventory(width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - x, (float) (topPos + 75 - 50) - y, Minecraft.getInstance().player);
+        GlStateManager._popMatrix();
 
         String str = "Banana Phone";
-        int length = minecraft.fontRenderer.getStringWidth(str);
+        int length = minecraft.font.width(str);
 
         if (RegenConfig.COMMON.infiniteRegeneration.get())
             str = new TranslationTextComponent("regen.gui.infinite_regenerations").getString();
         else
             str = new TranslationTextComponent("regen.gui.remaining_regens.status", data.getRegens()).getString();
 
-        length = minecraft.fontRenderer.getStringWidth(str);
-        font.drawStringWithShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
+        length = minecraft.font.width(str);
+        font.drawShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
 
         TranslationTextComponent traitLang = data.getTrait().getTranslation();
-        font.drawStringWithShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 40, Color.WHITE.getRGB());
+        font.drawShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 40, Color.WHITE.getRGB());
 
         TranslationTextComponent traitLangDesc = data.getTrait().getDescription();
-        font.drawStringWithShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 50, Color.WHITE.getRGB());
+        font.drawShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 50, Color.WHITE.getRGB());
 
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        this.font.drawStringWithShadow(matrixStack, this.title.getString(), (float) this.titleX, (float) this.titleY, 4210752);
+    protected void renderLabels(MatrixStack matrixStack, int x, int y) {
+        this.font.drawShadow(matrixStack, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
     }
 
     @Override

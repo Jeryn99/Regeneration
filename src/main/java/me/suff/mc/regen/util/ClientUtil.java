@@ -1,8 +1,8 @@
 package me.suff.mc.regen.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import me.suff.mc.regen.client.rendering.JarParticle;
 import me.suff.mc.regen.client.RKeybinds;
+import me.suff.mc.regen.client.rendering.JarParticle;
 import me.suff.mc.regen.client.rendering.JarTileRender;
 import me.suff.mc.regen.client.rendering.entity.RenderLaser;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
@@ -68,8 +68,9 @@ public class ClientUtil {
 
     @SubscribeEvent
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(RParticles.CONTAINER.get(), JarParticle.Factory::new);
+        Minecraft.getInstance().particleEngine.register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
     }
+
 
     //TODO maybe I should make this a hashmap
     public static BipedModel< ? > getArmorModel(ItemStack itemStack) {
@@ -110,13 +111,13 @@ public class ClientUtil {
 
     public static void doClientStuff() {
         /* Attach RenderLayers to Renderers */
-        Map< String, PlayerRenderer > skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
+        Map< String, PlayerRenderer > skinMap = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap();
         for (PlayerRenderer renderPlayer : skinMap.values()) {
             renderPlayer.addLayer(new HandLayer(renderPlayer));
             renderPlayer.addLayer(new RenderRegenLayer(renderPlayer));
         }
 
-        Minecraft.getInstance().getRenderManager().renderers.forEach((entityType, entityRenderer) -> {
+        Minecraft.getInstance().getEntityRenderDispatcher().renderers.forEach((entityType, entityRenderer) -> {
             if (entityRenderer instanceof BipedRenderer) {
                 ((BipedRenderer< ?, ? >) entityRenderer).addLayer(new RenderRegenLayer((IEntityRenderer) entityRenderer));
                 ((BipedRenderer< ?, ? >) entityRenderer).addLayer(new HandLayer((IEntityRenderer) entityRenderer));
@@ -131,7 +132,7 @@ public class ClientUtil {
 
         RKeybinds.init();
 
-        ItemModelsProperties.registerProperty(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
+        ItemModelsProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
             boolean isGold = getEngrave(stack);
             boolean isOpen = getOpen(stack);
             if (isOpen && isGold) {
@@ -150,24 +151,24 @@ public class ClientUtil {
             return 0.1F;
         });
 
-        ItemModelsProperties.registerProperty(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
+        ItemModelsProperties.register(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
             if (livingEntity == null) {
                 return 0;
             }
-            return livingEntity.getItemInUseCount() > 0 ? 1 : 0;
+            return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
         });
 
-        ItemModelsProperties.registerProperty(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
+        ItemModelsProperties.register(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
             if (livingEntity == null) {
                 return 0;
             }
-            return livingEntity.getItemInUseCount() > 0 ? 1 : 0;
+            return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
         });
 
-        ItemModelsProperties.registerProperty(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity) -> HandItem.isAlex(stack) ? 1 : 0);
+        ItemModelsProperties.register(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity) -> HandItem.isAlex(stack) ? 1 : 0);
 
 
-        ItemModelsProperties.registerProperty(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity) -> {
+        ItemModelsProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity) -> {
             if (itemStack == null || itemStack.isEmpty()) {
                 return 0;
             }
@@ -175,7 +176,7 @@ public class ClientUtil {
             return type.ordinal();
         });
 
-        RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.getCutoutMipped());
+        RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
 
         Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).getColor(), RItems.ELIXIR.get());
 
@@ -188,43 +189,43 @@ public class ClientUtil {
     }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
-        Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(sound, pitch, volume));
+        Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(sound, pitch, volume));
     }
 
     public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier< Boolean > stopCondition, float volume) {
-        Minecraft.getInstance().getSoundHandler().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
+        Minecraft.getInstance().getSoundManager().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
     }
 
     public static void createToast(TranslationTextComponent title, TranslationTextComponent subtitle) {
-        Minecraft.getInstance().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
+        Minecraft.getInstance().getToasts().addToast(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
     }
 
     public static PointOfView getPlayerPerspective() {
-        return Minecraft.getInstance().gameSettings.getPointOfView();
+        return Minecraft.getInstance().options.getCameraType();
     }
 
     public static void setPlayerPerspective(String pointOfView) {
         if (RegenConfig.CLIENT.changePerspective.get()) {
-            Minecraft.getInstance().gameSettings.setPointOfView(PointOfView.valueOf(pointOfView));
+            Minecraft.getInstance().options.setCameraType(PointOfView.valueOf(pointOfView));
         }
     }
 
     public static void renderSky(MatrixStack matrixStackIn, float partialTicks) {
-        if (Minecraft.getInstance().world.getDimensionKey().getLocation().getPath().contains("gallifrey")) {
+        if (Minecraft.getInstance().level.dimension().location().getPath().contains("gallifrey")) {
             float scale = 30.0F;
-            BufferBuilder bufferbuilder = Tessellator.getInstance().getBuffer();
-            matrixStackIn.push();
+            BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
+            matrixStackIn.pushPose();
             matrixStackIn.scale(5, 5, 5);
-            Matrix4f matrix4f1 = matrixStackIn.getLast().getMatrix();
-            Minecraft.getInstance().getTextureManager().bindTexture(SUN_TEXTURES);
+            Matrix4f matrix4f1 = matrixStackIn.last().pose();
+            Minecraft.getInstance().getTextureManager().bind(SUN_TEXTURES);
             bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-            bufferbuilder.pos(matrix4f1, -scale, 100.0F, -scale).tex(0.0F, 0.0F).endVertex();
-            bufferbuilder.pos(matrix4f1, scale, 100.0F, -scale).tex(1.0F, 0.0F).endVertex();
-            bufferbuilder.pos(matrix4f1, scale, 100.0F, scale).tex(1.0F, 1.0F).endVertex();
-            bufferbuilder.pos(matrix4f1, -scale, 100.0F, scale).tex(0.0F, 1.0F).endVertex();
-            matrixStackIn.pop();
-            bufferbuilder.finishDrawing();
-            WorldVertexBufferUploader.draw(bufferbuilder);
+            bufferbuilder.vertex(matrix4f1, -scale, 100.0F, -scale).uv(0.0F, 0.0F).endVertex();
+            bufferbuilder.vertex(matrix4f1, scale, 100.0F, -scale).uv(1.0F, 0.0F).endVertex();
+            bufferbuilder.vertex(matrix4f1, scale, 100.0F, scale).uv(1.0F, 1.0F).endVertex();
+            bufferbuilder.vertex(matrix4f1, -scale, 100.0F, scale).uv(0.0F, 1.0F).endVertex();
+            matrixStackIn.popPose();
+            bufferbuilder.end();
+            WorldVertexBufferUploader.end(bufferbuilder);
         }
     }
 }

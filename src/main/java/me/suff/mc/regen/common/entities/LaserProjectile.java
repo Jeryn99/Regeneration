@@ -33,7 +33,7 @@ public class LaserProjectile extends ThrowableEntity {
     }
 
     @Override
-    protected void registerData() {
+    protected void defineSynchedData() {
 
     }
 
@@ -48,8 +48,8 @@ public class LaserProjectile extends ThrowableEntity {
     @Override
     public void tick() {
         super.tick();
-        double speed = (new Vector3d(this.getPosX(), this.getPosY(), this.getPosZ())).distanceTo(new Vector3d(this.prevPosX, this.prevPosY, this.prevPosZ));
-        if (!this.world.isRemote && (this.ticksExisted > 600 || speed < 0.01D)) {
+        double speed = (new Vector3d(this.getX(), this.getY(), this.getZ())).distanceTo(new Vector3d(this.xo, this.yo, this.zo));
+        if (!this.level.isClientSide && (this.tickCount > 600 || speed < 0.01D)) {
             this.remove();
         }
         if (isAlive()) {
@@ -58,29 +58,29 @@ public class LaserProjectile extends ThrowableEntity {
     }
 
     @Override
-    protected void onImpact(RayTraceResult result) {
-        super.onImpact(result);
-        if (this.world.isRemote()) {
-            this.world.addParticle(ParticleTypes.SMOKE, true, this.getPosX(), this.getPosY(), this.getPosZ(), 0.0D, 0.0D, 0.0D);
+    protected void onHit(RayTraceResult result) {
+        super.onHit(result);
+        if (this.level.isClientSide()) {
+            this.level.addParticle(ParticleTypes.SMOKE, true, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 
     @Override
-    protected void onEntityHit(EntityRayTraceResult entityRayTraceResult) {
+    protected void onHitEntity(EntityRayTraceResult entityRayTraceResult) {
         Entity entity = entityRayTraceResult.getEntity();
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
-            livingEntity.attackEntityFrom(damageSrc, damage);
+            livingEntity.hurt(damageSrc, damage);
         }
     }
 
     @Override
-    public IPacket< ? > createSpawnPacket() {
+    public IPacket< ? > getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    protected float getGravityVelocity() {
+    protected float getGravity() {
         return 0F;
     }
 }

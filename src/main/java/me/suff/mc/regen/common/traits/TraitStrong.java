@@ -19,7 +19,7 @@ public class TraitStrong extends Traits.ITrait {
     public void apply(IRegen data) {
         LivingEntity living = data.getLiving();
         ModifiableAttributeInstance reach = living.getAttribute(Attributes.ATTACK_DAMAGE);
-        reach.applyPersistentModifier(new AttributeModifier(STRONG_UUID, "Strong modifier", 5, AttributeModifier.Operation.MULTIPLY_BASE));
+        reach.addPermanentModifier(new AttributeModifier(STRONG_UUID, "Strong modifier", 5, AttributeModifier.Operation.MULTIPLY_BASE));
     }
 
     @Override

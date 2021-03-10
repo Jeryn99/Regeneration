@@ -23,19 +23,19 @@ public class RenderRegenLayer extends LayerRenderer {
 
     public static void renderColorCone(MatrixStack matrixStack, IVertexBuilder vertexBuilder, int combinedLightIn, LivingEntity entityPlayer, float scale, float scale2, Vector3d color) {
         RegenCap.get(entityPlayer).ifPresent(iRegen -> {
-            matrixStack.push();
+            matrixStack.pushPose();
             for (int i = 0; i < 10; i++) {
-                matrixStack.rotate(Vector3f.YP.rotation(entityPlayer.ticksExisted * 4 + i * 45));
+                matrixStack.mulPose(Vector3f.YP.rotation(entityPlayer.tickCount * 4 + i * 45));
                 matrixStack.scale(1.0f, 1.0f, 0.65f);
-                float alpha = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
+                float alpha = MathHelper.clamp(MathHelper.sin((entityPlayer.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
                 float red = (float) color.x, green = (float) color.y, blue = (float) color.z;
-                vertexBuilder.pos(matrixStack.getLast().getMatrix(), 0.0F, 0.0F, 0.0F).color(red, green, blue, alpha).lightmap(combinedLightIn).endVertex();
-                vertexBuilder.pos(matrixStack.getLast().getMatrix(), -0.266F * scale, scale, -0.5F * scale).color(red, green, blue, alpha).lightmap(combinedLightIn).endVertex();
-                vertexBuilder.pos(matrixStack.getLast().getMatrix(), 0.266F * scale, scale, -0.5F * scale).color(red, green, blue, alpha).lightmap(combinedLightIn).endVertex();
-                vertexBuilder.pos(matrixStack.getLast().getMatrix(), 0.0F, scale2, 1.0F * scale).color(red, green, blue, alpha).lightmap(combinedLightIn).endVertex();
-                vertexBuilder.pos(matrixStack.getLast().getMatrix(), (float) (-0.266D * scale), scale, -0.5F * scale).color(red, green, blue, alpha).lightmap(combinedLightIn).endVertex();
+                vertexBuilder.vertex(matrixStack.last().pose(), 0.0F, 0.0F, 0.0F).color(red, green, blue, alpha).uv2(combinedLightIn).endVertex();
+                vertexBuilder.vertex(matrixStack.last().pose(), -0.266F * scale, scale, -0.5F * scale).color(red, green, blue, alpha).uv2(combinedLightIn).endVertex();
+                vertexBuilder.vertex(matrixStack.last().pose(), 0.266F * scale, scale, -0.5F * scale).color(red, green, blue, alpha).uv2(combinedLightIn).endVertex();
+                vertexBuilder.vertex(matrixStack.last().pose(), 0.0F, scale2, 1.0F * scale).color(red, green, blue, alpha).uv2(combinedLightIn).endVertex();
+                vertexBuilder.vertex(matrixStack.last().pose(), (float) (-0.266D * scale), scale, -0.5F * scale).color(red, green, blue, alpha).uv2(combinedLightIn).endVertex();
             }
-            matrixStack.pop();
+            matrixStack.popPose();
         });
     }
 
@@ -45,7 +45,7 @@ public class RenderRegenLayer extends LayerRenderer {
         if (entitylivingbaseIn instanceof LivingEntity) {
             RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
                 TransitionType< ? > type = iRegen.getTransitionType().get();
-                type.getRenderer().layer((BipedModel< ? >) getEntityModel(), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+                type.getRenderer().layer((BipedModel< ? >) getParentModel(), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
             });
         }
     }

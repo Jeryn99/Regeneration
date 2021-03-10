@@ -21,16 +21,16 @@ public class SyncMessage {
 
     public SyncMessage(PacketBuffer buf) {
         this.entityID = buf.readInt();
-        this.nbt = buf.readCompoundTag();
+        this.nbt = buf.readNbt();
     }
 
     public void toBytes(PacketBuffer buf) {
         buf.writeInt(this.entityID);
-        buf.writeCompoundTag(this.nbt);
+        buf.writeNbt(this.nbt);
     }
 
     public void handle(Supplier< NetworkEvent.Context > ctx) {
-        Entity entity = Minecraft.getInstance().world.getEntityByID(this.entityID);
+        Entity entity = Minecraft.getInstance().level.getEntity(this.entityID);
 
         ctx.get().enqueueWork(() -> {
             if (entity != null)

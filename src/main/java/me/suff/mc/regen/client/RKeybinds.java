@@ -18,13 +18,13 @@ public class RKeybinds {
 
 
     public static void tickKeybinds() {
-        if (Minecraft.getInstance().world == null) return;
-        if (FORCE_REGEN.isPressed()) {
+        if (Minecraft.getInstance().level == null) return;
+        if (FORCE_REGEN.consumeClick()) {
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ForceRegenMessage());
         }
 
-        if (REGEN_GUI.isPressed() && Minecraft.getInstance().currentScreen == null) {
-            Minecraft.getInstance().deferTask(() -> Minecraft.getInstance().displayGuiScreen(new PreferencesScreen()));
+        if (REGEN_GUI.consumeClick() && Minecraft.getInstance().screen == null) {
+            Minecraft.getInstance().submitAsync(() -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
         }
     }
 }

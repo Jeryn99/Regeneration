@@ -37,7 +37,7 @@ public class HutPieces {
         int x = pos.getX();
         int z = pos.getZ();
         BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
-        BlockPos blockpos = rotationOffSet.add(x, pos.getY(), z);
+        BlockPos blockpos = rotationOffSet.offset(x, pos.getY(), z);
         pieceList.add(new HutPieces.Piece(templateManager, new ResourceLocation(RConstants.MODID, "gallifrey_shack"), blockpos, rotation));
     }
 
@@ -49,7 +49,7 @@ public class HutPieces {
             super(RStructures.Structures.HUT_PIECE, 0);
             this.resourceLocation = resourceLocationIn;
             BlockPos blockpos = HutPieces.OFFSET.get(resourceLocation);
-            this.templatePosition = pos.add(blockpos.getX(), blockpos.getY(), blockpos.getZ());
+            this.templatePosition = pos.offset(blockpos.getX(), blockpos.getY(), blockpos.getZ());
             this.rotation = rotationIn;
             this.setupPiece(templateManagerIn);
         }
@@ -62,7 +62,7 @@ public class HutPieces {
         }
 
         private void setupPiece(TemplateManager templateManager) {
-            Template template = templateManager.getTemplateDefaulted(this.resourceLocation);
+            Template template = templateManager.getOrCreate(this.resourceLocation);
             PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
             this.setup(template, this.templatePosition, placementsettings);
         }
@@ -71,8 +71,8 @@ public class HutPieces {
          * (abstract) Helper method to read subclass data from NBT
          */
         @Override
-        protected void readAdditional(CompoundNBT tagCompound) {
-            super.readAdditional(tagCompound);
+        protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+            super.addAdditionalSaveData(tagCompound);
             tagCompound.putString("Template", this.resourceLocation.toString());
             tagCompound.putString("Rot", this.rotation.name());
         }
@@ -81,21 +81,21 @@ public class HutPieces {
         protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
 
             if ("timelord".equals(function)) {
-                TimelordEntity timelordEntity = REntities.TIMELORD.get().create(worldIn.getWorld());
+                TimelordEntity timelordEntity = REntities.TIMELORD.get().create(worldIn.getLevel());
                 RegenCap.get(timelordEntity).ifPresent(iRegen -> {
                     timelordEntity.initSkin(iRegen);
                     timelordEntity.genName();
                     iRegen.setRegens(rand.nextInt(12));
-                    timelordEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
-                    worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+                    timelordEntity.moveTo(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
+                    worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
                     iRegen.syncToClients(null);
-                    worldIn.addEntity(timelordEntity);
+                    worldIn.addFreshEntity(timelordEntity);
                 });
             }
 
             if ("chest_stone".equals(function)) {
-                LockableLootTileEntity.setLootTable(worldIn, rand, pos.up(), LootTables.CHESTS_STRONGHOLD_LIBRARY);
-                worldIn.setBlockState(pos, Blocks.STONE.getDefaultState(), 2);
+                LockableLootTileEntity.setLootTable(worldIn, rand, pos.above(), LootTables.STRONGHOLD_LIBRARY);
+                worldIn.setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
             }
 
         }

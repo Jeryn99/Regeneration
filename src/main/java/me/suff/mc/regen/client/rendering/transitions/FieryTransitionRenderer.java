@@ -34,14 +34,14 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
     public static void renderOverlay(MatrixStack matrixStack, IVertexBuilder buffer, int packedlight, BipedModel bipedModel, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float opacity, Vector3d color, AnimationHandler.Animation animation) {
         RegenCap.get(entityPlayer).ifPresent((data) -> {
-            matrixStack.push();
+            matrixStack.pushPose();
             if (animation == null) {
-                bipedModel.setRotationAngles(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+                bipedModel.setupAnim(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             } else {
                 animation.animate(bipedModel, entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             }
-            bipedModel.render(matrixStack, buffer, packedlight, OverlayTexture.NO_OVERLAY, (float) color.x, (float) color.y, (float) color.z, opacity);
-            matrixStack.pop();
+            bipedModel.renderToBuffer(matrixStack, buffer, packedlight, OverlayTexture.NO_OVERLAY, (float) color.x, (float) color.y, (float) color.z, opacity);
+            matrixStack.popPose();
         });
     }
 
@@ -93,10 +93,10 @@ public class FieryTransitionRenderer implements TransitionRenderer {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 // === Head Cone ===
-                matrix.push();
-                bipedModel.bipedHead.translateRotate(matrix);
+                matrix.pushPose();
+                bipedModel.head.translateAndRotate(matrix);
                 matrix.translate(0.0f, 0.09f, 0.2f);
-                matrix.rotate(Vector3f.XP.rotation(180));
+                matrix.mulPose(Vector3f.XP.rotation(180));
                 double x = iRegen.getTicksAnimating();
                 double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
                 double r = 0.09890109890109888;
@@ -111,16 +111,16 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                 Vector3d secondaryColors = new Vector3d(colorTag.getFloat(RConstants.SECONDARY_RED), colorTag.getFloat(RConstants.SECONDARY_GREEN), colorTag.getFloat(RConstants.SECONDARY_BLUE));
                 renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), primaryScale, primaryScale, primaryColors);
                 renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), secondaryScale, secondaryScale, secondaryColors);
-                matrix.pop();
+                matrix.popPose();
                 // === End Head Cone ===
             }
 
             //Render player overlay
             if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.getCurrentState() == RegenStates.POST || iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 if (entitylivingbaseIn instanceof TimelordEntity) return;
-                float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
-                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.getEndPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
-                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.getEndPortal(2)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
+                float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
+                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.endPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
+                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.endPortal(2)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
             }
 
         });
@@ -131,7 +131,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
-                double armShake = livingEntity.getRNG().nextDouble();
+                double armShake = livingEntity.getRandom().nextDouble();
                 float armRotY = (float) iRegen.getTicksAnimating() * 1.5F;
                 float armRotZ = (float) iRegen.getTicksAnimating() * 1.5F;
                 float headRot = (float) iRegen.getTicksAnimating() * 1.5F;
@@ -150,35 +150,35 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
 
                 // ARMS
-                bipedModel.bipedLeftArm.rotateAngleY = 0;
-                bipedModel.bipedRightArm.rotateAngleY = 0;
+                bipedModel.leftArm.yRot = 0;
+                bipedModel.rightArm.yRot = 0;
 
-                bipedModel.bipedLeftArm.rotateAngleX = 0;
-                bipedModel.bipedRightArm.rotateAngleX = 0;
+                bipedModel.leftArm.xRot = 0;
+                bipedModel.rightArm.xRot = 0;
 
-                bipedModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRotZ + armShake);
-                bipedModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRotZ + armShake);
-                bipedModel.bipedLeftArm.rotateAngleY = (float) -Math.toRadians(armRotY);
-                bipedModel.bipedRightArm.rotateAngleY = (float) Math.toRadians(armRotY);
+                bipedModel.leftArm.zRot = (float) -Math.toRadians(armRotZ + armShake);
+                bipedModel.rightArm.zRot = (float) Math.toRadians(armRotZ + armShake);
+                bipedModel.leftArm.yRot = (float) -Math.toRadians(armRotY);
+                bipedModel.rightArm.yRot = (float) Math.toRadians(armRotY);
 
                 // BODY
-                bipedModel.bipedBody.rotateAngleX = 0;
-                bipedModel.bipedBody.rotateAngleY = 0;
-                bipedModel.bipedBody.rotateAngleZ = 0;
+                bipedModel.body.xRot = 0;
+                bipedModel.body.yRot = 0;
+                bipedModel.body.zRot = 0;
 
                 // LEGS
-                bipedModel.bipedLeftLeg.rotateAngleY = 0;
-                bipedModel.bipedRightLeg.rotateAngleY = 0;
+                bipedModel.leftLeg.yRot = 0;
+                bipedModel.rightLeg.yRot = 0;
 
-                bipedModel.bipedLeftLeg.rotateAngleX = 0;
-                bipedModel.bipedRightLeg.rotateAngleX = 0;
+                bipedModel.leftLeg.xRot = 0;
+                bipedModel.rightLeg.xRot = 0;
 
-                bipedModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-                bipedModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+                bipedModel.leftLeg.zRot = (float) -Math.toRadians(5);
+                bipedModel.rightLeg.zRot = (float) Math.toRadians(5);
 
-                bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
-                bipedModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
-                bipedModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
+                bipedModel.head.xRot = (float) Math.toRadians(-headRot);
+                bipedModel.head.yRot = (float) Math.toRadians(0);
+                bipedModel.head.zRot = (float) Math.toRadians(0);
 
             }
         });

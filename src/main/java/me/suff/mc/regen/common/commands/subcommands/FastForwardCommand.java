@@ -27,11 +27,11 @@ public class FastForwardCommand implements Command< CommandSource > {
     public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
         CommandSource source = context.getSource();
 
-        RegenCap.get(source.asPlayer()).ifPresent((cap) -> {
+        RegenCap.get(source.getPlayerOrException()).ifPresent((cap) -> {
             if (cap.getCurrentState() != RegenStates.ALIVE) {
                 cap.getStateManager().fastForward();
                 try {
-                    NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveSkinPlayerMessage(source.asPlayer().getUniqueID()));
+                    NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveSkinPlayerMessage(source.getPlayerOrException().getUUID()));
                 } catch (CommandSyntaxException e) {
                     e.printStackTrace();
                 }

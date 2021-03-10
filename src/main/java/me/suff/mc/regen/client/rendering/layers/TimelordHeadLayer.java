@@ -21,33 +21,33 @@ public class TimelordHeadLayer extends LayerRenderer< TimelordEntity, BipedModel
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, TimelordEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        entitymodel.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
-        entitymodel.setVisible(false);
-        entitymodel.bipedHead.showModel = true;
-        entitymodel.bipedHeadwear.showModel = true;
-        entitymodel.bipedRightArm.showModel = true;
-        entitymodel.bipedLeftArm.showModel = true;
-        entitymodel.bipedRightArmwear.showModel = false;
-        entitymodel.bipedLeftArmwear.showModel = false;
-        entitymodel.bipedBody.showModel = true;
-        entitymodel.isChild = false;
-        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getEntityTranslucent(TimelordRenderer.getTimelordFace(entitylivingbaseIn)));
-        entitymodel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        entitymodel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
+        entitymodel.setAllVisible(false);
+        entitymodel.head.visible = true;
+        entitymodel.hat.visible = true;
+        entitymodel.rightArm.visible = true;
+        entitymodel.leftArm.visible = true;
+        entitymodel.rightSleeve.visible = false;
+        entitymodel.leftSleeve.visible = false;
+        entitymodel.body.visible = true;
+        entitymodel.young = false;
+        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.entityTranslucent(TimelordRenderer.getTimelordFace(entitylivingbaseIn)));
+        entitymodel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
         if (entitylivingbaseIn.getAiming()) {
-            entitymodel.bipedLeftArm.rotateAngleX = entitymodel.bipedHead.rotateAngleX;
-            entitymodel.bipedLeftArm.rotateAngleY = entitymodel.bipedHead.rotateAngleY;
-            entitymodel.bipedLeftArm.rotateAngleZ = entitymodel.bipedHead.rotateAngleZ;
-            entitymodel.bipedRightArm.rotateAngleX = entitymodel.bipedHead.rotateAngleX;
-            entitymodel.bipedRightArm.rotateAngleY = entitymodel.bipedHead.rotateAngleY;
-            entitymodel.bipedRightArm.rotateAngleZ = entitymodel.bipedHead.rotateAngleZ;
+            entitymodel.leftArm.xRot = entitymodel.head.xRot;
+            entitymodel.leftArm.yRot = entitymodel.head.yRot;
+            entitymodel.leftArm.zRot = entitymodel.head.zRot;
+            entitymodel.rightArm.xRot = entitymodel.head.xRot;
+            entitymodel.rightArm.yRot = entitymodel.head.yRot;
+            entitymodel.rightArm.zRot = entitymodel.head.zRot;
             float aimTicks = entitylivingbaseIn.getAimingTicks();
-            entitymodel.bipedLeftArm.rotateAngleX += (float) Math.toRadians(-55F + aimTicks * -30F);
-            entitymodel.bipedLeftArm.rotateAngleY += (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
-            entitymodel.bipedRightArm.rotateAngleX += (float) Math.toRadians(-42F + aimTicks * -48F);
-            entitymodel.bipedRightArm.rotateAngleY += (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
+            entitymodel.leftArm.xRot += (float) Math.toRadians(-55F + aimTicks * -30F);
+            entitymodel.leftArm.yRot += (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
+            entitymodel.rightArm.xRot += (float) Math.toRadians(-42F + aimTicks * -48F);
+            entitymodel.rightArm.yRot += (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
         }
 
-        entitymodel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0F);
+        entitymodel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0F);
     }
 }

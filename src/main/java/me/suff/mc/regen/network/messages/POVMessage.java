@@ -15,16 +15,16 @@ public class POVMessage {
     }
 
     public POVMessage(PacketBuffer buffer) {
-        pointOfView = buffer.readString(32767);
+        pointOfView = buffer.readUtf(32767);
     }
 
     public static void handle(POVMessage message, Supplier< NetworkEvent.Context > ctx) {
-        Minecraft.getInstance().deferTask(() -> ClientUtil.setPlayerPerspective(message.pointOfView));
+        Minecraft.getInstance().submitAsync(() -> ClientUtil.setPlayerPerspective(message.pointOfView));
         ctx.get().setPacketHandled(true);
     }
 
     public void toBytes(PacketBuffer buffer) {
-        buffer.writeString(this.pointOfView);
+        buffer.writeUtf(this.pointOfView);
     }
 
 }

@@ -53,55 +53,55 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
 
 
-            float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
+            float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
 
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
 
-                EntityRenderer< ? super Entity > entityRenderer = Minecraft.getInstance().getRenderManager().getRenderer(entitylivingbaseIn);
-                PlayerRenderer playerRenderer = (PlayerRenderer) Minecraft.getInstance().getRenderManager().getRenderer(Minecraft.getInstance().player);
-                ResourceLocation headTexture = entityRenderer.getEntityTexture(entitylivingbaseIn);
+                EntityRenderer< ? super Entity > entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entitylivingbaseIn);
+                PlayerRenderer playerRenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(Minecraft.getInstance().player);
+                ResourceLocation headTexture = entityRenderer.getTextureLocation(entitylivingbaseIn);
 
                 if (entitylivingbaseIn instanceof TimelordEntity) {
                     TimelordEntity timelordEntity = (TimelordEntity) entitylivingbaseIn;
                     headTexture = TimelordRenderer.getTimelordFace(timelordEntity);
                 }
                 Vector3d color = new Vector3d(1, 1, 1);
-                PlayerModel< AbstractClientPlayerEntity > headModel = playerRenderer.getEntityModel();
+                PlayerModel< AbstractClientPlayerEntity > headModel = playerRenderer.getModel();
 
-                matrixStackIn.push();
+                matrixStackIn.pushPose();
                 matrixStackIn.translate(0, opacity, 0);
                 for (int i = 0; i < 4; i++) {
-                    headModel.setVisible(false);
-                    headModel.bipedHead.showModel = true;
-                    headModel.bipedHeadwear.showModel = true;
+                    headModel.setAllVisible(false);
+                    headModel.head.visible = true;
+                    headModel.hat.visible = true;
                     switch (i) {
                         case 1:
-                            matrixStackIn.push();
+                            matrixStackIn.pushPose();
                             matrixStackIn.translate(1, 0, 0);
-                            matrixStackIn.rotate(Vector3f.YP.rotation(opacity * 2));
+                            matrixStackIn.mulPose(Vector3f.YP.rotation(opacity * 2));
                             FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getGlowing(headTexture)), packedLightIn, headModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity * 5, color);
-                            matrixStackIn.pop();
+                            matrixStackIn.popPose();
                             break;
                         case 2:
-                            matrixStackIn.push();
+                            matrixStackIn.pushPose();
                             matrixStackIn.translate(-1, 0, 0);
-                            matrixStackIn.rotate(Vector3f.YP.rotation(-opacity * 2));
+                            matrixStackIn.mulPose(Vector3f.YP.rotation(-opacity * 2));
                             FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getGlowing(headTexture)), packedLightIn, headModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity * 5, color);
-                            matrixStackIn.pop();
+                            matrixStackIn.popPose();
                             break;
                         case 3:
-                            matrixStackIn.push();
+                            matrixStackIn.pushPose();
                             matrixStackIn.translate(0, -1, 0);
-                            matrixStackIn.rotate(Vector3f.XP.rotation(opacity * 2));
+                            matrixStackIn.mulPose(Vector3f.XP.rotation(opacity * 2));
                             FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getGlowing(headTexture)), packedLightIn, headModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity * 5, color);
-                            matrixStackIn.pop();
+                            matrixStackIn.popPose();
                             break;
                         case 0:
                         case 4:
                             break;
                     }
                 }
-                matrixStackIn.pop();
+                matrixStackIn.popPose();
             }
         });
     }
@@ -112,15 +112,15 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
 
             if (data.getCurrentState() == RegenStates.REGENERATING && data.getTransitionType() == TransitionTypes.TROUGHTON) {
 
-                bipedModel.bipedHead.rotateAngleX = (float) Math.toRadians(-20);
-                bipedModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
-                bipedModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
+                bipedModel.head.xRot = (float) Math.toRadians(-20);
+                bipedModel.head.yRot = (float) Math.toRadians(0);
+                bipedModel.head.zRot = (float) Math.toRadians(0);
 
-                bipedModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-                bipedModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+                bipedModel.leftLeg.zRot = (float) -Math.toRadians(5);
+                bipedModel.rightLeg.zRot = (float) Math.toRadians(5);
 
-                bipedModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(5);
-                bipedModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(5);
+                bipedModel.leftArm.zRot = (float) -Math.toRadians(5);
+                bipedModel.rightArm.zRot = (float) Math.toRadians(5);
             }
         });
     }

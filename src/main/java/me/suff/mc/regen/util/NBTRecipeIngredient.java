@@ -23,7 +23,7 @@ public class NBTRecipeIngredient extends Ingredient {
     public boolean test(@Nullable ItemStack input) {
         if (input == null)
             return false;
-        return this.stack.getItem() == input.getItem() && this.stack.getDamage() == input.getDamage() && this.stack.areShareTagsEqual(input);
+        return this.stack.getItem() == input.getItem() && this.stack.getDamageValue() == input.getDamageValue() && this.stack.areShareTagsEqual(input);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class NBTRecipeIngredient extends Ingredient {
     }
 
     @Override
-    public JsonElement serialize() {
+    public JsonElement toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("type", CraftingHelper.getID(Serializer.INSTANCE).toString());
         json.addProperty("item", stack.getItem().getRegistryName().toString());
@@ -52,7 +52,7 @@ public class NBTRecipeIngredient extends Ingredient {
 
         @Override
         public NBTRecipeIngredient parse(PacketBuffer buffer) {
-            return new NBTRecipeIngredient(buffer.readItemStack());
+            return new NBTRecipeIngredient(buffer.readItem());
         }
 
         @Override
@@ -62,7 +62,7 @@ public class NBTRecipeIngredient extends Ingredient {
 
         @Override
         public void write(PacketBuffer buffer, NBTRecipeIngredient ingredient) {
-            buffer.writeItemStack(ingredient.stack);
+            buffer.writeItem(ingredient.stack);
         }
     }
 }

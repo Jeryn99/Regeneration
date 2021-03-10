@@ -42,9 +42,9 @@ public class TabRegistry {
 
     public static void openInventoryGui() {
         Minecraft mc = Minecraft.getInstance();
-        mc.player.connection.sendPacket(new CCloseWindowPacket(mc.player.openContainer.windowId));
+        mc.player.connection.send(new CCloseWindowPacket(mc.player.containerMenu.containerId));
         InventoryScreen inventory = new InventoryScreen(mc.player);
-        mc.displayGuiScreen(inventory);
+        mc.setScreen(inventory);
     }
 
     public static void updateTabValues(int cornerX, int cornerY, Class< ? > selectedButton) {

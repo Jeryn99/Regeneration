@@ -2,6 +2,7 @@ package me.suff.mc.regen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.common.regen.IRegen;
@@ -10,9 +11,7 @@ import me.suff.mc.regen.common.regen.RegenStorage;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.data.EnglishLangGen;
-import me.suff.mc.regen.data.RBlockTags;
-import me.suff.mc.regen.data.RRecipeGen;
+import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.util.*;
 import net.minecraft.data.DataGenerator;
@@ -68,10 +67,11 @@ public class Regeneration {
 
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
         ActingForwarder.init();
-        GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().create());
+        GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
+        GlobalEntityTypeAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
         DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
         RSoundSchemes.init();
+        TriggerManager.init();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -83,9 +83,10 @@ public class Regeneration {
         DataGenerator generator = e.getGenerator();
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
         generator.addProvider(new EnglishLangGen(generator));
+        generator.addProvider(new LootGen(generator));
         generator.addProvider(new RBlockTags(generator, existingFileHelper));
-        //  generator.addProvider(new ItemModelGen(generator, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
+        generator.addProvider(new AdvancementCreation(generator));
     }
 
     @SubscribeEvent
@@ -99,6 +100,7 @@ public class Regeneration {
         RStructures.Structures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RStructures.FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RParticles.TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RGlobalLoot.GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent

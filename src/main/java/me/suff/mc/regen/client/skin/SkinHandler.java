@@ -36,7 +36,7 @@ public class SkinHandler {
             boolean forceUpdate = false;
 
             byte[] skin = iRegen.getSkin();
-            UUID uuid = playerEntity.getUniqueID();
+            UUID uuid = playerEntity.getUUID();
 
             boolean validSkin = iRegen.isSkinValidForUse();
 
@@ -45,19 +45,19 @@ public class SkinHandler {
             if (validSkin && !hasPlayerSkin(uuid) || iRegen.getTicksAnimating() >= 140) {
                 NativeImage skinImage = genSkinNative(skin);
                 if (skinImage != null) {
-                    addPlayerSkin(playerEntity.getUniqueID(), loadImage(skinImage));
+                    addPlayerSkin(playerEntity.getUUID(), loadImage(skinImage));
                     forceUpdate = true;
                 }
             }
 
             //If the skin is invalid, we want to remove it and revert to Mojang
             if (!validSkin) {
-                removePlayerSkin(playerEntity.getUniqueID());
+                removePlayerSkin(playerEntity.getUUID());
                 forceUpdate = true;
             }
 
             //Update the skin if required.
-            if (forceUpdate || playerEntity.ticksExisted < 20) {
+            if (forceUpdate || playerEntity.tickCount < 20) {
                 ResourceLocation skinTexture = getSkinToUse(playerEntity);
                 setPlayerSkin(playerEntity, skinTexture);
             }
@@ -67,10 +67,10 @@ public class SkinHandler {
             if (iRegen.isSkinValidForUse()) {
                 isAlex = iRegen.isAlexSkinCurrently();
             } else {
-                playerEntity.playerInfo.loadPlayerTextures();
-                isAlex = playerEntity.playerInfo.getSkinType().contentEquals("slim");
+                playerEntity.playerInfo.registerTextures();
+                isAlex = playerEntity.playerInfo.getModelName().contentEquals("slim");
             }
-            if (armorSlim(playerEntity.getItemStackFromSlot(EquipmentSlotType.CHEST))) {
+            if (armorSlim(playerEntity.getItemBySlot(EquipmentSlotType.CHEST))) {
                 isAlex = true;
             }
             setPlayerSkinType(playerEntity, isAlex);
@@ -84,21 +84,21 @@ public class SkinHandler {
     public static void setPlayerSkinType(AbstractClientPlayerEntity player, boolean isAlex) {
         NetworkPlayerInfo playerInfo = player.playerInfo;
         if (playerInfo == null) return;
-        playerInfo.skinType = isAlex ? "slim" : "default";
+        playerInfo.skinModel = isAlex ? "slim" : "default";
     }
 
     public static void sendResetMessage() {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player != null) {
-            player.playerInfo.loadPlayerTextures();
-            boolean isAlex = player.playerInfo.getSkinType().equals("slim");
+            player.playerInfo.registerTextures();
+            boolean isAlex = player.playerInfo.getModelName().equals("slim");
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(new byte[0], isAlex));
         }
     }
 
     public static ResourceLocation loadImage(NativeImage nativeImage) {
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-        return textureManager.getDynamicTextureLocation("player_", new DynamicTexture(nativeImage));
+        return textureManager.register("player_", new DynamicTexture(nativeImage));
     }
 
     public static NativeImage genSkinNative(byte[] skinArray) {
@@ -116,15 +116,15 @@ public class SkinHandler {
 
     //Set players skin
     public static void setPlayerSkin(AbstractClientPlayerEntity player, ResourceLocation texture) {
-        if (player.getLocationSkin().equals(texture)) {
+        if (player.getSkinTextureLocation().equals(texture)) {
             return;
         }
         NetworkPlayerInfo playerInfo = player.playerInfo;
         if (playerInfo == null) return;
-        Map< MinecraftProfileTexture.Type, ResourceLocation > playerTextures = playerInfo.playerTextures;
+        Map< MinecraftProfileTexture.Type, ResourceLocation > playerTextures = playerInfo.textureLocations;
         playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
         if (texture == null) {
-            playerInfo.playerTexturesLoaded = false;
+            playerInfo.pendingTextures = false;
         }
     }
 
@@ -146,11 +146,11 @@ public class SkinHandler {
         }
         if (playerEntity.playerInfo != null) {
             NetworkPlayerInfo info = playerEntity.playerInfo;
-            info.playerTexturesLoaded = false;
-            info.loadPlayerTextures();
-            return MoreObjects.firstNonNull(info.playerTextures.get(MinecraftProfileTexture.Type.SKIN), DefaultPlayerSkin.getDefaultSkin(info.gameProfile.getId()));
+            info.pendingTextures = false;
+            info.registerTextures();
+            return MoreObjects.firstNonNull(info.textureLocations.get(MinecraftProfileTexture.Type.SKIN), DefaultPlayerSkin.getDefaultSkin(info.profile.getId()));
         }
-        return playerEntity.getLocationSkin();
+        return playerEntity.getSkinTextureLocation();
     }
 
 }

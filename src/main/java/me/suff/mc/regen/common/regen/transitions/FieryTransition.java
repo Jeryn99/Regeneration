@@ -21,8 +21,6 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Iterator;
 
-import static net.minecraft.util.math.BlockPos.getAllInBox;
-
 public class FieryTransition implements TransitionType< FieryTransitionRenderer > {
 
 
@@ -30,34 +28,34 @@ public class FieryTransition implements TransitionType< FieryTransitionRenderer 
     public void onUpdateMidRegen(IRegen capability) {
 
         LivingEntity livingEntity = capability.getLiving();
-        livingEntity.extinguish();
+        livingEntity.clearFire();
 
-        if (!livingEntity.world.isRemote) {
+        if (!livingEntity.level.isClientSide) {
             if (capability.getLiving() instanceof ServerPlayerEntity) {
                 NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
             }
         }
 
-        if (livingEntity.world.isRemote) return;
+        if (livingEntity.level.isClientSide) return;
 
         if (livingEntity.getType() == EntityType.PLAYER) {
-            BlockPos livingPos = new BlockPos(livingEntity.getPositionVec());
-            if (livingEntity.world.getBlockState(livingPos).getBlock() instanceof FireBlock)
-                livingEntity.world.removeBlock(livingPos, false);
+            BlockPos livingPos = new BlockPos(livingEntity.position());
+            if (livingEntity.level.getBlockState(livingPos).getBlock() instanceof FireBlock)
+                livingEntity.level.removeBlock(livingPos, false);
 
 
             PlayerUtil.regenerationExplosion(livingEntity);
-            double x = livingEntity.getPosX() + livingEntity.getRNG().nextGaussian() * 2;
-            double y = livingEntity.getPosY() + 0.5 + livingEntity.getRNG().nextGaussian() * 2;
-            double z = livingEntity.getPosZ() + livingEntity.getRNG().nextGaussian() * 2;
-            if(!PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
-                livingEntity.world.createExplosion(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
+            double x = livingEntity.getX() + livingEntity.getRandom().nextGaussian() * 2;
+            double y = livingEntity.getY() + 0.5 + livingEntity.getRandom().nextGaussian() * 2;
+            double z = livingEntity.getZ() + livingEntity.getRandom().nextGaussian() * 2;
+            if (!PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
+                livingEntity.level.explode(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
             }
-            Iterator< BlockPos > iterator = getAllInBox(new BlockPos(livingEntity.getPositionVec()).north().west(), new BlockPos(livingEntity.getPositionVec()).south().east()).iterator();
+            Iterator< BlockPos > iterator = BlockPos.betweenClosedStream(new BlockPos(livingEntity.position()).north().west(), new BlockPos(livingEntity.position()).south().east()).iterator();
             while (iterator.hasNext()) {
                 iterator.forEachRemaining((blockPos -> {
-                    if (livingEntity.world.getBlockState(blockPos).getBlock() instanceof FireBlock) {
-                        livingEntity.world.removeBlock(blockPos, false);
+                    if (livingEntity.level.getBlockState(blockPos).getBlock() instanceof FireBlock) {
+                        livingEntity.level.removeBlock(blockPos, false);
                     }
                 }));
             }

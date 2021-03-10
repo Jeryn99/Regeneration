@@ -23,7 +23,7 @@ public class EnderDragonTransition implements TransitionType< EnderDragonTransit
     @Override
     public void onUpdateMidRegen(IRegen cap) {
 
-        if (!cap.getLiving().world.isRemote) {
+        if (!cap.getLiving().level.isClientSide) {
             if (cap.getLiving() instanceof ServerPlayerEntity) {
                 NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
             }
@@ -31,8 +31,8 @@ public class EnderDragonTransition implements TransitionType< EnderDragonTransit
 
         if (cap.getLiving() instanceof PlayerEntity) {
             PlayerEntity serverPlayerEntity = (PlayerEntity) cap.getLiving();
-            serverPlayerEntity.abilities.allowFlying = RegenConfig.COMMON.allowUpwardsMotion.get();
-            serverPlayerEntity.abilities.isFlying = RegenConfig.COMMON.allowUpwardsMotion.get();
+            serverPlayerEntity.abilities.mayfly = RegenConfig.COMMON.allowUpwardsMotion.get();
+            serverPlayerEntity.abilities.flying = RegenConfig.COMMON.allowUpwardsMotion.get();
         }
     }
 
@@ -40,8 +40,8 @@ public class EnderDragonTransition implements TransitionType< EnderDragonTransit
     public void onFinishRegeneration(IRegen cap) {
         if (cap.getLiving() instanceof ServerPlayerEntity) {
             ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) cap.getLiving();
-            serverPlayerEntity.abilities.allowFlying = serverPlayerEntity.isCreative();
-            serverPlayerEntity.abilities.isFlying = false;
+            serverPlayerEntity.abilities.mayfly = serverPlayerEntity.isCreative();
+            serverPlayerEntity.abilities.flying = false;
 
             if (cap.getLiving() instanceof ServerPlayerEntity) {
                 NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
@@ -57,7 +57,7 @@ public class EnderDragonTransition implements TransitionType< EnderDragonTransit
 
     @Override
     public SoundEvent[] getRegeneratingSounds() {
-        return new SoundEvent[]{SoundEvents.ENTITY_ENDER_DRAGON_DEATH};
+        return new SoundEvent[]{SoundEvents.ENDER_DRAGON_DEATH};
     }
 
     @Override

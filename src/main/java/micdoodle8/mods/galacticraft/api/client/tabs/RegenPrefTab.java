@@ -12,7 +12,7 @@ public class RegenPrefTab extends AbstractTab {
 
     @Override
     public void onTabClicked() {
-        Minecraft.getInstance().displayGuiScreen(new PreferencesScreen());
+        Minecraft.getInstance().setScreen(new PreferencesScreen());
     }
 
     @Override

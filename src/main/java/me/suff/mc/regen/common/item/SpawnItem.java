@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 public class SpawnItem< E extends TimelordEntity > extends Item {
 
     public SpawnItem() {
-        super(new Properties().group(RItems.MAIN));
+        super(new Properties().tab(RItems.MAIN));
     }
 
     public static void setType(ItemStack stack, Timelord type) {
@@ -39,8 +39,8 @@ public class SpawnItem< E extends TimelordEntity > extends Item {
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList< ItemStack > items) {
-        if (isInGroup(group)) {
+    public void fillItemCategory(ItemGroup group, NonNullList< ItemStack > items) {
+        if (allowdedIn(group)) {
             for (Timelord timelordType : Timelord.values()) {
                 ItemStack itemstack = new ItemStack(this);
                 setType(itemstack, timelordType);
@@ -50,23 +50,23 @@ public class SpawnItem< E extends TimelordEntity > extends Item {
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
+    public ITextComponent getName(ItemStack stack) {
         Timelord name = getType(stack);
         return new TranslationTextComponent("regen.timelord_type." + name.name().toLowerCase());
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World worldIn = context.getWorld();
-        BlockPos pos = context.getPos();
+    public ActionResultType useOn(ItemUseContext context) {
+        World worldIn = context.getLevel();
+        BlockPos pos = context.getClickedPos();
         PlayerEntity player = context.getPlayer();
-        Hand hand = player.getActiveHand();
+        Hand hand = player.getUsedItemHand();
 
-        if (!worldIn.isRemote) {
+        if (!worldIn.isClientSide) {
             TimelordEntity timelord = REntities.TIMELORD.get().create(worldIn);
-            timelord.setMale(getType(context.getItem()).isMale());
+            timelord.setMale(getType(context.getItemInHand()).isMale());
             timelord.setPersonality(RSoundSchemes.getRandom(timelord.isMale()).identify().toString());
-            if (getType(context.getItem()) == Timelord.GUARD) {
+            if (getType(context.getItemInHand()) == Timelord.GUARD) {
                 timelord.setTimelordType(TimelordEntity.TimelordType.GUARD);
             } else {
                 timelord.setTimelordType(TimelordEntity.TimelordType.COUNCIL);
@@ -86,16 +86,16 @@ public class SpawnItem< E extends TimelordEntity > extends Item {
                 iRegen.readStyle(nbt);
             });
             timelord.setup();
-            timelord.setPosition(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
-            timelord.faceEntity(player, 90.0F, 90.0F);
-            player.getHeldItem(hand).shrink(1);
-            worldIn.addEntity(timelord);
+            timelord.setPos(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
+            timelord.lookAt(player, 90.0F, 90.0F);
+            player.getItemInHand(hand).shrink(1);
+            worldIn.addFreshEntity(timelord);
 
             if (!player.isCreative()) {
-                context.getItem().shrink(1);
+                context.getItemInHand().shrink(1);
             }
         }
-        return super.onItemUse(context);
+        return super.useOn(context);
     }
 
     public enum Timelord {

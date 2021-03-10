@@ -43,12 +43,12 @@ public class BlazeTransitionRenderer implements TransitionRenderer {
     public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
-                if (entitylivingbaseIn.world.rand.nextInt(24) == 0) {
-                    entitylivingbaseIn.world.playSound(entitylivingbaseIn.getPosX() + 0.5D, entitylivingbaseIn.getPosY() + 0.5D, entitylivingbaseIn.getPosZ() + 0.5D, SoundEvents.ENTITY_BLAZE_BURN, entitylivingbaseIn.getSoundCategory(), 1.0F + entitylivingbaseIn.world.rand.nextFloat(), entitylivingbaseIn.world.rand.nextFloat() * 0.7F + 0.3F, false);
+                if (entitylivingbaseIn.level.random.nextInt(24) == 0) {
+                    entitylivingbaseIn.level.playLocalSound(entitylivingbaseIn.getX() + 0.5D, entitylivingbaseIn.getY() + 0.5D, entitylivingbaseIn.getZ() + 0.5D, SoundEvents.BLAZE_BURN, entitylivingbaseIn.getSoundSource(), 1.0F + entitylivingbaseIn.level.random.nextFloat(), entitylivingbaseIn.level.random.nextFloat() * 0.7F + 0.3F, false);
                 }
                 for (int i = 0; i < 2; ++i) {
-                    entitylivingbaseIn.world.addParticle(ParticleTypes.LARGE_SMOKE, entitylivingbaseIn.getPosXRandom(0.5D), entitylivingbaseIn.getPosYRandom(), entitylivingbaseIn.getPosZRandom(0.5D), 0.0D, 0.0D, 0.0D);
-                    entitylivingbaseIn.world.addParticle(ParticleTypes.FLAME, entitylivingbaseIn.getPosXRandom(0.5D), entitylivingbaseIn.getPosYRandom(), entitylivingbaseIn.getPosZRandom(0.5D), 0.0D, 0.0D, 0.0D);
+                    entitylivingbaseIn.level.addParticle(ParticleTypes.LARGE_SMOKE, entitylivingbaseIn.getRandomX(0.5D), entitylivingbaseIn.getRandomY(), entitylivingbaseIn.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
+                    entitylivingbaseIn.level.addParticle(ParticleTypes.FLAME, entitylivingbaseIn.getRandomX(0.5D), entitylivingbaseIn.getRandomY(), entitylivingbaseIn.getRandomZ(0.5D), 0.0D, 0.0D, 0.0D);
                 }
             }
         });

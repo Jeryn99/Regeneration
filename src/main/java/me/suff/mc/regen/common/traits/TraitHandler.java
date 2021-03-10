@@ -16,7 +16,7 @@ public class TraitHandler {
     public static void onExperienceGain(PlayerXpEvent.PickupXp event) {
         RegenCap.get(event.getPlayer()).ifPresent(iRegen -> {
             if (iRegen.getTrait().getRegistryName().toString().equals(Traits.SMART.get().getRegistryName().toString())) {
-                event.getOrb().xpValue *= 1.5;
+                event.getOrb().value *= 1.5;
             }
         });
     }
@@ -43,7 +43,7 @@ public class TraitHandler {
     public static void onJump(LivingEvent.LivingJumpEvent event) {
         RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
             if (iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
-                event.getEntityLiving().setMotion(event.getEntityLiving().getMotion().x, event.getEntityLiving().getMotion().y + 0.1F * 2, event.getEntityLiving().getEntity().getMotion().z);
+                event.getEntityLiving().setDeltaMovement(event.getEntityLiving().getDeltaMovement().x, event.getEntityLiving().getDeltaMovement().y + 0.1F * 2, event.getEntityLiving().getEntity().getDeltaMovement().z);
             }
         });
     }

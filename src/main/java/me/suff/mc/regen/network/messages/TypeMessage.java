@@ -18,11 +18,11 @@ public class TypeMessage {
     }
 
     public TypeMessage(PacketBuffer buffer) {
-        type = buffer.readString(32767);
+        type = buffer.readUtf(32767);
     }
 
     public static void handle(TypeMessage message, Supplier< NetworkEvent.Context > ctx) {
-        ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
+        ctx.get().getSender().getServer().submitAsync(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
             cap.setTransitionType(TransitionTypes.REGISTRY.getValue(new ResourceLocation(message.type)));
             cap.syncToClients(null);
         }));
@@ -30,6 +30,6 @@ public class TypeMessage {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeString(this.type);
+        buf.writeUtf(this.type);
     }
 }

@@ -1,9 +1,9 @@
 package me.suff.mc.regen.data;
 
+import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.ITag;
@@ -17,15 +17,16 @@ public class RBlockTags extends BlockTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
-        add(RegenUtil.BANNED_BLOCKS, Blocks.MAGMA_BLOCK, Blocks.GLOWSTONE, Blocks.SEA_LANTERN);
+    protected void addTags() {
+        add(RegenUtil.BANNED_BLOCKS, RBlocks.ZERO_ROOM_FULL.get(), RBlocks.ZERO_ROUNDEL.get(), RBlocks.BIO_CONTAINER.get(), RBlocks.ZINC_ORE.get());
+        add(RegenUtil.ARS, RBlocks.ZERO_ROOM_FULL.get(), RBlocks.ZERO_ROUNDEL.get(), RBlocks.BIO_CONTAINER.get());
     }
 
     public void add(ITag.INamedTag< Block > branch, Block block) {
-        this.getOrCreateBuilder(branch).add(block);
+        this.tag(branch).add(block);
     }
 
     public void add(ITag.INamedTag< Block > branch, Block... block) {
-        this.getOrCreateBuilder(branch).add(block);
+        this.tag(branch).add(block);
     }
 }

@@ -20,7 +20,7 @@ public class ClientSkin {
 
     public static void downloadPreviousSkins() {
         if (!RegenConfig.SKIN.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
-        Regeneration.LOG.warn("Refreshing users past skins for {}", Minecraft.getInstance().getSession().getUsername());
+        Regeneration.LOG.warn("Refreshing users past skins for {}", Minecraft.getInstance().getUser().getName());
 
         if (!USER_ALEX.exists()) {
             if (USER_ALEX.mkdirs()) {
@@ -43,13 +43,13 @@ public class ClientSkin {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getInstance().getSession().getPlayerID();
+            String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getInstance().getUser().getUuid();
             try {
                 for (String skin : getSkins(url)) {
-                    downloadSkins(new URL(skin), Minecraft.getInstance().getSession().getUsername() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
+                    downloadSkins(new URL(skin), Minecraft.getInstance().getUser().getName() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
                 }
             } catch (IOException e) {
-                Regeneration.LOG.warn("Could not download player skins for {}, Are you a legitimate user? Are you online?", Minecraft.getInstance().getSession().getUsername());
+                Regeneration.LOG.warn("Could not download player skins for {}, Are you a legitimate user? Are you online?", Minecraft.getInstance().getUser().getName());
                 e.printStackTrace();
             }
         }

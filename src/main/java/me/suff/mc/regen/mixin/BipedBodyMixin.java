@@ -15,25 +15,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BipedModel.class)
 public class BipedBodyMixin {
 
-    @Inject(at = @At("TAIL"), method = "setRotationAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V")
+    @Inject(at = @At("TAIL"), method = "setupAnim(Lnet/minecraft/entity/LivingEntity;FFFFF)V")
     private void setRotationAngles(LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo callbackInfo) {
         AnimationHandler.setRotationAnglesCallback((BipedModel) (Object) this, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
         BipedModel bipedModel = (BipedModel) (Object) this;
 
         if (livingEntity.getType() == EntityType.PLAYER) {
-            if (livingEntity.getItemInUseCount() > 0 && (PlayerUtil.isInEitherHand(livingEntity, RItems.PISTOL.get()) || PlayerUtil.isInEitherHand(livingEntity, RItems.RIFLE.get()))) {
-                bipedModel.bipedLeftArm.rotateAngleX = bipedModel.bipedHead.rotateAngleX;
-                bipedModel.bipedLeftArm.rotateAngleY = bipedModel.bipedHead.rotateAngleY;
-                bipedModel.bipedLeftArm.rotateAngleZ = bipedModel.bipedHead.rotateAngleZ;
-                bipedModel.bipedRightArm.rotateAngleX = bipedModel.bipedHead.rotateAngleX;
-                bipedModel.bipedRightArm.rotateAngleY = bipedModel.bipedHead.rotateAngleY;
-                bipedModel.bipedRightArm.rotateAngleZ = bipedModel.bipedHead.rotateAngleZ;
-                float aimTicks = MathHelper.clamp(livingEntity.getItemInUseCount() / 100F, 0, 1F);
-                bipedModel.bipedLeftArm.rotateAngleX += (float) Math.toRadians(-55F + aimTicks * -30F);
-                bipedModel.bipedLeftArm.rotateAngleY += (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
-                bipedModel.bipedRightArm.rotateAngleX += (float) Math.toRadians(-42F + aimTicks * -48F);
-                bipedModel.bipedRightArm.rotateAngleY += (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
+            if (livingEntity.getUseItemRemainingTicks() > 0 && (PlayerUtil.isInEitherHand(livingEntity, RItems.PISTOL.get()) || PlayerUtil.isInEitherHand(livingEntity, RItems.RIFLE.get()))) {
+                bipedModel.leftArm.xRot = bipedModel.head.xRot;
+                bipedModel.leftArm.yRot = bipedModel.head.yRot;
+                bipedModel.leftArm.zRot = bipedModel.head.zRot;
+                bipedModel.rightArm.xRot = bipedModel.head.xRot;
+                bipedModel.rightArm.yRot = bipedModel.head.yRot;
+                bipedModel.rightArm.zRot = bipedModel.head.zRot;
+                float aimTicks = MathHelper.clamp(livingEntity.getUseItemRemainingTicks() / 100F, 0, 1F);
+                bipedModel.leftArm.xRot += (float) Math.toRadians(-55F + aimTicks * -30F);
+                bipedModel.leftArm.yRot += (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
+                bipedModel.rightArm.xRot += (float) Math.toRadians(-42F + aimTicks * -48F);
+                bipedModel.rightArm.yRot += (float) Math.toRadians((-15F + aimTicks * 5F) * (-1F));
             }
         }
     }

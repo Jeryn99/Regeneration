@@ -23,7 +23,7 @@ public class BlazeTranstion implements TransitionType< BlazeTransitionRenderer >
     @Override
     public void onUpdateMidRegen(IRegen cap) {
         LivingEntity entity = cap.getLiving();
-        if (!cap.getLiving().world.isRemote) {
+        if (!cap.getLiving().level.isClientSide) {
             if (cap.getLiving() instanceof ServerPlayerEntity) {
                 NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
             }

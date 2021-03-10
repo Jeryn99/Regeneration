@@ -6,15 +6,19 @@ import me.suff.mc.regen.client.rendering.JarTileRender;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import me.suff.mc.regen.common.item.GunItem;
+import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import me.suff.mc.regen.common.tiles.JarTile;
 import me.suff.mc.regen.config.RegenConfig;
+import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RenderHelp;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
@@ -48,6 +52,7 @@ public class ClientEvents {
     public static ResourceLocation OLD = new ResourceLocation("textures/gui/icons.png");
     public static ResourceLocation NEW = new ResourceLocation(RConstants.MODID, "textures/gui/icons.png");
     public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/regen_hearts.png");
+    private static ISound iSound = null;
 
     @SubscribeEvent
     public static void onName(RenderNameplateEvent event) {
@@ -89,14 +94,36 @@ public class ClientEvents {
 
         RKeybinds.tickKeybinds();
 
+        if (Minecraft.getInstance().player != null) {
+            ClientPlayerEntity ep = Minecraft.getInstance().player;
+            SoundHandler sound = Minecraft.getInstance().getSoundManager();
+            RegenCap.get(ep).ifPresent(iRegen -> {
+                if (iRegen.getCurrentState() == RegenStates.POST && PlayerUtil.isPlayerAboveZeroGrid(ep)) {
+
+                    if (iSound == null) {
+                        iSound = SimpleSound.forUI(RSounds.GRACE_HUM.get(), 1);
+                    }
+
+                    if (!sound.isActive(iSound)) {
+                        sound.play(iSound);
+                    }
+                } else {
+                    if (sound.isActive(iSound)) {
+                        sound.stop(iSound);
+                    }
+                }
+            });
+        }
+
+
         //Clean up our mess we might have made!
-        if (Minecraft.getInstance().world == null) {
+        if (Minecraft.getInstance().level == null) {
             if (SkinHandler.PLAYER_SKINS.size() > 0) {
-                SkinHandler.PLAYER_SKINS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().deleteTexture(texture)));
+                SkinHandler.PLAYER_SKINS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
                 SkinHandler.PLAYER_SKINS.clear();
-                TimelordRenderer.TIMELORDS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().deleteTexture(texture)));
+                TimelordRenderer.TIMELORDS.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
                 TimelordRenderer.TIMELORDS.clear();
-                JarTileRender.TEXTURES.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().deleteTexture(texture)));
+                JarTileRender.TEXTURES.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
                 JarTileRender.TEXTURES.clear();
                 Regeneration.LOG.warn("Cleared Regeneration texture cache.");
             }
@@ -105,8 +132,8 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
-        Entity renderView = Minecraft.getInstance().getRenderViewEntity();
-        if (!(Minecraft.getInstance().getRenderViewEntity() instanceof LivingEntity)) {
+        Entity renderView = Minecraft.getInstance().getCameraEntity();
+        if (!(Minecraft.getInstance().getCameraEntity() instanceof LivingEntity)) {
             return;
         }
 
@@ -132,7 +159,7 @@ public class ClientEvents {
         RegenCap.get(player).ifPresent((cap) -> {
             String warning = null;
 
-            if (player.getHeldItemMainhand().getItem() instanceof GunItem && player.getItemInUseCount() > 0) {
+            if (player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0) {
                 AbstractGui.GUI_ICONS_LOCATION = NEW;
                 if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS && event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
                     event.setCanceled(true);
@@ -148,7 +175,7 @@ public class ClientEvents {
             }
 
 
-            ITextComponent forceKeybind = new TranslationTextComponent(RKeybinds.FORCE_REGEN.getTranslationKey().replace("key.keyboard.", "").toUpperCase());
+            ITextComponent forceKeybind = new TranslationTextComponent(RKeybinds.FORCE_REGEN.saveString().replace("key.keyboard.", "").toUpperCase());
 
             switch (cap.getCurrentState()) {
                 case ALIVE:
@@ -167,7 +194,7 @@ public class ClientEvents {
                     break;
 
                 case POST:
-                    if (player.hurtTime > 0 || player.getActivePotionEffect(Effects.NAUSEA) != null) {
+                    if (player.hurtTime > 0 || player.getEffect(Effects.CONFUSION) != null) {
                         RenderHelp.renderVig(cap.getSecondaryColors(), 0.5F);
                     }
                     break;
@@ -179,21 +206,21 @@ public class ClientEvents {
                 RenderHelp.renderVig(TransitionTypes.FIERY.get().getDefaultPrimaryColor(), 0.5F);
             }
 
-            IRenderTypeBuffer.Impl renderImpl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+            IRenderTypeBuffer.Impl renderImpl = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
             if (warning != null)
-                Minecraft.getInstance().fontRenderer.renderString(warning, Minecraft.getInstance().getMainWindow().getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, TextFormatting.WHITE.getColor(), false, TransformationMatrix.identity().getMatrix(), renderImpl, false, 0, 15728880);
-            renderImpl.finish();
+                Minecraft.getInstance().font.drawInBatch(warning, Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - Minecraft.getInstance().font.width(warning) / 2, 4, TextFormatting.WHITE.getColor(), false, TransformationMatrix.identity().getMatrix(), renderImpl, false, 0, 15728880);
+            renderImpl.endBatch();
         });
     }
 
     @SubscribeEvent
     public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
-        Entity viewer = Minecraft.getInstance().getRenderViewEntity();
+        Entity viewer = Minecraft.getInstance().getCameraEntity();
         if (viewer != null) {
             RegenCap.get((LivingEntity) viewer).ifPresent((data) -> {
                 if (data.getCurrentState() == RegenStates.GRACE_CRIT) {
                     event.setCanceled(true);
-                    float amount = MathHelper.cos(data.getLiving().ticksExisted * 0.02F) * -0.10F;
+                    float amount = MathHelper.cos(data.getLiving().tickCount * 0.02F) * -0.10F;
                     event.setDensity(amount);
                 }
                 if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.getTicksAnimating() > 0) {
@@ -208,9 +235,9 @@ public class ClientEvents {
     public static void onDeath(LivingDeathEvent e) {
         if (e.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) e.getEntityLiving();
-            SkinHandler.PLAYER_SKINS.remove(player.getUniqueID());
+            SkinHandler.PLAYER_SKINS.remove(player.getUUID());
 
-            if (player.getUniqueID().equals(Minecraft.getInstance().player.getUniqueID())) {
+            if (player.getUUID().equals(Minecraft.getInstance().player.getUUID())) {
                 SkinHandler.sendResetMessage();
             }
         }
@@ -223,20 +250,20 @@ public class ClientEvents {
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data -> {
             if (data.getCurrentState() == RegenStates.REGENERATING) { // locking user
                 MovementInput moveType = e.getMovementInput();
-                moveType.rightKeyDown = false;
-                moveType.leftKeyDown = false;
-                moveType.backKeyDown = false;
-                moveType.jump = false;
-                moveType.moveForward = 0.0F;
-                moveType.sneaking = false;
-                moveType.moveStrafe = 0.0F;
+                moveType.right = false;
+                moveType.left = false;
+                moveType.down = false;
+                moveType.jumping = false;
+                moveType.forwardImpulse = 0.0F;
+                moveType.shiftKeyDown = false;
+                moveType.leftImpulse = 0.0F;
 
                 if (data.getTransitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
-                    if (player.getPosition().getY() <= 100) {
-                        BlockPos upwards = player.getPosition().up(2);
-                        BlockPos pos = upwards.subtract(player.getPosition());
+                    if (player.blockPosition().getY() <= 100) {
+                        BlockPos upwards = player.blockPosition().above(2);
+                        BlockPos pos = upwards.subtract(player.blockPosition());
                         Vector3d vec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).normalize();
-                        player.setMotion(player.getMotion().add(vec.scale(0.10D)));
+                        player.setDeltaMovement(player.getDeltaMovement().add(vec.scale(0.10D)));
                     }
                 }
             }
