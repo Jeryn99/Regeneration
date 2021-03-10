@@ -14,6 +14,7 @@ public class RSoundSchemes {
     public static SoundScheme M_RAMEN = new SoundScheme(RSounds.M_RAMEN_TIMELORD_HURT.get(), RSounds.M_RAMEN_TIMELORD_TRADE_FAIL.get(), RSounds.M_RAMEN_TIMELORD_TRADE_SUCCESS.get(), RSounds.M_RAMEN_TIMELORD_DIE.get(), RSounds.M_RAMEN_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "ramen"));
     public static SoundScheme M_TOMMY = new SoundScheme(RSounds.M_TOMMY_TIMELORD_HURT.get(), RSounds.M_TOMMY_TIMELORD_TRADE_FAIL.get(), RSounds.M_TOMMY_TIMELORD_TRADE_SUCCESS.get(), RSounds.M_TOMMY_TIMELORD_DIE.get(), RSounds.M_TOMMY_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "tommy"));
     public static SoundScheme M_CONNOR = new SoundScheme(RSounds.M_CONNOR_TIMELORD_HURT.get(), RSounds.M_CONNOR_TIMELORD_TRADE_FAIL.get(), RSounds.M_CONNOR_TIMELORD_TRADE_SUCCESS.get(), RSounds.M_CONNOR_TIMELORD_DIE.get(), RSounds.M_CONNOR_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "connor"));
+    public static SoundScheme M_WOD = new SoundScheme(RSounds.M_WODAMAN_TIMELORD_HURT.get(), RSounds.M_WODAMAN_TIMELORD_TRADE_FAIL.get(), RSounds.M_WODAMAN_TIMELORD_TRADE_SUCCESS.get(), RSounds.M_WODAMAN_TIMELORD_HURT.get(), RSounds.M_WODAMAN_TIMELORD_HURT.get(), new ResourceLocation(RConstants.MODID, "wodaman"));
     public static SoundScheme F_AALICEH = new SoundScheme(RSounds.F_AALICEH_TIMELORD_HURT.get(), RSounds.F_AALICEH_TIMELORD_TRADE_FAIL.get(), RSounds.F_AALICEH_TIMELORD_TRADE_SUCCESS.get(), RSounds.F_AALICEH_TIMELORD_HURT.get(), RSounds.F_AALICEH_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "aaliceh"));
     public static SoundScheme F_ANGELA = new SoundScheme(RSounds.F_ANGELA_TIMELORD_HURT.get(), RSounds.F_ANGELA_TIMELORD_TRADE_FAIL.get(), RSounds.F_ANGELA_TIMELORD_TRADE_SUCCESS.get(), RSounds.F_ANGELA_TIMELORD_DIE.get(), RSounds.F_ANGELA_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "angela"));
     public static SoundScheme F_ASHER = new SoundScheme(RSounds.F_ANGELA_TIMELORD_HURT.get(), RSounds.F_ASHER_TIMELORD_TRADE_FAIL.get(), RSounds.F_ASHER_TIMELORD_TRADE_SUCCESS.get(), RSounds.F_ANGELA_TIMELORD_DIE.get(), RSounds.F_ANGELA_TIMELORD_SCREAM.get(), new ResourceLocation(RConstants.MODID, "asher"));
@@ -21,7 +22,7 @@ public class RSoundSchemes {
 
     public static void init() {
         F_SCHEMES = new SoundScheme[]{RSoundSchemes.F_ANGELA, RSoundSchemes.F_AALICEH, RSoundSchemes.F_ASHER};
-        M_SCHEMES = new SoundScheme[]{RSoundSchemes.M_GAS, M_RAMEN, M_TOMMY, M_CONNOR};
+        M_SCHEMES = new SoundScheme[]{RSoundSchemes.M_GAS, M_RAMEN, M_TOMMY, M_CONNOR, M_WOD};
     }
 
 

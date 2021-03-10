@@ -79,6 +79,11 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > M_CONNOR_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_connor_timelord_trade_success", () -> setUpSound("m_connor_timelord_trade_success"));
     public static final RegistryObject< SoundEvent > M_CONNOR_TIMELORD_SCREAM = SOUNDS.register("m_connor_timelord_scream", () -> setUpSound("m_connor_timelord_scream"));
 
+    //Wodaman Timelord
+    public static final RegistryObject< SoundEvent > M_WODAMAN_TIMELORD_HURT = SOUNDS.register("m_wodaman_timelord_hurt", () -> setUpSound("m_wodaman_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > M_WODAMAN_TIMELORD_TRADE_FAIL = SOUNDS.register("m_wodaman_timelord_trade_fail", () -> setUpSound("m_wodaman_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > M_WODAMAN_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_wodaman_timelord_trade_success", () -> setUpSound("m_wodaman_timelord_trade_success"));
+
 
     public static final RegistryObject< SoundEvent > STASER = SOUNDS.register("staser", () -> setUpSound("staser"));
     public static final RegistryObject< SoundEvent > RIFLE = SOUNDS.register("rifle", () -> setUpSound("rifle"));

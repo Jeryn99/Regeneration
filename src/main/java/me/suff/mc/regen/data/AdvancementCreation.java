@@ -50,6 +50,8 @@ public class AdvancementCreation implements IDataProvider {
         this.createAdvancement("critical_period", new ItemStack(Items.CLOCK), new BaseTrigger.Instance(TriggerManager.CRITICAL.getId()));
         this.createAdvancement("timelord_trade", new ItemStack(RItems.SPAWN_ITEM.get()), new BaseTrigger.Instance(TriggerManager.TIMELORD_TRADE.getId()));
         this.createAdvancement("gallifreyan_weapon", new ItemStack(RItems.PISTOL.get()), InventoryChangeTrigger.Instance.hasItems(() -> RItems.PISTOL.get(), () -> RItems.RIFLE.get()));
+        this.createAdvancement("hand_cut", new ItemStack(RItems.HAND.get()), new BaseTrigger.Instance(TriggerManager.HAND_CUT.getId()));
+        this.createAdvancement("zero_room", new ItemStack(RBlocks.ZERO_ROUNDEL.get()), new BaseTrigger.Instance(TriggerManager.ZERO_ROOM.getId()));
 
 
         for (Advancement adv : advancements) {

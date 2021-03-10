@@ -31,9 +31,13 @@ public class EnglishLangGen extends LanguageProvider {
         add("advancements.regen.title.gallifrey", "Constellation of kasterborous");
         add("advancements.regen.desc.gallifrey", "Step foot on Gallifrey");
         add("advancements.regen.title.gallifreyan_weapon", "There's no Stun Setting...");
-        add("advancements.regen.desc.gallifreyan_weapon", "Hold a Gallifreyan Weapon");
+        add("advancements.regen.desc.gallifreyan_weapon", "Hold both Gallifreyan weapons");
         add("advancements.regen.title.timelord_trade", "Galactic Fortune");
         add("advancements.regen.desc.timelord_trade", "Trade with a Timelord");
+        add("advancements.regen.title.hand_cut", "For Science!");
+        add("advancements.regen.desc.hand_cut", "Cut off your hand");
+        add("advancements.regen.title.zero_room", "Smells like roses");
+        add("advancements.regen.desc.zero_room", "Use Zero Room Roundels to negate negative Regeneration Effects");
 
         // === Damages Sources ===
         add("regen.source.regen_energy", "%s was blasted by Regeneration Energy!");
