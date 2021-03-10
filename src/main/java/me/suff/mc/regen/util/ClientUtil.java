@@ -22,6 +22,7 @@ import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.toasts.SystemToast;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.BipedRenderer;
@@ -30,6 +31,8 @@ import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.PointOfView;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
@@ -71,6 +74,17 @@ public class ClientUtil {
         Minecraft.getInstance().particleEngine.register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
     }
 
+    public static boolean isAlex(Entity livingEntity) {
+        if (livingEntity instanceof AbstractClientPlayerEntity) {
+            AbstractClientPlayerEntity abstractClientPlayerEntity = (AbstractClientPlayerEntity) livingEntity;
+           if(abstractClientPlayerEntity.playerInfo.skinModel.isEmpty()){
+               return false;
+           }
+
+            return abstractClientPlayerEntity.playerInfo.skinModel == "slim";
+        }
+        return false;
+    }
 
     //TODO maybe I should make this a hashmap
     public static BipedModel< ? > getArmorModel(ItemStack itemStack) {

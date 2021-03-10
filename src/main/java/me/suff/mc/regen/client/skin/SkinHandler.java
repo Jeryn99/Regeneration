@@ -70,15 +70,8 @@ public class SkinHandler {
                 playerEntity.playerInfo.registerTextures();
                 isAlex = playerEntity.playerInfo.getModelName().contentEquals("slim");
             }
-            if (armorSlim(playerEntity.getItemBySlot(EquipmentSlotType.CHEST))) {
-                isAlex = true;
-            }
             setPlayerSkinType(playerEntity, isAlex);
         });
-    }
-
-    public static boolean armorSlim(ItemStack stack) {
-        return stack.getItem() == RItems.F_ROBES_CHEST.get() || stack.getItem() == RItems.GUARD_CHEST.get() || stack.getItem() == RItems.M_ROBES_CHEST.get();
     }
 
     public static void setPlayerSkinType(AbstractClientPlayerEntity player, boolean isAlex) {

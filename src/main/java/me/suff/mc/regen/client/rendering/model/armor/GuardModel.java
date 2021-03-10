@@ -2,20 +2,27 @@ package me.suff.mc.regen.client.rendering.model.armor;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import me.suff.mc.regen.util.ClientUtil;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 
 /* Created by Craig on 03/03/2021 */
-public class GuardModel extends BipedModel< LivingEntity > {
+public class GuardModel extends BipedModel< LivingEntity > implements LivingArmor{
     private final ModelRenderer Head;
     private final ModelRenderer Body;
     private final ModelRenderer RightArm;
     private final ModelRenderer LeftArm;
+    private ModelRenderer mainArmRight;
+    private ModelRenderer mainArmLeft;
+    private final ModelRenderer RightArmSteve;
+    private final ModelRenderer LeftArmSteve;
     private final ModelRenderer RightLeg;
     private final ModelRenderer LeftLeg;
     private EquipmentSlotType slot = EquipmentSlotType.HEAD;
+    private LivingEntity livingEntity;
 
     public GuardModel(EquipmentSlotType slotType) {
         super(1);
@@ -45,6 +52,17 @@ public class GuardModel extends BipedModel< LivingEntity > {
         LeftArm.texOffs(32, 48).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, 0.0F, false);
         LeftArm.texOffs(48, 48).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, 0.25F, false);
 
+        RightArmSteve = new ModelRenderer(this);
+        RightArmSteve.setPos(-5.0F, 2.0F, 0.0F);
+        RightArmSteve.texOffs(32, 48).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
+        RightArmSteve.texOffs(48, 48).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, false);
+
+        LeftArmSteve = new ModelRenderer(this);
+        LeftArmSteve.setPos(5.0F, 2.0F, 0.0F);
+        LeftArmSteve.texOffs(32, 48).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
+        LeftArmSteve.texOffs(48, 48).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, false);
+
+
         RightLeg = new ModelRenderer(this);
         RightLeg.setPos(-1.9F, 12.0F, 0.0F);
         RightLeg.texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
@@ -71,9 +89,10 @@ public class GuardModel extends BipedModel< LivingEntity > {
             Head.render(matrixStack, buffer, packedLight, packedOverlay);
         }
         if (slot == EquipmentSlotType.CHEST) {
+            updateArms(getLiving());
             Body.render(matrixStack, buffer, packedLight, packedOverlay);
-            RightArm.render(matrixStack, buffer, packedLight, packedOverlay);
-            LeftArm.render(matrixStack, buffer, packedLight, packedOverlay);
+            mainArmRight.render(matrixStack, buffer, packedLight, packedOverlay);
+            mainArmLeft.render(matrixStack, buffer, packedLight, packedOverlay);
         }
         if (slot == EquipmentSlotType.LEGS || slot == EquipmentSlotType.FEET) {
             RightLeg.render(matrixStack, buffer, packedLight, packedOverlay);
@@ -81,4 +100,31 @@ public class GuardModel extends BipedModel< LivingEntity > {
         }
     }
 
+    public void updateArms(LivingEntity livingEntity){
+        if(livingEntity instanceof AbstractClientPlayerEntity){
+            boolean isAlex = ClientUtil.isAlex(livingEntity);
+            if(isAlex){
+                this.mainArmLeft = LeftArm;
+                this.mainArmRight = RightArm;
+            } else {
+                this.mainArmLeft = LeftArmSteve;
+                this.mainArmRight = RightArmSteve;
+            }
+        } else {
+            this.mainArmLeft = LeftArmSteve;
+            this.mainArmRight = RightArmSteve;
+        }
+        leftArm = mainArmLeft;
+        rightArm = mainArmRight;
+    }
+
+    @Override
+    public void setLiving(LivingEntity entity) {
+        this.livingEntity = entity;
+    }
+
+    @Override
+    public LivingEntity getLiving() {
+        return livingEntity;
+    }
 }

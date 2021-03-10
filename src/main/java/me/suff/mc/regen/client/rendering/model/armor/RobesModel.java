@@ -1,20 +1,24 @@
-package me.suff.mc.regen.client.rendering.model.armor;// Made with Blockbench 3.7.5
-// Exported for Minecraft version 1.15
-// Paste this class into your mod and generate all required imports
+package me.suff.mc.regen.client.rendering.model.armor;
 
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import me.suff.mc.regen.util.ClientUtil;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 
-public class RobesModel extends BipedModel< LivingEntity > {
+public class RobesModel extends BipedModel< LivingEntity > implements LivingArmor {
     private final ModelRenderer Body;
     private final ModelRenderer RightArm;
     private final ModelRenderer LeftArm;
     private final ModelRenderer RightLeg;
+    private final ModelRenderer RightArmSteve;
+    private final ModelRenderer LeftArmSteve;
+    private ModelRenderer mainArmRight;
+    private ModelRenderer mainArmLeft;
     private final ModelRenderer LeftLeg;
     private final ModelRenderer Collar;
     private final ModelRenderer Cape;
@@ -43,6 +47,17 @@ public class RobesModel extends BipedModel< LivingEntity > {
         LeftArm.texOffs(32, 48).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, 0.0F, false);
         LeftArm.texOffs(48, 48).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, 0.25F, false);
 
+        RightArmSteve = new ModelRenderer(this);
+        RightArmSteve.setPos(-5.0F, 2.0F, 0.0F);
+        RightArmSteve.texOffs(32, 48).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
+        RightArmSteve.texOffs(48, 48).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, false);
+
+        LeftArmSteve = new ModelRenderer(this);
+        LeftArmSteve.setPos(5.0F, 2.0F, 0.0F);
+        LeftArmSteve.texOffs(32, 48).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
+        LeftArmSteve.texOffs(48, 48).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F, false);
+
+
         RightLeg = new ModelRenderer(this);
         RightLeg.setPos(-1.9F, 12.0F, 0.0F);
         RightLeg.texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, false);
@@ -69,26 +84,13 @@ public class RobesModel extends BipedModel< LivingEntity > {
         rightLeg = RightLeg;
         leftLeg = LeftLeg;
 
+        mainArmLeft = LeftArm;
+        mainArmRight = RightArm;
     }
 
-    public LivingEntity getLivingEntity() {
-        return livingEntity;
-    }
-
-    public void setLivingEntity(LivingEntity livingEntity) {
-        this.livingEntity = livingEntity;
-    }
 
     @Override
     public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-
-   /*     if(livingEntity.limbSwing > 0) {
-            if (livingEntity.isSprinting()) {
-                Cape.rotateAngleX = (float) Math.toDegrees(35);
-            } else {
-                Cape.rotateAngleX = livingEntity.limbSwing;
-            }
-        }*/
 
         if (slot == EquipmentSlotType.HEAD) {
             matrixStack.pushPose();
@@ -99,9 +101,10 @@ public class RobesModel extends BipedModel< LivingEntity > {
             matrixStack.popPose();
         }
         if (slot == EquipmentSlotType.CHEST) {
+            updateArms(livingEntity);
             Body.render(matrixStack, buffer, packedLight, packedOverlay);
-            RightArm.render(matrixStack, buffer, packedLight, packedOverlay);
-            LeftArm.render(matrixStack, buffer, packedLight, packedOverlay);
+            mainArmRight.render(matrixStack, buffer, packedLight, packedOverlay);
+            mainArmLeft.render(matrixStack, buffer, packedLight, packedOverlay);
             Cape.render(matrixStack, buffer, packedLight, packedOverlay);
         }
         if (slot == EquipmentSlotType.LEGS || slot == EquipmentSlotType.FEET) {
@@ -110,7 +113,36 @@ public class RobesModel extends BipedModel< LivingEntity > {
         }
     }
 
+    public void updateArms(LivingEntity livingEntity){
+        if(livingEntity instanceof AbstractClientPlayerEntity){
+            boolean isAlex = ClientUtil.isAlex(livingEntity);
+            if(isAlex){
+                this.mainArmLeft = LeftArm;
+                this.mainArmRight = RightArm;
+            } else {
+                this.mainArmLeft = LeftArmSteve;
+                this.mainArmRight = RightArmSteve;
+            }
+        } else {
+            this.mainArmLeft = LeftArmSteve;
+            this.mainArmRight = RightArmSteve;
+        }
+        leftArm = mainArmLeft;
+        rightArm = mainArmRight;
+    }
+
+
     public void renderCape(MatrixStack matrixStackIn, IVertexBuilder ivertexbuilder, int packedLightIn, int noOverlay) {
         this.Cape.render(matrixStackIn, ivertexbuilder, packedLightIn, noOverlay);
+    }
+
+    @Override
+    public void setLiving(LivingEntity entity) {
+        this.livingEntity = entity;
+    }
+
+    @Override
+    public LivingEntity getLiving() {
+        return livingEntity;
     }
 }
