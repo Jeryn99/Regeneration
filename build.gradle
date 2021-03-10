@@ -20,7 +20,7 @@ apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
 
 
-version = '1.0.9'
+version = '2.0.0'
 group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = '[1.16] Regeneration'
 
@@ -98,16 +98,36 @@ curseforge {
     project {
         id = rootProject.regen
 
-        changelog = 'Version 1.0.8 </br>' +
-                '- Fixed issue where GUI background would render ontop of GUIs occasionally </br>' +
-                '- Re-designed Color and Skin Selection GUIS </br>' +
-                '- Gave timelords names again </br>' +
-                '- Adds Drum/Hum options </br>' +
-                '- Fixed a bug where you would always get the boring trait  </br>' +
-                '- Added back tabs to guis </br>' +
-                '- Added Blaze Transition </br>' +
-                '- Fixes weird death handling in critical phase  </br>' +
-                '- Added checkmark to exclude and include trending skins </br>'
+        changelog = 'Regen 2.0.0 </br>' +
+                '- Fixed 1.16.5 not booting up  </br>' +
+                '- Gave Timelords voices  </br>' +
+                '- Added Timelord Spawn Items </br>' +
+                '- Added Female Council Robes </br>' +
+                '- Added Male Council Robes </br>' +
+                '- Added Timelord Guard Armor </br>' +
+                '- Added Zinc Ore </br>' +
+                '- Added Zinc Ingot </br>' +
+                '- Added Rifle </br>' +
+                '- Added Staser </br>' +
+                '- Added Bio-Container </br>' +
+                '- Renamed "Fob Watch" to "Chameleon Arch" </br>' +
+                '- Made Timelords choose from their own skin folder instead of recycling the players ones </br>' +
+                '- Fixed bug where timelord heads would render slightly dark </br>' +
+                '- Changed Timelord models  </br>' +
+                '- Added Config for mob regenerations </br>' +
+                '- Fixed Mending Exploit  </br>' +
+                '- Changed Timelord Trades slightly  </br>' +
+                '- Heart Icons now become double hearts when you have Regenerations </br>' +
+                '- Fixed Search bar over scaling outside of the GUI </br>' +
+                '- Added back Zero Room Roundels </br>' +
+                '- Fob Watches now generate in some chests (Can be disabled in config): </br>' +
+                '* ABANDONED_MINESHAFT 15% chance </br>' +
+                '* BASTION_BRIDGE 15% chance </br>' +
+                '* LIBRARIAN_GIFT 15% chance </br>' +
+                '* WOODLAND_MANSION 15% chance </br>' +
+                '* STRONGHOLD_LIBRARY 15% chance </br>' +
+                '* SHIPWRECK_SUPPLY 15% chance </br>' +
+                '* ALL TREASURE LOOT TABLES 40% chance </br>'
         releaseType = 'release'
         changelogType = 'html'
         addGameVersion '1.16.3'
