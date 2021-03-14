@@ -65,6 +65,14 @@ public class RSounds {
     public static final RegistryObject< SoundEvent > M_RAMEN_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_ramen_timelord_trade_success", () -> setUpSound("m_ramen_timelord_trade_success"));
     public static final RegistryObject< SoundEvent > M_RAMEN_TIMELORD_SCREAM = SOUNDS.register("m_ramen_timelord_scream", () -> setUpSound("m_ramen_timelord_scream"));
 
+    //Didgeridoomen Timelord
+    public static final RegistryObject< SoundEvent > M_DIDGERIDOOMEN_TIMELORD_HURT = SOUNDS.register("m_didgeridoomen_timelord_hurt", () -> setUpSound("m_didgeridoomen_timelord_hurt"));
+    public static final RegistryObject< SoundEvent > M_DIDGERIDOOMEN_TIMELORD_DIE = SOUNDS.register("m_didgeridoomen_timelord_die", () -> setUpSound("m_didgeridoomen_timelord_die"));
+    public static final RegistryObject< SoundEvent > M_DIDGERIDOOMEN_TIMELORD_TRADE_FAIL = SOUNDS.register("m_didgeridoomen_timelord_trade_fail", () -> setUpSound("m_didgeridoomen_timelord_trade_fail"));
+    public static final RegistryObject< SoundEvent > M_DIDGERIDOOMEN_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_didgeridoomen_timelord_trade_success", () -> setUpSound("m_didgeridoomen_timelord_trade_success"));
+    public static final RegistryObject< SoundEvent > M_DIDGERIDOOMEN_TIMELORD_SCREAM = SOUNDS.register("m_didgeridoomen_timelord_scream", () -> setUpSound("m_didgeridoomen_timelord_scream"));
+
+
     //Tommy Timelord
     public static final RegistryObject< SoundEvent > M_TOMMY_TIMELORD_HURT = SOUNDS.register("m_tommy_timelord_hurt", () -> setUpSound("m_tommy_timelord_hurt"));
     public static final RegistryObject< SoundEvent > M_TOMMY_TIMELORD_DIE = SOUNDS.register("m_tommy_timelord_die", () -> setUpSound("m_tommy_timelord_die"));

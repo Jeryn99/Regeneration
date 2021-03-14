@@ -265,6 +265,47 @@
       "regen:timelord/male/ramen/m_timelord_scream_2"
     ]
   },
+  "m_didgeridoomen_timelord_hurt": {
+    "subtitle": "regen.sound.m_timelord.hurt",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_hurt_4",
+      "regen:timelord/male/didgeridoomen/m_timelord_hurt_3",
+      "regen:timelord/male/didgeridoomen/m_timelord_hurt_2",
+      "regen:timelord/male/didgeridoomen/m_timelord_hurt_1"
+    ]
+  },
+  "m_didgeridoomen_timelord_die": {
+    "subtitle": "regen.sound.m_timelord.die",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_die_1"
+    ]
+  },
+  "m_didgeridoomen_timelord_trade_fail": {
+    "subtitle": "regen.sound.m_timelord.trade_fail",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_fail_1",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_fail_2",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_fail_3",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_fail_4"
+    ]
+  },
+  "m_didgeridoomen_timelord_trade_success": {
+    "subtitle": "regen.sound.m_timelord.trade_success",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_success_1",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_success_2",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_success_3",
+      "regen:timelord/male/didgeridoomen/m_timelord_trade_success_4"
+    ]
+  },
+  "m_didgeridoomen_timelord_scream": {
+    "subtitle": "regen.sound.m_timelord.scream",
+    "sounds": [
+      "regen:timelord/male/didgeridoomen/m_timelord_scream_1",
+      "regen:timelord/male/didgeridoomen/m_timelord_scream_2",
+      "regen:timelord/male/didgeridoomen/m_timelord_scream_3"
+    ]
+  },
   "m_tommy_timelord_hurt": {
     "subtitle": "regen.sound.m_timelord.hurt",
     "sounds": [

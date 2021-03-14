@@ -148,7 +148,7 @@ public class CommonSkin {
             alexDir.mkdirs();
         }
 
-        Regeneration.LOG.warn("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
+        Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
         ImageIO.write(img, "png", new File(file, filename + ".png"));
     }
 
@@ -164,7 +164,7 @@ public class CommonSkin {
             file.mkdirs();
         }
 
-        Regeneration.LOG.warn("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
+        Regeneration.LOG.info("URL: {} || Name: {} || Path: {}", url.toString(), filename, file.getPath());
         ImageIO.write(img, "png", new File(file, filename + ".png"));
     }
 
@@ -182,7 +182,7 @@ public class CommonSkin {
         long attr = drWhoDir.lastModified();
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(drWhoDir.list()).length == 0) {
             Regeneration.LOG.info("Re-Downloading Internal Skins");
-            String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
+            String PACKS_URL = "https://raw.githubusercontent.com/WhoCraft/Regeneration/skins/index.json";
             String[] links = Regeneration.GSON.fromJson(RegenUtil.getJsonFromURL(PACKS_URL), String[].class);
             for (String link : links) {
                 try {

@@ -35,4 +35,5 @@ public class TraitsArgumentType implements ArgumentType< Traits.ITrait > {
     public < S > CompletableFuture< Suggestions > listSuggestions(CommandContext< S > context, SuggestionsBuilder builder) {
         return ISuggestionProvider.suggestResource(Traits.REGISTRY.getKeys(), builder);
     }
+
 }

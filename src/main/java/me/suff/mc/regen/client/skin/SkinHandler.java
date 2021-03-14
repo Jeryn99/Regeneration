@@ -98,11 +98,6 @@ public class SkinHandler {
         try {
             return NativeImage.read(new ByteArrayInputStream(skinArray));
         } catch (IOException e) {
-        /*    CrashReport crashreport = CrashReport.makeCrashReport(e, "Regeneration Skin Creation");
-            crashreport = RegenUtil.crashReport(crashreport);
-            CrashReportCategory crashreportcategory = crashreport.makeCategory("Skin Creation");
-            crashreportcategory.addDetail("Skin bytes", Arrays.toString(skinArray));
-            throw new ReportedException(crashreport);*/
             return null;
         }
     }
