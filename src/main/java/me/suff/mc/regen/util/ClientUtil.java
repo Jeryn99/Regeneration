@@ -32,7 +32,6 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
@@ -77,9 +76,9 @@ public class ClientUtil {
     public static boolean isAlex(Entity livingEntity) {
         if (livingEntity instanceof AbstractClientPlayerEntity) {
             AbstractClientPlayerEntity abstractClientPlayerEntity = (AbstractClientPlayerEntity) livingEntity;
-           if(abstractClientPlayerEntity.playerInfo.skinModel.isEmpty()){
-               return false;
-           }
+            if (abstractClientPlayerEntity.playerInfo.skinModel.isEmpty()) {
+                return false;
+            }
 
             return abstractClientPlayerEntity.playerInfo.skinModel == "slim";
         }
@@ -230,6 +229,7 @@ public class ClientUtil {
             BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
             matrixStackIn.pushPose();
             matrixStackIn.scale(5, 5, 5);
+            matrixStackIn.translate(22, 22, -22);
             Matrix4f matrix4f1 = matrixStackIn.last().pose();
             Minecraft.getInstance().getTextureManager().bind(SUN_TEXTURES);
             bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
