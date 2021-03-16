@@ -14,6 +14,7 @@ import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.util.*;
+import net.minecraft.data.BiomeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -87,6 +88,7 @@ public class Regeneration {
         generator.addProvider(new RBlockTags(generator, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
         generator.addProvider(new AdvancementCreation(generator));
+        generator.addProvider(new BiomeProvider(generator));
     }
 
     @SubscribeEvent

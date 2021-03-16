@@ -1,0 +1,29 @@
+{
+  "parent": "regen:critical_period",
+  "display": {
+    "icon": {
+      "item": "regen:timelord"
+    },
+    "title": {
+      "translate": "advancements.regen.title.timelord_trade"
+    },
+    "description": {
+      "translate": "advancements.regen.desc.timelord_trade"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regen:textures/block/zero_roundel_half.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:timelord_trade"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}
