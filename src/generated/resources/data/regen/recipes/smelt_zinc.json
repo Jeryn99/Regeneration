@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "regen:zinc_ore"
-  },
-  "result": "regen:zinc",
-  "experience": 0.7,
-  "cookingtime": 300
-}

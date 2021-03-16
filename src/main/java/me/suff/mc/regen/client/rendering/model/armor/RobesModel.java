@@ -17,12 +17,11 @@ public class RobesModel extends BipedModel< LivingEntity > implements LivingArmo
     private final ModelRenderer RightLeg;
     private final ModelRenderer RightArmSteve;
     private final ModelRenderer LeftArmSteve;
-    private ModelRenderer mainArmRight;
-    private ModelRenderer mainArmLeft;
     private final ModelRenderer LeftLeg;
     private final ModelRenderer Collar;
     private final ModelRenderer Cape;
-
+    private ModelRenderer mainArmRight;
+    private ModelRenderer mainArmLeft;
     private LivingEntity livingEntity = null;
     private EquipmentSlotType slot = EquipmentSlotType.HEAD;
 
@@ -113,10 +112,10 @@ public class RobesModel extends BipedModel< LivingEntity > implements LivingArmo
         }
     }
 
-    public void updateArms(LivingEntity livingEntity){
-        if(livingEntity instanceof AbstractClientPlayerEntity){
+    public void updateArms(LivingEntity livingEntity) {
+        if (livingEntity instanceof AbstractClientPlayerEntity) {
             boolean isAlex = ClientUtil.isAlex(livingEntity);
-            if(isAlex){
+            if (isAlex) {
                 this.mainArmLeft = LeftArm;
                 this.mainArmRight = RightArm;
             } else {
@@ -137,12 +136,12 @@ public class RobesModel extends BipedModel< LivingEntity > implements LivingArmo
     }
 
     @Override
-    public void setLiving(LivingEntity entity) {
-        this.livingEntity = entity;
+    public LivingEntity getLiving() {
+        return livingEntity;
     }
 
     @Override
-    public LivingEntity getLiving() {
-        return livingEntity;
+    public void setLiving(LivingEntity entity) {
+        this.livingEntity = entity;
     }
 }

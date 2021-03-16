@@ -10,17 +10,17 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 
 /* Created by Craig on 03/03/2021 */
-public class GuardModel extends BipedModel< LivingEntity > implements LivingArmor{
+public class GuardModel extends BipedModel< LivingEntity > implements LivingArmor {
     private final ModelRenderer Head;
     private final ModelRenderer Body;
     private final ModelRenderer RightArm;
     private final ModelRenderer LeftArm;
-    private ModelRenderer mainArmRight;
-    private ModelRenderer mainArmLeft;
     private final ModelRenderer RightArmSteve;
     private final ModelRenderer LeftArmSteve;
     private final ModelRenderer RightLeg;
     private final ModelRenderer LeftLeg;
+    private ModelRenderer mainArmRight;
+    private ModelRenderer mainArmLeft;
     private EquipmentSlotType slot = EquipmentSlotType.HEAD;
     private LivingEntity livingEntity;
 
@@ -100,10 +100,10 @@ public class GuardModel extends BipedModel< LivingEntity > implements LivingArmo
         }
     }
 
-    public void updateArms(LivingEntity livingEntity){
-        if(livingEntity instanceof AbstractClientPlayerEntity){
+    public void updateArms(LivingEntity livingEntity) {
+        if (livingEntity instanceof AbstractClientPlayerEntity) {
             boolean isAlex = ClientUtil.isAlex(livingEntity);
-            if(isAlex){
+            if (isAlex) {
                 this.mainArmLeft = LeftArm;
                 this.mainArmRight = RightArm;
             } else {
@@ -119,12 +119,12 @@ public class GuardModel extends BipedModel< LivingEntity > implements LivingArmo
     }
 
     @Override
-    public void setLiving(LivingEntity entity) {
-        this.livingEntity = entity;
+    public LivingEntity getLiving() {
+        return livingEntity;
     }
 
     @Override
-    public LivingEntity getLiving() {
-        return livingEntity;
+    public void setLiving(LivingEntity entity) {
+        this.livingEntity = entity;
     }
 }

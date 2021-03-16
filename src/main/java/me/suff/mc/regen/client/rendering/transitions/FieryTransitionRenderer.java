@@ -68,7 +68,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
                 if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
-                    double x = iRegen.getTicksAnimating();
+                    double x = iRegen.getAnimationTicks();
                     double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
                     double r = 0.09890109890109888;
                     double f = p * Math.pow(x, 2) - r;
@@ -97,7 +97,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                 bipedModel.head.translateAndRotate(matrix);
                 matrix.translate(0.0f, 0.09f, 0.2f);
                 matrix.mulPose(Vector3f.XP.rotation(180));
-                double x = iRegen.getTicksAnimating();
+                double x = iRegen.getAnimationTicks();
                 double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
                 double r = 0.09890109890109888;
                 double f = p * Math.pow(x, 2) - r;
@@ -132,9 +132,9 @@ public class FieryTransitionRenderer implements TransitionRenderer {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 double armShake = livingEntity.getRandom().nextDouble();
-                float armRotY = (float) iRegen.getTicksAnimating() * 1.5F;
-                float armRotZ = (float) iRegen.getTicksAnimating() * 1.5F;
-                float headRot = (float) iRegen.getTicksAnimating() * 1.5F;
+                float armRotY = (float) iRegen.getAnimationTicks() * 1.5F;
+                float armRotZ = (float) iRegen.getAnimationTicks() * 1.5F;
+                float headRot = (float) iRegen.getAnimationTicks() * 1.5F;
 
                 if (armRotY > 95) {
                     armRotY = 95;

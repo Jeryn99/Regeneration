@@ -57,7 +57,7 @@ public class RegenCap implements IRegen {
     private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
     private boolean isAlex = false;
     private byte[] skinArray = new byte[0];
-    private int regensLeft = 0, ticksAnimating = 0;
+    private int regensLeft = 0, animationTicks = 0;
     private String deathMessage = "";
     private RegenStates currentState = RegenStates.ALIVE;
     private TransitionTypes transitionType = TransitionTypes.FIERY;
@@ -113,37 +113,37 @@ public class RegenCap implements IRegen {
             //Tick Trait
             currentTrait.tick(this);
 
-            //Tick State Manager
-            if (currentState != RegenStates.ALIVE) {
-                if (stateManager != null) {
-                    stateManager.tick();
-                }
+            if (stateManager != null && currentState != RegenStates.ALIVE) {
+                stateManager.tick();
             }
 
-            //Update Regeneratinh
+            //Tick Regenerating
             if (currentState == RegenStates.REGENERATING) {
-                ticksAnimating++;
+                animationTicks++;
                 transitionType.get().onUpdateMidRegen(this);
                 syncToClients(null);
-            } else {
-                ticksAnimating = 0;
+                return;
             }
+            animationTicks = 0;
         }
     }
 
     @Override
-    public int getTicksAnimating() {
-        return ticksAnimating;
+    public int getAnimationTicks() {
+        return animationTicks;
     }
 
     @Override
-    public void setAnimationTicks(int ticksAnimating) {
-        this.ticksAnimating = ticksAnimating;
+    public void setAnimationTicks(int animationTicks) {
+        this.animationTicks = animationTicks;
     }
 
     @Override
     public boolean canRegenerate() {
-        return getRegens() > 0 && livingEntity.getY() > 0 && currentState != RegenStates.POST;
+        if (livingEntity != null) {
+            return getRegens() > 0 && livingEntity.getY() > 0 && currentState != RegenStates.POST;
+        }
+        return false;
     }
 
     @Override
@@ -219,11 +219,11 @@ public class RegenCap implements IRegen {
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT compoundNBT = new CompoundNBT();
-        compoundNBT.putInt(RConstants.REGENS_LEFT, regensLeft);
-        compoundNBT.putString(RConstants.CURRENT_STATE, currentState.name());
-        compoundNBT.putInt(RConstants.ANIMATION_TICKS, ticksAnimating);
+        compoundNBT.putInt(RConstants.REGENS_LEFT, getRegens());
+        compoundNBT.putString(RConstants.CURRENT_STATE, getCurrentState().name());
+        compoundNBT.putInt(RConstants.ANIMATION_TICKS, getAnimationTicks());
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.get().getRegistryName().toString());
-        compoundNBT.putString(RConstants.PREFERENCE, preferredSkinType.name());
+        compoundNBT.putString(RConstants.PREFERENCE, getPreferredModel().name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
         compoundNBT.putBoolean(RConstants.GLOWING, areHandsGlowing());
         compoundNBT.putString(RConstants.CURRENT_TRAIT, currentTrait.getRegistryName().toString());
@@ -232,11 +232,11 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.HAND_STATE, getHandState().name());
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
-            compoundNBT.putByteArray(RConstants.SKIN, skinArray);
+            compoundNBT.putByteArray(RConstants.SKIN, getSkin());
         }
 
         if (isNextSkinValid()) {
-            compoundNBT.putByteArray("next_" + RConstants.SKIN, nextSkin);
+            compoundNBT.putByteArray("next_" + RConstants.SKIN, getNextSkin());
         }
 
         if (!livingEntity.level.isClientSide) {
@@ -278,7 +278,7 @@ public class RegenCap implements IRegen {
         }
 
 
-        //Statemanager
+        //State Manager
         if (nbt.contains(RConstants.STATE_MANAGER)) if (stateManager != null) {
             stateManager.deserializeNBT((CompoundNBT) nbt.get(RConstants.STATE_MANAGER));
         }
@@ -444,7 +444,6 @@ public class RegenCap implements IRegen {
             transitionCallbacks.put(RegenStates.Transition.HAND_GLOW_TRIGGER, err);
         }
 
-        @SuppressWarnings("deprecation")
         private void scheduleTransitionInTicks(RegenStates.Transition transition, long inTicks) {
             if (nextTransition != null && nextTransition.getTicksLeft() > 0)
                 throw new IllegalStateException("Overwriting non-completed/cancelled transition: " + "\n Attempted Transition: " + transition.name() + "\n Current: " + nextTransition.transition.name() + "\n Affected Player: " + livingEntity.getName());
@@ -489,45 +488,45 @@ public class RegenCap implements IRegen {
                 return false;
             }
 
-            if (currentState == RegenStates.ALIVE) {
-                if (!canRegenerate()) // that's too bad :(
+            switch (currentState) {
+                case ALIVE:
+                    if (!canRegenerate()) // that's too bad :(
+                        return false;
+
+                    // We're entering grace period...
+                    scheduleTransitionInSeconds(RegenStates.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
+                    scheduleHandGlowTrigger();
+
+                    currentState = RegenStates.GRACE;
+                    syncToClients(null);
+                    ActingForwarder.onEnterGrace(RegenCap.this);
+                    return true;
+                case REGENERATING:
+                    // We've been killed mid regeneration!
+                    nextTransition.cancel(); // ... cancel the finishing of the regeneration
+                    midSequenceKill(false);
                     return false;
-
-                // We're entering grace period...
-                scheduleTransitionInSeconds(RegenStates.Transition.ENTER_CRITICAL, RegenConfig.COMMON.gracePhaseLength.get());
-                scheduleHandGlowTrigger();
-
-                currentState = RegenStates.GRACE;
-                syncToClients(null);
-                ActingForwarder.onEnterGrace(RegenCap.this);
-                return true;
-
-            } else if (currentState == RegenStates.GRACE) {
-                // We're being forced to regenerate...
-                triggerRegeneration();
-                return true;
-
-            } else if (currentState == RegenStates.REGENERATING) {
-                // We've been killed mid regeneration!
-                nextTransition.cancel(); // ... cancel the finishing of the regeneration
-                midSequenceKill(false);
-                return false;
-
-            } else if (currentState == RegenStates.GRACE_CRIT) {
-                nextTransition.cancel();
-                if (source == RegenSources.REGEN_DMG_FORCED) {
+                case GRACE_CRIT:
+                    nextTransition.cancel();
+                    if (source == RegenSources.REGEN_DMG_FORCED) {
+                        triggerRegeneration();
+                        return true;
+                    } else {
+                        midSequenceKill(true);
+                        return false;
+                    }
+                case POST:
+                    currentState = RegenStates.ALIVE;
+                    nextTransition.cancel();
+                    return false;
+                case GRACE:
+                    // We're being forced to regenerate...
                     triggerRegeneration();
                     return true;
-                } else {
-                    midSequenceKill(true);
-                    return false;
-                }
-            } else if (currentState == RegenStates.POST) {
-                currentState = RegenStates.ALIVE;
-                nextTransition.cancel();
-                return false;
-            } else
-                throw new IllegalStateException("Unknown state: " + currentState);
+                default:
+                    break;
+            }
+            return false;
         }
 
 
@@ -709,12 +708,17 @@ public class RegenCap implements IRegen {
                 RegenStates.Transition transition = RegenStates.Transition.valueOf(nbt.getString("handGlowState"));
 
                 Runnable callback;
-                if (transition == RegenStates.Transition.HAND_GLOW_START)
-                    callback = this::scheduleHandGlowTrigger;
-                else if (transition == RegenStates.Transition.HAND_GLOW_TRIGGER)
-                    callback = this::triggerRegeneration;
-                else
-                    throw new IllegalStateException("Illegal hand glow timer transition");
+
+                switch (transition) {
+                    case HAND_GLOW_START:
+                        callback = this::scheduleHandGlowTrigger;
+                        break;
+                    case HAND_GLOW_TRIGGER:
+                        callback = this::triggerRegeneration;
+                        break;
+                    default:
+                        throw new IllegalStateException("Illegal hand glow timer transition");
+                }
 
                 handGlowTimer = new RegenScheduledAction(transition, livingEntity, callback, nbt.getLong("handGlowScheduledTicks"));
             }

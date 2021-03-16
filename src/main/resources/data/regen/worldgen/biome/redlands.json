@@ -886,7 +886,7 @@
                         },
                         "type": "minecraft:tree"
                       },
-                      "chance": 0.33333334
+                      "chance": 1
                     }
                   ],
                   "default": {

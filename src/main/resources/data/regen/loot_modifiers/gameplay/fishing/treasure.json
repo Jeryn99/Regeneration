@@ -5,6 +5,6 @@
       "loot_table_id": "minecraft:gameplay/fishing/treasure"
     }
   ],
-  "chance": 30,
+  "chance": 40,
   "type": "regen:loot"
 }

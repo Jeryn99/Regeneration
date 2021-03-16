@@ -6,7 +6,7 @@
       "block_search_extent": 8,
       "offset": 2.0
     },
-      "sky_color": 14854265,
+    "sky_color": 14854265,
     "fog_color": 14854265,
     "water_color": 15645605,
     "water_fog_color": 15967105,

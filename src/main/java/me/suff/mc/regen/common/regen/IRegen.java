@@ -20,7 +20,7 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     void tick();
 
-    int getTicksAnimating();
+    int getAnimationTicks();
 
     void setAnimationTicks(int ticksAnimating);
 

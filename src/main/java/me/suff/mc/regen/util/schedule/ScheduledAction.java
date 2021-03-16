@@ -39,10 +39,10 @@ public class ScheduledAction {
     @Deprecated
     /** @deprecated Use with caution, tick timings can be changed! */
     public long getTicksLeft() {
-        if (scheduledTick == -1)
+        if (scheduledTick == -1) {
             return -1;
-        else
-            return scheduledTick - currentTick;
+        }
+        return scheduledTick - currentTick;
     }
 
     public double getProgress() {

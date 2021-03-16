@@ -6,12 +6,10 @@
       "block_search_extent": 8,
       "offset": 2.0
     },
-    "sky_color": 14854265,
-    "fog_color": 14854265,
-    "water_color": 15645605,
-    "water_fog_color": 15967105,
-    "foliage_color": 14538698,
-    "grass_color": 10634503
+    "sky_color": 8103167,
+    "fog_color": 12638463,
+    "water_color": 4159204,
+    "water_fog_color": 329011
   },
   "surface_builder": {
     "config": {
@@ -1477,7 +1475,7 @@
   },
   "spawn_costs": {},
   "player_spawn_friendly": false,
-  "forge:registry_name": "regen:redlands_river",
+  "forge:registry_name": "minecraft:river",
   "precipitation": "rain",
   "temperature": 0.5,
   "downfall": 0.5,

@@ -35,26 +35,6 @@
       },
       "biomes": [
         {
-          "biome": "regen:redlands_cliffs",
-          "parameters": {
-            "altitude": 1.7,
-            "weirdness": 0,
-            "offset": 0,
-            "temperature": 0.8,
-            "humidity": -0.3
-          }
-        },
-        {
-          "biome": "regen:redlands_taiga_mountains",
-          "parameters": {
-            "altitude": 0.5,
-            "weirdness": 0,
-            "offset": 0,
-            "temperature": 0.25,
-            "humidity": -0.9
-          }
-        },
-        {
           "biome": "regen:redlands",
           "parameters": {
             "altitude": 0.2,
@@ -71,7 +51,7 @@
             "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
-            "humidity": -2
+            "humidity": 0.4
           }
         },
         {
@@ -81,7 +61,7 @@
             "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
-            "humidity": 1.6
+            "humidity": 0.4
           }
         },
         {
@@ -91,7 +71,7 @@
             "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
-            "humidity": 1.2
+            "humidity": 0.4
           }
         },
         {
@@ -101,7 +81,7 @@
             "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
-            "humidity": 0.7
+            "humidity": 0.4
           }
         },
         {
@@ -111,7 +91,7 @@
             "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
-            "humidity": 0.8
+            "humidity": 0.4
           }
         },
         {
@@ -121,7 +101,7 @@
             "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
-            "humidity": 0.3
+            "humidity": 0.4
           }
         },
         {
@@ -131,7 +111,7 @@
             "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
-            "humidity": 2
+            "humidity": 0.4
           }
         },
         {
@@ -141,7 +121,7 @@
             "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
-            "humidity": 0.1
+            "humidity": 0.4
           }
         },
         {
@@ -151,7 +131,7 @@
             "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
-            "humidity": 0.2
+            "humidity": 0.4
           }
         }
       ]

@@ -17,7 +17,6 @@
       "regen:drum_beat"
     ]
   },
-
   "m_wodaman_timelord_hurt": {
     "subtitle": "regen.sound.m_timelord_hurt",
     "sounds": [
@@ -48,7 +47,6 @@
       "regen:timelord/male/wodaman/m_timelord_trade_success_4"
     ]
   },
-
   "f_angela_timelord_hurt": {
     "subtitle": "regen.sound.f_timelord_hurt",
     "sounds": [
