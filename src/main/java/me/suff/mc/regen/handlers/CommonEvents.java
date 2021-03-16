@@ -171,7 +171,7 @@ public class CommonEvents {
         World world = event.getEntityLiving().level;
         if(world.dimension().location().getPath().contains("gallifrey") && (event.getSpawnReason() == SpawnReason.BREEDING || event.getSpawnReason() == SpawnReason.NATURAL)){
 
-            //Villager
+            /*//Villager
             if(livingEntity instanceof VillagerEntity && livingEntity.getType() != REntities.TIMELORD.get()){
                 event.setCanceled(true);
                 TimelordEntity timelordEntity = new TimelordEntity(world);
@@ -192,7 +192,7 @@ public class CommonEvents {
                     timelordEntity.setPos(timelordEntity.position().x + i, timelordEntity.position().y, timelordEntity.position().x);
                     event.getWorld().addFreshEntity(timelordEntity);
                 }
-            }
+            }*/
 
         }
     }
