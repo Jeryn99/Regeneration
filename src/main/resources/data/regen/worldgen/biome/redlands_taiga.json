@@ -2125,12 +2125,6 @@
         "weight": 100,
         "minCount": 4,
         "maxCount": 4
-      },
-      {
-        "type": "regen:timelord",
-        "weight": 100,
-        "minCount": 4,
-        "maxCount": 4
       }
     ],
     "creature": [
