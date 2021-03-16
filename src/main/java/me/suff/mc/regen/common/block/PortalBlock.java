@@ -5,6 +5,7 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.RegistryKey;
@@ -17,6 +18,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,7 +30,7 @@ import static me.suff.mc.regen.util.RConstants.MODID;
 /* Created by Craig on 16/03/2021 */
 public class PortalBlock extends Block {
 
-    public static final RegistryKey<World> GALLIFREY = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(MODID, "gallifrey"));
+    public static final RegistryKey< World > GALLIFREY = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(MODID, "gallifrey"));
 
 
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
@@ -52,7 +54,13 @@ public class PortalBlock extends Block {
                 return;
             }
 
-            entity.changeDimension(serverworld);
+            serverworld.getServer().addTickable(() -> {
+                        if (entity instanceof ServerPlayerEntity) {
+                            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) entity;
+                            serverPlayerEntity.teleportTo(serverworld, blockPos.getX(), serverworld.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, world.getChunkAt(blockPos).getPos().x, world.getChunkAt(blockPos).getPos().z), blockPos.getZ(), 1, 1);
+                        }
+                    }
+            );
         }
     }
 

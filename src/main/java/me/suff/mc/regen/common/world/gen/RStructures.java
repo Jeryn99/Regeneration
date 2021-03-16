@@ -43,7 +43,7 @@ public class RStructures {
      * <br> Call this in CommonSetup in a deferred work task to reduce concurrent modification issues as we are modifying multiple maps we ATed
      */
     public static void setupStructures() {
-        setupStructure(Structures.HUTS.get(), new StructureSeparationSettings(200, 100, 1234567890), true); //Maximum of 200 chunks apart, minimum 100 chunks apart, chunk seed respectively
+        setupStructure(Structures.HUTS.get(), new StructureSeparationSettings(400, 140, 1234567890), true); //Maximum of 200 chunks apart, minimum 100 chunks apart, chunk seed respectively
     }
 
     private static < T extends Structure< ? > > void registerConfiguredStructure(String registryName, Supplier< T > structure, StructureFeature< ?, ? > configuredStructure) {

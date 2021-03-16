@@ -37,8 +37,8 @@
         {
           "biome": "regen:redlands",
           "parameters": {
-            "altitude": 1.4,
-            "weirdness": 2,
+            "altitude": 0.2,
+            "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
             "humidity": 0.4
@@ -47,8 +47,8 @@
         {
           "biome": "regen:redlands_gravelly_mountains",
           "parameters": {
-            "altitude": 2,
-            "weirdness": 2,
+            "altitude": 0.5,
+            "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
             "humidity": 0.4
@@ -57,8 +57,8 @@
         {
           "biome": "regen:redlands_modified_gravelly_mountains",
           "parameters": {
-            "altitude": 2,
-            "weirdness": 1.2,
+            "altitude": 0.4,
+            "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
             "humidity": 0.4
@@ -67,8 +67,8 @@
         {
           "biome": "regen:redlands_mountains",
           "parameters": {
-            "altitude": 1.6,
-            "weirdness": 1,
+            "altitude": 0.3,
+            "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
             "humidity": 0.4
@@ -77,8 +77,8 @@
         {
           "biome": "regen:redlands_taiga_mountains",
           "parameters": {
-            "altitude": 2,
-            "weirdness": 1.9,
+            "altitude": 0.4,
+            "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
             "humidity": 0.4
@@ -87,8 +87,28 @@
         {
           "biome": "regen:redlands_wooded_mountains",
           "parameters": {
-            "altitude": -0.5,
-            "weirdness": 2,
+            "altitude": 1,
+            "weirdness": 0,
+            "offset": 0,
+            "temperature": 0.8,
+            "humidity": 0.4
+          }
+        },
+        {
+          "biome": "regen:redlands_river",
+          "parameters": {
+            "altitude": 1,
+            "weirdness": 0,
+            "offset": 0,
+            "temperature": 0.8,
+            "humidity": 0.4
+          }
+        },
+        {
+          "biome": "regen:redlands_cold_ocean",
+          "parameters": {
+            "altitude": 1,
+            "weirdness": 0,
             "offset": 0,
             "temperature": 0.8,
             "humidity": 0.4

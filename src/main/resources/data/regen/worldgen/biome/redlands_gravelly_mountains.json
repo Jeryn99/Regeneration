@@ -1544,6 +1544,12 @@
         "maxCount": 4
       },
       {
+        "type": "regen:timelord",
+        "weight": 10,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
         "type": "minecraft:pig",
         "weight": 10,
         "minCount": 4,
@@ -1582,7 +1588,7 @@
   },
   "spawn_costs": {},
   "player_spawn_friendly": false,
-  "forge:registry_name": "minecraft:gravelly_mountains",
+  "forge:registry_name": "regen:redlands_gravelly_mountains",
   "precipitation": "rain",
   "temperature": 0.2,
   "downfall": 0.3,
