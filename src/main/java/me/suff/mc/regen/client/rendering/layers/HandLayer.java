@@ -47,7 +47,7 @@ public class HandLayer extends LayerRenderer {
                 matrixStackIn.pushPose();
                 bipedModel.translateToHand(handSide, matrixStackIn);
                 renderGlowingHands((LivingEntity) entitylivingbaseIn, matrixStackIn, bufferIn, packedLightIn);
-                iRegen.getTransitionType().get().getRenderer().thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+                iRegen.transitionType().get().getRenderer().thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
                 matrixStackIn.popPose();
             }
         });

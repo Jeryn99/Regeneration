@@ -32,8 +32,7 @@ public class RSoundSchemes {
         if (array.length == 1) {
             return array[0];
         }
-        SoundScheme result = array[RegenUtil.RAND.nextInt(array.length)];
-        return result;
+        return array[RegenUtil.RAND.nextInt(array.length)];
     }
 
     public static SoundScheme get(ResourceLocation resourceLocation) {

@@ -67,7 +67,7 @@ public class ColorScreen extends ContainerScreen {
         // Default Button
         this.addButton(new Button(cx + (90 * 2), cy + 148, btnW, btnH, new TranslationTextComponent("regen.gui.default"), button -> {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
-                TransitionType regenType = data.getTransitionType().get();
+                TransitionType regenType = data.transitionType().get();
                 Vector3d primColor = regenType.getDefaultPrimaryColor();
                 Vector3d secColor = regenType.getDefaultSecondaryColor();
                 Color primaryColour = new Color((float) primColor.x, (float) primColor.y, (float) primColor.z);

@@ -17,6 +17,7 @@ public class TriggerManager {
         CriteriaTriggers.register(CRITICAL);
         CriteriaTriggers.register(TIMELORD_TRADE);
         CriteriaTriggers.register(HAND_CUT);
+        CriteriaTriggers.register(ZERO_ROOM);
     }
 
 }

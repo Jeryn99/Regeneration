@@ -85,7 +85,9 @@ public class Regeneration {
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
         generator.addProvider(new EnglishLangGen(generator));
         generator.addProvider(new LootGen(generator));
-        generator.addProvider(new RBlockTags(generator, existingFileHelper));
+        RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
+        generator.addProvider(blockTags);
+        generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
         generator.addProvider(new AdvancementCreation(generator));
         generator.addProvider(new BiomeProvider(generator));

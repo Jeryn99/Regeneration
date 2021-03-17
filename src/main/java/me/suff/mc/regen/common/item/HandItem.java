@@ -80,7 +80,7 @@ public class HandItem extends Item {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             setUUID(livingEntity.getUUID(), itemStack);
             setSkinType(iRegen.currentlyAlex() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
-            setTrait(iRegen.getTrait(), itemStack);
+            setTrait(iRegen.trait(), itemStack);
             setEnergy(0, itemStack);
             if (iRegen.isSkinValidForUse()) {
                 setSkin(iRegen.skin(), itemStack);

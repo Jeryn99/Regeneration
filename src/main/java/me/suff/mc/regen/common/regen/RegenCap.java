@@ -289,7 +289,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public TransitionTypes getTransitionType() {
+    public TransitionTypes transitionType() {
         return transitionType;
     }
 
@@ -386,7 +386,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public Traits.ITrait getTrait() {
+    public Traits.ITrait trait() {
         return currentTrait;
     }
 

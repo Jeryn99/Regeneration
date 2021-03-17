@@ -8,6 +8,7 @@ import me.suff.mc.regen.common.traits.Traits;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class EnglishLangGen extends LanguageProvider {
@@ -160,11 +161,11 @@ public class EnglishLangGen extends LanguageProvider {
         add("regen.gui.skin_choice", "Skin Settings");
         add("regen.gui.save", "Save");
         add("regen.gui.next_incarnation", "Select next incarnation");
-        add("regen.gui.reset_skin", "Reset Skin");
+        add("regen.gui.reset_skin", "Reset");
         add("regen.gui.infinite_regenerations", "Infinite Regeneration Mode");
         add("regen.gui.remaining_regens.status", "Remaining Regenerations: %s");
         add("regen.gui.color_gui", "Color selection");
-        add("regen.gui.current_skin", "Select next Incarnation");
+        add("regen.gui.current_skin", "Select Next Incarnation");
         add("regen.gui.back", "Back");
         add("regen.gui.preferences", "Preferences");
 
@@ -219,8 +220,10 @@ public class EnglishLangGen extends LanguageProvider {
 
         add(Traits.FIRE.get().getTranslation().getKey(), "Fire Immune");
         add(Traits.FIRE.get().getDescription().getKey(), "Immune to fire");
-    }
 
+        add(Traits.ENDER_HURT.get().getTranslation().getKey(), "Ender Emergency");
+        add(Traits.ENDER_HURT.get().getDescription().getKey(), "Teleport away when hurt");
+    }
 
     public String grammerNazi(String text) {
         String firstLetter = text.substring(0, 1).toUpperCase();

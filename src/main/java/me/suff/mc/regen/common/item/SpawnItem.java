@@ -65,7 +65,7 @@ public class SpawnItem< E extends TimelordEntity > extends Item {
         if (!worldIn.isClientSide) {
             TimelordEntity timelord = REntities.TIMELORD.get().create(worldIn);
             timelord.setMale(getType(context.getItemInHand()).isMale());
-            timelord.setPersonality(RSoundSchemes.getRandom(timelord.isMale()).identify().toString());
+            timelord.setPersonality(RSoundSchemes.getRandom(timelord.male()).identify().toString());
             if (getType(context.getItemInHand()) == Timelord.GUARD) {
                 timelord.setTimelordType(TimelordEntity.TimelordType.GUARD);
             } else {

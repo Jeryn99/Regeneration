@@ -44,7 +44,7 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     void syncToClients(@Nullable ServerPlayerEntity serverPlayerEntity);
 
-    TransitionTypes getTransitionType();
+    TransitionTypes transitionType();
 
     void setTransitionType(TransitionTypes transitionType);
 
@@ -83,7 +83,7 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     boolean isNextSkinTypeAlex();
 
-    Traits.ITrait getTrait();
+    Traits.ITrait trait();
 
     void setTrait(Traits.ITrait trait);
 

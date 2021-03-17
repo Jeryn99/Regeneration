@@ -26,7 +26,7 @@ import java.awt.*;
 public class PreferencesScreen extends ContainerScreen {
 
     private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/pref_back.png");
-    private static TransitionTypes SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTransitionType();
+    private static TransitionTypes SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     private static IRegen.TimelordSound SOUND_SCHEME = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
     private static PlayerUtil.SkinType CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
     private float ROTATION = 0;
@@ -95,7 +95,7 @@ public class PreferencesScreen extends ContainerScreen {
         addButton(btnSkinType);
         addButton(btnScheme);
 
-        SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTransitionType();
+        SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     }
 
     @Override
@@ -106,9 +106,7 @@ public class PreferencesScreen extends ContainerScreen {
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
 
-        GlStateManager._pushMatrix();
         InventoryScreen.renderEntityInInventory(width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - x, (float) (topPos + 75 - 50) - y, Minecraft.getInstance().player);
-        GlStateManager._popMatrix();
 
         String str = "Banana Phone";
         int length = minecraft.font.width(str);
@@ -121,17 +119,17 @@ public class PreferencesScreen extends ContainerScreen {
         length = minecraft.font.width(str);
         font.drawShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
 
-        TranslationTextComponent traitLang = data.getTrait().getTranslation();
+        TranslationTextComponent traitLang = data.trait().getTranslation();
         font.drawShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 40, Color.WHITE.getRGB());
 
-        TranslationTextComponent traitLangDesc = data.getTrait().getDescription();
+        TranslationTextComponent traitLangDesc = data.trait().getDescription();
         font.drawShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 50, Color.WHITE.getRGB());
 
     }
 
     @Override
     protected void renderLabels(MatrixStack matrixStack, int x, int y) {
-        this.font.drawShadow(matrixStack, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
+        this.font.draw(matrixStack, this.title.getString(), (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
     }
 
     @Override

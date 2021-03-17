@@ -1,6 +1,7 @@
 package me.suff.mc.regen.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.suff.mc.regen.client.skin.CommonSkin;
@@ -8,6 +9,7 @@ import me.suff.mc.regen.client.skin.SkinHandler;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.NextSkinMessage;
+import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;
@@ -15,7 +17,10 @@ import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.screen.EnchantmentScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -57,7 +62,7 @@ public class IncarnationScreen extends ContainerScreen {
 
 
     private TextFieldWidget searchField;
-    private ArrayList< DescButton > descButtons = new ArrayList();
+    private ArrayList< DescButton > descButtons = new ArrayList<>();
 
 
     public IncarnationScreen() {
@@ -72,45 +77,16 @@ public class IncarnationScreen extends ContainerScreen {
         renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
     }
 
-    //TODO Seems to clip out the left arm of the models wear, not a high priority
-    public static void drawModelToGui(EntityModel entityModel, MatrixStack matrixStack) {
-        RenderSystem.matrixMode(5889);
-        RenderSystem.pushMatrix();
-        RenderSystem.loadIdentity();
-        int k = (int) Minecraft.getInstance().getWindow().getGuiScale();
-        RenderSystem.scaled(1.5, 1.5, 1.5);
-        RenderSystem.translated(0.6, -0.3, 0);
-        RenderSystem.viewport((Minecraft.getInstance().screen.width - 320) / 2 * k, (Minecraft.getInstance().screen.height - 240) / 2 * k, 320 * k, 240 * k);
-        RenderSystem.translatef(-0.34F, 0.23F, 0.0F);
-        RenderSystem.multMatrix(Matrix4f.perspective(100.0D, 1.3333334F, 9.0F, 100.0F));
-        RenderSystem.matrixMode(5888);
-        matrixStack.pushPose();
-        MatrixStack.Entry matrixstack$entry = matrixStack.last();
-        matrixstack$entry.pose().setIdentity();
-        matrixstack$entry.normal().setIdentity();
-        matrixStack.translate(0.1D, 3.3F, 1984.0D);
-        matrixStack.scale(5.0F, 5.0F, 5.0F);
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(20.0F));
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(180.0F));
-        // matrixStack.rotate(Vector3f.YP.rotationDegrees(rotation));
-        RenderSystem.enableRescaleNormal();
-        IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
-        IVertexBuilder ivertexbuilder = irendertypebuffer$impl.getBuffer(RenderType.entityTranslucent(PLAYER_TEXTURE));
-        entityModel.renderToBuffer(matrixStack, ivertexbuilder, 15728880, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        irendertypebuffer$impl.endBatch();
-        matrixStack.popPose();
-        RenderSystem.matrixMode(5889);
-        RenderSystem.viewport(0, 0, Minecraft.getInstance().getWindow().getWidth(), Minecraft.getInstance().getWindow().getHeight());
-        RenderSystem.popMatrix();
-    }
 
     @Override
     public void init() {
         super.init();
+
         TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
             addButton(button);
         }
+        int buttonOffset = 35;
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
         final int btnW = 55, btnH = 18;
@@ -138,7 +114,7 @@ public class IncarnationScreen extends ContainerScreen {
         this.setInitialFocus(this.searchField);
 
 
-        DescButton btnNext = new DescButton(cx + 125, cy + 90, 20, 20, new TranslationTextComponent("regen.gui.previous"), button -> {
+        DescButton btnNext = new DescButton(cx + 140, cy + 60, 20, 20, new TranslationTextComponent("regen.gui.previous"), button -> {
             if (searchField.getValue().isEmpty()) {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
@@ -155,7 +131,7 @@ public class IncarnationScreen extends ContainerScreen {
                 updateModels();
             }
         });
-        DescButton btnPrevious = new DescButton(cx + 230, cy + 90, 20, 20, new TranslationTextComponent("regen.gui.next"), button -> {
+        DescButton btnPrevious = new DescButton(cx + 215, cy + 60, 20, 20, new TranslationTextComponent("regen.gui.next"), button -> {
             // Previous
             if (searchField.getValue().isEmpty()) {
                 skins = CommonSkin.listAllSkins(currentSkinType);
@@ -175,26 +151,26 @@ public class IncarnationScreen extends ContainerScreen {
                 updateModels();
             }
         });
-        DescButton btnBack = new DescButton(cx + 10, cy + 145 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.back"), new Button.IPressable() {
+        DescButton btnBack = new DescButton(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.back"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 Minecraft.getInstance().setScreen(new PreferencesScreen());
             }
         });
-        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 145 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.open_folder"), new Button.IPressable() {
+        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.open_folder"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 Util.getPlatform().openFile(CommonSkin.SKIN_DIRECTORY);
             }
         });
-        DescButton btnSave = new DescButton(cx + 90 - 20, cy + 125 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.save"), new Button.IPressable() {
+        DescButton btnSave = new DescButton(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.save"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 updateModels();
                 NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex));
             }
         });
-        DescButton btnResetSkin = new DescButton(cx + 10, cy + 125 - 25, btnW, btnH, new TranslationTextComponent("regen.gui.reset_skin"), new Button.IPressable() {
+        DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.reset_skin"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 SkinHandler.sendResetMessage();
@@ -292,21 +268,7 @@ public class IncarnationScreen extends ContainerScreen {
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         ALEX_MODEL.young = false;
         STEVE_MODEL.young = false;
-        matrixStack.pushPose();
-        switch (renderChoice) {
-            case ALEX:
-                drawModelToGui(ALEX_MODEL, matrixStack);
-                break;
-            case STEVE:
-                drawModelToGui(STEVE_MODEL, matrixStack);
-                break;
-            case EITHER:
-                drawModelToGui(ALEX_MODEL, matrixStack);
-                drawModelToGui(STEVE_MODEL, matrixStack);
-                break;
-        }
-        matrixStack.popPose();
-
+        renderSkinToGui(matrixStack, x, y);
 
         drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslationTextComponent("regen.gui.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
         if (!skins.isEmpty() && position < skins.size()) {
@@ -315,6 +277,22 @@ public class IncarnationScreen extends ContainerScreen {
             drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslationTextComponent(name), width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB());
             matrixStack.popPose();
         }
+
+        drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslationTextComponent("Search"), width / 2 - 95, height / 2 + 45, Color.WHITE.getRGB());
+
+    }
+
+    private void renderSkinToGui(MatrixStack matrixStack, int x, int y) {
+        matrixStack.pushPose();
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        ResourceLocation backup = player.playerInfo.getSkinLocation();
+        boolean backupSkinType = ClientUtil.isAlex(player);
+        SkinHandler.setPlayerSkin(Minecraft.getInstance().player, PLAYER_TEXTURE);
+        SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
+        InventoryScreen.renderEntityInInventory(width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - x, (float) (topPos + 75 - 25) - y, Minecraft.getInstance().player);
+        SkinHandler.setPlayerSkin(Minecraft.getInstance().player, backup);
+        SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
+        matrixStack.popPose();
     }
 
     @Override

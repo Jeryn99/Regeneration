@@ -69,7 +69,7 @@ public class ClientEvents {
         PlayerEntity player = playerEvent.getPlayer();
         SkinHandler.tick((AbstractClientPlayerEntity) playerEvent.getPlayer());
         RegenCap.get(player).ifPresent(iRegen -> {
-            TransitionType< ? > type = iRegen.getTransitionType().get();
+            TransitionType< ? > type = iRegen.transitionType().get();
             type.getRenderer().onPlayerRenderPre(playerEvent);
         });
     }
@@ -78,14 +78,14 @@ public class ClientEvents {
     public static void onRenderPlayerPost(RenderPlayerEvent.Post playerEvent) {
         PlayerEntity player = playerEvent.getPlayer();
         RegenCap.get(player).ifPresent(iRegen -> {
-            TransitionType< ? > type = iRegen.getTransitionType().get();
+            TransitionType< ? > type = iRegen.transitionType().get();
             type.getRenderer().onPlayerRenderPost(playerEvent);
         });
     }
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
-        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.getTransitionType().get().getRenderer().firstPersonHand(event));
+        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.transitionType().get().getRenderer().firstPersonHand(event));
     }
 
     @SubscribeEvent
@@ -145,7 +145,7 @@ public class ClientEvents {
                 e.setGreen(0.5F);
             }
 
-            if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.getCurrentState() == RegenStates.REGENERATING) {
+            if (data.transitionType() == TransitionTypes.TROUGHTON && data.getCurrentState() == RegenStates.REGENERATING) {
                 e.setRed(0);
                 e.setGreen(0);
                 e.setBlue(0);
@@ -227,7 +227,7 @@ public class ClientEvents {
                     float amount = MathHelper.cos(data.getLiving().tickCount * 0.02F) * -0.10F;
                     event.setDensity(amount);
                 }
-                if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.updateTicks() > 0) {
+                if (data.transitionType() == TransitionTypes.TROUGHTON && data.updateTicks() > 0) {
                     event.setCanceled(true);
                     event.setDensity(0.3F);
                 }
@@ -262,7 +262,7 @@ public class ClientEvents {
                 moveType.shiftKeyDown = false;
                 moveType.leftImpulse = 0.0F;
 
-                if (data.getTransitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
+                if (data.transitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
                     if (player.blockPosition().getY() <= 100) {
                         BlockPos upwards = player.blockPosition().above(2);
                         BlockPos pos = upwards.subtract(player.blockPosition());
