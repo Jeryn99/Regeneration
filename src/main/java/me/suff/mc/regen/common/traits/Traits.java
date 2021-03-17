@@ -2,6 +2,7 @@ package me.suff.mc.regen.common.traits;
 
 import com.google.common.collect.Iterables;
 import me.suff.mc.regen.common.regen.IRegen;
+import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -71,6 +72,13 @@ public class Traits extends ForgeRegistryEntry< Traits > {
         Collection< ITrait > value = REGISTRY.getValues();
         ArrayList< ITrait > traits = new ArrayList<>(value);
         traits.removeIf(trait -> trait.isPlayerOnly() && isMob || trait.getRegistryName().equals(Traits.BORING.getRegistryName()));
+        for (ITrait trait : traits) {
+            for (String s : RegenConfig.COMMON.disabledTraits.get()) {
+                if(trait.getRegistryName().toString().contains(s)) {
+                    traits.remove(trait);
+                }
+            }
+        }
         int i = random.nextInt(value.size());
         return Iterables.get(value, i);
     }
