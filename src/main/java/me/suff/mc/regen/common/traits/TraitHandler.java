@@ -2,7 +2,15 @@ package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.FoxEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
@@ -17,6 +25,28 @@ public class TraitHandler {
         RegenCap.get(event.getPlayer()).ifPresent(iRegen -> {
             if (iRegen.getTrait().getRegistryName().toString().equals(Traits.SMART.get().getRegistryName().toString())) {
                 event.getOrb().value *= 1.5;
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void onHurt(LivingHurtEvent event) {
+        LivingEntity living = event.getEntityLiving();
+        RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
+            if (iRegen.getTrait().getRegistryName().toString().equals(Traits.ENDER_HURT.get().getRegistryName().toString())) {
+                for(int i = 0; i < 16; ++i) {
+                    double d3 = living.getX() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
+                    double d4 = MathHelper.clamp(living.getY() + (double)(living.getRandom().nextInt(16) - 8), 0.0D, (double)(living.level.getHeight() - 1));
+                    double d5 = living.getZ() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
+                    if (living.isPassenger()) {
+                        living.stopRiding();
+                    }
+
+                    if (living.randomTeleport(d3, d4, d5, true)) {
+                        event.setAmount(event.getAmount() / 2);
+                        break;
+                    }
+                }
             }
         });
     }

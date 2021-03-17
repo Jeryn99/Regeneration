@@ -20,7 +20,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
@@ -55,7 +55,7 @@ import java.util.Random;
  * Created by Swirtzly
  * on 03/05/2020 @ 18:50
  */
-public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
+public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
 
     private static final DataParameter< String > TYPE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter< String > PERSONALITY = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
@@ -65,7 +65,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     private static final DataParameter< Float > AIMING_TICKS = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.FLOAT);
     protected final SwimmerPathNavigator waterNavigator;
     protected final GroundPathNavigator groundNavigator;
-    private boolean swimmingUp;
 
     public TimelordEntity(World world) {
         this(REntities.TIMELORD.get(), world);
@@ -86,9 +85,8 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 add(Attributes.ARMOR, 2.0D);
     }
 
-    @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity mate) {
+    public VillagerEntity getBreedOffspring(ServerWorld world, AgeableEntity mate) {
         return null;
     }
 
@@ -236,6 +234,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         }
     }
 
+
     /*Setup initial skins for the timelords*/
     public void initSkin(IRegen data) {
         level.getServer().submit(() -> {
@@ -262,12 +261,15 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         getEntityData().set(TYPE, type.name());
     }
 
+
+
     @Override
     public void tick() {
 
         if (!getEntityData().get(HAS_SETUP)) {
             setup();
         }
+
 
         super.tick();
 
@@ -283,24 +285,25 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                     data.syncToClients(null);
                 }
 
-                if (data.getCurrentState() == RegenStates.REGENERATING) {
+                if(data.getCurrentState().isGraceful() && data.glowing())
 
-                    if (data.getAnimationTicks() == 10) {
+                if (data.getCurrentState() == RegenStates.REGENERATING) {
+                    if (data.updateTicks() == 10) {
                         if (getPersonality().getScreamSound() != null) {
                             playSound(getPersonality().getScreamSound(), 1, 1);
                         }
                     }
-                    if (data.getAnimationTicks() == 100) {
+                    if (data.updateTicks() == 100) {
                         setMale(random.nextBoolean());
                         setPersonality(RSoundSchemes.getRandom(isMale()).identify().toString());
                         initSkin(data);
                     }
                     setNoAi(true);
                     setInvulnerable(true);
-                } else {
-                    setNoAi(false);
-                    setInvulnerable(false);
+                    return;
                 }
+                setNoAi(false);
+                setInvulnerable(false);
             }
         });
     }

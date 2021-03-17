@@ -5,6 +5,7 @@ import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.BossInfo;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -13,6 +14,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryBuilder;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
@@ -33,6 +35,7 @@ public class Traits extends ForgeRegistryEntry< Traits > {
     public static final Traits SWIM_SPEED = new Traits(TraitSwimSpeed::new);
     public static final Traits FISH = new Traits(TraitFish::new);
     public static final Traits FIRE = new Traits(TraitFireResistant::new);
+    public static final Traits ENDER_HURT = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "ender_hurt"), Color.MAGENTA.getRGB()));
 
 
     //Create Registry
@@ -51,7 +54,7 @@ public class Traits extends ForgeRegistryEntry< Traits > {
 
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register< ITrait > e) {
-        e.getRegistry().registerAll(FIRE.get(), LEAP.get(), FISH.get(), QUICK.get(), BORING.get(), SMART.get(), FAST_MINE.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get(), KNOCKBACK.get());
+        e.getRegistry().registerAll(ENDER_HURT.get(), FIRE.get(), LEAP.get(), FISH.get(), QUICK.get(), BORING.get(), SMART.get(), FAST_MINE.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get(), KNOCKBACK.get());
     }
 
     public static ITrait fromID(String location) {

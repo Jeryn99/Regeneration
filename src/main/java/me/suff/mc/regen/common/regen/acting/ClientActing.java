@@ -44,7 +44,7 @@ class ClientActing implements Acting {
     @Override
     public void onHandsStartGlowing(IRegen cap) {
         if (cap.getLiving().getType() == EntityType.PLAYER) {
-            ClientUtil.playSound(cap.getLiving(), RSounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.areHandsGlowing(), 1.0F);
+            ClientUtil.playSound(cap.getLiving(), RSounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.glowing(), 1.0F);
         }
     }
 
@@ -68,7 +68,7 @@ class ClientActing implements Acting {
                     return;
                 }
                 Minecraft.getInstance().submitAsync(() -> {
-                    File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRandom(), cap.getPreferredModel().isAlex(), false);
+                    File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRandom(), cap.preferredModel().isAlex(), false);
                     boolean isAlex = file.getAbsolutePath().contains(CommonSkin.SKIN_DIRECTORY_ALEX.getAbsolutePath());
                     Regeneration.LOG.info("Choosen Skin: " + file);
                     NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(RegenUtil.fileToBytes(file), isAlex));

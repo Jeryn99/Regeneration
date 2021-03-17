@@ -28,7 +28,7 @@ public class PreferencesScreen extends ContainerScreen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/pref_back.png");
     private static TransitionTypes SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTransitionType();
     private static IRegen.TimelordSound SOUND_SCHEME = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
-    private static PlayerUtil.SkinType CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getPreferredModel();
+    private static PlayerUtil.SkinType CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
     private float ROTATION = 0;
 
     public PreferencesScreen() {
@@ -116,7 +116,7 @@ public class PreferencesScreen extends ContainerScreen {
         if (RegenConfig.COMMON.infiniteRegeneration.get())
             str = new TranslationTextComponent("regen.gui.infinite_regenerations").getString();
         else
-            str = new TranslationTextComponent("regen.gui.remaining_regens.status", data.getRegens()).getString();
+            str = new TranslationTextComponent("regen.gui.remaining_regens.status", data.regens()).getString();
 
         length = minecraft.font.width(str);
         font.drawShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());

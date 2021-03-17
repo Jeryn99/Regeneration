@@ -79,11 +79,11 @@ public class HandItem extends Item {
         ItemStack itemStack = new ItemStack(RItems.HAND.get());
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             setUUID(livingEntity.getUUID(), itemStack);
-            setSkinType(iRegen.isAlexSkinCurrently() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
+            setSkinType(iRegen.currentlyAlex() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
             setTrait(iRegen.getTrait(), itemStack);
             setEnergy(0, itemStack);
             if (iRegen.isSkinValidForUse()) {
-                setSkin(iRegen.getSkin(), itemStack);
+                setSkin(iRegen.skin(), itemStack);
             }
             iRegen.setHandState(IRegen.Hand.LEFT_GONE);
         });

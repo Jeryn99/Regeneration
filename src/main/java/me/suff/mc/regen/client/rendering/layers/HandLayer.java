@@ -21,7 +21,7 @@ public class HandLayer extends LayerRenderer {
 
     public static void renderGlowingHands(LivingEntity livingEntity, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
-            if (iRegen.areHandsGlowing()) {
+            if (iRegen.glowing()) {
                 Vector3d primaryColors = iRegen.getPrimaryColors();
                 Vector3d secondaryColors = iRegen.getSecondaryColors();
                 RenderRegenLayer.renderColorCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.5F, 0.5F, primaryColors);

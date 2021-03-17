@@ -68,7 +68,7 @@ public class FieryTransition implements TransitionType< FieryTransitionRenderer 
         if (capability.getLiving() instanceof ServerPlayerEntity) {
             NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
         }
-        capability.setAnimationTicks(0);
+        capability.setUpdateTicks(0);
         capability.syncToClients(null);
     }
 

@@ -85,10 +85,10 @@ public class FobWatchItem extends Item {
         if (!player.isShiftKeyDown()) { // transferring watch->player
             if (getDamage(stack) == RegenConfig.COMMON.regenCapacity.get())
                 return msgUsageFailed(player, "regen.messages.transfer.empty_watch", stack);
-            else if (cap.getRegens() == RegenConfig.COMMON.regenCapacity.get())
+            else if (cap.regens() == RegenConfig.COMMON.regenCapacity.get())
                 return msgUsageFailed(player, "regen.messages.transfer.max_regens", stack);
 
-            int supply = RegenConfig.COMMON.regenCapacity.get() - getDamage(stack), needed = RegenConfig.COMMON.regenCapacity.get() - cap.getRegens(), used = Math.min(supply, needed);
+            int supply = RegenConfig.COMMON.regenCapacity.get() - getDamage(stack), needed = RegenConfig.COMMON.regenCapacity.get() - cap.regens(), used = Math.min(supply, needed);
 
             if (cap.canRegenerate()) {
                 setOpen(stack, true);
@@ -101,7 +101,7 @@ public class FobWatchItem extends Item {
             }
 
             if (used < 0)
-                Regeneration.LOG.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + getDamage(stack) + ", regens:" + cap.getRegens());
+                Regeneration.LOG.warn(player.getName().getString() + ": Fob watch used <0 regens (supply: " + supply + ", needed:" + needed + ", used:" + used + ", capacity:" + RegenConfig.COMMON.regenCapacity.get() + ", damage:" + getDamage(stack) + ", regens:" + cap.regens());
 
             setDamage(stack, stack.getDamageValue() + used);
 

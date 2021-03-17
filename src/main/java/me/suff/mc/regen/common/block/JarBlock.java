@@ -134,7 +134,7 @@ public class JarBlock extends DirectionalBlock {
                                 iRegen.setNextSkin(HandItem.getSkin(jarTile.getHand()));
                                 iRegen.setAlexSkin(HandItem.isAlex(jarTile.getHand()));
                                 iRegen.syncToClients(null);
-                                iRegen.regen();
+                                iRegen.forceRegeneration();
                                 player.playSound(RSounds.HAND_GLOW.get(), 1, 1);
                                 jarTile.setHand(ItemStack.EMPTY);
                                 jarTile.sendUpdates();

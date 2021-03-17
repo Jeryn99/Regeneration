@@ -51,7 +51,7 @@ public class IncarnationScreen extends ContainerScreen {
     private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkin();
     private static List< File > skins = null;
     private static int position = 0;
-    private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).getPreferredModel();
+    private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
     private RCheckbox excludeTrending;
 
@@ -279,9 +279,9 @@ public class IncarnationScreen extends ContainerScreen {
             }
         }
 
-        RegenCap.get(minecraft.player).ifPresent((data) -> currentSkinType = data.getPreferredModel());
+        RegenCap.get(minecraft.player).ifPresent((data) -> currentSkinType = data.preferredModel());
 
-        RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> currentSkinType = data.getPreferredModel());
+        RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> currentSkinType = data.preferredModel());
         updateModels();
     }
 

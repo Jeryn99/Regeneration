@@ -60,7 +60,7 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
     public static ResourceLocation getTimelordFace(TimelordEntity timelordEntity) {
         IRegen data = RegenCap.get(timelordEntity).orElseGet(null);
 
-        if (data.getAnimationTicks() > 100 && data.getAnimationTicks() < 105) {
+        if (data.updateTicks() > 100 && data.updateTicks() < 105) {
             TIMELORDS.remove(timelordEntity.getUUID());
         }
 
@@ -71,7 +71,7 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
         NativeImage nativeImage = null;
         try {
             if (data.isSkinValidForUse()) {
-                nativeImage = NativeImage.read(new ByteArrayInputStream(data.getSkin()));
+                nativeImage = NativeImage.read(new ByteArrayInputStream(data.skin()));
             }
         } catch (IOException e) {
             e.printStackTrace();

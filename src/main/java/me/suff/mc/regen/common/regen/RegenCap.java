@@ -89,7 +89,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public int getRegens() {
+    public int regens() {
         return regensLeft;
     }
 
@@ -129,25 +129,25 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public int getAnimationTicks() {
+    public int updateTicks() {
         return animationTicks;
     }
 
     @Override
-    public void setAnimationTicks(int animationTicks) {
+    public void setUpdateTicks(int animationTicks) {
         this.animationTicks = animationTicks;
     }
 
     @Override
     public boolean canRegenerate() {
         if (livingEntity != null) {
-            return getRegens() > 0 && livingEntity.getY() > 0 && currentState != RegenStates.POST;
+            return regens() > 0 && livingEntity.getY() > 0 && currentState != RegenStates.POST;
         }
         return false;
     }
 
     @Override
-    public boolean areHandsGlowing() {
+    public boolean glowing() {
         return areHandsGlowing;
     }
 
@@ -157,7 +157,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public StateManager getStateManager() {
+    public StateManager stateManager() {
         return stateManager;
     }
 
@@ -219,20 +219,20 @@ public class RegenCap implements IRegen {
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT compoundNBT = new CompoundNBT();
-        compoundNBT.putInt(RConstants.REGENS_LEFT, getRegens());
+        compoundNBT.putInt(RConstants.REGENS_LEFT, regens());
         compoundNBT.putString(RConstants.CURRENT_STATE, getCurrentState().name());
-        compoundNBT.putInt(RConstants.ANIMATION_TICKS, getAnimationTicks());
+        compoundNBT.putInt(RConstants.ANIMATION_TICKS, updateTicks());
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.get().getRegistryName().toString());
-        compoundNBT.putString(RConstants.PREFERENCE, getPreferredModel().name());
-        compoundNBT.putBoolean(RConstants.IS_ALEX, isAlexSkinCurrently());
-        compoundNBT.putBoolean(RConstants.GLOWING, areHandsGlowing());
+        compoundNBT.putString(RConstants.PREFERENCE, preferredModel().name());
+        compoundNBT.putBoolean(RConstants.IS_ALEX, currentlyAlex());
+        compoundNBT.putBoolean(RConstants.GLOWING, glowing());
         compoundNBT.putString(RConstants.CURRENT_TRAIT, currentTrait.getRegistryName().toString());
         compoundNBT.putString(RConstants.NEXT_TRAIT, nextTrait.getRegistryName().toString());
         compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
-        compoundNBT.putString(RConstants.HAND_STATE, getHandState().name());
+        compoundNBT.putString(RConstants.HAND_STATE, handState().name());
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
-            compoundNBT.putByteArray(RConstants.SKIN, getSkin());
+            compoundNBT.putByteArray(RConstants.SKIN, skin());
         }
 
         if (isNextSkinValid()) {
@@ -254,7 +254,7 @@ public class RegenCap implements IRegen {
     public void deserializeNBT(CompoundNBT nbt) {
         setRegens(nbt.getInt(RConstants.REGENS_LEFT));
         currentState = nbt.contains(RConstants.CURRENT_STATE) ? RegenStates.valueOf(nbt.getString(RConstants.CURRENT_STATE)) : RegenStates.ALIVE;
-        setAnimationTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
+        setUpdateTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
         setSkin(nbt.getByteArray(RConstants.SKIN));
         setNextSkin(nbt.getByteArray("next_" + RConstants.SKIN));
         setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
@@ -299,7 +299,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public String getDeathMessage() {
+    public String deathMessage() {
         return this.deathMessage;
     }
 
@@ -309,14 +309,14 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public void regen() {
+    public void forceRegeneration() {
         if (livingEntity != null) {
             livingEntity.hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
         }
     }
 
     @Override
-    public byte[] getSkin() {
+    public byte[] skin() {
         return skinArray;
     }
 
@@ -341,7 +341,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public boolean isAlexSkinCurrently() {
+    public boolean currentlyAlex() {
         return isAlex;
     }
 
@@ -351,7 +351,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public PlayerUtil.SkinType getPreferredModel() {
+    public PlayerUtil.SkinType preferredModel() {
         return preferredSkinType;
     }
 
@@ -416,7 +416,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public Hand getHandState() {
+    public Hand handState() {
         return handState;
     }
 
@@ -534,7 +534,7 @@ public class RegenCap implements IRegen {
         public void onPunchEntity(LivingHurtEvent event) {
             LivingEntity entity = event.getEntityLiving();
             // We're healing mobs...
-            if (currentState.isGraceful() && entity.getHealth() < entity.getMaxHealth() && areHandsGlowing() && livingEntity.isShiftKeyDown()) { // ... check if we're in grace and if the mob needs health
+            if (currentState.isGraceful() && entity.getHealth() < entity.getMaxHealth() && glowing() && livingEntity.isShiftKeyDown()) { // ... check if we're in grace and if the mob needs health
                 float healthNeeded = entity.getMaxHealth() - entity.getHealth();
                 entity.heal(healthNeeded);
                 if (livingEntity instanceof PlayerEntity) {
@@ -547,7 +547,7 @@ public class RegenCap implements IRegen {
 
         @Override
         public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-            if (currentState.isGraceful() && areHandsGlowing()) {
+            if (currentState.isGraceful() && glowing()) {
 
                 BlockState block = e.getWorld().getBlockState(e.getPos());
 
@@ -596,7 +596,7 @@ public class RegenCap implements IRegen {
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
                 if (livingEntity instanceof PlayerEntity) {
                     TranslationTextComponent text = new TranslationTextComponent("regen.messages.regen_death_msg", livingEntity.getName());
-                    text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(getDeathMessage()))));
+                    text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(deathMessage()))));
                     PlayerUtil.sendMessageToAll(text);
                 }
             }
@@ -629,7 +629,7 @@ public class RegenCap implements IRegen {
             transitionType.get().onFinishRegeneration(RegenCap.this);
             livingEntity.hurt(isGrace ? RegenSources.REGEN_DMG_CRITICAL : RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
-                extractRegens(getRegens());
+                extractRegens(regens());
             }
             setSkin(new byte[0]);
             syncToClients(null);

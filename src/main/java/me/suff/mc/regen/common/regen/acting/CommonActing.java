@@ -49,7 +49,7 @@ class CommonActing implements Acting {
     @Override
     public void onRegenTick(IRegen cap) {
         LivingEntity livingEntity = cap.getLiving();
-        float stateProgress = (float) cap.getStateManager().getStateProgress();
+        float stateProgress = (float) cap.stateManager().getStateProgress();
 
         switch (cap.getCurrentState()) {
             case POST:

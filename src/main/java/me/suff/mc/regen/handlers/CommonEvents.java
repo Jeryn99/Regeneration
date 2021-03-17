@@ -20,12 +20,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.concurrent.ThreadTaskExecutor;
+import net.minecraft.util.concurrent.TickDelayedTask;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -50,6 +53,8 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
@@ -101,166 +106,188 @@ public class CommonEvents {
         return false;
     }
 
-    @SubscribeEvent
-    public static void onVillagerJoin(EntityJoinWorldEvent worldEvent) {
-        if (worldEvent.getEntity() instanceof VillagerEntity) {
-            worldEvent.setCanceled(true);
-            ServerWorld world = worldEvent.getWorld().getServer().getLevel(worldEvent.getWorld().dimension());
-            TimelordEntity timelord = REntities.TIMELORD.get().create(world);
-            Vector3d pos = worldEvent.getEntity().position();
-            timelord.setPos(pos.x, pos.y, pos.z);
-            world.addFreshEntity(timelord);
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+        Entity entity = event.getEntity();
+        if (event.getWorld().dimension().location().getPath().contains("gallifrey")) {
+
+            if (entity instanceof VillagerEntity && entity.getType() != REntities.TIMELORD.get()) {
+                VillagerEntity villagerEntity = (VillagerEntity) entity;
+
+                TimelordEntity timelord = new TimelordEntity(event.getWorld());
+                timelord.setVillagerData(villagerEntity.getVillagerData());
+                timelord.setTimelordType(TimelordEntity.TimelordType.COUNCIL);
+                Vector3d pos = event.getEntity().position();
+                timelord.setPos(pos.x, pos.y, pos.z);
+                entity.remove();
+                event.setCanceled(true);
+                ThreadTaskExecutor< Runnable > executor = LogicalSidedProvider.WORKQUEUE.get(event.getWorld().isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+                executor.tell(new TickDelayedTask(0, () -> event.getWorld().addFreshEntity(timelord)));
+            }
+
+            if (entity instanceof IronGolemEntity && entity.getType() != REntities.TIMELORD.get()) {
+                for (int i = 4; i > 0; i--) {
+                    TimelordEntity timelord = new TimelordEntity(event.getWorld());
+                    timelord.setTimelordType(TimelordEntity.TimelordType.GUARD);
+                    Vector3d pos = event.getEntity().position();
+                    timelord.setPos(pos.x + (i * 2), pos.y, pos.z);
+                    entity.remove();
+                    event.setCanceled(true);
+                    ThreadTaskExecutor< Runnable > executor = LogicalSidedProvider.WORKQUEUE.get(event.getWorld().isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+                    executor.tell(new TickDelayedTask(0, () -> event.getWorld().addFreshEntity(timelord)));
+                }
+            }
         }
     }
 
 
-    @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
-        LivingEntity livingEntity = event.getEntityLiving();
+        @SubscribeEvent
+        public static void onLivingHurt (LivingHurtEvent event){
+            LivingEntity livingEntity = event.getEntityLiving();
 
-        if (livingEntity == null) return;
+            if (livingEntity == null) return;
 
-        RegenCap.get(livingEntity).ifPresent(iRegen -> {
+            RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
-            Entity trueSource = event.getSource().getEntity();
+                Entity trueSource = event.getSource().getEntity();
 
 
-            if (event.getSource().isFire() && iRegen.getTrait().getRegistryName().toString().equals(Traits.FIRE.get().getRegistryName().toString())) {
-                event.setCanceled(true);
-                event.setAmount(0.0F);
-                return;
-            }
-
-            if (trueSource instanceof PlayerEntity && event.getEntityLiving() != null) {
-                PlayerEntity player = (PlayerEntity) trueSource;
-                RegenCap.get(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
-            }
-
-            // Stop certain damages
-            if (event.getSource() == RegenSources.REGEN_DMG_KILLED)
-                return;
-
-            //Update Death Message
-            iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
-
-            //Stop falling for leap trait
-            if (iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
-                if (event.getSource() == DamageSource.FALL) {
+                if (event.getSource().isFire() && iRegen.getTrait().getRegistryName().toString().equals(Traits.FIRE.get().getRegistryName().toString())) {
                     event.setCanceled(true);
+                    event.setAmount(0.0F);
                     return;
                 }
-            }
 
-            //Handle Post
-            if (iRegen.getCurrentState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
-                event.setAmount(1.5F);
-                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.reduced_dmg"), true);
-            }
+                if (trueSource instanceof PlayerEntity && event.getEntityLiving() != null) {
+                    PlayerEntity player = (PlayerEntity) trueSource;
+                    RegenCap.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event));
+                }
 
-            //Handle Death
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.getCurrentState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
-                event.setCanceled(true);
-            } else if (livingEntity.getHealth() + livingEntity.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
-                boolean notDead = iRegen.getStateManager().onKilled(event.getSource());
-                event.setCanceled(notDead);
-            }
-        });
-    }
+                // Stop certain damages
+                if (event.getSource() == RegenSources.REGEN_DMG_KILLED)
+                    return;
 
-    @SubscribeEvent
-    public static void onKnockback(LivingKnockBackEvent event) {
-        LivingEntity livingEntity = event.getEntityLiving();
-        RegenCap.get(livingEntity).ifPresent((data) -> event.setCanceled(data.getCurrentState() == RegenStates.REGENERATING));
-    }
+                //Update Death Message
+                iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
 
+                //Stop falling for leap trait
+                if (iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
+                    if (event.getSource() == DamageSource.FALL) {
+                        event.setCanceled(true);
+                        return;
+                    }
+                }
 
-    @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-        Capability.IStorage< IRegen > storage = RegenCap.CAPABILITY.getStorage();
-        event.getOriginal().revive();
-        RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
-            CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
-            storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
-        }));
-    }
+                //Handle Post
+                if (iRegen.getCurrentState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
+                    event.setAmount(1.5F);
+                    PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.reduced_dmg"), true);
+                }
 
-    @SubscribeEvent
-    public static void onTrackPlayer(PlayerEvent.StartTracking startTracking) {
-        RegenCap.get(startTracking.getPlayer()).ifPresent(iRegen -> {
-            iRegen.syncToClients(null);
-        });
-    }
-
-    @SubscribeEvent
-    public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-        if (e.getPlayer().level.isClientSide) return;
-        RegenCap.get(e.getPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
-    }
-
-    @SubscribeEvent
-    public static void onLive(LivingEvent.LivingUpdateEvent livingUpdateEvent) {
-        RegenCap.get(livingUpdateEvent.getEntityLiving()).ifPresent(IRegen::tick);
-    }
-
-    @SubscribeEvent
-    public static void onServerStart(FMLServerStartingEvent event) {
-        CommandDispatcher< CommandSource > dispatcher = event.getServer().getCommands().getDispatcher();
-        RegenCommand.register(dispatcher);
-    }
-
-    @SubscribeEvent
-    public static void onCut(PlayerInteractEvent.RightClickItem event) {
-        if (event.getItemStack().getItem() instanceof ToolItem || event.getItemStack().getItem() instanceof SwordItem) {
-            PlayerEntity player = event.getPlayer();
-            RegenCap.get(player).ifPresent((data) -> {
-                if (data.getCurrentState() == RegenStates.POST && player.isShiftKeyDown() & data.getHandState() == IRegen.Hand.NO_GONE) {
-                    HandItem.createHand(player);
+                //Handle Death
+                if (iRegen.getCurrentState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.getCurrentState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
+                    event.setCanceled(true);
+                } else if (livingEntity.getHealth() + livingEntity.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
+                    boolean notDead = iRegen.stateManager().onKilled(event.getSource());
+                    event.setCanceled(notDead);
                 }
             });
         }
-    }
+
+        @SubscribeEvent
+        public static void onKnockback (LivingKnockBackEvent event){
+            LivingEntity livingEntity = event.getEntityLiving();
+            RegenCap.get(livingEntity).ifPresent((data) -> event.setCanceled(data.getCurrentState() == RegenStates.REGENERATING));
+        }
 
 
-    /**
-     * Adds the structure's spacing for modded code made dimensions so that the structure's spacing remains
-     * correct in any dimension or worldtype instead of not spawning.
-     * In {@link RStructures#setupStructure(Structure, StructureSeparationSettings, boolean)} we call {@link DimensionStructuresSettings#DEFAULTS}
-     * but this sometimes does not work in code made dimensions.
-     */
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void addDimensionalSpacing(final WorldEvent.Load event) {
-        if (event.getWorld() instanceof ServerWorld) {
-            ServerWorld serverWorld = (ServerWorld) event.getWorld();
+        @SubscribeEvent
+        public static void onPlayerClone (PlayerEvent.Clone event){
+            Capability.IStorage< IRegen > storage = RegenCap.CAPABILITY.getStorage();
+            event.getOriginal().revive();
+            RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
+                CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
+                storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
+            }));
+        }
 
-            /* Prevent spawning our structure in Vanilla's superflat world as
-             * people seem to want their superflat worlds free of modded structures.
-             * Also, vanilla superflat is really tricky and buggy to work with as mentioned in WAObjects#registerConfiguredStructure
-             * BiomeModificationEvent does not seem to fire for superflat biomes...you can't add structures to superflat without mixin it seems.
-             * */
-            if (serverWorld.getChunkSource().getGenerator() instanceof FlatChunkGenerator && serverWorld.dimension().equals(World.OVERWORLD)) {
-                return;
+        @SubscribeEvent
+        public static void onTrackPlayer (PlayerEvent.StartTracking startTracking){
+            RegenCap.get(startTracking.getPlayer()).ifPresent(iRegen -> {
+                iRegen.syncToClients(null);
+            });
+        }
+
+        @SubscribeEvent
+        public static void onPunchBlock (PlayerInteractEvent.LeftClickBlock e){
+            if (e.getPlayer().level.isClientSide) return;
+            RegenCap.get(e.getPlayer()).ifPresent((data) -> data.stateManager().onPunchBlock(e));
+        }
+
+        @SubscribeEvent
+        public static void onLive (LivingEvent.LivingUpdateEvent livingUpdateEvent){
+            RegenCap.get(livingUpdateEvent.getEntityLiving()).ifPresent(IRegen::tick);
+        }
+
+        @SubscribeEvent
+        public static void onServerStart (FMLServerStartingEvent event){
+            CommandDispatcher< CommandSource > dispatcher = event.getServer().getCommands().getDispatcher();
+            RegenCommand.register(dispatcher);
+        }
+
+        @SubscribeEvent
+        public static void onCut (PlayerInteractEvent.RightClickItem event){
+            if (event.getItemStack().getItem() instanceof ToolItem || event.getItemStack().getItem() instanceof SwordItem) {
+                PlayerEntity player = event.getPlayer();
+                RegenCap.get(player).ifPresent((data) -> {
+                    if (data.getCurrentState() == RegenStates.POST && player.isShiftKeyDown() & data.handState() == IRegen.Hand.NO_GONE) {
+                        HandItem.createHand(player);
+                    }
+                });
             }
-            //Only spawn Huts in the Overworld structure list
-            if (serverWorld.dimension().equals(World.OVERWORLD)) {
-                Map< Structure< ? >, StructureSeparationSettings > tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
-                tempMap.put(RStructures.Structures.HUTS.get(), DimensionStructuresSettings.DEFAULTS.get(RStructures.Structures.HUTS.get()));
-                serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
+        }
+
+
+        /**
+         * Adds the structure's spacing for modded code made dimensions so that the structure's spacing remains
+         * correct in any dimension or worldtype instead of not spawning.
+         * In {@link RStructures#setupStructure(Structure, StructureSeparationSettings, boolean)} we call {@link DimensionStructuresSettings#DEFAULTS}
+         * but this sometimes does not work in code made dimensions.
+         */
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void addDimensionalSpacing ( final WorldEvent.Load event){
+            if (event.getWorld() instanceof ServerWorld) {
+                ServerWorld serverWorld = (ServerWorld) event.getWorld();
+
+                /* Prevent spawning our structure in Vanilla's superflat world as
+                 * people seem to want their superflat worlds free of modded structures.
+                 * Also, vanilla superflat is really tricky and buggy to work with as mentioned in WAObjects#registerConfiguredStructure
+                 * BiomeModificationEvent does not seem to fire for superflat biomes...you can't add structures to superflat without mixin it seems.
+                 * */
+                if (serverWorld.getChunkSource().getGenerator() instanceof FlatChunkGenerator && serverWorld.dimension().equals(World.OVERWORLD)) {
+                    return;
+                }
+                //Only spawn Huts in the Overworld structure list
+                if (serverWorld.dimension().equals(World.OVERWORLD)) {
+                    Map< Structure< ? >, StructureSeparationSettings > tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+                    tempMap.put(RStructures.Structures.HUTS.get(), DimensionStructuresSettings.DEFAULTS.get(RStructures.Structures.HUTS.get()));
+                    serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
+                }
             }
         }
-    }
 
-    @SubscribeEvent
-    public static void onBiomeLoad(BiomeLoadingEvent biomeLoadingEvent) {
-        Biome.Category biomeCategory = biomeLoadingEvent.getCategory();
+        @SubscribeEvent
+        public static void onBiomeLoad (BiomeLoadingEvent biomeLoadingEvent){
+            Biome.Category biomeCategory = biomeLoadingEvent.getCategory();
 
-        if (biomeCategory != Biome.Category.ICY && biomeCategory != Biome.Category.MUSHROOM && biomeCategory != Biome.Category.JUNGLE && biomeCategory != Biome.Category.OCEAN && biomeCategory != Biome.Category.RIVER && biomeCategory != Biome.Category.DESERT) {
-            biomeLoadingEvent.getGeneration().getStructures().add(() -> RStructures.ConfiguredStructures.CONFIGURED_HUTS);
-            Regeneration.LOG.info("Added Huts to: " + biomeLoadingEvent.getName());
+            if (biomeCategory != Biome.Category.ICY && biomeCategory != Biome.Category.MUSHROOM && biomeCategory != Biome.Category.JUNGLE && biomeCategory != Biome.Category.OCEAN && biomeCategory != Biome.Category.RIVER && biomeCategory != Biome.Category.DESERT) {
+                biomeLoadingEvent.getGeneration().getStructures().add(() -> RStructures.ConfiguredStructures.CONFIGURED_HUTS);
+                Regeneration.LOG.info("Added Huts to: " + biomeLoadingEvent.getName());
+            }
+
+            if (biomeCategory != Biome.Category.NETHER && biomeCategory != Biome.Category.THEEND) {
+                biomeLoadingEvent.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RStructures.GAl_ORE);
+            }
         }
 
-        if (biomeCategory != Biome.Category.NETHER && biomeCategory != Biome.Category.THEEND) {
-            biomeLoadingEvent.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RStructures.GAl_ORE);
-        }
     }
-
-}

@@ -195,7 +195,7 @@ public class ClientEvents {
                     throw new IllegalStateException("Unexpected value: " + cap.getCurrentState());
             }
 
-            if (cap.areHandsGlowing()) {
+            if (cap.glowing()) {
                 RenderHelp.renderVig(TransitionTypes.FIERY.get().getDefaultPrimaryColor(), 0.5F);
             }
 
@@ -213,7 +213,7 @@ public class ClientEvents {
                 event.setCanceled(true);
             }
         } else {
-            AbstractGui.GUI_ICONS_LOCATION = cap.getRegens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
+            AbstractGui.GUI_ICONS_LOCATION = cap.regens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
         }
     }
 
@@ -227,7 +227,7 @@ public class ClientEvents {
                     float amount = MathHelper.cos(data.getLiving().tickCount * 0.02F) * -0.10F;
                     event.setDensity(amount);
                 }
-                if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.getAnimationTicks() > 0) {
+                if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.updateTicks() > 0) {
                     event.setCanceled(true);
                     event.setDensity(0.3F);
                 }
