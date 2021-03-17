@@ -118,14 +118,14 @@ public class EnglishLangGen extends LanguageProvider {
         add("regen.messages.transfer.max_regens", "You already have the maximum number of regenerations");
         add("regen.messages.transfer.no_regens", "You don't have any regenerations left to transfer");
         add("regen.messages.regen_chat_message", "%s is regenerating...");
-        add("regen.messages.warning.grace", "You are in a state of grace, press %s to regenerate!");
-        add("regen.messages.warning.grace_critical", "You are near death, press %s to regenerate!");
+        add("regen.messages.warning.grace", "You are in a state of grace! || Press %s to regenerate!");
+        add("regen.messages.warning.grace_critical", "You are near death! || Press %s to regenerate!");
         add("regen.messages.regen_delayed", "Regeneration delayed!");
         add("regen.messages.regen_warning", "Punch a block to delay your regeneration further");
         add("regen.messages.jar", "You have gained a Regeneration from harvested lindos!");
         add("regen.messages.jar_not_enough", "There is not enough Lindos in this jar! [100 Lindos = 1 free Regeneration]");
         add("regen.messages.jar_no_break", "You cannot break this Jar while it has %s Lindos Energy!");
-        add("regen.messages.not_alive", "You cannot transfer regens in this state!");
+        add("regen.messages.not_alive", "You cannot transfer Regenerations in this state!");
         add("regen.messages.item_taken_regens", "You have gained %s regenerations from %s");
         add("regen.messages.cannot_use", "You cannot use this right now!");
         add("regen.messages.healed", "You have given %s some of your Regeneration Energy!");

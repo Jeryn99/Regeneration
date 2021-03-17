@@ -3,7 +3,6 @@ package me.suff.mc.regen.client.skin;
 
 import com.google.common.base.MoreObjects;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SkinMessage;
@@ -15,8 +14,6 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
@@ -33,7 +30,7 @@ public class SkinHandler {
 
     public static void tick(AbstractClientPlayerEntity playerEntity) {
         RegenCap.get(playerEntity).ifPresent(iRegen -> {
-            boolean forceUpdate = false;
+            boolean hasBeenModified = false;
 
             byte[] skin = iRegen.getSkin();
             UUID uuid = playerEntity.getUUID();
@@ -42,36 +39,34 @@ public class SkinHandler {
 
             // Check if the player has a MOD skin and if the cache is present
             // if these conditions are true, we want to generate and cache the skin
-            if (validSkin && !hasPlayerSkin(uuid) || iRegen.getTicksAnimating() >= 140) {
+            if (validSkin && !hasPlayerSkin(uuid) || iRegen.getAnimationTicks() >= 140) {
                 NativeImage skinImage = genSkinNative(skin);
                 if (skinImage != null) {
                     addPlayerSkin(playerEntity.getUUID(), loadImage(skinImage));
-                    forceUpdate = true;
+                    hasBeenModified = true;
                 }
             }
 
             //If the skin is invalid, we want to remove it and revert to Mojang
             if (!validSkin) {
                 removePlayerSkin(playerEntity.getUUID());
-                forceUpdate = true;
+                hasBeenModified = true;
             }
 
             //Update the skin if required.
-            if (forceUpdate || playerEntity.tickCount < 20) {
+            if (hasBeenModified || playerEntity.tickCount < 20) {
                 ResourceLocation skinTexture = getSkinToUse(playerEntity);
                 setPlayerSkin(playerEntity, skinTexture);
             }
 
-            boolean isAlex = false;
-
-            if (iRegen.isSkinValidForUse()) {
-                isAlex = iRegen.isAlexSkinCurrently();
-            } else {
-                playerEntity.playerInfo.registerTextures();
-                isAlex = playerEntity.playerInfo.getModelName().contentEquals("slim");
-            }
+            boolean isAlex = iRegen.isSkinValidForUse() ? iRegen.isAlexSkinCurrently() : getUnmodifiedSkinType(playerEntity);
             setPlayerSkinType(playerEntity, isAlex);
         });
+    }
+
+    public static boolean getUnmodifiedSkinType(AbstractClientPlayerEntity abstractClientPlayerEntity) {
+        abstractClientPlayerEntity.playerInfo.registerTextures();
+        return abstractClientPlayerEntity.playerInfo.getModelName().contentEquals("slim");
     }
 
     public static void setPlayerSkinType(AbstractClientPlayerEntity player, boolean isAlex) {

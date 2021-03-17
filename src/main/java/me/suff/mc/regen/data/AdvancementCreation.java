@@ -72,7 +72,7 @@ public class AdvancementCreation implements IDataProvider {
                 .display(
                         display.getItem(),
                         new TranslationTextComponent("advancements.regen.title." + title),
-                        new TranslationTextComponent("advancements.regen.desc." + title ),
+                        new TranslationTextComponent("advancements.regen.desc." + title),
                         new ResourceLocation("regen:textures/block/zero_roundel_half.png"),
                         FrameType.TASK,
                         true,

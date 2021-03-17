@@ -7,7 +7,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -70,10 +69,6 @@ public class PortalBlock extends Block {
         double d1 = (double) p_180655_3_.getY() + 1D;
         double d2 = (double) p_180655_3_.getZ() + p_180655_4_.nextDouble() * 2;
         p_180655_2_.addParticle(RParticles.CONTAINER.get(), d0, d1, d2, 1.0D, 2.0D, 0.0D);
-    }
-
-    public ItemStack getCloneItemStack(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
-        return ItemStack.EMPTY;
     }
 
     public boolean canBeReplaced(BlockState p_225541_1_, Fluid p_225541_2_) {

@@ -159,14 +159,7 @@ public class ClientEvents {
         RegenCap.get(player).ifPresent((cap) -> {
             String warning = null;
 
-            if (player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0) {
-                AbstractGui.GUI_ICONS_LOCATION = NEW;
-                if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS && event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
-                    event.setCanceled(true);
-                }
-            } else {
-                AbstractGui.GUI_ICONS_LOCATION = cap.getRegens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
-            }
+            handleGunCrosshair(event, player, cap);
 
 
             if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
@@ -175,7 +168,7 @@ public class ClientEvents {
             }
 
 
-            ITextComponent forceKeybind = new TranslationTextComponent(RKeybinds.FORCE_REGEN.saveString().replace("key.keyboard.", "").toUpperCase());
+            ITextComponent forceKeybind = RKeybinds.FORCE_REGEN.getKey().getDisplayName();
 
             switch (cap.getCurrentState()) {
                 case ALIVE:
@@ -213,6 +206,17 @@ public class ClientEvents {
         });
     }
 
+    private static void handleGunCrosshair(RenderGameOverlayEvent.Pre event, ClientPlayerEntity player, me.suff.mc.regen.common.regen.IRegen cap) {
+        if (player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0) {
+            AbstractGui.GUI_ICONS_LOCATION = NEW;
+            if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS && event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
+                event.setCanceled(true);
+            }
+        } else {
+            AbstractGui.GUI_ICONS_LOCATION = cap.getRegens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
+        }
+    }
+
     @SubscribeEvent
     public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
         Entity viewer = Minecraft.getInstance().getCameraEntity();
@@ -223,7 +227,7 @@ public class ClientEvents {
                     float amount = MathHelper.cos(data.getLiving().tickCount * 0.02F) * -0.10F;
                     event.setDensity(amount);
                 }
-                if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.getTicksAnimating() > 0) {
+                if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.getAnimationTicks() > 0) {
                     event.setCanceled(true);
                     event.setDensity(0.3F);
                 }

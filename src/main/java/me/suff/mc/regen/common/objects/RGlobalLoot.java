@@ -2,7 +2,6 @@ package me.suff.mc.regen.common.objects;
 
 import com.google.gson.JsonObject;
 import me.suff.mc.regen.common.item.FobWatchItem;
-import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.item.ItemStack;

@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -48,7 +49,9 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import static me.suff.mc.regen.common.item.FobWatchItem.getEngrave;
@@ -57,16 +60,8 @@ import static me.suff.mc.regen.common.item.FobWatchItem.getOpen;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientUtil {
 
-    private static final BipedModel< ? > GUARD_HEAD = new GuardModel(EquipmentSlotType.HEAD);
-    private static final BipedModel< ? > GUARD_BODY = new GuardModel(EquipmentSlotType.CHEST);
-    private static final BipedModel< ? > GUARD_LEGS = new GuardModel(EquipmentSlotType.LEGS);
-    private static final BipedModel< ? > GUARD_FEET = new GuardModel(EquipmentSlotType.FEET);
-
-    private static final BipedModel< ? > ROBES_HEAD = new RobesModel(EquipmentSlotType.HEAD);
-    private static final BipedModel< ? > ROBES_BODY = new RobesModel(EquipmentSlotType.CHEST);
-    private static final BipedModel< ? > ROBES_LEGS = new RobesModel(EquipmentSlotType.LEGS);
-    private static final BipedModel< ? > ROBES_FEET = new RobesModel(EquipmentSlotType.FEET);
     private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
+    public static HashMap< Item, BipedModel< ? > > ARMOR_MODELS = new HashMap<>();
 
     @SubscribeEvent
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
@@ -80,49 +75,58 @@ public class ClientUtil {
                 return false;
             }
 
-            return abstractClientPlayerEntity.playerInfo.skinModel == "slim";
+            return Objects.equals(abstractClientPlayerEntity.playerInfo.skinModel, "slim");
         }
         return false;
     }
 
-    //TODO maybe I should make this a hashmap
+    public static void clothingModels() {
+        RobesModel robesHead = new RobesModel(EquipmentSlotType.HEAD);
+        RobesModel robesChest = new RobesModel(EquipmentSlotType.CHEST);
+        RobesModel robesLegs = new RobesModel(EquipmentSlotType.LEGS);
+        RobesModel robesFeet = new RobesModel(EquipmentSlotType.FEET);
+
+        //Robes
+        ARMOR_MODELS.put(RItems.F_ROBES_HEAD.get(), robesHead);
+        ARMOR_MODELS.put(RItems.M_ROBES_HEAD.get(), robesHead);
+        ARMOR_MODELS.put(RItems.F_ROBES_CHEST.get(), robesChest);
+        ARMOR_MODELS.put(RItems.M_ROBES_CHEST.get(), robesChest);
+        ARMOR_MODELS.put(RItems.F_ROBES_LEGS.get(), robesLegs);
+        ARMOR_MODELS.put(RItems.M_ROBES_LEGS.get(), robesLegs);
+        ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);
+
+        BipedModel< ? > guardHead = new GuardModel(EquipmentSlotType.HEAD);
+        BipedModel< ? > guardChest = new GuardModel(EquipmentSlotType.CHEST);
+        BipedModel< ? > guardLegs = new GuardModel(EquipmentSlotType.LEGS);
+        BipedModel< ? > guardFeet = new GuardModel(EquipmentSlotType.FEET);
+
+        //Guard
+        ARMOR_MODELS.put(RItems.GUARD_HELMET.get(), guardHead);
+        ARMOR_MODELS.put(RItems.GUARD_CHEST.get(), guardChest);
+        ARMOR_MODELS.put(RItems.GUARD_LEGS.get(), guardLegs);
+        ARMOR_MODELS.put(RItems.GUARD_FEET.get(), guardFeet);
+
+    }
+
     public static BipedModel< ? > getArmorModel(ItemStack itemStack) {
-
-        if (itemStack.getItem() == RItems.F_ROBES_HEAD.get() || itemStack.getItem() == RItems.M_ROBES_HEAD.get()) {
-            return ROBES_HEAD;
+        if (!ARMOR_MODELS.containsKey(itemStack.getItem())) {
+            throw new UnsupportedOperationException("No model registered for: " + itemStack.getItem());
         }
-
-        if (itemStack.getItem() == RItems.F_ROBES_CHEST.get() || itemStack.getItem() == RItems.M_ROBES_CHEST.get()) {
-            return ROBES_BODY;
-        }
-
-        if (itemStack.getItem() == RItems.F_ROBES_LEGS.get() || itemStack.getItem() == RItems.M_ROBES_LEGS.get()) {
-            return ROBES_LEGS;
-        }
-
-        if (itemStack.getItem() == RItems.ROBES_FEET.get()) {
-            return ROBES_FEET;
-        }
-
-        if (itemStack.getItem() == RItems.GUARD_HELMET.get()) {
-            return GUARD_HEAD;
-        }
-
-        if (itemStack.getItem() == RItems.GUARD_CHEST.get()) {
-            return GUARD_BODY;
-        }
-
-        if (itemStack.getItem() == RItems.GUARD_LEGS.get()) {
-            return GUARD_LEGS;
-        }
-
-        if (itemStack.getItem() == RItems.GUARD_FEET.get()) {
-            return GUARD_FEET;
-        }
-        return GUARD_FEET;
+        return ARMOR_MODELS.get(itemStack.getItem());
     }
 
     public static void doClientStuff() {
+        renderLayers();
+        clientRenders();
+        itemPredicates();
+        setupTabs();
+        clothingModels();
+        RKeybinds.init();
+        RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
+        Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).getColor(), RItems.ELIXIR.get());
+    }
+
+    private static void renderLayers() {
         /* Attach RenderLayers to Renderers */
         Map< String, PlayerRenderer > skinMap = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap();
         for (PlayerRenderer renderPlayer : skinMap.values()) {
@@ -132,19 +136,23 @@ public class ClientUtil {
 
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.forEach((entityType, entityRenderer) -> {
             if (entityRenderer instanceof BipedRenderer) {
-                ((BipedRenderer< ?, ? >) entityRenderer).addLayer(new RenderRegenLayer((IEntityRenderer) entityRenderer));
-                ((BipedRenderer< ?, ? >) entityRenderer).addLayer(new HandLayer((IEntityRenderer) entityRenderer));
+                BipedRenderer< ?, ? > bipedRenderer = (BipedRenderer< ?, ? >) entityRenderer;
+                bipedRenderer.addLayer(new RenderRegenLayer(bipedRenderer));
+                bipedRenderer.addLayer(new HandLayer((IEntityRenderer) entityRenderer));
             }
         });
+    }
 
-        RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(REntities.LASER.get(), RenderLaser::new);
-        RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);
+    private static void setupTabs() {
+        MinecraftForge.EVENT_BUS.register(new TabRegistry());
 
-        ClientRegistry.bindTileEntityRenderer(RTiles.HAND_JAR.get(), JarTileRender::new);
+        if (TabRegistry.getTabList().size() < 2) {
+            TabRegistry.registerTab(new InventoryTabVanilla());
+        }
+        TabRegistry.registerTab(new RegenPrefTab());
+    }
 
-        RKeybinds.init();
-
+    private static void itemPredicates() {
         ItemModelsProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
             boolean isGold = getEngrave(stack);
             boolean isOpen = getOpen(stack);
@@ -188,17 +196,13 @@ public class ClientUtil {
             SpawnItem.Timelord type = SpawnItem.getType(itemStack);
             return type.ordinal();
         });
+    }
 
-        RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
-
-        Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).getColor(), RItems.ELIXIR.get());
-
-        MinecraftForge.EVENT_BUS.register(new TabRegistry());
-
-        if (TabRegistry.getTabList().size() < 2) {
-            TabRegistry.registerTab(new InventoryTabVanilla());
-        }
-        TabRegistry.registerTab(new RegenPrefTab());
+    private static void clientRenders() {
+        ClientRegistry.bindTileEntityRenderer(RTiles.HAND_JAR.get(), JarTileRender::new);
+        RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(REntities.LASER.get(), RenderLaser::new);
+        RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);
     }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
@@ -211,10 +215,6 @@ public class ClientUtil {
 
     public static void createToast(TranslationTextComponent title, TranslationTextComponent subtitle) {
         Minecraft.getInstance().getToasts().addToast(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
-    }
-
-    public static PointOfView getPlayerPerspective() {
-        return Minecraft.getInstance().options.getCameraType();
     }
 
     public static void setPlayerPerspective(String pointOfView) {

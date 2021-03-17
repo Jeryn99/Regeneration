@@ -20,13 +20,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -99,6 +99,18 @@ public class CommonEvents {
             }
         }
         return false;
+    }
+
+    @SubscribeEvent
+    public static void onVillagerJoin(EntityJoinWorldEvent worldEvent) {
+        if (worldEvent.getEntity() instanceof VillagerEntity) {
+            worldEvent.setCanceled(true);
+            ServerWorld world = worldEvent.getWorld().getServer().getLevel(worldEvent.getWorld().dimension());
+            TimelordEntity timelord = REntities.TIMELORD.get().create(world);
+            Vector3d pos = worldEvent.getEntity().position();
+            timelord.setPos(pos.x, pos.y, pos.z);
+            world.addFreshEntity(timelord);
+        }
     }
 
 

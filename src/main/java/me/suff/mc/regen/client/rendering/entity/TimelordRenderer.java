@@ -60,7 +60,7 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
     public static ResourceLocation getTimelordFace(TimelordEntity timelordEntity) {
         IRegen data = RegenCap.get(timelordEntity).orElseGet(null);
 
-        if (data.getTicksAnimating() > 100 && data.getTicksAnimating() < 105) {
+        if (data.getAnimationTicks() > 100 && data.getAnimationTicks() < 105) {
             TIMELORDS.remove(timelordEntity.getUUID());
         }
 

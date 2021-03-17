@@ -32,8 +32,8 @@ public class CommonSkin {
     public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/skins/");
     public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
-    public static final File SKIN_DIRECTORY_MALE = new File(SKIN_DIRECTORY, "/timelord/male");
-    public static final File SKIN_DIRECTORY_FEMALE = new File(SKIN_DIRECTORY, "/timelord/female");
+    public static final File SKIN_DIRECTORY_MALE_TIMELORD = new File(SKIN_DIRECTORY, "/timelord/male");
+    public static final File SKIN_DIRECTORY_FEMALE_TIMELORD = new File(SKIN_DIRECTORY, "/timelord/female");
     public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
     public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
 
@@ -49,10 +49,7 @@ public class CommonSkin {
 
     //Choose a random PNG from a folder
     public static File chooseRandomSkin(Random rand, boolean isAlex, boolean isTimelord) {
-        File skins = isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE;
-        if (isTimelord) {
-            skins = isAlex ? SKIN_DIRECTORY_FEMALE : SKIN_DIRECTORY_MALE;
-        }
+        File skins = isTimelord ? (isAlex ? SKIN_DIRECTORY_FEMALE_TIMELORD : SKIN_DIRECTORY_MALE_TIMELORD) : (isAlex ? SKIN_DIRECTORY_ALEX : SKIN_DIRECTORY_STEVE);
 
         if (!skins.exists()) {
             try {
@@ -101,27 +98,12 @@ public class CommonSkin {
     }
 
     public static void createDefaultFolders() throws IOException {
-
-        if (!SKIN_DIRECTORY.exists()) {
-            FileUtils.forceMkdir(SKIN_DIRECTORY);
+        File[] folders = new File[]{SKIN_DIRECTORY, SKIN_DIRECTORY_ALEX, SKIN_DIRECTORY_FEMALE_TIMELORD, SKIN_DIRECTORY_MALE_TIMELORD, SKIN_DIRECTORY_STEVE};
+        for (File folder : folders) {
+            if (!folder.exists()) {
+                FileUtils.forceMkdir(folder);
+            }
         }
-
-        if (!SKIN_DIRECTORY_ALEX.exists()) {
-            FileUtils.forceMkdir(SKIN_DIRECTORY_ALEX);
-        }
-
-        if (!SKIN_DIRECTORY_STEVE.exists()) {
-            FileUtils.forceMkdir(SKIN_DIRECTORY_STEVE);
-        }
-
-        if (!SKIN_DIRECTORY_STEVE.exists()) {
-            FileUtils.forceMkdir(SKIN_DIRECTORY_FEMALE);
-        }
-
-        if (!SKIN_DIRECTORY_STEVE.exists()) {
-            FileUtils.forceMkdir(SKIN_DIRECTORY_MALE);
-        }
-
     }
 
     /**
@@ -182,8 +164,9 @@ public class CommonSkin {
         long attr = drWhoDir.lastModified();
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(drWhoDir.list()).length == 0) {
             Regeneration.LOG.info("Re-Downloading Internal Skins");
-            String PACKS_URL = "https://raw.githubusercontent.com/WhoCraft/Regeneration/skins/index.json";
-            String[] links = Regeneration.GSON.fromJson(RegenUtil.getJsonFromURL(PACKS_URL), String[].class);
+
+            String packsUrl = "https://raw.githubusercontent.com/WhoCraft/Regeneration/skins/index.json";
+            String[] links = Regeneration.GSON.fromJson(RegenUtil.getJsonFromURL(packsUrl), String[].class);
             for (String link : links) {
                 try {
                     unzipSkinPack(link);
@@ -198,13 +181,11 @@ public class CommonSkin {
     }
 
     public static boolean isAlexSkin(BufferedImage image) {
-
         for (int i = 0; i < 8; i++) {
             if (!hasAlpha(54, i + 20, image) || !hasAlpha(55, i + 20, image)) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -292,28 +273,17 @@ public class CommonSkin {
     }
 
     public static void downloadTimelord() throws IOException {
-        if (!SKIN_DIRECTORY_FEMALE.exists()) {
-            if (SKIN_DIRECTORY_FEMALE.mkdirs()) {
-                Regeneration.LOG.info("Creating Directory: " + SKIN_DIRECTORY_FEMALE);
-            }
-        }
-        if (!SKIN_DIRECTORY_MALE.exists()) {
-            if (SKIN_DIRECTORY_MALE.mkdirs()) {
-                Regeneration.LOG.info("Creating Directory: " + SKIN_DIRECTORY_MALE);
-            }
-        }
-
-        long attr = SKIN_DIRECTORY_MALE.lastModified();
-        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(SKIN_DIRECTORY_MALE.list()).length == 0) {
-            FileUtils.cleanDirectory(SKIN_DIRECTORY_FEMALE);
-            FileUtils.cleanDirectory(SKIN_DIRECTORY_MALE);
+        long attr = SKIN_DIRECTORY_MALE_TIMELORD.lastModified();
+        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(SKIN_DIRECTORY_MALE_TIMELORD.list()).length == 0) {
+            FileUtils.cleanDirectory(SKIN_DIRECTORY_FEMALE_TIMELORD);
+            FileUtils.cleanDirectory(SKIN_DIRECTORY_MALE_TIMELORD);
             Regeneration.LOG.warn("Refreshing Timelord skins");
 
             String[] genders = new String[]{"male", "female"};
             for (String gender : genders) {
                 for (String skin : getSkins("https://namemc.com/minecraft-skins/tag/" + gender)) {
                     String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
-                    downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE : SKIN_DIRECTORY_FEMALE);
+                    downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE_TIMELORD : SKIN_DIRECTORY_FEMALE_TIMELORD);
                 }
             }
         }

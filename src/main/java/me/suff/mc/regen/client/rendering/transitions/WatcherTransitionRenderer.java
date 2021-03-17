@@ -65,11 +65,11 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 matrixStackIn.pushPose();
                 matrixStackIn.scale(1.2F, 1.2F, 1.2F);
-                float opacity = iRegen.getTicksAnimating();
+                float opacity = iRegen.getAnimationTicks();
                 FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityTranslucent(TEXTURE)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, new Vector3d(1, 1, 1));
                 matrixStackIn.popPose();
 
-                if (iRegen.getTicksAnimating() < 150) {
+                if (iRegen.getAnimationTicks() < 150) {
                     matrixStackIn.pushPose();
                     matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(-90));
                     matrixStackIn.translate(0, -1.5, 1);

@@ -285,12 +285,12 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
                 if (data.getCurrentState() == RegenStates.REGENERATING) {
 
-                    if (data.getTicksAnimating() == 10) {
+                    if (data.getAnimationTicks() == 10) {
                         if (getPersonality().getScreamSound() != null) {
                             playSound(getPersonality().getScreamSound(), 1, 1);
                         }
                     }
-                    if (data.getTicksAnimating() == 100) {
+                    if (data.getAnimationTicks() == 100) {
                         setMale(random.nextBoolean());
                         setPersonality(RSoundSchemes.getRandom(isMale()).identify().toString());
                         initSkin(data);

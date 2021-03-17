@@ -59,7 +59,8 @@ public class SoundReverb {
         IRegen data = RegenCap.get(Minecraft.getInstance().player).orElse(null);
         if (data != null) {
             return data.getCurrentState().isGraceful();
-        } else return false;
+        }
+        return false;
     }
 
 }

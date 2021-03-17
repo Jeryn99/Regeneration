@@ -1,9 +1,7 @@
 package me.suff.mc.regen.common.item;
 
 import me.suff.mc.regen.client.rendering.model.armor.LivingArmor;
-import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.util.ClientUtil;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -23,7 +21,7 @@ public class ClothingItem extends ArmorItem {
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         String gender = "";
-        if(slot == EquipmentSlotType.CHEST){
+        if (slot == EquipmentSlotType.CHEST) {
             gender = (ClientUtil.isAlex(entity) ? "_alex" : "_steve");
         }
         return "regen:textures/entity/armour/" + stack.getItem().getRegistryName().getPath() + gender + ".png";
