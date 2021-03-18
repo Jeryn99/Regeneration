@@ -1,7 +1,6 @@
 package me.suff.mc.regen.common.objects;
 
 import me.suff.mc.regen.common.block.JarBlock;
-import me.suff.mc.regen.common.block.PortalBlock;
 import me.suff.mc.regen.common.block.ROreBlock;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.block.AbstractBlock;
@@ -34,9 +33,9 @@ public class RBlocks {
     public static final RegistryObject< Block > ZERO_ROUNDEL = BLOCKS.register("zero_roundel_half", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
     public static final RegistryObject< Block > ZERO_ROOM_FULL = BLOCKS.register("zero_roundel_full", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
     public static final RegistryObject< Block > AZBANTIUM = BLOCKS.register("azbantium", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
-    public static final RegistryObject< Block > SCHISM = BLOCKS.register("schism", () -> new PortalBlock(AbstractBlock.Properties.of(Material.PORTAL, MaterialColor.COLOR_BLACK).noCollission().lightLevel((p_235460_0_) -> {
+/*    public static final RegistryObject< Block > SCHISM = BLOCKS.register("schism", () -> new PortalBlock(AbstractBlock.Properties.of(Material.PORTAL, MaterialColor.COLOR_BLACK).noCollission().lightLevel((p_235460_0_) -> {
         return 15;
-    }).strength(-1.0F, 3600000.0F).noDrops()));
+    }).strength(-1.0F, 3600000.0F).noDrops()));*/
 
     private static ToIntFunction< BlockState > getLightValueLit(int lightValue) {
         return (state) -> state.getValue(BlockStateProperties.LIT) ? lightValue : 0;
@@ -50,7 +49,7 @@ public class RBlocks {
 
     @SubscribeEvent
     public static void regBlockItems(RegistryEvent.Register< Item > e) {
-        genBlockItems(SCHISM.get(), ZINC_ORE.get(), BIO_CONTAINER.get(), ZERO_ROOM_FULL.get(), ZERO_ROUNDEL.get(), AZBANTIUM.get());
+        genBlockItems( ZINC_ORE.get(), BIO_CONTAINER.get(), ZERO_ROOM_FULL.get(), ZERO_ROUNDEL.get(), AZBANTIUM.get());
     }
 
 }

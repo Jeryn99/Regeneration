@@ -41,6 +41,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.suff.mc.regen.common.regen.IRegen.Hand;
+import me.suff.mc.regen.common.regen.IRegen.TimelordSound;
+
 public class RegenCap implements IRegen {
 
     //Injection

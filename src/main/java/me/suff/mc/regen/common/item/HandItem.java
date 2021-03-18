@@ -24,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.item.Item.Properties;
+
 /* Created by Craig on 05/03/2021 */
 public class HandItem extends Item {
     public HandItem(Properties properties) {
