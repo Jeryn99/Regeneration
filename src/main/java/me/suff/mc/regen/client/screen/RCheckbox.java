@@ -1,4 +1,4 @@
-package me.suff.mc.regen.client.gui;
+package me.suff.mc.regen.client.screen;
 
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.CheckboxButton;

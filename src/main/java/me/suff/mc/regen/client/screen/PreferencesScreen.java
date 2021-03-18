@@ -1,7 +1,7 @@
-package me.suff.mc.regen.client.gui;
+package me.suff.mc.regen.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
+import me.suff.mc.regen.client.gui.IncarnationScreen;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;

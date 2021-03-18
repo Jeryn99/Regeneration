@@ -54,6 +54,7 @@ public class ClientEvents {
     public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/regen_hearts.png");
     private static ISound iSound = null;
 
+
     @SubscribeEvent
     public static void onName(RenderNameplateEvent event) {
         ClientPlayerEntity player = Minecraft.getInstance().player;

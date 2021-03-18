@@ -1,4 +1,4 @@
-package me.suff.mc.regen.client.gui;
+package me.suff.mc.regen.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.common.regen.RegenCap;

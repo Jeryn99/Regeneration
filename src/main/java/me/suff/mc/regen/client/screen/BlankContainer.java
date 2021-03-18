@@ -1,4 +1,4 @@
-package me.suff.mc.regen.client.gui;
+package me.suff.mc.regen.client.screen;
 
 import net.minecraft.entity.player.PlayerEntity;
 
