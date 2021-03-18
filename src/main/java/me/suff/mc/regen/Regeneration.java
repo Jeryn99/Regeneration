@@ -83,7 +83,7 @@ public class Regeneration {
     public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
-        generator.addProvider(new EnglishLangGen(generator));
+        generator.addProvider(new EnglishLang(generator));
         generator.addProvider(new LootGen(generator));
         RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
         generator.addProvider(blockTags);

@@ -63,7 +63,7 @@ public class GunItem extends Item {
                     laserProjectile.setDamage(damage);
                     laserProjectile.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
                     laserProjectile.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0.0F, 1.5F, 1.0F);
-                    entityLiving.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 1.0F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
+                    entityLiving.playSound(isPistol ? RSounds.RIFLE.get() : RSounds.STASER.get(), 1.0F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
                     worldIn.addFreshEntity(laserProjectile);
                 }
             }

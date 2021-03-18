@@ -4,13 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.suff.mc.regen.common.advancement.BaseTrigger;
 import me.suff.mc.regen.common.advancement.TriggerManager;
+import me.suff.mc.regen.common.block.PortalBlock;
 import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.ICriterionInstance;
+import net.minecraft.advancements.criterion.ChangeDimensionTrigger;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
@@ -18,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -29,8 +33,6 @@ public class AdvancementCreation implements IDataProvider {
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final List< Advancement > advancements = new ArrayList<>();
     private final DataGenerator generator;
-
-    private Advancement lastAdvancement;
 
     public AdvancementCreation(DataGenerator generatorIn) {
         this.generator = generatorIn;
@@ -45,14 +47,22 @@ public class AdvancementCreation implements IDataProvider {
     public void run(DirectoryCache p_200398_1_) throws IOException {
         Path path = this.generator.getOutputFolder();
         TriggerManager.init();
-        this.createAdvancement("first_regen", new ItemStack(RItems.FOB.get()), new BaseTrigger.Instance(TriggerManager.FIRST_REGENERATION.getId()));
-        this.createAdvancement("change_refusal", new ItemStack(RBlocks.BIO_CONTAINER.get()), new BaseTrigger.Instance(TriggerManager.CHANGE_REFUSAL.getId()));
-        this.createAdvancement("critical_period", new ItemStack(Items.CLOCK), new BaseTrigger.Instance(TriggerManager.CRITICAL.getId()));
-        this.createAdvancement("timelord_trade", new ItemStack(RItems.SPAWN_ITEM.get()), new BaseTrigger.Instance(TriggerManager.TIMELORD_TRADE.getId()));
-        this.createAdvancement("gallifreyan_weapon", new ItemStack(RItems.PISTOL.get()), InventoryChangeTrigger.Instance.hasItems(() -> RItems.PISTOL.get(), () -> RItems.RIFLE.get()));
-        this.createAdvancement("hand_cut", new ItemStack(RItems.HAND.get()), new BaseTrigger.Instance(TriggerManager.HAND_CUT.getId()));
-        this.createAdvancement("zero_room", new ItemStack(RBlocks.ZERO_ROUNDEL.get()), new BaseTrigger.Instance(TriggerManager.ZERO_ROOM.getId()));
+        Advancement watchIsMe = this.createAdvancement("watch_is_me", new ItemStack(RItems.FOB.get()), InventoryChangeTrigger.Instance.hasItems(RItems.FOB.get()), null);
+        Advancement firstRegeneration = this.createAdvancement("first_regen", new ItemStack(Blocks.PLAYER_HEAD), new BaseTrigger.Instance(TriggerManager.FIRST_REGENERATION.getId()), watchIsMe);
 
+        //Refusal Path
+        Advancement changeRefuse = this.createAdvancement("change_refusal", new ItemStack(RBlocks.BIO_CONTAINER.get()), new BaseTrigger.Instance(TriggerManager.CHANGE_REFUSAL.getId()), firstRegeneration);
+        this.createAdvancement("critical_period", new ItemStack(Items.CLOCK), new BaseTrigger.Instance(TriggerManager.CRITICAL.getId()), changeRefuse);
+
+        //Restoration Path
+        Advancement cutHand = this.createAdvancement("hand_cut", new ItemStack(RItems.HAND.get()), new BaseTrigger.Instance(TriggerManager.HAND_CUT.getId()), changeRefuse);
+        this.createAdvancement("zero_room", new ItemStack(RBlocks.ZERO_ROUNDEL.get()), new BaseTrigger.Instance(TriggerManager.ZERO_ROOM.getId()), cutHand);
+
+        Advancement gallifrey = this.createAdvancement("gallifrey", new ItemStack(RBlocks.AZBANTIUM.get()), ChangeDimensionTrigger.Instance.changedDimensionTo(PortalBlock.GALLIFREY), watchIsMe);
+        Advancement trade = this.createAdvancement("timelord_trade", new ItemStack(RItems.SPAWN_ITEM.get()), new BaseTrigger.Instance(TriggerManager.TIMELORD_TRADE.getId()), gallifrey);
+        Advancement guard = this.createAdvancement("guard", new ItemStack(RItems.GUARD_HELMET.get()), InventoryChangeTrigger.Instance.hasItems(() -> RItems.GUARD_HELMET.get(), () -> RItems.GUARD_CHEST.get(), () -> RItems.GUARD_FEET.get(), () -> RItems.GUARD_LEGS.get()), trade);
+        Advancement council = this.createAdvancement("council", new ItemStack(RItems.M_ROBES_HEAD.get()), new BaseTrigger.Instance(TriggerManager.COUNCIL.getId()), trade);
+        this.createAdvancement("gallifreyan_weapon", new ItemStack(RItems.PISTOL.get()), InventoryChangeTrigger.Instance.hasItems(() -> RItems.PISTOL.get(), () -> RItems.RIFLE.get()), guard);
 
         for (Advancement adv : advancements) {
             IDataProvider.save(GSON, p_200398_1_, adv.deconstruct().serializeToJson(), getPath(path, adv));
@@ -66,7 +76,7 @@ public class AdvancementCreation implements IDataProvider {
         return "Advancements";
     }
 
-    public Advancement create(String name, String title, ItemStack display, ICriterionInstance... inst) {
+    public Advancement create(String name, String title, ItemStack display, Advancement parent, ICriterionInstance... inst) {
 
         Advancement.Builder adv = Advancement.Builder.advancement()
                 .display(
@@ -85,17 +95,16 @@ public class AdvancementCreation implements IDataProvider {
             i++;
         }
 
-        if (lastAdvancement != null) {
-            adv.parent(lastAdvancement);
+        if (parent != null) {
+            adv.parent(parent);
         }
 
         return adv.build(new ResourceLocation(RConstants.MODID, name));
     }
 
-    public Advancement createAdvancement(String name, ItemStack display, ICriterionInstance inst) {
-        Advancement advance = this.create(name, name, display, inst);
+    public Advancement createAdvancement(String name, ItemStack display, ICriterionInstance inst, Advancement parent) {
+        Advancement advance = this.create(name, name, display, parent, inst);
         advancements.add(advance);
-        lastAdvancement = advance;
         return advance;
     }
 }

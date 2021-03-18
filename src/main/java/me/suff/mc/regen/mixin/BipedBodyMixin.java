@@ -17,9 +17,10 @@ public class BipedBodyMixin {
 
     @Inject(at = @At("TAIL"), method = "setupAnim(Lnet/minecraft/entity/LivingEntity;FFFFF)V")
     private void setRotationAngles(LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo callbackInfo) {
-        AnimationHandler.setRotationAnglesCallback((BipedModel) (Object) this, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-
         BipedModel bipedModel = (BipedModel) (Object) this;
+
+        AnimationHandler.setRotationAnglesCallback(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
 
         if (livingEntity.getType() == EntityType.PLAYER) {
             if (livingEntity.getUseItemRemainingTicks() > 0 && (PlayerUtil.isInEitherHand(livingEntity, RItems.PISTOL.get()) || PlayerUtil.isInEitherHand(livingEntity, RItems.RIFLE.get()))) {

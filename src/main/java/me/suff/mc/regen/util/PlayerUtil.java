@@ -1,5 +1,6 @@
 package me.suff.mc.regen.util;
 
+import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
@@ -54,6 +55,9 @@ public class PlayerUtil {
                 return false;
             }
         }
+        if(playerEntity instanceof ServerPlayerEntity) {
+            TriggerManager.ZERO_ROOM.trigger((ServerPlayerEntity) playerEntity);
+        }
         return true;
     }
 
@@ -87,13 +91,11 @@ public class PlayerUtil {
         players.forEach(playerMP -> sendMessage(playerMP, translation, false));
     }
 
-    public static boolean applyPotionIfAbsent(LivingEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
-        if (potion == null) return false;
+    public static void applyPotionIfAbsent(LivingEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
+        if (potion == null) return;
         if (player.getEffect(potion) == null) {
             player.addEffect(new EffectInstance(potion, length, amplifier, ambient, showParticles));
-            return true;
         }
-        return false;
     }
 
     public static AxisAlignedBB getReach(BlockPos pos, int range) {

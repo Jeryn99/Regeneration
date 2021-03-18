@@ -11,9 +11,9 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
 
-public class EnglishLangGen extends LanguageProvider {
+public class EnglishLang extends LanguageProvider {
 
-    public EnglishLangGen(DataGenerator gen) {
+    public EnglishLang(DataGenerator gen) {
         super(gen, RConstants.MODID, "en_us");
     }
 
@@ -27,9 +27,9 @@ public class EnglishLangGen extends LanguageProvider {
         add("advancements.regen.desc.critical_period", "Refuse to Regenerate up till the point of near death...");
         add("advancements.regen.title.first_regen", "Change my dear...");
         add("advancements.regen.desc.first_regen", "Regenerate for the First time!");
-        add("advancements.regen.title.robes", "Member of the High Council");
-        add("advancements.regen.desc.robes", "Wear Gallifreyan Robes");
-        add("advancements.regen.title.gallifrey", "Constellation of kasterborous");
+        add("advancements.regen.title.council", "Member of the High Council");
+        add("advancements.regen.desc.council", "Wear Gallifreyan Robes");
+        add("advancements.regen.title.gallifrey", "Constellation of Kasterborous");
         add("advancements.regen.desc.gallifrey", "Step foot on Gallifrey");
         add("advancements.regen.title.gallifreyan_weapon", "There's no Stun Setting...");
         add("advancements.regen.desc.gallifreyan_weapon", "Hold both Gallifreyan weapons");
@@ -39,6 +39,11 @@ public class EnglishLangGen extends LanguageProvider {
         add("advancements.regen.desc.hand_cut", "Cut off your hand");
         add("advancements.regen.title.zero_room", "Smells like roses");
         add("advancements.regen.desc.zero_room", "Use Zero Room Roundels to negate negative Regeneration Effects");
+        add("advancements.regen.title.watch_is_me", "This watch, is me!");
+        add("advancements.regen.desc.watch_is_me", "Obtain a Chameleon Arch");
+        add("advancements.regen.title.guard", "Chancellery Guard");
+        add("advancements.regen.desc.guard", "Wear all Timelord Guard Armor");
+
 
         // === Damages Sources ===
         add("regen.source.regen_energy", "%s was blasted by Regeneration Energy!");

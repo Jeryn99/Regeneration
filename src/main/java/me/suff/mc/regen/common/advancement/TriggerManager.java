@@ -10,6 +10,7 @@ public class TriggerManager {
     public static final BaseTrigger TIMELORD_TRADE = new BaseTrigger("timelord_trade");
     public static final BaseTrigger HAND_CUT = new BaseTrigger("hand_cut");
     public static final BaseTrigger ZERO_ROOM = new BaseTrigger("zero_room");
+    public static final BaseTrigger COUNCIL = new BaseTrigger("council");
 
     public static void init() {
         CriteriaTriggers.register(FIRST_REGENERATION);
@@ -18,6 +19,7 @@ public class TriggerManager {
         CriteriaTriggers.register(TIMELORD_TRADE);
         CriteriaTriggers.register(HAND_CUT);
         CriteriaTriggers.register(ZERO_ROOM);
+        CriteriaTriggers.register(COUNCIL);
     }
 
 }

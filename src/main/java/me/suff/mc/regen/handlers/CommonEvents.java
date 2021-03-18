@@ -2,6 +2,7 @@ package me.suff.mc.regen.handlers;
 
 import com.mojang.brigadier.CommandDispatcher;
 import me.suff.mc.regen.Regeneration;
+import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.commands.RegenCommand;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.item.HandItem;
@@ -22,6 +23,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
@@ -226,6 +229,22 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLive(LivingEvent.LivingUpdateEvent livingUpdateEvent) {
         RegenCap.get(livingUpdateEvent.getEntityLiving()).ifPresent(IRegen::tick);
+
+        if(livingUpdateEvent.getEntityLiving() instanceof ServerPlayerEntity) {
+            if(shouldGiveCouncilAdvancement((ServerPlayerEntity) livingUpdateEvent.getEntity())) {
+                TriggerManager.COUNCIL.trigger((ServerPlayerEntity) livingUpdateEvent.getEntityLiving());
+            }
+        }
+    }
+
+    public static boolean shouldGiveCouncilAdvancement(ServerPlayerEntity serverPlayerEntity){
+        EquipmentSlotType[] equipmentSlotTypes = new EquipmentSlotType[]{EquipmentSlotType.HEAD, EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
+        for (EquipmentSlotType equipmentSlotType : equipmentSlotTypes) {
+            if(!serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem().getRegistryName().getPath().contains("robes")){
+                return false;
+            }
+        }
+        return true;
     }
 
     @SubscribeEvent

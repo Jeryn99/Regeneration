@@ -25,7 +25,7 @@ public class SoundReverb {
         });
     }
 
-    public static void onPlaySound(int soundId) {
+    public static void setSelfPosition(int soundId) {
         if (!setup) {
             setupEffects();
             setup = true;

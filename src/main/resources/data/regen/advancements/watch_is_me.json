@@ -1,15 +1,14 @@
 {
-  "parent": "regen:guard",
   "display": {
     "icon": {
-      "item": "regen:staser",
+      "item": "regen:fobwatch",
       "nbt": "{Damage:0}"
     },
     "title": {
-      "translate": "advancements.regen.title.gallifreyan_weapon"
+      "translate": "advancements.regen.title.watch_is_me"
     },
     "description": {
-      "translate": "advancements.regen.desc.gallifreyan_weapon"
+      "translate": "advancements.regen.desc.watch_is_me"
     },
     "frame": "task",
     "show_toast": true,
@@ -23,10 +22,7 @@
       "conditions": {
         "items": [
           {
-            "item": "regen:staser"
-          },
-          {
-            "item": "regen:rifle"
+            "item": "regen:fobwatch"
           }
         ]
       }

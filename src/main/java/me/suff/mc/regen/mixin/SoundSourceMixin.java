@@ -22,7 +22,7 @@ public class SoundSourceMixin {
 
     @Inject(at = @At("RETURN"), method = "setSelfPosition(Lnet/minecraft/util/math/vector/Vector3d;)V")
     private void setSelfPosition(Vector3d vector3d, CallbackInfo callbackInfo) {
-        SoundReverb.onPlaySound(source);
+        SoundReverb.setSelfPosition(source);
     }
 
 }
