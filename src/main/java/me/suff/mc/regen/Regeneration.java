@@ -51,9 +51,8 @@ public class Regeneration {
         MinecraftForge.EVENT_BUS.register(this);
         NetworkDispatcher.init();
         PlayerUtil.setupPotions();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.SKIN_SPEC, "regen-skin.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
     }
 
 

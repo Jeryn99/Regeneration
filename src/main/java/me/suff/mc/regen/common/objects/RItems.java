@@ -29,6 +29,7 @@ public class RItems {
     public static RegistryObject< Item > ELIXIR = ITEMS.register("elixir", ElixirItem::new);
     public static RegistryObject< Item > ZINC = ITEMS.register("zinc", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
     public static RegistryObject< Item > HAND = ITEMS.register("hand", () -> new HandItem(new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
+    public static RegistryObject< Item > DIMENSION_CANNON = ITEMS.register("dimension_cannon", () -> new TeleportItem(new Item.Properties().stacksTo(1).setNoRepair().tab(RItems.MAIN)));
 
     public static Item.Properties clothing = new Item.Properties().tab(RItems.MAIN).stacksTo(1);
 

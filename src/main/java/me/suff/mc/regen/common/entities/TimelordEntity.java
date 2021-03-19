@@ -141,7 +141,6 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
         this.applyEntityAI();
     }
 
-
     protected void applyEntityAI() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(TimelordEntity.class));
@@ -268,7 +267,6 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
             setup();
         }
 
-
         super.tick();
 
         RegenCap.get(this).ifPresent((data) -> {
@@ -390,7 +388,7 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
                     new TimelordEntity.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), random.nextInt(7), 5)
             };
             this.addOffersFromItemListings(merchantoffers, tradetrades, 5);
-
+            super.updateTrades();
         }
     }
 

@@ -1,6 +1,7 @@
 package me.suff.mc.regen.common.regen;
 
 import me.suff.mc.regen.common.advancement.TriggerManager;
+import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.IStateManager;
 import me.suff.mc.regen.common.regen.state.RegenStates;
@@ -40,9 +41,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import me.suff.mc.regen.common.regen.IRegen.Hand;
-import me.suff.mc.regen.common.regen.IRegen.TimelordSound;
 
 public class RegenCap implements IRegen {
 
@@ -550,6 +548,7 @@ public class RegenCap implements IRegen {
 
         @Override
         public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
+
             if (currentState.isGraceful() && glowing()) {
 
                 BlockState block = e.getWorld().getBlockState(e.getPos());

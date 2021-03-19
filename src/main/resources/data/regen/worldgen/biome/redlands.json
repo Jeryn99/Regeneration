@@ -4,7 +4,7 @@
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000,
       "block_search_extent": 8,
-      "offset": 2.0
+      "offset": 2
     },
     "sky_color": 14854265,
     "fog_color": 14854265,
@@ -1578,7 +1578,7 @@
                             "Name": "minecraft:cobweb"
                           },
                           "input_predicate": {
-                            "block": "minecraft:spruce_log",
+                            "block": "minecraft:oak_log",
                             "probability": 0.08,
                             "predicate_type": "minecraft:random_block_match"
                           },

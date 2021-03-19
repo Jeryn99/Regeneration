@@ -4,7 +4,7 @@
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000,
       "block_search_extent": 8,
-      "offset": 2.0
+      "offset": 2
     },
     "sky_color": 14854265,
     "fog_color": 14854265,
@@ -1450,8 +1450,8 @@
           "decorator": {
             "config": {
               "noise_to_count_ratio": 120,
-              "noise_factor": 80.0,
-              "noise_offset": 0.0
+              "noise_factor": 80,
+              "noise_offset": 0
             },
             "type": "minecraft:count_noise_biased"
           }
@@ -1592,6 +1592,6 @@
   "temperature": 0.5,
   "downfall": 0.5,
   "category": "ocean",
-  "depth": -1.0,
+  "depth": -1,
   "scale": 0.1
 }

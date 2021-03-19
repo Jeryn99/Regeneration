@@ -8,7 +8,6 @@ import me.suff.mc.regen.common.traits.Traits;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
 
 public class EnglishLang extends LanguageProvider {
@@ -93,6 +92,7 @@ public class EnglishLang extends LanguageProvider {
         add(RItems.FOB.get(), "Chameleon Arch");
         add(RItems.PISTOL.get(), "Staser");
         add(RItems.RIFLE.get(), "Staser Rifle");
+        add(RItems.DIMENSION_CANNON.get(), "Dimension Cannon");
         add(RItems.HAND.get(), "Hand");
         add("item.regen.hand_with_arg", "%s Hand");
 
@@ -141,6 +141,40 @@ public class EnglishLang extends LanguageProvider {
         add("regen.messages.fast_forward_cmd_fail", "Nothing to fast forward to.");
         add("regen.messages.new_trait", "New Trait: %s");
         add("regen.messages.cant_glow", "You cannot activate a glowing hand without being in a grace period");
+
+        // === Config ===
+        //Skin
+        add("config.regeneration.downloadTrendingSkins", "Download Trending Skins?");
+        add("config.regeneration.downloadPreviousSkins", "Download Previous Skins?");
+        add("config.regeneration.downloadInternalSkins", "Download Doctor Who Skins?");
+
+        //Client
+        add("config.regeneration.changemyskin", "Change Skin?");
+        add("config.regeneration.perspective", "Change Perspective view?");
+        add("config.regeneration.timelordRenderSecondLayers", "Render Head layers on Timelords?");
+        add("config.regeneration.heartIcons", "Regeneration Hearts?");
+
+        //Common
+        add("config.regeneration.max_regens", "Maximum Regenerations?");
+        add("config.regeneration.lose_regens_on_death", "Lose Regeneratons on Death?");
+        add("config.regeneration.fiery_regen", "Spawn Fire?");
+        add("config.regeneration.genFobLoot", "Chameleon Arch in chests?");
+        add("config.regeneration.mobsHaveRegens", "Mobs allowed Regenerations?");
+        add("config.regeneration.regen_messages", "Send Regeneration death chat messages?");
+        add("config.regeneration.skindir", "Base Skin Directory");
+        add("config.regeneration.post_regen_duration", "Post Regeneration Duration");
+        add("config.regeneration.post_regenerationEffect_level", "Post Regeneration Level");
+        add("config.regeneration.reset_hunger", "Reset Hunger?");
+        add("config.regeneration.absorbtion_level", "Absorbtion Level?");
+        add("config.regeneration.post_effects", "Post Regeneration Effects");
+        add("config.regeneration.gracePeriodLength", "Grace Period Length (Ticks)");
+        add("config.regeneration.criticalPhaseLength", "Critical Period Length (Ticks)");
+        add("config.regeneration.criticalDamageChance", "Critical Damage Chance");
+        add("config.regeneration.handGlowInterval", "Hand Glow Interval");
+        add("config.regeneration.handGlowTriggerDelay", "Hand Trigger Delay");
+        add("config.regeneration.regenerative_kill_range", "Regeneration hurt range");
+
+
 
         // === Toasts ===
         add("regen.toast.regenerated", "You have regenerated!");

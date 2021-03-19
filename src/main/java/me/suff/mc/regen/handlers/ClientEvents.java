@@ -1,5 +1,6 @@
 package me.suff.mc.regen.handlers;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.client.rendering.JarTileRender;
@@ -46,8 +47,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import net.minecraftforge.client.event;
-
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
 
@@ -55,6 +54,25 @@ public class ClientEvents {
     public static ResourceLocation NEW = new ResourceLocation(RConstants.MODID, "textures/gui/icons.png");
     public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/regen_hearts.png");
     private static ISound iSound = null;
+
+
+    @SubscribeEvent
+    public static void onSetupFogDensity2(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
+        if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBiome(Minecraft.getInstance().player.blockPosition()).getRegistryName().getPath().contains("death_zone")) {
+            GlStateManager._fogMode(GlStateManager.FogMode.EXP.value);
+            event.setCanceled(true);
+            event.setDensity(0.10F);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onSetupFogColor2(EntityViewRenderEvent.RenderFogEvent.FogColors event) {
+        if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBiome(Minecraft.getInstance().player.blockPosition()).getRegistryName().getPath().contains("death_zone")) {
+            event.setRed(0.14F);
+            event.setGreen(0.15F);
+            event.setBlue(0.22F);
+        }
+    }
 
 
     @SubscribeEvent

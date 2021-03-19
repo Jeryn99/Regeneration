@@ -157,7 +157,7 @@ public class CommonSkin {
     }
 
     public static boolean internalSkinsDownload() {
-        if (!RegenConfig.SKIN.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return false;
+        if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return false;
 
         File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
 
@@ -252,7 +252,7 @@ public class CommonSkin {
     }
 
     public static void downloadTrendingSkins() throws IOException {
-        if (!RegenConfig.SKIN.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
+        if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
         File trendingDir = TRENDING_ALEX;
         if (!trendingDir.exists()) {
             if (trendingDir.mkdirs()) {

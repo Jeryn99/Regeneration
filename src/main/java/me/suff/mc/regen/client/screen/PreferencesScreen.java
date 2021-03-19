@@ -111,10 +111,7 @@ public class PreferencesScreen extends ContainerScreen {
         String str = "Banana Phone";
         int length = minecraft.font.width(str);
 
-        if (RegenConfig.COMMON.infiniteRegeneration.get())
-            str = new TranslationTextComponent("regen.gui.infinite_regenerations").getString();
-        else
-            str = new TranslationTextComponent("regen.gui.remaining_regens.status", data.regens()).getString();
+        str = new TranslationTextComponent("regen.gui.remaining_regens.status", data.regens()).getString();
 
         length = minecraft.font.width(str);
         font.drawShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
