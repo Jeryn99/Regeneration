@@ -39,16 +39,12 @@ minecraft {
         client {
             workingDirectory project.file('run')
             arg "-mixin.config=regen.mixins.json"
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
             ideaModule "${project.name}.main"
 
             environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
-
 
             mods {
                 regen {
@@ -59,10 +55,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
@@ -75,9 +67,6 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -94,47 +83,50 @@ minecraft {
 }
 
 curseforge {
-    apiKey = rootProject.curseforge
-    project {
-        id = rootProject.regen
+    if(project.has('curseforge') && project.has('regen')) {
 
-        changelog = 'Regen 2.0.0 </br>' +
-                '- Fixed 1.16.5 not booting up  </br>' +
-                '- Gave Timelords voices  </br>' +
-                '- Added Timelord Spawn Items </br>' +
-                '- Added Female Council Robes </br>' +
-                '- Added Male Council Robes </br>' +
-                '- Added Timelord Guard Armor </br>' +
-                '- Added Zinc Ore </br>' +
-                '- Added Zinc Ingot </br>' +
-                '- Added Rifle </br>' +
-                '- Added Staser </br>' +
-                '- Added Bio-Container </br>' +
-                '- Renamed "Fob Watch" to "Chameleon Arch" </br>' +
-                '- Made Timelords choose from their own skin folder instead of recycling the players ones </br>' +
-                '- Fixed bug where timelord heads would render slightly dark </br>' +
-                '- Changed Timelord models  </br>' +
-                '- Added Config for mob regenerations </br>' +
-                '- Fixed Mending Exploit  </br>' +
-                '- Changed Timelord Trades slightly  </br>' +
-                '- Heart Icons now become double hearts when you have Regenerations </br>' +
-                '- Fixed Search bar over scaling outside of the GUI </br>' +
-                '- Added back Zero Room Roundels </br>' +
-                '- Fob Watches now generate in some chests (Can be disabled in config): </br>' +
-                '* ABANDONED_MINESHAFT 15% chance </br>' +
-                '* BASTION_BRIDGE 15% chance </br>' +
-                '* LIBRARIAN_GIFT 15% chance </br>' +
-                '* WOODLAND_MANSION 15% chance </br>' +
-                '* STRONGHOLD_LIBRARY 15% chance </br>' +
-                '* SHIPWRECK_SUPPLY 15% chance </br>' +
-                '* ALL TREASURE LOOT TABLES 40% chance </br>'
-        releaseType = 'release'
-        changelogType = 'html'
-        addGameVersion '1.16.3'
-        addGameVersion '1.16.4'
-        addGameVersion '1.16.5'
-        mainArtifact(jar) {
-            displayName = "[1.16.x] Regeneration -  $project.version"
+        apiKey = rootProject.curseforge
+        project {
+            id = rootProject.regen
+
+            changelog = 'Regen 2.0.0 </br>' +
+                    '- Fixed 1.16.5 not booting up  </br>' +
+                    '- Gave Timelords voices  </br>' +
+                    '- Added Timelord Spawn Items </br>' +
+                    '- Added Female Council Robes </br>' +
+                    '- Added Male Council Robes </br>' +
+                    '- Added Timelord Guard Armor </br>' +
+                    '- Added Zinc Ore </br>' +
+                    '- Added Zinc Ingot </br>' +
+                    '- Added Rifle </br>' +
+                    '- Added Staser </br>' +
+                    '- Added Bio-Container </br>' +
+                    '- Renamed "Fob Watch" to "Chameleon Arch" </br>' +
+                    '- Made Timelords choose from their own skin folder instead of recycling the players ones </br>' +
+                    '- Fixed bug where timelord heads would render slightly dark </br>' +
+                    '- Changed Timelord models  </br>' +
+                    '- Added Config for mob regenerations </br>' +
+                    '- Fixed Mending Exploit  </br>' +
+                    '- Changed Timelord Trades slightly  </br>' +
+                    '- Heart Icons now become double hearts when you have Regenerations </br>' +
+                    '- Fixed Search bar over scaling outside of the GUI </br>' +
+                    '- Added back Zero Room Roundels </br>' +
+                    '- Fob Watches now generate in some chests (Can be disabled in config): </br>' +
+                    '* ABANDONED_MINESHAFT 15% chance </br>' +
+                    '* BASTION_BRIDGE 15% chance </br>' +
+                    '* LIBRARIAN_GIFT 15% chance </br>' +
+                    '* WOODLAND_MANSION 15% chance </br>' +
+                    '* STRONGHOLD_LIBRARY 15% chance </br>' +
+                    '* SHIPWRECK_SUPPLY 15% chance </br>' +
+                    '* ALL TREASURE LOOT TABLES 40% chance </br>'
+            releaseType = 'release'
+            changelogType = 'html'
+            addGameVersion '1.16.3'
+            addGameVersion '1.16.4'
+            addGameVersion '1.16.5'
+            mainArtifact(jar) {
+                displayName = "[1.16.x] Regeneration -  $project.version"
+            }
         }
     }
 }

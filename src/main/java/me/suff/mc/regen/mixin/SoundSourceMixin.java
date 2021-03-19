@@ -17,12 +17,13 @@ public class SoundSourceMixin {
 
     @Shadow
     @Final
-    @Mutable
     private int source;
 
     @Inject(at = @At("RETURN"), method = "setSelfPosition(Lnet/minecraft/util/math/vector/Vector3d;)V")
     private void setSelfPosition(Vector3d vector3d, CallbackInfo callbackInfo) {
-        SoundReverb.setSelfPosition(source);
+        if(source != 0) {
+            SoundReverb.setSelfPosition(source);
+        }
     }
 
 }

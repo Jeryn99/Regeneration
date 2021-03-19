@@ -19,7 +19,7 @@ public class SoundReverb {
 
     private static int auxEffectSlot;
 
-    static {
+   public static void addReloader() {
         ((IReloadableResourceManager) MC.getResourceManager()).registerReloadListener((ISelectiveResourceReloadListener) (manager, predicate) -> {
             setup = false;
         });
