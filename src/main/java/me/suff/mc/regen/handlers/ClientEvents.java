@@ -55,26 +55,6 @@ public class ClientEvents {
     public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/regen_hearts.png");
     private static ISound iSound = null;
 
-
-    @SubscribeEvent
-    public static void onSetupFogDensity2(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
-        if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBiome(Minecraft.getInstance().player.blockPosition()).getRegistryName().getPath().contains("death_zone")) {
-            GlStateManager._fogMode(GlStateManager.FogMode.EXP.value);
-            event.setCanceled(true);
-            event.setDensity(0.10F);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onSetupFogColor2(EntityViewRenderEvent.RenderFogEvent.FogColors event) {
-        if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBiome(Minecraft.getInstance().player.blockPosition()).getRegistryName().getPath().contains("death_zone")) {
-            event.setRed(0.14F);
-            event.setGreen(0.15F);
-            event.setBlue(0.22F);
-        }
-    }
-
-
     @SubscribeEvent
     public static void onName(RenderNameplateEvent event) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
@@ -244,9 +224,9 @@ public class ClientEvents {
         if (viewer != null) {
             RegenCap.get((LivingEntity) viewer).ifPresent((data) -> {
                 if (data.getCurrentState() == RegenStates.GRACE_CRIT) {
+                    GlStateManager._fogMode(GlStateManager.FogMode.EXP.value);
                     event.setCanceled(true);
-                    float amount = MathHelper.cos(data.getLiving().tickCount * 0.02F) * -0.10F;
-                    event.setDensity(amount);
+                    event.setDensity(0.10F);
                 }
                 if (data.transitionType() == TransitionTypes.TROUGHTON && data.updateTicks() > 0) {
                     event.setCanceled(true);

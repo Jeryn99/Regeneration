@@ -54,8 +54,8 @@ public class RegenCap implements IRegen {
     //Don't save to disk
     private boolean didSetup = false;
     // Color Data
-    private float primaryRed = 0.93f, primaryGreen = 0.61f, primaryBlue = 0.0f;
-    private float secondaryRed = 1f, secondaryGreen = 0.5f, secondaryBlue = 0.18f;
+    private float primaryRed = 0.69411767f, primaryGreen = 0.74509805f, primaryBlue = 0.23529412f;
+    private float secondaryRed = 0.7137255f, secondaryGreen = 0.75686276f, secondaryBlue = 0.25490198f;
     private boolean isAlex = false;
     private byte[] skinArray = new byte[0];
     private int regensLeft = 0, animationTicks = 0;

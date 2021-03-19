@@ -9,6 +9,7 @@ import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.RegenStorage;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
+import me.suff.mc.regen.common.world.biome.surface.RSurfaceBuilder;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
@@ -60,6 +61,7 @@ public class Regeneration {
 
         event.enqueueWork(() ->
         {
+            RSurfaceBuilder.registerConfiguredSurfaceBuilders();
             RStructures.setupStructures();
             RStructures.ConfiguredStructures.registerConfiguredStructures();
             RStructures.registerConfiguredFeatures();
@@ -104,6 +106,7 @@ public class Regeneration {
         RStructures.FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RParticles.TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RGlobalLoot.GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RSurfaceBuilder.SurfaceBuilders.SURFACE_BUILDERS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent
