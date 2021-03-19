@@ -83,7 +83,7 @@ minecraft {
 }
 
 curseforge {
-    if(project.has('curseforge') && project.has('regen')) {
+    if(project.hasProperty('curseforge') && project.hasProperty('regen')) {
 
         apiKey = rootProject.curseforge
         project {
