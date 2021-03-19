@@ -1,5 +1,5 @@
 {
-  "parent": "regen:timelord_trade",
+  "parent": "regen:guard",
   "display": {
     "icon": {
       "item": "regen:staser",

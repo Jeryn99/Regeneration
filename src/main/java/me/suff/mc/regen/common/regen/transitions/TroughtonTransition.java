@@ -42,7 +42,7 @@ public final class TroughtonTransition implements TransitionType< TroughtonTrans
         if (cap.getLiving() instanceof ServerPlayerEntity) {
             NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
         }
-        cap.setAnimationTicks(0);
+        cap.setUpdateTicks(0);
         cap.syncToClients(null);
     }
 

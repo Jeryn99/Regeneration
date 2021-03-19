@@ -32,14 +32,14 @@ public class SkinHandler {
         RegenCap.get(playerEntity).ifPresent(iRegen -> {
             boolean hasBeenModified = false;
 
-            byte[] skin = iRegen.getSkin();
+            byte[] skin = iRegen.skin();
             UUID uuid = playerEntity.getUUID();
 
             boolean validSkin = iRegen.isSkinValidForUse();
 
             // Check if the player has a MOD skin and if the cache is present
             // if these conditions are true, we want to generate and cache the skin
-            if (validSkin && !hasPlayerSkin(uuid) || iRegen.getAnimationTicks() >= 140) {
+            if (validSkin && !hasPlayerSkin(uuid) || iRegen.updateTicks() >= 140) {
                 NativeImage skinImage = genSkinNative(skin);
                 if (skinImage != null) {
                     addPlayerSkin(playerEntity.getUUID(), loadImage(skinImage));
@@ -59,7 +59,7 @@ public class SkinHandler {
                 setPlayerSkin(playerEntity, skinTexture);
             }
 
-            boolean isAlex = iRegen.isSkinValidForUse() ? iRegen.isAlexSkinCurrently() : getUnmodifiedSkinType(playerEntity);
+            boolean isAlex = iRegen.isSkinValidForUse() ? iRegen.currentlyAlex() : getUnmodifiedSkinType(playerEntity);
             setPlayerSkinType(playerEntity, isAlex);
         });
     }

@@ -22,6 +22,8 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 
 import java.util.List;
 
+import net.minecraft.world.gen.feature.structure.Structure.IStartFactory;
+
 public class GallifreyanHuts extends Structure< ProbabilityConfig > {
 
     private static final List< MobSpawnInfo.Spawners > STRUCTURE_CREATURES = ImmutableList.of(

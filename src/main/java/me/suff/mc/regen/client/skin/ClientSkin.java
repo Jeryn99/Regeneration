@@ -19,7 +19,7 @@ public class ClientSkin {
     public static File USER_STEVE = new File(SKIN_DIRECTORY_STEVE + "/the_past");
 
     public static void downloadPreviousSkins() {
-        if (!RegenConfig.SKIN.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
+        if (!RegenConfig.CLIENT.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
         Regeneration.LOG.warn("Refreshing users past skins for {}", Minecraft.getInstance().getUser().getName());
 
         if (!USER_ALEX.exists()) {

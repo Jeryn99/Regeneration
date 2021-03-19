@@ -68,7 +68,7 @@ public class FieryTransition implements TransitionType< FieryTransitionRenderer 
         if (capability.getLiving() instanceof ServerPlayerEntity) {
             NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
         }
-        capability.setAnimationTicks(0);
+        capability.setUpdateTicks(0);
         capability.syncToClients(null);
     }
 
@@ -84,12 +84,12 @@ public class FieryTransition implements TransitionType< FieryTransitionRenderer 
 
     @Override
     public Vector3d getDefaultPrimaryColor() {
-        return new Vector3d(0.93F, 0.61F, 0F);
+        return new Vector3d(0.69411767f, 0.74509805f, 0.23529412f);
     }
 
     @Override
     public Vector3d getDefaultSecondaryColor() {
-        return new Vector3d(1F, 0.5F, 0.18F);
+        return new Vector3d(0.7137255f, 0.75686276f,0.25490198f);
     }
 
     @Override

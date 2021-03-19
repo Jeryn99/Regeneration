@@ -14,23 +14,23 @@ import javax.annotation.Nullable;
 
 public interface IRegen extends INBTSerializable< CompoundNBT > {
 
-    int getRegens();
+    int regens();
 
     void setRegens(int regens);
 
     void tick();
 
-    int getAnimationTicks();
+    int updateTicks();
 
-    void setAnimationTicks(int ticksAnimating);
+    void setUpdateTicks(int ticksAnimating);
 
     boolean canRegenerate();
 
-    boolean areHandsGlowing();
+    boolean glowing();
 
     RegenStates getCurrentState();
 
-    RegenCap.StateManager getStateManager();
+    RegenCap.StateManager stateManager();
 
     void readStyle(CompoundNBT compoundNBT);
 
@@ -44,17 +44,17 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     void syncToClients(@Nullable ServerPlayerEntity serverPlayerEntity);
 
-    TransitionTypes getTransitionType();
+    TransitionTypes transitionType();
 
     void setTransitionType(TransitionTypes transitionType);
 
-    String getDeathMessage();
+    String deathMessage();
 
     void setDeathMessage(String deathMessage);
 
-    void regen();
+    void forceRegeneration();
 
-    byte[] getSkin();
+    byte[] skin();
 
     void setSkin(byte[] skin);
 
@@ -64,11 +64,11 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     Vector3d getSecondaryColors();
 
-    boolean isAlexSkinCurrently();
+    boolean currentlyAlex();
 
     void setAlexSkin(boolean isAlex);
 
-    PlayerUtil.SkinType getPreferredModel();
+    PlayerUtil.SkinType preferredModel();
 
     void setPreferredModel(PlayerUtil.SkinType skinType);
 
@@ -83,7 +83,7 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     boolean isNextSkinTypeAlex();
 
-    Traits.ITrait getTrait();
+    Traits.ITrait trait();
 
     void setTrait(Traits.ITrait trait);
 
@@ -95,7 +95,7 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     void setTimelordSound(TimelordSound timelordSound);
 
-    Hand getHandState();
+    Hand handState();
 
     void setHandState(Hand handState);
 

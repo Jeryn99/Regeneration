@@ -2,6 +2,7 @@ package me.suff.mc.regen.handlers;
 
 import com.mojang.brigadier.CommandDispatcher;
 import me.suff.mc.regen.Regeneration;
+import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.commands.RegenCommand;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.item.HandItem;
@@ -20,12 +21,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.concurrent.ThreadTaskExecutor;
+import net.minecraft.util.concurrent.TickDelayedTask;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -50,6 +56,8 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
@@ -88,29 +96,47 @@ public class CommonEvents {
     }
 
     public static boolean canBeGiven(Entity entity) {
-        boolean isliving = entity instanceof LivingEntity;
+        boolean isLiving = entity instanceof LivingEntity;
         boolean ignoresConfig = entity.getType() == REntities.TIMELORD.get() || entity.getType() == EntityType.PLAYER;
 
-        if (isliving) {
-            if (ignoresConfig) {
-                return true;
-            } else {
-                return RegenConfig.COMMON.mobsHaveRegens.get();
-            }
+        if (isLiving && ignoresConfig) {
+            return true;
         }
-        return false;
+        return RegenConfig.COMMON.mobsHaveRegens.get();
     }
 
-    @SubscribeEvent
-    public static void onVillagerJoin(EntityJoinWorldEvent worldEvent) {
-        if (worldEvent.getEntity() instanceof VillagerEntity) {
-            worldEvent.setCanceled(true);
-            ServerWorld world = worldEvent.getWorld().getServer().getLevel(worldEvent.getWorld().dimension());
-            TimelordEntity timelord = REntities.TIMELORD.get().create(world);
-            Vector3d pos = worldEvent.getEntity().position();
-            timelord.setPos(pos.x, pos.y, pos.z);
-            world.addFreshEntity(timelord);
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+        Entity entity = event.getEntity();
+        if (event.getWorld().dimension().location().getPath().contains("gallifrey")) {
+
+            if (entity instanceof VillagerEntity && entity.getType() != REntities.TIMELORD.get()) {
+                VillagerEntity villagerEntity = (VillagerEntity) entity;
+                TimelordEntity timelord = new TimelordEntity(event.getWorld());
+                timelord.setVillagerData(villagerEntity.getVillagerData());
+                timelord.setTimelordType(TimelordEntity.TimelordType.COUNCIL);
+                Vector3d pos = event.getEntity().position();
+                timelord.setPos(pos.x, pos.y, pos.z);
+                cancelRemoveAdd(event, entity, timelord);
+            }
+
+            if (entity instanceof IronGolemEntity) {
+                for (int i = 4; i > 0; i--) {
+                    TimelordEntity timelord = new TimelordEntity(event.getWorld());
+                    timelord.setTimelordType(TimelordEntity.TimelordType.GUARD);
+                    Vector3d pos = event.getEntity().position();
+                    timelord.setPos(pos.x + (i * 2), pos.y, pos.z);
+                    cancelRemoveAdd(event, entity, timelord);
+                }
+            }
         }
+    }
+
+    private static void cancelRemoveAdd(EntityJoinWorldEvent event, Entity entity, TimelordEntity timelord) {
+        entity.remove();
+        event.setCanceled(true);
+        ThreadTaskExecutor< Runnable > executor = LogicalSidedProvider.WORKQUEUE.get(event.getWorld().isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+        executor.tell(new TickDelayedTask(0, () -> event.getWorld().addFreshEntity(timelord)));
     }
 
 
@@ -125,7 +151,7 @@ public class CommonEvents {
             Entity trueSource = event.getSource().getEntity();
 
 
-            if (event.getSource().isFire() && iRegen.getTrait().getRegistryName().toString().equals(Traits.FIRE.get().getRegistryName().toString())) {
+            if (event.getSource().isFire() && iRegen.trait().getRegistryName().toString().equals(Traits.FIRE.get().getRegistryName().toString())) {
                 event.setCanceled(true);
                 event.setAmount(0.0F);
                 return;
@@ -133,7 +159,7 @@ public class CommonEvents {
 
             if (trueSource instanceof PlayerEntity && event.getEntityLiving() != null) {
                 PlayerEntity player = (PlayerEntity) trueSource;
-                RegenCap.get(player).ifPresent((data) -> data.getStateManager().onPunchEntity(event));
+                RegenCap.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event));
             }
 
             // Stop certain damages
@@ -144,7 +170,7 @@ public class CommonEvents {
             iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
 
             //Stop falling for leap trait
-            if (iRegen.getTrait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
+            if (iRegen.trait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
                 if (event.getSource() == DamageSource.FALL) {
                     event.setCanceled(true);
                     return;
@@ -160,8 +186,11 @@ public class CommonEvents {
             //Handle Death
             if (iRegen.getCurrentState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.getCurrentState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
                 event.setCanceled(true);
-            } else if (livingEntity.getHealth() + livingEntity.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
-                boolean notDead = iRegen.getStateManager().onKilled(event.getSource());
+                return;
+            }
+
+            if (livingEntity.getHealth() + livingEntity.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
+                boolean notDead = iRegen.stateManager().onKilled(event.getSource());
                 event.setCanceled(notDead);
             }
         });
@@ -194,12 +223,28 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
         if (e.getPlayer().level.isClientSide) return;
-        RegenCap.get(e.getPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
+        RegenCap.get(e.getPlayer()).ifPresent((data) -> data.stateManager().onPunchBlock(e));
     }
 
     @SubscribeEvent
     public static void onLive(LivingEvent.LivingUpdateEvent livingUpdateEvent) {
         RegenCap.get(livingUpdateEvent.getEntityLiving()).ifPresent(IRegen::tick);
+
+        if(livingUpdateEvent.getEntityLiving() instanceof ServerPlayerEntity) {
+            if(shouldGiveCouncilAdvancement((ServerPlayerEntity) livingUpdateEvent.getEntity())) {
+                TriggerManager.COUNCIL.trigger((ServerPlayerEntity) livingUpdateEvent.getEntityLiving());
+            }
+        }
+    }
+
+    public static boolean shouldGiveCouncilAdvancement(ServerPlayerEntity serverPlayerEntity){
+        EquipmentSlotType[] equipmentSlotTypes = new EquipmentSlotType[]{EquipmentSlotType.HEAD, EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
+        for (EquipmentSlotType equipmentSlotType : equipmentSlotTypes) {
+            if(!serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem().getRegistryName().getPath().contains("robes")){
+                return false;
+            }
+        }
+        return true;
     }
 
     @SubscribeEvent
@@ -213,7 +258,7 @@ public class CommonEvents {
         if (event.getItemStack().getItem() instanceof ToolItem || event.getItemStack().getItem() instanceof SwordItem) {
             PlayerEntity player = event.getPlayer();
             RegenCap.get(player).ifPresent((data) -> {
-                if (data.getCurrentState() == RegenStates.POST && player.isShiftKeyDown() & data.getHandState() == IRegen.Hand.NO_GONE) {
+                if (data.getCurrentState() == RegenStates.POST && player.isShiftKeyDown() & data.handState() == IRegen.Hand.NO_GONE) {
                     HandItem.createHand(player);
                 }
             });

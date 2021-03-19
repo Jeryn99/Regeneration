@@ -25,7 +25,7 @@ public final class WatcherTransition implements TransitionType< WatcherTransitio
 
     public static void createWatcher(LivingEntity player) {
         RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.getTransitionType() == TransitionTypes.WATCHER) {
+            if (iRegen.transitionType() == TransitionTypes.WATCHER) {
                 Direction facing = player.getMotionDirection();
                 BlockPos playerPos = player.blockPosition();
                 BlockPos spawnPos = playerPos.relative(facing, 4);

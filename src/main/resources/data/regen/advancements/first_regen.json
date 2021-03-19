@@ -1,8 +1,8 @@
 {
+  "parent": "regen:watch_is_me",
   "display": {
     "icon": {
-      "item": "regen:fobwatch",
-      "nbt": "{Damage:0}"
+      "item": "minecraft:player_head"
     },
     "title": {
       "translate": "advancements.regen.title.first_regen"
@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.regen.desc.first_regen"
     },
-    "frame": "task",
+    "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false,

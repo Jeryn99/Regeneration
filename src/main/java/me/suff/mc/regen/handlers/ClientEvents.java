@@ -1,5 +1,6 @@
 package me.suff.mc.regen.handlers;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.client.rendering.JarTileRender;
@@ -69,7 +70,7 @@ public class ClientEvents {
         PlayerEntity player = playerEvent.getPlayer();
         SkinHandler.tick((AbstractClientPlayerEntity) playerEvent.getPlayer());
         RegenCap.get(player).ifPresent(iRegen -> {
-            TransitionType< ? > type = iRegen.getTransitionType().get();
+            TransitionType< ? > type = iRegen.transitionType().get();
             type.getRenderer().onPlayerRenderPre(playerEvent);
         });
     }
@@ -78,14 +79,14 @@ public class ClientEvents {
     public static void onRenderPlayerPost(RenderPlayerEvent.Post playerEvent) {
         PlayerEntity player = playerEvent.getPlayer();
         RegenCap.get(player).ifPresent(iRegen -> {
-            TransitionType< ? > type = iRegen.getTransitionType().get();
+            TransitionType< ? > type = iRegen.transitionType().get();
             type.getRenderer().onPlayerRenderPost(playerEvent);
         });
     }
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
-        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.getTransitionType().get().getRenderer().firstPersonHand(event));
+        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.transitionType().get().getRenderer().firstPersonHand(event));
     }
 
     @SubscribeEvent
@@ -145,7 +146,7 @@ public class ClientEvents {
                 e.setGreen(0.5F);
             }
 
-            if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.getCurrentState() == RegenStates.REGENERATING) {
+            if (data.transitionType() == TransitionTypes.TROUGHTON && data.getCurrentState() == RegenStates.REGENERATING) {
                 e.setRed(0);
                 e.setGreen(0);
                 e.setBlue(0);
@@ -195,7 +196,7 @@ public class ClientEvents {
                     throw new IllegalStateException("Unexpected value: " + cap.getCurrentState());
             }
 
-            if (cap.areHandsGlowing()) {
+            if (cap.glowing()) {
                 RenderHelp.renderVig(TransitionTypes.FIERY.get().getDefaultPrimaryColor(), 0.5F);
             }
 
@@ -213,7 +214,7 @@ public class ClientEvents {
                 event.setCanceled(true);
             }
         } else {
-            AbstractGui.GUI_ICONS_LOCATION = cap.getRegens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
+            AbstractGui.GUI_ICONS_LOCATION = cap.regens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
         }
     }
 
@@ -223,11 +224,11 @@ public class ClientEvents {
         if (viewer != null) {
             RegenCap.get((LivingEntity) viewer).ifPresent((data) -> {
                 if (data.getCurrentState() == RegenStates.GRACE_CRIT) {
+                    GlStateManager._fogMode(GlStateManager.FogMode.EXP.value);
                     event.setCanceled(true);
-                    float amount = MathHelper.cos(data.getLiving().tickCount * 0.02F) * -0.10F;
-                    event.setDensity(amount);
+                    event.setDensity(0.10F);
                 }
-                if (data.getTransitionType() == TransitionTypes.TROUGHTON && data.getAnimationTicks() > 0) {
+                if (data.transitionType() == TransitionTypes.TROUGHTON && data.updateTicks() > 0) {
                     event.setCanceled(true);
                     event.setDensity(0.3F);
                 }
@@ -262,7 +263,7 @@ public class ClientEvents {
                 moveType.shiftKeyDown = false;
                 moveType.leftImpulse = 0.0F;
 
-                if (data.getTransitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
+                if (data.transitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
                     if (player.blockPosition().getY() <= 100) {
                         BlockPos upwards = player.blockPosition().above(2);
                         BlockPos pos = upwards.subtract(player.blockPosition());

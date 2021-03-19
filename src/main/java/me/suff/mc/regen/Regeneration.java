@@ -9,6 +9,7 @@ import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.RegenStorage;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
+import me.suff.mc.regen.common.world.biome.surface.RSurfaceBuilder;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
@@ -51,9 +52,8 @@ public class Regeneration {
         MinecraftForge.EVENT_BUS.register(this);
         NetworkDispatcher.init();
         PlayerUtil.setupPotions();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.SKIN_SPEC, "regen-skin.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
     }
 
 
@@ -61,6 +61,7 @@ public class Regeneration {
 
         event.enqueueWork(() ->
         {
+            RSurfaceBuilder.registerConfiguredSurfaceBuilders();
             RStructures.setupStructures();
             RStructures.ConfiguredStructures.registerConfiguredStructures();
             RStructures.registerConfiguredFeatures();
@@ -83,11 +84,13 @@ public class Regeneration {
     public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
-        generator.addProvider(new EnglishLangGen(generator));
+        generator.addProvider(new EnglishLang(generator));
         generator.addProvider(new LootGen(generator));
-        generator.addProvider(new RBlockTags(generator, existingFileHelper));
+        RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
+        generator.addProvider(blockTags);
+        generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
-        generator.addProvider(new AdvancementCreation(generator));
+        generator.addProvider(new AdvancementGen(generator));
         generator.addProvider(new BiomeProvider(generator));
     }
 
@@ -103,6 +106,7 @@ public class Regeneration {
         RStructures.FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RParticles.TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         RGlobalLoot.GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
+        RSurfaceBuilder.SurfaceBuilders.SURFACE_BUILDERS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent

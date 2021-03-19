@@ -41,6 +41,8 @@ public class RRecipeGen extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RBlocks.ZERO_ROUNDEL.get()).pattern("   ").pattern("ZIZ").pattern("ZZZ").define('I', RItems.ZINC.get()).define('Z', ItemTags.STONE_BRICKS).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
         ShapedRecipeBuilder.shaped(RBlocks.ZERO_ROOM_FULL.get()).pattern("ZZZ").pattern("ZIZ").pattern("ZZZ").define('I', RItems.ZINC.get()).define('Z', ItemTags.STONE_BRICKS).group("regen").unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
         ShapedRecipeBuilder.shaped(RBlocks.BIO_CONTAINER.get()).pattern("FZF").pattern("FPF").pattern("FOF").define('Z', RItems.ZINC.get()).define('F', Items.IRON_INGOT).define('P', Items.ROTTEN_FLESH).define('O', Items.GLOWSTONE_DUST).unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RBlocks.AZBANTIUM.get(), 2).pattern("ZZZ").pattern("Z Z").pattern("ZZZ").define('Z', RItems.ZINC.get()).unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
+        ShapedRecipeBuilder.shaped(RItems.DIMENSION_CANNON.get()).pattern("RZR").pattern("ZCZ").pattern("RZR").define('Z', RItems.ZINC.get()).define('C', Items.CLOCK).define('R', Blocks.REDSTONE_WIRE).unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
 
 
     }

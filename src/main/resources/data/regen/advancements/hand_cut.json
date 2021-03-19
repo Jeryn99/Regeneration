@@ -1,5 +1,5 @@
 {
-  "parent": "regen:gallifreyan_weapon",
+  "parent": "regen:change_refusal",
   "display": {
     "icon": {
       "item": "regen:hand"

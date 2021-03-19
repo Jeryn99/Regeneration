@@ -11,6 +11,7 @@ import me.suff.mc.regen.client.rendering.layers.HandLayer;
 import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
 import me.suff.mc.regen.client.rendering.model.armor.GuardModel;
 import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
+import me.suff.mc.regen.client.sound.SoundReverb;
 import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.item.SpawnItem;
@@ -196,6 +197,8 @@ public class ClientUtil {
             SpawnItem.Timelord type = SpawnItem.getType(itemStack);
             return type.ordinal();
         });
+
+        SoundReverb.addReloader();
     }
 
     private static void clientRenders() {
@@ -224,6 +227,7 @@ public class ClientUtil {
     }
 
     public static void renderSky(MatrixStack matrixStackIn, float partialTicks) {
+        if(Minecraft.getInstance().level == null || matrixStackIn == null) return;
         if (Minecraft.getInstance().level.dimension().location().getPath().contains("gallifrey")) {
             float scale = 30.0F;
             BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();

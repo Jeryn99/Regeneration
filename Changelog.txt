@@ -27,3 +27,16 @@
 * STRONGHOLD_LIBRARY 15% chance
 * SHIPWRECK_SUPPLY 15% chance
 * ALL TREASURE LOOT TABLES 40% chance
+
+# Regeneration 2.0.1
+- Gallifrey
+- Added Didgeridoomen Timelord voices
+- Optimized performance
+- Changed Critical Stage fog
+- Fixed retaining Traits after actually dying
+- Translated all config options for use with Mod Menu mods
+- Converted Timelord currency into datapack tags so players can change the currency
+- Unflipped Timelord gun sounds, whoops
+- Re-Added Advancements and made them more presentable
+- Re-done Regeneration customisation screens
+- Added Dimension Canon

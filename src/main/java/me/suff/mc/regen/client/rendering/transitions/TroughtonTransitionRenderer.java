@@ -110,7 +110,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
 
-            if (data.getCurrentState() == RegenStates.REGENERATING && data.getTransitionType() == TransitionTypes.TROUGHTON) {
+            if (data.getCurrentState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.TROUGHTON) {
 
                 bipedModel.head.xRot = (float) Math.toRadians(-20);
                 bipedModel.head.yRot = (float) Math.toRadians(0);

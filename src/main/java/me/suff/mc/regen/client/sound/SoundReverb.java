@@ -19,13 +19,13 @@ public class SoundReverb {
 
     private static int auxEffectSlot;
 
-    static {
+   public static void addReloader() {
         ((IReloadableResourceManager) MC.getResourceManager()).registerReloadListener((ISelectiveResourceReloadListener) (manager, predicate) -> {
             setup = false;
         });
     }
 
-    public static void onPlaySound(int soundId) {
+    public static void setSelfPosition(int soundId) {
         if (!setup) {
             setupEffects();
             setup = true;

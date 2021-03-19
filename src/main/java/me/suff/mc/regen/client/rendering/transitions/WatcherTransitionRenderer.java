@@ -65,11 +65,11 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
             if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
                 matrixStackIn.pushPose();
                 matrixStackIn.scale(1.2F, 1.2F, 1.2F);
-                float opacity = iRegen.getAnimationTicks();
+                float opacity = iRegen.updateTicks();
                 FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityTranslucent(TEXTURE)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, new Vector3d(1, 1, 1));
                 matrixStackIn.popPose();
 
-                if (iRegen.getAnimationTicks() < 150) {
+                if (iRegen.updateTicks() < 150) {
                     matrixStackIn.pushPose();
                     matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(-90));
                     matrixStackIn.translate(0, -1.5, 1);
@@ -90,7 +90,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
     @Override
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
-            if (data.getCurrentState() == RegenStates.REGENERATING && data.getTransitionType() == TransitionTypes.WATCHER) {
+            if (data.getCurrentState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.WATCHER) {
                 bipedModel.head.xRot = (float) Math.toRadians(0);
                 bipedModel.head.yRot = (float) Math.toRadians(0);
                 bipedModel.head.zRot = (float) Math.toRadians(0);

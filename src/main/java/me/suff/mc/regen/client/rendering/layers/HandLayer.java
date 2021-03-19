@@ -21,7 +21,7 @@ public class HandLayer extends LayerRenderer {
 
     public static void renderGlowingHands(LivingEntity livingEntity, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
-            if (iRegen.areHandsGlowing()) {
+            if (iRegen.glowing()) {
                 Vector3d primaryColors = iRegen.getPrimaryColors();
                 Vector3d secondaryColors = iRegen.getSecondaryColors();
                 RenderRegenLayer.renderColorCone(matrixStackIn, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, 0.5F, 0.5F, primaryColors);
@@ -47,7 +47,7 @@ public class HandLayer extends LayerRenderer {
                 matrixStackIn.pushPose();
                 bipedModel.translateToHand(handSide, matrixStackIn);
                 renderGlowingHands((LivingEntity) entitylivingbaseIn, matrixStackIn, bufferIn, packedLightIn);
-                iRegen.getTransitionType().get().getRenderer().thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+                iRegen.transitionType().get().getRenderer().thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
                 matrixStackIn.popPose();
             }
         });

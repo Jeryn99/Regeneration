@@ -1,6 +1,6 @@
 package me.suff.mc.regen.client;
 
-import me.suff.mc.regen.client.gui.PreferencesScreen;
+import me.suff.mc.regen.client.screen.PreferencesScreen;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.ForceRegenMessage;
 import net.minecraft.client.Minecraft;

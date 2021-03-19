@@ -4,7 +4,7 @@
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000,
       "block_search_extent": 8,
-      "offset": 2.0
+      "offset": 2
     },
     "sky_color": 14854265,
     "fog_color": 14854265,
@@ -1581,6 +1581,6 @@
   "temperature": 0.2,
   "downfall": 0.3,
   "category": "extreme_hills",
-  "depth": 1.0,
+  "depth": 1,
   "scale": 0.5
 }

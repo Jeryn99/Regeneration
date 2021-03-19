@@ -4,7 +4,7 @@
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000,
       "block_search_extent": 8,
-      "offset": 2.0
+      "offset": 2
     },
     "sky_color": 14854265,
     "fog_color": 14854265,
@@ -1483,5 +1483,5 @@
   "downfall": 0.5,
   "category": "river",
   "depth": -0.5,
-  "scale": 0.0
+  "scale": 0
 }

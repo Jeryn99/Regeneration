@@ -42,14 +42,14 @@ class CommonActing implements Acting {
     }
 
     public static SoundEvent getRandomSound(Random random, IRegen cap) {
-        SoundEvent[] soundEvents = cap.getTransitionType().get().getRegeneratingSounds();
+        SoundEvent[] soundEvents = cap.transitionType().get().getRegeneratingSounds();
         return soundEvents[random.nextInt(soundEvents.length)];
     }
 
     @Override
     public void onRegenTick(IRegen cap) {
         LivingEntity livingEntity = cap.getLiving();
-        float stateProgress = (float) cap.getStateManager().getStateProgress();
+        float stateProgress = (float) cap.stateManager().getStateProgress();
 
         switch (cap.getCurrentState()) {
             case POST:
@@ -164,7 +164,7 @@ class CommonActing implements Acting {
         if (RegenConfig.COMMON.traitsEnabled.get() && cap.getLiving().getType() == EntityType.PLAYER) {
 
             //Reset old Trait
-            Traits.ITrait old = cap.getTrait();
+            Traits.ITrait old = cap.trait();
             old.reset(cap);
 
             //Get the new Trait
@@ -180,9 +180,9 @@ class CommonActing implements Acting {
 
             PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", next.getTranslation().getString()), true);
         } else {
-            cap.getTrait().reset(cap);
+            cap.trait().reset(cap);
             cap.setTrait(Traits.BORING.get());
-            cap.getTrait().apply(cap);
+            cap.trait().apply(cap);
         }
     }
 

@@ -2,8 +2,10 @@ package me.suff.mc.regen.util;
 
 import me.suff.mc.regen.Regeneration;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.io.FileUtils;
@@ -20,12 +22,17 @@ public class RegenUtil {
 
     public static ITag.INamedTag< Block > BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
     public static ITag.INamedTag< Block > ARS = makeBlock("tardis", "ars");
+    public static ITag.INamedTag< Item > TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};
 
     public static ITag.INamedTag< Block > makeBlock(String domain, String path) {
         return BlockTags.bind(new ResourceLocation(domain, path).toString());
+    }
+
+    public static ITag.INamedTag< Item > makeItem(String domain, String path) {
+        return ItemTags.bind(new ResourceLocation(domain, path).toString());
     }
 
     public static double round(float value, int scale) {

@@ -20,7 +20,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SkeletonEntity;
@@ -52,10 +52,10 @@ import java.io.File;
 import java.util.Random;
 
 /**
- * Created by Swirtzly
+ * Created by Suff
  * on 03/05/2020 @ 18:50
  */
-public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
+public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
 
     private static final DataParameter< String > TYPE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter< String > PERSONALITY = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
@@ -65,7 +65,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     private static final DataParameter< Float > AIMING_TICKS = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.FLOAT);
     protected final SwimmerPathNavigator waterNavigator;
     protected final GroundPathNavigator groundNavigator;
-    private boolean swimmingUp;
 
     public TimelordEntity(World world) {
         this(REntities.TIMELORD.get(), world);
@@ -86,9 +85,8 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 add(Attributes.ARMOR, 2.0D);
     }
 
-    @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity mate) {
+    public VillagerEntity getBreedOffspring(ServerWorld world, AgeableEntity mate) {
         return null;
     }
 
@@ -99,7 +97,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         getEntityData().define(AIMING, false);
         getEntityData().define(AIMING_TICKS, 0.0F);
         getEntityData().define(IS_MALE, random.nextBoolean());
-        getEntityData().define(PERSONALITY, RSoundSchemes.getRandom(isMale()).identify().toString());
+        getEntityData().define(PERSONALITY, RSoundSchemes.getRandom(male()).identify().toString());
         getEntityData().define(HAS_SETUP, false);
         setup();
     }
@@ -120,31 +118,28 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(1, new PanicGoal(this, 0.5D));
+        this.goalSelector.addGoal(9, new LookAtWithoutMovingGoal(this, PlayerEntity.class, 3.0F, 1.0F));
+        this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(1, new SwimGoal(this));
-        if (getTimelordType() == TimelordType.GUARD) {
+
+
+        if(getTimelordType() == TimelordType.GUARD){
             this.goalSelector.addGoal(2, new TimelordAttackGoal(this, 1.0D, 20, 20.0F));
-        } else {
+        }
 
-            Item[] currency = new Item[]{
-                    Items.GOLD_INGOT,
-                    Items.BONE,
-                    Items.EMERALD,
-                    RItems.ZINC.get(),
-                    Items.IRON_INGOT,
-            };
-
-            for (Item item : currency) {
+        if(getTimelordType() == TimelordType.COUNCIL){
+            for (Item item : RegenUtil.TIMELORD_CURRENCY.getValues()) {
                 this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(item), false));
             }
             this.goalSelector.addGoal(1, new LookAtCustomerGoal(this));
             this.goalSelector.addGoal(1, new PanicGoal(this, 0.5D));
             this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
         }
+
         this.applyEntityAI();
     }
-
 
     protected void applyEntityAI() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
@@ -236,10 +231,11 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         }
     }
 
+
     /*Setup initial skins for the timelords*/
     public void initSkin(IRegen data) {
         level.getServer().submit(() -> {
-            File file = CommonSkin.chooseRandomSkin(level.random, !isMale(), true);
+            File file = CommonSkin.chooseRandomSkin(level.random, !male(), true);
             if (file != null) {
                 data.setSkin(RegenUtil.fileToBytes(file));
             }
@@ -262,6 +258,8 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         getEntityData().set(TYPE, type.name());
     }
 
+
+
     @Override
     public void tick() {
 
@@ -283,27 +281,30 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                     data.syncToClients(null);
                 }
 
-                if (data.getCurrentState() == RegenStates.REGENERATING) {
+                if(data.getCurrentState().isGraceful() && data.glowing())
 
-                    if (data.getAnimationTicks() == 10) {
+                if (data.getCurrentState() == RegenStates.REGENERATING) {
+                    if (data.updateTicks() == 10) {
                         if (getPersonality().getScreamSound() != null) {
                             playSound(getPersonality().getScreamSound(), 1, 1);
                         }
                     }
-                    if (data.getAnimationTicks() == 100) {
+                    if (data.updateTicks() == 100) {
                         setMale(random.nextBoolean());
-                        setPersonality(RSoundSchemes.getRandom(isMale()).identify().toString());
+                        setPersonality(RSoundSchemes.getRandom(male()).identify());
                         initSkin(data);
                     }
                     setNoAi(true);
                     setInvulnerable(true);
-                } else {
-                    setNoAi(false);
-                    setInvulnerable(false);
+                    return;
                 }
+                setNoAi(false);
+                setInvulnerable(false);
             }
         });
     }
+
+
 
     @Override
     protected float getVoicePitch() {
@@ -322,6 +323,11 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         return RSoundSchemes.get(new ResourceLocation(getEntityData().get(PERSONALITY)));
     }
 
+    public void setPersonality(ResourceLocation per) {
+        getEntityData().set(PERSONALITY, per.toString());
+    }
+
+    //Exists for easier NBT
     public void setPersonality(String per) {
         getEntityData().set(PERSONALITY, per);
     }
@@ -330,7 +336,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
         compound.putString("timelord_type", getTimelordType().name());
-        compound.putBoolean("is_male", isMale());
+        compound.putBoolean("is_male", male());
         compound.putBoolean("setup", getEntityData().get(HAS_SETUP));
         compound.putString("personality", getPersonality().identify().toString());
     }
@@ -355,7 +361,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         }
     }
 
-    public boolean isMale() {
+    public boolean male() {
         return getEntityData().get(IS_MALE);
     }
 
@@ -371,13 +377,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
             for (int i = random.nextInt(7); i > 0; i--) {
                 Traits.ITrait trait = Traits.getRandomTrait(random, false);
                 ItemStack item = new ItemStack(RItems.ELIXIR.get());
-                Item[] currency = new Item[]{
-                        Items.GOLD_INGOT,
-                        Items.BONE,
-                        Items.EMERALD,
-                        RItems.ZINC.get(),
-                        Items.IRON_INGOT,
-                };
+                Item[] currency = RegenUtil.TIMELORD_CURRENCY.getValues().toArray(new Item[0]);
                 ElixirItem.setTrait(item, trait);
                 TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[random.nextInt(currency.length)], MathHelper.clamp(random.nextInt(10), 6, 20)), item, random.nextInt(7), 5)};
                 this.addOffersFromItemListings(merchantoffers, trades, 5);
@@ -388,7 +388,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                     new TimelordEntity.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), random.nextInt(7), 5)
             };
             this.addOffersFromItemListings(merchantoffers, tradetrades, 5);
-
+            super.updateTrades();
         }
     }
 
@@ -470,7 +470,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 return guardStack;
             case COUNCIL:
                 ItemStack councilStack = new ItemStack(RItems.SPAWN_ITEM.get());
-                SpawnItem.setType(councilStack, isMale() ? SpawnItem.Timelord.MALE_COUNCIL : SpawnItem.Timelord.FEMALE_COUNCIL);
+                SpawnItem.setType(councilStack, male() ? SpawnItem.Timelord.MALE_COUNCIL : SpawnItem.Timelord.FEMALE_COUNCIL);
                 return councilStack;
         }
         return null;

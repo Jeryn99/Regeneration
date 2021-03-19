@@ -1,5 +1,5 @@
 {
-  "parent": "regen:critical_period",
+  "parent": "regen:gallifrey",
   "display": {
     "icon": {
       "item": "regen:timelord"

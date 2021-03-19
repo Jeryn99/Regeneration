@@ -39,7 +39,7 @@ public class SetTraitsCommand implements Command< CommandSource > {
         }
 
         RegenCap.get(player).ifPresent((data) -> {
-            ResourceLocation oldDna = data.getTrait().getRegistryName();
+            ResourceLocation oldDna = data.trait().getRegistryName();
             Traits.ITrait oldTrait = Traits.fromID(oldDna.toString());
             oldTrait.reset(data);
             data.setTrait(trait);

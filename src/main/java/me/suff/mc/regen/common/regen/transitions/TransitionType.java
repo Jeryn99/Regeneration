@@ -31,7 +31,7 @@ public interface TransitionType< R extends TransitionRenderer > {
     }
 
     default double getAnimationProgress(IRegen cap) {
-        return Math.min(1, cap.getAnimationTicks() / (double) getAnimationLength());
+        return Math.min(1, cap.updateTicks() / (double) getAnimationLength());
     }
 
     SoundEvent[] getRegeneratingSounds();

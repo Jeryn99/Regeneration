@@ -24,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.item.Item.Properties;
+
 /* Created by Craig on 05/03/2021 */
 public class HandItem extends Item {
     public HandItem(Properties properties) {
@@ -79,11 +81,11 @@ public class HandItem extends Item {
         ItemStack itemStack = new ItemStack(RItems.HAND.get());
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             setUUID(livingEntity.getUUID(), itemStack);
-            setSkinType(iRegen.isAlexSkinCurrently() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
-            setTrait(iRegen.getTrait(), itemStack);
+            setSkinType(iRegen.currentlyAlex() ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE, itemStack);
+            setTrait(iRegen.trait(), itemStack);
             setEnergy(0, itemStack);
             if (iRegen.isSkinValidForUse()) {
-                setSkin(iRegen.getSkin(), itemStack);
+                setSkin(iRegen.skin(), itemStack);
             }
             iRegen.setHandState(IRegen.Hand.LEFT_GONE);
         });

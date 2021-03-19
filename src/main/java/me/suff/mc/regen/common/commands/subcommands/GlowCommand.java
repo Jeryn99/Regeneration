@@ -20,7 +20,7 @@ public class GlowCommand implements Command< CommandSource > {
     @Override
     public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
         CommandSource source = context.getSource();
-        RegenCap.get(source.getPlayerOrException()).ifPresent((cap) -> cap.getStateManager().fastForwardHandGlow());
+        RegenCap.get(source.getPlayerOrException()).ifPresent((cap) -> cap.stateManager().fastForwardHandGlow());
         return Command.SINGLE_SUCCESS;
     }
 }

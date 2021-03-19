@@ -44,7 +44,7 @@ public class RenderRegenLayer extends LayerRenderer {
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entitylivingbaseIn instanceof LivingEntity) {
             RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
-                TransitionType< ? > type = iRegen.getTransitionType().get();
+                TransitionType< ? > type = iRegen.transitionType().get();
                 type.getRenderer().layer((BipedModel< ? >) getParentModel(), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
             });
         }
