@@ -90,7 +90,7 @@ public class Regeneration {
         generator.addProvider(blockTags);
         generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
-        generator.addProvider(new AdvancementCreation(generator));
+        generator.addProvider(new AdvancementGen(generator));
         generator.addProvider(new BiomeProvider(generator));
     }
 

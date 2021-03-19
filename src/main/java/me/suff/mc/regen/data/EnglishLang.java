@@ -165,14 +165,22 @@ public class EnglishLang extends LanguageProvider {
         add("config.regeneration.post_regen_duration", "Post Regeneration Duration");
         add("config.regeneration.post_regenerationEffect_level", "Post Regeneration Level");
         add("config.regeneration.reset_hunger", "Reset Hunger?");
+        add("config.regeneration.reset_oxygen", "Reset Air?");
+        add("config.regeneration.regeneration_fire_immunity", "Fire immunity?");
+        add("config.regeneration.regeneration_knocksback_players", "Knocksback players?");
         add("config.regeneration.absorbtion_level", "Absorbtion Level?");
         add("config.regeneration.post_effects", "Post Regeneration Effects");
-        add("config.regeneration.gracePeriodLength", "Grace Period Length (Ticks)");
-        add("config.regeneration.criticalPhaseLength", "Critical Period Length (Ticks)");
+        add("config.regeneration.gracePeriodLength", "Grace Period Length");
+        add("config.regeneration.criticalPhaseLength", "Critical Period Length");
         add("config.regeneration.criticalDamageChance", "Critical Damage Chance");
         add("config.regeneration.handGlowInterval", "Hand Glow Interval");
         add("config.regeneration.handGlowTriggerDelay", "Hand Trigger Delay");
         add("config.regeneration.regenerative_kill_range", "Regeneration hurt range");
+        add("config.regeneration.regenerative_knockback", "Knockback Radius");
+        add("config.regeneration.regenerative_knockback_range", "Knockback Range");
+        add("config.regeneration.traitsenabled", "Traits Enabled?");
+        add("config.regeneration.disabledTraits", "Disabled Traits");
+        add("config.regeneration.upwards_motion", "Upwards motion?");
 
 
 
@@ -185,9 +193,6 @@ public class EnglishLang extends LanguageProvider {
         add("regen.toast.to_use", "You have %s lives now!");
 
         // === GUI Elements ===
-        add("regen.gui.red", "Red: ");
-        add("regen.gui.green", "Green: ");
-        add("regen.gui.blue", "Blue: ");
         add("regen.gui.primary", "Primary");
         add("regen.gui.secondary", "Secondary");
         add("regen.gui.undo", "Undo");

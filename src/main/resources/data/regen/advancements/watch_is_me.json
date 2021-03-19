@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.regen.desc.watch_is_me"
     },
-    "frame": "task",
+    "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false,

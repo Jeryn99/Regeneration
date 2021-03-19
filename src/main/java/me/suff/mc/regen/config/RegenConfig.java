@@ -1,6 +1,7 @@
 package me.suff.mc.regen.config;
 
 import com.google.common.collect.Lists;
+import net.minecraft.potion.Effects;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -95,15 +96,15 @@ public class RegenConfig {
             resetHunger = builder.comment("Regenerate hunger bars").translation("config.regeneration.reset_hunger").define("resetHunger", true);
             resetOxygen = builder.comment("Regenerate Oxygen").translation("config.regeneration.reset_oxygen").define("resetOxygen", true);
             absorbtionLevel = builder.comment("The amount of absorption hearts you get when regenerating").translation("config.regeneration.absorbtion_level").defineInRange("absorbtionLevel", 10, 0, Integer.MAX_VALUE);
-            postRegenEffects = builder.translation("config.regeneration.post_effects").comment("List of potion effects the player can endure during post regeneration").defineList("postRegenPotions", Lists.newArrayList("minecraft:weakness", "minecraft:mining_fatigue", "minecraft:resistance", "minecraft:health_boost", "minecraft:hunger", "minecraft:water_breathing", "minecraft:haste"), String.class::isInstance);
+            postRegenEffects = builder.translation("config.regeneration.post_effects").comment("List of potion effects the player can endure during post regeneration").defineList("postRegenPotions", Lists.newArrayList("minecraft:weakness", "minecraft:mining_fatigue", "minecraft:resistance", "minecraft:health_boost", "minecraft:hunger", "minecraft:water_breathing", "minecraft:haste", "minecraft:nausea"), String.class::isInstance);
             builder.pop();
 
             builder.comment("Grace Settings").push("Grace Stage");
-            gracePhaseLength = builder.comment("The time in seconds before your grace period enters a critical phase").translation("config.regeneration.grace.gracePeriodLength").define("gracePhaseLength", 15 * 60);
-            criticalDamageChance = builder.comment("Chance that a player in critical phase gets damaged at a given tick. Higher number means more damage.").translation("config.regeneration.grace.criticalDamageChance").defineInRange("criticalDamageChance", 1, 0, Integer.MAX_VALUE);
-            criticalPhaseLength = builder.comment("The time in seconds you can stay in the critical phase without dying").translation("config.regeneration.grace.criticalPhaseLength").define("criticalPhaseLength", 60);
-            handGlowInterval = builder.comment("Interval (in seconds) at which your hands start to glow").translation("config.regeneration.grace.handGlowInterval").defineInRange("handGlowInterval", 120, 0, Integer.MAX_VALUE);
-            handGlowTriggerDelay = builder.comment("Amount of time (in seconds) you have when your hands start glowing before you start to regenerate").translation("config.regeneration.grace.handGlowTriggerDelay").defineInRange("handTriggerDelay", 10, 0, Integer.MAX_VALUE);
+            gracePhaseLength = builder.comment("The time in seconds before your grace period enters a critical phase").translation("config.regeneration.gracePeriodLength").define("gracePhaseLength", 15 * 60);
+            criticalDamageChance = builder.comment("Chance that a player in critical phase gets damaged at a given tick. Higher number means more damage.").translation("config.regeneration.criticalDamageChance").defineInRange("criticalDamageChance", 1, 0, Integer.MAX_VALUE);
+            criticalPhaseLength = builder.comment("The time in seconds you can stay in the critical phase without dying").translation("config.regeneration.criticalPhaseLength").define("criticalPhaseLength", 60);
+            handGlowInterval = builder.comment("Interval (in seconds) at which your hands start to glow").translation("config.regeneration.handGlowInterval").defineInRange("handGlowInterval", 120, 0, Integer.MAX_VALUE);
+            handGlowTriggerDelay = builder.comment("Amount of time (in seconds) you have when your hands start glowing before you start to regenerate").translation("config.regeneration.handGlowTriggerDelay").defineInRange("handTriggerDelay", 10, 0, Integer.MAX_VALUE);
             builder.pop();
 
             builder.comment("Mid Regen Settings").push("While Regenerating");

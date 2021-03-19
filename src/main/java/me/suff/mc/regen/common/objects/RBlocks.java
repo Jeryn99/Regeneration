@@ -6,6 +6,7 @@ import me.suff.mc.regen.util.RConstants;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.item.BlockItem;
@@ -32,7 +33,7 @@ public class RBlocks {
     public static final RegistryObject< Block > ZINC_ORE = BLOCKS.register("zinc_ore", () -> new ROreBlock(AbstractBlock.Properties.of(Material.STONE).lightLevel(getLightValueLit(9)).requiresCorrectToolForDrops().strength(3.0F, 3.0F)));
     public static final RegistryObject< Block > ZERO_ROUNDEL = BLOCKS.register("zero_roundel_half", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
     public static final RegistryObject< Block > ZERO_ROOM_FULL = BLOCKS.register("zero_roundel_full", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
-    public static final RegistryObject< Block > AZBANTIUM = BLOCKS.register("azbantium", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
+    public static final RegistryObject< Block > AZBANTIUM = BLOCKS.register("azbantium", () -> new Block(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
 
     private static ToIntFunction< BlockState > getLightValueLit(int lightValue) {
         return (state) -> state.getValue(BlockStateProperties.LIT) ? lightValue : 0;

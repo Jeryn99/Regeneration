@@ -27,13 +27,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdvancementCreation implements IDataProvider {
+public class AdvancementGen implements IDataProvider {
 
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final List< Advancement > advancements = new ArrayList<>();
     private final DataGenerator generator;
 
-    public AdvancementCreation(DataGenerator generatorIn) {
+    public AdvancementGen(DataGenerator generatorIn) {
         this.generator = generatorIn;
     }
 
@@ -46,8 +46,8 @@ public class AdvancementCreation implements IDataProvider {
     public void run(DirectoryCache p_200398_1_) throws IOException {
         Path path = this.generator.getOutputFolder();
         TriggerManager.init();
-        Advancement watchIsMe = this.createAdvancement("watch_is_me", new ItemStack(RItems.FOB.get()), InventoryChangeTrigger.Instance.hasItems(RItems.FOB.get()), null);
-        Advancement firstRegeneration = this.createAdvancement("first_regen", new ItemStack(Blocks.PLAYER_HEAD), new BaseTrigger.Instance(TriggerManager.FIRST_REGENERATION.getId()), watchIsMe);
+        Advancement watchIsMe = this.createAdvancement("watch_is_me", new ItemStack(RItems.FOB.get()), InventoryChangeTrigger.Instance.hasItems(RItems.FOB.get()), null, FrameType.GOAL);
+        Advancement firstRegeneration = this.createAdvancement("first_regen", new ItemStack(Blocks.PLAYER_HEAD), new BaseTrigger.Instance(TriggerManager.FIRST_REGENERATION.getId()), watchIsMe, FrameType.CHALLENGE);
 
         //Refusal Path
         Advancement changeRefuse = this.createAdvancement("change_refusal", new ItemStack(RBlocks.BIO_CONTAINER.get()), new BaseTrigger.Instance(TriggerManager.CHANGE_REFUSAL.getId()), firstRegeneration);
@@ -57,11 +57,11 @@ public class AdvancementCreation implements IDataProvider {
         Advancement cutHand = this.createAdvancement("hand_cut", new ItemStack(RItems.HAND.get()), new BaseTrigger.Instance(TriggerManager.HAND_CUT.getId()), changeRefuse);
         this.createAdvancement("zero_room", new ItemStack(RBlocks.ZERO_ROUNDEL.get()), new BaseTrigger.Instance(TriggerManager.ZERO_ROOM.getId()), cutHand);
 
-        Advancement gallifrey = this.createAdvancement("gallifrey", new ItemStack(RBlocks.AZBANTIUM.get()), ChangeDimensionTrigger.Instance.changedDimensionTo(TeleportItem.GALLIFREY), watchIsMe);
+        Advancement gallifrey = this.createAdvancement("gallifrey", new ItemStack(RBlocks.AZBANTIUM.get()), ChangeDimensionTrigger.Instance.changedDimensionTo(TeleportItem.GALLIFREY), watchIsMe, FrameType.CHALLENGE);
         Advancement trade = this.createAdvancement("timelord_trade", new ItemStack(RItems.SPAWN_ITEM.get()), new BaseTrigger.Instance(TriggerManager.TIMELORD_TRADE.getId()), gallifrey);
         Advancement guard = this.createAdvancement("guard", new ItemStack(RItems.GUARD_HELMET.get()), InventoryChangeTrigger.Instance.hasItems(() -> RItems.GUARD_HELMET.get(), () -> RItems.GUARD_CHEST.get(), () -> RItems.GUARD_FEET.get(), () -> RItems.GUARD_LEGS.get()), trade);
-        Advancement council = this.createAdvancement("council", new ItemStack(RItems.M_ROBES_HEAD.get()), new BaseTrigger.Instance(TriggerManager.COUNCIL.getId()), trade);
         this.createAdvancement("gallifreyan_weapon", new ItemStack(RItems.PISTOL.get()), InventoryChangeTrigger.Instance.hasItems(() -> RItems.PISTOL.get(), () -> RItems.RIFLE.get()), guard);
+        Advancement council = this.createAdvancement("council", new ItemStack(RItems.M_ROBES_HEAD.get()), new BaseTrigger.Instance(TriggerManager.COUNCIL.getId()), trade);
 
         for (Advancement adv : advancements) {
             IDataProvider.save(GSON, p_200398_1_, adv.deconstruct().serializeToJson(), getPath(path, adv));
@@ -75,7 +75,7 @@ public class AdvancementCreation implements IDataProvider {
         return "Advancements";
     }
 
-    public Advancement create(String name, String title, ItemStack display, Advancement parent, ICriterionInstance... inst) {
+    public Advancement create(String name, String title, ItemStack display, Advancement parent, FrameType frameType, ICriterionInstance... inst) {
 
         Advancement.Builder adv = Advancement.Builder.advancement()
                 .display(
@@ -83,7 +83,7 @@ public class AdvancementCreation implements IDataProvider {
                         new TranslationTextComponent("advancements.regen.title." + title),
                         new TranslationTextComponent("advancements.regen.desc." + title),
                         new ResourceLocation("regen:textures/block/zero_roundel_half.png"),
-                        FrameType.TASK,
+                        frameType,
                         true,
                         true,
                         false);
@@ -102,7 +102,11 @@ public class AdvancementCreation implements IDataProvider {
     }
 
     public Advancement createAdvancement(String name, ItemStack display, ICriterionInstance inst, Advancement parent) {
-        Advancement advance = this.create(name, name, display, parent, inst);
+        return createAdvancement(name, display, inst, parent, FrameType.TASK);
+    }
+
+    public Advancement createAdvancement(String name, ItemStack display, ICriterionInstance inst, Advancement parent, FrameType frameType) {
+        Advancement advance = this.create(name, name, display, parent, frameType, inst);
         advancements.add(advance);
         return advance;
     }

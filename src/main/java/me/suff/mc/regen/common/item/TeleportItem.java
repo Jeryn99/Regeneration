@@ -57,7 +57,7 @@ public class TeleportItem extends Item {
         boolean isOnOverworld = currentWorld.dimension() == World.OVERWORLD;
         ServerWorld newWorld = currentWorld.getServer().getLevel(isOnOverworld ? GALLIFREY : World.OVERWORLD);
         BlockPos tpPos = getTopBlockForPos(playerEntity, newWorld, playerEntity.blockPosition());
-        playerEntity.teleportTo(newWorld, tpPos.getX(), tpPos.getY(), tpPos.getZ(), playerEntity.yRot, playerEntity.yHeadRot);
+        playerEntity.teleportTo(newWorld, tpPos.getX(), tpPos.getY(), tpPos.getZ(), playerEntity.yRot, playerEntity.xRot);
         playerEntity.randomTeleport(playerEntity.blockPosition().getX(), playerEntity.blockPosition().getY(), playerEntity.blockPosition().getZ(), false);
     }
 

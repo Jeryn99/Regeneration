@@ -633,6 +633,7 @@ public class RegenCap implements IRegen {
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(regens());
             }
+            setTrait(Traits.BORING.get());
             setSkin(new byte[0]);
             syncToClients(null);
         }

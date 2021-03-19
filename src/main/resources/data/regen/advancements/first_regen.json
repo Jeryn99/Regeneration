@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.regen.desc.first_regen"
     },
-    "frame": "task",
+    "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false,

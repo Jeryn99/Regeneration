@@ -1,11 +1,9 @@
 package me.suff.mc.regen.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import me.suff.mc.regen.client.gui.IncarnationScreen;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.ChangeSoundScheme;
 import me.suff.mc.regen.network.messages.TypeMessage;
