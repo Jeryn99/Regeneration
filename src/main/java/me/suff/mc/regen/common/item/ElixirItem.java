@@ -39,7 +39,7 @@ public class ElixirItem extends Item {
     @Override
     public ITextComponent getName(ItemStack stack) {
         StringTextComponent prefix = new StringTextComponent("Elixir: ");
-        return prefix.append(getTrait(stack).getTranslation());
+        return prefix.append(getTrait(stack).translation());
     }
 
     @Override
@@ -95,6 +95,6 @@ public class ElixirItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(getTrait(stack).getDescription());
+        tooltip.add(getTrait(stack).description());
     }
 }

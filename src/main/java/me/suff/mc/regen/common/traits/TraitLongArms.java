@@ -24,7 +24,7 @@ public class TraitLongArms extends Traits.ITrait {
     }
 
     @Override
-    public void reset(IRegen data) {
+    public void remove(IRegen data) {
         LivingEntity living = data.getLiving();
         ModifiableAttributeInstance reach = living.getAttribute(ForgeMod.REACH_DISTANCE.get());
         if (reach != null) {
@@ -50,7 +50,7 @@ public class TraitLongArms extends Traits.ITrait {
     }
 
     @Override
-    public int getColor() {
+    public int color() {
         return 9740385;
     }
 }

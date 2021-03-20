@@ -21,7 +21,7 @@ public class TraitSwimSpeed extends Traits.ITrait {
     }
 
     @Override
-    public void reset(IRegen data) {
+    public void remove(IRegen data) {
 
     }
 
@@ -51,7 +51,7 @@ public class TraitSwimSpeed extends Traits.ITrait {
     }
 
     @Override
-    public int getColor() {
+    public int color() {
         return 2039713;
     }
 }

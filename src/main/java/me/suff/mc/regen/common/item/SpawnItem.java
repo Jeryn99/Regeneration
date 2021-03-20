@@ -20,8 +20,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class SpawnItem< E extends TimelordEntity > extends Item {
 
     public SpawnItem() {

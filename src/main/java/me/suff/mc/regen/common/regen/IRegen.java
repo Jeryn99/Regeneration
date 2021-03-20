@@ -85,6 +85,10 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     Traits.ITrait trait();
 
+    boolean traitActive();
+
+    void toggleTrait();
+
     void setTrait(Traits.ITrait trait);
 
     Traits.ITrait getNextTrait();

@@ -19,7 +19,7 @@ public class TraitBase extends Traits.ITrait {
     }
 
     @Override
-    public void reset(IRegen data) {
+    public void remove(IRegen data) {
 
     }
 
@@ -50,7 +50,7 @@ public class TraitBase extends Traits.ITrait {
     }
 
     @Override
-    public int getColor() {
+    public int color() {
         return color;
     }
 }

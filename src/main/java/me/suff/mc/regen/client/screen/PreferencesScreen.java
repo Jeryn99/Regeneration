@@ -45,12 +45,12 @@ public class PreferencesScreen extends ContainerScreen {
 
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
-        final int btnW = 66, btnH = 18;
+        final int btnW = 66, btnH = 20;
         ROTATION = 0;
 
         Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regen.gui.close"), onPress -> Minecraft.getInstance().setScreen(null));
 
-        Button btnScheme = new Button(width / 2 + 50 - 66, cy + 65, btnW * 2, btnH, new TranslationTextComponent("regen.gui.sound_scheme." + SOUND_SCHEME.name().toLowerCase()), button -> {
+        Button btnScheme = new Button(width / 2 + 50 - 66, cy + 60, btnW * 2, btnH, new TranslationTextComponent("regen.gui.sound_scheme." + SOUND_SCHEME.name().toLowerCase()), button -> {
             IRegen.TimelordSound newOne = SOUND_SCHEME == IRegen.TimelordSound.DRUM ? IRegen.TimelordSound.HUM : IRegen.TimelordSound.DRUM;
             SOUND_SCHEME = newOne;
             button.setMessage(new TranslationTextComponent("regen.gui.sound_scheme." + newOne.name().toLowerCase()));
@@ -58,7 +58,7 @@ public class PreferencesScreen extends ContainerScreen {
         });
 
 
-        Button btnRegenType = new Button(width / 2 + 50 - 66, cy + 105, btnW * 2, btnH, SELECTED_TYPE.get().getTranslation(), button -> {
+        Button btnRegenType = new Button(width / 2 + 50 - 66, cy + 102, btnW * 2, btnH, SELECTED_TYPE.get().getTranslation(), button -> {
             int pos = TransitionTypes.getPosition(SELECTED_TYPE) + 1;
 
             if (pos < 0 || pos >= TransitionTypes.TYPES.length) {
@@ -69,7 +69,7 @@ public class PreferencesScreen extends ContainerScreen {
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(SELECTED_TYPE.get()));
         });
 
-        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 85, btnW * 2, btnH, new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase()), button -> {
+        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW * 2, btnH, new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase()), button -> {
             if (CHOICES.next() != null) {
                 CHOICES = CHOICES.next();
             } else {
@@ -80,7 +80,7 @@ public class PreferencesScreen extends ContainerScreen {
         });
         btnRegenType.setMessage(SELECTED_TYPE.get().getTranslation());
 
-        Button btnColor = new Button(width / 2 + 50 - 66, cy + 125, btnW * 2, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
+        Button btnColor = new Button(width / 2 + 50 - 66, cy + 123, btnW * 2, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
 
         Button btnSkinChoice = new Button(width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TranslationTextComponent("regen.gui.skin_choice"), p_onPress_1_ -> {
             Minecraft.getInstance().setScreen(new IncarnationScreen());
@@ -114,11 +114,14 @@ public class PreferencesScreen extends ContainerScreen {
         length = minecraft.font.width(str);
         font.drawShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
 
-        TranslationTextComponent traitLang = data.trait().getTranslation();
-        font.drawShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 40, Color.WHITE.getRGB());
+        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> {
+            int color = iRegen.traitActive() ? Color.GREEN.getRGB() : Color.RED.getRGB();
+            TranslationTextComponent traitLang = data.trait().translation();
+            font.drawShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 35, color);
 
-        TranslationTextComponent traitLangDesc = data.trait().getDescription();
-        font.drawShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 50, Color.WHITE.getRGB());
+            TranslationTextComponent traitLangDesc = data.trait().description();
+            font.drawShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 45, color);
+        });
 
     }
 
