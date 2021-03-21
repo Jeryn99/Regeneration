@@ -22,6 +22,7 @@ import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.EnchantmentScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
@@ -278,7 +279,8 @@ public class IncarnationScreen extends ContainerScreen {
         if (!skins.isEmpty() && position < skins.size()) {
             matrixStack.pushPose();
             String name = skins.get(position).getName().replaceAll(".png", "");
-            drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslationTextComponent(name), width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB());
+            //drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslationTextComponent("Test"), width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB());
+            renderWidthScaledText(name, matrixStack, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 20);
             matrixStack.popPose();
         }
 
@@ -357,4 +359,31 @@ public class IncarnationScreen extends ContainerScreen {
         this.searchField.tick();
         excludeTrending.active = searchField.getValue().isEmpty();
     }
+
+    //Spectre0987
+
+    /**
+     *
+     * @param text - The text you'd like to draw
+     * @param matrix
+     * @param font
+     * @param x
+     * @param y
+     * @param color
+     * @param width - The max width of the text, scales to maintain this width if larger than it
+     */
+    public void renderWidthScaledText(String text, MatrixStack matrix, FontRenderer font, float x, float y, int color, int width){
+
+        matrix.pushPose();
+
+        int textWidth = font.width(text);
+
+        float scale = width / (float) textWidth;
+
+        matrix.translate(x, y, 0);
+        matrix.scale(scale, scale, scale);
+        font.draw(matrix, text, 0, 0, color);
+        matrix.popPose();
+    }
+
 }
