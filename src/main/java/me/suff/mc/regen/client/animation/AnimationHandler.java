@@ -21,7 +21,9 @@ public class AnimationHandler {
     public static void setRotationAnglesCallback(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             TransitionType< ? > type = iRegen.transitionType().get();
+
             type.getRenderer().animate(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
             if (iRegen.getCurrentState() != RegenStates.REGENERATING && livingEntity.getType() == EntityType.PLAYER) {
                 handleArmor(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             }

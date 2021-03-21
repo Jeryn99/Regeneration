@@ -62,7 +62,7 @@ public class RegenCap implements IRegen {
     private String deathMessage = "";
     private RegenStates currentState = RegenStates.ALIVE;
     private TransitionTypes transitionType = TransitionTypes.FIERY;
-    private boolean areHandsGlowing = false;
+    private boolean areHandsGlowing = false, traitActive = true;
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
     private byte[] nextSkin = new byte[0];
@@ -112,8 +112,9 @@ public class RegenCap implements IRegen {
             }
 
             //Tick Trait
-            currentTrait.tick(this);
-
+            if(traitActive) {
+                currentTrait.tick(this);
+            }
             if (stateManager != null && currentState != RegenStates.ALIVE) {
                 stateManager.tick();
             }
@@ -231,6 +232,7 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.NEXT_TRAIT, nextTrait.getRegistryName().toString());
         compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
         compoundNBT.putString(RConstants.HAND_STATE, handState().name());
+        compoundNBT.putBoolean(RConstants.IS_TRAIT_ACTIVE, traitActive);
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skin());
@@ -259,6 +261,7 @@ public class RegenCap implements IRegen {
         setSkin(nbt.getByteArray(RConstants.SKIN));
         setNextSkin(nbt.getByteArray("next_" + RConstants.SKIN));
         setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
+        traitActive = nbt.getBoolean(RConstants.IS_TRAIT_ACTIVE);
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
         if (nbt.contains(RConstants.SOUND_SCHEME)) {
             setTimelordSound(TimelordSound.valueOf(nbt.getString(RConstants.SOUND_SCHEME)));
@@ -389,6 +392,16 @@ public class RegenCap implements IRegen {
     @Override
     public Traits.ITrait trait() {
         return currentTrait;
+    }
+
+    @Override
+    public boolean traitActive() {
+        return traitActive;
+    }
+
+    @Override
+    public void toggleTrait() {
+        this.traitActive = !traitActive;
     }
 
     @Override

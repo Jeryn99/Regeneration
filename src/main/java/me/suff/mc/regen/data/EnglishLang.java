@@ -232,41 +232,44 @@ public class EnglishLang extends LanguageProvider {
         add(REntities.TIMELORD.get(), "Timelord");
 
         //Traits
-        add(Traits.BORING.get().getTranslation().getKey(), "Boring");
-        add(Traits.BORING.get().getDescription().getKey(), "Plain Human!");
+        add(Traits.BORING.get().translation().getKey(), "Boring");
+        add(Traits.BORING.get().description().getKey(), "Plain Human!");
 
-        add(Traits.QUICK.get().getTranslation().getKey(), "Quick");
-        add(Traits.QUICK.get().getDescription().getKey(), "Sprint Faster!");
+        add(Traits.QUICK.get().translation().getKey(), "Quick");
+        add(Traits.QUICK.get().description().getKey(), "Sprint Faster!");
 
-        add(Traits.SWIM_SPEED.get().getTranslation().getKey(), "Mermaid");
-        add(Traits.SWIM_SPEED.get().getDescription().getKey(), "Swim Faster!");
+        add(Traits.SWIM_SPEED.get().translation().getKey(), "Mermaid");
+        add(Traits.SWIM_SPEED.get().description().getKey(), "Swim Faster!");
 
-        add(Traits.FAST_MINE.get().getTranslation().getKey(), "Fast Mine");
-        add(Traits.FAST_MINE.get().getDescription().getKey(), "Mine Faster!");
+        add(Traits.FAST_MINE.get().translation().getKey(), "Fast Mine");
+        add(Traits.FAST_MINE.get().description().getKey(), "Mine Faster!");
 
-        add(Traits.SMART.get().getTranslation().getKey(), "Smart");
-        add(Traits.SMART.get().getDescription().getKey(), "More XP Pickup!");
+        add(Traits.SMART.get().translation().getKey(), "Smart");
+        add(Traits.SMART.get().description().getKey(), "More XP Pickup!");
 
-        add(Traits.LONG_ARMS.get().getTranslation().getKey(), "Long Arms");
-        add(Traits.LONG_ARMS.get().getDescription().getKey(), "Reach further!");
+        add(Traits.LONG_ARMS.get().translation().getKey(), "Long Arms");
+        add(Traits.LONG_ARMS.get().description().getKey(), "Reach further!");
 
-        add(Traits.STRONG.get().getTranslation().getKey(), "Strong");
-        add(Traits.STRONG.get().getDescription().getKey(), "Punch Harder!");
+        add(Traits.STRONG.get().translation().getKey(), "Strong");
+        add(Traits.STRONG.get().description().getKey(), "Punch Harder!");
 
-        add(Traits.KNOCKBACK.get().getTranslation().getKey(), "KnockBack");
-        add(Traits.KNOCKBACK.get().getDescription().getKey(), "Don't get flung back!");
+        add(Traits.KNOCKBACK.get().translation().getKey(), "KnockBack");
+        add(Traits.KNOCKBACK.get().description().getKey(), "Don't get flung back!");
 
-        add(Traits.FISH.get().getTranslation().getKey(), "Fish");
-        add(Traits.FISH.get().getDescription().getKey(), "Infinite Oxygen under water");
+        add(Traits.FISH.get().translation().getKey(), "Fish");
+        add(Traits.FISH.get().description().getKey(), "Infinite Oxygen under water");
 
-        add(Traits.LEAP.get().getTranslation().getKey(), "Leap");
-        add(Traits.LEAP.get().getDescription().getKey(), "Jump a little higher");
+        add(Traits.LEAP.get().translation().getKey(), "Leap");
+        add(Traits.LEAP.get().description().getKey(), "Jump a little higher");
 
-        add(Traits.FIRE.get().getTranslation().getKey(), "Fire Immune");
-        add(Traits.FIRE.get().getDescription().getKey(), "Immune to fire");
+        add(Traits.FIRE.get().translation().getKey(), "Fire Immune");
+        add(Traits.FIRE.get().description().getKey(), "Immune to fire");
 
-        add(Traits.ENDER_HURT.get().getTranslation().getKey(), "Ender Emergency");
-        add(Traits.ENDER_HURT.get().getDescription().getKey(), "Teleport away when hurt");
+        add(Traits.ENDER_HURT.get().translation().getKey(), "Ender Emergency");
+        add(Traits.ENDER_HURT.get().description().getKey(), "Teleport away when hurt");
+
+        add(Traits.WATER_STRIDE.get().translation().getKey(), "Water Stride");
+        add(Traits.WATER_STRIDE.get().description().getKey(), "Walk on water!");
     }
 
     public String grammerNazi(String text) {

@@ -165,7 +165,7 @@ class CommonActing implements Acting {
 
             //Reset old Trait
             Traits.ITrait old = cap.trait();
-            old.reset(cap);
+            old.remove(cap);
 
             //Get the new Trait
             Traits.ITrait next = cap.getNextTrait();
@@ -178,9 +178,9 @@ class CommonActing implements Acting {
             cap.setTrait(next);
             cap.setNextTrait(Traits.BORING.get());
 
-            PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", next.getTranslation().getString()), true);
+            PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", next.translation().getString()), true);
         } else {
-            cap.trait().reset(cap);
+            cap.trait().remove(cap);
             cap.setTrait(Traits.BORING.get());
             cap.trait().apply(cap);
         }

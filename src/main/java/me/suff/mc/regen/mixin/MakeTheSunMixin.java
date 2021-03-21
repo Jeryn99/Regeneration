@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MakeTheSunMixin {
 
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/WorldRenderer;MOON_LOCATION:Lnet/minecraft/util/ResourceLocation;", opcode = Opcodes.GETSTATIC), method = "renderSky(Lcom/mojang/blaze3d/matrix/MatrixStack;F)V")
-    public void renderSky(MatrixStack matrixStackIn, float partialTicks, CallbackInfo ci) {
-        ClientUtil.renderSky(matrixStackIn, partialTicks);
+    private void renderSky(MatrixStack matrixStackIn, float partialTicks, CallbackInfo ci) {
+        ClientUtil.renderSky(matrixStackIn);
     }
 }

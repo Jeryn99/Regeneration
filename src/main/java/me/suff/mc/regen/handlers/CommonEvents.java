@@ -10,6 +10,7 @@ import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
+import me.suff.mc.regen.common.traits.TraitHandler;
 import me.suff.mc.regen.common.traits.Traits;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;

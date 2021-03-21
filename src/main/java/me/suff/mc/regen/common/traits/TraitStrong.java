@@ -23,7 +23,7 @@ public class TraitStrong extends Traits.ITrait {
     }
 
     @Override
-    public void reset(IRegen data) {
+    public void remove(IRegen data) {
         LivingEntity living = data.getLiving();
         ModifiableAttributeInstance reach = living.getAttribute(Attributes.ATTACK_DAMAGE);
         reach.removeModifier(STRONG_UUID);
@@ -46,7 +46,7 @@ public class TraitStrong extends Traits.ITrait {
     }
 
     @Override
-    public int getColor() {
+    public int color() {
         return 9643043;
     }
 }

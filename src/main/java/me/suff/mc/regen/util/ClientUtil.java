@@ -15,6 +15,7 @@ import me.suff.mc.regen.client.sound.SoundReverb;
 import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.item.SpawnItem;
+import me.suff.mc.regen.common.item.TeleportItem;
 import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.sound.MovingSound;
@@ -124,7 +125,7 @@ public class ClientUtil {
         clothingModels();
         RKeybinds.init();
         RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
-        Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).getColor(), RItems.ELIXIR.get());
+        Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).color(), RItems.ELIXIR.get());
     }
 
     private static void renderLayers() {
@@ -226,9 +227,9 @@ public class ClientUtil {
         }
     }
 
-    public static void renderSky(MatrixStack matrixStackIn, float partialTicks) {
+    public static void renderSky(MatrixStack matrixStackIn) {
         if(Minecraft.getInstance().level == null || matrixStackIn == null) return;
-        if (Minecraft.getInstance().level.dimension().location().getPath().contains("gallifrey")) {
+        if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension()== TeleportItem.GALLIFREY) {
             float scale = 30.0F;
             BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
             matrixStackIn.pushPose();

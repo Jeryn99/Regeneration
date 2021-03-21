@@ -24,8 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.item.Item.Properties;
-
 /* Created by Craig on 05/03/2021 */
 public class HandItem extends Item {
     public HandItem(Properties properties) {
@@ -117,7 +115,7 @@ public class HandItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslationTextComponent(TextFormatting.WHITE + "Trait: %s", TextFormatting.GRAY + TextFormatting.ITALIC.toString() + getTrait(stack).getTranslation().getString()));
+        tooltip.add(new TranslationTextComponent(TextFormatting.WHITE + "Trait: %s", TextFormatting.GRAY + TextFormatting.ITALIC.toString() + getTrait(stack).translation().getString()));
         tooltip.add(new TranslationTextComponent(TextFormatting.WHITE + "Energy: %s", TextFormatting.GRAY + TextFormatting.ITALIC.toString() + RegenUtil.round(getEnergy(stack), 2)));
     }
 }

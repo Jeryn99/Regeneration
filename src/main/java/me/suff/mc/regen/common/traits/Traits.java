@@ -2,11 +2,11 @@ package me.suff.mc.regen.common.traits;
 
 import com.google.common.collect.Iterables;
 import me.suff.mc.regen.common.regen.IRegen;
+import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.BossInfo;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -37,6 +37,7 @@ public class Traits extends ForgeRegistryEntry< Traits > {
     public static final Traits FISH = new Traits(TraitFish::new);
     public static final Traits FIRE = new Traits(TraitFireResistant::new);
     public static final Traits ENDER_HURT = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "ender_hurt"), Color.MAGENTA.getRGB()));
+    public static final Traits WATER_STRIDE = new Traits(() -> new TraitBase(new ResourceLocation(RConstants.MODID, "water_stride"), Color.WHITE.getRGB()));
 
 
     //Create Registry
@@ -55,7 +56,7 @@ public class Traits extends ForgeRegistryEntry< Traits > {
 
     @SubscribeEvent
     public static void onRegisterTypes(RegistryEvent.Register< ITrait > e) {
-        e.getRegistry().registerAll(ENDER_HURT.get(), FIRE.get(), LEAP.get(), FISH.get(), QUICK.get(), BORING.get(), SMART.get(), FAST_MINE.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get(), KNOCKBACK.get());
+        e.getRegistry().registerAll(WATER_STRIDE.get(), ENDER_HURT.get(), FIRE.get(), LEAP.get(), FISH.get(), QUICK.get(), BORING.get(), SMART.get(), FAST_MINE.get(), LONG_ARMS.get(), STRONG.get(), SWIM_SPEED.get(), KNOCKBACK.get());
     }
 
     public static ITrait fromID(String location) {
@@ -91,25 +92,26 @@ public class Traits extends ForgeRegistryEntry< Traits > {
 
     //Base
     public static abstract class ITrait implements IForgeRegistryEntry< ITrait > {
+
         public abstract void apply(IRegen data);
 
-        public abstract void reset(IRegen data);
+        public abstract void remove(IRegen data);
 
         public abstract void tick(IRegen data);
 
-        public TranslationTextComponent getTranslation() {
+        public TranslationTextComponent translation() {
             ResourceLocation regName = getRegistryName();
             return new TranslationTextComponent("trait." + regName.getNamespace() + "." + regName.getPath());
         }
 
-        public TranslationTextComponent getDescription() {
+        public TranslationTextComponent description() {
             ResourceLocation regName = getRegistryName();
             return new TranslationTextComponent("trait." + regName.getNamespace() + "." + regName.getPath() + ".description");
         }
 
         public abstract boolean isPlayerOnly();
 
-        public int getColor() {
+        public int color() {
             return 2293580;
         }
 
@@ -122,6 +124,8 @@ public class Traits extends ForgeRegistryEntry< Traits > {
         public Class< ITrait > getRegistryType() {
             return ITrait.class;
         }
+
+
     }
 
 }

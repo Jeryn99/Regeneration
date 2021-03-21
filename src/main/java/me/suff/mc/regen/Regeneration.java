@@ -83,6 +83,7 @@ public class Regeneration {
     @SubscribeEvent
     public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
+        boolean reports = false;
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
         generator.addProvider(new EnglishLang(generator));
         generator.addProvider(new LootGen(generator));
@@ -91,7 +92,9 @@ public class Regeneration {
         generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
         generator.addProvider(new AdvancementGen(generator));
-        generator.addProvider(new BiomeProvider(generator));
+        if(reports) {
+            generator.addProvider(new BiomeProvider(generator));
+        }
     }
 
     @SubscribeEvent
