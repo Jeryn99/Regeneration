@@ -67,6 +67,13 @@ public class EnglishLang extends LanguageProvider {
         //Item Group
         add("itemGroup.regen", "Regeneration");
 
+        //Tooltip
+        add("button.tooltip.reset_mojang", "Resets your Skin to Mojang Skin");
+        add("button.tooltip.previous_skin", "Previous Skin");
+        add("button.tooltip.next_skin", "Next Skin");
+        add("button.tooltip.save_skin", "Save Changes");
+        add("button.tooltip.open_folder", "Open Local Skin Folder");
+        add("button.tooltip.upload2mc", "Upload currently selected skin to Minecraft");
 
         //Sounds
         for (int i = 0; i < 7; i++) {
@@ -207,7 +214,7 @@ public class EnglishLang extends LanguageProvider {
         add("regen.gui.next_incarnation", "Select next incarnation");
         add("regen.gui.reset_skin", "Reset");
         add("regen.gui.infinite_regenerations", "Infinite Regeneration Mode");
-        add("regen.gui.remaining_regens.status", "Remaining Regenerations: %s");
+        add("regen.gui.remaining_regens.status", "Regenerations: %s");
         add("regen.gui.color_gui", "Color selection");
         add("regen.gui.current_skin", "Select Next Incarnation");
         add("regen.gui.back", "Back");

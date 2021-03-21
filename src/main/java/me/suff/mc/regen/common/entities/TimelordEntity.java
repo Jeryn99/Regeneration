@@ -281,9 +281,9 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
                     data.syncToClients(null);
                 }
 
-                if(data.getCurrentState().isGraceful() && data.glowing())
+                if(data.regenState().isGraceful() && data.glowing())
 
-                if (data.getCurrentState() == RegenStates.REGENERATING) {
+                if (data.regenState() == RegenStates.REGENERATING) {
                     if (data.updateTicks() == 10) {
                         if (getPersonality().getScreamSound() != null) {
                             playSound(getPersonality().getScreamSound(), 1, 1);
@@ -418,7 +418,7 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
         double d3 = target.getZ() - this.getZ();
         float f = MathHelper.sqrt(d1 * d1 + d3 * d3) * 0.2F;
         laserProjectile.shoot(d1, d2 + (double) f, d3, 1.6F, 0);
-        this.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 0.3F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.level.addFreshEntity(laserProjectile);
     }
 

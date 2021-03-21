@@ -30,7 +30,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
         PlayerEntity player = pre.getPlayer();
 
         RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 MatrixStack maxtrix = pre.getMatrixStack();
                 player.yBodyRot = player.yBodyRotO = 0;
                 maxtrix.translate(0, 0.1, 0);
@@ -43,7 +43,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
     public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
         PlayerEntity player = post.getPlayer();
         RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 player.yBodyRot = player.yBodyRotO = player.yRot;
             }
         });
@@ -62,7 +62,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
     @Override
     public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 matrixStackIn.pushPose();
                 matrixStackIn.scale(1.2F, 1.2F, 1.2F);
                 float opacity = iRegen.updateTicks();
@@ -90,7 +90,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
     @Override
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
-            if (data.getCurrentState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.WATCHER) {
+            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.WATCHER) {
                 bipedModel.head.xRot = (float) Math.toRadians(0);
                 bipedModel.head.yRot = (float) Math.toRadians(0);
                 bipedModel.head.zRot = (float) Math.toRadians(0);

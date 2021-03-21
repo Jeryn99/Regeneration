@@ -21,7 +21,7 @@ public class RenderPlayerMixin {
     protected void setupRotations(AbstractClientPlayerEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
 
         RegenCap.get(entityLiving).ifPresent(iRegen -> {
-            if (PlayerUtil.isPlayerAboveZeroGrid(entityLiving) && iRegen.getCurrentState() == RegenStates.POST) {
+            if (PlayerUtil.isPlayerAboveZeroGrid(entityLiving) && iRegen.regenState() == RegenStates.POST) {
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(entityLiving.yRot));
                 matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(90));
                 matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(270.0F));

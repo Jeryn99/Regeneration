@@ -51,7 +51,7 @@ class CommonActing implements Acting {
         LivingEntity livingEntity = cap.getLiving();
         float stateProgress = (float) cap.stateManager().getStateProgress();
 
-        switch (cap.getCurrentState()) {
+        switch (cap.regenState()) {
             case POST:
                 if (!PlayerUtil.POTIONS.isEmpty()) {
                     if (livingEntity.tickCount % 210 == 0 && !PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
@@ -120,7 +120,7 @@ class CommonActing implements Acting {
             case ALIVE:
                 break;
             default:
-                throw new IllegalStateException("Unknown state " + cap.getCurrentState());
+                throw new IllegalStateException("Unknown state " + cap.regenState());
         }
     }
 

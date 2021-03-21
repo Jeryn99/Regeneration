@@ -32,7 +32,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -59,7 +58,7 @@ public class ClientEvents {
     public static void onName(RenderNameplateEvent event) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.POST || iRegen.getCurrentState() == RegenStates.GRACE_CRIT) {
+            if (iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.GRACE_CRIT) {
                 event.setContent(new StringTextComponent(TextFormatting.OBFUSCATED + event.getContent().getString()));
             }
         });
@@ -99,7 +98,7 @@ public class ClientEvents {
             ClientPlayerEntity ep = Minecraft.getInstance().player;
             SoundHandler sound = Minecraft.getInstance().getSoundManager();
             RegenCap.get(ep).ifPresent(iRegen -> {
-                if (iRegen.getCurrentState() == RegenStates.POST && PlayerUtil.isPlayerAboveZeroGrid(ep)) {
+                if (iRegen.regenState() == RegenStates.POST && PlayerUtil.isPlayerAboveZeroGrid(ep)) {
 
                     if (iSound == null) {
                         iSound = SimpleSound.forUI(RSounds.GRACE_HUM.get(), 1);
@@ -117,6 +116,10 @@ public class ClientEvents {
         }
 
 
+        destroyTextures();
+    }
+
+    private static void destroyTextures() {
         //Clean up our mess we might have made!
         if (Minecraft.getInstance().level == null) {
             if (SkinHandler.PLAYER_SKINS.size() > 0) {
@@ -140,13 +143,13 @@ public class ClientEvents {
 
         RegenCap.get((LivingEntity) renderView).ifPresent((data) -> {
 
-            if (data.getCurrentState() == RegenStates.GRACE_CRIT) {
+            if (data.regenState() == RegenStates.GRACE_CRIT) {
                 e.setRed(0.5F);
                 e.setBlue(0.5F);
                 e.setGreen(0.5F);
             }
 
-            if (data.transitionType() == TransitionTypes.TROUGHTON && data.getCurrentState() == RegenStates.REGENERATING) {
+            if (data.transitionType() == TransitionTypes.TROUGHTON && data.regenState() == RegenStates.REGENERATING) {
                 e.setRed(0);
                 e.setGreen(0);
                 e.setBlue(0);
@@ -164,14 +167,14 @@ public class ClientEvents {
 
 
             if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
-            if (cap.getCurrentState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+            if (cap.regenState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
                 event.setCanceled(true);
             }
 
 
             ITextComponent forceKeybind = RKeybinds.FORCE_REGEN.getKey().getDisplayName();
 
-            switch (cap.getCurrentState()) {
+            switch (cap.regenState()) {
                 case ALIVE:
                     break;
                 case GRACE:
@@ -193,7 +196,7 @@ public class ClientEvents {
                     }
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + cap.getCurrentState());
+                    throw new IllegalStateException("Unexpected value: " + cap.regenState());
             }
 
             if (cap.glowing()) {
@@ -223,7 +226,7 @@ public class ClientEvents {
         Entity viewer = Minecraft.getInstance().getCameraEntity();
         if (viewer != null) {
             RegenCap.get((LivingEntity) viewer).ifPresent((data) -> {
-                if (data.getCurrentState() == RegenStates.GRACE_CRIT) {
+                if (data.regenState() == RegenStates.GRACE_CRIT) {
                     GlStateManager._fogMode(GlStateManager.FogMode.EXP.value);
                     event.setCanceled(true);
                     event.setDensity(0.10F);
@@ -253,7 +256,7 @@ public class ClientEvents {
         if (Minecraft.getInstance().player == null) return;
         ClientPlayerEntity player = Minecraft.getInstance().player;
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data -> {
-            if (data.getCurrentState() == RegenStates.REGENERATING) { // locking user
+            if (data.regenState() == RegenStates.REGENERATING) { // locking user
                 MovementInput moveType = e.getMovementInput();
                 moveType.right = false;
                 moveType.left = false;

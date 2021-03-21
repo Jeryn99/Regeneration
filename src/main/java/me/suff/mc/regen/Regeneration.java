@@ -11,6 +11,7 @@ import me.suff.mc.regen.common.regen.RegenStorage;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.world.biome.surface.RSurfaceBuilder;
 import me.suff.mc.regen.common.world.gen.RStructures;
+import me.suff.mc.regen.compat.TardisMod;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.network.NetworkDispatcher;
@@ -28,6 +29,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -74,6 +76,10 @@ public class Regeneration {
         DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
         RSoundSchemes.init();
         TriggerManager.init();
+
+        if(ModList.get().isLoaded("tardis")){
+            TardisMod.tardis();
+        }
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

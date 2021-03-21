@@ -28,7 +28,7 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     boolean glowing();
 
-    RegenStates getCurrentState();
+    RegenStates regenState();
 
     RegenCap.StateManager stateManager();
 
@@ -72,7 +72,7 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     void setPreferredModel(PlayerUtil.SkinType skinType);
 
-    byte[] getNextSkin();
+    byte[] nextSkin();
 
     //Next Skin
     void setNextSkin(byte[] bytes);

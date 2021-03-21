@@ -1,7 +1,6 @@
 package me.suff.mc.regen.common.regen;
 
 import me.suff.mc.regen.common.advancement.TriggerManager;
-import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.IStateManager;
 import me.suff.mc.regen.common.regen.state.RegenStates;
@@ -154,7 +153,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public RegenStates getCurrentState() {
+    public RegenStates regenState() {
         return currentState;
     }
 
@@ -206,7 +205,7 @@ public class RegenCap implements IRegen {
         if (livingEntity != null && livingEntity.level.isClientSide)
             throw new IllegalStateException("Don't sync client -> server");
 
-        areHandsGlowing = getCurrentState().isGraceful() && stateManager.handGlowTimer.getTransition() == RegenStates.Transition.HAND_GLOW_TRIGGER;
+        areHandsGlowing = regenState().isGraceful() && stateManager.handGlowTimer.getTransition() == RegenStates.Transition.HAND_GLOW_TRIGGER;
 
         CompoundNBT nbt = serializeNBT();
         nbt.remove(RConstants.STATE_MANAGER);
@@ -222,7 +221,7 @@ public class RegenCap implements IRegen {
     public CompoundNBT serializeNBT() {
         CompoundNBT compoundNBT = new CompoundNBT();
         compoundNBT.putInt(RConstants.REGENS_LEFT, regens());
-        compoundNBT.putString(RConstants.CURRENT_STATE, getCurrentState().name());
+        compoundNBT.putString(RConstants.CURRENT_STATE, regenState().name());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, updateTicks());
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.get().getRegistryName().toString());
         compoundNBT.putString(RConstants.PREFERENCE, preferredModel().name());
@@ -239,7 +238,7 @@ public class RegenCap implements IRegen {
         }
 
         if (isNextSkinValid()) {
-            compoundNBT.putByteArray("next_" + RConstants.SKIN, getNextSkin());
+            compoundNBT.putByteArray("next_" + RConstants.SKIN, nextSkin());
         }
 
         if (!livingEntity.level.isClientSide) {
@@ -365,7 +364,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public byte[] getNextSkin() {
+    public byte[] nextSkin() {
         return nextSkin;
     }
 
