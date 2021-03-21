@@ -39,6 +39,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -379,6 +380,7 @@ public class IncarnationScreen extends ContainerScreen {
         int textWidth = font.width(text);
 
         float scale = width / (float) textWidth;
+        scale = MathHelper.clamp(scale, 0.0F, 1.0F);
 
         matrix.translate(x, y, 0);
         matrix.scale(scale, scale, scale);
