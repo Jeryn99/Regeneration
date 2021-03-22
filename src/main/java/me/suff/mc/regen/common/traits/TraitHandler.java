@@ -1,9 +1,7 @@
 package me.suff.mc.regen.common.traits;
 
-import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;

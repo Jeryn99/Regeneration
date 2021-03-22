@@ -1,8 +1,6 @@
 package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.IRegen;
-import net.minecraft.util.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 public class TraitBase extends TraitRegistry.AbstractTrait {
     private int color;

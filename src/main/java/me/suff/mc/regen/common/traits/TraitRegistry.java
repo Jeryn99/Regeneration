@@ -27,8 +27,8 @@ public class TraitRegistry {
 
     public static final RegistryObject<AbstractTrait> QUICK = TRAITS.register("quick", (TraitQuick::new));
     public static final RegistryObject<AbstractTrait> BORING = TRAITS.register("boring", () -> new TraitBase(3484199));
-    public static final RegistryObject<AbstractTrait> SMART = TRAITS.register("fast_mine", () -> new TraitBase(3381504));
-    public static final RegistryObject<AbstractTrait> FAST_MINE = TRAITS.register("", () -> new TraitBase(16773073));
+    public static final RegistryObject<AbstractTrait> SMART = TRAITS.register("smart", () -> new TraitBase(3381504));
+    public static final RegistryObject<AbstractTrait> FAST_MINE = TRAITS.register("fast_mine", () -> new TraitBase(16773073));
     public static final RegistryObject<AbstractTrait> KNOCKBACK = TRAITS.register("knockback", () -> new TraitBase(1950417));
     public static final RegistryObject<AbstractTrait> LEAP = TRAITS.register("leap", () -> new TraitBase( 2293580));
     public static final RegistryObject<AbstractTrait> LONG_ARMS = TRAITS.register("long_arms", (TraitLongArms::new));
