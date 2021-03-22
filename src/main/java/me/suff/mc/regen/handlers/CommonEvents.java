@@ -1,10 +1,16 @@
 package me.suff.mc.regen.handlers;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.commands.RegenCommand;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.item.HandItem;
+import me.suff.mc.regen.common.item.TeleportItem;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
@@ -59,10 +65,6 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
 
-import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
 
@@ -94,19 +96,22 @@ public class CommonEvents {
     }
 
     public static boolean canBeGiven(Entity entity) {
-        boolean isLiving = entity instanceof LivingEntity;
+        boolean isLiving = entity instanceof LivingEntity && entity.getType() != EntityType.ARMOR_STAND;
         boolean ignoresConfig = entity.getType() == REntities.TIMELORD.get() || entity.getType() == EntityType.PLAYER;
 
         if (isLiving && ignoresConfig) {
             return true;
         }
-        return RegenConfig.COMMON.mobsHaveRegens.get();
+        else if (isLiving){ //Always make sure the entity is living, because we are explicility casting to LivingEntity later on
+        	return RegenConfig.COMMON.mobsHaveRegens.get();	//Base on the config value
+        }
+        return false;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
         Entity entity = event.getEntity();
-        if (event.getWorld().dimension().location().getPath().contains("gallifrey")) {
+        if (event.getWorld().dimension() == TeleportItem.GALLIFREY) {
 
             if (entity instanceof VillagerEntity && entity.getType() != REntities.TIMELORD.get()) {
                 VillagerEntity villagerEntity = (VillagerEntity) entity;
