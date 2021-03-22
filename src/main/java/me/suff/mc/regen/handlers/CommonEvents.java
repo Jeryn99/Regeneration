@@ -1,6 +1,5 @@
 package me.suff.mc.regen.handlers;
 
-import com.mojang.brigadier.CommandDispatcher;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.commands.RegenCommand;
@@ -16,7 +15,6 @@ import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
-import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -46,6 +44,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -59,7 +58,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -248,9 +246,8 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onServerStart(FMLServerStartingEvent event) {
-        CommandDispatcher< CommandSource > dispatcher = event.getServer().getCommands().getDispatcher();
-        RegenCommand.register(dispatcher);
+    public static void onCommandRegister(RegisterCommandsEvent event) {
+        RegenCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent
