@@ -8,7 +8,7 @@ import net.minecraftforge.common.ForgeMod;
 import java.util.Objects;
 import java.util.UUID;
 
-public class TraitSwimSpeed extends TraitRegistry.AbstractTrait {
+public class TraitSwimSpeed extends AbstractTrait {
 
     public static final UUID SWIM_UUID = UUID.fromString("7dec4b0e-a904-46a9-bc03-b35697cdafdc");
 

@@ -2,7 +2,7 @@ package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.IRegen;
 
-public class TraitBase extends TraitRegistry.AbstractTrait {
+public class TraitBase extends AbstractTrait {
     private int color;
 
     public TraitBase(int color) {

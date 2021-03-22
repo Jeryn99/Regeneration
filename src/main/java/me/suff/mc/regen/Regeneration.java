@@ -1,21 +1,42 @@
 package me.suff.mc.regen;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.entities.TimelordEntity;
-import me.suff.mc.regen.common.objects.*;
+import me.suff.mc.regen.common.objects.RBlocks;
+import me.suff.mc.regen.common.objects.REntities;
+import me.suff.mc.regen.common.objects.RGlobalLoot;
+import me.suff.mc.regen.common.objects.RItems;
+import me.suff.mc.regen.common.objects.RParticles;
+import me.suff.mc.regen.common.objects.RSoundSchemes;
+import me.suff.mc.regen.common.objects.RSounds;
+import me.suff.mc.regen.common.objects.RTiles;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.RegenStorage;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.common.world.biome.surface.RSurfaceBuilder;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.compat.TardisMod;
 import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.data.*;
+import me.suff.mc.regen.data.AdvancementGen;
+import me.suff.mc.regen.data.EnglishLang;
+import me.suff.mc.regen.data.LootGen;
+import me.suff.mc.regen.data.RBlockTags;
+import me.suff.mc.regen.data.RItemTags;
+import me.suff.mc.regen.data.RRecipeGen;
 import me.suff.mc.regen.network.NetworkDispatcher;
-import me.suff.mc.regen.util.*;
+import me.suff.mc.regen.util.ClientUtil;
+import me.suff.mc.regen.util.DownloadSkinsThread;
+import me.suff.mc.regen.util.NBTRecipeIngredient;
+import me.suff.mc.regen.util.PlayerUtil;
+import me.suff.mc.regen.util.RConstants;
 import net.minecraft.data.BiomeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -27,6 +48,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -38,8 +60,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Mod("regen")
 public class Regeneration {
@@ -48,10 +68,25 @@ public class Regeneration {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public Regeneration() {
+    	IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff));
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doCommonStuff);
-        FMLJavaModLoadingContext.get().getModEventBus().register(this);
+        modBus.addListener(this::doCommonStuff);
+        modBus.register(this);
         MinecraftForge.EVENT_BUS.register(this);
+        
+        RSounds.SOUNDS.register(modBus);
+        RItems.ITEMS.register(modBus);
+        REntities.ENTITIES.register(modBus);
+        RBlocks.BLOCK_ITEMS.register(modBus);
+        RBlocks.BLOCKS.register(modBus);
+        RTiles.TILES.register(modBus);
+        RStructures.Structures.STRUCTURES.register(modBus);
+        RStructures.FEATURES.register(modBus);
+        RParticles.TYPES.register(modBus);
+        RGlobalLoot.GLM.register(modBus);
+        RSurfaceBuilder.SurfaceBuilders.SURFACE_BUILDERS.register(modBus);
+        RegenTraitRegistry.TRAITS.register(modBus);
+        
         NetworkDispatcher.init();
         PlayerUtil.setupPotions();
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
@@ -101,21 +136,6 @@ public class Regeneration {
         if(reports) {
             generator.addProvider(new BiomeProvider(generator));
         }
-    }
-
-    @SubscribeEvent
-    public void onRegisterNewRegistries(RegistryEvent.NewRegistry e) {
-        RSounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        REntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RStructures.Structures.STRUCTURES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RStructures.FEATURES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RParticles.TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RGlobalLoot.GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
-        RSurfaceBuilder.SurfaceBuilders.SURFACE_BUILDERS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent

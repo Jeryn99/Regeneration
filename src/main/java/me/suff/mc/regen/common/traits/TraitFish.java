@@ -3,7 +3,7 @@ package me.suff.mc.regen.common.traits;
 import me.suff.mc.regen.common.regen.IRegen;
 import net.minecraft.entity.LivingEntity;
 
-public class TraitFish extends TraitRegistry.AbstractTrait {
+public class TraitFish extends AbstractTrait {
     @Override
     public void apply(IRegen data) {
 

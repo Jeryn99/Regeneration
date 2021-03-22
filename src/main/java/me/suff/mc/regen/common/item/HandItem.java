@@ -1,9 +1,15 @@
 package me.suff.mc.regen.common.item;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.jetbrains.annotations.Nullable;
+
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
-import me.suff.mc.regen.common.traits.TraitRegistry;
+import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenSources;
 import me.suff.mc.regen.util.RegenUtil;
@@ -19,10 +25,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.UUID;
 
 /* Created by Craig on 05/03/2021 */
 public class HandItem extends Item {
@@ -48,12 +50,12 @@ public class HandItem extends Item {
     }
 
     //Trait
-    public static void setTrait(TraitRegistry.AbstractTrait traitBase, ItemStack stack) {
+    public static void setTrait(AbstractTrait traitBase, ItemStack stack) {
         stack.getOrCreateTag().putString("trait", traitBase.getRegistryName().toString());
     }
 
-    public static TraitRegistry.AbstractTrait getTrait(ItemStack stack) {
-        return TraitRegistry.fromID(stack.getOrCreateTag().getString("trait"));
+    public static AbstractTrait getTrait(ItemStack stack) {
+        return RegenTraitRegistry.fromID(stack.getOrCreateTag().getString("trait"));
     }
 
     public static void setEnergy(float energy, ItemStack stack) {

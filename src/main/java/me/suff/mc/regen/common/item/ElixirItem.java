@@ -1,8 +1,13 @@
 package me.suff.mc.regen.common.item;
 
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.RegenCap;
-import me.suff.mc.regen.common.traits.TraitRegistry;
+import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.util.RegenSources;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -18,9 +23,6 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class ElixirItem extends Item {
 
@@ -28,11 +30,11 @@ public class ElixirItem extends Item {
         super(new Item.Properties().setNoRepair().tab(RItems.MAIN).stacksTo(1));
     }
 
-    public static TraitRegistry.AbstractTrait getTrait(ItemStack stack) {
-        return TraitRegistry.fromID(stack.getOrCreateTag().getString("trait"));
+    public static AbstractTrait getTrait(ItemStack stack) {
+        return RegenTraitRegistry.fromID(stack.getOrCreateTag().getString("trait"));
     }
 
-    public static void setTrait(ItemStack stack, TraitRegistry.AbstractTrait iTrait) {
+    public static void setTrait(ItemStack stack, AbstractTrait iTrait) {
         stack.getOrCreateTag().putString("trait", iTrait.getRegistryName().toString());
     }
 
@@ -45,15 +47,15 @@ public class ElixirItem extends Item {
     @Override
     public void fillItemCategory(ItemGroup group, NonNullList< ItemStack > items) {
         if (allowdedIn(group)) {
-            for (TraitRegistry.AbstractTrait trait : TraitRegistry.TRAIT_REGISTRY.get().getValues()) {
-                if (trait.getRegistryName() != TraitRegistry.BORING.get().getRegistryName()) {
+            for (AbstractTrait trait : RegenTraitRegistry.TRAIT_REGISTRY.get().getValues()) {
+                if (trait.getRegistryName() != RegenTraitRegistry.BORING.get().getRegistryName()) {
                     ItemStack stack = new ItemStack(this);
                     setTrait(stack, trait);
                     items.add(stack);
                 }
             }
         }
-        items.removeIf(stack -> getTrait(stack).getRegistryName() == TraitRegistry.BORING.get().getRegistryName());
+        items.removeIf(stack -> getTrait(stack).getRegistryName() == RegenTraitRegistry.BORING.get().getRegistryName());
     }
 
     @Override

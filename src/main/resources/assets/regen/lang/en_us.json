@@ -207,5 +207,8 @@
   "type.regeneration.fiery": "Fiery",
   "type.regeneration.sparkle": "Sparkle",
   "type.regeneration.troughton": "Troughton",
-  "type.regeneration.watcher": "Watcher"
+  "type.regeneration.watcher": "Watcher",
+  "command.regen.set_trait.success":"Set trait for player %s to %s",
+  "command.regen.set_trait.error":"Could not set trait for player %s to %s",
+  "command.regen.set_regen.success":"Set Regenerations for player %s to %s"
 }

@@ -1,11 +1,21 @@
 package me.suff.mc.regen.common.regen;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.IStateManager;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import me.suff.mc.regen.common.traits.TraitRegistry;
+import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SyncMessage;
@@ -33,13 +43,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RegenCap implements IRegen {
 
@@ -65,8 +68,8 @@ public class RegenCap implements IRegen {
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
     private byte[] nextSkin = new byte[0];
-    private TraitRegistry.AbstractTrait currentTrait = TraitRegistry.BORING.get();
-    private TraitRegistry.AbstractTrait nextTrait = TraitRegistry.BORING.get();
+    private AbstractTrait currentTrait = RegenTraitRegistry.BORING.get();
+    private AbstractTrait nextTrait = RegenTraitRegistry.BORING.get();
     private TimelordSound timelordSound = TimelordSound.HUM;
     private Hand handState = Hand.NO_GONE;
 
@@ -270,8 +273,8 @@ public class RegenCap implements IRegen {
             setHandState(Hand.valueOf(nbt.getString(RConstants.HAND_STATE)));
         }
         areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
-        setTrait(TraitRegistry.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
-        setNextTrait(TraitRegistry.fromID(nbt.getString(RConstants.NEXT_TRAIT)));
+        setTrait(RegenTraitRegistry.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
+        setNextTrait(RegenTraitRegistry.fromID(nbt.getString(RConstants.NEXT_TRAIT)));
         if (nbt.contains(RConstants.PREFERENCE)) {
             setPreferredModel(PlayerUtil.SkinType.valueOf(nbt.getString(RConstants.PREFERENCE)));
         }
@@ -389,7 +392,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public TraitRegistry.AbstractTrait trait() {
+    public AbstractTrait trait() {
         return currentTrait;
     }
 
@@ -404,17 +407,17 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public void setTrait(TraitRegistry.AbstractTrait trait) {
+    public void setTrait(AbstractTrait trait) {
         this.currentTrait = trait;
     }
 
     @Override
-    public TraitRegistry.AbstractTrait getNextTrait() {
+    public AbstractTrait getNextTrait() {
         return nextTrait;
     }
 
     @Override
-    public void setNextTrait(TraitRegistry.AbstractTrait trait) {
+    public void setNextTrait(AbstractTrait trait) {
         this.nextTrait = trait;
     }
 
@@ -645,7 +648,7 @@ public class RegenCap implements IRegen {
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(regens());
             }
-            setTrait(TraitRegistry.BORING.get());
+            setTrait(RegenTraitRegistry.BORING.get());
             setSkin(new byte[0]);
             syncToClients(null);
         }

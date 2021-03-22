@@ -19,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
-public class TraitRegistry {
+public class RegenTraitRegistry {
 	
 	public static final DeferredRegister<AbstractTrait> TRAITS = DeferredRegister.create(AbstractTrait.class, RConstants.MODID);
     
@@ -48,14 +48,22 @@ public class TraitRegistry {
         if (value != null) {
             return value;
         }
-        return TraitRegistry.BORING.get();
+        return RegenTraitRegistry.BORING.get();
+    }
+    
+    public static AbstractTrait fromID(ResourceLocation location) {
+        AbstractTrait value = TRAIT_REGISTRY.get().getValue(location);
+        if (value != null) {
+            return value;
+        }
+        return RegenTraitRegistry.BORING.get();
     }
 
 
     public static AbstractTrait getRandomTrait(Random random, boolean isMob) {
         Collection<AbstractTrait> value = TRAIT_REGISTRY.get().getValues();
         ArrayList<AbstractTrait> traits = new ArrayList<>(value);
-        traits.removeIf(trait -> trait.isPlayerOnly() && isMob || trait.getRegistryName().equals(TraitRegistry.BORING.get().getRegistryName()));
+        traits.removeIf(trait -> trait.isPlayerOnly() && isMob || trait.getRegistryName().equals(RegenTraitRegistry.BORING.get().getRegistryName()));
         for (AbstractTrait trait : traits) {
             for (String s : RegenConfig.COMMON.disabledTraits.get()) {
                 if(trait.getRegistryName().toString().contains(s)) {
@@ -66,32 +74,4 @@ public class TraitRegistry {
         int i = random.nextInt(value.size());
         return Iterables.get(value, i);
     }
-
-    //Base
-    public static abstract class AbstractTrait extends ForgeRegistryEntry<AbstractTrait> {
-
-        public abstract void apply(IRegen data);
-
-        public abstract void remove(IRegen data);
-
-        public abstract void tick(IRegen data);
-
-        public TranslationTextComponent translation() {
-            ResourceLocation regName = getRegistryName();
-            return new TranslationTextComponent("trait." + regName.getNamespace() + "." + regName.getPath());
-        }
-
-        public TranslationTextComponent description() {
-            ResourceLocation regName = getRegistryName();
-            return new TranslationTextComponent("trait." + regName.getNamespace() + "." + regName.getPath() + ".description");
-        }
-
-        public abstract boolean isPlayerOnly();
-
-        public int color() {
-            return 2293580;
-        }
-
-    }
-
 }

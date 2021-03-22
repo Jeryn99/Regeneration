@@ -8,7 +8,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import java.util.Objects;
 import java.util.UUID;
 
-public class TraitQuick extends TraitRegistry.AbstractTrait {
+public class TraitQuick extends AbstractTrait {
 
     public static final UUID SPRINT_UUID = UUID.fromString("7dec4b0e-a904-46a9-bc03-b35697cdafdc");
 

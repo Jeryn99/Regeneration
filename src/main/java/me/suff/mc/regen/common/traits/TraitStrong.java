@@ -7,7 +7,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import java.util.UUID;
 
-public class TraitStrong extends TraitRegistry.AbstractTrait {
+public class TraitStrong extends AbstractTrait {
 
     public static final UUID STRONG_UUID = UUID.fromString("687d360b-c983-415e-80bb-f34dc2c0b77b");
 

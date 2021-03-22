@@ -8,7 +8,7 @@ import net.minecraftforge.common.ForgeMod;
 
 import java.util.UUID;
 
-public class TraitLongArms extends TraitRegistry.AbstractTrait {
+public class TraitLongArms extends AbstractTrait {
 
     public static final UUID REACH_UUID = UUID.fromString("4a204916-e836-4b7c-b133-0da469f8b9ec");
     @Override

@@ -1,11 +1,16 @@
 package me.suff.mc.regen.common.regen.acting;
 
+import java.util.Iterator;
+import java.util.Random;
+import java.util.UUID;
+
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.block.JarBlock;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.transitions.WatcherTransition;
 import me.suff.mc.regen.common.tiles.JarTile;
-import me.suff.mc.regen.common.traits.TraitRegistry;
+import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SFXMessage;
@@ -26,10 +31,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
-
-import java.util.Iterator;
-import java.util.Random;
-import java.util.UUID;
 
 class CommonActing implements Acting {
 
@@ -164,24 +165,24 @@ class CommonActing implements Acting {
         if (RegenConfig.COMMON.traitsEnabled.get() && cap.getLiving().getType() == EntityType.PLAYER) {
 
             //Reset old Trait
-            TraitRegistry.AbstractTrait old = cap.trait();
+            AbstractTrait old = cap.trait();
             old.remove(cap);
 
             //Get the new Trait
-            TraitRegistry.AbstractTrait next = cap.getNextTrait();
-            if (next.getRegistryName().toString().equals(TraitRegistry.BORING.get().getRegistryName().toString())) {
-                next = TraitRegistry.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof PlayerEntity));
+            AbstractTrait next = cap.getNextTrait();
+            if (next.getRegistryName().toString().equals(RegenTraitRegistry.BORING.get().getRegistryName().toString())) {
+                next = RegenTraitRegistry.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof PlayerEntity));
             }
             next.apply(cap);
 
             //Set new Trait & reset next trait
             cap.setTrait(next);
-            cap.setNextTrait(TraitRegistry.BORING.get());
+            cap.setNextTrait(RegenTraitRegistry.BORING.get());
 
             PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", next.translation().getString()), true);
         } else {
             cap.trait().remove(cap);
-            cap.setTrait(TraitRegistry.BORING.get());
+            cap.setTrait(RegenTraitRegistry.BORING.get());
             cap.trait().apply(cap);
         }
     }

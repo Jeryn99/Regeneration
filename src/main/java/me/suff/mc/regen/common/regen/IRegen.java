@@ -1,16 +1,17 @@
 package me.suff.mc.regen.common.regen;
 
+import javax.annotation.Nullable;
+
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import me.suff.mc.regen.common.traits.TraitRegistry;
+import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.util.PlayerUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import javax.annotation.Nullable;
 
 public interface IRegen extends INBTSerializable< CompoundNBT > {
 
@@ -83,17 +84,17 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     boolean isNextSkinTypeAlex();
 
-    TraitRegistry.AbstractTrait trait();
+    AbstractTrait trait();
 
     boolean traitActive();
 
     void toggleTrait();
 
-    void setTrait(TraitRegistry.AbstractTrait trait);
+    void setTrait(AbstractTrait trait);
 
-    TraitRegistry.AbstractTrait getNextTrait();
+    AbstractTrait getNextTrait();
 
-    void setNextTrait(TraitRegistry.AbstractTrait trait);
+    void setNextTrait(AbstractTrait trait);
 
     TimelordSound getTimelordSound();
 
