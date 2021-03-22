@@ -1,10 +1,15 @@
 package me.suff.mc.regen.data;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import me.suff.mc.regen.common.advancement.BaseTrigger;
 import me.suff.mc.regen.common.advancement.TriggerManager;
-import me.suff.mc.regen.common.item.TeleportItem;
 import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.util.RConstants;
@@ -21,11 +26,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AdvancementGen implements IDataProvider {
 
@@ -57,7 +57,7 @@ public class AdvancementGen implements IDataProvider {
         Advancement cutHand = this.createAdvancement("hand_cut", new ItemStack(RItems.HAND.get()), new BaseTrigger.Instance(TriggerManager.HAND_CUT.getId()), changeRefuse);
         this.createAdvancement("zero_room", new ItemStack(RBlocks.ZERO_ROUNDEL.get()), new BaseTrigger.Instance(TriggerManager.ZERO_ROOM.getId()), cutHand);
 
-        Advancement gallifrey = this.createAdvancement("gallifrey", new ItemStack(RBlocks.AZBANTIUM.get()), ChangeDimensionTrigger.Instance.changedDimensionTo(TeleportItem.GALLIFREY), watchIsMe, FrameType.CHALLENGE);
+        Advancement gallifrey = this.createAdvancement("gallifrey", new ItemStack(RBlocks.AZBANTIUM.get()), ChangeDimensionTrigger.Instance.changedDimensionTo(RConstants.GALLIFREY), watchIsMe, FrameType.CHALLENGE);
         Advancement trade = this.createAdvancement("timelord_trade", new ItemStack(RItems.SPAWN_ITEM.get()), new BaseTrigger.Instance(TriggerManager.TIMELORD_TRADE.getId()), gallifrey);
         Advancement guard = this.createAdvancement("guard", new ItemStack(RItems.GUARD_HELMET.get()), InventoryChangeTrigger.Instance.hasItems(() -> RItems.GUARD_HELMET.get(), () -> RItems.GUARD_CHEST.get(), () -> RItems.GUARD_FEET.get(), () -> RItems.GUARD_LEGS.get()), trade);
         this.createAdvancement("gallifreyan_weapon", new ItemStack(RItems.PISTOL.get()), InventoryChangeTrigger.Instance.hasItems(() -> RItems.PISTOL.get(), () -> RItems.RIFLE.get()), guard);

@@ -1,6 +1,15 @@
 package me.suff.mc.regen.util;
 
+import static me.suff.mc.regen.common.item.FobWatchItem.getEngrave;
+import static me.suff.mc.regen.common.item.FobWatchItem.getOpen;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
+
 import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.client.rendering.JarParticle;
 import me.suff.mc.regen.client.rendering.JarTileRender;
@@ -15,8 +24,11 @@ import me.suff.mc.regen.client.sound.SoundReverb;
 import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.item.SpawnItem;
-import me.suff.mc.regen.common.item.TeleportItem;
-import me.suff.mc.regen.common.objects.*;
+import me.suff.mc.regen.common.objects.RBlocks;
+import me.suff.mc.regen.common.objects.REntities;
+import me.suff.mc.regen.common.objects.RItems;
+import me.suff.mc.regen.common.objects.RParticles;
+import me.suff.mc.regen.common.objects.RTiles;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.sound.MovingSound;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
@@ -26,7 +38,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.toasts.SystemToast;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldVertexBufferUploader;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
@@ -50,14 +66,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Supplier;
-
-import static me.suff.mc.regen.common.item.FobWatchItem.getEngrave;
-import static me.suff.mc.regen.common.item.FobWatchItem.getOpen;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientUtil {
@@ -229,7 +237,7 @@ public class ClientUtil {
 
     public static void renderSky(MatrixStack matrixStackIn) {
         if(Minecraft.getInstance().level == null || matrixStackIn == null) return;
-        if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension()== TeleportItem.GALLIFREY) {
+        if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension()== RConstants.GALLIFREY) {
             float scale = 30.0F;
             BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
             matrixStackIn.pushPose();

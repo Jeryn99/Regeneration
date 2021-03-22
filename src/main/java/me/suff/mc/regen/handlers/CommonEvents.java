@@ -10,7 +10,6 @@ import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.commands.RegenCommand;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.item.HandItem;
-import me.suff.mc.regen.common.item.TeleportItem;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
@@ -111,7 +110,7 @@ public class CommonEvents {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
         Entity entity = event.getEntity();
-        if (event.getWorld().dimension() == TeleportItem.GALLIFREY) {
+        if (event.getWorld().dimension() == RConstants.GALLIFREY) {
 
             if (entity instanceof VillagerEntity && entity.getType() != REntities.TIMELORD.get()) {
                 VillagerEntity villagerEntity = (VillagerEntity) entity;
