@@ -18,6 +18,7 @@ import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -41,7 +42,7 @@ public class SetRegensCommand implements Command<CommandSource> {
     	TextComponent entityText = RTextHelper.getEntityTextObject(context.getSource().getLevel(), entity.getUUID());
     	//Need a special case Armor Stands, for some reason they are classified as LivingEntities...
     	if (entity instanceof LivingEntity && entity.getType() != EntityType.ARMOR_STAND && entity != null) {
-    		if (RegenConfig.COMMON.mobsHaveRegens.get()) {//If the config option allows mobs to have regens, continue
+    		if (RegenConfig.COMMON.mobsHaveRegens.get() || entity instanceof ServerPlayerEntity) {//If the config option allows mobs to have regens, continue
     			LivingEntity ent = (LivingEntity)entity;
                 RegenCap.get(ent).ifPresent((cap) -> cap.setRegens(amount));
                 context.getSource().sendSuccess(new TranslationTextComponent("command.regen.set_regen.success", entityText, amount), false);

@@ -20,7 +20,7 @@ public class RegenTraitRegistry {
 	
 	public static final DeferredRegister<AbstractTrait> TRAITS = DeferredRegister.create(AbstractTrait.class, RConstants.MODID);
     
-	public static Supplier<IForgeRegistry<AbstractTrait>> TRAIT_REGISTRY = TRAITS.makeRegistry("trait", () -> new RegistryBuilder<AbstractTrait>().setMaxID(Integer.MAX_VALUE - 1));
+	public static Supplier<IForgeRegistry<AbstractTrait>> TRAIT_REGISTRY = TRAITS.makeRegistry("regeneration_traits", () -> new RegistryBuilder<AbstractTrait>().setMaxID(Integer.MAX_VALUE - 1));
 
     public static final RegistryObject<AbstractTrait> QUICK = TRAITS.register("quick", (TraitQuick::new));
     public static final RegistryObject<AbstractTrait> BORING = TRAITS.register("boring", () -> new TraitBase(3484199));
