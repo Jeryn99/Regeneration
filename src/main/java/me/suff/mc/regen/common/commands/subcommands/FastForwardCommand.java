@@ -28,7 +28,7 @@ public class FastForwardCommand implements Command< CommandSource > {
         CommandSource source = context.getSource();
 
         RegenCap.get(source.getPlayerOrException()).ifPresent((cap) -> {
-            if (cap.getCurrentState() != RegenStates.ALIVE) {
+            if (cap.regenState() != RegenStates.ALIVE) {
                 cap.stateManager().fastForward();
                 try {
                     NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveSkinPlayerMessage(source.getPlayerOrException().getUUID()));

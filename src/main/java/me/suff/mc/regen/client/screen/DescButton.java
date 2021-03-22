@@ -7,9 +7,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 
-import net.minecraft.client.gui.widget.button.Button.IPressable;
-import net.minecraft.client.gui.widget.button.Button.ITooltip;
-
 public class DescButton extends Button {
 
     private ArrayList< IReorderingProcessor > description = null;
@@ -26,11 +23,14 @@ public class DescButton extends Button {
         return description;
     }
 
-    public void setDescription(TranslationTextComponent[] description) {
+    public DescButton setDescription(String[] description) {
         ArrayList< IReorderingProcessor > reorderingProcessors = new ArrayList<>();
-        for (TranslationTextComponent textComponent : description) {
-            reorderingProcessors.add(textComponent.getVisualOrderText());
+        for (String textComponent : description) {
+            reorderingProcessors.add(new TranslationTextComponent(textComponent).getVisualOrderText());
         }
         this.description = reorderingProcessors;
+        return this;
     }
+
+
 }

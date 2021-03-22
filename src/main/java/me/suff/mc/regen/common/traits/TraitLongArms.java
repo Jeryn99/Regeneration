@@ -1,21 +1,16 @@
 package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.IRegen;
-import me.suff.mc.regen.util.RConstants;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeMod;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class TraitLongArms extends Traits.ITrait {
+public class TraitLongArms extends AbstractTrait {
 
     public static final UUID REACH_UUID = UUID.fromString("4a204916-e836-4b7c-b133-0da469f8b9ec");
-    private static final ResourceLocation LOCATION = new ResourceLocation(RConstants.MODID, "long_arms");
-
     @Override
     public void apply(IRegen data) {
         LivingEntity living = data.getLiving();
@@ -40,13 +35,6 @@ public class TraitLongArms extends Traits.ITrait {
     @Override
     public boolean isPlayerOnly() {
         return true;
-    }
-
-
-    @Nullable
-    @Override
-    public ResourceLocation getRegistryName() {
-        return LOCATION;
     }
 
     @Override

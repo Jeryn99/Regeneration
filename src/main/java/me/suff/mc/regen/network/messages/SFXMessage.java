@@ -31,7 +31,7 @@ public class SFXMessage {
         Minecraft.getInstance().submitAsync(() -> {
             PlayerEntity player = Minecraft.getInstance().level.getPlayerByUUID(message.playerUUID);
             if (player != null) {
-                RegenCap.get(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.getCurrentState().equals(RegenStates.REGENERATING), 1.0F));
+                RegenCap.get(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.regenState().equals(RegenStates.REGENERATING), 1.0F));
             }
         });
         ctx.get().setPacketHandled(true);

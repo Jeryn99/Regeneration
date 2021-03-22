@@ -1,17 +1,13 @@
 package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.IRegen;
-import me.suff.mc.regen.util.RConstants;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.util.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.UUID;
 
-public class TraitStrong extends Traits.ITrait {
+public class TraitStrong extends AbstractTrait {
 
     public static final UUID STRONG_UUID = UUID.fromString("687d360b-c983-415e-80bb-f34dc2c0b77b");
 
@@ -37,12 +33,6 @@ public class TraitStrong extends Traits.ITrait {
     @Override
     public boolean isPlayerOnly() {
         return false;
-    }
-
-    @Nullable
-    @Override
-    public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RConstants.MODID, "strong");
     }
 
     @Override

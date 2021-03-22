@@ -37,7 +37,7 @@ public class WatcherEntity extends MobEntity {
         if (getTarget() == null) {
             for (PlayerEntity worldPlayer : level.players()) {
                 RegenCap.get(worldPlayer).ifPresent(iRegen -> {
-                    if (iRegen.getCurrentState().isGraceful() && iRegen.transitionType() == TransitionTypes.WATCHER) {
+                    if (iRegen.regenState().isGraceful() && iRegen.transitionType() == TransitionTypes.WATCHER) {
                         setTarget(worldPlayer);
                     }
                 });
@@ -48,11 +48,11 @@ public class WatcherEntity extends MobEntity {
             }
         } else {
             RegenCap.get(getTarget()).ifPresent(iRegen -> {
-                if (iRegen.transitionType() != TransitionTypes.WATCHER || iRegen.getCurrentState() == RegenStates.POST || iRegen.getCurrentState() == RegenStates.ALIVE || getTarget().level.dimension() != level.dimension()) {
+                if (iRegen.transitionType() != TransitionTypes.WATCHER || iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.ALIVE || getTarget().level.dimension() != level.dimension()) {
                     remove();
                 } else {
 
-                    if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+                    if (iRegen.regenState() == RegenStates.REGENERATING) {
                         remove();
                     } else {
                         lookAt(EntityAnchorArgument.Type.EYES, getTarget().position());

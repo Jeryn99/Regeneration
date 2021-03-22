@@ -1,6 +1,5 @@
 package me.suff.mc.regen.handlers;
 
-import com.mojang.brigadier.CommandDispatcher;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.commands.RegenCommand;
@@ -10,14 +9,12 @@ import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
-import me.suff.mc.regen.common.traits.TraitHandler;
-import me.suff.mc.regen.common.traits.Traits;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
-import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -47,6 +44,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -60,7 +58,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -152,7 +149,7 @@ public class CommonEvents {
             Entity trueSource = event.getSource().getEntity();
 
 
-            if (event.getSource().isFire() && iRegen.trait().getRegistryName().toString().equals(Traits.FIRE.get().getRegistryName().toString())) {
+            if (event.getSource().isFire() && iRegen.trait().getRegistryName().toString().equals(RegenTraitRegistry.FIRE.get().getRegistryName().toString())) {
                 event.setCanceled(true);
                 event.setAmount(0.0F);
                 return;
@@ -171,7 +168,7 @@ public class CommonEvents {
             iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
 
             //Stop falling for leap trait
-            if (iRegen.trait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
+            if (iRegen.trait().getRegistryName().toString().equals(RegenTraitRegistry.LEAP.get().getRegistryName().toString())) {
                 if (event.getSource() == DamageSource.FALL) {
                     event.setCanceled(true);
                     return;
@@ -179,13 +176,13 @@ public class CommonEvents {
             }
 
             //Handle Post
-            if (iRegen.getCurrentState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
+            if (iRegen.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
                 event.setAmount(1.5F);
                 PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.reduced_dmg"), true);
             }
 
             //Handle Death
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.getCurrentState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
+            if (iRegen.regenState() == RegenStates.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || iRegen.regenState() == RegenStates.REGENERATING && event.getSource().isExplosion()) {
                 event.setCanceled(true);
                 return;
             }
@@ -200,7 +197,7 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onKnockback(LivingKnockBackEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
-        RegenCap.get(livingEntity).ifPresent((data) -> event.setCanceled(data.getCurrentState() == RegenStates.REGENERATING));
+        RegenCap.get(livingEntity).ifPresent((data) -> event.setCanceled(data.regenState() == RegenStates.REGENERATING));
     }
 
 
@@ -249,9 +246,8 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onServerStart(FMLServerStartingEvent event) {
-        CommandDispatcher< CommandSource > dispatcher = event.getServer().getCommands().getDispatcher();
-        RegenCommand.register(dispatcher);
+    public static void onCommandRegister(RegisterCommandsEvent event) {
+        RegenCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent
@@ -259,7 +255,7 @@ public class CommonEvents {
         if (event.getItemStack().getItem() instanceof ToolItem || event.getItemStack().getItem() instanceof SwordItem) {
             PlayerEntity player = event.getPlayer();
             RegenCap.get(player).ifPresent((data) -> {
-                if (data.getCurrentState() == RegenStates.POST && player.isShiftKeyDown() & data.handState() == IRegen.Hand.NO_GONE) {
+                if (data.regenState() == RegenStates.POST && player.isShiftKeyDown() & data.handState() == IRegen.Hand.NO_GONE) {
                     HandItem.createHand(player);
                 }
             });

@@ -25,6 +25,13 @@
   "block.regen.zero_roundel_full": "Zero Roundel (Full)",
   "block.regen.zero_roundel_half": "Zero Roundel (Half)",
   "block.regen.zinc_ore": "Zinc Ore",
+  "block.regen.azbantium":"Azbantium",
+  "button.tooltip.next_skin": "Next Skin",
+  "button.tooltip.open_folder": "Open Local Skin Folder",
+  "button.tooltip.previous_skin": "Previous Skin",
+  "button.tooltip.reset_mojang": "Resets your Skin to Mojang Skin",
+  "button.tooltip.save_skin": "Save Changes",
+  "button.tooltip.upload2mc": "Upload currently selected skin to Minecraft",
   "config.regeneration.absorbtion_level": "Absorbtion Level?",
   "config.regeneration.changemyskin": "Change Skin?",
   "config.regeneration.criticalDamageChance": "Critical Damage Chance",
@@ -91,7 +98,7 @@
   "regen.gui.preferences": "Preferences",
   "regen.gui.previous": "<",
   "regen.gui.primary": "Primary",
-  "regen.gui.remaining_regens.status": "Remaining Regenerations: %s",
+  "regen.gui.remaining_regens.status": "Regenerations: %s",
   "regen.gui.reset_skin": "Reset",
   "regen.gui.save": "Save",
   "regen.gui.secondary": "Secondary",
@@ -201,5 +208,8 @@
   "type.regeneration.fiery": "Fiery",
   "type.regeneration.sparkle": "Sparkle",
   "type.regeneration.troughton": "Troughton",
-  "type.regeneration.watcher": "Watcher"
+  "type.regeneration.watcher": "Watcher",
+  "command.regen.set_trait.success":"Set trait for player %s to %s",
+  "command.regen.set_trait.error":"Could not set trait for player %s to %s",
+  "command.regen.set_regen.success":"Set Regenerations for player %s to %s"
 }

@@ -30,8 +30,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class JarBlock extends DirectionalBlock {
 
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
@@ -130,7 +128,7 @@ public class JarBlock extends DirectionalBlock {
                 } else {
                     if (jarTile.getHand().getItem() == RItems.HAND.get() && jarTile.isValid(JarTile.Action.CREATE)) {
                         RegenCap.get(player).ifPresent(iRegen -> {
-                            if (iRegen.getCurrentState() == RegenStates.ALIVE) {
+                            if (iRegen.regenState() == RegenStates.ALIVE) {
                                 iRegen.addRegens(1);
                                 iRegen.setNextTrait(HandItem.getTrait(jarTile.getHand()));
                                 iRegen.setNextSkin(HandItem.getSkin(jarTile.getHand()));

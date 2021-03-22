@@ -1,12 +1,9 @@
 package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.IRegen;
-import me.suff.mc.regen.util.RConstants;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
-public class TraitFireResistant extends Traits.ITrait {
+public class TraitFireResistant extends AbstractTrait {
     @Override
     public void apply(IRegen data) {
 
@@ -28,12 +25,6 @@ public class TraitFireResistant extends Traits.ITrait {
     @Override
     public boolean isPlayerOnly() {
         return false;
-    }
-
-    @Nullable
-    @Override
-    public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RConstants.MODID, "fire_resistant");
     }
 
     @Override

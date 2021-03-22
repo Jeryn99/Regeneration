@@ -141,6 +141,10 @@ repositories{
     maven {
         url "https://www.cursemaven.com"
     }
+
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
     mavenCentral()
 }
 
@@ -151,6 +155,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
     implementation fg.deobf("curse.maven:configured-457570:3243552")
+    implementation fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:1.16-SNAPSHOT')
 
 }
 

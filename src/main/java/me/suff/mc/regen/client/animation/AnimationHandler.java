@@ -24,12 +24,12 @@ public class AnimationHandler {
 
             type.getRenderer().animate(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
-            if (iRegen.getCurrentState() != RegenStates.REGENERATING && livingEntity.getType() == EntityType.PLAYER) {
+            if (iRegen.regenState() != RegenStates.REGENERATING && livingEntity.getType() == EntityType.PLAYER) {
                 handleArmor(bipedModel, livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             }
 
             if (livingEntity.getType() == EntityType.PLAYER) {
-                if (PlayerUtil.isPlayerAboveZeroGrid(livingEntity) && iRegen.getCurrentState() == RegenStates.POST) {
+                if (PlayerUtil.isPlayerAboveZeroGrid(livingEntity) && iRegen.regenState() == RegenStates.POST) {
                     bipedModel.head.xRot = (float) Math.toRadians(20);
                     bipedModel.head.yRot = (float) Math.toRadians(0);
                     bipedModel.head.zRot = (float) Math.toRadians(0);

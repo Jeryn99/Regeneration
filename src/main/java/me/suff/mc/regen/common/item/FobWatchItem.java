@@ -115,7 +115,7 @@ public class FobWatchItem extends Item {
         } else { // transferring player->watch
             if (!cap.canRegenerate()) return msgUsageFailed(player, "regen.messages.transfer.no_regens", stack);
 
-            if (cap.getCurrentState() != RegenStates.ALIVE) {
+            if (cap.regenState() != RegenStates.ALIVE) {
                 return msgUsageFailed(player, "regen.messages.not_alive", stack);
             }
 

@@ -18,7 +18,7 @@ public class ForceRegenMessage {
 
     public static void handle(ForceRegenMessage message, Supplier< NetworkEvent.Context > ctx) {
         ctx.get().getSender().getServer().submitAsync(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
-            if (cap.getCurrentState() == RegenStates.ALIVE || cap.getCurrentState().isGraceful()) {
+            if (cap.regenState() == RegenStates.ALIVE || cap.regenState().isGraceful()) {
                 if (cap.canRegenerate()) {
                     cap.getLiving().hurt(RegenSources.REGEN_DMG_FORCED, Integer.MAX_VALUE);
                 }

@@ -67,7 +67,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
             LivingEntity livingEntity = (LivingEntity) entitylivingbaseIn;
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
-                if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+                if (iRegen.regenState() == RegenStates.REGENERATING) {
                     double x = iRegen.updateTicks();
                     double p = 109.89010989010987; // see the wiki for the explanation of these "magic" numbers
                     double r = 0.09890109890109888;
@@ -91,7 +91,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     @Override
     public void layer(BipedModel< ? > bipedModel, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 // === Head Cone ===
                 matrix.pushPose();
                 bipedModel.head.translateAndRotate(matrix);
@@ -116,7 +116,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
             }
 
             //Render player overlay
-            if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.getCurrentState() == RegenStates.POST || iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.REGENERATING) {
                 if (entitylivingbaseIn instanceof TimelordEntity) return;
                 float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
                 renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.endPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
@@ -130,7 +130,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     @Override
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 double armShake = livingEntity.getRandom().nextDouble();
                 float armRotY = (float) iRegen.updateTicks() * 1.5F;
                 float armRotZ = (float) iRegen.updateTicks() * 1.5F;

@@ -35,8 +35,8 @@ class ClientActing implements Acting {
     public void onEnterGrace(IRegen cap) {
         if (cap.getLiving().getUUID().equals(Minecraft.getInstance().player.getUUID())) {
             SoundEvent ambientSound = cap.getTimelordSound() == IRegen.TimelordSound.DRUM ? RSounds.DRUM_BEAT.get() : RSounds.GRACE_HUM.get();
-            ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getCurrentState().isGraceful(), 0.2F);
-            ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getCurrentState() != RegenStates.GRACE, 1.5F);
+            ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.regenState().isGraceful(), 0.2F);
+            ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.regenState() != RegenStates.GRACE, 1.5F);
         }
         //TODO - LP - STOP MUSIC PLAYING IN GRACE Minecraft.getInstance().getSoundHandler().stop(null, SoundCategory.MUSIC);
     }
@@ -64,7 +64,7 @@ class ClientActing implements Acting {
 
             if (RegenConfig.CLIENT.changeMySkin.get()) {
                 if (cap.isNextSkinValid()) {
-                    NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(cap.getNextSkin(), cap.isNextSkinTypeAlex()));
+                    NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(cap.nextSkin(), cap.isNextSkinTypeAlex()));
                     return;
                 }
                 Minecraft.getInstance().submitAsync(() -> {
@@ -84,7 +84,7 @@ class ClientActing implements Acting {
         if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
             if (cap.getLiving().getType() == EntityType.PLAYER) {
                 ClientUtil.createToast(new TranslationTextComponent("regen.toast.enter_critical"), new TranslationTextComponent("regen.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
-                ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getCurrentState() != RegenStates.GRACE_CRIT, 1.0F);
+                ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.regenState() != RegenStates.GRACE_CRIT, 1.0F);
             }
         }
     }

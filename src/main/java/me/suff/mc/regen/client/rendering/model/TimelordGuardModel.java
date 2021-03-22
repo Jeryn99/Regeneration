@@ -9,8 +9,6 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-import net.minecraft.client.renderer.entity.model.BipedModel.ArmPose;
-
 public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
     private final ModelRenderer Head;
     private final ModelRenderer Body;
@@ -60,7 +58,7 @@ public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
     @Override
     public void setupAnim(TimelordEntity timelordEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(timelordEntity).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 rightArmPose = ArmPose.EMPTY;
             }
 

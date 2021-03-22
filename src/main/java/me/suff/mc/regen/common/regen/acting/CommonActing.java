@@ -1,11 +1,16 @@
 package me.suff.mc.regen.common.regen.acting;
 
+import java.util.Iterator;
+import java.util.Random;
+import java.util.UUID;
+
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.block.JarBlock;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.transitions.WatcherTransition;
 import me.suff.mc.regen.common.tiles.JarTile;
-import me.suff.mc.regen.common.traits.Traits;
+import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SFXMessage;
@@ -27,10 +32,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-import java.util.Iterator;
-import java.util.Random;
-import java.util.UUID;
-
 class CommonActing implements Acting {
 
     public static final Acting INSTANCE = new CommonActing();
@@ -51,7 +52,7 @@ class CommonActing implements Acting {
         LivingEntity livingEntity = cap.getLiving();
         float stateProgress = (float) cap.stateManager().getStateProgress();
 
-        switch (cap.getCurrentState()) {
+        switch (cap.regenState()) {
             case POST:
                 if (!PlayerUtil.POTIONS.isEmpty()) {
                     if (livingEntity.tickCount % 210 == 0 && !PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
@@ -120,7 +121,7 @@ class CommonActing implements Acting {
             case ALIVE:
                 break;
             default:
-                throw new IllegalStateException("Unknown state " + cap.getCurrentState());
+                throw new IllegalStateException("Unknown state " + cap.regenState());
         }
     }
 
@@ -164,24 +165,24 @@ class CommonActing implements Acting {
         if (RegenConfig.COMMON.traitsEnabled.get() && cap.getLiving().getType() == EntityType.PLAYER) {
 
             //Reset old Trait
-            Traits.ITrait old = cap.trait();
+            AbstractTrait old = cap.trait();
             old.remove(cap);
 
             //Get the new Trait
-            Traits.ITrait next = cap.getNextTrait();
-            if (next.getRegistryName().toString().equals(Traits.BORING.getRegistryName().toString())) {
-                next = Traits.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof PlayerEntity));
+            AbstractTrait next = cap.getNextTrait();
+            if (next.getRegistryName().toString().equals(RegenTraitRegistry.BORING.get().getRegistryName().toString())) {
+                next = RegenTraitRegistry.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof PlayerEntity));
             }
             next.apply(cap);
 
             //Set new Trait & reset next trait
             cap.setTrait(next);
-            cap.setNextTrait(Traits.BORING.get());
+            cap.setNextTrait(RegenTraitRegistry.BORING.get());
 
             PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", next.translation().getString()), true);
         } else {
             cap.trait().remove(cap);
-            cap.setTrait(Traits.BORING.get());
+            cap.setTrait(RegenTraitRegistry.BORING.get());
             cap.trait().apply(cap);
         }
     }

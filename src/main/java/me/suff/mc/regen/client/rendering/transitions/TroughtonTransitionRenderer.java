@@ -55,7 +55,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
 
             float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
 
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
 
                 EntityRenderer< ? super Entity > entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entitylivingbaseIn);
                 PlayerRenderer playerRenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(Minecraft.getInstance().player);
@@ -110,7 +110,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
 
-            if (data.getCurrentState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.TROUGHTON) {
+            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.TROUGHTON) {
 
                 bipedModel.head.xRot = (float) Math.toRadians(-20);
                 bipedModel.head.yRot = (float) Math.toRadians(0);

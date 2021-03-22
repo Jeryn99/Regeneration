@@ -28,7 +28,7 @@ public class SparkleTransitionRenderer implements TransitionRenderer {
         PlayerEntity player = pre.getPlayer();
 
         RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 MatrixStack maxtrix = pre.getMatrixStack();
                 player.yBodyRot = player.yBodyRotO = 0;
                 maxtrix.translate(0, 0.1, 0);
@@ -41,7 +41,7 @@ public class SparkleTransitionRenderer implements TransitionRenderer {
     public void onPlayerRenderPost(RenderPlayerEvent.Post post) {
         PlayerEntity player = post.getPlayer();
         RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 player.yBodyRot = player.yBodyRotO = player.yRot;
             }
         });
@@ -60,7 +60,7 @@ public class SparkleTransitionRenderer implements TransitionRenderer {
     @Override
     public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
                 renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.endPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
                 renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.endPortal(2)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
@@ -71,7 +71,7 @@ public class SparkleTransitionRenderer implements TransitionRenderer {
     @Override
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
-            if (data.getCurrentState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.SPARKLE) {
+            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.SPARKLE) {
                 bipedModel.head.xRot = (float) Math.toRadians(-20);
                 bipedModel.head.yRot = (float) Math.toRadians(0);
                 bipedModel.head.zRot = (float) Math.toRadians(0);

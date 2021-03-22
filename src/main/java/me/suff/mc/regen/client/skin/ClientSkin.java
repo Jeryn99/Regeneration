@@ -42,6 +42,7 @@ public class ClientSkin {
                 FileUtils.cleanDirectory(USER_STEVE);
             } catch (IOException e) {
                 e.printStackTrace();
+                return;
             }
             String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getInstance().getUser().getUuid();
             try {
@@ -51,6 +52,7 @@ public class ClientSkin {
             } catch (IOException e) {
                 Regeneration.LOG.warn("Could not download player skins for {}, Are you a legitimate user? Are you online?", Minecraft.getInstance().getUser().getName());
                 e.printStackTrace();
+                return;
             }
         }
     }

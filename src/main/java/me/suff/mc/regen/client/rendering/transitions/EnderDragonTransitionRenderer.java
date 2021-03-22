@@ -67,7 +67,7 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
 
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             int ticksAnimating = iRegen.updateTicks() / 2;
-            if (ticksAnimating > 0 && iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (ticksAnimating > 0 && iRegen.regenState() == RegenStates.REGENERATING) {
                 float f5 = ((float) ticksAnimating + Minecraft.getInstance().getFrameTime()) / 200.0F;
                 float f7 = Math.min(f5 > 0.8F ? (f5 - 0.8F) / 0.2F : 0.0F, 1.0F);
                 Random random = new Random(432L);
@@ -105,7 +105,7 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
     @Override
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
-            if (iRegen.getCurrentState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
                 float armRotY = (float) iRegen.updateTicks() * 2.5F;
                 float armRotZ = (float) iRegen.updateTicks() * 2.5F;
                 float headRot = (float) iRegen.updateTicks() * 2.5F;

@@ -23,11 +23,10 @@ import java.awt.*;
 
 public class PreferencesScreen extends ContainerScreen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/pref_back.png");
-    private static TransitionTypes SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
-    private static IRegen.TimelordSound SOUND_SCHEME = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
-    private static PlayerUtil.SkinType CHOICES = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
-    private float ROTATION = 0;
+    private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/pref_back.png");
+    private static TransitionTypes transitionType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
+    private static IRegen.TimelordSound soundScheme = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
+    private static PlayerUtil.SkinType skinType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
 
     public PreferencesScreen() {
         super(new BlankContainer(), null, new TranslationTextComponent("Regeneration"));
@@ -46,39 +45,38 @@ public class PreferencesScreen extends ContainerScreen {
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
         final int btnW = 66, btnH = 20;
-        ROTATION = 0;
 
         Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regen.gui.close"), onPress -> Minecraft.getInstance().setScreen(null));
 
-        Button btnScheme = new Button(width / 2 + 50 - 66, cy + 60, btnW * 2, btnH, new TranslationTextComponent("regen.gui.sound_scheme." + SOUND_SCHEME.name().toLowerCase()), button -> {
-            IRegen.TimelordSound newOne = SOUND_SCHEME == IRegen.TimelordSound.DRUM ? IRegen.TimelordSound.HUM : IRegen.TimelordSound.DRUM;
-            SOUND_SCHEME = newOne;
-            button.setMessage(new TranslationTextComponent("regen.gui.sound_scheme." + newOne.name().toLowerCase()));
+        Button btnScheme = new Button(width / 2 + 50 - 66, cy + 60, btnW * 2, btnH, new TranslationTextComponent("regen.gui.sound_scheme." + soundScheme.name().toLowerCase()), button -> {
+            IRegen.TimelordSound newOne = soundScheme == IRegen.TimelordSound.DRUM ? IRegen.TimelordSound.HUM : IRegen.TimelordSound.DRUM;
+            soundScheme = newOne;
+            button.setMessage(new TranslationTextComponent("regen.gui.soundScheme." + newOne.name().toLowerCase()));
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ChangeSoundScheme(newOne));
         });
 
 
-        Button btnRegenType = new Button(width / 2 + 50 - 66, cy + 102, btnW * 2, btnH, SELECTED_TYPE.get().getTranslation(), button -> {
-            int pos = TransitionTypes.getPosition(SELECTED_TYPE) + 1;
+        Button btnRegenType = new Button(width / 2 + 50 - 66, cy + 102, btnW * 2, btnH, transitionType.get().getTranslation(), button -> {
+            int pos = TransitionTypes.getPosition(transitionType) + 1;
 
             if (pos < 0 || pos >= TransitionTypes.TYPES.length) {
                 pos = 0;
             }
-            SELECTED_TYPE = TransitionTypes.TYPES[pos];
-            button.setMessage(SELECTED_TYPE.get().getTranslation());
-            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(SELECTED_TYPE.get()));
+            transitionType = TransitionTypes.TYPES[pos];
+            button.setMessage(transitionType.get().getTranslation());
+            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(transitionType.get()));
         });
 
-        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW * 2, btnH, new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase()), button -> {
-            if (CHOICES.next() != null) {
-                CHOICES = CHOICES.next();
+        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW * 2, btnH, new TranslationTextComponent("regeneration.skin_type." + skinType.name().toLowerCase()), button -> {
+            if (skinType.next() != null) {
+                skinType = skinType.next();
             } else {
-                CHOICES = PlayerUtil.SkinType.ALEX;
+                skinType = PlayerUtil.SkinType.ALEX;
             }
-            button.setMessage(new TranslationTextComponent("regeneration.skin_type." + CHOICES.name().toLowerCase()));
-            PlayerUtil.updateModel(CHOICES);
+            button.setMessage(new TranslationTextComponent("regeneration.skin_type." + skinType.name().toLowerCase()));
+            PlayerUtil.updateModel(skinType);
         });
-        btnRegenType.setMessage(SELECTED_TYPE.get().getTranslation());
+        btnRegenType.setMessage(transitionType.get().getTranslation());
 
         Button btnColor = new Button(width / 2 + 50 - 66, cy + 123, btnW * 2, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
 
@@ -93,12 +91,12 @@ public class PreferencesScreen extends ContainerScreen {
         addButton(btnSkinType);
         addButton(btnScheme);
 
-        SELECTED_TYPE = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
+        transitionType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     }
 
     @Override
     protected void renderBg(MatrixStack matrixStack, float partialTicks, int x, int y) {
-        Minecraft.getInstance().getTextureManager().bind(BACKGROUND);
+        Minecraft.getInstance().getTextureManager().bind(screenBackground);
         IRegen data = RegenCap.get(Minecraft.getInstance().player).orElseGet(null);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int cx = (width - imageWidth) / 2;
@@ -134,10 +132,6 @@ public class PreferencesScreen extends ContainerScreen {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        ROTATION++;
-        if (ROTATION > 360) {
-            ROTATION = 0;
-        }
     }
 
 }

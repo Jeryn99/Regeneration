@@ -44,7 +44,6 @@ public class RegenConfig {
             downloadPreviousSkins = builder.comment("Toggle whether the mod downloads your past skins from NameMC").translation("config.regeneration.downloadPreviousSkins").define("downloadPastSkins", true);
             downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
             builder.pop();
-
         }
 
     }
