@@ -3,12 +3,14 @@ package me.suff.mc.regen.client.rendering.model.armor;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.util.ClientUtil;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.util.math.MathHelper;
 
 public class RobesModel extends BipedModel< LivingEntity > implements LivingArmor {
     private final ModelRenderer Body;
@@ -104,6 +106,7 @@ public class RobesModel extends BipedModel< LivingEntity > implements LivingArmo
             Body.render(matrixStack, buffer, packedLight, packedOverlay);
             mainArmRight.render(matrixStack, buffer, packedLight, packedOverlay);
             mainArmLeft.render(matrixStack, buffer, packedLight, packedOverlay);
+            capeBob(this.Cape, livingEntity.tickCount);
             Cape.render(matrixStack, buffer, packedLight, packedOverlay);
         }
         if (slot == EquipmentSlotType.LEGS || slot == EquipmentSlotType.FEET) {
@@ -143,5 +146,9 @@ public class RobesModel extends BipedModel< LivingEntity > implements LivingArmo
     @Override
     public void setLiving(LivingEntity entity) {
         this.livingEntity = entity;
+    }
+
+    public static void capeBob(ModelRenderer p_239101_0_, float p_239101_2_) {
+       //p_239101_0_.xRot += MathHelper.sin(p_239101_2_ * 0.03F) * 0.01F;
     }
 }

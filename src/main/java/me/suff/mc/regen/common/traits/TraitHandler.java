@@ -32,6 +32,7 @@ public class TraitHandler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         RegenCap.get(event.player).ifPresent(iRegen -> {
+
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.WATER_STRIDE.get()) {
                 World world = event.player.level;
                 int x = MathHelper.floor(event.player.position().x);
@@ -42,14 +43,28 @@ public class TraitHandler {
                     event.player.setDeltaMovement(new Vector3d(delta.x, 0, delta.z));
                 }
             }
+
+            if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.PHOTOSYNTHETIC.get()) {
+                //check if day
+                if (event.player.level.isDay() && !event.player.level.isRaining()) {
+                    //if day, check if its time to do photosynthetic ability
+                    if (event.player.tickCount % 200 == 0) {
+                        //if the player can see the sky
+                        if (event.player.level.canSeeSky(event.player.blockPosition())) {
+                            event.player.getFoodData().eat(1, 0.25f);
+                        }
+                    }
+                }
+            }
         });
+
     }
 
     @SubscribeEvent
     public static void onHurt(LivingHurtEvent event) {
         LivingEntity living = event.getEntityLiving();
         RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
-            if (iRegen.traitActive() && iRegen.trait().getRegistryName().toString().equals(RegenTraitRegistry.ENDER_HURT.get().getRegistryName().toString())) {
+            if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.ENDER_HURT.get()) {
                 for (int i = 0; i < 16; ++i) {
                     double d3 = living.getX() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
                     double d4 = MathHelper.clamp(living.getY() + (double) (living.getRandom().nextInt(16) - 8), 0.0D, (double) (living.level.getHeight() - 1));

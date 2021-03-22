@@ -157,6 +157,7 @@ public class CommonSkin {
     }
 
     public static boolean internalSkinsDownload() {
+        if(DownloadSkinsThread.forceStop) return false;
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return false;
 
         File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
@@ -173,6 +174,7 @@ public class CommonSkin {
                     return true;
                 } catch (IOException exception) {
                     exception.printStackTrace();
+                    DownloadSkinsThread.forceStop = true;
                     return false;
                 }
             }
@@ -195,6 +197,7 @@ public class CommonSkin {
     }
 
     public static void unzipSkinPack(String url) throws IOException {
+        if(DownloadSkinsThread.forceStop) return;
         File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
         Regeneration.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
         FileUtils.copyURLToFile(new URL(url), tempZip);
@@ -252,6 +255,7 @@ public class CommonSkin {
     }
 
     public static void downloadTrendingSkins() throws IOException {
+        if(DownloadSkinsThread.forceStop) return;
         if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
         File trendingDir = TRENDING_ALEX;
         if (!trendingDir.exists()) {
