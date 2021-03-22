@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.mojang.authlib.GameProfile;
 
 import me.suff.mc.regen.common.traits.AbstractTrait;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -40,6 +41,12 @@ public class RTextHelper {
         GameProfile profileByUUID = world.getServer().getProfileCache().get(id);
         String playerName = profileByUUID != null ? profileByUUID.getName() : "OFFLINE Player";
         return createTextComponentWithTip(playerName, id.toString());
+    }
+    
+    public static TextComponent getEntityTextObject(ServerWorld world, UUID id) {
+        Entity entity = world.getEntity(id);
+        String entityName = entity != null ? entity.getName().getString() : "Null Entity";
+        return createTextComponentWithTip(entityName, id.toString());
     }
     
     public static String formatTraitName(AbstractTrait trait) {

@@ -213,5 +213,7 @@
   "type.regeneration.watcher": "Watcher",
   "command.regen.set_trait.success":"Set trait for player %s to %s",
   "command.regen.set_trait.error":"Could not set trait for player %s to %s",
-  "command.regen.set_regen.success":"Set Regenerations for player %s to %s"
+  "command.regen.set_regen.success":"Set Regenerations for entity %s to %s",
+  "command.regen.set_regen.invalid_entity":"Could not set %s Regenerations for %s, it is not a Living Entity",
+  "command.regen.set_regen.config_off":"Could not set Regenerations for %s, the Config Option %s is set to %s"
 }
