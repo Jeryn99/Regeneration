@@ -1,8 +1,11 @@
 package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.BoatEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -31,7 +34,8 @@ public class TraitHandler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         RegenCap.get(event.player).ifPresent(iRegen -> {
-            if (iRegen.traitActive() && iRegen.trait().getRegistryName().toString().equals(RegenTraitRegistry.WATER_STRIDE.get().getRegistryName().toString())) {
+            String playerTrait = iRegen.trait().getRegistryName().toString();
+            if (iRegen.traitActive() && playerTrait.equals(RegenTraitRegistry.WATER_STRIDE.get().getRegistryName().toString())) {
                 World world = event.player.level;
                 int x = MathHelper.floor(event.player.position().x);
                 int y = MathHelper.floor(event.player.getBoundingBox().minY);
@@ -39,6 +43,18 @@ public class TraitHandler {
                 if (world.getBlockState(new BlockPos(x, y - 1, z)).getMaterial().isLiquid()) {
                     Vector3d delta = event.player.getDeltaMovement();
                     event.player.setDeltaMovement(new Vector3d(delta.x, 0, delta.z));
+                }
+            }
+            else if (playerTrait.equals(RegenTraitRegistry.PHOTOSYNTHETIC.get().getRegistryName().toString())) {
+                //check if day
+                if (event.player.level.isDay() && !event.player.level.isRaining()) {
+                    //if day, check if its time to do photosynthetic ability
+                    if (event.player.tickCount % 200 == 0) {
+                        //if the player can see the sky
+                        if (event.player.level.canSeeSky(event.player.blockPosition())) {
+                            event.player.getFoodData().eat(1,0.25f);
+                        }
+                    }
                 }
             }
         });
