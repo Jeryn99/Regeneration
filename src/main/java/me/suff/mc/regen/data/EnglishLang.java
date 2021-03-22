@@ -278,6 +278,9 @@ public class EnglishLang extends LanguageProvider {
 
         add(RegenTraitRegistry.WATER_STRIDE.get().translation().getKey(), "Water Stride");
         add(RegenTraitRegistry.WATER_STRIDE.get().description().getKey(), "Walk on water!");
+
+        add(RegenTraitRegistry.PHOTOSYNTHETIC.get().translation().getKey(), "Photosynthetic");
+        add(RegenTraitRegistry.PHOTOSYNTHETIC.get().description().getKey(), "The sun energizes you!");
     }
 
     public String grammerNazi(String text) {

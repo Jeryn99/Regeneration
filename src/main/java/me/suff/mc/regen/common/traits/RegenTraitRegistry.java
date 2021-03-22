@@ -8,14 +8,11 @@ import java.util.function.Supplier;
 
 import com.google.common.collect.Iterables;
 
-import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
@@ -38,6 +35,7 @@ public class RegenTraitRegistry {
     public static final RegistryObject<AbstractTrait> FIRE = TRAITS.register("fire_resistant", (TraitFireResistant::new));
     public static final RegistryObject<AbstractTrait> ENDER_HURT = TRAITS.register("ender_hurt", () -> new TraitBase(Color.MAGENTA.getRGB()));
     public static final RegistryObject<AbstractTrait> WATER_STRIDE = TRAITS.register("water_stride", () -> new TraitBase(Color.WHITE.getRGB()));
+    public static final RegistryObject<AbstractTrait> PHOTOSYNTHETIC = TRAITS.register("photosynthetic", () -> new TraitBase(Color.green.getRGB()));
 
 
     //Create Registry

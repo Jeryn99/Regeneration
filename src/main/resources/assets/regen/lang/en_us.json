@@ -203,6 +203,8 @@
   "trait.regen.swim_quick.description": "Swim Faster!",
   "trait.regen.water_stride": "Water Stride",
   "trait.regen.water_stride.description": "Walk on water!",
+  "trait.regen.photosynthetic": "Photosynthetic",
+  "trait.regen.photosynthetic.description": "The sun energizes you!",
   "type.regeneration.blaze": "Blaze",
   "type.regeneration.ender_dragon": "Ender-Dragon",
   "type.regeneration.fiery": "Fiery",
