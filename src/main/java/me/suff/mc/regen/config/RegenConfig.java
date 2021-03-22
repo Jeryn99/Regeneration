@@ -86,7 +86,7 @@ public class RegenConfig {
             fieryRegen = builder.comment("Spawn fire during fiery regeneration").translation("config.regeneration.fiery_regen").define("fieryRegen", true);
             regenFireImmune = builder.comment("Players are immune to fire damage while regenerating").translation("config.regeneration.regeneration_fire_immunity").define("fireImmunity", true);
             genFobLoot = builder.comment("Toggle whether fob watches generate in some chest loot tables").translation("config.regeneration.genFobLoot").define("genFobLoot", true);
-            mobsHaveRegens = builder.comment("Toggle whether mobs have regenerations. In most cases, requires a game restart.").translation("config.regeneration.mobsHaveRegens").define("mobsHaveRegens", false);
+            mobsHaveRegens = builder.comment("Toggle whether mobs have regenerations. In most cases, requires a game restart.").translation("config.regeneration.mobsHaveRegens").define("mobsHaveRegens", true);
             sendRegenDeathMessages = builder.comment("Sends a message to chat to say that a player is regenerating, and the reason for it").translation("config.regeneration.regen_messages").define("sendRegenDeathMessages", true);
             skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './', the path MUST NOT end in /").translation("config.regeneration.skindir").define("skinDir", ".");
 

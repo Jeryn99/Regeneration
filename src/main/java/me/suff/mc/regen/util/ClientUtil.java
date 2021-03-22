@@ -1,7 +1,7 @@
 package me.suff.mc.regen.util;
 
 import static me.suff.mc.regen.common.item.FobWatchItem.getEngrave;
-import static me.suff.mc.regen.common.item.FobWatchItem.getOpen;
+import static me.suff.mc.regen.common.item.FobWatchItem.isOpen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -165,7 +165,7 @@ public class ClientUtil {
     private static void itemPredicates() {
         ItemModelsProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
             boolean isGold = getEngrave(stack);
-            boolean isOpen = getOpen(stack);
+            boolean isOpen = isOpen(stack);
             if (isOpen && isGold) {
                 return 0.2F;
             }

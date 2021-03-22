@@ -32,9 +32,7 @@ public class SetRegensCommand implements Command<CommandSource> {
     }
     
     private static int setRegenForMultipleEntities(CommandContext<CommandSource> context, Collection<? extends Entity> collection, int amount) {
-    	collection.forEach(target -> {
-    		setRegenForSingleEntity(context, target, amount);
-    	});
+    	collection.forEach(target -> setRegenForSingleEntity(context, target, amount));
     	return Command.SINGLE_SUCCESS;
     }
     

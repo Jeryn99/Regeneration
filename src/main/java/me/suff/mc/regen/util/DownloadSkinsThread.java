@@ -38,10 +38,18 @@ public class DownloadSkinsThread extends Thread {
             }
             CommonSkin.downloadTrendingSkins();
             CommonSkin.downloadTimelord();
-            if (isClient) {
-                DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientSkin::downloadPreviousSkins);
-            }
             internalSkinsDownload();
+
+
+            if (isClient) {
+                DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+                    try {
+                        ClientSkin.downloadPreviousSkins();
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
+                });
+            }
 
             if(forceStop){
                 stop();;

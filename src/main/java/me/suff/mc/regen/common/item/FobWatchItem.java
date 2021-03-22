@@ -49,7 +49,7 @@ public class FobWatchItem extends Item {
         getStackTag(stack).putBoolean("is_gold", isGold);
     }
 
-    public static boolean getOpen(ItemStack stack) {
+    public static boolean isOpen(ItemStack stack) {
         return getStackTag(stack).getBoolean("is_open");
     }
 
@@ -67,7 +67,7 @@ public class FobWatchItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (stack.getItem() instanceof FobWatchItem) {
-            if (getOpen(stack)) {
+            if (isOpen(stack)) {
                 if (entityIn.tickCount % 600 == 0) {
                     setOpen(stack, false);
                 }
