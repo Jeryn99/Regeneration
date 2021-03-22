@@ -2,6 +2,7 @@ package me.suff.mc.regen.client.skin;
 
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.config.RegenConfig;
+import me.suff.mc.regen.util.DownloadSkinsThread;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
@@ -19,6 +20,7 @@ public class ClientSkin {
     public static File USER_STEVE = new File(SKIN_DIRECTORY_STEVE + "/the_past");
 
     public static void downloadPreviousSkins() {
+        if(DownloadSkinsThread.forceStop) return;
         if (!RegenConfig.CLIENT.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
         Regeneration.LOG.warn("Refreshing users past skins for {}", Minecraft.getInstance().getUser().getName());
 
@@ -52,7 +54,7 @@ public class ClientSkin {
             } catch (IOException e) {
                 Regeneration.LOG.warn("Could not download player skins for {}, Are you a legitimate user? Are you online?", Minecraft.getInstance().getUser().getName());
                 e.printStackTrace();
-                return;
+                DownloadSkinsThread.forceStop = true;
             }
         }
     }

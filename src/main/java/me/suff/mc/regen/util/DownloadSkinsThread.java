@@ -19,6 +19,8 @@ public class DownloadSkinsThread extends Thread {
         this.isClient = isClient;
     }
 
+    public static boolean forceStop = false;
+
     public static void setup(boolean isClient) {
         DownloadSkinsThread thread = new DownloadSkinsThread(isClient);
         thread.setDaemon(true);
@@ -40,9 +42,16 @@ public class DownloadSkinsThread extends Thread {
                 DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientSkin::downloadPreviousSkins);
             }
             internalSkinsDownload();
+
+            if(forceStop){
+                stop();;
+                forceStop = false;
+            }
+
         } catch (IOException exception) {
             exception.printStackTrace();
             stop();
+            forceStop = false;
         }
     }
 

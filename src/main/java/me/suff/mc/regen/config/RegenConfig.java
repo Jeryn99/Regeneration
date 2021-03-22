@@ -18,6 +18,7 @@ public class RegenConfig {
         COMMON_SPEC = specPair.getRight();
         COMMON = specPair.getLeft();
 
+
         Pair< Client, ForgeConfigSpec > specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
         CLIENT_SPEC = specClientPair.getRight();
         CLIENT = specClientPair.getLeft();
