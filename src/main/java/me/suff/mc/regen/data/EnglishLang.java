@@ -63,6 +63,7 @@ public class EnglishLang extends LanguageProvider {
         add(RBlocks.BIO_CONTAINER.get(), "Bio-Container");
         add(RBlocks.ZERO_ROUNDEL.get(), "Zero Roundel (Half)");
         add(RBlocks.ZERO_ROOM_FULL.get(), "Zero Roundel (Full)");
+        add(RBlocks.AZBANTIUM.get(), "Azbantium");
 
         //Item Group
         add("itemGroup.regen", "Regeneration");

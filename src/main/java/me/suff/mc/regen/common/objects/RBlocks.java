@@ -50,9 +50,9 @@ public class RBlocks {
      * @return
      */
     private static <T extends Block> RegistryObject<T> register(String id, Supplier<T> blockSupplier, ItemGroup itemGroup){
-    	RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
-    	RItems.ITEMS.register(id, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(itemGroup)));
-    	return registryObject;
+        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
+        RItems.ITEMS.register(id, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(itemGroup)));
+        return registryObject;
     }
     
     /**
@@ -64,8 +64,8 @@ public class RBlocks {
      * @return
      */
     private static <T extends Block> RegistryObject<T> registerBlockOnly(String id, Supplier<T> blockSupplier){
-    	RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
-    	return registryObject;
+        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
+        return registryObject;
     }
     
     /**
@@ -76,9 +76,9 @@ public class RBlocks {
      * @return
      */
     private static <T extends Block> RegistryObject<T> register(String id, Supplier<T> blockSupplier){
-    	RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
-    	RItems.ITEMS.register(id, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(MAIN)));
-    	return registryObject;
+        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
+        RItems.ITEMS.register(id, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(MAIN)));
+        return registryObject;
     }
     
 

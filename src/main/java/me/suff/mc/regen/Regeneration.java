@@ -68,7 +68,7 @@ public class Regeneration {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public Regeneration() {
-    	IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff));
         modBus.addListener(this::doCommonStuff);
         modBus.register(this);
