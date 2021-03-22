@@ -73,12 +73,11 @@ public class Regeneration {
         modBus.addListener(this::doCommonStuff);
         modBus.register(this);
         MinecraftForge.EVENT_BUS.register(this);
-        
+        RBlocks.BLOCKS.register(modBus);
         RSounds.SOUNDS.register(modBus);
         RItems.ITEMS.register(modBus);
         REntities.ENTITIES.register(modBus);
-        RBlocks.BLOCK_ITEMS.register(modBus);
-        RBlocks.BLOCKS.register(modBus);
+        
         RTiles.TILES.register(modBus);
         RStructures.Structures.STRUCTURES.register(modBus);
         RStructures.FEATURES.register(modBus);
