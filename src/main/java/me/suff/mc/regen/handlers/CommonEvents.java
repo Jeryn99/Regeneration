@@ -10,7 +10,7 @@ import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
-import me.suff.mc.regen.common.traits.Traits;
+import me.suff.mc.regen.common.traits.TraitRegistry;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.PlayerUtil;
@@ -151,7 +151,7 @@ public class CommonEvents {
             Entity trueSource = event.getSource().getEntity();
 
 
-            if (event.getSource().isFire() && iRegen.trait().getRegistryName().toString().equals(Traits.FIRE.get().getRegistryName().toString())) {
+            if (event.getSource().isFire() && iRegen.trait().getRegistryName().toString().equals(TraitRegistry.FIRE.get().getRegistryName().toString())) {
                 event.setCanceled(true);
                 event.setAmount(0.0F);
                 return;
@@ -170,7 +170,7 @@ public class CommonEvents {
             iRegen.setDeathMessage(event.getSource().getLocalizedDeathMessage(livingEntity).getString());
 
             //Stop falling for leap trait
-            if (iRegen.trait().getRegistryName().toString().equals(Traits.LEAP.get().getRegistryName().toString())) {
+            if (iRegen.trait().getRegistryName().toString().equals(TraitRegistry.LEAP.get().getRegistryName().toString())) {
                 if (event.getSource() == DamageSource.FALL) {
                     event.setCanceled(true);
                     return;

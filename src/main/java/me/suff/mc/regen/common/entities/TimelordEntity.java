@@ -9,7 +9,7 @@ import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import me.suff.mc.regen.common.traits.Traits;
+import me.suff.mc.regen.common.traits.TraitRegistry;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.RemoveTimelordSkinMessage;
 import me.suff.mc.regen.util.RConstants;
@@ -375,7 +375,7 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
             MerchantOffers merchantoffers = this.getOffers();
 
             for (int i = random.nextInt(7); i > 0; i--) {
-                Traits.ITrait trait = Traits.getRandomTrait(random, false);
+                TraitRegistry.AbstractTrait trait = TraitRegistry.getRandomTrait(random, false);
                 ItemStack item = new ItemStack(RItems.ELIXIR.get());
                 Item[] currency = RegenUtil.TIMELORD_CURRENCY.getValues().toArray(new Item[0]);
                 ElixirItem.setTrait(item, trait);

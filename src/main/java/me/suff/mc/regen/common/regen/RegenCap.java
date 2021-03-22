@@ -5,7 +5,7 @@ import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.IStateManager;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import me.suff.mc.regen.common.traits.Traits;
+import me.suff.mc.regen.common.traits.TraitRegistry;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SyncMessage;
@@ -65,8 +65,8 @@ public class RegenCap implements IRegen {
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
     private byte[] nextSkin = new byte[0];
-    private Traits.ITrait currentTrait = Traits.BORING.get();
-    private Traits.ITrait nextTrait = Traits.BORING.get();
+    private TraitRegistry.AbstractTrait currentTrait = TraitRegistry.BORING.get();
+    private TraitRegistry.AbstractTrait nextTrait = TraitRegistry.BORING.get();
     private TimelordSound timelordSound = TimelordSound.HUM;
     private Hand handState = Hand.NO_GONE;
 
@@ -270,8 +270,8 @@ public class RegenCap implements IRegen {
             setHandState(Hand.valueOf(nbt.getString(RConstants.HAND_STATE)));
         }
         areHandsGlowing = nbt.getBoolean(RConstants.GLOWING);
-        setTrait(Traits.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
-        setNextTrait(Traits.fromID(nbt.getString(RConstants.NEXT_TRAIT)));
+        setTrait(TraitRegistry.fromID(nbt.getString(RConstants.CURRENT_TRAIT)));
+        setNextTrait(TraitRegistry.fromID(nbt.getString(RConstants.NEXT_TRAIT)));
         if (nbt.contains(RConstants.PREFERENCE)) {
             setPreferredModel(PlayerUtil.SkinType.valueOf(nbt.getString(RConstants.PREFERENCE)));
         }
@@ -389,7 +389,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public Traits.ITrait trait() {
+    public TraitRegistry.AbstractTrait trait() {
         return currentTrait;
     }
 
@@ -404,17 +404,17 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public void setTrait(Traits.ITrait trait) {
+    public void setTrait(TraitRegistry.AbstractTrait trait) {
         this.currentTrait = trait;
     }
 
     @Override
-    public Traits.ITrait getNextTrait() {
+    public TraitRegistry.AbstractTrait getNextTrait() {
         return nextTrait;
     }
 
     @Override
-    public void setNextTrait(Traits.ITrait trait) {
+    public void setNextTrait(TraitRegistry.AbstractTrait trait) {
         this.nextTrait = trait;
     }
 
@@ -645,7 +645,7 @@ public class RegenCap implements IRegen {
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(regens());
             }
-            setTrait(Traits.BORING.get());
+            setTrait(TraitRegistry.BORING.get());
             setSkin(new byte[0]);
             syncToClients(null);
         }

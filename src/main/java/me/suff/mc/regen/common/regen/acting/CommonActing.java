@@ -5,7 +5,7 @@ import me.suff.mc.regen.common.block.JarBlock;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.transitions.WatcherTransition;
 import me.suff.mc.regen.common.tiles.JarTile;
-import me.suff.mc.regen.common.traits.Traits;
+import me.suff.mc.regen.common.traits.TraitRegistry;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SFXMessage;
@@ -164,24 +164,24 @@ class CommonActing implements Acting {
         if (RegenConfig.COMMON.traitsEnabled.get() && cap.getLiving().getType() == EntityType.PLAYER) {
 
             //Reset old Trait
-            Traits.ITrait old = cap.trait();
+            TraitRegistry.AbstractTrait old = cap.trait();
             old.remove(cap);
 
             //Get the new Trait
-            Traits.ITrait next = cap.getNextTrait();
-            if (next.getRegistryName().toString().equals(Traits.BORING.getRegistryName().toString())) {
-                next = Traits.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof PlayerEntity));
+            TraitRegistry.AbstractTrait next = cap.getNextTrait();
+            if (next.getRegistryName().toString().equals(TraitRegistry.BORING.get().getRegistryName().toString())) {
+                next = TraitRegistry.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof PlayerEntity));
             }
             next.apply(cap);
 
             //Set new Trait & reset next trait
             cap.setTrait(next);
-            cap.setNextTrait(Traits.BORING.get());
+            cap.setNextTrait(TraitRegistry.BORING.get());
 
             PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", next.translation().getString()), true);
         } else {
             cap.trait().remove(cap);
-            cap.setTrait(Traits.BORING.get());
+            cap.setTrait(TraitRegistry.BORING.get());
             cap.trait().apply(cap);
         }
     }

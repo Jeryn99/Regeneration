@@ -4,7 +4,7 @@ import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import me.suff.mc.regen.common.traits.Traits;
+import me.suff.mc.regen.common.traits.TraitRegistry;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
@@ -239,44 +239,44 @@ public class EnglishLang extends LanguageProvider {
         add(REntities.TIMELORD.get(), "Timelord");
 
         //Traits
-        add(Traits.BORING.get().translation().getKey(), "Boring");
-        add(Traits.BORING.get().description().getKey(), "Plain Human!");
+        add(TraitRegistry.BORING.get().translation().getKey(), "Boring");
+        add(TraitRegistry.BORING.get().description().getKey(), "Plain Human!");
 
-        add(Traits.QUICK.get().translation().getKey(), "Quick");
-        add(Traits.QUICK.get().description().getKey(), "Sprint Faster!");
+        add(TraitRegistry.QUICK.get().translation().getKey(), "Quick");
+        add(TraitRegistry.QUICK.get().description().getKey(), "Sprint Faster!");
 
-        add(Traits.SWIM_SPEED.get().translation().getKey(), "Mermaid");
-        add(Traits.SWIM_SPEED.get().description().getKey(), "Swim Faster!");
+        add(TraitRegistry.SWIM_SPEED.get().translation().getKey(), "Mermaid");
+        add(TraitRegistry.SWIM_SPEED.get().description().getKey(), "Swim Faster!");
 
-        add(Traits.FAST_MINE.get().translation().getKey(), "Fast Mine");
-        add(Traits.FAST_MINE.get().description().getKey(), "Mine Faster!");
+        add(TraitRegistry.FAST_MINE.get().translation().getKey(), "Fast Mine");
+        add(TraitRegistry.FAST_MINE.get().description().getKey(), "Mine Faster!");
 
-        add(Traits.SMART.get().translation().getKey(), "Smart");
-        add(Traits.SMART.get().description().getKey(), "More XP Pickup!");
+        add(TraitRegistry.SMART.get().translation().getKey(), "Smart");
+        add(TraitRegistry.SMART.get().description().getKey(), "More XP Pickup!");
 
-        add(Traits.LONG_ARMS.get().translation().getKey(), "Long Arms");
-        add(Traits.LONG_ARMS.get().description().getKey(), "Reach further!");
+        add(TraitRegistry.LONG_ARMS.get().translation().getKey(), "Long Arms");
+        add(TraitRegistry.LONG_ARMS.get().description().getKey(), "Reach further!");
 
-        add(Traits.STRONG.get().translation().getKey(), "Strong");
-        add(Traits.STRONG.get().description().getKey(), "Punch Harder!");
+        add(TraitRegistry.STRONG.get().translation().getKey(), "Strong");
+        add(TraitRegistry.STRONG.get().description().getKey(), "Punch Harder!");
 
-        add(Traits.KNOCKBACK.get().translation().getKey(), "KnockBack");
-        add(Traits.KNOCKBACK.get().description().getKey(), "Don't get flung back!");
+        add(TraitRegistry.KNOCKBACK.get().translation().getKey(), "KnockBack");
+        add(TraitRegistry.KNOCKBACK.get().description().getKey(), "Don't get flung back!");
 
-        add(Traits.FISH.get().translation().getKey(), "Fish");
-        add(Traits.FISH.get().description().getKey(), "Infinite Oxygen under water");
+        add(TraitRegistry.FISH.get().translation().getKey(), "Fish");
+        add(TraitRegistry.FISH.get().description().getKey(), "Infinite Oxygen under water");
 
-        add(Traits.LEAP.get().translation().getKey(), "Leap");
-        add(Traits.LEAP.get().description().getKey(), "Jump a little higher");
+        add(TraitRegistry.LEAP.get().translation().getKey(), "Leap");
+        add(TraitRegistry.LEAP.get().description().getKey(), "Jump a little higher");
 
-        add(Traits.FIRE.get().translation().getKey(), "Fire Immune");
-        add(Traits.FIRE.get().description().getKey(), "Immune to fire");
+        add(TraitRegistry.FIRE.get().translation().getKey(), "Fire Immune");
+        add(TraitRegistry.FIRE.get().description().getKey(), "Immune to fire");
 
-        add(Traits.ENDER_HURT.get().translation().getKey(), "Ender Emergency");
-        add(Traits.ENDER_HURT.get().description().getKey(), "Teleport away when hurt");
+        add(TraitRegistry.ENDER_HURT.get().translation().getKey(), "Ender Emergency");
+        add(TraitRegistry.ENDER_HURT.get().description().getKey(), "Teleport away when hurt");
 
-        add(Traits.WATER_STRIDE.get().translation().getKey(), "Water Stride");
-        add(Traits.WATER_STRIDE.get().description().getKey(), "Walk on water!");
+        add(TraitRegistry.WATER_STRIDE.get().translation().getKey(), "Water Stride");
+        add(TraitRegistry.WATER_STRIDE.get().description().getKey(), "Walk on water!");
     }
 
     public String grammerNazi(String text) {

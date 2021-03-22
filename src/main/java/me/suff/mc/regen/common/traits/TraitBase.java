@@ -4,12 +4,10 @@ import me.suff.mc.regen.common.regen.IRegen;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-public class TraitBase extends Traits.ITrait {
-    private ResourceLocation LOCATION;
+public class TraitBase extends TraitRegistry.AbstractTrait {
     private int color;
 
-    public TraitBase(ResourceLocation resourceLocation, int color) {
-        LOCATION = resourceLocation;
+    public TraitBase(int color) {
         this.color = color;
     }
 
@@ -31,22 +29,6 @@ public class TraitBase extends Traits.ITrait {
     @Override
     public boolean isPlayerOnly() {
         return false;
-    }
-
-    @Override
-    public Traits.ITrait setRegistryName(ResourceLocation name) {
-        return this;
-    }
-
-    @Nullable
-    @Override
-    public ResourceLocation getRegistryName() {
-        return LOCATION;
-    }
-
-    @Override
-    public Class< Traits.ITrait > getRegistryType() {
-        return Traits.ITrait.class;
     }
 
     @Override

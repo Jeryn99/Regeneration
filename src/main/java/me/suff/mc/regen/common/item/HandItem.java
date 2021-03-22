@@ -3,7 +3,7 @@ package me.suff.mc.regen.common.item;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
-import me.suff.mc.regen.common.traits.Traits;
+import me.suff.mc.regen.common.traits.TraitRegistry;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenSources;
 import me.suff.mc.regen.util.RegenUtil;
@@ -48,12 +48,12 @@ public class HandItem extends Item {
     }
 
     //Trait
-    public static void setTrait(Traits.ITrait traitBase, ItemStack stack) {
+    public static void setTrait(TraitRegistry.AbstractTrait traitBase, ItemStack stack) {
         stack.getOrCreateTag().putString("trait", traitBase.getRegistryName().toString());
     }
 
-    public static Traits.ITrait getTrait(ItemStack stack) {
-        return Traits.fromID(stack.getOrCreateTag().getString("trait"));
+    public static TraitRegistry.AbstractTrait getTrait(ItemStack stack) {
+        return TraitRegistry.fromID(stack.getOrCreateTag().getString("trait"));
     }
 
     public static void setEnergy(float energy, ItemStack stack) {

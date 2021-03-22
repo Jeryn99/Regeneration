@@ -8,7 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.mc.regen.common.commands.arguments.TraitsArgumentType;
 import me.suff.mc.regen.common.regen.RegenCap;
-import me.suff.mc.regen.common.traits.Traits;
+import me.suff.mc.regen.common.traits.TraitRegistry;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.ISuggestionProvider;
@@ -30,7 +30,7 @@ public class SetTraitsCommand implements Command< CommandSource > {
     @Override
     public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
         CommandSource source = context.getSource();
-        Traits.ITrait trait = context.getArgument("trait", Traits.ITrait.class);
+        TraitRegistry.AbstractTrait trait = context.getArgument("trait", TraitRegistry.AbstractTrait.class);
         String username = context.getArgument("username", String.class);
         ServerPlayerEntity player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByName(username);
 
@@ -40,7 +40,7 @@ public class SetTraitsCommand implements Command< CommandSource > {
 
         RegenCap.get(player).ifPresent((data) -> {
             ResourceLocation oldDna = data.trait().getRegistryName();
-            Traits.ITrait oldTrait = Traits.fromID(oldDna.toString());
+            TraitRegistry.AbstractTrait oldTrait = TraitRegistry.fromID(oldDna.toString());
             oldTrait.remove(data);
             data.setTrait(trait);
             trait.apply(data);
