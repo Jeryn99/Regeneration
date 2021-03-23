@@ -34,6 +34,7 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
         public final ForgeConfigSpec.BooleanValue downloadPreviousSkins;
         public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
+        public final ForgeConfigSpec.ConfigValue< String > imgurClientID;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client").push("client");
@@ -44,6 +45,7 @@ public class RegenConfig {
             downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
             downloadPreviousSkins = builder.comment("Toggle whether the mod downloads your past skins from NameMC").translation("config.regeneration.downloadPreviousSkins").define("downloadPastSkins", true);
             downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
+            imgurClientID = builder.comment("Imgur Upload Client ID").translation("config.regeneration.imgur").define("imgur", "CLIENT_ID_HERE");
             builder.pop();
         }
 

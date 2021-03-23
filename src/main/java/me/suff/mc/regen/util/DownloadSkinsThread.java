@@ -1,5 +1,6 @@
 package me.suff.mc.regen.util;
 
+import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.skin.ClientSkin;
 import me.suff.mc.regen.client.skin.CommonSkin;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,7 +41,6 @@ public class DownloadSkinsThread extends Thread {
             CommonSkin.downloadTimelord();
             internalSkinsDownload();
 
-
             if (isClient) {
                 DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
                     try {
@@ -51,8 +51,9 @@ public class DownloadSkinsThread extends Thread {
                 });
             }
 
-            if(forceStop){
-                stop();;
+            if (forceStop) {
+                stop();
+                ;
                 forceStop = false;
             }
 
@@ -60,6 +61,8 @@ public class DownloadSkinsThread extends Thread {
             exception.printStackTrace();
             stop();
             forceStop = false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

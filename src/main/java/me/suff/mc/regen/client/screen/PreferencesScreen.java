@@ -56,7 +56,7 @@ public class PreferencesScreen extends ContainerScreen {
         });
 
 
-        Button btnRegenType = new Button(width / 2 + 50 - 66, cy + 102, btnW * 2, btnH, transitionType.get().getTranslation(), button -> {
+        Button btnRegenType = new Button(width / 2 + 50 + 4, cy + 81, btnW- 2, btnH, transitionType.get().getTranslation(), button -> {
             int pos = TransitionTypes.getPosition(transitionType) + 1;
 
             if (pos < 0 || pos >= TransitionTypes.TYPES.length) {
@@ -67,7 +67,7 @@ public class PreferencesScreen extends ContainerScreen {
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(transitionType.get()));
         });
 
-        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW * 2, btnH, new TranslationTextComponent("regeneration.skin_type." + skinType.name().toLowerCase()), button -> {
+        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW - 2, btnH, new TranslationTextComponent("regeneration.skin_type." + skinType.name().toLowerCase()), button -> {
             if (skinType.next() != null) {
                 skinType = skinType.next();
             } else {

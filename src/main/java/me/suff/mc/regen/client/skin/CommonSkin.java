@@ -3,12 +3,14 @@ package me.suff.mc.regen.client.skin;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.DownloadSkinsThread;
+import me.suff.mc.regen.util.ImgUploader;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.tardis.mod.ars.ConsoleRoom;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
@@ -157,7 +159,7 @@ public class CommonSkin {
     }
 
     public static boolean internalSkinsDownload() {
-        if(DownloadSkinsThread.forceStop) return false;
+        if (DownloadSkinsThread.forceStop) return false;
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return false;
 
         File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
@@ -197,7 +199,7 @@ public class CommonSkin {
     }
 
     public static void unzipSkinPack(String url) throws IOException {
-        if(DownloadSkinsThread.forceStop) return;
+        if (DownloadSkinsThread.forceStop) return;
         File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
         Regeneration.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
         FileUtils.copyURLToFile(new URL(url), tempZip);
@@ -213,10 +215,9 @@ public class CommonSkin {
                     BufferedInputStream bis = new BufferedInputStream(is);
                     String uncompressedFileName = SKIN_DIRECTORY + File.separator + entry.getName();
                     Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
-                    Regeneration.LOG.info("Extracting file: " + uncompressedFilePath);
+                    Regeneration.LOG.info(entry.getName());
                     File temp = uncompressedFilePath.toFile();
                     if (temp.exists()) {
-                        Regeneration.LOG.info("Recreating: " + uncompressedFilePath);
                         temp.delete();
                     }
                     Files.createFile(uncompressedFilePath);
@@ -235,6 +236,7 @@ public class CommonSkin {
             FileUtils.forceDelete(tempZip.getParentFile());
         }
     }
+
 
     public static List< File > listAllSkins(PlayerUtil.SkinType choices) {
         File directory = null;
@@ -255,7 +257,7 @@ public class CommonSkin {
     }
 
     public static void downloadTrendingSkins() throws IOException {
-        if(DownloadSkinsThread.forceStop) return;
+        if (DownloadSkinsThread.forceStop) return;
         if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
         File trendingDir = TRENDING_ALEX;
         if (!trendingDir.exists()) {

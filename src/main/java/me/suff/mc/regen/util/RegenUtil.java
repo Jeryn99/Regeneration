@@ -8,12 +8,14 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import static me.suff.mc.regen.Regeneration.GSON;
@@ -122,6 +124,10 @@ public class RegenUtil {
         }
     }
 
+    public static String encodeFileToBase64Binary(File file) throws IOException {
+        byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
+        return new String(encoded, StandardCharsets.US_ASCII);
+    }
 
     public static String colorToHex(Color color) {
         StringBuilder hex = new StringBuilder(Integer.toHexString(color.getRGB() & 0xffffff));

@@ -6,10 +6,7 @@ import me.suff.mc.regen.client.skin.SkinHandler;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.NextSkinMessage;
-import me.suff.mc.regen.util.ClientUtil;
-import me.suff.mc.regen.util.PlayerUtil;
-import me.suff.mc.regen.util.RConstants;
-import me.suff.mc.regen.util.RegenUtil;
+import me.suff.mc.regen.util.*;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
@@ -30,8 +27,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.lwjgl.glfw.GLFW;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -105,8 +104,13 @@ public class IncarnationScreen extends ContainerScreen {
         this.setInitialFocus(this.searchField);
 
         uploadToMcBtn = new DescButton(cx + 10, cy + 105, btnW * 2 + 5, btnH + 2, new TranslationTextComponent("Upload to Minecraft"), button -> {
-            String trending = "https://namemc.com/skin/KEY/apply";
-            Util.getPlatform().openUri(trending.replaceAll("KEY", skins.get(position).getName().replace("trending_", "").replace(".png", "")));
+            Thread uploader = null;
+            try {
+                uploader = new Thread(new ImgUploader(ImageIO.read(skins.get(position)), isAlex));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+            uploader.start();
         }).setDescription(new String[]{"button.tooltip.upload2mc"});
 
         DescButton btnPrevious = new DescButton(cx + 140, cy + 60, 20, 20, new TranslationTextComponent("regen.gui.previous"), button -> {
@@ -322,8 +326,6 @@ public class IncarnationScreen extends ContainerScreen {
                 }
             }
         }
-
-        uploadToMcBtn.active = skins.get(position).getName().contains("trending");
     }
 
     @Override
