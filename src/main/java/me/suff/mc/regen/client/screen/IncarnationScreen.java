@@ -93,9 +93,7 @@ public class IncarnationScreen extends ContainerScreen {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
 
-            if (!excludeTrending.selected()) {
-                skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
-            }
+            stripTrending();
 
             Collections.sort(skins);
             updateModels();
@@ -104,22 +102,21 @@ public class IncarnationScreen extends ContainerScreen {
         this.setInitialFocus(this.searchField);
 
         uploadToMcBtn = new DescButton(cx + 10, cy + 105, btnW * 2 + 5, btnH + 2, new TranslationTextComponent("Upload to Minecraft"), button -> {
-            Thread uploader = null;
+            String imgurLink = null;
             try {
-                uploader = new Thread(new ImgUploader(ImageIO.read(skins.get(position)), isAlex));
-            } catch (IOException exception) {
-                exception.printStackTrace();
+                imgurLink = ClientUtil.getImgurLink(RegenUtil.encodeFileToBase64Binary(skins.get(position)));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            uploader.start();
+            String url = "https://www.minecraft.net/en-us/profile/skin/remote?url=" + imgurLink + "&model=" + (isAlex ? "slim" : "classic");
+            Util.getPlatform().openUri(url);
         }).setDescription(new String[]{"button.tooltip.upload2mc"});
 
         DescButton btnPrevious = new DescButton(cx + 140, cy + 60, 20, 20, new TranslationTextComponent("regen.gui.previous"), button -> {
             if (searchField.getValue().isEmpty()) {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
-            if (!excludeTrending.selected()) {
-                skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
-            }
+            stripTrending();
 
             if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                 if (position >= skins.size() - 1) {
@@ -137,9 +134,7 @@ public class IncarnationScreen extends ContainerScreen {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
 
-            if (!excludeTrending.selected()) {
-                skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
-            }
+            stripTrending();
 
             if (!currentTexture.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                 if (position > 0) {
@@ -238,6 +233,12 @@ public class IncarnationScreen extends ContainerScreen {
 
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> currentSkinType = data.preferredModel());
         updateModels();
+    }
+
+    private void stripTrending() {
+        if (!excludeTrending.selected()) {
+            skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
+        }
     }
 
     @Override

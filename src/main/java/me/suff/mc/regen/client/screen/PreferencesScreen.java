@@ -56,7 +56,7 @@ public class PreferencesScreen extends ContainerScreen {
         });
 
 
-        Button btnRegenType = new Button(width / 2 + 50 + 4, cy + 81, btnW- 2, btnH, transitionType.get().getTranslation(), button -> {
+        Button btnRegenType = new Button(width / 2 + 50 + 2, cy + 81, btnW - 2, btnH, transitionType.get().getTranslation(), button -> {
             int pos = TransitionTypes.getPosition(transitionType) + 1;
 
             if (pos < 0 || pos >= TransitionTypes.TYPES.length) {
@@ -67,7 +67,7 @@ public class PreferencesScreen extends ContainerScreen {
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(transitionType.get()));
         });
 
-        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW - 2, btnH, new TranslationTextComponent("regeneration.skin_type." + skinType.name().toLowerCase()), button -> {
+        Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW, btnH, new TranslationTextComponent("regeneration.skin_type." + skinType.name().toLowerCase()), button -> {
             if (skinType.next() != null) {
                 skinType = skinType.next();
             } else {
@@ -78,9 +78,9 @@ public class PreferencesScreen extends ContainerScreen {
         });
         btnRegenType.setMessage(transitionType.get().getTranslation());
 
-        Button btnColor = new Button(width / 2 + 50 - 66, cy + 123, btnW * 2, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
+        Button btnColor = new Button(width / 2 + 50 - 66, cy + 103, btnW, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
 
-        Button btnSkinChoice = new Button(width / 2 + 50 - 66, cy + 145, btnW * 2, btnH, new TranslationTextComponent("regen.gui.skin_choice"), p_onPress_1_ -> {
+        Button btnSkinChoice = new Button(width / 2 + 50 + 2, cy + 103, btnW - 2, btnH, new TranslationTextComponent("regen.gui.skin_choice"), p_onPress_1_ -> {
             Minecraft.getInstance().setScreen(new IncarnationScreen());
         });
 
@@ -101,22 +101,13 @@ public class PreferencesScreen extends ContainerScreen {
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
-
         InventoryScreen.renderEntityInInventory(width / 2 - 75, height / 2 + 45, 55, (float) (leftPos + 51) - x, (float) (topPos + 75 - 50) - y, Minecraft.getInstance().player);
-
-        String str = "Banana Phone";
-        int length = minecraft.font.width(str);
-
-        str = new TranslationTextComponent("regen.gui.remaining_regens.status", data.regens()).getString();
-
-        length = minecraft.font.width(str);
+        String str = new TranslationTextComponent("regen.gui.remaining_regens.status", data.regens()).getString();
         font.drawShadow(matrixStack, str, width / 2 + 50 - 66, cy + 21, Color.WHITE.getRGB());
-
         RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> {
             int color = iRegen.traitActive() ? Color.GREEN.getRGB() : Color.RED.getRGB();
             TranslationTextComponent traitLang = data.trait().translation();
             font.drawShadow(matrixStack, traitLang.getString(), width / 2 + 50 - 66, cy + 35, color);
-
             TranslationTextComponent traitLangDesc = data.trait().description();
             font.drawShadow(matrixStack, traitLangDesc.getString(), width / 2 + 50 - 66, cy + 45, color);
         });

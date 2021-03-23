@@ -225,13 +225,13 @@ public class EnglishLang extends LanguageProvider {
         add("regen.gui.next", ">");
         add("regen.gui.default", "Default");
         add("regen.gui.open_folder", "Skin Dir");
-        add("regen.gui.skin_choice", "Skin Settings");
+        add("regen.gui.skin_choice", "Skin");
         add("regen.gui.save", "Save");
         add("regen.gui.next_incarnation", "Select next incarnation");
         add("regen.gui.reset_skin", "Reset");
         add("regen.gui.infinite_regenerations", "Infinite Regeneration Mode");
         add("regen.gui.remaining_regens.status", "Regenerations: %s");
-        add("regen.gui.color_gui", "Color selection");
+        add("regen.gui.color_gui", "Colors");
         add("regen.gui.current_skin", "Select Next Incarnation");
         add("regen.gui.back", "Back");
         add("regen.gui.preferences", "Preferences");

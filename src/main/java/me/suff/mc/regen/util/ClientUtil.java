@@ -3,11 +3,20 @@ package me.suff.mc.regen.util;
 import static me.suff.mc.regen.common.item.FobWatchItem.getEngrave;
 import static me.suff.mc.regen.common.item.FobWatchItem.isOpen;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import me.suff.mc.regen.client.RKeybinds;
@@ -54,6 +63,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -72,6 +82,45 @@ public class ClientUtil {
 
     private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
     public static HashMap< Item, BipedModel< ? > > ARMOR_MODELS = new HashMap<>();
+
+    public static String getImgurLink(String base64Image) throws Exception {
+        URL url;
+        url = new URL("https://who-craft.com/api/index.php");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        String data = URLEncoder.encode("image", "UTF-8") + "="
+                + URLEncoder.encode(base64Image, "UTF-8");
+
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded");
+
+        conn.connect();
+        StringBuilder stb = new StringBuilder();
+        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+        wr.write(data);
+        wr.flush();
+
+        // Get the response
+        BufferedReader rd = new BufferedReader(
+                new InputStreamReader(conn.getInputStream()));
+        String line;
+        while ((line = rd.readLine()) != null) {
+            stb.append(line).append("\n");
+        }
+        wr.close();
+        rd.close();
+
+        JsonElement jelement = new JsonParser().parse(stb.toString());
+        JsonObject jobject = jelement.getAsJsonObject();
+        if (JSONUtils.isValidNode(jobject, "link")) {
+            return JSONUtils.getAsString(jobject, "link");
+        } else {
+            throw new Exception(JSONUtils.getAsString(jobject, "message"));
+        }
+    }
 
     @SubscribeEvent
     public static void registerParticles(ParticleFactoryRegisterEvent event) {

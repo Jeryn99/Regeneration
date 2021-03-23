@@ -68,10 +68,12 @@ class ClientActing implements Acting {
                     return;
                 }
                 Minecraft.getInstance().submitAsync(() -> {
-                    File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRandom(), cap.preferredModel().isAlex(), false);
-                    boolean isAlex = file.getAbsolutePath().contains(CommonSkin.SKIN_DIRECTORY_ALEX.getAbsolutePath());
-                    Regeneration.LOG.info("Choosen Skin: " + file);
-                    NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(RegenUtil.fileToBytes(file), isAlex));
+                    if (!cap.isNextSkinValid()) {
+                        File file = CommonSkin.chooseRandomSkin(cap.getLiving().getRandom(), cap.preferredModel().isAlex(), false);
+                        boolean isAlex = file.getAbsolutePath().contains(CommonSkin.SKIN_DIRECTORY_ALEX.getAbsolutePath());
+                        Regeneration.LOG.info("Choosen Skin: " + file);
+                        NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(RegenUtil.fileToBytes(file), isAlex));
+                    }
                 });
             } else {
                 SkinHandler.sendResetMessage();

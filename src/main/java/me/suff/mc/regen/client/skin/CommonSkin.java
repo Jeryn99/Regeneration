@@ -3,14 +3,12 @@ package me.suff.mc.regen.client.skin;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.DownloadSkinsThread;
-import me.suff.mc.regen.util.ImgUploader;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.tardis.mod.ars.ConsoleRoom;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
@@ -252,7 +250,7 @@ public class CommonSkin {
                 break;
         }
         Collection< File > folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
-        folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
+        folderFiles.removeIf(file -> !file.getName().endsWith(".png") || file.getName().contains("timelord_male") || file.getName().contains("timelord_female"));
         return new ArrayList<>(folderFiles);
     }
 
