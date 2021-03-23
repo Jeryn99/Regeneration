@@ -95,6 +95,9 @@ public class EnglishLang extends LanguageProvider {
         add("regen.sound.m_timelord.trade_fail", "Male Timelord Trade Fail");
         add("regen.sound.m_timelord.trade_success", "Male Timelord Trade Success");
         add("regen.sound.m_timelord.scream", "Male Timelord Screams");
+        add("regen.sound.f_timelord.scream", "Female Timelord Screams");
+        add("regen.sound.rifle", "Rifle fires");
+        add("regen.sound.staser", "Staser Fires");
 
         //Items
         add(RItems.FOB.get(), "Chameleon Arch");
