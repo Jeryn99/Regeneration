@@ -15,7 +15,23 @@ public class RMaterials {
     public static IArmorMaterial TIMELORD = new IArmorMaterial() {
         @Override
         public int getDurabilityForSlot(EquipmentSlotType slotIn) {
-            return 35;
+            switch (slotIn) {
+                case HEAD:
+                    return 390;
+                case CHEST:
+                    return 550;
+                case LEGS:
+                    return 510;
+                case FEET:
+                    return 450;
+                case MAINHAND:
+                    break;
+                case OFFHAND:
+                    break;
+                default:
+                    return 300;
+            }
+            return 300;
         }
 
         @Override
@@ -25,7 +41,7 @@ public class RMaterials {
 
         @Override
         public int getEnchantmentValue() {
-            return 15;
+            return 20;
         }
 
         @Override
@@ -37,7 +53,7 @@ public class RMaterials {
         public Ingredient getRepairIngredient() {
             return Ingredient.of(RItems.ZINC.get());
         }
-
+        //ClientSide only variable
         @Override
         public String getName() {
             return "timelord";
@@ -50,7 +66,7 @@ public class RMaterials {
 
         @Override
         public float getKnockbackResistance() {
-            return 1;
+            return 1F;
         }
     };
 

@@ -95,13 +95,13 @@ public class EnglishLang extends LanguageProvider {
         add("regen.sound.m_timelord.trade_fail", "Male Timelord Trade Fail");
         add("regen.sound.m_timelord.trade_success", "Male Timelord Trade Success");
         add("regen.sound.m_timelord.scream", "Male Timelord Screams");
-        
+
         add("regen.sound.f_timelord.hurt", "Female Timelord Hurts");
         add("regen.sound.f_timelord.die", "Female Timelord Dies");
         add("regen.sound.f_timelord.trade_fail", "Female Timelord Trade Fail");
         add("regen.sound.f_timelord.trade_success", "Female Timelord Trade Success");
         add("regen.sound.f_timelord.scream", "Female Timelord Screams");
-        
+
         add("regen.sound.rifle", "Rifle fires");
         add("regen.sound.staser", "Staser Fires");
 

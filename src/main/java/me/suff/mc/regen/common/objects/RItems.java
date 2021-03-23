@@ -38,14 +38,15 @@ public class RItems {
     public static RegistryObject< Item > GUARD_LEGS = ITEMS.register("guard_legs", () -> new ClothingItem(RMaterials.TIMELORD, EquipmentSlotType.LEGS, clothing));
     public static RegistryObject< Item > GUARD_FEET = ITEMS.register("guard_feet", () -> new ClothingItem(RMaterials.TIMELORD, EquipmentSlotType.FEET, clothing));
 
-    public static RegistryObject< Item > F_ROBES_HEAD = ITEMS.register("f_robes_head", () -> new ClothingItem(LEATHER, EquipmentSlotType.HEAD, clothing));
-    public static RegistryObject< Item > F_ROBES_CHEST = ITEMS.register("f_robes_chest", () -> new ClothingItem(LEATHER, EquipmentSlotType.CHEST, clothing));
-    public static RegistryObject< Item > F_ROBES_LEGS = ITEMS.register("f_robes_legs", () -> new ClothingItem(LEATHER, EquipmentSlotType.LEGS, clothing));
+    public static RegistryObject< Item > F_ROBES_HEAD = ITEMS.register("f_robes_head", () -> new ClothingItem(LEATHER, EquipmentSlotType.HEAD, clothing.durability(280)));
+    public static RegistryObject< Item > F_ROBES_CHEST = ITEMS.register("f_robes_chest", () -> new ClothingItem(LEATHER, EquipmentSlotType.CHEST, clothing.durability(400)));
+    public static RegistryObject< Item > F_ROBES_LEGS = ITEMS.register("f_robes_legs", () -> new ClothingItem(LEATHER, EquipmentSlotType.LEGS, clothing.durability(375)));
 
-    public static RegistryObject< Item > M_ROBES_HEAD = ITEMS.register("m_robes_head", () -> new ClothingItem(LEATHER, EquipmentSlotType.HEAD, clothing));
-    public static RegistryObject< Item > M_ROBES_CHEST = ITEMS.register("m_robes_chest", () -> new ClothingItem(LEATHER, EquipmentSlotType.CHEST, clothing));
-    public static RegistryObject< Item > M_ROBES_LEGS = ITEMS.register("m_robes_legs", () -> new ClothingItem(LEATHER, EquipmentSlotType.LEGS, clothing));
-    public static RegistryObject< Item > ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem(LEATHER, EquipmentSlotType.FEET, clothing));
+    public static RegistryObject< Item > M_ROBES_HEAD = ITEMS.register("m_robes_head", () -> new ClothingItem(LEATHER, EquipmentSlotType.HEAD, clothing.durability(280)));
+    public static RegistryObject< Item > M_ROBES_CHEST = ITEMS.register("m_robes_chest", () -> new ClothingItem(LEATHER, EquipmentSlotType.CHEST, clothing.durability(400)));
+    public static RegistryObject< Item > M_ROBES_LEGS = ITEMS.register("m_robes_legs", () -> new ClothingItem(LEATHER, EquipmentSlotType.LEGS, clothing.durability(375)));
+
+    public static RegistryObject< Item > ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem(LEATHER, EquipmentSlotType.FEET, clothing.durability(350)));
 
 
 }
