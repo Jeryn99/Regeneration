@@ -89,13 +89,19 @@ public class EnglishLang extends LanguageProvider {
         add("regen.sound.fob_watch", "Ticking");
         add("regen.sound.regen_breath", "Regeneration exhale");
         add("regen.sound.alarm", "Regeneration Alarm");
+
         add("regen.sound.m_timelord.hurt", "Male Timelord Hurts");
-        add("regen.sound.f_timelord.hurt", "Female Timelord Hurts");
         add("regen.sound.m_timelord.die", "Male Timelord Dies");
         add("regen.sound.m_timelord.trade_fail", "Male Timelord Trade Fail");
         add("regen.sound.m_timelord.trade_success", "Male Timelord Trade Success");
         add("regen.sound.m_timelord.scream", "Male Timelord Screams");
+        
+        add("regen.sound.f_timelord.hurt", "Female Timelord Hurts");
+        add("regen.sound.f_timelord.die", "Female Timelord Dies");
+        add("regen.sound.f_timelord.trade_fail", "Female Timelord Trade Fail");
+        add("regen.sound.f_timelord.trade_success", "Female Timelord Trade Success");
         add("regen.sound.f_timelord.scream", "Female Timelord Screams");
+        
         add("regen.sound.rifle", "Rifle fires");
         add("regen.sound.staser", "Staser Fires");
 
@@ -152,7 +158,13 @@ public class EnglishLang extends LanguageProvider {
         add("regen.messages.fast_forward_cmd_fail", "Nothing to fast forward to.");
         add("regen.messages.new_trait", "New Trait: %s");
         add("regen.messages.cant_glow", "You cannot activate a glowing hand without being in a grace period");
-
+        // === Command Output ===
+        add("command.regen.set_trait.success", "Set trait for player %s to %s");
+        add("command.regen.set_trait.error", "Could not set trait for player %s to %s");
+        add("command.regen.set_regen.success", "Set Regenerations for entity %s to %s");
+        add("command.regen.set_regen.invalid_entity", "Could not set %s Regenerations for %s, it is not a Living Entity");
+        add("command.regen.set_regen.config_off", "Could not set Regenerations for %s, the Config Option %s is set to %s");
+        
         // === Config ===
         //Skin
         add("config.regeneration.downloadTrendingSkins", "Download Trending Skins?");

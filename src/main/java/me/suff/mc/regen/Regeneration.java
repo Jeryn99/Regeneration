@@ -28,6 +28,7 @@ import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.AdvancementGen;
 import me.suff.mc.regen.data.EnglishLang;
 import me.suff.mc.regen.data.LootGen;
+import me.suff.mc.regen.data.RBlockLootTableGen;
 import me.suff.mc.regen.data.RBlockTags;
 import me.suff.mc.regen.data.RItemTags;
 import me.suff.mc.regen.data.RRecipeGen;
@@ -126,6 +127,7 @@ public class Regeneration {
         boolean reports = false;
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
         generator.addProvider(new EnglishLang(generator));
+        generator.addProvider(new RBlockLootTableGen(generator));
         generator.addProvider(new LootGen(generator));
         RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
         generator.addProvider(blockTags);

@@ -21,7 +21,7 @@ import net.minecraft.data.LootTableProvider;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
-
+/** Created by 50ap5ud5 23/3/2021 */
 public class RBlockLootTableGen extends LootTableProvider {
 
 
