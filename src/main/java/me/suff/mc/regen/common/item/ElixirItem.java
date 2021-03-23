@@ -52,10 +52,9 @@ public class ElixirItem extends Item {
                     ItemStack stack = new ItemStack(this);
                     setTrait(stack, trait);
                     items.add(stack);
-                }
+                }//Do not call removeIf outside the for loop as this will loop back around to the start of the item group and "delete" other items like the fobwatch
             }
         }
-        items.removeIf(stack -> getTrait(stack).getRegistryName() == RegenTraitRegistry.BORING.get().getRegistryName());
     }
 
     @Override
