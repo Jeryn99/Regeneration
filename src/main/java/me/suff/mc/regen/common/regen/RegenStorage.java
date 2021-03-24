@@ -3,6 +3,7 @@ package me.suff.mc.regen.common.regen;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.capabilities.Capability;
 
 public class RegenStorage implements Capability.IStorage< IRegen > {

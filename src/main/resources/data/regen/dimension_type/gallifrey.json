@@ -6,7 +6,7 @@
   "ambient_light": 0,
   "piglin_safe": false,
   "bed_works": true,
-  "respawn_anchor_works": false,
+  "respawn_anchor_works": true,
   "ultrawarm": false,
   "natural": true,
   "coordinate_scale": 1,
