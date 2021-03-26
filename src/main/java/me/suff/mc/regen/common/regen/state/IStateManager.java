@@ -17,14 +17,14 @@ public interface IStateManager extends INBTSerializable< CompoundNBT > {
     void onPunchBlock(PlayerInteractEvent.LeftClickBlock e);
 
     // Proxy methods for timing related stuff
-    double getStateProgress();
+    double stateProgress();
 
     // Debug things
     @Deprecated
     Pair< RegenStates.Transition, Long > getScheduledEvent();
 
     @Deprecated
-    void fastForward();
+    void skip();
 
     @Deprecated
     void fastForwardHandGlow();

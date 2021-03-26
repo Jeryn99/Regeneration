@@ -21,11 +21,11 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
 
-public final class WatcherTransition implements TransitionType< WatcherTransitionRenderer > {
+public final class WatcherTransition extends TransitionType {
 
     public static void createWatcher(LivingEntity player) {
         RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.transitionType() == TransitionTypes.WATCHER) {
+            if (iRegen.transitionType() == TransitionTypes.WATCHER.get()) {
                 Direction facing = player.getMotionDirection();
                 BlockPos playerPos = player.blockPosition();
                 BlockPos spawnPos = playerPos.relative(facing, 4);
@@ -53,10 +53,6 @@ public final class WatcherTransition implements TransitionType< WatcherTransitio
         return 340;
     }
 
-    @Override
-    public WatcherTransitionRenderer getRenderer() {
-        return WatcherTransitionRenderer.INSTANCE;
-    }
 
     @Override
     public SoundEvent[] getRegeneratingSounds() {
@@ -92,10 +88,5 @@ public final class WatcherTransition implements TransitionType< WatcherTransitio
     public void onUpdateMidRegen(IRegen cap) {
         LivingEntity living = cap.getLiving();
 
-    }
-
-    @Override
-    public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RConstants.MODID, "watcher");
     }
 }

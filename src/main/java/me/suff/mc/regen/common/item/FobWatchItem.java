@@ -2,6 +2,7 @@ package me.suff.mc.regen.common.item;
 
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.objects.RItems;
+import me.suff.mc.regen.common.objects.RParticles;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
@@ -19,8 +20,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 
 /**
@@ -98,6 +101,12 @@ public class FobWatchItem extends Item {
                     setOpen(stack, true);
                     PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.now_timelord"), true);
                 }
+            }
+
+            if (!world.isClientSide()) {
+                ServerWorld serverWorld = (ServerWorld) world;
+                BlockPos blockPos = player.blockPosition();
+                serverWorld.sendParticles(RParticles.CONTAINER.get(), blockPos.getX(), (double) blockPos.getY() + 1D, blockPos.getZ(), 8, 0.5D, 0.25D, 0.5D, 0.0D);
             }
 
             if (used < 0)

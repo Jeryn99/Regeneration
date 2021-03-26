@@ -71,7 +71,7 @@ public class SparkleTransitionRenderer implements TransitionRenderer {
     @Override
     public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
-            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.SPARKLE) {
+            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.SPARKLE.get()) {
                 bipedModel.head.xRot = (float) Math.toRadians(-20);
                 bipedModel.head.yRot = (float) Math.toRadians(0);
                 bipedModel.head.zRot = (float) Math.toRadians(0);

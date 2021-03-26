@@ -3,6 +3,7 @@ package me.suff.mc.regen.client.screen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.ChangeSoundScheme;
@@ -24,7 +25,7 @@ import java.awt.*;
 public class PreferencesScreen extends ContainerScreen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/pref_back.png");
-    private static TransitionTypes transitionType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
+    private static TransitionType transitionType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     private static IRegen.TimelordSound soundScheme = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
     private static PlayerUtil.SkinType skinType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
 
@@ -56,15 +57,15 @@ public class PreferencesScreen extends ContainerScreen {
         });
 
 
-        Button btnRegenType = new Button(width / 2 + 50 + 2, cy + 81, btnW - 2, btnH, transitionType.get().getTranslation(), button -> {
+        Button btnRegenType = new Button(width / 2 + 50 + 2, cy + 81, btnW - 2, btnH, transitionType.getTranslation(), button -> {
             int pos = TransitionTypes.getPosition(transitionType) + 1;
 
             if (pos < 0 || pos >= TransitionTypes.TYPES.length) {
                 pos = 0;
             }
             transitionType = TransitionTypes.TYPES[pos];
-            button.setMessage(transitionType.get().getTranslation());
-            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(transitionType.get()));
+            button.setMessage(transitionType.getTranslation());
+            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new TypeMessage(transitionType));
         });
 
         Button btnSkinType = new Button(width / 2 + 50 - 66, cy + 81, btnW, btnH, new TranslationTextComponent("regeneration.skin_type." + skinType.name().toLowerCase()), button -> {
@@ -76,7 +77,7 @@ public class PreferencesScreen extends ContainerScreen {
             button.setMessage(new TranslationTextComponent("regeneration.skin_type." + skinType.name().toLowerCase()));
             PlayerUtil.updateModel(skinType);
         });
-        btnRegenType.setMessage(transitionType.get().getTranslation());
+        btnRegenType.setMessage(transitionType.getTranslation());
 
         Button btnColor = new Button(width / 2 + 50 - 66, cy + 103, btnW, btnH, new TranslationTextComponent("regen.gui.color_gui"), button -> Minecraft.getInstance().setScreen(new ColorScreen()));
 

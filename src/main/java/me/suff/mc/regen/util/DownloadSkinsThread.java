@@ -1,8 +1,6 @@
 package me.suff.mc.regen.util;
 
-import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.skin.ClientSkin;
-import me.suff.mc.regen.client.skin.CommonSkin;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.io.FileUtils;
@@ -32,14 +30,14 @@ public class DownloadSkinsThread extends Thread {
     @Override
     public void run() {
         try {
-            createDefaultFolders();
+            folderSetup();
             File tempZip = new File(SKIN_DIRECTORY + "/temp");
             if (tempZip.exists()) {
                 FileUtils.cleanDirectory(tempZip);
             }
-            CommonSkin.downloadTrendingSkins();
-            CommonSkin.downloadTimelord();
-            internalSkinsDownload();
+            trending();
+            timelord();
+            skinpacks();
 
             if (isClient) {
                 DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {

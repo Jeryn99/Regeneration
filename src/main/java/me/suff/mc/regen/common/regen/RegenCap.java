@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import org.apache.commons.lang3.tuple.Pair;
 
 import me.suff.mc.regen.common.advancement.TriggerManager;
@@ -63,7 +64,7 @@ public class RegenCap implements IRegen {
     private int regensLeft = 0, animationTicks = 0;
     private String deathMessage = "";
     private RegenStates currentState = RegenStates.ALIVE;
-    private TransitionTypes transitionType = TransitionTypes.FIERY;
+    private TransitionType transitionType = TransitionTypes.FIERY.get();
     private boolean areHandsGlowing = false, traitActive = true;
     private PlayerUtil.SkinType preferredSkinType = PlayerUtil.SkinType.ALEX;
     private boolean nextSkinTypeAlex = false;
@@ -124,7 +125,7 @@ public class RegenCap implements IRegen {
             //Tick Regenerating
             if (currentState == RegenStates.REGENERATING) {
                 animationTicks++;
-                transitionType.get().onUpdateMidRegen(this);
+                transitionType.onUpdateMidRegen(this);
                 syncToClients(null);
                 return;
             }
@@ -226,7 +227,7 @@ public class RegenCap implements IRegen {
         compoundNBT.putInt(RConstants.REGENS_LEFT, regens());
         compoundNBT.putString(RConstants.CURRENT_STATE, regenState().name());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, updateTicks());
-        compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.get().getRegistryName().toString());
+        compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
         compoundNBT.putString(RConstants.PREFERENCE, preferredModel().name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, currentlyAlex());
         compoundNBT.putBoolean(RConstants.GLOWING, glowing());
@@ -280,7 +281,7 @@ public class RegenCap implements IRegen {
         }
         //RegenType
         if (nbt.contains(RConstants.TRANSITION_TYPE)) {
-            transitionType = TransitionTypes.REGISTRY.getValue(new ResourceLocation(nbt.getString(RConstants.TRANSITION_TYPE)));
+            transitionType = TransitionTypes.TRANSITION_TYPES_REGISTRY.get().getValue(new ResourceLocation(nbt.getString(RConstants.TRANSITION_TYPE)));
         }
 
 
@@ -295,12 +296,12 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public TransitionTypes transitionType() {
+    public TransitionType transitionType() {
         return transitionType;
     }
 
     @Override
-    public void setTransitionType(TransitionTypes transitionType) {
+    public void setTransitionType(TransitionType transitionType) {
         this.transitionType = transitionType;
     }
 
@@ -620,10 +621,10 @@ public class RegenCap implements IRegen {
 
             nextTransition.cancel(); // ... cancel any state shift we had planned
             if (currentState.isGraceful()) handGlowTimer.cancel();
-            scheduleTransitionInTicks(RegenStates.Transition.FINISH_REGENERATION, transitionType.get().getAnimationLength());
+            scheduleTransitionInTicks(RegenStates.Transition.FINISH_REGENERATION, transitionType.getAnimationLength());
 
             ActingForwarder.onRegenTrigger(RegenCap.this);
-            transitionType.get().onStartRegeneration(RegenCap.this);
+            transitionType.onStartRegeneration(RegenCap.this);
             syncToClients(null);
         }
 
@@ -643,7 +644,7 @@ public class RegenCap implements IRegen {
             currentState = RegenStates.ALIVE;
             nextTransition = null;
             handGlowTimer = null;
-            transitionType.get().onFinishRegeneration(RegenCap.this);
+            transitionType.onFinishRegeneration(RegenCap.this);
             livingEntity.hurt(isGrace ? RegenSources.REGEN_DMG_CRITICAL : RegenSources.REGEN_DMG_KILLED, Integer.MAX_VALUE);
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                 extractRegens(regens());
@@ -667,7 +668,7 @@ public class RegenCap implements IRegen {
             currentState = RegenStates.POST;
             scheduleTransitionInSeconds(RegenStates.Transition.END_POST, livingEntity.level.random.nextInt(300) + 10);
             handGlowTimer = null;
-            transitionType.get().onFinishRegeneration(RegenCap.this);
+            transitionType.onFinishRegeneration(RegenCap.this);
             ActingForwarder.onRegenFinish(RegenCap.this);
             syncToClients(null);
         }
@@ -682,7 +683,7 @@ public class RegenCap implements IRegen {
         @Override
         @Deprecated
         /** @deprecated Debug purposes */
-        public void fastForward() {
+        public void skip() {
             while (!nextTransition.tick()) ;
         }
 
@@ -694,7 +695,7 @@ public class RegenCap implements IRegen {
         }
 
         @Override
-        public double getStateProgress() {
+        public double stateProgress() {
             if (nextTransition != null) {
                 return nextTransition.getProgress();
             }

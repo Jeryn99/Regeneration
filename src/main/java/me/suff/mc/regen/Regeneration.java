@@ -1,5 +1,7 @@
 package me.suff.mc.regen;
 
+import me.suff.mc.regen.common.regen.transitions.TransitionType;
+import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -86,7 +88,8 @@ public class Regeneration {
         RGlobalLoot.GLM.register(modBus);
         RSurfaceBuilder.SurfaceBuilders.SURFACE_BUILDERS.register(modBus);
         RegenTraitRegistry.TRAITS.register(modBus);
-        
+        TransitionTypes.TRANSITION_TYPES.register(modBus);
+
         NetworkDispatcher.init();
         PlayerUtil.setupPotions();
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);

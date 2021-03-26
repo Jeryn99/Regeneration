@@ -14,7 +14,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 /* Created by Craig on 31/01/2021 */
-public class BlazeTranstion implements TransitionType< BlazeTransitionRenderer > {
+public class BlazeTranstion extends TransitionType {
     @Override
     public int getAnimationLength() {
         return 150;
@@ -40,11 +40,6 @@ public class BlazeTranstion implements TransitionType< BlazeTransitionRenderer >
     }
 
     @Override
-    public BlazeTransitionRenderer getRenderer() {
-        return BlazeTransitionRenderer.INSTANCE;
-    }
-
-    @Override
     public SoundEvent[] getRegeneratingSounds() {
         return new SoundEvent[]{RSounds.REGENERATION_0.get(), RSounds.REGENERATION_1.get(), RSounds.REGENERATION_2.get(), RSounds.REGENERATION_3.get(), RSounds.REGENERATION_4.get(), RSounds.REGENERATION_5.get(), RSounds.REGENERATION_6.get(), RSounds.REGENERATION_7.get()};
     }
@@ -57,10 +52,5 @@ public class BlazeTranstion implements TransitionType< BlazeTransitionRenderer >
     @Override
     public Vector3d getDefaultSecondaryColor() {
         return new Vector3d(1F, 0.5F, 0.18F);
-    }
-
-    @Override
-    public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RConstants.MODID, "blaze");
     }
 }

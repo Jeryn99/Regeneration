@@ -13,16 +13,11 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SparkleTransition implements TransitionType< SparkleTransitionRenderer > {
+public class SparkleTransition extends TransitionType {
 
     @Override
     public int getAnimationLength() {
         return 230;
-    }
-
-    @Override
-    public SparkleTransitionRenderer getRenderer() {
-        return SparkleTransitionRenderer.INSTANCE;
     }
 
     @Override
@@ -38,11 +33,6 @@ public class SparkleTransition implements TransitionType< SparkleTransitionRende
     @Override
     public Vector3d getDefaultSecondaryColor() {
         return new Vector3d(1F, 0.5F, 0.18F);
-    }
-
-    @Override
-    public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RConstants.MODID, "sparkle");
     }
 
     @Override

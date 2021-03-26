@@ -13,16 +13,11 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public final class TroughtonTransition implements TransitionType< TroughtonTransitionRenderer > {
+public final class TroughtonTransition extends TransitionType {
 
     @Override
     public int getAnimationLength() {
         return 330;
-    }
-
-    @Override
-    public TroughtonTransitionRenderer getRenderer() {
-        return TroughtonTransitionRenderer.INSTANCE;
     }
 
     @Override
@@ -59,11 +54,6 @@ public final class TroughtonTransition implements TransitionType< TroughtonTrans
     @Override
     public Vector3d getDefaultSecondaryColor() {
         return new Vector3d(0.5, 0.5, 0.5);
-    }
-
-    @Override
-    public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RConstants.MODID, "troughton");
     }
 
 }

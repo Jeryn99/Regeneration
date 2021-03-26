@@ -2,51 +2,43 @@ package me.suff.mc.regen.common.regen.transitions;
 
 import me.suff.mc.regen.client.rendering.transitions.TransitionRenderer;
 import me.suff.mc.regen.common.regen.IRegen;
-import net.minecraft.util.ResourceLocation;
+import me.suff.mc.regen.common.traits.AbstractTrait;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
-/**
- * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
- * <p>
- * Created by Sub on 16/09/2018.
- */
-public interface TransitionType< R extends TransitionRenderer > {
+public abstract class TransitionType extends ForgeRegistryEntry< TransitionType> {
 
     /**
      * @return in ticks
      */
-    int getAnimationLength();
+    public abstract int getAnimationLength();
 
-    R getRenderer();
-
-    default void onStartRegeneration(IRegen cap) {
+    public void onStartRegeneration(IRegen cap) {
     }
 
-    default void onUpdateMidRegen(IRegen cap) {
+    public void onUpdateMidRegen(IRegen cap) {
     }
 
-    default void onFinishRegeneration(IRegen cap) {
+    public void onFinishRegeneration(IRegen cap) {
     }
 
-    default double getAnimationProgress(IRegen cap) {
+    public double getAnimationProgress(IRegen cap) {
         return Math.min(1, cap.updateTicks() / (double) getAnimationLength());
     }
 
-    SoundEvent[] getRegeneratingSounds();
+    public abstract SoundEvent[] getRegeneratingSounds();
 
-    Vector3d getDefaultPrimaryColor();
+    public abstract Vector3d getDefaultPrimaryColor();
 
-    Vector3d getDefaultSecondaryColor();
+    public abstract Vector3d getDefaultSecondaryColor();
 
-    default TranslationTextComponent getTranslation() {
+    public TranslationTextComponent getTranslation() {
         return new TranslationTextComponent("type.regeneration." + getRegistryName().getPath());
     }
 
-    ResourceLocation getRegistryName();
-
-    default void tick(IRegen cap) {
+    public void tick(IRegen cap) {
     }
 
 }

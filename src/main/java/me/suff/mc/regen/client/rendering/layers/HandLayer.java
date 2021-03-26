@@ -3,6 +3,7 @@ package me.suff.mc.regen.client.rendering.layers;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -47,7 +48,7 @@ public class HandLayer extends LayerRenderer {
                 matrixStackIn.pushPose();
                 bipedModel.translateToHand(handSide, matrixStackIn);
                 renderGlowingHands((LivingEntity) entitylivingbaseIn, matrixStackIn, bufferIn, packedLightIn);
-                iRegen.transitionType().get().getRenderer().thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+                TransitionTypeRenderers.get(iRegen.transitionType()).thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
                 matrixStackIn.popPose();
             }
         });

@@ -3,6 +3,7 @@ package me.suff.mc.regen.common.regen;
 import javax.annotation.Nullable;
 
 import me.suff.mc.regen.common.regen.state.RegenStates;
+import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.AbstractTrait;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
@@ -45,9 +46,9 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
 
     void syncToClients(@Nullable ServerPlayerEntity serverPlayerEntity);
 
-    TransitionTypes transitionType();
+    TransitionType transitionType();
 
-    void setTransitionType(TransitionTypes transitionType);
+    void setTransitionType(TransitionType transitionType);
 
     String deathMessage();
 

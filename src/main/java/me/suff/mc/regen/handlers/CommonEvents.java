@@ -101,7 +101,8 @@ public class CommonEvents {
         if (isLiving && ignoresConfig) {
             return true;
         }
-        else if (isLiving){ //Always make sure the entity is living, because we are explicility casting to LivingEntity later on
+
+        if (isLiving){ //Always make sure the entity is living, because we are explicility casting to LivingEntity later on
         	return RegenConfig.COMMON.mobsHaveRegens.get();	//Base on the config value
         }
         return false;

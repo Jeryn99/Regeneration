@@ -53,7 +53,7 @@ public class CommonSkin {
 
         if (!skins.exists()) {
             try {
-                CommonSkin.createDefaultFolders();
+                CommonSkin.folderSetup();
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
@@ -97,7 +97,7 @@ public class CommonSkin {
         return skins;
     }
 
-    public static void createDefaultFolders() throws IOException {
+    public static void folderSetup() throws IOException {
         File[] folders = new File[]{SKIN_DIRECTORY, SKIN_DIRECTORY_ALEX, SKIN_DIRECTORY_FEMALE_TIMELORD, SKIN_DIRECTORY_MALE_TIMELORD, SKIN_DIRECTORY_STEVE};
         for (File folder : folders) {
             if (!folder.exists()) {
@@ -156,7 +156,7 @@ public class CommonSkin {
         return op.filter(img, gray);
     }
 
-    public static boolean internalSkinsDownload() {
+    public static boolean skinpacks() {
         if (DownloadSkinsThread.forceStop) return false;
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return false;
 
@@ -254,7 +254,7 @@ public class CommonSkin {
         return new ArrayList<>(folderFiles);
     }
 
-    public static void downloadTrendingSkins() throws IOException {
+    public static void trending() throws IOException {
         if (DownloadSkinsThread.forceStop) return;
         if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
         File trendingDir = TRENDING_ALEX;
@@ -276,7 +276,7 @@ public class CommonSkin {
         }
     }
 
-    public static void downloadTimelord() throws IOException {
+    public static void timelord() throws IOException {
         long attr = SKIN_DIRECTORY_MALE_TIMELORD.lastModified();
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(SKIN_DIRECTORY_MALE_TIMELORD.list()).length == 0) {
             FileUtils.cleanDirectory(SKIN_DIRECTORY_FEMALE_TIMELORD);

@@ -1,15 +1,22 @@
 package me.suff.mc.regen.common.regen.transitions;
 
+import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.TraitQuick;
+import me.suff.mc.regen.common.traits.TraitSwimSpeed;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
 import java.util.function.Supplier;
+
+import static me.suff.mc.regen.common.traits.RegenTraitRegistry.TRAITS;
 
 /**
  * Created by Swirtzly
@@ -18,29 +25,23 @@ import java.util.function.Supplier;
 @Mod.EventBusSubscriber(modid = RConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TransitionTypes extends ForgeRegistryEntry< TransitionTypes > {
 
-    public static final TransitionTypes FIERY = new TransitionTypes(FieryTransition::new);
-    public static final TransitionTypes TROUGHTON = new TransitionTypes(TroughtonTransition::new);
-    public static final TransitionTypes WATCHER = new TransitionTypes(WatcherTransition::new);
-    public static final TransitionTypes SPARKLE = new TransitionTypes(SparkleTransition::new);
-    public static final TransitionTypes ENDER_DRAGON = new TransitionTypes(EnderDragonTransition::new);
-    public static final TransitionTypes BLAZE = new TransitionTypes(BlazeTranstion::new);
+    public static final DeferredRegister< TransitionType > TRANSITION_TYPES = DeferredRegister.create(TransitionType.class, RConstants.MODID);
+    public static TransitionType[] TYPES = new TransitionType[]{};
 
-    public static IForgeRegistry< TransitionTypes > REGISTRY;
-    public static TransitionTypes[] TYPES = new TransitionTypes[]{FIERY, TROUGHTON};
-    //==================================
-    private Supplier< TransitionType > supplier;
+    public static Supplier< IForgeRegistry< TransitionType > > TRANSITION_TYPES_REGISTRY = TRANSITION_TYPES.makeRegistry("transition_types", () -> new RegistryBuilder<TransitionType>().setMaxID(Integer.MAX_VALUE - 1));
 
-    public TransitionTypes(Supplier< TransitionType > supplier) {
-        this.supplier = supplier;
-        this.setRegistryName(supplier.get().getRegistryName());
-    }
+    public static final RegistryObject<TransitionType> FIERY = TRANSITION_TYPES.register("fiery", (FieryTransition::new));
+    public static final RegistryObject<TransitionType> TROUGHTON = TRANSITION_TYPES.register("troughton", (TroughtonTransition::new));
+    public static final RegistryObject<TransitionType> WATCHER = TRANSITION_TYPES.register("watcher", (WatcherTransition::new));
+    public static final RegistryObject<TransitionType> SPARKLE = TRANSITION_TYPES.register("sparkle", (SparkleTransition::new));
+    public static final RegistryObject<TransitionType> ENDER_DRAGON = TRANSITION_TYPES.register("ender_dragon", (EnderDragonTransition::new));
+    public static final RegistryObject<TransitionType> BLAZE = TRANSITION_TYPES.register("blaze", (BlazeTranstion::new));
 
-    @SubscribeEvent
-    public static void onRegisterNewRegistries(RegistryEvent.NewRegistry e) {
-        REGISTRY = new RegistryBuilder< TransitionTypes >().setName(new ResourceLocation(RConstants.MODID, "regeneration_types")).setType(TransitionTypes.class).setIDRange(0, 2048).create();
-    }
 
-    public static int getPosition(TransitionTypes rrRegenType) {
+    public static int getPosition(TransitionType rrRegenType) {
+        if(TYPES.length <= 0) {
+            TYPES = TRANSITION_TYPES_REGISTRY.get().getValues().toArray(new TransitionType[0]);
+        }
         for (int i = 0; i < TYPES.length; i++) {
             if (TYPES[i] == rrRegenType) {
                 return i;
@@ -49,23 +50,16 @@ public class TransitionTypes extends ForgeRegistryEntry< TransitionTypes > {
         return 0;
     }
 
-    public static TransitionTypes getRandomType() {
+    public static TransitionType getRandomType() {
+        if(TYPES.length <= 0) {
+            TYPES = TRANSITION_TYPES_REGISTRY.get().getValues().toArray(new TransitionType[0]);
+        }
         return TYPES[(int) (System.currentTimeMillis() % TYPES.length)];
     }
 
-    public static TransitionTypes getRandomTimelordType() {
-        TransitionTypes[] timelordTypes = new TransitionTypes[]{FIERY, TROUGHTON, ENDER_DRAGON, BLAZE};
+    public static TransitionType getRandomTimelordType() {
+        TransitionType[] timelordTypes = new TransitionType[]{FIERY.get(), TROUGHTON.get(), ENDER_DRAGON.get(), BLAZE.get()};
         return timelordTypes[(int) (System.currentTimeMillis() % timelordTypes.length)];
-    }
-
-    @SubscribeEvent
-    public static void onRegisterTypes(RegistryEvent.Register< TransitionTypes > e) {
-        e.getRegistry().registerAll(FIERY, TROUGHTON, WATCHER, SPARKLE, ENDER_DRAGON, BLAZE);
-        TYPES = e.getRegistry().getValues().toArray(new TransitionTypes[0]);
-    }
-
-    public TransitionType get() {
-        return this.supplier.get();
     }
 
 

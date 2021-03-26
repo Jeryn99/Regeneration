@@ -11,6 +11,7 @@ import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
+import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.PlayerUtil;
@@ -69,8 +70,8 @@ public class ClientEvents {
         PlayerEntity player = playerEvent.getPlayer();
         SkinHandler.tick((AbstractClientPlayerEntity) playerEvent.getPlayer());
         RegenCap.get(player).ifPresent(iRegen -> {
-            TransitionType< ? > type = iRegen.transitionType().get();
-            type.getRenderer().onPlayerRenderPre(playerEvent);
+            TransitionType type = iRegen.transitionType();
+            TransitionTypeRenderers.get(type).onPlayerRenderPre(playerEvent);
         });
     }
 
@@ -78,14 +79,14 @@ public class ClientEvents {
     public static void onRenderPlayerPost(RenderPlayerEvent.Post playerEvent) {
         PlayerEntity player = playerEvent.getPlayer();
         RegenCap.get(player).ifPresent(iRegen -> {
-            TransitionType< ? > type = iRegen.transitionType().get();
-            type.getRenderer().onPlayerRenderPost(playerEvent);
+            TransitionType type = iRegen.transitionType();
+            TransitionTypeRenderers.get(type).onPlayerRenderPost(playerEvent);
         });
     }
 
     @SubscribeEvent
     public static void onRenderHand(RenderHandEvent event) {
-        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> iRegen.transitionType().get().getRenderer().firstPersonHand(event));
+        RegenCap.get(Minecraft.getInstance().player).ifPresent(iRegen -> TransitionTypeRenderers.get(iRegen.transitionType()).firstPersonHand(event));
     }
 
     @SubscribeEvent
@@ -101,7 +102,7 @@ public class ClientEvents {
                 if (iRegen.regenState() == RegenStates.POST && PlayerUtil.isPlayerAboveZeroGrid(ep)) {
 
                     if (iSound == null) {
-                        iSound = SimpleSound.forUI(RSounds.GRACE_HUM.get(), 1);
+                        iSound = SimpleSound.forLocalAmbience(RSounds.GRACE_HUM.get(), 1, 1);
                     }
 
                     if (!sound.isActive(iSound)) {
@@ -149,7 +150,7 @@ public class ClientEvents {
                 e.setGreen(0.5F);
             }
 
-            if (data.transitionType() == TransitionTypes.TROUGHTON && data.regenState() == RegenStates.REGENERATING) {
+            if (data.transitionType() == TransitionTypes.TROUGHTON.get() && data.regenState() == RegenStates.REGENERATING) {
                 e.setRed(0);
                 e.setGreen(0);
                 e.setBlue(0);
@@ -231,7 +232,7 @@ public class ClientEvents {
                     event.setCanceled(true);
                     event.setDensity(0.10F);
                 }
-                if (data.transitionType() == TransitionTypes.TROUGHTON && data.updateTicks() > 0) {
+                if (data.transitionType() == TransitionTypes.TROUGHTON.get() && data.updateTicks() > 0) {
                     event.setCanceled(true);
                     event.setDensity(0.3F);
                 }
@@ -258,24 +259,31 @@ public class ClientEvents {
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data -> {
             if (data.regenState() == RegenStates.REGENERATING) { // locking user
                 MovementInput moveType = e.getMovementInput();
-                moveType.right = false;
-                moveType.left = false;
-                moveType.down = false;
-                moveType.jumping = false;
-                moveType.forwardImpulse = 0.0F;
-                moveType.shiftKeyDown = false;
-                moveType.leftImpulse = 0.0F;
-
-                if (data.transitionType() == TransitionTypes.ENDER_DRAGON && RegenConfig.COMMON.allowUpwardsMotion.get()) {
-                    if (player.blockPosition().getY() <= 100) {
-                        BlockPos upwards = player.blockPosition().above(2);
-                        BlockPos pos = upwards.subtract(player.blockPosition());
-                        Vector3d vec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).normalize();
-                        player.setDeltaMovement(player.getDeltaMovement().add(vec.scale(0.10D)));
-                    }
-                }
+                blockMovement(moveType);
+                upwardsMovement(player, data);
             }
         }));
+    }
+
+    private static void upwardsMovement(ClientPlayerEntity player, me.suff.mc.regen.common.regen.IRegen data) {
+        if (data.transitionType() == TransitionTypes.ENDER_DRAGON.get() && RegenConfig.COMMON.allowUpwardsMotion.get()) {
+            if (player.blockPosition().getY() <= 100) {
+                BlockPos upwards = player.blockPosition().above(2);
+                BlockPos pos = upwards.subtract(player.blockPosition());
+                Vector3d vec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).normalize();
+                player.setDeltaMovement(player.getDeltaMovement().add(vec.scale(0.10D)));
+            }
+        }
+    }
+
+    private static void blockMovement(MovementInput moveType) {
+        moveType.right = false;
+        moveType.left = false;
+        moveType.down = false;
+        moveType.jumping = false;
+        moveType.forwardImpulse = 0.0F;
+        moveType.shiftKeyDown = false;
+        moveType.leftImpulse = 0.0F;
     }
 
 }

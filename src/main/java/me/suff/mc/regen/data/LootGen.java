@@ -19,7 +19,7 @@ public class LootGen extends GlobalLootModifierProvider {
     protected void start() {
 
         //FOB WATCH
-        ResourceLocation[] FOB_TABLES = new ResourceLocation[]{
+        ResourceLocation[] fobWatchTables = new ResourceLocation[]{
                 LootTables.ABANDONED_MINESHAFT,
                 LootTables.BASTION_BRIDGE,
                 LootTables.LIBRARIAN_GIFT,
@@ -28,9 +28,9 @@ public class LootGen extends GlobalLootModifierProvider {
                 LootTables.SHIPWRECK_SUPPLY
         };
 
-        for (ResourceLocation fob_table : FOB_TABLES) {
-            add(fob_table.getPath(), RGlobalLoot.REGEN_LOOT.get(), new RGlobalLoot.RegenerationLoot(
-                    new ILootCondition[]{LootTableIdCondition.builder(fob_table).build()}, 15)
+        for (ResourceLocation currentTable : fobWatchTables) {
+            add(currentTable.getPath(), RGlobalLoot.REGEN_LOOT.get(), new RGlobalLoot.RegenerationLoot(
+                    new ILootCondition[]{LootTableIdCondition.builder(currentTable).build()}, 15)
             );
         }
 

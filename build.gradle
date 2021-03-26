@@ -2,12 +2,12 @@ buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        maven { url = "https://plugins.gradle.org/m2/"}
+        maven { url = "https://plugins.gradle.org/m2/" }
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
     }
@@ -81,7 +81,7 @@ minecraft {
 }
 
 curseforge {
-    if(project.hasProperty('curseforge') && project.hasProperty('regen')) {
+    if (project.hasProperty('curseforge') && project.hasProperty('regen')) {
 
         apiKey = rootProject.curseforge
         project {
@@ -129,22 +129,11 @@ curseforge {
     }
 }
 
-repositories{
-    maven {
-        // location of the maven that hosts JEI files
-        url "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        // location of the maven that hosts IE files
-        url "https://maven.blamejared.com/"
-    }
-    maven {
-        url "https://www.cursemaven.com"
-    }
-
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
+repositories {
+    maven { url "https://dvs1.progwml6.com/files/maven/" }
+    maven { url "https://maven.blamejared.com/" }
+    maven { url "https://www.cursemaven.com" }
+    maven { url 'https://jitpack.io' }
     mavenCentral()
 }
 
@@ -154,7 +143,7 @@ dependencies {
     compileOnly 'org.jetbrains:annotations:15.0'
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
-    implementation fg.deobf("curse.maven:configured-457570:3243552")
+    implementation fg.deobf("curse.maven:configured-457570:3244520")
     implementation fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:1.16-SNAPSHOT')
 
 }
@@ -172,20 +161,12 @@ jar {
                 "Implementation-Version"  : "${version}",
                 "Implementation-Vendor"   : "suff99",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "regen.mixins.json"
+                "MixinConfigs"            : "regen.mixins.json"
         ])
     }
 }
 
-def getDate() {
-    return new Date().format('dd-MM-yyyy')
-}
-
-// Example configuration to allow publishing using the maven-publish task
-// This is the preferred method to reobfuscate your jar file
 jar.finalizedBy('reobfJar')
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-//publish.dependsOn('reobfJar')
 
 publishing {
     publications {

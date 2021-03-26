@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.client.skin.CommonSkin;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.NextSkinMessage;
 import me.suff.mc.regen.util.*;
@@ -31,10 +32,14 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 
 public class IncarnationScreen extends ContainerScreen {
@@ -191,20 +196,20 @@ public class IncarnationScreen extends ContainerScreen {
         this.addButton(this.excludeTrending);
 
 
-      /*  List< Path > files;
+     /*  List< Path > files;
         AtomicInteger offset = new AtomicInteger(btnH + 5);
         try {
            Files.list(new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/Skins/alex").toPath())
-                    .limit(10)
+                    .collect(Collectors.toList())
                     .forEach(path -> {
                         System.out.println(path);
                         RCheckbox bob = new RCheckbox(cx + 10, cy + 25 + offset.get(), 150, 20, new TranslationTextComponent(path.toString()), true, checkboxButton -> {
                             position = 0;
-                            if (!checkboxButton.isChecked()) {
-                                skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains(path.toString()));
-                            } else {
-                                skins = CommonSkin.listAllSkins(currentSkinType);
-                            }
+                          //  if (!checkboxButton.isChecked()) {
+                           //     skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains(path.toString()));
+                          //  } else {
+                          //      skins = CommonSkin.listAllSkins(currentSkinType);
+                         //   }
                             updateModels();
                         });
                         offset.addAndGet(btnH + 5);

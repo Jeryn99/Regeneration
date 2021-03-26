@@ -23,7 +23,7 @@ public class TypeMessage {
 
     public static void handle(TypeMessage message, Supplier< NetworkEvent.Context > ctx) {
         ctx.get().getSender().getServer().submitAsync(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
-            cap.setTransitionType(TransitionTypes.REGISTRY.getValue(new ResourceLocation(message.type)));
+            cap.setTransitionType(TransitionTypes.TRANSITION_TYPES_REGISTRY.get().getValue(new ResourceLocation(message.type)));
             cap.syncToClients(null);
         }));
         ctx.get().setPacketHandled(true);

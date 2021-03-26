@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Iterator;
 
-public class FieryTransition implements TransitionType< FieryTransitionRenderer > {
+public class FieryTransition extends TransitionType {
 
 
     @Override
@@ -90,16 +90,6 @@ public class FieryTransition implements TransitionType< FieryTransitionRenderer 
     @Override
     public Vector3d getDefaultSecondaryColor() {
         return new Vector3d(0.7137255f, 0.75686276f,0.25490198f);
-    }
-
-    @Override
-    public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RConstants.MODID, "fiery");
-    }
-
-    @Override
-    public FieryTransitionRenderer getRenderer() {
-        return FieryTransitionRenderer.INSTANCE;
     }
 
 }

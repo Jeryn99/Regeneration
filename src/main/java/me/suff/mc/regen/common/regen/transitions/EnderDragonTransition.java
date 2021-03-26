@@ -14,7 +14,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class EnderDragonTransition implements TransitionType< EnderDragonTransitionRenderer > {
+public class EnderDragonTransition extends TransitionType {
     @Override
     public int getAnimationLength() {
         return 300;
@@ -51,11 +51,6 @@ public class EnderDragonTransition implements TransitionType< EnderDragonTransit
     }
 
     @Override
-    public EnderDragonTransitionRenderer getRenderer() {
-        return EnderDragonTransitionRenderer.INSTANCE;
-    }
-
-    @Override
     public SoundEvent[] getRegeneratingSounds() {
         return new SoundEvent[]{SoundEvents.ENDER_DRAGON_DEATH};
     }
@@ -70,8 +65,4 @@ public class EnderDragonTransition implements TransitionType< EnderDragonTransit
         return Vector3d.ZERO;
     }
 
-    @Override
-    public ResourceLocation getRegistryName() {
-        return new ResourceLocation(RConstants.MODID, "ender_dragon");
-    }
 }

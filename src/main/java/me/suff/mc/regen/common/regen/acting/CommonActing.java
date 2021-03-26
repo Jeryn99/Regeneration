@@ -43,14 +43,14 @@ class CommonActing implements Acting {
     }
 
     public static SoundEvent getRandomSound(Random random, IRegen cap) {
-        SoundEvent[] soundEvents = cap.transitionType().get().getRegeneratingSounds();
+        SoundEvent[] soundEvents = cap.transitionType().getRegeneratingSounds();
         return soundEvents[random.nextInt(soundEvents.length)];
     }
 
     @Override
     public void onRegenTick(IRegen cap) {
         LivingEntity livingEntity = cap.getLiving();
-        float stateProgress = (float) cap.stateManager().getStateProgress();
+        float stateProgress = (float) cap.stateManager().stateProgress();
 
         switch (cap.regenState()) {
             case POST:
