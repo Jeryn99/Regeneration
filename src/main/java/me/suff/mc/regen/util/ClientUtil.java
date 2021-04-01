@@ -23,6 +23,7 @@ import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.client.rendering.JarParticle;
 import me.suff.mc.regen.client.rendering.JarTileRender;
 import me.suff.mc.regen.client.rendering.entity.RenderLaser;
+import me.suff.mc.regen.client.rendering.entity.RenderOmega;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
 import me.suff.mc.regen.client.rendering.layers.HandLayer;
@@ -275,6 +276,7 @@ public class ClientUtil {
         ClientRegistry.bindTileEntityRenderer(RTiles.HAND_JAR.get(), JarTileRender::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.LASER.get(), RenderLaser::new);
+        RenderingRegistry.registerEntityRenderingHandler(REntities.OMEGA.get(), RenderOmega::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);
     }
 

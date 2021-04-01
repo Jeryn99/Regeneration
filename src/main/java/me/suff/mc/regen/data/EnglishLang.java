@@ -253,6 +253,7 @@ public class EnglishLang extends LanguageProvider {
 
         //Entity
         add(REntities.TIMELORD.get(), "Timelord");
+        add(REntities.OMEGA.get(), "Omega");
 
         //Traits
         add(RegenTraitRegistry.BORING.get().translation().getKey(), "Boring");

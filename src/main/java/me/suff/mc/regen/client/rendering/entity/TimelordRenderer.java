@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.client.rendering.layers.HandLayer;
 import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
 import me.suff.mc.regen.client.rendering.layers.TimelordHeadLayer;
+import me.suff.mc.regen.client.rendering.model.OmegaModel;
 import me.suff.mc.regen.client.rendering.model.TimelordGuardModel;
 import me.suff.mc.regen.client.rendering.model.TimelordModel;
 import me.suff.mc.regen.common.entities.TimelordEntity;

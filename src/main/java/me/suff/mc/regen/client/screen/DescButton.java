@@ -7,6 +7,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 
+import net.minecraft.client.gui.widget.button.Button.IPressable;
+import net.minecraft.client.gui.widget.button.Button.ITooltip;
+
 public class DescButton extends Button {
 
     private ArrayList< IReorderingProcessor > description = null;

@@ -1,6 +1,7 @@
 package me.suff.mc.regen.common.objects;
 
 import me.suff.mc.regen.common.entities.LaserProjectile;
+import me.suff.mc.regen.common.entities.OmegaEntity;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.entities.WatcherEntity;
 import me.suff.mc.regen.util.RConstants;
@@ -18,6 +19,7 @@ public class REntities {
 
     public static final DeferredRegister< EntityType< ? > > ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, RConstants.MODID);
     public static RegistryObject< EntityType< TimelordEntity > > TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
+    public static RegistryObject< EntityType< OmegaEntity > > OMEGA = ENTITIES.register("omega", () -> registerNoSpawnerBase(OmegaEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "omega"));
     public static RegistryObject< EntityType< WatcherEntity > > WATCHER = ENTITIES.register("watcher", () -> registerNoSpawnerBase(WatcherEntity::new, EntityClassification.MISC, 0.6F, 1.95F, 128, 1, true, "watcher"));
     public static RegistryObject< EntityType< LaserProjectile > > LASER = ENTITIES.register("laser", () -> registerNoSpawnerBase(LaserProjectile::new, EntityClassification.MISC, 0.25F, 0.25F, 128, 1, true, "laser"));
 

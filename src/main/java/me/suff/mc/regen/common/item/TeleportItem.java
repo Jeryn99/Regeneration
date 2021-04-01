@@ -21,6 +21,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 
+import net.minecraft.item.Item.Properties;
+
 /* Created by Craig on 18/03/2021 */
 public class TeleportItem extends Item {
 

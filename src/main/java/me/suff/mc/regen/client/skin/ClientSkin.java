@@ -21,6 +21,10 @@ public class ClientSkin {
 
     public static void downloadPreviousSkins() throws IOException {
         if (DownloadSkinsThread.forceStop) return;
+        if(Minecraft.getInstance().getUser().getGameProfile().getId().version() != 5){
+            Regeneration.LOG.warn("Could not download player skins for {}, You are not a legitimate player.", Minecraft.getInstance().getUser().getName());
+            return;
+        }
         if (!RegenConfig.CLIENT.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
         Regeneration.LOG.warn("Refreshing users past skins for {}", Minecraft.getInstance().getUser().getName());
 

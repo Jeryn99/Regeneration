@@ -26,6 +26,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 
+import net.minecraft.item.Item.Properties;
+
 /* Created by Craig on 05/03/2021 */
 public class HandItem extends Item {
     public HandItem(Properties properties) {
