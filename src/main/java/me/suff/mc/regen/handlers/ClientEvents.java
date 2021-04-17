@@ -130,7 +130,7 @@ public class ClientEvents {
                 TimelordRenderer.TIMELORDS.clear();
                 JarTileRender.TEXTURES.forEach(((uuid, texture) -> Minecraft.getInstance().getTextureManager().release(texture)));
                 JarTileRender.TEXTURES.clear();
-                Regeneration.LOG.warn("Cleared Regeneration texture cache.");
+                Regeneration.LOG.warn("Cleared Regeneration texture cache");
             }
         }
     }

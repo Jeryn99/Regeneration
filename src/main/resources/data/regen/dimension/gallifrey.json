@@ -48,30 +48,30 @@
           "biome": "regen:redlands_taiga_mountains",
           "parameters": {
             "altitude": 0,
+            "temperature": 0.233333333333,
+            "humidity": 0.366666666667,
             "weirdness": 0,
-            "offset": 0,
-            "temperature": 0.471428571428,
-            "humidity": 0.128571428572
+            "offset": 0
           }
         },
         {
           "biome": "regen:redlands",
           "parameters": {
             "altitude": 0,
+            "temperature": 0.1,
+            "humidity": 0.5,
             "weirdness": 0,
-            "offset": 0,
-            "temperature": 0.442857142857,
-            "humidity": 0.157142857143
+            "offset": 0
           }
         },
         {
           "biome": "regen:death_zone",
           "parameters": {
-            "altitude": 0.6,
+            "altitude": 0,
+            "temperature": 0.366666666667,
+            "humidity": 0.233333333333,
             "weirdness": 0,
-            "offset": 0,
-            "temperature": 0.414285714286,
-            "humidity": 0.185714285714
+            "offset": 0
           }
         },
         {
@@ -88,10 +88,10 @@
           "biome": "regen:redlands_modified_gravelly_mountains",
           "parameters": {
             "altitude": 0,
+            "temperature": 0.5,
+            "humidity": 0.1,
             "weirdness": 0,
-            "offset": 0,
-            "temperature": 0.357142857143,
-            "humidity": 0.242857142857
+            "offset": 0
           }
         },
         {

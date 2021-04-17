@@ -64,6 +64,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import software.bernie.geckolib3.GeckoLib;
 
 @Mod("regen")
 public class Regeneration {
@@ -95,6 +96,7 @@ public class Regeneration {
         PlayerUtil.setupPotions();
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
+        GeckoLib.initialize();
     }
 
 

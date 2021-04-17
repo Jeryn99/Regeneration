@@ -23,21 +23,21 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
     //Taken from vanilla
     private static float HALF_SQRT_3 = (float) (Math.sqrt(3.0D) / 2.0D);
 
-    private static void vertex01(IVertexBuilder p_229061_0_, Matrix4f p_229061_1_, int p_229061_2_) {
-        p_229061_0_.vertex(p_229061_1_, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
-        p_229061_0_.vertex(p_229061_1_, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
+    private static void vertex01(IVertexBuilder iVertexBuilder, Matrix4f matrix4f, int p_229061_2_) {
+        iVertexBuilder.vertex(matrix4f, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
+        iVertexBuilder.vertex(matrix4f, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
     }
 
-    private static void vertex2(IVertexBuilder p_229060_0_, Matrix4f p_229060_1_, float p_229060_2_, float p_229060_3_) {
-        p_229060_0_.vertex(p_229060_1_, -HALF_SQRT_3 * p_229060_3_, p_229060_2_, -0.5F * p_229060_3_).color(255, 0, 255, 0).endVertex();
+    private static void vertex2(IVertexBuilder iVertexBuilder, Matrix4f matrix4f, float p_229060_2_, float p_229060_3_) {
+        iVertexBuilder.vertex(matrix4f, -HALF_SQRT_3 * p_229060_3_, p_229060_2_, -0.5F * p_229060_3_).color(255, 0, 255, 0).endVertex();
     }
 
-    private static void vertex3(IVertexBuilder p_229062_0_, Matrix4f p_229062_1_, float p_229062_2_, float p_229062_3_) {
-        p_229062_0_.vertex(p_229062_1_, HALF_SQRT_3 * p_229062_3_, p_229062_2_, -0.5F * p_229062_3_).color(255, 0, 255, 0).endVertex();
+    private static void vertex3(IVertexBuilder iVertexBuilder, Matrix4f matrix4f, float p_229062_2_, float p_229062_3_) {
+        iVertexBuilder.vertex(matrix4f, HALF_SQRT_3 * p_229062_3_, p_229062_2_, -0.5F * p_229062_3_).color(255, 0, 255, 0).endVertex();
     }
 
-    private static void vertex4(IVertexBuilder p_229063_0_, Matrix4f p_229063_1_, float p_229063_2_, float p_229063_3_) {
-        p_229063_0_.vertex(p_229063_1_, 0.0F, p_229063_2_, 1.0F * p_229063_3_).color(255, 0, 255, 0).endVertex();
+    private static void vertex4(IVertexBuilder iVertexBuilder, Matrix4f matrix4f, float p_229063_2_, float p_229063_3_) {
+        iVertexBuilder.vertex(matrix4f, 0.0F, p_229063_2_, 1.0F * p_229063_3_).color(255, 0, 255, 0).endVertex();
     }
 
     @Override
