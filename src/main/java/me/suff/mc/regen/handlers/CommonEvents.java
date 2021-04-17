@@ -108,41 +108,6 @@ public class CommonEvents {
         return false;
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        Entity entity = event.getEntity();
-        if (event.getWorld().dimension() == RConstants.GALLIFREY) {
-
-            if (entity instanceof VillagerEntity && entity.getType() != REntities.TIMELORD.get()) {
-                VillagerEntity villagerEntity = (VillagerEntity) entity;
-                TimelordEntity timelord = new TimelordEntity(event.getWorld());
-                timelord.setVillagerData(villagerEntity.getVillagerData());
-                timelord.setTimelordType(TimelordEntity.TimelordType.COUNCIL);
-                Vector3d pos = event.getEntity().position();
-                timelord.setPos(pos.x, pos.y, pos.z);
-                cancelRemoveAdd(event, entity, timelord);
-            }
-
-            if (entity instanceof IronGolemEntity) {
-                for (int i = 4; i > 0; i--) {
-                    TimelordEntity timelord = new TimelordEntity(event.getWorld());
-                    timelord.setTimelordType(TimelordEntity.TimelordType.GUARD);
-                    Vector3d pos = event.getEntity().position();
-                    timelord.setPos(pos.x + (i * 2), pos.y, pos.z);
-                    cancelRemoveAdd(event, entity, timelord);
-                }
-            }
-        }
-    }
-
-    private static void cancelRemoveAdd(EntityJoinWorldEvent event, Entity entity, TimelordEntity timelord) {
-        entity.remove();
-        event.setCanceled(true);
-        ThreadTaskExecutor< Runnable > executor = LogicalSidedProvider.WORKQUEUE.get(event.getWorld().isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
-        executor.tell(new TickDelayedTask(0, () -> event.getWorld().addFreshEntity(timelord)));
-    }
-
-
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();

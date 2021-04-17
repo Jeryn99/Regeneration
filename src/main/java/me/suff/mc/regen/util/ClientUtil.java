@@ -23,7 +23,6 @@ import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.client.rendering.JarParticle;
 import me.suff.mc.regen.client.rendering.JarTileRender;
 import me.suff.mc.regen.client.rendering.entity.RenderLaser;
-import me.suff.mc.regen.client.rendering.entity.RenderOmega;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
 import me.suff.mc.regen.client.rendering.layers.HandLayer;
@@ -50,16 +49,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.toasts.SystemToast;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldVertexBufferUploader;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -70,7 +65,6 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
@@ -97,9 +91,7 @@ public class ClientUtil {
         conn.setDoOutput(true);
         conn.setDoInput(true);
         conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type",
-                "application/x-www-form-urlencoded");
-
+        conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
         conn.connect();
         StringBuilder stb = new StringBuilder();
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -107,8 +99,7 @@ public class ClientUtil {
         wr.flush();
 
         // Get the response
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(conn.getInputStream()));
+        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String line;
         while ((line = rd.readLine()) != null) {
             stb.append(line).append("\n");
@@ -276,7 +267,6 @@ public class ClientUtil {
         ClientRegistry.bindTileEntityRenderer(RTiles.HAND_JAR.get(), JarTileRender::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.LASER.get(), RenderLaser::new);
-        RenderingRegistry.registerEntityRenderingHandler(REntities.OMEGA.get(), RenderOmega::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);
     }
 
@@ -300,7 +290,7 @@ public class ClientUtil {
 
     public static void renderSky(MatrixStack matrixStackIn) {
         if(Minecraft.getInstance().level == null || matrixStackIn == null) return;
-        if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension()== RConstants.GALLIFREY) {
+      /*  if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension()== RConstants.GALLIFREY) {
             float scale = 30.0F;
             BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
             matrixStackIn.pushPose();
@@ -316,6 +306,6 @@ public class ClientUtil {
             matrixStackIn.popPose();
             bufferbuilder.end();
             WorldVertexBufferUploader.end(bufferbuilder);
-        }
+        }*/
     }
 }
