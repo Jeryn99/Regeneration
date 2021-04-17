@@ -19,7 +19,7 @@ public class SoundReverb {
 
     private static int auxEffectSlot;
 
-   public static void addReloader() {
+    public static void addReloader() {
         ((IReloadableResourceManager) MC.getResourceManager()).registerReloadListener((ISelectiveResourceReloadListener) (manager, predicate) -> {
             setup = false;
         });
@@ -55,7 +55,7 @@ public class SoundReverb {
     }
 
     private static boolean shouldEcho() {
-        if (Minecraft.getInstance().player == null) return false;
+        if (Minecraft.getInstance().level == null) return false;
         IRegen data = RegenCap.get(Minecraft.getInstance().player).orElse(null);
         if (data != null) {
             return data.regenState().isGraceful();

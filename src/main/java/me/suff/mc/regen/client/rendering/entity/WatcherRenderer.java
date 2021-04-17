@@ -4,13 +4,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.entities.WatcherEntity;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 

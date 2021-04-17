@@ -1,11 +1,6 @@
 package me.suff.mc.regen.util;
 
-import java.util.Arrays;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import com.mojang.authlib.GameProfile;
-
 import me.suff.mc.regen.common.traits.AbstractTrait;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.StringTextComponent;
@@ -15,9 +10,13 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.server.ServerWorld;
 
+import java.util.Arrays;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 public class RTextHelper {
-	
-	public static TextComponent createTextComponentWithTip(String text, String tooltipText) {
+
+    public static TextComponent createTextComponentWithTip(String text, String tooltipText) {
         //Always surround tool tip items with brackets
         TextComponent textComponent = new StringTextComponent("[" + text + "]");
         textComponent.withStyle(style -> {
@@ -27,14 +26,14 @@ public class RTextHelper {
         });
         return textComponent;
     }
-	
-	public static TextComponent getTraitTextObject(AbstractTrait trait) {
-		if (trait != null)
-			return createTextComponentWithTip(formatTraitName(trait), trait.getRegistryName().toString());
-		return createTextComponentWithTip("Null Trait","Null");
-	}
-	
-	/**
+
+    public static TextComponent getTraitTextObject(AbstractTrait trait) {
+        if (trait != null)
+            return createTextComponentWithTip(formatTraitName(trait), trait.getRegistryName().toString());
+        return createTextComponentWithTip("Null Trait", "Null");
+    }
+
+    /**
      * For getting player tool tip. If player has been online since server start, then will show their display name.
      */
     public static TextComponent getPlayerTextObject(ServerWorld world, UUID id) {
@@ -42,19 +41,19 @@ public class RTextHelper {
         String playerName = profileByUUID != null ? profileByUUID.getName() : "OFFLINE Player";
         return createTextComponentWithTip(playerName, id.toString());
     }
-    
+
     public static TextComponent getEntityTextObject(ServerWorld world, UUID id) {
         Entity entity = world.getEntity(id);
         String entityName = entity != null ? entity.getName().getString() : "Null Entity";
         return createTextComponentWithTip(entityName, id.toString());
     }
-    
+
     public static String formatTraitName(AbstractTrait trait) {
-    	String original = trait.getRegistryName().getPath().trim().replace("	", "").replace("_", " ");
-		String output = Arrays.stream(original.split("\\s+"))
-				.map(t -> t.substring(0,1).toUpperCase() + t.substring(1))
-				.collect(Collectors.joining(" "));
-		return output;
+        String original = trait.getRegistryName().getPath().trim().replace("	", "").replace("_", " ");
+        String output = Arrays.stream(original.split("\\s+"))
+                .map(t -> t.substring(0, 1).toUpperCase() + t.substring(1))
+                .collect(Collectors.joining(" "));
+        return output;
     }
 
 }

@@ -11,8 +11,6 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.function.Supplier;
 
-import net.minecraft.client.audio.ISound.AttenuationType;
-
 public class MovingSound extends TickableSound {
 
     private final Object entity;

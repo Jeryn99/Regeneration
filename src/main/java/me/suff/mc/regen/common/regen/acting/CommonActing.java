@@ -1,9 +1,5 @@
 package me.suff.mc.regen.common.regen.acting;
 
-import java.util.Iterator;
-import java.util.Random;
-import java.util.UUID;
-
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.block.JarBlock;
 import me.suff.mc.regen.common.regen.IRegen;
@@ -31,6 +27,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import java.util.Iterator;
+import java.util.Random;
+import java.util.UUID;
 
 class CommonActing implements Acting {
 

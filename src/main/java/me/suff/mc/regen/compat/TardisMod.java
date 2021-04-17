@@ -39,11 +39,11 @@ public class TardisMod {
         LivingEntity living = event.getEntityLiving();
         World world = living.level;
         RegenCap.get(living).ifPresent(iRegen -> {
-            if(iRegen.regenState() == RegenStates.REGENERATING && isTardis(living.level) && !PlayerUtil.isPlayerAboveZeroGrid(living)){
+            if (iRegen.regenState() == RegenStates.REGENERATING && isTardis(living.level) && !PlayerUtil.isPlayerAboveZeroGrid(living)) {
                 ConsoleTile console = (ConsoleTile) world.getBlockEntity(TardisHelper.TARDIS_POS);
                 if (console.getLevel().getGameTime() % 5 == 0) {
 
-                    if(console.isInFlight() && world.random.nextInt(100) < 5){
+                    if (console.isInFlight() && world.random.nextInt(100) < 5) {
                         console.crash();
                         return;
                     }
@@ -70,25 +70,25 @@ public class TardisMod {
         });
     }
 
-    public boolean isTardis(World world){
+    public boolean isTardis(World world) {
         return WorldHelper.areDimensionTypesSame(world, TDimensions.DimensionTypes.TARDIS_TYPE);
     }
 
     @SubscribeEvent
     public void onLive(EntityJoinWorldEvent event) {
 
-        if(event.getEntity() instanceof TimelordEntity){
+        if (event.getEntity() instanceof TimelordEntity) {
             TimelordEntity timelordEntity = (TimelordEntity) event.getEntity();
-            if(timelordEntity.getTimelordType() == TimelordEntity.TimelordType.COUNCIL){
+            if (timelordEntity.getTimelordType() == TimelordEntity.TimelordType.COUNCIL) {
                 timelordEntity.goalSelector.addGoal(1, new AvoidEntityGoal<>(timelordEntity, DalekEntity.class, 15.0F, 0.5D, 0.5D));
             }
 
-            if(timelordEntity.getTimelordType() == TimelordEntity.TimelordType.GUARD){
+            if (timelordEntity.getTimelordType() == TimelordEntity.TimelordType.GUARD) {
                 timelordEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(timelordEntity, DalekEntity.class, false));
             }
         }
 
-        if(event.getEntity() instanceof DalekEntity){
+        if (event.getEntity() instanceof DalekEntity) {
             DalekEntity dalekEntity = (DalekEntity) event.getEntity();
             dalekEntity.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(dalekEntity, TimelordEntity.class, false));
         }

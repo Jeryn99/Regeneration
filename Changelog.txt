@@ -29,7 +29,6 @@
 * ALL TREASURE LOOT TABLES 40% chance
 
 # Regeneration 2.0.1
-- Gallifrey
 - Added Didgeridoomen Timelord voices
 - Optimized performance
 - Changed Critical Stage fog
@@ -39,4 +38,8 @@
 - Unflipped Timelord gun sounds, whoops
 - Re-Added Advancements and made them more presentable
 - Re-done Regeneration customisation screens
+- Fixed crash when opening inventory/Steve Minecraft Skins 
+
+# Regeneration 2.0.2
 - Added Dimension Canon
+- Gallifrey

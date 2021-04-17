@@ -53,6 +53,7 @@ public class RMaterials {
         public Ingredient getRepairIngredient() {
             return Ingredient.of(RItems.ZINC.get());
         }
+
         //ClientSide only variable
         @Override
         public String getName() {

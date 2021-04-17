@@ -5,7 +5,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import me.suff.mc.regen.common.commands.arguments.TraitsArgumentType;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.traits.AbstractTrait;
@@ -31,14 +30,14 @@ public class SetTraitsCommand implements Command< CommandSource > {
 
     @Override
     public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
-    	CommandSource source = context.getSource();
+        CommandSource source = context.getSource();
         AbstractTrait trait = context.getArgument("trait", AbstractTrait.class);
         ServerPlayerEntity player = EntityArgument.getPlayer(context, "player");
         TextComponent playerText = RTextHelper.getPlayerTextObject(source.getLevel(), player.getUUID());
         TextComponent traitText = RTextHelper.getTraitTextObject(trait);
-        
+
         if (player == null || trait == null) {
-        	source.sendFailure(new TranslationTextComponent("command.regen.set_trait.error", playerText, traitText));
+            source.sendFailure(new TranslationTextComponent("command.regen.set_trait.error", playerText, traitText));
             return 0; //Zero is error
         }
         RegenCap.get(player).ifPresent((data) -> {

@@ -3,7 +3,6 @@ package me.suff.mc.regen.client.rendering.model;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 
@@ -11,6 +10,8 @@ import net.minecraft.entity.LivingEntity;
 public class RegenerationConeModel extends BipedModel< LivingEntity > {
 
     public final ModelRenderer Head;
+    public final ModelRenderer RightArm;
+    public final ModelRenderer LeftArm;
     private final ModelRenderer Head_r1;
     private final ModelRenderer Head_r2;
     private final ModelRenderer Head_r3;
@@ -19,7 +20,6 @@ public class RegenerationConeModel extends BipedModel< LivingEntity > {
     private final ModelRenderer Head_r6;
     private final ModelRenderer Head_r7;
     private final ModelRenderer Head_r8;
-    public final ModelRenderer RightArm;
     private final ModelRenderer LeftArm_r1;
     private final ModelRenderer LeftArm_r2;
     private final ModelRenderer LeftArm_r3;
@@ -28,7 +28,6 @@ public class RegenerationConeModel extends BipedModel< LivingEntity > {
     private final ModelRenderer LeftArm_r6;
     private final ModelRenderer LeftArm_r7;
     private final ModelRenderer LeftArm_r8;
-    public final ModelRenderer LeftArm;
     private final ModelRenderer LeftArm_r9;
     private final ModelRenderer LeftArm_r10;
     private final ModelRenderer LeftArm_r11;
@@ -38,7 +37,7 @@ public class RegenerationConeModel extends BipedModel< LivingEntity > {
     private final ModelRenderer LeftArm_r15;
     private final ModelRenderer LeftArm_r16;
 
-    public RegenerationConeModel(){
+    public RegenerationConeModel() {
         super(0);
         texWidth = 128;
         texHeight = 128;
@@ -202,28 +201,28 @@ public class RegenerationConeModel extends BipedModel< LivingEntity > {
         leftArm = LeftArm;
         rightArm = RightArm;
     }
-    
+
     @Override
     public void setupAnim(LivingEntity p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
 
     }
 
     @Override
-    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         Head.render(matrixStack, buffer, packedLight, packedOverlay);
         RightArm.render(matrixStack, buffer, packedLight, packedOverlay);
         LeftArm.render(matrixStack, buffer, packedLight, packedOverlay);
     }
 
-    public void renderHead(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay){
+    public void renderHead(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay) {
         Head.render(matrixStack, buffer, packedLight, packedOverlay);
     }
 
-    public void renderRightArm(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay){
+    public void renderRightArm(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay) {
         RightArm.render(matrixStack, buffer, packedLight, packedOverlay);
     }
 
-    public void renderLeftArm(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay){
+    public void renderLeftArm(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay) {
         LeftArm.render(matrixStack, buffer, packedLight, packedOverlay);
     }
 

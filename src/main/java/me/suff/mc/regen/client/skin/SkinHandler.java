@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.world.DimensionRenderInfo;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
@@ -66,8 +65,12 @@ public class SkinHandler {
     }
 
     public static boolean getUnmodifiedSkinType(AbstractClientPlayerEntity abstractClientPlayerEntity) {
+        if (abstractClientPlayerEntity.playerInfo == null) return false;
         abstractClientPlayerEntity.playerInfo.registerTextures();
-        if(abstractClientPlayerEntity.playerInfo.getModelName().isEmpty()){
+        if (abstractClientPlayerEntity.playerInfo.getModelName() == null) {
+            return false;
+        }
+        if (abstractClientPlayerEntity.playerInfo.getModelName().isEmpty()) {
             return false;
         }
         return abstractClientPlayerEntity.playerInfo.getModelName().contentEquals("slim");

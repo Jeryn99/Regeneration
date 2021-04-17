@@ -1,6 +1,5 @@
 package me.suff.mc.regen.common.regen.transitions;
 
-import me.suff.mc.regen.client.rendering.transitions.EnderDragonTransitionRenderer;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
@@ -8,7 +7,6 @@ import me.suff.mc.regen.network.messages.POVMessage;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.vector.Vector3d;

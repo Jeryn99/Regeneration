@@ -1,9 +1,5 @@
 package me.suff.mc.regen.common.item;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.traits.AbstractTrait;
@@ -23,6 +19,9 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ElixirItem extends Item {
 

@@ -1,9 +1,6 @@
 package me.suff.mc.regen.util;
 
-import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
 
 public class RConstants {
 

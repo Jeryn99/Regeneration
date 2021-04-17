@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class AbstractTrait extends ForgeRegistryEntry<AbstractTrait> {
+public abstract class AbstractTrait extends ForgeRegistryEntry< AbstractTrait > {
 
     public abstract void apply(IRegen data);
 

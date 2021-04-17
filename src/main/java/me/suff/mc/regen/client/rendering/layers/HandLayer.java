@@ -2,23 +2,17 @@ package me.suff.mc.regen.client.rendering.layers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.client.rendering.model.RegenerationConeModel;
-import me.suff.mc.regen.client.rendering.transitions.EnderDragonTransitionRenderer;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
-import me.suff.mc.regen.util.RConstants;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.HandSide;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class HandLayer extends LayerRenderer {

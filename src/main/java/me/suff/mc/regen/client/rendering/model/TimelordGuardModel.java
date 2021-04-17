@@ -9,8 +9,6 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-import net.minecraft.client.renderer.entity.model.BipedModel.ArmPose;
-
 public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
     private final ModelRenderer Head;
     private final ModelRenderer Body;

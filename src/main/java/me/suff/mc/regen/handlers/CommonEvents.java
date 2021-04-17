@@ -1,14 +1,8 @@
 package me.suff.mc.regen.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.commands.RegenCommand;
-import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.IRegen;
@@ -23,8 +17,6 @@ import me.suff.mc.regen.util.RegenSources;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -33,9 +25,6 @@ import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
-import net.minecraft.util.concurrent.ThreadTaskExecutor;
-import net.minecraft.util.concurrent.TickDelayedTask;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -50,7 +39,6 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
@@ -60,9 +48,11 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
@@ -102,8 +92,8 @@ public class CommonEvents {
             return true;
         }
 
-        if (isLiving){ //Always make sure the entity is living, because we are explicility casting to LivingEntity later on
-        	return RegenConfig.COMMON.mobsHaveRegens.get();	//Base on the config value
+        if (isLiving) { //Always make sure the entity is living, because we are explicility casting to LivingEntity later on
+            return RegenConfig.COMMON.mobsHaveRegens.get();    //Base on the config value
         }
         return false;
     }
@@ -198,17 +188,17 @@ public class CommonEvents {
     public static void onLive(LivingEvent.LivingUpdateEvent livingUpdateEvent) {
         RegenCap.get(livingUpdateEvent.getEntityLiving()).ifPresent(IRegen::tick);
 
-        if(livingUpdateEvent.getEntityLiving() instanceof ServerPlayerEntity) {
-            if(shouldGiveCouncilAdvancement((ServerPlayerEntity) livingUpdateEvent.getEntity())) {
+        if (livingUpdateEvent.getEntityLiving() instanceof ServerPlayerEntity) {
+            if (shouldGiveCouncilAdvancement((ServerPlayerEntity) livingUpdateEvent.getEntity())) {
                 TriggerManager.COUNCIL.trigger((ServerPlayerEntity) livingUpdateEvent.getEntityLiving());
             }
         }
     }
 
-    public static boolean shouldGiveCouncilAdvancement(ServerPlayerEntity serverPlayerEntity){
+    public static boolean shouldGiveCouncilAdvancement(ServerPlayerEntity serverPlayerEntity) {
         EquipmentSlotType[] equipmentSlotTypes = new EquipmentSlotType[]{EquipmentSlotType.HEAD, EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
         for (EquipmentSlotType equipmentSlotType : equipmentSlotTypes) {
-            if(!serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem().getRegistryName().getPath().contains("robes")){
+            if (!serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem().getRegistryName().getPath().contains("robes")) {
                 return false;
             }
         }

@@ -1,7 +1,6 @@
 package me.suff.mc.regen.config;
 
 import com.google.common.collect.Lists;
-import net.minecraft.potion.Effects;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
