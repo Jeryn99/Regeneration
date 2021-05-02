@@ -1,10 +1,5 @@
 package me.suff.mc.regen.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.commands.RegenCommand;
@@ -57,28 +52,62 @@ import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
 
+    @SubscribeEvent
+    public static void onWorldLoad(WorldEvent.Load load) {
+        if (load.getWorld() instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) load.getWorld();
+            if (serverWorld.dimension() == RConstants.GALLIFREY) {
+                boolean isDedicated = ServerLifecycleHooks.getCurrentServer().isDedicatedServer();
+                File file = new File(serverWorld.getServer().getServerDirectory() + (isDedicated ? "/" : "/saves/") + getLevelIdName() + "/dimensions/regen/gallifrey/region");
+                File srcDir = new File("./gallifrey");
+                try {
+                    FileUtils.copyDirectory(srcDir, file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(file);
+            }
+        }
+    }
+
+    @NotNull
+    private static String getLevelIdName() {
+        return ServerLifecycleHooks.getCurrentServer().getWorldData().getLevelName();
+    }
+
     /* Attach Capability to all LivingEntities */
     @SubscribeEvent
-    public static void onAttachCapabilities(AttachCapabilitiesEvent< Entity > event) {
+    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (canBeGiven(event.getObject())) {
-            event.addCapability(RConstants.CAP_REGEN_ID, new ICapabilitySerializable< CompoundNBT >() {
+            event.addCapability(RConstants.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
                 final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
-                final LazyOptional< IRegen > regenInstance = LazyOptional.of(() -> regen);
+                final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
 
                 @Nonnull
                 @Override
-                public < T > LazyOptional< T > getCapability(@Nonnull Capability< T > cap, @javax.annotation.Nullable Direction side) {
-                    return cap == RegenCap.CAPABILITY ? (LazyOptional< T >) regenInstance : LazyOptional.empty();
+                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
+                    return cap == RegenCap.CAPABILITY ? (LazyOptional<T>) regenInstance : LazyOptional.empty();
                 }
 
                 @Override

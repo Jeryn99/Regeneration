@@ -10,7 +10,6 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
-        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -19,11 +18,10 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
-apply plugin: 'com.github.johnrengelman.shadow'
 
 
 
-version = '2.0.0'
+version = '2.0.2'
 group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = '[1.16] Regeneration'
 
@@ -90,36 +88,17 @@ curseforge {
         project {
             id = rootProject.regen
 
-            changelog = 'Regen 2.0.0 </br>' +
-                    '- Fixed 1.16.5 not booting up  </br>' +
-                    '- Gave Timelords voices  </br>' +
-                    '- Added Timelord Spawn Items </br>' +
-                    '- Added Female Council Robes </br>' +
-                    '- Added Male Council Robes </br>' +
-                    '- Added Timelord Guard Armor </br>' +
-                    '- Added Zinc Ore </br>' +
-                    '- Added Zinc Ingot </br>' +
-                    '- Added Rifle </br>' +
-                    '- Added Staser </br>' +
-                    '- Added Bio-Container </br>' +
-                    '- Renamed "Fob Watch" to "Chameleon Arch" </br>' +
-                    '- Made Timelords choose from their own skin folder instead of recycling the players ones </br>' +
-                    '- Fixed bug where timelord heads would render slightly dark </br>' +
-                    '- Changed Timelord models  </br>' +
-                    '- Added Config for mob regenerations </br>' +
-                    '- Fixed Mending Exploit  </br>' +
-                    '- Changed Timelord Trades slightly  </br>' +
-                    '- Heart Icons now become double hearts when you have Regenerations </br>' +
-                    '- Fixed Search bar over scaling outside of the GUI </br>' +
-                    '- Added back Zero Room Roundels </br>' +
-                    '- Fob Watches now generate in some chests (Can be disabled in config): </br>' +
-                    '* ABANDONED_MINESHAFT 15% chance </br>' +
-                    '* BASTION_BRIDGE 15% chance </br>' +
-                    '* LIBRARIAN_GIFT 15% chance </br>' +
-                    '* WOODLAND_MANSION 15% chance </br>' +
-                    '* STRONGHOLD_LIBRARY 15% chance </br>' +
-                    '* SHIPWRECK_SUPPLY 15% chance </br>' +
-                    '* ALL TREASURE LOOT TABLES 40% chance </br>'
+            changelog = '# Regeneration 2.0.1 </br>' +
+                    '- Added Didgeridoomen Timelord voices </br>' +
+                    '- Optimized performance </br>' +
+                    '- Changed Critical Stage fog </br>' +
+                    '- Fixed retaining Traits after actually dying </br>' +
+                    '- Translated all config options for use with Mod Menu mods </br>' +
+                    '- Converted Timelord currency into datapack tags so players can change the currency </br>' +
+                    '- Unflipped Timelord gun sounds, whoops </br>' +
+                    '- Re-Added Advancements and made them more presentable </br>' +
+                    '- Re-done Regeneration customisation screens </br>' +
+                    '- Fixed crash when opening inventory/Steve Minecraft Skins '
             releaseType = 'release'
             changelogType = 'html'
             addGameVersion '1.16.3'
@@ -137,24 +116,30 @@ repositories {
     maven { url "https://maven.blamejared.com/" }
     maven { url "https://www.cursemaven.com" }
     maven { url 'https://jitpack.io' }
-    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
+
+    flatDir {
+        dirs 'libMods'
+    }
+
     mavenCentral()
 }
 
 
 dependencies {
+    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
     minecraft "net.minecraftforge:forge:${forge_version}"
     compileOnly 'org.jetbrains:annotations:15.0'
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
     implementation fg.deobf("curse.maven:configured-457570:3244520")
-    implementation fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:1.16-SNAPSHOT')
-    compile fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.15')
+    implementation fg.deobf("curse.maven:worldedit-225608:3283693")
+    implementation fg.deobf('undefined:time:1.0')
 }
 
 mixin {
     add sourceSets.main, "regen.refmap.json"
 }
+
 jar {
     manifest {
         attributes([
@@ -170,19 +155,6 @@ jar {
     }
 }
 
-shadowJar {
-    dependencies {
-        include(dependency('software.bernie.geckolib:.*'))
-    }
-
-    relocate 'software.bernie.geckolib', 'software.bernie.shadowed.geckolib'
-
-    classifier ''
-}
-
-reobf{
-    shadowJar{}
-}
 
 jar.finalizedBy('reobfJar')
 

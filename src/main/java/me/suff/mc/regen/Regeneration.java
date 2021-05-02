@@ -1,46 +1,24 @@
 package me.suff.mc.regen;
 
-import me.suff.mc.regen.common.entities.OmegaEntity;
-import me.suff.mc.regen.common.regen.transitions.TransitionType;
-import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import me.suff.mc.regen.common.advancement.TriggerManager;
+import me.suff.mc.regen.common.entities.OmegaEntity;
 import me.suff.mc.regen.common.entities.TimelordEntity;
-import me.suff.mc.regen.common.objects.RBlocks;
-import me.suff.mc.regen.common.objects.REntities;
-import me.suff.mc.regen.common.objects.RGlobalLoot;
-import me.suff.mc.regen.common.objects.RItems;
-import me.suff.mc.regen.common.objects.RParticles;
-import me.suff.mc.regen.common.objects.RSoundSchemes;
-import me.suff.mc.regen.common.objects.RSounds;
-import me.suff.mc.regen.common.objects.RTiles;
+import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.RegenStorage;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
+import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.common.world.biome.surface.RSurfaceBuilder;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.compat.TardisMod;
 import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.data.AdvancementGen;
-import me.suff.mc.regen.data.EnglishLang;
-import me.suff.mc.regen.data.LootGen;
-import me.suff.mc.regen.data.RBlockLootTableGen;
-import me.suff.mc.regen.data.RBlockTags;
-import me.suff.mc.regen.data.RItemTags;
-import me.suff.mc.regen.data.RRecipeGen;
+import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.network.NetworkDispatcher;
-import me.suff.mc.regen.util.ClientUtil;
-import me.suff.mc.regen.util.DownloadSkinsThread;
-import me.suff.mc.regen.util.NBTRecipeIngredient;
-import me.suff.mc.regen.util.PlayerUtil;
-import me.suff.mc.regen.util.RConstants;
+import me.suff.mc.regen.util.*;
 import net.minecraft.data.BiomeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -64,7 +42,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import software.bernie.geckolib3.GeckoLib;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod("regen")
 public class Regeneration {
@@ -96,7 +75,6 @@ public class Regeneration {
         PlayerUtil.setupPotions();
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
-        GeckoLib.initialize();
     }
 
 

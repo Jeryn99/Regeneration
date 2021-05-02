@@ -1,6 +1,8 @@
 package me.suff.mc.regen.common.advancement;
 
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.event.world.WorldEvent;
 
 public class TriggerManager {
 
