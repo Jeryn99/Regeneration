@@ -26,6 +26,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.concurrent.ThreadTaskExecutor;
@@ -75,18 +76,23 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onWorldLoad(WorldEvent.Load load) {
-        if (load.getWorld() instanceof ServerWorld) {
-            ServerWorld serverWorld = (ServerWorld) load.getWorld();
+        generateCitadel((World) load.getWorld());
+    }
+
+    public static void generateCitadel(World world) {
+        if (world instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) world;
+            MinecraftServer server = serverWorld.getServer();
             if (serverWorld.dimension() == RConstants.GALLIFREY) {
-                boolean isDedicated = ServerLifecycleHooks.getCurrentServer().isDedicatedServer();
-                File file = new File(serverWorld.getServer().getServerDirectory() + (isDedicated ? "/" : "/saves/") + getLevelIdName() + "/dimensions/regen/gallifrey/region");
+                boolean isDedicated = server.isDedicatedServer();
+                File file = new File(server.getServerDirectory() + (isDedicated ? "/" : "/saves/") + getLevelIdName() + "/dimensions/regen/gallifrey/region");
                 File srcDir = new File("./gallifrey");
+                System.out.println(file);
                 try {
                     FileUtils.copyDirectory(srcDir, file);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println(file);
             }
         }
     }

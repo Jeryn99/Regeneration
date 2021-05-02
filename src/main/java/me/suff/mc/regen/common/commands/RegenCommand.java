@@ -1,10 +1,7 @@
 package me.suff.mc.regen.common.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import me.suff.mc.regen.common.commands.subcommands.FastForwardCommand;
-import me.suff.mc.regen.common.commands.subcommands.GlowCommand;
-import me.suff.mc.regen.common.commands.subcommands.SetRegensCommand;
-import me.suff.mc.regen.common.commands.subcommands.SetTraitsCommand;
+import me.suff.mc.regen.common.commands.subcommands.*;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -18,6 +15,7 @@ public class RegenCommand {
                         .requires(commandSource -> commandSource.hasPermission(ServerLifecycleHooks.getCurrentServer().getOperatorUserPermissionLevel()))
                         .then(SetRegensCommand.register(dispatcher))
                         .then(GlowCommand.register(dispatcher))
+                       // .then(RegenCitadel.register(dispatcher))
                         .then(FastForwardCommand.register(dispatcher)).then(SetTraitsCommand.register(dispatcher))
         );
 
