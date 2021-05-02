@@ -40,7 +40,7 @@ import java.util.Objects;
 
 public class IncarnationScreen extends ContainerScreen {
 
-    private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer_background.png");
+    private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
     private static final PlayerModel< ? > alexModel = new PlayerModel<>(0.1f, true);
     private static final PlayerModel< ? > steveModel = new PlayerModel<>(0.1f, false);
     public static boolean isAlex = true;

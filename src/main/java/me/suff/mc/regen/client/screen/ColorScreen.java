@@ -22,7 +22,7 @@ import java.awt.*;
 
 public class ColorScreen extends ContainerScreen {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/customizer_background.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
 
     private Vector3d initialPrimary, initialSecondary;
     private ColorWidget colorChooserPrimary, colorChooserSecondary;

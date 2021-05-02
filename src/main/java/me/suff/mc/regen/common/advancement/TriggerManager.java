@@ -5,7 +5,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 public class TriggerManager {
 
     public static final BaseTrigger FIRST_REGENERATION = new BaseTrigger("first_regen");
-    public static final BaseTrigger CHANGE_REFUSAL = new BaseTrigger("change_refusal");
+    public static final BaseTrigger CHANGE_REFUSAL = new BaseTrigger("change_refusal");//698 88
     public static final BaseTrigger CRITICAL = new BaseTrigger("critical_period");
     public static final BaseTrigger TIMELORD_TRADE = new BaseTrigger("timelord_trade");
     public static final BaseTrigger HAND_CUT = new BaseTrigger("hand_cut");

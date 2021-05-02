@@ -1,9 +1,9 @@
 {
   "credit": "Created in Blockbench by dhi_holo (@holo_modeller on Twitter)",
   "textures": {
-    "1": "regen:block/hand_jar_glass",
-    "2": "regen:block/hand_jar_lid",
-    "particle": "regen:block/hand_jar_lid"
+    "1": "regen:block/jar/hand_jar_glass",
+    "2": "regen:block/jar/hand_jar_lid",
+    "particle": "regen:block/jar/hand_jar_lid"
   },
   "elements": [
     {
