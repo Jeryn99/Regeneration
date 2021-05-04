@@ -23,7 +23,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 
 version = '2.0.2'
 group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = '[1.16] Regeneration'
+archivesBaseName = '[1.16] Regeneration (Amazing Angela)'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -132,6 +132,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
     implementation fg.deobf("curse.maven:configured-457570:3244520")
+    implementation fg.deobf("curse.maven:catalogue-459701:3285353")
     implementation fg.deobf("curse.maven:worldedit-225608:3283693")
     implementation fg.deobf('undefined:time:1.0')
 }

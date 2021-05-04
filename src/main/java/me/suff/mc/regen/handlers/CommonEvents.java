@@ -76,7 +76,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onWorldLoad(WorldEvent.Load load) {
-        generateCitadel((World) load.getWorld());
+       // generateCitadel((World) load.getWorld());
     }
 
     public static void generateCitadel(World world) {

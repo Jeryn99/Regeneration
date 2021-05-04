@@ -4,6 +4,7 @@ license = "https://raw.githubusercontent.com/WhoCraft/Regeneration/1.16/LICENSE"
 issueTrackerURL = "https://github.com/WhoCraft/Regeneration/issues"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
+itemIcon="regen:fobwatch"
 modId = "regen" #mandatory
 version = "2.0.0" #mandatory
 displayName = "Regeneration" #mandatory

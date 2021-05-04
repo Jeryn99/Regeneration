@@ -1,7 +1,7 @@
 {
   "generator": {
     "type": "minecraft:noise",
-    "seed": 286956243,
+    "seed": -2930707745621290070,
     "biome_source": {
       "seed": 286956243,
       "type": "minecraft:multi_noise",

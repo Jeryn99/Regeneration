@@ -58,11 +58,13 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onName(RenderNameplateEvent event) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.GRACE_CRIT) {
-                event.setContent(new StringTextComponent(TextFormatting.OBFUSCATED + event.getContent().getString()));
-            }
-        });
+        if (player != null) {
+            RegenCap.get(player).ifPresent(iRegen -> {
+                if (iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.GRACE_CRIT) {
+                    event.setContent(new StringTextComponent(TextFormatting.OBFUSCATED + event.getContent().getString()));
+                }
+            });
+        }
     }
 
     @SubscribeEvent
