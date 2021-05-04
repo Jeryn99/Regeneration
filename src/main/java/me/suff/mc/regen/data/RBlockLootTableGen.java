@@ -1,16 +1,6 @@
 package me.suff.mc.regen.data;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.function.Supplier;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
+import com.google.gson.*;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlabBlock;
@@ -21,7 +11,14 @@ import net.minecraft.data.LootTableProvider;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
-/** Created by 50ap5ud5 23/3/2021 */
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.function.Supplier;
+
+/**
+ * Created by 50ap5ud5 23/3/2021
+ */
 public class RBlockLootTableGen extends LootTableProvider {
 
 
@@ -32,6 +29,15 @@ public class RBlockLootTableGen extends LootTableProvider {
     public RBlockLootTableGen(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
         this.generator = dataGeneratorIn;
+    }
+
+    public static Path getPath(Path base, Block block) {
+        ResourceLocation key = block.getRegistryName();
+        return base.resolve("data/" + key.getNamespace() + "/loot_tables/blocks/" + key.getPath() + ".json");
+    }
+
+    public static Path getPath(Path path, ResourceLocation rl) {
+        return path.resolve("data/" + rl.getNamespace() + "/loot_tables/blocks/" + rl.getPath() + ".json");
     }
 
     @Override
@@ -69,19 +75,9 @@ public class RBlockLootTableGen extends LootTableProvider {
         }
     }
 
-
     @Override
     public String getName() {
         return "Regeneration Block Loot Gen";
-    }
-
-    public static Path getPath(Path base, Block block) {
-        ResourceLocation key = block.getRegistryName();
-        return base.resolve("data/" + key.getNamespace() + "/loot_tables/blocks/" + key.getPath() + ".json");
-    }
-
-    public static Path getPath(Path path, ResourceLocation rl) {
-        return path.resolve("data/" + rl.getNamespace() + "/loot_tables/blocks/" + rl.getPath() + ".json");
     }
 
     public JsonElement createSingleDropTable(String name) {

@@ -21,13 +21,12 @@ import static me.suff.mc.regen.client.skin.CommonSkin.*;
 
 public class DownloadSkinsThread extends Thread {
 
+    public static boolean forceStop = false;
     private final boolean isClient;
 
     public DownloadSkinsThread(boolean isClient) {
         this.isClient = isClient;
     }
-
-    public static boolean forceStop = false;
 
     public static void setup(boolean isClient) {
         DownloadSkinsThread thread = new DownloadSkinsThread(isClient);

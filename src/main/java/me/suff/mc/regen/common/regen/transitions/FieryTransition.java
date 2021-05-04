@@ -1,6 +1,5 @@
 package me.suff.mc.regen.common.regen.transitions;
 
-import me.suff.mc.regen.client.rendering.transitions.FieryTransitionRenderer;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.config.RegenConfig;
@@ -12,7 +11,6 @@ import net.minecraft.block.FireBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -89,7 +87,7 @@ public class FieryTransition extends TransitionType {
 
     @Override
     public Vector3d getDefaultSecondaryColor() {
-        return new Vector3d(0.7137255f, 0.75686276f,0.25490198f);
+        return new Vector3d(0.7137255f, 0.75686276f, 0.25490198f);
     }
 
 }

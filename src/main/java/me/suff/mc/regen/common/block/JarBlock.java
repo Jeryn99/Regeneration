@@ -30,8 +30,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class JarBlock extends DirectionalBlock {
 
     public static final DirectionProperty FACING = HorizontalBlock.FACING;

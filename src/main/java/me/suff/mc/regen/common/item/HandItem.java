@@ -1,10 +1,5 @@
 package me.suff.mc.regen.common.item;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
@@ -25,8 +20,10 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
+import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.item.Item.Properties;
+import java.util.List;
+import java.util.UUID;
 
 /* Created by Craig on 05/03/2021 */
 public class HandItem extends Item {

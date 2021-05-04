@@ -1,19 +1,10 @@
 package me.suff.mc.regen.common.regen;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import me.suff.mc.regen.common.regen.transitions.TransitionType;
-import org.apache.commons.lang3.tuple.Pair;
-
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.IStateManager;
 import me.suff.mc.regen.common.regen.state.RegenStates;
+import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.AbstractTrait;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
@@ -44,6 +35,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegenCap implements IRegen {
 
@@ -115,7 +113,7 @@ public class RegenCap implements IRegen {
             }
 
             //Tick Trait
-            if(traitActive) {
+            if (traitActive) {
                 currentTrait.tick(this);
             }
             if (stateManager != null && currentState != RegenStates.ALIVE) {

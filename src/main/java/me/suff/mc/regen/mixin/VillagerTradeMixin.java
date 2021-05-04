@@ -14,7 +14,7 @@ public class VillagerTradeMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/merchant/villager/VillagerEntity;getVillagerData()Lnet/minecraft/entity/merchant/villager/VillagerData;"), method = "customServerAiStep()V", cancellable = true)
     protected void customServerAiStep(CallbackInfo ci) {
         VillagerEntity villagerEntity = (VillagerEntity) (Object) this;
-        if(villagerEntity.getType() == REntities.TIMELORD.get()){
+        if (villagerEntity.getType() == REntities.TIMELORD.get()) {
             ci.cancel();
         }
     }

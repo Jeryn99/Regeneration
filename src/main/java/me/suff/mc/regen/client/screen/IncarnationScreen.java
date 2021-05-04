@@ -4,10 +4,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.client.skin.CommonSkin;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import me.suff.mc.regen.common.regen.RegenCap;
-import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.NextSkinMessage;
-import me.suff.mc.regen.util.*;
+import me.suff.mc.regen.util.ClientUtil;
+import me.suff.mc.regen.util.PlayerUtil;
+import me.suff.mc.regen.util.RConstants;
+import me.suff.mc.regen.util.RegenUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
@@ -28,35 +30,28 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.lwjgl.glfw.GLFW;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 
 public class IncarnationScreen extends ContainerScreen {
 
-    private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer_background.png");
+    private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
     private static final PlayerModel< ? > alexModel = new PlayerModel<>(0.1f, true);
     private static final PlayerModel< ? > steveModel = new PlayerModel<>(0.1f, false);
+    public static boolean isAlex = true;
     private static ResourceLocation currentTexture = DefaultPlayerSkin.getDefaultSkin();
     private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
-    public static boolean isAlex = true;
     private static List< File > skins = null;
     private static int position = 0;
-    private RCheckbox excludeTrending;
-
-    private TextFieldWidget searchField;
     private final ArrayList< DescButton > descButtons = new ArrayList<>();
+    private RCheckbox excludeTrending;
+    private TextFieldWidget searchField;
     private Button uploadToMcBtn;
 
 

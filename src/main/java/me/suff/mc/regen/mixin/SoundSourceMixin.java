@@ -16,14 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SoundSourceMixin {
 
     @Shadow
+    @Mutable
     @Final
     private int source;
 
     @Inject(at = @At("RETURN"), method = "setSelfPosition(Lnet/minecraft/util/math/vector/Vector3d;)V")
     private void setSelfPosition(Vector3d vector3d, CallbackInfo callbackInfo) {
-        if(source != 0) {
-            SoundReverb.setSelfPosition(source);
-        }
+        SoundReverb.setSelfPosition(source);
     }
 
 }

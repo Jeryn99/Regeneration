@@ -55,7 +55,7 @@ public class PlayerUtil {
                 return false;
             }
         }
-        if(playerEntity instanceof ServerPlayerEntity) {
+        if (playerEntity instanceof ServerPlayerEntity) {
             TriggerManager.ZERO_ROOM.trigger((ServerPlayerEntity) playerEntity);
         }
         return true;

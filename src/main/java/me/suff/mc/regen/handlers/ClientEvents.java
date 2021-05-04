@@ -50,9 +50,9 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
 
-    public static ResourceLocation OLD = new ResourceLocation("textures/gui/icons.png");
-    public static ResourceLocation NEW = new ResourceLocation(RConstants.MODID, "textures/gui/icons.png");
-    public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/regen_hearts.png");
+    public static ResourceLocation OLD = new ResourceLocation("textures/gui/crosshair.png");
+    public static ResourceLocation NEW = new ResourceLocation(RConstants.MODID, "textures/gui/crosshair.png");
+    public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/hearts.png");
     private static ISound iSound = null;
 
     @SubscribeEvent

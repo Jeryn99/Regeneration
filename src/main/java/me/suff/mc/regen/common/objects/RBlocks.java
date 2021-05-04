@@ -40,46 +40,49 @@ public class RBlocks {
             RItems.ITEMS.register(block.getRegistryName().getPath(), () -> new BlockItem(block, new Item.Properties().tab(MAIN)));
         }
     }
-    
+
     /**
      * Registers a Block and BlockItem to the ItemGroup of your choice
+     *
      * @param <T>
      * @param id
      * @param blockSupplier
      * @param itemGroup
      * @return
      */
-    private static <T extends Block> RegistryObject<T> register(String id, Supplier<T> blockSupplier, ItemGroup itemGroup){
-        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
+    private static < T extends Block > RegistryObject< T > register(String id, Supplier< T > blockSupplier, ItemGroup itemGroup) {
+        RegistryObject< T > registryObject = BLOCKS.register(id, blockSupplier);
         RItems.ITEMS.register(id, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(itemGroup)));
         return registryObject;
     }
-    
+
     /**
      * Registers a Block without a BlockItem
      * <br> Use when you need a special BlockItem. The BlockItem should be registered in RItems with the same registry name as the block
+     *
      * @param <T>
      * @param id
      * @param blockSupplier
      * @return
      */
-    private static <T extends Block> RegistryObject<T> registerBlockOnly(String id, Supplier<T> blockSupplier){
-        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
+    private static < T extends Block > RegistryObject< T > registerBlockOnly(String id, Supplier< T > blockSupplier) {
+        RegistryObject< T > registryObject = BLOCKS.register(id, blockSupplier);
         return registryObject;
     }
-    
+
     /**
      * Registers a Block and BlockItem into the Main ItemGroup
+     *
      * @param <T>
      * @param id
      * @param blockSupplier
      * @return
      */
-    private static <T extends Block> RegistryObject<T> register(String id, Supplier<T> blockSupplier){
-        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
+    private static < T extends Block > RegistryObject< T > register(String id, Supplier< T > blockSupplier) {
+        RegistryObject< T > registryObject = BLOCKS.register(id, blockSupplier);
         RItems.ITEMS.register(id, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(MAIN)));
         return registryObject;
     }
-    
+
 
 }

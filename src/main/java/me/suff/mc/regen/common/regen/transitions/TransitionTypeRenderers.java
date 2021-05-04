@@ -15,8 +15,8 @@ public class TransitionTypeRenderers {
         TRANSITION_RENDERERS.put(transitionType, transitionRenderer);
     }
 
-    public static TransitionRenderer get(TransitionType transitionType){
-        if(TRANSITION_RENDERERS.containsKey(transitionType)){
+    public static TransitionRenderer get(TransitionType transitionType) {
+        if (TRANSITION_RENDERERS.containsKey(transitionType)) {
             return TRANSITION_RENDERERS.get(transitionType);
         }
         Regeneration.LOG.error("No Renderer registered for " + transitionType.getRegistryName());

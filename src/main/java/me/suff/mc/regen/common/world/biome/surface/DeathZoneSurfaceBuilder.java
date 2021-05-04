@@ -11,7 +11,7 @@ import java.util.Random;
 
 /* Created by Craig on 19/03/2021 */
 public class DeathZoneSurfaceBuilder extends SurfaceBuilder< SurfaceBuilderConfig > {
-    public DeathZoneSurfaceBuilder(Codec<SurfaceBuilderConfig> codec) {
+    public DeathZoneSurfaceBuilder(Codec< SurfaceBuilderConfig > codec) {
         super(codec);
     }
 

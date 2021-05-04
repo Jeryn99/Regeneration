@@ -11,8 +11,6 @@ import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.item.Item.Properties;
-
 /* Created by Craig on 03/03/2021 */
 public class ClothingItem extends ArmorItem {
     public ClothingItem(IArmorMaterial materialIn, EquipmentSlotType slot, Properties builderIn) {

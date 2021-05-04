@@ -1,5 +1,5 @@
 {
-  "parent": "regen:gallifrey",
+  "parent": "regen:watch_is_me",
   "display": {
     "icon": {
       "item": "regen:timelord"

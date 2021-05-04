@@ -1,14 +1,12 @@
 package me.suff.mc.regen.common.regen.transitions;
 
-import me.suff.mc.regen.client.rendering.transitions.TransitionRenderer;
 import me.suff.mc.regen.common.regen.IRegen;
-import me.suff.mc.regen.common.traits.AbstractTrait;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class TransitionType extends ForgeRegistryEntry< TransitionType> {
+public abstract class TransitionType extends ForgeRegistryEntry< TransitionType > {
 
     /**
      * @return in ticks

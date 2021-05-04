@@ -1,19 +1,10 @@
 package me.suff.mc.regen.common.entities;
 
-import java.io.File;
-import java.util.Random;
-
-import org.jetbrains.annotations.Nullable;
-
 import me.suff.mc.regen.client.skin.CommonSkin;
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.common.item.SpawnItem;
-import me.suff.mc.regen.common.objects.REntities;
-import me.suff.mc.regen.common.objects.RItems;
-import me.suff.mc.regen.common.objects.RSoundSchemes;
-import me.suff.mc.regen.common.objects.RSounds;
-import me.suff.mc.regen.common.objects.SoundScheme;
+import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
@@ -25,25 +16,10 @@ import me.suff.mc.regen.network.messages.RemoveTimelordSkinMessage;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
 import me.suff.mc.regen.util.RegenUtil;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.HurtByTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtCustomerGoal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookAtWithoutMovingGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.PanicGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
@@ -53,11 +29,7 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.item.MerchantOffers;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -65,11 +37,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -79,6 +47,10 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.util.Random;
 
 /**
  * Created by Suff
@@ -154,11 +126,11 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
         this.goalSelector.addGoal(1, new SwimGoal(this));
 
 
-        if(getTimelordType() == TimelordType.GUARD){
+        if (getTimelordType() == TimelordType.GUARD) {
             this.goalSelector.addGoal(2, new TimelordAttackGoal(this, 1.0D, 20, 20.0F));
         }
 
-        if(getTimelordType() == TimelordType.COUNCIL){
+        if (getTimelordType() == TimelordType.COUNCIL) {
             for (Item item : RegenUtil.TIMELORD_CURRENCY.getValues()) {
                 this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(item), false));
             }
@@ -288,7 +260,6 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
     }
 
 
-
     @Override
     public void tick() {
 
@@ -310,29 +281,28 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
                     data.syncToClients(null);
                 }
 
-                if(data.regenState().isGraceful() && data.glowing())
+                if (data.regenState().isGraceful() && data.glowing())
 
-                if (data.regenState() == RegenStates.REGENERATING) {
-                    if (data.updateTicks() == 10) {
-                        if (getPersonality().getScreamSound() != null) {
-                            playSound(getPersonality().getScreamSound(), 1, 1);
+                    if (data.regenState() == RegenStates.REGENERATING) {
+                        if (data.updateTicks() == 10) {
+                            if (getPersonality().getScreamSound() != null) {
+                                playSound(getPersonality().getScreamSound(), 1, 1);
+                            }
                         }
+                        if (data.updateTicks() == 100) {
+                            setMale(random.nextBoolean());
+                            setPersonality(RSoundSchemes.getRandom(male()).identify());
+                            initSkin(data);
+                        }
+                        setNoAi(true);
+                        setInvulnerable(true);
+                        return;
                     }
-                    if (data.updateTicks() == 100) {
-                        setMale(random.nextBoolean());
-                        setPersonality(RSoundSchemes.getRandom(male()).identify());
-                        initSkin(data);
-                    }
-                    setNoAi(true);
-                    setInvulnerable(true);
-                    return;
-                }
                 setNoAi(false);
                 setInvulnerable(false);
             }
         });
     }
-
 
 
     @Override

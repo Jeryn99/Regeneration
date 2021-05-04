@@ -17,6 +17,18 @@ import java.util.function.Supplier;
 /* Created by Craig on 19/03/2021 */
 public class RSurfaceBuilder {
 
+    public static void registerConfiguredSurfaceBuilders() {
+        registerConfiguredSurfaceBuilder("death_zone", ConfiguredSurfaceBuilders.CONFIGURED_MOON_SURFACE_BUILDER);
+    }
+
+    private static < S extends SurfaceBuilder< ? > > RegistryObject< S > createSurfaceBuilder(String name, Supplier< ? extends S > surfaceBuilder) {
+        return SurfaceBuilders.SURFACE_BUILDERS.register(name, surfaceBuilder);
+    }
+
+    private static < SC extends ISurfaceBuilderConfig > ConfiguredSurfaceBuilder< SC > registerConfiguredSurfaceBuilder(String name, ConfiguredSurfaceBuilder< SC > configuredSurfaceBuilder) {
+        return WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_SURFACE_BUILDER, new ResourceLocation(RConstants.MODID, name), configuredSurfaceBuilder);
+    }
+
     public static class SurfaceBuilders {
         public static final DeferredRegister< SurfaceBuilder< ? > > SURFACE_BUILDERS = DeferredRegister.create(ForgeRegistries.SURFACE_BUILDERS, RConstants.MODID);
 
@@ -31,19 +43,6 @@ public class RSurfaceBuilder {
 
     public static class ConfiguredSurfaceBuilders {
         public static final ConfiguredSurfaceBuilder< SurfaceBuilderConfig > CONFIGURED_MOON_SURFACE_BUILDER = new ConfiguredSurfaceBuilder<>(SurfaceBuilders.DEATH_ZONE_BUILDER_INSTANCE, SurfaceBuilderConfigs.DEATH_ZONE_CONFIG);
-    }
-
-    public static void registerConfiguredSurfaceBuilders() {
-        registerConfiguredSurfaceBuilder("death_zone", ConfiguredSurfaceBuilders.CONFIGURED_MOON_SURFACE_BUILDER);
-    }
-
-
-    private static < S extends SurfaceBuilder< ? > > RegistryObject< S > createSurfaceBuilder(String name, Supplier< ? extends S > surfaceBuilder) {
-        return SurfaceBuilders.SURFACE_BUILDERS.register(name, surfaceBuilder);
-    }
-
-    private static < SC extends ISurfaceBuilderConfig > ConfiguredSurfaceBuilder< SC > registerConfiguredSurfaceBuilder(String name, ConfiguredSurfaceBuilder< SC > configuredSurfaceBuilder) {
-        return WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_SURFACE_BUILDER, new ResourceLocation(RConstants.MODID, name), configuredSurfaceBuilder);
     }
 
 

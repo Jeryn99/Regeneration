@@ -3,7 +3,6 @@ package me.suff.mc.regen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.suff.mc.regen.common.advancement.TriggerManager;
-import me.suff.mc.regen.common.entities.OmegaEntity;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.common.regen.IRegen;
@@ -61,7 +60,7 @@ public class Regeneration {
         RSounds.SOUNDS.register(modBus);
         RItems.ITEMS.register(modBus);
         REntities.ENTITIES.register(modBus);
-        
+
         RTiles.TILES.register(modBus);
         RStructures.Structures.STRUCTURES.register(modBus);
         RStructures.FEATURES.register(modBus);
@@ -91,13 +90,12 @@ public class Regeneration {
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
         ActingForwarder.init();
         GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
-        GlobalEntityTypeAttributes.put(REntities.OMEGA.get(), OmegaEntity.createAttributes().build());
         GlobalEntityTypeAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
         DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
         RSoundSchemes.init();
         TriggerManager.init();
 
-        if(ModList.get().isLoaded("tardis")){
+        if (ModList.get().isLoaded("tardis")) {
             TardisMod.tardis();
         }
     }
@@ -119,7 +117,7 @@ public class Regeneration {
         generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
         generator.addProvider(new AdvancementGen(generator));
-        if(reports) {
+        if (reports) {
             generator.addProvider(new BiomeProvider(generator));
         }
     }

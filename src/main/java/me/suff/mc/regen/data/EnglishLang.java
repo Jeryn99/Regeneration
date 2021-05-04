@@ -109,7 +109,7 @@ public class EnglishLang extends LanguageProvider {
         add(RItems.FOB.get(), "Chameleon Arch");
         add(RItems.PISTOL.get(), "Staser");
         add(RItems.RIFLE.get(), "Staser Rifle");
-        add(RItems.DIMENSION_CANNON.get(), "Dimension Cannon");
+
         add(RItems.HAND.get(), "Hand");
         add("item.regen.hand_with_arg", "%s Hand");
 
@@ -164,7 +164,7 @@ public class EnglishLang extends LanguageProvider {
         add("command.regen.set_regen.success", "Set Regenerations for entity %s to %s");
         add("command.regen.set_regen.invalid_entity", "Could not set %s Regenerations for %s, it is not a Living Entity");
         add("command.regen.set_regen.config_off", "Could not set Regenerations for %s, the Config Option %s is set to %s");
-        
+
         // === Config ===
         //Skin
         add("config.regeneration.downloadTrendingSkins", "Download Trending Skins?");
@@ -204,7 +204,6 @@ public class EnglishLang extends LanguageProvider {
         add("config.regeneration.traitsenabled", "Traits Enabled?");
         add("config.regeneration.disabledTraits", "Disabled Traits");
         add("config.regeneration.upwards_motion", "Upwards motion?");
-
 
 
         // === Toasts ===
@@ -253,7 +252,6 @@ public class EnglishLang extends LanguageProvider {
 
         //Entity
         add(REntities.TIMELORD.get(), "Timelord");
-        add(REntities.OMEGA.get(), "Omega");
 
         //Traits
         add(RegenTraitRegistry.BORING.get().translation().getKey(), "Boring");

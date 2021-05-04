@@ -6,7 +6,7 @@ issueTrackerURL = "https://github.com/WhoCraft/Regeneration/issues"
 [[mods]] #mandatory
 itemIcon="regen:fobwatch"
 modId = "regen" #mandatory
-version = "2.0.0" #mandatory
+version = "2.0.2" #mandatory
 displayName = "Regeneration" #mandatory
 updateJSONURL = "https://raw.githubusercontent.com/WhoCraft/Regeneration/skins/update.json" #optional
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration" #optional

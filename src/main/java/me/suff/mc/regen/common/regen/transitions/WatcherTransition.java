@@ -1,6 +1,5 @@
 package me.suff.mc.regen.common.regen.transitions;
 
-import me.suff.mc.regen.client.rendering.transitions.WatcherTransitionRenderer;
 import me.suff.mc.regen.common.entities.WatcherEntity;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.objects.RSounds;
@@ -12,7 +11,6 @@ import me.suff.mc.regen.util.RConstants;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;

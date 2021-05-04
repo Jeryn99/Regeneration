@@ -24,7 +24,7 @@ import java.awt.*;
 
 public class PreferencesScreen extends ContainerScreen {
 
-    private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/pref_back.png");
+    private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/preferences.png");
     private static TransitionType transitionType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     private static IRegen.TimelordSound soundScheme = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).getTimelordSound();
     private static PlayerUtil.SkinType skinType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
