@@ -126,6 +126,7 @@ public class EnglishLang extends LanguageProvider {
         add(RItems.GUARD_CHEST.get(), "Timelord Chest Armor");
         add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
         add(RItems.GUARD_FEET.get(), "Timelord Boots");
+        add(RItems.DIMENSION_CANNON.get(), "Dimension Canon");
 
         add(RBlocks.ZINC_ORE.get(), "Zinc Ore");
         add(RItems.ZINC.get(), "Zinc Ingot");

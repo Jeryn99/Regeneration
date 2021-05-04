@@ -47,5 +47,7 @@ public class RItems {
 
     public static RegistryObject< Item > ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem(LEATHER, EquipmentSlotType.FEET, clothing.durability(350)));
 
+    public static RegistryObject< Item > DIMENSION_CANNON = ITEMS.register("dimension_cannon", () -> new DimensionCanonItem(new Item.Properties().stacksTo(1).setNoRepair().tab(RItems.MAIN)));
+
 
 }
