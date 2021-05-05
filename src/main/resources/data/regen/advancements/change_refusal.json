@@ -18,7 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:change_refusal"
+      "trigger": "regen:change_refusal",
+      "conditions": {}
     }
   },
   "requirements": [

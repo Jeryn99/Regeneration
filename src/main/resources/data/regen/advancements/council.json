@@ -19,7 +19,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:council"
+      "trigger": "regen:council",
+      "conditions": {}
     }
   },
   "requirements": [
