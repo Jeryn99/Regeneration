@@ -18,7 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:first_regen"
+      "trigger": "regen:first_regen",
+      "conditions": {}
     }
   },
   "requirements": [

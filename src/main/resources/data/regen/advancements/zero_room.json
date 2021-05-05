@@ -18,7 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:zero_room"
+      "trigger": "regen:zero_room",
+      "conditions": {}
     }
   },
   "requirements": [

@@ -46,12 +46,10 @@ import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -62,16 +60,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
-
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonEvents {
 
     @SubscribeEvent
     public static void onWorldLoad(WorldEvent.Load load) {
-       // generateCitadel((World) load.getWorld());
+       generateCitadel((World) load.getWorld());
     }
 
     public static void generateCitadel(World world) {
@@ -81,14 +75,20 @@ public class CommonEvents {
             if (serverWorld.dimension() == RConstants.GALLIFREY) {
                 boolean isDedicated = server.isDedicatedServer();
                 File file = new File(server.getServerDirectory() + (isDedicated ? "/" : "/saves/") + getLevelIdName() + "/dimensions/regen/gallifrey/region");
+                File dataCheck = new File(file, "gallifrey.lock");
+                //   if (dataCheck.exists()) {
+                //      Regeneration.LOG.info("Gallifrey has already been generated.");
+                // } else {
                 File srcDir = new File("./gallifrey");
-                System.out.println(file);
                 try {
-                    FileUtils.copyDirectory(srcDir, file);
+                    FileUtils.copyDirectory(srcDir, file, false);
+                    dataCheck.createNewFile();
+                    Regeneration.LOG.info("Gallifrey has now been generated.");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+            //      }
         }
     }
 
@@ -97,7 +97,6 @@ public class CommonEvents {
         return ServerLifecycleHooks.getCurrentServer().getWorldData().getLevelName();
     }
 
-    /* Attach Capability to all LivingEntities */
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (canBeGiven(event.getObject())) {

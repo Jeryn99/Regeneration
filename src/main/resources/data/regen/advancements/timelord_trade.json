@@ -18,7 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:timelord_trade"
+      "trigger": "regen:timelord_trade",
+      "conditions": {}
     }
   },
   "requirements": [

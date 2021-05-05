@@ -18,7 +18,8 @@
   },
   "criteria": {
     "0": {
-      "trigger": "minecraft:critical_period"
+      "trigger": "regen:critical_period",
+      "conditions": {}
     }
   },
   "requirements": [
