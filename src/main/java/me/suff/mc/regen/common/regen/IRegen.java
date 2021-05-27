@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 
-public interface IRegen extends INBTSerializable< CompoundNBT > {
+public interface IRegen extends INBTSerializable<CompoundNBT> {
 
     int regens();
 
@@ -106,7 +106,11 @@ public interface IRegen extends INBTSerializable< CompoundNBT > {
     enum Hand {
         LEFT_GONE,
         RIGHT_GONE,
-        NO_GONE
+        NO_GONE;
+
+        public boolean isChopped() {
+            return this != NO_GONE;
+        }
     }
 
     enum TimelordSound {
