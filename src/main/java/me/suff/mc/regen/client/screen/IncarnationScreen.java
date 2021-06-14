@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import me.suff.mc.regen.client.skin.CommonSkin;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.NextSkinMessage;
 import me.suff.mc.regen.util.ClientUtil;
@@ -32,6 +33,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,16 +42,16 @@ import java.util.Objects;
 
 public class IncarnationScreen extends ContainerScreen {
 
-    private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer_background.png");
-    private static final PlayerModel< ? > alexModel = new PlayerModel<>(0.1f, true);
-    private static final PlayerModel< ? > steveModel = new PlayerModel<>(0.1f, false);
+    private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
+    private static final PlayerModel<?> alexModel = new PlayerModel<>(0.1f, true);
+    private static final PlayerModel<?> steveModel = new PlayerModel<>(0.1f, false);
     public static boolean isAlex = true;
     private static ResourceLocation currentTexture = DefaultPlayerSkin.getDefaultSkin();
     private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
-    private static List< File > skins = null;
+    private static List<File> skins = null;
     private static int position = 0;
-    private final ArrayList< DescButton > descButtons = new ArrayList<>();
+    private final ArrayList<DescButton> descButtons = new ArrayList<>();
     private RCheckbox excludeTrending;
     private TextFieldWidget searchField;
     private Button uploadToMcBtn;
@@ -62,6 +64,7 @@ public class IncarnationScreen extends ContainerScreen {
     }
 
     public static void updateModels() {
+        if (skins.isEmpty()) return;
         currentTexture = CommonSkin.fileTotexture(skins.get(position));
         isAlex = skins.get(position).toPath().startsWith(CommonSkin.SKIN_DIRECTORY_ALEX.toPath().toString());
         renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
@@ -83,6 +86,10 @@ public class IncarnationScreen extends ContainerScreen {
         position = 0;
         skins = CommonSkin.listAllSkins(currentSkinType);
 
+        if (skins.isEmpty()) {
+            Minecraft.getInstance().setScreen(new RErrorScreen(new TranslationTextComponent("No Skins within skin directories!"), new TranslationTextComponent("Please place skins in your skin directory.")));
+            return;
+        }
 
         this.searchField = new TextFieldWidget(this.font, cx + 15, cy + 145, imageWidth - 70, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
 
@@ -347,7 +354,7 @@ public class IncarnationScreen extends ContainerScreen {
      * @param color
      * @param width  - The max width of the text, scales to maintain this width if larger than it
      */
-    public void renderWidthScaledText(String text, MatrixStack matrix, FontRenderer font, float x, float y, int color, int width) {
+    public static void renderWidthScaledText(String text, MatrixStack matrix, FontRenderer font, float x, float y, int color, int width) {
         matrix.pushPose();
         int textWidth = font.width(text);
         float scale = width / (float) textWidth;

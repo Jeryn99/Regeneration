@@ -44,6 +44,8 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+
 @Mod("regen")
 public class Regeneration {
 
@@ -78,7 +80,6 @@ public class Regeneration {
 
 
     private void doCommonStuff(final FMLCommonSetupEvent event) {
-
         event.enqueueWork(() ->
         {
             RSurfaceBuilder.registerConfiguredSurfaceBuilders();

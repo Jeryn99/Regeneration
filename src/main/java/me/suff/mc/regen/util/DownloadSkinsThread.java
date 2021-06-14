@@ -35,18 +35,10 @@ public class DownloadSkinsThread extends Thread {
                 FileUtils.cleanDirectory(tempZip);
             }
             trending();
-            timelord();
+           // timelord();
             skinpacks();
 
-            if (isClient) {
-                DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-                    try {
-                        ClientSkin.downloadPreviousSkins();
-                    } catch (IOException exception) {
-                        exception.printStackTrace();
-                    }
-                });
-            }
+
 
             if (forceStop) {
                 stop();

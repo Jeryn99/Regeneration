@@ -15,6 +15,7 @@ import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
 import me.suff.mc.regen.client.rendering.model.armor.GuardModel;
 import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.client.rendering.transitions.*;
+import me.suff.mc.regen.client.skin.CommonSkin;
 import me.suff.mc.regen.client.sound.SoundReverb;
 import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.common.item.HandItem;
@@ -55,7 +56,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
+import org.apache.commons.lang3.RandomUtils;
 
+import javax.imageio.ImageIO;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -65,6 +68,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.function.Supplier;
 
 import static me.suff.mc.regen.common.item.FobWatchItem.getEngrave;
@@ -111,6 +115,7 @@ public class ClientUtil {
             throw new Exception(JSONUtils.getAsString(jobject, "message"));
         }
     }
+
 
     @SubscribeEvent
     public static void registerParticles(ParticleFactoryRegisterEvent event) {

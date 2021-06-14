@@ -21,6 +21,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.UsernameCache;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.stb.STBImage;
 
 import java.util.List;
 import java.util.UUID;

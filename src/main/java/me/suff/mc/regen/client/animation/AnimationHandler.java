@@ -7,6 +7,7 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import me.suff.mc.regen.util.PlayerUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.EntityType;
