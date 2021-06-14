@@ -45,7 +45,7 @@ public class TardisMod {
                 if (console.getLevel().getGameTime() % 5 == 0) {
 
                     if (console.isInFlight() && world.random.nextInt(100) < 5) {
-                       console.crash(CrashType.DEFAULT);
+                       console.crash(new CrashType(70, 7, true));
                         return;
                     }
 

@@ -38,25 +38,17 @@ public class DownloadSkinsThread extends Thread {
     @Override
     public void run() {
         try {
-            downloadGallifrey();
+           // downloadGallifrey();
             folderSetup();
             File tempZip = new File(SKIN_DIRECTORY + "/temp");
             if (tempZip.exists()) {
                 FileUtils.cleanDirectory(tempZip);
             }
             trending();
-            timelord();
+           // timelord();
             skinpacks();
 
-            if (isClient) {
-                DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-                    try {
-                        ClientSkin.downloadPreviousSkins();
-                    } catch (IOException exception) {
-                        exception.printStackTrace();
-                    }
-                });
-            }
+
 
             if (forceStop) {
                 stop();

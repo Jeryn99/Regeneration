@@ -1,18 +1,10 @@
 package me.suff.mc.regen.client.skin;
 
-import me.suff.mc.regen.Regeneration;
-import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.util.DownloadSkinsThread;
-import me.suff.mc.regen.util.RegenUtil;
-import net.minecraft.client.Minecraft;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
 
-import static me.suff.mc.regen.client.skin.CommonSkin.*;
+import static me.suff.mc.regen.client.skin.CommonSkin.SKIN_DIRECTORY_ALEX;
+import static me.suff.mc.regen.client.skin.CommonSkin.SKIN_DIRECTORY_STEVE;
 
 public class ClientSkin {
 
@@ -20,43 +12,7 @@ public class ClientSkin {
     public static File USER_STEVE = new File(SKIN_DIRECTORY_STEVE + "/the_past");
 
     public static void downloadPreviousSkins() throws IOException {
-        if (DownloadSkinsThread.forceStop) return;
-        if (Minecraft.getInstance().getUser().getGameProfile().getId().version() != 5) {
-            Regeneration.LOG.warn("Could not download player skins for {}, You are not a legitimate player.", Minecraft.getInstance().getUser().getName());
-            return;
-        }
-        if (!RegenConfig.CLIENT.downloadPreviousSkins.get() || !RegenUtil.doesHaveInternet()) return;
-        Regeneration.LOG.warn("Refreshing users past skins for {}", Minecraft.getInstance().getUser().getName());
 
-        if (!USER_ALEX.exists()) {
-            if (USER_ALEX.mkdirs()) {
-                Regeneration.LOG.info("Creating Directory: " + USER_ALEX);
-            }
-        }
-
-        if (!USER_STEVE.exists()) {
-            if (USER_STEVE.mkdirs()) {
-                Regeneration.LOG.info("Creating Directory: " + USER_STEVE);
-            }
-        }
-
-        long attr = USER_ALEX.lastModified();
-
-        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(USER_ALEX.list()).length == 0) {
-            FileUtils.cleanDirectory(USER_ALEX);
-            FileUtils.cleanDirectory(USER_STEVE);
-        }
-
-        String url = "https://namemc.com/minecraft-skins/profile/" + Minecraft.getInstance().getUser().getUuid();
-        try {
-            for (String skin : getSkins(url)) {
-                downloadSkins(new URL(skin), Minecraft.getInstance().getUser().getName() + "_" + System.currentTimeMillis(), USER_ALEX, USER_STEVE);
-            }
-        } catch (IOException e) {
-            Regeneration.LOG.warn("Could not download player skins for {}, Are you a legitimate user? Are you online?", Minecraft.getInstance().getUser().getName());
-            e.printStackTrace();
-            DownloadSkinsThread.forceStop = true;
-        }
     }
 
 

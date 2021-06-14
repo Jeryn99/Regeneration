@@ -3,6 +3,7 @@ package me.suff.mc.regen.client.skin;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.DownloadSkinsThread;
+import me.suff.mc.regen.util.MineSkin;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -59,7 +60,7 @@ public class CommonSkin {
             }
         }
 
-        Collection< File > folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
 
         if (folderFiles.isEmpty()) {
@@ -70,32 +71,6 @@ public class CommonSkin {
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
-    //Get a list of skins from namemc url
-    public static ArrayList< String > getSkins(String downloadUrl) throws IOException {
-        ArrayList< String > skins = new ArrayList<>();
-        BufferedReader br = null;
-
-        try {
-            URL url = new URL(downloadUrl);
-            URLConnection uc = url.openConnection();
-            uc.connect();
-            uc = url.openConnection();
-            uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-            br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.contains("<a href=\"/skin/")) {
-                    String downloadLine = line.replaceAll("<a href=\"/skin/", "").replaceAll("\">", "").replaceAll("        ", "");
-                    skins.add("https://namemc.com/texture/" + downloadLine + ".png");
-                }
-            }
-        } finally {
-            if (br != null) {
-                br.close();
-            }
-        }
-        return skins;
-    }
 
     public static void folderSetup() throws IOException {
         File[] folders = new File[]{SKIN_DIRECTORY, SKIN_DIRECTORY_ALEX, SKIN_DIRECTORY_FEMALE_TIMELORD, SKIN_DIRECTORY_MALE_TIMELORD, SKIN_DIRECTORY_STEVE};
@@ -203,7 +178,7 @@ public class CommonSkin {
         FileUtils.copyURLToFile(new URL(url), tempZip);
         try (ZipFile file = new ZipFile(tempZip)) {
             FileSystem fileSystem = FileSystems.getDefault();
-            Enumeration< ? extends ZipEntry > entries = file.entries();
+            Enumeration<? extends ZipEntry> entries = file.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 if (entry.isDirectory()) {
@@ -236,7 +211,7 @@ public class CommonSkin {
     }
 
 
-    public static List< File > listAllSkins(PlayerUtil.SkinType choices) {
+    public static List<File> listAllSkins(PlayerUtil.SkinType choices) {
         File directory = null;
         switch (choices) {
             case EITHER:
@@ -249,7 +224,7 @@ public class CommonSkin {
                 directory = SKIN_DIRECTORY_STEVE;
                 break;
         }
-        Collection< File > folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        Collection<File> folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png") || file.getName().contains("timelord_male") || file.getName().contains("timelord_female"));
         return new ArrayList<>(folderFiles);
     }
@@ -269,8 +244,8 @@ public class CommonSkin {
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
             FileUtils.cleanDirectory(trendingDir);
             Regeneration.LOG.warn("Refreshing Trending skins");
-            for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
-                String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
+            for (String skin : MineSkin.getSkinsFromPage(87)) {
+                String cleanName = String.valueOf(System.currentTimeMillis());
                 downloadSkins(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
             }
         }
@@ -285,7 +260,7 @@ public class CommonSkin {
 
             String[] genders = new String[]{"male", "female"};
             for (String gender : genders) {
-                for (String skin : getSkins("https://namemc.com/minecraft-skins/tag/" + gender)) {
+                for (String skin : MineSkin.getSkinsFromPage(87)) {
                     String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
                     downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE_TIMELORD : SKIN_DIRECTORY_FEMALE_TIMELORD);
                 }
