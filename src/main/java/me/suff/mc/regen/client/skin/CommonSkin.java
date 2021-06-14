@@ -244,9 +244,14 @@ public class CommonSkin {
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
             FileUtils.cleanDirectory(trendingDir);
             Regeneration.LOG.warn("Refreshing Trending skins");
-            for (String skin : MineSkin.getSkinsFromPage(87)) {
-                String cleanName = String.valueOf(System.currentTimeMillis());
-                downloadSkins(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
+
+            int randomPage = RegenUtil.RAND.nextInt(7800);
+
+            for (int i = 3; i > 0; i--) {
+                for (String skin : MineSkin.getSkinsFromPage(randomPage + i)) {
+                    String cleanName = String.valueOf(System.currentTimeMillis());
+                    downloadSkins(new URL(skin), "mk_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
+                }
             }
         }
     }
@@ -260,9 +265,8 @@ public class CommonSkin {
 
             String[] genders = new String[]{"male", "female"};
             for (String gender : genders) {
-                for (String skin : MineSkin.getSkinsFromPage(87)) {
-                    String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
-                    downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE_TIMELORD : SKIN_DIRECTORY_FEMALE_TIMELORD);
+                for (String skin : MineSkin.searchSkins(gender)) {
+                    downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + System.currentTimeMillis(), gender.equals("male") ? SKIN_DIRECTORY_MALE_TIMELORD : SKIN_DIRECTORY_FEMALE_TIMELORD);
                 }
             }
         }

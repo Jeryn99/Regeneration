@@ -17,8 +17,6 @@ import net.minecraft.util.math.vector.Vector3d;
 
 public class HandLayer extends LayerRenderer {
 
-    static RegenerationConeModel regenerationConeModel = new RegenerationConeModel();
-
     public HandLayer(IEntityRenderer entityRendererIn) {
         super(entityRendererIn);
     }
@@ -37,15 +35,6 @@ public class HandLayer extends LayerRenderer {
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         EntityModel< ? > model = getParentModel();
-
-        /*if(model instanceof BipedModel) {
-            BipedModel< ? > biped = (BipedModel< ? >) model;
-            regenerationConeModel.head.copyFrom(biped.head);
-            regenerationConeModel.leftArm.copyFrom(biped.leftArm);
-            regenerationConeModel.rightArm.copyFrom(biped.rightArm);
-        }
-        regenerationConeModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(new ResourceLocation(RConstants.MODID, "textures/entity/regen_cone/cone_" +entitylivingbaseIn.level.random.nextInt(2)+ ".png"))), packedLightIn, OverlayTexture.NO_OVERLAY,1,1,1,1);
-*/
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
 
             if (entitylivingbaseIn.isShiftKeyDown()) {

@@ -3,13 +3,13 @@ package me.suff.mc.regen.util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.JSONUtils;
-import net.minecraftforge.fml.ModList;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -42,19 +42,42 @@ public class MineSkin {
      */
     public static boolean isUserValid(UUID uuid) throws IOException {
         JsonObject response = getApiResponse(new URL(URL + "/validate/uuid/" + uuid));
-        return response.get("valid").getAsBoolean();
+        return response.get("valid").getAsBoolean() && response.has("uuid");
     }
 
     /**
      * @param name Name of User to validate
+     * @param uuid UUID of User to validate. UUID is used to confirm the local ID matches the remote one
      * @return Returns a boolean declaring whether a user is premium or not
      * @author Craig
      */
-    public static boolean isUserValid(String name) throws IOException {
+    public static boolean isUserValid(String name, UUID uuid) throws IOException {
         JsonObject response = getApiResponse(new URL(URL + "/validate/name/" + name));
-        return response.get("valid").getAsBoolean();
+
+        //If the response doesn't contain a uuid, it is not a premium account
+        if (!response.has("uuid")) {
+            return false;
+        } else {
+            String uuidResponse = response.get("uuid").getAsString();
+            return uuidResponse.equals(uuid.toString()) && response.get("valid").getAsBoolean();
+        }
     }
 
+    public static ArrayList<String> searchSkins(String searchTerm) throws IOException {
+        JsonObject response = getApiResponse(new URL("https://api.mineskin.org/get/list?filter=" + searchTerm));
+        ArrayList<String> foundSkins = new ArrayList<>();
+        for (int skins = response.getAsJsonArray("skins").size() - 1; skins >= 0; skins--) {
+            JsonElement t = response.getAsJsonArray("skins").get(skins).getAsJsonObject().get("url");
+            foundSkins.add(t.getAsString());
+        }
+        return foundSkins;
+    }
+
+    /**
+     * @param url URL
+     * @return Returns a JsonObject of the response from the site
+     * @author Craig
+     */
     public static JsonObject getApiResponse(URL url) throws IOException {
         HttpsURLConnection uc = (HttpsURLConnection) url.openConnection();
         uc.connect();
@@ -64,6 +87,7 @@ public class MineSkin {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         return JSONUtils.parse(br);
     }
+
 
 
 }
