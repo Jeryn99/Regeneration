@@ -42,6 +42,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -162,7 +163,13 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     /*Setup initial skins for the timelords*/
     public void initSkin(IRegen data) {
-        File file = HandleSkins.chooseRandomTimelordSkin(world.rand);
+        File file = null;
+        try {
+            file = HandleSkins.chooseRandomTimelordSkin(world.rand);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(file == null) return;
         data.setEncodedSkin(HandleSkins.imageToPixelData(file));
     }
 

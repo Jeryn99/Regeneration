@@ -115,11 +115,18 @@ public class HandleSkins {
         return skins;
     }
 
-    public static File chooseRandomTimelordSkin(Random rand) {
+    public static File chooseRandomTimelordSkin(Random rand) throws IOException {
         Collection< File > folderFiles = FileUtils.listFiles(TIMELORDS, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         if (folderFiles.isEmpty()) {
             folderFiles = FileUtils.listFiles(TIMELORDS, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         }
+
+        //Check again
+        if(folderFiles.isEmpty()){
+            downloadTimelordSkins();
+            return null;
+        }
+
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
