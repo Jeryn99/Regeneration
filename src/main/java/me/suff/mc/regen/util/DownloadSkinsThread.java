@@ -1,13 +1,9 @@
 package me.suff.mc.regen.util;
 
 import me.suff.mc.regen.Regeneration;
-import me.suff.mc.regen.client.skin.ClientSkin;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -35,36 +31,6 @@ public class DownloadSkinsThread extends Thread {
         thread.start();
     }
 
-    @Override
-    public void run() {
-        try {
-           // downloadGallifrey();
-            folderSetup();
-            File tempZip = new File(SKIN_DIRECTORY + "/temp");
-            if (tempZip.exists()) {
-                FileUtils.cleanDirectory(tempZip);
-            }
-            trending();
-           // timelord();
-            skinpacks();
-
-
-
-            if (forceStop) {
-                stop();
-                ;
-                forceStop = false;
-            }
-
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            stop();
-            forceStop = false;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void downloadGallifrey() {
         try {
             unPack("https://github.com/WhoCraft/Regeneration/blob/skins/gallifrey/regions.zip?raw=true");
@@ -80,7 +46,7 @@ public class DownloadSkinsThread extends Thread {
         FileUtils.copyURLToFile(new URL(s), tempZip);
         try (ZipFile file = new ZipFile(tempZip)) {
             FileSystem fileSystem = FileSystems.getDefault();
-            Enumeration< ? extends ZipEntry> entries = file.entries();
+            Enumeration<? extends ZipEntry> entries = file.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 if (entry.isDirectory()) {
@@ -104,6 +70,32 @@ public class DownloadSkinsThread extends Thread {
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            // downloadGallifrey();
+            folderSetup();
+            File tempZip = new File(SKIN_DIRECTORY + "/temp");
+            if (tempZip.exists()) {
+                FileUtils.cleanDirectory(tempZip);
+            }
+            trending();
+            timelord();
+            skinpacks();
+            if (forceStop) {
+                stop();
+                forceStop = false;
+            }
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            stop();
+            forceStop = false;
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -15,7 +15,6 @@ public class RegenCommand {
                         .requires(commandSource -> commandSource.hasPermission(ServerLifecycleHooks.getCurrentServer().getOperatorUserPermissionLevel()))
                         .then(SetRegensCommand.register(dispatcher))
                         .then(GlowCommand.register(dispatcher))
-                       // .then(RegenCitadel.register(dispatcher))
                         .then(FastForwardCommand.register(dispatcher)).then(SetTraitsCommand.register(dispatcher))
         );
 
