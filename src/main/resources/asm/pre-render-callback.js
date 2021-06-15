@@ -63,7 +63,7 @@ function patchCallback(methodNode) {
                 //int opcode
                 INVOKESTATIC,
                 //String owner
-                "me/swirtzly/animateme/AMHooks",
+                "me/suff/mc/regen/animateme/AMHooks",
                 //String name
                 "preRenderCallBack",
                 //String descriptor

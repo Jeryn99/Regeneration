@@ -69,7 +69,7 @@ function patchAngles(methodNode) {
                 //int opcode
                 INVOKESTATIC,
                 //String owner
-                "me/swirtzly/animateme/AMHooks",
+                "me/suff/mc/regen/animateme/AMHooks",
                 //String name
                 "renderBipedPost",
                 //String descriptor

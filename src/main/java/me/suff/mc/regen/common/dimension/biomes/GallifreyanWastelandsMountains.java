@@ -1,0 +1,55 @@
+package me.suff.mc.regen.common.dimension.biomes;
+
+import me.suff.mc.regen.common.dimension.features.BiomeHelper;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.DefaultBiomeFeatures;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.structure.MineshaftConfig;
+import net.minecraft.world.gen.feature.structure.MineshaftStructure;
+import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
+import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
+import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
+
+/**
+ * Created by Swirtzly
+ * on 05/05/2020 @ 14:56
+ */
+public class GallifreyanWastelandsMountains extends GallifrayanWastelands {
+
+    public GallifreyanWastelandsMountains() {
+        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.defaultBlockState(), Blocks.DIRT.defaultBlockState(), Blocks.SANDSTONE.defaultBlockState()))).precipitation(RainType.RAIN).biomeCategory(Category.PLAINS).downfall(0.3F).depth(3.6F).temperature(6F).waterColor(BiomeHelper.WASTELAND_WATER).waterFogColor(BiomeHelper.WASTELAND_WATER).scale(3.6F).parent(null));
+        this.addStructureStart(Feature.MINESHAFT, new MineshaftConfig(0.004D, MineshaftStructure.Type.NORMAL));
+        this.addStructureStart(Feature.STRONGHOLD, IFeatureConfig.NONE);
+        DefaultBiomeFeatures.addDefaultCarvers(this);
+        DefaultBiomeFeatures.addStructureFeaturePlacement(this);
+        DefaultBiomeFeatures.addDefaultLakes(this);
+        DefaultBiomeFeatures.addDefaultMonsterRoom(this);
+        DefaultBiomeFeatures.addDefaultUndergroundVariety(this);
+        DefaultBiomeFeatures.addDefaultOres(this);
+        DefaultBiomeFeatures.addDefaultSoftDisks(this);
+        DefaultBiomeFeatures.addDefaultFlowers(this);
+        DefaultBiomeFeatures.addDefaultGrass(this); //Grass
+        DefaultBiomeFeatures.addDefaultMushrooms(this);
+        DefaultBiomeFeatures.addDefaultExtraVegetation(this);
+        DefaultBiomeFeatures.addDefaultSprings(this);
+        DefaultBiomeFeatures.addExtraEmeralds(this);
+        DefaultBiomeFeatures.addInfestedStone(this);
+        DefaultBiomeFeatures.addSurfaceFreezing(this);
+        BiomeHelper.addGallifreyTress(this);
+        BiomeHelper.addHut(this);
+    }
+
+    @Override
+    public int getGrassColor(BlockPos pos) {
+        return -6525891;
+    }
+
+    @Override
+    public int getFoliageColor(BlockPos pos) {
+        return BiomeHelper.GREY_LEAVES_COLOR;
+    }
+
+}

@@ -1,0 +1,79 @@
+package me.suff.mc.regen.client.rendering.layers;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import me.suff.mc.regen.common.capability.IRegen;
+import me.suff.mc.regen.common.capability.RegenCap;
+import me.suff.mc.regen.common.types.RegenType;
+import me.suff.mc.regen.util.client.RenderUtil;
+import me.suff.mc.regen.util.common.PlayerUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.HandSide;
+import net.minecraft.util.math.Vec3d;
+
+import java.util.Random;
+
+import static me.suff.mc.regen.client.rendering.types.FieryRenderer.renderOverlay;
+import static me.suff.mc.regen.util.client.RenderUtil.drawGlowingLine;
+
+/**
+ * Created by Craig on 16/09/2018.
+ */
+public class RegenerationLayer extends LayerRenderer {
+
+    public static final PlayerModel playerModelSteve = new PlayerModel(0.1F, false);
+
+    private final LivingRenderer livingEntityRenderer;
+
+    public RegenerationLayer(LivingRenderer livingEntityRendererIn) {
+        super(livingEntityRendererIn);
+        this.livingEntityRenderer = livingEntityRendererIn;
+    }
+
+    public static void renderGlowingHands(LivingEntity player, IRegen handler, float scale, HandSide side) {
+        Vec3d primaryColor = handler.getPrimaryColor();
+        Vec3d secondaryColor = handler.getSecondaryColor();
+
+        Minecraft mc = Minecraft.getInstance();
+        Random rand = player.level.random;
+        float factor = 0.2F;
+
+        RenderUtil.setupRenderLightning();
+        GlStateManager.scalef(scale, scale, scale);
+        GlStateManager.translatef(0, 0.3F, 0);
+        GlStateManager.rotatef((mc.player.tickCount + RenderUtil.renderTick) / 2F, 0, 1, 0);
+        for (int i = 0; i < 7; i++) {
+            GlStateManager.rotatef((mc.player.tickCount + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
+            drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, primaryColor, 0);
+            drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, secondaryColor, 0);
+        }
+        RenderUtil.finishRenderLightning();
+    }
+
+    @Override
+    public void render(Entity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        LivingEntity player = (LivingEntity) entity;
+        RegenCap.get(player).ifPresent((data) -> {
+            RegenType type = data.getRegenType().create();
+            if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
+                type.getRenderer().onRenderLayer(type, livingEntityRenderer, data, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            }
+
+            if (data.getState() == PlayerUtil.RegenState.POST && player.hurtTime > 0) {
+                renderOverlay(livingEntityRenderer, player, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            }
+
+        });
+
+    }
+
+    @Override
+    public boolean colorsOnDamage() {
+        return false;
+    }
+
+}

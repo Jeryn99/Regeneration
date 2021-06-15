@@ -28,7 +28,7 @@ function patch_sound_source(class_node) {
         if (insn.getOpcode() == Opcodes.RETURN) {
             instructions.insertBefore(insn, new VarInsnNode(Opcodes.ALOAD, 0));
             instructions.insertBefore(insn, new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/audio/SoundSource", api.mapField("field_216441_b"), "I"));
-            instructions.insertBefore(insn, new MethodInsnNode(Opcodes.INVOKESTATIC, "me/swirtzly/regeneration/client/sound/ReverbHandler", "onPlaySound", "(I)V", false));
+            instructions.insertBefore(insn, new MethodInsnNode(Opcodes.INVOKESTATIC, "me/suff/mc/regen/client/sound/ReverbHandler", "onPlaySound", "(I)V", false));
             break;
         }
     }
