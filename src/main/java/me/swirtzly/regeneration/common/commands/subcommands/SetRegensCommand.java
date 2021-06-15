@@ -15,10 +15,10 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-public class SetRegensCommand implements Command< CommandSource > {
+public class SetRegensCommand implements Command<CommandSource> {
     private static final SetRegensCommand CMD = new SetRegensCommand();
 
-    public static ArgumentBuilder< CommandSource, ? > register(CommandDispatcher< CommandSource > dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("set-regens")
                 .then(Commands.argument("username", StringArgumentType.string())
                         .suggests((context, builder) -> ISuggestionProvider.suggest(ServerLifecycleHooks.getCurrentServer().getOnlinePlayerNames(), builder))
@@ -28,7 +28,7 @@ public class SetRegensCommand implements Command< CommandSource > {
 
 
     @Override
-    public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         CommandSource source = context.getSource();
         Integer amount = context.getArgument("amount", Integer.class);
         String username = context.getArgument("username", String.class);

@@ -37,7 +37,7 @@ public class PlaySFXMessage {
 
     public static class Handler {
 
-        public static void handle(PlaySFXMessage message, Supplier< NetworkEvent.Context > ctx) {
+        public static void handle(PlaySFXMessage message, Supplier<NetworkEvent.Context> ctx) {
             Minecraft.getInstance().deferTask(() -> {
                 PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.playerUUID);
                 if (player != null) {

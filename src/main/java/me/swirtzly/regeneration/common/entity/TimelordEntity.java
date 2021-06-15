@@ -51,9 +51,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
-    private static final DataParameter< String > TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
-    private static final DataParameter< Boolean > SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter< Boolean > VILLAGER = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> VILLAGER = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
 
     private final SwimmerPathNavigator waterNavigator;
     private final GroundPathNavigator groundNavigator;
@@ -62,7 +62,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         this(RegenObjects.EntityEntries.TIMELORD.get(), world);
     }
 
-    public TimelordEntity(EntityType< TimelordEntity > entityEntityType, World world) {
+    public TimelordEntity(EntityType<TimelordEntity> entityEntityType, World world) {
         super(entityEntityType, world);
         this.waterNavigator = new SwimmerPathNavigator(this, world);
         this.groundNavigator = new GroundPathNavigator(this, world);
@@ -169,7 +169,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(file == null) return;
+        if (file == null) return;
         data.setEncodedSkin(HandleSkins.imageToPixelData(file));
     }
 

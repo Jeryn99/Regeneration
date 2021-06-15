@@ -33,14 +33,14 @@ import java.util.UUID;
 
 public class OverrideEntity extends Entity {
 
-    private static final DataParameter< ItemStack > ITEM = EntityDataManager.createKey(OverrideEntity.class, DataSerializers.ITEMSTACK);
+    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(OverrideEntity.class, DataSerializers.ITEMSTACK);
 
     private UUID thrower;
     private UUID owner;
     private int health = 5;
 
 
-    public OverrideEntity(EntityType< ? extends OverrideEntity > entityTypeIn, World worldIn) {
+    public OverrideEntity(EntityType<? extends OverrideEntity> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -230,7 +230,7 @@ public class OverrideEntity extends Entity {
 
     @Nonnull
     @Override
-    public IPacket< ? > createSpawnPacket() {
+    public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

@@ -54,12 +54,26 @@ import static me.swirtzly.regeneration.common.item.DyeableClothingItem.SWIFT_KEY
 public class CommonHandler {
 
 
+    public static boolean canBeGiven(Entity entity) {
+        boolean isliving = entity instanceof LivingEntity;
+        boolean ignoresConfig = entity.getType() == RegenObjects.EntityEntries.TIMELORD.get() || entity.getType() == EntityType.PLAYER;
+
+        if (isliving) {
+            if (ignoresConfig) {
+                return true;
+            } else {
+                return RegenConfig.COMMON.mobsHaveRegens.get();
+            }
+        }
+        return false;
+    }
+
+    // =========== CAPABILITY HANDLING =============
+
     @SubscribeEvent
     public void registerDim(RegisterDimensionsEvent event) {
         RegenObjects.GALLIFREY_TYPE = DimensionManager.registerOrGetDimension(new ResourceLocation(Regeneration.MODID, "gallifrey"), RegenObjects.Dimensions.GALLIFREY.get(), null, true);
     }
-
-    // =========== CAPABILITY HANDLING =============
 
     @SubscribeEvent
     public void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
@@ -68,7 +82,7 @@ public class CommonHandler {
 
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
-        IStorage< IRegen > storage = RegenCap.CAPABILITY.getStorage();
+        IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
         event.getOriginal().revive();
         RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
             CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
@@ -92,14 +106,14 @@ public class CommonHandler {
     }
 
     @SubscribeEvent
-    public void swift(ServerChatEvent event){
+    public void swift(ServerChatEvent event) {
         ServerPlayerEntity player = event.getPlayer();
         UUID uuid = player.getUniqueID();
-        if(player.getName().getString().contentEquals("Dev") || uuid.equals(UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39")) || uuid.equals(UUID.fromString("bc8b891e-5c25-4c9f-ae61-cdfb270f1cc1")) || uuid.equals(UUID.fromString("09ebf22b-721f-4aca-b0bf-902cfdd9b47a"))){
-            if(event.getMessage().contentEquals("swift")){
+        if (player.getName().getString().contentEquals("Dev") || uuid.equals(UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39")) || uuid.equals(UUID.fromString("bc8b891e-5c25-4c9f-ae61-cdfb270f1cc1")) || uuid.equals(UUID.fromString("09ebf22b-721f-4aca-b0bf-902cfdd9b47a"))) {
+            if (event.getMessage().contentEquals("swift")) {
                 int amount = 0;
                 for (ItemStack stack : player.inventory.mainInventory) {
-                    if(stack.getItem() instanceof ClothingItem || stack.getItem() instanceof DyeableClothingItem){
+                    if (stack.getItem() instanceof ClothingItem || stack.getItem() instanceof DyeableClothingItem) {
                         stack.getOrCreateTag().putString(SWIFT_KEY, SWIFT_KEY);
                         amount++;
                     }
@@ -237,18 +251,17 @@ public class CommonHandler {
         });
     }
 
-
     @SubscribeEvent
-    public void attachCapabilities(AttachCapabilitiesEvent< Entity > event) {
+    public void attachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (canBeGiven(event.getObject())) {
-            event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable< CompoundNBT >() {
+            event.addCapability(RegenCap.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
                 final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
-                final LazyOptional< IRegen > regenInstance = LazyOptional.of(() -> regen);
+                final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
 
                 @Nonnull
                 @Override
-                public < T > LazyOptional< T > getCapability(@Nonnull Capability< T > cap, @javax.annotation.Nullable Direction side) {
-                    if (cap == RegenCap.CAPABILITY) return (LazyOptional< T >) regenInstance;
+                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
+                    if (cap == RegenCap.CAPABILITY) return (LazyOptional<T>) regenInstance;
                     return LazyOptional.empty();
                 }
 
@@ -264,20 +277,6 @@ public class CommonHandler {
 
             });
         }
-    }
-
-    public static boolean canBeGiven(Entity entity){
-        boolean isliving = entity instanceof LivingEntity;
-        boolean ignoresConfig = entity.getType() == RegenObjects.EntityEntries.TIMELORD.get() || entity.getType() == EntityType.PLAYER;
-
-        if(isliving){
-            if(ignoresConfig){
-                return true;
-            } else {
-                return RegenConfig.COMMON.mobsHaveRegens.get();
-            }
-        }
-        return false;
     }
 
     //I hate this.

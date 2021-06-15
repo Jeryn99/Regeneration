@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.common.traits.positive;
 
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.traits.TraitManager;
-import net.minecraft.block.LadderBlock;
 import net.minecraft.entity.LivingEntity;
 
 public class WallClimbingTrait extends TraitManager.IDna {

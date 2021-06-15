@@ -36,7 +36,7 @@ public class SyncDataMessage {
     }
 
     public static class Handler {
-        public static void handle(SyncDataMessage message, Supplier< NetworkEvent.Context > ctx) {
+        public static void handle(SyncDataMessage message, Supplier<NetworkEvent.Context> ctx) {
             Entity player = message.player;
             ctx.get().getSender().getServer().deferTask(() -> {
                 if (player != null) {

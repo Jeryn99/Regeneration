@@ -37,7 +37,7 @@ public class SkinChoiceScreen extends ContainerScreen {
     private static final PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
     public static boolean isAlex = true;
     private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
-    private static List< File > skins = null;
+    private static List<File> skins = null;
     private static int position = 0;
     private static PlayerUtil.EnumChoices choices = null;
     private float rotation = 0;

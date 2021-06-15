@@ -54,16 +54,16 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
     }
 
     private Layer[] makeTheWorld(long seed) {
-        LongFunction< IExtendedNoiseRandom< LazyArea > > contextFactory = l -> new LazyAreaLayerContext(25, seed, l);
-        IAreaFactory< LazyArea > parentLayer = IslandLayer.INSTANCE.apply(contextFactory.apply(1));
-        IAreaFactory< LazyArea > biomeLayer = (new BiomeLayerCustom(RegenObjects.GallifreyBiomes.getBiomes())).apply(contextFactory.apply(200), parentLayer);
+        LongFunction<IExtendedNoiseRandom<LazyArea>> contextFactory = l -> new LazyAreaLayerContext(25, seed, l);
+        IAreaFactory<LazyArea> parentLayer = IslandLayer.INSTANCE.apply(contextFactory.apply(1));
+        IAreaFactory<LazyArea> biomeLayer = (new BiomeLayerCustom(RegenObjects.GallifreyBiomes.getBiomes())).apply(contextFactory.apply(200), parentLayer);
         biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1000), biomeLayer);
         biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1001), biomeLayer);
         biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1002), biomeLayer);
         biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1003), biomeLayer);
         biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1004), biomeLayer);
         biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1005), biomeLayer);
-        IAreaFactory< LazyArea > voronoizoom = VoroniZoomLayer.INSTANCE.apply(contextFactory.apply(10), biomeLayer);
+        IAreaFactory<LazyArea> voronoizoom = VoroniZoomLayer.INSTANCE.apply(contextFactory.apply(10), biomeLayer);
         return new Layer[]{new Layer(biomeLayer), new Layer(voronoizoom)};
     }
 
@@ -83,21 +83,21 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
     }
 
     @Override
-    public Set< Biome > getBiomesInSquare(int centerX, int centerZ, int sideLength) {
+    public Set<Biome> getBiomesInSquare(int centerX, int centerZ, int sideLength) {
         int i = centerX - sideLength >> 2;
         int j = centerZ - sideLength >> 2;
         int k = centerX + sideLength >> 2;
         int l = centerZ + sideLength >> 2;
         int i1 = k - i + 1;
         int j1 = l - j + 1;
-        Set< Biome > set = Sets.newHashSet();
+        Set<Biome> set = Sets.newHashSet();
         Collections.addAll(set, this.genBiomes.generateBiomes(i, j, i1, j1));
         return set;
     }
 
     @Override
     @Nullable
-    public BlockPos findBiomePosition(int x, int z, int range, List< Biome > biomes, Random random) {
+    public BlockPos findBiomePosition(int x, int z, int range, List<Biome> biomes, Random random) {
         int i = x - range >> 2;
         int j = z - range >> 2;
         int k = x + range >> 2;
@@ -121,7 +121,7 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
     }
 
     @Override
-    public boolean hasStructure(Structure< ? > structureIn) {
+    public boolean hasStructure(Structure<?> structureIn) {
         return this.hasStructureCache.computeIfAbsent(structureIn, (p_205006_1_) -> {
             for (Biome biome : this.biomes) {
                 if (biome.hasStructure(p_205006_1_)) {
@@ -133,7 +133,7 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
     }
 
     @Override
-    public Set< BlockState > getSurfaceBlocks() {
+    public Set<BlockState> getSurfaceBlocks() {
         if (this.topBlocksCache.isEmpty()) {
             for (Biome biome : this.biomes) {
                 this.topBlocksCache.add(biome.getSurfaceBuilderConfig().getTop());

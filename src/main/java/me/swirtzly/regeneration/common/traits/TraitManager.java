@@ -29,7 +29,7 @@ import java.util.Random;
 @Mod.EventBusSubscriber(modid = Regeneration.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TraitManager {
 
-    private static final ArrayList< IDna > DNA_LIST = new ArrayList<>();
+    private static final ArrayList<IDna> DNA_LIST = new ArrayList<>();
     public static IDna DNA_ATHLETE = new AthleteTrait();
     public static IDna DNA_BORING = new BaseTrait("boring");
     public static IDna DNA_DUMB = new BaseTrait("dumb");
@@ -40,7 +40,7 @@ public class TraitManager {
     public static IDna DNA_HUNGER = new HungerTrait();
     public static IDna DNA_WALLCLIMB = new WallClimbingTrait();
     public static IDna DNA_REPEL_ARROW = new BaseTrait("repel_arrow");
-    public static HashMap< ResourceLocation, IDna > DNA_ENTRIES = new HashMap<>();
+    public static HashMap<ResourceLocation, IDna> DNA_ENTRIES = new HashMap<>();
 
     public static void init() {
         register(DNA_ATHLETE);

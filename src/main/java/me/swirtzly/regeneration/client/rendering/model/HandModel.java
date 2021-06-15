@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
 /**
  * Created by Swirtzly on 22/08/2019 @ 16:46
  */
-public class HandModel extends EntityModel< Entity > {
+public class HandModel extends EntityModel<Entity> {
     private final RendererModel arm;
 
     public HandModel(boolean isAlex) {

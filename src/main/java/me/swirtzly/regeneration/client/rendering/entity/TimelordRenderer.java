@@ -11,8 +11,6 @@ import me.swirtzly.regeneration.client.skinhandling.SkinManipulation;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.entity.TimelordEntity;
-import me.swirtzly.regeneration.common.item.GunItem;
-import me.swirtzly.regeneration.util.common.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -37,17 +35,17 @@ import java.util.UUID;
  * Created by Swirtzly
  * on 03/05/2020 @ 19:02
  */
-public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel< TimelordEntity > > {
+public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<TimelordEntity>> {
 
-    public static EntityModel< TimelordEntity > mainModel = new TimelordModel();
-    public static EntityModel< TimelordEntity > councilModel = new TimelordModel();
-    public static EntityModel< TimelordEntity > guardModel = new TimelordGuardModel();
-    public static PlayerModel< TimelordEntity > bipedModel = new PlayerModel<>(-0.25F, true);
+    public static EntityModel<TimelordEntity> mainModel = new TimelordModel();
+    public static EntityModel<TimelordEntity> councilModel = new TimelordModel();
+    public static EntityModel<TimelordEntity> guardModel = new TimelordGuardModel();
+    public static PlayerModel<TimelordEntity> bipedModel = new PlayerModel<>(-0.25F, true);
 
     public static ResourceLocation TIMELORD = new ResourceLocation(Regeneration.MODID, "textures/entity/timelords/timelord/timelord_villager.png");
 
 
-    public static HashMap< UUID, ResourceLocation > TIMELORDS = new HashMap<>();
+    public static HashMap<UUID, ResourceLocation> TIMELORDS = new HashMap<>();
 
     public TimelordRenderer(EntityRendererManager entityRendererManager) {
         super(entityRendererManager, new BipedModel<>(), 0.1F);
@@ -97,7 +95,7 @@ public class TimelordRenderer extends LivingRenderer< TimelordEntity, BipedModel
                 break;
         }
 
-        entityModel = (BipedModel< TimelordEntity >) mainModel;
+        entityModel = (BipedModel<TimelordEntity>) mainModel;
 
         boolean flag = this.isVisible(entitylivingbaseIn);
         boolean flag1 = !flag && !entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getInstance().player);

@@ -10,9 +10,9 @@ import java.util.List;
 
 public class AnimationManager {
 
-    private static List< IAnimate > ANIMATIONS = new ArrayList();
+    private static List<IAnimate> ANIMATIONS = new ArrayList();
 
-    public static List< IAnimate > getAnimations() {
+    public static List<IAnimate> getAnimations() {
         return ANIMATIONS;
     }
 

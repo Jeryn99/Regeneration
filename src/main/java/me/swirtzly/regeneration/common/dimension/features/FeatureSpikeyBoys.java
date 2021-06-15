@@ -15,14 +15,14 @@ import net.minecraft.world.gen.feature.NoFeatureConfig;
 import java.util.Random;
 import java.util.function.Function;
 
-public class FeatureSpikeyBoys extends Feature< NoFeatureConfig > {
+public class FeatureSpikeyBoys extends Feature<NoFeatureConfig> {
 
-    public FeatureSpikeyBoys(Function< Dynamic< ? >, ? extends NoFeatureConfig > p_i51493_1_) {
+    public FeatureSpikeyBoys(Function<Dynamic<?>, ? extends NoFeatureConfig> p_i51493_1_) {
         super(p_i51493_1_);
     }
 
     @Override
-    public boolean place(IWorld worldIn, ChunkGenerator< ? extends GenerationSettings > generator, Random rand, BlockPos pos, NoFeatureConfig config) {
+    public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
         while (worldIn.isAirBlock(pos) && pos.getY() > 2) {
             pos = pos.down();
         }

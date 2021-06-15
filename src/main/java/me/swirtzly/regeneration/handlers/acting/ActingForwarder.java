@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ActingForwarder {
 
-    private static List< Acting > SERVER_HANDLERS = new ArrayList<>(), CLIENT_HANDLERS = new ArrayList<>();
+    private static List<Acting> SERVER_HANDLERS = new ArrayList<>(), CLIENT_HANDLERS = new ArrayList<>();
 
     public static void init() {
         register(CommonActing.INSTANCE, Dist.DEDICATED_SERVER);
@@ -21,7 +21,7 @@ public class ActingForwarder {
         }
     }
 
-    public static void register(Class< ? extends Acting > handlerClass, Dist side) {
+    public static void register(Class<? extends Acting> handlerClass, Dist side) {
         try {
             register(handlerClass.newInstance(), side);
         } catch (ReflectiveOperationException e) {

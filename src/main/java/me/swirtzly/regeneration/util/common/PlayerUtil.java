@@ -43,7 +43,7 @@ public class PlayerUtil {
 
     private static final Random RAND = new Random();
 
-    public static ArrayList< Effect > POTIONS = new ArrayList<>();
+    public static ArrayList<Effect> POTIONS = new ArrayList<>();
 
     public static void updateModel(EnumChoices choice) {
         NetworkDispatcher.INSTANCE.sendToServer(new UpdateSkinMapMessage(choice.name()));
@@ -101,7 +101,7 @@ public class PlayerUtil {
     }
 
     public static void sendMessageToAll(TranslationTextComponent translation) {
-        List< ServerPlayerEntity > players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+        List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
         players.forEach(playerMP -> sendMessage(playerMP, translation, false));
     }
 
@@ -152,7 +152,7 @@ public class PlayerUtil {
 
     public static boolean isZeroRoom(LivingEntity livingEntity) {
         AxisAlignedBB box = livingEntity.getBoundingBox().grow(25);
-        for (Iterator< BlockPos > iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
             BlockState blockState = livingEntity.world.getBlockState(pos);
             if (blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM.get() || blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM_TWO.get()) {
@@ -172,7 +172,7 @@ public class PlayerUtil {
     public static boolean isAboveZeroGrid(LivingEntity livingEntity) {
         BlockPos livingPos = livingEntity.getPosition().down();
         AxisAlignedBB grid = new AxisAlignedBB(livingPos.north().west(), livingPos.south().east());
-        for (Iterator< BlockPos > iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
             BlockState state = livingEntity.world.getBlockState(pos);
             if (!state.getBlock().getRegistryName().getPath().contains("zero_roundel")) {

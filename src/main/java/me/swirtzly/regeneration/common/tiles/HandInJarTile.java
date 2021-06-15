@@ -32,7 +32,7 @@ import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABI
 public class HandInJarTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
     public int lindosAmont = 0;
-    public LazyOptional< IItemHandler > handler = LazyOptional.of(this::createHandler);
+    public LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
 
     public HandInJarTile() {
         super(RegenObjects.Tiles.HAND_JAR.get());
@@ -98,7 +98,7 @@ public class HandInJarTile extends TileEntity implements ITickableTileEntity, IN
     @Override
     public void read(CompoundNBT tag) {
         CompoundNBT invTag = tag.getCompound("inv");
-        handler.ifPresent(h -> ((INBTSerializable< CompoundNBT >) h).deserializeNBT(invTag));
+        handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(invTag));
         lindosAmont = tag.getInt("lindos");
         super.read(tag);
     }
@@ -106,7 +106,7 @@ public class HandInJarTile extends TileEntity implements ITickableTileEntity, IN
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         handler.ifPresent(h -> {
-            CompoundNBT compound = ((INBTSerializable< CompoundNBT >) h).serializeNBT();
+            CompoundNBT compound = ((INBTSerializable<CompoundNBT>) h).serializeNBT();
             tag.put("inv", compound);
         });
         tag.putInt("lindos", lindosAmont);
@@ -134,14 +134,14 @@ public class HandInJarTile extends TileEntity implements ITickableTileEntity, IN
 
     @Nonnull
     @Override
-    public < T > LazyOptional< T > getCapability(@Nonnull Capability< T > cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ITEM_HANDLER_CAPABILITY) {
             return handler.cast();
         }
         return super.getCapability(cap, side);
     }
 
-    public LazyOptional< IItemHandler > getInventory() {
+    public LazyOptional<IItemHandler> getInventory() {
         return getCapability(ITEM_HANDLER_CAPABILITY);
     }
 

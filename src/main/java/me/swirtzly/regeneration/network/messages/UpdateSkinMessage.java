@@ -31,7 +31,7 @@ public class UpdateSkinMessage {
     }
 
     public static class Handler {
-        public static void handle(UpdateSkinMessage message, Supplier< NetworkEvent.Context > ctx) {
+        public static void handle(UpdateSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
                 cap.setEncodedSkin(message.encodedSkin);
                 cap.setSkinType(message.isAlex ? SkinInfo.SkinType.ALEX.name() : SkinInfo.SkinType.STEVE.name());

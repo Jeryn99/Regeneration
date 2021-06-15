@@ -14,18 +14,18 @@ public class RegenConfig {
     public static ForgeConfigSpec CLIENT_SPEC;
 
     static {
-        Pair< Common, ForgeConfigSpec > specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+        Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
         COMMON = specPair.getLeft();
 
 
-        Pair< Client, ForgeConfigSpec > specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
+        Pair<Client, ForgeConfigSpec> specClientPair = new ForgeConfigSpec.Builder().configure(Client::new);
         CLIENT_SPEC = specClientPair.getRight();
         CLIENT = specClientPair.getLeft();
     }
 
-    public static ArrayList< String > genBiomesForSpawn() {
-        ArrayList< String > BIOMES = new ArrayList<>();
+    public static ArrayList<String> genBiomesForSpawn() {
+        ArrayList<String> BIOMES = new ArrayList<>();
         BIOMES.add("regeneration:gallifreyan_mountains");
         BIOMES.add("regeneration:gallifreyan_river");
         BIOMES.add("regeneration:redlands");
@@ -41,7 +41,6 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue changePerspective;
         public final ForgeConfigSpec.BooleanValue changeHand;
         public final ForgeConfigSpec.BooleanValue downloadTrendingSkins;
-        public final ForgeConfigSpec.BooleanValue downloadPreviousSkins;
         public final ForgeConfigSpec.BooleanValue downloadInteralSkins;
         public final ForgeConfigSpec.BooleanValue renderTimelordHeadwear;
 
@@ -53,7 +52,6 @@ public class RegenConfig {
             changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
             changeHand = builder.comment("Toggle whether your hand has the chance of inverting after a regen").translation("config.regeneration.hand_change").define("changeHand", true);
             downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regeneration.downloadTrendingSkins").define("downloadTrendingSkins", true);
-            downloadPreviousSkins = builder.comment("Toggle whether the mod downloads your past skins from NameMC").translation("config.regeneration.downloadPreviousSkins").define("downloadPastSkins", true);
             downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regeneration.downloadInternalSkins").define("downloadInternalSkins", true);
             builder.comment("Misc Settings").push("misc");
             renderTimelordHeadwear = builder.comment("Toggle whether Timelords second head layers render, as some look good without and some look good with, I just leave this decision up to you").translation("config.regeneration.timelordRenderSecondLayers").define("timelordRenderSecondLayers", true);
@@ -71,12 +69,12 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue infiniteRegeneration;
         public final ForgeConfigSpec.BooleanValue sendRegenDeathMessages;
         public final ForgeConfigSpec.IntValue regenerativeKillRange;
-        public final ForgeConfigSpec.ConfigValue< Double > regenerativeKnockback;
+        public final ForgeConfigSpec.ConfigValue<Double> regenerativeKnockback;
         public final ForgeConfigSpec.IntValue regenKnockbackRange;
         public final ForgeConfigSpec.BooleanValue regenerationKnocksbackPlayers;
-        public final ForgeConfigSpec.ConfigValue< Integer > gracePhaseLength;
+        public final ForgeConfigSpec.ConfigValue<Integer> gracePhaseLength;
         public final ForgeConfigSpec.IntValue criticalDamageChance;
-        public final ForgeConfigSpec.ConfigValue< Integer > criticalPhaseLength;
+        public final ForgeConfigSpec.ConfigValue<Integer> criticalPhaseLength;
         public final ForgeConfigSpec.IntValue handGlowInterval;
         public final ForgeConfigSpec.IntValue handGlowTriggerDelay;
         public final ForgeConfigSpec.IntValue postRegenerationDuration;
@@ -85,23 +83,19 @@ public class RegenConfig {
         public final ForgeConfigSpec.BooleanValue resetOxygen;
         public final ForgeConfigSpec.IntValue absorbtionLevel;
         public final ForgeConfigSpec.BooleanValue genCrater;
-        public final ForgeConfigSpec.ConfigValue< List< ? extends String > > postRegenEffects;
-        public final ForgeConfigSpec.ConfigValue< String > skinDir;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> postRegenEffects;
+        public final ForgeConfigSpec.ConfigValue<String> skinDir;
         public final ForgeConfigSpec.BooleanValue mobsHaveRegens;
 
         public final ForgeConfigSpec.BooleanValue spawnTimelords;
         public final ForgeConfigSpec.IntValue maxSpawn;
         public final ForgeConfigSpec.IntValue spawnWeight;
         public final ForgeConfigSpec.IntValue minSpawn;
-        public final ForgeConfigSpec.ConfigValue< String > spawnType;
-        public final ForgeConfigSpec.ConfigValue< List< ? extends String > > allowedBiomes;
+        public final ForgeConfigSpec.ConfigValue<String> spawnType;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedBiomes;
 
 
         public final ForgeConfigSpec.BooleanValue tardisModCompatFeatures;
-
-/*
-        public final ForgeConfigSpec.ConfigValue<Integer> confessionDialSpawnChance;
-*/
 
         Common(ForgeConfigSpec.Builder builder) {
             builder.comment("General Regeneration Settings").push("common");
@@ -113,10 +107,6 @@ public class RegenConfig {
             sendRegenDeathMessages = builder.comment("Sends a message to chat to say that a player is regenerating, and the reason for it").translation("config.regeneration.regen_messages").define("sendRegenDeathMessages", true);
             mobsHaveRegens = builder.comment("Allows mobs to have Regenerations").translation("config.regeneration.regen_messages").define("mobsHaveRegens", true);
             skinDir = builder.comment("This is where the regeneration skin folder will be generated, the default is './', the path MUST NOT end in /").translation("config.regeneration.skins.skindir").define("skinDir", ".");
-
-/*
-			confessionDialSpawnChance = builder.comment("Sets the percentage change of a Confession Dial to spawn in chests").translation("config.regeneration.confession_dial_spawn").define("confessionDialSpawnChance", 50, Integer.class::isInstance);
-*/
             builder.pop();
 
             builder.comment("Post Regen Settings").push("post");

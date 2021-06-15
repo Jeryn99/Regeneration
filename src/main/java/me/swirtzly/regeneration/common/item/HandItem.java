@@ -95,7 +95,7 @@ public class HandItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         Date date = new Date(HandItem.getTimeCreated(stack));
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy @ HH:mm");

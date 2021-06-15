@@ -19,7 +19,7 @@ public class BlockTagCreation extends BlockTagsProvider {
         add(RegenTags.TARDIS_ARS, RegenObjects.Blocks.ZERO_ROOM.get());
     }
 
-    public void add(Tag< Block > branch, Block block) {
+    public void add(Tag<Block> branch, Block block) {
         this.getBuilder(branch).add(block);
     }
 }

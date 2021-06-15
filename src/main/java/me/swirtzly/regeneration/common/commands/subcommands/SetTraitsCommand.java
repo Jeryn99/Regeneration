@@ -16,10 +16,10 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-public class SetTraitsCommand implements Command< CommandSource > {
+public class SetTraitsCommand implements Command<CommandSource> {
     private static final SetTraitsCommand CMD = new SetTraitsCommand();
 
-    public static ArgumentBuilder< CommandSource, ? > register(CommandDispatcher< CommandSource > dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("set-traits")
                 .then(Commands.argument("username", StringArgumentType.string())
                         .suggests((context, builder) -> ISuggestionProvider.suggest(ServerLifecycleHooks.getCurrentServer().getOnlinePlayerNames(), builder))
@@ -28,7 +28,7 @@ public class SetTraitsCommand implements Command< CommandSource > {
     }
 
     @Override
-    public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         CommandSource source = context.getSource();
         TraitManager.IDna trait = context.getArgument("trait", TraitManager.IDna.class);
         String username = context.getArgument("username", String.class);

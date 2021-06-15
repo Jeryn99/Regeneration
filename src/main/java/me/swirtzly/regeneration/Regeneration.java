@@ -3,17 +3,11 @@ package me.swirtzly.regeneration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.swirtzly.data.*;
-import me.swirtzly.regeneration.client.rendering.entity.ItemOverrideRenderer;
-import me.swirtzly.regeneration.client.rendering.entity.LaserRenderer;
-import me.swirtzly.regeneration.client.rendering.entity.TimelordRenderer;
 import me.swirtzly.regeneration.common.advancements.TriggerManager;
 import me.swirtzly.regeneration.common.capability.IRegen;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import me.swirtzly.regeneration.common.capability.RegenStorage;
 import me.swirtzly.regeneration.common.commands.RegenCommand;
-import me.swirtzly.regeneration.common.entity.LaserEntity;
-import me.swirtzly.regeneration.common.entity.OverrideEntity;
-import me.swirtzly.regeneration.common.entity.TimelordEntity;
 import me.swirtzly.regeneration.common.skin.HandleSkins;
 import me.swirtzly.regeneration.common.traits.TraitManager;
 import me.swirtzly.regeneration.compat.TardisCompat;
@@ -27,9 +21,6 @@ import me.swirtzly.regeneration.proxy.Proxy;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
 import me.swirtzly.regeneration.util.common.RegenUtil;
-import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
-import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
-import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -40,7 +31,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.*;
@@ -135,7 +125,7 @@ public class Regeneration {
 
         try {
             File dir = new File("./regen_temp");
-            if(dir.exists()) {
+            if (dir.exists()) {
                 FileUtils.cleanDirectory(new File("./regen_temp"));
             }
         } catch (IOException exception) {

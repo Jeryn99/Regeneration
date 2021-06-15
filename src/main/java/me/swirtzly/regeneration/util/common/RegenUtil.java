@@ -25,7 +25,7 @@ import static me.swirtzly.regeneration.util.common.FileUtil.getJsonFromURL;
 
 public class RegenUtil {
 
-    private static final Random rand = new Random();
+    public static final Random RAND = new Random();
     public static String[] TIMELORD_NAMES = new String[]{
             "Timelord"
     };
@@ -33,7 +33,7 @@ public class RegenUtil {
     public static String NO_SKIN = "no_skin";
 
     public static String[] downloadNames() {
-        String[] names = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/timelord-names.json"), String[].class);
+        String[] names = Regeneration.GSON.fromJson(getJsonFromURL("https://raw.githubusercontent.com/WhoCraft/Regeneration/data/timelord-names.json"), String[].class);
         if (names == null) return new String[]{"TIMELORD"};
         return names;
     }
@@ -42,13 +42,13 @@ public class RegenUtil {
         return (playerUUID.hashCode() & 1) == 1;
     }
 
-    public static < T extends Enum< ? > > T randomEnum(Class< T > clazz) {
-        int x = rand.nextInt(clazz.getEnumConstants().length);
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
+        int x = RAND.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
 
     public static float randFloat(float min, float max) {
-        return rand.nextFloat() * (max - min) + min;
+        return RAND.nextFloat() * (max - min) + min;
     }
 
     public static void genCrater(World world, BlockPos pos, int radius) {
@@ -127,7 +127,7 @@ public class RegenUtil {
         }
     }
 
-    public interface IEnum< E extends Enum< E > > {
+    public interface IEnum<E extends Enum<E>> {
         int ordinal();
 
         default E next() {

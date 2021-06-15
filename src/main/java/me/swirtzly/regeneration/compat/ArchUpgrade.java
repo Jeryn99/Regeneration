@@ -11,11 +11,11 @@ import net.tardis.mod.upgrades.UpgradeEntry;
  */
 public class ArchUpgrade extends Upgrade {
 
-    protected ArchUpgrade(UpgradeEntry< ? > entry, ConsoleTile tile, Class< ? extends Subsystem > clazz) {
+    protected ArchUpgrade(UpgradeEntry<?> entry, ConsoleTile tile, Class<? extends Subsystem> clazz) {
         super(entry, tile, clazz);
     }
 
-    public ArchUpgrade(UpgradeEntry< ? > upgradeEntry, ConsoleTile consoleTile) {
+    public ArchUpgrade(UpgradeEntry<?> upgradeEntry, ConsoleTile consoleTile) {
         this(upgradeEntry, consoleTile, null);
     }
 

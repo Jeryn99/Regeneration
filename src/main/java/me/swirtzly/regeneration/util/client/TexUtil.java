@@ -2,7 +2,6 @@ package me.swirtzly.regeneration.util.client;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.common.skin.HandleSkins;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -46,7 +45,7 @@ public class TexUtil {
         ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
         if (gameProfile != null) {
             Minecraft minecraft = Minecraft.getInstance();
-            Map< MinecraftProfileTexture.Type, MinecraftProfileTexture > map = minecraft.getSkinManager().loadSkinFromCache(gameProfile);
+            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(gameProfile);
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 resourcelocation = minecraft.getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
             } else {

@@ -4,7 +4,6 @@ package me.swirtzly.regeneration.client.rendering.model;// Made with Blockbench 
 
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.swirtzly.regeneration.client.animation.GeneralAnimations;
 import me.swirtzly.regeneration.common.capability.RegenCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.BipedModel;

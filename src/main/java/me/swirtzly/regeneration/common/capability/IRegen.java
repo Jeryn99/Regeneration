@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 /**
  * Created by Sub on 16/09/2018.
  */
-public interface IRegen extends INBTSerializable< CompoundNBT > {
+public interface IRegen extends INBTSerializable<CompoundNBT> {
 
     LivingEntity getLivingEntity();
 

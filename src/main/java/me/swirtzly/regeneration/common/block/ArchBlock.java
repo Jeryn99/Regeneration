@@ -60,7 +60,7 @@ public class ArchBlock extends DirectionalBlock implements ICompatObject {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder< Block, BlockState > builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 

@@ -16,7 +16,7 @@ public class RecipeCreation extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer< IFinishedRecipe > consumer) {
+    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
 
         // Crafting Table
         ShapedRecipeBuilder.shapedRecipe(RegenObjects.Items.SEAL.get()).patternLine(" G ").patternLine("G G").patternLine(" G ").key('G', RegenObjects.Items.GAL_INGOT.get()).addCriterion("has_crafting_table", this.hasItem(Blocks.CRAFTING_TABLE)).build(consumer);

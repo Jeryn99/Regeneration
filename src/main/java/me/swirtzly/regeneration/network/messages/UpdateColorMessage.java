@@ -27,7 +27,7 @@ public class UpdateColorMessage {
     }
 
     public static class Handler {
-        public static void handle(UpdateColorMessage message, Supplier< NetworkEvent.Context > ctx) {
+        public static void handle(UpdateColorMessage message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().getSender().getServer().deferTask(() -> {
                 RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
                     cap.setStyle(message.style);

@@ -23,7 +23,7 @@ import java.util.function.Function;
  * Created by Swirtzly
  * on 30/04/2020 @ 11:10
  */
-public class GallifreyanTreeFeature extends Feature< NoFeatureConfig > {
+public class GallifreyanTreeFeature extends Feature<NoFeatureConfig> {
 
     private final ResourceLocation[] TREE_LIST = new ResourceLocation[]{
             createTreeLocation("gal_normal_large"),
@@ -34,7 +34,7 @@ public class GallifreyanTreeFeature extends Feature< NoFeatureConfig > {
             createTreeLocation("gal_tree_pine_large")
     };
 
-    public GallifreyanTreeFeature(Function< Dynamic< ? >, ? extends NoFeatureConfig > configFactoryIn) {
+    public GallifreyanTreeFeature(Function<Dynamic<?>, ? extends NoFeatureConfig> configFactoryIn) {
         super(configFactoryIn);
     }
 
@@ -43,7 +43,7 @@ public class GallifreyanTreeFeature extends Feature< NoFeatureConfig > {
     }
 
     @Override
-    public boolean place(IWorld worldIn, ChunkGenerator< ? extends GenerationSettings > generator, Random rand, BlockPos pos, NoFeatureConfig config) {
+    public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
         if (worldIn instanceof WorldGenRegion) {
             WorldGenRegion reg = (WorldGenRegion) worldIn;
             Template temp = reg.getWorld().getStructureTemplateManager().getTemplate(TREE_LIST[rand.nextInt(TREE_LIST.length)]);

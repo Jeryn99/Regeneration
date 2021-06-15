@@ -37,20 +37,19 @@ import java.util.function.Supplier;
 
 public class ClientUtil {
 
-    public static void doClientStuff(){
+    public static String keyBind = "???";
+
+    public static void doClientStuff() {
         RenderingRegistry.registerEntityRenderingHandler(OverrideEntity.class, ItemOverrideRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(TimelordEntity.class, TimelordRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(LaserEntity.class, LaserRenderer::new);
         MinecraftForge.EVENT_BUS.register(new TabRegistry());
 
-        if (TabRegistry.getTabList().size() < 2){
+        if (TabRegistry.getTabList().size() < 2) {
             TabRegistry.registerTab(new InventoryTabVanilla());
         }
         TabRegistry.registerTab(new RegenPrefTab());
     }
-
-
-    public static String keyBind = "???";
 
     public static void createToast(TranslationTextComponent title, TranslationTextComponent subtitle) {
         Minecraft.getInstance().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
@@ -68,7 +67,7 @@ public class ClientUtil {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier< Boolean > stopCondition, float volume) {
+    public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
         Minecraft.getInstance().getSoundHandler().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
     }
 

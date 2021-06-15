@@ -24,7 +24,7 @@ public class ItemsTagCreation extends ItemTagsProvider {
         }
     }
 
-    public void add(Tag< Item > branch, Item block) {
+    public void add(Tag<Item> branch, Item block) {
         this.getBuilder(branch).add(block);
     }
 }

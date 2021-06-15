@@ -17,11 +17,11 @@ import java.util.HashMap;
 /**
  * Created by Swirtzly on 22/08/2019 @ 16:30
  */
-public class HandTileRenderer extends TileEntityRenderer< HandInJarTile > {
+public class HandTileRenderer extends TileEntityRenderer<HandInJarTile> {
 
     private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
-    public static HashMap< HandInJarTile, ResourceLocation > TEXTURES = new HashMap<>();
+    public static HashMap<HandInJarTile, ResourceLocation> TEXTURES = new HashMap<>();
     public static EntityModel STEVE_ARM = new HandModel(false);
     public static EntityModel ALEX_ARM = new HandModel(true);
 

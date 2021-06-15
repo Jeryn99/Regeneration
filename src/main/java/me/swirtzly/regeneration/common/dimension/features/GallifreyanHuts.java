@@ -20,9 +20,9 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Random;
 import java.util.function.Function;
 
-public class GallifreyanHuts extends Feature< NoFeatureConfig > {
+public class GallifreyanHuts extends Feature<NoFeatureConfig> {
 
-    public GallifreyanHuts(Function< Dynamic< ? >, ? extends NoFeatureConfig > configFactoryIn) {
+    public GallifreyanHuts(Function<Dynamic<?>, ? extends NoFeatureConfig> configFactoryIn) {
         super(configFactoryIn);
     }
 

@@ -77,7 +77,7 @@ public class GuardArmorNew extends BipedModel {
             data.getRegenType().create().getRenderer().animateEntity(this, entity, f, f1, f2, f3, f4, f5);
         });
 
-            if (type == EquipmentSlotType.HEAD) {
+        if (type == EquipmentSlotType.HEAD) {
             if (entity instanceof ArmorStandEntity) {
                 GlStateManager.rotatef(90, 0F, 1, 0F);
             }

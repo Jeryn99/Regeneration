@@ -32,7 +32,7 @@ public class SyncRegenDataToClientMessage {
     }
 
     public static class Handler {
-        public static void handle(SyncRegenDataToClientMessage message, Supplier< NetworkEvent.Context > ctx) {
+        public static void handle(SyncRegenDataToClientMessage message, Supplier<NetworkEvent.Context> ctx) {
             Entity player = message.player;
             if (player != null)
                 Minecraft.getInstance().deferTask(() -> RegenCap.get(player).ifPresent((data) -> data.deserializeNBT(message.data)));

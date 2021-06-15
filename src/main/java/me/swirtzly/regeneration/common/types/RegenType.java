@@ -12,7 +12,7 @@ import net.minecraft.util.text.TranslationTextComponent;
  * <p>
  * Created by Sub on 16/09/2018.
  */
-public interface RegenType< R extends ATypeRenderer< ? > > {
+public interface RegenType<R extends ATypeRenderer<?>> {
 
     /**
      * @return in ticks

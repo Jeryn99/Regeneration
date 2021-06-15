@@ -23,7 +23,7 @@ import static net.minecraft.util.math.BlockPos.getAllInBox;
 /**
  * Created by Sub on 16/09/2018.
  */
-public class FieryType implements RegenType< FieryRenderer > {
+public class FieryType implements RegenType<FieryRenderer> {
 
     private SoundEvent[] SOUNDS = new SoundEvent[]{RegenObjects.Sounds.REGENERATION_0.get(), RegenObjects.Sounds.REGENERATION_1.get(), RegenObjects.Sounds.REGENERATION_2.get(), RegenObjects.Sounds.REGENERATION_3.get(), RegenObjects.Sounds.REGENERATION_4.get(), RegenObjects.Sounds.REGENERATION_5.get(), RegenObjects.Sounds.REGENERATION_6.get(), RegenObjects.Sounds.REGENERATION_7.get()};
 
@@ -50,7 +50,7 @@ public class FieryType implements RegenType< FieryRenderer > {
             double y = livingEntity.posY + 0.5 + livingEntity.getRNG().nextGaussian() * 2;
             double z = livingEntity.posZ + livingEntity.getRNG().nextGaussian() * 2;
             livingEntity.world.createExplosion(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
-            Iterator< BlockPos > iterator = getAllInBox(livingEntity.getPosition().north().west(), livingEntity.getPosition().south().east()).iterator();
+            Iterator<BlockPos> iterator = getAllInBox(livingEntity.getPosition().north().west(), livingEntity.getPosition().south().east()).iterator();
             while (iterator.hasNext()) {
                 iterator.forEachRemaining((blockPos -> {
                     if (livingEntity.world.getBlockState(blockPos).getBlock() instanceof FireBlock) {

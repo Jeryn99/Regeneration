@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.model.ModelBox;
  * Created by Swirtzly
  * on 08/05/2020 @ 11:28
  */
-public class TimelordGuardModel extends BipedModel< TimelordEntity > {
+public class TimelordGuardModel extends BipedModel<TimelordEntity> {
     private final RendererModel Head;
     private final RendererModel Body;
     private final RendererModel RightArm;

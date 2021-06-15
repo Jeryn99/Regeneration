@@ -20,7 +20,7 @@ public class ForceRegenerationMessage {
     }
 
     public static class Handler {
-        public static void handle(ForceRegenerationMessage message, Supplier< NetworkEvent.Context > ctx) {
+        public static void handle(ForceRegenerationMessage message, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().getSender().getServer().deferTask(() -> {
                 ServerPlayerEntity player = ctx.get().getSender();
                 RegenCap.get(player).ifPresent((data) -> {

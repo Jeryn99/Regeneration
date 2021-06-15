@@ -20,7 +20,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.ModList;
 
-public class FieryRenderer extends ATypeRenderer< FieryType > {
+public class FieryRenderer extends ATypeRenderer<FieryType> {
 
 
     /* Note 1#: Quark does this weird thing, where it appears to break the Regeneration Effect Staying at the arms

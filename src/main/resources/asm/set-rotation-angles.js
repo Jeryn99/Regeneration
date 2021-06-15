@@ -43,7 +43,7 @@ function initializeCoreMod() {
 }
 
 
-function patchAngles(methodNode){
+function patchAngles(methodNode) {
     var instructions = methodNode.instructions;
 
     var setRotationAngles_name = ASMAPI.mapMethod("func_212844_a_"); // BipedModel.setRotationAngles

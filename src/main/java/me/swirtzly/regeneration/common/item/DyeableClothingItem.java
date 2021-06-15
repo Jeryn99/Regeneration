@@ -15,14 +15,14 @@ import javax.annotation.Nullable;
 public class DyeableClothingItem extends ArmorItem implements IDyeableArmorItem {
 
     public static ResourceLocation TIMELORD = new ResourceLocation(Regeneration.MODID, "textures/entity/armour/white_robes.png");
-
+    public static String SWIFT_KEY = "yOulqmuNmMtget3CxeKbWwr0FVanx90M35TlMFdmHI0Rda3y3iMCqFp";
 
     public DyeableClothingItem(EquipmentSlotType slot) {
         super(ArmorMaterial.LEATHER, slot, new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList< ItemStack > items) {
+    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         super.fillItemGroup(group, items);
 
         if (group == ItemGroups.REGEN_CLOTHING) {
@@ -36,7 +36,7 @@ public class DyeableClothingItem extends ArmorItem implements IDyeableArmorItem 
 
     @Nullable
     @Override
-    public < A extends BipedModel< ? > > A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
+    public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
         return (A) ClientProxy.getArmorModel(itemStack);
     }
 
@@ -50,6 +50,4 @@ public class DyeableClothingItem extends ArmorItem implements IDyeableArmorItem 
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
         return stack.getOrCreateTag().contains(SWIFT_KEY) ? TIMELORD.toString() : "regeneration:textures/entity/armour/robes.png";
     }
-
-    public static String SWIFT_KEY = "yOulqmuNmMtget3CxeKbWwr0FVanx90M35TlMFdmHI0Rda3y3iMCqFp";
 }

@@ -13,7 +13,6 @@ import me.swirtzly.regeneration.common.types.RegenType;
 import me.swirtzly.regeneration.handlers.RegenObjects;
 import me.swirtzly.regeneration.network.NetworkDispatcher;
 import me.swirtzly.regeneration.network.messages.UpdateSkinMessage;
-import me.swirtzly.regeneration.proxy.ClientProxy;
 import me.swirtzly.regeneration.util.client.ClientUtil;
 import me.swirtzly.regeneration.util.client.TexUtil;
 import me.swirtzly.regeneration.util.common.PlayerUtil;
@@ -50,7 +49,7 @@ import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 @OnlyIn(Dist.CLIENT)
 public class SkinManipulation {
 
-    public static final Map< UUID, SkinInfo > PLAYER_SKINS = new HashMap<>();
+    public static final Map<UUID, SkinInfo> PLAYER_SKINS = new HashMap<>();
 
     public static NativeImage decodeToImage(String base64String) {
         if (base64String.equalsIgnoreCase(NO_SKIN)) {
@@ -116,7 +115,7 @@ public class SkinManipulation {
         }
         NetworkPlayerInfo playerInfo = player.playerInfo;
         if (playerInfo == null) return;
-        Map< MinecraftProfileTexture.Type, ResourceLocation > playerTextures = playerInfo.playerTextures;
+        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
         playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
         if (texture == null) {
             ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
@@ -132,8 +131,8 @@ public class SkinManipulation {
     }
 
 
-    public static List< File > listAllSkins(PlayerUtil.EnumChoices choices) {
-        List< File > resultList = new ArrayList<>();
+    public static List<File> listAllSkins(PlayerUtil.EnumChoices choices) {
+        List<File> resultList = new ArrayList<>();
         File directory = null;
 
         switch (choices) {
@@ -184,7 +183,7 @@ public class SkinManipulation {
     public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
         AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
 
-        PlayerModel< AbstractClientPlayerEntity > model = renderPlayerEvent.getRenderer().getEntityModel();
+        PlayerModel<AbstractClientPlayerEntity> model = renderPlayerEvent.getRenderer().getEntityModel();
 
         boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get() || player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES_CHEST.get();
 
@@ -203,7 +202,7 @@ public class SkinManipulation {
 
 
             //Fixes First person arm
-            if(Minecraft.getInstance().player.getUniqueID() == player.getUniqueID()) {
+            if (Minecraft.getInstance().player.getUniqueID() == player.getUniqueID()) {
                 if (Minecraft.getInstance().gameSettings.thirdPersonView == 0 && isWearingChest) {
                     model.bipedLeftArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
                     model.bipedRightArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
@@ -266,7 +265,7 @@ public class SkinManipulation {
         });
     }
 
-    private void createSkinData(AbstractClientPlayerEntity player, LazyOptional< IRegen > cap) {
+    private void createSkinData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
         cap.ifPresent((data) -> {
             Minecraft.getInstance().deferTask(() -> {
                 SkinInfo skinInfo = SkinManipulation.getSkinInfo(player, data);

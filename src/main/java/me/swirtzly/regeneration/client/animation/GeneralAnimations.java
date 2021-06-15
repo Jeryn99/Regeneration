@@ -15,8 +15,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 
-import static me.swirtzly.regeneration.common.item.DyeableClothingItem.SWIFT_KEY;
-
 public class GeneralAnimations implements AnimationManager.IAnimate {
 
     public static void copyAnglesToWear(BipedModel modelBiped) {
@@ -43,7 +41,7 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
                 modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
             }
 
-            if(modelPlayer instanceof PlayerModel){
+            if (modelPlayer instanceof PlayerModel) {
                 PlayerModel playerModel = (PlayerModel) modelPlayer;
                 playerModel.bipedLeftArmwear.isHidden = playerModel.bipedRightArmwear.isHidden = playerModel.bipedBodyWear.isHidden = hideBodyWear(entity.getItemStackFromSlot(EquipmentSlotType.CHEST));
                 playerModel.bipedRightLeg.isHidden = playerModel.bipedLeftLeg.isHidden = playerModel.bipedRightLegwear.isHidden = playerModel.bipedLeftLegwear.isHidden = !showLegWear(entity.getItemStackFromSlot(EquipmentSlotType.LEGS));
@@ -58,17 +56,17 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
     private boolean showLegWear(ItemStack stack) {
         Item[] items = new Item[]{RegenObjects.Items.ROBES_LEGS.get(), RegenObjects.Items.GUARD_LEGGINGS.get()};
         for (Item item : items) {
-            if(stack.getItem() == item){
+            if (stack.getItem() == item) {
                 return false;
             }
         }
         return true;
     }
 
-    public boolean hideBodyWear(ItemStack stack){
+    public boolean hideBodyWear(ItemStack stack) {
         Item[] items = new Item[]{RegenObjects.Items.ROBES_CHEST.get(), RegenObjects.Items.GUARD_CHEST.get()};
         for (Item item : items) {
-            if(stack.getItem() == item){
+            if (stack.getItem() == item) {
                 return true;
             }
         }

@@ -27,7 +27,7 @@ import java.util.List;
 public class AdvancementCreation implements IDataProvider {
 
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-    private static final List< Advancement > advancements = new ArrayList<>();
+    private static final List<Advancement> advancements = new ArrayList<>();
     private final DataGenerator generator;
 
     private Advancement lastAdvancement;

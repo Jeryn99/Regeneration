@@ -1,5 +1,7 @@
 package me.swirtzly.regeneration.util.common;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import me.swirtzly.regeneration.RegenConfig;
 import me.swirtzly.regeneration.Regeneration;
 import me.swirtzly.regeneration.client.image.ImageDownloader;
@@ -17,6 +19,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -29,10 +32,26 @@ public class FileUtil {
     public static void handleDownloads() throws IOException {
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
 
-        String PACKS_URL = "https://raw.githubusercontent.com/Swirtzly/Regeneration/skins/index.json";
-        String[] links = Regeneration.GSON.fromJson(getJsonFromURL(PACKS_URL), String[].class);
-        for (String link : links) {
-            unzipSkinPack(link);
+        File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
+
+        long attr = drWhoDir.lastModified();
+        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(drWhoDir.list()).length == 0) {
+            Regeneration.LOG.info("Downloading Remote Skinpacks");
+            String packsUrl = "https://raw.githubusercontent.com/WhoCraft/Regeneration/data/skinpacks/skinpacks.json";
+            JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
+
+            System.out.println("HELLO THERE");
+
+            for (int skins = links.getAsJsonArray("packs").size() - 1; skins >= 0; skins--) {
+                JsonArray packs = links.getAsJsonArray("packs");
+                JsonObject currentPack = packs.get(skins).getAsJsonObject();
+                String packName = currentPack.get("name").getAsString();
+                String packCredit = currentPack.get("credits").getAsString();
+                String downloadLink = currentPack.get("download_url").getAsString();
+                System.out.println(downloadLink);
+                Regeneration.LOG.info("Downloading " + packName + " by " + packCredit);
+                unzipSkinPack(downloadLink, packName);
+            }
         }
     }
 
@@ -98,7 +117,6 @@ public class FileUtil {
                     createDefaultFolders();
                     handleDownloads();
                     SkinDownloadManager.downloadTrendingSkins();
-                    SkinDownloadManager.downloadPreviousSkins();
                     notDownloaded.set(false);
                 } catch (Exception e) {
                     Regeneration.LOG.error("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");
@@ -108,13 +126,13 @@ public class FileUtil {
         }, Regeneration.NAME + " Download Daemon").start();
     }
 
-    public static void unzipSkinPack(String url) throws IOException {
-        File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
+    public static void unzipSkinPack(String url, String packanme) throws IOException {
+        File tempZip = new File(SKIN_DIRECTORY + "/temp/" + packanme + ".zip");
         Regeneration.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
         FileUtils.copyURLToFile(new URL(url), tempZip);
         try (ZipFile file = new ZipFile(tempZip)) {
             FileSystem fileSystem = FileSystems.getDefault();
-            Enumeration< ? extends ZipEntry > entries = file.entries();
+            Enumeration<? extends ZipEntry> entries = file.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 if (entry.isDirectory()) {

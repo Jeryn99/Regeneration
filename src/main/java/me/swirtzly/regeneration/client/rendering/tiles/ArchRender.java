@@ -14,7 +14,7 @@ import net.minecraft.util.math.Vec3d;
  * Created by Swirtzly
  * on 22/04/2020 @ 17:46
  */
-public class ArchRender extends TileEntityRenderer< ArchTile > {
+public class ArchRender extends TileEntityRenderer<ArchTile> {
 
 
     @Override
