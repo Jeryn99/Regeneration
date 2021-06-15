@@ -195,7 +195,7 @@ public final class VoxelShapeUtils {
      *
      * @param initial  The {@link VoxelShape} to start with
      * @param function The {@link IBooleanFunction} to perform
-     * @param simplify True if the returned shape should run {@link VoxelShape#simplify()}, False otherwise
+     * @param simplify True if the returned shape should run {@link VoxelShape#optimize()} ()}, False otherwise
      * @param shapes   The collection of {@link VoxelShape}s to include
      * @return A {@link VoxelShape} based on the input parameters.
      * @implNote We do not do any simplification until after combining all the shapes, and then only if the {@code simplify} is True. This is because there is a
@@ -214,7 +214,7 @@ public final class VoxelShapeUtils {
      *
      * @param initial  The {@link VoxelShape} to start with
      * @param function The {@link IBooleanFunction} to perform
-     * @param simplify True if the returned shape should run {@link VoxelShape#simplify()}, False otherwise
+     * @param simplify True if the returned shape should run {@link VoxelShape#optimize()}, False otherwise
      * @param shapes   The list of {@link VoxelShape}s to include
      * @return A {@link VoxelShape} based on the input parameters.
      * @implNote We do not do any simplification until after combining all the shapes, and then only if the {@code simplify} is True. This is because there is a

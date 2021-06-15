@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.color.ColorSpace;
@@ -248,7 +249,7 @@ public class CommonSkin {
 
             for (int i = 3; i > 0; i--) {
                 for (String skin : MineSkin.getSkinsFromPage(randomPage + i)) {
-                    downloadSkins(new URL(skin), "mk_" + UUID.randomUUID().toString().substring(0, 6), TRENDING_ALEX, TRENDING_STEVE);
+                    downloadSkins(new URL(skin), "mk_" + RandomStringUtils.random(5, true, false), TRENDING_ALEX, TRENDING_STEVE);
                 }
             }
         }
@@ -264,7 +265,7 @@ public class CommonSkin {
             String[] genders = new String[]{"male", "female"};
             for (String gender : genders) {
                 for (String skin : MineSkin.searchSkins(gender)) {
-                    downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + UUID.randomUUID().toString().substring(0, 6), gender.equals("male") ? SKIN_DIRECTORY_MALE_TIMELORD : SKIN_DIRECTORY_FEMALE_TIMELORD);
+                    downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + RandomStringUtils.random(5, true, false), gender.equals("male") ? SKIN_DIRECTORY_MALE_TIMELORD : SKIN_DIRECTORY_FEMALE_TIMELORD);
                 }
             }
         }

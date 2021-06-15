@@ -166,18 +166,15 @@ public class ClientEvents {
 
             handleGunCrosshair(event, player, cap);
 
-
             if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
+
             if (cap.regenState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
                 event.setCanceled(true);
             }
 
-
             ITextComponent forceKeybind = RKeybinds.FORCE_REGEN.getKey().getDisplayName();
 
             switch (cap.regenState()) {
-                case ALIVE:
-                    break;
                 case GRACE:
                     RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
                     warning = new TranslationTextComponent("regen.messages.warning.grace", forceKeybind.getString()).getString();
@@ -196,8 +193,6 @@ public class ClientEvents {
                         RenderHelp.renderVig(cap.getSecondaryColors(), 0.5F);
                     }
                     break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + cap.regenState());
             }
 
             if (cap.glowing()) {
@@ -212,14 +207,13 @@ public class ClientEvents {
     }
 
     private static void handleGunCrosshair(RenderGameOverlayEvent.Pre event, ClientPlayerEntity player, me.suff.mc.regen.common.regen.IRegen cap) {
-        if (player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0) {
-            AbstractGui.GUI_ICONS_LOCATION = NEW;
-            if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS && event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
-                event.setCanceled(true);
-            }
-        } else {
-            AbstractGui.GUI_ICONS_LOCATION = cap.regens() > 0 && RegenConfig.CLIENT.heartIcons.get() ? HEARTS : OLD;
+        boolean gunSight = player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0;
+        boolean healthCheck = event.getType().name().toLowerCase().contains("health");
+        if(gunSight && healthCheck){
+            event.setCanceled(true);
         }
+        AbstractGui.GUI_ICONS_LOCATION = gunSight ? HEARTS : OLD;
+
     }
 
     @SubscribeEvent

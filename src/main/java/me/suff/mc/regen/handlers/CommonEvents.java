@@ -125,8 +125,6 @@ public class CommonEvents {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
             Entity trueSource = event.getSource().getEntity();
-
-
             if (event.getSource().isFire() && iRegen.trait().getRegistryName().toString().equals(RegenTraitRegistry.FIRE.get().getRegistryName().toString())) {
                 event.setCanceled(true);
                 event.setAmount(0.0F);
@@ -195,6 +193,7 @@ public class CommonEvents {
                     cap.syncToClients((ServerPlayerEntity) event.getEntityLiving());
                 return;
             }
+            if(cap.stateManager() == null) return;
             boolean notDead = cap.stateManager().onKilled(event.getSource());
             event.setCanceled(notDead);
         });

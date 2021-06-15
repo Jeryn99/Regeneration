@@ -1,8 +1,10 @@
 [![](https://i.imgur.com/GcUuiUW.png#center)](https://www.curseforge.com/minecraft/mc-mods/regeneration/files)
 
 <p align="center">
+<a href="https://www.curseforge.com/minecraft/mc-mods/regeneration/files">
   <img src="http://cf.way2muchnoise.eu/versions/regeneration.svg">
   <img src="http://cf.way2muchnoise.eu/regeneration.svg"> <br>
+</a>>
 </p>
 <p align="center">
   <b>Links:</b><br>
@@ -32,5 +34,7 @@
   <a href="https://twitter.com/LocalViolet">Violet</a> | Logo & Doctor Who Skins
 
 <p align="center">
+<a href="https://www.bisecthosting.com/dontblink">
   <img src="https://www.bisecthosting.com/partners/custom-banners/dd651da3-657d-4154-9e2b-3df1d135c635.png">
+</a>
 </p>
