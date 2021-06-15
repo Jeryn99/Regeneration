@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * Created by Sub on 17/09/2018.
+ * Created by Craig on 17/09/2018.
  */
 @EventBusSubscriber(Dist.CLIENT)
 public class RegenKeyBinds {
@@ -36,20 +36,20 @@ public class RegenKeyBinds {
     @SubscribeEvent
     public static void keyInput(InputUpdateEvent e) {
         PlayerEntity player = Minecraft.getInstance().player;
-        if (player == null || Minecraft.getInstance().currentScreen != null) return;
+        if (player == null || Minecraft.getInstance().screen != null) return;
 
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.currentScreen == null && minecraft.player != null) {
+        if (minecraft.screen == null && minecraft.player != null) {
             ClientUtil.keyBind = RegenKeyBinds.getRegenerateNowDisplayName();
         }
 
         RegenCap.get(player).ifPresent((data) -> {
-            if (REGEN_NOW.isPressed() && data.getState().isGraceful()) {
+            if (REGEN_NOW.consumeClick() && data.getState().isGraceful()) {
                 NetworkDispatcher.INSTANCE.sendToServer(new RegenerateMessage());
             }
         });
 
-        if (RegenKeyBinds.REGEN_FORCEFULLY.isPressed()) {
+        if (RegenKeyBinds.REGEN_FORCEFULLY.consumeClick()) {
             NetworkDispatcher.sendToServer(new ForceRegenerationMessage());
         }
 

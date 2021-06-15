@@ -59,21 +59,21 @@ public class RegenUtil {
                     if (squareDistance <= Math.pow(radius, 2)) {
                         BlockState block = world.getBlockState(new BlockPos(x, y, z));
 
-                        if (block.getBlock() != Blocks.BEDROCK && block.getBlockHardness(world, new BlockPos(x, y, z)) < 3.0F) {
+                        if (block.getBlock() != Blocks.BEDROCK && block.getDestroySpeed(world, new BlockPos(x, y, z)) < 3.0F) {
 
-                            if (!world.isRemote) {
+                            if (!world.isClientSide) {
 
-                                if (world.getTileEntity(new BlockPos(x, y, z)) != null) {
-                                    TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
+                                if (world.getBlockEntity(new BlockPos(x, y, z)) != null) {
+                                    TileEntity tileEntity = world.getBlockEntity(new BlockPos(x, y, z));
                                     if (tileEntity instanceof IInventory) {
-                                        InventoryHelper.dropInventoryItems(world, pos, (IInventory) tileEntity);
-                                        world.updateComparatorOutputLevel(pos, block.getBlock());
+                                        InventoryHelper.dropContents(world, pos, (IInventory) tileEntity);
+                                        world.updateNeighbourForOutputSignal(pos, block.getBlock());
                                     }
                                 }
 
-                                InventoryHelper.spawnItemStack(world, x, y, z, new ItemStack(block.getBlock()));
+                                InventoryHelper.dropItemStack(world, x, y, z, new ItemStack(block.getBlock()));
                             }
-                            world.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState());
+                            world.setBlockAndUpdate(new BlockPos(x, y, z), Blocks.AIR.defaultBlockState());
                         }
                     }
                 }
@@ -82,27 +82,27 @@ public class RegenUtil {
     }
 
     public static void regenerationExplosion(LivingEntity player) {
-        explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
-        explodeKill(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
+        explodeKnockback(player, player.level, player.getCommandSenderBlockPosition(), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
+        explodeKill(player, player.level, player.getCommandSenderBlockPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
     }
 
     public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
-        world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
-            if ((entity instanceof CreatureEntity && entity.isNonBoss()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
-                entity.attackEntityFrom(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
+        world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
+            if ((entity instanceof CreatureEntity && entity.canChangeDimensions()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
+                entity.hurt(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
         });
     }
 
     public static AxisAlignedBB getReach(BlockPos pos, int range) {
-        return new AxisAlignedBB(pos.up(range).north(range).west(range), pos.down(range).south(range).east(range));
+        return new AxisAlignedBB(pos.above(range).north(range).west(range), pos.below(range).south(range).east(range));
     }
 
     public static void explodeKnockback(Entity exploder, World world, BlockPos pos, double knockback, int range) {
-        world.getEntitiesWithinAABBExcludingEntity(exploder, getReach(pos, range)).forEach(entity -> {
+        world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
             if (entity instanceof LivingEntity && exploder.isAlive()) {
                 LivingEntity victim = (LivingEntity) entity;
 
-                if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.isNonBoss())
+                if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.canChangeDimensions())
                     return;
 
                 // float densMod = world.getBlockDensity(new Vec3d(pos), entity.getBoundingBox());
@@ -110,10 +110,10 @@ public class RegenUtil {
                 float densMod = 1;
 
                 int xr, zr;
-                xr = (int) -(victim.posX - exploder.posX);
-                zr = (int) -(victim.posZ - exploder.posZ);
+                xr = (int) -(victim.x - exploder.x);
+                zr = (int) -(victim.z - exploder.z);
 
-                victim.knockBack(exploder, (float) (knockback * densMod), xr, zr);
+                victim.knockback(exploder, (float) (knockback * densMod), xr, zr);
             }
         });
     }

@@ -118,11 +118,11 @@ jar {
     manifest {
         attributes([
                 "Specification-Title"     : "regeneration",
-                "Specification-Vendor"    : "Swirtzly",
+                "Specification-Vendor"    : "Suff99",
                 "Specification-Version"   : "${version}",
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : "${version}",
-                "Implementation-Vendor"   : "Swirtzly",
+                "Implementation-Vendor"   : "Suff99",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }

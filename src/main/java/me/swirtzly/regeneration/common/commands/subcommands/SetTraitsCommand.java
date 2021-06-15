@@ -22,7 +22,7 @@ public class SetTraitsCommand implements Command<CommandSource> {
     public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("set-traits")
                 .then(Commands.argument("username", StringArgumentType.string())
-                        .suggests((context, builder) -> ISuggestionProvider.suggest(ServerLifecycleHooks.getCurrentServer().getOnlinePlayerNames(), builder))
+                        .suggests((context, builder) -> ISuggestionProvider.suggest(ServerLifecycleHooks.getCurrentServer().getPlayerNames(), builder))
                         .then(Commands.argument("trait", TraitsArgumentType.createArgument())
                                 .executes(CMD)));
     }
@@ -32,7 +32,7 @@ public class SetTraitsCommand implements Command<CommandSource> {
         CommandSource source = context.getSource();
         TraitManager.IDna trait = context.getArgument("trait", TraitManager.IDna.class);
         String username = context.getArgument("username", String.class);
-        ServerPlayerEntity player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByUsername(username);
+        ServerPlayerEntity player = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByName(username);
 
         if (player == null || trait == null) {
             return Command.SINGLE_SUCCESS;

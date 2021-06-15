@@ -67,19 +67,19 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
         }
 
         if (data.getAnimationTicks() > 100) {
-            TIMELORDS.remove(timelordEntity.getUniqueID());
+            TIMELORDS.remove(timelordEntity.getUUID());
         }
 
-        if (TIMELORDS.containsKey(timelordEntity.getUniqueID())) {
-            return TIMELORDS.get(timelordEntity.getUniqueID());
+        if (TIMELORDS.containsKey(timelordEntity.getUUID())) {
+            return TIMELORDS.get(timelordEntity.getUUID());
         }
 
         NativeImage bufferedImage = SkinManipulation.decodeToImage(data.getEncodedSkin());
         if (bufferedImage == null) {
-            return DefaultPlayerSkin.getDefaultSkinLegacy();
+            return DefaultPlayerSkin.getDefaultSkin();
         }
-        ResourceLocation location = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("timelord_", new DynamicTexture(bufferedImage));
-        TIMELORDS.put(timelordEntity.getUniqueID(), location);
+        ResourceLocation location = Minecraft.getInstance().getTextureManager().register("timelord_", new DynamicTexture(bufferedImage));
+        TIMELORDS.put(timelordEntity.getUUID(), location);
         return location;
 
     }
@@ -95,12 +95,12 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
                 break;
         }
 
-        entityModel = (BipedModel<TimelordEntity>) mainModel;
+        model = (BipedModel<TimelordEntity>) mainModel;
 
         boolean flag = this.isVisible(entitylivingbaseIn);
-        boolean flag1 = !flag && !entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getInstance().player);
+        boolean flag1 = !flag && !entitylivingbaseIn.isInvisibleTo(Minecraft.getInstance().player);
         if (flag || flag1) {
-            if (!this.bindEntityTexture(entitylivingbaseIn)) {
+            if (!this.bindTexture(entitylivingbaseIn)) {
                 return;
             }
 
@@ -110,33 +110,33 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
 
 
             if (!entitylivingbaseIn.isVillagerModel()) {
-                Minecraft.getInstance().getTextureManager().bindTexture(TimelordRenderer.getTimelordFace(entitylivingbaseIn));
-                bipedModel.isChild = false;
+                Minecraft.getInstance().getTextureManager().bind(TimelordRenderer.getTimelordFace(entitylivingbaseIn));
+                bipedModel.young = false;
 
 
-                for (RendererModel rendererModel : bipedModel.boxList) {
-                    rendererModel.isHidden = true;
+                for (RendererModel rendererModel : bipedModel.cubes) {
+                    rendererModel.neverRender = true;
                 }
 
-                bipedModel.bipedHead.isHidden = false;
-                bipedModel.bipedRightArm.isHidden = false;
-                bipedModel.bipedLeftArm.isHidden = false;
-                bipedModel.bipedBody.isHidden = false;
-                bipedModel.bipedBodyWear.isHidden = false;
-                bipedModel.bipedHeadwear.isHidden = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
+                bipedModel.head.neverRender = false;
+                bipedModel.rightArm.neverRender = false;
+                bipedModel.leftArm.neverRender = false;
+                bipedModel.body.neverRender = false;
+                bipedModel.jacket.neverRender = false;
+                bipedModel.hat.neverRender = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
 
-                bipedModel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+                bipedModel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
 
-                bipedModel.rightArmPose = entityModel.rightArmPose;
-                bipedModel.leftArmPose = entityModel.leftArmPose;
-                bipedModel.bipedRightArm.copyModelAngles(entityModel.bipedRightArm);
-                bipedModel.bipedLeftArm.copyModelAngles(entityModel.bipedLeftArm);
+                bipedModel.rightArmPose = model.rightArmPose;
+                bipedModel.leftArmPose = model.leftArmPose;
+                bipedModel.rightArm.copyFrom(model.rightArm);
+                bipedModel.leftArm.copyFrom(model.leftArm);
                 bipedModel.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
             }
 
-            Minecraft.getInstance().getTextureManager().bindTexture(getEntityTexture(entitylivingbaseIn));
-            entityModel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
-            entityModel.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+            Minecraft.getInstance().getTextureManager().bind(getTextureLocation(entitylivingbaseIn));
+            model.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+            model.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
             if (flag1) {
                 GlStateManager.unsetProfile(GlStateManager.Profile.TRANSPARENT_MODEL);
             }
@@ -145,7 +145,7 @@ public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<
 
     @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(TimelordEntity entity) {
+    protected ResourceLocation getTextureLocation(TimelordEntity entity) {
         switch (entity.getTimelordType()) {
             case COUNCIL:
                 return new ResourceLocation(Regeneration.MODID, "textures/entity/timelords/timelord/timelord_council.png");

@@ -47,11 +47,11 @@ public class BlockHandInJar extends DirectionalBlock {
     public static final DirectionProperty CFACING = DirectionProperty.create("facing", (facing) -> facing != Direction.UP && facing != Direction.DOWN);
 
     public BlockHandInJar() {
-        super(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10));
+        super(Block.Properties.of(Material.PISTON).strength(1.25F, 10));
     }
 
     public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        Direction direction = Direction.getFacingFromVector((float) (entity.posX - clickedBlock.getX()), (float) (entity.posY - clickedBlock.getY()), (float) (entity.posZ - clickedBlock.getZ()));
+        Direction direction = Direction.getNearest((float) (entity.x - clickedBlock.getX()), (float) (entity.y - clickedBlock.getY()), (float) (entity.z - clickedBlock.getZ()));
         if (direction == Direction.UP || direction == Direction.DOWN) {
             return Direction.NORTH;
         }
@@ -59,16 +59,16 @@ public class BlockHandInJar extends DirectionalBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if (entity != null) {
-            world.setBlockState(pos, state.with(CFACING, getFacingFromEntity(pos, entity)), 2);
+            world.setBlock(pos, state.setValue(CFACING, getFacingFromEntity(pos, entity)), 2);
         }
     }
 
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(CFACING)) {
+        switch (state.getValue(CFACING)) {
             case EAST:
                 return EAST;
             case SOUTH:
@@ -82,14 +82,14 @@ public class BlockHandInJar extends DirectionalBlock {
 
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(CFACING);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return super.getStateForPlacement(context)
-                .with(CFACING, context.getPlayer().getHorizontalFacing().getOpposite());
+                .setValue(CFACING, context.getPlayer().getDirection().getOpposite());
     }
 
     @Override
@@ -98,18 +98,18 @@ public class BlockHandInJar extends DirectionalBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote) return false;
+    public boolean use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) return false;
 
-        if (worldIn.getTileEntity(pos) instanceof HandInJarTile) {
-            HandInJarTile jar = (HandInJarTile) worldIn.getTileEntity(pos);
+        if (worldIn.getBlockEntity(pos) instanceof HandInJarTile) {
+            HandInJarTile jar = (HandInJarTile) worldIn.getBlockEntity(pos);
 
             boolean dataThere = RegenCap.get(player).isPresent();
 
             if (dataThere) {
                 IRegen data = RegenCap.get(player).orElseGet(null);
                 if (jar.getLindosAmont() >= 100 && data.getState() == PlayerUtil.RegenState.ALIVE && player.isSneaking() && jar.hasHand()) {
-                    PlayerUtil.lookAt(jar.getPos().getX(), jar.getPos().getY(), jar.getPos().getZ(), player);
+                    PlayerUtil.lookAt(jar.getBlockPos().getX(), jar.getBlockPos().getY(), jar.getBlockPos().getZ(), player);
                     jar.setLindosAmont(jar.getLindosAmont() - 100);
                     data.receiveRegenerations(1);
                     data.setSyncingFromJar(true);
@@ -117,7 +117,7 @@ public class BlockHandInJar extends DirectionalBlock {
                     data.setEncodedSkin(HandItem.getTextureString(jar.getHand()));
                     data.setSkinType(HandItem.getSkinType(jar.getHand()));
                     data.synchronise();
-                    NetworkDispatcher.sendPacketToAll(new InvalidatePlayerDataMessage(data.getLivingEntity().getUniqueID()));
+                    NetworkDispatcher.sendPacketToAll(new InvalidatePlayerDataMessage(data.getLivingEntity().getUUID()));
                     jar.destroyHand();
                     worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), RegenObjects.Sounds.HAND_GLOW.get(), SoundCategory.PLAYERS, 1.0F, 0.7F);
                     data.synchronise();
@@ -126,7 +126,7 @@ public class BlockHandInJar extends DirectionalBlock {
                 }
 
                 if (data.getState() != PlayerUtil.RegenState.REGENERATING && !player.isSneaking()) {
-                    NetworkHooks.openGui((ServerPlayerEntity) player, jar, jar.getPos());
+                    NetworkHooks.openGui((ServerPlayerEntity) player, jar, jar.getBlockPos());
                     return true;
                 }
                 return false;
@@ -148,22 +148,22 @@ public class BlockHandInJar extends DirectionalBlock {
     }
 
     @Override
-    public boolean isVariableOpacity() {
+    public boolean hasDynamicShape() {
         return true;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        HandInJarTile te = (HandInJarTile) worldIn.getTileEntity(pos);
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        HandInJarTile te = (HandInJarTile) worldIn.getBlockEntity(pos);
         if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 //			InventoryHelper.dropInventoryItems(worldIn, pos, (HandInJarTile)te);
             //TODO: Make TE implement IInventory so we can make it drop its items
-            worldIn.removeTileEntity(pos);
+            worldIn.removeBlockEntity(pos);
         }
     }
 

@@ -10,6 +10,6 @@ import net.minecraft.item.Rarity;
 public class IngotItem extends Item {
 
     public IngotItem() {
-        super(new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
+        super(new Item.Properties().rarity(Rarity.UNCOMMON).tab(ItemGroups.REGEN_TAB));
     }
 }

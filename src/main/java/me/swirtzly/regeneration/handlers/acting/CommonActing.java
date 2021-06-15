@@ -44,27 +44,27 @@ class CommonActing implements Acting {
 
         switch (cap.getState()) {
             case POST:
-                if (player.ticksExisted % 210 == 0) {
-                    PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.world.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
+                if (player.tickCount % 210 == 0) {
+                    PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.level.random.nextInt(PlayerUtil.POTIONS.size())), player.level.random.nextInt(400), 1, false, false);
                 }
                 break;
             case REGENERATING:
-                float dm = Math.max(1, (player.world.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
+                float dm = Math.max(1, (player.level.getDifficulty().getId() + 1) / 3F); // compensating for hard difficulty
                 player.heal(stateProgress * 0.3F * dm);
-                player.setArrowCountInEntity(0);
+                player.setArrowCount(0);
                 break;
 
             case GRACE_CRIT:
                 float nauseaPercentage = 0.5F;
 
                 if (stateProgress > nauseaPercentage) {
-                    PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false);
+                    PlayerUtil.applyPotionIfAbsent(player, Effects.CONFUSION, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false);
                 }
 
                 PlayerUtil.applyPotionIfAbsent(player, Effects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
 
-                if (player.world.rand.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F))
-                    player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, player.world.rand.nextFloat() + .5F);
+                if (player.level.random.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F))
+                    player.hurt(RegenObjects.REGEN_DMG_CRITICAL, player.level.random.nextFloat() + .5F);
 
                 break;
 
@@ -87,13 +87,13 @@ class CommonActing implements Acting {
     @Override
     public void onEnterGrace(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-        RegenUtil.explodeKnockback(player, player.world, player.getPosition(), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
+        RegenUtil.explodeKnockback(player, player.level, player.getCommandSenderBlockPosition(), RegenConfig.COMMON.regenerativeKnockback.get() / 2, RegenConfig.COMMON.regenKnockbackRange.get());
 
         // Reduce number of hearts, but compensate with absorption
         player.setAbsorptionAmount(player.getMaxHealth() * (float) HEART_REDUCTION);
 
         if (!player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).hasModifier(heartModifier)) {
-            player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(heartModifier);
+            player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).addModifier(heartModifier);
         }
 
         TraitManager.IDna dna = TraitManager.getDnaEntry(cap.getTrait());
@@ -115,7 +115,7 @@ class CommonActing implements Acting {
         }
 
         if (!cap.getLivingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(slownessModifier)) {
-            cap.getLivingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(slownessModifier);
+            cap.getLivingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).addModifier(slownessModifier);
         }
     }
 
@@ -125,11 +125,11 @@ class CommonActing implements Acting {
         if (cap.getLivingEntity() instanceof ServerPlayerEntity) {
             TriggerManager.FIRST_REGENERATION.trigger((ServerPlayerEntity) cap.getLivingEntity());
         }
-        player.addPotionEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
+        player.addEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get() * 2, RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
         player.setHealth(player.getMaxHealth());
         player.setAbsorptionAmount(RegenConfig.COMMON.absorbtionLevel.get() * 2);
 
-        cap.setTrait(TraitManager.getRandomDna(player.world.rand).getRegistryName());
+        cap.setTrait(TraitManager.getRandomDna(player.level.random).getRegistryName());
         TraitManager.IDna newDna = TraitManager.getDnaEntry(cap.getTrait());
         newDna.onAdded(cap);
         cap.setDnaActive(true);
@@ -145,23 +145,23 @@ class CommonActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-        NetworkDispatcher.sendPacketToAll(new PlaySFXMessage(getRandomSound(player.world.rand, cap).getRegistryName(), player.getUniqueID()));
+        NetworkDispatcher.sendPacketToAll(new PlaySFXMessage(getRandomSound(player.level.random, cap).getRegistryName(), player.getUUID()));
         player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
         player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
         player.setHealth(Math.max(player.getHealth(), 8));
         player.setAbsorptionAmount(0);
 
-        player.extinguish();
-        player.removePassengers();
-        player.clearActivePotions();
+        player.clearFire();
+        player.ejectPassengers();
+        player.removeAllEffects();
         player.stopRiding();
 
         if (player instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) player;
-            if (RegenConfig.COMMON.resetHunger.get()) playerEntity.getFoodStats().setFoodLevel(20);
+            if (RegenConfig.COMMON.resetHunger.get()) playerEntity.getFoodData().setFoodLevel(20);
         }
 
-        if (RegenConfig.COMMON.resetOxygen.get()) player.setAir(300);
+        if (RegenConfig.COMMON.resetOxygen.get()) player.setAirSupply(300);
 
         cap.extractRegeneration(1);
     }

@@ -21,7 +21,7 @@ public final class ReverbHandler {
     private static int auxEffectSlot;
 
     static {
-        ((IReloadableResourceManager) MC.getResourceManager()).addReloadListener((ISelectiveResourceReloadListener) (manager, predicate) -> {
+        ((IReloadableResourceManager) MC.getResourceManager()).registerReloadListener((ISelectiveResourceReloadListener) (manager, predicate) -> {
             setup = false;
         });
     }

@@ -41,9 +41,9 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
             GlStateManager.blendFuncSeparate(770, 771, 1, 0);
             GlStateManager.blendFunc(770, 1);
             Vec3d color = data.getPrimaryColor();
-            float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.ticksExisted + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
+            float opacity = MathHelper.clamp(MathHelper.sin((entityPlayer.tickCount + partialTicks) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
             GlStateManager.color4f((float) color.x, (float) color.y, (float) color.z, opacity);
-            renderer.getEntityModel().render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            renderer.getModel().render(entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
             RenderUtil.restoreLightMap();
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
@@ -54,19 +54,19 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
     /* This renders the "Fiery" cone, used in the hands and the head of the player */
     public static void renderCone(LivingEntity entityPlayer, float scale, float scale2, Vec3d color) {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexBuffer = tessellator.getBuffer();
+        BufferBuilder vertexBuffer = tessellator.getBuilder();
 
         for (int i = 0; i < 8; i++) {
             GlStateManager.pushMatrix();
-            GlStateManager.rotatef(entityPlayer.ticksExisted * 4 + i * 45, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotatef(entityPlayer.tickCount * 4 + i * 45, 0.0F, 1.0F, 0.0F);
             GlStateManager.scalef(1.0f, 1.0f, 0.65f);
             vertexBuffer.begin(6, DefaultVertexFormats.POSITION_COLOR);
-            vertexBuffer.pos(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
-            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
-            vertexBuffer.pos(0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
-            vertexBuffer.pos(0.0D, scale2, 1.0F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
-            vertexBuffer.pos(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
-            tessellator.draw();
+            vertexBuffer.vertex(0.0D, 0.0D, 0.0D).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
+            vertexBuffer.vertex(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
+            vertexBuffer.vertex(0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
+            vertexBuffer.vertex(0.0D, scale2, 1.0F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
+            vertexBuffer.vertex(-0.266D * scale, scale, -0.5F * scale).color((float) color.x, (float) color.y, (float) color.z, 55).endVertex();
+            tessellator.end();
             GlStateManager.popMatrix();
         }
     }
@@ -183,9 +183,9 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
         // Render head cone
         GlStateManager.pushMatrix();
 
-        if (renderLivingBase.getEntityModel() instanceof BipedModel) {
-            BipedModel player = (BipedModel) renderLivingBase.getEntityModel();
-            player.bipedHead.postRender(scale);
+        if (renderLivingBase.getModel() instanceof BipedModel) {
+            BipedModel player = (BipedModel) renderLivingBase.getModel();
+            player.head.translateTo(scale);
         }
 
         GlStateManager.translatef(0f, 0.09f, 0f);
@@ -228,7 +228,7 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
             /* We want the player to go into a "T-Pose" type animation while they are Regenerating in this Fiery Type */
             if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getRegenType() == RegenTypes.FIERY) {
                 double animationProgress = data.getAnimationTicks();
-                double arm_shake = entity.getRNG().nextDouble();
+                double arm_shake = entity.getRandom().nextDouble();
                 float armRotY = (float) animationProgress * 1.5F;
                 float armRotZ = (float) animationProgress * 1.5F;
                 float headRot = (float) animationProgress * 1.5F;
@@ -246,36 +246,36 @@ public class FieryRenderer extends ATypeRenderer<FieryType> {
                 }
 
                 // ARMS
-                playerModel.bipedLeftArm.rotateAngleY = 0;
-                playerModel.bipedRightArm.rotateAngleY = 0;
+                playerModel.leftArm.yRot = 0;
+                playerModel.rightArm.yRot = 0;
 
-                playerModel.bipedLeftArm.rotateAngleX = 0;
-                playerModel.bipedRightArm.rotateAngleX = 0;
+                playerModel.leftArm.xRot = 0;
+                playerModel.rightArm.xRot = 0;
 
-                playerModel.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(armRotZ + arm_shake);
-                playerModel.bipedRightArm.rotateAngleZ = (float) Math.toRadians(armRotZ + arm_shake);
-                playerModel.bipedLeftArm.rotateAngleY = (float) -Math.toRadians(armRotY);
-                playerModel.bipedRightArm.rotateAngleY = (float) Math.toRadians(armRotY);
+                playerModel.leftArm.zRot = (float) -Math.toRadians(armRotZ + arm_shake);
+                playerModel.rightArm.zRot = (float) Math.toRadians(armRotZ + arm_shake);
+                playerModel.leftArm.yRot = (float) -Math.toRadians(armRotY);
+                playerModel.rightArm.yRot = (float) Math.toRadians(armRotY);
 
                 // BODY
-                playerModel.bipedBody.rotateAngleX = 0;
-                playerModel.bipedBody.rotateAngleY = 0;
-                playerModel.bipedBody.rotateAngleZ = 0;
+                playerModel.body.xRot = 0;
+                playerModel.body.yRot = 0;
+                playerModel.body.zRot = 0;
 
                 // LEGS
-                playerModel.bipedLeftLeg.rotateAngleY = 0;
-                playerModel.bipedRightLeg.rotateAngleY = 0;
+                playerModel.leftLeg.yRot = 0;
+                playerModel.rightLeg.yRot = 0;
 
-                playerModel.bipedLeftLeg.rotateAngleX = 0;
-                playerModel.bipedRightLeg.rotateAngleX = 0;
+                playerModel.leftLeg.xRot = 0;
+                playerModel.rightLeg.xRot = 0;
 
-                playerModel.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-                playerModel.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+                playerModel.leftLeg.zRot = (float) -Math.toRadians(5);
+                playerModel.rightLeg.zRot = (float) Math.toRadians(5);
 
 
-                playerModel.bipedHead.rotateAngleX = (float) Math.toRadians(-headRot);
-                playerModel.bipedHead.rotateAngleY = (float) Math.toRadians(0);
-                playerModel.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
+                playerModel.head.xRot = (float) Math.toRadians(-headRot);
+                playerModel.head.yRot = (float) Math.toRadians(0);
+                playerModel.head.zRot = (float) Math.toRadians(0);
 
             }
         });

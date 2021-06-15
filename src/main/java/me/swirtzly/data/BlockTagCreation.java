@@ -13,13 +13,13 @@ public class BlockTagCreation extends BlockTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
+    protected void addTags() {
         add(RegenTags.TARDIS_ARS, RegenObjects.Blocks.HAND_JAR.get());
         add(RegenTags.TARDIS_ARS, RegenObjects.Blocks.ZERO_ROOM_TWO.get());
         add(RegenTags.TARDIS_ARS, RegenObjects.Blocks.ZERO_ROOM.get());
     }
 
     public void add(Tag<Block> branch, Block block) {
-        this.getBuilder(branch).add(block);
+        this.tag(branch).add(block);
     }
 }

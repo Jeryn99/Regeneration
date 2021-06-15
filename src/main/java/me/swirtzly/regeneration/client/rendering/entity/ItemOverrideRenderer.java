@@ -25,10 +25,10 @@ public class ItemOverrideRenderer extends EntityRenderer<OverrideEntity> {
     }
 
     static void makeGlowingBall(Minecraft mc, float f, Random rand, Vec3d primaryColor, Vec3d secondaryColor) {
-        GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
+        GlStateManager.rotatef((mc.player.tickCount + RenderUtil.renderTick) / 2F, 0, 1, 0);
 
         for (int i = 0; i < 3; i++) {
-            GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
+            GlStateManager.rotatef((mc.player.tickCount + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
             RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, primaryColor, 0);
             RenderUtil.drawGlowingLine(new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), new Vec3d((-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f, (-f / 2F) + rand.nextFloat() * f), 0.1F, secondaryColor, 0);
         }
@@ -37,7 +37,7 @@ public class ItemOverrideRenderer extends EntityRenderer<OverrideEntity> {
 
     @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(OverrideEntity entity) {
+    protected ResourceLocation getTextureLocation(OverrideEntity entity) {
         return null;
     }
 
@@ -45,14 +45,14 @@ public class ItemOverrideRenderer extends EntityRenderer<OverrideEntity> {
      * Renders the desired {@code T} type Entity.
      */
     @Override
-    public void doRender(OverrideEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void render(OverrideEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         if (entity.getItem().isEmpty()) return;
         Minecraft mc = Minecraft.getInstance();
         float f = 0.2f;
-        Random rand = entity.world.rand;
+        Random rand = entity.level.random;
 
         GlStateManager.pushMatrix();
-        if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH.get() && entity.getItem().getDamage() != RegenConfig.COMMON.regenCapacity.get()) {
+        if (entity.getItem().getItem() == RegenObjects.Items.FOB_WATCH.get() && entity.getItem().getDamageValue() != RegenConfig.COMMON.regenCapacity.get()) {
             for (int j = 0; j < 2; j++) {
                 RenderUtil.setupRenderLightning();
                 GlStateManager.translated(x, y + 0.20, z);
@@ -62,8 +62,8 @@ public class ItemOverrideRenderer extends EntityRenderer<OverrideEntity> {
         }
 
         GlStateManager.translated(x, y + 0.17F, z);
-        GlStateManager.rotatef(-entity.rotationYaw, 0, 1, 0);
-        Minecraft.getInstance().getItemRenderer().renderItem(entity.getItem(), ItemCameraTransforms.TransformType.GROUND);
+        GlStateManager.rotatef(-entity.yRot, 0, 1, 0);
+        Minecraft.getInstance().getItemRenderer().renderStatic(entity.getItem(), ItemCameraTransforms.TransformType.GROUND);
         GlStateManager.popMatrix();
     }
 

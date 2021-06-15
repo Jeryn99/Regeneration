@@ -37,16 +37,16 @@ public class GallifreyanHuts extends Feature<NoFeatureConfig> {
                 int k = ck + random.nextInt(16) + 8;
                 int j = iworld.getHeight(Heightmap.Type.WORLD_SURFACE_WG, i, k);
                 j -= 1;
-                Template template = ((ServerWorld) iworld.getWorld()).getSaveHandler().getStructureTemplateManager().getTemplateDefaulted(new ResourceLocation(Regeneration.MODID, "regeneration/structures/gallifrey_shack"));
+                Template template = ((ServerWorld) iworld.getLevel()).getLevelStorage().getStructureManager().getOrCreate(new ResourceLocation(Regeneration.MODID, "regeneration/structures/gallifrey_shack"));
                 if (template == null)
                     return false;
                 Rotation rotation = Rotation.values()[random.nextInt(3)];
                 Mirror mirror = Mirror.values()[random.nextInt(2)];
-                BlockPos spawnTo = new BlockPos(i, j, k).up();
+                BlockPos spawnTo = new BlockPos(i, j, k).above();
                 if (iworld.getBlockState(pos).getBlock() == Blocks.WATER) {
                     return false;
                 }
-                template.addBlocksToWorldChunk(iworld, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunk(null).setIgnoreEntities(false));
+                template.placeInWorldChunk(iworld, spawnTo, new PlacementSettings().setRotation(rotation).setRandom(random).setMirror(mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK).setChunkPos(null).setIgnoreEntities(false));
 
             }
         }

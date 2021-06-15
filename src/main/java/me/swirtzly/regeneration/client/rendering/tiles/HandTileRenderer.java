@@ -32,7 +32,7 @@ public class HandTileRenderer extends TileEntityRenderer<HandInJarTile> {
 
         if (tileEntityIn.hasHand()) {
             String handType = HandItem.getSkinType(tileEntityIn.getHand());
-            Minecraft.getInstance().getTextureManager().bindTexture(getOrCreateTexture(tileEntityIn));
+            Minecraft.getInstance().getTextureManager().bind(getOrCreateTexture(tileEntityIn));
             GlStateManager.rotatef(180, 1, 0, 0);
             GlStateManager.translated(0.5, -1.5, -0.5);
 
@@ -57,7 +57,7 @@ public class HandTileRenderer extends TileEntityRenderer<HandInJarTile> {
 
         if (!TEXTURES.containsKey(tileEntityHandInJar)) {
             NativeImage image = SkinManipulation.decodeToImage(HandItem.getTextureString(tileEntityHandInJar.getHand()));
-            ResourceLocation res = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("hand_", new DynamicTexture(image));
+            ResourceLocation res = Minecraft.getInstance().getTextureManager().register("hand_", new DynamicTexture(image));
             TEXTURES.put(tileEntityHandInJar, res);
             return res;
         }

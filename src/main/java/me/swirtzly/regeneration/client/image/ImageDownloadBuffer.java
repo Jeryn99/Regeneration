@@ -39,22 +39,22 @@ public class ImageDownloadBuffer implements IImageBuffer {
         boolean flag = nativeImageIn.getHeight() == 32;
         if (flag) {
             NativeImage nativeimage = new NativeImage(64, 64, true);
-            nativeimage.copyImageData(nativeImageIn);
+            nativeimage.copyFrom(nativeImageIn);
             nativeImageIn.close();
             nativeImageIn = nativeimage;
-            nativeimage.fillAreaRGBA(0, 32, 64, 32, 0);
-            nativeimage.copyAreaRGBA(4, 16, 16, 32, 4, 4, true, false);
-            nativeimage.copyAreaRGBA(8, 16, 16, 32, 4, 4, true, false);
-            nativeimage.copyAreaRGBA(0, 20, 24, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(4, 20, 16, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(8, 20, 8, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(12, 20, 16, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(44, 16, -8, 32, 4, 4, true, false);
-            nativeimage.copyAreaRGBA(48, 16, -8, 32, 4, 4, true, false);
-            nativeimage.copyAreaRGBA(40, 20, 0, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(44, 20, -8, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(48, 20, -16, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(52, 20, -8, 32, 4, 12, true, false);
+            nativeimage.fillRect(0, 32, 64, 32, 0);
+            nativeimage.copyRect(4, 16, 16, 32, 4, 4, true, false);
+            nativeimage.copyRect(8, 16, 16, 32, 4, 4, true, false);
+            nativeimage.copyRect(0, 20, 24, 32, 4, 12, true, false);
+            nativeimage.copyRect(4, 20, 16, 32, 4, 12, true, false);
+            nativeimage.copyRect(8, 20, 8, 32, 4, 12, true, false);
+            nativeimage.copyRect(12, 20, 16, 32, 4, 12, true, false);
+            nativeimage.copyRect(44, 16, -8, 32, 4, 4, true, false);
+            nativeimage.copyRect(48, 16, -8, 32, 4, 4, true, false);
+            nativeimage.copyRect(40, 20, 0, 32, 4, 12, true, false);
+            nativeimage.copyRect(44, 20, -8, 32, 4, 12, true, false);
+            nativeimage.copyRect(48, 20, -16, 32, 4, 12, true, false);
+            nativeimage.copyRect(52, 20, -8, 32, 4, 12, true, false);
         }
 
         setAreaOpaque(nativeImageIn, 0, 0, 32, 16);
@@ -68,10 +68,10 @@ public class ImageDownloadBuffer implements IImageBuffer {
     }
 
     @Override
-    public NativeImage parseUserSkin(NativeImage nativeImage) {
+    public NativeImage process(NativeImage nativeImage) {
         return convert(nativeImage);
     }
 
-    public void skinAvailable() {
+    public void onTextureDownloaded() {
     }
 }

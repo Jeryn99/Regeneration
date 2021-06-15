@@ -19,23 +19,23 @@ public class ClothingItem extends ArmorItem {
     private String prefix = null;
 
     public ClothingItem(EquipmentSlotType slot) {
-        super(ArmorMaterial.GOLD, slot, new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
+        super(ArmorMaterial.GOLD, slot, new Item.Properties().rarity(Rarity.UNCOMMON).tab(ItemGroups.REGEN_TAB));
         this.prefix = "guard_SLOT";
     }
 
     public ClothingItem(EquipmentSlotType slot, String prefix) {
-        super(ArmorMaterial.GOLD, slot, new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
+        super(ArmorMaterial.GOLD, slot, new Item.Properties().rarity(Rarity.UNCOMMON).tab(ItemGroups.REGEN_TAB));
         this.prefix = prefix;
     }
 
     @Override
-    public EquipmentSlotType getEquipmentSlot() {
+    public EquipmentSlotType getSlot() {
         return this.slot;
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        super.fillItemGroup(group, items);
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        super.fillItemCategory(group, items);
     }
 
     @Nullable

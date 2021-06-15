@@ -36,7 +36,7 @@ public class SkinChoiceScreen extends ContainerScreen {
     private static final PlayerModel ALEX_MODEL = new PlayerModel(0.1f, true);
     private static final PlayerModel STEVE_MODEL = new PlayerModel(0.1f, false);
     public static boolean isAlex = true;
-    private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
+    private static ResourceLocation PLAYER_TEXTURE = DefaultPlayerSkin.getDefaultSkin();
     private static List<File> skins = null;
     private static int position = 0;
     private static PlayerUtil.EnumChoices choices = null;
@@ -44,8 +44,8 @@ public class SkinChoiceScreen extends ContainerScreen {
 
     public SkinChoiceScreen() {
         super(new ContainerBlank(), null, new TranslationTextComponent("Regeneration"));
-        xSize = 176;
-        ySize = 186;
+        imageWidth = 176;
+        imageHeight = 186;
     }
 
     public static void updateModels() {
@@ -56,62 +56,62 @@ public class SkinChoiceScreen extends ContainerScreen {
     @Override
     public void init() {
         super.init();
-        int cx = (width - xSize) / 2;
-        int cy = (height - ySize) / 2;
+        int cx = (width - imageWidth) / 2;
+        int cy = (height - imageHeight) / 2;
         final int btnW = 60, btnH = 18;
         rotation = 0;
         position = 0;
-        GuiButtonExt btnNext = new GuiButtonExt(cx + 25, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.previous").getFormattedText(), new Button.IPressable() {
+        GuiButtonExt btnNext = new GuiButtonExt(cx + 25, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.previous").getColoredString(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+                if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                     if (position >= skins.size() - 1) {
                         position = 0;
                     } else {
                         position++;
                     }
-                    textureManager.deleteTexture(PLAYER_TEXTURE);
+                    textureManager.release(PLAYER_TEXTURE);
                     PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
                     updateModels();
                 }
             }
         });
-        GuiButtonExt btnPrevious = new GuiButtonExt(cx + 130, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.next").getFormattedText(), new Button.IPressable() {
+        GuiButtonExt btnPrevious = new GuiButtonExt(cx + 130, cy + 75, 20, 20, new TranslationTextComponent("regeneration.gui.next").getColoredString(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 // Previous
-                if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+                if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                     if (position > 0) {
                         position--;
                     } else {
                         position = skins.size() - 1;
                     }
-                    textureManager.deleteTexture(PLAYER_TEXTURE);
+                    textureManager.release(PLAYER_TEXTURE);
                     PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
                     updateModels();
                 }
             }
         });
-        GuiButtonExt btnBack = new GuiButtonExt(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.back").getFormattedText(), new Button.IPressable() {
+        GuiButtonExt btnBack = new GuiButtonExt(cx + 25, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.back").getColoredString(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                Minecraft.getInstance().displayGuiScreen(new ColorScreen());
+                Minecraft.getInstance().setScreen(new ColorScreen());
             }
         });
-        GuiButtonExt btnOpenFolder = new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder").getFormattedText(), new Button.IPressable() {
+        GuiButtonExt btnOpenFolder = new GuiButtonExt(cx + 90, cy + 145, btnW, btnH, new TranslationTextComponent("regeneration.gui.open_folder").getColoredString(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                Util.getOSType().openFile(HandleSkins.SKIN_DIRECTORY);
+                Util.getPlatform().openFile(HandleSkins.SKIN_DIRECTORY);
             }
         });
-        GuiButtonExt btnSave = new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.save").getFormattedText(), new Button.IPressable() {
+        GuiButtonExt btnSave = new GuiButtonExt(cx + 90, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.save").getColoredString(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 updateModels();
                 NetworkDispatcher.sendToServer(new NextSkinMessage(HandleSkins.imageToPixelData(skins.get(position)), isAlex));
             }
         });
-        GuiButtonExt btnResetSkin = new GuiButtonExt(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin").getFormattedText(), new Button.IPressable() {
+        GuiButtonExt btnResetSkin = new GuiButtonExt(cx + 25, cy + 125, btnW, btnH, new TranslationTextComponent("regeneration.gui.reset_skin").getColoredString(), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
                 ClientUtil.sendSkinResetPacket();
@@ -134,14 +134,14 @@ public class SkinChoiceScreen extends ContainerScreen {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(float partialTicks, int mouseX, int mouseY) {
         this.renderBackground();
-        Minecraft.getInstance().getTextureManager().bindTexture(background);
-        blit(guiLeft, guiTop, 0, 0, xSize, ySize);
+        Minecraft.getInstance().getTextureManager().bind(background);
+        blit(leftPos, topPos, 0, 0, imageWidth, imageHeight);
         GlStateManager.pushMatrix();
-        ALEX_MODEL.isChild = false;
-        STEVE_MODEL.isChild = false;
-        Minecraft.getInstance().getTextureManager().bindTexture(PLAYER_TEXTURE);
+        ALEX_MODEL.young = false;
+        STEVE_MODEL.young = false;
+        Minecraft.getInstance().getTextureManager().bind(PLAYER_TEXTURE);
         switch (choices) {
             case ALEX:
                 drawModelToGui(ALEX_MODEL, width / 2, height / 2 - 50, 1.0f, rotation);
@@ -156,8 +156,8 @@ public class SkinChoiceScreen extends ContainerScreen {
         }
         GlStateManager.popMatrix();
 
-        drawCenteredString(Minecraft.getInstance().fontRenderer, new TranslationTextComponent("regeneration.gui.current_skin").getUnformattedComponentText(), width / 2, height / 2 + 5, Color.WHITE.getRGB());
-        drawCenteredString(Minecraft.getInstance().fontRenderer, new TranslationTextComponent(skins.get(position).getName().replaceAll(".png", "")).getUnformattedComponentText(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
+        drawCenteredString(Minecraft.getInstance().font, new TranslationTextComponent("regeneration.gui.current_skin").getContents(), width / 2, height / 2 + 5, Color.WHITE.getRGB());
+        drawCenteredString(Minecraft.getInstance().font, new TranslationTextComponent(skins.get(position).getName().replaceAll(".png", "")).getContents(), width / 2, height / 2 + 15, Color.WHITE.getRGB());
 
     }
 
@@ -165,26 +165,26 @@ public class SkinChoiceScreen extends ContainerScreen {
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
 
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_RIGHT) {
-            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                 if (position >= skins.size() - 1) {
                     position = 0;
                 } else {
                     position++;
                 }
-                textureManager.deleteTexture(PLAYER_TEXTURE);
+                textureManager.release(PLAYER_TEXTURE);
                 PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
                 updateModels();
             }
         }
 
         if (p_keyPressed_1_ == GLFW.GLFW_KEY_LEFT) {
-            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getLocationSkin())) {
+            if (!PLAYER_TEXTURE.equals(Minecraft.getInstance().player.getSkinTextureLocation())) {
                 if (position > 0) {
                     position--;
                 } else {
                     position = skins.size() - 1;
                 }
-                textureManager.deleteTexture(PLAYER_TEXTURE);
+                textureManager.release(PLAYER_TEXTURE);
                 PLAYER_TEXTURE = TexUtil.fileTotexture(skins.get(position));
                 updateModels();
             }

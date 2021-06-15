@@ -54,7 +54,7 @@ public class BaseTrigger implements ICriterionTrigger<BaseTrigger.Instance> {
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<BaseTrigger.Instance> listener) {
+    public void addPlayerListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<BaseTrigger.Instance> listener) {
         BaseTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (myCustomTrigger$listeners == null) {
@@ -70,7 +70,7 @@ public class BaseTrigger implements ICriterionTrigger<BaseTrigger.Instance> {
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<BaseTrigger.Instance> listener) {
+    public void removePlayerListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<BaseTrigger.Instance> listener) {
         BaseTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (tameanimaltrigger$listeners != null) {
@@ -87,7 +87,7 @@ public class BaseTrigger implements ICriterionTrigger<BaseTrigger.Instance> {
      * @see net.minecraft.advancements.ICriterionTrigger#removeAllListeners(net.minecraft.advancements.PlayerAdvancements)
      */
     @Override
-    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
+    public void removePlayerListeners(PlayerAdvancements playerAdvancementsIn) {
         listeners.remove(playerAdvancementsIn);
     }
 
@@ -99,7 +99,7 @@ public class BaseTrigger implements ICriterionTrigger<BaseTrigger.Instance> {
      * @return the tame bird trigger. instance
      */
     @Override
-    public BaseTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
+    public BaseTrigger.Instance createInstance(JsonObject json, JsonDeserializationContext context) {
         return new BaseTrigger.Instance(getId());
     }
 
@@ -139,12 +139,12 @@ public class BaseTrigger implements ICriterionTrigger<BaseTrigger.Instance> {
         }
 
         @Override
-        public ResourceLocation getId() {
+        public ResourceLocation getCriterion() {
             return id;
         }
 
         @Override
-        public JsonElement serialize() {
+        public JsonElement serializeToJson() {
             return null;
         }
     }
@@ -198,7 +198,7 @@ public class BaseTrigger implements ICriterionTrigger<BaseTrigger.Instance> {
             ArrayList<ICriterionTrigger.Listener<BaseTrigger.Instance>> list = null;
 
             for (ICriterionTrigger.Listener<BaseTrigger.Instance> listener : listeners) {
-                if (listener.getCriterionInstance().test()) {
+                if (listener.getTriggerInstance().test()) {
                     if (list == null) {
                         list = Lists.newArrayList();
                     }
@@ -209,7 +209,7 @@ public class BaseTrigger implements ICriterionTrigger<BaseTrigger.Instance> {
 
             if (list != null) {
                 for (ICriterionTrigger.Listener<BaseTrigger.Instance> listener1 : list) {
-                    listener1.grantCriterion(playerAdvancements);
+                    listener1.run(playerAdvancements);
                 }
             }
         }

@@ -88,7 +88,7 @@ public class SkinManipulation {
 
             nativeImage = ImageDownloadBuffer.convert(nativeImage);
             DynamicTexture tex = new DynamicTexture(nativeImage);
-            resourceLocation = Minecraft.getInstance().getTextureManager().getDynamicTextureLocation(player.getName().getUnformattedComponentText().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
+            resourceLocation = Minecraft.getInstance().getTextureManager().register(player.getName().getContents().toLowerCase() + "_skin_" + System.currentTimeMillis(), tex);
         }
         skinType = getSkinType(data);
         return new SkinInfo(player, resourceLocation, skinType);
@@ -99,8 +99,8 @@ public class SkinManipulation {
         if (living instanceof AbstractClientPlayerEntity) {
             if (cap.getEncodedSkin().equalsIgnoreCase(NO_SKIN)) {
                 AbstractClientPlayerEntity playerEntity = (AbstractClientPlayerEntity) living;
-                playerEntity.playerInfo.playerTexturesLoaded = false;
-                boolean isSlim = playerEntity.playerInfo.getSkinType().equalsIgnoreCase("slim");
+                playerEntity.playerInfo.pendingTextures = false;
+                boolean isSlim = playerEntity.playerInfo.getModelName().equalsIgnoreCase("slim");
                 return isSlim ? SkinInfo.SkinType.ALEX : SkinInfo.SkinType.STEVE;
             } else {
                 return cap.getSkinType();
@@ -110,12 +110,12 @@ public class SkinManipulation {
     }
 
     public static void setPlayerSkin(AbstractClientPlayerEntity player, ResourceLocation texture) {
-        if (player.getLocationSkin() == texture) {
+        if (player.getSkinTextureLocation() == texture) {
             return;
         }
         NetworkPlayerInfo playerInfo = player.playerInfo;
         if (playerInfo == null) return;
-        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.playerTextures;
+        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.textureLocations;
         playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
         if (texture == null) {
             ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, false, 4);
@@ -124,7 +124,7 @@ public class SkinManipulation {
 
 
     public static void setPlayerSkinType(AbstractClientPlayerEntity player, SkinInfo.SkinType skinType) {
-        if (skinType.getMojangType().equals(player.getSkinType())) return;
+        if (skinType.getMojangType().equals(player.getModelName())) return;
         NetworkPlayerInfo playerInfo = player.playerInfo;
         if (playerInfo == null) return;
         ObfuscationReflectionHelper.setPrivateValue(NetworkPlayerInfo.class, playerInfo, skinType.getMojangType(), 5);
@@ -155,7 +155,7 @@ public class SkinManipulation {
     }
 
     public static void sendSkinUpdate(Random random, PlayerEntity player) {
-        if (Minecraft.getInstance().player.getUniqueID() != player.getUniqueID()) return;
+        if (Minecraft.getInstance().player.getUUID() != player.getUUID()) return;
         RegenCap.get(player).ifPresent((data) -> {
 
             if (RegenConfig.CLIENT.changeMySkin.get()) {
@@ -183,43 +183,43 @@ public class SkinManipulation {
     public void onRenderPlayer(RenderPlayerEvent.Pre renderPlayerEvent) {
         AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) renderPlayerEvent.getPlayer();
 
-        PlayerModel<AbstractClientPlayerEntity> model = renderPlayerEvent.getRenderer().getEntityModel();
+        PlayerModel<AbstractClientPlayerEntity> model = renderPlayerEvent.getRenderer().getModel();
 
-        boolean isWearingChest = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get() || player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES_CHEST.get();
+        boolean isWearingChest = player.getItemBySlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get() || player.getItemBySlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES_CHEST.get();
 
-        boolean isWearingLeggings = player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == RegenObjects.Items.GUARD_LEGGINGS.get();
-        model.bipedRightLegwear.isHidden = isWearingLeggings;
-        model.bipedLeftLegwear.isHidden = isWearingLeggings;
+        boolean isWearingLeggings = player.getItemBySlot(EquipmentSlotType.LEGS).getItem() == RegenObjects.Items.GUARD_LEGGINGS.get();
+        model.rightPants.neverRender = isWearingLeggings;
+        model.leftPants.neverRender = isWearingLeggings;
 
         RegenCap.get(player).ifPresent((cap) -> {
             /* When the player is in a Post Regenerative state and above a 3x3 grid of Zero Rounde Blocks,
              *  We want them to float up and down slightly*/
             if (cap.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(player)) {
-                float floatingOffset = MathHelper.cos(player.ticksExisted * 0.1F) * -0.09F + 0.5F;
+                float floatingOffset = MathHelper.cos(player.tickCount * 0.1F) * -0.09F + 0.5F;
                 GlStateManager.translated(0, floatingOffset, 0);
                 GlStateManager.translated(0, 0, -1);
             }
 
 
             //Fixes First person arm
-            if (Minecraft.getInstance().player.getUniqueID() == player.getUniqueID()) {
-                if (Minecraft.getInstance().gameSettings.thirdPersonView == 0 && isWearingChest) {
-                    model.bipedLeftArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
-                    model.bipedRightArm.isHidden = player.getUniqueID() != Minecraft.getInstance().player.getUniqueID();
+            if (Minecraft.getInstance().player.getUUID() == player.getUUID()) {
+                if (Minecraft.getInstance().options.thirdPersonView == 0 && isWearingChest) {
+                    model.leftArm.neverRender = player.getUUID() != Minecraft.getInstance().player.getUUID();
+                    model.rightArm.neverRender = player.getUUID() != Minecraft.getInstance().player.getUUID();
                 }
             }
 
 			/* Sometimes when the player is teleported, the Mojang skin becomes re-downloaded and resets to either Steve,
 			 or the Mojang Skin, so once they have been re-created, we remove the cache we have on them, causing it to be renewed */
-            if (player.ticksExisted < 20) {
-                PLAYER_SKINS.remove(player.getUniqueID());
+            if (player.tickCount < 20) {
+                PLAYER_SKINS.remove(player.getUUID());
             }
 
             /* Grab the SkinInfo of a player and set their SkinType and Skin location from it */
             if (cap.getState() != PlayerUtil.RegenState.REGENERATING) {
-                SkinInfo skin = PLAYER_SKINS.get(player.getUniqueID());
+                SkinInfo skin = PLAYER_SKINS.get(player.getUUID());
                 if (skin != null) {
-                    boolean swift = player.getItemStackFromSlot(EquipmentSlotType.CHEST).getOrCreateTag().contains(SWIFT_KEY);
+                    boolean swift = player.getItemBySlot(EquipmentSlotType.CHEST).getOrCreateTag().contains(SWIFT_KEY);
                     boolean forceAlex = !swift && isWearingChest;
                     setPlayerSkin(player, skin.getTextureLocation());
                     setPlayerSkinType(player, forceAlex ? SkinInfo.SkinType.ALEX : skin.getSkintype());
@@ -230,9 +230,9 @@ public class SkinManipulation {
 
             /* 	When the player regenerates, we want the skin to change midway through Regeneration
              *	We only do this midway through, we will destroy the data and re-create it */
-            Minecraft.getInstance().deferTask(() -> {
+            Minecraft.getInstance().submitAsync(() -> {
                 boolean isMidRegeneration = cap.getState() == PlayerUtil.RegenState.REGENERATING && cap.getAnimationTicks() >= 100;
-                if (isMidRegeneration || player.ticksExisted < 10) {
+                if (isMidRegeneration || player.tickCount < 10) {
                     createSkinData(player, RegenCap.get(player));
                 }
             });
@@ -267,7 +267,7 @@ public class SkinManipulation {
 
     private void createSkinData(AbstractClientPlayerEntity player, LazyOptional<IRegen> cap) {
         cap.ifPresent((data) -> {
-            Minecraft.getInstance().deferTask(() -> {
+            Minecraft.getInstance().submitAsync(() -> {
                 SkinInfo skinInfo = SkinManipulation.getSkinInfo(player, data);
                 /* Set player skin and SkinType and cache it so we don't keep re-making it */
                 SkinManipulation.setPlayerSkin(player, skinInfo.getTextureLocation());

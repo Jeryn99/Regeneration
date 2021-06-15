@@ -10,7 +10,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 /**
  * SUBCLASSES MUST HAVE A DEFAULT CONSTRUCTOR
  * <p>
- * Created by Sub on 16/09/2018.
+ * Created by Craig on 16/09/2018.
  */
 public interface RegenType<R extends ATypeRenderer<?>> {
 

@@ -38,11 +38,11 @@ public class AthleteTrait extends TraitManager.IDna {
         registerAttributeIfAbsent(player, SharedMonsterAttributes.MOVEMENT_SPEED);
         registerAttributeIfAbsent(player, SharedMonsterAttributes.KNOCKBACK_RESISTANCE);
         if (!player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(SPEED_MODIFIER)) {
-            player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(SPEED_MODIFIER);
+            player.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).addModifier(SPEED_MODIFIER);
         }
 
         if (!player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(KNOCKBACK_MODIFIER)) {
-            player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(KNOCKBACK_MODIFIER);
+            player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).addModifier(KNOCKBACK_MODIFIER);
         }
     }
 

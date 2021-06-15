@@ -28,18 +28,18 @@ public class PlaySFXMessage {
 
     public static void encode(PlaySFXMessage message, PacketBuffer buffer) {
         buffer.writeResourceLocation(message.sound);
-        buffer.writeUniqueId(message.playerUUID);
+        buffer.writeUUID(message.playerUUID);
     }
 
     public static PlaySFXMessage decode(PacketBuffer buffer) {
-        return new PlaySFXMessage(buffer.readResourceLocation(), buffer.readUniqueId());
+        return new PlaySFXMessage(buffer.readResourceLocation(), buffer.readUUID());
     }
 
     public static class Handler {
 
         public static void handle(PlaySFXMessage message, Supplier<NetworkEvent.Context> ctx) {
-            Minecraft.getInstance().deferTask(() -> {
-                PlayerEntity player = Minecraft.getInstance().world.getPlayerByUuid(message.playerUUID);
+            Minecraft.getInstance().submitAsync(() -> {
+                PlayerEntity player = Minecraft.getInstance().level.getPlayerByUUID(message.playerUUID);
                 if (player != null) {
                     RegenCap.get(player).ifPresent((data) -> ClientUtil.playSound(player, message.sound, SoundCategory.PLAYERS, true, () -> !data.getState().equals(PlayerUtil.RegenState.REGENERATING), 1.0F));
                 }

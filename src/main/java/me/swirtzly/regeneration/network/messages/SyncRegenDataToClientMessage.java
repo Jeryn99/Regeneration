@@ -10,7 +10,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 /**
- * Created by Sub on 16/09/2018.
+ * Created by Craig on 16/09/2018.
  */
 public class SyncRegenDataToClientMessage {
 
@@ -23,19 +23,19 @@ public class SyncRegenDataToClientMessage {
     }
 
     public static void encode(SyncRegenDataToClientMessage message, PacketBuffer buffer) {
-        buffer.writeInt(message.player.getEntityId());
-        buffer.writeCompoundTag(message.data);
+        buffer.writeInt(message.player.getId());
+        buffer.writeNbt(message.data);
     }
 
     public static SyncRegenDataToClientMessage decode(PacketBuffer packetBuffer) {
-        return new SyncRegenDataToClientMessage(Minecraft.getInstance().player.world.getEntityByID(packetBuffer.readInt()), packetBuffer.readCompoundTag());
+        return new SyncRegenDataToClientMessage(Minecraft.getInstance().player.level.getEntity(packetBuffer.readInt()), packetBuffer.readNbt());
     }
 
     public static class Handler {
         public static void handle(SyncRegenDataToClientMessage message, Supplier<NetworkEvent.Context> ctx) {
             Entity player = message.player;
             if (player != null)
-                Minecraft.getInstance().deferTask(() -> RegenCap.get(player).ifPresent((data) -> data.deserializeNBT(message.data)));
+                Minecraft.getInstance().submitAsync(() -> RegenCap.get(player).ifPresent((data) -> data.deserializeNBT(message.data)));
             ctx.get().setPacketHandled(true);
         }
     }

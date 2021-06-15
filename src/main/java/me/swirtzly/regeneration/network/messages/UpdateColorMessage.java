@@ -8,7 +8,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 /**
- * Created by Sub on 20/09/2018.
+ * Created by Craig on 20/09/2018.
  */
 public class UpdateColorMessage {
 
@@ -19,16 +19,16 @@ public class UpdateColorMessage {
     }
 
     public static void encode(UpdateColorMessage saveStyle, PacketBuffer buf) {
-        buf.writeCompoundTag(saveStyle.style);
+        buf.writeNbt(saveStyle.style);
     }
 
     public static UpdateColorMessage decode(PacketBuffer buffer) {
-        return new UpdateColorMessage(buffer.readCompoundTag());
+        return new UpdateColorMessage(buffer.readNbt());
     }
 
     public static class Handler {
         public static void handle(UpdateColorMessage message, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().getSender().getServer().deferTask(() -> {
+            ctx.get().getSender().getServer().submitAsync(() -> {
                 RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
                     cap.setStyle(message.style);
                     cap.synchronise();

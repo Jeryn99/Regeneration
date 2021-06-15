@@ -22,24 +22,24 @@ public class ArchProtocol extends Protocol {
     private static final AxisAlignedBB BOX = new AxisAlignedBB(-20, -20, -20, 20, 20, 20);
 
     public static BlockPos getGoodArchPlacement(World world, BlockPos consolePos) {
-        BlockPos northPos = consolePos.north(2).up(2);
-        BlockPos southPos = consolePos.south(2).up(2);
-        BlockPos eastPos = consolePos.east(2).up(2);
-        BlockPos westPos = consolePos.west(2).up(2);
+        BlockPos northPos = consolePos.north(2).above(2);
+        BlockPos southPos = consolePos.south(2).above(2);
+        BlockPos eastPos = consolePos.east(2).above(2);
+        BlockPos westPos = consolePos.west(2).above(2);
 
-        if (world.isAirBlock(northPos)) {
+        if (world.isEmptyBlock(northPos)) {
             return northPos;
         }
 
-        if (world.isAirBlock(southPos)) {
+        if (world.isEmptyBlock(southPos)) {
             return southPos;
         }
 
-        if (world.isAirBlock(eastPos)) {
+        if (world.isEmptyBlock(eastPos)) {
             return eastPos;
         }
 
-        if (world.isAirBlock(westPos)) {
+        if (world.isEmptyBlock(westPos)) {
             return westPos;
         }
         return BlockPos.ZERO;
@@ -47,28 +47,28 @@ public class ArchProtocol extends Protocol {
 
     @Override
     public void call(World world, PlayerEntity player, ConsoleTile consoleTile) { //Add a PlayerEntity parameter for Tardis Mod 1.4
-        if (!world.isRemote()) {
+        if (!world.isClientSide()) {
             consoleTile.getUpgrade(ArchUpgrade.class).ifPresent((archSubSystem -> {
                 if (archSubSystem.isUsable()) {
-                    BlockPos pos = consoleTile.getPos();
-                    BlockPos placePos = pos.north(2).up(2);
-                    if (world.isAirBlock(placePos)) {
-                        world.setBlockState(placePos, RegenObjects.Blocks.ARCH.get().getDefaultState());
+                    BlockPos pos = consoleTile.getBlockPos();
+                    BlockPos placePos = pos.north(2).above(2);
+                    if (world.isEmptyBlock(placePos)) {
+                        world.setBlockAndUpdate(placePos, RegenObjects.Blocks.ARCH.get().defaultBlockState());
                         if (consoleTile.getArtron() > 10) {
                             consoleTile.setArtron(consoleTile.getArtron() - 10);
                         }
-                        for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, BOX.offset(consoleTile.getPos()))) {
+                        for (PlayerEntity playerEntity : world.getEntitiesOfClass(PlayerEntity.class, BOX.move(consoleTile.getBlockPos()))) {
                             PlayerUtil.sendMessage(playerEntity, "message.regeneration.arch_placed", true);
                         }
                     } else {
-                        world.setBlockState(placePos, Blocks.AIR.getDefaultState());
+                        world.setBlockAndUpdate(placePos, Blocks.AIR.defaultBlockState());
                         TardisCompat.damageSubsystem(world); //Only damage after you retract the arch
-                        for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, BOX.offset(consoleTile.getPos()))) {
+                        for (PlayerEntity playerEntity : world.getEntitiesOfClass(PlayerEntity.class, BOX.move(consoleTile.getBlockPos()))) {
                             PlayerUtil.sendMessage(playerEntity, "message.regeneration.arch_removed", true);
                         }
                     }
                 } else {
-                    for (PlayerEntity playerEntity : world.getEntitiesWithinAABB(PlayerEntity.class, BOX.offset(consoleTile.getPos()))) {
+                    for (PlayerEntity playerEntity : world.getEntitiesOfClass(PlayerEntity.class, BOX.move(consoleTile.getBlockPos()))) {
                         PlayerUtil.sendMessage(playerEntity, new TranslationTextComponent("message.regeneration.arch_system_dead"), true);
                     }
                 }
@@ -83,11 +83,11 @@ public class ArchProtocol extends Protocol {
 
     //Left here
     public String getDisplayName() {
-        return ARCH.getUnformattedComponentText();
+        return ARCH.getContents();
     }
 
     @Override
     public String getDisplayName(ConsoleTile consoleTile) {
-        return ARCH.getUnformattedComponentText();
+        return ARCH.getContents();
     }
 }

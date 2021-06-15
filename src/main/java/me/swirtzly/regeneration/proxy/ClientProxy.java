@@ -37,7 +37,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import java.util.Map;
 
 /**
- * Created by Sub on 17/09/2018.
+ * Created by Craig on 17/09/2018.
  */
 public class ClientProxy extends CommonProxy {
 
@@ -98,7 +98,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init() {
         super.init();
-        ScreenManager.registerFactory(RegenObjects.Containers.BIO_CONTAINER.get(), BioContainerScreen::new);
+        ScreenManager.register(RegenObjects.Containers.BIO_CONTAINER.get(), BioContainerScreen::new);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ClientProxy extends CommonProxy {
         RegenKeyBinds.init();
 
         // Render layers ===========================================
-        Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getRenderManager().getSkinMap();
+        Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap();
         for (PlayerRenderer renderPlayer : skinMap.values()) {
             renderPlayer.addLayer(new RegenerationLayer(renderPlayer)); // Add Regeneration Layer
             renderPlayer.addLayer(new HandsLayer(renderPlayer));
@@ -128,12 +128,12 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void closeGui() {
-        Minecraft.getInstance().displayGuiScreen(null);
+        Minecraft.getInstance().setScreen(null);
     }
 
     @Override
     public World getClientWorld() {
-        return Minecraft.getInstance().world;
+        return Minecraft.getInstance().level;
     }
 
     @Override

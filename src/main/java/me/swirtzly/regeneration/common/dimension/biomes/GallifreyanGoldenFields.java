@@ -13,7 +13,7 @@ public class GallifreyanGoldenFields extends GallifreyanRedLands {
 
     @Override
     public int getFoliageColor(BlockPos pos) {
-        double d0 = MathHelper.clamp(this.func_225486_c(pos), 0.0F, 1.0F);
+        double d0 = MathHelper.clamp(this.getTemperature(pos), 0.0F, 1.0F);
         double d1 = MathHelper.clamp(this.getDownfall(), 0.0F, 1.0F);
         return FoliageColors.get(d0, d1);
     }

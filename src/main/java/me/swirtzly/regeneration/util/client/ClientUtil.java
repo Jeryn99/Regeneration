@@ -52,11 +52,11 @@ public class ClientUtil {
     }
 
     public static void createToast(TranslationTextComponent title, TranslationTextComponent subtitle) {
-        Minecraft.getInstance().getToastGui().add(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
+        Minecraft.getInstance().getToasts().addToast(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
     }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
-        Minecraft.getInstance().getSoundHandler().play(SimpleSound.master(sound, pitch, volume));
+        Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(sound, pitch, volume));
     }
 
     /**
@@ -68,7 +68,7 @@ public class ClientUtil {
 
     @OnlyIn(Dist.CLIENT)
     public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
-        Minecraft.getInstance().getSoundHandler().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
+        Minecraft.getInstance().getSoundManager().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
     }
 
     public static String colorToHex(Color color) {
@@ -85,25 +85,25 @@ public class ClientUtil {
      * @param biped
      */
     public static void copyAnglesToWear(PlayerModel biped) {
-        RenderUtil.copyModelAngles(biped.bipedRightArm, biped.bipedRightArmwear);
-        RenderUtil.copyModelAngles(biped.bipedLeftArm, biped.bipedLeftArmwear);
-        RenderUtil.copyModelAngles(biped.bipedRightLeg, biped.bipedRightLegwear);
-        RenderUtil.copyModelAngles(biped.bipedLeftLeg, biped.bipedLeftLegwear);
-        RenderUtil.copyModelAngles(biped.bipedBody, biped.bipedBodyWear);
-        RenderUtil.copyModelAngles(biped.bipedHead, biped.bipedHeadwear);
+        RenderUtil.copyModelAngles(biped.rightArm, biped.rightSleeve);
+        RenderUtil.copyModelAngles(biped.leftArm, biped.leftSleeve);
+        RenderUtil.copyModelAngles(biped.rightLeg, biped.rightPants);
+        RenderUtil.copyModelAngles(biped.leftLeg, biped.leftPants);
+        RenderUtil.copyModelAngles(biped.body, biped.jacket);
+        RenderUtil.copyModelAngles(biped.head, biped.hat);
 
-        copyRotationPoints(biped.bipedRightArm, biped.bipedRightArmwear);
-        copyRotationPoints(biped.bipedLeftArm, biped.bipedLeftArmwear);
-        copyRotationPoints(biped.bipedRightLeg, biped.bipedRightLegwear);
-        copyRotationPoints(biped.bipedLeftLeg, biped.bipedLeftLegwear);
-        copyRotationPoints(biped.bipedBody, biped.bipedBodyWear);
-        copyRotationPoints(biped.bipedHead, biped.bipedHeadwear);
+        copyRotationPoints(biped.rightArm, biped.rightSleeve);
+        copyRotationPoints(biped.leftArm, biped.leftSleeve);
+        copyRotationPoints(biped.rightLeg, biped.rightPants);
+        copyRotationPoints(biped.leftLeg, biped.leftPants);
+        copyRotationPoints(biped.body, biped.jacket);
+        copyRotationPoints(biped.head, biped.hat);
     }
 
     public static void copyRotationPoints(RendererModel src, RendererModel dest) {
-        dest.rotationPointX = src.rotationPointX;
-        dest.rotationPointY = src.rotationPointY;
-        dest.rotationPointZ = src.rotationPointZ;
+        dest.x = src.x;
+        dest.y = src.y;
+        dest.z = src.z;
     }
 
     public static class ImageFixer {

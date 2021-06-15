@@ -51,9 +51,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
-    private static final DataParameter<String> TYPE = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.STRING);
-    private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> VILLAGER = EntityDataManager.createKey(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<String> TYPE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Boolean> SWINGING_ARMS = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> VILLAGER = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
 
     private final SwimmerPathNavigator waterNavigator;
     private final GroundPathNavigator groundNavigator;
@@ -69,33 +69,33 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        getDataManager().register(VILLAGER, false);
-        getDataManager().register(TYPE, rand.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
-        getDataManager().register(SWINGING_ARMS, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(VILLAGER, false);
+        getEntityData().define(TYPE, random.nextBoolean() ? TimelordType.COUNCIL.name() : TimelordType.GUARD.name());
+        getEntityData().define(SWINGING_ARMS, false);
     }
 
 
     @Override
     public void updateSwimming() {
-        if (!this.world.isRemote) {
-            if (this.isServerWorld() && this.isInWater()) {
-                this.navigator = this.waterNavigator;
+        if (!this.level.isClientSide) {
+            if (this.isEffectiveAi() && this.isInWater()) {
+                this.navigation = this.waterNavigator;
                 this.setSwimming(true);
             } else {
-                this.navigator = this.groundNavigator;
+                this.navigation = this.groundNavigator;
                 this.setSwimming(false);
             }
         }
     }
 
     public boolean isSwingingArms() {
-        return this.getDataManager().get(SWINGING_ARMS);
+        return this.getEntityData().get(SWINGING_ARMS);
     }
 
     public void setSwingingArms(boolean swingingArms) {
-        this.getDataManager().set(SWINGING_ARMS, swingingArms);
+        this.getEntityData().set(SWINGING_ARMS, swingingArms);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     protected void applyEntityAI() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setCallsForHelp(TimelordEntity.class));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(TimelordEntity.class));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ZombieEntity.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, SkeletonEntity.class, false));
     }
@@ -131,33 +131,33 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData finalizeSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
 
-        if (!worldIn.isRemote()) {
+        if (!worldIn.isClientSide()) {
 
             if (getTimelordType() == TimelordType.GUARD) {
-                setHeldItem(Hand.MAIN_HAND, new ItemStack(rand.nextBoolean() ? RegenObjects.Items.PISTOL.get() : RegenObjects.Items.RIFLE.get()));
+                setItemInHand(Hand.MAIN_HAND, new ItemStack(random.nextBoolean() ? RegenObjects.Items.PISTOL.get() : RegenObjects.Items.RIFLE.get()));
             }
 
             RegenCap.get(this).ifPresent((data) -> {
                 data.receiveRegenerations(worldIn.getRandom().nextInt(12));
                 CompoundNBT nbt = new CompoundNBT();
-                nbt.putFloat("PrimaryRed", rand.nextInt(255) / 255.0F);
-                nbt.putFloat("PrimaryGreen", rand.nextInt(255) / 255.0F);
-                nbt.putFloat("PrimaryBlue", rand.nextInt(255) / 255.0F);
+                nbt.putFloat("PrimaryRed", random.nextInt(255) / 255.0F);
+                nbt.putFloat("PrimaryGreen", random.nextInt(255) / 255.0F);
+                nbt.putFloat("PrimaryBlue", random.nextInt(255) / 255.0F);
 
-                nbt.putFloat("SecondaryRed", rand.nextInt(255) / 255.0F);
-                nbt.putFloat("SecondaryGreen", rand.nextInt(255) / 255.0F);
-                nbt.putFloat("SecondaryBlue", rand.nextInt(255) / 255.0F);
+                nbt.putFloat("SecondaryRed", random.nextInt(255) / 255.0F);
+                nbt.putFloat("SecondaryGreen", random.nextInt(255) / 255.0F);
+                nbt.putFloat("SecondaryBlue", random.nextInt(255) / 255.0F);
                 data.setStyle(nbt);
-                data.setRegenType(rand.nextBoolean() ? RegenTypes.FIERY : RegenTypes.HARTNELL);
+                data.setRegenType(random.nextBoolean() ? RegenTypes.FIERY : RegenTypes.HARTNELL);
                 initSkin(data);
                 data.synchronise();
             });
         }
-        setCustomName(new StringTextComponent(RegenUtil.TIMELORD_NAMES[rand.nextInt(RegenUtil.TIMELORD_NAMES.length)]));
+        setCustomName(new StringTextComponent(RegenUtil.TIMELORD_NAMES[random.nextInt(RegenUtil.TIMELORD_NAMES.length)]));
 
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
 
@@ -165,7 +165,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     public void initSkin(IRegen data) {
         File file = null;
         try {
-            file = HandleSkins.chooseRandomTimelordSkin(world.rand);
+            file = HandleSkins.chooseRandomTimelordSkin(level.random);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -174,24 +174,24 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     }
 
     @Override
-    public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
-        if (this.getHeldItemMainhand().getItem() instanceof GunItem) {
-            GunItem gunItem = (GunItem) getHeldItemMainhand().getItem();
-            LaserEntity laserEntity = new LaserEntity(RegenObjects.EntityEntries.LASER.get(), this, this.world);
+    public void performRangedAttack(LivingEntity target, float distanceFactor) {
+        if (this.getMainHandItem().getItem() instanceof GunItem) {
+            GunItem gunItem = (GunItem) getMainHandItem().getItem();
+            LaserEntity laserEntity = new LaserEntity(RegenObjects.EntityEntries.LASER.get(), this, this.level);
             laserEntity.setColor(new Vec3d(1, 0, 0));
             laserEntity.setDamage(gunItem.getDamage());
-            double d0 = target.posX - this.posX;
-            double d1 = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - laserEntity.posY;
-            double d2 = target.posZ - this.posZ;
+            double d0 = target.x - this.x;
+            double d1 = target.getBoundingBox().minY + (double) (target.getBbHeight() / 3.0F) - laserEntity.y;
+            double d2 = target.z - this.z;
             double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
-            laserEntity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.world.getDifficulty().getId() * 4));
-            this.world.playSound(null, this.posX, this.posY, this.posZ, this.getHeldItemMainhand().getItem() == RegenObjects.Items.PISTOL.get() ? RegenObjects.Sounds.STASER.get() : RegenObjects.Sounds.RIFLE.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (rand.nextFloat() * 0.4F + 0.8F));
-            this.world.addEntity(laserEntity);
+            laserEntity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - this.level.getDifficulty().getId() * 4));
+            this.level.playSound(null, this.x, this.y, this.z, this.getMainHandItem().getItem() == RegenObjects.Items.PISTOL.get() ? RegenObjects.Sounds.STASER.get() : RegenObjects.Sounds.RIFLE.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+            this.level.addFreshEntity(laserEntity);
         }
     }
 
     public TimelordType getTimelordType() {
-        String type = getDataManager().get(TYPE);
+        String type = getEntityData().get(TYPE);
         for (TimelordType value : TimelordType.values()) {
             if (value.name().equals(type)) {
                 return value;
@@ -201,7 +201,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     }
 
     public void setTimelordType(TimelordType type) {
-        getDataManager().set(TYPE, type.name());
+        getEntityData().set(TYPE, type.name());
     }
 
     @Override
@@ -209,9 +209,9 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         super.tick();
 
         RegenCap.get(this).ifPresent((data) -> {
-            if (!world.isRemote) {
+            if (!level.isClientSide) {
 
-                if (ticksExisted < 20) {
+                if (tickCount < 20) {
                     data.synchronise();
                 }
 
@@ -220,10 +220,10 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                         setVillager(false);
                         initSkin(data);
                     }
-                    setNoAI(true);
+                    setNoAi(true);
                     setInvulnerable(true);
                 } else {
-                    setNoAI(false);
+                    setNoAi(false);
                     setInvulnerable(false);
                 }
             }
@@ -231,38 +231,38 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     }
 
     public Boolean isVillagerModel() {
-        return getDataManager().get(VILLAGER);
+        return getEntityData().get(VILLAGER);
     }
 
     public void setVillager(boolean villager) {
-        getDataManager().set(VILLAGER, villager);
+        getEntityData().set(VILLAGER, villager);
     }
 
     @Nullable
     @Override
-    public AgeableEntity createChild(AgeableEntity ageable) {
+    public AgeableEntity getBreedOffspring(AgeableEntity ageable) {
         return null;
     }
 
     @Override
-    protected void func_213713_b(MerchantOffer merchantOffer) {
-        if (merchantOffer.func_222221_q()) {
-            int i = 3 + this.rand.nextInt(4);
-            this.world.addEntity(new ExperienceOrbEntity(this.world, this.posX, this.posY + 0.5D, this.posZ, i));
+    protected void rewardTradeXp(MerchantOffer merchantOffer) {
+        if (merchantOffer.shouldRewardExp()) {
+            int i = 3 + this.random.nextInt(4);
+            this.level.addFreshEntity(new ExperienceOrbEntity(this.level, this.x, this.y + 0.5D, this.z, i));
         }
 
     }
 
     @Override
-    public boolean func_213705_dZ() {
+    public boolean showProgressBar() {
         return false;
     }
 
     @Override
-    public boolean processInteract(PlayerEntity player, Hand hand) {
+    public boolean mobInteract(PlayerEntity player, Hand hand) {
         if (getTimelordType() == TimelordType.COUNCIL) {
 
-            if (!world.isRemote) {
+            if (!level.isClientSide) {
                 TriggerManager.TIMELORD_TRADE.trigger((ServerPlayerEntity) player);
             }
 
@@ -279,48 +279,48 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
                 return true;
             }
 
-            ItemStack itemstack = player.getHeldItem(hand);
+            ItemStack itemstack = player.getItemInHand(hand);
             boolean flag = itemstack.getItem() == Items.NAME_TAG;
             if (flag) {
-                itemstack.interactWithEntity(player, this, hand);
+                itemstack.interactEnemy(player, this, hand);
                 return true;
-            } else if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.func_213716_dX() && !this.isChild()) {
+            } else if (itemstack.getItem() != Items.VILLAGER_SPAWN_EGG && this.isAlive() && !this.isTrading() && !this.isBaby()) {
                 if (hand == Hand.MAIN_HAND) {
-                    player.addStat(Stats.TALKED_TO_VILLAGER);
+                    player.awardStat(Stats.TALKED_TO_VILLAGER);
                 }
 
                 if (this.getOffers().isEmpty()) {
-                    return super.processInteract(player, hand);
+                    return super.mobInteract(player, hand);
                 } else {
-                    if (!this.world.isRemote) {
-                        this.setCustomer(player);
-                        this.func_213707_a(player, this.getDisplayName(), 1);
+                    if (!this.level.isClientSide) {
+                        this.setTradingPlayer(player);
+                        this.openTradingScreen(player, this.getDisplayName(), 1);
                     }
 
                     return true;
                 }
             } else {
-                return super.processInteract(player, hand);
+                return super.mobInteract(player, hand);
             }
         }
-        return super.processInteract(player, hand);
+        return super.mobInteract(player, hand);
     }
 
     @Override
-    public void onKillCommand() {
+    public void kill() {
         remove();
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putBoolean("villager", isVillagerModel());
         compound.putString("timelord_type", getTimelordType().name());
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         setVillager(compound.getBoolean("villager"));
         if (compound.contains("timelord_type")) {
             setTimelordType(TimelordType.valueOf(compound.getString("timelord_type")));
@@ -328,12 +328,12 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     }
 
     @Override
-    protected void populateTradeData() {
+    protected void updateTrades() {
         if (getTimelordType() == TimelordType.COUNCIL) {
             VillagerTrades.ITrade[] trades = TimelordTrades.genTrades();
             if (trades != null) {
                 MerchantOffers merchantoffers = this.getOffers();
-                this.addTrades(merchantoffers, trades, 5);
+                this.addOffersFromItemListings(merchantoffers, trades, 5);
             }
         }
     }

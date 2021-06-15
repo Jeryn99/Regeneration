@@ -27,7 +27,7 @@ class ClientActing implements Acting {
 
     @Override
     public void onEnterGrace(IRegen cap) {
-        if (cap.getLivingEntity().getUniqueID().equals(Minecraft.getInstance().player.getUniqueID())) {
+        if (cap.getLivingEntity().getUUID().equals(Minecraft.getInstance().player.getUUID())) {
             ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.getState().isGraceful(), 0.2F);
             ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.GRACE_HUM.get().getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE, 1.5F);
         }
@@ -40,10 +40,10 @@ class ClientActing implements Acting {
 
     @Override
     public void onRegenFinish(IRegen cap) {
-        if (RegenConfig.CLIENT.changeHand.get() && cap.getLivingEntity().getUniqueID() == Minecraft.getInstance().player.getUniqueID()) {
+        if (RegenConfig.CLIENT.changeHand.get() && cap.getLivingEntity().getUUID() == Minecraft.getInstance().player.getUUID()) {
             ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.regenerated"), new TranslationTextComponent("regeneration.toast.regenerations_left", cap.getRegenerationsLeft()));
-            Minecraft.getInstance().gameSettings.mainHand = RegenUtil.randomEnum(HandSide.class);
-            Minecraft.getInstance().gameSettings.sendSettingsToServer();
+            Minecraft.getInstance().options.mainHand = RegenUtil.randomEnum(HandSide.class);
+            Minecraft.getInstance().options.broadcastOptions();
         }
 
     }
@@ -55,14 +55,14 @@ class ClientActing implements Acting {
 
     @Override
     public void onRegenTrigger(IRegen cap) {
-        if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLivingEntity().getUniqueID())) {
-            SkinManipulation.sendSkinUpdate(cap.getLivingEntity().world.rand, (PlayerEntity) cap.getLivingEntity());
+        if (Minecraft.getInstance().player.getUUID().equals(cap.getLivingEntity().getUUID())) {
+            SkinManipulation.sendSkinUpdate(cap.getLivingEntity().level.random, (PlayerEntity) cap.getLivingEntity());
         }
     }
 
     @Override
     public void onGoCritical(IRegen cap) {
-        if (Minecraft.getInstance().player.getUniqueID().equals(cap.getLivingEntity().getUniqueID())) {
+        if (Minecraft.getInstance().player.getUUID().equals(cap.getLivingEntity().getUUID())) {
             ClientUtil.createToast(new TranslationTextComponent("regeneration.toast.enter_critical"), new TranslationTextComponent("regeneration.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
             ClientUtil.playSound(cap.getLivingEntity(), RegenObjects.Sounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE_CRIT, 1.0F);
         }

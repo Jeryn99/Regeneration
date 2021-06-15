@@ -23,18 +23,18 @@ public class FeatureSpikeyBoys extends Feature<NoFeatureConfig> {
 
     @Override
     public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-        while (worldIn.isAirBlock(pos) && pos.getY() > 2) {
-            pos = pos.down();
+        while (worldIn.isEmptyBlock(pos) && pos.getY() > 2) {
+            pos = pos.below();
         }
 
         if (!worldIn.getBlockState(pos).getBlock().getRegistryName().toString().contains("sand")) {
             return false;
         } else {
-            pos = pos.up(rand.nextInt(4));
+            pos = pos.above(rand.nextInt(4));
             int i = rand.nextInt(4) + 7;
             int j = i / 4 + rand.nextInt(2);
             if (j > 1 && rand.nextInt(60) == 0) {
-                pos = pos.up(10 + rand.nextInt(30));
+                pos = pos.above(10 + rand.nextInt(30));
             }
 
             for (int k = 0; k < i; ++k) {
@@ -47,17 +47,17 @@ public class FeatureSpikeyBoys extends Feature<NoFeatureConfig> {
                     for (int j1 = -l; j1 <= l; ++j1) {
                         float f2 = (float) MathHelper.abs(j1) - 0.25F;
                         if ((i1 == 0 && j1 == 0 || !(f1 * f1 + f2 * f2 > f * f)) && (i1 != -l && i1 != l && j1 != -l && j1 != l || !(rand.nextFloat() > 0.75F))) {
-                            BlockState blockstate = worldIn.getBlockState(pos.add(i1, k, j1));
+                            BlockState blockstate = worldIn.getBlockState(pos.offset(i1, k, j1));
                             Block block = blockstate.getBlock();
-                            if (blockstate.isAir(worldIn, pos.add(i1, k, j1)) || Block.isDirt(block) || block == Blocks.SNOW_BLOCK || block == Blocks.ICE || block.getRegistryName().toString().contains("sand")) {
-                                this.setBlockState(worldIn, pos.add(i1, k, j1), Blocks.BLACK_CONCRETE.getDefaultState());
+                            if (blockstate.isAir(worldIn, pos.offset(i1, k, j1)) || Block.equalsDirt(block) || block == Blocks.SNOW_BLOCK || block == Blocks.ICE || block.getRegistryName().toString().contains("sand")) {
+                                this.setBlock(worldIn, pos.offset(i1, k, j1), Blocks.BLACK_CONCRETE.defaultBlockState());
                             }
 
                             if (k != 0 && l > 1) {
-                                blockstate = worldIn.getBlockState(pos.add(i1, -k, j1));
+                                blockstate = worldIn.getBlockState(pos.offset(i1, -k, j1));
                                 block = blockstate.getBlock();
-                                if (blockstate.isAir(worldIn, pos.add(i1, -k, j1)) || Block.isDirt(block) || block == Blocks.GRASS_BLOCK || block == Blocks.ICE || block.getRegistryName().toString().contains("sand")) {
-                                    this.setBlockState(worldIn, pos.add(i1, -k, j1), Blocks.BLACK_CONCRETE.getDefaultState());
+                                if (blockstate.isAir(worldIn, pos.offset(i1, -k, j1)) || Block.equalsDirt(block) || block == Blocks.GRASS_BLOCK || block == Blocks.ICE || block.getRegistryName().toString().contains("sand")) {
+                                    this.setBlock(worldIn, pos.offset(i1, -k, j1), Blocks.BLACK_CONCRETE.defaultBlockState());
                                 }
                             }
                         }
@@ -74,7 +74,7 @@ public class FeatureSpikeyBoys extends Feature<NoFeatureConfig> {
 
             for (int l1 = -k1; l1 <= k1; ++l1) {
                 for (int i2 = -k1; i2 <= k1; ++i2) {
-                    BlockPos blockpos = pos.add(l1, -1, i2);
+                    BlockPos blockpos = pos.offset(l1, -1, i2);
                     int j2 = 50;
                     if (Math.abs(l1) == 1 && Math.abs(i2) == 1) {
                         j2 = rand.nextInt(5);
@@ -83,15 +83,15 @@ public class FeatureSpikeyBoys extends Feature<NoFeatureConfig> {
                     while (blockpos.getY() > 50) {
                         BlockState blockstate1 = worldIn.getBlockState(blockpos);
                         Block block1 = blockstate1.getBlock();
-                        if (!blockstate1.isAir(worldIn, blockpos) && !Block.isDirt(block1) && block1 != Blocks.SNOW_BLOCK && block1 != Blocks.ICE && block1 != Blocks.BLACK_CONCRETE) {
+                        if (!blockstate1.isAir(worldIn, blockpos) && !Block.equalsDirt(block1) && block1 != Blocks.SNOW_BLOCK && block1 != Blocks.ICE && block1 != Blocks.BLACK_CONCRETE) {
                             break;
                         }
 
-                        this.setBlockState(worldIn, blockpos, Blocks.BLACK_CONCRETE.getDefaultState());
-                        blockpos = blockpos.down();
+                        this.setBlock(worldIn, blockpos, Blocks.BLACK_CONCRETE.defaultBlockState());
+                        blockpos = blockpos.below();
                         --j2;
                         if (j2 <= 0) {
-                            blockpos = blockpos.down(rand.nextInt(5) + 1);
+                            blockpos = blockpos.below(rand.nextInt(5) + 1);
                             j2 = rand.nextInt(5);
                         }
                     }

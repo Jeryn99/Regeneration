@@ -6,6 +6,6 @@ package me.swirtzly.regeneration.common.item;
  */
 public class SealItem extends SolidItem {
     public SealItem() {
-        super(new Properties().group(ItemGroups.REGEN_TAB));
+        super(new Properties().tab(ItemGroups.REGEN_TAB));
     }
 }

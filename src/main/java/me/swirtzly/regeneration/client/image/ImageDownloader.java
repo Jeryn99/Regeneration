@@ -52,13 +52,13 @@ public class ImageDownloader extends SimpleTexture {
     }
 
     private void uploadImage(NativeImage nativeImageIn) {
-        TextureUtil.prepareImage(this.getGlTextureId(), nativeImageIn.getWidth(), nativeImageIn.getHeight());
-        nativeImageIn.uploadTextureSub(0, 0, 0, false);
+        TextureUtil.prepareImage(this.getId(), nativeImageIn.getWidth(), nativeImageIn.getHeight());
+        nativeImageIn.upload(0, 0, 0, false);
     }
 
     public void setImage(NativeImage nativeImageIn) {
         if (this.imageBuffer != null) {
-            this.imageBuffer.skinAvailable();
+            this.imageBuffer.onTextureDownloaded();
         }
 
         synchronized (this) {
@@ -67,10 +67,10 @@ public class ImageDownloader extends SimpleTexture {
         }
     }
 
-    public void loadTexture(IResourceManager manager) throws IOException {
+    public void load(IResourceManager manager) throws IOException {
         if (!this.textureUploaded) {
             synchronized (this) {
-                super.loadTexture(manager);
+                super.load(manager);
                 this.textureUploaded = true;
             }
         }
@@ -83,7 +83,7 @@ public class ImageDownloader extends SimpleTexture {
                 try {
                     nativeimage = NativeImage.read(new FileInputStream(this.cacheFile));
                     if (this.imageBuffer != null) {
-                        nativeimage = this.imageBuffer.parseUserSkin(nativeimage);
+                        nativeimage = this.imageBuffer.process(nativeimage);
                     }
 
                     this.setImage(nativeimage);
@@ -123,13 +123,13 @@ public class ImageDownloader extends SimpleTexture {
                             inputstream = httpurlconnection.getInputStream();
                         }
 
-                        Minecraft.getInstance().runAsync(() -> {
+                        Minecraft.getInstance().submit(() -> {
                             NativeImage nativeimage = null;
 
                             try {
                                 nativeimage = NativeImage.read(inputstream);
                                 if (ImageDownloader.this.imageBuffer != null) {
-                                    nativeimage = ImageDownloader.this.imageBuffer.parseUserSkin(nativeimage);
+                                    nativeimage = ImageDownloader.this.imageBuffer.process(nativeimage);
                                 }
                             } catch (IOException ioexception) {
                                 ImageDownloader.LOGGER.warn("Error while loading the skin texture", ioexception);

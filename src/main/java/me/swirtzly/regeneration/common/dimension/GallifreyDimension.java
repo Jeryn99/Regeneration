@@ -36,18 +36,18 @@ public class GallifreyDimension extends Dimension {
     }
 
     @Override
-    public ChunkGenerator<?> createChunkGenerator() {
+    public ChunkGenerator<?> createRandomLevelGenerator() {
         OverworldGenSettings gensettings = new OverworldGenSettings();
-        GallifreyBiomeProviderNew biomes = new GallifreyBiomeProviderNew(world, RegenObjects.GallifreyBiomes.getBiomes());
-        return RegenObjects.ChunkGeneratorTypes.GALLIFREY_CHUNKS.get().create(this.world, biomes, gensettings);
+        GallifreyBiomeProviderNew biomes = new GallifreyBiomeProviderNew(level, RegenObjects.GallifreyBiomes.getBiomes());
+        return RegenObjects.ChunkGeneratorTypes.GALLIFREY_CHUNKS.get().create(this.level, biomes, gensettings);
     }
 
     @Override
     public void resetRainAndThunder() {
-        world.getWorldInfo().setRainTime(0);
-        world.getWorldInfo().setRaining(false);
-        world.getWorldInfo().setThunderTime(0);
-        world.getWorldInfo().setThundering(false);
+        level.getLevelData().setRainTime(0);
+        level.getLevelData().setRaining(false);
+        level.getLevelData().setThunderTime(0);
+        level.getLevelData().setThundering(false);
     }
 
     @Override
@@ -56,10 +56,10 @@ public class GallifreyDimension extends Dimension {
     }
 
     @Override
-    public BlockPos findSpawn(ChunkPos chunkPosIn, boolean checkValid) {
-        for (int i = chunkPosIn.getXStart(); i <= chunkPosIn.getXEnd(); ++i) {
-            for (int j = chunkPosIn.getZStart(); j <= chunkPosIn.getZEnd(); ++j) {
-                BlockPos blockpos = this.findSpawn(i, j, checkValid);
+    public BlockPos getSpawnPosInChunk(ChunkPos chunkPosIn, boolean checkValid) {
+        for (int i = chunkPosIn.getMinBlockX(); i <= chunkPosIn.getMaxBlockX(); ++i) {
+            for (int j = chunkPosIn.getMinBlockZ(); j <= chunkPosIn.getMaxBlockZ(); ++j) {
+                BlockPos blockpos = this.getValidSpawnPosition(i, j, checkValid);
                 if (blockpos != null) {
                     return blockpos;
                 }
@@ -70,29 +70,29 @@ public class GallifreyDimension extends Dimension {
     }
 
     @Override
-    public BlockPos findSpawn(int posX, int posZ, boolean checkValid) {
+    public BlockPos getValidSpawnPosition(int posX, int posZ, boolean checkValid) {
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos(posX, 0, posZ);
-        Biome biome = this.world.getBiome(blockpos$mutableblockpos);
-        BlockState blockstate = biome.getSurfaceBuilderConfig().getTop();
-        if (checkValid && !blockstate.getBlock().isIn(BlockTags.VALID_SPAWN)) {
+        Biome biome = this.level.getBiome(blockpos$mutableblockpos);
+        BlockState blockstate = biome.getSurfaceBuilderConfig().getTopMaterial();
+        if (checkValid && !blockstate.getBlock().is(BlockTags.VALID_SPAWN)) {
             return null;
         } else {
-            Chunk chunk = this.world.getChunk(posX >> 4, posZ >> 4);
-            int i = chunk.getTopBlockY(Heightmap.Type.MOTION_BLOCKING, posX & 15, posZ & 15);
+            Chunk chunk = this.level.getChunk(posX >> 4, posZ >> 4);
+            int i = chunk.getHeight(Heightmap.Type.MOTION_BLOCKING, posX & 15, posZ & 15);
             if (i < 0) {
                 return null;
-            } else if (chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE, posX & 15, posZ & 15) > chunk.getTopBlockY(Heightmap.Type.OCEAN_FLOOR, posX & 15, posZ & 15)) {
+            } else if (chunk.getHeight(Heightmap.Type.WORLD_SURFACE, posX & 15, posZ & 15) > chunk.getHeight(Heightmap.Type.OCEAN_FLOOR, posX & 15, posZ & 15)) {
                 return null;
             } else {
                 for (int j = i + 1; j >= 0; --j) {
-                    blockpos$mutableblockpos.setPos(posX, j, posZ);
-                    BlockState blockstate1 = this.world.getBlockState(blockpos$mutableblockpos);
+                    blockpos$mutableblockpos.set(posX, j, posZ);
+                    BlockState blockstate1 = this.level.getBlockState(blockpos$mutableblockpos);
                     if (!blockstate1.getFluidState().isEmpty()) {
                         break;
                     }
 
                     if (blockstate1.equals(blockstate)) {
-                        return blockpos$mutableblockpos.up().toImmutable();
+                        return blockpos$mutableblockpos.above().immutable();
                     }
                 }
 
@@ -102,14 +102,14 @@ public class GallifreyDimension extends Dimension {
     }
 
     @Override
-    public float calculateCelestialAngle(long worldTime, float partialTicks) {
+    public float getTimeOfDay(long worldTime, float partialTicks) {
         double d0 = MathHelper.frac((double) worldTime / 24000.0D - 0.25D);
         double d1 = 0.5D - Math.cos(d0 * Math.PI) / 2.0D;
         return (float) (d0 * 2.0D + d1) / 3.0F;
     }
 
     @Override
-    public boolean isSurfaceWorld() {
+    public boolean isNaturalDimension() {
         return false;
     }
 
@@ -134,35 +134,35 @@ public class GallifreyDimension extends Dimension {
     }
 
     @Override
-    public boolean canRespawnHere() {
+    public boolean mayRespawn() {
         return false;
     }
 
     @Override
-    public boolean doesXZShowFog(int x, int z) {
+    public boolean isFoggyAt(int x, int z) {
         return false;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public boolean isSkyColored() {
+    public boolean hasGround() {
         return true;
     }
 
 
     @Override
     public Vec3d getSkyColor(BlockPos cameraPos, float partialTicks) {
-        float f = world.getCelestialAngle(partialTicks);
+        float f = level.getTimeOfDay(partialTicks);
         float f1 = MathHelper.cos(f * ((float) Math.PI * 2F)) * 2.0F + 0.5F;
         f1 = MathHelper.clamp(f1, 0.0F, 1.0F);
-        int i = net.minecraftforge.client.ForgeHooksClient.getSkyBlendColour(world, cameraPos);
+        int i = net.minecraftforge.client.ForgeHooksClient.getSkyBlendColour(level, cameraPos);
         float f3 = 0.7F;
         float f4 = 0.4F;
         float f5 = 0.2F;
         f3 = f3 * f1;
         f4 = f4 * f1;
         f5 = f5 * f1;
-        float f6 = world.getRainStrength(partialTicks);
+        float f6 = level.getRainLevel(partialTicks);
         if (f6 > 0.0F) {
             float f7 = (f3 * 0.3F + f4 * 0.59F + f5 * 0.11F) * 0.6F;
             float f8 = 1.0F - f6 * 0.75F;
@@ -171,7 +171,7 @@ public class GallifreyDimension extends Dimension {
             f5 = f5 * f8 + f7 * (1.0F - f8);
         }
 
-        float f10 = world.getThunderStrength(partialTicks);
+        float f10 = level.getThunderLevel(partialTicks);
         if (f10 > 0.0F) {
             float f11 = (f3 * 0.3F + f4 * 0.59F + f5 * 0.11F) * 0.2F;
             float f9 = 1.0F - f10 * 0.75F;
@@ -180,8 +180,8 @@ public class GallifreyDimension extends Dimension {
             f5 = f5 * f9 + f11 * (1.0F - f9);
         }
 
-        if (world.getLastLightningBolt() > 0) {
-            float f12 = (float) world.getLastLightningBolt() - partialTicks;
+        if (level.getSkyFlashTime() > 0) {
+            float f12 = (float) level.getSkyFlashTime() - partialTicks;
             if (f12 > 1.0F) {
                 f12 = 1.0F;
             }
@@ -218,7 +218,7 @@ public class GallifreyDimension extends Dimension {
     }
 
     @Override
-    public boolean hasSkyLight() {
+    public boolean isHasSkyLight() {
         return true;
     }
 

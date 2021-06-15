@@ -18,17 +18,17 @@ import java.util.List;
  */
 public class ComponentItem extends SolidItem implements ICompatObject {
     public ComponentItem() {
-        super(new Properties().maxStackSize(1).maxDamage(2));
+        super(new Properties().stacksTo(1).durability(2));
     }
 
     @Override
-    protected boolean isInGroup(ItemGroup group) {
+    protected boolean allowdedIn(ItemGroup group) {
         return ModList.get().isLoaded("tardis") && group == ItemGroups.REGEN_TAB;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (!ModList.get().isLoaded("tardis")) {
             tooltip.add(new StringTextComponent("This item is useless without the New Tardis Mod Installed."));
         }

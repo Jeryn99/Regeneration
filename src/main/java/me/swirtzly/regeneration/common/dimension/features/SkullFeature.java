@@ -23,13 +23,13 @@ public class SkullFeature extends Feature<ProbabilityConfig> {
 
     @Override
     public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, ProbabilityConfig config) {
-        BlockPos skullPos = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);
-        if (worldIn.getBlockState(skullPos.down()).getFluidState().isSource()) {
+        BlockPos skullPos = worldIn.getHeightmapPos(Heightmap.Type.WORLD_SURFACE_WG, pos);
+        if (worldIn.getBlockState(skullPos.below()).getFluidState().isSource()) {
             return false;
-        } else if (worldIn.getBlockState(skullPos).isAir(worldIn, skullPos) && worldIn.getBlockState(skullPos).isAir(worldIn, skullPos.up())) {
+        } else if (worldIn.getBlockState(skullPos).isAir(worldIn, skullPos) && worldIn.getBlockState(skullPos).isAir(worldIn, skullPos.above())) {
             if (worldIn.getRandom().nextInt() / 100 < 500 && worldIn.getRandom().nextInt() > 0) {
-                BlockState skullToPlace = Blocks.SKELETON_SKULL.getDefaultState().with(SkullBlock.ROTATION, worldIn.getRandom().nextInt(14));
-                worldIn.setBlockState(skullPos, skullToPlace, 7);
+                BlockState skullToPlace = Blocks.SKELETON_SKULL.defaultBlockState().setValue(SkullBlock.ROTATION, worldIn.getRandom().nextInt(14));
+                worldIn.setBlock(skullPos, skullToPlace, 7);
             }
         }
         return true;

@@ -20,17 +20,17 @@ public class UpdateStateMessage {
     }
 
     public static void encode(UpdateStateMessage event, PacketBuffer packetBuffer) {
-        packetBuffer.writeInt(event.player.getEntityId());
-        packetBuffer.writeString(event.event);
+        packetBuffer.writeInt(event.player.getId());
+        packetBuffer.writeUtf(event.event);
     }
 
     public static UpdateStateMessage decode(PacketBuffer buffer) {
-        return new UpdateStateMessage(Minecraft.getInstance().player.world.getEntityByID(buffer.readInt()), buffer.readString(32767));
+        return new UpdateStateMessage(Minecraft.getInstance().player.level.getEntity(buffer.readInt()), buffer.readUtf(32767));
     }
 
     public static class Handler {
         public static void handle(UpdateStateMessage message, Supplier<NetworkEvent.Context> ctx) {
-            Minecraft.getInstance().deferTask(() -> RegenCap.get(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
+            Minecraft.getInstance().submitAsync(() -> RegenCap.get(message.player).ifPresent((data) -> ActingForwarder.onClient(ActingForwarder.RegenEvent.valueOf(message.event), data)));
             ctx.get().setPacketHandled(true);
         }
     }

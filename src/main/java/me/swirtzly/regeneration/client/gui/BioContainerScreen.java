@@ -26,21 +26,21 @@ public class BioContainerScreen extends ContainerScreen<BioContainerContainer> {
     public void render(int mouseX, int mouseY, float partialTicks) {
         this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+        this.renderTooltip(mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.get().getTranslationKey()).getUnformattedComponentText(), 8, 25, Color.BLACK.getRGB());
-        this.font.drawString("Residual Energy: " + getContainer().getTileEntity().getLindosAmont(), 8, 59, Color.BLACK.getRGB());
+    protected void renderLabels(int mouseX, int mouseY) {
+        this.font.draw(new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.get().getDescriptionId()).getContents(), 8, 25, Color.BLACK.getRGB());
+        this.font.draw("Residual Energy: " + getMenu().getTileEntity().getLindosAmont(), 8, 59, Color.BLACK.getRGB());
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bindTexture(GUI);
-        int relX = (this.width - this.xSize) / 2 + 2;
-        int relY = (this.height - this.ySize) / 2 + 19;
-        this.blit(relX, relY, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(GUI);
+        int relX = (this.width - this.imageWidth) / 2 + 2;
+        int relY = (this.height - this.imageHeight) / 2 + 19;
+        this.blit(relX, relY, 0, 0, this.imageWidth, this.imageHeight);
     }
 }

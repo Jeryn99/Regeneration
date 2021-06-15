@@ -17,22 +17,22 @@ public class GallifreyanRiver extends Biome {
 
 
     public GallifreyanRiver() {
-        super((new Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(RainType.RAIN).category(Category.RIVER).depth(-0.5F).scale(0.0F).temperature(6f).downfall(0.5F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent(null));
-        DefaultBiomeFeatures.addCarvers(this);
-        DefaultBiomeFeatures.addStructures(this);
-        DefaultBiomeFeatures.addLakes(this);
-        DefaultBiomeFeatures.addMonsterRooms(this);
-        DefaultBiomeFeatures.addStoneVariants(this);
-        DefaultBiomeFeatures.addOres(this);
-        DefaultBiomeFeatures.addSedimentDisks(this);
-        DefaultBiomeFeatures.func_222296_u(this);
+        super((new Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.CONFIG_GRASS).precipitation(RainType.RAIN).biomeCategory(Category.RIVER).depth(-0.5F).scale(0.0F).temperature(6f).downfall(0.5F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent(null));
+        DefaultBiomeFeatures.addDefaultCarvers(this);
+        DefaultBiomeFeatures.addStructureFeaturePlacement(this);
+        DefaultBiomeFeatures.addDefaultLakes(this);
+        DefaultBiomeFeatures.addDefaultMonsterRoom(this);
+        DefaultBiomeFeatures.addDefaultUndergroundVariety(this);
+        DefaultBiomeFeatures.addDefaultOres(this);
+        DefaultBiomeFeatures.addDefaultSoftDisks(this);
+        DefaultBiomeFeatures.addWaterTrees(this);
         DefaultBiomeFeatures.addDefaultFlowers(this);
-        DefaultBiomeFeatures.func_222348_W(this);
-        DefaultBiomeFeatures.addMushrooms(this);
-        DefaultBiomeFeatures.addReedsAndPumpkins(this);
-        DefaultBiomeFeatures.addSprings(this);
-        this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, createDecoratedFeature(Feature.SEAGRASS, new SeaGrassConfig(48, 0.4D), Placement.TOP_SOLID_HEIGHTMAP, IPlacementConfig.NO_PLACEMENT_CONFIG));
-        DefaultBiomeFeatures.addFreezeTopLayer(this);
+        DefaultBiomeFeatures.addDefaultGrass(this);
+        DefaultBiomeFeatures.addDefaultMushrooms(this);
+        DefaultBiomeFeatures.addDefaultExtraVegetation(this);
+        DefaultBiomeFeatures.addDefaultSprings(this);
+        this.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, makeComposite(Feature.SEAGRASS, new SeaGrassConfig(48, 0.4D), Placement.TOP_SOLID_HEIGHTMAP, IPlacementConfig.NONE));
+        DefaultBiomeFeatures.addSurfaceFreezing(this);
         BiomeHelper.addGallifreyOres(this);
         BiomeHelper.addHut(this);
 

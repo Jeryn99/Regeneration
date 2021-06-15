@@ -15,6 +15,6 @@ public class ArchTile extends TileEntity {
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return super.getRenderBoundingBox().grow(20);
+        return super.getRenderBoundingBox().inflate(20);
     }
 }

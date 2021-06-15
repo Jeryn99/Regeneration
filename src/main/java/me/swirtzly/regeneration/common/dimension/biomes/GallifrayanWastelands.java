@@ -25,11 +25,11 @@ public class GallifrayanWastelands extends Biome {
     }
 
     public GallifrayanWastelands() {
-        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.SANDSTONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(6F).waterColor(WASTELAND_WATER).waterFogColor(WASTELAND_WATER).scale(0.5F).parent(null));
-        DefaultBiomeFeatures.addSwampClayDisks(this);
+        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.defaultBlockState(), Blocks.DIRT.defaultBlockState(), Blocks.SANDSTONE.defaultBlockState()))).precipitation(RainType.RAIN).biomeCategory(Category.PLAINS).downfall(0.3F).depth(0.6F).temperature(6F).waterColor(WASTELAND_WATER).waterFogColor(WASTELAND_WATER).scale(0.5F).parent(null));
+        DefaultBiomeFeatures.addSwampClayDisk(this);
         DefaultBiomeFeatures.addSwampVegetation(this);
-        DefaultBiomeFeatures.addDeadBushes(this);
-        DefaultBiomeFeatures.addFossils(this);
+        DefaultBiomeFeatures.addDesertVegetation(this);
+        DefaultBiomeFeatures.addSwampExtraDecoration(this);
         BiomeHelper.addBlackSpikes(this);
         BiomeHelper.addGallifreyOres(this);
         BiomeHelper.addSkulls(this);

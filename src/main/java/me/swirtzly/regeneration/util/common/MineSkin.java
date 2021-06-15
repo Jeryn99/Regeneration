@@ -84,7 +84,7 @@ public class MineSkin {
         uc.addRequestProperty("User-Agent", USER_AGENT);
         InputStream inputStream = uc.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        return JSONUtils.fromJson(br);
+        return JSONUtils.parse(br);
     }
 
 

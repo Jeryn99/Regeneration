@@ -23,9 +23,9 @@ public class DimensionalEvents {
 
             //Stuff to do if the player can't regenerate
             if (!data.canRegenerate()) {
-                if (!living.world.isRemote) {
-                    if (living.world.getBiome(living.getPosition()) == RegenObjects.GallifreyBiomes.WASTELANDS.get() && living.isInWater()) {
-                        PlayerUtil.applyPotionIfAbsent(living, Effects.NAUSEA, 200, 1, false, false);
+                if (!living.level.isClientSide) {
+                    if (living.level.getBiome(living.getCommandSenderBlockPosition()) == RegenObjects.GallifreyBiomes.WASTELANDS.get() && living.isInWater()) {
+                        PlayerUtil.applyPotionIfAbsent(living, Effects.CONFUSION, 200, 1, false, false);
                         PlayerUtil.applyPotionIfAbsent(living, Effects.POISON, 100, 1, false, false);
                     }
                 }

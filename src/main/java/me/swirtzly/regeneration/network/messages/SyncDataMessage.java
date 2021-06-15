@@ -17,20 +17,20 @@ public class SyncDataMessage {
 
     public SyncDataMessage(Entity player) {
         this.player = player;
-        this.dimensionType = player.world.dimension.getType();
+        this.dimensionType = player.level.dimension.getType();
     }
 
     public static void encode(SyncDataMessage message, PacketBuffer packetBuffer) {
-        packetBuffer.writeInt(message.player.getEntityId());
+        packetBuffer.writeInt(message.player.getId());
         packetBuffer.writeResourceLocation(message.dimensionType.getRegistryName());
 
     }
 
     public static SyncDataMessage decode(PacketBuffer buffer) {
         int entityID = buffer.readInt();
-        DimensionType type = DimensionType.byName(buffer.readResourceLocation());
-        if (ServerLifecycleHooks.getCurrentServer().getWorld(type) == null) {
-            return new SyncDataMessage(ServerLifecycleHooks.getCurrentServer().getWorld(type).getEntityByID(entityID));
+        DimensionType type = DimensionType.getByName(buffer.readResourceLocation());
+        if (ServerLifecycleHooks.getCurrentServer().getLevel(type) == null) {
+            return new SyncDataMessage(ServerLifecycleHooks.getCurrentServer().getLevel(type).getEntity(entityID));
         }
         return null;
     }
@@ -38,7 +38,7 @@ public class SyncDataMessage {
     public static class Handler {
         public static void handle(SyncDataMessage message, Supplier<NetworkEvent.Context> ctx) {
             Entity player = message.player;
-            ctx.get().getSender().getServer().deferTask(() -> {
+            ctx.get().getSender().getServer().submitAsync(() -> {
                 if (player != null) {
                     RegenCap.get(player).ifPresent(IRegen::synchronise);
                 }

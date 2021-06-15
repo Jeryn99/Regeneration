@@ -19,17 +19,17 @@ public class NextSkinMessage {
     }
 
     public static void encode(NextSkinMessage message, PacketBuffer packetBuffer) {
-        packetBuffer.writeString(message.encodedSkin);
+        packetBuffer.writeUtf(message.encodedSkin);
         packetBuffer.writeBoolean(message.isAlex);
     }
 
     public static NextSkinMessage decode(PacketBuffer buffer) {
-        return new NextSkinMessage(buffer.readString(32767), buffer.readBoolean());
+        return new NextSkinMessage(buffer.readUtf(32767), buffer.readBoolean());
     }
 
     public static class Handler {
         public static void handle(NextSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().getSender().getServer().deferTask(() -> {
+            ctx.get().getSender().getServer().submitAsync(() -> {
                 ServerPlayerEntity player = ctx.get().getSender();
                 RegenCap.get(player).ifPresent((data) -> {
 

@@ -24,11 +24,11 @@ public class SolidItem extends Item {
     @Nullable
     @Override
     public Entity createEntity(World world, Entity location, ItemStack itemstack) {
-        OverrideEntity entity = new OverrideEntity(world, location.posX, location.posY, location.posZ, itemstack);
-        entity.setMotion(location.getMotion());
+        OverrideEntity entity = new OverrideEntity(world, location.x, location.y, location.z, itemstack);
+        entity.setDeltaMovement(location.getDeltaMovement());
         if (location instanceof ItemEntity) {
-            entity.setOwnerId(((ItemEntity) location).getOwnerId());
-            entity.setThrowerId(((ItemEntity) location).getThrowerId());
+            entity.setOwnerId(((ItemEntity) location).getOwner());
+            entity.setThrowerId(((ItemEntity) location).getThrower());
         }
         return entity;
     }

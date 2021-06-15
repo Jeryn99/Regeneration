@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.function.Supplier;
 
 /**
- * Created by Sub on 20/09/2018.
+ * Created by Craig on 20/09/2018.
  */
 public class MovingSound extends TickableSound {
 
@@ -24,7 +24,7 @@ public class MovingSound extends TickableSound {
         super(soundIn, categoryIn);
         this.entity = object;
         this.stopCondition = stopCondition;
-        super.repeat = repeat;
+        super.looping = repeat;
         volume = volumeSfx;
     }
 
@@ -38,18 +38,18 @@ public class MovingSound extends TickableSound {
             }
 
             // I promise this is the only case specific thing I am putting in here ~ swirtzly
-            if (sound.getSoundLocation().equals(RegenObjects.Sounds.GRACE_HUM.get().getRegistryName())) {
+            if (sound.getLocation().equals(RegenObjects.Sounds.GRACE_HUM.get().getRegistryName())) {
                 volume = RegenUtil.randFloat(1.5F, 6F);
             }
 
-            super.x = (float) entityObject.posX;
-            super.y = (float) entityObject.posY;
-            super.z = (float) entityObject.posZ;
+            super.x = (float) entityObject.x;
+            super.y = (float) entityObject.y;
+            super.z = (float) entityObject.z;
         }
 
         if (entity instanceof TileEntity) {
             TileEntity tileObject = (TileEntity) entity;
-            BlockPos pos = tileObject.getPos();
+            BlockPos pos = tileObject.getBlockPos();
             super.x = (float) pos.getX();
             super.y = (float) pos.getY();
             super.z = (float) pos.getZ();
@@ -58,14 +58,14 @@ public class MovingSound extends TickableSound {
     }
 
     public void setDonePlaying() {
-        this.repeat = false;
+        this.looping = false;
         this.donePlaying = true;
-        this.repeatDelay = 0;
+        this.delay = 0;
     }
 
     @Override
-    public boolean canRepeat() {
-        return this.repeat;
+    public boolean isLooping() {
+        return this.looping;
     }
 
     @Override
@@ -79,17 +79,17 @@ public class MovingSound extends TickableSound {
     }
 
     @Override
-    public boolean isDonePlaying() {
+    public boolean isStopped() {
         return donePlaying;
     }
 
     @Override
-    public int getRepeatDelay() {
-        return this.repeatDelay;
+    public int getDelay() {
+        return this.delay;
     }
 
     @Override
-    public AttenuationType getAttenuationType() {
+    public AttenuationType getAttenuation() {
         return AttenuationType.LINEAR;
     }
 }

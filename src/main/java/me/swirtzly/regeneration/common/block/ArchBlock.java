@@ -45,40 +45,40 @@ public class ArchBlock extends DirectionalBlock implements ICompatObject {
     }
 
     @Override
-    public boolean isVariableOpacity() {
+    public boolean hasDynamicShape() {
         return true;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (worldIn.isRemote) return false;
-        ItemStack mainHandItem = player.getHeldItemMainhand();
-        ItemStack headItem = player.getItemStackFromSlot(EquipmentSlotType.HEAD);
+    public boolean use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (worldIn.isClientSide) return false;
+        ItemStack mainHandItem = player.getMainHandItem();
+        ItemStack headItem = player.getItemBySlot(EquipmentSlotType.HEAD);
         IRegen cap = RegenCap.get(player).orElse(null);
         int regensLeftInHand = ArchHelper.getRegenerations(mainHandItem);
 
@@ -94,7 +94,7 @@ public class ArchBlock extends DirectionalBlock implements ICompatObject {
                 int stored = cap.getRegenerationsLeft();
                 ArchHelper.storeRegenerations(mainHandItem, cap.getRegenerationsLeft());
                 cap.extractRegeneration(cap.getRegenerationsLeft());
-                PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.stored_item", stored, new TranslationTextComponent(mainHandItem.getTranslationKey())), true);
+                PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.stored_item", stored, new TranslationTextComponent(mainHandItem.getDescriptionId())), true);
                 worldIn.removeBlock(pos, false);
                 cap.synchronise();
                 return true;
@@ -103,7 +103,7 @@ public class ArchBlock extends DirectionalBlock implements ICompatObject {
             if (cap.getRegenerationsLeft() >= 0 && regensLeftInHand > 0) {
                 int needed = RegenConfig.COMMON.regenCapacity.get() - cap.getRegenerationsLeft(), used = Math.min(regensLeftInHand, needed);
                 ArchHelper.storeRegenerations(mainHandItem, regensLeftInHand - used);
-                PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.item_taken_regens", used, new TranslationTextComponent(mainHandItem.getTranslationKey())), true);
+                PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.item_taken_regens", used, new TranslationTextComponent(mainHandItem.getDescriptionId())), true);
                 worldIn.removeBlock(pos, false);
                 cap.receiveRegenerations(used);
                 cap.synchronise();
@@ -113,7 +113,7 @@ public class ArchBlock extends DirectionalBlock implements ICompatObject {
             PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.regen_fail"), true);
         }
 
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override

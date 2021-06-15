@@ -37,11 +37,11 @@ public class ToughTrait extends IDna {
         registerAttributeIfAbsent(player, SharedMonsterAttributes.ATTACK_DAMAGE);
 
         if (!player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).hasModifier(TOUGH_MODIFIER)) {
-            player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).applyModifier(TOUGH_MODIFIER);
+            player.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).addModifier(TOUGH_MODIFIER);
         }
 
         if (!player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).hasModifier(ATTACK_MODIFIER)) {
-            player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(ATTACK_MODIFIER);
+            player.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).addModifier(ATTACK_MODIFIER);
         }
     }
 

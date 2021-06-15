@@ -36,6 +36,6 @@ public class ArchUpgrade extends Upgrade {
 
     @Override
     public boolean isUsable() {
-        return super.isUsable() && getStack().getDamage() < this.getStack().getMaxDamage();
+        return super.isUsable() && getStack().getDamageValue() < this.getStack().getMaxDamage();
     }
 }

@@ -25,7 +25,7 @@ public class HandsLayer extends LayerRenderer {
         GlStateManager.pushMatrix();
         LivingEntity entitylivingbaseIn = (LivingEntity) entity;
         RegenCap.get(entitylivingbaseIn).ifPresent((data) -> {
-            if (this.livingEntityRenderer.getEntityModel().isChild) {
+            if (this.livingEntityRenderer.getModel().young) {
                 GlStateManager.translatef(0.0F, 0.75F, 0.0F);
                 GlStateManager.scalef(0.5F, 0.5F, 0.5F);
             }
@@ -70,17 +70,17 @@ public class HandsLayer extends LayerRenderer {
     }
 
     protected void translateToHand(HandSide handSide) {
-        BipedModel biped = ((BipedModel) this.livingEntityRenderer.getEntityModel());
-        boolean oldValueRight = biped.bipedRightArm.isHidden;
-        boolean oldValueLeft = biped.bipedLeftArm.isHidden;
-        biped.bipedRightArm.isHidden = false;
-        biped.bipedLeftArm.isHidden = false;
-        biped.postRenderArm(0.0625F, handSide);
-        biped.bipedRightArm.isHidden = oldValueRight;
-        biped.bipedLeftArm.isHidden = oldValueLeft;
+        BipedModel biped = ((BipedModel) this.livingEntityRenderer.getModel());
+        boolean oldValueRight = biped.rightArm.neverRender;
+        boolean oldValueLeft = biped.leftArm.neverRender;
+        biped.rightArm.neverRender = false;
+        biped.leftArm.neverRender = false;
+        biped.translateToHand(0.0625F, handSide);
+        biped.rightArm.neverRender = oldValueRight;
+        biped.leftArm.neverRender = oldValueLeft;
     }
 
-    public boolean shouldCombineTextures() {
+    public boolean colorsOnDamage() {
         return false;
     }
 

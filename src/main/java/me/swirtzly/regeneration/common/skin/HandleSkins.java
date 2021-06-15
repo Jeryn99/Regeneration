@@ -15,7 +15,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Random;
 
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 

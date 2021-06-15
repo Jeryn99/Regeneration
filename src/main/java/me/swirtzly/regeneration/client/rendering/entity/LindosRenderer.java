@@ -22,9 +22,9 @@ public class LindosRenderer extends EntityRenderer<Entity> {
     }
 
     @Override
-    public void doRender(Entity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void render(Entity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
-        Random rand = entity.world.rand;
+        Random rand = entity.level.random;
         float f = 0.1F;
         for (int j = 0; j < 2; j++) {
             RenderUtil.setupRenderLightning();
@@ -36,7 +36,7 @@ public class LindosRenderer extends EntityRenderer<Entity> {
 
     @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(Entity entity) {
+    protected ResourceLocation getTextureLocation(Entity entity) {
         return null;
     }
 }

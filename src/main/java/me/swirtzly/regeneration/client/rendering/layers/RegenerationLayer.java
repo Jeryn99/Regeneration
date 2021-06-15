@@ -21,7 +21,7 @@ import static me.swirtzly.regeneration.client.rendering.types.FieryRenderer.rend
 import static me.swirtzly.regeneration.util.client.RenderUtil.drawGlowingLine;
 
 /**
- * Created by Sub on 16/09/2018.
+ * Created by Craig on 16/09/2018.
  */
 public class RegenerationLayer extends LayerRenderer {
 
@@ -39,15 +39,15 @@ public class RegenerationLayer extends LayerRenderer {
         Vec3d secondaryColor = handler.getSecondaryColor();
 
         Minecraft mc = Minecraft.getInstance();
-        Random rand = player.world.rand;
+        Random rand = player.level.random;
         float factor = 0.2F;
 
         RenderUtil.setupRenderLightning();
         GlStateManager.scalef(scale, scale, scale);
         GlStateManager.translatef(0, 0.3F, 0);
-        GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
+        GlStateManager.rotatef((mc.player.tickCount + RenderUtil.renderTick) / 2F, 0, 1, 0);
         for (int i = 0; i < 7; i++) {
-            GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
+            GlStateManager.rotatef((mc.player.tickCount + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
             drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, primaryColor, 0);
             drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, secondaryColor, 0);
         }
@@ -72,7 +72,7 @@ public class RegenerationLayer extends LayerRenderer {
     }
 
     @Override
-    public boolean shouldCombineTextures() {
+    public boolean colorsOnDamage() {
         return false;
     }
 

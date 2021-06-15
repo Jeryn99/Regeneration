@@ -16,15 +16,15 @@ public class RecipeCreation extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
 
         // Crafting Table
-        ShapedRecipeBuilder.shapedRecipe(RegenObjects.Items.SEAL.get()).patternLine(" G ").patternLine("G G").patternLine(" G ").key('G', RegenObjects.Items.GAL_INGOT.get()).addCriterion("has_crafting_table", this.hasItem(Blocks.CRAFTING_TABLE)).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RegenObjects.Items.FOB_WATCH.get()).patternLine("QIG").patternLine("SES").patternLine("IGI").key('G', Items.GHAST_TEAR).key('I', Items.IRON_INGOT).key('E', Items.ENDER_EYE).key('S', Items.SPIDER_EYE).key('Q', Items.BLAZE_ROD).addCriterion("has_crafting_table", this.hasItem(Blocks.CRAFTING_TABLE)).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(RegenObjects.Blocks.HAND_JAR.get()).patternLine("FOF").patternLine("FPF").patternLine("FOF").key('F', Items.IRON_INGOT).key('P', Items.ROTTEN_FLESH).key('O', Items.GLOWSTONE_DUST).addCriterion("has_crafting_table", this.hasItem(Blocks.CRAFTING_TABLE)).build(consumer);
+        ShapedRecipeBuilder.shaped(RegenObjects.Items.SEAL.get()).pattern(" G ").pattern("G G").pattern(" G ").define('G', RegenObjects.Items.GAL_INGOT.get()).unlocks("has_crafting_table", this.has(Blocks.CRAFTING_TABLE)).save(consumer);
+        ShapedRecipeBuilder.shaped(RegenObjects.Items.FOB_WATCH.get()).pattern("QIG").pattern("SES").pattern("IGI").define('G', Items.GHAST_TEAR).define('I', Items.IRON_INGOT).define('E', Items.ENDER_EYE).define('S', Items.SPIDER_EYE).define('Q', Items.BLAZE_ROD).unlocks("has_crafting_table", this.has(Blocks.CRAFTING_TABLE)).save(consumer);
+        ShapedRecipeBuilder.shaped(RegenObjects.Blocks.HAND_JAR.get()).pattern("FOF").pattern("FPF").pattern("FOF").define('F', Items.IRON_INGOT).define('P', Items.ROTTEN_FLESH).define('O', Items.GLOWSTONE_DUST).unlocks("has_crafting_table", this.has(Blocks.CRAFTING_TABLE)).save(consumer);
 
         //Furnace
-        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(RegenObjects.Blocks.GAL_ORE.get()), RegenObjects.Items.GAL_INGOT.get(), 3.1F, 150).addCriterion("has_block", this.enteredBlock(RegenObjects.Blocks.GAL_ORE.get())).build(consumer, new ResourceLocation(Regeneration.MODID, "unknown_smelt"));
-        CookingRecipeBuilder.blastingRecipe(Ingredient.fromItems(RegenObjects.Blocks.GAL_ORE.get()), RegenObjects.Items.GAL_INGOT.get(), 3.1F, 100).addCriterion("has_block", this.enteredBlock(RegenObjects.Blocks.GAL_ORE.get())).build(consumer, new ResourceLocation(Regeneration.MODID, "unknown_blast"));
+        CookingRecipeBuilder.smelting(Ingredient.of(RegenObjects.Blocks.GAL_ORE.get()), RegenObjects.Items.GAL_INGOT.get(), 3.1F, 150).unlocks("has_block", this.insideOf(RegenObjects.Blocks.GAL_ORE.get())).save(consumer, new ResourceLocation(Regeneration.MODID, "unknown_smelt"));
+        CookingRecipeBuilder.blasting(Ingredient.of(RegenObjects.Blocks.GAL_ORE.get()), RegenObjects.Items.GAL_INGOT.get(), 3.1F, 100).unlocks("has_block", this.insideOf(RegenObjects.Blocks.GAL_ORE.get())).save(consumer, new ResourceLocation(Regeneration.MODID, "unknown_blast"));
     }
 }

@@ -17,16 +17,16 @@ public class UpdateTypeMessage {
     }
 
     public static void encode(UpdateTypeMessage model, PacketBuffer buf) {
-        buf.writeString(model.type);
+        buf.writeUtf(model.type);
     }
 
     public static UpdateTypeMessage decode(PacketBuffer buffer) {
-        return new UpdateTypeMessage(buffer.readString(32767));
+        return new UpdateTypeMessage(buffer.readUtf(32767));
     }
 
     public static class Handler {
         public static void handle(UpdateTypeMessage message, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
+            ctx.get().getSender().getServer().submitAsync(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
                 cap.setRegenType(RegenTypes.REGISTRY.getValue(new ResourceLocation(message.type)));
                 cap.synchronise();
             }));

@@ -24,7 +24,7 @@ public class FastForwardCommand implements Command<CommandSource> {
     public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         CommandSource source = context.getSource();
 
-        RegenCap.get(source.asPlayer()).ifPresent((cap) -> {
+        RegenCap.get(source.getPlayerOrException()).ifPresent((cap) -> {
             if (cap.getState() != PlayerUtil.RegenState.ALIVE) {
                 cap.getStateManager().fastForward();
             } else {

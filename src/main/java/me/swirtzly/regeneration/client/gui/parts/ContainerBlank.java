@@ -10,7 +10,7 @@ public class ContainerBlank extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean stillValid(PlayerEntity playerIn) {
         return false;
     }
 

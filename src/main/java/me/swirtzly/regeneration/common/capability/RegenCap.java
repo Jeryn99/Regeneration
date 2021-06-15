@@ -41,7 +41,7 @@ import java.util.Map;
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
 /**
- * Created by Sub on 16/09/2018.
+ * Created by Craig on 16/09/2018.
  */
 public class RegenCap implements IRegen {
 
@@ -83,7 +83,7 @@ public class RegenCap implements IRegen {
 
     public RegenCap(LivingEntity player) {
         this.player = player;
-        if (!player.world.isRemote)
+        if (!player.level.isClientSide)
             this.stateManager = new StateManager();
         else
             this.stateManager = null;
@@ -96,8 +96,8 @@ public class RegenCap implements IRegen {
 
     @Override
     public void tick() {
-        if (!didSetup && player.world.isRemote) {
-            if (player.world.dimension.getType() != null && player.world.dimension.getType().getRegistryName() != null) {
+        if (!didSetup && player.level.isClientSide) {
+            if (player.level.dimension.getType() != null && player.level.dimension.getType().getRegistryName() != null) {
                 NetworkDispatcher.INSTANCE.sendToServer(new SyncDataMessage(player));
                 didSetup = true;
             }
@@ -105,11 +105,11 @@ public class RegenCap implements IRegen {
 
         if (PlayerUtil.isAboveZeroGrid(player) && state == PlayerUtil.RegenState.POST) {
             for (Effect potion : PlayerUtil.POTIONS) {
-                player.removePotionEffect(potion);
+                player.removeEffect(potion);
             }
         }
 
-        if (!player.world.isRemote) {
+        if (!player.level.isClientSide) {
             if (isSyncingToJar() && ticksAnimating >= 250) {
                 setSyncingFromJar(false);
                 ticksAnimating = 0;
@@ -134,7 +134,7 @@ public class RegenCap implements IRegen {
 
         TraitManager.getDnaEntry(getTrait()).onUpdate(this);
 
-        if (!player.world.isRemote && state != PlayerUtil.RegenState.ALIVE) { // ticking only on the server for simplicity
+        if (!player.level.isClientSide && state != PlayerUtil.RegenState.ALIVE) { // ticking only on the server for simplicity
             if (stateManager != null) {
                 stateManager.tick();
             }
@@ -148,7 +148,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public void synchronise() {
-        if (player != null && player.world.isRemote) throw new IllegalStateException("Don't sync client -> server");
+        if (player != null && player.level.isClientSide) throw new IllegalStateException("Don't sync client -> server");
 
         handsAreGlowingClient = state.isGraceful() && stateManager.handGlowTimer.getTransition() == PlayerUtil.RegenState.Transition.HAND_GLOW_TRIGGER;
         CompoundNBT nbt = serializeNBT();
@@ -179,7 +179,7 @@ public class RegenCap implements IRegen {
         nbt.putBoolean("traitActive", traitActive);
         nbt.putInt("ticks_animating", ticksAnimating);
         nbt.putBoolean("jar", syncingToJar);
-        if (!player.world.isRemote) nbt.put("stateManager", stateManager.serializeNBT());
+        if (!player.level.isClientSide) nbt.put("stateManager", stateManager.serializeNBT());
         nbt.putString("nextSkinType", nextSkinType.name());
         nbt.putString("nextSkin", nextSkin);
         nbt.putString("cutOffHand", cutOffHand.name());
@@ -194,7 +194,7 @@ public class RegenCap implements IRegen {
         if (nbt.contains("skinType")) {
             setSkinType(nbt.getString("skinType"));
         } else {
-            setSkinType(RegenUtil.isSlimSkin(player.getUniqueID()) ? "ALEX" : "STEVE");
+            setSkinType(RegenUtil.isSlimSkin(player.getUUID()) ? "ALEX" : "STEVE");
         }
 
         if (nbt.contains("preferredModel")) {
@@ -478,7 +478,7 @@ public class RegenCap implements IRegen {
 
     @Override
     public void triggerRegeneration() {
-        if (player.world.isRemote)
+        if (player.level.isClientSide)
             throw new IllegalStateException("Triggering regeneration via capability instance on the client side");
         stateManager.triggerRegeneration();
     }
@@ -590,7 +590,7 @@ public class RegenCap implements IRegen {
                     PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.healed", entity.getName()), true);
                 }
                 event.setAmount(0.0F);
-                player.attackEntityFrom(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
+                player.hurt(RegenObjects.REGEN_DMG_HEALING, healthNeeded);
             }
         }
 
@@ -601,12 +601,12 @@ public class RegenCap implements IRegen {
                 BlockState block = e.getWorld().getBlockState(e.getPos());
 
                 if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_BLOCK) {
-                    e.getWorld().playSound(null, e.getPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
+                    e.getWorld().playSound(null, e.getPos(), SoundEvents.FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
                 }
 
                 handGlowTimer.cancel();
                 scheduleNextHandGlow();
-                if (!player.world.isRemote) {
+                if (!player.level.isClientSide) {
                     if (player instanceof PlayerEntity) {
                         TriggerManager.CHANGE_REFUSAL.trigger((ServerPlayerEntity) player);
                         PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.regen_delayed"), true);
@@ -617,7 +617,7 @@ public class RegenCap implements IRegen {
         }
 
         private void tick() {
-            if (player.world.isRemote)
+            if (player.level.isClientSide)
                 throw new IllegalStateException("Ticking state manager on the client"); // the state manager shouldn't even exist on the client
             if (state == PlayerUtil.RegenState.ALIVE)
                 throw new IllegalStateException("Ticking dormant state manager (state == ALIVE)"); // would NPE when ticking the transition, but this is a more clear message
@@ -667,9 +667,9 @@ public class RegenCap implements IRegen {
             handGlowTimer = null;
             regenType.create().onFinishRegeneration(RegenCap.this);
             if (state == PlayerUtil.RegenState.GRACE_CRIT) {
-                player.attackEntityFrom(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
+                player.hurt(RegenObjects.REGEN_DMG_CRITICAL, Integer.MAX_VALUE);
             } else {
-                player.attackEntityFrom(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
+                player.hurt(RegenObjects.REGEN_DMG_KILLED, Integer.MAX_VALUE);
             }
             setTrait(TraitManager.DNA_BORING.getRegistryName());
             if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
@@ -690,7 +690,7 @@ public class RegenCap implements IRegen {
 
         private void finishRegeneration() {
             state = PlayerUtil.RegenState.POST;
-            scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.world.rand.nextInt(300));
+            scheduleTransitionInSeconds(PlayerUtil.RegenState.Transition.END_POST, player.level.random.nextInt(300));
             handGlowTimer = null;
             regenType.create().onFinishRegeneration(RegenCap.this);
             ActingForwarder.onRegenFinish(RegenCap.this);

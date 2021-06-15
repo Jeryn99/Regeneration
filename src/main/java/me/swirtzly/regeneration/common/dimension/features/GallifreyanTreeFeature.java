@@ -46,12 +46,12 @@ public class GallifreyanTreeFeature extends Feature<NoFeatureConfig> {
     public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
         if (worldIn instanceof WorldGenRegion) {
             WorldGenRegion reg = (WorldGenRegion) worldIn;
-            Template temp = reg.getWorld().getStructureTemplateManager().getTemplate(TREE_LIST[rand.nextInt(TREE_LIST.length)]);
+            Template temp = reg.getLevel().getStructureManager().get(TREE_LIST[rand.nextInt(TREE_LIST.length)]);
             if (temp != null) {
-                pos = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);
+                pos = worldIn.getHeightmapPos(Heightmap.Type.WORLD_SURFACE_WG, pos);
                 PlacementSettings set = new PlacementSettings().addProcessor(BlockIgnoreStructureProcessor.AIR);
-                if (worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK) {
-                    temp.addBlocksToWorld(reg, pos, set);
+                if (worldIn.getBlockState(pos.below()).getBlock() == Blocks.GRASS_BLOCK) {
+                    temp.placeInWorld(reg, pos, set);
                 }
                 return true;
             }

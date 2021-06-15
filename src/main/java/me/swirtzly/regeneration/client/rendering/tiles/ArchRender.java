@@ -29,7 +29,7 @@ public class ArchRender extends TileEntityRenderer<ArchTile> {
         RenderUtil.finishRenderLightning();
         GlStateManager.popMatrix();
 
-        Minecraft.getInstance().getItemRenderer().renderItem(new ItemStack(RegenObjects.Blocks.ARCH.get()), ItemCameraTransforms.TransformType.GUI);
+        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(RegenObjects.Blocks.ARCH.get()), ItemCameraTransforms.TransformType.GUI);
         GlStateManager.popMatrix();
 
     }

@@ -35,6 +35,6 @@ public class BreathingTrait extends TraitManager.IDna {
     @Override
     public void onRemoved(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-        player.removeActivePotionEffect(Effects.WATER_BREATHING);
+        player.removeEffectNoUpdate(Effects.WATER_BREATHING);
     }
 }

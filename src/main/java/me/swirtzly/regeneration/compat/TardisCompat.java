@@ -90,11 +90,11 @@ public class TardisCompat {
     }
 
     private static ConsoleTile getTardis(World world) {
-        return (ConsoleTile) world.getTileEntity(TARDIS_POS);
+        return (ConsoleTile) world.getBlockEntity(TARDIS_POS);
     }
 
     public static Block createBlock() {
-        return setUpBlock(new RoundelBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F), SoundType.CORAL, 3, 3));
+        return setUpBlock(new RoundelBlock(Block.Properties.of(Material.STONE).strength(3.0F, 3.0F), SoundType.CORAL_BLOCK, 3, 3));
     }
 
     @SubscribeEvent
@@ -107,7 +107,7 @@ public class TardisCompat {
 
     @SubscribeEvent
     public void onZeroRoom(ZeroRoomEvent event) {
-        World world = event.getEntityLiving().world;
+        World world = event.getEntityLiving().level;
         TardisHelper.getConsoleInWorld(world).ifPresent((consoleTile -> {
             if (consoleTile.getArtron() < 5F) {
                 event.setCanceled(true);
@@ -120,7 +120,7 @@ public class TardisCompat {
         ServerPlayerEntity player = event.getPlayer();
         RegenCap.get(player).ifPresent((data) -> {
             if (data.getState() == PlayerUtil.RegenState.POST) {
-                World world = player.world;
+                World world = player.level;
                 if (world.dimension instanceof TardisDimension) {
                     if (PlayerUtil.isZeroRoom(player)) {
                         TardisHelper.getConsoleInWorld(world).ifPresent((consoleTile -> consoleTile.setArtron(consoleTile.getArtron() - 5F)));
@@ -132,8 +132,8 @@ public class TardisCompat {
 
     @SubscribeEvent
     public void onLive(LivingEvent.LivingUpdateEvent event) {
-        World world = event.getEntityLiving().world;
-        if (world.isRemote) return;
+        World world = event.getEntityLiving().level;
+        if (world.isClientSide) return;
 
         if (world.dimension.getDimension() instanceof TardisDimension) {
             ConsoleTile console = findConsole(world.dimension.getType());
@@ -142,9 +142,9 @@ public class TardisCompat {
             RegenCap.get(playerEntity).ifPresent((data) -> {
                 //Regenerating
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                    if (data.getRegenType() == RegenTypes.FIERY && playerEntity.ticksExisted % 10 == 0) {
+                    if (data.getRegenType() == RegenTypes.FIERY && playerEntity.tickCount % 10 == 0) {
                         for (Subsystem subSystem : console.getSubSystems()) {
-                            subSystem.damage(null, world.rand.nextInt(5));
+                            subSystem.damage(null, world.random.nextInt(5));
                         }
                     }
 
@@ -153,7 +153,7 @@ public class TardisCompat {
                         console.getInteriorManager().setLight(0);
 
                         if (console.isInFlight() && data.getRegenType() == RegenTypes.FIERY) {
-                            if (world.rand.nextInt(50) < 10) {
+                            if (world.random.nextInt(50) < 10) {
                                 console.crash();
                             }
                         }
@@ -161,14 +161,14 @@ public class TardisCompat {
                         console.getDoor().ifPresent(doorEntity -> {
                             if (doorEntity.getOpenState() != EnumDoorState.CLOSED) {
                                 BlockPos loc = console.getLocation();
-                                ServerWorld currentWorld = ServerLifecycleHooks.getCurrentServer().getWorld(console.getDimension());
+                                ServerWorld currentWorld = ServerLifecycleHooks.getCurrentServer().getLevel(console.getDimension());
                                 for (int i = 0; i < 5; i++) {
-                                    int xOffset = world.rand.nextInt(5);
-                                    int zOffset = world.rand.nextInt(5);
+                                    int xOffset = world.random.nextInt(5);
+                                    int zOffset = world.random.nextInt(5);
 /*
                                     int y = world.getChunk(loc.getX() + xOffset, loc.getZ() + zOffset).getTopBlockY(Heightmap.Type.MOTION_BLOCKING, spawn.getX(), spawn.getZ()
 */
-                                    currentWorld.setBlockState(loc.add(xOffset, 0, zOffset), Blocks.FIRE.getDefaultState());
+                                    currentWorld.setBlockAndUpdate(loc.offset(xOffset, 0, zOffset), Blocks.FIRE.defaultBlockState());
                                 }
                             }
                         });
@@ -177,9 +177,9 @@ public class TardisCompat {
 
                 //Grace
                 if (data.getState().isGraceful()) {
-                    for (TileEntity tileEntity : playerEntity.world.loadedTileEntityList) {
-                        if (playerEntity.getDistanceSq(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ()) < 40 && tileEntity instanceof ConsoleTile && data.getLivingEntity().ticksExisted % 25 == 0) {
-                            tileEntity.getWorld().playSound(null, tileEntity.getPos(), RegenObjects.Sounds.ALARM.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    for (TileEntity tileEntity : playerEntity.level.blockEntityList) {
+                        if (playerEntity.distanceToSqr(tileEntity.getBlockPos().getX(), tileEntity.getBlockPos().getY(), tileEntity.getBlockPos().getZ()) < 40 && tileEntity instanceof ConsoleTile && data.getLivingEntity().tickCount % 25 == 0) {
+                            tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), RegenObjects.Sounds.ALARM.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
                         }
                     }
                 }
@@ -191,11 +191,11 @@ public class TardisCompat {
     public void onBreed(BabyEntitySpawnEvent entitySpawnEvent) {
         if (RegenConfig.COMMON.mobsHaveRegens.get()) {
             AgeableEntity kid = entitySpawnEvent.getChild();
-            if (kid.getEntityWorld().dimension instanceof TardisDimension) {
-                ConsoleTile tardis = getTardis(kid.getEntityWorld());
+            if (kid.getCommandSenderWorld().dimension instanceof TardisDimension) {
+                ConsoleTile tardis = getTardis(kid.getCommandSenderWorld());
                 if (tardis.isInFlight()) {
                     RegenCap.get(kid).ifPresent(iRegen -> {
-                        iRegen.receiveRegenerations(kid.world.rand.nextInt(12));
+                        iRegen.receiveRegenerations(kid.level.random.nextInt(12));
                         iRegen.setRegenType(RegenTypes.HARTNELL);
                     });
                 }
@@ -206,9 +206,9 @@ public class TardisCompat {
     /* I'm aware this is not how to do this, and I will fix it in the due course of time */
     public ConsoleTile findConsole(DimensionType type) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        ServerWorld world = server.getWorld(type);
+        ServerWorld world = server.getLevel(type);
         if (world != null) {
-            TileEntity te = world.getTileEntity(TARDIS_POS);
+            TileEntity te = world.getBlockEntity(TARDIS_POS);
             if (te instanceof ConsoleTile) {
                 return (ConsoleTile) te;
             }

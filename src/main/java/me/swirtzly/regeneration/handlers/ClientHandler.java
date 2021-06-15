@@ -53,7 +53,7 @@ import static me.swirtzly.regeneration.compat.ArchHelper.hasRegenerations;
 import static me.swirtzly.regeneration.util.common.PlayerUtil.RegenState.*;
 
 /**
- * Created by Sub on 16/09/2018.
+ * Created by Craig on 16/09/2018.
  */
 public class ClientHandler {
 
@@ -62,10 +62,10 @@ public class ClientHandler {
     }
 
     private static void createWorldAmbience(PlayerEntity player) {
-        Random random = player.world.rand;
-        double originX = player.posX;
-        double originY = player.posY;
-        double originZ = player.posZ;
+        Random random = player.level.random;
+        double originX = player.x;
+        double originY = player.y;
+        double originZ = player.z;
         for (int i = 0; i < 55; i++) {
             double particleX = originX + (random.nextInt(24) - random.nextInt(24));
             double particleY = originY + (random.nextInt(24) - random.nextInt(24));
@@ -75,11 +75,11 @@ public class ClientHandler {
             double velocityZ = (random.nextDouble() - 0.5) * 0.02;
 
             BasicParticleType[] TYPES = new BasicParticleType[]{ParticleTypes.SMOKE, ParticleTypes.CRIT, ParticleTypes.BARRIER};
-            IParticleData currentType = TYPES[player.world.rand.nextInt(TYPES.length - 1)];
-            player.world.addParticle(currentType, particleX, particleY, particleZ, velocityX, velocityY, velocityZ);
-            if (player.world.rand.nextInt(30) < 10 && player.world.rand.nextBoolean()) {
+            IParticleData currentType = TYPES[player.level.random.nextInt(TYPES.length - 1)];
+            player.level.addParticle(currentType, particleX, particleY, particleZ, velocityX, velocityY, velocityZ);
+            if (player.level.random.nextInt(30) < 10 && player.level.random.nextBoolean()) {
                 BlockPos pos = new BlockPos(particleX + random.nextInt(500), particleY + random.nextInt(500), particleZ + random.nextInt(500));
-                player.world.addEntity(new LightningBoltEntity(player.world, pos.getX(), pos.getY(), pos.getZ(), true));
+                player.level.addFreshEntity(new LightningBoltEntity(player.level, pos.getX(), pos.getY(), pos.getZ(), true));
             }
         }
     }
@@ -87,9 +87,9 @@ public class ClientHandler {
     @SubscribeEvent
     public void onTickEvent(TickEvent.ClientTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.START)) return;
-        if (Minecraft.getInstance().world == null) {
+        if (Minecraft.getInstance().level == null) {
             if (SkinManipulation.PLAYER_SKINS.size() > 0) {
-                SkinManipulation.PLAYER_SKINS.forEach(((uuid, skinInfo) -> Minecraft.getInstance().getTextureManager().deleteTexture(skinInfo.getTextureLocation())));
+                SkinManipulation.PLAYER_SKINS.forEach(((uuid, skinInfo) -> Minecraft.getInstance().getTextureManager().release(skinInfo.getTextureLocation())));
                 SkinManipulation.PLAYER_SKINS.clear();
                 Regeneration.LOG.warn("CLEARED CACHE OF PLAYER_SKINS");
             }
@@ -101,11 +101,11 @@ public class ClientHandler {
         if (!(e.getEntity() instanceof PlayerEntity) || Minecraft.getInstance().player == null) return;
 
         PlayerEntity player = (PlayerEntity) e.getEntity();
-        Minecraft.getInstance().runAsync(() -> {
+        Minecraft.getInstance().submit(() -> {
 
-            if (player.ticksExisted == 50) {
+            if (player.tickCount == 50) {
 
-                UUID clientUUID = Minecraft.getInstance().player.getUniqueID();
+                UUID clientUUID = Minecraft.getInstance().player.getUUID();
                 RegenCap.get(player).ifPresent((data) -> {
                     if (data.areHandsGlowing()) {
                         ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.areHandsGlowing(), 0.2F);
@@ -115,7 +115,7 @@ public class ClientHandler {
                         ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.REGENERATION_0.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(REGENERATING), 1.0F);
                     }
 
-                    if (data.getState().isGraceful() && clientUUID == player.getUniqueID()) {
+                    if (data.getState().isGraceful() && clientUUID == player.getUUID()) {
                         ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().equals(GRACE_CRIT), 1F);
                         ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !data.getState().isGraceful(), 0.2F);
                         ClientUtil.playSound(data.getLivingEntity(), RegenObjects.Sounds.GRACE_HUM.get().getRegistryName(), SoundCategory.AMBIENT, true, () -> data.getState() != GRACE, 1.5F);
@@ -141,12 +141,12 @@ public class ClientHandler {
             switch (cap.getState()) {
                 case GRACE:
                     RenderUtil.renderVignette(cap.getPrimaryColor(), 0.3F, cap.getState());
-                    warning = new TranslationTextComponent("regeneration.messages.warning.grace", new TranslationTextComponent(ClientUtil.keyBind)).getUnformattedComponentText();
+                    warning = new TranslationTextComponent("regeneration.messages.warning.grace", new TranslationTextComponent(ClientUtil.keyBind)).getContents();
                     break;
 
                 case GRACE_CRIT:
                     RenderUtil.renderVignette(new Vec3d(1, 0, 0), 0.5F, cap.getState());
-                    warning = new TranslationTextComponent("regeneration.messages.warning.grace_critical", ClientUtil.keyBind).getUnformattedComponentText();
+                    warning = new TranslationTextComponent("regeneration.messages.warning.grace_critical", ClientUtil.keyBind).getContents();
                     break;
 
                 case REGENERATING:
@@ -154,21 +154,21 @@ public class ClientHandler {
                     break;
 
                 case POST:
-                    if (player.hurtTime > 0 || player.getActivePotionEffect(Effects.NAUSEA) != null) {
+                    if (player.hurtTime > 0 || player.getEffect(Effects.CONFUSION) != null) {
                         RenderUtil.renderVignette(cap.getSecondaryColor(), 0.5F, cap.getState());
                     }
                     break;
             }
 
             if (warning != null)
-                Minecraft.getInstance().fontRenderer.drawString(warning, Minecraft.getInstance().mainWindow.getScaledWidth() / 2 - Minecraft.getInstance().fontRenderer.getStringWidth(warning) / 2, 4, 0xffffffff);
+                Minecraft.getInstance().font.draw(warning, Minecraft.getInstance().window.getGuiScaledWidth() / 2 - Minecraft.getInstance().font.width(warning) / 2, 4, 0xffffffff);
         });
 
     }
 
     @SubscribeEvent
     public void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
-        RegenCap.get(Minecraft.getInstance().getRenderViewEntity()).ifPresent((data) -> {
+        RegenCap.get(Minecraft.getInstance().getCameraEntity()).ifPresent((data) -> {
             if (data.getRegenType() == RegenTypes.HARTNELL && data.getState() == REGENERATING) {
                 e.setRed((float) data.getPrimaryColor().x);
                 e.setGreen((float) data.getPrimaryColor().y);
@@ -179,18 +179,18 @@ public class ClientHandler {
 
     @SubscribeEvent
     public void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
-        Entity viewer = Minecraft.getInstance().getRenderViewEntity();
+        Entity viewer = Minecraft.getInstance().getCameraEntity();
         if (viewer != null) {
             RegenCap.get(viewer).ifPresent((data) -> {
                 if (data.getState() == GRACE_CRIT) {
                     event.setCanceled(true);
-                    float amount = MathHelper.cos(data.getLivingEntity().ticksExisted * 0.06F) * -0.09F;
+                    float amount = MathHelper.cos(data.getLivingEntity().tickCount * 0.06F) * -0.09F;
                     event.setDensity(amount);
                 }
 
                 if (data.getRegenType() == RegenTypes.HARTNELL && data.getAnimationTicks() > 0) {
                     event.setCanceled(true);
-                    float opacity = MathHelper.clamp(MathHelper.sin((viewer.ticksExisted + Minecraft.getInstance().getRenderPartialTicks()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
+                    float opacity = MathHelper.clamp(MathHelper.sin((viewer.tickCount + Minecraft.getInstance().getFrameTime()) / 10F) * 0.1F + 0.1F, 0.11F, 1F);
                     event.setDensity(opacity);
                 }
 
@@ -207,23 +207,23 @@ public class ClientHandler {
         IRegen data = RegenCap.get(player).orElse(null);
         if (data.getState() != POST) return;
 
-        if (player.world.rand.nextBoolean()) {
-            String message = e.getMessage().getUnformattedComponentText();
+        if (player.level.random.nextBoolean()) {
+            String message = e.getMessage().getContents();
             StringTextComponent newMessage = new StringTextComponent("");
             String[] words = message.split(" ");
             for (String word : words) {
                 if (word.equals(words[0])) {
                     StringTextComponent name = new StringTextComponent(word + " ");
-                    newMessage.appendSibling(name);
+                    newMessage.append(name);
                     continue;
                 }
-                if (player.world.rand.nextBoolean()) {
+                if (player.level.random.nextBoolean()) {
                     StringTextComponent txtComp = new StringTextComponent(getColoredText("&k" + word + "&r "));
                     txtComp.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(word)));
-                    newMessage.appendSibling(txtComp);
+                    newMessage.append(txtComp);
                 } else {
                     StringTextComponent txtComp = new StringTextComponent(word + " ");
-                    newMessage.appendSibling(txtComp);
+                    newMessage.append(txtComp);
                 }
             }
             e.setMessage(newMessage);
@@ -237,13 +237,13 @@ public class ClientHandler {
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data -> {
             if (data.getState() == REGENERATING || data.isSyncingToJar()) { // locking user
                 MovementInput moveType = e.getMovementInput();
-                moveType.rightKeyDown = false;
-                moveType.leftKeyDown = false;
-                moveType.backKeyDown = false;
-                moveType.jump = false;
-                moveType.moveForward = 0.0F;
-                moveType.sneak = false;
-                moveType.moveStrafe = 0.0F;
+                moveType.right = false;
+                moveType.left = false;
+                moveType.down = false;
+                moveType.jumping = false;
+                moveType.forwardImpulse = 0.0F;
+                moveType.sneakKeyDown = false;
+                moveType.leftImpulse = 0.0F;
             }
         }));
     }
@@ -252,9 +252,9 @@ public class ClientHandler {
     public void onDeath(LivingDeathEvent e) {
         if (e.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) e.getEntityLiving();
-            SkinManipulation.PLAYER_SKINS.remove(player.getUniqueID());
+            SkinManipulation.PLAYER_SKINS.remove(player.getUUID());
 
-            if (player.getUniqueID().equals(Minecraft.getInstance().player.getUniqueID())) {
+            if (player.getUUID().equals(Minecraft.getInstance().player.getUUID())) {
                 ClientUtil.sendSkinResetPacket();
             }
         }
@@ -266,9 +266,9 @@ public class ClientHandler {
         Minecraft mc = Minecraft.getInstance();
         ClientPlayerEntity player = Minecraft.getInstance().player;
         float factor = 0.2F;
-        if (player.getHeldItemMainhand().getItem() != Items.AIR || mc.gameSettings.thirdPersonView > 0) return;
+        if (player.getMainHandItem().getItem() != Items.AIR || mc.options.thirdPersonView > 0) return;
 
-        BipedModel model = ClientProxy.getArmorModel(player.getItemStackFromSlot(EquipmentSlotType.CHEST));
+        BipedModel model = ClientProxy.getArmorModel(player.getItemBySlot(EquipmentSlotType.CHEST));
 
         RegenCap.get(player).ifPresent((data) -> {
 
@@ -280,18 +280,18 @@ public class ClientHandler {
 
             GlStateManager.pushMatrix();
 
-            float leftHandedFactor = mc.gameSettings.mainHand.equals(HandSide.RIGHT) ? 1 : -1;
+            float leftHandedFactor = mc.options.mainHand.equals(HandSide.RIGHT) ? 1 : -1;
             GlStateManager.translatef(0.33F * leftHandedFactor, -0.23F, -0.5F); // move in place
-            GlStateManager.translatef(-.8F * player.swingProgress * leftHandedFactor, -.8F * player.swingProgress, -.4F * player.swingProgress); // compensate for 'punching' motion
-            GlStateManager.translatef(-(player.renderArmYaw - player.prevRenderArmYaw) / 400F, (player.renderArmPitch - player.prevRenderArmPitch) / 500F, 0); // compensate for 'swinging' motion
+            GlStateManager.translatef(-.8F * player.attackAnim * leftHandedFactor, -.8F * player.attackAnim, -.4F * player.attackAnim); // compensate for 'punching' motion
+            GlStateManager.translatef(-(player.yBob - player.yBobO) / 400F, (player.xBob - player.xBobO) / 500F, 0); // compensate for 'swinging' motion
 
             RenderUtil.setupRenderLightning();
-            GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) / 2F, 0, 1, 0);
+            GlStateManager.rotatef((mc.player.tickCount + RenderUtil.renderTick) / 2F, 0, 1, 0);
             for (int i = 0; i < 15; i++) {
-                GlStateManager.rotatef((mc.player.ticksExisted + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
+                GlStateManager.rotatef((mc.player.tickCount + RenderUtil.renderTick) * i / 70F, 1, 1, 0);
                 Vec3d primaryColor = data.getPrimaryColor();
 
-                Random rand = player.world.rand;
+                Random rand = player.level.random;
                 RenderUtil.drawGlowingLine(new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), new Vec3d((-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor, (-factor / 2F) + rand.nextFloat() * factor), 0.1F, primaryColor, 0);
             }
             RenderUtil.finishRenderLightning();
@@ -314,7 +314,7 @@ public class ClientHandler {
         if (Minecraft.getInstance().player == null) return;
         PlayerEntity player = Minecraft.getInstance().player;
 
-        if (player.world.getBiome(player.getPosition()) instanceof GallifrayanWastelands) {
+        if (player.level.getBiome(player.getCommandSenderBlockPosition()) instanceof GallifrayanWastelands) {
             createWorldAmbience(player);
         }
     }

@@ -25,8 +25,8 @@ import java.util.UUID;
  */
 public class HandItem extends Item {
     public HandItem() {
-        super(new Item.Properties().maxStackSize(1).setNoRepair().group(ItemGroups.REGEN_TAB));
-        addPropertyOverride(new ResourceLocation("skin_type"), (stack, worldIn, entityIn) -> getSkinType(stack).equals("ALEX") ? 1 : 0);
+        super(new Item.Properties().stacksTo(1).setNoRepair().tab(ItemGroups.REGEN_TAB));
+        addProperty(new ResourceLocation("skin_type"), (stack, worldIn, entityIn) -> getSkinType(stack).equals("ALEX") ? 1 : 0);
     }
 
     public static void setTimeCreated(ItemStack stack, long created) {
@@ -62,11 +62,11 @@ public class HandItem extends Item {
     }
 
     public static void setOwner(ItemStack stack, UUID owner) {
-        getStackTag(stack).putUniqueId("owner", owner);
+        getStackTag(stack).putUUID("owner", owner);
     }
 
     public static UUID getOwner(ItemStack stack) {
-        return getStackTag(stack).getUniqueId("owner");
+        return getStackTag(stack).getUUID("owner");
     }
 
     public static CompoundNBT getStackTag(ItemStack stack) {
@@ -78,7 +78,7 @@ public class HandItem extends Item {
             stackTag.putString("skinType", SkinInfo.SkinType.ALEX.name());
         }
         if (!stackTag.contains("owner")) {
-            stackTag.putUniqueId("owner", UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39"));
+            stackTag.putUUID("owner", UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39"));
         }
         if (!stackTag.contains("created")) {
             stackTag.putLong("created", 0);
@@ -90,13 +90,13 @@ public class HandItem extends Item {
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
+    public ITextComponent getName(ItemStack stack) {
         return new TranslationTextComponent("item.regeneration.hand", UsernameCache.getLastKnownUsername(getOwner(stack)));
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         Date date = new Date(HandItem.getTimeCreated(stack));
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy @ HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));

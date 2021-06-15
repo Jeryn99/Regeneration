@@ -21,7 +21,7 @@ public class RegenerateMessage {
     public static class Handler {
 
         public static void handle(RegenerateMessage message, Supplier<NetworkEvent.Context> ctx) {
-            Objects.requireNonNull(ctx.get().getSender()).getServer().deferTask(() -> {
+            Objects.requireNonNull(ctx.get().getSender()).getServer().submitAsync(() -> {
                 ServerPlayerEntity player = ctx.get().getSender();
                 if (player != null) {
                     RegenCap.get(player).ifPresent((cap) -> {

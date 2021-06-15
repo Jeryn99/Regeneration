@@ -21,11 +21,11 @@ public class ForceRegenerationMessage {
 
     public static class Handler {
         public static void handle(ForceRegenerationMessage message, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().getSender().getServer().deferTask(() -> {
+            ctx.get().getSender().getServer().submitAsync(() -> {
                 ServerPlayerEntity player = ctx.get().getSender();
                 RegenCap.get(player).ifPresent((data) -> {
                     if (data.getState() == PlayerUtil.RegenState.ALIVE && data.getRegenerationsLeft() > 0) {
-                        player.attackEntityFrom(RegenObjects.REGEN_DMG_FORCED, Integer.MAX_VALUE);
+                        player.hurt(RegenObjects.REGEN_DMG_FORCED, Integer.MAX_VALUE);
                     }
                 });
             });

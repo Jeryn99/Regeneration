@@ -19,16 +19,16 @@ public class LaserRenderer extends EntityRenderer<LaserEntity> {
     }
 
     @Override
-    public void doRenderShadowAndFire(Entity entityIn, double x, double y, double z, float yaw, float partialTicks) {
+    public void postRender(Entity entityIn, double x, double y, double z, float yaw, float partialTicks) {
     }
 
     @Override
-    public void doRender(LaserEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void render(LaserEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
         GlStateManager.pushMatrix();
         GlStateManager.translated(x, y, z);
         RenderUtil.setupRenderLightning();
-        Vec3d vec1 = new Vec3d(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ);
-        Vec3d vec2 = new Vec3d(entity.posX, entity.posY, entity.posZ);
+        Vec3d vec1 = new Vec3d(entity.xOld, entity.yOld, entity.zOld);
+        Vec3d vec2 = new Vec3d(entity.x, entity.y, entity.z);
         vec1 = vec2.subtract(vec1);
         vec2 = vec2.subtract(vec2);
         vec1 = vec1.normalize();
@@ -46,7 +46,7 @@ public class LaserRenderer extends EntityRenderer<LaserEntity> {
     }
 
     @Nullable
-    protected ResourceLocation getEntityTexture(LaserEntity entity) {
+    protected ResourceLocation getTextureLocation(LaserEntity entity) {
         return null;
     }
 }

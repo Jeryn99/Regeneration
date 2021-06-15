@@ -16,7 +16,7 @@ public class ItemsTagCreation extends ItemTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
+    protected void addTags() {
         for (Item value : ForgeRegistries.ITEMS.getValues()) {
             if (value instanceof ToolItem || value instanceof SwordItem || value instanceof ShearsItem) {
                 add(RegenTags.SHARP_ITEMS, value);
@@ -25,6 +25,6 @@ public class ItemsTagCreation extends ItemTagsProvider {
     }
 
     public void add(Tag<Item> branch, Item block) {
-        this.getBuilder(branch).add(block);
+        this.tag(branch).add(block);
     }
 }

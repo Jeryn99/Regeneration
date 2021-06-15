@@ -67,8 +67,8 @@ public class LaserEntity extends ThrowableEntity {
 
     @Override
     public void tick() {
-        double speed = (new Vec3d(this.posX, this.posY, this.posZ)).distanceTo(new Vec3d(this.prevPosX, this.prevPosY, this.prevPosZ));
-        if (!this.world.isRemote && (this.ticksExisted > 600 || speed < 0.01D)) {
+        double speed = (new Vec3d(this.x, this.y, this.z)).distanceTo(new Vec3d(this.xo, this.yo, this.zo));
+        if (!this.level.isClientSide && (this.tickCount > 600 || speed < 0.01D)) {
             this.remove();
         }
 
@@ -80,33 +80,33 @@ public class LaserEntity extends ThrowableEntity {
     }
 
     @Override
-    protected void onImpact(RayTraceResult result) {
+    protected void onHit(RayTraceResult result) {
         if (result != null && this.isAlive()) {
             if (result.getType() == Type.ENTITY) {
                 EntityRayTraceResult entityHitResult = (EntityRayTraceResult) result;
-                if (entityHitResult.getEntity() == this.getThrower() || entityHitResult == null) {
+                if (entityHitResult.getEntity() == this.getOwner() || entityHitResult == null) {
                     return;
                 }
 
                 Entity hitEntity = entityHitResult.getEntity();
-                hitEntity.attackEntityFrom(this.source, getDamage());
+                hitEntity.hurt(this.source, getDamage());
             } else if (result.getType() == Type.BLOCK) {
                 BlockRayTraceResult blockResult = (BlockRayTraceResult) result;
-                BlockState block = this.world.getBlockState(blockResult.getPos());
+                BlockState block = this.level.getBlockState(blockResult.getBlockPos());
                 if (block.getBlock() instanceof TNTBlock) {
-                    BlockPos pos = blockResult.getPos();
-                    this.world.removeBlock(pos, true);
-                    TNTEntity tntEntity = new TNTEntity(this.world, (float) pos.getX() + 0.5F, pos.getY(), (float) pos.getZ() + 0.5F, this.getThrower());
+                    BlockPos pos = blockResult.getBlockPos();
+                    this.level.removeBlock(pos, true);
+                    TNTEntity tntEntity = new TNTEntity(this.level, (float) pos.getX() + 0.5F, pos.getY(), (float) pos.getZ() + 0.5F, this.getOwner());
                     tntEntity.setFuse(0);
-                    this.world.addEntity(tntEntity);
-                    this.world.playSound(null, tntEntity.posX, tntEntity.posY, tntEntity.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    if (this.world.isRemote()) {
-                        this.world.addParticle(ParticleTypes.SMOKE, true, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+                    this.level.addFreshEntity(tntEntity);
+                    this.level.playSound(null, tntEntity.x, tntEntity.y, tntEntity.z, SoundEvents.TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    if (this.level.isClientSide()) {
+                        this.level.addParticle(ParticleTypes.SMOKE, true, this.x, this.y, this.z, 0.0D, 0.0D, 0.0D);
                     }
                 }
             }
 
-            if (!this.world.isRemote) {
+            if (!this.level.isClientSide) {
                 this.remove();
             }
 
@@ -146,20 +146,20 @@ public class LaserEntity extends ThrowableEntity {
     }
 
     @Override
-    protected void registerData() {
+    protected void defineSynchedData() {
     }
 
     @Override
-    public void readAdditional(CompoundNBT compoundNBT) {
-        super.readAdditional(compoundNBT);
+    public void readAdditionalSaveData(CompoundNBT compoundNBT) {
+        super.readAdditionalSaveData(compoundNBT);
         this.damage = compoundNBT.getFloat("damage");
         this.color = new Vec3d(compoundNBT.getDouble("red"), compoundNBT.getDouble("green"), compoundNBT.getDouble("blue"));
         this.scale = compoundNBT.getFloat("scale");
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compoundNBT) {
-        super.writeAdditional(compoundNBT);
+    public void addAdditionalSaveData(CompoundNBT compoundNBT) {
+        super.addAdditionalSaveData(compoundNBT);
         compoundNBT.putFloat("damage", this.damage);
         compoundNBT.putDouble("red", this.color.x);
         compoundNBT.putDouble("green", this.color.y);
@@ -173,12 +173,12 @@ public class LaserEntity extends ThrowableEntity {
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    protected float getGravityVelocity() {
+    protected float getGravity() {
         return 0.00001F;
     }
 }

@@ -27,14 +27,14 @@ public class GunItem extends SolidItem {
     private final float damage;
 
     public GunItem(int shotsPerRound, int cooldown, float damage) {
-        super(new Properties().group(ItemGroups.REGEN_TAB).maxDamage(shotsPerRound).setNoRepair());
+        super(new Properties().tab(ItemGroups.REGEN_TAB).durability(shotsPerRound).setNoRepair());
         this.cooldown = cooldown;
         this.damage = damage;
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        return super.onItemUse(context);
+    public ActionResultType useOn(ItemUseContext context) {
+        return super.useOn(context);
     }
 
     @Override
@@ -48,35 +48,35 @@ public class GunItem extends SolidItem {
     }
 
     @Override
-    public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
+    public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
 
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerIn = (PlayerEntity) entityLiving;
-            if (stack.getDamage() < stack.getMaxDamage() && !playerIn.getCooldownTracker().hasCooldown(this)) {
-                worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, this == RegenObjects.Items.PISTOL.get() ? RegenObjects.Sounds.STASER.get() : RegenObjects.Sounds.RIFLE.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-                playerIn.getCooldownTracker().setCooldown(this, cooldown);
+            if (stack.getDamageValue() < stack.getMaxDamage() && !playerIn.getCooldowns().isOnCooldown(this)) {
+                worldIn.playSound(null, playerIn.x, playerIn.y, playerIn.z, this == RegenObjects.Items.PISTOL.get() ? RegenObjects.Sounds.STASER.get() : RegenObjects.Sounds.RIFLE.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+                playerIn.getCooldowns().addCooldown(this, cooldown);
                 setDamage(stack, getDamage(stack) + 1);
-                if (!worldIn.isRemote) {
-                    LaserEntity entity = new LaserEntity(RegenObjects.EntityEntries.LASER.get(), playerIn, playerIn.world);
+                if (!worldIn.isClientSide) {
+                    LaserEntity entity = new LaserEntity(RegenObjects.EntityEntries.LASER.get(), playerIn, playerIn.level);
                     entity.setColor(new Vec3d(1, 0, 0));
                     entity.setDamage(damage);
-                    entity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
-                    worldIn.addEntity(entity);
+                    entity.shootFromRotation(playerIn, playerIn.xRot, playerIn.yRot, 0.0F, 1.5F, 1.0F);
+                    worldIn.addFreshEntity(entity);
                 }
             }
         }
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        playerIn.setActiveHand(handIn);
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        playerIn.startUsingItem(handIn);
+        return super.use(worldIn, playerIn, handIn);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-        if (entityIn.ticksExisted % 100 == 0) {
+        if (entityIn.tickCount % 100 == 0) {
             if (getDamage(stack) > 0) {
                 setDamage(stack, getDamage(stack) - 1);
             }
@@ -89,7 +89,7 @@ public class GunItem extends SolidItem {
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.BOW;
     }
 

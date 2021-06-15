@@ -15,7 +15,7 @@ public class FireResistantTrait extends TraitManager.IDna {
     @Override
     public void onUpdate(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-        if (player.isBurning()) {
+        if (player.isOnFire()) {
             PlayerUtil.applyPotionIfAbsent(player, Effects.FIRE_RESISTANCE, 1200, 2, true, false);
         }
     }
@@ -28,7 +28,7 @@ public class FireResistantTrait extends TraitManager.IDna {
     @Override
     public void onRemoved(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-        player.removePotionEffect(Effects.FIRE_RESISTANCE);
+        player.removeEffect(Effects.FIRE_RESISTANCE);
     }
 
 }

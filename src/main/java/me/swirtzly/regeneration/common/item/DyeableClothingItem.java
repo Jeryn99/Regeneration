@@ -18,12 +18,12 @@ public class DyeableClothingItem extends ArmorItem implements IDyeableArmorItem 
     public static String SWIFT_KEY = "yOulqmuNmMtget3CxeKbWwr0FVanx90M35TlMFdmHI0Rda3y3iMCqFp";
 
     public DyeableClothingItem(EquipmentSlotType slot) {
-        super(ArmorMaterial.LEATHER, slot, new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB));
+        super(ArmorMaterial.LEATHER, slot, new Item.Properties().rarity(Rarity.UNCOMMON).tab(ItemGroups.REGEN_TAB));
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        super.fillItemGroup(group, items);
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+        super.fillItemCategory(group, items);
 
         if (group == ItemGroups.REGEN_CLOTHING) {
             for (DyeColor value : DyeColor.values()) {
@@ -41,7 +41,7 @@ public class DyeableClothingItem extends ArmorItem implements IDyeableArmorItem 
     }
 
     @Override
-    public EquipmentSlotType getEquipmentSlot() {
+    public EquipmentSlotType getSlot() {
         return this.slot;
     }
 

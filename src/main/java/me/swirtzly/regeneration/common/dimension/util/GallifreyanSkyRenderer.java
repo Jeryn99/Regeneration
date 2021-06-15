@@ -38,7 +38,7 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
 
     public GallifreyanSkyRenderer() {
         this.renderEngine = Minecraft.getInstance().getTextureManager();
-        this.vboEnabled = Minecraft.getInstance().gameSettings.field_225307_E;
+        this.vboEnabled = Minecraft.getInstance().options.rawMouseInput;
         this.vertexBufferFormat = new VertexFormat();
         this.vertexBufferFormat.addElement(new VertexFormatElement(0, VertexFormatElement.Type.FLOAT, VertexFormatElement.Usage.POSITION, 3));
         this.generateStars();
@@ -54,29 +54,29 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
 
     private void generateStars() {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        BufferBuilder bufferbuilder = tessellator.getBuilder();
 
         if (this.starVBO != null) {
-            this.starVBO.deleteGlBuffers();
+            this.starVBO.delete();
         }
 
         if (this.starGLCallList >= 0) {
-            GLAllocation.deleteDisplayLists(this.starGLCallList);
+            GLAllocation.releaseList(this.starGLCallList);
             this.starGLCallList = -1;
         }
 
         if (this.vboEnabled) {
             this.starVBO = new VertexBuffer(this.vertexBufferFormat);
             this.renderStars(bufferbuilder);
-            bufferbuilder.finishDrawing();
-            bufferbuilder.reset();
-            this.starVBO.bufferData(bufferbuilder.getByteBuffer());
+            bufferbuilder.end();
+            bufferbuilder.clear();
+            this.starVBO.upload(bufferbuilder.getBuffer());
         } else {
-            this.starGLCallList = GLAllocation.generateDisplayLists(1);
+            this.starGLCallList = GLAllocation.genLists(1);
             GlStateManager.pushMatrix();
             GlStateManager.newList(this.starGLCallList, 4864);
             this.renderStars(bufferbuilder);
-            tessellator.draw();
+            tessellator.end();
             GlStateManager.endList();
             GlStateManager.popMatrix();
         }
@@ -122,7 +122,7 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
                     double d24 = 0.0D * d12 - d21 * d13;
                     double d25 = d24 * d9 - d22 * d10;
                     double d26 = d22 * d9 + d24 * d10;
-                    bufferBuilderIn.pos(d5 + d25, d6 + d23, d7 + d26).endVertex();
+                    bufferBuilderIn.vertex(d5 + d25, d6 + d23, d7 + d26).endVertex();
                 }
             }
         }
@@ -130,56 +130,56 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
 
     private void generateSky2() {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        BufferBuilder bufferbuilder = tessellator.getBuilder();
 
         if (this.sky2VBO != null) {
-            this.sky2VBO.deleteGlBuffers();
+            this.sky2VBO.delete();
         }
 
         if (this.glSkyList2 >= 0) {
-            GLAllocation.deleteDisplayLists(this.glSkyList2);
+            GLAllocation.releaseList(this.glSkyList2);
             this.glSkyList2 = -1;
         }
 
         if (this.vboEnabled) {
             this.sky2VBO = new VertexBuffer(this.vertexBufferFormat);
             this.renderSky(bufferbuilder, -16.0F, true);
-            bufferbuilder.finishDrawing();
-            bufferbuilder.reset();
-            this.sky2VBO.bufferData(bufferbuilder.getByteBuffer());
+            bufferbuilder.end();
+            bufferbuilder.clear();
+            this.sky2VBO.upload(bufferbuilder.getBuffer());
         } else {
-            this.glSkyList2 = GLAllocation.generateDisplayLists(1);
+            this.glSkyList2 = GLAllocation.genLists(1);
             GlStateManager.newList(this.glSkyList2, 4864);
             this.renderSky(bufferbuilder, -16.0F, true);
-            tessellator.draw();
+            tessellator.end();
             GlStateManager.endList();
         }
     }
 
     private void generateSky() {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        BufferBuilder bufferbuilder = tessellator.getBuilder();
 
         if (this.skyVBO != null) {
-            this.skyVBO.deleteGlBuffers();
+            this.skyVBO.delete();
         }
 
         if (this.glSkyList >= 0) {
-            GLAllocation.deleteDisplayLists(this.glSkyList);
+            GLAllocation.releaseList(this.glSkyList);
             this.glSkyList = -1;
         }
 
         if (this.vboEnabled) {
             this.skyVBO = new VertexBuffer(this.vertexBufferFormat);
             this.renderSky(bufferbuilder, 16.0F, false);
-            bufferbuilder.finishDrawing();
-            bufferbuilder.reset();
-            this.skyVBO.bufferData(bufferbuilder.getByteBuffer());
+            bufferbuilder.end();
+            bufferbuilder.clear();
+            this.skyVBO.upload(bufferbuilder.getBuffer());
         } else {
-            this.glSkyList = GLAllocation.generateDisplayLists(1);
+            this.glSkyList = GLAllocation.genLists(1);
             GlStateManager.newList(this.glSkyList, 4864);
             this.renderSky(bufferbuilder, 16.0F, false);
-            tessellator.draw();
+            tessellator.end();
             GlStateManager.endList();
         }
     }
@@ -197,10 +197,10 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
                     f = (float) (k + 50);
                 }
 
-                bufferBuilderIn.pos(f, posY, l).endVertex();
-                bufferBuilderIn.pos(f1, posY, l).endVertex();
-                bufferBuilderIn.pos(f1, posY, l + 50).endVertex();
-                bufferBuilderIn.pos(f, posY, l + 50).endVertex();
+                bufferBuilderIn.vertex(f, posY, l).endVertex();
+                bufferBuilderIn.vertex(f1, posY, l).endVertex();
+                bufferBuilderIn.vertex(f1, posY, l + 50).endVertex();
+                bufferBuilderIn.vertex(f, posY, l + 50).endVertex();
             }
         }
     }
@@ -208,24 +208,24 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
     @Override
     public void render(int ticks, float partialTicks, ClientWorld world, Minecraft mc) {
         GlStateManager.disableTexture();
-        Vec3d vec3d = world.getSkyColor(mc.getRenderViewEntity().getPosition(), partialTicks);
+        Vec3d vec3d = world.getSkyColor(mc.getCameraEntity().getCommandSenderBlockPosition(), partialTicks);
         float f = (float) vec3d.x;
         float f1 = (float) vec3d.y;
         float f2 = (float) vec3d.z;
 
         GlStateManager.color3f(f, f1, f2);
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        BufferBuilder bufferbuilder = tessellator.getBuilder();
         GlStateManager.depthMask(false);
         GlStateManager.enableFog();
         GlStateManager.color3f(f, f1, f2);
 
         if (vboEnabled) {
-            this.skyVBO.bindBuffer();
+            this.skyVBO.bind();
             GlStateManager.enableClientState(32884);
             GlStateManager.vertexPointer(3, 5126, 12, 0);
-            this.skyVBO.drawArrays(7);
-            VertexBuffer.unbindBuffer();
+            this.skyVBO.draw(7);
+            VertexBuffer.unbind();
             GlStateManager.disableClientState(32884);
         } else {
             GlStateManager.callList(this.glSkyList);
@@ -235,31 +235,31 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
         GlStateManager.disableAlphaTest();
         GlStateManager.enableBlend();
         GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        RenderHelper.disableStandardItemLighting();
-        float[] afloat = world.dimension.calcSunriseSunsetColors(world.getCelestialAngle(partialTicks), partialTicks);
+        RenderHelper.turnOff();
+        float[] afloat = world.dimension.getSunriseColor(world.getTimeOfDay(partialTicks), partialTicks);
 
         if (afloat != null) {
             GlStateManager.disableTexture();
             GlStateManager.shadeModel(7425);
             GlStateManager.pushMatrix();
             GlStateManager.rotatef(90.0F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.rotatef(MathHelper.sin(world.getCelestialAngleRadians(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotatef(MathHelper.sin(world.getSunAngle(partialTicks)) < 0.0F ? 180.0F : 0.0F, 0.0F, 0.0F, 1.0F);
             GlStateManager.rotatef(90.0F, 0.0F, 0.0F, 1.0F);
             float f6 = afloat[0];
             float f7 = afloat[1];
             float f8 = afloat[2];
 
             bufferbuilder.begin(6, DefaultVertexFormats.POSITION_COLOR);
-            bufferbuilder.pos(0.0D, 100.0D, 0.0D).color(f6, f7, f8, afloat[3]).endVertex();
+            bufferbuilder.vertex(0.0D, 100.0D, 0.0D).color(f6, f7, f8, afloat[3]).endVertex();
 
             for (int j2 = 0; j2 <= 16; ++j2) {
                 float f21 = (float) j2 * ((float) Math.PI * 2F) / 16.0F;
                 float f12 = MathHelper.sin(f21);
                 float f13 = MathHelper.cos(f21);
-                bufferbuilder.pos(f12 * 120.0F, f13 * 120.0F, -f13 * 40.0F * afloat[3]).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
+                bufferbuilder.vertex(f12 * 120.0F, f13 * 120.0F, -f13 * 40.0F * afloat[3]).color(afloat[0], afloat[1], afloat[2], 0.0F).endVertex();
             }
 
-            tessellator.draw();
+            tessellator.end();
             GlStateManager.popMatrix();
             GlStateManager.shadeModel(7424);
         }
@@ -267,36 +267,36 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
         GlStateManager.enableTexture();
         GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.pushMatrix();
-        float f16 = 1.0F - world.getRainStrength(partialTicks);
+        float f16 = 1.0F - world.getRainLevel(partialTicks);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, f16);
         GlStateManager.rotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotatef(world.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotatef(world.getTimeOfDay(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
         float f17 = 30.0F;
 
         GlStateManager.pushMatrix();
-        this.renderEngine.bindTexture(OG);
+        this.renderEngine.bind(OG);
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(-f17, 100.0D, -f17).tex(0.0D, 0.0D).endVertex();
-        bufferbuilder.pos(f17, 100.0D, -f17).tex(1.0D, 0.0D).endVertex();
-        bufferbuilder.pos(f17, 100.0D, f17).tex(1.0D, 1.0D).endVertex();
-        bufferbuilder.pos(-f17, 100.0D, f17).tex(0.0D, 1.0D).endVertex();
-        tessellator.draw();
+        bufferbuilder.vertex(-f17, 100.0D, -f17).uv(0.0D, 0.0D).endVertex();
+        bufferbuilder.vertex(f17, 100.0D, -f17).uv(1.0D, 0.0D).endVertex();
+        bufferbuilder.vertex(f17, 100.0D, f17).uv(1.0D, 1.0D).endVertex();
+        bufferbuilder.vertex(-f17, 100.0D, f17).uv(0.0D, 1.0D).endVertex();
+        tessellator.end();
         GlStateManager.popMatrix();
 
         GlStateManager.pushMatrix();
         GlStateManager.translatef(34, 0, 0);
         GlStateManager.translatef(0, 0.0F, -18);
-        this.renderEngine.bindTexture(OG);
+        this.renderEngine.bind(OG);
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(-f17, 100.0D, -f17).tex(0.0D, 0.0D).endVertex();
-        bufferbuilder.pos(f17, 100.0D, -f17).tex(1.0D, 0.0D).endVertex();
-        bufferbuilder.pos(f17, 100.0D, f17).tex(1.0D, 1.0D).endVertex();
-        bufferbuilder.pos(-f17, 100.0D, f17).tex(0.0D, 1.0D).endVertex();
-        tessellator.draw();
+        bufferbuilder.vertex(-f17, 100.0D, -f17).uv(0.0D, 0.0D).endVertex();
+        bufferbuilder.vertex(f17, 100.0D, -f17).uv(1.0D, 0.0D).endVertex();
+        bufferbuilder.vertex(f17, 100.0D, f17).uv(1.0D, 1.0D).endVertex();
+        bufferbuilder.vertex(-f17, 100.0D, f17).uv(0.0D, 1.0D).endVertex();
+        tessellator.end();
         GlStateManager.popMatrix();
 
         f17 = 20.0F;
-        this.renderEngine.bindTexture(MOON_PHASES_TEXTURES);
+        this.renderEngine.bind(MOON_PHASES_TEXTURES);
         int k1 = world.getMoonPhase();
         int i2 = k1 % 4;
         int k2 = k1 / 4 % 2;
@@ -305,11 +305,11 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
         float f24 = (float) (i2 + 1) / 4.0F;
         float f14 = (float) (k2 + 1) / 2.0F;
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(-f17, -100.0D, f17).tex(f24, f14).endVertex();
-        bufferbuilder.pos(f17, -100.0D, f17).tex(f22, f14).endVertex();
-        bufferbuilder.pos(f17, -100.0D, -f17).tex(f22, f23).endVertex();
-        bufferbuilder.pos(-f17, -100.0D, -f17).tex(f24, f23).endVertex();
-        tessellator.draw();
+        bufferbuilder.vertex(-f17, -100.0D, f17).uv(f24, f14).endVertex();
+        bufferbuilder.vertex(f17, -100.0D, f17).uv(f22, f14).endVertex();
+        bufferbuilder.vertex(f17, -100.0D, -f17).uv(f22, f23).endVertex();
+        bufferbuilder.vertex(-f17, -100.0D, -f17).uv(f24, f23).endVertex();
+        tessellator.end();
 
         GlStateManager.disableTexture();
         float f15 = world.getStarBrightness(partialTicks) * f16;
@@ -318,11 +318,11 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
             GlStateManager.color4f(f15, f15, f15, f15);
 
             if (this.vboEnabled) {
-                this.starVBO.bindBuffer();
+                this.starVBO.bind();
                 GlStateManager.enableClientState(32884);
                 GlStateManager.vertexPointer(3, 5126, 12, 0);
-                this.starVBO.drawArrays(7);
-                VertexBuffer.unbindBuffer();
+                this.starVBO.draw(7);
+                VertexBuffer.unbind();
                 GlStateManager.disableClientState(32884);
             } else {
                 GlStateManager.callList(this.starGLCallList);
@@ -336,18 +336,18 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
         GlStateManager.popMatrix();
         GlStateManager.disableTexture();
         GlStateManager.color3f(0.0F, 0.0F, 0.0F);
-        double d3 = mc.player.getEyePosition(partialTicks).y - world.getHorizon();
+        double d3 = mc.player.getEyePosition(partialTicks).y - world.getHorizonHeight();
 
         if (d3 < 0.0D) {
             GlStateManager.pushMatrix();
             GlStateManager.translatef(0.0F, 12.0F, 0.0F);
 
             if (this.vboEnabled) {
-                this.sky2VBO.bindBuffer();
+                this.sky2VBO.bind();
                 GlStateManager.enableClientState(32884);
                 GlStateManager.vertexPointer(3, 5126, 12, 0);
-                this.sky2VBO.drawArrays(7);
-                VertexBuffer.unbindBuffer();
+                this.sky2VBO.draw(7);
+                VertexBuffer.unbind();
                 GlStateManager.disableClientState(32884);
             } else {
                 GlStateManager.callList(this.glSkyList2);
@@ -356,37 +356,37 @@ public class GallifreyanSkyRenderer implements IRenderHandler {
             GlStateManager.popMatrix();
             float f19 = -((float) (d3 + 65.0D));
             bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            bufferbuilder.pos(-1.0D, f19, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, f19, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(-1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(-1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, f19, -1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(-1.0D, f19, -1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, f19, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, f19, -1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(-1.0D, f19, -1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(-1.0D, f19, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(-1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(-1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(-1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(-1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
-            bufferbuilder.pos(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
-            tessellator.draw();
+            bufferbuilder.vertex(-1.0D, f19, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, f19, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(-1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(-1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, f19, -1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(-1.0D, f19, -1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, f19, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, f19, -1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(-1.0D, f19, -1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(-1.0D, f19, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(-1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(-1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(-1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(-1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, -1.0D, 1.0D).color(0, 0, 0, 255).endVertex();
+            bufferbuilder.vertex(1.0D, -1.0D, -1.0D).color(0, 0, 0, 255).endVertex();
+            tessellator.end();
         }
 
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (player.world.getBiome(player.getPosition()) instanceof GallifrayanWastelands) {
+        if (player.level.getBiome(player.getCommandSenderBlockPosition()) instanceof GallifrayanWastelands) {
             f = 0.14F;
             f1 = 0.15F;
             f2 = 0.22F;
         }
 
-        if (!world.dimension.isSkyColored()) {
+        if (!world.dimension.hasGround()) {
             GlStateManager.color3f(f * 0.2F + 0.04F, f1 * 0.2F + 0.04F, f2 * 0.6F + 0.1F);
         } else {
             GlStateManager.color3f(f, f1, f2);

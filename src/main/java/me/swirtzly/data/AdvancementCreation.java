@@ -43,7 +43,7 @@ public class AdvancementCreation implements IDataProvider {
     /**
      * Performs this provider's action.
      */
-    public void act(DirectoryCache cache) throws IOException {
+    public void run(DirectoryCache cache) throws IOException {
         Path path = this.generator.getOutputFolder();
 
         this.createAdvancement("first_regen", new ItemStack(RegenObjects.Items.FOB_WATCH.get()), new BaseTrigger.Instance(TriggerManager.FIRST_REGENERATION.getId()));
@@ -54,21 +54,21 @@ public class AdvancementCreation implements IDataProvider {
         this.createAdvancement(
                 "gallifrey",
                 new ItemStack(RegenObjects.Items.SEAL.get()),
-                PositionTrigger.Instance.forLocation(LocationPredicate.forBiome(RegenObjects.GallifreyBiomes.REDLANDS.get())));
+                PositionTrigger.Instance.located(LocationPredicate.inBiome(RegenObjects.GallifreyBiomes.REDLANDS.get())));
 
         this.createAdvancement(
                 "robes",
                 new ItemStack(RegenObjects.Items.ROBES_CHEST.get()),
-                InventoryChangeTrigger.Instance.forItems(() -> RegenObjects.Items.ROBES_HEAD.get(), () -> RegenObjects.Items.ROBES_CHEST.get()));
+                InventoryChangeTrigger.Instance.hasItem(() -> RegenObjects.Items.ROBES_HEAD.get(), () -> RegenObjects.Items.ROBES_CHEST.get()));
 
         this.createAdvancement(
                 "gallifreyan_weapon",
                 new ItemStack(RegenObjects.Items.PISTOL.get()),
-                InventoryChangeTrigger.Instance.forItems(() -> RegenObjects.Items.PISTOL.get(), () -> RegenObjects.Items.RIFLE.get()));
+                InventoryChangeTrigger.Instance.hasItem(() -> RegenObjects.Items.PISTOL.get(), () -> RegenObjects.Items.RIFLE.get()));
 
 
         for (Advancement adv : advancements) {
-            IDataProvider.save(GSON, cache, adv.copy().serialize(), getPath(path, adv));
+            IDataProvider.save(GSON, cache, adv.deconstruct().serializeToJson(), getPath(path, adv));
         }
 
     }
@@ -82,8 +82,8 @@ public class AdvancementCreation implements IDataProvider {
 
     public Advancement create(String name, String title, ItemStack display, ICriterionInstance... inst) {
 
-        Advancement.Builder adv = Advancement.Builder.builder()
-                .withDisplay(
+        Advancement.Builder adv = Advancement.Builder.advancement()
+                .display(
                         display.getItem(),
                         new TranslationTextComponent("advancements.regeneration.title." + title),
                         new TranslationTextComponent("advancements.regeneration.desc." + title),
@@ -95,12 +95,12 @@ public class AdvancementCreation implements IDataProvider {
         int i = 0;
 
         for (ICriterionInstance in : inst) {
-            adv = adv.withCriterion(i + "", in);
+            adv = adv.addCriterion(i + "", in);
             i++;
         }
 
         if (lastAdvancement != null) {
-            adv.withParent(lastAdvancement);
+            adv.parent(lastAdvancement);
         }
 
         return adv.build(new ResourceLocation(Regeneration.MODID, name));

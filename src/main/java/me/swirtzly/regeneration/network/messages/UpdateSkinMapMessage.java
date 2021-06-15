@@ -15,16 +15,16 @@ public class UpdateSkinMapMessage {
     }
 
     public static void encode(UpdateSkinMapMessage model, PacketBuffer buf) {
-        buf.writeString(model.preferred);
+        buf.writeUtf(model.preferred);
     }
 
     public static UpdateSkinMapMessage decode(PacketBuffer buffer) {
-        return new UpdateSkinMapMessage(buffer.readString(32767));
+        return new UpdateSkinMapMessage(buffer.readUtf(32767));
     }
 
     public static class Handler {
         public static void handle(UpdateSkinMapMessage message, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().getSender().getServer().deferTask(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
+            ctx.get().getSender().getServer().submitAsync(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
                 cap.setPreferredModel(message.preferred);
                 cap.synchronise();
             }));

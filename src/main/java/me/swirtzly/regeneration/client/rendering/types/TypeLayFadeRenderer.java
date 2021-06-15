@@ -58,15 +58,15 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
     public void animateEntity(BipedModel model, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(entity).ifPresent((data) -> {
             if (data.getState() == PlayerUtil.RegenState.REGENERATING && data.getRegenType() == RegenTypes.HARTNELL) {
-                model.bipedHead.rotateAngleX = (float) Math.toRadians(0);
-                model.bipedHead.rotateAngleY = (float) Math.toRadians(0);
-                model.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
+                model.head.xRot = (float) Math.toRadians(0);
+                model.head.yRot = (float) Math.toRadians(0);
+                model.head.zRot = (float) Math.toRadians(0);
 
-                model.bipedLeftLeg.rotateAngleZ = (float) -Math.toRadians(5);
-                model.bipedRightLeg.rotateAngleZ = (float) Math.toRadians(5);
+                model.leftLeg.zRot = (float) -Math.toRadians(5);
+                model.rightLeg.zRot = (float) Math.toRadians(5);
 
-                model.bipedLeftArm.rotateAngleZ = (float) -Math.toRadians(5);
-                model.bipedRightArm.rotateAngleZ = (float) Math.toRadians(5);
+                model.leftArm.zRot = (float) -Math.toRadians(5);
+                model.rightArm.zRot = (float) Math.toRadians(5);
                 if (model instanceof PlayerModel) {
                     ClientUtil.copyAnglesToWear((PlayerModel) model);
                 }

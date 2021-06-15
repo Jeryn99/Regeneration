@@ -43,11 +43,11 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
         this.biomeFactoryLayer = aLayer[1];
         this.biomes = dimensionBiomes;
         for (Biome biome : this.biomes) {
-            biome.addCarver(GenerationStage.Carving.AIR, Biome.createCarver(new CaveWorldCarver(ProbabilityConfig::deserialize, 256) {
+            biome.addCarver(GenerationStage.Carving.AIR, Biome.makeCarver(new CaveWorldCarver(ProbabilityConfig::deserialize, 256) {
                 {
-                    carvableBlocks = ImmutableSet.of(Blocks.DIRT.getDefaultState().getBlock(),
-                            biome.getSurfaceBuilder().getConfig().getTop().getBlock(),
-                            biome.getSurfaceBuilder().getConfig().getUnder().getBlock());
+                    replaceableBlocks = ImmutableSet.of(Blocks.DIRT.defaultBlockState().getBlock(),
+                            biome.getSurfaceBuilder().getSurfaceBuilderConfiguration().getTopMaterial().getBlock(),
+                            biome.getSurfaceBuilder().getSurfaceBuilderConfiguration().getUnderMaterial().getBlock());
                 }
             }, new ProbabilityConfig(0.14285715f)));
         }
@@ -55,35 +55,35 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
 
     private Layer[] makeTheWorld(long seed) {
         LongFunction<IExtendedNoiseRandom<LazyArea>> contextFactory = l -> new LazyAreaLayerContext(25, seed, l);
-        IAreaFactory<LazyArea> parentLayer = IslandLayer.INSTANCE.apply(contextFactory.apply(1));
-        IAreaFactory<LazyArea> biomeLayer = (new BiomeLayerCustom(RegenObjects.GallifreyBiomes.getBiomes())).apply(contextFactory.apply(200), parentLayer);
-        biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1000), biomeLayer);
-        biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1001), biomeLayer);
-        biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1002), biomeLayer);
-        biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1003), biomeLayer);
-        biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1004), biomeLayer);
-        biomeLayer = ZoomLayer.NORMAL.apply(contextFactory.apply(1005), biomeLayer);
-        IAreaFactory<LazyArea> voronoizoom = VoroniZoomLayer.INSTANCE.apply(contextFactory.apply(10), biomeLayer);
+        IAreaFactory<LazyArea> parentLayer = IslandLayer.INSTANCE.run(contextFactory.apply(1));
+        IAreaFactory<LazyArea> biomeLayer = (new BiomeLayerCustom(RegenObjects.GallifreyBiomes.getBiomes())).run(contextFactory.apply(200), parentLayer);
+        biomeLayer = ZoomLayer.NORMAL.run(contextFactory.apply(1000), biomeLayer);
+        biomeLayer = ZoomLayer.NORMAL.run(contextFactory.apply(1001), biomeLayer);
+        biomeLayer = ZoomLayer.NORMAL.run(contextFactory.apply(1002), biomeLayer);
+        biomeLayer = ZoomLayer.NORMAL.run(contextFactory.apply(1003), biomeLayer);
+        biomeLayer = ZoomLayer.NORMAL.run(contextFactory.apply(1004), biomeLayer);
+        biomeLayer = ZoomLayer.NORMAL.run(contextFactory.apply(1005), biomeLayer);
+        IAreaFactory<LazyArea> voronoizoom = VoroniZoomLayer.INSTANCE.run(contextFactory.apply(10), biomeLayer);
         return new Layer[]{new Layer(biomeLayer), new Layer(voronoizoom)};
     }
 
     @Override
     public Biome getBiome(int x, int y) {
-        return this.biomeFactoryLayer.func_215738_a(x, y);
+        return this.biomeFactoryLayer.get(x, y);
     }
 
     @Override
-    public Biome func_222366_b(int p_222366_1_, int p_222366_2_) {
-        return this.genBiomes.func_215738_a(p_222366_1_, p_222366_2_);
+    public Biome getNoiseBiome(int p_222366_1_, int p_222366_2_) {
+        return this.genBiomes.get(p_222366_1_, p_222366_2_);
     }
 
     @Override
-    public Biome[] getBiomes(int x, int z, int width, int length, boolean cacheFlag) {
-        return this.biomeFactoryLayer.generateBiomes(x, z, width, length);
+    public Biome[] getBiomeBlock(int x, int z, int width, int length, boolean cacheFlag) {
+        return this.biomeFactoryLayer.getArea(x, z, width, length);
     }
 
     @Override
-    public Set<Biome> getBiomesInSquare(int centerX, int centerZ, int sideLength) {
+    public Set<Biome> getBiomesWithin(int centerX, int centerZ, int sideLength) {
         int i = centerX - sideLength >> 2;
         int j = centerZ - sideLength >> 2;
         int k = centerX + sideLength >> 2;
@@ -91,20 +91,20 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
         int i1 = k - i + 1;
         int j1 = l - j + 1;
         Set<Biome> set = Sets.newHashSet();
-        Collections.addAll(set, this.genBiomes.generateBiomes(i, j, i1, j1));
+        Collections.addAll(set, this.genBiomes.getArea(i, j, i1, j1));
         return set;
     }
 
     @Override
     @Nullable
-    public BlockPos findBiomePosition(int x, int z, int range, List<Biome> biomes, Random random) {
+    public BlockPos findBiome(int x, int z, int range, List<Biome> biomes, Random random) {
         int i = x - range >> 2;
         int j = z - range >> 2;
         int k = x + range >> 2;
         int l = z + range >> 2;
         int i1 = k - i + 1;
         int j1 = l - j + 1;
-        Biome[] abiome = this.genBiomes.generateBiomes(i, j, i1, j1);
+        Biome[] abiome = this.genBiomes.getArea(i, j, i1, j1);
         BlockPos blockpos = null;
         int k1 = 0;
         for (int l1 = 0; l1 < i1 * j1; ++l1) {
@@ -121,10 +121,10 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
     }
 
     @Override
-    public boolean hasStructure(Structure<?> structureIn) {
-        return this.hasStructureCache.computeIfAbsent(structureIn, (p_205006_1_) -> {
+    public boolean canGenerateStructure(Structure<?> structureIn) {
+        return this.supportedStructures.computeIfAbsent(structureIn, (p_205006_1_) -> {
             for (Biome biome : this.biomes) {
-                if (biome.hasStructure(p_205006_1_)) {
+                if (biome.isValidStart(p_205006_1_)) {
                     return true;
                 }
             }
@@ -134,12 +134,12 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
 
     @Override
     public Set<BlockState> getSurfaceBlocks() {
-        if (this.topBlocksCache.isEmpty()) {
+        if (this.surfaceBlocks.isEmpty()) {
             for (Biome biome : this.biomes) {
-                this.topBlocksCache.add(biome.getSurfaceBuilderConfig().getTop());
+                this.surfaceBlocks.add(biome.getSurfaceBuilderConfig().getTopMaterial());
             }
         }
-        return this.topBlocksCache;
+        return this.surfaceBlocks;
     }
 
     public static class BiomeLayerCustom implements IC0Transformer {
@@ -152,7 +152,7 @@ public class GallifreyBiomeProviderNew extends BiomeProvider {
 
         @Override
         public int apply(INoiseRandom context, int value) {
-            return Registry.BIOME.getId(biomes[context.random(biomes.length)]);
+            return Registry.BIOME.getId(biomes[context.nextRandom(biomes.length)]);
         }
     }
 }

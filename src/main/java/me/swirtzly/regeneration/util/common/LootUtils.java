@@ -16,23 +16,23 @@ public class LootUtils {
     private static final Field entryItem;
 
     static {
-        tablePools = ObfuscationReflectionHelper.findField(LootTable.class, "field_186466_c");
+        tablePools = ObfuscationReflectionHelper.findField(LootTable.class, "pools");
         tablePools.setAccessible(true);
-        poolEntries = ObfuscationReflectionHelper.findField(LootPool.class, "field_186453_a");
+        poolEntries = ObfuscationReflectionHelper.findField(LootPool.class, "entries");
         poolEntries.setAccessible(true);
-        entryItem = ObfuscationReflectionHelper.findField(ItemLootEntry.class, "field_186368_a");
+        entryItem = ObfuscationReflectionHelper.findField(ItemLootEntry.class, "item");
         entryItem.setAccessible(true);
     }
 
 
     public static LootPool createLootPool(String name, RandomValueRange numRolls, RandomValueRange bonusRolls, LootEntry.Builder entryBuilder, ILootCondition.IBuilder conditionBuilder, ILootFunction.IBuilder functionBuilder) {
-        LootPool.Builder builder = LootPool.builder();
+        LootPool.Builder builder = LootPool.lootPool();
         builder.name(name);
-        builder.rolls(numRolls);
+        builder.setRolls(numRolls);
         builder.bonusRolls(bonusRolls.getMin(), bonusRolls.getMax());
-        builder.addEntry(entryBuilder);
-        builder.acceptCondition(conditionBuilder);
-        builder.acceptFunction(functionBuilder);
+        builder.add(entryBuilder);
+        builder.when(conditionBuilder);
+        builder.apply(functionBuilder);
 
         return builder.build();
     }
@@ -50,14 +50,14 @@ public class LootUtils {
     }
 
     private static void addItemToTable(LootTable table, Item item, int weight, float numRolls, float probability, int minQuantity, int maxQuantity, String name) {
-        RandomChance.IBuilder conditionBuilder = RandomChance.builder(probability);
-        SetCount.IBuilder functionBuilder = SetCount.func_215932_a(new RandomValueRange(minQuantity, maxQuantity));
+        ILootCondition.IBuilder conditionBuilder = RandomChance.randomChance(probability);
+        ILootFunction.IBuilder functionBuilder = SetCount.setCount(new RandomValueRange(minQuantity, maxQuantity));
 
-        ItemLootEntry.Builder entryBuilder = ItemLootEntry.builder(item);
-        entryBuilder.weight(weight);
-        entryBuilder.quality(1);
-        entryBuilder.acceptCondition(conditionBuilder);
-        entryBuilder.acceptFunction(functionBuilder);
+        StandaloneLootEntry.Builder entryBuilder = ItemLootEntry.lootTableItem(item);
+        entryBuilder.setWeight(weight);
+        entryBuilder.setQuality(1);
+        entryBuilder.when(conditionBuilder);
+        entryBuilder.apply(functionBuilder);
 
         LootPool newPool = createLootPool(name, new RandomValueRange(numRolls), new RandomValueRange(0), entryBuilder, conditionBuilder, functionBuilder);
 

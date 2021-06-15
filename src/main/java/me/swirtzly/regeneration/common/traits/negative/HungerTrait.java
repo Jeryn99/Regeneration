@@ -15,7 +15,7 @@ public class HungerTrait extends TraitManager.IDna {
     @Override
     public void onUpdate(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-        if (player.ticksExisted % 2400 == 0 && player.world.rand.nextBoolean()) {
+        if (player.tickCount % 2400 == 0 && player.level.random.nextBoolean()) {
             PlayerUtil.applyPotionIfAbsent(player, Effects.HUNGER, 200, 1, true, false);
         }
     }
@@ -29,6 +29,6 @@ public class HungerTrait extends TraitManager.IDna {
     @Override
     public void onRemoved(IRegen cap) {
         LivingEntity player = cap.getLivingEntity();
-        player.removePotionEffect(Effects.HUNGER);
+        player.removeEffect(Effects.HUNGER);
     }
 }

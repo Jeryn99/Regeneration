@@ -25,26 +25,26 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
     }
 
     public static void makeZombieArms(BipedModel modelBiped) {
-        modelBiped.bipedRightArm.rotateAngleY = -0.1F + modelBiped.bipedHead.rotateAngleY - 0.4F;
-        modelBiped.bipedLeftArm.rotateAngleY = 0.1F + modelBiped.bipedHead.rotateAngleY;
-        modelBiped.bipedRightArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
-        modelBiped.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
+        modelBiped.rightArm.yRot = -0.1F + modelBiped.head.yRot - 0.4F;
+        modelBiped.leftArm.yRot = 0.1F + modelBiped.head.yRot;
+        modelBiped.rightArm.xRot = -((float) Math.PI / 2F) + modelBiped.head.xRot;
+        modelBiped.leftArm.xRot = -((float) Math.PI / 2F) + modelBiped.head.xRot;
     }
 
     @Override
     public void preRenderCallback(LivingRenderer renderer, LivingEntity entity) {
         RegenCap.get(entity).ifPresent((data) -> {
-            if (!(renderer.getEntityModel() instanceof BipedModel)) return;
-            BipedModel modelPlayer = (BipedModel) renderer.getEntityModel();
+            if (!(renderer.getModel() instanceof BipedModel)) return;
+            BipedModel modelPlayer = (BipedModel) renderer.getModel();
             if (data.hasDroppedHand() && data.getState() == PlayerUtil.RegenState.POST) {
-                modelPlayer.bipedRightArm.isHidden = data.getCutoffHand() == HandSide.RIGHT;
-                modelPlayer.bipedLeftArm.isHidden = data.getCutoffHand() == HandSide.LEFT;
+                modelPlayer.rightArm.neverRender = data.getCutoffHand() == HandSide.RIGHT;
+                modelPlayer.leftArm.neverRender = data.getCutoffHand() == HandSide.LEFT;
             }
 
             if (modelPlayer instanceof PlayerModel) {
                 PlayerModel playerModel = (PlayerModel) modelPlayer;
-                playerModel.bipedLeftArmwear.isHidden = playerModel.bipedRightArmwear.isHidden = playerModel.bipedBodyWear.isHidden = hideBodyWear(entity.getItemStackFromSlot(EquipmentSlotType.CHEST));
-                playerModel.bipedRightLeg.isHidden = playerModel.bipedLeftLeg.isHidden = playerModel.bipedRightLegwear.isHidden = playerModel.bipedLeftLegwear.isHidden = !showLegWear(entity.getItemStackFromSlot(EquipmentSlotType.LEGS));
+                playerModel.leftSleeve.neverRender = playerModel.rightSleeve.neverRender = playerModel.jacket.neverRender = hideBodyWear(entity.getItemBySlot(EquipmentSlotType.CHEST));
+                playerModel.rightLeg.neverRender = playerModel.leftLeg.neverRender = playerModel.rightPants.neverRender = playerModel.leftPants.neverRender = !showLegWear(entity.getItemBySlot(EquipmentSlotType.LEGS));
             }
 
             if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
@@ -75,8 +75,8 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
 
     @Override
     public void animateEntity(BipedModel modelBiped, LivingEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ItemStack stack = entity.getHeldItemMainhand();
-        ItemStack offStack = entity.getHeldItemOffhand();
+        ItemStack stack = entity.getMainHandItem();
+        ItemStack offStack = entity.getOffhandItem();
 
         // ==============FOB WATCH & JAR START==============
         boolean isOpen;
@@ -104,14 +104,14 @@ public class GeneralAnimations implements AnimationManager.IAnimate {
             // JAR SYNCING
             if (data.isSyncingToJar()) {
                 makeZombieArms(modelBiped);
-                modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(45);
+                modelBiped.head.xRot = (float) Math.toRadians(45);
                 copyAnglesToWear(modelBiped);
             }
 
             if (data.getState() == PlayerUtil.RegenState.POST && PlayerUtil.isAboveZeroGrid(entity)) {
-                modelBiped.bipedHead.rotateAngleX = (float) Math.toRadians(0);
-                modelBiped.bipedHead.rotateAngleY = (float) Math.toRadians(0);
-                modelBiped.bipedHead.rotateAngleZ = (float) Math.toRadians(0);
+                modelBiped.head.xRot = (float) Math.toRadians(0);
+                modelBiped.head.yRot = (float) Math.toRadians(0);
+                modelBiped.head.zRot = (float) Math.toRadians(0);
             }
         });
     }

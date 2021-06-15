@@ -73,14 +73,14 @@ import java.util.function.Supplier;
 import static me.swirtzly.regeneration.Regeneration.MODID;
 
 /**
- * Created by Sub on 16/09/2018.
+ * Created by Craig on 16/09/2018.
  */
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RegenObjects {
 
     public static DimensionType GALLIFREY_TYPE;
-    public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"), REGEN_DMG_HEALING = new RegenDamageSource("regen_heal").setDamageAllowedInCreativeMode(), // The irony lmao
-            REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit").setDamageAllowedInCreativeMode(), REGEN_DMG_KILLED = new RegenDamageSource("regen_killed"), REGEN_DMG_FORCED = new RegenDamageSource("forced").setDamageAllowedInCreativeMode();
+    public static DamageSource REGEN_DMG_ENERGY_EXPLOSION = new RegenDamageSource("regen_energy"), REGEN_DMG_HEALING = new RegenDamageSource("regen_heal").bypassInvul(), // The irony lmao
+            REGEN_DMG_CRITICAL = new RegenDamageSource("regen_crit").bypassInvul(), REGEN_DMG_KILLED = new RegenDamageSource("regen_killed"), REGEN_DMG_FORCED = new RegenDamageSource("forced").bypassInvul();
     private static ItemGroup itemGroup = ItemGroups.REGEN_TAB;
 
     //Container Creation
@@ -99,21 +99,21 @@ public class RegenObjects {
     // Entity Creation
     private static <T extends Entity> EntityType<T> registerNoSpawnerBase(EntityType.IFactory<T> factory, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
         ResourceLocation loc = new ResourceLocation(Regeneration.MODID, name);
-        EntityType.Builder<T> builder = EntityType.Builder.create(factory, classification);
+        EntityType.Builder<T> builder = EntityType.Builder.of(factory, classification);
         builder.setShouldReceiveVelocityUpdates(sendUpdate);
         builder.setTrackingRange(trackingRange);
         builder.setUpdateInterval(updateFreq);
-        builder.size(width, height);
+        builder.sized(width, height);
         return builder.build(loc.toString());
     }
 
     private static <T extends Entity> EntityType<T> registerBase(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
         ResourceLocation loc = new ResourceLocation(Regeneration.MODID, name);
-        EntityType.Builder<T> builder = EntityType.Builder.create(factory, classification);
+        EntityType.Builder<T> builder = EntityType.Builder.of(factory, classification);
         builder.setShouldReceiveVelocityUpdates(sendUpdate);
         builder.setTrackingRange(trackingRange);
         builder.setUpdateInterval(updateFreq);
-        builder.size(width, height);
+        builder.sized(width, height);
         builder.setCustomClientFactory((spawnEntity, world) -> client.spawn(world));
         return builder.build(loc.toString());
     }
@@ -121,12 +121,12 @@ public class RegenObjects {
     // Fire Resistant Entity Creation
     private static <T extends Entity> EntityType<T> registerFireImmuneBase(EntityType.IFactory<T> factory, IClientSpawner<T> client, EntityClassification classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {
         ResourceLocation loc = new ResourceLocation(Regeneration.MODID, name);
-        EntityType.Builder<T> builder = EntityType.Builder.create(factory, classification);
+        EntityType.Builder<T> builder = EntityType.Builder.of(factory, classification);
         builder.setShouldReceiveVelocityUpdates(sendUpdate);
         builder.setTrackingRange(trackingRange);
         builder.setUpdateInterval(updateFreq);
-        builder.immuneToFire();
-        builder.size(width, height);
+        builder.fireImmune();
+        builder.sized(width, height);
         builder.setCustomClientFactory((spawnEntity, world) -> client.spawn(world));
         EntityType<T> type = builder.build(loc.toString());
         return type;
@@ -155,7 +155,7 @@ public class RegenObjects {
                 itemGroup = null;
             } else {
                 itemGroup = ItemGroups.REGEN_TAB;
-                Blocks.BLOCK_ITEMS.register(block.get().getRegistryName().getPath(), () -> setUpItem(new BlockItem(block.get(), new Item.Properties().group(itemGroup))));
+                Blocks.BLOCK_ITEMS.register(block.get().getRegistryName().getPath(), () -> setUpItem(new BlockItem(block.get(), new Item.Properties().tab(itemGroup))));
             }
         }
     }
@@ -173,7 +173,7 @@ public class RegenObjects {
         if (ModList.get().isLoaded("tardis")) {
             return TardisCompat.createBlock();
         }
-        return setUpBlock(new ZeroRoomBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F)));
+        return setUpBlock(new ZeroRoomBlock(Block.Properties.of(Material.STONE).strength(3.0F, 3.0F)));
     }
 
     @SubscribeEvent
@@ -182,7 +182,7 @@ public class RegenObjects {
             for (String name : RegenConfig.COMMON.allowedBiomes.get()) {
                 Biome biome = ForgeRegistries.BIOMES.getValue(new ResourceLocation(name));
                 if (biome != null) {
-                    biome.getSpawns(EntityClassification.valueOf(RegenConfig.COMMON.spawnType.get())).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), RegenConfig.COMMON.spawnWeight.get(), RegenConfig.COMMON.minSpawn.get(), RegenConfig.COMMON.maxSpawn.get()));
+                    biome.getMobs(EntityClassification.valueOf(RegenConfig.COMMON.spawnType.get())).add(new Biome.SpawnListEntry(RegenObjects.EntityEntries.TIMELORD.get(), RegenConfig.COMMON.spawnWeight.get(), RegenConfig.COMMON.minSpawn.get(), RegenConfig.COMMON.maxSpawn.get()));
                 }
             }
         }
@@ -190,7 +190,7 @@ public class RegenObjects {
 
     // Tile Creation
     private static <T extends TileEntity> TileEntityType<T> registerTiles(Supplier<T> tile, Block... validBlock) {
-        return TileEntityType.Builder.create(tile, validBlock).build(null);
+        return TileEntityType.Builder.of(tile, validBlock).build(null);
     }
 
     private static SoundEvent setUpSound(String soundName) {
@@ -258,8 +258,8 @@ public class RegenObjects {
         public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, Regeneration.MODID);
         public static final DeferredRegister<Item> BLOCK_ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Regeneration.MODID);
         public static final RegistryObject<Block> HAND_JAR = BLOCKS.register("hand_jar", () -> setUpBlock(new BlockHandInJar()));
-        public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.create(Material.PISTON).hardnessAndResistance(1.25F, 10))));
-        public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.create(Material.ROCK).hardnessAndResistance(3.0F, 3.0F))));
+        public static final RegistryObject<Block> ARCH = BLOCKS.register("arch", () -> setUpBlock(new ArchBlock(Block.Properties.of(Material.PISTON).strength(1.25F, 10))));
+        public static final RegistryObject<Block> GAL_ORE = BLOCKS.register("gal_ore", () -> setUpBlock(new OreBlock(Block.Properties.of(Material.STONE).strength(3.0F, 3.0F))));
         public static final RegistryObject<Block> ZERO_ROOM = BLOCKS.register("zero_roundel_one", RegenObjects::createBlock);
         public static final RegistryObject<Block> ZERO_ROOM_TWO = BLOCKS.register("zero_roundel_two", RegenObjects::createBlock);
     }
@@ -278,7 +278,7 @@ public class RegenObjects {
         public static final RegistryObject<ContainerType<BioContainerContainer>> BIO_CONTAINER = CONTAINERS.register("bio_container",
                 () -> IForgeContainerType.create((windowId, inv, data) -> {
                     BlockPos pos = data.readBlockPos();
-                    return new BioContainerContainer(windowId, inv, Regeneration.proxy.getClientPlayer(), (HandInJarTile) Minecraft.getInstance().world.getTileEntity(pos));
+                    return new BioContainerContainer(windowId, inv, Regeneration.proxy.getClientPlayer(), (HandInJarTile) Minecraft.getInstance().level.getBlockEntity(pos));
                 }));
     }
 

@@ -33,7 +33,7 @@ import java.util.UUID;
 
 public class OverrideEntity extends Entity {
 
-    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(OverrideEntity.class, DataSerializers.ITEMSTACK);
+    private static final DataParameter<ItemStack> ITEM = EntityDataManager.defineId(OverrideEntity.class, DataSerializers.ITEM_STACK);
 
     private UUID thrower;
     private UUID owner;
@@ -50,9 +50,9 @@ public class OverrideEntity extends Entity {
 
     public OverrideEntity(World worldIn, double x, double y, double z) {
         this(RegenObjects.EntityEntries.ITEM_OVERRIDE_ENTITY_TYPE.get(), worldIn);
-        this.setPosition(x, y, z);
-        this.rotationYaw = this.rand.nextFloat() * 360.0F;
-        this.setMotion(this.rand.nextDouble() * 0.2D - 0.1D, 0.2D, this.rand.nextDouble() * 0.2D - 0.1D);
+        this.setPos(x, y, z);
+        this.yRot = this.random.nextFloat() * 360.0F;
+        this.setDeltaMovement(this.random.nextDouble() * 0.2D - 0.1D, 0.2D, this.random.nextDouble() * 0.2D - 0.1D);
     }
 
     public OverrideEntity(World worldIn, double x, double y, double z, ItemStack stack) {
@@ -61,39 +61,39 @@ public class OverrideEntity extends Entity {
     }
 
     @Override
-    protected boolean canTriggerWalking() {
+    protected boolean makeStepSound() {
         return false;
     }
 
     @Override
-    public void registerData() {
-        this.getDataManager().register(ITEM, ItemStack.EMPTY);
+    public void defineSynchedData() {
+        this.getEntityData().define(ITEM, ItemStack.EMPTY);
     }
 
     @Override
     public ITextComponent getName() {
         ITextComponent itextcomponent = this.getCustomName();
-        return (itextcomponent != null ? itextcomponent : new TranslationTextComponent(this.getItem().getTranslationKey()));
+        return (itextcomponent != null ? itextcomponent : new TranslationTextComponent(this.getItem().getDescriptionId()));
     }
 
     @Override
-    public EntitySize getSize(Pose poseIn) {
+    public EntitySize getDimensions(Pose poseIn) {
         Item item = this.getItem().getItem();
         if (item instanceof SolidItem) {
             EntitySize size = ((SolidItem) item).getEntitySize(this, this.getItem());
-            return size != null ? size : super.getSize(poseIn);
+            return size != null ? size : super.getDimensions(poseIn);
         }
-        return super.getSize(poseIn);
+        return super.getDimensions(poseIn);
     }
 
     @Override
-    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vec3d vec, Hand hand) {
-        if (player.getHeldItem(hand).isEmpty() && this.isAlive()) {
-            player.setHeldItem(hand, this.getItem());
+    public ActionResultType interactAt(PlayerEntity player, Vec3d vec, Hand hand) {
+        if (player.getItemInHand(hand).isEmpty() && this.isAlive()) {
+            player.setItemInHand(hand, this.getItem());
             this.remove();
             return ActionResultType.SUCCESS;
         }
-        return super.applyPlayerInteraction(player, vec, hand);
+        return super.interactAt(player, vec, hand);
     }
 
     @Override
@@ -113,53 +113,53 @@ public class OverrideEntity extends Entity {
         } else {
             super.tick();
 
-            this.prevPosX = this.posX;
-            this.prevPosY = this.posY;
-            this.prevPosZ = this.posZ;
-            Vec3d vec3d = this.getMotion();
-            if (this.areEyesInFluid(FluidTags.WATER)) {
+            this.xo = this.x;
+            this.yo = this.y;
+            this.zo = this.z;
+            Vec3d vec3d = this.getDeltaMovement();
+            if (this.isUnderLiquid(FluidTags.WATER)) {
                 this.applyFloatMotion();
-            } else if (!this.hasNoGravity()) {
-                this.setMotion(this.getMotion().add(0.0D, -0.04D, 0.0D));
+            } else if (!this.isNoGravity()) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.04D, 0.0D));
             }
 
-            if (this.world.isRemote) {
-                this.noClip = false;
+            if (this.level.isClientSide) {
+                this.noPhysics = false;
             } else {
-                this.noClip = !this.world.areCollisionShapesEmpty(this);
-                if (this.noClip) {
-                    this.pushOutOfBlocks(this.posX, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.posZ);
+                this.noPhysics = !this.level.noCollision(this);
+                if (this.noPhysics) {
+                    this.checkInBlock(this.x, (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.z);
                 }
             }
 
-            if (!this.onGround || func_213296_b(this.getMotion()) > (double) 1.0E-5F || (this.ticksExisted + this.getEntityId()) % 4 == 0) {
-                this.move(MoverType.SELF, this.getMotion());
+            if (!this.onGround || getHorizontalDistanceSqr(this.getDeltaMovement()) > (double) 1.0E-5F || (this.tickCount + this.getId()) % 4 == 0) {
+                this.move(MoverType.SELF, this.getDeltaMovement());
                 float f = 0.98F;
                 if (this.onGround) {
-                    BlockPos pos = new BlockPos(this.posX, this.getBoundingBox().minY - 1.0D, this.posZ);
-                    f = this.world.getBlockState(pos).getSlipperiness(this.world, pos, this) * 0.98F;
+                    BlockPos pos = new BlockPos(this.x, this.getBoundingBox().minY - 1.0D, this.z);
+                    f = this.level.getBlockState(pos).getSlipperiness(this.level, pos, this) * 0.98F;
                 }
 
-                this.setMotion(this.getMotion().mul(f, 0.98D, f));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.98D, f));
                 if (this.onGround) {
-                    this.setMotion(this.getMotion().mul(1.0D, -0.5D, 1.0D));
+                    this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, -0.5D, 1.0D));
                 }
             }
 
-            boolean flag = MathHelper.floor(this.prevPosX) != MathHelper.floor(this.posX) || MathHelper.floor(this.prevPosY) != MathHelper.floor(this.posY) || MathHelper.floor(this.prevPosZ) != MathHelper.floor(this.posZ);
+            boolean flag = MathHelper.floor(this.xo) != MathHelper.floor(this.x) || MathHelper.floor(this.yo) != MathHelper.floor(this.y) || MathHelper.floor(this.zo) != MathHelper.floor(this.z);
             int i = flag ? 2 : 40;
-            if (this.ticksExisted % i == 0) {
-                if (this.world.getFluidState(new BlockPos(this)).isTagged(FluidTags.LAVA)) {
-                    this.setMotion((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F, 0.2F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-                    this.playSound(SoundEvents.ENTITY_GENERIC_BURN, 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
+            if (this.tickCount % i == 0) {
+                if (this.level.getFluidState(new BlockPos(this)).is(FluidTags.LAVA)) {
+                    this.setDeltaMovement((this.random.nextFloat() - this.random.nextFloat()) * 0.2F, 0.2F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+                    this.playSound(SoundEvents.GENERIC_BURN, 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
                 }
             }
 
-            this.isAirBorne |= this.handleWaterMovement();
-            if (!this.world.isRemote) {
-                double d0 = this.getMotion().subtract(vec3d).lengthSquared();
+            this.hasImpulse |= this.updateInWaterState();
+            if (!this.level.isClientSide) {
+                double d0 = this.getDeltaMovement().subtract(vec3d).lengthSqr();
                 if (d0 > 0.01D) {
-                    this.isAirBorne = true;
+                    this.hasImpulse = true;
                 }
             }
 
@@ -171,24 +171,24 @@ public class OverrideEntity extends Entity {
     }
 
     private void applyFloatMotion() {
-        Vec3d vec3d = this.getMotion();
-        this.setMotion(vec3d.x * (double) 0.99F, vec3d.y + (double) (vec3d.y < (double) 0.06F ? 5.0E-4F : 0.0F), vec3d.z * (double) 0.99F);
+        Vec3d vec3d = this.getDeltaMovement();
+        this.setDeltaMovement(vec3d.x * (double) 0.99F, vec3d.y + (double) (vec3d.y < (double) 0.06F ? 5.0E-4F : 0.0F), vec3d.z * (double) 0.99F);
     }
 
     @Override
-    protected void dealFireDamage(int amount) {
-        this.attackEntityFrom(DamageSource.IN_FIRE, (float) amount);
+    protected void burn(int amount) {
+        this.hurt(DamageSource.IN_FIRE, (float) amount);
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
-        if (this.world.isRemote || this.isAlive()) return false;
+    public boolean hurt(DamageSource source, float amount) {
+        if (this.level.isClientSide || this.isAlive()) return false;
         if (this.isInvulnerableTo(source)) {
             return false;
         } else if (!this.getItem().isEmpty() && this.getItem().getItem() == Items.NETHER_STAR && source.isExplosion()) {
             return false;
         } else {
-            this.markVelocityChanged();
+            this.markHurt();
             this.health = (int) ((float) this.health - amount);
             if (this.health <= 0) {
                 this.remove();
@@ -199,57 +199,57 @@ public class OverrideEntity extends Entity {
     }
 
     @Override
-    protected void readAdditional(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundNBT compound) {
         this.health = compound.getShort("Health");
 
         if (compound.contains("Owner", Constants.NBT.TAG_COMPOUND))
-            this.owner = NBTUtil.readUniqueId(compound.getCompound("Owner"));
+            this.owner = NBTUtil.loadUUIDTag(compound.getCompound("Owner"));
 
         if (compound.contains("Thrower", Constants.NBT.TAG_COMPOUND))
-            this.thrower = NBTUtil.readUniqueId(compound.getCompound("Thrower"));
+            this.thrower = NBTUtil.loadUUIDTag(compound.getCompound("Thrower"));
 
         CompoundNBT compoundnbt = compound.getCompound("Item");
-        this.setItem(ItemStack.read(compoundnbt));
+        this.setItem(ItemStack.of(compoundnbt));
         if (this.getItem().isEmpty())
             this.remove();
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundNBT compound) {
         compound.putShort("Health", (short) this.health);
 
         if (this.getThrowerId() != null)
-            compound.put("Thrower", NBTUtil.writeUniqueId(this.getThrowerId()));
+            compound.put("Thrower", NBTUtil.createUUIDTag(this.getThrowerId()));
 
         if (this.getOwnerId() != null)
-            compound.put("Owner", NBTUtil.writeUniqueId(this.getOwnerId()));
+            compound.put("Owner", NBTUtil.createUUIDTag(this.getOwnerId()));
 
         if (!this.getItem().isEmpty())
-            compound.put("Item", this.getItem().write(new CompoundNBT()));
+            compound.put("Item", this.getItem().save(new CompoundNBT()));
     }
 
     @Nonnull
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public boolean canBeAttackedWithItem() {
+    public boolean isAttackable() {
         return false;
     }
 
     @Override
-    public boolean canBeCollidedWith() {
+    public boolean isPickable() {
         return true;
     }
 
     public ItemStack getItem() {
-        return this.getDataManager().get(ITEM);
+        return this.getEntityData().get(ITEM);
     }
 
     public void setItem(ItemStack stack) {
-        this.getDataManager().set(ITEM, stack);
+        this.getEntityData().set(ITEM, stack);
     }
 
     @Nullable

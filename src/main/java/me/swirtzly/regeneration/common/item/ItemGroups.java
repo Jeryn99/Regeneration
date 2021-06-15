@@ -12,14 +12,14 @@ public class ItemGroups {
 
     public static final ItemGroup REGEN_TAB = new ItemGroup("regeneration") {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(RegenObjects.Blocks.HAND_JAR.get());
         }
     };
 
     public static final ItemGroup REGEN_CLOTHING = new ItemGroup("regeneration_clothes") {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(RegenObjects.Items.ROBES_CHEST.get());
         }
     };

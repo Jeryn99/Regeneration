@@ -18,12 +18,12 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
 /**
- * Created by Sub on 16/09/2018.
+ * Created by Craig on 16/09/2018.
  */
 public class RenderUtil {
 
     private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation(Regeneration.MODID, "textures/misc/vignette.png");
-    public static float renderTick = Minecraft.getInstance().getRenderPartialTicks();
+    public static float renderTick = Minecraft.getInstance().getFrameTime();
 
     private static float lastBrightnessX = GLX.lastBrightnessX;
     private static float lastBrightnessY = GLX.lastBrightnessY;
@@ -42,8 +42,8 @@ public class RenderUtil {
         if (start == null || end == null) return;
 
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bb = tessellator.getBuffer();
-        int smoothFactor = Minecraft.getInstance().gameSettings.ambientOcclusionStatus.func_216572_a();
+        BufferBuilder bb = tessellator.getBuilder();
+        int smoothFactor = Minecraft.getInstance().options.ambientOcclusion.getId();
         int layers = 10 + smoothFactor * 20;
 
         GlStateManager.pushMatrix();
@@ -80,31 +80,31 @@ public class RenderUtil {
             double length = start.distanceTo(end) + d;
 
             bb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-            bb.pos(-width, height, length).endVertex();
-            bb.pos(width, height, length).endVertex();
-            bb.pos(width, height, -d).endVertex();
-            bb.pos(-width, height, -d).endVertex();
-            bb.pos(width, -height, -d).endVertex();
-            bb.pos(width, -height, length).endVertex();
-            bb.pos(-width, -height, length).endVertex();
-            bb.pos(-width, -height, -d).endVertex();
-            bb.pos(-width, -height, -d).endVertex();
-            bb.pos(-width, -height, length).endVertex();
-            bb.pos(-width, height, length).endVertex();
-            bb.pos(-width, height, -d).endVertex();
-            bb.pos(width, height, length).endVertex();
-            bb.pos(width, -height, length).endVertex();
-            bb.pos(width, -height, -d).endVertex();
-            bb.pos(width, height, -d).endVertex();
-            bb.pos(width, -height, length).endVertex();
-            bb.pos(width, height, length).endVertex();
-            bb.pos(-width, height, length).endVertex();
-            bb.pos(-width, -height, length).endVertex();
-            bb.pos(width, -height, -d).endVertex();
-            bb.pos(width, height, -d).endVertex();
-            bb.pos(-width, height, -d).endVertex();
-            bb.pos(-width, -height, -d).endVertex();
-            tessellator.draw();
+            bb.vertex(-width, height, length).endVertex();
+            bb.vertex(width, height, length).endVertex();
+            bb.vertex(width, height, -d).endVertex();
+            bb.vertex(-width, height, -d).endVertex();
+            bb.vertex(width, -height, -d).endVertex();
+            bb.vertex(width, -height, length).endVertex();
+            bb.vertex(-width, -height, length).endVertex();
+            bb.vertex(-width, -height, -d).endVertex();
+            bb.vertex(-width, -height, -d).endVertex();
+            bb.vertex(-width, -height, length).endVertex();
+            bb.vertex(-width, height, length).endVertex();
+            bb.vertex(-width, height, -d).endVertex();
+            bb.vertex(width, height, length).endVertex();
+            bb.vertex(width, -height, length).endVertex();
+            bb.vertex(width, -height, -d).endVertex();
+            bb.vertex(width, height, -d).endVertex();
+            bb.vertex(width, -height, length).endVertex();
+            bb.vertex(width, height, length).endVertex();
+            bb.vertex(-width, height, length).endVertex();
+            bb.vertex(-width, -height, length).endVertex();
+            bb.vertex(width, -height, -d).endVertex();
+            bb.vertex(width, height, -d).endVertex();
+            bb.vertex(-width, height, -d).endVertex();
+            bb.vertex(-width, -height, -d).endVertex();
+            tessellator.end();
         }
 
         GlStateManager.enableTexture();
@@ -139,18 +139,18 @@ public class RenderUtil {
         GlStateManager.depthMask(false);
         GlStateManager.enableBlend();
         GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        Minecraft.getInstance().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
+        Minecraft.getInstance().getTextureManager().bind(VIGNETTE_TEX_PATH);
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        BufferBuilder bufferbuilder = tessellator.getBuilder();
 
-        MainWindow scaledRes = Minecraft.getInstance().mainWindow;
+        MainWindow scaledRes = Minecraft.getInstance().window;
         int z = -89; // below the HUD
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(0, scaledRes.getScaledHeight(), z).tex(0, 1).endVertex();
-        bufferbuilder.pos(scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), z).tex(1.0D, 1.0D).endVertex();
-        bufferbuilder.pos(scaledRes.getScaledWidth(), 0, z).tex(1, 0).endVertex();
-        bufferbuilder.pos(0, 0, z).tex(0, 0).endVertex();
-        tessellator.draw();
+        bufferbuilder.vertex(0, scaledRes.getGuiScaledHeight(), z).uv(0, 1).endVertex();
+        bufferbuilder.vertex(scaledRes.getGuiScaledWidth(), scaledRes.getGuiScaledHeight(), z).uv(1.0D, 1.0D).endVertex();
+        bufferbuilder.vertex(scaledRes.getGuiScaledWidth(), 0, z).uv(1, 0).endVertex();
+        bufferbuilder.vertex(0, 0, z).uv(0, 0).endVertex();
+        tessellator.end();
 
         GlStateManager.depthMask(true);
         GlStateManager.enableAlphaTest();
@@ -178,25 +178,25 @@ public class RenderUtil {
         GlStateManager.translatef(xPos, yPos, 100);
         GlStateManager.rotatef(-25, 1, 0, 0);
         GlStateManager.rotatef(rotation, 0, 1, 0);
-        RenderHelper.enableGUIStandardItemLighting();
+        RenderHelper.turnOnGui();
 
-        GlStateManager.lightModel(2899, RenderHelper.setColorBuffer(0.75F, 0.75F, 0.75F, 1F));
+        GlStateManager.lightModel(2899, RenderHelper.getBuffer(0.75F, 0.75F, 0.75F, 1F));
         GlStateManager.scalef(38 * scale, 34 * scale, 38 * scale);
         GlStateManager.scalef(-1, 1, 1);
-        model.render(Minecraft.getInstance().player, 0, 0, Minecraft.getInstance().player.ticksExisted, 0, 0, 0.0625f);
-        RenderHelper.disableStandardItemLighting();
+        model.render(Minecraft.getInstance().player, 0, 0, Minecraft.getInstance().player.tickCount, 0, 0, 0.0625f);
+        RenderHelper.turnOff();
         GlStateManager.disableBlend();
         GlStateManager.disableDepthTest();
         GlStateManager.popMatrix();
     }
 
     public static void copyModelAngles(RendererModel src, RendererModel dest) {
-        dest.rotateAngleX = src.rotateAngleX;
-        dest.rotateAngleY = src.rotateAngleY;
-        dest.rotateAngleZ = src.rotateAngleZ;
-        dest.rotationPointX = src.rotationPointX;
-        dest.rotationPointY = src.rotationPointY;
-        dest.rotationPointZ = src.rotationPointZ;
+        dest.xRot = src.xRot;
+        dest.yRot = src.yRot;
+        dest.zRot = src.zRot;
+        dest.x = src.x;
+        dest.y = src.y;
+        dest.z = src.z;
     }
 
     public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
@@ -213,17 +213,17 @@ public class RenderUtil {
         }
 
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        BufferBuilder bufferBuilder = tessellator.getBuilder();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture();
         GlStateManager.blendFuncSeparate(770, 771, 1, 0);
         GlStateManager.color4f(red, green, blue, alpha);
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION);
-        bufferBuilder.pos(left, bottom, 0.0D).endVertex();
-        bufferBuilder.pos(right, bottom, 0.0D).endVertex();
-        bufferBuilder.pos(right, top, 0.0D).endVertex();
-        bufferBuilder.pos(left, top, 0.0D).endVertex();
-        tessellator.draw();
+        bufferBuilder.vertex(left, bottom, 0.0D).endVertex();
+        bufferBuilder.vertex(right, bottom, 0.0D).endVertex();
+        bufferBuilder.vertex(right, top, 0.0D).endVertex();
+        bufferBuilder.vertex(left, top, 0.0D).endVertex();
+        tessellator.end();
         GlStateManager.enableTexture();
         GlStateManager.disableBlend();
     }

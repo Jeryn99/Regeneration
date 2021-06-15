@@ -49,15 +49,15 @@ public class HandInJarTile extends TileEntity implements ITickableTileEntity, IN
     @Override
     public void tick() {
 
-        if (world.getGameTime() % 35 == 0 && hasHand()) {
-            world.playSound(null, getPos().getX(), getPos().getY(), getPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.4F, 0.3F);
+        if (level.getGameTime() % 35 == 0 && hasHand()) {
+            level.playSound(null, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), RegenObjects.Sounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.4F, 0.3F);
         }
 
-        PlayerEntity player = world.getClosestPlayer(getPos().getX(), getPos().getY(), getPos().getZ(), 56, false);
+        PlayerEntity player = level.getNearestPlayer(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 56, false);
         if (player != null) {
             RegenCap.get(player).ifPresent((data) -> {
                 if (data.getState() == PlayerUtil.RegenState.REGENERATING) {
-                    if (world.rand.nextInt(90) < 10) {
+                    if (level.random.nextInt(90) < 10) {
                         lindosAmont = lindosAmont + 1;
                     }
                 }
@@ -71,7 +71,7 @@ public class HandInJarTile extends TileEntity implements ITickableTileEntity, IN
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, 3, getUpdateTag());
+        return new SUpdateTileEntityPacket(worldPosition, 3, getUpdateTag());
     }
 
     @Override
@@ -81,37 +81,37 @@ public class HandInJarTile extends TileEntity implements ITickableTileEntity, IN
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
+        return save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
+        handleUpdateTag(pkt.getTag());
     }
 
     public void sendUpdates() {
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        markDirty();
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        setChanged();
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void load(CompoundNBT tag) {
         CompoundNBT invTag = tag.getCompound("inv");
         handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(invTag));
         lindosAmont = tag.getInt("lindos");
-        super.read(tag);
+        super.load(tag);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         handler.ifPresent(h -> {
             CompoundNBT compound = ((INBTSerializable<CompoundNBT>) h).serializeNBT();
             tag.put("inv", compound);
         });
         tag.putInt("lindos", lindosAmont);
         tag.putBoolean("hasHand", hasHand());
-        return super.write(tag);
+        return super.save(tag);
     }
 
     private IItemHandler createHandler() {
@@ -147,7 +147,7 @@ public class HandInJarTile extends TileEntity implements ITickableTileEntity, IN
 
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.get().getTranslationKey());
+        return new TranslationTextComponent(RegenObjects.Blocks.HAND_JAR.get().getDescriptionId());
     }
 
     @Nullable

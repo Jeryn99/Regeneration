@@ -34,7 +34,7 @@ public class TypeLayFade implements RegenType {
     public void onUpdateMidRegen(IRegen capability) {
         if (capability.getLivingEntity() instanceof ServerPlayerEntity) {
             LivingEntity player = capability.getLivingEntity();
-            if (!player.world.isRemote) {
+            if (!player.level.isClientSide) {
                 PlayerUtil.setPerspective((ServerPlayerEntity) player, true, false);
             }
         }
@@ -44,7 +44,7 @@ public class TypeLayFade implements RegenType {
     public void onFinishRegeneration(IRegen capability) {
         if (capability.getLivingEntity() instanceof ServerPlayerEntity) {
             LivingEntity player = capability.getLivingEntity();
-            if (!player.world.isRemote) {
+            if (!player.level.isClientSide) {
                 PlayerUtil.setPerspective((ServerPlayerEntity) player, false, true);
             }
         }

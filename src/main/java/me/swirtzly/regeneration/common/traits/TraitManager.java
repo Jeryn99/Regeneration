@@ -76,7 +76,7 @@ public class TraitManager {
         RegenCap.get(e.getEntityPlayer()).ifPresent((data) -> {
             IDna dna = TraitManager.getDnaEntry(data.getTrait());
             if (dna.getRegistryName().equals(TraitManager.DNA_DUMB.getRegistryName()) && data.isDnaActive()) {
-                e.getOrb().xpValue *= 0.5;
+                e.getOrb().value *= 0.5;
             }
         });
     }
@@ -86,10 +86,10 @@ public class TraitManager {
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             RegenCap.get(player).ifPresent((data) -> {
-                if (player.world.isRemote) return;
+                if (player.level.isClientSide) return;
                 if (data.isDnaActive() && data.getTrait().equals(DNA_ATHLETE.getRegistryName())) {
-                    player.getMotion().add(0, 0.1, 0);
-                    player.velocityChanged = true;
+                    player.getDeltaMovement().add(0, 0.1, 0);
+                    player.hurtMarked = true;
                 }
             });
         }
@@ -99,9 +99,9 @@ public class TraitManager {
     public static void onArrow(LivingAttackEvent event) {
         DamageSource source = event.getSource();
         Entity attacked = event.getEntity();
-        if (source != null && attacked != null && source.getImmediateSource() != null) {
-            if (attacked instanceof PlayerEntity && source.getImmediateSource() instanceof AbstractArrowEntity) {
-                if (!attacked.world.isRemote) {
+        if (source != null && attacked != null && source.getDirectEntity() != null) {
+            if (attacked instanceof PlayerEntity && source.getDirectEntity() instanceof AbstractArrowEntity) {
+                if (!attacked.level.isClientSide) {
                     PlayerEntity player = (PlayerEntity) attacked;
                     boolean flag = RegenCap.get(player).orElse(null).getTrait().toString().equals(DNA_REPEL_ARROW.getRegistryName().toString());
                     event.setCanceled(flag);
@@ -141,7 +141,7 @@ public class TraitManager {
         }
 
         public void registerAttributeIfAbsent(LivingEntity livingEntity, IAttribute attributes) {
-            if (livingEntity.getAttributes().getAttributeInstance(attributes) == null) {
+            if (livingEntity.getAttributes().getInstance(attributes) == null) {
                 livingEntity.getAttributes().registerAttribute(attributes);
             }
         }

@@ -24,15 +24,15 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 public class ConfessionDialItem extends Item implements ICompatObject {
 
     public ConfessionDialItem() {
-        super(new Item.Properties().rarity(Rarity.UNCOMMON).group(ItemGroups.REGEN_TAB).maxDamage(10).setNoRepair());
+        super(new Item.Properties().rarity(Rarity.UNCOMMON).tab(ItemGroups.REGEN_TAB).durability(10).setNoRepair());
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
 
-        ItemStack stack = playerIn.getHeldItem(handIn);
+        ItemStack stack = playerIn.getItemInHand(handIn);
 
-        if (playerIn instanceof ServerPlayerEntity && !playerIn.getCooldownTracker().hasCooldown(stack.getItem())) {
+        if (playerIn instanceof ServerPlayerEntity && !playerIn.getCooldowns().isOnCooldown(stack.getItem())) {
             ServerPlayerEntity playerEntity = (ServerPlayerEntity) playerIn;
             ServerWorld gallifrey = DimensionManager.getWorld(ServerLifecycleHooks.getCurrentServer(), RegenObjects.GALLIFREY_TYPE, false, true);
             ServerWorld overworld = DimensionManager.getWorld(ServerLifecycleHooks.getCurrentServer(), DimensionType.OVERWORLD, false, false);
@@ -43,11 +43,11 @@ public class ConfessionDialItem extends Item implements ICompatObject {
                     stack.setCount(0);
                 }
                 ServerWorld targetDimension = playerEntity.dimension == RegenObjects.GALLIFREY_TYPE ? overworld : gallifrey;
-                playerEntity.teleport(targetDimension, playerEntity.posX, Worldutil.getTopBlockForPos(targetDimension, new BlockPos(playerEntity.posX, 35, playerEntity.posZ)), playerEntity.posZ, playerEntity.rotationYaw, playerEntity.rotationPitch);
-                playerEntity.getCooldownTracker().setCooldown(stack.getItem().getItem(), 200);
+                playerEntity.teleportTo(targetDimension, playerEntity.x, Worldutil.getTopBlockForPos(targetDimension, new BlockPos(playerEntity.x, 35, playerEntity.z)), playerEntity.z, playerEntity.yRot, playerEntity.xRot);
+                playerEntity.getCooldowns().addCooldown(stack.getItem().getItem(), 200);
             }
         }
 
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.use(worldIn, playerIn, handIn);
     }
 }

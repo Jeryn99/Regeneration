@@ -20,24 +20,24 @@ import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
 public class GallifreyanMountainsBiome extends Biome {
 
     public GallifreyanMountainsBiome() {
-        super((new Biome.Builder()).surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG)).precipitation(Biome.RainType.RAIN).category(Biome.Category.EXTREME_HILLS).depth(1.3F).scale(0.3F).temperature(0.3F).downfall(0.3F).waterColor(WASTELAND_WATER).waterFogColor(WASTELAND_WATER).parent(null));
-        this.addStructure(Feature.MINESHAFT, new MineshaftConfig(0.004D, MineshaftStructure.Type.NORMAL));
-        this.addStructure(Feature.STRONGHOLD, IFeatureConfig.NO_FEATURE_CONFIG);
-        DefaultBiomeFeatures.addCarvers(this);
-        DefaultBiomeFeatures.addStructures(this);
-        DefaultBiomeFeatures.addLakes(this);
-        DefaultBiomeFeatures.addMonsterRooms(this);
-        DefaultBiomeFeatures.addStoneVariants(this);
-        DefaultBiomeFeatures.addOres(this);
-        DefaultBiomeFeatures.addSedimentDisks(this);
+        super((new Biome.Builder()).surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, SurfaceBuilder.CONFIG_GRASS)).precipitation(Biome.RainType.RAIN).biomeCategory(Biome.Category.EXTREME_HILLS).depth(1.3F).scale(0.3F).temperature(0.3F).downfall(0.3F).waterColor(WASTELAND_WATER).waterFogColor(WASTELAND_WATER).parent(null));
+        this.addStructureStart(Feature.MINESHAFT, new MineshaftConfig(0.004D, MineshaftStructure.Type.NORMAL));
+        this.addStructureStart(Feature.STRONGHOLD, IFeatureConfig.NONE);
+        DefaultBiomeFeatures.addDefaultCarvers(this);
+        DefaultBiomeFeatures.addStructureFeaturePlacement(this);
+        DefaultBiomeFeatures.addDefaultLakes(this);
+        DefaultBiomeFeatures.addDefaultMonsterRoom(this);
+        DefaultBiomeFeatures.addDefaultUndergroundVariety(this);
+        DefaultBiomeFeatures.addDefaultOres(this);
+        DefaultBiomeFeatures.addDefaultSoftDisks(this);
         DefaultBiomeFeatures.addDefaultFlowers(this);
-        DefaultBiomeFeatures.func_222348_W(this); //Grass
-        DefaultBiomeFeatures.addMushrooms(this);
-        DefaultBiomeFeatures.addReedsAndPumpkins(this);
-        DefaultBiomeFeatures.addSprings(this);
-        DefaultBiomeFeatures.addExtraEmeraldOre(this);
+        DefaultBiomeFeatures.addDefaultGrass(this); //Grass
+        DefaultBiomeFeatures.addDefaultMushrooms(this);
+        DefaultBiomeFeatures.addDefaultExtraVegetation(this);
+        DefaultBiomeFeatures.addDefaultSprings(this);
+        DefaultBiomeFeatures.addExtraEmeralds(this);
         DefaultBiomeFeatures.addInfestedStone(this);
-        DefaultBiomeFeatures.addFreezeTopLayer(this);
+        DefaultBiomeFeatures.addSurfaceFreezing(this);
         BiomeHelper.addGallifreyTress(this);
         BiomeHelper.addHut(this);
 

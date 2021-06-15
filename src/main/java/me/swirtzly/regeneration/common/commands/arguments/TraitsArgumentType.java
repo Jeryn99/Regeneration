@@ -33,6 +33,6 @@ public class TraitsArgumentType implements ArgumentType<TraitManager.IDna> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggestIterable(TraitManager.DNA_ENTRIES.keySet(), builder);
+        return ISuggestionProvider.suggestResource(TraitManager.DNA_ENTRIES.keySet(), builder);
     }
 }

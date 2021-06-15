@@ -35,21 +35,21 @@ public class TexUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Minecraft.getInstance().getTextureManager().getDynamicTextureLocation("file_" + System.currentTimeMillis(), new DynamicTexture(nativeImage));
+        return Minecraft.getInstance().getTextureManager().register("file_" + System.currentTimeMillis(), new DynamicTexture(nativeImage));
     }
 
     /*  This is great! It loads based on the Players Gameprofile and works the exact same way Minecraft Skulls do!
      *   This makes updating really quickly, it also doesn't redownload the skin a load of times!
      *   You may pass null in, but you will result in a Steve/Alex skin */
     public static ResourceLocation getSkinFromGameProfile(@Nullable GameProfile gameProfile) {
-        ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
+        ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkin();
         if (gameProfile != null) {
             Minecraft minecraft = Minecraft.getInstance();
-            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(gameProfile);
+            Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.getSkinManager().getInsecureSkinInformation(gameProfile);
             if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                resourcelocation = minecraft.getSkinManager().loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+                resourcelocation = minecraft.getSkinManager().registerTexture(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
             } else {
-                resourcelocation = DefaultPlayerSkin.getDefaultSkin(PlayerEntity.getUUID(gameProfile));
+                resourcelocation = DefaultPlayerSkin.getDefaultSkin(PlayerEntity.createPlayerUUID(gameProfile));
             }
         }
 
@@ -60,7 +60,7 @@ public class TexUtil {
     public static String getEncodedMojangSkin(AbstractClientPlayerEntity pl) {
         try {
             long current = System.currentTimeMillis();
-            URL url = new URL("https://crafatar.com/skins/" + pl.getUniqueID().toString());
+            URL url = new URL("https://crafatar.com/skins/" + pl.getUUID().toString());
             URLConnection openConnection = url.openConnection();
             openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
             InputStream is = openConnection.getInputStream();

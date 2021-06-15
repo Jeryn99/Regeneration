@@ -37,7 +37,7 @@ import java.util.Random;
 import static me.swirtzly.regeneration.util.common.RegenUtil.NO_SKIN;
 
 /**
- * Created by Sub on 20/09/2018.
+ * Created by Craig on 20/09/2018.
  */
 public class PlayerUtil {
 
@@ -62,9 +62,9 @@ public class PlayerUtil {
     }
 
     public static void lookAt(double px, double py, double pz, PlayerEntity me) {
-        double dirx = me.getPosition().getX() - px;
-        double diry = me.getPosition().getY() - py;
-        double dirz = me.getPosition().getZ() - pz;
+        double dirx = me.getCommandSenderBlockPosition().getX() - px;
+        double diry = me.getCommandSenderBlockPosition().getY() - py;
+        double dirz = me.getCommandSenderBlockPosition().getZ() - pz;
 
         double len = Math.sqrt(dirx * dirx + diry * diry + dirz * dirz);
 
@@ -80,23 +80,23 @@ public class PlayerUtil {
         yaw = yaw * 180.0 / Math.PI;
 
         yaw += 90f;
-        me.rotationPitch = (float) pitch;
-        me.rotationYaw = (float) yaw;
+        me.xRot = (float) pitch;
+        me.yRot = (float) yaw;
     }
 
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
         if (!(livingEntity instanceof PlayerEntity)) return;
         PlayerEntity player = (PlayerEntity) livingEntity;
-        if (!player.world.isRemote) {
-            player.sendStatusMessage(new TranslationTextComponent(message), hotBar);
+        if (!player.level.isClientSide) {
+            player.displayClientMessage(new TranslationTextComponent(message), hotBar);
         }
     }
 
     public static void sendMessage(LivingEntity livingEntity, TranslationTextComponent translation, boolean hotBar) {
         if (!(livingEntity instanceof PlayerEntity)) return;
         PlayerEntity player = (PlayerEntity) livingEntity;
-        if (!player.world.isRemote) {
-            player.sendStatusMessage(translation, hotBar);
+        if (!player.level.isClientSide) {
+            player.displayClientMessage(translation, hotBar);
         }
     }
 
@@ -115,48 +115,48 @@ public class PlayerUtil {
                 ItemStack hand = new ItemStack(RegenObjects.Items.HAND.get());
                 HandItem.setTextureString(hand, data.getEncodedSkin());
                 HandItem.setSkinType(hand, data.getSkinType().name());
-                HandItem.setOwner(hand, player.getUniqueID());
+                HandItem.setOwner(hand, player.getUUID());
                 HandItem.setTimeCreated(hand, System.currentTimeMillis());
                 HandItem.setTrait(hand, data.getTrait().toString());
                 data.setDroppedHand(true);
-                data.setCutOffHand(player.getPrimaryHand() == HandSide.LEFT ? HandSide.RIGHT : HandSide.LEFT);
+                data.setCutOffHand(player.getMainArm() == HandSide.LEFT ? HandSide.RIGHT : HandSide.LEFT);
                 data.setDroppedHand(true);
-                InventoryHelper.spawnItemStack(player.world, player.posX, player.posY, player.posZ, hand);
+                InventoryHelper.dropItemStack(player.level, player.x, player.y, player.z, hand);
             }
         });
     }
 
     public static boolean applyPotionIfAbsent(LivingEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
         if (potion == null) return false;
-        if (player.getActivePotionEffect(potion) == null) {
-            player.addPotionEffect(new EffectInstance(potion, length, amplifier, ambient, showParticles));
+        if (player.getEffect(potion) == null) {
+            player.addEffect(new EffectInstance(potion, length, amplifier, ambient, showParticles));
             return true;
         }
         return false;
     }
 
     public static boolean isSharp(ItemStack stack) {
-        return stack.getItem().isIn(RegenTags.SHARP_ITEMS);
+        return stack.getItem().is(RegenTags.SHARP_ITEMS);
     }
 
     public static void handleCutOffhand(LivingEntity player) {
         RegenCap.get(player).ifPresent((data) -> {
             if (data.hasDroppedHand()) {
-                if (!player.getHeldItemOffhand().isEmpty()) {
-                    player.entityDropItem(player.getHeldItemOffhand());
-                    player.setItemStackToSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.AIR));
+                if (!player.getOffhandItem().isEmpty()) {
+                    player.spawnAtLocation(player.getOffhandItem());
+                    player.setItemSlot(EquipmentSlotType.OFFHAND, new ItemStack(Items.AIR));
                 }
             }
         });
     }
 
     public static boolean isZeroRoom(LivingEntity livingEntity) {
-        AxisAlignedBB box = livingEntity.getBoundingBox().grow(25);
-        for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
+        AxisAlignedBB box = livingEntity.getBoundingBox().inflate(25);
+        for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
-            BlockState blockState = livingEntity.world.getBlockState(pos);
+            BlockState blockState = livingEntity.level.getBlockState(pos);
             if (blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM.get() || blockState.getBlock() == RegenObjects.Blocks.ZERO_ROOM_TWO.get()) {
-                boolean isTardis = livingEntity.world.dimension.getClass().getName().contains("TardisDimension");
+                boolean isTardis = livingEntity.level.dimension.getClass().getName().contains("TardisDimension");
                 if (isTardis) {
                     ZeroRoomEvent zeroRoomEvent = new ZeroRoomEvent(livingEntity);
                     MinecraftForge.EVENT_BUS.post(zeroRoomEvent);
@@ -170,11 +170,11 @@ public class PlayerUtil {
     }
 
     public static boolean isAboveZeroGrid(LivingEntity livingEntity) {
-        BlockPos livingPos = livingEntity.getPosition().down();
+        BlockPos livingPos = livingEntity.getCommandSenderBlockPosition().below();
         AxisAlignedBB grid = new AxisAlignedBB(livingPos.north().west(), livingPos.south().east());
-        for (Iterator<BlockPos> iterator = BlockPos.getAllInBox(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
-            BlockState state = livingEntity.world.getBlockState(pos);
+            BlockState state = livingEntity.level.getBlockState(pos);
             if (!state.getBlock().getRegistryName().getPath().contains("zero_roundel")) {
                 return false;
             }

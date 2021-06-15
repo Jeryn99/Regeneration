@@ -11,7 +11,6 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
 import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
 
-
 /**
  * Created by Swirtzly
  * on 28/04/2020 @ 12:42
@@ -19,12 +18,12 @@ import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
 public class GallifreyanRedLands extends Biome {
 
     public GallifreyanRedLands() {
-        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.STONE.getDefaultState()))).precipitation(RainType.RAIN).category(Category.PLAINS).downfall(0.3F).depth(0.0F).temperature(6).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).scale(0.0F).parent(null));
-        DefaultBiomeFeatures.func_222339_L(this);
-        DefaultBiomeFeatures.addSprings(this);
-        DefaultBiomeFeatures.func_222319_X(this);
-        DefaultBiomeFeatures.addExtraDefaultFlowers(this);
-        DefaultBiomeFeatures.addTaigaRocks(this);
+        super(new Biome.Builder().surfaceBuilder(new ConfiguredSurfaceBuilder<>(SurfaceBuilder.DEFAULT, new SurfaceBuilderConfig(Blocks.GRASS_BLOCK.defaultBlockState(), Blocks.DIRT.defaultBlockState(), Blocks.STONE.defaultBlockState()))).precipitation(RainType.RAIN).biomeCategory(Category.PLAINS).downfall(0.3F).depth(0.0F).temperature(6).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).scale(0.0F).parent(null));
+        DefaultBiomeFeatures.addSavannaExtraGrass(this);
+        DefaultBiomeFeatures.addDefaultSprings(this);
+        DefaultBiomeFeatures.addTaigaGrass(this);
+        DefaultBiomeFeatures.addWarmFlowers(this);
+        DefaultBiomeFeatures.addMossyStoneBlock(this);
         BiomeHelper.restoreVanillaStuff(this);
         BiomeHelper.addGallifreyTress(this);
         BiomeHelper.addGallifreyOres(this);

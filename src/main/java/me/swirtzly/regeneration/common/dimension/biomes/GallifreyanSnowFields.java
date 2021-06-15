@@ -10,23 +10,23 @@ import static me.swirtzly.regeneration.common.dimension.features.BiomeHelper.*;
 public class GallifreyanSnowFields extends Biome {
 
     public GallifreyanSnowFields() {
-        super((new Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.GRASS_DIRT_GRAVEL_CONFIG).precipitation(RainType.SNOW).category(Category.TAIGA).depth(0.2F).scale(0.2F).temperature(-0.5F).downfall(0.4F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent((String) null));
-        DefaultBiomeFeatures.addCarvers(this);
-        DefaultBiomeFeatures.addStructures(this);
-        DefaultBiomeFeatures.addLakes(this);
-        DefaultBiomeFeatures.addMonsterRooms(this);
-        DefaultBiomeFeatures.addTaigaLargeFerns(this);
-        DefaultBiomeFeatures.addStoneVariants(this);
-        DefaultBiomeFeatures.addOres(this);
-        DefaultBiomeFeatures.addSedimentDisks(this);
-        DefaultBiomeFeatures.addTaigaConifers(this);
+        super((new Builder()).surfaceBuilder(SurfaceBuilder.DEFAULT, SurfaceBuilder.CONFIG_GRASS).precipitation(RainType.SNOW).biomeCategory(Category.TAIGA).depth(0.2F).scale(0.2F).temperature(-0.5F).downfall(0.4F).waterColor(RED_WATER_COLOR).waterFogColor(RED_WATER_COLOR).parent((String) null));
+        DefaultBiomeFeatures.addDefaultCarvers(this);
+        DefaultBiomeFeatures.addStructureFeaturePlacement(this);
+        DefaultBiomeFeatures.addDefaultLakes(this);
+        DefaultBiomeFeatures.addDefaultMonsterRoom(this);
+        DefaultBiomeFeatures.addFerns(this);
+        DefaultBiomeFeatures.addDefaultUndergroundVariety(this);
+        DefaultBiomeFeatures.addDefaultOres(this);
+        DefaultBiomeFeatures.addDefaultSoftDisks(this);
+        DefaultBiomeFeatures.addTaigaTrees(this);
         DefaultBiomeFeatures.addDefaultFlowers(this);
-        DefaultBiomeFeatures.func_222319_X(this);
-        DefaultBiomeFeatures.addMushrooms(this);
-        DefaultBiomeFeatures.addReedsAndPumpkins(this);
-        DefaultBiomeFeatures.addSprings(this);
-        DefaultBiomeFeatures.addSparseBerryBushes(this);
-        DefaultBiomeFeatures.addFreezeTopLayer(this);
+        DefaultBiomeFeatures.addTaigaGrass(this);
+        DefaultBiomeFeatures.addDefaultMushrooms(this);
+        DefaultBiomeFeatures.addDefaultExtraVegetation(this);
+        DefaultBiomeFeatures.addDefaultSprings(this);
+        DefaultBiomeFeatures.addBerryBushes(this);
+        DefaultBiomeFeatures.addSurfaceFreezing(this);
     }
 
     @Override

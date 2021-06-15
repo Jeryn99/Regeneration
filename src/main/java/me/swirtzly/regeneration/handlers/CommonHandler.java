@@ -49,7 +49,7 @@ import java.util.UUID;
 import static me.swirtzly.regeneration.common.item.DyeableClothingItem.SWIFT_KEY;
 
 /**
- * Created by Sub on 16/09/2018.
+ * Created by Craig on 16/09/2018.
  */
 public class CommonHandler {
 
@@ -108,11 +108,11 @@ public class CommonHandler {
     @SubscribeEvent
     public void swift(ServerChatEvent event) {
         ServerPlayerEntity player = event.getPlayer();
-        UUID uuid = player.getUniqueID();
+        UUID uuid = player.getUUID();
         if (player.getName().getString().contentEquals("Dev") || uuid.equals(UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39")) || uuid.equals(UUID.fromString("bc8b891e-5c25-4c9f-ae61-cdfb270f1cc1")) || uuid.equals(UUID.fromString("09ebf22b-721f-4aca-b0bf-902cfdd9b47a"))) {
             if (event.getMessage().contentEquals("swift")) {
                 int amount = 0;
-                for (ItemStack stack : player.inventory.mainInventory) {
+                for (ItemStack stack : player.inventory.items) {
                     if (stack.getItem() instanceof ClothingItem || stack.getItem() instanceof DyeableClothingItem) {
                         stack.getOrCreateTag().putString(SWIFT_KEY, SWIFT_KEY);
                         amount++;
@@ -131,9 +131,9 @@ public class CommonHandler {
 
         if (interactedWith instanceof LivingEntity) {
             LivingEntity toBeTimelord = (LivingEntity) interactedWith;
-            ItemStack interactorsItem = interactor.getHeldItemMainhand();
+            ItemStack interactorsItem = interactor.getMainHandItem();
 
-            if (!toBeTimelord.world.isRemote && interactorsItem.getItem() == RegenObjects.Items.ARCH_PART.get() && ArchHelper.getRegenerations(interactorsItem) > 0) {
+            if (!toBeTimelord.level.isClientSide && interactorsItem.getItem() == RegenObjects.Items.ARCH_PART.get() && ArchHelper.getRegenerations(interactorsItem) > 0) {
                 if (interactor.isSneaking()) {
                     entityInteract.setCanceled(true);
                     RegenCap.get(toBeTimelord).ifPresent((data) -> {
@@ -176,13 +176,13 @@ public class CommonHandler {
 
     @SubscribeEvent
     public void onPunchBlock(PlayerInteractEvent.LeftClickBlock e) {
-        if (e.getPlayer().world.isRemote) return;
+        if (e.getPlayer().level.isClientSide) return;
         RegenCap.get(e.getPlayer()).ifPresent((data) -> data.getStateManager().onPunchBlock(e));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onHurt(LivingHurtEvent event) {
-        Entity trueSource = event.getSource().getTrueSource();
+        Entity trueSource = event.getSource().getEntity();
 
         if (trueSource instanceof PlayerEntity && event.getEntityLiving() instanceof MobEntity) {
             PlayerEntity player = (PlayerEntity) trueSource;
@@ -196,14 +196,14 @@ public class CommonHandler {
         LivingEntity player = event.getEntityLiving();
         RegenCap.get(player).ifPresent((cap) -> {
 
-            cap.setDeathSource(event.getSource().getDeathMessage(player).getUnformattedComponentText());
+            cap.setDeathSource(event.getSource().getLocalizedDeathMessage(player).getContents());
 
-            if (cap.getState() == PlayerUtil.RegenState.POST && player.posY > 0) {
+            if (cap.getState() == PlayerUtil.RegenState.POST && player.y > 0) {
                 if (event.getSource() == DamageSource.FALL) {
-                    PlayerUtil.applyPotionIfAbsent(player, Effects.NAUSEA, 200, 4, false, false);
+                    PlayerUtil.applyPotionIfAbsent(player, Effects.CONFUSION, 200, 4, false, false);
                     if (event.getAmount() > 8.0F) {
-                        if (player.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING) && RegenConfig.COMMON.genCrater.get()) {
-                            RegenUtil.genCrater(player.world, player.getPosition(), 3);
+                        if (player.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && RegenConfig.COMMON.genCrater.get()) {
+                            RegenUtil.genCrater(player.level, player.getCommandSenderBlockPosition(), 3);
                         }
                         event.setAmount(0.5F);
                         PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.fall_dmg"), true);
@@ -213,9 +213,9 @@ public class CommonHandler {
                     event.setAmount(0.5F);
                     PlayerUtil.sendMessage(player, new TranslationTextComponent("regeneration.messages.reduced_dmg"), true);
 
-                    if (event.getSource().getTrueSource() instanceof LivingEntity) {
-                        LivingEntity livingEntity = (LivingEntity) event.getSource().getTrueSource();
-                        if (PlayerUtil.isSharp(livingEntity.getHeldItemMainhand())) {
+                    if (event.getSource().getEntity() instanceof LivingEntity) {
+                        LivingEntity livingEntity = (LivingEntity) event.getSource().getEntity();
+                        if (PlayerUtil.isSharp(livingEntity.getMainHandItem())) {
                             if (!cap.hasDroppedHand() && cap.getState() == PlayerUtil.RegenState.POST) {
                                 PlayerUtil.createHand(player);
                             }
@@ -232,7 +232,7 @@ public class CommonHandler {
                 }
             }
 
-            if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFireDamage() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
+            if (cap.getState() == PlayerUtil.RegenState.REGENERATING && RegenConfig.COMMON.regenFireImmune.get() && event.getSource().isFire() || cap.getState() == PlayerUtil.RegenState.REGENERATING && event.getSource().isExplosion()) {
                 event.setCanceled(true); // TODO still "hurts" the client view
             } else if (player.getHealth() + player.getAbsorptionAmount() - event.getAmount() <= 0) { // player has actually died
                 boolean notDead = cap.getStateManager().onKilled(event.getSource());
