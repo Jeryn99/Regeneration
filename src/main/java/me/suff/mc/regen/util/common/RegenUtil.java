@@ -1,7 +1,6 @@
 package me.suff.mc.regen.util.common;
 
 import me.suff.mc.regen.RegenConfig;
-import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.handlers.RegenObjects;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,8 +19,6 @@ import net.minecraft.world.World;
 import java.net.Socket;
 import java.util.Random;
 import java.util.UUID;
-
-import static me.suff.mc.regen.util.common.FileUtil.getJsonFromURL;
 
 public class RegenUtil {
 
@@ -78,13 +75,15 @@ public class RegenUtil {
 
     public static void regenerationExplosion(LivingEntity player) {
         explodeKnockback(player, player.level, player.getCommandSenderBlockPosition(), RegenConfig.COMMON.regenerativeKnockback.get(), RegenConfig.COMMON.regenKnockbackRange.get());
-        explodeKill(player, player.level, player.getCommandSenderBlockPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
+        if (player.level.getGameTime() % 10 == 0) {
+            explodeHurt(player, player.level, player.getCommandSenderBlockPosition(), RegenConfig.COMMON.regenerativeKillRange.get());
+        }
     }
 
-    public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
+    public static void explodeHurt(Entity exploder, World world, BlockPos pos, int range) {
         world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
             if ((entity instanceof CreatureEntity && entity.canChangeDimensions()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
-                entity.hurt(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, Float.MAX_VALUE);
+                entity.hurt(RegenObjects.REGEN_DMG_ENERGY_EXPLOSION, 2F);
         });
     }
 
