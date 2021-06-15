@@ -27,7 +27,7 @@ public class SFXMessage {
         playerUUID = buffer.readUUID();
     }
 
-    public static void handle(SFXMessage message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(SFXMessage message, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().submitAsync(() -> {
             PlayerEntity player = Minecraft.getInstance().level.getPlayerByUUID(message.playerUUID);
             if (player != null) {

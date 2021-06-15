@@ -14,7 +14,7 @@ public class ToggleTraitMessage {
     public ToggleTraitMessage(PacketBuffer buffer) {
     }
 
-    public static void handle(ToggleTraitMessage message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(ToggleTraitMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().getSender().getServer().submitAsync(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
             cap.toggleTrait();
             if (cap.traitActive()) {

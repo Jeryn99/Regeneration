@@ -1,8 +1,11 @@
 package me.suff.mc.regen.client.skin;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.DownloadSkinsThread;
+import me.suff.mc.regen.util.MineSkin;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -34,8 +37,8 @@ public class CommonSkin {
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
     public static final File SKIN_DIRECTORY_MALE_TIMELORD = new File(SKIN_DIRECTORY, "/timelord/male");
     public static final File SKIN_DIRECTORY_FEMALE_TIMELORD = new File(SKIN_DIRECTORY, "/timelord/female");
-    public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
-    public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
+    public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/mineskin");
+    public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/mineskin");
 
     public static ResourceLocation fileTotexture(File file) {
         NativeImage nativeImage = null;
@@ -59,7 +62,7 @@ public class CommonSkin {
             }
         }
 
-        Collection< File > folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        Collection<File> folderFiles = FileUtils.listFiles(skins, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
 
         if (folderFiles.isEmpty()) {
@@ -70,32 +73,6 @@ public class CommonSkin {
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
-    //Get a list of skins from namemc url
-    public static ArrayList< String > getSkins(String downloadUrl) throws IOException {
-        ArrayList< String > skins = new ArrayList<>();
-        BufferedReader br = null;
-
-        try {
-            URL url = new URL(downloadUrl);
-            URLConnection uc = url.openConnection();
-            uc.connect();
-            uc = url.openConnection();
-            uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-            br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.contains("<a href=\"/skin/")) {
-                    String downloadLine = line.replaceAll("<a href=\"/skin/", "").replaceAll("\">", "").replaceAll("        ", "");
-                    skins.add("https://namemc.com/texture/" + downloadLine + ".png");
-                }
-            }
-        } finally {
-            if (br != null) {
-                br.close();
-            }
-        }
-        return skins;
-    }
 
     public static void folderSetup() throws IOException {
         File[] folders = new File[]{SKIN_DIRECTORY, SKIN_DIRECTORY_ALEX, SKIN_DIRECTORY_FEMALE_TIMELORD, SKIN_DIRECTORY_MALE_TIMELORD, SKIN_DIRECTORY_STEVE};
@@ -156,27 +133,26 @@ public class CommonSkin {
         return op.filter(img, gray);
     }
 
-    public static boolean skinpacks() {
-        if (DownloadSkinsThread.forceStop) return false;
+    public static boolean skinpacks() throws IOException {
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return false;
 
         File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
 
         long attr = drWhoDir.lastModified();
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(drWhoDir.list()).length == 0) {
-            Regeneration.LOG.info("Re-Downloading Internal Skins");
+            Regeneration.LOG.info("Downloading Remote Skinpacks");
+            String packsUrl = "https://raw.githubusercontent.com/WhoCraft/Regeneration/skins/skinpacks/skinpacks.json";
+            JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
 
-            String packsUrl = "https://raw.githubusercontent.com/WhoCraft/Regeneration/skins/index.json";
-            String[] links = Regeneration.GSON.fromJson(RegenUtil.getJsonFromURL(packsUrl), String[].class);
-            for (String link : links) {
-                try {
-                    unzipSkinPack(link);
-                    return true;
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                    DownloadSkinsThread.forceStop = true;
-                    return false;
-                }
+            for (int skins = links.getAsJsonArray("packs").size() - 1; skins >= 0; skins--) {
+                JsonArray packs = links.getAsJsonArray("packs");
+                JsonObject currentPack = packs.get(skins).getAsJsonObject();
+                String packName = currentPack.get("name").getAsString();
+                String packCredit = currentPack.get("credits").getAsString();
+                String downloadLink = currentPack.get("download_url").getAsString();
+
+                Regeneration.LOG.info("Downloading " + packName + " by " + packCredit);
+                unzipSkinPack(downloadLink);
             }
         }
         return false;
@@ -197,13 +173,12 @@ public class CommonSkin {
     }
 
     public static void unzipSkinPack(String url) throws IOException {
-        if (DownloadSkinsThread.forceStop) return;
         File tempZip = new File(SKIN_DIRECTORY + "/temp/" + System.currentTimeMillis() + ".zip");
         Regeneration.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
         FileUtils.copyURLToFile(new URL(url), tempZip);
         try (ZipFile file = new ZipFile(tempZip)) {
             FileSystem fileSystem = FileSystems.getDefault();
-            Enumeration< ? extends ZipEntry > entries = file.entries();
+            Enumeration<? extends ZipEntry> entries = file.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 if (entry.isDirectory()) {
@@ -236,7 +211,7 @@ public class CommonSkin {
     }
 
 
-    public static List< File > listAllSkins(PlayerUtil.SkinType choices) {
+    public static List<File> listAllSkins(PlayerUtil.SkinType choices) {
         File directory = null;
         switch (choices) {
             case EITHER:
@@ -249,13 +224,12 @@ public class CommonSkin {
                 directory = SKIN_DIRECTORY_STEVE;
                 break;
         }
-        Collection< File > folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+        Collection<File> folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png") || file.getName().contains("timelord_male") || file.getName().contains("timelord_female"));
         return new ArrayList<>(folderFiles);
     }
 
     public static void trending() throws IOException {
-        if (DownloadSkinsThread.forceStop) return;
         if (!RegenConfig.CLIENT.downloadTrendingSkins.get() || !RegenUtil.doesHaveInternet()) return;
         File trendingDir = TRENDING_ALEX;
         if (!trendingDir.exists()) {
@@ -269,9 +243,13 @@ public class CommonSkin {
         if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(trendingDir.list()).length == 0) {
             FileUtils.cleanDirectory(trendingDir);
             Regeneration.LOG.warn("Refreshing Trending skins");
-            for (String skin : getSkins("https://namemc.com/minecraft-skins")) {
-                String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
-                downloadSkins(new URL(skin), "trending_" + cleanName, TRENDING_ALEX, TRENDING_STEVE);
+
+            int randomPage = RegenUtil.RAND.nextInt(7800);
+
+            for (int i = 3; i > 0; i--) {
+                for (String skin : MineSkin.getSkinsFromPage(randomPage + i)) {
+                    downloadSkins(new URL(skin), "mk_" + UUID.randomUUID().toString().substring(0, 6), TRENDING_ALEX, TRENDING_STEVE);
+                }
             }
         }
     }
@@ -285,9 +263,8 @@ public class CommonSkin {
 
             String[] genders = new String[]{"male", "female"};
             for (String gender : genders) {
-                for (String skin : getSkins("https://namemc.com/minecraft-skins/tag/" + gender)) {
-                    String cleanName = skin.replaceAll("https://namemc.com/texture/", "").replaceAll(".png", "");
-                    downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + cleanName, gender.equals("male") ? SKIN_DIRECTORY_MALE_TIMELORD : SKIN_DIRECTORY_FEMALE_TIMELORD);
+                for (String skin : MineSkin.searchSkins(gender)) {
+                    downloadSkinsSpecific(new URL(skin), "timelord_" + gender + "_" + UUID.randomUUID().toString().substring(0, 6), gender.equals("male") ? SKIN_DIRECTORY_MALE_TIMELORD : SKIN_DIRECTORY_FEMALE_TIMELORD);
                 }
             }
         }

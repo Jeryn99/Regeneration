@@ -80,7 +80,7 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public ActionResult< ItemStack > use(World world, PlayerEntity player, Hand hand) {
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
 
         ItemStack stack = player.getItemInHand(hand);
         IRegen cap = RegenCap.get(player).orElseGet(null);
@@ -146,7 +146,7 @@ public class FobWatchItem extends Item {
     }
 
 
-    private ActionResult< ItemStack > msgUsageFailed(PlayerEntity player, String message, ItemStack stack) {
+    private ActionResult<ItemStack> msgUsageFailed(PlayerEntity player, String message, ItemStack stack) {
         PlayerUtil.sendMessage(player, message, true);
         return ActionResult.fail(stack);
     }

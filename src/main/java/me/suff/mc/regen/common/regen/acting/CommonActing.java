@@ -78,7 +78,7 @@ class CommonActing implements Acting {
                 livingEntity.setArrowCount(0);
 
                 AxisAlignedBB box = livingEntity.getBoundingBox().inflate(25);
-                for (Iterator< BlockPos > iterator = BlockPos.betweenClosedStream(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
+                for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
                     BlockPos pos = iterator.next();
                     ServerWorld serverWorld = (ServerWorld) livingEntity.level;
                     BlockState blockState = serverWorld.getBlockState(pos);

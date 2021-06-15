@@ -9,7 +9,7 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-public class TimelordGuardModel extends PlayerModel< TimelordEntity > {
+public class TimelordGuardModel extends PlayerModel<TimelordEntity> {
     private final ModelRenderer Head;
     private final ModelRenderer Body;
     private final ModelRenderer RightArm;

@@ -58,12 +58,12 @@ import java.util.Random;
  */
 public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
 
-    private static final DataParameter< String > TYPE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
-    private static final DataParameter< String > PERSONALITY = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
-    private static final DataParameter< Boolean > AIMING = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter< Boolean > IS_MALE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter< Boolean > HAS_SETUP = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter< Float > AIMING_TICKS = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<String> TYPE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
+    private static final DataParameter<String> PERSONALITY = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Boolean> AIMING = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> IS_MALE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> HAS_SETUP = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Float> AIMING_TICKS = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.FLOAT);
     protected final SwimmerPathNavigator waterNavigator;
     protected final GroundPathNavigator groundNavigator;
 
@@ -71,7 +71,7 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
         this(REntities.TIMELORD.get(), world);
     }
 
-    public TimelordEntity(EntityType< TimelordEntity > entityEntityType, World world) {
+    public TimelordEntity(EntityType<TimelordEntity> entityEntityType, World world) {
         super(entityEntityType, world);
         this.waterNavigator = new SwimmerPathNavigator(this, world);
         this.groundNavigator = new GroundPathNavigator(this, world);
@@ -206,7 +206,7 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
     protected void tickDeath() {
         super.tickDeath();
         if (ModList.get().isLoaded("weeping_angels") && !level.isClientSide) {
-            EntityType< ? > weepingAngel = ForgeRegistries.ENTITIES.getValue(new ResourceLocation("weeping_angels", "weeping_angel"));
+            EntityType<?> weepingAngel = ForgeRegistries.ENTITIES.getValue(new ResourceLocation("weeping_angels", "weeping_angel"));
             if (weepingAngel != null) {
                 if (level.random.nextInt(100) < 10) {
                     Entity entity = weepingAngel.create(level);

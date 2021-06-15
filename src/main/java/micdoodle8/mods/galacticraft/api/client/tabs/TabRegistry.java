@@ -11,9 +11,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.ArrayList;
 
 public class TabRegistry {
-    public static ArrayList< AbstractTab > tabList = new ArrayList< AbstractTab >();
-    public static Class< ? > clazzNEIConfig = null;
-    private static Class< ? > clazzJEIConfig = null;
+    public static ArrayList<AbstractTab> tabList = new ArrayList<AbstractTab>();
+    public static Class<?> clazzNEIConfig = null;
+    private static Class<?> clazzJEIConfig = null;
 
     static {
         try {
@@ -36,7 +36,7 @@ public class TabRegistry {
         TabRegistry.tabList.add(tab);
     }
 
-    public static ArrayList< AbstractTab > getTabList() {
+    public static ArrayList<AbstractTab> getTabList() {
         return TabRegistry.tabList;
     }
 
@@ -47,7 +47,7 @@ public class TabRegistry {
         mc.setScreen(inventory);
     }
 
-    public static void updateTabValues(int cornerX, int cornerY, Class< ? > selectedButton) {
+    public static void updateTabValues(int cornerX, int cornerY, Class<?> selectedButton) {
         int count = 2;
         for (int i = 0; i < TabRegistry.tabList.size(); i++) {
             AbstractTab t = TabRegistry.tabList.get(i);

@@ -46,7 +46,7 @@ public class RenderRegenLayer extends LayerRenderer {
         if (entitylivingbaseIn instanceof LivingEntity) {
             RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
                 TransitionType type = iRegen.transitionType();
-                TransitionTypeRenderers.get(type).layer((BipedModel< ? >) getParentModel(), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+                TransitionTypeRenderers.get(type).layer((BipedModel<?>) getParentModel(), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
             });
         }
     }

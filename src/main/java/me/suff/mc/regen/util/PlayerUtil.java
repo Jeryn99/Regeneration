@@ -31,7 +31,7 @@ import java.util.List;
 public class PlayerUtil {
 
 
-    public static ArrayList< Effect > POTIONS = new ArrayList();
+    public static ArrayList<Effect> POTIONS = new ArrayList();
 
     public static void setupPotions() {
         if (!RegenConfig.COMMON.postRegenEffects.get().isEmpty()) {
@@ -48,7 +48,7 @@ public class PlayerUtil {
     public static boolean isPlayerAboveZeroGrid(LivingEntity playerEntity) {
         BlockPos livingPos = playerEntity.blockPosition().below();
         AxisAlignedBB grid = new AxisAlignedBB(livingPos.north().west(), livingPos.south().east());
-        for (Iterator< BlockPos > iterator = BlockPos.betweenClosedStream(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
             BlockState state = playerEntity.level.getBlockState(pos);
             if (state.getBlock() != RBlocks.ZERO_ROOM_FULL.get() && state.getBlock() != RBlocks.ZERO_ROUNDEL.get()) {
@@ -87,7 +87,7 @@ public class PlayerUtil {
     }
 
     public static void sendMessageToAll(TranslationTextComponent translation) {
-        List< ServerPlayerEntity > players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+        List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
         players.forEach(playerMP -> sendMessage(playerMP, translation, false));
     }
 
@@ -166,7 +166,7 @@ public class PlayerUtil {
         return mainHand || offHand;
     }
 
-    public enum SkinType implements RegenUtil.IEnum< SkinType > {
+    public enum SkinType implements RegenUtil.IEnum<SkinType> {
         ALEX, STEVE, EITHER;
 
         public boolean isAlex() {

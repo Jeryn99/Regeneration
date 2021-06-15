@@ -29,8 +29,8 @@ public class ClothingItem extends ArmorItem {
 
     @Nullable
     @Override
-    public < A extends BipedModel< ? > > A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
-        BipedModel< LivingEntity > model = (BipedModel< LivingEntity >) ClientUtil.getArmorModel(itemStack);
+    public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default) {
+        BipedModel<LivingEntity> model = (BipedModel<LivingEntity>) ClientUtil.getArmorModel(itemStack);
         if (model instanceof LivingArmor) {
             ((LivingArmor) model).setLiving(entityLiving);
         }

@@ -67,7 +67,7 @@ public class RBlockLootTableGen extends LootTableProvider {
         this.generateTable(cache, getPath(base, block.getRegistryName()), () -> this.createSlabDropTable(block.getRegistryName().toString()));
     }
 
-    public void generateTable(DirectoryCache cache, Path path, Supplier< JsonElement > element) {
+    public void generateTable(DirectoryCache cache, Path path, Supplier<JsonElement> element) {
         try {
             IDataProvider.save(GSON, cache, element.get(), path);
         } catch (IOException e) {

@@ -17,18 +17,16 @@ import me.suff.mc.regen.compat.TardisMod;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.network.NetworkDispatcher;
-import me.suff.mc.regen.util.*;
+import me.suff.mc.regen.util.ClientUtil;
+import me.suff.mc.regen.util.DownloadSkinsThread;
+import me.suff.mc.regen.util.PlayerUtil;
 import net.minecraft.data.BiomeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -78,7 +76,6 @@ public class Regeneration {
 
 
     private void doCommonStuff(final FMLCommonSetupEvent event) {
-
         event.enqueueWork(() ->
         {
             RSurfaceBuilder.registerConfiguredSurfaceBuilders();
@@ -122,8 +119,4 @@ public class Regeneration {
         }
     }
 
-    @SubscribeEvent
-    public void registerRecipeSerialziers(RegistryEvent.Register< IRecipeSerializer< ? > > event) {
-        CraftingHelper.register(new ResourceLocation(RConstants.MODID, "nbt"), NBTRecipeIngredient.Serializer.INSTANCE);
-    }
 }

@@ -22,10 +22,10 @@ import java.util.function.Supplier;
 public class RStructures {
 
 
-    public static final DeferredRegister< Feature< ? > > FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, RConstants.MODID);
-    public static final RegistryObject< Feature< OreFeatureConfig > > ZINC = FEATURES.register("zinc", () -> new OreFeature(OreFeatureConfig.CODEC));
+    public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, RConstants.MODID);
+    public static final RegistryObject<Feature<OreFeatureConfig>> ZINC = FEATURES.register("zinc", () -> new OreFeature(OreFeatureConfig.CODEC));
 
-    public static ConfiguredFeature< ?, ? > GAl_ORE = null;
+    public static ConfiguredFeature<?, ?> GAl_ORE = null;
 
     public static void registerConfiguredFeatures() {
 
@@ -33,8 +33,8 @@ public class RStructures {
         registerConfiguredFeature("zinc", GAl_ORE);
     }
 
-    private static < T extends Feature< ? > > void registerConfiguredFeature(String registryName, ConfiguredFeature< ?, ? > configuredFeature) {
-        Registry< ConfiguredFeature< ?, ? > > registry = WorldGenRegistries.CONFIGURED_FEATURE;
+    private static <T extends Feature<?>> void registerConfiguredFeature(String registryName, ConfiguredFeature<?, ?> configuredFeature) {
+        Registry<ConfiguredFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_FEATURE;
         Registry.register(registry, new ResourceLocation(RConstants.MODID, registryName), configuredFeature);
     }
 
@@ -46,20 +46,20 @@ public class RStructures {
         setupStructure(Structures.HUTS.get(), new StructureSeparationSettings(400, 140, 1234567890), true); //Maximum of 200 chunks apart, minimum 100 chunks apart, chunk seed respectively
     }
 
-    private static < T extends Structure< ? > > void registerConfiguredStructure(String registryName, Supplier< T > structure, StructureFeature< ?, ? > configuredStructure) {
-        Registry< StructureFeature< ?, ? > > registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
+    private static <T extends Structure<?>> void registerConfiguredStructure(String registryName, Supplier<T> structure, StructureFeature<?, ?> configuredStructure) {
+        Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
         Registry.register(registry, new ResourceLocation(RConstants.MODID, registryName), configuredStructure);
         FlatGenerationSettings.STRUCTURE_FEATURES.put(structure.get(), configuredStructure);
     }
 
-    private static < T extends Structure< ? > > RegistryObject< T > setupStructure(String name, Supplier< T > structure) {
+    private static <T extends Structure<?>> RegistryObject<T> setupStructure(String name, Supplier<T> structure) {
         return Structures.STRUCTURES.register(name, structure);
     }
 
     /**
      * Add Structure to the structure registry map and setup the seperation settings.
      */
-    public static < F extends Structure< ? > > void setupStructure(F structure, StructureSeparationSettings structureSeparationSettings, boolean transformSurroundingLand) {
+    public static <F extends Structure<?>> void setupStructure(F structure, StructureSeparationSettings structureSeparationSettings, boolean transformSurroundingLand) {
         /*
          * We need to add our structures into the map in Structure alongside vanilla
          * structures or else it will cause errors. Called by registerStructure.
@@ -72,7 +72,7 @@ public class RStructures {
          * Doesn't work well on structures that have pieces stacked vertically or change in heights.
          */
         if (transformSurroundingLand) {
-            Structure.NOISE_AFFECTING_FEATURES = ImmutableList.< Structure< ? > >builder().addAll(Structure.NOISE_AFFECTING_FEATURES).add(structure).build();
+            Structure.NOISE_AFFECTING_FEATURES = ImmutableList.<Structure<?>>builder().addAll(Structure.NOISE_AFFECTING_FEATURES).add(structure).build();
         }
         /*
          * Adds the structure's spacing into several places so that the structure's spacing remains
@@ -83,7 +83,7 @@ public class RStructures {
          * the structure spacing from this list into that dimension.
          */
         DimensionStructuresSettings.DEFAULTS =
-                ImmutableMap.< Structure< ? >, StructureSeparationSettings >builder()
+                ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
                         .putAll(DimensionStructuresSettings.DEFAULTS)
                         .put(structure, structureSeparationSettings)
                         .build();
@@ -99,12 +99,12 @@ public class RStructures {
     }
 
     public static class Structures {
-        public static final DeferredRegister< Structure< ? > > STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, RConstants.MODID);
+        public static final DeferredRegister<Structure<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, RConstants.MODID);
 
         /**
          * The Structure registry object. This isn't actually setup yet, see {@link RStructures#setupStructure(Structure, StructureSeparationSettings, boolean)}
          */
-        public static final RegistryObject< Structure< ProbabilityConfig > > HUTS = setupStructure("hut", () -> new GallifreyanHuts(ProbabilityConfig.CODEC));
+        public static final RegistryObject<Structure<ProbabilityConfig>> HUTS = setupStructure("hut", () -> new GallifreyanHuts(ProbabilityConfig.CODEC));
         /**
          * Static instance of our structure so we can reference it before registry stuff happens and use it to make configured structures in ConfiguredStructures
          */
@@ -119,7 +119,7 @@ public class RStructures {
         /**
          * Static instance of our configured structure feature so we can reference it for registration
          */
-        public static StructureFeature< ?, ? > CONFIGURED_HUTS = Structures.HUTS.get().configured(new ProbabilityConfig(1));
+        public static StructureFeature<?, ?> CONFIGURED_HUTS = Structures.HUTS.get().configured(new ProbabilityConfig(1));
 
         public static void registerConfiguredStructures() {
             registerConfiguredStructure("configured_huts", Structures.HUTS, CONFIGURED_HUTS); //We have to add this to flatGeneratorSettings to account for mods that add custom chunk generators or superflat world type

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 
-public class TimelordModel extends PlayerModel< TimelordEntity > {
+public class TimelordModel extends PlayerModel<TimelordEntity> {
 
     private final ModelRenderer Head;
     private final ModelRenderer Body;

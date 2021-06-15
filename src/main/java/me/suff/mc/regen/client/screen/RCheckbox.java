@@ -20,7 +20,7 @@ public class RCheckbox extends CheckboxButton {
         this.onPress.onPress(this);
     }
 
-    public interface IInteraction< T extends Widget > {
+    public interface IInteraction<T extends Widget> {
         void onPress(T p_onPress_1_);
     }
 }

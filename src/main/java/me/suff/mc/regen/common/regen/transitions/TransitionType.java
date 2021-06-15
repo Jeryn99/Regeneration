@@ -6,7 +6,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public abstract class TransitionType extends ForgeRegistryEntry< TransitionType > {
+public abstract class TransitionType extends ForgeRegistryEntry<TransitionType> {
 
     /**
      * @return in ticks

@@ -47,7 +47,7 @@ public class RegenCap implements IRegen {
 
     //Injection
     @CapabilityInject(IRegen.class)
-    public static final Capability< IRegen > CAPABILITY = null;
+    public static final Capability<IRegen> CAPABILITY = null;
     //State
     private final StateManager stateManager;
     //Data
@@ -86,7 +86,7 @@ public class RegenCap implements IRegen {
     }
 
     @Nonnull
-    public static LazyOptional< IRegen > get(LivingEntity player) {
+    public static LazyOptional<IRegen> get(LivingEntity player) {
         return player.getCapability(RegenCap.CAPABILITY, null);
     }
 
@@ -442,7 +442,7 @@ public class RegenCap implements IRegen {
 
     public class StateManager implements IStateManager {
 
-        private final Map< RegenStates.Transition, Runnable > transitionCallbacks;
+        private final Map<RegenStates.Transition, Runnable> transitionCallbacks;
         private RegenScheduledAction nextTransition, handGlowTimer;
 
         private StateManager() {
@@ -674,7 +674,7 @@ public class RegenCap implements IRegen {
         @Override
         @Deprecated
         /** @deprecated Debug purposes */
-        public Pair< RegenStates.Transition, Long > getScheduledEvent() {
+        public Pair<RegenStates.Transition, Long> getScheduledEvent() {
             return nextTransition == null ? null : Pair.of(nextTransition.transition, nextTransition.getTicksLeft());
         }
 

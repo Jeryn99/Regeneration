@@ -20,9 +20,9 @@ import java.util.Random;
 
 /* Created by Craig on 10/03/2021 */
 public class RGlobalLoot {
-    public static final DeferredRegister< GlobalLootModifierSerializer< ? > > GLM = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, RConstants.MODID);
+    public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, RConstants.MODID);
 
-    public static final RegistryObject< RegenerationLoot.Serializer > REGEN_LOOT = GLM.register("loot", RegenerationLoot.Serializer::new);
+    public static final RegistryObject<RegenerationLoot.Serializer> REGEN_LOOT = GLM.register("loot", RegenerationLoot.Serializer::new);
 
     public static ItemStack createBrokenFob(Random random) {
         ItemStack itemStack = new ItemStack(RItems.FOB.get());
@@ -41,7 +41,7 @@ public class RGlobalLoot {
         }
 
         @Override
-        protected List< ItemStack > doApply(List< ItemStack > generatedLoot, LootContext context) {
+        protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
 
             if (context.getRandom().nextInt(100) <= chance && RegenConfig.COMMON.genFobLoot.get()) {
                 generatedLoot.add(createBrokenFob(context.getRandom()));
@@ -50,7 +50,7 @@ public class RGlobalLoot {
             return generatedLoot;
         }
 
-        private static class Serializer extends GlobalLootModifierSerializer< RegenerationLoot > {
+        private static class Serializer extends GlobalLootModifierSerializer<RegenerationLoot> {
             @Override
             public RegenerationLoot read(ResourceLocation location, JsonObject object, ILootCondition[] conditions) {
                 final int multiplicationFactor = JSONUtils.getAsInt(object, "chance", 2);

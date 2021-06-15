@@ -44,7 +44,7 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public void fillItemCategory(ItemGroup group, NonNullList< ItemStack > items) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
         if (allowdedIn(group)) {
             for (AbstractTrait trait : RegenTraitRegistry.TRAIT_REGISTRY.get().getValues()) {
                 if (trait.getRegistryName() != RegenTraitRegistry.BORING.get().getRegistryName()) {
@@ -57,7 +57,7 @@ public class ElixirItem extends Item {
     }
 
     @Override
-    public ActionResult< ItemStack > use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         if (itemstack.getItem() instanceof ElixirItem) {
             playerIn.startUsingItem(handIn);
@@ -93,7 +93,7 @@ public class ElixirItem extends Item {
 
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(getTrait(stack).description());
     }

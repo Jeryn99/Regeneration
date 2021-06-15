@@ -15,7 +15,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.concurrent.CompletableFuture;
 
-public class TraitsArgumentType implements ArgumentType< AbstractTrait > {
+public class TraitsArgumentType implements ArgumentType<AbstractTrait> {
     public static final DynamicCommandExceptionType INVALID_TRAIT_EXCEPTION = new DynamicCommandExceptionType((trait) -> new TranslationTextComponent("argument.regeneration.trait.invalid", new Object[]{trait}));
 
     public static TraitsArgumentType createArgument() {
@@ -33,7 +33,7 @@ public class TraitsArgumentType implements ArgumentType< AbstractTrait > {
     }
 
     @Override
-    public < S > CompletableFuture< Suggestions > listSuggestions(CommandContext< S > context, SuggestionsBuilder builder) {
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         return ISuggestionProvider.suggestResource(RegenTraitRegistry.TRAIT_REGISTRY.get().getKeys(), builder);
     }
 

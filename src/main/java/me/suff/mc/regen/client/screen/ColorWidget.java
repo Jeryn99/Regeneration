@@ -13,14 +13,14 @@ import static java.lang.Math.*;
 //Based on https://github.com/Petersil1998/utilcraft/blob/master/src/main/java/net/petersil98/utilcraft/screen/widget/ColorChooser.java
 public class ColorWidget extends Widget {
 
-    protected final RCheckbox.IInteraction< ColorWidget > onPress;
+    protected final RCheckbox.IInteraction<ColorWidget> onPress;
     private final int radius;
     private final int textHeight;
     private int color;
     private TextFieldWidget text = null;
 
 
-    public ColorWidget(FontRenderer font, int x, int y, int width, int textHeight, ITextComponent title, int defaultColor, RCheckbox.IInteraction< ColorWidget > iInteraction) {
+    public ColorWidget(FontRenderer font, int x, int y, int width, int textHeight, ITextComponent title, int defaultColor, RCheckbox.IInteraction<ColorWidget> iInteraction) {
         super(x, y, width, width, title);
         radius = width / 2;
         color = defaultColor;

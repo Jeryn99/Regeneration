@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class BaseTrigger implements ICriterionTrigger< BaseTrigger.Instance > {
+public class BaseTrigger implements ICriterionTrigger<BaseTrigger.Instance> {
     private final ResourceLocation RL;
-    private final Map< PlayerAdvancements, BaseTrigger.Listeners > listeners = Maps.newHashMap();
+    private final Map<PlayerAdvancements, BaseTrigger.Listeners> listeners = Maps.newHashMap();
 
     /**
      * Instantiates a new custom trigger.
@@ -54,7 +54,7 @@ public class BaseTrigger implements ICriterionTrigger< BaseTrigger.Instance > {
      * @see net.minecraft.advancements.ICriterionTrigger#addListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void addPlayerListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener< BaseTrigger.Instance > listener) {
+    public void addPlayerListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<BaseTrigger.Instance> listener) {
         BaseTrigger.Listeners myCustomTrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (myCustomTrigger$listeners == null) {
@@ -70,7 +70,7 @@ public class BaseTrigger implements ICriterionTrigger< BaseTrigger.Instance > {
      * @see net.minecraft.advancements.ICriterionTrigger#removeListener(net.minecraft.advancements.PlayerAdvancements, net.minecraft.advancements.ICriterionTrigger.Listener)
      */
     @Override
-    public void removePlayerListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener< BaseTrigger.Instance > listener) {
+    public void removePlayerListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<BaseTrigger.Instance> listener) {
         BaseTrigger.Listeners tameanimaltrigger$listeners = listeners.get(playerAdvancementsIn);
 
         if (tameanimaltrigger$listeners != null) {
@@ -140,7 +140,7 @@ public class BaseTrigger implements ICriterionTrigger< BaseTrigger.Instance > {
 
     static class Listeners {
         private final PlayerAdvancements playerAdvancements;
-        private final Set< ICriterionTrigger.Listener< BaseTrigger.Instance > > listeners = Sets.newHashSet();
+        private final Set<ICriterionTrigger.Listener<BaseTrigger.Instance>> listeners = Sets.newHashSet();
 
         /**
          * Instantiates a new listeners.
@@ -165,7 +165,7 @@ public class BaseTrigger implements ICriterionTrigger< BaseTrigger.Instance > {
          *
          * @param listener the listener
          */
-        public void add(ICriterionTrigger.Listener< BaseTrigger.Instance > listener) {
+        public void add(ICriterionTrigger.Listener<BaseTrigger.Instance> listener) {
             listeners.add(listener);
         }
 
@@ -174,7 +174,7 @@ public class BaseTrigger implements ICriterionTrigger< BaseTrigger.Instance > {
          *
          * @param listener the listener
          */
-        public void remove(ICriterionTrigger.Listener< BaseTrigger.Instance > listener) {
+        public void remove(ICriterionTrigger.Listener<BaseTrigger.Instance> listener) {
             listeners.remove(listener);
         }
 
@@ -184,9 +184,9 @@ public class BaseTrigger implements ICriterionTrigger< BaseTrigger.Instance > {
          * @param player the player
          */
         public void trigger(ServerPlayerEntity player) {
-            ArrayList< ICriterionTrigger.Listener< BaseTrigger.Instance > > list = null;
+            ArrayList<ICriterionTrigger.Listener<BaseTrigger.Instance>> list = null;
 
-            for (ICriterionTrigger.Listener< BaseTrigger.Instance > listener : listeners) {
+            for (ICriterionTrigger.Listener<BaseTrigger.Instance> listener : listeners) {
                 if (listener.getTriggerInstance().test()) {
                     if (list == null) {
                         list = Lists.newArrayList();
@@ -197,7 +197,7 @@ public class BaseTrigger implements ICriterionTrigger< BaseTrigger.Instance > {
             }
 
             if (list != null) {
-                for (ICriterionTrigger.Listener< BaseTrigger.Instance > listener1 : list) {
+                for (ICriterionTrigger.Listener<BaseTrigger.Instance> listener1 : list) {
                     listener1.run(playerAdvancements);
                 }
             }

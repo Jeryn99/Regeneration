@@ -20,15 +20,15 @@ public class LaserProjectile extends ThrowableEntity {
     private float damage = 3;
     private DamageSource damageSrc = RegenSources.REGEN_DMG_RIFLE;
 
-    public LaserProjectile(EntityType< ? extends ThrowableEntity > type, World worldIn) {
+    public LaserProjectile(EntityType<? extends ThrowableEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
-    public LaserProjectile(EntityType< ? extends ThrowableEntity > type, double x, double y, double z, World worldIn) {
+    public LaserProjectile(EntityType<? extends ThrowableEntity> type, double x, double y, double z, World worldIn) {
         super(type, x, y, z, worldIn);
     }
 
-    public LaserProjectile(EntityType< ? extends ThrowableEntity > type, LivingEntity livingEntityIn, World worldIn) {
+    public LaserProjectile(EntityType<? extends ThrowableEntity> type, LivingEntity livingEntityIn, World worldIn) {
         super(type, livingEntityIn, worldIn);
     }
 
@@ -75,7 +75,7 @@ public class LaserProjectile extends ThrowableEntity {
     }
 
     @Override
-    public IPacket< ? > getAddEntityPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

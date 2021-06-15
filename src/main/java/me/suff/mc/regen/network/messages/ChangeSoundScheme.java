@@ -20,7 +20,7 @@ public class ChangeSoundScheme {
         type = buffer.readUtf(32767);
     }
 
-    public static void handle(ChangeSoundScheme message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(ChangeSoundScheme message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().getSender().getServer().submitAsync(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
             cap.setTimelordSound(IRegen.TimelordSound.valueOf(message.type));
             cap.syncToClients(null);

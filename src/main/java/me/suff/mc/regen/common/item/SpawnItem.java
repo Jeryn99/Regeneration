@@ -20,7 +20,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-public class SpawnItem< E extends TimelordEntity > extends Item {
+public class SpawnItem<E extends TimelordEntity> extends Item {
 
     public SpawnItem() {
         super(new Properties().tab(RItems.MAIN));
@@ -39,7 +39,7 @@ public class SpawnItem< E extends TimelordEntity > extends Item {
     }
 
     @Override
-    public void fillItemCategory(ItemGroup group, NonNullList< ItemStack > items) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
         if (allowdedIn(group)) {
             for (Timelord timelordType : Timelord.values()) {
                 ItemStack itemstack = new ItemStack(this);

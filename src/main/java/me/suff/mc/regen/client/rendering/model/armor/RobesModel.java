@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 
-public class RobesModel extends BipedModel< LivingEntity > implements LivingArmor {
+public class RobesModel extends BipedModel<LivingEntity> implements LivingArmor {
     private final ModelRenderer Body;
     private final ModelRenderer RightArm;
     private final ModelRenderer LeftArm;

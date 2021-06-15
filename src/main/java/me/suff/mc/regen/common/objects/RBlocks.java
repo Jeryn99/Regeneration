@@ -23,15 +23,15 @@ import static me.suff.mc.regen.common.objects.RItems.MAIN;
 
 public class RBlocks {
 
-    public static final DeferredRegister< Block > BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RConstants.MODID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, RConstants.MODID);
 
-    public static final RegistryObject< Block > BIO_CONTAINER = register("bio_container", JarBlock::new, MAIN);
-    public static final RegistryObject< Block > ZINC_ORE = register("zinc_ore", () -> new ROreBlock(AbstractBlock.Properties.of(Material.STONE).lightLevel(getLightValueLit(9)).requiresCorrectToolForDrops().strength(3.0F, 3.0F)));
-    public static final RegistryObject< Block > ZERO_ROUNDEL = register("zero_roundel_half", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
-    public static final RegistryObject< Block > ZERO_ROOM_FULL = register("zero_roundel_full", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
-    public static final RegistryObject< Block > AZBANTIUM = register("azbantium", () -> new Block(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
+    public static final RegistryObject<Block> BIO_CONTAINER = register("bio_container", JarBlock::new, MAIN);
+    public static final RegistryObject<Block> ZINC_ORE = register("zinc_ore", () -> new ROreBlock(AbstractBlock.Properties.of(Material.STONE).lightLevel(getLightValueLit(9)).requiresCorrectToolForDrops().strength(3.0F, 3.0F)));
+    public static final RegistryObject<Block> ZERO_ROUNDEL = register("zero_roundel_half", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
+    public static final RegistryObject<Block> ZERO_ROOM_FULL = register("zero_roundel_full", () -> new Block(AbstractBlock.Properties.of(Material.STONE).requiresCorrectToolForDrops().strength(1.5F, 6.0F)));
+    public static final RegistryObject<Block> AZBANTIUM = register("azbantium", () -> new Block(AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F)));
 
-    private static ToIntFunction< BlockState > getLightValueLit(int lightValue) {
+    private static ToIntFunction<BlockState> getLightValueLit(int lightValue) {
         return (state) -> state.getValue(BlockStateProperties.LIT) ? lightValue : 0;
     }
 
@@ -50,8 +50,8 @@ public class RBlocks {
      * @param itemGroup
      * @return
      */
-    private static < T extends Block > RegistryObject< T > register(String id, Supplier< T > blockSupplier, ItemGroup itemGroup) {
-        RegistryObject< T > registryObject = BLOCKS.register(id, blockSupplier);
+    private static <T extends Block> RegistryObject<T> register(String id, Supplier<T> blockSupplier, ItemGroup itemGroup) {
+        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
         RItems.ITEMS.register(id, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(itemGroup)));
         return registryObject;
     }
@@ -65,8 +65,8 @@ public class RBlocks {
      * @param blockSupplier
      * @return
      */
-    private static < T extends Block > RegistryObject< T > registerBlockOnly(String id, Supplier< T > blockSupplier) {
-        RegistryObject< T > registryObject = BLOCKS.register(id, blockSupplier);
+    private static <T extends Block> RegistryObject<T> registerBlockOnly(String id, Supplier<T> blockSupplier) {
+        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
         return registryObject;
     }
 
@@ -78,8 +78,8 @@ public class RBlocks {
      * @param blockSupplier
      * @return
      */
-    private static < T extends Block > RegistryObject< T > register(String id, Supplier< T > blockSupplier) {
-        RegistryObject< T > registryObject = BLOCKS.register(id, blockSupplier);
+    private static <T extends Block> RegistryObject<T> register(String id, Supplier<T> blockSupplier) {
+        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
         RItems.ITEMS.register(id, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(MAIN)));
         return registryObject;
     }

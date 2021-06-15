@@ -34,7 +34,7 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
 
     private boolean updateSkin = true;
     private ItemStackHandler itemHandler = createHandler();
-    private LazyOptional< IItemHandler > handler = LazyOptional.of(() -> itemHandler);
+    private LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
     public JarTile() {
         super(RTiles.HAND_JAR.get());
@@ -177,7 +177,7 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
 
     @Nonnull
     @Override
-    public < T > LazyOptional< T > getCapability(@Nonnull Capability< T > cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return handler.cast();
         }

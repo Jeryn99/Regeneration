@@ -19,6 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.tardis.mod.entity.hostile.dalek.DalekEntity;
 import net.tardis.mod.helper.TardisHelper;
 import net.tardis.mod.helper.WorldHelper;
+import net.tardis.mod.misc.CrashType;
 import net.tardis.mod.sounds.TSounds;
 import net.tardis.mod.subsystem.Subsystem;
 import net.tardis.mod.tileentities.ConsoleTile;
@@ -44,11 +45,11 @@ public class TardisMod {
                 if (console.getLevel().getGameTime() % 5 == 0) {
 
                     if (console.isInFlight() && world.random.nextInt(100) < 5) {
-                        console.crash();
+                        console.crash(new CrashType(70, 7, true));
                         return;
                     }
 
-                    List< Subsystem > subsystems = console.getSubSystems();
+                    List<Subsystem> subsystems = console.getSubSystems();
                     if (!subsystems.isEmpty()) {
                         Subsystem randomSubsystem = subsystems.get(world.random.nextInt(subsystems.size()));
                         if (world.random.nextBoolean()) {

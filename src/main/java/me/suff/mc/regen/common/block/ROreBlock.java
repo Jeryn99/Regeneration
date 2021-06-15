@@ -111,7 +111,7 @@ public class ROreBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder< Block, BlockState > builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LIT);
     }
 }

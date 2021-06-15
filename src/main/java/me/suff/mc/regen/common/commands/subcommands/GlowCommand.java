@@ -9,16 +9,16 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
-public class GlowCommand implements Command< CommandSource > {
+public class GlowCommand implements Command<CommandSource> {
     private static final GlowCommand CMD = new GlowCommand();
 
-    public static ArgumentBuilder< CommandSource, ? > register(CommandDispatcher< CommandSource > dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("glow")
                 .executes(CMD);
     }
 
     @Override
-    public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         CommandSource source = context.getSource();
         RegenCap.get(source.getPlayerOrException()).ifPresent((cap) -> cap.stateManager().fastForwardHandGlow());
         return Command.SINGLE_SUCCESS;

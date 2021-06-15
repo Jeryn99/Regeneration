@@ -21,7 +21,7 @@ public class RemoveTimelordSkinMessage {
         livingEntity = buffer.readUUID();
     }
 
-    public static void handle(RemoveTimelordSkinMessage message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(RemoveTimelordSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().submitAsync(() -> {
             TimelordRenderer.TIMELORDS.remove(message.livingEntity);
         });

@@ -52,7 +52,7 @@ public class JarParticle extends SpriteTexturedParticle {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory< BasicParticleType > {
+    public static class Factory implements IParticleFactory<BasicParticleType> {
         private final IAnimatedSprite spriteSet;
 
         public Factory(IAnimatedSprite spriteSet) {

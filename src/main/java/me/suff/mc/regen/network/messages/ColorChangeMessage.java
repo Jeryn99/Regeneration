@@ -18,7 +18,7 @@ public class ColorChangeMessage {
         style = buffer.readNbt();
     }
 
-    public static void handle(ColorChangeMessage message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(ColorChangeMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().getSender().getServer().submitAsync(() -> {
             RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
                 cap.readStyle(message.style);

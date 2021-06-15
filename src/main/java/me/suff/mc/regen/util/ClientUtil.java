@@ -74,7 +74,7 @@ import static me.suff.mc.regen.common.item.FobWatchItem.isOpen;
 public class ClientUtil {
 
     private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
-    public static HashMap< Item, BipedModel< ? > > ARMOR_MODELS = new HashMap<>();
+    public static HashMap<Item, BipedModel<?>> ARMOR_MODELS = new HashMap<>();
 
     public static String getImgurLink(String base64Image) throws Exception {
         URL url;
@@ -112,6 +112,7 @@ public class ClientUtil {
         }
     }
 
+
     @SubscribeEvent
     public static void registerParticles(ParticleFactoryRegisterEvent event) {
         Minecraft.getInstance().particleEngine.register(RParticles.CONTAINER.get(), JarParticle.Factory::new);
@@ -144,10 +145,10 @@ public class ClientUtil {
         ARMOR_MODELS.put(RItems.M_ROBES_LEGS.get(), robesLegs);
         ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);
 
-        BipedModel< ? > guardHead = new GuardModel(EquipmentSlotType.HEAD);
-        BipedModel< ? > guardChest = new GuardModel(EquipmentSlotType.CHEST);
-        BipedModel< ? > guardLegs = new GuardModel(EquipmentSlotType.LEGS);
-        BipedModel< ? > guardFeet = new GuardModel(EquipmentSlotType.FEET);
+        BipedModel<?> guardHead = new GuardModel(EquipmentSlotType.HEAD);
+        BipedModel<?> guardChest = new GuardModel(EquipmentSlotType.CHEST);
+        BipedModel<?> guardLegs = new GuardModel(EquipmentSlotType.LEGS);
+        BipedModel<?> guardFeet = new GuardModel(EquipmentSlotType.FEET);
 
         //Guard
         ARMOR_MODELS.put(RItems.GUARD_HELMET.get(), guardHead);
@@ -157,7 +158,7 @@ public class ClientUtil {
 
     }
 
-    public static BipedModel< ? > getArmorModel(ItemStack itemStack) {
+    public static BipedModel<?> getArmorModel(ItemStack itemStack) {
         if (!ARMOR_MODELS.containsKey(itemStack.getItem())) {
             throw new UnsupportedOperationException("No model registered for: " + itemStack.getItem());
         }
@@ -187,7 +188,7 @@ public class ClientUtil {
 
     private static void renderLayers() {
         /* Attach RenderLayers to Renderers */
-        Map< String, PlayerRenderer > skinMap = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap();
+        Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap();
         for (PlayerRenderer renderPlayer : skinMap.values()) {
             renderPlayer.addLayer(new HandLayer(renderPlayer));
             renderPlayer.addLayer(new RenderRegenLayer(renderPlayer));
@@ -195,7 +196,7 @@ public class ClientUtil {
 
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.forEach((entityType, entityRenderer) -> {
             if (entityRenderer instanceof BipedRenderer) {
-                BipedRenderer< ?, ? > bipedRenderer = (BipedRenderer< ?, ? >) entityRenderer;
+                BipedRenderer<?, ?> bipedRenderer = (BipedRenderer<?, ?>) entityRenderer;
                 bipedRenderer.addLayer(new RenderRegenLayer(bipedRenderer));
                 bipedRenderer.addLayer(new HandLayer((IEntityRenderer) entityRenderer));
             }
@@ -270,7 +271,7 @@ public class ClientUtil {
         Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(sound, pitch, volume));
     }
 
-    public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier< Boolean > stopCondition, float volume) {
+    public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
         Minecraft.getInstance().getSoundManager().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
     }
 

@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class WatcherEntity extends MobEntity {
 
-    public WatcherEntity(EntityType< ? extends MobEntity > type, World worldIn) {
+    public WatcherEntity(EntityType<? extends MobEntity> type, World worldIn) {
         super(type, worldIn);
     }
 

@@ -142,10 +142,10 @@ public final class VoxelShapeUtils {
      * @param rotateFunction The transformation function to apply to each {@link AxisAlignedBB} in the {@link VoxelShape}.
      * @return The rotated {@link VoxelShape}
      */
-    public static VoxelShape rotate(VoxelShape shape, UnaryOperator< AxisAlignedBB > rotateFunction) {
-        List< VoxelShape > rotatedPieces = new ArrayList<>();
+    public static VoxelShape rotate(VoxelShape shape, UnaryOperator<AxisAlignedBB> rotateFunction) {
+        List<VoxelShape> rotatedPieces = new ArrayList<>();
         //Explode the voxel shape into bounding boxes
-        List< AxisAlignedBB > sourceBoundingBoxes = shape.toAabbs();
+        List<AxisAlignedBB> sourceBoundingBoxes = shape.toAabbs();
         //Rotate them and convert them each back into a voxel shape
         for (AxisAlignedBB sourceBoundingBox : sourceBoundingBoxes) {
             //Make the bounding box be centered around the middle, and then move it back after rotating
@@ -172,11 +172,11 @@ public final class VoxelShapeUtils {
      * @param shapes The collection of {@link VoxelShape}s to include
      * @return A simplified {@link VoxelShape} including everything that is part of any of the input shapes.
      */
-    public static VoxelShape combine(Collection< VoxelShape > shapes) {
+    public static VoxelShape combine(Collection<VoxelShape> shapes) {
         return combine(shapes, true);
     }
 
-    public static VoxelShape combine(Collection< VoxelShape > shapes, boolean simplify) {
+    public static VoxelShape combine(Collection<VoxelShape> shapes, boolean simplify) {
         return batchCombine(VoxelShapes.empty(), IBooleanFunction.OR, simplify, shapes);
     }
 
@@ -201,7 +201,7 @@ public final class VoxelShapeUtils {
      * @implNote We do not do any simplification until after combining all the shapes, and then only if the {@code simplify} is True. This is because there is a
      * performance hit in calculating the simplified shape each time if we still have more changers we are making to it.
      */
-    public static VoxelShape batchCombine(VoxelShape initial, IBooleanFunction function, boolean simplify, Collection< VoxelShape > shapes) {
+    public static VoxelShape batchCombine(VoxelShape initial, IBooleanFunction function, boolean simplify, Collection<VoxelShape> shapes) {
         VoxelShape combinedShape = initial;
         for (VoxelShape shape : shapes) {
             combinedShape = VoxelShapes.joinUnoptimized(combinedShape, shape, function);

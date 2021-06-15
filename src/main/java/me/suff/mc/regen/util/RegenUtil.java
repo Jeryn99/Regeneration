@@ -14,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
@@ -22,18 +21,18 @@ import static me.suff.mc.regen.Regeneration.GSON;
 
 public class RegenUtil {
 
-    public static ITag.INamedTag< Block > BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
-    public static ITag.INamedTag< Block > ARS = makeBlock("tardis", "ars");
-    public static ITag.INamedTag< Item > TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
+    public static ITag.INamedTag<Block> BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
+    public static ITag.INamedTag<Block> ARS = makeBlock("tardis", "ars");
+    public static ITag.INamedTag<Item> TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};
 
-    public static ITag.INamedTag< Block > makeBlock(String domain, String path) {
+    public static ITag.INamedTag<Block> makeBlock(String domain, String path) {
         return BlockTags.bind(new ResourceLocation(domain, path).toString());
     }
 
-    public static ITag.INamedTag< Item > makeItem(String domain, String path) {
+    public static ITag.INamedTag<Item> makeItem(String domain, String path) {
         return ItemTags.bind(new ResourceLocation(domain, path).toString());
     }
 
@@ -46,11 +45,8 @@ public class RegenUtil {
             try {
 
                 ResourceLocation resourceLocation = new ResourceLocation(RConstants.MODID, "names.json");
-
                 InputStream stream = ServerLifecycleHooks.getCurrentServer().getDataPackRegistries().getResourceManager().getResource(resourceLocation).getInputStream();
-
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-
                 StringBuilder sb = new StringBuilder();
 
                 String line = null;
@@ -59,19 +55,13 @@ public class RegenUtil {
                 }
                 reader.close();
                 stream.close();
-                //
-                String[] names = GSON.fromJson(sb.toString(), String[].class);
 
-                if (names != null) {
-                    USERNAMES = names;
-                }
+                USERNAMES = GSON.fromJson(sb.toString(), String[].class);
 
             } catch (IOException e) {
                 Regeneration.LOG.catching(e);
             }
-
         }
-
     }
 
 
@@ -88,32 +78,6 @@ public class RegenUtil {
         }
     }
 
-    public static String getJsonFromURL(String URL) {
-        java.net.URL url = null;
-        try {
-            url = new URL(URL);
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            return bufferedReaderToString(in);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String bufferedReaderToString(BufferedReader e) {
-        StringBuilder builder = new StringBuilder();
-        String aux = "";
-
-        try {
-            while ((aux = e.readLine()) != null) {
-                builder.append(aux);
-            }
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-
-        return builder.toString();
-    }
 
     public static byte[] fileToBytes(File file) {
         try {
@@ -137,7 +101,7 @@ public class RegenUtil {
         return "#" + hex;
     }
 
-    public interface IEnum< E extends Enum< E > > {
+    public interface IEnum<E extends Enum<E>> {
         int ordinal();
 
         default E next() {

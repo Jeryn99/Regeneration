@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
 
 /* Created by Craig on 13/04/2021 */
-public class RegenerationConeModel extends BipedModel< LivingEntity > {
+public class RegenerationConeModel extends BipedModel<LivingEntity> {
 
     public final ModelRenderer Head;
     public final ModelRenderer RightArm;

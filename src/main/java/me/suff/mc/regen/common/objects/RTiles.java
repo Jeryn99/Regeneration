@@ -13,12 +13,12 @@ import java.util.function.Supplier;
 
 public class RTiles {
 
-    public static final DeferredRegister< TileEntityType< ? > > TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, RConstants.MODID);
+    public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, RConstants.MODID);
 
-    public static final RegistryObject< TileEntityType< JarTile > > HAND_JAR = TILES.register("hand_jar", () -> registerTiles(JarTile::new, RBlocks.BIO_CONTAINER.get()));
+    public static final RegistryObject<TileEntityType<JarTile>> HAND_JAR = TILES.register("hand_jar", () -> registerTiles(JarTile::new, RBlocks.BIO_CONTAINER.get()));
 
 
-    private static < T extends TileEntity > TileEntityType< T > registerTiles(Supplier< T > tile, Block... validBlock) {
+    private static <T extends TileEntity> TileEntityType<T> registerTiles(Supplier<T> tile, Block... validBlock) {
         return TileEntityType.Builder.of(tile, validBlock).build(null);
     }
 

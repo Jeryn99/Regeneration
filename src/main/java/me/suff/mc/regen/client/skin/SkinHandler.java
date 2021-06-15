@@ -26,7 +26,7 @@ public class SkinHandler {
 
 
     //Skin Storage
-    public static final HashMap< UUID, ResourceLocation > PLAYER_SKINS = new HashMap<>();
+    public static final HashMap<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
 
     public static void tick(AbstractClientPlayerEntity playerEntity) {
         RegenCap.get(playerEntity).ifPresent(iRegen -> {
@@ -111,7 +111,7 @@ public class SkinHandler {
         }
         NetworkPlayerInfo playerInfo = player.playerInfo;
         if (playerInfo == null) return;
-        Map< MinecraftProfileTexture.Type, ResourceLocation > playerTextures = playerInfo.textureLocations;
+        Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.textureLocations;
         playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
         if (texture == null) {
             playerInfo.pendingTextures = false;
@@ -131,8 +131,9 @@ public class SkinHandler {
     }
 
     public static ResourceLocation getSkinToUse(AbstractClientPlayerEntity playerEntity) {
-        if (PLAYER_SKINS.containsKey(playerEntity.getGameProfile().getId())) {
-            return PLAYER_SKINS.get(playerEntity.getGameProfile().getId());
+        UUID uuid = playerEntity.getGameProfile().getId();
+        if (PLAYER_SKINS.containsKey(uuid)) {
+            return PLAYER_SKINS.get(uuid);
         }
         if (playerEntity.playerInfo != null) {
             NetworkPlayerInfo info = playerEntity.playerInfo;

@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
 
 /* Created by Craig on 03/03/2021 */
-public class RArmorLayer< T extends LivingEntity, M extends BipedModel< T >, A extends BipedModel< T > > extends LayerRenderer< T, M > {
+public class RArmorLayer<T extends LivingEntity, M extends BipedModel<T>, A extends BipedModel<T>> extends LayerRenderer<T, M> {
 
-    public RArmorLayer(IEntityRenderer< T, M > entityRendererIn) {
+    public RArmorLayer(IEntityRenderer<T, M> entityRendererIn) {
         super(entityRendererIn);
     }
 

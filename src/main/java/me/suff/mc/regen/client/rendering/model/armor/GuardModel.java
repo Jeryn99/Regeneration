@@ -10,7 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 
 /* Created by Craig on 03/03/2021 */
-public class GuardModel extends BipedModel< LivingEntity > implements LivingArmor {
+public class GuardModel extends BipedModel<LivingEntity> implements LivingArmor {
     private final ModelRenderer Head;
     private final ModelRenderer Body;
     private final ModelRenderer RightArm;

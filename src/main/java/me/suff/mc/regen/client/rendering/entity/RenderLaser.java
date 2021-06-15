@@ -14,7 +14,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 
 /* Created by Craig on 01/03/2021 */
-public class RenderLaser extends EntityRenderer< LaserProjectile > {
+public class RenderLaser extends EntityRenderer<LaserProjectile> {
 
     public RenderLaser(EntityRendererManager renderManager) {
         super(renderManager);

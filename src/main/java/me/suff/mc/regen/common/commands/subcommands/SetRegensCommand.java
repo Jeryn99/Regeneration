@@ -21,21 +21,21 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collection;
 
-public class SetRegensCommand implements Command< CommandSource > {
+public class SetRegensCommand implements Command<CommandSource> {
 
-    public static ArgumentBuilder< CommandSource, ? > register(CommandDispatcher< CommandSource > dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("set-regens")
                 .then(Commands.argument("entities", EntityArgument.entities())
                         .then(Commands.argument("amount", IntegerArgumentType.integer(1))
                                 .executes(context -> setRegenForMultipleEntities(context, EntityArgument.getEntities(context, "entities"), IntegerArgumentType.getInteger(context, "amount")))));
     }
 
-    private static int setRegenForMultipleEntities(CommandContext< CommandSource > context, Collection< ? extends Entity > collection, int amount) {
+    private static int setRegenForMultipleEntities(CommandContext<CommandSource> context, Collection<? extends Entity> collection, int amount) {
         collection.forEach(target -> setRegenForSingleEntity(context, target, amount));
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int setRegenForSingleEntity(CommandContext< CommandSource > context, Entity entity, int amount) {
+    private static int setRegenForSingleEntity(CommandContext<CommandSource> context, Entity entity, int amount) {
         TextComponent entityText = RTextHelper.getEntityTextObject(context.getSource().getLevel(), entity.getUUID());
         //Need a special case Armor Stands, for some reason they are classified as LivingEntities...
         if (entity instanceof LivingEntity && entity.getType() != EntityType.ARMOR_STAND && entity != null) {
@@ -57,7 +57,7 @@ public class SetRegensCommand implements Command< CommandSource > {
 
 
     @Override
-    public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         return 0;
     }
 }

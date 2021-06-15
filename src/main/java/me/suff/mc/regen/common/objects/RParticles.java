@@ -10,9 +10,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 /* Created by Craig on 09/03/2021 */
 public class RParticles {
 
-    public static final DeferredRegister< ParticleType< ? > > TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, RConstants.MODID);
+    public static final DeferredRegister<ParticleType<?>> TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, RConstants.MODID);
 
-    public static final RegistryObject< BasicParticleType > CONTAINER = TYPES.register("container", () -> new BasicParticleType(false));
+    public static final RegistryObject<BasicParticleType> CONTAINER = TYPES.register("container", () -> new BasicParticleType(false));
 
 
 }

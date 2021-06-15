@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /* Created by Craig on 25/03/2021 */
 public class TransitionTypeRenderers {
 
-    public static Map< TransitionType, TransitionRenderer > TRANSITION_RENDERERS = new ConcurrentHashMap<>();
+    public static Map<TransitionType, TransitionRenderer> TRANSITION_RENDERERS = new ConcurrentHashMap<>();
 
     public static void add(TransitionType transitionType, TransitionRenderer transitionRenderer) {
         TRANSITION_RENDERERS.put(transitionType, transitionRenderer);

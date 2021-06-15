@@ -39,7 +39,7 @@ public final class WatcherTransition extends TransitionType {
     public void tick(IRegen cap) {
         LivingEntity living = cap.getLiving();
         World world = living.level;
-        List< WatcherEntity > watchers = world.getEntities(REntities.WATCHER.get(), living.getBoundingBox().inflate(64), watcherEntity -> watcherEntity.getTarget() == living);
+        List<WatcherEntity> watchers = world.getEntities(REntities.WATCHER.get(), living.getBoundingBox().inflate(64), watcherEntity -> watcherEntity.getTarget() == living);
 
         if (watchers.isEmpty()) {
             WatcherTransition.createWatcher(living);

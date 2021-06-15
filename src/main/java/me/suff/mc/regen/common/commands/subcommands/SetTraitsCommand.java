@@ -18,10 +18,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class SetTraitsCommand implements Command< CommandSource > {
+public class SetTraitsCommand implements Command<CommandSource> {
     private static final SetTraitsCommand CMD = new SetTraitsCommand();
 
-    public static ArgumentBuilder< CommandSource, ? > register(CommandDispatcher< CommandSource > dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("set-trait")
                 .then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("trait", TraitsArgumentType.createArgument())
@@ -29,7 +29,7 @@ public class SetTraitsCommand implements Command< CommandSource > {
     }
 
     @Override
-    public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         CommandSource source = context.getSource();
         AbstractTrait trait = context.getArgument("trait", AbstractTrait.class);
         ServerPlayerEntity player = EntityArgument.getPlayer(context, "player");

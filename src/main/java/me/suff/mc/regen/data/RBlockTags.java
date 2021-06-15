@@ -22,11 +22,11 @@ public class RBlockTags extends BlockTagsProvider {
         add(RegenUtil.ARS, RBlocks.ZERO_ROOM_FULL.get(), RBlocks.ZERO_ROUNDEL.get(), RBlocks.BIO_CONTAINER.get());
     }
 
-    public void add(ITag.INamedTag< Block > branch, Block block) {
+    public void add(ITag.INamedTag<Block> branch, Block block) {
         this.tag(branch).add(block);
     }
 
-    public void add(ITag.INamedTag< Block > branch, Block... block) {
+    public void add(ITag.INamedTag<Block> branch, Block... block) {
         this.tag(branch).add(block);
     }
 }

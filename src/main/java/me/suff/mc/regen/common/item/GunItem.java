@@ -71,7 +71,7 @@ public class GunItem extends Item {
     }
 
     @Override
-    public ActionResult< ItemStack > use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         playerIn.startUsingItem(handIn);
         return super.use(worldIn, playerIn, handIn);
     }

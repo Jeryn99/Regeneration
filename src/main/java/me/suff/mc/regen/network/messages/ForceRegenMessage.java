@@ -16,7 +16,7 @@ public class ForceRegenMessage {
     public ForceRegenMessage(PacketBuffer buffer) {
     }
 
-    public static void handle(ForceRegenMessage message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(ForceRegenMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().getSender().getServer().submitAsync(() -> RegenCap.get(ctx.get().getSender()).ifPresent((cap) -> {
             if (cap.regenState() == RegenStates.ALIVE || cap.regenState().isGraceful()) {
                 if (cap.canRegenerate()) {

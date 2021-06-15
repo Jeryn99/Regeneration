@@ -20,7 +20,7 @@ public class RemoveSkinPlayerMessage {
         livingEntity = buffer.readUUID();
     }
 
-    public static void handle(RemoveSkinPlayerMessage message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(RemoveSkinPlayerMessage message, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().submitAsync(() -> {
             SkinHandler.removePlayerSkin(message.livingEntity);
         });

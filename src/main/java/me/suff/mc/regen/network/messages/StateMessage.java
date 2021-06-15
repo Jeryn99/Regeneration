@@ -25,7 +25,7 @@ public class StateMessage {
         event = buffer.readUtf(32767);
     }
 
-    public static void handle(StateMessage message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(StateMessage message, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().submitAsync(() -> {
 
             Entity entity = Minecraft.getInstance().level.getEntity(message.livingEntity);

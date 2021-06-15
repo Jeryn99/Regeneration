@@ -21,7 +21,7 @@ public class NextSkinMessage {
         isAlex = buffer.readBoolean();
     }
 
-    public static void handle(NextSkinMessage message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(NextSkinMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity serverPlayer = ctx.get().getSender();
             RegenCap.get(serverPlayer).ifPresent(iRegen -> {

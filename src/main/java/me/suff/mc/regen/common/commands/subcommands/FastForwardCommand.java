@@ -15,16 +15,16 @@ import net.minecraft.command.Commands;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class FastForwardCommand implements Command< CommandSource > {
+public class FastForwardCommand implements Command<CommandSource> {
     private static final FastForwardCommand CMD = new FastForwardCommand();
 
-    public static ArgumentBuilder< CommandSource, ? > register(CommandDispatcher< CommandSource > dispatcher) {
+    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
         return Commands.literal("fast-forward")
                 .executes(CMD);
     }
 
     @Override
-    public int run(CommandContext< CommandSource > context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
         CommandSource source = context.getSource();
 
         RegenCap.get(source.getPlayerOrException()).ifPresent((cap) -> {

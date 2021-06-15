@@ -14,10 +14,10 @@ import java.util.function.Supplier;
 public class MovingSound extends TickableSound {
 
     private final Object entity;
-    private final Supplier< Boolean > stopCondition;
+    private final Supplier<Boolean> stopCondition;
     private boolean donePlaying = false;
 
-    public MovingSound(Object object, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier< Boolean > stopCondition, float volumeSfx) {
+    public MovingSound(Object object, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier<Boolean> stopCondition, float volumeSfx) {
         super(soundIn, categoryIn);
         this.entity = object;
         this.stopCondition = stopCondition;

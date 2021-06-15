@@ -101,7 +101,7 @@ public class HandItem extends Item {
     }
 
     @Override
-    public void fillItemCategory(ItemGroup group, NonNullList< ItemStack > items) {
+    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
         if (allowdedIn(group)) {
             for (PlayerUtil.SkinType skinType : PlayerUtil.SkinType.values()) {
                 if (skinType != PlayerUtil.SkinType.EITHER) {
@@ -114,7 +114,7 @@ public class HandItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List< ITextComponent > tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         tooltip.add(new TranslationTextComponent(TextFormatting.WHITE + "Trait: %s", TextFormatting.GRAY + TextFormatting.ITALIC.toString() + getTrait(stack).translation().getString()));
         tooltip.add(new TranslationTextComponent(TextFormatting.WHITE + "Energy: %s", TextFormatting.GRAY + TextFormatting.ITALIC.toString() + RegenUtil.round(getEnergy(stack), 2)));

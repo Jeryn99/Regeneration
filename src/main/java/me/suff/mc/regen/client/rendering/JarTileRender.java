@@ -30,11 +30,11 @@ import java.util.HashMap;
 import static me.suff.mc.regen.util.RegenUtil.round;
 
 /* Created by Craig on 05/03/2021 */
-public class JarTileRender extends TileEntityRenderer< JarTile > {
+public class JarTileRender extends TileEntityRenderer<JarTile> {
 
     private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
-    public static HashMap< JarTile, ResourceLocation > TEXTURES = new HashMap<>();
+    public static HashMap<JarTile, ResourceLocation> TEXTURES = new HashMap<>();
     SteveArmModel steveArmModel = new SteveArmModel();
     AlexArmModel alexArmModel = new AlexArmModel();
     EntityModel mainModel = new AlexArmModel();

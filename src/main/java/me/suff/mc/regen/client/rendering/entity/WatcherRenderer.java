@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-public class WatcherRenderer extends BipedRenderer< WatcherEntity, PlayerModel< WatcherEntity > > {
+public class WatcherRenderer extends BipedRenderer<WatcherEntity, PlayerModel<WatcherEntity>> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RConstants.MODID, "textures/entity/watcher.png");
 

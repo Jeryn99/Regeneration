@@ -49,7 +49,7 @@ public class FieryTransition extends TransitionType {
             if (!PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
                 livingEntity.level.explode(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
             }
-            Iterator< BlockPos > iterator = BlockPos.betweenClosedStream(new BlockPos(livingEntity.position()).north().west(), new BlockPos(livingEntity.position()).south().east()).iterator();
+            Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(livingEntity.position()).north().west(), new BlockPos(livingEntity.position()).south().east()).iterator();
             while (iterator.hasNext()) {
                 iterator.forEachRemaining((blockPos -> {
                     if (livingEntity.level.getBlockState(blockPos).getBlock() instanceof FireBlock) {

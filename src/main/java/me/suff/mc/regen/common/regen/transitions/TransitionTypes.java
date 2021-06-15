@@ -15,17 +15,17 @@ import java.util.function.Supplier;
  * on 06/05/2020 @ 14:09
  */
 @Mod.EventBusSubscriber(modid = RConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class TransitionTypes extends ForgeRegistryEntry< TransitionTypes > {
+public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
 
-    public static final DeferredRegister< TransitionType > TRANSITION_TYPES = DeferredRegister.create(TransitionType.class, RConstants.MODID);
-    public static final RegistryObject< TransitionType > FIERY = TRANSITION_TYPES.register("fiery", (FieryTransition::new));
-    public static final RegistryObject< TransitionType > TROUGHTON = TRANSITION_TYPES.register("troughton", (TroughtonTransition::new));
-    public static final RegistryObject< TransitionType > WATCHER = TRANSITION_TYPES.register("watcher", (WatcherTransition::new));
-    public static final RegistryObject< TransitionType > SPARKLE = TRANSITION_TYPES.register("sparkle", (SparkleTransition::new));
-    public static final RegistryObject< TransitionType > ENDER_DRAGON = TRANSITION_TYPES.register("ender_dragon", (EnderDragonTransition::new));
-    public static final RegistryObject< TransitionType > BLAZE = TRANSITION_TYPES.register("blaze", (BlazeTranstion::new));
+    public static final DeferredRegister<TransitionType> TRANSITION_TYPES = DeferredRegister.create(TransitionType.class, RConstants.MODID);
+    public static final RegistryObject<TransitionType> FIERY = TRANSITION_TYPES.register("fiery", (FieryTransition::new));
+    public static final RegistryObject<TransitionType> TROUGHTON = TRANSITION_TYPES.register("troughton", (TroughtonTransition::new));
+    public static final RegistryObject<TransitionType> WATCHER = TRANSITION_TYPES.register("watcher", (WatcherTransition::new));
+    public static final RegistryObject<TransitionType> SPARKLE = TRANSITION_TYPES.register("sparkle", (SparkleTransition::new));
+    public static final RegistryObject<TransitionType> ENDER_DRAGON = TRANSITION_TYPES.register("ender_dragon", (EnderDragonTransition::new));
+    public static final RegistryObject<TransitionType> BLAZE = TRANSITION_TYPES.register("blaze", (BlazeTranstion::new));
     public static TransitionType[] TYPES = new TransitionType[]{};
-    public static Supplier< IForgeRegistry< TransitionType > > TRANSITION_TYPES_REGISTRY = TRANSITION_TYPES.makeRegistry("transition_types", () -> new RegistryBuilder< TransitionType >().setMaxID(Integer.MAX_VALUE - 1));
+    public static Supplier<IForgeRegistry<TransitionType>> TRANSITION_TYPES_REGISTRY = TRANSITION_TYPES.makeRegistry("transition_types", () -> new RegistryBuilder<TransitionType>().setMaxID(Integer.MAX_VALUE - 1));
 
     public static int getPosition(TransitionType rrRegenType) {
         if (TYPES.length <= 0) {

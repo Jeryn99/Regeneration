@@ -18,7 +18,7 @@ public class POVMessage {
         pointOfView = buffer.readUtf(32767);
     }
 
-    public static void handle(POVMessage message, Supplier< NetworkEvent.Context > ctx) {
+    public static void handle(POVMessage message, Supplier<NetworkEvent.Context> ctx) {
         Minecraft.getInstance().submitAsync(() -> ClientUtil.setPlayerPerspective(message.pointOfView));
         ctx.get().setPacketHandled(true);
     }

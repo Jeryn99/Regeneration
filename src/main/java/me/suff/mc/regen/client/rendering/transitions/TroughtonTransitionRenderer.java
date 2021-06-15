@@ -49,7 +49,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void layer(BipedModel< ? > bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void layer(BipedModel<?> bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
 
 
@@ -57,7 +57,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
 
             if (iRegen.regenState() == RegenStates.REGENERATING) {
 
-                EntityRenderer< ? super Entity > entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entitylivingbaseIn);
+                EntityRenderer<? super Entity> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entitylivingbaseIn);
                 PlayerRenderer playerRenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(Minecraft.getInstance().player);
                 ResourceLocation headTexture = entityRenderer.getTextureLocation(entitylivingbaseIn);
 
@@ -66,7 +66,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                     headTexture = TimelordRenderer.getTimelordFace(timelordEntity);
                 }
                 Vector3d color = new Vector3d(1, 1, 1);
-                PlayerModel< AbstractClientPlayerEntity > headModel = playerRenderer.getModel();
+                PlayerModel<AbstractClientPlayerEntity> headModel = playerRenderer.getModel();
 
                 matrixStackIn.pushPose();
                 matrixStackIn.translate(0, opacity, 0);

@@ -24,11 +24,11 @@ public class RItemTags extends ItemTagsProvider {
         add(RegenUtil.TIMELORD_CURRENCY, Items.GOLD_INGOT, Items.BONE, Items.EMERALD, RItems.ZINC.get(), Items.IRON_INGOT);
     }
 
-    public void add(ITag.INamedTag< Item > branch, Item item) {
+    public void add(ITag.INamedTag<Item> branch, Item item) {
         this.tag(branch).add(item);
     }
 
-    public void add(ITag.INamedTag< Item > branch, Item... item) {
+    public void add(ITag.INamedTag<Item> branch, Item... item) {
         this.tag(branch).add(item);
     }
 }

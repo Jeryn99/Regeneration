@@ -1,7 +1,6 @@
 package me.suff.mc.regen.client.rendering.layers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import me.suff.mc.regen.client.rendering.model.RegenerationConeModel;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
@@ -16,8 +15,6 @@ import net.minecraft.util.HandSide;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class HandLayer extends LayerRenderer {
-
-    static RegenerationConeModel regenerationConeModel = new RegenerationConeModel();
 
     public HandLayer(IEntityRenderer entityRendererIn) {
         super(entityRendererIn);
@@ -36,23 +33,14 @@ public class HandLayer extends LayerRenderer {
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        EntityModel< ? > model = getParentModel();
-
-        /*if(model instanceof BipedModel) {
-            BipedModel< ? > biped = (BipedModel< ? >) model;
-            regenerationConeModel.head.copyFrom(biped.head);
-            regenerationConeModel.leftArm.copyFrom(biped.leftArm);
-            regenerationConeModel.rightArm.copyFrom(biped.rightArm);
-        }
-        regenerationConeModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(new ResourceLocation(RConstants.MODID, "textures/entity/regen_cone/cone_" +entitylivingbaseIn.level.random.nextInt(2)+ ".png"))), packedLightIn, OverlayTexture.NO_OVERLAY,1,1,1,1);
-*/
+        EntityModel<?> model = getParentModel();
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
 
             if (entitylivingbaseIn.isShiftKeyDown()) {
                 matrixStackIn.translate(0.0F, 0.2F, 0.0F);
             }
 
-            BipedModel< ? > bipedModel = (BipedModel) model;
+            BipedModel<?> bipedModel = (BipedModel) model;
 
             //For Regen Layers
             for (HandSide handSide : HandSide.values()) {
