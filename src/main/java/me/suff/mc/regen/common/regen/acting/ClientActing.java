@@ -34,7 +34,7 @@ class ClientActing implements Acting {
     @Override
     public void onEnterGrace(IRegen cap) {
         if (cap.getLiving().getUUID().equals(Minecraft.getInstance().player.getUUID())) {
-            SoundEvent ambientSound = cap.getTimelordSound() == IRegen.TimelordSound.DRUM ? RSounds.DRUM_BEAT.get() : RSounds.GRACE_HUM.get();
+            SoundEvent ambientSound = cap.getTimelordSound().getSound();
             ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.regenState().isGraceful(), 0.2F);
             ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.regenState() != RegenStates.GRACE, 1.5F);
         }

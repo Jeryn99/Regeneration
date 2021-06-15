@@ -50,8 +50,16 @@ public class PreferencesScreen extends ContainerScreen {
         Button btnClose = new Button(width / 2 - 109, cy + 145, 71, btnH, new TranslationTextComponent("regen.gui.close"), onPress -> Minecraft.getInstance().setScreen(null));
 
         Button btnScheme = new Button(width / 2 + 50 - 66, cy + 60, btnW * 2, btnH, new TranslationTextComponent("regen.gui.sound_scheme." + soundScheme.name().toLowerCase()), button -> {
-            IRegen.TimelordSound newOne = soundScheme == IRegen.TimelordSound.DRUM ? IRegen.TimelordSound.HUM : IRegen.TimelordSound.DRUM;
-            soundScheme = newOne;
+
+            IRegen.TimelordSound newOne;
+            IRegen.TimelordSound[] values = soundScheme.getAllValues();
+
+            //what is this
+            if (soundScheme.ordinal() == values[values.length - 1].ordinal()) {
+                newOne = soundScheme = IRegen.TimelordSound.values()[0];
+            } else {
+                newOne = soundScheme = soundScheme.next();
+            }
             button.setMessage(new TranslationTextComponent("regen.gui.sound_scheme." + newOne.name().toLowerCase()));
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ChangeSoundScheme(newOne));
         });

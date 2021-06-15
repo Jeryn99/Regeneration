@@ -109,6 +109,7 @@
   "regen.gui.skin_choice": "Skin",
   "regen.gui.sound_scheme.drum": "Resistant Drums",
   "regen.gui.sound_scheme.hum": "Graceful Hum",
+  "regen.gui.sound_scheme.saxon_england": "Saxons England",
   "regen.gui.undo": "Undo",
   "regen.messages.cannot_use": "You cannot use this right now!",
   "regen.messages.cant_glow": "You cannot activate a glowing hand without being in a grace period",

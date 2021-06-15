@@ -17,6 +17,12 @@
       "regen:drum_beat"
     ]
   },
+  "saxons_england": {
+    "subtitle": "regen.sound.saxons_england",
+    "sounds": [
+      "regen:saxons_england"
+    ]
+  },
   "m_wodaman_timelord_hurt": {
     "subtitle": "regen.sound.m_timelord_hurt",
     "sounds": [

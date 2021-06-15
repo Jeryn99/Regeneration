@@ -1,16 +1,20 @@
 package me.suff.mc.regen.common.regen;
 
+import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.traits.AbstractTrait;
 import me.suff.mc.regen.util.PlayerUtil;
+import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public interface IRegen extends INBTSerializable<CompoundNBT> {
 
@@ -109,7 +113,17 @@ public interface IRegen extends INBTSerializable<CompoundNBT> {
         NO_GONE
     }
 
-    enum TimelordSound {
-        DRUM, HUM
+    enum TimelordSound implements RegenUtil.IEnum<TimelordSound> {
+        DRUM(RSounds.DRUM_BEAT::get), HUM(RSounds.GRACE_HUM::get), SAXON_ENGLAND(RSounds.SAXONS_ENGLAND::get);
+
+        private final Supplier<SoundEvent> sound;
+
+        TimelordSound(Supplier<SoundEvent> soundEventSupplier) {
+            this.sound = soundEventSupplier;
+        }
+
+        public SoundEvent getSound() {
+            return sound.get();
+        }
     }
 }

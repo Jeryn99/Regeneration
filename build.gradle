@@ -21,7 +21,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 
 
 
-version = '2.0.2'
+version = '2.0.3'
 group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = '[1.16] Regeneration'
 
@@ -98,18 +98,7 @@ curseforge {
         apiKey = rootProject.curseforge
         project {
             id = rootProject.regen
-
-            changelog = '# Regeneration 2.0.1 </br>' +
-                    '- Added Didgeridoomen Timelord voices </br>' +
-                    '- Optimized performance </br>' +
-                    '- Changed Critical Stage fog </br>' +
-                    '- Fixed retaining Traits after actually dying </br>' +
-                    '- Translated all config options for use with Mod Menu mods </br>' +
-                    '- Converted Timelord currency into datapack tags so players can change the currency </br>' +
-                    '- Unflipped Timelord gun sounds, whoops </br>' +
-                    '- Re-Added Advancements and made them more presentable </br>' +
-                    '- Re-done Regeneration customisation screens </br>' +
-                    '- Fixed crash when opening inventory/Steve Minecraft Skins '
+            changelog = new File("${project.projectDir}/changelog.html").text
             releaseType = 'release'
             changelogType = 'html'
             addGameVersion '1.16.3'

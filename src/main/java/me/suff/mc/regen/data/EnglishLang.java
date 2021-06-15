@@ -241,6 +241,7 @@ public class EnglishLang extends LanguageProvider {
 
         add("regen.gui.sound_scheme.hum", "Graceful Hum");
         add("regen.gui.sound_scheme.drum", "Resistant Drums");
+        add("regen.gui.sound_scheme.saxon_england", "Saxons England");
 
         // === Regen ===
         add(TransitionTypes.ENDER_DRAGON.get().getTranslation().getKey(), "Ender-Dragon");

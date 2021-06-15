@@ -17,6 +17,7 @@ public class RSounds {
     public static final RegistryObject<SoundEvent> GRACE_HUM = SOUNDS.register("grace_hum", () -> setUpSound("grace_hum"));
     public static final RegistryObject<SoundEvent> ALARM = SOUNDS.register("alarm", () -> setUpSound("alarm"));
     public static final RegistryObject<SoundEvent> JAR_BUBBLES = SOUNDS.register("jar_bubbles", () -> setUpSound("jar_bubbles"));
+    public static final RegistryObject<SoundEvent> SAXONS_ENGLAND = SOUNDS.register("saxons_england", () -> setUpSound("saxons_england"));
 
     public static final RegistryObject<SoundEvent> REGENERATION_0 = SOUNDS.register("regeneration_0", () -> setUpSound("regeneration_0"));
     public static final RegistryObject<SoundEvent> REGENERATION_1 = SOUNDS.register("regeneration_1", () -> setUpSound("regeneration_1"));
