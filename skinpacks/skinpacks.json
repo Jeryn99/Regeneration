@@ -10,7 +10,7 @@
         },
         {
             "name" : "Doctor Who - Companions",
-            "download_url" : "https://github.com/WhoCraft/Regeneration/blob/data/skinpacks/companions.zip?raw=true",
+            "download_url" : "https://github.com/WhoCraft/Regeneration/blob/data/skinpacks/doctor_who/companions.zip?raw=true",
             "credits": "Violet, GasMaskMan, Dhi_awesome",
             "install" : "doctor_who/companions",
             "description" : "",
@@ -18,7 +18,7 @@
         },
         {
             "name" : "Doctor Who - Timelords",
-            "download_url" : "https://github.com/WhoCraft/Regeneration/blob/data/skinpacks/timelords.zip?raw=true",
+            "download_url" : "https://github.com/WhoCraft/Regeneration/blob/data/skinpacks/doctor_who/timelords.zip?raw=true",
             "credits": "Violet, GasMaskMan, Dhi_awesome",
             "install" : "doctor_who/timelords",
             "description" : "",
