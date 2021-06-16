@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 22/04/2020 @ 13:56
  */
 public class ArchHelper {

@@ -2,11 +2,11 @@ package me.suff.mc.regen.common.block;
 
 import me.suff.mc.regen.common.capability.IRegen;
 import me.suff.mc.regen.common.capability.RegenCap;
-import me.suff.mc.regen.common.tiles.HandInJarTile;
-import me.suff.mc.regen.network.messages.InvalidatePlayerDataMessage;
 import me.suff.mc.regen.common.item.HandItem;
+import me.suff.mc.regen.common.tiles.HandInJarTile;
 import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.network.NetworkDispatcher;
+import me.suff.mc.regen.network.messages.InvalidatePlayerDataMessage;
 import me.suff.mc.regen.util.common.PlayerUtil;
 import me.suff.mc.regen.util.common.RegenShapes;
 import me.suff.mc.regen.util.common.VoxelShapeUtils;
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 /**
- * Created by Swirtzly on 21/08/2019 @ 17:31
+ * Created by Craig on 21/08/2019 @ 17:31
  */
 public class BlockHandInJar extends DirectionalBlock {
 

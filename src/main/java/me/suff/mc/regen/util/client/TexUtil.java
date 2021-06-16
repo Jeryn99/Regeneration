@@ -22,7 +22,7 @@ import java.net.URLConnection;
 import java.util.Map;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 26/05/2020 @ 15:03
  */
 public class TexUtil {

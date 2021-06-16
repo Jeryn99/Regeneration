@@ -12,7 +12,7 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 import java.awt.*;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 28/04/2020 @ 12:45
  */
 public class GallifrayanWastelands extends Biome {

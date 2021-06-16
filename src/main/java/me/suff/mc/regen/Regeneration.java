@@ -2,7 +2,6 @@ package me.suff.mc.regen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.common.advancements.TriggerManager;
 import me.suff.mc.regen.common.capability.IRegen;
 import me.suff.mc.regen.common.capability.RegenCap;
@@ -11,6 +10,7 @@ import me.suff.mc.regen.common.commands.RegenCommand;
 import me.suff.mc.regen.common.skin.HandleSkins;
 import me.suff.mc.regen.common.traits.TraitManager;
 import me.suff.mc.regen.compat.TardisCompat;
+import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.handlers.CommonHandler;
 import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.handlers.acting.ActingForwarder;
@@ -121,7 +121,7 @@ public class Regeneration {
     private void processIMC(final InterModProcessEvent event) {
         proxy.postInit();
         PlayerUtil.createPostList();
-        RegenUtil.TIMELORD_NAMES = new String[] {"Timelord"};
+        RegenUtil.TIMELORD_NAMES = new String[]{"Timelord"};
 
         try {
             File dir = new File("./regen_temp");

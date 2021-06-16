@@ -15,7 +15,7 @@ import net.minecraft.util.HandSide;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
 /**
- * Created by Swirtzly on 29/08/2019 @ 15:18
+ * Created by Craig on 29/08/2019 @ 15:18
  */
 public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
 

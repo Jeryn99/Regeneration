@@ -3,9 +3,9 @@ package me.suff.mc.regen.util.client;
 import me.suff.mc.regen.RegenConfig;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.skin.HandleSkins;
+import me.suff.mc.regen.util.common.FileUtil;
 import me.suff.mc.regen.util.common.MineSkin;
 import me.suff.mc.regen.util.common.RegenUtil;
-import me.suff.mc.regen.util.common.FileUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

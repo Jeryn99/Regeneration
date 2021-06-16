@@ -1,7 +1,7 @@
 package me.suff.mc.regen.common.item;
 
-import me.suff.mc.regen.common.traits.TraitManager;
 import me.suff.mc.regen.client.skinhandling.SkinInfo;
+import me.suff.mc.regen.common.traits.TraitManager;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,7 +21,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 /**
- * Created by Swirtzly on 21/08/2019 @ 17:39
+ * Created by Craig on 21/08/2019 @ 17:39
  */
 public class HandItem extends Item {
     public HandItem() {

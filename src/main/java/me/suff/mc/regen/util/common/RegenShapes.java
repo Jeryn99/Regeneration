@@ -5,7 +5,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 01/04/2020 @ 11:23
  */
 public class RegenShapes {

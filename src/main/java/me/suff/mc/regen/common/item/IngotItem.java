@@ -4,7 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 02/05/2020 @ 11:34
  */
 public class IngotItem extends Item {

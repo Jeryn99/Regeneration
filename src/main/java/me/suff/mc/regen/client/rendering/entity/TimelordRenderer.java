@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 03/05/2020 @ 19:02
  */
 public class TimelordRenderer extends LivingRenderer<TimelordEntity, BipedModel<TimelordEntity>> {

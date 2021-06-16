@@ -2,14 +2,14 @@ package me.suff.mc.regen.util.common;
 
 import me.suff.mc.regen.RegenConfig;
 import me.suff.mc.regen.Regeneration;
+import me.suff.mc.regen.api.ZeroRoomEvent;
 import me.suff.mc.regen.common.block.RegenTags;
 import me.suff.mc.regen.common.capability.RegenCap;
 import me.suff.mc.regen.common.item.HandItem;
-import me.suff.mc.regen.network.messages.ThirdPersonMessage;
-import me.suff.mc.regen.network.messages.UpdateSkinMapMessage;
-import me.suff.mc.regen.api.ZeroRoomEvent;
 import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.network.NetworkDispatcher;
+import me.suff.mc.regen.network.messages.ThirdPersonMessage;
+import me.suff.mc.regen.network.messages.UpdateSkinMapMessage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

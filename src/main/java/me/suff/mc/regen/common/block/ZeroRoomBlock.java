@@ -3,7 +3,7 @@ package me.suff.mc.regen.common.block;
 import net.minecraft.block.Block;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 20/05/2020 @ 11:30
  */
 public class ZeroRoomBlock extends Block {

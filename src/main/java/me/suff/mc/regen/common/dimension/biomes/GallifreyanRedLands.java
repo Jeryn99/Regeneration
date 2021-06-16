@@ -10,7 +10,7 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 28/04/2020 @ 12:42
  */
 public class GallifreyanRedLands extends Biome {

@@ -1,7 +1,4 @@
-package me.suff.mc.regen.client.rendering.model;// Made with Blockbench 3.7.5
-// Exported for Minecraft version 1.14
-// Paste this class into your mod and generate all required imports
-
+package me.suff.mc.regen.client.rendering.model;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.suff.mc.regen.common.capability.RegenCap;
@@ -90,8 +87,10 @@ public class RobesNew extends BipedModel {
             bb_main.render(f5);
         }
 
+
         if (type == EquipmentSlotType.CHEST) {
             Body.render(f5);
+
             RightArm.render(f5);
             LeftArm.render(f5);
             GlStateManager.pushMatrix();

@@ -1,5 +1,6 @@
 package me.suff.mc.regen.util.client;
 
+import me.suff.mc.regen.client.MovingSound;
 import me.suff.mc.regen.client.rendering.entity.ItemOverrideRenderer;
 import me.suff.mc.regen.client.rendering.entity.LaserRenderer;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
@@ -9,10 +10,9 @@ import me.suff.mc.regen.common.capability.RegenCap;
 import me.suff.mc.regen.common.entity.LaserEntity;
 import me.suff.mc.regen.common.entity.OverrideEntity;
 import me.suff.mc.regen.common.entity.TimelordEntity;
+import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.UpdateSkinMessage;
 import me.suff.mc.regen.util.common.RegenUtil;
-import me.suff.mc.regen.client.MovingSound;
-import me.suff.mc.regen.network.NetworkDispatcher;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;

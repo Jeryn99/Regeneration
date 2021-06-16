@@ -7,15 +7,12 @@ import me.suff.mc.regen.client.gui.BioContainerScreen;
 import me.suff.mc.regen.client.rendering.layers.HandsLayer;
 import me.suff.mc.regen.client.rendering.layers.RegenerationLayer;
 import me.suff.mc.regen.client.rendering.model.GuardArmorNew;
-import me.suff.mc.regen.client.rendering.model.GuardModel;
-import me.suff.mc.regen.client.rendering.model.RobeModel;
 import me.suff.mc.regen.client.rendering.model.RobesNew;
 import me.suff.mc.regen.client.rendering.tiles.ArchRender;
 import me.suff.mc.regen.client.rendering.tiles.HandTileRenderer;
 import me.suff.mc.regen.client.rendering.types.FieryRenderer;
 import me.suff.mc.regen.client.rendering.types.TypeLayFadeRenderer;
 import me.suff.mc.regen.client.skinhandling.SkinManipulation;
-import me.suff.mc.regen.common.item.DyeableClothingItem;
 import me.suff.mc.regen.common.tiles.ArchTile;
 import me.suff.mc.regen.common.tiles.HandInJarTile;
 import me.suff.mc.regen.handlers.ClientHandler;
@@ -42,7 +39,6 @@ import java.util.Map;
 public class ClientProxy extends CommonProxy {
 
     private static final RobesNew ROBES = new RobesNew(EquipmentSlotType.CHEST);
-    private static final RobeModel ROBES_OLD = new RobeModel();
     private static final RobesNew ROBES_HEAD = new RobesNew(EquipmentSlotType.HEAD);
     private static final RobesNew ROBES_LEGS = new RobesNew(EquipmentSlotType.LEGS);
     private static final GuardArmorNew GUARD_HEAD = new GuardArmorNew(EquipmentSlotType.HEAD);
@@ -50,14 +46,9 @@ public class ClientProxy extends CommonProxy {
     private static final GuardArmorNew GUARD_LEGGINGS = new GuardArmorNew(EquipmentSlotType.LEGS);
     private static final GuardArmorNew GUARD_FEET = new GuardArmorNew(EquipmentSlotType.FEET);
 
-    private static final GuardModel GUARD_HEAD_OLD = new GuardModel(EquipmentSlotType.HEAD);
-    private static final GuardModel GUARD_CHEST_OLD = new GuardModel(EquipmentSlotType.CHEST);
-    private static final GuardModel GUARD_LEGGINGS_OLD = new GuardModel(EquipmentSlotType.LEGS);
-    private static final GuardModel GUARD_FEET_OLD = new GuardModel(EquipmentSlotType.FEET);
 
+    //TODO Turn this into a hashmap again
     public static BipedModel getArmorModel(ItemStack item) {
-
-        boolean swiftItem = item.getOrCreateTag().contains(DyeableClothingItem.SWIFT_KEY);
 
         if (item.getItem() == RegenObjects.Items.ROBES_HEAD.get()) {
             return ROBES_HEAD;
@@ -68,26 +59,26 @@ public class ClientProxy extends CommonProxy {
         }
 
         if (item.getItem() == RegenObjects.Items.ROBES_CHEST.get()) {
-            return swiftItem ? ROBES_OLD : ROBES;
+            return ROBES;
         }
 
         if (item.getItem() == RegenObjects.Items.GUARD_HEAD.get()) {
-            return swiftItem ? GUARD_HEAD_OLD : GUARD_HEAD;
+            return GUARD_HEAD;
         }
 
         if (item.getItem() == RegenObjects.Items.GUARD_CHEST.get()) {
-            return swiftItem ? GUARD_CHEST_OLD : GUARD_CHEST;
+            return GUARD_CHEST;
         }
 
         if (item.getItem() == RegenObjects.Items.GUARD_LEGGINGS.get()) {
-            return swiftItem ? GUARD_LEGGINGS_OLD : GUARD_LEGGINGS;
+            return GUARD_LEGGINGS;
         }
 
         if (item.getItem() == RegenObjects.Items.GUARD_FEET.get()) {
-            return swiftItem ? GUARD_FEET_OLD : GUARD_FEET;
+            return GUARD_FEET;
         }
 
-        return swiftItem ? GUARD_HEAD_OLD : GUARD_HEAD;
+        return GUARD_HEAD;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package me.suff.mc.regen.common.tiles;
 
-import me.suff.mc.regen.common.capability.RegenCap;
 import me.suff.mc.regen.client.gui.BioContainerContainer;
+import me.suff.mc.regen.common.capability.RegenCap;
 import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.util.common.PlayerUtil;
 import net.minecraft.entity.player.PlayerEntity;

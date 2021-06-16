@@ -31,7 +31,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 22/04/2020 @ 11:46
  */
 public class ArchBlock extends DirectionalBlock implements ICompatObject {

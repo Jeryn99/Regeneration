@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraft.client.renderer.model.ModelBox;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 08/05/2020 @ 11:28
  */
 public class TimelordGuardModel extends BipedModel<TimelordEntity> {

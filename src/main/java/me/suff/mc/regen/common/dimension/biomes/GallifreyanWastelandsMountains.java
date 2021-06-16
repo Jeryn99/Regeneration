@@ -14,7 +14,7 @@ import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 05/05/2020 @ 14:56
  */
 public class GallifreyanWastelandsMountains extends GallifrayanWastelands {

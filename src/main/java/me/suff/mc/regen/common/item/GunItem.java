@@ -18,7 +18,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 07/05/2020 @ 12:50
  */
 public class GunItem extends SolidItem {

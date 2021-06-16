@@ -26,7 +26,7 @@ import net.minecraftforge.client.IRenderHandler;
 import javax.annotation.Nullable;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 28/04/2020 @ 10:41
  */
 public class GallifreyDimension extends Dimension {

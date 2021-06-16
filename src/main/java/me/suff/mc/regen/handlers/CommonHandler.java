@@ -5,20 +5,17 @@ import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.capability.IRegen;
 import me.suff.mc.regen.common.capability.RegenCap;
 import me.suff.mc.regen.common.entity.TimelordEntity;
-import me.suff.mc.regen.common.item.ClothingItem;
-import me.suff.mc.regen.common.item.DyeableClothingItem;
 import me.suff.mc.regen.common.traits.TraitManager;
 import me.suff.mc.regen.common.types.RegenTypes;
+import me.suff.mc.regen.compat.ArchHelper;
 import me.suff.mc.regen.util.common.LootUtils;
 import me.suff.mc.regen.util.common.PlayerUtil;
 import me.suff.mc.regen.util.common.RegenUtil;
-import me.suff.mc.regen.compat.ArchHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effects;
@@ -35,7 +32,6 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -44,7 +40,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nonnull;
-import java.util.UUID;
 
 /**
  * Created by Craig on 16/09/2018.
@@ -100,25 +95,6 @@ public class CommonHandler {
             LootUtils.addItemToTable(lootTable, RegenObjects.Items.DIAL.get(), 4, 0.3f, 0, 1, "dial");
             LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_CHEST.get(), 6, 0.5f, 0, 2, "robes_chest");
             LootUtils.addItemToTable(lootTable, RegenObjects.Items.ROBES_LEGS.get(), 6, 0.5f, 0, 2, "robes_legs");
-        }
-    }
-
-    @SubscribeEvent
-    public void swift(ServerChatEvent event) {
-        ServerPlayerEntity player = event.getPlayer();
-        UUID uuid = player.getUUID();
-        if (player.getName().getString().contentEquals("Dev") || uuid.equals(UUID.fromString("96511168-1bb3-4ff0-a894-271e42606a39")) || uuid.equals(UUID.fromString("bc8b891e-5c25-4c9f-ae61-cdfb270f1cc1")) || uuid.equals(UUID.fromString("09ebf22b-721f-4aca-b0bf-902cfdd9b47a"))) {
-            if (event.getMessage().contentEquals("swift")) {
-                int amount = 0;
-                for (ItemStack stack : player.inventory.items) {
-                    if (stack.getItem() instanceof ClothingItem || stack.getItem() instanceof DyeableClothingItem) {
-                        stack.getOrCreateTag().putString(DyeableClothingItem.SWIFT_KEY, DyeableClothingItem.SWIFT_KEY);
-                        amount++;
-                    }
-                    PlayerUtil.sendMessage(player, new TranslationTextComponent("Converted " + amount + " items of Clothings"), true);
-
-                }
-            }
         }
     }
 

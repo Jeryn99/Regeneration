@@ -1,8 +1,8 @@
 package me.suff.mc.regen.handlers.acting;
 
-import me.suff.mc.regen.network.messages.UpdateStateMessage;
 import me.suff.mc.regen.common.capability.IRegen;
 import me.suff.mc.regen.network.NetworkDispatcher;
+import me.suff.mc.regen.network.messages.UpdateStateMessage;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 

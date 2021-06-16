@@ -6,7 +6,7 @@ import net.tardis.mod.upgrades.Upgrade;
 import net.tardis.mod.upgrades.UpgradeEntry;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 22/04/2020 @ 12:13
  */
 public class ArchUpgrade extends Upgrade {

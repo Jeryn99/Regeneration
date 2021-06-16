@@ -7,10 +7,9 @@ import me.suff.mc.regen.common.capability.IRegen;
 import me.suff.mc.regen.common.capability.RegenCap;
 import me.suff.mc.regen.common.dimension.biomes.GallifrayanWastelands;
 import me.suff.mc.regen.common.types.RegenTypes;
-import me.suff.mc.regen.util.client.RenderUtil;
-import me.suff.mc.regen.util.common.PlayerUtil;
 import me.suff.mc.regen.proxy.ClientProxy;
 import me.suff.mc.regen.util.client.ClientUtil;
+import me.suff.mc.regen.util.client.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -50,7 +49,8 @@ import java.util.UUID;
 
 import static me.suff.mc.regen.compat.ArchHelper.getRegenerations;
 import static me.suff.mc.regen.compat.ArchHelper.hasRegenerations;
-import static me.suff.mc.regen.util.common.PlayerUtil.*;
+import static me.suff.mc.regen.util.common.PlayerUtil.RegenState;
+import static me.suff.mc.regen.util.common.PlayerUtil.isZeroRoom;
 
 /**
  * Created by Craig on 16/09/2018.

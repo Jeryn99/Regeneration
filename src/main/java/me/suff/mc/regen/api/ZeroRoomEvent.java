@@ -4,7 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 20/05/2020 @ 12:21
  */
 public class ZeroRoomEvent extends LivingEvent {

@@ -23,7 +23,7 @@ import java.util.Random;
 import static me.suff.mc.regen.util.common.RegenUtil.NO_SKIN;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 18/05/2020 @ 10:24
  */
 @Mod.EventBusSubscriber

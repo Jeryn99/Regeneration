@@ -6,7 +6,6 @@ import me.suff.mc.regen.RegenConfig;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.image.ImageDownloader;
 import me.suff.mc.regen.common.skin.HandleSkins;
-import me.suff.mc.regen.util.client.SkinDownloadManager;
 import me.suff.mc.regen.util.client.ClientUtil;
 import org.apache.commons.io.FileUtils;
 
@@ -117,7 +116,7 @@ public class FileUtil {
                 try {
                     createDefaultFolders();
                     skinpacks();
-                 //   SkinDownloadManager.downloadTrendingSkins();
+                    //   SkinDownloadManager.downloadTrendingSkins();
                     notDownloaded.set(false);
                 } catch (Exception e) {
                     Regeneration.LOG.error("Regeneration Mod: Failed to download skins! Check your internet connection and ensure you are playing in online mode!");
@@ -128,7 +127,7 @@ public class FileUtil {
     }
 
     public static void unzipSkinPack(String url, String packName) throws IOException {
-        File tempZip = new File(  "./temp/" + packName + ".zip");
+        File tempZip = new File("./temp/" + packName + ".zip");
         Regeneration.LOG.info("Downloading " + url + " to " + tempZip.getAbsolutePath());
         FileUtils.copyURLToFile(new URL(url), tempZip);
         try (ZipFile file = new ZipFile(tempZip)) {

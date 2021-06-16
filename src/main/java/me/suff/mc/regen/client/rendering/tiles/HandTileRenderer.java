@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.HashMap;
 
 /**
- * Created by Swirtzly on 22/08/2019 @ 16:30
+ * Created by Craig on 22/08/2019 @ 16:30
  */
 public class HandTileRenderer extends TileEntityRenderer<HandInJarTile> {
 

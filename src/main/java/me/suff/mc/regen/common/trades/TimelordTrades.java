@@ -9,7 +9,7 @@ import net.minecraft.item.MerchantOffer;
 import java.util.Random;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 03/05/2020 @ 21:18
  */
 public class TimelordTrades {

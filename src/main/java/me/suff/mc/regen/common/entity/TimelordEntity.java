@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 03/05/2020 @ 18:50
  */
 public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {

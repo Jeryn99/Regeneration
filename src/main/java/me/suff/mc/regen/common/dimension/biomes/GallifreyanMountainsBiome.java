@@ -12,7 +12,7 @@ import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 28/04/2020 @ 11:41
  */
 public class GallifreyanMountainsBiome extends Biome {

@@ -2,12 +2,12 @@ package me.suff.mc.regen.compat;
 
 import me.suff.mc.regen.RegenConfig;
 import me.suff.mc.regen.Regeneration;
+import me.suff.mc.regen.api.ZeroRoomEvent;
 import me.suff.mc.regen.common.capability.RegenCap;
 import me.suff.mc.regen.common.entity.TimelordEntity;
 import me.suff.mc.regen.common.types.RegenTypes;
 import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.util.common.PlayerUtil;
-import me.suff.mc.regen.api.ZeroRoomEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
@@ -49,7 +49,7 @@ import net.tardis.mod.upgrades.UpgradeEntry;
 import static net.tardis.mod.helper.TardisHelper.TARDIS_POS;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 19/04/2020 @ 16:20
  */
 public class TardisCompat {

@@ -15,7 +15,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 /**
- * Created by Swirtzly on 22/08/2019 @ 14:43
+ * Created by Craig on 22/08/2019 @ 14:43
  */
 public class BioContainerContainer extends Container {
 

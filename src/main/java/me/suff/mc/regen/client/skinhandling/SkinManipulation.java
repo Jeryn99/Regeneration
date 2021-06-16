@@ -4,16 +4,16 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.suff.mc.regen.RegenConfig;
 import me.suff.mc.regen.Regeneration;
+import me.suff.mc.regen.client.image.ImageDownloadBuffer;
 import me.suff.mc.regen.client.rendering.types.ATypeRenderer;
 import me.suff.mc.regen.common.capability.IRegen;
 import me.suff.mc.regen.common.capability.RegenCap;
 import me.suff.mc.regen.common.item.DyeableClothingItem;
 import me.suff.mc.regen.common.skin.HandleSkins;
 import me.suff.mc.regen.common.types.RegenType;
-import me.suff.mc.regen.network.messages.UpdateSkinMessage;
-import me.suff.mc.regen.client.image.ImageDownloadBuffer;
 import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.network.NetworkDispatcher;
+import me.suff.mc.regen.network.messages.UpdateSkinMessage;
 import me.suff.mc.regen.util.client.ClientUtil;
 import me.suff.mc.regen.util.client.TexUtil;
 import me.suff.mc.regen.util.common.PlayerUtil;
@@ -187,8 +187,12 @@ public class SkinManipulation {
         boolean isWearingChest = player.getItemBySlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.GUARD_CHEST.get() || player.getItemBySlot(EquipmentSlotType.CHEST).getItem() == RegenObjects.Items.ROBES_CHEST.get();
 
         boolean isWearingLeggings = player.getItemBySlot(EquipmentSlotType.LEGS).getItem() == RegenObjects.Items.GUARD_LEGGINGS.get();
+
         model.rightPants.neverRender = isWearingLeggings;
         model.leftPants.neverRender = isWearingLeggings;
+
+        model.leftSleeve.neverRender = isWearingChest;
+        model.rightSleeve.neverRender = isWearingChest;
 
         RegenCap.get(player).ifPresent((cap) -> {
             /* When the player is in a Post Regenerative state and above a 3x3 grid of Zero Rounde Blocks,
@@ -199,14 +203,6 @@ public class SkinManipulation {
                 GlStateManager.translated(0, 0, -1);
             }
 
-
-            //Fixes First person arm
-            if (Minecraft.getInstance().player.getUUID() == player.getUUID()) {
-                if (Minecraft.getInstance().options.thirdPersonView == 0 && isWearingChest) {
-                    model.leftArm.neverRender = player.getUUID() != Minecraft.getInstance().player.getUUID();
-                    model.rightArm.neverRender = player.getUUID() != Minecraft.getInstance().player.getUUID();
-                }
-            }
 
 			/* Sometimes when the player is teleported, the Mojang skin becomes re-downloaded and resets to either Steve,
 			 or the Mojang Skin, so once they have been re-created, we remove the cache we have on them, causing it to be renewed */

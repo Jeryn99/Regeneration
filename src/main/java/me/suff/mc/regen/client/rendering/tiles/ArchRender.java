@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 22/04/2020 @ 17:46
  */
 public class ArchRender extends TileEntityRenderer<ArchTile> {

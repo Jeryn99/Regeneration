@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.model.ModelBox;
 import net.minecraft.entity.Entity;
 
 /**
- * Created by Swirtzly on 22/08/2019 @ 16:46
+ * Created by Craig on 22/08/2019 @ 16:46
  */
 public class HandModel extends EntityModel<Entity> {
     private final RendererModel arm;

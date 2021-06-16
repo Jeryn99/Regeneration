@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 29/04/2020 @ 12:04
  */
 public class ComponentItem extends SolidItem implements ICompatObject {

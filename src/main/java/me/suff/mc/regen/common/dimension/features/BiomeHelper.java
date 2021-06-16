@@ -13,7 +13,7 @@ import net.minecraft.world.gen.placement.HeightWithChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 30/04/2020 @ 14:22
  */
 public class BiomeHelper {

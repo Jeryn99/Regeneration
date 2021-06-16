@@ -18,7 +18,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 20/05/2020 @ 20:39
  */
 public class ConfessionDialItem extends Item implements ICompatObject {

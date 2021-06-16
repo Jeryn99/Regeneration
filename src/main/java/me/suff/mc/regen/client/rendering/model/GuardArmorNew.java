@@ -10,7 +10,7 @@ import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 08/05/2020 @ 11:28
  */
 public class GuardArmorNew extends BipedModel {
@@ -85,14 +85,32 @@ public class GuardArmorNew extends BipedModel {
         }
 
         if (type == EquipmentSlotType.CHEST) {
+
             Body.render(f5);
+
+            GlStateManager.pushMatrix();
+            if(entity.isSneaking()){
+                GlStateManager.translated(0,0.2,0);
+            }
+            GlStateManager.scaled(1.1,1.1,1.1);
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translated(0.03,0,0);
             RightArm.render(f5);
+            GlStateManager.popMatrix();
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translated(-0.03,0,0);
             LeftArm.render(f5);
+            GlStateManager.popMatrix();
+
+            GlStateManager.popMatrix();
         }
 
         if (type == EquipmentSlotType.LEGS || type == EquipmentSlotType.FEET) {
             RightLeg.render(f5);
             LeftLeg.render(f5);
         }
+
     }
 }

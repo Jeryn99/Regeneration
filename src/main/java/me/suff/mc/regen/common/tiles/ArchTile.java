@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 22/04/2020 @ 17:43
  */
 public class ArchTile extends TileEntity {
