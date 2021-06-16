@@ -5,7 +5,7 @@
             "download_url" : "https://github.com/WhoCraft/Regeneration/blob/data/skinpacks/doctor_who/doctors.zip?raw=true",
             "credits": "Violet, GasMaskMan, Dhi_awesome",
             "install" : "doctor_who/doctors",
-            "description" : "",
+            "description" : "Did someone ask for a Doctor?",
             "thumbnail" : ""
         },
         {
@@ -13,15 +13,15 @@
             "download_url" : "https://github.com/WhoCraft/Regeneration/blob/data/skinpacks/doctor_who/companions.zip?raw=true",
             "credits": "Violet, GasMaskMan, Dhi_awesome",
             "install" : "doctor_who/companions",
-            "description" : "",
+            "description" : "Contains Companions of the Doctor!",
             "thumbnail" : ""
         },
         {
             "name" : "Doctor Who - Timelords",
-            "download_url" : "https://github.com/WhoCraft/Regeneration/blob/data/skinpacks/timelords.zip?raw=true",
+            "download_url" : "https://github.com/WhoCraft/Regeneration/blob/data/skinpacks/doctor_who/timelords.zip?raw=true",
             "credits": "Violet, GasMaskMan, Dhi_awesome",
             "install" : "doctor_who/timelords",
-            "description" : "",
+            "description" : "Pffft. Last of the timelords?",
             "thumbnail" : ""
         }
     ]
