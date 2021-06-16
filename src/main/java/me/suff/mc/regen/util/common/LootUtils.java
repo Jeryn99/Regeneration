@@ -11,19 +11,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import java.lang.reflect.Field;
 
 public class LootUtils {
-    private static final Field tablePools;
-    private static final Field poolEntries;
-    private static final Field entryItem;
-
-    static {
-        tablePools = ObfuscationReflectionHelper.findField(LootTable.class, "pools");
-        tablePools.setAccessible(true);
-        poolEntries = ObfuscationReflectionHelper.findField(LootPool.class, "entries");
-        poolEntries.setAccessible(true);
-        entryItem = ObfuscationReflectionHelper.findField(ItemLootEntry.class, "item");
-        entryItem.setAccessible(true);
-    }
-
 
     public static LootPool createLootPool(String name, RandomValueRange numRolls, RandomValueRange bonusRolls, LootEntry.Builder entryBuilder, ILootCondition.IBuilder conditionBuilder, ILootFunction.IBuilder functionBuilder) {
         LootPool.Builder builder = LootPool.lootPool();

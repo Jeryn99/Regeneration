@@ -106,10 +106,10 @@ curseforge {
     project {
         id = rootProject.regen
         changelogType = 'html'
-        changelog = 'Changes: </br> - Fixed Armors breaking limbs sometimes </br> - Updated to MineSkin Api </br> - Updated SkinPack System to be more flexible '
+        changelog = '<b> Version 4.1.0 (Re-Release) </br> </br> Changes: </br> - Fixed Armors breaking limbs sometimes </br> - Updated to MineSkin Api </br> - Updated SkinPack System to be more flexible '
         releaseType = 'release'
         mainArtifact(jar) {
-            displayName = "[${minecraft_version}] Regeneration - $project.version"
+            displayName = "[${minecraft_version}] Regeneration - $project.version - (Re-Release)"
         }
     }
 }
