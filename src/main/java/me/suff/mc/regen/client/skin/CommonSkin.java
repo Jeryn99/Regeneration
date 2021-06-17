@@ -151,8 +151,9 @@ public class CommonSkin {
                 String packName = currentPack.get("name").getAsString();
                 String packCredit = currentPack.get("credits").getAsString();
                 String downloadLink = currentPack.get("download_url").getAsString();
+                String desc = currentPack.get("description").getAsString();
 
-                Regeneration.LOG.info("Downloading " + packName + " by " + packCredit);
+                Regeneration.LOG.info("Downloading " + packName + " by " + packCredit + " " + desc);
                 unzipSkinPack(downloadLink);
             }
         }

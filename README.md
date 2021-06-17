@@ -4,7 +4,8 @@
 <a href="https://www.curseforge.com/minecraft/mc-mods/regeneration/files">
   <img src="http://cf.way2muchnoise.eu/versions/regeneration.svg">
   <img src="http://cf.way2muchnoise.eu/regeneration.svg"> <br>
-</a>>
+</a>
+
 </p>
 <p align="center">
   <b>Links:</b><br>
@@ -32,6 +33,7 @@
   <a href="https://twitter.com/AlotOfSpareTime">GasMaskVA</a> | Timelord Voices
   <a href="https://twitter.com/holo_modeller">Dhi</a> | Models & Textures
   <a href="https://twitter.com/LocalViolet">Violet</a> | Logo & Doctor Who Skins
+  <a href="https://inventivetalent.org/">InventiveTalent</a> | MineSkin API
 
 <p align="center">
 <a href="https://www.bisecthosting.com/dontblink">
