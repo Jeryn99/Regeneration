@@ -36,20 +36,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class IncarnationScreen extends ContainerScreen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
-    private static final PlayerModel< ? > alexModel = new PlayerModel<>(0.1f, true);
-    private static final PlayerModel< ? > steveModel = new PlayerModel<>(0.1f, false);
+    private static final PlayerModel<?> alexModel = new PlayerModel<>(0.1f, true);
+    private static final PlayerModel<?> steveModel = new PlayerModel<>(0.1f, false);
     public static boolean isAlex = true;
     private static ResourceLocation currentTexture = DefaultPlayerSkin.getDefaultSkin();
     private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
     private static PlayerUtil.SkinType renderChoice = currentSkinType;
-    private static List< File > skins = null;
+    private static List<File> skins = null;
     private static int position = 0;
-    private final ArrayList< DescButton > descButtons = new ArrayList<>();
+    private final ArrayList<DescButton> descButtons = new ArrayList<>();
     private RCheckbox excludeTrending;
     private TextFieldWidget searchField;
     private Button uploadToMcBtn;
@@ -62,11 +63,17 @@ public class IncarnationScreen extends ContainerScreen {
     }
 
     public static void updateModels() {
-        currentTexture = CommonSkin.fileTotexture(skins.get(position));
-        isAlex = skins.get(position).toPath().startsWith(CommonSkin.SKIN_DIRECTORY_ALEX.toPath().toString());
-        renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
+        if (!skins.isEmpty()) {
+            currentTexture = CommonSkin.fileTotexture(skins.get(position));
+            isAlex = skins.get(position).toPath().startsWith(CommonSkin.SKIN_DIRECTORY_ALEX.toPath().toString());
+            renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
+        }
     }
 
+    @Override
+    public boolean isPauseScreen() {
+        return true;
+    }
 
     @Override
     public void init() {
@@ -83,8 +90,11 @@ public class IncarnationScreen extends ContainerScreen {
         position = 0;
         skins = CommonSkin.listAllSkins(currentSkinType);
 
+        if (skins.isEmpty()) {
+            Minecraft.getInstance().setScreen(new RErrorScreen(new TranslationTextComponent("No Skins for " + new TranslationTextComponent("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), new TranslationTextComponent("Please place skins in the local Directory")));
+        }
 
-        this.searchField = new TextFieldWidget(this.font, cx + 15, cy + 145, imageWidth - 70, 20, this.searchField, new TranslationTextComponent("selectWorld.search"));
+        this.searchField = new TextFieldWidget(this.font, cx + 15, cy + 145, imageWidth - 70, 20, this.searchField, new TranslationTextComponent("skins.search"));
 
         this.searchField.setResponder((p_214329_1_) -> {
             position = 0;
@@ -147,26 +157,13 @@ public class IncarnationScreen extends ContainerScreen {
             }
         }).setDescription(new String[]{"button.tooltip.next_skin"});
 
-        DescButton btnBack = new DescButton(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.back"), new Button.IPressable() {
-            @Override
-            public void onPress(Button button) {
-                Minecraft.getInstance().setScreen(new PreferencesScreen());
-            }
-        });
+        DescButton btnBack = new DescButton(cx + 10, cy + 115 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen()));
 
-        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.open_folder"), new Button.IPressable() {
-            @Override
-            public void onPress(Button button) {
-                Util.getPlatform().openFile(CommonSkin.SKIN_DIRECTORY);
-            }
-        }).setDescription(new String[]{"button.tooltip.open_folder"});
+        DescButton btnOpenFolder = new DescButton(cx + 90 - 20, cy + 115 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.open_folder"), button -> Util.getPlatform().openFile(CommonSkin.SKIN_DIRECTORY)).setDescription(new String[]{"button.tooltip.open_folder"});
 
-        DescButton btnSave = new DescButton(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.save"), new Button.IPressable() {
-            @Override
-            public void onPress(Button button) {
-                updateModels();
-                NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex));
-            }
+        DescButton btnSave = new DescButton(cx + 90 - 20, cy + 90 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.save"), button -> {
+            updateModels();
+            NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new NextSkinMessage(RegenUtil.fileToBytes(skins.get(position)), isAlex));
         }).setDescription(new String[]{"button.tooltip.save_skin"});
 
         DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.reset_skin"), new Button.IPressable() {
@@ -189,31 +186,6 @@ public class IncarnationScreen extends ContainerScreen {
             }
         });
         this.addButton(this.excludeTrending);
-
-
-     /*  List< Path > files;
-        AtomicInteger offset = new AtomicInteger(btnH + 5);
-        try {
-           Files.list(new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/Skins/alex").toPath())
-                    .collect(Collectors.toList())
-                    .forEach(path -> {
-                        System.out.println(path);
-                        RCheckbox bob = new RCheckbox(cx + 10, cy + 25 + offset.get(), 150, 20, new TranslationTextComponent(path.toString()), true, checkboxButton -> {
-                            position = 0;
-                          //  if (!checkboxButton.isChecked()) {
-                           //     skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains(path.toString()));
-                          //  } else {
-                          //      skins = CommonSkin.listAllSkins(currentSkinType);
-                         //   }
-                            updateModels();
-                        });
-                        offset.addAndGet(btnH + 5);
-                        addButton(bob);
-                    });
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }*/
-
 
         addButton(btnNext);
         addButton(btnPrevious);
