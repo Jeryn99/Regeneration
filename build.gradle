@@ -1,40 +1,52 @@
-
-
 buildscript {
 	repositories {
+		maven { url = 'https://files.minecraftforge.net/maven' }
 		jcenter()
-		maven { url = 'http://files.minecraftforge.net/maven' }
+		mavenCentral()
 	}
-
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
 	}
 }
 
-plugins {
-	id 'com.github.johnrengelman.shadow' version '1.2.4'
-}
+apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
-apply plugin: 'net.minecraftforge.gradle.forge'
-
-//TODO add classifier for builds not on the master branch
 version = project.mod_version
 group = project.maven_group
-archivesBaseName = "${project.jar_name}-${minecraft_version}"
+archivesBaseName = 'modid'
 
-sourceCompatibility = targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-	version = "${project.minecraft_version}-${project.forge_version}"
-	mappings = project.mappings_version
-	makeObfSourceJar = true
 
-	if(project.hasProperty('runDir'))
-		runDir = project.runDir
-	else if(file('../run').exists())
-		runDir = '../run'
-	else
-		runDir = 'run'
+	accessTransformer = file('src/main/resources/META-INF/regeneration_at.cfg')
+
+
+	mappings channel: 'snapshot', version: '20171003-1.12'
+
+	runs {
+		client {
+			workingDirectory project.file('run')
+
+			// Recommended logging data for a userdev environment
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+			// Recommended logging level for the console
+			property 'forge.logging.console.level', 'debug'
+		}
+
+		server {
+
+			// Recommended logging data for a userdev environment
+			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+			// Recommended logging level for the console
+			property 'forge.logging.console.level', 'debug'
+		}
+	}
 }
 
 repositories {
@@ -53,43 +65,23 @@ repositories {
 		url = "https://jitpack.io"
 	}
 
-
 	maven {
 		name = "Progwml6 maven"
 		url = "http://dvs1.progwml6.com/files/maven"
 	}
 }
 
-configurations {
-	testServer.extendsFrom runtime
+
+dependencies {
+	minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
 }
 
 dependencies {
-	deobfCompile 'com.github.Spectre0987:TardisMod:0.1.0E_Hotfix'
-	deobfCompile 'com.gitlab.lcoremodders:LucraftCore:3fe48363d9'
-
-	testCompile 'junit:junit:4.12'
-	testCompile 'org.objenesis:objenesis:3.0.1'
-	testCompile 'org.mockito:mockito-core:2.23.4'
-
-	testServer 'com.github.HoldYourWaffle:CrashMyServer:-SNAPSHOT'
+	implementation fg.deobf('com.github.Spectre0987:TardisMod:0.1.0E_Hotfix')
+	implementation fg.deobf('com.gitlab.lcoremodders:LucraftCore:3fe48363d9')
 }
 
-processResources {
-	inputs.property 'version', project.version
-	inputs.property 'mcversion', project.minecraft.version
-
-	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
-		expand 'version':project.version, 'mcversion':project.minecraft.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
-	}
-}
-
-def core_plugin = "me.swirtzly.regeneration.asm.RegenerationPlugin"
+def core_plugin = "me.suff.mc.regen.asm.RegenerationPlugin"
 
 jar {
 	manifest {
@@ -100,3 +92,21 @@ jar {
 }
 
 
+// Example configuration to allow publishing using the maven-publish task
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar')
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+//publish.dependsOn('reobfJar')
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact jar
+		}
+	}
+	repositories {
+		maven {
+			url "file:///${project.projectDir}/mcmodsrepo"
+		}
+	}
+}
