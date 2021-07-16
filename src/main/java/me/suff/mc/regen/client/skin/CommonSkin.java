@@ -152,7 +152,7 @@ public class CommonSkin {
             JsonArray authorsJson = currentPack.get("authors").getAsJsonArray();
 
             ArrayList<String> authors = new ArrayList<>();
-            for(int i = 0; i < authorsJson.size(); i++){
+            for (int i = 0; i < authorsJson.size(); i++) {
                 authors.add(authorsJson.get(i).getAsString());
             }
 
@@ -163,8 +163,8 @@ public class CommonSkin {
 
             SkinPack.add(new SkinPack(packName, authors, downloadLink, thumbnail, namespace));
 
-            File skinPackDir = new File(SKIN_DIRECTORY_ALEX + "/" + namespace.getNamespace() + "/"+ namespace.getPath());
-            if(skinPackDir.exists()){
+            File skinPackDir = new File(SKIN_DIRECTORY_ALEX + "/" + namespace.getNamespace() + "/" + namespace.getPath());
+            if (skinPackDir.exists()) {
                 skinPackDir.mkdirs();
             }
             long attr = skinPackDir.lastModified();

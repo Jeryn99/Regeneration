@@ -21,7 +21,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 
 
 
-version = '2.0.3'
+version = '2.0.4'
 group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = '[1.16] Regeneration'
 

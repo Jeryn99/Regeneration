@@ -72,6 +72,7 @@ public class MineSkin {
         return foundSkins;
     }
 
+
     /**
      * @param url URL
      * @return Returns a JsonObject of the response from the site

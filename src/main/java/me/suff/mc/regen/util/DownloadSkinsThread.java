@@ -1,17 +1,8 @@
 package me.suff.mc.regen.util;
 
-import me.suff.mc.regen.Regeneration;
 import org.apache.commons.io.FileUtils;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.io.File;
 
 import static me.suff.mc.regen.client.skin.CommonSkin.*;
 

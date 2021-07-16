@@ -209,7 +209,7 @@ public class ClientEvents {
     private static void handleGunCrosshair(RenderGameOverlayEvent.Pre event, ClientPlayerEntity player, me.suff.mc.regen.common.regen.IRegen cap) {
         boolean gunSight = player.getMainHandItem().getItem() instanceof GunItem && player.getUseItemRemainingTicks() > 0;
         boolean healthCheck = event.getType().name().toLowerCase().contains("health");
-        if(gunSight && healthCheck){
+        if (gunSight && healthCheck) {
             event.setCanceled(true);
         }
         AbstractGui.GUI_ICONS_LOCATION = gunSight ? HEARTS : OLD;

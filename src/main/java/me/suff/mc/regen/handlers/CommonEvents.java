@@ -193,7 +193,7 @@ public class CommonEvents {
                     cap.syncToClients((ServerPlayerEntity) event.getEntityLiving());
                 return;
             }
-            if(cap.stateManager() == null) return;
+            if (cap.stateManager() == null) return;
             boolean notDead = cap.stateManager().onKilled(event.getSource());
             event.setCanceled(notDead);
         });

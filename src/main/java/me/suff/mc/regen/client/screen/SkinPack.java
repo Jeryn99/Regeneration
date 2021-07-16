@@ -21,7 +21,7 @@ import java.util.HashMap;
 public class SkinPack {
 
     private static final HashMap<ResourceLocation, ResourceLocation> THUMBNAIL = new HashMap<>();
-    private static ArrayList<SkinPack> skins = new ArrayList<>();
+    private static final ArrayList<SkinPack> skins = new ArrayList<>();
     private final ResourceLocation namespace;
     private String name;
     private ArrayList<String> authors;
@@ -33,7 +33,7 @@ public class SkinPack {
         this.downloadUrl = downloadUrl;
         this.namespace = namespace;
 
-        if(!thumbnail.isEmpty()) {
+        if (!thumbnail.isEmpty()) {
             Thread thread = new Thread(() -> {
                 try {
                     THUMBNAIL.put(namespace, urlToTexture(new URL(thumbnail)));
@@ -78,7 +78,7 @@ public class SkinPack {
         return skins;
     }
 
-    public static void add(SkinPack skinPack){
+    public static void add(SkinPack skinPack) {
         skins.add(skinPack);
     }
 
