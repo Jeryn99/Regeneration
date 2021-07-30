@@ -5,12 +5,12 @@ import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.POVMessage;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class EnderDragonTransition extends TransitionType {
     @Override
@@ -29,8 +29,8 @@ public class EnderDragonTransition extends TransitionType {
 
         if (cap.getLiving() instanceof Player) {
             Player serverPlayerEntity = (Player) cap.getLiving();
-            serverPlayerEntity.abilities.mayfly = RegenConfig.COMMON.allowUpwardsMotion.get();
-            serverPlayerEntity.abilities.flying = RegenConfig.COMMON.allowUpwardsMotion.get();
+            serverPlayerEntity.getAbilities().mayfly = RegenConfig.COMMON.allowUpwardsMotion.get();
+            serverPlayerEntity.getAbilities().flying = RegenConfig.COMMON.allowUpwardsMotion.get();
         }
     }
 
@@ -38,8 +38,8 @@ public class EnderDragonTransition extends TransitionType {
     public void onFinishRegeneration(IRegen cap) {
         if (cap.getLiving() instanceof ServerPlayer) {
             ServerPlayer serverPlayerEntity = (ServerPlayer) cap.getLiving();
-            serverPlayerEntity.abilities.mayfly = serverPlayerEntity.isCreative();
-            serverPlayerEntity.abilities.flying = false;
+            serverPlayerEntity.getAbilities().mayfly = serverPlayerEntity.isCreative();
+            serverPlayerEntity.getAbilities().flying = false;
 
             if (cap.getLiving() instanceof ServerPlayer) {
                 NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));

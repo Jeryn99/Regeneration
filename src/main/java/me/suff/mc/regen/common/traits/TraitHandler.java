@@ -104,7 +104,7 @@ public class TraitHandler {
     public static void onJump(LivingEvent.LivingJumpEvent event) {
         RegenCap.get(event.getEntityLiving()).ifPresent(iRegen -> {
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.LEAP.get()) {
-                event.getEntityLiving().setDeltaMovement(event.getEntityLiving().getDeltaMovement().x, event.getEntityLiving().getDeltaMovement().y + 0.1F * 2, event.getEntityLiving().getEntity().getDeltaMovement().z);
+                event.getEntityLiving().setDeltaMovement(event.getEntityLiving().getDeltaMovement().x, event.getEntityLiving().getDeltaMovement().y + 0.1F * 2, event.getEntityLiving().getDeltaMovement().z);
             }
         });
     }

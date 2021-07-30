@@ -5,39 +5,39 @@ import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RParticles;
 import me.suff.mc.regen.common.objects.RSounds;
-import me.suff.mc.regen.common.objects.RTiles;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.Containers;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Random;
 
-public class JarTile extends BlockEntity implements TickableBlockEntity {
+public class JarTile extends BlockEntity implements BlockEntityTicker<JarTile> {
 
     private boolean updateSkin = true;
     private ItemStackHandler itemHandler = createHandler();
     private LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
-    public JarTile() {
-        super(RTiles.HAND_JAR.get());
+    public JarTile(BlockEntityType<?> p_155228_, BlockPos p_155229_, BlockState p_155230_) {
+        super(p_155228_, p_155229_, p_155230_);
     }
 
     private static void spawnParticles(Level world, BlockPos worldIn) {
@@ -67,11 +67,11 @@ public class JarTile extends BlockEntity implements TickableBlockEntity {
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(getBlockState(), pkt.getTag());
+        handleUpdateTag(pkt.getTag());
     }
 
     @Override
-    public void tick() {
+    public void tick(Level level, BlockPos blockPos, BlockState blockState, JarTile jarTile) {
         if (isValid(Action.CREATE)) {
             spawnParticles(level, worldPosition);
         }
@@ -133,13 +133,13 @@ public class JarTile extends BlockEntity implements TickableBlockEntity {
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
+    public void load(CompoundTag nbt) {
         setLindos(nbt.getFloat("energy"));
         if (nbt.contains("inv")) {
             itemHandler.deserializeNBT(nbt.getCompound("inv"));
         }
         setUpdateSkin(nbt.getBoolean("update_skin"));
-        super.load(state, nbt);
+        super.load(nbt);
     }
 
     @Override

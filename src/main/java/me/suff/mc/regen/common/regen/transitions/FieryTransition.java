@@ -7,15 +7,15 @@ import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.POVMessage;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.util.Iterator;
 

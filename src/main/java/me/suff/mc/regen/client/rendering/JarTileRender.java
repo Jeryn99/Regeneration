@@ -30,7 +30,7 @@ import java.util.HashMap;
 import static me.suff.mc.regen.util.RegenUtil.round;
 
 /* Created by Craig on 05/03/2021 */
-public class JarTileRender extends BlockEntityRenderer<JarTile> {
+public class JarTileRender implements BlockEntityRenderer<JarTile> {
 
     private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
@@ -39,10 +39,6 @@ public class JarTileRender extends BlockEntityRenderer<JarTile> {
     AlexArmModel alexArmModel = new AlexArmModel();
     EntityModel mainModel = new AlexArmModel();
 
-
-    public JarTileRender(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-    }
 
     @Override
     public void render(JarTile tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -94,7 +90,7 @@ public class JarTileRender extends BlockEntityRenderer<JarTile> {
     }
 
     private void add(Fluid fluid, BlockAndTintGetter lightReader, BlockPos posIn, VertexConsumer renderer, PoseStack stack, float x, float y, float z, float u, float v) {
-        int i = fluid.getFluid().getAttributes().getColor(lightReader, posIn);
+        int i = fluid.getAttributes().getColor(lightReader, posIn);
         float alpha = (float) (i >> 24 & 255) / 255.0F;
         float r = (float) (i >> 16 & 255) / 255.0F;
         float g = (float) (i >> 8 & 255) / 255.0F;

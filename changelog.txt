@@ -1,0 +1,90 @@
+Build: 1.17.1-37.0.15 - Fri Jul 30 02:10:51 GMT 2021
+	gigaherz:
+		Introduce RegisterShadersEvent to register shaders with the proper timing (runs every client resource reload).
+		Fix ShaderInstance to allow resourcelocations with namespaces as input.
+		Fix shader parsing to respect resource domains.
+		Fix ForgeRenderTypes to use the right shader in each situation.
+		Add custom forge shader for unlit translucent entity rendering, equivalent to the vanilla entity translucent shader.
+
+	daemonumbra:
+		Remove Generic from ProjectileImpactEvent (#7959)
+		
+		Generification of this event was half-done and has been aborted, leaving the generic parameter in place just creates confusion and crashes
+
+=========
+Build: 1.17.1-37.0.13 - Wed Jul 28 05:43:57 GMT 2021
+	sizableshrimp:
+		Fix userdev mod deps on the classpath (#7919)
+
+=========
+Build: 1.17.1-37.0.12 - Mon Jul 26 22:22:53 GMT 2021
+	ititus:
+		Fix typo in FluidBlockWrapper (#7931)
+
+=========
+Build: 1.17.1-37.0.11 - Mon Jul 26 21:24:39 GMT 2021
+	lexmanos:
+		Fix rounding related errors with small entity pathfinding. Closes #7730
+
+=========
+Build: 1.17.1-37.0.10 - Mon Jul 26 08:55:12 GMT 2021
+	eerussianguy:
+		Add modder-friendly way to edit the boat model / texture in custom boats (#7897)
+
+=========
+Build: 1.17.1-37.0.9 - Sun Jul 25 20:48:45 GMT 2021
+	Commoble:
+		Fix EntityRendererEventsTest crashing dedicated server when running forge_test_server in forgedev (#7930)
+
+=========
+Build: 1.17.1-37.0.8 - Sun Jul 25 10:08:29 GMT 2021
+	gigaherz:
+		Added RegisterClientReloadListenersEvent which lets you register reload listeners with appropriate timing.
+		Added new entity rendering events.
+		- EntityRenderersEvent.RegisterLayerDefinitions: Used to register layer definitions for entity models.
+		- EntityRenderersEvent.RegisterRenderers: Used to register entity renderers.
+		- EntityRenderersEvent.AddLayers: Called during resource reload after all renderers have been constructed and it's safe to add layers.
+		Removed RenderingRegistry, which is now not necessary.
+		Removed a few unused things.
+		Fixes #7920
+
+=========
+Build: 1.17.1-37.0.7 - Sat Jul 24 18:19:07 GMT 2021
+	cyborgmas:
+		remove old direct GL call (#7907)
+
+	supermartijn642:
+		Pass the 'includeName' flag to the ItemTossEvent (#7894)
+
+=========
+Build: 1.17.1-37.0.5 - Sat Jul 24 14:42:12 GMT 2021
+	supermartijn642:
+		Expose RenderStateShard inner classes (#7895)
+		
+		In 1.17, all of the inner classes of `RenderStateShard` (`RenderStateShard.OverlayStateShard`, `RenderStateShard.WriteMaskStateShard`, etc.) have been changed to protected. These classes are needed however to create new `RenderType.CompositeRenderType`'s using `RenderType.CompositeState.CompositeStateBuilder`.
+		Since these are protected inner classes, their constructors also can't be directly be obtained using `ObfuscationReflectionHelper`.
+		
+		Currently, any mod using custom `RenderType`'s will have to either:
+		- add their own access transformer for the inner classes, or
+		- extend `RenderStateShard` to access `RenderStateShard`'s inner classes, and extend `RenderType` to access `RenderType.CompositeRenderType`
+		
+		This PR changes the visibility of `RenderStateShard`'s inner classes to public in Forge's `accesstransformer.cfg`.
+
+	cyborgmas:
+		1.17 Fix InitGuiEvent (#7906)
+
+=========
+Build: 1.17.1-37.0.3 - Sat Jul 24 14:30:37 GMT 2021
+	cyborgmas:
+		added back attribute patches (#7886)
+
+=========
+Build: 1.17.1-37.0.2 - Sat Jul 24 00:26:10 GMT 2021
+	lexmanos:
+		Bump SecureJarHandler, and fix life cycle event's deferred work being on the incorrect thread/boot classloader.
+
+=========
+Build: 1.17.1-37.0.1 - Thu Jul 22 21:52:37 GMT 2021
+	lexmanos:
+		Bump SecureJarHandler to fix package meta issue. Closes #7881
+		Fix version.json having duplicate libraries.

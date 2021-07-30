@@ -16,7 +16,9 @@ public class TraitLongArms extends AbstractTrait {
     public void apply(IRegen data) {
         LivingEntity living = data.getLiving();
         AttributeInstance reach = living.getAttribute(ForgeMod.REACH_DISTANCE.get());
-        reach.addPermanentModifier(new AttributeModifier(REACH_UUID, "Reach modifier", 15, AttributeModifier.Operation.ADDITION));
+        if (reach != null) {
+            reach.addPermanentModifier(new AttributeModifier(REACH_UUID, "Reach modifier", 15, AttributeModifier.Operation.ADDITION));
+        }
     }
 
     @Override
