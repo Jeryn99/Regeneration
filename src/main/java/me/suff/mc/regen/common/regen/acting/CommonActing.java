@@ -12,21 +12,21 @@ import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SFXMessage;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenSources;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -68,8 +68,8 @@ class CommonActing implements Acting {
                 break;
             case REGENERATING:
 
-                if (livingEntity instanceof ServerPlayerEntity) {
-                    ServerPlayerEntity playerEntity = (ServerPlayerEntity) livingEntity;
+                if (livingEntity instanceof ServerPlayer) {
+                    ServerPlayer playerEntity = (ServerPlayer) livingEntity;
                     TriggerManager.FIRST_REGENERATION.trigger(playerEntity);
                 }
 
@@ -77,10 +77,10 @@ class CommonActing implements Acting {
                 livingEntity.heal(stateProgress * 0.3F * dm);
                 livingEntity.setArrowCount(0);
 
-                AxisAlignedBB box = livingEntity.getBoundingBox().inflate(25);
+                AABB box = livingEntity.getBoundingBox().inflate(25);
                 for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(box.maxX, box.maxY, box.maxZ), new BlockPos(box.minX, box.minY, box.minZ)).iterator(); iterator.hasNext(); ) {
                     BlockPos pos = iterator.next();
-                    ServerWorld serverWorld = (ServerWorld) livingEntity.level;
+                    ServerLevel serverWorld = (ServerLevel) livingEntity.level;
                     BlockState blockState = serverWorld.getBlockState(pos);
                     if (blockState.getBlock() instanceof JarBlock) {
                         JarTile jarTile = (JarTile) serverWorld.getBlockEntity(pos);
@@ -102,10 +102,10 @@ class CommonActing implements Acting {
                 float nauseaPercentage = 0.5F;
 
                 if (stateProgress > nauseaPercentage) {
-                    PlayerUtil.applyPotionIfAbsent(livingEntity, Effects.CONFUSION, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false);
+                    PlayerUtil.applyPotionIfAbsent(livingEntity, MobEffects.CONFUSION, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - nauseaPercentage) * 1.5F), 0, false, false);
                 }
 
-                PlayerUtil.applyPotionIfAbsent(livingEntity, Effects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
+                PlayerUtil.applyPotionIfAbsent(livingEntity, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.criticalPhaseLength.get() * 20 * (1 - stateProgress)), 0, false, false);
 
                 if (livingEntity.level.random.nextDouble() < (RegenConfig.COMMON.criticalDamageChance.get() / 100F)) {
                     livingEntity.hurt(RegenSources.REGEN_DMG_CRITICAL, livingEntity.level.random.nextFloat() + .5F);
@@ -115,7 +115,7 @@ class CommonActing implements Acting {
             case GRACE:
                 float weaknessPercentage = 0.5F;
                 if (stateProgress > weaknessPercentage) {
-                    PlayerUtil.applyPotionIfAbsent(livingEntity, Effects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false);
+                    PlayerUtil.applyPotionIfAbsent(livingEntity, MobEffects.WEAKNESS, (int) (RegenConfig.COMMON.gracePhaseLength.get() * 20 * (1 - weaknessPercentage) + RegenConfig.COMMON.criticalPhaseLength.get() * 20), 0, false, false);
                 }
                 break;
             case ALIVE:
@@ -140,7 +140,7 @@ class CommonActing implements Acting {
 
     @Override
     public void onHandsStartGlowing(IRegen cap) {
-        PlayerUtil.sendMessage(cap.getLiving(), new TranslationTextComponent("regen.messages.regen_warning"), true);
+        PlayerUtil.sendMessage(cap.getLiving(), new TranslatableComponent("regen.messages.regen_warning"), true);
     }
 
     @Override
@@ -153,7 +153,7 @@ class CommonActing implements Acting {
     @Override
     public void onRegenFinish(IRegen cap) {
         LivingEntity player = cap.getLiving();
-        player.addEffect(new EffectInstance(Effects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get(), RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, RegenConfig.COMMON.postRegenerationDuration.get(), RegenConfig.COMMON.postRegenerationLevel.get() - 1, false, false));
         player.setHealth(player.getMaxHealth());
         player.setAbsorptionAmount(RegenConfig.COMMON.absorbtionLevel.get() * 2);
         cap.setNextSkin(new byte[0]);
@@ -171,7 +171,7 @@ class CommonActing implements Acting {
             //Get the new Trait
             AbstractTrait next = cap.getNextTrait();
             if (next.getRegistryName().toString().equals(RegenTraitRegistry.BORING.get().getRegistryName().toString())) {
-                next = RegenTraitRegistry.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof PlayerEntity));
+                next = RegenTraitRegistry.getRandomTrait(cap.getLiving().getRandom(), !(cap.getLiving() instanceof Player));
             }
             next.apply(cap);
 
@@ -179,7 +179,7 @@ class CommonActing implements Acting {
             cap.setTrait(next);
             cap.setNextTrait(RegenTraitRegistry.BORING.get());
 
-            PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.new_trait", next.translation().getString()), true);
+            PlayerUtil.sendMessage(player, new TranslatableComponent("regen.messages.new_trait", next.translation().getString()), true);
         } else {
             cap.trait().remove(cap);
             cap.setTrait(RegenTraitRegistry.BORING.get());
@@ -194,7 +194,7 @@ class CommonActing implements Acting {
     @Override
     public void onRegenTrigger(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        if (cap.getLiving() instanceof PlayerEntity) {
+        if (cap.getLiving() instanceof Player) {
             NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.DIMENSION.with(() -> living.getCommandSenderWorld().dimension()), new SFXMessage(getRandomSound(living.getRandom(), cap).getRegistryName(), living.getUUID()));
         } else {
             living.playSound(getRandomSound(living.getRandom(), cap), 1, 1);
@@ -209,8 +209,7 @@ class CommonActing implements Acting {
         living.removeAllEffects();
         living.stopRiding();
 
-        if (living instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity) living;
+        if (living instanceof Player playerEntity) {
             if (RegenConfig.COMMON.resetHunger.get()) playerEntity.getFoodData().setFoodLevel(20);
         }
 

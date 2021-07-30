@@ -2,8 +2,8 @@ package me.suff.mc.regen.network.messages;
 
 import me.suff.mc.regen.client.skin.SkinHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -16,7 +16,7 @@ public class RemoveSkinPlayerMessage {
         this.livingEntity = playerEntity;
     }
 
-    public RemoveSkinPlayerMessage(PacketBuffer buffer) {
+    public RemoveSkinPlayerMessage(FriendlyByteBuf buffer) {
         livingEntity = buffer.readUUID();
     }
 
@@ -27,7 +27,7 @@ public class RemoveSkinPlayerMessage {
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(PacketBuffer packetBuffer) {
+    public void toBytes(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeUUID(livingEntity);
     }
 

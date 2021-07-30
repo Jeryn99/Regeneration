@@ -9,23 +9,23 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.RemoveSkinPlayerMessage;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandRuntimeException;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class FastForwardCommand implements Command<CommandSource> {
+public class FastForwardCommand implements Command<CommandSourceStack> {
     private static final FastForwardCommand CMD = new FastForwardCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+    public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("fast-forward")
                 .executes(CMD);
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        CommandSource source = context.getSource();
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        CommandSourceStack source = context.getSource();
 
         RegenCap.get(source.getPlayerOrException()).ifPresent((cap) -> {
             if (cap.regenState() != RegenStates.ALIVE) {
@@ -36,7 +36,7 @@ public class FastForwardCommand implements Command<CommandSource> {
                     e.printStackTrace();
                 }
             } else {
-                throw new CommandException(new TranslationTextComponent("regen.messages.fast_forward_cmd_fail"));
+                throw new CommandRuntimeException(new TranslatableComponent("regen.messages.fast_forward_cmd_fail"));
             }
         });
         return Command.SINGLE_SUCCESS;

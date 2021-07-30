@@ -2,7 +2,7 @@ package me.suff.mc.regen.util.schedule;
 
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.regen.state.RegenStates;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 public class RegenScheduledAction extends ScheduledAction {
     public final RegenStates.Transition transition;

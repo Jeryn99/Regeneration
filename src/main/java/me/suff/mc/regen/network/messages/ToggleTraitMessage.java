@@ -1,8 +1,8 @@
 package me.suff.mc.regen.network.messages;
 
 import me.suff.mc.regen.common.regen.RegenCap;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -11,7 +11,7 @@ public class ToggleTraitMessage {
     public ToggleTraitMessage() {
     }
 
-    public ToggleTraitMessage(PacketBuffer buffer) {
+    public ToggleTraitMessage(FriendlyByteBuf buffer) {
     }
 
     public static void handle(ToggleTraitMessage message, Supplier<NetworkEvent.Context> ctx) {
@@ -27,7 +27,7 @@ public class ToggleTraitMessage {
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
 
     }
 

@@ -13,16 +13,15 @@ import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.common.world.biome.surface.RSurfaceBuilder;
 import me.suff.mc.regen.common.world.gen.RStructures;
-import me.suff.mc.regen.compat.TardisMod;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.DownloadSkinsThread;
 import me.suff.mc.regen.util.PlayerUtil;
-import net.minecraft.data.BiomeProvider;
+import net.minecraft.data.worldgen.biome.BiomeReport;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -36,9 +35,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -86,15 +85,11 @@ public class Regeneration {
 
         CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
         ActingForwarder.init();
-        GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
-        GlobalEntityTypeAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
+        DefaultAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
+        DefaultAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
         DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
         RSoundSchemes.init();
         TriggerManager.init();
-
-        if (ModList.get().isLoaded("tardis")) {
-            TardisMod.tardis();
-        }
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -115,7 +110,7 @@ public class Regeneration {
         generator.addProvider(new RRecipeGen(generator));
         generator.addProvider(new AdvancementGen(generator));
         if (reports) {
-            generator.addProvider(new BiomeProvider(generator));
+            generator.addProvider(new BiomeReport(generator));
         }
     }
 

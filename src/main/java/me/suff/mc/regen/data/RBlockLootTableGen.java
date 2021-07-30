@@ -2,14 +2,14 @@ package me.suff.mc.regen.data;
 
 import com.google.gson.*;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.block.Block;
-import net.minecraft.block.SlabBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.data.LootTableProvider;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class RBlockLootTableGen extends LootTableProvider {
     }
 
     @Override
-    public void run(DirectoryCache cache) {
+    public void run(HashCache cache) {
 
         Path path = this.generator.getOutputFolder();
 
@@ -59,17 +59,17 @@ public class RBlockLootTableGen extends LootTableProvider {
 
     }
 
-    public void generateSelfTable(Block block, DirectoryCache cache, Path base) {
+    public void generateSelfTable(Block block, HashCache cache, Path base) {
         this.generateTable(cache, getPath(base, block.getRegistryName()), () -> this.createSingleDropTable(block.getRegistryName().toString()));
     }
 
-    public void generateSelfSlabTable(Block block, DirectoryCache cache, Path base) {
+    public void generateSelfSlabTable(Block block, HashCache cache, Path base) {
         this.generateTable(cache, getPath(base, block.getRegistryName()), () -> this.createSlabDropTable(block.getRegistryName().toString()));
     }
 
-    public void generateTable(DirectoryCache cache, Path path, Supplier<JsonElement> element) {
+    public void generateTable(HashCache cache, Path path, Supplier<JsonElement> element) {
         try {
-            IDataProvider.save(GSON, cache, element.get(), path);
+            DataProvider.save(GSON, cache, element.get(), path);
         } catch (IOException e) {
             e.printStackTrace();
         }

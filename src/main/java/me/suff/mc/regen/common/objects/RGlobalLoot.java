@@ -4,14 +4,15 @@ import com.google.gson.JsonObject;
 import me.suff.mc.regen.common.item.FobWatchItem;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -35,7 +36,7 @@ public class RGlobalLoot {
 
         private final int chance;
 
-        public RegenerationLoot(final ILootCondition[] conditionsIn, int chance) {
+        public RegenerationLoot(final LootItemCondition[] conditionsIn, int chance) {
             super(conditionsIn);
             this.chance = chance;
         }
@@ -52,8 +53,8 @@ public class RGlobalLoot {
 
         private static class Serializer extends GlobalLootModifierSerializer<RegenerationLoot> {
             @Override
-            public RegenerationLoot read(ResourceLocation location, JsonObject object, ILootCondition[] conditions) {
-                final int multiplicationFactor = JSONUtils.getAsInt(object, "chance", 2);
+            public RegenerationLoot read(ResourceLocation location, JsonObject object, LootItemCondition[] conditions) {
+                final int multiplicationFactor = GsonHelper.getAsInt(object, "chance", 2);
                 return new RegenerationLoot(conditions, multiplicationFactor);
             }
 

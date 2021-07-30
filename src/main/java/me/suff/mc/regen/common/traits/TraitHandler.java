@@ -2,12 +2,12 @@ package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -34,13 +34,13 @@ public class TraitHandler {
         RegenCap.get(event.player).ifPresent(iRegen -> {
 
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.WATER_STRIDE.get()) {
-                World world = event.player.level;
-                int x = MathHelper.floor(event.player.position().x);
-                int y = MathHelper.floor(event.player.getBoundingBox().minY);
-                int z = MathHelper.floor(event.player.position().z);
+                Level world = event.player.level;
+                int x = Mth.floor(event.player.position().x);
+                int y = Mth.floor(event.player.getBoundingBox().minY);
+                int z = Mth.floor(event.player.position().z);
                 if (world.getBlockState(new BlockPos(x, y - 1, z)).getMaterial() == Material.WATER) {
-                    Vector3d delta = event.player.getDeltaMovement();
-                    event.player.setDeltaMovement(new Vector3d(delta.x, 0, delta.z));
+                    Vec3 delta = event.player.getDeltaMovement();
+                    event.player.setDeltaMovement(new Vec3(delta.x, 0, delta.z));
                 }
             }
 
@@ -67,7 +67,7 @@ public class TraitHandler {
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.ENDER_HURT.get()) {
                 for (int i = 0; i < 16; ++i) {
                     double d3 = living.getX() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
-                    double d4 = MathHelper.clamp(living.getY() + (double) (living.getRandom().nextInt(16) - 8), 0.0D, (double) (living.level.getHeight() - 1));
+                    double d4 = Mth.clamp(living.getY() + (double) (living.getRandom().nextInt(16) - 8), 0.0D, (double) (living.level.getHeight() - 1));
                     double d5 = living.getZ() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
                     if (living.isPassenger()) {
                         living.stopRiding();

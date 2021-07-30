@@ -7,14 +7,14 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SkinMessage;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class SkinHandler {
     //Skin Storage
     public static final HashMap<UUID, ResourceLocation> PLAYER_SKINS = new HashMap<>();
 
-    public static void tick(AbstractClientPlayerEntity playerEntity) {
+    public static void tick(AbstractClientPlayer playerEntity) {
         RegenCap.get(playerEntity).ifPresent(iRegen -> {
             boolean hasBeenModified = false;
 
@@ -64,7 +64,7 @@ public class SkinHandler {
         });
     }
 
-    public static boolean getUnmodifiedSkinType(AbstractClientPlayerEntity abstractClientPlayerEntity) {
+    public static boolean getUnmodifiedSkinType(AbstractClientPlayer abstractClientPlayerEntity) {
         if (abstractClientPlayerEntity.playerInfo == null) return false;
         abstractClientPlayerEntity.playerInfo.registerTextures();
         if (abstractClientPlayerEntity.playerInfo.getModelName() == null) {
@@ -76,14 +76,14 @@ public class SkinHandler {
         return abstractClientPlayerEntity.playerInfo.getModelName().contentEquals("slim");
     }
 
-    public static void setPlayerSkinType(AbstractClientPlayerEntity player, boolean isAlex) {
-        NetworkPlayerInfo playerInfo = player.playerInfo;
+    public static void setPlayerSkinType(AbstractClientPlayer player, boolean isAlex) {
+        PlayerInfo playerInfo = player.playerInfo;
         if (playerInfo == null) return;
         playerInfo.skinModel = isAlex ? "slim" : "default";
     }
 
     public static void sendResetMessage() {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             player.playerInfo.registerTextures();
             boolean isAlex = player.playerInfo.getModelName().equals("slim");
@@ -105,11 +105,11 @@ public class SkinHandler {
     }
 
     //Set players skin
-    public static void setPlayerSkin(AbstractClientPlayerEntity player, ResourceLocation texture) {
+    public static void setPlayerSkin(AbstractClientPlayer player, ResourceLocation texture) {
         if (player.getSkinTextureLocation().equals(texture)) {
             return;
         }
-        NetworkPlayerInfo playerInfo = player.playerInfo;
+        PlayerInfo playerInfo = player.playerInfo;
         if (playerInfo == null) return;
         Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.textureLocations;
         playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
@@ -130,13 +130,13 @@ public class SkinHandler {
         PLAYER_SKINS.remove(uuid);
     }
 
-    public static ResourceLocation getSkinToUse(AbstractClientPlayerEntity playerEntity) {
+    public static ResourceLocation getSkinToUse(AbstractClientPlayer playerEntity) {
         UUID uuid = playerEntity.getGameProfile().getId();
         if (PLAYER_SKINS.containsKey(uuid)) {
             return PLAYER_SKINS.get(uuid);
         }
         if (playerEntity.playerInfo != null) {
-            NetworkPlayerInfo info = playerEntity.playerInfo;
+            PlayerInfo info = playerEntity.playerInfo;
             info.pendingTextures = false;
             info.registerTextures();
             return MoreObjects.firstNonNull(info.textureLocations.get(MinecraftProfileTexture.Type.SKIN), DefaultPlayerSkin.getDefaultSkin(info.profile.getId()));

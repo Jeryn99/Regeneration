@@ -3,8 +3,8 @@ package me.suff.mc.regen.network.messages;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -17,7 +17,7 @@ public class RemoveTimelordSkinMessage {
         this.livingEntity = livingEntity.getUUID();
     }
 
-    public RemoveTimelordSkinMessage(PacketBuffer buffer) {
+    public RemoveTimelordSkinMessage(FriendlyByteBuf buffer) {
         livingEntity = buffer.readUUID();
     }
 
@@ -28,7 +28,7 @@ public class RemoveTimelordSkinMessage {
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(PacketBuffer packetBuffer) {
+    public void toBytes(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeUUID(livingEntity);
     }
 

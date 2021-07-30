@@ -14,26 +14,26 @@ import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.SwordItem;
-import net.minecraft.item.ToolItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.FlatChunkGenerator;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
-import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.DiggerItem;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -59,7 +59,7 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (canBeGiven(event.getObject())) {
-            event.addCapability(RConstants.CAP_REGEN_ID, new ICapabilitySerializable<CompoundNBT>() {
+            event.addCapability(RConstants.CAP_REGEN_ID, new ICapabilitySerializable<CompoundTag>() {
                 final RegenCap regen = new RegenCap((LivingEntity) event.getObject());
                 final LazyOptional<IRegen> regenInstance = LazyOptional.of(() -> regen);
 
@@ -70,12 +70,12 @@ public class CommonEvents {
                 }
 
                 @Override
-                public CompoundNBT serializeNBT() {
+                public CompoundTag serializeNBT() {
                     return regen.serializeNBT();
                 }
 
                 @Override
-                public void deserializeNBT(CompoundNBT nbt) {
+                public void deserializeNBT(CompoundTag nbt) {
                     regen.deserializeNBT(nbt);
                 }
             });
@@ -131,8 +131,8 @@ public class CommonEvents {
                 return;
             }
 
-            if (trueSource instanceof PlayerEntity && event.getEntityLiving() != null) {
-                PlayerEntity player = (PlayerEntity) trueSource;
+            if (trueSource instanceof Player && event.getEntityLiving() != null) {
+                Player player = (Player) trueSource;
                 RegenCap.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event));
             }
 
@@ -154,7 +154,7 @@ public class CommonEvents {
             //Handle Post
             if (iRegen.regenState() == RegenStates.POST && event.getSource() != DamageSource.OUT_OF_WORLD && event.getSource() != RegenSources.REGEN_DMG_HAND) {
                 event.setAmount(1.5F);
-                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.reduced_dmg"), true);
+                PlayerUtil.sendMessage(livingEntity, new TranslatableComponent("regen.messages.reduced_dmg"), true);
             }
 
             //Handle Death
@@ -189,8 +189,8 @@ public class CommonEvents {
                 if (RegenConfig.COMMON.loseRegensOnDeath.get()) {
                     cap.extractRegens(cap.regens());
                 }
-                if (event.getEntityLiving() instanceof ServerPlayerEntity)
-                    cap.syncToClients((ServerPlayerEntity) event.getEntityLiving());
+                if (event.getEntityLiving() instanceof ServerPlayer)
+                    cap.syncToClients((ServerPlayer) event.getEntityLiving());
                 return;
             }
             if (cap.stateManager() == null) return;
@@ -212,7 +212,7 @@ public class CommonEvents {
         Capability.IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
         event.getOriginal().revive();
         RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
-            CompoundNBT nbt = (CompoundNBT) storage.writeNBT(RegenCap.CAPABILITY, old, null);
+            CompoundTag nbt = (CompoundTag) storage.writeNBT(RegenCap.CAPABILITY, old, null);
             storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
         }));
     }
@@ -234,19 +234,19 @@ public class CommonEvents {
     public static void onLive(LivingEvent.LivingUpdateEvent livingUpdateEvent) {
         RegenCap.get(livingUpdateEvent.getEntityLiving()).ifPresent(IRegen::tick);
 
-        if (livingUpdateEvent.getEntityLiving() instanceof ServerPlayerEntity) {
-            if (shouldGiveCouncilAdvancement((ServerPlayerEntity) livingUpdateEvent.getEntity())) {
-                TriggerManager.COUNCIL.trigger((ServerPlayerEntity) livingUpdateEvent.getEntityLiving());
+        if (livingUpdateEvent.getEntityLiving() instanceof ServerPlayer) {
+            if (shouldGiveCouncilAdvancement((ServerPlayer) livingUpdateEvent.getEntity())) {
+                TriggerManager.COUNCIL.trigger((ServerPlayer) livingUpdateEvent.getEntityLiving());
             }
         }
     }
 
-    public static boolean shouldGiveCouncilAdvancement(ServerPlayerEntity serverPlayerEntity) {
-        EquipmentSlotType[] equipmentSlotTypes = new EquipmentSlotType[]{EquipmentSlotType.HEAD,
-                EquipmentSlotType.CHEST,
-                EquipmentSlotType.LEGS,
-                EquipmentSlotType.FEET};
-        for (EquipmentSlotType equipmentSlotType : equipmentSlotTypes) {
+    public static boolean shouldGiveCouncilAdvancement(ServerPlayer serverPlayerEntity) {
+        EquipmentSlot[] equipmentSlotTypes = new EquipmentSlot[]{EquipmentSlot.HEAD,
+                EquipmentSlot.CHEST,
+                EquipmentSlot.LEGS,
+                EquipmentSlot.FEET};
+        for (EquipmentSlot equipmentSlotType : equipmentSlotTypes) {
             if (!serverPlayerEntity.getItemBySlot(equipmentSlotType).getItem().getRegistryName().getPath().contains("robes")) {
                 return false;
             }
@@ -261,8 +261,8 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onCut(PlayerInteractEvent.RightClickItem event) {
-        if (event.getItemStack().getItem() instanceof ToolItem || event.getItemStack().getItem() instanceof SwordItem) {
-            PlayerEntity player = event.getPlayer();
+        if (event.getItemStack().getItem() instanceof DiggerItem || event.getItemStack().getItem() instanceof SwordItem) {
+            Player player = event.getPlayer();
             RegenCap.get(player).ifPresent((data) -> {
                 if (data.regenState() == RegenStates.POST && player.isShiftKeyDown() & data.handState() == IRegen.Hand.NO_GONE) {
                     HandItem.createHand(player);
@@ -280,21 +280,21 @@ public class CommonEvents {
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void addDimensionalSpacing(final WorldEvent.Load event) {
-        if (event.getWorld() instanceof ServerWorld) {
-            ServerWorld serverWorld = (ServerWorld) event.getWorld();
+        if (event.getWorld() instanceof ServerLevel) {
+            ServerLevel serverWorld = (ServerLevel) event.getWorld();
 
             /* Prevent spawning our structure in Vanilla's superflat world as
              * people seem to want their superflat worlds free of modded structures.
              * Also, vanilla superflat is really tricky and buggy to work with as mentioned in WAObjects#registerConfiguredStructure
              * BiomeModificationEvent does not seem to fire for superflat biomes...you can't add structures to superflat without mixin it seems.
              * */
-            if (serverWorld.getChunkSource().getGenerator() instanceof FlatChunkGenerator && serverWorld.dimension().equals(World.OVERWORLD)) {
+            if (serverWorld.getChunkSource().getGenerator() instanceof FlatLevelSource && serverWorld.dimension().equals(Level.OVERWORLD)) {
                 return;
             }
             //Only spawn Huts in the Overworld structure list
-            if (serverWorld.dimension().equals(World.OVERWORLD)) {
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
-                tempMap.put(RStructures.Structures.HUTS.get(), DimensionStructuresSettings.DEFAULTS.get(RStructures.Structures.HUTS.get()));
+            if (serverWorld.dimension().equals(Level.OVERWORLD)) {
+                Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+                tempMap.put(RStructures.Structures.HUTS.get(), StructureSettings.DEFAULTS.get(RStructures.Structures.HUTS.get()));
                 serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
             }
         }
@@ -302,15 +302,15 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onBiomeLoad(BiomeLoadingEvent biomeLoadingEvent) {
-        Biome.Category biomeCategory = biomeLoadingEvent.getCategory();
+        Biome.BiomeCategory biomeCategory = biomeLoadingEvent.getCategory();
 
-        if (biomeCategory != Biome.Category.ICY && biomeCategory != Biome.Category.MUSHROOM && biomeCategory != Biome.Category.JUNGLE && biomeCategory != Biome.Category.OCEAN && biomeCategory != Biome.Category.RIVER && biomeCategory != Biome.Category.DESERT) {
+        if (biomeCategory != Biome.BiomeCategory.ICY && biomeCategory != Biome.BiomeCategory.MUSHROOM && biomeCategory != Biome.BiomeCategory.JUNGLE && biomeCategory != Biome.BiomeCategory.OCEAN && biomeCategory != Biome.BiomeCategory.RIVER && biomeCategory != Biome.BiomeCategory.DESERT) {
             biomeLoadingEvent.getGeneration().getStructures().add(() -> RStructures.ConfiguredStructures.CONFIGURED_HUTS);
             Regeneration.LOG.info("Added Huts to: " + biomeLoadingEvent.getName());
         }
 
-        if (biomeCategory != Biome.Category.NETHER && biomeCategory != Biome.Category.THEEND) {
-            biomeLoadingEvent.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RStructures.GAl_ORE);
+        if (biomeCategory != Biome.BiomeCategory.NETHER && biomeCategory != Biome.BiomeCategory.THEEND) {
+            biomeLoadingEvent.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, RStructures.GAl_ORE);
         }
     }
 

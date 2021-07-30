@@ -5,14 +5,15 @@ import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.ForceRegenMessage;
 import me.suff.mc.regen.network.messages.ToggleTraitMessage;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
 
 public class RKeybinds {
-    public static KeyBinding FORCE_REGEN = new KeyBinding("Force Regeneration", GLFW.GLFW_KEY_Y, "Regeneration");
-    public static KeyBinding REGEN_GUI = new KeyBinding("Open Preferences", GLFW.GLFW_KEY_F10, "Regeneration");
-    public static KeyBinding TOGGLE_TRAIT = new KeyBinding("Toggle Trait", GLFW.GLFW_KEY_RIGHT_ALT, "Regeneration");
+    public static KeyMapping FORCE_REGEN = new KeyMapping("Force Regeneration", GLFW.GLFW_KEY_Y, "Regeneration");
+    public static KeyMapping REGEN_GUI = new KeyMapping("Open Preferences", GLFW.GLFW_KEY_F10, "Regeneration");
+    public static KeyMapping TOGGLE_TRAIT = new KeyMapping("Toggle Trait", GLFW.GLFW_KEY_RIGHT_ALT, "Regeneration");
 
     public static void init() {
         ClientRegistry.registerKeyBinding(FORCE_REGEN);

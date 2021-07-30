@@ -11,9 +11,9 @@ import me.suff.mc.regen.util.MineSkin;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.io.FileUtils;
@@ -243,7 +243,7 @@ public class CommonSkin {
         }
 
         if (!directory.exists()) {
-            Minecraft.getInstance().setScreen(new RErrorScreen(new TranslationTextComponent("No Skins for " + new TranslationTextComponent("regeneration.skin_type." + choices.name().toLowerCase()).getString()), new TranslationTextComponent("Please place skins in the local Directory")));
+            Minecraft.getInstance().setScreen(new RErrorScreen(new TranslatableComponent("No Skins for " + new TranslatableComponent("regeneration.skin_type." + choices.name().toLowerCase()).getString()), new TranslatableComponent("Please place skins in the local Directory")));
             return new ArrayList<>();
         }
 

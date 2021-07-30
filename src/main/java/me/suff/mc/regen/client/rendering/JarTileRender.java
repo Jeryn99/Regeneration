@@ -1,36 +1,36 @@
 package me.suff.mc.regen.client.rendering;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.suff.mc.regen.client.rendering.model.AlexArmModel;
 import me.suff.mc.regen.client.rendering.model.SteveArmModel;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.tiles.JarTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Matrix4f;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.HashMap;
 
 import static me.suff.mc.regen.util.RegenUtil.round;
 
 /* Created by Craig on 05/03/2021 */
-public class JarTileRender extends TileEntityRenderer<JarTile> {
+public class JarTileRender extends BlockEntityRenderer<JarTile> {
 
     private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
@@ -40,12 +40,12 @@ public class JarTileRender extends TileEntityRenderer<JarTile> {
     EntityModel mainModel = new AlexArmModel();
 
 
-    public JarTileRender(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public JarTileRender(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 
     @Override
-    public void render(JarTile tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(JarTile tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         if (tileEntityIn.getHand().getItem() instanceof HandItem && !tileEntityIn.isValid(JarTile.Action.CREATE)) {
             matrixStackIn.pushPose();
@@ -53,9 +53,9 @@ public class JarTileRender extends TileEntityRenderer<JarTile> {
             matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
             matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
             Matrix4f matrix4f = matrixStackIn.last().pose();
-            FontRenderer fontrenderer = Minecraft.getInstance().font;
-            float f2 = (float) (-fontrenderer.width(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
-            fontrenderer.drawInBatch(new TranslationTextComponent(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
+            Font fontrenderer = Minecraft.getInstance().font;
+            float f2 = (float) (-fontrenderer.width(new TranslatableComponent(String.valueOf(round(tileEntityIn.getLindos(), 2)))) / 2);
+            fontrenderer.drawInBatch(new TranslatableComponent(String.valueOf(round(tileEntityIn.getLindos(), 2))), f2, (float) 1, -1, false, matrix4f, bufferIn, false, 0, combinedLightIn);
             matrixStackIn.popPose();
         }
 
@@ -93,7 +93,7 @@ public class JarTileRender extends TileEntityRenderer<JarTile> {
         return TEXTURES.get(tileEntityHandInJar);
     }
 
-    private void add(Fluid fluid, IBlockDisplayReader lightReader, BlockPos posIn, IVertexBuilder renderer, MatrixStack stack, float x, float y, float z, float u, float v) {
+    private void add(Fluid fluid, BlockAndTintGetter lightReader, BlockPos posIn, VertexConsumer renderer, PoseStack stack, float x, float y, float z, float u, float v) {
         int i = fluid.getFluid().getAttributes().getColor(lightReader, posIn);
         float alpha = (float) (i >> 24 & 255) / 255.0F;
         float r = (float) (i >> 16 & 255) / 255.0F;
@@ -108,9 +108,9 @@ public class JarTileRender extends TileEntityRenderer<JarTile> {
                 .endVertex();
     }
 
-    private int getCombinedAverageLight(IBlockDisplayReader lightReaderIn, BlockPos posIn) {
-        int i = WorldRenderer.getLightColor(lightReaderIn, posIn);
-        int j = WorldRenderer.getLightColor(lightReaderIn, posIn.above());
+    private int getCombinedAverageLight(BlockAndTintGetter lightReaderIn, BlockPos posIn) {
+        int i = LevelRenderer.getLightColor(lightReaderIn, posIn);
+        int j = LevelRenderer.getLightColor(lightReaderIn, posIn.above());
         int k = i & 255;
         int l = j & 255;
         int i1 = i >> 16 & 255;

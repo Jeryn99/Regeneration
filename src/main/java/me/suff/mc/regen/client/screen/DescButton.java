@@ -1,32 +1,35 @@
 package me.suff.mc.regen.client.screen;
 
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 
+import net.minecraft.client.gui.components.Button.OnPress;
+import net.minecraft.client.gui.components.Button.OnTooltip;
+
 public class DescButton extends Button {
 
-    private ArrayList<IReorderingProcessor> description = null;
+    private ArrayList<FormattedCharSequence> description = null;
 
-    public DescButton(int x, int y, int width, int height, ITextComponent title, IPressable pressedAction) {
+    public DescButton(int x, int y, int width, int height, Component title, OnPress pressedAction) {
         super(x, y, width, height, title, pressedAction);
     }
 
-    public DescButton(int x, int y, int width, int height, ITextComponent title, IPressable pressedAction, ITooltip onTooltip) {
+    public DescButton(int x, int y, int width, int height, Component title, OnPress pressedAction, OnTooltip onTooltip) {
         super(x, y, width, height, title, pressedAction, onTooltip);
     }
 
-    public ArrayList<IReorderingProcessor> getDescription() {
+    public ArrayList<FormattedCharSequence> getDescription() {
         return description;
     }
 
     public DescButton setDescription(String[] description) {
-        ArrayList<IReorderingProcessor> reorderingProcessors = new ArrayList<>();
+        ArrayList<FormattedCharSequence> reorderingProcessors = new ArrayList<>();
         for (String textComponent : description) {
-            reorderingProcessors.add(new TranslationTextComponent(textComponent).getVisualOrderText());
+            reorderingProcessors.add(new TranslatableComponent(textComponent).getVisualOrderText());
         }
         this.description = reorderingProcessors;
         return this;

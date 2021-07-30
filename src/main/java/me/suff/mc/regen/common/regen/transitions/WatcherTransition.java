@@ -8,13 +8,13 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.POVMessage;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public final class WatcherTransition extends TransitionType {
     @Override
     public void tick(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        World world = living.level;
+        Level world = living.level;
         List<WatcherEntity> watchers = world.getEntities(REntities.WATCHER.get(), living.getBoundingBox().inflate(64), watcherEntity -> watcherEntity.getTarget() == living);
 
         if (watchers.isEmpty()) {
@@ -58,27 +58,27 @@ public final class WatcherTransition extends TransitionType {
     }
 
     @Override
-    public Vector3d getDefaultPrimaryColor() {
-        return Vector3d.ZERO;
+    public Vec3 getDefaultPrimaryColor() {
+        return Vec3.ZERO;
     }
 
     @Override
-    public Vector3d getDefaultSecondaryColor() {
-        return Vector3d.ZERO;
+    public Vec3 getDefaultSecondaryColor() {
+        return Vec3.ZERO;
     }
 
     @Override
     public void onFinishRegeneration(IRegen cap) {
         LivingEntity living = cap.getLiving();
-        if (living instanceof ServerPlayerEntity) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
+        if (living instanceof ServerPlayer) {
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
         }
     }
 
     @Override
     public void onStartRegeneration(IRegen cap) {
-        if (cap.getLiving() instanceof ServerPlayerEntity) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
+        if (cap.getLiving() instanceof ServerPlayer) {
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
         }
     }
 

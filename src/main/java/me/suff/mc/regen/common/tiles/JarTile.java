@@ -6,20 +6,20 @@ import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RParticles;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.objects.RTiles;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class JarTile extends TileEntity implements ITickableTileEntity {
+public class JarTile extends BlockEntity implements TickableBlockEntity {
 
     private boolean updateSkin = true;
     private ItemStackHandler itemHandler = createHandler();
@@ -40,7 +40,7 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
         super(RTiles.HAND_JAR.get());
     }
 
-    private static void spawnParticles(World world, BlockPos worldIn) {
+    private static void spawnParticles(Level world, BlockPos worldIn) {
         Random random = world.random;
 
         for (Direction direction : Direction.values()) {
@@ -60,12 +60,12 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     }
 
     public void setLindos(float lindos) {
-        lindos = MathHelper.clamp(lindos, 0, 100);
+        lindos = Mth.clamp(lindos, 0, 100);
         HandItem.setEnergy(lindos, getHand());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(getBlockState(), pkt.getTag());
     }
@@ -79,7 +79,7 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
 
         if (isValid(Action.CREATE)) {
             if (level.getGameTime() % 77 == 0) {
-                level.playSound(null, getBlockPos(), RSounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.2F, 0.2F);
+                level.playSound(null, getBlockPos(), RSounds.JAR_BUBBLES.get(), SoundSource.PLAYERS, 0.2F, 0.2F);
             }
         }
 
@@ -100,22 +100,22 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
         return false;
     }
 
-    public void dropHandIfPresent(@Nullable PlayerEntity player) {
+    public void dropHandIfPresent(@Nullable Player player) {
         if (!getHand().isEmpty()) {
             if (player != null) {
                 if (!player.addItem(getHand())) {
-                    InventoryHelper.dropItemStack(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), getHand());
+                    Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), getHand());
                 }
             } else {
-                InventoryHelper.dropItemStack(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), getHand());
+                Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), getHand());
             }
             setHand(ItemStack.EMPTY);
         }
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return save(new CompoundTag());
     }
 
     public void sendUpdates() {
@@ -128,12 +128,12 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(worldPosition, 3, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(worldPosition, 3, getUpdateTag());
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         setLindos(nbt.getFloat("energy"));
         if (nbt.contains("inv")) {
             itemHandler.deserializeNBT(nbt.getCompound("inv"));
@@ -143,7 +143,7 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         compound.putFloat("energy", getLindos());
         compound.put("inv", itemHandler.serializeNBT());
         compound.putBoolean("update_skin", updateSkin);

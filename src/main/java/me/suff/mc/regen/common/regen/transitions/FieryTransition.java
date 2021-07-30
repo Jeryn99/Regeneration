@@ -7,14 +7,14 @@ import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.POVMessage;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.block.FireBlock;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Explosion;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Explosion;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Iterator;
@@ -29,8 +29,8 @@ public class FieryTransition extends TransitionType {
         livingEntity.clearFire();
 
         if (!livingEntity.level.isClientSide) {
-            if (capability.getLiving() instanceof ServerPlayerEntity) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
+            if (capability.getLiving() instanceof ServerPlayer) {
+                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) capability.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
             }
         }
 
@@ -47,7 +47,7 @@ public class FieryTransition extends TransitionType {
             double y = livingEntity.getY() + 0.5 + livingEntity.getRandom().nextGaussian() * 2;
             double z = livingEntity.getZ() + livingEntity.getRandom().nextGaussian() * 2;
             if (!PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
-                livingEntity.level.explode(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
+                livingEntity.level.explode(livingEntity, x, y, z, 0.1F, RegenConfig.COMMON.fieryRegen.get(), Explosion.BlockInteraction.NONE);
             }
             Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(livingEntity.position()).north().west(), new BlockPos(livingEntity.position()).south().east()).iterator();
             while (iterator.hasNext()) {
@@ -63,8 +63,8 @@ public class FieryTransition extends TransitionType {
 
     @Override
     public void onFinishRegeneration(IRegen capability) {
-        if (capability.getLiving() instanceof ServerPlayerEntity) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) capability.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
+        if (capability.getLiving() instanceof ServerPlayer) {
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) capability.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
         }
         capability.setUpdateTicks(0);
         capability.syncToClients(null);
@@ -81,13 +81,13 @@ public class FieryTransition extends TransitionType {
     }
 
     @Override
-    public Vector3d getDefaultPrimaryColor() {
-        return new Vector3d(0.69411767f, 0.74509805f, 0.23529412f);
+    public Vec3 getDefaultPrimaryColor() {
+        return new Vec3(0.69411767f, 0.74509805f, 0.23529412f);
     }
 
     @Override
-    public Vector3d getDefaultSecondaryColor() {
-        return new Vector3d(0.7137255f, 0.75686276f, 0.25490198f);
+    public Vec3 getDefaultSecondaryColor() {
+        return new Vec3(0.7137255f, 0.75686276f, 0.25490198f);
     }
 
 }

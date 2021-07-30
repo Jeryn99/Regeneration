@@ -4,7 +4,7 @@ import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
@@ -20,7 +20,7 @@ public class SoundReverb {
     private static int auxEffectSlot;
 
     public static void addReloader() {
-        ((IReloadableResourceManager) MC.getResourceManager()).registerReloadListener((ISelectiveResourceReloadListener) (manager, predicate) -> {
+        ((ReloadableResourceManager) MC.getResourceManager()).registerReloadListener((ISelectiveResourceReloadListener) (manager, predicate) -> {
             setup = false;
         });
     }

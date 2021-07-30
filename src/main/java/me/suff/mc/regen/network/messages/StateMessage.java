@@ -3,10 +3,10 @@ package me.suff.mc.regen.network.messages;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -20,7 +20,7 @@ public class StateMessage {
         this.event = event.name();
     }
 
-    public StateMessage(PacketBuffer buffer) {
+    public StateMessage(FriendlyByteBuf buffer) {
         livingEntity = buffer.readInt();
         event = buffer.readUtf(32767);
     }
@@ -39,7 +39,7 @@ public class StateMessage {
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(PacketBuffer packetBuffer) {
+    public void toBytes(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(livingEntity);
         packetBuffer.writeUtf(event);
     }

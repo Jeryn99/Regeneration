@@ -1,10 +1,10 @@
 package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.IRegen;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
 import java.util.UUID;
 
@@ -15,14 +15,14 @@ public class TraitStrong extends AbstractTrait {
     @Override
     public void apply(IRegen data) {
         LivingEntity living = data.getLiving();
-        ModifiableAttributeInstance reach = living.getAttribute(Attributes.ATTACK_DAMAGE);
+        AttributeInstance reach = living.getAttribute(Attributes.ATTACK_DAMAGE);
         reach.addPermanentModifier(new AttributeModifier(STRONG_UUID, "Strong modifier", 5, AttributeModifier.Operation.MULTIPLY_BASE));
     }
 
     @Override
     public void remove(IRegen data) {
         LivingEntity living = data.getLiving();
-        ModifiableAttributeInstance reach = living.getAttribute(Attributes.ATTACK_DAMAGE);
+        AttributeInstance reach = living.getAttribute(Attributes.ATTACK_DAMAGE);
         reach.removeModifier(STRONG_UUID);
     }
 

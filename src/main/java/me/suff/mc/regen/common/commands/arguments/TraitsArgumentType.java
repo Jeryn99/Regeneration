@@ -9,14 +9,14 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.suff.mc.regen.common.traits.AbstractTrait;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.concurrent.CompletableFuture;
 
 public class TraitsArgumentType implements ArgumentType<AbstractTrait> {
-    public static final DynamicCommandExceptionType INVALID_TRAIT_EXCEPTION = new DynamicCommandExceptionType((trait) -> new TranslationTextComponent("argument.regeneration.trait.invalid", new Object[]{trait}));
+    public static final DynamicCommandExceptionType INVALID_TRAIT_EXCEPTION = new DynamicCommandExceptionType((trait) -> new TranslatableComponent("argument.regeneration.trait.invalid", new Object[]{trait}));
 
     public static TraitsArgumentType createArgument() {
         return new TraitsArgumentType();
@@ -34,7 +34,7 @@ public class TraitsArgumentType implements ArgumentType<AbstractTrait> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return ISuggestionProvider.suggestResource(RegenTraitRegistry.TRAIT_REGISTRY.get().getKeys(), builder);
+        return SharedSuggestionProvider.suggestResource(RegenTraitRegistry.TRAIT_REGISTRY.get().getKeys(), builder);
     }
 
 }

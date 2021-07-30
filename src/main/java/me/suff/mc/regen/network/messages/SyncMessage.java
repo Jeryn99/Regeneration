@@ -2,29 +2,29 @@ package me.suff.mc.regen.network.messages;
 
 import me.suff.mc.regen.common.regen.RegenCap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class SyncMessage {
     public int entityID;
-    public CompoundNBT nbt;
+    public CompoundTag nbt;
 
-    public SyncMessage(int entityID, CompoundNBT nbt) {
+    public SyncMessage(int entityID, CompoundTag nbt) {
         this.entityID = entityID;
         this.nbt = nbt;
     }
 
-    public SyncMessage(PacketBuffer buf) {
+    public SyncMessage(FriendlyByteBuf buf) {
         this.entityID = buf.readInt();
         this.nbt = buf.readNbt();
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(this.entityID);
         buf.writeNbt(this.nbt);
     }

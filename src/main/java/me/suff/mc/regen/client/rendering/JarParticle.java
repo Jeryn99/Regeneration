@@ -2,17 +2,17 @@ package me.suff.mc.regen.client.rendering;
 
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class JarParticle extends SpriteTexturedParticle {
-    private JarParticle(ClientWorld world, double x, double y, double z, double motionX, double motionY, double motionZ) {
+public class JarParticle extends TextureSheetParticle {
+    private JarParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ) {
         super(world, x, y, z, motionX, motionY, motionZ);
-        Vector3d color = random.nextBoolean() ? TransitionTypes.FIERY.get().getDefaultSecondaryColor() : TransitionTypes.FIERY.get().getDefaultSecondaryColor();
+        Vec3 color = random.nextBoolean() ? TransitionTypes.FIERY.get().getDefaultSecondaryColor() : TransitionTypes.FIERY.get().getDefaultSecondaryColor();
         this.rCol = (float) color.x;
         this.gCol = (float) color.y;
         this.bCol = (float) color.z;
@@ -26,8 +26,8 @@ public class JarParticle extends SpriteTexturedParticle {
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
@@ -52,14 +52,14 @@ public class JarParticle extends SpriteTexturedParticle {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static class Factory implements IParticleFactory<BasicParticleType> {
-        private final IAnimatedSprite spriteSet;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteSet;
 
-        public Factory(IAnimatedSprite spriteSet) {
+        public Factory(SpriteSet spriteSet) {
             this.spriteSet = spriteSet;
         }
 
-        public Particle createParticle(BasicParticleType typeIn, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             JarParticle jarParticle = new JarParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
             jarParticle.pickSprite(this.spriteSet);
             return jarParticle;

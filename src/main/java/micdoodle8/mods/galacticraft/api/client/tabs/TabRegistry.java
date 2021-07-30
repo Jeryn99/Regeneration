@@ -1,8 +1,8 @@
 package micdoodle8.mods.galacticraft.api.client.tabs;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.network.play.client.CCloseWindowPacket;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -42,7 +42,7 @@ public class TabRegistry {
 
     public static void openInventoryGui() {
         Minecraft mc = Minecraft.getInstance();
-        mc.player.connection.send(new CCloseWindowPacket(mc.player.containerMenu.containerId));
+        mc.player.connection.send(new ServerboundContainerClosePacket(mc.player.containerMenu.containerId));
         InventoryScreen inventory = new InventoryScreen(mc.player);
         mc.setScreen(inventory);
     }

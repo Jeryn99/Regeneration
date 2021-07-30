@@ -1,26 +1,26 @@
 package me.suff.mc.regen.client.rendering.layers;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.common.entities.TimelordEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
-public class TimelordHeadLayer extends LayerRenderer<TimelordEntity, BipedModel<TimelordEntity>> {
+public class TimelordHeadLayer extends RenderLayer<TimelordEntity, HumanoidModel<TimelordEntity>> {
     private static final PlayerModel<TimelordEntity> entitymodel = new PlayerModel<>(-0.25F, true);
 
-    public TimelordHeadLayer(IEntityRenderer<TimelordEntity, BipedModel<TimelordEntity>> entityRendererIn) {
+    public TimelordHeadLayer(RenderLayerParent<TimelordEntity, HumanoidModel<TimelordEntity>> entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, TimelordEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, TimelordEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         entitymodel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
         entitymodel.setAllVisible(false);
         entitymodel.head.visible = true;
@@ -31,7 +31,7 @@ public class TimelordHeadLayer extends LayerRenderer<TimelordEntity, BipedModel<
         entitymodel.leftSleeve.visible = false;
         entitymodel.body.visible = true;
         entitymodel.young = false;
-        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.entityTranslucent(TimelordRenderer.getTimelordFace(entitylivingbaseIn)));
+        VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityTranslucent(TimelordRenderer.getTimelordFace(entitylivingbaseIn)));
         entitymodel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
         if (entitylivingbaseIn.getAiming()) {

@@ -3,9 +3,9 @@ package me.suff.mc.regen.network.messages;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -17,7 +17,7 @@ public class TypeMessage {
         this.type = type.getRegistryName().toString();
     }
 
-    public TypeMessage(PacketBuffer buffer) {
+    public TypeMessage(FriendlyByteBuf buffer) {
         type = buffer.readUtf(32767);
     }
 
@@ -29,7 +29,7 @@ public class TypeMessage {
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeUtf(this.type);
     }
 }

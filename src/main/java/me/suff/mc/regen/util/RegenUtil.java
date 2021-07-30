@@ -1,13 +1,13 @@
 package me.suff.mc.regen.util;
 
 import me.suff.mc.regen.Regeneration;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 
@@ -21,18 +21,18 @@ import static me.suff.mc.regen.Regeneration.GSON;
 
 public class RegenUtil {
 
-    public static ITag.INamedTag<Block> BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
-    public static ITag.INamedTag<Block> ARS = makeBlock("tardis", "ars");
-    public static ITag.INamedTag<Item> TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
+    public static Tag.Named<Block> BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
+    public static Tag.Named<Block> ARS = makeBlock("tardis", "ars");
+    public static Tag.Named<Item> TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};
 
-    public static ITag.INamedTag<Block> makeBlock(String domain, String path) {
+    public static Tag.Named<Block> makeBlock(String domain, String path) {
         return BlockTags.createOptional(new ResourceLocation(domain, path));
     }
 
-    public static ITag.INamedTag<Item> makeItem(String domain, String path) {
+    public static Tag.Named<Item> makeItem(String domain, String path) {
         return ItemTags.createOptional(new ResourceLocation(domain, path));
     }
 
@@ -45,7 +45,7 @@ public class RegenUtil {
             try {
 
                 ResourceLocation resourceLocation = new ResourceLocation(RConstants.MODID, "names.json");
-                InputStream stream = ServerLifecycleHooks.getCurrentServer().getDataPackRegistries().getResourceManager().getResource(resourceLocation).getInputStream();
+                InputStream stream = ServerLifecycleHooks.getCurrentServer().getServerResources().getResourceManager().getResource(resourceLocation).getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder sb = new StringBuilder();
 

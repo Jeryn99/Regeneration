@@ -2,8 +2,8 @@ package me.suff.mc.regen.network.messages;
 
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -16,7 +16,7 @@ public class ChangeSoundScheme {
         this.type = type.name();
     }
 
-    public ChangeSoundScheme(PacketBuffer buffer) {
+    public ChangeSoundScheme(FriendlyByteBuf buffer) {
         type = buffer.readUtf(32767);
     }
 
@@ -28,7 +28,7 @@ public class ChangeSoundScheme {
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeUtf(this.type);
     }
 }

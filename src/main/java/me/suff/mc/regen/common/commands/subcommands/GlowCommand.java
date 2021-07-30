@@ -6,20 +6,20 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.mc.regen.common.regen.RegenCap;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 
-public class GlowCommand implements Command<CommandSource> {
+public class GlowCommand implements Command<CommandSourceStack> {
     private static final GlowCommand CMD = new GlowCommand();
 
-    public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher) {
+    public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("glow")
                 .executes(CMD);
     }
 
     @Override
-    public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        CommandSource source = context.getSource();
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        CommandSourceStack source = context.getSource();
         RegenCap.get(source.getPlayerOrException()).ifPresent((cap) -> cap.stateManager().fastForwardHandGlow());
         return Command.SINGLE_SUCCESS;
     }

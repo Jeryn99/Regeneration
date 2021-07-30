@@ -1,31 +1,31 @@
 package me.suff.mc.regen.client.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class SkinDownloadScreen extends ContainerScreen {
+public class SkinDownloadScreen extends AbstractContainerScreen {
 
     private static final ArrayList<SkinPack> PACKS = new ArrayList();
 
     public SkinDownloadScreen() {
-        super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).inventory, new TranslationTextComponent("Next Incarnation"));
+        super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).inventory, new TranslatableComponent("Next Incarnation"));
         PACKS.clear();
         PACKS.addAll(SkinPack.getAll());
     }
 
     @Override
-    protected void renderBg(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+    protected void renderBg(PoseStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
 
         SkinPack selectedPack = getPack("doctor_who:doctors");
 
         if (selectedPack != null) {
-            drawCenteredString(p_230450_1_, Minecraft.getInstance().font, new TranslationTextComponent(selectedPack.getName()).getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
+            drawCenteredString(p_230450_1_, Minecraft.getInstance().font, new TranslatableComponent(selectedPack.getName()).getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
 
             // if (selectedPack.hasThumbnail()) {
             this.minecraft.getTextureManager().bind(selectedPack.getThumbnail());
@@ -36,7 +36,7 @@ public class SkinDownloadScreen extends ContainerScreen {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }

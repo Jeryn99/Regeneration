@@ -2,22 +2,24 @@ package me.suff.mc.regen.util.sound;
 
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.util.RegenUtil;
-import net.minecraft.client.audio.TickableSound;
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
 
 import java.util.function.Supplier;
 
-public class MovingSound extends TickableSound {
+import net.minecraft.client.resources.sounds.SoundInstance.Attenuation;
+
+public class MovingSound extends AbstractTickableSoundInstance {
 
     private final Object entity;
     private final Supplier<Boolean> stopCondition;
     private boolean donePlaying = false;
 
-    public MovingSound(Object object, SoundEvent soundIn, SoundCategory categoryIn, boolean repeat, Supplier<Boolean> stopCondition, float volumeSfx) {
+    public MovingSound(Object object, SoundEvent soundIn, SoundSource categoryIn, boolean repeat, Supplier<Boolean> stopCondition, float volumeSfx) {
         super(soundIn, categoryIn);
         this.entity = object;
         this.stopCondition = stopCondition;
@@ -44,8 +46,8 @@ public class MovingSound extends TickableSound {
             super.z = (float) entityObject.getZ();
         }
 
-        if (entity instanceof TileEntity) {
-            TileEntity tileObject = (TileEntity) entity;
+        if (entity instanceof BlockEntity) {
+            BlockEntity tileObject = (BlockEntity) entity;
             BlockPos pos = tileObject.getBlockPos();
             super.x = (float) pos.getX();
             super.y = (float) pos.getY();
@@ -86,8 +88,8 @@ public class MovingSound extends TickableSound {
     }
 
     @Override
-    public AttenuationType getAttenuation() {
-        return AttenuationType.LINEAR;
+    public Attenuation getAttenuation() {
+        return Attenuation.LINEAR;
     }
 }
 

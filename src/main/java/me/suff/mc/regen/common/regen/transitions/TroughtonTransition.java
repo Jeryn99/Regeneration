@@ -5,10 +5,10 @@ import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.POVMessage;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public final class TroughtonTransition extends TransitionType {
@@ -20,8 +20,8 @@ public final class TroughtonTransition extends TransitionType {
 
     @Override
     public void onStartRegeneration(IRegen cap) {
-        if (cap.getLiving() instanceof ServerPlayerEntity) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
+        if (cap.getLiving() instanceof ServerPlayer) {
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
         }
     }
 
@@ -32,8 +32,8 @@ public final class TroughtonTransition extends TransitionType {
 
     @Override
     public void onFinishRegeneration(IRegen cap) {
-        if (cap.getLiving() instanceof ServerPlayerEntity) {
-            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
+        if (cap.getLiving() instanceof ServerPlayer) {
+            NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
         }
         cap.setUpdateTicks(0);
         cap.syncToClients(null);
@@ -45,13 +45,13 @@ public final class TroughtonTransition extends TransitionType {
     }
 
     @Override
-    public Vector3d getDefaultPrimaryColor() {
-        return new Vector3d(0.5, 0.5, 0.5);
+    public Vec3 getDefaultPrimaryColor() {
+        return new Vec3(0.5, 0.5, 0.5);
     }
 
     @Override
-    public Vector3d getDefaultSecondaryColor() {
-        return new Vector3d(0.5, 0.5, 0.5);
+    public Vec3 getDefaultSecondaryColor() {
+        return new Vec3(0.5, 0.5, 0.5);
     }
 
 }

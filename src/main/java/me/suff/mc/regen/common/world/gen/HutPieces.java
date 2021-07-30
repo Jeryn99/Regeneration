@@ -5,21 +5,21 @@ import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.block.Blocks;
-import net.minecraft.loot.LootTables;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class HutPieces {
 
     private static final Map<ResourceLocation, BlockPos> OFFSET = ImmutableMap.of(HUT, BlockPos.ZERO);
 
-    public static void start(TemplateManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random) {
+    public static void start(StructureManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random) {
         int x = pos.getX();
         int z = pos.getZ();
         BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
@@ -45,7 +45,7 @@ public class HutPieces {
         private final ResourceLocation resourceLocation;
         private final Rotation rotation;
 
-        public Piece(TemplateManager templateManagerIn, ResourceLocation resourceLocationIn, BlockPos pos, Rotation rotationIn) {
+        public Piece(StructureManager templateManagerIn, ResourceLocation resourceLocationIn, BlockPos pos, Rotation rotationIn) {
             super(RStructures.Structures.HUT_PIECE, 0);
             this.resourceLocation = resourceLocationIn;
             BlockPos blockpos = HutPieces.OFFSET.get(resourceLocation);
@@ -54,16 +54,16 @@ public class HutPieces {
             this.setupPiece(templateManagerIn);
         }
 
-        public Piece(TemplateManager templateManagerIn, CompoundNBT tagCompound) {
+        public Piece(StructureManager templateManagerIn, CompoundTag tagCompound) {
             super(RStructures.Structures.HUT_PIECE, tagCompound);
             this.resourceLocation = new ResourceLocation(tagCompound.getString("Template"));
             this.rotation = Rotation.valueOf(tagCompound.getString("Rot"));
             this.setupPiece(templateManagerIn);
         }
 
-        private void setupPiece(TemplateManager templateManager) {
-            Template template = templateManager.getOrCreate(this.resourceLocation);
-            PlacementSettings placementsettings = (new PlacementSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
+        private void setupPiece(StructureManager templateManager) {
+            StructureTemplate template = templateManager.getOrCreate(this.resourceLocation);
+            StructurePlaceSettings placementsettings = (new StructurePlaceSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
             this.setup(template, this.templatePosition, placementsettings);
         }
 
@@ -71,14 +71,14 @@ public class HutPieces {
          * (abstract) Helper method to read subclass data from NBT
          */
         @Override
-        protected void addAdditionalSaveData(CompoundNBT tagCompound) {
+        protected void addAdditionalSaveData(CompoundTag tagCompound) {
             super.addAdditionalSaveData(tagCompound);
             tagCompound.putString("Template", this.resourceLocation.toString());
             tagCompound.putString("Rot", this.rotation.name());
         }
 
         @Override
-        protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
+        protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, Random rand, BoundingBox sbb) {
 
             if ("timelord".equals(function)) {
                 TimelordEntity timelordEntity = REntities.TIMELORD.get().create(worldIn.getLevel());
@@ -94,7 +94,7 @@ public class HutPieces {
             }
 
             if ("chest_stone".equals(function)) {
-                LockableLootTileEntity.setLootTable(worldIn, rand, pos.above(), LootTables.STRONGHOLD_LIBRARY);
+                RandomizableContainerBlockEntity.setLootTable(worldIn, rand, pos.above(), BuiltInLootTables.STRONGHOLD_LIBRARY);
                 worldIn.setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
             }
 

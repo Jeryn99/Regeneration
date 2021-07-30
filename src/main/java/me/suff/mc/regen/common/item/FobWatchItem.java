@@ -10,20 +10,20 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.PlayerUtil;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 
 /**
@@ -35,8 +35,8 @@ public class FobWatchItem extends Item {
         super(new Item.Properties().setNoRepair().tab(RItems.MAIN).stacksTo(1));
     }
 
-    public static CompoundNBT getStackTag(ItemStack stack) {
-        CompoundNBT stackTag = stack.getOrCreateTag();
+    public static CompoundTag getStackTag(ItemStack stack) {
+        CompoundTag stackTag = stack.getOrCreateTag();
         if (!stackTag.contains("is_open") || !stackTag.contains("is_gold")) {
             stackTag.putBoolean("is_open", false);
             stackTag.putBoolean("is_gold", random.nextBoolean());
@@ -61,14 +61,14 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public void onCraftedBy(ItemStack stack, World worldIn, PlayerEntity playerIn) {
+    public void onCraftedBy(ItemStack stack, Level worldIn, Player playerIn) {
         super.onCraftedBy(stack, worldIn, playerIn);
         setDamage(stack, 0);
         setOpen(stack, false);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (stack.getItem() instanceof FobWatchItem) {
             if (isOpen(stack)) {
                 if (entityIn.tickCount % 600 == 0) {
@@ -80,7 +80,7 @@ public class FobWatchItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 
         ItemStack stack = player.getItemInHand(hand);
         IRegen cap = RegenCap.get(player).orElseGet(null);
@@ -95,16 +95,16 @@ public class FobWatchItem extends Item {
 
             if (cap.canRegenerate()) {
                 setOpen(stack, true);
-                PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.gained_regens", used), true);
+                PlayerUtil.sendMessage(player, new TranslatableComponent("regen.messages.gained_regens", used), true);
             } else {
                 if (!world.isClientSide) {
                     setOpen(stack, true);
-                    PlayerUtil.sendMessage(player, new TranslationTextComponent("regen.messages.now_timelord"), true);
+                    PlayerUtil.sendMessage(player, new TranslatableComponent("regen.messages.now_timelord"), true);
                 }
             }
 
             if (!world.isClientSide()) {
-                ServerWorld serverWorld = (ServerWorld) world;
+                ServerLevel serverWorld = (ServerLevel) world;
                 BlockPos blockPos = player.blockPosition();
                 serverWorld.sendParticles(RParticles.CONTAINER.get(), blockPos.getX(), (double) blockPos.getY() + 1D, blockPos.getZ(), 8, 0.5D, 0.25D, 0.5D, 0.0D);
             }
@@ -142,13 +142,13 @@ public class FobWatchItem extends Item {
             }
 
         }
-        return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
     }
 
 
-    private ActionResult<ItemStack> msgUsageFailed(PlayerEntity player, String message, ItemStack stack) {
+    private InteractionResultHolder<ItemStack> msgUsageFailed(Player player, String message, ItemStack stack) {
         PlayerUtil.sendMessage(player, message, true);
-        return ActionResult.fail(stack);
+        return InteractionResultHolder.fail(stack);
     }
 
     @Override

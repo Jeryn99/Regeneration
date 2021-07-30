@@ -1,20 +1,20 @@
 package me.suff.mc.regen.network.messages;
 
 import me.suff.mc.regen.common.regen.RegenCap;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class ColorChangeMessage {
-    private final CompoundNBT style;
+    private final CompoundTag style;
 
-    public ColorChangeMessage(CompoundNBT style) {
+    public ColorChangeMessage(CompoundTag style) {
         this.style = style;
     }
 
-    public ColorChangeMessage(PacketBuffer buffer) {
+    public ColorChangeMessage(FriendlyByteBuf buffer) {
         style = buffer.readNbt();
     }
 
@@ -28,7 +28,7 @@ public class ColorChangeMessage {
         });
     }
 
-    public void toBytes(PacketBuffer buffer) {
+    public void toBytes(FriendlyByteBuf buffer) {
         buffer.writeNbt(this.style);
     }
 

@@ -1,8 +1,8 @@
 package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.IRegen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public abstract class AbstractTrait extends ForgeRegistryEntry<AbstractTrait> {
@@ -13,14 +13,14 @@ public abstract class AbstractTrait extends ForgeRegistryEntry<AbstractTrait> {
 
     public abstract void tick(IRegen data);
 
-    public TranslationTextComponent translation() {
+    public TranslatableComponent translation() {
         ResourceLocation regName = getRegistryName();
-        return new TranslationTextComponent("trait." + regName.getNamespace() + "." + regName.getPath());
+        return new TranslatableComponent("trait." + regName.getNamespace() + "." + regName.getPath());
     }
 
-    public TranslationTextComponent description() {
+    public TranslatableComponent description() {
         ResourceLocation regName = getRegistryName();
-        return new TranslationTextComponent("trait." + regName.getNamespace() + "." + regName.getPath() + ".description");
+        return new TranslatableComponent("trait." + regName.getNamespace() + "." + regName.getPath() + ".description");
     }
 
     public abstract boolean isPlayerOnly();

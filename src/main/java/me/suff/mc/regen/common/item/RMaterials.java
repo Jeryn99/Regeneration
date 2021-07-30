@@ -1,20 +1,20 @@
 package me.suff.mc.regen.common.item;
 
 import me.suff.mc.regen.common.objects.RItems;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 
 /* Created by Craig on 03/03/2021 */
 public class RMaterials {
 
     private static final int[] DMG_TIME = new int[]{3, 6, 8, 3};
 
-    public static IArmorMaterial TIMELORD = new IArmorMaterial() {
+    public static ArmorMaterial TIMELORD = new ArmorMaterial() {
         @Override
-        public int getDurabilityForSlot(EquipmentSlotType slotIn) {
+        public int getDurabilityForSlot(EquipmentSlot slotIn) {
             switch (slotIn) {
                 case HEAD:
                     return 390;
@@ -35,7 +35,7 @@ public class RMaterials {
         }
 
         @Override
-        public int getDefenseForSlot(EquipmentSlotType slotIn) {
+        public int getDefenseForSlot(EquipmentSlot slotIn) {
             return DMG_TIME[slotIn.getIndex()];
         }
 

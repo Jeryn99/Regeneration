@@ -1,14 +1,14 @@
 package micdoodle8.mods.galacticraft.api.client.tabs;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.AbstractButton;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public abstract class AbstractTab extends AbstractButton {
     public int potionOffsetLast;
@@ -17,14 +17,14 @@ public abstract class AbstractTab extends AbstractButton {
     ItemStack renderStack;
 
     public AbstractTab(int id, int posX, int posY, ItemStack renderStack) {
-        super(posX, posY, 28, 32, new TranslationTextComponent(""));
+        super(posX, posY, 28, 32, new TranslatableComponent(""));
         this.renderStack = renderStack;
         this.id = id;
     }
 
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             Minecraft mc = Minecraft.getInstance();
@@ -36,7 +36,7 @@ public abstract class AbstractTab extends AbstractButton {
             mc.getTextureManager().bind(this.texture);
             this.blit(matrixStack, this.x, yPos, xOffset * 28, yTexPos, 28, ySize);
 
-            RenderHelper.turnBackOn();
+            Lighting.turnBackOn();
             this.setBlitOffset(this.getBlitOffset() + 30);
             itemRender.blitOffset = 10.0F;
             RenderSystem.enableLighting();
@@ -46,7 +46,7 @@ public abstract class AbstractTab extends AbstractButton {
             RenderSystem.disableLighting();
             itemRender.blitOffset = 0.0F;
             this.setBlitOffset(this.getBlitOffset() - 30);
-            RenderHelper.turnOff();
+            Lighting.turnOff();
         }
     }
 

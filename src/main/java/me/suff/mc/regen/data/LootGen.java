@@ -3,9 +3,9 @@ package me.suff.mc.regen.data;
 import me.suff.mc.regen.common.objects.RGlobalLoot;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.LootTableIdCondition;
 
@@ -20,25 +20,25 @@ public class LootGen extends GlobalLootModifierProvider {
 
         //FOB WATCH
         ResourceLocation[] fobWatchTables = new ResourceLocation[]{
-                LootTables.ABANDONED_MINESHAFT,
-                LootTables.BASTION_BRIDGE,
-                LootTables.LIBRARIAN_GIFT,
-                LootTables.WOODLAND_MANSION,
-                LootTables.STRONGHOLD_LIBRARY,
-                LootTables.SHIPWRECK_SUPPLY
+                BuiltInLootTables.ABANDONED_MINESHAFT,
+                BuiltInLootTables.BASTION_BRIDGE,
+                BuiltInLootTables.LIBRARIAN_GIFT,
+                BuiltInLootTables.WOODLAND_MANSION,
+                BuiltInLootTables.STRONGHOLD_LIBRARY,
+                BuiltInLootTables.SHIPWRECK_SUPPLY
         };
 
         for (ResourceLocation currentTable : fobWatchTables) {
             add(currentTable.getPath(), RGlobalLoot.REGEN_LOOT.get(), new RGlobalLoot.RegenerationLoot(
-                    new ILootCondition[]{LootTableIdCondition.builder(currentTable).build()}, 15)
+                    new LootItemCondition[]{LootTableIdCondition.builder(currentTable).build()}, 15)
             );
         }
 
-        for (ResourceLocation resourceLocation : LootTables.all()) {
+        for (ResourceLocation resourceLocation : BuiltInLootTables.all()) {
             //Fob Treasure
             if (resourceLocation.getPath().contains("treasure")) {
                 add(resourceLocation.getPath(), RGlobalLoot.REGEN_LOOT.get(), new RGlobalLoot.RegenerationLoot(
-                        new ILootCondition[]{LootTableIdCondition.builder(resourceLocation).build()}, 40)
+                        new LootItemCondition[]{LootTableIdCondition.builder(resourceLocation).build()}, 40)
                 );
             }
         }

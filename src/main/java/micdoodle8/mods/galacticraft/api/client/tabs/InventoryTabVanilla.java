@@ -1,7 +1,7 @@
 package micdoodle8.mods.galacticraft.api.client.tabs;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.ItemStack;
 
 public class InventoryTabVanilla extends AbstractTab {
     public InventoryTabVanilla() {

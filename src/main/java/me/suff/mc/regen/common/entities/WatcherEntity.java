@@ -5,24 +5,24 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.util.ViewUtil;
-import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
-public class WatcherEntity extends MobEntity {
+public class WatcherEntity extends Mob {
 
-    public WatcherEntity(EntityType<? extends MobEntity> type, World worldIn) {
+    public WatcherEntity(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public WatcherEntity(World worldIn) {
+    public WatcherEntity(Level worldIn) {
         super(REntities.WATCHER.get(), worldIn);
     }
 
@@ -31,11 +31,11 @@ public class WatcherEntity extends MobEntity {
         super.tick();
 
         setNoAi(true);
-        setDeltaMovement(new Vector3d(0, 0, 0));
+        setDeltaMovement(new Vec3(0, 0, 0));
         RegenCap.get(this).ifPresent(iRegen -> iRegen.setRegens(0));
 
         if (getTarget() == null) {
-            for (PlayerEntity worldPlayer : level.players()) {
+            for (Player worldPlayer : level.players()) {
                 RegenCap.get(worldPlayer).ifPresent(iRegen -> {
                     if (iRegen.regenState().isGraceful() && iRegen.transitionType() == TransitionTypes.WATCHER.get()) {
                         setTarget(worldPlayer);
@@ -55,7 +55,7 @@ public class WatcherEntity extends MobEntity {
                     if (iRegen.regenState() == RegenStates.REGENERATING) {
                         remove();
                     } else {
-                        lookAt(EntityAnchorArgument.Type.EYES, getTarget().position());
+                        lookAt(EntityAnchorArgument.Anchor.EYES, getTarget().position());
                         if (tickCount % 100 == 0 && !ViewUtil.isInSight(getTarget(), this)) {
                             teleportRandomly();
                         }
@@ -87,8 +87,8 @@ public class WatcherEntity extends MobEntity {
     }
 
     @Override
-    protected AxisAlignedBB getBoundingBoxForPose(Pose pose) {
-        return new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+    protected AABB getBoundingBoxForPose(Pose pose) {
+        return new AABB(0, 0, 0, 0, 0, 0);
     }
 
     @Override

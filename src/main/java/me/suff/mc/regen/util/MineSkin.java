@@ -2,7 +2,7 @@ package me.suff.mc.regen.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.util.GsonHelper;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -85,7 +85,7 @@ public class MineSkin {
         uc.addRequestProperty("User-Agent", USER_AGENT);
         InputStream inputStream = uc.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        return JSONUtils.parse(br);
+        return GsonHelper.parse(br);
     }
 
 

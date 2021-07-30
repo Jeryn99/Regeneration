@@ -15,26 +15,26 @@ import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
 import me.suff.mc.regen.util.schedule.RegenScheduledAction;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -165,7 +165,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public void readStyle(CompoundNBT colors) {
+    public void readStyle(CompoundTag colors) {
         primaryRed = colors.getFloat(RConstants.PRIMARY_RED);
         primaryGreen = colors.getFloat(RConstants.PRIMARY_GREEN);
         primaryBlue = colors.getFloat(RConstants.PRIMARY_BLUE);
@@ -176,8 +176,8 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public CompoundNBT getOrWriteStyle() {
-        CompoundNBT colors = new CompoundNBT();
+    public CompoundTag getOrWriteStyle() {
+        CompoundTag colors = new CompoundTag();
         colors.putFloat(RConstants.PRIMARY_RED, primaryRed);
         colors.putFloat(RConstants.PRIMARY_GREEN, primaryGreen);
         colors.putFloat(RConstants.PRIMARY_BLUE, primaryBlue);
@@ -203,13 +203,13 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public void syncToClients(@Nullable ServerPlayerEntity serverPlayerEntity) {
+    public void syncToClients(@Nullable ServerPlayer serverPlayerEntity) {
         if (livingEntity != null && livingEntity.level.isClientSide)
             throw new IllegalStateException("Don't sync client -> server");
 
         areHandsGlowing = regenState().isGraceful() && stateManager.handGlowTimer.getTransition() == RegenStates.Transition.HAND_GLOW_TRIGGER;
 
-        CompoundNBT nbt = serializeNBT();
+        CompoundTag nbt = serializeNBT();
         nbt.remove(RConstants.STATE_MANAGER);
 
         if (serverPlayerEntity == null) {
@@ -220,8 +220,8 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT compoundNBT = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag compoundNBT = new CompoundTag();
         compoundNBT.putInt(RConstants.REGENS_LEFT, regens());
         compoundNBT.putString(RConstants.CURRENT_STATE, regenState().name());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, updateTicks());
@@ -255,7 +255,7 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         setRegens(nbt.getInt(RConstants.REGENS_LEFT));
         currentState = nbt.contains(RConstants.CURRENT_STATE) ? RegenStates.valueOf(nbt.getString(RConstants.CURRENT_STATE)) : RegenStates.ALIVE;
         setUpdateTicks(nbt.getInt(RConstants.ANIMATION_TICKS));
@@ -285,11 +285,11 @@ public class RegenCap implements IRegen {
 
         //State Manager
         if (nbt.contains(RConstants.STATE_MANAGER)) if (stateManager != null) {
-            stateManager.deserializeNBT((CompoundNBT) nbt.get(RConstants.STATE_MANAGER));
+            stateManager.deserializeNBT((CompoundTag) nbt.get(RConstants.STATE_MANAGER));
         }
 
         if (nbt.contains(RConstants.COLORS)) {
-            readStyle((CompoundNBT) nbt.get(RConstants.COLORS));
+            readStyle((CompoundTag) nbt.get(RConstants.COLORS));
         }
     }
 
@@ -336,13 +336,13 @@ public class RegenCap implements IRegen {
     }
 
     @Override
-    public Vector3d getPrimaryColors() {
-        return new Vector3d(primaryRed, primaryGreen, primaryBlue);
+    public Vec3 getPrimaryColors() {
+        return new Vec3(primaryRed, primaryGreen, primaryBlue);
     }
 
     @Override
-    public Vector3d getSecondaryColors() {
-        return new Vector3d(secondaryRed, secondaryGreen, secondaryBlue);
+    public Vec3 getSecondaryColors() {
+        return new Vec3(secondaryRed, secondaryGreen, secondaryBlue);
     }
 
     @Override
@@ -552,8 +552,8 @@ public class RegenCap implements IRegen {
             if (currentState.isGraceful() && entity.getHealth() < entity.getMaxHealth() && glowing() && livingEntity.isShiftKeyDown()) { // ... check if we're in grace and if the mob needs health
                 float healthNeeded = entity.getMaxHealth() - entity.getHealth();
                 entity.heal(healthNeeded);
-                if (livingEntity instanceof PlayerEntity) {
-                    PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.healed", entity.getName()), true);
+                if (livingEntity instanceof Player) {
+                    PlayerUtil.sendMessage(livingEntity, new TranslatableComponent("regen.messages.healed", entity.getName()), true);
                 }
                 event.setAmount(0.0F);
                 livingEntity.hurt(RegenSources.REGEN_DMG_HEALING, healthNeeded);
@@ -568,18 +568,18 @@ public class RegenCap implements IRegen {
                 BlockState block = e.getWorld().getBlockState(e.getPos());
 
                 if (block.getBlock() == Blocks.SNOW || block.getBlock() == Blocks.SNOW_BLOCK) {
-                    e.getWorld().playSound(null, e.getPos(), SoundEvents.FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
+                    e.getWorld().playSound(null, e.getPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
                 }
-                if (e.getEntityLiving() instanceof ServerPlayerEntity) {
-                    ServerPlayerEntity playerEntity = (ServerPlayerEntity) livingEntity;
+                if (e.getEntityLiving() instanceof ServerPlayer) {
+                    ServerPlayer playerEntity = (ServerPlayer) livingEntity;
                     TriggerManager.CHANGE_REFUSAL.trigger(playerEntity);
                 }
 
                 handGlowTimer.cancel();
                 scheduleNextHandGlow();
                 if (!e.getEntityLiving().level.isClientSide) {
-                    if (e.getEntityLiving() instanceof PlayerEntity) {
-                        PlayerUtil.sendMessage(e.getEntityLiving(), new TranslationTextComponent("regen.messages.regen_delayed"), true);
+                    if (e.getEntityLiving() instanceof Player) {
+                        PlayerUtil.sendMessage(e.getEntityLiving(), new TranslatableComponent("regen.messages.regen_delayed"), true);
                     }
                 }
                 e.setCanceled(true); // It got annoying in creative to break something
@@ -610,9 +610,9 @@ public class RegenCap implements IRegen {
             currentState = RegenStates.REGENERATING;
 
             if (RegenConfig.COMMON.sendRegenDeathMessages.get()) {
-                if (livingEntity instanceof PlayerEntity) {
-                    TranslationTextComponent text = new TranslationTextComponent("regen.messages.regen_death_msg", livingEntity.getName());
-                    text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(deathMessage()))));
+                if (livingEntity instanceof Player) {
+                    TranslatableComponent text = new TranslatableComponent("regen.messages.regen_death_msg", livingEntity.getName());
+                    text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(deathMessage()))));
                     PlayerUtil.sendMessageToAll(text);
                 }
             }
@@ -631,8 +631,8 @@ public class RegenCap implements IRegen {
             currentState = RegenStates.GRACE_CRIT;
             scheduleTransitionInSeconds(RegenStates.Transition.CRITICAL_DEATH, RegenConfig.COMMON.criticalPhaseLength.get());
             ActingForwarder.onGoCritical(RegenCap.this);
-            if (livingEntity instanceof ServerPlayerEntity) {
-                ServerPlayerEntity playerEntity = (ServerPlayerEntity) livingEntity;
+            if (livingEntity instanceof ServerPlayer) {
+                ServerPlayer playerEntity = (ServerPlayer) livingEntity;
                 TriggerManager.CRITICAL.trigger(playerEntity);
             }
             syncToClients(null);
@@ -656,8 +656,8 @@ public class RegenCap implements IRegen {
             currentState = RegenStates.ALIVE;
             syncToClients(null);
             nextTransition = null;
-            if (livingEntity instanceof PlayerEntity) {
-                PlayerUtil.sendMessage(livingEntity, new TranslationTextComponent("regen.messages.post_ended"), true);
+            if (livingEntity instanceof Player) {
+                PlayerUtil.sendMessage(livingEntity, new TranslatableComponent("regen.messages.post_ended"), true);
             }
             handState = Hand.NO_GONE;
         }
@@ -702,8 +702,8 @@ public class RegenCap implements IRegen {
 
         @SuppressWarnings("deprecation")
         @Override
-        public CompoundNBT serializeNBT() {
-            CompoundNBT nbt = new CompoundNBT();
+        public CompoundTag serializeNBT() {
+            CompoundTag nbt = new CompoundTag();
             if (nextTransition != null && nextTransition.getTicksLeft() >= 0) {
                 nbt.putString("transitionId", nextTransition.transition.toString());
                 nbt.putLong("transitionInTicks", nextTransition.getTicksLeft());
@@ -717,7 +717,7 @@ public class RegenCap implements IRegen {
         }
 
         @Override
-        public void deserializeNBT(CompoundNBT nbt) {
+        public void deserializeNBT(CompoundTag nbt) {
             if (nbt.contains("transitionId"))
                 scheduleTransitionInTicks(RegenStates.Transition.valueOf(nbt.getString("transitionId")), nbt.getLong("transitionInTicks"));
 

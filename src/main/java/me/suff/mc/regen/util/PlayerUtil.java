@@ -5,23 +5,23 @@ import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.ModelMessage;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -31,12 +31,12 @@ import java.util.List;
 public class PlayerUtil {
 
 
-    public static ArrayList<Effect> POTIONS = new ArrayList();
+    public static ArrayList<MobEffect> POTIONS = new ArrayList();
 
     public static void setupPotions() {
         if (!RegenConfig.COMMON.postRegenEffects.get().isEmpty()) {
             for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
-                for (Effect effect : ForgeRegistries.POTIONS.getValues()) {
+                for (MobEffect effect : ForgeRegistries.POTIONS.getValues()) {
                     if (name.contentEquals(effect.getRegistryName().toString())) {
                         POTIONS.add(effect);
                     }
@@ -47,7 +47,7 @@ public class PlayerUtil {
 
     public static boolean isPlayerAboveZeroGrid(LivingEntity playerEntity) {
         BlockPos livingPos = playerEntity.blockPosition().below();
-        AxisAlignedBB grid = new AxisAlignedBB(livingPos.north().west(), livingPos.south().east());
+        AABB grid = new AABB(livingPos.north().west(), livingPos.south().east());
         for (Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(grid.maxX, grid.maxY, grid.maxZ), new BlockPos(grid.minX, grid.minY, grid.minZ)).iterator(); iterator.hasNext(); ) {
             BlockPos pos = iterator.next();
             BlockState state = playerEntity.level.getBlockState(pos);
@@ -55,14 +55,14 @@ public class PlayerUtil {
                 return false;
             }
         }
-        if (playerEntity instanceof ServerPlayerEntity) {
-            TriggerManager.ZERO_ROOM.trigger((ServerPlayerEntity) playerEntity);
+        if (playerEntity instanceof ServerPlayer) {
+            TriggerManager.ZERO_ROOM.trigger((ServerPlayer) playerEntity);
         }
         return true;
     }
 
     public static void handleZeroGrid(LivingEntity playerEntity) {
-        for (Effect effect : PlayerUtil.POTIONS) {
+        for (MobEffect effect : PlayerUtil.POTIONS) {
             if (playerEntity.hasEffect(effect)) {
                 playerEntity.removeEffect(effect);
             }
@@ -71,43 +71,43 @@ public class PlayerUtil {
 
 
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
-        if (!(livingEntity instanceof PlayerEntity)) return;
-        PlayerEntity player = (PlayerEntity) livingEntity;
+        if (!(livingEntity instanceof Player)) return;
+        Player player = (Player) livingEntity;
         if (!player.level.isClientSide) {
-            player.displayClientMessage(new TranslationTextComponent(message), hotBar);
+            player.displayClientMessage(new TranslatableComponent(message), hotBar);
         }
     }
 
-    public static void sendMessage(LivingEntity livingEntity, TranslationTextComponent translation, boolean hotBar) {
-        if (!(livingEntity instanceof PlayerEntity)) return;
-        PlayerEntity player = (PlayerEntity) livingEntity;
+    public static void sendMessage(LivingEntity livingEntity, TranslatableComponent translation, boolean hotBar) {
+        if (!(livingEntity instanceof Player)) return;
+        Player player = (Player) livingEntity;
         if (!player.level.isClientSide) {
             player.displayClientMessage(translation, hotBar);
         }
     }
 
-    public static void sendMessageToAll(TranslationTextComponent translation) {
-        List<ServerPlayerEntity> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+    public static void sendMessageToAll(TranslatableComponent translation) {
+        List<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
         players.forEach(playerMP -> sendMessage(playerMP, translation, false));
     }
 
-    public static void applyPotionIfAbsent(LivingEntity player, Effect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
+    public static void applyPotionIfAbsent(LivingEntity player, MobEffect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
         if (potion == null) return;
         if (player.getEffect(potion) == null) {
-            player.addEffect(new EffectInstance(potion, length, amplifier, ambient, showParticles));
+            player.addEffect(new MobEffectInstance(potion, length, amplifier, ambient, showParticles));
         }
     }
 
-    public static AxisAlignedBB getReach(BlockPos pos, int range) {
-        return new AxisAlignedBB(pos.above(range).north(range).west(range), pos.below(range).south(range).east(range));
+    public static AABB getReach(BlockPos pos, int range) {
+        return new AABB(pos.above(range).north(range).west(range), pos.below(range).south(range).east(range));
     }
 
-    public static void explodeKnockback(Entity exploder, World world, BlockPos pos, double knockback, int range) {
+    public static void explodeKnockback(Entity exploder, Level world, BlockPos pos, double knockback, int range) {
         world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
             if (entity instanceof LivingEntity && exploder.isAlive()) {
                 LivingEntity victim = (LivingEntity) entity;
 
-                if (entity instanceof PlayerEntity && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.canChangeDimensions())
+                if (entity instanceof Player && !RegenConfig.COMMON.regenerationKnocksbackPlayers.get() || !victim.canChangeDimensions())
                     return;
 
                 float densMod = Explosion.getSeenPercent(entity.position(), entity);
@@ -125,9 +125,9 @@ public class PlayerUtil {
         explodeKill(player, player.level, new BlockPos(player.position()), RegenConfig.COMMON.regenerativeKillRange.get());
     }
 
-    public static void explodeKill(Entity exploder, World world, BlockPos pos, int range) {
+    public static void explodeKill(Entity exploder, Level world, BlockPos pos, int range) {
         world.getEntities(exploder, getReach(pos, range)).forEach(entity -> {
-            if ((entity instanceof CreatureEntity && entity.canChangeDimensions()) || (entity instanceof PlayerEntity)) // && RegenConfig.COMMON.regenerationKillsPlayers))
+            if ((entity instanceof PathfinderMob && entity.canChangeDimensions()) || (entity instanceof Player)) // && RegenConfig.COMMON.regenerationKillsPlayers))
                 entity.hurt(RegenSources.REGEN_DMG_ENERGY_EXPLOSION, 3.5F);
         });
     }
@@ -136,20 +136,20 @@ public class PlayerUtil {
         NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new ModelMessage(choices));
     }
 
-    public static boolean isInHand(Hand hand, LivingEntity holder, Item item) {
+    public static boolean isInHand(InteractionHand hand, LivingEntity holder, Item item) {
         ItemStack heldItem = holder.getItemInHand(hand);
         return heldItem.getItem() == item;
     }
 
     public static boolean isInMainHand(LivingEntity holder, Item item) {
-        return isInHand(Hand.MAIN_HAND, holder, item);
+        return isInHand(InteractionHand.MAIN_HAND, holder, item);
     }
 
     /**
      * Checks if player has item in offhand
      */
     public static boolean isInOffHand(LivingEntity holder, Item item) {
-        return isInHand(Hand.OFF_HAND, holder, item);
+        return isInHand(InteractionHand.OFF_HAND, holder, item);
     }
 
     /**

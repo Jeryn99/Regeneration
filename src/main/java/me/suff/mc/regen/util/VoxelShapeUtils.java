@@ -1,12 +1,13 @@
 package me.suff.mc.regen.util;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +19,7 @@ import java.util.function.UnaryOperator;
 
 public final class VoxelShapeUtils {
 
-    private static final Vector3d fromOrigin = new Vector3d(-0.5, -0.5, -0.5);
+    private static final Vec3 fromOrigin = new Vec3(-0.5, -0.5, -0.5);
 
     public static void print(double x1, double y1, double z1, double x2, double y2, double z2) {
         System.out.println("makeCuboidShape(" + Math.min(x1, x2) + ", " + Math.min(y1, y2) + ", " + Math.min(z1, z2) + ", " +
@@ -34,59 +35,59 @@ public final class VoxelShapeUtils {
     }
 
     /**
-     * Rotates an {@link AxisAlignedBB} to a specific side, similar to how the block states rotate models.
+     * Rotates an {@link BoundingBox} to a specific side, similar to how the block states rotate models.
      *
-     * @param box  The {@link AxisAlignedBB} to rotate
+     * @param box  The {@link BoundingBox} to rotate
      * @param side The side to rotate it to.
-     * @return The rotated {@link AxisAlignedBB}
+     * @return The rotated {@link net.minecraft.world.level.levelgen.structure.BoundingBox}
      */
-    public static AxisAlignedBB rotate(AxisAlignedBB box, Direction side) {
+    public static AABB rotate(AABB box, Direction side) {
         switch (side) {
             case DOWN:
                 return box;
             case UP:
-                return new AxisAlignedBB(box.minX, -box.minY, -box.minZ, box.maxX, -box.maxY, -box.maxZ);
+                return new AABB(box.minX, -box.minY, -box.minZ, box.maxX, -box.maxY, -box.maxZ);
             case NORTH:
-                return new AxisAlignedBB(box.minX, -box.minZ, box.minY, box.maxX, -box.maxZ, box.maxY);
+                return new AABB(box.minX, -box.minZ, box.minY, box.maxX, -box.maxZ, box.maxY);
             case SOUTH:
-                return new AxisAlignedBB(-box.minX, box.minZ, -box.minY, -box.maxX, box.maxZ, -box.maxY);
+                return new AABB(-box.minX, box.minZ, -box.minY, -box.maxX, box.maxZ, -box.maxY);
             case WEST:
-                return new AxisAlignedBB(box.minY, -box.minZ, -box.minX, box.maxY, -box.maxZ, -box.maxX);
+                return new AABB(box.minY, -box.minZ, -box.minX, box.maxY, -box.maxZ, -box.maxX);
             case EAST:
-                return new AxisAlignedBB(-box.minY, box.minZ, box.minX, -box.maxY, box.maxZ, box.maxX);
+                return new AABB(-box.minY, box.minZ, box.minX, -box.maxY, box.maxZ, box.maxX);
         }
         return box;
     }
 
     /**
-     * Rotates an {@link AxisAlignedBB} to a according to a specific rotation.
+     * Rotates an {@link BoundingBox} to a according to a specific rotation.
      *
-     * @param box      The {@link AxisAlignedBB} to rotate
+     * @param box      The {@link BoundingBox} to rotate
      * @param rotation The rotation we are performing.
-     * @return The rotated {@link AxisAlignedBB}
+     * @return The rotated {@link BoundingBox}
      */
-    public static AxisAlignedBB rotate(AxisAlignedBB box, Rotation rotation) {
+    public static AABB rotate(AABB box, Rotation rotation) {
         switch (rotation) {
             case NONE:
                 return box;
             case CLOCKWISE_90:
-                return new AxisAlignedBB(-box.minZ, box.minY, box.minX, -box.maxZ, box.maxY, box.maxX);
+                return new AABB(-box.minZ, box.minY, box.minX, -box.maxZ, box.maxY, box.maxX);
             case CLOCKWISE_180:
-                return new AxisAlignedBB(-box.minX, box.minY, -box.minZ, -box.maxX, box.maxY, -box.maxZ);
+                return new AABB(-box.minX, box.minY, -box.minZ, -box.maxX, box.maxY, -box.maxZ);
             case COUNTERCLOCKWISE_90:
-                return new AxisAlignedBB(box.minZ, box.minY, -box.minX, box.maxZ, box.maxY, -box.maxX);
+                return new AABB(box.minZ, box.minY, -box.minX, box.maxZ, box.maxY, -box.maxX);
         }
         return box;
     }
 
     /**
-     * Rotates an {@link AxisAlignedBB} to a specific side horizontally. This is a default most common rotation setup as to {@link #rotate(AxisAlignedBB, Rotation)}
+     * Rotates an {@link BoundingBox} to a specific side horizontally. This is a default most common rotation setup as to {@link #rotate(BoundingBox, Rotation)}
      *
-     * @param box  The {@link AxisAlignedBB} to rotate
+     * @param box  The {@link BoundingBox} to rotate
      * @param side The side to rotate it to.
-     * @return The rotated {@link AxisAlignedBB}
+     * @return The rotated {@link BoundingBox}
      */
-    public static AxisAlignedBB rotateHorizontal(AxisAlignedBB box, Direction side) {
+    public static AABB rotateHorizontal(AABB box, Direction side) {
         switch (side) {
             case NORTH:
                 return rotate(box, Rotation.NONE);
@@ -136,20 +137,20 @@ public final class VoxelShapeUtils {
     }
 
     /**
-     * Rotates a {@link VoxelShape} using a specific transformation function for each {@link AxisAlignedBB} in the {@link VoxelShape}.
+     * Rotates a {@link VoxelShape} using a specific transformation function for each {@link BoundingBox} in the {@link VoxelShape}.
      *
      * @param shape          The {@link VoxelShape} to rotate
-     * @param rotateFunction The transformation function to apply to each {@link AxisAlignedBB} in the {@link VoxelShape}.
+     * @param rotateFunction The transformation function to apply to each {@link BoundingBox} in the {@link VoxelShape}.
      * @return The rotated {@link VoxelShape}
      */
-    public static VoxelShape rotate(VoxelShape shape, UnaryOperator<AxisAlignedBB> rotateFunction) {
+    public static VoxelShape rotate(VoxelShape shape, UnaryOperator<AABB> rotateFunction) {
         List<VoxelShape> rotatedPieces = new ArrayList<>();
         //Explode the voxel shape into bounding boxes
-        List<AxisAlignedBB> sourceBoundingBoxes = shape.toAabbs();
+        List<AABB> sourceBoundingBoxes = shape.toAabbs();
         //Rotate them and convert them each back into a voxel shape
-        for (AxisAlignedBB sourceBoundingBox : sourceBoundingBoxes) {
+        for (AABB sourceBoundingBox : sourceBoundingBoxes) {
             //Make the bounding box be centered around the middle, and then move it back after rotating
-            rotatedPieces.add(VoxelShapes.create(rotateFunction.apply(sourceBoundingBox.move(fromOrigin.x, fromOrigin.y, fromOrigin.z))
+            rotatedPieces.add(Shapes.create(rotateFunction.apply(sourceBoundingBox.move(fromOrigin.x, fromOrigin.y, fromOrigin.z))
                     .move(-fromOrigin.x, -fromOrigin.z, -fromOrigin.z)));
         }
         //return the recombined rotated voxel shape
@@ -163,7 +164,7 @@ public final class VoxelShapeUtils {
      * @return A simplified {@link VoxelShape} including everything that is part of any of the input shapes.
      */
     public static VoxelShape combine(VoxelShape... shapes) {
-        return batchCombine(VoxelShapes.empty(), IBooleanFunction.OR, true, shapes);
+        return batchCombine(Shapes.empty(), BooleanOp.OR, true, shapes);
     }
 
     /**
@@ -177,7 +178,7 @@ public final class VoxelShapeUtils {
     }
 
     public static VoxelShape combine(Collection<VoxelShape> shapes, boolean simplify) {
-        return batchCombine(VoxelShapes.empty(), IBooleanFunction.OR, simplify, shapes);
+        return batchCombine(Shapes.empty(), BooleanOp.OR, simplify, shapes);
     }
 
     /**
@@ -187,7 +188,7 @@ public final class VoxelShapeUtils {
      * @return A {@link VoxelShape} including everything that is not part of any of the input shapes.
      */
     public static VoxelShape exclude(VoxelShape... shapes) {
-        return batchCombine(VoxelShapes.block(), IBooleanFunction.ONLY_FIRST, true, shapes);
+        return batchCombine(Shapes.block(), BooleanOp.ONLY_FIRST, true, shapes);
     }
 
     /**
@@ -201,10 +202,10 @@ public final class VoxelShapeUtils {
      * @implNote We do not do any simplification until after combining all the shapes, and then only if the {@code simplify} is True. This is because there is a
      * performance hit in calculating the simplified shape each time if we still have more changers we are making to it.
      */
-    public static VoxelShape batchCombine(VoxelShape initial, IBooleanFunction function, boolean simplify, Collection<VoxelShape> shapes) {
+    public static VoxelShape batchCombine(VoxelShape initial, BooleanOp function, boolean simplify, Collection<VoxelShape> shapes) {
         VoxelShape combinedShape = initial;
         for (VoxelShape shape : shapes) {
-            combinedShape = VoxelShapes.joinUnoptimized(combinedShape, shape, function);
+            combinedShape = Shapes.joinUnoptimized(combinedShape, shape, function);
         }
         return simplify ? combinedShape.optimize() : combinedShape;
     }
@@ -220,10 +221,10 @@ public final class VoxelShapeUtils {
      * @implNote We do not do any simplification until after combining all the shapes, and then only if the {@code simplify} is True. This is because there is a
      * performance hit in calculating the simplified shape each time if we still have more changers we are making to it.
      */
-    public static VoxelShape batchCombine(VoxelShape initial, IBooleanFunction function, boolean simplify, VoxelShape... shapes) {
+    public static VoxelShape batchCombine(VoxelShape initial, BooleanOp function, boolean simplify, VoxelShape... shapes) {
         VoxelShape combinedShape = initial;
         for (VoxelShape shape : shapes) {
-            combinedShape = VoxelShapes.joinUnoptimized(combinedShape, shape, function);
+            combinedShape = Shapes.joinUnoptimized(combinedShape, shape, function);
         }
         return simplify ? combinedShape.optimize() : combinedShape;
     }

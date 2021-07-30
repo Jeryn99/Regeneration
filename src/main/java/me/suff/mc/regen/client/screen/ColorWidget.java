@@ -1,30 +1,30 @@
 package me.suff.mc.regen.client.screen;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 
 import java.awt.*;
 
 import static java.lang.Math.*;
 
 //Based on https://github.com/Petersil1998/utilcraft/blob/master/src/main/java/net/petersil98/utilcraft/screen/widget/ColorChooser.java
-public class ColorWidget extends Widget {
+public class ColorWidget extends AbstractWidget {
 
     protected final RCheckbox.IInteraction<ColorWidget> onPress;
     private final int radius;
     private final int textHeight;
     private int color;
-    private TextFieldWidget text = null;
+    private EditBox text = null;
 
 
-    public ColorWidget(FontRenderer font, int x, int y, int width, int textHeight, ITextComponent title, int defaultColor, RCheckbox.IInteraction<ColorWidget> iInteraction) {
+    public ColorWidget(Font font, int x, int y, int width, int textHeight, Component title, int defaultColor, RCheckbox.IInteraction<ColorWidget> iInteraction) {
         super(x, y, width, width, title);
         radius = width / 2;
         color = defaultColor;
-        text = new TextFieldWidget(font, x, y + width + 10, width - textHeight - 5, textHeight, this.text, title);
+        text = new EditBox(font, x, y + width + 10, width - textHeight - 5, textHeight, this.text, title);
         text.setEditable(true);
         this.textHeight = textHeight;
         this.onPress = iInteraction;
@@ -42,7 +42,7 @@ public class ColorWidget extends Widget {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             for (int x = -radius; x < radius; x++) {
                 for (int y = -radius; y < radius; y++) {

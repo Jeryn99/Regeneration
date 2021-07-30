@@ -6,13 +6,13 @@ import me.suff.mc.regen.common.commands.subcommands.GlowCommand;
 import me.suff.mc.regen.common.commands.subcommands.SetRegensCommand;
 import me.suff.mc.regen.common.commands.subcommands.SetTraitsCommand;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class RegenCommand {
 
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal(RConstants.MODID)
                         .requires(commandSource -> commandSource.hasPermission(ServerLifecycleHooks.getCurrentServer().getOperatorUserPermissionLevel()))

@@ -1,9 +1,9 @@
 package me.suff.mc.regen.common.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -27,7 +27,7 @@ public class BlockShapes {
             Block.box(3, 1.5, 3, 4, 3, 13),
             Block.box(3, 0, 3, 13, 1.5, 13),
             Block.box(3, 1.5, 12, 13, 3, 13)
-    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR));
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR));
 
     static Optional<VoxelShape> JAR_OPEN = Stream.of(
             Block.box(12.503, 14.003, 12.503, 3.497, 2.997, 3.497),
@@ -41,6 +41,6 @@ public class BlockShapes {
             Block.box(3, 1.5, 3, 4, 3, 13),
             Block.box(3, 0, 3, 13, 1.5, 13),
             Block.box(3, 1.5, 12, 13, 3, 13)
-    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR));
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR));
 
 }

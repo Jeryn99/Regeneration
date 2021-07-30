@@ -3,14 +3,15 @@ package me.suff.mc.regen.data;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;
-import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.ItemTagsProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.tags.ITag;
+import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 /* Created by Craig on 17/03/2021 */
 public class RItemTags extends ItemTagsProvider {
@@ -24,11 +25,11 @@ public class RItemTags extends ItemTagsProvider {
         add(RegenUtil.TIMELORD_CURRENCY, Items.GOLD_INGOT, Items.BONE, Items.EMERALD, RItems.ZINC.get(), Items.IRON_INGOT);
     }
 
-    public void add(ITag.INamedTag<Item> branch, Item item) {
+    public void add(Tag.Named<Item> branch, Item item) {
         this.tag(branch).add(item);
     }
 
-    public void add(ITag.INamedTag<Item> branch, Item... item) {
+    public void add(Tag.Named<Item> branch, Item... item) {
         this.tag(branch).add(item);
     }
 }

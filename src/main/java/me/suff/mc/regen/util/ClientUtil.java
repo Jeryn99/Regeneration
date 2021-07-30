@@ -3,7 +3,7 @@ package me.suff.mc.regen.util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.client.rendering.JarParticle;
 import me.suff.mc.regen.client.rendering.JarTileRender;
@@ -28,26 +28,26 @@ import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.gui.toasts.SystemToast;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.entity.BipedRenderer;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.settings.PointOfView;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.CameraType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -74,7 +74,7 @@ import static me.suff.mc.regen.common.item.FobWatchItem.isOpen;
 public class ClientUtil {
 
     private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
-    public static HashMap<Item, BipedModel<?>> ARMOR_MODELS = new HashMap<>();
+    public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
 
     public static String getImgurLink(String base64Image) throws Exception {
         URL url;
@@ -107,10 +107,10 @@ public class ClientUtil {
         JsonElement jelement = new JsonParser().parse(stb.toString());
         JsonObject jobject = jelement.getAsJsonObject();
 
-        if (JSONUtils.isValidNode(jobject, "link")) {
-            return JSONUtils.getAsString(jobject, "link");
+        if (GsonHelper.isValidNode(jobject, "link")) {
+            return GsonHelper.getAsString(jobject, "link");
         } else {
-            throw new Exception(JSONUtils.getAsString(jobject, "message"));
+            throw new Exception(GsonHelper.getAsString(jobject, "message"));
         }
     }
 
@@ -121,8 +121,8 @@ public class ClientUtil {
     }
 
     public static boolean isAlex(Entity livingEntity) {
-        if (livingEntity instanceof AbstractClientPlayerEntity) {
-            AbstractClientPlayerEntity abstractClientPlayerEntity = (AbstractClientPlayerEntity) livingEntity;
+        if (livingEntity instanceof AbstractClientPlayer) {
+            AbstractClientPlayer abstractClientPlayerEntity = (AbstractClientPlayer) livingEntity;
             if (abstractClientPlayerEntity.playerInfo.skinModel.isEmpty()) {
                 return false;
             }
@@ -133,10 +133,10 @@ public class ClientUtil {
     }
 
     public static void clothingModels() {
-        RobesModel robesHead = new RobesModel(EquipmentSlotType.HEAD);
-        RobesModel robesChest = new RobesModel(EquipmentSlotType.CHEST);
-        RobesModel robesLegs = new RobesModel(EquipmentSlotType.LEGS);
-        RobesModel robesFeet = new RobesModel(EquipmentSlotType.FEET);
+        RobesModel robesHead = new RobesModel(EquipmentSlot.HEAD);
+        RobesModel robesChest = new RobesModel(EquipmentSlot.CHEST);
+        RobesModel robesLegs = new RobesModel(EquipmentSlot.LEGS);
+        RobesModel robesFeet = new RobesModel(EquipmentSlot.FEET);
 
         //Robes
         ARMOR_MODELS.put(RItems.F_ROBES_HEAD.get(), robesHead);
@@ -147,10 +147,10 @@ public class ClientUtil {
         ARMOR_MODELS.put(RItems.M_ROBES_LEGS.get(), robesLegs);
         ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);
 
-        BipedModel<?> guardHead = new GuardModel(EquipmentSlotType.HEAD);
-        BipedModel<?> guardChest = new GuardModel(EquipmentSlotType.CHEST);
-        BipedModel<?> guardLegs = new GuardModel(EquipmentSlotType.LEGS);
-        BipedModel<?> guardFeet = new GuardModel(EquipmentSlotType.FEET);
+        HumanoidModel<?> guardHead = new GuardModel(EquipmentSlot.HEAD);
+        HumanoidModel<?> guardChest = new GuardModel(EquipmentSlot.CHEST);
+        HumanoidModel<?> guardLegs = new GuardModel(EquipmentSlot.LEGS);
+        HumanoidModel<?> guardFeet = new GuardModel(EquipmentSlot.FEET);
 
         //Guard
         ARMOR_MODELS.put(RItems.GUARD_HELMET.get(), guardHead);
@@ -160,7 +160,7 @@ public class ClientUtil {
 
     }
 
-    public static BipedModel<?> getArmorModel(ItemStack itemStack) {
+    public static HumanoidModel<?> getArmorModel(ItemStack itemStack) {
         if (!ARMOR_MODELS.containsKey(itemStack.getItem())) {
             throw new UnsupportedOperationException("No model registered for: " + itemStack.getItem());
         }
@@ -175,7 +175,7 @@ public class ClientUtil {
         clothingModels();
         transitionTypes();
         RKeybinds.init();
-        RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
         Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).color(), RItems.ELIXIR.get());
     }
 
@@ -197,10 +197,10 @@ public class ClientUtil {
         }
 
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.forEach((entityType, entityRenderer) -> {
-            if (entityRenderer instanceof BipedRenderer) {
-                BipedRenderer<?, ?> bipedRenderer = (BipedRenderer<?, ?>) entityRenderer;
+            if (entityRenderer instanceof HumanoidMobRenderer) {
+                HumanoidMobRenderer<?, ?> bipedRenderer = (HumanoidMobRenderer<?, ?>) entityRenderer;
                 bipedRenderer.addLayer(new RenderRegenLayer(bipedRenderer));
-                bipedRenderer.addLayer(new HandLayer((IEntityRenderer) entityRenderer));
+                bipedRenderer.addLayer(new HandLayer((RenderLayerParent) entityRenderer));
             }
         });
     }
@@ -215,7 +215,7 @@ public class ClientUtil {
     }
 
     private static void itemPredicates() {
-        ItemModelsProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
+        ItemProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
             boolean isGold = getEngrave(stack);
             boolean isOpen = isOpen(stack);
             if (isOpen && isGold) {
@@ -234,24 +234,24 @@ public class ClientUtil {
             return 0.1F;
         });
 
-        ItemModelsProperties.register(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
+        ItemProperties.register(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
             if (livingEntity == null) {
                 return 0;
             }
             return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
         });
 
-        ItemModelsProperties.register(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
+        ItemProperties.register(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
             if (livingEntity == null) {
                 return 0;
             }
             return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
         });
 
-        ItemModelsProperties.register(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity) -> HandItem.isAlex(stack) ? 1 : 0);
+        ItemProperties.register(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity) -> HandItem.isAlex(stack) ? 1 : 0);
 
 
-        ItemModelsProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity) -> {
+        ItemProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity) -> {
             if (itemStack == null || itemStack.isEmpty()) {
                 return 0;
             }
@@ -270,24 +270,24 @@ public class ClientUtil {
     }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
-        Minecraft.getInstance().getSoundManager().play(SimpleSound.forUI(sound, pitch, volume));
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, pitch, volume));
     }
 
-    public static void playSound(Object entity, ResourceLocation soundName, SoundCategory category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
+    public static void playSound(Object entity, ResourceLocation soundName, SoundSource category, boolean repeat, Supplier<Boolean> stopCondition, float volume) {
         Minecraft.getInstance().getSoundManager().play(new MovingSound(entity, new SoundEvent(soundName), category, repeat, stopCondition, volume));
     }
 
-    public static void createToast(TranslationTextComponent title, TranslationTextComponent subtitle) {
-        Minecraft.getInstance().getToasts().addToast(new SystemToast(SystemToast.Type.TUTORIAL_HINT, title, subtitle));
+    public static void createToast(TranslatableComponent title, TranslatableComponent subtitle) {
+        Minecraft.getInstance().getToasts().addToast(new SystemToast(SystemToast.SystemToastIds.TUTORIAL_HINT, title, subtitle));
     }
 
     public static void setPlayerPerspective(String pointOfView) {
         if (RegenConfig.CLIENT.changePerspective.get()) {
-            Minecraft.getInstance().options.setCameraType(PointOfView.valueOf(pointOfView));
+            Minecraft.getInstance().options.setCameraType(CameraType.valueOf(pointOfView));
         }
     }
 
-    public static void renderSky(MatrixStack matrixStackIn) {
+    public static void renderSky(PoseStack matrixStackIn) {
         if (Minecraft.getInstance().level == null || matrixStackIn == null) return;
       /*  if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension()== RConstants.GALLIFREY) {
             float scale = 30.0F;

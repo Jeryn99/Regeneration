@@ -1,34 +1,34 @@
 package me.suff.mc.regen.common.entities;
 
 import me.suff.mc.regen.util.RegenSources;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 /* Created by Craig on 01/03/2021 */
-public class LaserProjectile extends ThrowableEntity {
+public class LaserProjectile extends ThrowableProjectile {
 
     private float damage = 3;
     private DamageSource damageSrc = RegenSources.REGEN_DMG_RIFLE;
 
-    public LaserProjectile(EntityType<? extends ThrowableEntity> type, World worldIn) {
+    public LaserProjectile(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public LaserProjectile(EntityType<? extends ThrowableEntity> type, double x, double y, double z, World worldIn) {
+    public LaserProjectile(EntityType<? extends ThrowableProjectile> type, double x, double y, double z, Level worldIn) {
         super(type, x, y, z, worldIn);
     }
 
-    public LaserProjectile(EntityType<? extends ThrowableEntity> type, LivingEntity livingEntityIn, World worldIn) {
+    public LaserProjectile(EntityType<? extends ThrowableProjectile> type, LivingEntity livingEntityIn, Level worldIn) {
         super(type, livingEntityIn, worldIn);
     }
 
@@ -48,9 +48,9 @@ public class LaserProjectile extends ThrowableEntity {
     @Override
     public void tick() {
         super.tick();
-        double speed = (new Vector3d(this.getX(), this.getY(), this.getZ())).distanceTo(new Vector3d(this.xo, this.yo, this.zo));
+        double speed = (new Vec3(this.getX(), this.getY(), this.getZ())).distanceTo(new Vec3(this.xo, this.yo, this.zo));
         if (!this.level.isClientSide && (this.tickCount > 600 || speed < 0.01D)) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
         if (isAlive()) {
             super.tick();
@@ -58,7 +58,7 @@ public class LaserProjectile extends ThrowableEntity {
     }
 
     @Override
-    protected void onHit(RayTraceResult result) {
+    protected void onHit(HitResult result) {
         super.onHit(result);
         if (this.level.isClientSide()) {
             this.level.addParticle(ParticleTypes.SMOKE, true, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
@@ -66,7 +66,7 @@ public class LaserProjectile extends ThrowableEntity {
     }
 
     @Override
-    protected void onHitEntity(EntityRayTraceResult entityRayTraceResult) {
+    protected void onHitEntity(EntityHitResult entityRayTraceResult) {
         Entity entity = entityRayTraceResult.getEntity();
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
@@ -75,7 +75,7 @@ public class LaserProjectile extends ThrowableEntity {
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

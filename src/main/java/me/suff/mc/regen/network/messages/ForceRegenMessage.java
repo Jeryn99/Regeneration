@@ -3,8 +3,8 @@ package me.suff.mc.regen.network.messages;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.util.RegenSources;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -13,7 +13,7 @@ public class ForceRegenMessage {
     public ForceRegenMessage() {
     }
 
-    public ForceRegenMessage(PacketBuffer buffer) {
+    public ForceRegenMessage(FriendlyByteBuf buffer) {
     }
 
     public static void handle(ForceRegenMessage message, Supplier<NetworkEvent.Context> ctx) {
@@ -27,7 +27,7 @@ public class ForceRegenMessage {
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
 
     }
 

@@ -1,7 +1,7 @@
 package me.suff.mc.regen.client.rendering.transitions;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.suff.mc.regen.client.animation.AnimationHandler;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.entities.TimelordEntity;
@@ -9,16 +9,16 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
@@ -28,11 +28,11 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
     public static final FieryTransitionRenderer INSTANCE = new FieryTransitionRenderer();
 
-    public static void renderOverlay(MatrixStack matrixStack, IVertexBuilder buffer, int packedlight, BipedModel bipedModel, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float opacity, Vector3d color) {
+    public static void renderOverlay(PoseStack matrixStack, VertexConsumer buffer, int packedlight, HumanoidModel bipedModel, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float opacity, Vec3 color) {
         renderOverlay(matrixStack, buffer, packedlight, bipedModel, entityPlayer, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, color, null);
     }
 
-    public static void renderOverlay(MatrixStack matrixStack, IVertexBuilder buffer, int packedlight, BipedModel bipedModel, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float opacity, Vector3d color, AnimationHandler.Animation animation) {
+    public static void renderOverlay(PoseStack matrixStack, VertexConsumer buffer, int packedlight, HumanoidModel bipedModel, LivingEntity entityPlayer, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float opacity, Vec3 color, AnimationHandler.Animation animation) {
         RegenCap.get(entityPlayer).ifPresent((data) -> {
             matrixStack.pushPose();
             if (animation == null) {
@@ -62,7 +62,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
 
     @Override
-    public void thirdPersonHand(HandSide side, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void thirdPersonHand(HumanoidArm side, PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entitylivingbaseIn instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entitylivingbaseIn;
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
@@ -73,12 +73,12 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                     double r = 0.09890109890109888;
                     double f = p * Math.pow(x, 2) - r;
 
-                    float cf = MathHelper.clamp((float) f, 0F, 1F);
+                    float cf = Mth.clamp((float) f, 0F, 1F);
                     float primaryScale = cf * 4F;
                     float secondaryScale = cf * 6.4F;
 
-                    Vector3d primaryColors = iRegen.getPrimaryColors();
-                    Vector3d secondaryColors = iRegen.getSecondaryColors();
+                    Vec3 primaryColors = iRegen.getPrimaryColors();
+                    Vec3 secondaryColors = iRegen.getSecondaryColors();
                     renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, primaryScale, primaryScale, primaryColors);
                     renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, livingEntity, secondaryScale, secondaryScale, secondaryColors);
                 }
@@ -89,7 +89,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void layer(BipedModel<?> bipedModel, MatrixStack matrix, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void layer(HumanoidModel<?> bipedModel, PoseStack matrix, MultiBufferSource bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 // === Head Cone ===
@@ -102,13 +102,13 @@ public class FieryTransitionRenderer implements TransitionRenderer {
                 double r = 0.09890109890109888;
                 double f = p * Math.pow(x, 2) - r;
 
-                float cf = MathHelper.clamp((float) f, 0F, 1F);
+                float cf = Mth.clamp((float) f, 0F, 1F);
                 float primaryScale = cf * 4F;
                 float secondaryScale = cf * 6.4F;
 
-                CompoundNBT colorTag = iRegen.getOrWriteStyle();
-                Vector3d primaryColors = new Vector3d(colorTag.getFloat(RConstants.PRIMARY_RED), colorTag.getFloat(RConstants.PRIMARY_GREEN), colorTag.getFloat(RConstants.PRIMARY_BLUE));
-                Vector3d secondaryColors = new Vector3d(colorTag.getFloat(RConstants.SECONDARY_RED), colorTag.getFloat(RConstants.SECONDARY_GREEN), colorTag.getFloat(RConstants.SECONDARY_BLUE));
+                CompoundTag colorTag = iRegen.getOrWriteStyle();
+                Vec3 primaryColors = new Vec3(colorTag.getFloat(RConstants.PRIMARY_RED), colorTag.getFloat(RConstants.PRIMARY_GREEN), colorTag.getFloat(RConstants.PRIMARY_BLUE));
+                Vec3 secondaryColors = new Vec3(colorTag.getFloat(RConstants.SECONDARY_RED), colorTag.getFloat(RConstants.SECONDARY_GREEN), colorTag.getFloat(RConstants.SECONDARY_BLUE));
                 renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), primaryScale, primaryScale, primaryColors);
                 renderColorCone(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, iRegen.getLiving(), secondaryScale, secondaryScale, secondaryColors);
                 matrix.popPose();
@@ -118,7 +118,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
             //Render player overlay
             if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.REGENERATING) {
                 if (entitylivingbaseIn instanceof TimelordEntity) return;
-                float opacity = MathHelper.clamp(MathHelper.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
+                float opacity = Mth.clamp(Mth.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
                 renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.endPortal(1)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
                 renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.endPortal(2)), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
             }
@@ -128,7 +128,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
 
     @Override
-    public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void animate(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 double armShake = livingEntity.getRandom().nextDouble();

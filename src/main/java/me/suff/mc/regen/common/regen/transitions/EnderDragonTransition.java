@@ -5,11 +5,11 @@ import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.POVMessage;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class EnderDragonTransition extends TransitionType {
@@ -22,13 +22,13 @@ public class EnderDragonTransition extends TransitionType {
     public void onUpdateMidRegen(IRegen cap) {
 
         if (!cap.getLiving().level.isClientSide) {
-            if (cap.getLiving() instanceof ServerPlayerEntity) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
+            if (cap.getLiving() instanceof ServerPlayer) {
+                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.THIRD_PERSON_FRONT));
             }
         }
 
-        if (cap.getLiving() instanceof PlayerEntity) {
-            PlayerEntity serverPlayerEntity = (PlayerEntity) cap.getLiving();
+        if (cap.getLiving() instanceof Player) {
+            Player serverPlayerEntity = (Player) cap.getLiving();
             serverPlayerEntity.abilities.mayfly = RegenConfig.COMMON.allowUpwardsMotion.get();
             serverPlayerEntity.abilities.flying = RegenConfig.COMMON.allowUpwardsMotion.get();
         }
@@ -36,13 +36,13 @@ public class EnderDragonTransition extends TransitionType {
 
     @Override
     public void onFinishRegeneration(IRegen cap) {
-        if (cap.getLiving() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) cap.getLiving();
+        if (cap.getLiving() instanceof ServerPlayer) {
+            ServerPlayer serverPlayerEntity = (ServerPlayer) cap.getLiving();
             serverPlayerEntity.abilities.mayfly = serverPlayerEntity.isCreative();
             serverPlayerEntity.abilities.flying = false;
 
-            if (cap.getLiving() instanceof ServerPlayerEntity) {
-                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
+            if (cap.getLiving() instanceof ServerPlayer) {
+                NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) cap.getLiving()), new POVMessage(RConstants.FIRST_PERSON));
             }
         }
 
@@ -54,13 +54,13 @@ public class EnderDragonTransition extends TransitionType {
     }
 
     @Override
-    public Vector3d getDefaultPrimaryColor() {
-        return Vector3d.ZERO;
+    public Vec3 getDefaultPrimaryColor() {
+        return Vec3.ZERO;
     }
 
     @Override
-    public Vector3d getDefaultSecondaryColor() {
-        return Vector3d.ZERO;
+    public Vec3 getDefaultSecondaryColor() {
+        return Vec3.ZERO;
     }
 
 }

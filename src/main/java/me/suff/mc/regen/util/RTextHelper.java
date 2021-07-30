@@ -2,32 +2,33 @@ package me.suff.mc.regen.util;
 
 import com.mojang.authlib.GameProfile;
 import me.suff.mc.regen.common.traits.AbstractTrait;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class RTextHelper {
 
-    public static TextComponent createTextComponentWithTip(String text, String tooltipText) {
+    public static BaseComponent createTextComponentWithTip(String text, String tooltipText) {
         //Always surround tool tip items with brackets
-        TextComponent textComponent = new StringTextComponent("[" + text + "]");
+        BaseComponent textComponent = new TextComponent("[" + text + "]");
         textComponent.withStyle(style -> {
-            return style.applyFormat(TextFormatting.GREEN)//color tool tip items green
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(tooltipText)))
+            return style.applyFormat(ChatFormatting.GREEN)//color tool tip items green
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(tooltipText)))
                     .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, tooltipText));
         });
         return textComponent;
     }
 
-    public static TextComponent getTraitTextObject(AbstractTrait trait) {
+    public static BaseComponent getTraitTextObject(AbstractTrait trait) {
         if (trait != null)
             return createTextComponentWithTip(formatTraitName(trait), trait.getRegistryName().toString());
         return createTextComponentWithTip("Null Trait", "Null");
@@ -36,13 +37,13 @@ public class RTextHelper {
     /**
      * For getting player tool tip. If player has been online since server start, then will show their display name.
      */
-    public static TextComponent getPlayerTextObject(ServerWorld world, UUID id) {
-        GameProfile profileByUUID = world.getServer().getProfileCache().get(id);
+    public static BaseComponent getPlayerTextObject(ServerLevel world, UUID id) {
+        GameProfile profileByUUID = world.getServer().getProfileCache().get(id).get();
         String playerName = profileByUUID != null ? profileByUUID.getName() : "OFFLINE Player";
         return createTextComponentWithTip(playerName, id.toString());
     }
 
-    public static TextComponent getEntityTextObject(ServerWorld world, UUID id) {
+    public static BaseComponent getEntityTextObject(ServerLevel world, UUID id) {
         Entity entity = world.getEntity(id);
         String entityName = entity != null ? entity.getName().getString() : "Null Entity";
         return createTextComponentWithTip(entityName, id.toString());

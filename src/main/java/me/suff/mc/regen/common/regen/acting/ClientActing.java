@@ -12,10 +12,10 @@ import me.suff.mc.regen.network.messages.SkinMessage;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.io.File;
 
@@ -35,8 +35,8 @@ class ClientActing implements Acting {
     public void onEnterGrace(IRegen cap) {
         if (cap.getLiving().getUUID().equals(Minecraft.getInstance().player.getUUID())) {
             SoundEvent ambientSound = cap.getTimelordSound().getSound();
-            ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.regenState().isGraceful(), 0.2F);
-            ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundCategory.AMBIENT, true, () -> cap.regenState() != RegenStates.GRACE, 1.5F);
+            ClientUtil.playSound(cap.getLiving(), RSounds.HEART_BEAT.get().getRegistryName(), SoundSource.PLAYERS, true, () -> !cap.regenState().isGraceful(), 0.2F);
+            ClientUtil.playSound(cap.getLiving(), ambientSound.getRegistryName(), SoundSource.AMBIENT, true, () -> cap.regenState() != RegenStates.GRACE, 1.5F);
         }
         //TODO - LP - STOP MUSIC PLAYING IN GRACE Minecraft.getInstance().getSoundHandler().stop(null, SoundCategory.MUSIC);
     }
@@ -44,7 +44,7 @@ class ClientActing implements Acting {
     @Override
     public void onHandsStartGlowing(IRegen cap) {
         if (cap.getLiving().getType() == EntityType.PLAYER) {
-            ClientUtil.playSound(cap.getLiving(), RSounds.HAND_GLOW.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> !cap.glowing(), 1.0F);
+            ClientUtil.playSound(cap.getLiving(), RSounds.HAND_GLOW.get().getRegistryName(), SoundSource.PLAYERS, true, () -> !cap.glowing(), 1.0F);
         }
     }
 
@@ -85,8 +85,8 @@ class ClientActing implements Acting {
     public void onGoCritical(IRegen cap) {
         if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
             if (cap.getLiving().getType() == EntityType.PLAYER) {
-                ClientUtil.createToast(new TranslationTextComponent("regen.toast.enter_critical"), new TranslationTextComponent("regen.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
-                ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.regenState() != RegenStates.GRACE_CRIT, 1.0F);
+                ClientUtil.createToast(new TranslatableComponent("regen.toast.enter_critical"), new TranslatableComponent("regen.toast.enter_critical.sub", RegenConfig.COMMON.criticalPhaseLength.get() / 60));
+                ClientUtil.playSound(cap.getLiving(), RSounds.CRITICAL_STAGE.get().getRegistryName(), SoundSource.PLAYERS, true, () -> cap.regenState() != RegenStates.GRACE_CRIT, 1.0F);
             }
         }
     }

@@ -1,15 +1,15 @@
 package me.suff.mc.regen.client.screen;
 
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.CheckboxButton;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.network.chat.Component;
 
 /* Created by Craig on 31/01/2021 */
-public class RCheckbox extends CheckboxButton {
+public class RCheckbox extends Checkbox {
 
     protected final IInteraction onPress;
 
-    public RCheckbox(int x, int y, int width, int height, ITextComponent title, boolean checked, IInteraction iPressable) {
+    public RCheckbox(int x, int y, int width, int height, Component title, boolean checked, IInteraction iPressable) {
         super(x, y, width, height, title, checked);
         this.onPress = iPressable;
     }
@@ -20,7 +20,7 @@ public class RCheckbox extends CheckboxButton {
         this.onPress.onPress(this);
     }
 
-    public interface IInteraction<T extends Widget> {
+    public interface IInteraction<T extends AbstractWidget> {
         void onPress(T p_onPress_1_);
     }
 }

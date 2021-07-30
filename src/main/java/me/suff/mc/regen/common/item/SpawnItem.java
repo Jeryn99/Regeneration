@@ -6,19 +6,21 @@ import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RSoundSchemes;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class SpawnItem<E extends TimelordEntity> extends Item {
 
@@ -27,19 +29,19 @@ public class SpawnItem<E extends TimelordEntity> extends Item {
     }
 
     public static void setType(ItemStack stack, Timelord type) {
-        CompoundNBT tag = stack.getOrCreateTag();
+        CompoundTag tag = stack.getOrCreateTag();
         tag.putString("type", type.name());
     }
 
     public static Timelord getType(ItemStack stack) {
-        CompoundNBT tag = stack.getOrCreateTag();
+        CompoundTag tag = stack.getOrCreateTag();
         String timelordType = tag.getString("type");
         timelordType = timelordType.isEmpty() ? Timelord.FEMALE_COUNCIL.name() : timelordType;
         return Timelord.valueOf(timelordType);
     }
 
     @Override
-    public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if (allowdedIn(group)) {
             for (Timelord timelordType : Timelord.values()) {
                 ItemStack itemstack = new ItemStack(this);
@@ -50,17 +52,17 @@ public class SpawnItem<E extends TimelordEntity> extends Item {
     }
 
     @Override
-    public ITextComponent getName(ItemStack stack) {
+    public Component getName(ItemStack stack) {
         Timelord name = getType(stack);
-        return new TranslationTextComponent("regen.timelord_type." + name.name().toLowerCase());
+        return new TranslatableComponent("regen.timelord_type." + name.name().toLowerCase());
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
-        World worldIn = context.getLevel();
+    public InteractionResult useOn(UseOnContext context) {
+        Level worldIn = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        PlayerEntity player = context.getPlayer();
-        Hand hand = player.getUsedItemHand();
+        Player player = context.getPlayer();
+        InteractionHand hand = player.getUsedItemHand();
 
         if (!worldIn.isClientSide) {
             TimelordEntity timelord = REntities.TIMELORD.get().create(worldIn);
@@ -75,7 +77,7 @@ public class SpawnItem<E extends TimelordEntity> extends Item {
                 timelord.initSkin(iRegen);
                 timelord.genName();
                 iRegen.setRegens(12);
-                CompoundNBT nbt = new CompoundNBT();
+                CompoundTag nbt = new CompoundTag();
                 nbt.putFloat(RConstants.PRIMARY_RED, random.nextInt(255) / 255.0F);
                 nbt.putFloat(RConstants.PRIMARY_GREEN, random.nextInt(255) / 255.0F);
                 nbt.putFloat(RConstants.PRIMARY_BLUE, random.nextInt(255) / 255.0F);

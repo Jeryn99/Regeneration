@@ -2,8 +2,8 @@ package me.suff.mc.regen.network.messages;
 
 import me.suff.mc.regen.util.ClientUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -14,7 +14,7 @@ public class POVMessage {
         this.pointOfView = pointOfView;
     }
 
-    public POVMessage(PacketBuffer buffer) {
+    public POVMessage(FriendlyByteBuf buffer) {
         pointOfView = buffer.readUtf(32767);
     }
 
@@ -23,7 +23,7 @@ public class POVMessage {
         ctx.get().setPacketHandled(true);
     }
 
-    public void toBytes(PacketBuffer buffer) {
+    public void toBytes(FriendlyByteBuf buffer) {
         buffer.writeUtf(this.pointOfView);
     }
 

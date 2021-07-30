@@ -7,19 +7,19 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import me.suff.mc.regen.util.PlayerUtil;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AnimationHandler {
 
-    public static void setRotationAnglesCallback(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public static void setRotationAnglesCallback(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             TransitionType type = iRegen.transitionType();
 
@@ -43,12 +43,12 @@ public class AnimationHandler {
         correctPlayerModel(bipedModel);
     }
 
-    public static void handleArmor(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public static void handleArmor(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         if (bipedModel instanceof PlayerModel) {
             PlayerModel playerModel = (PlayerModel) bipedModel;
-            playerModel.jacket.visible = hideBodyWear(livingEntity.getItemBySlot(EquipmentSlotType.CHEST));
-            playerModel.leftSleeve.visible = playerModel.rightSleeve.visible = livingEntity.getItemBySlot(EquipmentSlotType.CHEST).getItem() != RItems.GUARD_CHEST.get();
-            playerModel.leftPants.visible = playerModel.rightPants.visible = hideLegWear(livingEntity.getItemBySlot(EquipmentSlotType.LEGS));
+            playerModel.jacket.visible = hideBodyWear(livingEntity.getItemBySlot(EquipmentSlot.CHEST));
+            playerModel.leftSleeve.visible = playerModel.rightSleeve.visible = livingEntity.getItemBySlot(EquipmentSlot.CHEST).getItem() != RItems.GUARD_CHEST.get();
+            playerModel.leftPants.visible = playerModel.rightPants.visible = hideLegWear(livingEntity.getItemBySlot(EquipmentSlot.LEGS));
             playerModel.leftSleeve.visible = playerModel.leftArm.visible = showArms(livingEntity);
         }
     }
@@ -82,7 +82,7 @@ public class AnimationHandler {
     }
 
 
-    public static void correctPlayerModel(BipedModel bipedModel) {
+    public static void correctPlayerModel(HumanoidModel bipedModel) {
         if (bipedModel instanceof PlayerModel) {
             PlayerModel playerModel = (PlayerModel) bipedModel;
             playerModel.hat.copyFrom(playerModel.head);
@@ -95,7 +95,7 @@ public class AnimationHandler {
 
 
     public interface Animation {
-        void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch);
+        void animate(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch);
     }
 
 }

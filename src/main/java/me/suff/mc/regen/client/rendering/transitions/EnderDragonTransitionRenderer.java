@@ -1,18 +1,18 @@
 package me.suff.mc.regen.client.rendering.transitions;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.HumanoidArm;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
@@ -23,20 +23,20 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
     //Taken from vanilla
     private static float HALF_SQRT_3 = (float) (Math.sqrt(3.0D) / 2.0D);
 
-    private static void vertex01(IVertexBuilder iVertexBuilder, Matrix4f matrix4f, int p_229061_2_) {
+    private static void vertex01(VertexConsumer iVertexBuilder, Matrix4f matrix4f, int p_229061_2_) {
         iVertexBuilder.vertex(matrix4f, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
         iVertexBuilder.vertex(matrix4f, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();
     }
 
-    private static void vertex2(IVertexBuilder iVertexBuilder, Matrix4f matrix4f, float p_229060_2_, float p_229060_3_) {
+    private static void vertex2(VertexConsumer iVertexBuilder, Matrix4f matrix4f, float p_229060_2_, float p_229060_3_) {
         iVertexBuilder.vertex(matrix4f, -HALF_SQRT_3 * p_229060_3_, p_229060_2_, -0.5F * p_229060_3_).color(255, 0, 255, 0).endVertex();
     }
 
-    private static void vertex3(IVertexBuilder iVertexBuilder, Matrix4f matrix4f, float p_229062_2_, float p_229062_3_) {
+    private static void vertex3(VertexConsumer iVertexBuilder, Matrix4f matrix4f, float p_229062_2_, float p_229062_3_) {
         iVertexBuilder.vertex(matrix4f, HALF_SQRT_3 * p_229062_3_, p_229062_2_, -0.5F * p_229062_3_).color(255, 0, 255, 0).endVertex();
     }
 
-    private static void vertex4(IVertexBuilder iVertexBuilder, Matrix4f matrix4f, float p_229063_2_, float p_229063_3_) {
+    private static void vertex4(VertexConsumer iVertexBuilder, Matrix4f matrix4f, float p_229063_2_, float p_229063_3_) {
         iVertexBuilder.vertex(matrix4f, 0.0F, p_229063_2_, 1.0F * p_229063_3_).color(255, 0, 255, 0).endVertex();
     }
 
@@ -56,13 +56,13 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void thirdPersonHand(HandSide side, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void thirdPersonHand(HumanoidArm side, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 
     @Override
-    public void layer(BipedModel<?> bipedModel, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        MatrixStack matrix = matrixStackIn;
+    public void layer(HumanoidModel<?> bipedModel, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        PoseStack matrix = matrixStackIn;
         ;
 
         RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
@@ -71,7 +71,7 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
                 float f5 = ((float) ticksAnimating + Minecraft.getInstance().getFrameTime()) / 200.0F;
                 float f7 = Math.min(f5 > 0.8F ? (f5 - 0.8F) / 0.2F : 0.0F, 1.0F);
                 Random random = new Random(432L);
-                IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.lightning());
+                VertexConsumer vertexBuilder = bufferIn.getBuffer(RenderType.lightning());
                 matrix.pushPose();
                 bipedModel.body.translateAndRotate(matrix);
                 matrix.translate(0.0D, 0.5D, 0);
@@ -103,7 +103,7 @@ public class EnderDragonTransitionRenderer implements TransitionRenderer {
     }
 
     @Override
-    public void animate(BipedModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void animate(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 float armRotY = (float) iRegen.updateTicks() * 2.5F;
