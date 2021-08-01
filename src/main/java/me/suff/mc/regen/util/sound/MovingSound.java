@@ -3,15 +3,13 @@ package me.suff.mc.regen.util.sound;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.core.BlockPos;
 
 import java.util.function.Supplier;
-
-import net.minecraft.client.resources.sounds.SoundInstance.Attenuation;
 
 public class MovingSound extends AbstractTickableSoundInstance {
 

@@ -1,11 +1,11 @@
 package me.suff.mc.regen.common.item;
 
 import me.suff.mc.regen.common.objects.RItems;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 
 /* Created by Craig on 03/03/2021 */
 public class RMaterials {
@@ -25,7 +25,6 @@ public class RMaterials {
                 case FEET:
                     return 450;
                 case MAINHAND:
-                    break;
                 case OFFHAND:
                     break;
                 default:

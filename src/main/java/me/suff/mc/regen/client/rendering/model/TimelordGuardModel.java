@@ -9,8 +9,6 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 
-import net.minecraft.client.model.HumanoidModel.ArmPose;
-
 public class TimelordGuardModel extends PlayerModel<TimelordEntity> {
     private final ModelPart Head;
     private final ModelPart Body;

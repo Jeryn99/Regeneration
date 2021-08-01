@@ -673,21 +673,22 @@ public class RegenCap implements IRegen {
 
         @Override
         @Deprecated
-        /** @deprecated Debug purposes */
+        /* @deprecated Debug purposes */
         public Pair<RegenStates.Transition, Long> getScheduledEvent() {
             return nextTransition == null ? null : Pair.of(nextTransition.transition, nextTransition.getTicksLeft());
         }
 
+        @SuppressWarnings("StatementWithEmptyBody")
         @Override
         @Deprecated
-        /** @deprecated Debug purposes */
+        /* @deprecated Debug purposes */
         public void skip() {
             while (!nextTransition.tick()) ;
         }
 
         @Override
         @Deprecated
-        /** @deprecated Debug purposes */
+        /* @deprecated Debug purposes */
         public void fastForwardHandGlow() {
             while (!handGlowTimer.tick()) ;
         }

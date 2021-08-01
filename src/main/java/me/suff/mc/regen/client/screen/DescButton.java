@@ -1,14 +1,11 @@
 package me.suff.mc.regen.client.screen;
 
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
-
-import net.minecraft.client.gui.components.Button.OnPress;
-import net.minecraft.client.gui.components.Button.OnTooltip;
 
 public class DescButton extends Button {
 

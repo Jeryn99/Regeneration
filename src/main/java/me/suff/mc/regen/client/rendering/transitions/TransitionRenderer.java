@@ -2,8 +2,8 @@ package me.suff.mc.regen.client.rendering.transitions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.suff.mc.regen.client.animation.AnimationHandler;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.client.event.RenderHandEvent;

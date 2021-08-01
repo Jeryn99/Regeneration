@@ -2,8 +2,9 @@ package me.suff.mc.regen.client.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 import java.awt.*;
@@ -34,7 +35,7 @@ public class ColorWidget extends AbstractWidget {
                 Color color = Color.decode(s);
                 setColor(color.getRGB());
                 updateColor();
-            } catch (Exception e) {
+            } catch (NumberFormatException ignored) {
             }
         });
 
@@ -144,4 +145,8 @@ public class ColorWidget extends AbstractWidget {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+
+    }
 }

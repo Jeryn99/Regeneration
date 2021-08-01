@@ -1,10 +1,10 @@
 package me.suff.mc.regen.client.rendering.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.LivingEntity;
 
 /* Created by Craig on 03/03/2021 */

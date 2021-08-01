@@ -1,5 +1,6 @@
 package me.suff.mc.regen.client.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.suff.mc.regen.client.skin.CommonSkin;
 import me.suff.mc.regen.client.skin.SkinHandler;
@@ -13,21 +14,22 @@ import me.suff.mc.regen.util.RegenUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.Util;
-import net.minecraft.util.Mth;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -41,8 +43,8 @@ import java.util.Objects;
 public class IncarnationScreen extends AbstractContainerScreen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
-    private static final PlayerModel<?> alexModel = new PlayerModel<>(0.1f, true);
-    private static final PlayerModel<?> steveModel = new PlayerModel<>(0.1f, false);
+    private static final ModelPart alexModel = ClientUtil.getPlayerModel(true);
+    private static final ModelPart steveModel = ClientUtil.getPlayerModel(false);
     public static boolean isAlex = true;
     private static ResourceLocation currentTexture = DefaultPlayerSkin.getDefaultSkin();
     private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
@@ -56,7 +58,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
 
     public IncarnationScreen() {
-        super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).inventory, new TranslatableComponent("Next Incarnation"));
+        super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).getInventory(), new TranslatableComponent("Next Incarnation"));
         imageWidth = 256;
         imageHeight = 173;
     }
@@ -80,7 +82,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
-            addButton(button);
+            addWidget(button);
         }
         int buttonOffset = 35;
         int cx = (width - imageWidth) / 2;
@@ -184,15 +186,15 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 updateModels();
             }
         });
-        this.addButton(this.excludeTrending);
+        this.addWidget(this.excludeTrending);
 
-        addButton(btnNext);
-        addButton(btnPrevious);
-        addButton(btnOpenFolder);
-        addButton(btnBack);
-        addButton(btnSave);
-        addButton(btnResetSkin);
-        addButton(this.uploadToMcBtn);
+        addWidget(btnNext);
+        addWidget(btnPrevious);
+        addWidget(btnOpenFolder);
+        addWidget(btnBack);
+        addWidget(btnSave);
+        addWidget(btnResetSkin);
+        addWidget(this.uploadToMcBtn);
 
         for (AbstractWidget widget : buttons) {
             if (widget instanceof DescButton) {
@@ -215,10 +217,10 @@ public class IncarnationScreen extends AbstractContainerScreen {
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
         this.renderBackground(matrixStack);
-        Minecraft.getInstance().getTextureManager().bind(screenBackground);
+        RenderSystem.setShaderTexture(0, screenBackground);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        alexModel.young = false;
-        steveModel.young = false;
+        //alexModel.young = false;
+        //steveModel.young = false;
         renderSkinToGui(matrixStack, x, y);
 
         drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslatableComponent("regen.gui.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
@@ -288,6 +290,8 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
     @Override
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.searchField.tick();
+        excludeTrending.active = searchField.getValue().isEmpty();
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
 
@@ -300,23 +304,11 @@ public class IncarnationScreen extends AbstractContainerScreen {
         }
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        this.searchField.tick();
-        excludeTrending.active = searchField.getValue().isEmpty();
-    }
-
     //Spectre0987
 
     /**
-     * @param text   - The text you'd like to draw
-     * @param matrix
-     * @param font
-     * @param x
-     * @param y
-     * @param color
-     * @param width  - The max width of the text, scales to maintain this width if larger than it
+     * @param text  - The text you'd like to draw
+     * @param width - The max width of the text, scales to maintain this width if larger than it
      */
     public void renderWidthScaledText(String text, PoseStack matrix, Font font, float x, float y, int color, int width) {
         matrix.pushPose();

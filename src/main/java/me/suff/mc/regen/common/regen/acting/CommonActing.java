@@ -4,7 +4,7 @@ import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.block.JarBlock;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.transitions.WatcherTransition;
-import me.suff.mc.regen.common.tiles.JarTile;
+import me.suff.mc.regen.common.tiles.BioContainerBlockEntity;
 import me.suff.mc.regen.common.traits.AbstractTrait;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.config.RegenConfig;
@@ -83,14 +83,14 @@ class CommonActing implements Acting {
                     ServerLevel serverWorld = (ServerLevel) livingEntity.level;
                     BlockState blockState = serverWorld.getBlockState(pos);
                     if (blockState.getBlock() instanceof JarBlock) {
-                        JarTile jarTile = (JarTile) serverWorld.getBlockEntity(pos);
-                        if (!jarTile.isValid(JarTile.Action.ADD)) {
+                        BioContainerBlockEntity bioContainerBlockEntity = (BioContainerBlockEntity) serverWorld.getBlockEntity(pos);
+                        if (!bioContainerBlockEntity.isValid(BioContainerBlockEntity.Action.ADD)) {
                             continue;
                         }
                         if (livingEntity.level.random.nextBoolean() && serverWorld.getGameTime() % 5 == 0) {
-                            jarTile.setLindos(jarTile.getLindos() + 0.7F);
+                            bioContainerBlockEntity.setLindos(bioContainerBlockEntity.getLindos() + 0.7F);
                         }
-                        jarTile.sendUpdates();
+                        bioContainerBlockEntity.sendUpdates();
                         return;
                     }
                 }

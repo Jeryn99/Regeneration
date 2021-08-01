@@ -1,28 +1,26 @@
 package me.suff.mc.regen.util;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.core.Direction;
-import net.minecraft.util.math.*;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.HitResult;
 
 public class ViewUtil {
 
@@ -35,60 +33,6 @@ public class ViewUtil {
         Vec3 vecFinal = vecTargetsPos.vectorTo(new Vec3(entity.getX(), entity.getY(), entity.getZ())).normalize();
         vecFinal = new Vec3(vecFinal.x, 0.0D, vecFinal.z);
         return vecFinal.dot(vecLook) < 0.0;
-    }
-
-    /**
-     * Method that detects whether a entity is the the view sight of another entity
-     *
-     * @param viewer      The viewer entity
-     * @param beingViewed The entity being watched by viewer
-     */
-    public static boolean canEntitySee(LivingEntity viewer, LivingEntity beingViewed) {
-        double dx = beingViewed.getX() - viewer.getX();
-        double dz;
-        for (dz = beingViewed.getX() - viewer.getZ(); dx * dx + dz * dz < 1.0E-4D; dz = (Math.random() - Math.random()) * 0.01D) {
-            dx = (Math.random() - Math.random()) * 0.01D;
-        }
-        while (viewer.yRot > 360) {
-            viewer.yRot -= 360;
-        }
-        while (viewer.yRot < -360) {
-            viewer.yRot += 360;
-        }
-        float yaw = (float) (Math.atan2(dz, dx) * 180.0D / Math.PI) - viewer.yRot;
-        yaw = yaw - 90;
-        while (yaw < -180) {
-            yaw += 360;
-        }
-        while (yaw >= 180) {
-            yaw -= 360;
-        }
-
-        return yaw < 60 && yaw > -60 && viewer.canSee(beingViewed);
-    }
-
-    public static boolean isInSightPos(LivingEntity viewer, BlockPos pos) {
-        double dx = pos.getX() - viewer.getX();
-        ;
-        double dz;
-        for (dz = pos.getX() - viewer.getZ(); dx * dx + dz * dz < 1.0E-4D; dz = (Math.random() - Math.random()) * 0.01D) {
-            dx = (Math.random() - Math.random()) * 0.01D;
-        }
-        while (viewer.yRot > 360) {
-            viewer.yRot -= 360;
-        }
-        while (viewer.yRot < -360) {
-            viewer.yRot += 360;
-        }
-        float yaw = (float) (Math.atan2(dz, dx) * 180.0D / Math.PI) - viewer.yRot;
-        yaw = yaw - 90;
-        while (yaw < -180) {
-            yaw += 360;
-        }
-        while (yaw >= 180) {
-            yaw -= 360;
-        }
-        return yaw < 60 && yaw > -60;
     }
 
     /**

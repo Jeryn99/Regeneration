@@ -3,19 +3,18 @@ package me.suff.mc.regen.data;
 import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.data.*;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.resources.ResourceLocation;
-
-import java.util.function.Consumer;
-
+import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
+
+import java.util.function.Consumer;
 
 public class RRecipeGen extends RecipeProvider {
     public RRecipeGen(DataGenerator generatorIn) {

@@ -4,9 +4,8 @@ import me.suff.mc.regen.client.screen.PreferencesScreen;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.ForceRegenMessage;
 import me.suff.mc.regen.network.messages.ToggleTraitMessage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
 

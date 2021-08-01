@@ -3,9 +3,9 @@ package me.suff.mc.regen.data;
 import me.suff.mc.regen.common.objects.RGlobalLoot;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.LootTableIdCondition;
 

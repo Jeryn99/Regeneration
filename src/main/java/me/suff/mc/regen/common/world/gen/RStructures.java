@@ -4,27 +4,21 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
-import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.level.levelgen.feature.StructurePieceType;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.*;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
-
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.OreFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
 
 public class RStructures {
 
@@ -109,7 +103,7 @@ public class RStructures {
         public static final DeferredRegister<StructureFeature<?>> STRUCTURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, RConstants.MODID);
 
         /**
-         * The Structure registry object. This isn't actually setup yet, see {@link RStructures#setupStructure(Structure, StructureSeparationSettings, boolean)}
+         * The Structure registry object. This isn't actually setup yet, see
          */
         public static final RegistryObject<StructureFeature<ProbabilityFeatureConfiguration>> HUTS = setupStructure("hut", () -> new GallifreyanHuts(ProbabilityFeatureConfiguration.CODEC));
         /**
@@ -134,7 +128,7 @@ public class RStructures {
     }
 
 
-    /**===Structure Registration End===*/
+    /*===Structure Registration End===*/
 
 
 }

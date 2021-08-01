@@ -12,10 +12,10 @@ import me.suff.mc.regen.network.messages.SkinMessage;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntityType;
 
 import java.io.File;
 

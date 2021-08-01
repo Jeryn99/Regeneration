@@ -1,8 +1,8 @@
 package me.suff.mc.regen.client.rendering;
 
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
-import net.minecraft.client.particle.*;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;

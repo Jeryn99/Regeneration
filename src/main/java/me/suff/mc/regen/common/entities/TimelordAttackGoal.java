@@ -1,9 +1,9 @@
 package me.suff.mc.regen.common.entities;
 
 import me.suff.mc.regen.common.item.GunItem;
-import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 
 /* Created by Craig on 01/03/2021 */
 public class TimelordAttackGoal extends RangedAttackGoal {

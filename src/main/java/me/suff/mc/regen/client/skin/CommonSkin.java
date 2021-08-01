@@ -2,6 +2,7 @@ package me.suff.mc.regen.client.skin;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.platform.NativeImage;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.screen.RErrorScreen;
 import me.suff.mc.regen.client.screen.SkinPack;
@@ -11,9 +12,8 @@ import me.suff.mc.regen.util.MineSkin;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
-import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.io.FileUtils;
@@ -91,7 +91,6 @@ public class CommonSkin {
     /**
      * @param url      - URL to download image from
      * @param filename - Filename of the image [SHOULD NOT CONTAIN FILE EXTENSION, PNG IS SUFFIXED FOR YOU]
-     * @throws IOException
      */
     public static void downloadSkins(URL url, String filename, File alexDir, File steveDir) throws IOException {
         URLConnection uc = url.openConnection();

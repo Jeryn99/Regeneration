@@ -2,9 +2,9 @@ package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.IRegen;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 
 import java.util.UUID;
 

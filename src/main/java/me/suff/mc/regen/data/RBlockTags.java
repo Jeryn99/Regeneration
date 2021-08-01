@@ -3,10 +3,10 @@ package me.suff.mc.regen.data;
 import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.Tag;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 /* Created by Craig on 08/03/2021 */

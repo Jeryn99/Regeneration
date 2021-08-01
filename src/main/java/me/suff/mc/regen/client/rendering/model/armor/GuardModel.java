@@ -3,11 +3,11 @@ package me.suff.mc.regen.client.rendering.model.armor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.suff.mc.regen.util.ClientUtil;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 
 /* Created by Craig on 03/03/2021 */
 public class GuardModel extends HumanoidModel<LivingEntity> implements LivingArmor {

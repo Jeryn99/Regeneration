@@ -2,16 +2,15 @@ package me.suff.mc.regen.util;
 
 import com.mojang.authlib.GameProfile;
 import me.suff.mc.regen.common.traits.AbstractTrait;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

@@ -27,33 +27,36 @@ import me.suff.mc.regen.util.sound.MovingSound;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 
 import java.io.BufferedReader;
@@ -62,8 +65,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -76,13 +79,17 @@ public class ClientUtil {
     private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
 
+    public static ModelPart getPlayerModel(boolean slim) {
+        return Minecraft.getInstance().getEntityModels().bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER);
+    }
+
     public static String getImgurLink(String base64Image) throws Exception {
         URL url;
         url = new URL("https://who-craft.com/api/index.php");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        String data = URLEncoder.encode("image", "UTF-8") + "="
-                + URLEncoder.encode(base64Image, "UTF-8");
+        String data = URLEncoder.encode("image", StandardCharsets.UTF_8) + "="
+                + URLEncoder.encode(base64Image, StandardCharsets.UTF_8);
 
         conn.setDoOutput(true);
         conn.setDoInput(true);
@@ -188,13 +195,14 @@ public class ClientUtil {
         TransitionTypeRenderers.add(TransitionTypes.ENDER_DRAGON.get(), EnderDragonTransitionRenderer.INSTANCE);
     }
 
-    private static void renderLayers() {
-        /* Attach RenderLayers to Renderers */
-        Map<String, PlayerRenderer> skinMap = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap();
-        for (PlayerRenderer renderPlayer : skinMap.values()) {
-            renderPlayer.addLayer(new HandLayer(renderPlayer));
-            renderPlayer.addLayer(new RenderRegenLayer(renderPlayer));
-        }
+
+    @SubscribeEvent
+    public static void renderLayers(EntityRenderersEvent.AddLayers addLayers) {
+        addLayers.getSkins().forEach(skin -> {
+            LivingEntityRenderer<? extends Player, ? extends EntityModel<? extends Player>> renderer = addLayers.getSkin(skin);
+            renderer.addLayer(new HandLayer(renderer));
+            renderer.addLayer(new RenderRegenLayer(renderer));
+        });
 
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.forEach((entityType, entityRenderer) -> {
             if (entityRenderer instanceof HumanoidMobRenderer) {
@@ -215,7 +223,7 @@ public class ClientUtil {
     }
 
     private static void itemPredicates() {
-        ItemProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_) -> {
+        ItemProperties.register(RItems.FOB.get(), new ResourceLocation(RConstants.MODID, "model"), (stack, p_call_2_, p_call_3_, something) -> {
             boolean isGold = getEngrave(stack);
             boolean isOpen = isOpen(stack);
             if (isOpen && isGold) {
@@ -234,24 +242,24 @@ public class ClientUtil {
             return 0.1F;
         });
 
-        ItemProperties.register(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
+        ItemProperties.register(RItems.RIFLE.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity, something) -> {
             if (livingEntity == null) {
                 return 0;
             }
             return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
         });
 
-        ItemProperties.register(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity) -> {
+        ItemProperties.register(RItems.PISTOL.get(), new ResourceLocation(RConstants.MODID, "aim"), (stack, p_call_2_, livingEntity, something) -> {
             if (livingEntity == null) {
                 return 0;
             }
             return livingEntity.getUseItemRemainingTicks() > 0 ? 1 : 0;
         });
 
-        ItemProperties.register(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity) -> HandItem.isAlex(stack) ? 1 : 0);
+        ItemProperties.register(RItems.HAND.get(), new ResourceLocation(RConstants.MODID, "skin_type"), (stack, p_call_2_, livingEntity, something) -> HandItem.isAlex(stack) ? 1 : 0);
 
 
-        ItemProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity) -> {
+        ItemProperties.register(RItems.SPAWN_ITEM.get(), new ResourceLocation(RConstants.MODID, "timelord"), (itemStack, clientWorld, livingEntity, something) -> {
             if (itemStack == null || itemStack.isEmpty()) {
                 return 0;
             }

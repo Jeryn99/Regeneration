@@ -6,7 +6,7 @@ import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.objects.RTiles;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
-import me.suff.mc.regen.common.tiles.JarTile;
+import me.suff.mc.regen.common.tiles.BioContainerBlockEntity;
 import me.suff.mc.regen.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -106,32 +106,32 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!worldIn.isClientSide()) {
-            JarTile jarTile = (JarTile) worldIn.getBlockEntity(pos);
+            BioContainerBlockEntity bioContainerBlockEntity = (BioContainerBlockEntity) worldIn.getBlockEntity(pos);
             if (handIn == InteractionHand.MAIN_HAND) {
                 if (!player.isShiftKeyDown()) {
                     if (player.getMainHandItem().getItem() == RItems.HAND.get()) {
-                        jarTile.dropHandIfPresent(player);
-                        jarTile.setHand(player.getMainHandItem().copy());
-                        jarTile.setUpdateSkin(true);
+                        bioContainerBlockEntity.dropHandIfPresent(player);
+                        bioContainerBlockEntity.setHand(player.getMainHandItem().copy());
+                        bioContainerBlockEntity.setUpdateSkin(true);
                         player.getMainHandItem().shrink(1);
-                        jarTile.sendUpdates();
+                        bioContainerBlockEntity.sendUpdates();
                     } else {
-                        jarTile.dropHandIfPresent(player);
-                        jarTile.sendUpdates();
+                        bioContainerBlockEntity.dropHandIfPresent(player);
+                        bioContainerBlockEntity.sendUpdates();
                     }
                 } else {
-                    if (jarTile.getHand().getItem() == RItems.HAND.get() && jarTile.isValid(JarTile.Action.CREATE)) {
+                    if (bioContainerBlockEntity.getHand().getItem() == RItems.HAND.get() && bioContainerBlockEntity.isValid(BioContainerBlockEntity.Action.CREATE)) {
                         RegenCap.get(player).ifPresent(iRegen -> {
                             if (iRegen.regenState() == RegenStates.ALIVE) {
                                 iRegen.addRegens(1);
-                                iRegen.setNextTrait(HandItem.getTrait(jarTile.getHand()));
-                                iRegen.setNextSkin(HandItem.getSkin(jarTile.getHand()));
-                                iRegen.setAlexSkin(HandItem.isAlex(jarTile.getHand()));
+                                iRegen.setNextTrait(HandItem.getTrait(bioContainerBlockEntity.getHand()));
+                                iRegen.setNextSkin(HandItem.getSkin(bioContainerBlockEntity.getHand()));
+                                iRegen.setAlexSkin(HandItem.isAlex(bioContainerBlockEntity.getHand()));
                                 iRegen.syncToClients(null);
                                 iRegen.forceRegeneration();
                                 player.playSound(RSounds.HAND_GLOW.get(), 1, 1);
-                                jarTile.setHand(ItemStack.EMPTY);
-                                jarTile.sendUpdates();
+                                bioContainerBlockEntity.setHand(ItemStack.EMPTY);
+                                bioContainerBlockEntity.sendUpdates();
                             }
                         });
                     }
@@ -146,8 +146,8 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!newState.is(this)) {
             if (!worldIn.isClientSide()) {
-                JarTile jarTile = (JarTile) worldIn.getBlockEntity(pos);
-                jarTile.dropHandIfPresent(null);
+                BioContainerBlockEntity bioContainerBlockEntity = (BioContainerBlockEntity) worldIn.getBlockEntity(pos);
+                bioContainerBlockEntity.dropHandIfPresent(null);
             }
         }
         super.onRemove(state, worldIn, pos, newState, isMoving);
@@ -156,8 +156,8 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
     @Override
     public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (!world.isClientSide()) {
-            JarTile jarTile = (JarTile) world.getBlockEntity(pos);
-            jarTile.dropHandIfPresent(player);
+            BioContainerBlockEntity bioContainerBlockEntity = (BioContainerBlockEntity) world.getBlockEntity(pos);
+            bioContainerBlockEntity.dropHandIfPresent(player);
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
@@ -166,7 +166,7 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new JarTile(RTiles.HAND_JAR.get(), blockPos, blockState);
+        return new BioContainerBlockEntity(RTiles.HAND_JAR.get(), blockPos, blockState);
     }
 
     @Nullable

@@ -30,13 +30,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class JarTile extends BlockEntity implements BlockEntityTicker<JarTile> {
+public class BioContainerBlockEntity extends BlockEntity implements BlockEntityTicker<BioContainerBlockEntity> {
 
     private boolean updateSkin = true;
     private ItemStackHandler itemHandler = createHandler();
     private LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
-    public JarTile(BlockEntityType<?> p_155228_, BlockPos p_155229_, BlockState p_155230_) {
+    public BioContainerBlockEntity(BlockEntityType<?> p_155228_, BlockPos p_155229_, BlockState p_155230_) {
         super(p_155228_, p_155229_, p_155230_);
     }
 
@@ -71,7 +71,7 @@ public class JarTile extends BlockEntity implements BlockEntityTicker<JarTile> {
     }
 
     @Override
-    public void tick(Level level, BlockPos blockPos, BlockState blockState, JarTile jarTile) {
+    public void tick(Level level, BlockPos blockPos, BlockState blockState, BioContainerBlockEntity bioContainerBlockEntity) {
         if (isValid(Action.CREATE)) {
             spawnParticles(level, worldPosition);
         }

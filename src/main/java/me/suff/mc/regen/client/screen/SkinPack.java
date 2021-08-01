@@ -1,10 +1,10 @@
 package me.suff.mc.regen.client.screen;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 
@@ -41,7 +41,7 @@ public class SkinPack {
                     e.printStackTrace();
                 }
             });
-            thread.run();
+            thread.start();
         } else {
             THUMBNAIL.put(namespace, null);
         }

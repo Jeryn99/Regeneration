@@ -4,10 +4,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -81,7 +81,7 @@ public final class VoxelShapeUtils {
     }
 
     /**
-     * Rotates an {@link BoundingBox} to a specific side horizontally. This is a default most common rotation setup as to {@link #rotate(BoundingBox, Rotation)}
+     * Rotates an {@link BoundingBox} to a specific side horizontally. This is a default most common rotation setup as to
      *
      * @param box  The {@link BoundingBox} to rotate
      * @param side The side to rotate it to.
@@ -192,10 +192,10 @@ public final class VoxelShapeUtils {
     }
 
     /**
-     * Used for mass combining shapes using a specific {@link IBooleanFunction} and a given start shape.
+     * Used for mass combining shapes using a specific {@link BooleanOp} and a given start shape.
      *
      * @param initial  The {@link VoxelShape} to start with
-     * @param function The {@link IBooleanFunction} to perform
+     * @param function The {@link BooleanOp} to perform
      * @param simplify True if the returned shape should run {@link VoxelShape#optimize()} ()}, False otherwise
      * @param shapes   The collection of {@link VoxelShape}s to include
      * @return A {@link VoxelShape} based on the input parameters.
@@ -211,10 +211,10 @@ public final class VoxelShapeUtils {
     }
 
     /**
-     * Used for mass combining shapes using a specific {@link IBooleanFunction} and a given start shape.
+     * Used for mass combining shapes using a specific {@link BooleanOp} and a given start shape.
      *
      * @param initial  The {@link VoxelShape} to start with
-     * @param function The {@link IBooleanFunction} to perform
+     * @param function The {@link BooleanOp} to perform
      * @param simplify True if the returned shape should run {@link VoxelShape#optimize()}, False otherwise
      * @param shapes   The list of {@link VoxelShape}s to include
      * @return A {@link VoxelShape} based on the input parameters.

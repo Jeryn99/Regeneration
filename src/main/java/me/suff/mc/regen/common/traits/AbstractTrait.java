@@ -1,8 +1,8 @@
 package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.IRegen;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public abstract class AbstractTrait extends ForgeRegistryEntry<AbstractTrait> {

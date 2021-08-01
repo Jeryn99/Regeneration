@@ -14,7 +14,7 @@ public class SkinDownloadScreen extends AbstractContainerScreen {
     private static final ArrayList<SkinPack> PACKS = new ArrayList();
 
     public SkinDownloadScreen() {
-        super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).inventory, new TranslatableComponent("Next Incarnation"));
+        super(new BlankContainer(), Objects.requireNonNull(Minecraft.getInstance().player).getInventory(), new TranslatableComponent("Next Incarnation"));
         PACKS.clear();
         PACKS.addAll(SkinPack.getAll());
     }
@@ -28,7 +28,7 @@ public class SkinDownloadScreen extends AbstractContainerScreen {
             drawCenteredString(p_230450_1_, Minecraft.getInstance().font, new TranslatableComponent(selectedPack.getName()).getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
 
             // if (selectedPack.hasThumbnail()) {
-            this.minecraft.getTextureManager().bind(selectedPack.getThumbnail());
+            this.minecraft.getTextureManager().bindForSetup(selectedPack.getThumbnail());
             blit(p_230450_1_, leftPos, topPos, 0, 0, imageWidth, imageHeight);
             //}  // this.minecraft.getTextureManager().bindTexture(selectedPack.getTexture());
 

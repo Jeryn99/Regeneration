@@ -1,7 +1,7 @@
 package me.suff.mc.regen.mixin;
 
-import me.suff.mc.regen.client.sound.SoundReverb;
 import com.mojang.blaze3d.audio.Channel;
+import me.suff.mc.regen.client.sound.SoundReverb;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

@@ -2,12 +2,12 @@ package me.suff.mc.regen.common.traits;
 
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -67,7 +67,7 @@ public class TraitHandler {
             if (iRegen.traitActive() && iRegen.trait() == RegenTraitRegistry.ENDER_HURT.get()) {
                 for (int i = 0; i < 16; ++i) {
                     double d3 = living.getX() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
-                    double d4 = Mth.clamp(living.getY() + (double) (living.getRandom().nextInt(16) - 8), 0.0D, (double) (living.level.getHeight() - 1));
+                    double d4 = Mth.clamp(living.getY() + (double) (living.getRandom().nextInt(16) - 8), 0.0D, living.level.getHeight() - 1);
                     double d5 = living.getZ() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
                     if (living.isPassenger()) {
                         living.stopRiding();

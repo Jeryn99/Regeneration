@@ -13,10 +13,10 @@ import me.suff.mc.regen.util.RTextHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
 public class SetTraitsCommand implements Command<CommandSourceStack> {
     private static final SetTraitsCommand CMD = new SetTraitsCommand();

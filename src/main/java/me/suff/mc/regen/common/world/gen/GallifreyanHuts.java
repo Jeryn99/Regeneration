@@ -5,24 +5,22 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.objects.REntities;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
 import java.util.List;
-
-import net.minecraft.world.level.levelgen.feature.StructureFeature.StructureStartFactory;
 
 public class GallifreyanHuts extends StructureFeature<ProbabilityFeatureConfiguration> {
 

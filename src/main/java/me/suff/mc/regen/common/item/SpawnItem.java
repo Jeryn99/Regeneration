@@ -6,21 +6,20 @@ import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RSoundSchemes;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.NonNullList;
+import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class SpawnItem<E extends TimelordEntity> extends Item {
 
@@ -78,13 +77,13 @@ public class SpawnItem<E extends TimelordEntity> extends Item {
                 timelord.genName();
                 iRegen.setRegens(12);
                 CompoundTag nbt = new CompoundTag();
-                nbt.putFloat(RConstants.PRIMARY_RED, random.nextInt(255) / 255.0F);
-                nbt.putFloat(RConstants.PRIMARY_GREEN, random.nextInt(255) / 255.0F);
-                nbt.putFloat(RConstants.PRIMARY_BLUE, random.nextInt(255) / 255.0F);
+                nbt.putFloat(RConstants.PRIMARY_RED, RegenUtil.RAND.nextInt(255) / 255.0F);
+                nbt.putFloat(RConstants.PRIMARY_GREEN, RegenUtil.RAND.nextInt(255) / 255.0F);
+                nbt.putFloat(RConstants.PRIMARY_BLUE, RegenUtil.RAND.nextInt(255) / 255.0F);
 
-                nbt.putFloat(RConstants.SECONDARY_RED, random.nextInt(255) / 255.0F);
-                nbt.putFloat(RConstants.SECONDARY_GREEN, random.nextInt(255) / 255.0F);
-                nbt.putFloat(RConstants.SECONDARY_BLUE, random.nextInt(255) / 255.0F);
+                nbt.putFloat(RConstants.SECONDARY_RED, RegenUtil.RAND.nextInt(255) / 255.0F);
+                nbt.putFloat(RConstants.SECONDARY_GREEN, RegenUtil.RAND.nextInt(255) / 255.0F);
+                nbt.putFloat(RConstants.SECONDARY_BLUE, RegenUtil.RAND.nextInt(255) / 255.0F);
                 iRegen.readStyle(nbt);
             });
             timelord.setup();
@@ -110,7 +109,7 @@ public class SpawnItem<E extends TimelordEntity> extends Item {
         }
 
         public boolean isMale() {
-            return this == GUARD ? random.nextBoolean() : isMale;
+            return this == GUARD ? RegenUtil.RAND.nextBoolean() : isMale;
         }
     }
 

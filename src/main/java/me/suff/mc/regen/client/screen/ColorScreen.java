@@ -1,5 +1,6 @@
 package me.suff.mc.regen.client.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
@@ -10,13 +11,13 @@ import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
 
@@ -28,7 +29,7 @@ public class ColorScreen extends AbstractContainerScreen {
     private ColorWidget colorChooserPrimary, colorChooserSecondary;
 
     public ColorScreen() {
-        super(new BlankContainer(), Minecraft.getInstance().player.inventory, new TranslatableComponent("regen.gui.color_gui"));
+        super(new BlankContainer(), Minecraft.getInstance().player.getInventory(), new TranslatableComponent("regen.gui.color_gui"));
         imageWidth = 256;
         imageHeight = 173;
     }
@@ -38,7 +39,7 @@ public class ColorScreen extends AbstractContainerScreen {
         super.init();
         TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
-            addButton(button);
+            addWidget(button);
         }
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
@@ -53,7 +54,7 @@ public class ColorScreen extends AbstractContainerScreen {
 
 
         // Reset Style Button
-        this.addButton(new Button(cx + 100, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.undo"), button -> {
+        this.addWidget(new Button(cx + 100, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.undo"), button -> {
             Color primaryColour = new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z);
             Color secondaryColour = new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z);
             colorChooserPrimary.setColor(primaryColour.getRGB());
@@ -62,10 +63,10 @@ public class ColorScreen extends AbstractContainerScreen {
         }));
 
         // Close Button
-        this.addButton(new Button(cx + 25, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
+        this.addWidget(new Button(cx + 25, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
 
         // Default Button
-        this.addButton(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.default"), button -> {
+        this.addWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.default"), button -> {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
                 TransitionType regenType = data.transitionType();
                 Vec3 primColor = regenType.getDefaultPrimaryColor();
@@ -83,8 +84,8 @@ public class ColorScreen extends AbstractContainerScreen {
 
         colorChooserSecondary = new ColorWidget(font, cx + 150, cy + 35, 70, 20, new TextComponent("Regen"), new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
 
-        children.add(colorChooserPrimary);
-        children.add(colorChooserSecondary);
+        addWidget(colorChooserPrimary);
+        addWidget(colorChooserSecondary);
     }
 
     @Override
@@ -108,10 +109,15 @@ public class ColorScreen extends AbstractContainerScreen {
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+
+        super.tick();
+        colorChooserPrimary.tick();
+        colorChooserSecondary.tick();
+
         this.renderBackground(matrixStack);
 
         if (this.minecraft != null) {
-            this.minecraft.getTextureManager().bind(BACKGROUND);
+            RenderSystem.setShaderTexture(0, BACKGROUND);
             int i = (this.width - this.imageWidth) / 2;
             int j = (this.height - this.imageHeight) / 2;
             this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
@@ -131,12 +137,5 @@ public class ColorScreen extends AbstractContainerScreen {
 
         colorChooserPrimary.render(matrixStack, x, y, partialTicks);
         colorChooserSecondary.render(matrixStack, x, y, partialTicks);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        colorChooserPrimary.tick();
-        colorChooserSecondary.tick();
     }
 }

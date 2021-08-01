@@ -2,10 +2,10 @@ package me.suff.mc.regen.client.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.suff.mc.regen.client.skin.CommonSkin;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,7 +25,7 @@ public class RErrorScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.addButton(new Button(this.width / 2 - 100, 140, 200, 20, new TranslatableComponent("button.tooltip.open_folder"), (p_213034_1_) -> {
+        this.addWidget(new Button(this.width / 2 - 100, 140, 200, 20, new TranslatableComponent("button.tooltip.open_folder"), (p_213034_1_) -> {
             Util.getPlatform().openFile(CommonSkin.SKIN_DIRECTORY);
             try {
                 CommonSkin.folderSetup();

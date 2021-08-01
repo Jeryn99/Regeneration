@@ -2,16 +2,16 @@ package me.suff.mc.regen.client.rendering.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import me.suff.mc.regen.common.entities.LaserProjectile;
 import me.suff.mc.regen.util.RenderHelp;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
 
 /* Created by Craig on 01/03/2021 */
 public class RenderLaser extends EntityRenderer<LaserProjectile> {

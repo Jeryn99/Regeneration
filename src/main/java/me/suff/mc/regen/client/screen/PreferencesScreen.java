@@ -14,11 +14,11 @@ import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.awt.*;
 
@@ -40,7 +40,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
         super.init();
         TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
-            addButton(button);
+            addWidget(button);
         }
 
         int cx = (width - imageWidth) / 2;
@@ -93,19 +93,19 @@ public class PreferencesScreen extends AbstractContainerScreen {
             Minecraft.getInstance().setScreen(new IncarnationScreen());
         });
 
-        addButton(btnRegenType);
-        addButton(btnSkinChoice);
-        addButton(btnClose);
-        addButton(btnColor);
-        addButton(btnSkinType);
-        addButton(btnScheme);
+        addWidget(btnRegenType);
+        addWidget(btnSkinChoice);
+        addWidget(btnClose);
+        addWidget(btnColor);
+        addWidget(btnSkinType);
+        addWidget(btnScheme);
 
         transitionType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     }
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        Minecraft.getInstance().getTextureManager().bind(screenBackground);
+        Minecraft.getInstance().getTextureManager().bindForSetup(screenBackground);
         IRegen data = RegenCap.get(Minecraft.getInstance().player).orElseGet(null);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int cx = (width - imageWidth) / 2;
