@@ -19,6 +19,7 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
 
     public static final DeferredRegister<TransitionType> TRANSITION_TYPES = DeferredRegister.create(TransitionType.class, RConstants.MODID);
     public static final RegistryObject<TransitionType> FIERY = TRANSITION_TYPES.register("fiery", (FieryTransition::new));
+    public static final RegistryObject<TransitionType> MINECRAFT_FLAME = TRANSITION_TYPES.register("minecraft_flame", (MinecraftFlameTransition::new));
     public static final RegistryObject<TransitionType> TROUGHTON = TRANSITION_TYPES.register("troughton", (TroughtonTransition::new));
     public static final RegistryObject<TransitionType> WATCHER = TRANSITION_TYPES.register("watcher", (WatcherTransition::new));
     public static final RegistryObject<TransitionType> SPARKLE = TRANSITION_TYPES.register("sparkle", (SparkleTransition::new));
