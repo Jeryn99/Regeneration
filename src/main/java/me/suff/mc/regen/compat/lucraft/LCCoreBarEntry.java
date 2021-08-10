@@ -3,8 +3,8 @@ package me.suff.mc.regen.compat.lucraft;
 import lucraft.mods.lucraftcore.util.abilitybar.IAbilityBarEntry;
 import lucraft.mods.lucraftcore.util.abilitybar.IAbilityBarProvider;
 import me.suff.mc.regen.RegenerationMod;
-import me.suff.mc.regen.network.MessageTriggerRegeneration;
 import me.suff.mc.regen.common.capability.CapabilityRegeneration;
+import me.suff.mc.regen.network.MessageTriggerRegeneration;
 import me.suff.mc.regen.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -75,5 +75,5 @@ public class LCCoreBarEntry implements IAbilityBarProvider, IAbilityBarEntry {
         list.add(new LCCoreBarEntry());
         return list;
     }
-	
+
 }

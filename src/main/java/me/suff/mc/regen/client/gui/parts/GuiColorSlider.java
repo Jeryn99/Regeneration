@@ -24,5 +24,5 @@ public class GuiColorSlider extends GuiSlider {
         sliderValue = round(sliderValue, 2);
         displayString = dispString + ": " + sliderValue;
     }
-	
+
 }

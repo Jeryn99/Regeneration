@@ -60,5 +60,5 @@ public class TypeLayFadeRenderer extends ATypeRenderer<TypeLayFade> {
         GlStateManager.rotate(-90, 1, 0, 0);
         GlStateManager.translate(0, 1, 0);
     }
-	
+
 }

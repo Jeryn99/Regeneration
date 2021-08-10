@@ -1,8 +1,8 @@
 package me.suff.mc.regen.network;
 
 import io.netty.buffer.ByteBuf;
-import me.suff.mc.regen.handlers.ActingForwarder;
 import me.suff.mc.regen.common.capability.CapabilityRegeneration;
+import me.suff.mc.regen.handlers.ActingForwarder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -46,5 +46,5 @@ public class MessageRegenStateEvent implements IMessage {
             return null;
         }
     }
-	
+
 }

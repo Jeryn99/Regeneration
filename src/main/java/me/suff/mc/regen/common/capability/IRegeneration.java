@@ -1,10 +1,10 @@
 package me.suff.mc.regen.common.capability;
 
 import me.suff.mc.regen.RegenConfig;
-import me.suff.mc.regen.compat.lucraft.PlayerCanRegenEvent;
 import me.suff.mc.regen.client.skinhandling.SkinChangingHandler;
 import me.suff.mc.regen.client.skinhandling.SkinInfo;
 import me.suff.mc.regen.common.types.TypeHandler;
+import me.suff.mc.regen.compat.lucraft.PlayerCanRegenEvent;
 import me.suff.mc.regen.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

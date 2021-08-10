@@ -84,5 +84,5 @@ public class HIJContainer extends Container {
             return stack.getItem() == RegenObjects.Items.HAND;
         }
     }
-	
+
 }

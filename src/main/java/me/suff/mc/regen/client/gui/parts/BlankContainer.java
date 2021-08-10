@@ -9,5 +9,5 @@ public class BlankContainer extends Container {
     public boolean canInteractWith(EntityPlayer playerIn) {
         return false;
     }
-	
+
 }

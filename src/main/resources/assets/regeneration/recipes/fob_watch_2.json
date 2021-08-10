@@ -9,10 +9,10 @@
     "I": {
       "item": "minecraft:iron_ingot"
     },
-	 "G": {
+    "G": {
       "item": "minecraft:gold_ingot"
     },
-	"S": {
+    "S": {
       "item": "minecraft:nether_star"
     }
   },

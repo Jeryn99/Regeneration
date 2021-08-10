@@ -19,5 +19,5 @@ public class RegenTriggers {
         CriteriaTriggers.register(HAND);
         CriteriaTriggers.register(HAND_JAR_FIRST);
     }
-	
+
 }

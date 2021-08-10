@@ -48,5 +48,5 @@ public class ScheduledAction {
     public double getProgress() {
         return currentTick / (double) scheduledTick;
     }
-	
+
 }

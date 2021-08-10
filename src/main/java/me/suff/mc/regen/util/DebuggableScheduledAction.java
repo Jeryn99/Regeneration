@@ -43,5 +43,5 @@ public class DebuggableScheduledAction extends ScheduledAction {
     public PlayerUtil.RegenState.Transition getTransition() {
         return transition;
     }
-	
+
 }

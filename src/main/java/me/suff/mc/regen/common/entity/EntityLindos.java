@@ -1,9 +1,9 @@
 package me.suff.mc.regen.common.entity;
 
 import me.suff.mc.regen.RegenConfig;
+import me.suff.mc.regen.common.item.ItemLindos;
 import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.util.ClientUtil;
-import me.suff.mc.regen.common.item.ItemLindos;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.SharedMonsterAttributes;

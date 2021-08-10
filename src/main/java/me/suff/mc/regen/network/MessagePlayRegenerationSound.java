@@ -1,9 +1,9 @@
 package me.suff.mc.regen.network;
 
 import io.netty.buffer.ByteBuf;
-import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.common.capability.CapabilityRegeneration;
 import me.suff.mc.regen.common.capability.IRegeneration;
+import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,7 +1,7 @@
 package me.suff.mc.regen.client.gui.parts;
 
-import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.common.capability.CapabilityRegeneration;
+import me.suff.mc.regen.handlers.RegenObjects;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -25,5 +25,5 @@ public class InventoryTabRegeneration extends AbstractTab {
     public boolean shouldAddToList() {
         return Minecraft.getMinecraft().player != null && CapabilityRegeneration.getForPlayer(Minecraft.getMinecraft().player).getRegenerationsLeft() > 0;
     }
-	
+
 }

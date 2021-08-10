@@ -115,5 +115,5 @@ public class AnimationHandler {
         modelBiped.bipedLeftArm.rotateAngleX = -((float) Math.PI / 2F) + modelBiped.bipedHead.rotateAngleX;
         return copyAndReturn(modelBiped, true);
     }
-	
+
 }

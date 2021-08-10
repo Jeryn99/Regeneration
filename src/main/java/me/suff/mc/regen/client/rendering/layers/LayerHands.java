@@ -1,10 +1,10 @@
 package me.suff.mc.regen.client.rendering.layers;
 
+import me.suff.mc.regen.client.rendering.types.TypeFieryRenderer;
 import me.suff.mc.regen.common.capability.CapabilityRegeneration;
 import me.suff.mc.regen.common.capability.IRegeneration;
 import me.suff.mc.regen.common.types.TypeHandler;
 import me.suff.mc.regen.util.PlayerUtil;
-import me.suff.mc.regen.client.rendering.types.TypeFieryRenderer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;

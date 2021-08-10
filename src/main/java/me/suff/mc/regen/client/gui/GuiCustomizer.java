@@ -164,5 +164,5 @@ public class GuiCustomizer extends GuiContainer {
         super.drawScreen(mouseX, mouseY, partialTicks);
         renderHoveredToolTip(mouseX, mouseY);
     }
-	
+
 }

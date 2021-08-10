@@ -1,7 +1,10 @@
 package me.suff.mc.regen.common.item.arch;
 
+import me.suff.mc.regen.client.skinhandling.SkinChangingHandler;
+import me.suff.mc.regen.client.skinhandling.SkinInfo;
 import me.suff.mc.regen.common.capability.CapabilityRegeneration;
 import me.suff.mc.regen.common.capability.IRegeneration;
+import me.suff.mc.regen.common.item.ItemArchInterface;
 import me.suff.mc.regen.common.item.arch.capability.ArchProvider;
 import me.suff.mc.regen.common.item.arch.capability.CapabilityArch;
 import me.suff.mc.regen.common.item.arch.capability.IArch;
@@ -9,9 +12,6 @@ import me.suff.mc.regen.common.traits.DnaHandler;
 import me.suff.mc.regen.network.MessageRemovePlayer;
 import me.suff.mc.regen.network.NetworkHandler;
 import me.suff.mc.regen.util.PlayerUtil;
-import me.suff.mc.regen.client.skinhandling.SkinChangingHandler;
-import me.suff.mc.regen.client.skinhandling.SkinInfo;
-import me.suff.mc.regen.common.item.ItemArchInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryHelper;

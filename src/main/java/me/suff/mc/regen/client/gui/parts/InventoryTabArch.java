@@ -1,7 +1,7 @@
 package me.suff.mc.regen.client.gui.parts;
 
-import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.common.item.ItemArchInterface;
+import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.network.MessageOpenArch;
 import me.suff.mc.regen.network.NetworkHandler;
 import micdoodle8.mods.galacticraft.api.client.tabs.AbstractTab;

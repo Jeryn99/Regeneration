@@ -1,12 +1,12 @@
 package me.suff.mc.regen.network;
 
 import io.netty.buffer.ByteBuf;
-import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.common.advancements.RegenTriggers;
 import me.suff.mc.regen.common.capability.CapabilityRegeneration;
 import me.suff.mc.regen.common.capability.IRegeneration;
 import me.suff.mc.regen.common.item.ItemHand;
 import me.suff.mc.regen.common.tiles.TileEntityHandInJar;
+import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.block.state.IBlockState;

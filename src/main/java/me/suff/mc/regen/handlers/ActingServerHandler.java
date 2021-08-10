@@ -42,7 +42,7 @@ class ActingServerHandler implements IActingHandler {
                 if (player.ticksExisted % 210 == 0) {
                     PlayerUtil.applyPotionIfAbsent(player, PlayerUtil.POTIONS.get(player.world.rand.nextInt(PlayerUtil.POTIONS.size())), player.world.rand.nextInt(400), 1, false, false);
                 }
-                if (RegenConfig.postRegen.postRegenerationLindosInterval != 0 && player.ticksExisted % (RegenConfig.postRegen.postRegenerationLindosInterval*20) == 0 && player.world.rand.nextDouble()<RegenConfig.postRegen.lindosChancePerInterval) {
+                if (RegenConfig.postRegen.postRegenerationLindosInterval != 0 && player.ticksExisted % (RegenConfig.postRegen.postRegenerationLindosInterval * 20) == 0 && player.world.rand.nextDouble() < RegenConfig.postRegen.lindosChancePerInterval) {
                     EntityLindos lindos = new EntityLindos(player.world);
                     lindos.setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, 0, 0);
                     player.world.spawnEntity(lindos);

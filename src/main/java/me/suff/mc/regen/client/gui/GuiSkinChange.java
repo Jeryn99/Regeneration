@@ -5,11 +5,11 @@ import me.suff.mc.regen.client.gui.parts.BlankContainer;
 import me.suff.mc.regen.client.gui.parts.FileButton;
 import me.suff.mc.regen.client.gui.parts.InventoryTabRegeneration;
 import me.suff.mc.regen.client.image.ImageDownloadAlt;
-import me.suff.mc.regen.network.MessageNextSkin;
-import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.client.skinhandling.SkinChangingHandler;
 import me.suff.mc.regen.common.capability.CapabilityRegeneration;
+import me.suff.mc.regen.network.MessageNextSkin;
 import me.suff.mc.regen.network.NetworkHandler;
+import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.FileUtil;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.Minecraft;
@@ -306,5 +306,5 @@ public class GuiSkinChange extends GuiContainer {
             if (!Mouse.isButtonDown(0)) this.isScrollPressed = false;
         }
     }
-	
+
 }

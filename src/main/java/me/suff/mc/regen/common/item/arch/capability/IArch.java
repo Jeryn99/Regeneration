@@ -10,25 +10,27 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public interface IArch extends INBTSerializable<NBTTagCompound> {
 
-	int getRegenAmount();
+    int getRegenAmount();
 
-	void setRegenAmount(int regenAmount);
+    void setRegenAmount(int regenAmount);
 
-	ResourceLocation getSavedTrait();
+    ResourceLocation getSavedTrait();
 
-	void setSavedTrait(ResourceLocation savedTrait);
+    void setSavedTrait(ResourceLocation savedTrait);
 
-	ArchStatus getArchStatus();
+    ArchStatus getArchStatus();
 
-	void setArchStatus(ArchStatus status);
+    void setArchStatus(ArchStatus status);
 
-    void setSkinType(SkinInfo.SkinType skinType);
     SkinInfo.SkinType getSkinType();
 
-    void setSkin(String encoded);
+    void setSkinType(SkinInfo.SkinType skinType);
+
     String getSkin();
 
+    void setSkin(String encoded);
+
     enum ArchStatus {
-		ARCH_ITEM, NORMAL_ITEM
-	}
+        ARCH_ITEM, NORMAL_ITEM
+    }
 }

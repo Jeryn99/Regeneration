@@ -7,7 +7,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 public class RegenDamageSource extends DamageSource {
 
-    private String message;
+    private final String message;
 
     public RegenDamageSource(String name) {
         super(name);

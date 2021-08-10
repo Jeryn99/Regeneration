@@ -22,5 +22,5 @@ public class RegenerationStorage implements Capability.IStorage<IRegeneration> {
     public void readNBT(Capability<IRegeneration> capability, IRegeneration instance, EnumFacing side, NBTBase nbt) {
         instance.deserializeNBT(nbt instanceof NBTTagCompound ? (NBTTagCompound) nbt : new NBTTagCompound());
     }
-	
+
 }

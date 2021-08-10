@@ -1,7 +1,7 @@
 package me.suff.mc.regen.common.item;
 
-import me.suff.mc.regen.common.traits.DnaHandler;
 import me.suff.mc.regen.client.skinhandling.SkinInfo;
+import me.suff.mc.regen.common.traits.DnaHandler;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;

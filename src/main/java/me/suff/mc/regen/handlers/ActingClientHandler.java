@@ -2,8 +2,8 @@ package me.suff.mc.regen.handlers;
 
 import me.suff.mc.regen.RegenConfig;
 import me.suff.mc.regen.asm.RegenClientHooks;
-import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.common.capability.IRegeneration;
+import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
@@ -70,5 +70,5 @@ class ActingClientHandler implements IActingHandler {
         ClientUtil.playSound(cap.getPlayer(), RegenObjects.Sounds.CRITICAL_STAGE.getRegistryName(), SoundCategory.PLAYERS, true, () -> cap.getState() != PlayerUtil.RegenState.GRACE_CRIT, 1.0F);
         RegenClientHooks.handleShader();
     }
-	
+
 }

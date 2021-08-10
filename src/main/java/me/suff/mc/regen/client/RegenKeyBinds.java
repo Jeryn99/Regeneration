@@ -1,12 +1,12 @@
 package me.suff.mc.regen.client;
 
 import me.suff.mc.regen.RegenerationMod;
-import me.suff.mc.regen.network.MessageTriggerRegeneration;
-import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.common.capability.CapabilityRegeneration;
 import me.suff.mc.regen.common.capability.IRegeneration;
 import me.suff.mc.regen.network.MessageTriggerForcedRegen;
+import me.suff.mc.regen.network.MessageTriggerRegeneration;
 import me.suff.mc.regen.network.NetworkHandler;
+import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.EnumCompatModids;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -83,5 +83,5 @@ public class RegenKeyBinds {
     public static String getRegenerateNowDisplayName() {
         return REGEN_NOW.getDisplayName();
     }
-	
+
 }

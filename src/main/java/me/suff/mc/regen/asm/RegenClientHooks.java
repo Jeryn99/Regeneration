@@ -29,6 +29,7 @@ public class RegenClientHooks {
 
     public static int colorModeCache;
     public static float savedGreen, savedRed, savedBlue;
+    private static int[] postShaders = new int[]{19, 18, 7, 12, 20};
 
     public static void handleRotations(ModelBiped model, float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
         if (entity == null) return;
@@ -42,8 +43,6 @@ public class RegenClientHooks {
         MinecraftForge.EVENT_BUS.post(ev);
     }
 
-    private static int[] postShaders = new int[]{19, 18, 7, 12, 20};
-
     public static void handleShader() {
         if (Minecraft.getMinecraft().player == null || !RegenConfig.regenerationShaders) return;
 
@@ -55,10 +54,6 @@ public class RegenClientHooks {
                 EntityPlayer player = (EntityPlayer) entity;
                 IRegeneration data = CapabilityRegeneration.getForPlayer(player);
                 switch (data.getState()) {
-                    case POST:
-                        int shader = postShaders[entity.world.rand.nextInt(postShaders.length)];
-                        entityRender.loadShader(SHADERS_TEXTURES[shader]);
-                        break;
                     case GRACE:
                     case GRACE_CRIT:
                         entityRender.loadShader(SHADERS_TEXTURES[16]);//desaturate.json
@@ -105,9 +100,7 @@ public class RegenClientHooks {
     }
 
     public static float modGreen(float green) {
-        if (!enabled()) {
-            return green;
-        }
+        if (!enabled()) return green;
 
         savedGreen = green;
 

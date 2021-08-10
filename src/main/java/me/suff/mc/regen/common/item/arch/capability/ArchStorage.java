@@ -12,14 +12,14 @@ import javax.annotation.Nullable;
  */
 public class ArchStorage implements Capability.IStorage<IArch> {
 
-	@Nullable
-	@Override
-	public NBTBase writeNBT(Capability<IArch> capability, IArch instance, EnumFacing side) {
-		return instance.serializeNBT();
-	}
+    @Nullable
+    @Override
+    public NBTBase writeNBT(Capability<IArch> capability, IArch instance, EnumFacing side) {
+        return instance.serializeNBT();
+    }
 
-	@Override
-	public void readNBT(Capability<IArch> capability, IArch instance, EnumFacing side, NBTBase nbt) {
-		instance.deserializeNBT(nbt instanceof NBTTagCompound ? (NBTTagCompound) nbt : new NBTTagCompound());
-	}
+    @Override
+    public void readNBT(Capability<IArch> capability, IArch instance, EnumFacing side, NBTBase nbt) {
+        instance.deserializeNBT(nbt instanceof NBTTagCompound ? (NBTTagCompound) nbt : new NBTTagCompound());
+    }
 }

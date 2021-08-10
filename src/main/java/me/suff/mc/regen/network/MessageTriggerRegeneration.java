@@ -49,5 +49,5 @@ public class MessageTriggerRegeneration implements IMessage {
             return null;
         }
     }
-	
+
 }

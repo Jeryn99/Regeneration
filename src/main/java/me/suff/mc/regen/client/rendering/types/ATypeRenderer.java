@@ -52,5 +52,5 @@ public abstract class ATypeRenderer<T> {
     public abstract void renderHand(EntityPlayer player, EnumHandSide handSide, RenderLivingBase<?> render);
 
     public abstract void onRenderCallBack(RenderCallbackEvent event);
-	
+
 }

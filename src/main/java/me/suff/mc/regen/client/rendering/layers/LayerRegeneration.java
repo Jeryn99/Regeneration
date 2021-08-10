@@ -69,5 +69,5 @@ public class LayerRegeneration implements LayerRenderer<EntityPlayer> {
     public boolean shouldCombineTextures() {
         return false;
     }
-	
+
 }

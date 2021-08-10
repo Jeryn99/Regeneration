@@ -87,8 +87,9 @@ public class FileUtil {
             while (notDownloaded.get()) {
                 try {
                     createDefaultFolders();
-                    Trending.trending();
-                    Trending.trending();
+                    SkinHandler.trending();
+                    SkinHandler.skinpacks();
+
                     notDownloaded.set(false);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -170,6 +171,16 @@ public class FileUtil {
         return similarWordList;
     }
 
+    public static ThreadDownloadImageData getDownloadImageSkin(ResourceLocation resourceLocationIn, String url) {
+        TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+        Object object = texturemanager.getTexture(resourceLocationIn);
+        if (object == null) {
+            object = new ThreadDownloadImageData(null, url, DefaultPlayerSkin.getDefaultSkin(AbstractClientPlayer.getOfflineUUID("")), new ImageBufferDownload());
+            texturemanager.loadTexture(resourceLocationIn, (ITextureObject) object);
+        }
+        return (ThreadDownloadImageData) object;
+    }
+
     public interface IEnum<E extends Enum<E>> {
 
         int ordinal();
@@ -188,15 +199,5 @@ public class FileUtil {
             IEnum[] ies = this.getClass().getEnumConstants();
             return (E[]) ies;
         }
-    }
-
-    public static ThreadDownloadImageData getDownloadImageSkin(ResourceLocation resourceLocationIn, String url) {
-        TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-        Object object = texturemanager.getTexture(resourceLocationIn);
-        if (object == null) {
-            object = new ThreadDownloadImageData(null, url, DefaultPlayerSkin.getDefaultSkin(AbstractClientPlayer.getOfflineUUID("")), new ImageBufferDownload());
-            texturemanager.loadTexture(resourceLocationIn, (ITextureObject) object);
-        }
-        return (ThreadDownloadImageData) object;
     }
 }

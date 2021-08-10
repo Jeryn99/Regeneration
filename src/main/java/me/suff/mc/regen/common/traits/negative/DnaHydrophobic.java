@@ -36,5 +36,5 @@ public class DnaHydrophobic extends DnaHandler.IDna {
     public void onRemoved(IRegeneration cap) {
 
     }
-	
+
 }

@@ -1,10 +1,10 @@
 package me.suff.mc.regen.util;
 
 import me.suff.mc.regen.RegenerationMod;
+import me.suff.mc.regen.client.skinhandling.SkinChangingHandler;
 import me.suff.mc.regen.network.MessageSetPerspective;
 import me.suff.mc.regen.network.MessageUpdateModel;
 import me.suff.mc.regen.network.NetworkHandler;
-import me.suff.mc.regen.client.skinhandling.SkinChangingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockTrapDoor;

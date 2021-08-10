@@ -132,5 +132,5 @@ public class ActingForwarder {
     public enum RegenEvent {
         ENTER_GRACE, REGEN_FINISH, REGEN_TRIGGER, CRITICAL_START, PERFORM_POST, HAND_GLOW_START, PROCESS_DONE
     }
-	
+
 }

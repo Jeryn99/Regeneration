@@ -166,5 +166,5 @@ public class TabRegistry {
             TabRegistry.addTabsToList(event.getButtonList());
         }
     }
-	
+
 }

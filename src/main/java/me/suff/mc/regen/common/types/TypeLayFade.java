@@ -1,9 +1,9 @@
 package me.suff.mc.regen.common.types;
 
+import me.suff.mc.regen.client.rendering.types.TypeLayFadeRenderer;
 import me.suff.mc.regen.common.capability.IRegeneration;
 import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.util.PlayerUtil;
-import me.suff.mc.regen.client.rendering.types.TypeLayFadeRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.SoundEvent;
@@ -11,7 +11,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class TypeLayFade implements IRegenType<TypeLayFadeRenderer> {
 
-    private SoundEvent[] soundEvents = new SoundEvent[]{RegenObjects.Sounds.HAND_GLOW};
+    private final SoundEvent[] soundEvents = new SoundEvent[]{RegenObjects.Sounds.HAND_GLOW};
 
     @Override
     public int getAnimationLength() {
@@ -64,5 +64,5 @@ public class TypeLayFade implements IRegenType<TypeLayFadeRenderer> {
     public Vec3d getDefaultSecondaryColor() {
         return new Vec3d(1, 1, 1);
     }
-	
+
 }

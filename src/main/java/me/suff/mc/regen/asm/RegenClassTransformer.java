@@ -226,5 +226,5 @@ public class RegenClassTransformer implements IClassTransformer, Opcodes {
 
         return data;
     }
-	
+
 }

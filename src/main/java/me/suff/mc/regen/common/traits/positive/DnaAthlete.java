@@ -55,5 +55,5 @@ public class DnaAthlete extends DnaHandler.IDna {
             player.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).removeModifier(KNOCKBACK_MODIFIER);
         }
     }
-	
+
 }

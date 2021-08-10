@@ -41,6 +41,18 @@ public class ItemArchInterface extends Item implements IDontStore {
         setMaxStackSize(1);
     }
 
+    public static void sync(ItemStack stack) {
+        if (stack.getTagCompound() != null) {
+            stack.getTagCompound().merge(stack.getItem().getNBTShareTag(stack));
+        }
+    }
+
+    public static void readSync(ItemStack stack) {
+        if (stack.getTagCompound() != null) {
+            stack.getItem().readNBTShareTag(stack, stack.getTagCompound());
+        }
+    }
+
     /**
      * Called when the equipped item is right clicked.
      */
@@ -61,19 +73,6 @@ public class ItemArchInterface extends Item implements IDontStore {
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound oldCapNbt) {
         return new InvProvider();
-    }
-
-
-    public static void sync(ItemStack stack) {
-        if (stack.getTagCompound() != null) {
-            stack.getTagCompound().merge(stack.getItem().getNBTShareTag(stack));
-        }
-    }
-
-    public static void readSync(ItemStack stack) {
-        if (stack.getTagCompound() != null) {
-            stack.getItem().readNBTShareTag(stack, stack.getTagCompound());
-        }
     }
 
     @Override
@@ -114,6 +113,22 @@ public class ItemArchInterface extends Item implements IDontStore {
         return EntityEquipmentSlot.HEAD;
     }
 
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+
+        tooltip.add(new TextComponentTranslation("item.info.purpose").getUnformattedComponentText());
+
+        if (GuiInventory.isShiftKeyDown()) {
+            tooltip.add(new TextComponentTranslation("item.info.arch_power").getUnformattedComponentText());
+            tooltip.add(new TextComponentTranslation("item.info.arch_power2").getUnformattedComponentText());
+            tooltip.add(new TextComponentTranslation("item.info.arch_use").getUnformattedComponentText());
+        } else {
+            tooltip.add(new TextComponentTranslation("item.info.shift").getUnformattedComponentText());
+        }
+
+    }
+
     private static class InvProvider implements ICapabilitySerializable<NBTBase> {
 
         private final IItemHandler inv = new ItemStackHandler(1) {
@@ -150,21 +165,5 @@ public class ItemArchInterface extends Item implements IDontStore {
         public void deserializeNBT(NBTBase nbt) {
             CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(inv, null, nbt);
         }
-    }
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
-
-        tooltip.add(new TextComponentTranslation("item.info.purpose").getUnformattedComponentText());
-
-        if (GuiInventory.isShiftKeyDown()) {
-            tooltip.add(new TextComponentTranslation("item.info.arch_power").getUnformattedComponentText());
-            tooltip.add(new TextComponentTranslation("item.info.arch_power2").getUnformattedComponentText());
-            tooltip.add(new TextComponentTranslation("item.info.arch_use").getUnformattedComponentText());
-        } else {
-            tooltip.add(new TextComponentTranslation("item.info.shift").getUnformattedComponentText());
-        }
-
     }
 }

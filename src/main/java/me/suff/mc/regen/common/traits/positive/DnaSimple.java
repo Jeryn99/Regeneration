@@ -26,5 +26,5 @@ public class DnaSimple extends DnaHandler.IDna {
     public void onRemoved(IRegeneration cap) {
 
     }
-	
+
 }

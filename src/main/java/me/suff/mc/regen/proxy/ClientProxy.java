@@ -33,47 +33,47 @@ import java.util.Map;
  */
 public class ClientProxy extends CommonProxy {
 
-	@Override
-	public void preInit() {
-		super.preInit();
-		MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
-		RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityWatcher.class, RenderWatcher::new);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandInJar.class, new RenderTileEntityHand());
-	}
+    @Override
+    public void preInit() {
+        super.preInit();
+        MinecraftForge.EVENT_BUS.register(new SkinChangingHandler());
+        RenderingRegistry.registerEntityRenderingHandler(EntityItemOverride.class, RenderItemOverride::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityLindos.class, RenderLindos::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityWatcher.class, RenderWatcher::new);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandInJar.class, new RenderTileEntityHand());
+    }
 
-	@Override
-	public void init() {
-		super.init();
-	}
+    @Override
+    public void init() {
+        super.init();
+    }
 
-	@Override
-	public void postInit() {
-		super.postInit();
-		RegenKeyBinds.init();
+    @Override
+    public void postInit() {
+        super.postInit();
+        RegenKeyBinds.init();
 
-		// Render layers ===========================================
-		Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-		for (RenderPlayer renderPlayer : skinMap.values()) {
-			renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
-			renderPlayer.addLayer(new LayerHands(renderPlayer));
+        // Render layers ===========================================
+        Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
+        for (RenderPlayer renderPlayer : skinMap.values()) {
+            renderPlayer.addLayer(new LayerRegeneration(renderPlayer)); // Add Regeneration Layer
+            renderPlayer.addLayer(new LayerHands(renderPlayer));
             renderPlayer.addLayer(new RenderArchItem(renderPlayer));
-		}
-		FileUtil.doSetupOnThread();
+        }
+        FileUtil.doSetupOnThread();
 
-		// Galacticraft API for TABS ======================
-		if (TabRegistry.getTabList().isEmpty()) {
-			MinecraftForge.EVENT_BUS.register(new TabRegistry());
-			TabRegistry.registerTab(new InventoryTabVanilla());
-		}
-		TabRegistry.registerTab(new InventoryTabRegeneration());
-		TabRegistry.registerTab(new InventoryTabArch());
+        // Galacticraft API for TABS ======================
+        if (TabRegistry.getTabList().isEmpty()) {
+            MinecraftForge.EVENT_BUS.register(new TabRegistry());
+            TabRegistry.registerTab(new InventoryTabVanilla());
+        }
+        TabRegistry.registerTab(new InventoryTabRegeneration());
+        TabRegistry.registerTab(new InventoryTabArch());
 
-		// LC Core
-		if (EnumCompatModids.LCCORE.isLoaded()) {
-			LucraftCoreHandler.registerEntry();
-		}
-	}
-	
+        // LC Core
+        if (EnumCompatModids.LCCORE.isLoaded()) {
+            LucraftCoreHandler.registerEntry();
+        }
+    }
+
 }

@@ -1,7 +1,7 @@
 package me.suff.mc.regen.common.types;
 
-import me.suff.mc.regen.common.capability.IRegeneration;
 import me.suff.mc.regen.client.rendering.types.ATypeRenderer;
+import me.suff.mc.regen.common.capability.IRegeneration;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
@@ -38,5 +38,5 @@ public interface IRegenType<R extends ATypeRenderer<?>> {
     Vec3d getDefaultPrimaryColor();
 
     Vec3d getDefaultSecondaryColor();
-	
+
 }

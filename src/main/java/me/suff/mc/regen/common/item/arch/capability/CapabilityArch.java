@@ -1,8 +1,8 @@
 package me.suff.mc.regen.common.item.arch.capability;
 
 import me.suff.mc.regen.RegenerationMod;
-import me.suff.mc.regen.common.traits.DnaHandler;
 import me.suff.mc.regen.client.skinhandling.SkinInfo;
+import me.suff.mc.regen.common.traits.DnaHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -71,23 +71,23 @@ public class CapabilityArch implements IArch {
     }
 
     @Override
-    public void setSkinType(SkinInfo.SkinType skinType) {
-        this.skinType = skinType;
-    }
-
-    @Override
     public SkinInfo.SkinType getSkinType() {
         return skinType;
     }
 
     @Override
-    public void setSkin(String encoded) {
-        this.encoded = encoded;
+    public void setSkinType(SkinInfo.SkinType skinType) {
+        this.skinType = skinType;
     }
 
     @Override
     public String getSkin() {
         return encoded;
+    }
+
+    @Override
+    public void setSkin(String encoded) {
+        this.encoded = encoded;
     }
 
     @Override

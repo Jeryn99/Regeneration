@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.suff.mc.regen.RegenConfig;
 import me.suff.mc.regen.RegenerationMod;
-import net.minecraft.client.Minecraft;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -20,39 +19,11 @@ import java.util.Objects;
 import static me.suff.mc.regen.client.skinhandling.SkinChangingHandler.SKIN_DIRECTORY_ALEX;
 import static me.suff.mc.regen.client.skinhandling.SkinChangingHandler.SKIN_DIRECTORY_STEVE;
 
-public class Trending {
+public class SkinHandler {
 
     public static File TRENDING_ALEX = new File(SKIN_DIRECTORY_ALEX + "/namemc");
     public static File TRENDING_STEVE = new File(SKIN_DIRECTORY_STEVE + "/namemc");
 
-    public static File USER_ALEX = new File(SKIN_DIRECTORY_ALEX + "/the_past");
-    public static File USER_STEVE = new File(SKIN_DIRECTORY_STEVE + "/the_past");
-
-    public static ArrayList<String> getSkins(String downloadUrl) throws IOException {
-        ArrayList<String> skins = new ArrayList<>();
-        BufferedReader br = null;
-
-        try {
-            URL url = new URL(downloadUrl);
-            URLConnection uc = url.openConnection();
-            uc.connect();
-            uc = url.openConnection();
-            uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
-            br = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.contains("<a href=\"/skin/")) {
-                    String downloadLine = line.replaceAll("<a href=\"/skin/", "").replaceAll("\">", "").replaceAll("        ", "");
-                    skins.add("https://namemc.com/texture/" + downloadLine + ".png");
-                }
-            }
-        } finally {
-            if (br != null) {
-                br.close();
-            }
-        }
-        return skins;
-    }
 
     public static void trending() throws IOException {
         if (!RegenConfig.skins.downloadTrendingSkins) return;
@@ -79,8 +50,8 @@ public class Trending {
         }
     }
 
-    public static boolean skinpacks() throws IOException {
-        if (!RegenConfig.skins.downloadInternalSkins) return false;
+    public static void skinpacks() throws IOException {
+        if (!RegenConfig.skins.downloadInternalSkins) return;
 
         File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
 
@@ -102,8 +73,7 @@ public class Trending {
                 FileUtil.unzipSkinPack(downloadLink);
             }
         }
-        return false;
     }
 
-	
+
 }

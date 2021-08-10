@@ -43,5 +43,5 @@ public class DnaLucky extends DnaHandler.IDna {
             player.getEntityAttribute(SharedMonsterAttributes.LUCK).removeModifier(LUCKY_MODIFIER);
         }
     }
-	
+
 }

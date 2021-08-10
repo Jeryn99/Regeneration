@@ -1,10 +1,10 @@
 package me.suff.mc.regen.common.types;
 
 import me.suff.mc.regen.RegenConfig;
+import me.suff.mc.regen.client.rendering.types.TypeFieryRenderer;
 import me.suff.mc.regen.common.capability.IRegeneration;
 import me.suff.mc.regen.handlers.RegenObjects;
 import me.suff.mc.regen.util.PlayerUtil;
-import me.suff.mc.regen.client.rendering.types.TypeFieryRenderer;
 import net.minecraft.block.BlockFire;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -85,5 +85,5 @@ public class TypeFiery implements IRegenType<TypeFieryRenderer> {
     public TypeFieryRenderer getRenderer() {
         return TypeFieryRenderer.INSTANCE;
     }
-	
+
 }

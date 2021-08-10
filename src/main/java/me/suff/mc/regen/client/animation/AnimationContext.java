@@ -46,5 +46,5 @@ public class AnimationContext {
     public float getNetHeadYaw() {
         return netHeadYaw;
     }
-	
+
 }
