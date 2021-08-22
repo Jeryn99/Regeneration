@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -16,8 +17,9 @@ import net.minecraft.world.phys.Vec3;
 /* Created by Craig on 01/03/2021 */
 public class RenderLaser extends EntityRenderer<LaserProjectile> {
 
-    public RenderLaser(EntityRenderDispatcher renderManager) {
-        super(renderManager);
+
+    protected RenderLaser(EntityRendererProvider.Context p_174008_) {
+        super(p_174008_);
     }
 
     @Override
@@ -31,7 +33,7 @@ public class RenderLaser extends EntityRenderer<LaserProjectile> {
         double x_ = vec2.x - vec1.x;
         double y_ = vec2.y - vec1.y;
         double z_ = vec2.z - vec1.z;
-        double diff = Mth.sqrt(x_ * x_ + z_ * z_);
+        double diff = Mth.sqrt((float) (x_ * x_ + z_ * z_));
         float yaw = (float) (Math.atan2(z_, x_) * 180.0D / 3.141592653589793D) - 90.0F;
         float pitch = (float) -(Math.atan2(y_, diff) * 180.0D / 3.141592653589793D);
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-yaw));

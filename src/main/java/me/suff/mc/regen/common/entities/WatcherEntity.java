@@ -43,17 +43,17 @@ public class WatcherEntity extends Mob {
                 });
 
                 if (getTarget() == null) {
-                    remove();
+                    remove(RemovalReason.DISCARDED);
                 }
             }
         } else {
             RegenCap.get(getTarget()).ifPresent(iRegen -> {
                 if (iRegen.transitionType() != TransitionTypes.WATCHER.get() || iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.ALIVE || getTarget().level.dimension() != level.dimension()) {
-                    remove();
+                    remove(RemovalReason.DISCARDED);
                 } else {
 
                     if (iRegen.regenState() == RegenStates.REGENERATING) {
-                        remove();
+                        remove(RemovalReason.DISCARDED);
                     } else {
                         lookAt(EntityAnchorArgument.Anchor.EYES, getTarget().position());
                         if (tickCount % 100 == 0 && !ViewUtil.isInSight(getTarget(), this)) {
@@ -82,8 +82,8 @@ public class WatcherEntity extends Mob {
     }
 
     @Override
-    public void knockback(float strength, double ratioX, double ratioZ) {
-        //no
+    public void knockback(double p_147241_, double p_147242_, double p_147243_) {
+
     }
 
     @Override

@@ -219,7 +219,7 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
             if (weepingAngel != null) {
                 if (level.random.nextInt(100) < 10) {
                     Entity entity = weepingAngel.create(level);
-                    entity.moveTo(getX(), getY(), getZ(), yRot, xRot);
+                    entity.moveTo(getX(), getY(), getZ(), getYRot(), getXRot());
                     level.addFreshEntity(entity);
                 }
             }
@@ -424,7 +424,7 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
         double d1 = target.getX() - this.getX();
         double d2 = d0 - laserProjectile.getY();
         double d3 = target.getZ() - this.getZ();
-        float f = Mth.sqrt(d1 * d1 + d3 * d3) * 0.2F;
+        float f = Mth.sqrt((float) (d1 * d1 + d3 * d3)) * 0.2F;
         laserProjectile.shoot(d1, d2 + (double) f, d3, 1.6F, 0);
         this.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 0.3F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.level.addFreshEntity(laserProjectile);

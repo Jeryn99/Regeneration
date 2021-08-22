@@ -10,6 +10,7 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.PlayerUtil;
+import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -39,7 +40,7 @@ public class FobWatchItem extends Item {
         CompoundTag stackTag = stack.getOrCreateTag();
         if (!stackTag.contains("is_open") || !stackTag.contains("is_gold")) {
             stackTag.putBoolean("is_open", false);
-            stackTag.putBoolean("is_gold", random.nextBoolean());
+            stackTag.putBoolean("is_gold", RegenUtil.RAND.nextBoolean());
         }
         return stackTag;
     }

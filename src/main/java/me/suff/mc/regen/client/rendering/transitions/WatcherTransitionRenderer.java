@@ -44,7 +44,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
         Player player = post.getPlayer();
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
-                player.yBodyRot = player.yBodyRotO = player.yRot;
+                player.yBodyRot = player.yBodyRotO = player.yHeadRot;
             }
         });
     }

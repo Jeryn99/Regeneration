@@ -6,8 +6,6 @@ import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.common.regen.IRegen;
-import me.suff.mc.regen.common.regen.RegenCap;
-import me.suff.mc.regen.common.regen.RegenStorage;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
@@ -82,7 +80,7 @@ public class Regeneration {
             RStructures.registerConfiguredFeatures();
         });
 
-        CapabilityManager.INSTANCE.register(IRegen.class, new RegenStorage(), RegenCap::new);
+        CapabilityManager.INSTANCE.register(IRegen.class);
         ActingForwarder.init();
         DefaultAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
         DefaultAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());

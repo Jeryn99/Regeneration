@@ -207,15 +207,16 @@ public class CommonEvents {
     }
 
 
-    @SubscribeEvent
+    //TODO
+ /*   @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        Capability.IStorage<IRegen> storage = RegenCap.CAPABILITY.getStorage();
+        Capability.ICapabilitySerializable <IRegen> storage = RegenCap.CAPABILITY.getStorage();
         event.getOriginal().revive();
         RegenCap.get(event.getOriginal()).ifPresent((old) -> RegenCap.get(event.getPlayer()).ifPresent((data) -> {
             CompoundTag nbt = (CompoundTag) storage.writeNBT(RegenCap.CAPABILITY, old, null);
             storage.readNBT(RegenCap.CAPABILITY, data, null, nbt);
         }));
-    }
+    }*/
 
     @SubscribeEvent
     public static void onTrackPlayer(PlayerEvent.StartTracking startTracking) {

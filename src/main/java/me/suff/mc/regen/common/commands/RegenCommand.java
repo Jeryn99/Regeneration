@@ -8,7 +8,7 @@ import me.suff.mc.regen.common.commands.subcommands.SetTraitsCommand;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
 public class RegenCommand {
 

@@ -4,12 +4,17 @@ import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraftforge.resource.ISelectiveResourceReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
 import org.lwjgl.openal.EXTEfx;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class SoundReverb {
     private static final Minecraft MC = Minecraft.getInstance();
@@ -20,8 +25,9 @@ public class SoundReverb {
     private static int auxEffectSlot;
 
     public static void addReloader() {
-        ((ReloadableResourceManager) MC.getResourceManager()).registerReloadListener((ISelectiveResourceReloadListener) (manager, predicate) -> {
+        ((ReloadableResourceManager) MC.getResourceManager()).registerReloadListener((p_10638_, p_10639_, p_10640_, p_10641_, p_10642_, p_10643_) -> {
             setup = false;
+            return new CompletableFuture<>();
         });
     }
 
