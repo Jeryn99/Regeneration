@@ -18,7 +18,7 @@
   | Credit | Contribution |
   | --- | --- |
   <a href="https://twitter.com/Suff1999">Suff</a> | Code
-  <a href="#">HoldYourWaffle</a> | Code
+  <a href="https://github.com/HoldYourWaffle">HoldYourWaffle</a> | Code
   <a href="https://twitter.com/nictogen">Nictogen</a> | Code
   <a href="https://twitter.com/50ap5ud5">50ap5ud5</a> | Code
   <a href="https://twitter.com/TheConnorDawn">Connor Dawn</a> | Ideas & Sounds
