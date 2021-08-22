@@ -15,9 +15,10 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 public class TimelordHeadLayer extends RenderLayer<TimelordEntity, HumanoidModel<TimelordEntity>> {
     private static final PlayerModel<TimelordEntity> entitymodel = new PlayerModel<>(-0.25F, true);
 
-    public TimelordHeadLayer(RenderLayerParent<TimelordEntity, HumanoidModel<TimelordEntity>> entityRendererIn) {
-        super(entityRendererIn);
+    public TimelordHeadLayer(RenderLayerParent<TimelordEntity, HumanoidModel<TimelordEntity>> p_117346_) {
+        super(p_117346_);
     }
+
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, TimelordEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {

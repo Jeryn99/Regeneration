@@ -11,12 +11,15 @@ import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.config.RegenConfig;
+import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.ArrowLayer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
@@ -37,23 +40,24 @@ import java.util.UUID;
  * Created by Swirtzly
  * on 03/05/2020 @ 19:02
  */
-public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, HumanoidModel<TimelordEntity>> {
+public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, EntityModel<TimelordEntity>> {
 
-    public static EntityModel<TimelordEntity> mainModel = new TimelordModel();
-    public static EntityModel<TimelordEntity> councilModel = new TimelordModel();
-    public static EntityModel<TimelordEntity> guardModel = new TimelordGuardModel();
+    public static ModelPart mainModel;
+    public static ModelPart councilModel = new TimelordModel();
+    public static ModelPart guardModel = new TimelordGuardModel();
 
     public static HashMap<UUID, ResourceLocation> TIMELORDS = new HashMap<>();
 
-    public TimelordRenderer(EntityRenderDispatcher entityRendererManager) {
-        super(entityRendererManager, new HumanoidModel(1), 0.1F);
+    public TimelordRenderer(EntityRendererProvider.Context entityRendererManager) {
+        super(entityRendererManager, new TimelordModel(Minecraft.getInstance().getEntityModels().bakeLayer(ClientUtil.TIMELORD)), 0.1F);
+        councilModel = Minecraft.getInstance().getEntityModels().bakeLayer(ClientUtil.TIMELORD);
+        guardModel = Minecraft.getInstance().getEntityModels().bakeLayer(ClientUtil.TIMELORD);
+        mainModel = councilModel;
         addLayer(new RenderRegenLayer(this));
         addLayer(new HandLayer(this));
         addLayer(new ItemInHandLayer<>(this));
-        addLayer(new ArrowLayer(this));
+        addLayer(new ArrowLayer(entityRendererManager, this));
         addLayer(new TimelordHeadLayer(this));
-        addLayer(new CustomHeadLayer<>(this));
-        addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(0.5F), new HumanoidModel<>(1.0F)));
     }
 
 
@@ -95,7 +99,7 @@ public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, Human
                 mainModel = councilModel;
                 break;
         }
-        model = (HumanoidModel<TimelordEntity>) mainModel;
+        model = mainModel;
         model.head.visible = false;
         model.hat.visible = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
 

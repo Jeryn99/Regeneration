@@ -12,6 +12,8 @@ import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
 import me.suff.mc.regen.client.rendering.layers.HandLayer;
 import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
+import me.suff.mc.regen.client.rendering.model.TimelordGuardModel;
+import me.suff.mc.regen.client.rendering.model.TimelordModel;
 import me.suff.mc.regen.client.rendering.model.armor.GuardModel;
 import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.client.rendering.transitions.*;
@@ -32,6 +34,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -41,6 +44,7 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -175,7 +179,6 @@ public class ClientUtil {
     }
 
     public static void doClientStuff() {
-        renderLayers();
         clientRenders();
         itemPredicates();
         setupTabs();
@@ -184,6 +187,16 @@ public class ClientUtil {
         RKeybinds.init();
         ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
         Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).color(), RItems.ELIXIR.get());
+    }
+
+    public static ModelLayerLocation TIMELORD = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "timelord"), "council");
+    public static ModelLayerLocation TIMELORD_GUARD = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "timelord"), "guard");
+
+    @SubscribeEvent
+    public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event)
+    {
+        event.registerLayerDefinition(TIMELORD, TimelordModel::getModelData);
+        event.registerLayerDefinition(TIMELORD_GUARD, TimelordGuardModel::getModelData);
     }
 
     private static void transitionTypes() {
@@ -295,24 +308,4 @@ public class ClientUtil {
         }
     }
 
-    public static void renderSky(PoseStack matrixStackIn) {
-        if (Minecraft.getInstance().level == null || matrixStackIn == null) return;
-      /*  if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension()== RConstants.GALLIFREY) {
-            float scale = 30.0F;
-            BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
-            matrixStackIn.pushPose();
-            matrixStackIn.scale(5, 5, 5);
-            matrixStackIn.translate(22, 22, -22);
-            Matrix4f matrix4f1 = matrixStackIn.last().pose();
-            Minecraft.getInstance().getTextureManager().bind(SUN_TEXTURES);
-            bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-            bufferbuilder.vertex(matrix4f1, -scale, 100.0F, -scale).uv(0.0F, 0.0F).endVertex();
-            bufferbuilder.vertex(matrix4f1, scale, 100.0F, -scale).uv(1.0F, 0.0F).endVertex();
-            bufferbuilder.vertex(matrix4f1, scale, 100.0F, scale).uv(1.0F, 1.0F).endVertex();
-            bufferbuilder.vertex(matrix4f1, -scale, 100.0F, scale).uv(0.0F, 1.0F).endVertex();
-            matrixStackIn.popPose();
-            bufferbuilder.end();
-            WorldVertexBufferUploader.end(bufferbuilder);
-        }*/
-    }
 }
