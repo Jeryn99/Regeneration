@@ -33,6 +33,9 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,15 +84,19 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
-            addWidget(button);
+            addRenderableWidget(button);
         }
         int buttonOffset = 35;
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
         final int btnW = 55, btnH = 18;
         position = 0;
-        skins = CommonSkin.listAllSkins(currentSkinType);
-
+        skins = CommonSkin.listAllSkins(PlayerUtil.SkinType.EITHER);
+        try {
+            getHash();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (skins.isEmpty()) {
             Minecraft.getInstance().setScreen(new RErrorScreen(new TranslatableComponent("No Skins for " + new TranslatableComponent("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), new TranslatableComponent("Please place skins in the local Directory")));
         }
@@ -185,15 +192,15 @@ public class IncarnationScreen extends AbstractContainerScreen {
                 updateModels();
             }
         });
-        this.addWidget(this.excludeTrending);
+        this.addRenderableWidget(this.excludeTrending);
 
-        addWidget(btnNext);
-        addWidget(btnPrevious);
-        addWidget(btnOpenFolder);
-        addWidget(btnBack);
-        addWidget(btnSave);
-        addWidget(btnResetSkin);
-        addWidget(this.uploadToMcBtn);
+        addRenderableWidget(btnNext);
+        addRenderableWidget(btnPrevious);
+        addRenderableWidget(btnOpenFolder);
+        addRenderableWidget(btnBack);
+        addRenderableWidget(btnSave);
+        addRenderableWidget(btnResetSkin);
+        addRenderableWidget(this.uploadToMcBtn);
 
         for (Widget widget : renderables) {
             if (widget instanceof DescButton) {
@@ -226,7 +233,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         if (!skins.isEmpty() && position < skins.size()) {
             matrixStack.pushPose();
             String name = skins.get(position).getName().replaceAll(".png", "");
-            renderWidthScaledText(name, matrixStack, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 100);
+            renderWidthScaledText(name + skins.get(position), matrixStack, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 100);
             matrixStack.popPose();
         }
 
@@ -245,6 +252,24 @@ public class IncarnationScreen extends AbstractContainerScreen {
         SkinHandler.setPlayerSkin(Minecraft.getInstance().player, backup);
         SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         matrixStack.popPose();
+    }
+
+
+    public static void getHash() throws IOException {
+        StringBuilder end = new StringBuilder();
+        for (File file : skins) {
+            if (!file.getName().startsWith("mk_")) {
+                String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(new FileInputStream(file));
+
+                String md5Line = "\n&quot;" + md5 + "&quot;:{";
+                String authorLine = "\n&quot;author&quot;:&quot;" + "author_here" + "&quot;";
+                String nameLine = "\n&quot;name&quot;:&quot;" + file.getName() + "&quot;}\n";
+
+                String line = md5Line+authorLine+nameLine;
+                end.append(line);
+            }
+        }
+        System.out.println(end);
     }
 
     @Override

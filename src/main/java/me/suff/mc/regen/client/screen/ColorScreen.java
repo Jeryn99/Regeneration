@@ -39,7 +39,7 @@ public class ColorScreen extends AbstractContainerScreen {
         super.init();
         TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
-            addWidget(button);
+            addRenderableWidget(button);
         }
         int cx = (width - imageWidth) / 2;
         int cy = (height - imageHeight) / 2;
@@ -54,7 +54,7 @@ public class ColorScreen extends AbstractContainerScreen {
 
 
         // Reset Style Button
-        this.addWidget(new Button(cx + 100, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.undo"), button -> {
+        this.addRenderableWidget(new Button(cx + 100, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.undo"), button -> {
             Color primaryColour = new Color((float) initialPrimary.x, (float) initialPrimary.y, (float) initialPrimary.z);
             Color secondaryColour = new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z);
             colorChooserPrimary.setColor(primaryColour.getRGB());
@@ -63,10 +63,10 @@ public class ColorScreen extends AbstractContainerScreen {
         }));
 
         // Close Button
-        this.addWidget(new Button(cx + 25, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
+        this.addRenderableWidget(new Button(cx + 25, cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.back"), button -> Minecraft.getInstance().setScreen(new PreferencesScreen())));
 
         // Default Button
-        this.addWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.default"), button -> {
+        this.addRenderableWidget(new Button(cx + (90 * 2), cy + 145, btnW, btnH + 2, new TranslatableComponent("regen.gui.default"), button -> {
             RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> {
                 TransitionType regenType = data.transitionType();
                 Vec3 primColor = regenType.getDefaultPrimaryColor();
@@ -84,8 +84,8 @@ public class ColorScreen extends AbstractContainerScreen {
 
         colorChooserSecondary = new ColorWidget(font, cx + 150, cy + 35, 70, 20, new TextComponent("Regen"), new Color((float) initialSecondary.x, (float) initialSecondary.y, (float) initialSecondary.z).getRGB(), p_onPress_1_ -> updateScreenAndServer());
 
-        addWidget(colorChooserPrimary);
-        addWidget(colorChooserSecondary);
+        addRenderableWidget(colorChooserPrimary);
+        addRenderableWidget(colorChooserSecondary);
     }
 
     @Override

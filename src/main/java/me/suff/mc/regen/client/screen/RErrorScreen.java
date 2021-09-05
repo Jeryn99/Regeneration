@@ -25,7 +25,7 @@ public class RErrorScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.addWidget(new Button(this.width / 2 - 100, 140, 200, 20, new TranslatableComponent("button.tooltip.open_folder"), (p_213034_1_) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 100, 140, 200, 20, new TranslatableComponent("button.tooltip.open_folder"), (p_213034_1_) -> {
             Util.getPlatform().openFile(CommonSkin.SKIN_DIRECTORY);
             try {
                 CommonSkin.folderSetup();

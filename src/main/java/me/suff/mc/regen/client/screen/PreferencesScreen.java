@@ -1,5 +1,6 @@
 package me.suff.mc.regen.client.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
@@ -40,7 +41,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
         super.init();
         TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
         for (AbstractTab button : TabRegistry.tabList) {
-            addWidget(button);
+            addRenderableWidget(button);
         }
 
         int cx = (width - imageWidth) / 2;
@@ -93,19 +94,19 @@ public class PreferencesScreen extends AbstractContainerScreen {
             Minecraft.getInstance().setScreen(new IncarnationScreen());
         });
 
-        addWidget(btnRegenType);
-        addWidget(btnSkinChoice);
-        addWidget(btnClose);
-        addWidget(btnColor);
-        addWidget(btnSkinType);
-        addWidget(btnScheme);
+        addRenderableWidget(btnRegenType);
+        addRenderableWidget(btnSkinChoice);
+        addRenderableWidget(btnClose);
+        addRenderableWidget(btnColor);
+        addRenderableWidget(btnSkinType);
+        addRenderableWidget(btnScheme);
 
         transitionType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).transitionType();
     }
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        Minecraft.getInstance().getTextureManager().bindForSetup(screenBackground);
+        RenderSystem.setShaderTexture(0,screenBackground);
         IRegen data = RegenCap.get(Minecraft.getInstance().player).orElseGet(null);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int cx = (width - imageWidth) / 2;

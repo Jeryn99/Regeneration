@@ -198,7 +198,7 @@ minecraft.runs.all {
 }
 afterEvaluate {
     def reobfTsrgFile = file("${tasks.reobfJar.temporaryDir}/mixins.tsrg")
-    def refMapFile = file("${tasks.compileJava.temporaryDir}/mixins.regen.refmap.json")
+    def refMapFile = file("${tasks.compileJava.temporaryDir}/regen.refmap.json")
     configurations.compileClasspath.resolvedConfiguration.firstLevelModuleDependencies.each { dep ->
         dependencies.annotationProcessor([group: dep.moduleGroup, name: dep.moduleName, version: dep.moduleVersion])
     }
