@@ -30,6 +30,6 @@ public class ClothingItem extends ArmorItem {
 
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        super.initializeClient((Consumer<IItemRenderProperties>) new ClothingItemRendering());
+        consumer.accept(new ClothingItemRendering());
     }
 }

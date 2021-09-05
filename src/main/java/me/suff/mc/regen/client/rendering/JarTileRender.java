@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -38,6 +39,9 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
     AlexArmModel alexArmModel = new AlexArmModel();
     EntityModel mainModel = new AlexArmModel();
 
+    public JarTileRender(BlockEntityRendererProvider.Context context) {
+
+    }
 
     @Override
     public void render(BioContainerBlockEntity tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {

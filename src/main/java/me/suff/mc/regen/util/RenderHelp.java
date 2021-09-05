@@ -7,13 +7,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class RenderHelp {
 
     private static final ResourceLocation VIG = new ResourceLocation("regen:textures/vignette.png");
+    private static int screenWidth, screenHeight;
 
     public static void renderFilledBox(Matrix4f matrix, VertexConsumer builder, AABB boundingBox, float red, float green, float blue, float alpha, int combinedLightIn) {
         renderFilledBox(matrix, builder, (float) boundingBox.minX, (float) boundingBox.minY, (float) boundingBox.minZ, (float) boundingBox.maxX, (float) boundingBox.maxY, (float) boundingBox.maxZ, red, green, blue, alpha, combinedLightIn);
@@ -67,28 +73,35 @@ public class RenderHelp {
     }
 
     public static void renderVig(Vec3 vector3d, float alpha) {
+        screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+
+            float f1 =0.2F;//TODO Look back at GUI
+            f1 = Mth.clamp(f1, 0.0F, 1.0F);
+            RenderSystem.setShaderColor(f1, f1, f1, 1.0F);
+
         RenderSystem.setShaderColor((float) vector3d.x, (float) vector3d.y, (float) vector3d.z, alpha);
-       //TODO  RenderSystem.disableAlphaTest();
-        Minecraft.getInstance().getTextureManager().bindForSetup(VIG);
-        Window scaledRes = Minecraft.getInstance().getWindow();
-        int z = -89; // below the HUD
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuilder();
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, VIG);
+
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferbuilder.vertex(0, scaledRes.getGuiScaledHeight(), z).uv(0, 1).endVertex();
-        bufferbuilder.vertex(scaledRes.getGuiScaledWidth(), scaledRes.getGuiScaledHeight(), z).uv(1.0F, 1.0F).endVertex();
-        bufferbuilder.vertex(scaledRes.getGuiScaledWidth(), 0, z).uv(1, 0).endVertex();
-        bufferbuilder.vertex(0, 0, z).uv(0, 0).endVertex();
-        tessellator.end();
+        bufferbuilder.vertex(0.0D, screenHeight, -90.0D).uv(0.0F, 1.0F).endVertex();
+        bufferbuilder.vertex(screenWidth, screenHeight, -90.0D).uv(1.0F, 1.0F).endVertex();
+        bufferbuilder.vertex(screenWidth, 0.0D, -90.0D).uv(1.0F, 0.0F).endVertex();
+        bufferbuilder.vertex(0.0D, 0.0D, -90.0D).uv(0.0F, 0.0F).endVertex();
+        tesselator.end();
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
-      //TODO  RenderSystem.enableAlphaTest();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.defaultBlendFunc();
     }
+
 
     public static void drawRect(int left, int top, int right, int bottom, float red, float green, float blue, float alpha) {
         if (left < right) {

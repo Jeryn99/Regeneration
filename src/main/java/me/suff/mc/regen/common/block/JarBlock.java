@@ -40,7 +40,8 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty IS_OPEN = BooleanProperty.create("is_open");
 
-    public static final VoxelShape NORTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_180);
+    //TODO Some strange issue: "The min values need to be smaller or equals to the max values"
+/*    public static final VoxelShape NORTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_180);
     public static final VoxelShape EAST = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.COUNTERCLOCKWISE_90);
     public static final VoxelShape SOUTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.NONE);
     public static final VoxelShape WEST = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_90);
@@ -48,7 +49,7 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
     public static final VoxelShape NORTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.CLOCKWISE_180);
     public static final VoxelShape EAST_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.COUNTERCLOCKWISE_90);
     public static final VoxelShape SOUTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.NONE);
-    public static final VoxelShape WEST_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.CLOCKWISE_90);
+    public static final VoxelShape WEST_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.CLOCKWISE_90);*/
 
 
     public JarBlock() {
@@ -58,7 +59,7 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        if (state.getValue(IS_OPEN)) {
+       /* if (state.getValue(IS_OPEN)) {
             switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
                 case EAST:
                     return EAST_OPEN;
@@ -79,7 +80,8 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
                 return WEST;
             default:
                 return NORTH;
-        }
+        }*/
+        return super.getShape(state, worldIn, pos, context);
     }
 
 

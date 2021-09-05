@@ -17,12 +17,12 @@ import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
@@ -237,12 +237,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private void renderSkinToGui(PoseStack matrixStack, int x, int y) {
         matrixStack.pushPose();
         LocalPlayer player = Minecraft.getInstance().player;
-      //TODO  ResourceLocation backup = player.playerInfo.getSkinLocation();
+        ResourceLocation backup = ClientUtil.getPlayerInfo(player).getSkinLocation();
         boolean backupSkinType = ClientUtil.isAlex(player);
         SkinHandler.setPlayerSkin(Minecraft.getInstance().player, currentTexture);
         SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
         InventoryScreen.renderEntityInInventory(width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - x, (float) (topPos + 75 - 25) - y, Minecraft.getInstance().player);
-      //TODO ^^  SkinHandler.setPlayerSkin(Minecraft.getInstance().player, backup);
+        SkinHandler.setPlayerSkin(Minecraft.getInstance().player, backup);
         SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         matrixStack.popPose();
     }

@@ -30,7 +30,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
     private static PlayerUtil.SkinType skinType = RegenCap.get(Minecraft.getInstance().player).orElseGet(null).preferredModel();
 
     public PreferencesScreen() {
-        super(new BlankContainer(), null, new TranslatableComponent("Regeneration"));
+        super(new BlankContainer(), Minecraft.getInstance().player.getInventory(), new TranslatableComponent("Regeneration"));
         imageWidth = 256;
         imageHeight = 173;
     }

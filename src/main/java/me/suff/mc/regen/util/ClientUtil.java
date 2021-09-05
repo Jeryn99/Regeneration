@@ -42,6 +42,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -64,6 +65,8 @@ import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -182,10 +185,9 @@ public class ClientUtil {
     }
 
     public static void doClientStuff() {
-        clientRenders();
         itemPredicates();
         setupTabs();
-        clothingModels();
+        //TODO clothingModels();
         transitionTypes();
         RKeybinds.init();
         ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
@@ -286,14 +288,6 @@ public class ClientUtil {
         SoundReverb.addReloader();
     }
 
-    private static void clientRenders() {
-  //TODO
-        /*      ClientRegistry.bindTileEntityRenderer(RTiles.HAND_JAR.get(), JarTileRender::new);
-        RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(REntities.LASER.get(), RenderLaser::new);
-        RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);*/
-    }
-
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, pitch, volume));
     }
@@ -313,7 +307,6 @@ public class ClientUtil {
     }
 
     public static PlayerInfo getPlayerInfo(AbstractClientPlayer player) {
-        MixinPlayerInfo mixin = (MixinPlayerInfo) player;
-        return mixin.getPlayerInfo();
+        return ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, "playerInfo");
     }
 }

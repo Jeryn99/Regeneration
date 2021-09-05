@@ -166,7 +166,7 @@ public class ClientEvents {
 
             handleGunCrosshair(event, player, cap);
 
-            if (event.getType() != RenderGameOverlayEvent.ElementType.LAYER) return;
+           // if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
 
             if (cap.regenState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
                 event.setCanceled(true);

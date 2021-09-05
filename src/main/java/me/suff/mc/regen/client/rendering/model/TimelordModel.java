@@ -21,9 +21,9 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
     private final ModelPart LeftArm;
     private final ModelPart RightLeg;
     private final ModelPart LeftLeg;
-    private final ModelPart Cape;
+   // private final ModelPart Cape;
 
-
+//TODO Cape missing, Angela may have given me a old model
     public TimelordModel(ModelPart root) {
         super(Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.PLAYER_SLIM), true);
         Head = root.getChild("Head");
@@ -33,7 +33,7 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
         LeftArm = root.getChild("LeftArm");
         RightLeg = root.getChild("RightLeg");
         LeftLeg = root.getChild("LeftLeg");
-        Cape = root.getChild("Cape");
+      //  Cape = Body.getChild("Cape");
     }
 
     public static LayerDefinition getModelData() {
@@ -80,7 +80,7 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
 
     @Override
     public void renderCloak(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn) {
-        this.Cape.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
+       // this.Cape.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
     }
 
     @Override

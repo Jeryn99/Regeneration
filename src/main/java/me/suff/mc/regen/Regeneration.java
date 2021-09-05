@@ -2,6 +2,9 @@ package me.suff.mc.regen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.suff.mc.regen.client.rendering.entity.RenderLaser;
+import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
+import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.objects.*;
@@ -22,6 +25,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.worldgen.biome.BiomeReport;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -90,6 +94,12 @@ public class Regeneration {
         TriggerManager.init();
     }
 
+    @SubscribeEvent
+    public void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(REntities.TIMELORD.get(), TimelordRenderer::new);
+        event.registerEntityRenderer(REntities.WATCHER.get(), WatcherRenderer::new);
+        event.registerEntityRenderer(REntities.LASER.get(), RenderLaser::new);
+    }
 
 
     @SubscribeEvent

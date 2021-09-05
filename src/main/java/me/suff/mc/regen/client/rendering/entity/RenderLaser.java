@@ -18,7 +18,7 @@ import net.minecraft.world.phys.Vec3;
 public class RenderLaser extends EntityRenderer<LaserProjectile> {
 
 
-    protected RenderLaser(EntityRendererProvider.Context p_174008_) {
+    public RenderLaser(EntityRendererProvider.Context p_174008_) {
         super(p_174008_);
     }
 
