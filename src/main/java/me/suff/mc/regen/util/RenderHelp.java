@@ -4,10 +4,7 @@ package me.suff.mc.regen.util;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -75,13 +72,13 @@ public class RenderHelp {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
                 GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor((float) vector3d.x, (float) vector3d.y, (float) vector3d.z, alpha);
-        RenderSystem.disableAlphaTest();
+       //TODO  RenderSystem.disableAlphaTest();
         Minecraft.getInstance().getTextureManager().bindForSetup(VIG);
         Window scaledRes = Minecraft.getInstance().getWindow();
         int z = -89; // below the HUD
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
-        bufferbuilder.begin(7, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         bufferbuilder.vertex(0, scaledRes.getGuiScaledHeight(), z).uv(0, 1).endVertex();
         bufferbuilder.vertex(scaledRes.getGuiScaledWidth(), scaledRes.getGuiScaledHeight(), z).uv(1.0F, 1.0F).endVertex();
         bufferbuilder.vertex(scaledRes.getGuiScaledWidth(), 0, z).uv(1, 0).endVertex();
@@ -89,7 +86,7 @@ public class RenderHelp {
         tessellator.end();
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
-        RenderSystem.enableAlphaTest();
+      //TODO  RenderSystem.enableAlphaTest();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
@@ -112,7 +109,7 @@ public class RenderHelp {
         RenderSystem.disableTexture();
         RenderSystem.blendFuncSeparate(770, 771, 1, 0);
         RenderSystem.setShaderColor(red, green, blue, alpha);
-        bufferBuilder.begin(7, DefaultVertexFormat.POSITION);
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
         bufferBuilder.vertex(left, bottom, 0.0D).endVertex();
         bufferBuilder.vertex(right, bottom, 0.0D).endVertex();
         bufferBuilder.vertex(right, top, 0.0D).endVertex();

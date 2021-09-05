@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SkinMessage;
+import me.suff.mc.regen.util.ClientUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -65,19 +67,22 @@ public class SkinHandler {
     }
 
     public static boolean getUnmodifiedSkinType(AbstractClientPlayer abstractClientPlayerEntity) {
-        if (abstractClientPlayerEntity.playerInfo == null) return false;
-        abstractClientPlayerEntity.playerInfo.registerTextures();
-        if (abstractClientPlayerEntity.playerInfo.getModelName() == null) {
+        if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity) == null) return false;
+
+        PlayerInfo info = ClientUtil.getPlayerInfo(abstractClientPlayerEntity);
+
+        info.registerTextures();
+        if (info.getModelName() == null) {
             return false;
         }
-        if (abstractClientPlayerEntity.playerInfo.getModelName().isEmpty()) {
+        if (info.getModelName().isEmpty()) {
             return false;
         }
-        return abstractClientPlayerEntity.playerInfo.getModelName().contentEquals("slim");
+        return info.getModelName().contentEquals("slim");
     }
 
     public static void setPlayerSkinType(AbstractClientPlayer player, boolean isAlex) {
-        PlayerInfo playerInfo = player.playerInfo;
+        PlayerInfo playerInfo = ClientUtil.getPlayerInfo(player);
         if (playerInfo == null) return;
         playerInfo.skinModel = isAlex ? "slim" : "default";
     }
@@ -85,8 +90,9 @@ public class SkinHandler {
     public static void sendResetMessage() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            player.playerInfo.registerTextures();
-            boolean isAlex = player.playerInfo.getModelName().equals("slim");
+            PlayerInfo info = ClientUtil.getPlayerInfo(player);
+            info.registerTextures();
+            boolean isAlex = info.getModelName().equals("slim");
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(new byte[0], isAlex));
         }
     }
@@ -109,7 +115,7 @@ public class SkinHandler {
         if (player.getSkinTextureLocation().equals(texture)) {
             return;
         }
-        PlayerInfo playerInfo = player.playerInfo;
+        PlayerInfo playerInfo = ClientUtil.getPlayerInfo(player);
         if (playerInfo == null) return;
         Map<MinecraftProfileTexture.Type, ResourceLocation> playerTextures = playerInfo.textureLocations;
         playerTextures.put(MinecraftProfileTexture.Type.SKIN, texture);
@@ -135,8 +141,10 @@ public class SkinHandler {
         if (PLAYER_SKINS.containsKey(uuid)) {
             return PLAYER_SKINS.get(uuid);
         }
-        if (playerEntity.playerInfo != null) {
-            PlayerInfo info = playerEntity.playerInfo;
+
+        PlayerInfo info = ClientUtil.getPlayerInfo(playerEntity);
+
+        if (info != null) {
             info.pendingTextures = false;
             info.registerTextures();
             return MoreObjects.firstNonNull(info.textureLocations.get(MinecraftProfileTexture.Type.SKIN), DefaultPlayerSkin.getDefaultSkin(info.profile.getId()));

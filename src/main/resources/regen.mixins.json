@@ -4,7 +4,7 @@
   "refmap": "regen.refmap.json",
   "client": [
     "BipedBodyMixin",
-    "MakeTheSunMixin",
+    "MixinPlayerInfo",
     "RenderPlayerMixin",
     "SoundSourceMixin"
   ],

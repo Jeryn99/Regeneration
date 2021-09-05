@@ -8,9 +8,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.*;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.RangeDecoratorConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import net.minecraftforge.fmllegacy.RegistryObject;
@@ -24,12 +26,11 @@ public class RStructures {
 
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, RConstants.MODID);
     public static final RegistryObject<Feature<OreConfiguration>> ZINC = FEATURES.register("zinc", () -> new OreFeature(OreConfiguration.CODEC));
-
     public static ConfiguredFeature<?, ?> GAl_ORE = null;
 
     public static void registerConfiguredFeatures() {
-
-        GAl_ORE = ZINC.get().configured(new OreConfiguration(OreConfiguration.Predicates.NATURAL_STONE, RBlocks.ZINC_ORE.get().defaultBlockState(), 9)).range(32).squared().chance(2);
+        final ImmutableList<OreConfiguration.TargetBlockState> ZINC_TARGET = ImmutableList.of(OreConfiguration.target(OreConfiguration.Predicates.STONE_ORE_REPLACEABLES, RBlocks.ZINC_ORE.get().defaultBlockState()), OreConfiguration.target(OreConfiguration.Predicates.DEEPSLATE_ORE_REPLACEABLES, RBlocks.ZINC_ORE.get().defaultBlockState()));
+        GAl_ORE = ZINC.get().configured(new OreConfiguration(ZINC_TARGET, 9)).count(2).rangeUniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(63)).squared().count(20);
         registerConfiguredFeature("zinc", GAl_ORE);
     }
 

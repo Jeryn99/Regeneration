@@ -4,8 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.common.entities.TimelordEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -13,16 +16,17 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 public class TimelordHeadLayer extends RenderLayer<TimelordEntity, HumanoidModel<TimelordEntity>> {
-    private static final PlayerModel<TimelordEntity> entitymodel = new PlayerModel<>(-0.25F, true);
+    private static ModelPart entitymodel = null;
 
     public TimelordHeadLayer(RenderLayerParent<TimelordEntity, HumanoidModel<TimelordEntity>> p_117346_) {
         super(p_117346_);
+        entitymodel = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.PLAYER_SLIM);
     }
 
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, TimelordEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        entitymodel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
+        /*entitymodel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
         entitymodel.setAllVisible(false);
         entitymodel.head.visible = true;
         entitymodel.hat.visible = true;
@@ -50,5 +54,6 @@ public class TimelordHeadLayer extends RenderLayer<TimelordEntity, HumanoidModel
         }
 
         entitymodel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1.0F);
-    }
+    */
+    }    //TODO
 }

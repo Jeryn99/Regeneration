@@ -4,10 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.entities.WatcherEntity;
 import me.suff.mc.regen.util.RConstants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
@@ -17,9 +21,10 @@ public class WatcherRenderer extends HumanoidMobRenderer<WatcherEntity, PlayerMo
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(RConstants.MODID, "textures/entity/watcher.png");
 
-    public WatcherRenderer(EntityRenderDispatcher renderManagerIn) {
-        super(renderManagerIn, new PlayerModel<>(0.5F, true), 0);
+    public WatcherRenderer(EntityRendererProvider.Context p_174169_, PlayerModel<WatcherEntity> p_174170_, float p_174171_) {
+        super(p_174169_, p_174170_, p_174171_);
     }
+
 
     @Override
     public void render(WatcherEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {

@@ -36,7 +36,7 @@ public class PlayerUtil {
     public static void setupPotions() {
         if (!RegenConfig.COMMON.postRegenEffects.get().isEmpty()) {
             for (String name : RegenConfig.COMMON.postRegenEffects.get()) {
-                for (MobEffect effect : ForgeRegistries.POTIONS.getValues()) {
+                for (MobEffect effect : ForgeRegistries.MOB_EFFECTS.getValues()) {
                     if (name.contentEquals(effect.getRegistryName().toString())) {
                         POTIONS.add(effect);
                     }

@@ -17,10 +17,9 @@ import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.PlayerModel;
@@ -109,7 +108,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
             Collections.sort(skins);
             updateModels();
         });
-        this.children.add(this.searchField);
+        this.renderables.add(this.searchField);
         this.setInitialFocus(this.searchField);
 
         uploadToMcBtn = new DescButton(cx + 10, cy + 105, btnW * 2 + 5, btnH + 2, new TranslatableComponent("Upload to Minecraft"), button -> {
@@ -196,7 +195,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         addWidget(btnResetSkin);
         addWidget(this.uploadToMcBtn);
 
-        for (AbstractWidget widget : buttons) {
+        for (Widget widget : renderables) {
             if (widget instanceof DescButton) {
                 descButtons.add((DescButton) widget);
             }
@@ -238,12 +237,12 @@ public class IncarnationScreen extends AbstractContainerScreen {
     private void renderSkinToGui(PoseStack matrixStack, int x, int y) {
         matrixStack.pushPose();
         LocalPlayer player = Minecraft.getInstance().player;
-        ResourceLocation backup = player.playerInfo.getSkinLocation();
+      //TODO  ResourceLocation backup = player.playerInfo.getSkinLocation();
         boolean backupSkinType = ClientUtil.isAlex(player);
         SkinHandler.setPlayerSkin(Minecraft.getInstance().player, currentTexture);
         SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, renderChoice == PlayerUtil.SkinType.ALEX);
         InventoryScreen.renderEntityInInventory(width / 2 + 60, height / 2 + 20, 45, (float) (leftPos + 170) - x, (float) (topPos + 75 - 25) - y, Minecraft.getInstance().player);
-        SkinHandler.setPlayerSkin(Minecraft.getInstance().player, backup);
+      //TODO ^^  SkinHandler.setPlayerSkin(Minecraft.getInstance().player, backup);
         SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         matrixStack.popPose();
     }

@@ -17,6 +17,7 @@ import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.DownloadSkinsThread;
 import me.suff.mc.regen.util.PlayerUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.worldgen.biome.BiomeReport;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
@@ -24,6 +25,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -80,13 +82,20 @@ public class Regeneration {
             RStructures.registerConfiguredFeatures();
         });
 
-        CapabilityManager.INSTANCE.register(IRegen.class);
+
+        CapabilityManager.INSTANCE.register(IRegen.class); //TODO Update
         ActingForwarder.init();
-        DefaultAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
-        DefaultAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
         DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
         RSoundSchemes.init();
         TriggerManager.init();
+    }
+
+
+
+    @SubscribeEvent
+    public static void onAttributes(EntityAttributeCreationEvent attributeCreationEvent){
+        attributeCreationEvent.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
+        attributeCreationEvent.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

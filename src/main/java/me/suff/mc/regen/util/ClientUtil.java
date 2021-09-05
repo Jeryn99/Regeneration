@@ -25,6 +25,7 @@ import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.config.RegenConfig;
+import me.suff.mc.regen.mixin.MixinPlayerInfo;
 import me.suff.mc.regen.util.sound.MovingSound;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
@@ -37,6 +38,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -134,17 +136,18 @@ public class ClientUtil {
     public static boolean isAlex(Entity livingEntity) {
         if (livingEntity instanceof AbstractClientPlayer) {
             AbstractClientPlayer abstractClientPlayerEntity = (AbstractClientPlayer) livingEntity;
-            if (abstractClientPlayerEntity.playerInfo.skinModel.isEmpty()) {
+            if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity).skinModel.isEmpty()) {
                 return false;
             }
 
-            return Objects.equals(abstractClientPlayerEntity.playerInfo.skinModel, "slim");
+            return Objects.equals(ClientUtil.getPlayerInfo(abstractClientPlayerEntity).skinModel, "slim");
         }
         return false;
     }
 
     public static void clothingModels() {
-        RobesModel robesHead = new RobesModel(EquipmentSlot.HEAD);
+  //TODO
+      /*  RobesModel robesHead = new RobesModel(EquipmentSlot.HEAD);
         RobesModel robesChest = new RobesModel(EquipmentSlot.CHEST);
         RobesModel robesLegs = new RobesModel(EquipmentSlot.LEGS);
         RobesModel robesFeet = new RobesModel(EquipmentSlot.FEET);
@@ -157,7 +160,7 @@ public class ClientUtil {
         ARMOR_MODELS.put(RItems.F_ROBES_LEGS.get(), robesLegs);
         ARMOR_MODELS.put(RItems.M_ROBES_LEGS.get(), robesLegs);
         ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);
-
+*/
         HumanoidModel<?> guardHead = new GuardModel(EquipmentSlot.HEAD);
         HumanoidModel<?> guardChest = new GuardModel(EquipmentSlot.CHEST);
         HumanoidModel<?> guardLegs = new GuardModel(EquipmentSlot.LEGS);
@@ -284,10 +287,11 @@ public class ClientUtil {
     }
 
     private static void clientRenders() {
-        ClientRegistry.bindTileEntityRenderer(RTiles.HAND_JAR.get(), JarTileRender::new);
+  //TODO
+        /*      ClientRegistry.bindTileEntityRenderer(RTiles.HAND_JAR.get(), JarTileRender::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.TIMELORD.get(), TimelordRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(REntities.LASER.get(), RenderLaser::new);
-        RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(REntities.WATCHER.get(), WatcherRenderer::new);*/
     }
 
     public static void playPositionedSoundRecord(SoundEvent sound, float pitch, float volume) {
@@ -308,4 +312,8 @@ public class ClientUtil {
         }
     }
 
+    public static PlayerInfo getPlayerInfo(AbstractClientPlayer player) {
+        MixinPlayerInfo mixin = (MixinPlayerInfo) player;
+        return mixin.getPlayerInfo();
+    }
 }

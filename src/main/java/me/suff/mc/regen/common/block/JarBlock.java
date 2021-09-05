@@ -166,7 +166,7 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new BioContainerBlockEntity(RTiles.HAND_JAR.get(), blockPos, blockState);
+        return new BioContainerBlockEntity(blockPos, blockState);
     }
 
     @Nullable

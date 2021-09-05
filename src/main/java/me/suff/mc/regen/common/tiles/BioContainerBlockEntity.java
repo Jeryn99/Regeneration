@@ -5,6 +5,7 @@ import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RParticles;
 import me.suff.mc.regen.common.objects.RSounds;
+import me.suff.mc.regen.common.objects.RTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -36,8 +37,8 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     private ItemStackHandler itemHandler = createHandler();
     private LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
-    public BioContainerBlockEntity(BlockEntityType<?> p_155228_, BlockPos p_155229_, BlockState p_155230_) {
-        super(p_155228_, p_155229_, p_155230_);
+    public BioContainerBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
+        super(RTiles.HAND_JAR.get(), p_155229_, p_155230_);
     }
 
     private static void spawnParticles(Level world, BlockPos worldIn) {

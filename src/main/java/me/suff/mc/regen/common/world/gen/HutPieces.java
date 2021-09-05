@@ -8,6 +8,7 @@ import me.suff.mc.regen.util.RConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -38,44 +40,28 @@ public class HutPieces {
         int z = pos.getZ();
         BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
         BlockPos blockpos = rotationOffSet.offset(x, pos.getY(), z);
-        pieceList.add(new HutPieces.Piece(templateManager, new ResourceLocation(RConstants.MODID, "gallifrey_shack"), blockpos, rotation));
+        pieceList.add(new HutPieces.Piece(templateManager, new ResourceLocation(RConstants.MODID, "gallifrey_shack"), blockpos, rotation, 64));
     }
 
     public static class Piece extends TemplateStructurePiece {
-        private final ResourceLocation resourceLocation;
-        private final Rotation rotation;
 
-        public Piece(StructureManager templateManagerIn, ResourceLocation resourceLocationIn, BlockPos pos, Rotation rotationIn) {
-            super(RStructures.Structures.HUT_PIECE, 0);
-            this.resourceLocation = resourceLocationIn;
-            BlockPos blockpos = HutPieces.OFFSET.get(resourceLocation);
-            this.templatePosition = pos.offset(blockpos.getX(), blockpos.getY(), blockpos.getZ());
-            this.rotation = rotationIn;
-            this.setupPiece(templateManagerIn);
+        public Piece(StructureManager p_71244_, ResourceLocation p_71245_, BlockPos p_71246_, Rotation p_71247_, int p_71248_) {
+            super(RStructures.Structures.HUT_PIECE, 0, p_71244_, p_71245_, p_71245_.toString(), makeSettings(p_71247_, p_71245_), makePosition(p_71245_, p_71246_, p_71248_));
         }
 
-        public Piece(StructureManager templateManagerIn, CompoundTag tagCompound) {
-            super(RStructures.Structures.HUT_PIECE, tagCompound);
-            this.resourceLocation = new ResourceLocation(tagCompound.getString("Template"));
-            this.rotation = Rotation.valueOf(tagCompound.getString("Rot"));
-            this.setupPiece(templateManagerIn);
+        private static BlockPos makePosition(ResourceLocation p_71245_, BlockPos p_71246_, int p_71248_) {
+            return p_71246_;
         }
 
-        private void setupPiece(StructureManager templateManager) {
-            StructureTemplate template = templateManager.getOrCreate(this.resourceLocation);
-            StructurePlaceSettings placementsettings = (new StructurePlaceSettings()).setRotation(this.rotation).setMirror(Mirror.NONE);
-            this.setup(template, this.templatePosition, placementsettings);
+        public Piece(ServerLevel p_162441_, CompoundTag p_162442_) {
+            super(RStructures.Structures.HUT_PIECE, p_162442_, p_162441_, (p_162451_) -> makeSettings(Rotation.valueOf(p_162442_.getString("Rot")), p_162451_));
+
         }
 
-        /**
-         * (abstract) Helper method to read subclass data from NBT
-         */
-        @Override
-        protected void addAdditionalSaveData(CompoundTag tagCompound) {
-            super.addAdditionalSaveData(tagCompound);
-            tagCompound.putString("Template", this.resourceLocation.toString());
-            tagCompound.putString("Rot", this.rotation.name());
+        private static StructurePlaceSettings makeSettings(Rotation p_162447_, ResourceLocation p_162448_) {
+            return (new StructurePlaceSettings()).setRotation(p_162447_).setMirror(Mirror.NONE).setRotationPivot(BlockPos.ZERO).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
         }
+
 
         @Override
         protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, Random rand, BoundingBox sbb) {

@@ -37,14 +37,14 @@ import java.util.UUID;
 
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 03/05/2020 @ 19:02
  */
 public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, EntityModel<TimelordEntity>> {
 
     public static ModelPart mainModel;
-    public static ModelPart councilModel = new TimelordModel();
-    public static ModelPart guardModel = new TimelordGuardModel();
+    public static ModelPart councilModel;
+    public static ModelPart guardModel;
 
     public static HashMap<UUID, ResourceLocation> TIMELORDS = new HashMap<>();
 
@@ -55,9 +55,9 @@ public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, Entit
         mainModel = councilModel;
         addLayer(new RenderRegenLayer(this));
         addLayer(new HandLayer(this));
-        addLayer(new ItemInHandLayer<>(this));
+        //addLayer(new ItemInHandLayer<>(this));
         addLayer(new ArrowLayer(entityRendererManager, this));
-        addLayer(new TimelordHeadLayer(this));
+       // addLayer(new TimelordHeadLayer(this));
     }
 
 
@@ -92,16 +92,12 @@ public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, Entit
     @Override
     public void render(TimelordEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         switch (entityIn.getTimelordType()) {
-            case GUARD:
-                mainModel = guardModel;
-                break;
-            case COUNCIL:
-                mainModel = councilModel;
-                break;
+            case GUARD -> mainModel = guardModel;
+            case COUNCIL -> mainModel = councilModel;
         }
-        model = mainModel;
-        model.head.visible = false;
-        model.hat.visible = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
+      /*  model = mainModel;
+        model.visible = false;
+        model.hat.visible = !RegenConfig.CLIENT.renderTimelordHeadwear.get();*/
 
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }

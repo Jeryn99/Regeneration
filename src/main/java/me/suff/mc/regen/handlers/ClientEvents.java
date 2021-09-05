@@ -166,7 +166,7 @@ public class ClientEvents {
 
             handleGunCrosshair(event, player, cap);
 
-            if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
+            if (event.getType() != RenderGameOverlayEvent.ElementType.LAYER) return;
 
             if (cap.regenState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
                 event.setCanceled(true);
@@ -222,7 +222,7 @@ public class ClientEvents {
         if (viewer != null) {
             RegenCap.get((LivingEntity) viewer).ifPresent((data) -> {
                 if (data.regenState() == RegenStates.GRACE_CRIT) {
-                    GlStateManager._fogMode(GlStateManager.FogMode.EXP.value);
+                    //TODO FOG GlStateManager._fogMode(GlStateManager.FogMode.EXP.value);
                     event.setCanceled(true);
                     event.setDensity(0.10F);
                 }

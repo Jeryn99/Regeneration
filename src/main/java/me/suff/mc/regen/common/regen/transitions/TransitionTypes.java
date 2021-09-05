@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 import java.util.function.Supplier;
 
 /**
- * Created by Swirtzly
+ * Created by Craig
  * on 06/05/2020 @ 14:09
  */
 @Mod.EventBusSubscriber(modid = RConstants.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)

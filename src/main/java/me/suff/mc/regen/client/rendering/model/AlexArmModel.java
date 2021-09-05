@@ -8,16 +8,10 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.Entity;
 
 public class AlexArmModel extends EntityModel<Entity> {
-    private final ModelPart RightArm;
+    private final ModelPart RightArm = null;
 
     public AlexArmModel() {
-        texWidth = 64;
-        texHeight = 64;
 
-        RightArm = new ModelPart(this);
-        RightArm.setPos(0.0F, 18.0F, -0.5F);
-        RightArm.texOffs(40, 16).addBox(-1.5F, -6.0F, -2.0F, 3.0F, 12.0F, 4.0F, 0.0F, false);
-        RightArm.texOffs(40, 32).addBox(-1.5F, -6.0F, -2.0F, 3.0F, 12.0F, 4.0F, 0.25F, false);
     }
 
     @Override

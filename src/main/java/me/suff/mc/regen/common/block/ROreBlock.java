@@ -62,10 +62,11 @@ public class ROreBlock extends Block {
         super.attack(state, worldIn, pos, player);
     }
 
+
     @Override
-    public void stepOn(Level worldIn, BlockPos pos, Entity entityIn) {
-        activate(worldIn.getBlockState(pos), worldIn, pos);
-        super.stepOn(worldIn, pos, entityIn);
+    public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
+        activate(level.getBlockState(blockPos), level, blockPos);
+        super.stepOn(level, blockPos, blockState, entity);
     }
 
     @Override

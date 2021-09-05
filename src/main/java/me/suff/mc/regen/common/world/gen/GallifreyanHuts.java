@@ -8,6 +8,8 @@ import me.suff.mc.regen.common.objects.REntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Rotation;
@@ -58,23 +60,23 @@ public class GallifreyanHuts extends StructureFeature<ProbabilityFeatureConfigur
 
     public static class Start extends StructureStart<ProbabilityFeatureConfiguration> {
 
-        public Start(StructureFeature<ProbabilityFeatureConfiguration> structureIn, int chunkX, int chunkZ, BoundingBox mutableBoundingBox, int referenceIn, long seedIn) {
-            super(structureIn, chunkX, chunkZ, mutableBoundingBox, referenceIn, seedIn);
+
+        public Start(StructureFeature<ProbabilityFeatureConfiguration> p_163595_, ChunkPos p_163596_, int p_163597_, long p_163598_) {
+            super(p_163595_, p_163596_, p_163597_, p_163598_);
         }
 
         @Override
-        public void generatePieces(RegistryAccess dynamicRegistryManager, ChunkGenerator chunkGenerator, StructureManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, ProbabilityFeatureConfiguration config) {
-
+        public void generatePieces(RegistryAccess p_163615_, ChunkGenerator chunkGenerator, StructureManager structureManager, ChunkPos p_163618_, Biome p_163619_, ProbabilityFeatureConfiguration p_163620_, LevelHeightAccessor p_163621_) {
             Rotation rotation = Rotation.values()[this.random.nextInt(Rotation.values().length)];
-            int x = (chunkX << 4) + 7;
-            int z = (chunkZ << 4) + 7;
-            int surfaceY = chunkGenerator.getBaseHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG);
-            BlockPos blockpos = new BlockPos(x, surfaceY, z);
-            HutPieces.start(templateManagerIn, blockpos, rotation, this.pieces, this.random);
-            this.calculateBoundingBox();
+            int x = (getChunkPos().x << 4) + 7;
+            int z = (getChunkPos().z << 4) + 7;
+          //TODO Height  int surfaceY = chunkGenerator.getBaseHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG);
+            BlockPos blockpos = new BlockPos(x, 64, z);
+
+            HutPieces.start(structureManager, blockpos, rotation, this.pieces, this.random);
+            this.createBoundingBox();
             Regeneration.LOG.info("Hut at " + (blockpos.getX()) + " " + blockpos.getY() + " " + (blockpos.getZ()));
         }
-
     }
 
 }
