@@ -236,8 +236,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent e) {
-        if (e.getEntityLiving() instanceof Player) {
-            Player player = (Player) e.getEntityLiving();
+        if (e.getEntityLiving() instanceof Player player) {
             SkinHandler.PLAYER_SKINS.remove(player.getUUID());
 
             if (player.getUUID().equals(Minecraft.getInstance().player.getUUID())) {

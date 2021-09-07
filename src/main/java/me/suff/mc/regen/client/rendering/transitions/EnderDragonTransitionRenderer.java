@@ -21,7 +21,7 @@ import java.util.Random;
 public class EnderDragonTransitionRenderer implements TransitionRenderer {
     public static final EnderDragonTransitionRenderer INSTANCE = new EnderDragonTransitionRenderer();
     //Taken from vanilla
-    private static float HALF_SQRT_3 = (float) (Math.sqrt(3.0D) / 2.0D);
+    private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0D) / 2.0D);
 
     private static void vertex01(VertexConsumer iVertexBuilder, Matrix4f matrix4f, int p_229061_2_) {
         iVertexBuilder.vertex(matrix4f, 0.0F, 0.0F, 0.0F).color(255, 255, 255, p_229061_2_).endVertex();

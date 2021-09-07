@@ -5,25 +5,19 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import me.suff.mc.regen.client.rendering.layers.HandLayer;
 import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
 import me.suff.mc.regen.client.rendering.layers.TimelordHeadLayer;
-import me.suff.mc.regen.client.rendering.model.TimelordGuardModel;
+import me.suff.mc.regen.client.rendering.model.RModels;
 import me.suff.mc.regen.client.rendering.model.TimelordModel;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
-import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.ArrowLayer;
-import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
-import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
@@ -40,7 +34,7 @@ import java.util.UUID;
  * Created by Craig
  * on 03/05/2020 @ 19:02
  */
-public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, EntityModel<TimelordEntity>> {
+public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, PlayerModel<TimelordEntity>> {
 
     public static ModelPart mainModel;
     public static ModelPart councilModel;
@@ -49,15 +43,15 @@ public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, Entit
     public static HashMap<UUID, ResourceLocation> TIMELORDS = new HashMap<>();
 
     public TimelordRenderer(EntityRendererProvider.Context entityRendererManager) {
-        super(entityRendererManager, new TimelordModel(Minecraft.getInstance().getEntityModels().bakeLayer(ClientUtil.TIMELORD)), 0.1F);
-        councilModel = Minecraft.getInstance().getEntityModels().bakeLayer(ClientUtil.TIMELORD);
-        guardModel = Minecraft.getInstance().getEntityModels().bakeLayer(ClientUtil.TIMELORD);
+        super(entityRendererManager, new TimelordModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD)), 0.1F);
+        councilModel = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD);
+        guardModel = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD);
         mainModel = councilModel;
         addLayer(new RenderRegenLayer(this));
         addLayer(new HandLayer(this));
-        //addLayer(new ItemInHandLayer<>(this));
+        addLayer(new ItemInHandLayer<>(this));
         addLayer(new ArrowLayer(entityRendererManager, this));
-       // addLayer(new TimelordHeadLayer(this));
+        addLayer(new TimelordHeadLayer(this));
     }
 
 

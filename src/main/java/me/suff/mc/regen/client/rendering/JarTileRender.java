@@ -4,14 +4,16 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
-import me.suff.mc.regen.client.rendering.model.AlexArmModel;
-import me.suff.mc.regen.client.rendering.model.SteveArmModel;
+import com.mojang.math.Vector3f;
+import me.suff.mc.regen.client.rendering.model.ArmModel;
+import me.suff.mc.regen.client.rendering.model.RModels;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.tiles.BioContainerBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -35,12 +37,12 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
     private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
     public static HashMap<BioContainerBlockEntity, ResourceLocation> TEXTURES = new HashMap<>();
-    SteveArmModel steveArmModel = new SteveArmModel();
-    AlexArmModel alexArmModel = new AlexArmModel();
-    EntityModel mainModel = new AlexArmModel();
+    private final ModelPart alexArm;
+    private final ModelPart steveArm;
 
     public JarTileRender(BlockEntityRendererProvider.Context context) {
-
+        alexArm = context.bakeLayer(RModels.ARM_ALEX);
+        steveArm = context.bakeLayer(RModels.ARM_STEVE);
     }
 
     @Override
@@ -65,10 +67,11 @@ public class JarTileRender implements BlockEntityRenderer<BioContainerBlockEntit
 
         if (tileEntityIn.getHand().getItem() instanceof HandItem) {
             matrixStackIn.pushPose();
-            matrixStackIn.translate(0.5D, -0.6, 0.5D);
+            matrixStackIn.translate(0.5D, 1.5, 0.5D);
+            matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(180));
             boolean isAlex = HandItem.isAlex(tileEntityIn.getHand());
-            mainModel = isAlex ? alexArmModel : steveArmModel;
-            mainModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(getOrCreateTexture(tileEntityIn))), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+            ModelPart mainModel = isAlex ? alexArm : steveArm;
+            mainModel.render(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(getOrCreateTexture(tileEntityIn))), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
             matrixStackIn.popPose();
         } else {
             TEXTURES.remove(tileEntityIn);

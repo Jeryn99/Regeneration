@@ -119,8 +119,8 @@ public class FieryTransitionRenderer implements TransitionRenderer {
             if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.REGENERATING) {
                 if (entitylivingbaseIn instanceof TimelordEntity) return;
                 float opacity = Mth.clamp(Mth.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
-                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.endPortal()), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
-                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.endGateway()), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
+                renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.glintTranslucent()), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
+               // renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.endGateway()), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
             }
 
         });

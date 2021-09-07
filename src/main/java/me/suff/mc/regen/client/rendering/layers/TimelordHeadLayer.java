@@ -15,10 +15,10 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
-public class TimelordHeadLayer extends RenderLayer<TimelordEntity, HumanoidModel<TimelordEntity>> {
+public class TimelordHeadLayer extends RenderLayer<TimelordEntity, PlayerModel<TimelordEntity>> {
     private static ModelPart entitymodel = null;
 
-    public TimelordHeadLayer(RenderLayerParent<TimelordEntity, HumanoidModel<TimelordEntity>> p_117346_) {
+    public TimelordHeadLayer(RenderLayerParent<TimelordEntity, PlayerModel<TimelordEntity>> p_117346_) {
         super(p_117346_);
         entitymodel = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.PLAYER_SLIM);
     }

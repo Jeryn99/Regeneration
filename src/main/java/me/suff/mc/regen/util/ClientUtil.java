@@ -3,19 +3,13 @@ package me.suff.mc.regen.util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mojang.blaze3d.vertex.PoseStack;
 import me.suff.mc.regen.client.RKeybinds;
 import me.suff.mc.regen.client.rendering.JarParticle;
 import me.suff.mc.regen.client.rendering.JarTileRender;
-import me.suff.mc.regen.client.rendering.entity.RenderLaser;
-import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
-import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
 import me.suff.mc.regen.client.rendering.layers.HandLayer;
 import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
-import me.suff.mc.regen.client.rendering.model.TimelordGuardModel;
-import me.suff.mc.regen.client.rendering.model.TimelordModel;
+import me.suff.mc.regen.client.rendering.model.RModels;
 import me.suff.mc.regen.client.rendering.model.armor.GuardModel;
-import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.client.rendering.transitions.*;
 import me.suff.mc.regen.client.sound.SoundReverb;
 import me.suff.mc.regen.common.item.ElixirItem;
@@ -25,7 +19,6 @@ import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.mixin.MixinPlayerInfo;
 import me.suff.mc.regen.util.sound.MovingSound;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
@@ -35,7 +28,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -47,7 +39,6 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -65,8 +56,6 @@ import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -87,6 +76,8 @@ public class ClientUtil {
 
     private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
+
+
 
     public static ModelPart getPlayerModel(boolean slim) {
         return Minecraft.getInstance().getEntityModels().bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER);
@@ -190,18 +181,16 @@ public class ClientUtil {
         //TODO clothingModels();
         transitionTypes();
         RKeybinds.init();
+        BlockEntityRenderers.register(RTiles.HAND_JAR.get(), JarTileRender::new);
+
         ItemBlockRenderTypes.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
         Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).color(), RItems.ELIXIR.get());
     }
 
-    public static ModelLayerLocation TIMELORD = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "timelord"), "council");
-    public static ModelLayerLocation TIMELORD_GUARD = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "timelord"), "guard");
-
     @SubscribeEvent
     public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event)
     {
-        event.registerLayerDefinition(TIMELORD, TimelordModel::getModelData);
-        event.registerLayerDefinition(TIMELORD_GUARD, TimelordGuardModel::getModelData);
+        RModels.addModels(event);
     }
 
     private static void transitionTypes() {
@@ -307,6 +296,6 @@ public class ClientUtil {
     }
 
     public static PlayerInfo getPlayerInfo(AbstractClientPlayer player) {
-        return ObfuscationReflectionHelper.getPrivateValue(AbstractClientPlayer.class, player, "playerInfo");
+        return player.playerInfo;
     }
 }

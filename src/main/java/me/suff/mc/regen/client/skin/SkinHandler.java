@@ -91,6 +91,7 @@ public class SkinHandler {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             PlayerInfo info = ClientUtil.getPlayerInfo(player);
+           // if(info == null) return;
             info.registerTextures();
             boolean isAlex = info.getModelName().equals("slim");
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(new byte[0], isAlex));
