@@ -173,6 +173,7 @@ public class ClientEvents {
             }
 
             Component forceKeybind = RKeybinds.FORCE_REGEN.getKey().getDisplayName();
+            RenderHelp.renderVig(cap.getPrimaryColors(), 0.3F);
 
             switch (cap.regenState()) {
                 case GRACE:
