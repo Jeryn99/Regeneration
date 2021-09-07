@@ -28,6 +28,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -86,12 +87,15 @@ public class Regeneration {
             RStructures.registerConfiguredFeatures();
         });
 
-
-        CapabilityManager.INSTANCE.register(IRegen.class); //TODO Update
         ActingForwarder.init();
         DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
         RSoundSchemes.init();
         TriggerManager.init();
+    }
+
+    @SubscribeEvent
+    public static void onAddCaps(RegisterCapabilitiesEvent capabilitiesEvent){
+        capabilitiesEvent.register(IRegen.class);
     }
 
     @SubscribeEvent

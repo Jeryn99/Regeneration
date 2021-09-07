@@ -6,14 +6,15 @@ import me.suff.mc.regen.client.rendering.layers.HandLayer;
 import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
 import me.suff.mc.regen.client.rendering.layers.TimelordHeadLayer;
 import me.suff.mc.regen.client.rendering.model.RModels;
+import me.suff.mc.regen.client.rendering.model.TimelordGuardModel;
 import me.suff.mc.regen.client.rendering.model.TimelordModel;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -36,16 +37,16 @@ import java.util.UUID;
  */
 public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, PlayerModel<TimelordEntity>> {
 
-    public static ModelPart mainModel;
-    public static ModelPart councilModel;
-    public static ModelPart guardModel;
+    public static PlayerModel mainModel;
+    public static TimelordModel councilModel;
+    public static TimelordGuardModel guardModel;
 
     public static HashMap<UUID, ResourceLocation> TIMELORDS = new HashMap<>();
 
     public TimelordRenderer(EntityRendererProvider.Context entityRendererManager) {
         super(entityRendererManager, new TimelordModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD)), 0.1F);
-        councilModel = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD);
-        guardModel = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD);
+        councilModel = new TimelordModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD));
+        guardModel = new TimelordGuardModel(Minecraft.getInstance().getEntityModels().bakeLayer(RModels.TIMELORD_GUARD));
         mainModel = councilModel;
         addLayer(new RenderRegenLayer(this));
         addLayer(new HandLayer(this));
@@ -89,9 +90,9 @@ public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, Playe
             case GUARD -> mainModel = guardModel;
             case COUNCIL -> mainModel = councilModel;
         }
-      /*  model = mainModel;
-        model.visible = false;
-        model.hat.visible = !RegenConfig.CLIENT.renderTimelordHeadwear.get();*/
+        model = mainModel;
+        model.setAllVisible(false);
+        model.hat.visible = !RegenConfig.CLIENT.renderTimelordHeadwear.get();
 
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
@@ -101,12 +102,9 @@ public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, Playe
     @Override
     public ResourceLocation getTextureLocation(TimelordEntity entity) {
         String gender = entity.male() ? "male" : "female";
-        switch (entity.getTimelordType()) {
-            case COUNCIL:
-                return new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_council_" + gender + ".png");
-            case GUARD:
-                return new ResourceLocation(RConstants.MODID, "textures/entity/timelords/guards/timelord_guard.png");
-        }
-        return null;
+        return switch (entity.getTimelordType()) {
+            case COUNCIL -> new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_council_" + gender + ".png");
+            case GUARD -> new ResourceLocation(RConstants.MODID, "textures/entity/timelords/guards/timelord_guard.png");
+        };
     }
 }

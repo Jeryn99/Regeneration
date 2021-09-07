@@ -21,9 +21,7 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
     private final ModelPart LeftArm;
     private final ModelPart RightLeg;
     private final ModelPart LeftLeg;
-   // private final ModelPart Cape;
 
-//TODO Cape missing, Angela may have given me a old model
     public TimelordModel(ModelPart root) {
         super(Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.PLAYER_SLIM), true);
         Head = root.getChild("Head");
@@ -33,7 +31,11 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
         LeftArm = root.getChild("LeftArm");
         RightLeg = root.getChild("RightLeg");
         LeftLeg = root.getChild("LeftLeg");
-      //  Cape = Body.getChild("Cape");
+    }
+
+    @Override
+    public void renderCloak(PoseStack p_103412_, VertexConsumer p_103413_, int p_103414_, int p_103415_) {
+
     }
 
     public static LayerDefinition getModelData() {
@@ -79,13 +81,7 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
     }
 
     @Override
-    public void renderCloak(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn) {
-       // this.Cape.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
-    }
-
-    @Override
     public void setupAnim(TimelordEntity timelordEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
         super.setupAnim(timelordEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         Head.copyFrom(head);
         Body.copyFrom(body);

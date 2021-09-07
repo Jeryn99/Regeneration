@@ -225,6 +225,11 @@ public class RegenCap implements IRegen {
         compoundNBT.putInt(RConstants.REGENS_LEFT, regens());
         compoundNBT.putString(RConstants.CURRENT_STATE, regenState().name());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, updateTicks());
+
+        if(transitionType == null){
+            transitionType = TransitionTypes.FIERY.get();
+        }
+
         compoundNBT.putString(RConstants.TRANSITION_TYPE, transitionType.getRegistryName().toString());
         compoundNBT.putString(RConstants.PREFERENCE, preferredModel().name());
         compoundNBT.putBoolean(RConstants.IS_ALEX, currentlyAlex());

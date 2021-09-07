@@ -61,10 +61,10 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                 PlayerRenderer playerRenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(Minecraft.getInstance().player);
                 ResourceLocation headTexture = entityRenderer.getTextureLocation(entitylivingbaseIn);
 
-                if (entitylivingbaseIn instanceof TimelordEntity) {
-                    TimelordEntity timelordEntity = (TimelordEntity) entitylivingbaseIn;
+                if (entitylivingbaseIn instanceof TimelordEntity timelordEntity) {
                     headTexture = TimelordRenderer.getTimelordFace(timelordEntity);
                 }
+
                 Vec3 color = new Vec3(1, 1, 1);
                 PlayerModel<AbstractClientPlayer> headModel = playerRenderer.getModel();
 
@@ -79,21 +79,21 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                             matrixStackIn.pushPose();
                             matrixStackIn.translate(1, 0, 0);
                             matrixStackIn.mulPose(Vector3f.YP.rotation(opacity * 2));
-                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getGlowing(headTexture)), packedLightIn, headModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity * 5, color);
+                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityCutout(headTexture)), packedLightIn, headModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity * 5, color);
                             matrixStackIn.popPose();
                             break;
                         case 2:
                             matrixStackIn.pushPose();
                             matrixStackIn.translate(-1, 0, 0);
                             matrixStackIn.mulPose(Vector3f.YP.rotation(-opacity * 2));
-                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getGlowing(headTexture)), packedLightIn, headModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity * 5, color);
+                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityCutout(headTexture)), packedLightIn, headModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity * 5, color);
                             matrixStackIn.popPose();
                             break;
                         case 3:
                             matrixStackIn.pushPose();
                             matrixStackIn.translate(0, -1, 0);
                             matrixStackIn.mulPose(Vector3f.XP.rotation(opacity * 2));
-                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.getGlowing(headTexture)), packedLightIn, headModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity * 5, color);
+                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderTypes.entityCutout(headTexture)), packedLightIn, headModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity * 5, color);
                             matrixStackIn.popPose();
                             break;
                         case 0:
@@ -110,7 +110,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
     public void animate(HumanoidModel bipedModel, LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(livingEntity).ifPresent((data) -> {
 
-            if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.TROUGHTON.get()) {
+        /*    if (data.regenState() == RegenStates.REGENERATING && data.transitionType() == TransitionTypes.TROUGHTON.get()) {
 
                 bipedModel.head.xRot = (float) Math.toRadians(-20);
                 bipedModel.head.yRot = (float) Math.toRadians(0);
@@ -121,7 +121,7 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
 
                 bipedModel.leftArm.zRot = (float) -Math.toRadians(5);
                 bipedModel.rightArm.zRot = (float) Math.toRadians(5);
-            }
+            }*/
         });
     }
 }

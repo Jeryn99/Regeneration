@@ -19,7 +19,7 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
 
     public static final DeferredRegister<TransitionType> TRANSITION_TYPES = DeferredRegister.create(TransitionType.class, RConstants.MODID);
     public static final RegistryObject<TransitionType> FIERY = TRANSITION_TYPES.register("fiery", (FieryTransition::new));
-    public static final RegistryObject<TransitionType> TROUGHTON = TRANSITION_TYPES.register("troughton", (TroughtonTransition::new));
+    //public static final RegistryObject<TransitionType> TROUGHTON = TRANSITION_TYPES.register("troughton", (TroughtonTransition::new));
     public static final RegistryObject<TransitionType> WATCHER = TRANSITION_TYPES.register("watcher", (WatcherTransition::new));
     public static final RegistryObject<TransitionType> SPARKLE = TRANSITION_TYPES.register("sparkle", (SparkleTransition::new));
     public static final RegistryObject<TransitionType> ENDER_DRAGON = TRANSITION_TYPES.register("ender_dragon", (EnderDragonTransition::new));
@@ -47,7 +47,7 @@ public class TransitionTypes extends ForgeRegistryEntry<TransitionTypes> {
     }
 
     public static TransitionType getRandomTimelordType() {
-        TransitionType[] timelordTypes = new TransitionType[]{FIERY.get(), TROUGHTON.get(), ENDER_DRAGON.get(), BLAZE.get()};
+        TransitionType[] timelordTypes = new TransitionType[]{FIERY.get(), ENDER_DRAGON.get(), BLAZE.get()};
         return timelordTypes[(int) (System.currentTimeMillis() % timelordTypes.length)];
     }
 

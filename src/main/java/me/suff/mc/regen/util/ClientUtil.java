@@ -9,24 +9,25 @@ import me.suff.mc.regen.client.rendering.JarTileRender;
 import me.suff.mc.regen.client.rendering.layers.HandLayer;
 import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
 import me.suff.mc.regen.client.rendering.model.RModels;
-import me.suff.mc.regen.client.rendering.model.armor.GuardModel;
+import me.suff.mc.regen.client.rendering.model.armor.GuardArmorModel;
 import me.suff.mc.regen.client.rendering.transitions.*;
 import me.suff.mc.regen.client.sound.SoundReverb;
 import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.item.SpawnItem;
-import me.suff.mc.regen.common.objects.*;
+import me.suff.mc.regen.common.objects.RBlocks;
+import me.suff.mc.regen.common.objects.RItems;
+import me.suff.mc.regen.common.objects.RParticles;
+import me.suff.mc.regen.common.objects.RTiles;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.handlers.ClientEvents;
 import me.suff.mc.regen.util.sound.MovingSound;
 import micdoodle8.mods.galacticraft.api.client.tabs.InventoryTabVanilla;
 import micdoodle8.mods.galacticraft.api.client.tabs.RegenPrefTab;
 import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -78,7 +79,6 @@ public class ClientUtil {
 
     private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
-
 
 
     public static ModelPart getPlayerModel(boolean slim) {
@@ -142,11 +142,20 @@ public class ClientUtil {
     }
 
     public static void clothingModels() {
-  //TODO
-      /*  RobesModel robesHead = new RobesModel(EquipmentSlot.HEAD);
-        RobesModel robesChest = new RobesModel(EquipmentSlot.CHEST);
-        RobesModel robesLegs = new RobesModel(EquipmentSlot.LEGS);
-        RobesModel robesFeet = new RobesModel(EquipmentSlot.FEET);
+
+        if (!ARMOR_MODELS.isEmpty()) return;
+
+        ModelPart bakedGuard = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.GUARD_ARMOR);
+        GuardArmorModel guardHead = new GuardArmorModel(bakedGuard, EquipmentSlot.HEAD);
+        GuardArmorModel guardChest = new GuardArmorModel(bakedGuard, EquipmentSlot.CHEST);
+        GuardArmorModel guardLegs = new GuardArmorModel(bakedGuard, EquipmentSlot.LEGS);
+        GuardArmorModel guardFeet = new GuardArmorModel(bakedGuard, EquipmentSlot.FEET);
+
+      /*  ModelPart bakedRobes = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.GUARD_ARMOR);
+        RobesModel robesHead = new RobesModel(bakedRobes,EquipmentSlot.HEAD);
+        RobesModel robesChest = new RobesModel(bakedRobes, EquipmentSlot.CHEST);
+        RobesModel robesLegs = new RobesModel(bakedRobes, EquipmentSlot.LEGS);
+        RobesModel robesFeet = new RobesModel(bakedRobes, EquipmentSlot.FEET);
 
         //Robes
         ARMOR_MODELS.put(RItems.F_ROBES_HEAD.get(), robesHead);
@@ -155,12 +164,7 @@ public class ClientUtil {
         ARMOR_MODELS.put(RItems.M_ROBES_CHEST.get(), robesChest);
         ARMOR_MODELS.put(RItems.F_ROBES_LEGS.get(), robesLegs);
         ARMOR_MODELS.put(RItems.M_ROBES_LEGS.get(), robesLegs);
-        ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);
-*/
-        HumanoidModel<?> guardHead = new GuardModel(EquipmentSlot.HEAD);
-        HumanoidModel<?> guardChest = new GuardModel(EquipmentSlot.CHEST);
-        HumanoidModel<?> guardLegs = new GuardModel(EquipmentSlot.LEGS);
-        HumanoidModel<?> guardFeet = new GuardModel(EquipmentSlot.FEET);
+        ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);*/
 
         //Guard
         ARMOR_MODELS.put(RItems.GUARD_HELMET.get(), guardHead);
@@ -180,7 +184,6 @@ public class ClientUtil {
     public static void doClientStuff() {
         itemPredicates();
         setupTabs();
-        //TODO clothingModels();
         transitionTypes();
         RKeybinds.init();
         BlockEntityRenderers.register(RTiles.HAND_JAR.get(), JarTileRender::new);
@@ -190,14 +193,13 @@ public class ClientUtil {
     }
 
     @SubscribeEvent
-    public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event)
-    {
+    public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event) {
         RModels.addModels(event);
     }
 
     private static void transitionTypes() {
         TransitionTypeRenderers.add(TransitionTypes.FIERY.get(), FieryTransitionRenderer.INSTANCE);
-        TransitionTypeRenderers.add(TransitionTypes.TROUGHTON.get(), TroughtonTransitionRenderer.INSTANCE);
+        //  TransitionTypeRenderers.add(TransitionTypes.TROUGHTON.get(), TroughtonTransitionRenderer.INSTANCE);
         TransitionTypeRenderers.add(TransitionTypes.WATCHER.get(), WatcherTransitionRenderer.INSTANCE);
         TransitionTypeRenderers.add(TransitionTypes.SPARKLE.get(), SparkleTransitionRenderer.INSTANCE);
         TransitionTypeRenderers.add(TransitionTypes.BLAZE.get(), BlazeTransitionRenderer.INSTANCE);

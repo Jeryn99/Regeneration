@@ -25,22 +25,11 @@ public class RobesModel extends HumanoidModel<LivingEntity> implements LivingArm
     private LivingEntity livingEntity = null;
     private EquipmentSlot slot = EquipmentSlot.HEAD;
 
-    public RobesModel(ModelPart p_170677_) {
+    public RobesModel(ModelPart p_170677_, EquipmentSlot slot) {
         super(p_170677_);
         mainArmLeft = LeftArm;
         mainArmRight = RightArm;
-    }
-
-    public void setSlot(EquipmentSlot slot) {
         this.slot = slot;
-    }
-
-    public EquipmentSlot getSlot() {
-        return slot;
-    }
-
-    public static void capeBob(ModelPart p_239101_0_, float p_239101_2_) {
-        //p_239101_0_.xRot += MathHelper.sin(p_239101_2_ * 0.03F) * 0.01F;
     }
 
     @Override
@@ -59,7 +48,6 @@ public class RobesModel extends HumanoidModel<LivingEntity> implements LivingArm
             Body.render(matrixStack, buffer, packedLight, packedOverlay);
             mainArmRight.render(matrixStack, buffer, packedLight, packedOverlay);
             mainArmLeft.render(matrixStack, buffer, packedLight, packedOverlay);
-            capeBob(this.Cape, livingEntity.tickCount);
             Cape.render(matrixStack, buffer, packedLight, packedOverlay);
         }
         if (slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET) {

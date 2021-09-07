@@ -92,11 +92,11 @@ public class IncarnationScreen extends AbstractContainerScreen {
         final int btnW = 55, btnH = 18;
         position = 0;
         skins = CommonSkin.listAllSkins(PlayerUtil.SkinType.EITHER);
-        try {
+      /*  try {
             getHash();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         if (skins.isEmpty()) {
             Minecraft.getInstance().setScreen(new RErrorScreen(new TranslatableComponent("No Skins for " + new TranslatableComponent("regeneration.skin_type." + currentSkinType.name().toLowerCase()).getString()), new TranslatableComponent("Please place skins in the local Directory")));
         }
@@ -181,8 +181,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         }).setDescription(new String[]{"button.tooltip.reset_mojang"});
 
         this.excludeTrending = new RCheckbox(cx + 10, cy + 25, 150, 20, new TranslatableComponent("Trending?"), true, checkboxButton -> {
-            if (checkboxButton instanceof Checkbox) {
-                Checkbox check = (Checkbox) checkboxButton;
+            if (checkboxButton instanceof Checkbox check) {
                 position = 0;
                 if (!check.selected()) {
                     skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
@@ -225,20 +224,15 @@ public class IncarnationScreen extends AbstractContainerScreen {
         this.renderBackground(matrixStack);
         RenderSystem.setShaderTexture(0, screenBackground);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        //alexModel.young = false;
-        //steveModel.young = false;
         renderSkinToGui(matrixStack, x, y);
-
         drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslatableComponent("regen.gui.current_skin").getString(), width / 2 + 60, height / 2 + 30, Color.WHITE.getRGB());
         if (!skins.isEmpty() && position < skins.size()) {
             matrixStack.pushPose();
             String name = skins.get(position).getName().replaceAll(".png", "");
-            renderWidthScaledText(name + skins.get(position), matrixStack, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 100);
+            renderWidthScaledText(name, matrixStack, this.font, width / 2 + 60, height / 2 + 40, Color.WHITE.getRGB(), 100);
             matrixStack.popPose();
         }
-
         drawCenteredString(matrixStack, Minecraft.getInstance().font, new TranslatableComponent("Search"), width / 2 - 95, height / 2 + 45, Color.WHITE.getRGB());
-
     }
 
     private void renderSkinToGui(PoseStack matrixStack, int x, int y) {

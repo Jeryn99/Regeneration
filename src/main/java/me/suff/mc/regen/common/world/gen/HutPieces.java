@@ -54,7 +54,7 @@ public class HutPieces {
         }
 
         public Piece(ServerLevel p_162441_, CompoundTag p_162442_) {
-            super(RStructures.Structures.HUT_PIECE, p_162442_, p_162441_, (p_162451_) -> makeSettings(Rotation.valueOf(p_162442_.getString("Rot")), p_162451_));
+            super(RStructures.Structures.HUT_PIECE, p_162442_, p_162441_, (p_162451_) -> makeSettings(Rotation.NONE, p_162451_));
 
         }
 
