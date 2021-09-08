@@ -3,6 +3,7 @@ buildscript {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        maven { url = "https://plugins.gradle.org/m2/" }
         mavenCentral()
     }
     dependencies {
@@ -11,7 +12,6 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
@@ -99,6 +99,11 @@ if (System.getProperty("idea.sync.active") == "true") {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    maven { url "https://dvs1.progwml6.com/files/maven/" }
+    maven { url "https://maven.blamejared.com/" }
+    maven { url "https://www.cursemaven.com" }
+    maven { url 'https://jitpack.io' }
+    mavenCentral()
 }
 
 
@@ -128,8 +133,8 @@ jar {
     manifest {
         attributes([
                 "Specification-Title"     : "regen",
-                "Specification-Vendor"    : "regensareus",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Vendor"    : "Suff99",
+                "Specification-Version"   : project.version, // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "regensareus",

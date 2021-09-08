@@ -45,7 +45,7 @@ public class SetRegensCommand implements Command<CommandSourceStack> {
                 context.getSource().sendSuccess(new TranslatableComponent("command.regen.set_regen.success", entityText, amount), false);
                 return Command.SINGLE_SUCCESS;
             } else {//Send error message if the config option doesn't allow for it
-                String configOptionKey = "config.regeneration.mobsHaveRegens";
+                String configOptionKey = "config.regen.mobsHaveRegens";
                 context.getSource().sendFailure(new TranslatableComponent("command.regen.set_regen.config_off", entityText, new TranslatableComponent(configOptionKey).getString(), RegenConfig.COMMON.mobsHaveRegens.get()));
                 return 0;
             }

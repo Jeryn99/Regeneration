@@ -35,3 +35,9 @@ mandatory = true
 versionRange = "[1.17.1,]"
 ordering = "NONE"
 side = "BOTH"
+[[dependencies.regen]]
+modId = "mixinbootstrap"
+mandatory = true
+versionRange = "[1.1.0,]"
+ordering = "NONE"
+side = "BOTH"

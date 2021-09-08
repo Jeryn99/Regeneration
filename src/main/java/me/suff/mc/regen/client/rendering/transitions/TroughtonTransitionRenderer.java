@@ -10,7 +10,6 @@ import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -56,71 +55,71 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
 
             float opacity = Mth.clamp(Mth.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
 
-             if (iRegen.regenState() == RegenStates.REGENERATING) {
+            if (iRegen.regenState() == RegenStates.REGENERATING) {
 
-            EntityRenderer<? super Entity> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entitylivingbaseIn);
-            PlayerRenderer playerRenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(Minecraft.getInstance().player);
-            ResourceLocation headTexture = entityRenderer.getTextureLocation(entitylivingbaseIn);
+                EntityRenderer<? super Entity> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entitylivingbaseIn);
+                PlayerRenderer playerRenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(Minecraft.getInstance().player);
+                ResourceLocation headTexture = entityRenderer.getTextureLocation(entitylivingbaseIn);
 
-            if (entitylivingbaseIn instanceof TimelordEntity timelordEntity) {
-                headTexture = TimelordRenderer.getTimelordFace(timelordEntity);
-            }
-
-            Vec3 color = new Vec3(1, 1, 1);
-            PlayerModel<AbstractClientPlayer> headModel = playerRenderer.getModel();
-
-            float rotate = ((float) entitylivingbaseIn.tickCount + partialTicks) * 3.0F;
-
-
-            matrixStackIn.pushPose();
-            matrixStackIn.mulPose(Vector3f.YN.rotation(rotate / 50)); //
-            matrixStackIn.translate(0, -0.2, 0);
-            matrixStackIn.translate(0, opacity, 0);
-
-            headModel.setAllVisible(false);
-            headModel.head.visible = true;
-            headModel.hat.visible = true;
-            headModel.head.xRot = 0;
-            headModel.head.yRot = 0;
-            headModel.head.zRot = 0;
-            for (int i = 0; i < 5; i++) {
-                switch (i) {
-                    case 1:
-                        matrixStackIn.pushPose();
-                        matrixStackIn.translate(1, 0, 0);
-                        matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-                        FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
-                        matrixStackIn.popPose();
-                        break;
-                    case 2:
-                        matrixStackIn.pushPose();
-                        matrixStackIn.translate(-1, 0, 0);
-                        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-180));
-                        matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-                        FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
-                        matrixStackIn.popPose();
-                        break;
-                    case 3:
-                        matrixStackIn.pushPose();
-                        matrixStackIn.translate(0, 0, -1);
-                        matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-                        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
-                        FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
-                        matrixStackIn.popPose();
-                        break;
-                    case 4:
-                        matrixStackIn.pushPose();
-                        matrixStackIn.translate(0, 0, 1);
-                        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
-                        matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-                        FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
-                        matrixStackIn.popPose();
-                    case 0:
-                        break;
+                if (entitylivingbaseIn instanceof TimelordEntity timelordEntity) {
+                    headTexture = TimelordRenderer.getTimelordFace(timelordEntity);
                 }
+
+                Vec3 color = new Vec3(1, 1, 1);
+                PlayerModel<AbstractClientPlayer> headModel = playerRenderer.getModel();
+
+                float rotate = ((float) entitylivingbaseIn.tickCount + partialTicks) * 3.0F;
+
+
+                matrixStackIn.pushPose();
+                matrixStackIn.mulPose(Vector3f.YN.rotation(rotate / 50)); //
+                matrixStackIn.translate(0, -0.2, 0);
+                matrixStackIn.translate(0, opacity, 0);
+
+                headModel.setAllVisible(false);
+                headModel.head.visible = true;
+                headModel.hat.visible = true;
+                headModel.head.xRot = 0;
+                headModel.head.yRot = 0;
+                headModel.head.zRot = 0;
+                for (int i = 0; i < 5; i++) {
+                    switch (i) {
+                        case 1:
+                            matrixStackIn.pushPose();
+                            matrixStackIn.translate(1, 0, 0);
+                            matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
+                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
+                            matrixStackIn.popPose();
+                            break;
+                        case 2:
+                            matrixStackIn.pushPose();
+                            matrixStackIn.translate(-1, 0, 0);
+                            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-180));
+                            matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
+                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
+                            matrixStackIn.popPose();
+                            break;
+                        case 3:
+                            matrixStackIn.pushPose();
+                            matrixStackIn.translate(0, 0, -1);
+                            matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
+                            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
+                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
+                            matrixStackIn.popPose();
+                            break;
+                        case 4:
+                            matrixStackIn.pushPose();
+                            matrixStackIn.translate(0, 0, 1);
+                            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+                            matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
+                            FieryTransitionRenderer.renderOverlay(matrixStackIn, bufferIn.getBuffer(RenderType.entityCutout(headTexture)), packedLightIn, headModel, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 100, color);
+                            matrixStackIn.popPose();
+                        case 0:
+                            break;
+                    }
+                }
+                matrixStackIn.popPose();
             }
-            matrixStackIn.popPose();
-               }
         });
     }
 
