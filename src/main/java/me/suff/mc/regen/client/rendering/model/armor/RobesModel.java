@@ -3,33 +3,61 @@ package me.suff.mc.regen.client.rendering.model.armor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import me.suff.mc.regen.util.ClientUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 
 public class RobesModel extends HumanoidModel<LivingEntity> implements LivingArmor {
-    private final ModelPart Body = null;
-    private final ModelPart RightArm = null;
-    private final ModelPart LeftArm = null;
-    private final ModelPart RightLeg = null;
-    private final ModelPart RightArmSteve = null;
-    private final ModelPart LeftArmSteve = null;
-    private final ModelPart LeftLeg = null;
-    private final ModelPart Collar = null;
-    private final ModelPart Cape = null;
-    private ModelPart mainArmRight;
-    private ModelPart mainArmLeft;
+
+    private final ModelPart headPiece;
     private LivingEntity livingEntity = null;
     private EquipmentSlot slot = EquipmentSlot.HEAD;
 
-    public RobesModel(ModelPart p_170677_, EquipmentSlot slot) {
-        super(p_170677_);
-        mainArmLeft = LeftArm;
-        mainArmRight = RightArm;
+    public RobesModel(ModelPart root, EquipmentSlot slot) {
+        super(root);
         this.slot = slot;
+        headPiece = root.getChild("collar");
+    }
+
+    public static LayerDefinition createBodyLayer(boolean isAlex) {
+        MeshDefinition meshdefinition = new MeshDefinition();
+        PartDefinition partdefinition = meshdefinition.getRoot();
+
+        partdefinition.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
+        partdefinition.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.ZERO);
+
+        PartDefinition Body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(54, 16).addBox(-5.0F, -0.27F, 3.0F, 10.0F, 23.0F, 0.0F, new CubeDeformation(0.0F))
+                .texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+                .texOffs(16, 32).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+        partdefinition.addOrReplaceChild("collar", CubeListBuilder.create().texOffs(0, 84).addBox(-7.5F, -24.275F, -2.5F, 15.0F, 3.0F, 5.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 64).addBox(-7.5F, -36.275F, -2.5F, 15.0F, 12.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+
+        if (isAlex) {
+            PartDefinition RightArm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(40, 16).addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+                    .texOffs(40, 32).addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offset(-5.0F, 2.0F, 0.0F));
+
+            PartDefinition LeftArm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 48).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+                    .texOffs(48, 48).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offset(5.0F, 2.0F, 0.0F));
+        } else {
+            PartDefinition right_arm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(32, 48).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+                    .texOffs(48, 48).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offset(-5.0F, 2.0F, 0.0F));
+
+            PartDefinition left_arm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(32, 48).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+                    .texOffs(48, 48).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offset(5.0F, 2.0F, 0.0F));
+
+        }
+        PartDefinition RightLeg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 32).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offset(-1.9F, 12.0F, 0.0F));
+
+        PartDefinition LeftLeg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+                .texOffs(0, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offset(1.9F, 12.0F, 0.0F));
+
+        return LayerDefinition.create(meshdefinition, 100, 100);
     }
 
     @Override
@@ -40,42 +68,18 @@ public class RobesModel extends HumanoidModel<LivingEntity> implements LivingArm
             if (livingEntity.isShiftKeyDown()) {
                 matrixStack.translate(0, 0.1, 0);
             }
-            Collar.render(matrixStack, buffer, packedLight, packedOverlay);
+            headPiece.render(matrixStack, buffer, packedLight, packedOverlay);
             matrixStack.popPose();
         }
         if (slot == EquipmentSlot.CHEST) {
-            updateArms(livingEntity);
-            Body.render(matrixStack, buffer, packedLight, packedOverlay);
-            mainArmRight.render(matrixStack, buffer, packedLight, packedOverlay);
-            mainArmLeft.render(matrixStack, buffer, packedLight, packedOverlay);
-            Cape.render(matrixStack, buffer, packedLight, packedOverlay);
+            body.render(matrixStack, buffer, packedLight, packedOverlay);
+            leftArm.render(matrixStack, buffer, packedLight, packedOverlay);
+            rightArm.render(matrixStack, buffer, packedLight, packedOverlay);
         }
         if (slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET) {
-            RightLeg.render(matrixStack, buffer, packedLight, packedOverlay);
-            LeftLeg.render(matrixStack, buffer, packedLight, packedOverlay);
+            rightLeg.render(matrixStack, buffer, packedLight, packedOverlay);
+            leftLeg.render(matrixStack, buffer, packedLight, packedOverlay);
         }
-    }
-
-    public void updateArms(LivingEntity livingEntity) {
-        if (livingEntity instanceof AbstractClientPlayer) {
-            boolean isAlex = ClientUtil.isAlex(livingEntity);
-            if (isAlex) {
-                this.mainArmLeft = LeftArm;
-                this.mainArmRight = RightArm;
-            } else {
-                this.mainArmLeft = LeftArmSteve;
-                this.mainArmRight = RightArmSteve;
-            }
-        } else {
-            this.mainArmLeft = LeftArmSteve;
-            this.mainArmRight = RightArmSteve;
-        }
-      //TODO  leftArm = mainArmLeft;
-     //   rightArm = mainArmRight;
-    }
-
-    public void renderCape(PoseStack matrixStackIn, VertexConsumer ivertexbuilder, int packedLightIn, int noOverlay) {
-        this.Cape.render(matrixStackIn, ivertexbuilder, packedLightIn, noOverlay);
     }
 
     @Override

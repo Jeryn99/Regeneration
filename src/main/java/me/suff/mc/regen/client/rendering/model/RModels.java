@@ -1,6 +1,7 @@
 package me.suff.mc.regen.client.rendering.model;
 
 import me.suff.mc.regen.client.rendering.model.armor.GuardArmorModel;
+import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -18,15 +19,18 @@ public class RModels {
 
     // Armor
     public static ModelLayerLocation COUNCIL_ROBES = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "robes"), "robes");
+    public static ModelLayerLocation COUNCIL_ROBES_STEVE = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "council_robes_steve"), "council_robes_steve");
     public static ModelLayerLocation GUARD_ARMOR = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "guard_armor"), "guard_armor");
+    public static ModelLayerLocation GUARD_ARMOR_STEVE = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "guard_armor_steve"), "guard_armor_steve");
 
 
     public static void addModels(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(TIMELORD, TimelordModel::getModelData);
         event.registerLayerDefinition(TIMELORD_GUARD, TimelordGuardModel::getModelData);
-        //event.registerLayerDefinition(COUNCIL_ROBES, RobesModel.createMesh());
-        event.registerLayerDefinition(GUARD_ARMOR, () -> GuardArmorModel.createBodyLayer(false));
-        event.registerLayerDefinition(COUNCIL_ROBES, () -> GuardArmorModel.createBodyLayer(false));
+        event.registerLayerDefinition(GUARD_ARMOR, () -> GuardArmorModel.createBodyLayer(true));
+        event.registerLayerDefinition(GUARD_ARMOR_STEVE, () -> GuardArmorModel.createBodyLayer(false));
+        event.registerLayerDefinition(COUNCIL_ROBES, () -> RobesModel.createBodyLayer(true));
+        event.registerLayerDefinition(COUNCIL_ROBES_STEVE, () -> RobesModel.createBodyLayer(false));
         event.registerLayerDefinition(ARM_ALEX, () -> ArmModel.createMesh(true));
         event.registerLayerDefinition(ARM_STEVE, () -> ArmModel.createMesh(false));
     }

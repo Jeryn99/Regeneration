@@ -10,6 +10,7 @@ import me.suff.mc.regen.client.rendering.layers.HandLayer;
 import me.suff.mc.regen.client.rendering.layers.RenderRegenLayer;
 import me.suff.mc.regen.client.rendering.model.RModels;
 import me.suff.mc.regen.client.rendering.model.armor.GuardArmorModel;
+import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.client.rendering.transitions.*;
 import me.suff.mc.regen.client.sound.SoundReverb;
 import me.suff.mc.regen.common.item.ElixirItem;
@@ -50,6 +51,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -79,6 +81,7 @@ public class ClientUtil {
 
     private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
     public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS = new HashMap<>();
+    public static HashMap<Item, HumanoidModel<?>> ARMOR_MODELS_STEVE = new HashMap<>();
 
 
     public static ModelPart getPlayerModel(boolean slim) {
@@ -130,8 +133,7 @@ public class ClientUtil {
     }
 
     public static boolean isAlex(Entity livingEntity) {
-        if (livingEntity instanceof AbstractClientPlayer) {
-            AbstractClientPlayer abstractClientPlayerEntity = (AbstractClientPlayer) livingEntity;
+        if (livingEntity instanceof AbstractClientPlayer abstractClientPlayerEntity) {
             if (ClientUtil.getPlayerInfo(abstractClientPlayerEntity).skinModel.isEmpty()) {
                 return false;
             }
@@ -151,22 +153,32 @@ public class ClientUtil {
         GuardArmorModel guardLegs = new GuardArmorModel(bakedGuard, EquipmentSlot.LEGS);
         GuardArmorModel guardFeet = new GuardArmorModel(bakedGuard, EquipmentSlot.FEET);
 
-      /*  ModelPart bakedRobes = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.GUARD_ARMOR);
-        RobesModel robesHead = new RobesModel(bakedRobes,EquipmentSlot.HEAD);
+        ModelPart bakedRobes = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.COUNCIL_ROBES);
+        RobesModel robesHead = new RobesModel(bakedRobes, EquipmentSlot.HEAD);
         RobesModel robesChest = new RobesModel(bakedRobes, EquipmentSlot.CHEST);
         RobesModel robesLegs = new RobesModel(bakedRobes, EquipmentSlot.LEGS);
         RobesModel robesFeet = new RobesModel(bakedRobes, EquipmentSlot.FEET);
 
+        ModelPart bakedRobesSteve = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.COUNCIL_ROBES_STEVE);
+        RobesModel robesChestSteve = new RobesModel(bakedRobesSteve, EquipmentSlot.CHEST);
+
+        ModelPart bakedGuardSteve = Minecraft.getInstance().getEntityModels().bakeLayer(RModels.GUARD_ARMOR_STEVE);
+        GuardArmorModel armorSteve = new GuardArmorModel(bakedGuardSteve, EquipmentSlot.CHEST);
+
         //Robes
+        ARMOR_MODELS_STEVE.put(RItems.F_ROBES_CHEST.get(), robesChestSteve);
+        ARMOR_MODELS_STEVE.put(RItems.M_ROBES_CHEST.get(), robesChestSteve);
+
         ARMOR_MODELS.put(RItems.F_ROBES_HEAD.get(), robesHead);
         ARMOR_MODELS.put(RItems.M_ROBES_HEAD.get(), robesHead);
         ARMOR_MODELS.put(RItems.F_ROBES_CHEST.get(), robesChest);
         ARMOR_MODELS.put(RItems.M_ROBES_CHEST.get(), robesChest);
         ARMOR_MODELS.put(RItems.F_ROBES_LEGS.get(), robesLegs);
         ARMOR_MODELS.put(RItems.M_ROBES_LEGS.get(), robesLegs);
-        ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);*/
+        ARMOR_MODELS.put(RItems.ROBES_FEET.get(), robesFeet);
 
         //Guard
+        ARMOR_MODELS_STEVE.put(RItems.GUARD_CHEST.get(), armorSteve);
         ARMOR_MODELS.put(RItems.GUARD_HELMET.get(), guardHead);
         ARMOR_MODELS.put(RItems.GUARD_CHEST.get(), guardChest);
         ARMOR_MODELS.put(RItems.GUARD_LEGS.get(), guardLegs);
@@ -174,7 +186,25 @@ public class ClientUtil {
 
     }
 
-    public static HumanoidModel<?> getArmorModel(ItemStack itemStack) {
+    public static HumanoidModel<?> getArmorModel(ItemStack itemStack, LivingEntity livingEntity) {
+
+        if (livingEntity instanceof AbstractClientPlayer player) {
+            boolean isSlim = (Objects.equals(ClientUtil.getPlayerInfo(player).skinModel, "slim"));
+            if (isSlim) {
+                return getHumanoidModel(itemStack, false);
+            }
+        }
+        return getHumanoidModel(itemStack, true);
+    }
+
+    private static HumanoidModel<?> getHumanoidModel(ItemStack itemStack, boolean trySteve) {
+
+        if (trySteve) {
+            if (ARMOR_MODELS_STEVE.containsKey(itemStack.getItem())) {
+                return ARMOR_MODELS_STEVE.get(itemStack.getItem());
+            }
+        }
+
         if (!ARMOR_MODELS.containsKey(itemStack.getItem())) {
             throw new UnsupportedOperationException("No model registered for: " + itemStack.getItem());
         }

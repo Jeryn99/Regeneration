@@ -14,7 +14,7 @@ public class ClothingItemRendering implements IItemRenderProperties {
     @Override
     public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default) {
         clothingModels();
-        HumanoidModel<LivingEntity> model = (HumanoidModel<LivingEntity>) ClientUtil.getArmorModel(itemStack);
+        HumanoidModel<LivingEntity> model = (HumanoidModel<LivingEntity>) ClientUtil.getArmorModel(itemStack, entityLiving);
         if (model instanceof LivingArmor) {
             ((LivingArmor) model).setLiving(entityLiving);
         }
