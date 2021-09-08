@@ -6,6 +6,7 @@ import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.tiles.BioContainerBlockEntity;
+import me.suff.mc.regen.util.VoxelShapeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.gameevent.GameEventListener;
@@ -38,15 +40,17 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
     public static final BooleanProperty IS_OPEN = BooleanProperty.create("is_open");
 
     //TODO Some strange issue: "The min values need to be smaller or equals to the max values"
-/*    public static final VoxelShape NORTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_180);
-    public static final VoxelShape EAST = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.COUNTERCLOCKWISE_90);
-    public static final VoxelShape SOUTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.NONE);
-    public static final VoxelShape WEST = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_90);
+/*
+    public static final VoxelShape NORTH = VoxelShapeUtils.rotate(BlockShapes.makeClosedJar(), Rotation.CLOCKWISE_180);
+    public static final VoxelShape EAST = VoxelShapeUtils.rotate(BlockShapes.makeClosedJar(), Rotation.COUNTERCLOCKWISE_90);
+    public static final VoxelShape SOUTH = VoxelShapeUtils.rotate(BlockShapes.makeClosedJar(), Rotation.NONE);
+    public static final VoxelShape WEST = VoxelShapeUtils.rotate(BlockShapes.makeClosedJar(), Rotation.CLOCKWISE_90);
 
-    public static final VoxelShape NORTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.CLOCKWISE_180);
-    public static final VoxelShape EAST_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.COUNTERCLOCKWISE_90);
-    public static final VoxelShape SOUTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.NONE);
-    public static final VoxelShape WEST_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.CLOCKWISE_90);*/
+    public static final VoxelShape NORTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.makeOpenJar(), Rotation.CLOCKWISE_180);
+    public static final VoxelShape EAST_OPEN = VoxelShapeUtils.rotate(BlockShapes.makeOpenJar(), Rotation.COUNTERCLOCKWISE_90);
+    public static final VoxelShape SOUTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.makeOpenJar(), Rotation.NONE);
+    public static final VoxelShape WEST_OPEN = VoxelShapeUtils.rotate(BlockShapes.makeOpenJar(), Rotation.CLOCKWISE_90);
+*/
 
 
     public JarBlock() {
@@ -56,28 +60,20 @@ public class JarBlock extends DirectionalBlock implements EntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-       /* if (state.getValue(IS_OPEN)) {
-            switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
-                case EAST:
-                    return EAST_OPEN;
-                case SOUTH:
-                    return SOUTH_OPEN;
-                case WEST:
-                    return WEST_OPEN;
-                default:
-                    return NORTH_OPEN;
-            }
+    /*    if (state.getValue(IS_OPEN)) {
+            return switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
+                case EAST -> EAST_OPEN;
+                case SOUTH -> SOUTH_OPEN;
+                case WEST -> WEST_OPEN;
+                default -> NORTH_OPEN;
+            };
         }
-        switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
-            case EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH;
-            case WEST:
-                return WEST;
-            default:
-                return NORTH;
-        }*/
+        return switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
+            case EAST -> EAST;
+            case SOUTH -> SOUTH;
+            case WEST -> WEST;
+            default -> NORTH;
+        };*/
         return super.getShape(state, worldIn, pos, context);
     }
 

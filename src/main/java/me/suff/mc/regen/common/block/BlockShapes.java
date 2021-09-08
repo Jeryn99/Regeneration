@@ -11,36 +11,47 @@ import java.util.stream.Stream;
 /* Created by Craig on 09/03/2021 */
 public class BlockShapes {
 
-    static Optional<VoxelShape> JAR = Stream.of(
-            Block.box(3.5, 3, 3.5, 12.5, 14, 12.5),
-            Block.box(2.5, 0, 6, 3.5, 16, 10),
-            Block.box(13.5, 0, 6.5, 14.5, 12, 9.5),
-            Block.box(-0.5, 7, 7, 2.5, 14, 9),
-            Block.box(12.5, 0, 6, 13.5, 16, 10),
-            Block.box(3, 15, 3, 13, 16, 13),
-            Block.box(12, 14, 3, 13, 15, 13),
-            Block.box(3, 14, 12, 13, 15, 13),
-            Block.box(3, 14, 3, 4, 15, 13),
-            Block.box(3, 14, 3, 13, 15, 4),
-            Block.box(3, 1.5, 3, 13, 3, 4),
-            Block.box(12, 1.5, 3, 13, 3, 13),
-            Block.box(3, 1.5, 3, 4, 3, 13),
-            Block.box(3, 0, 3, 13, 1.5, 13),
-            Block.box(3, 1.5, 12, 13, 3, 13)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR));
+    public static VoxelShape makeClosedJar(){
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.09375, 0.1875, 0.8125, 0.1875, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.75, 0.09375, 0.1875, 0.8125, 0.1875, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.09375, 0.1875, 0.25, 0.1875, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0, 0.1875, 0.8125, 0.09375, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.09375, 0.75, 0.8125, 0.1875, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.9375, 0.1875, 0.8125, 1, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.75, 0.875, 0.1875, 0.8125, 0.9375, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.875, 0.75, 0.8125, 0.9375, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.875, 0.1875, 0.25, 0.9375, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.875, 0.1875, 0.8125, 0.9375, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.15625, 0, 0.375, 0.21875, 1, 0.625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.78125, 0, 0.375, 0.84375, 1, 0.625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.84375, 0, 0.40625, 0.90625, 0.75, 0.59375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(-0.03125, 0.4375, 0.4375, 0.15625, 0.875, 0.5625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.21875, 0.1875, 0.21875, 0.78125, 0.875, 0.78125), BooleanOp.OR);
 
-    static Optional<VoxelShape> JAR_OPEN = Stream.of(
-            Block.box(12.503, 14.003, 12.503, 3.497, 2.997, 3.497),
-            Block.box(3.5, 3, 3.5, 12.5, 14, 12.5),
-            Block.box(2.5, 0, 6, 3.5, 16, 10),
-            Block.box(12.5, 0, 6, 13.5, 16, 10),
-            Block.box(13.5, 0, 6.5, 14.5, 12, 9.5),
-            Block.box(-0.5, 7, 7, 2.5, 14, 9),
-            Block.box(3, 1.5, 3, 13, 3, 4),
-            Block.box(12, 1.5, 3, 13, 3, 13),
-            Block.box(3, 1.5, 3, 4, 3, 13),
-            Block.box(3, 0, 3, 13, 1.5, 13),
-            Block.box(3, 1.5, 12, 13, 3, 13)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR));
+        return shape;
+    }
+    
+    public static VoxelShape makeOpenJar(){
+        VoxelShape shape = Shapes.empty();
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.09375, 0.1875, 0.8125, 0.1875, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.75, 0.09375, 0.1875, 0.8125, 0.1875, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.09375, 0.1875, 0.25, 0.1875, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0, 0.1875, 0.8125, 0.09375, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.09375, 0.75, 0.8125, 0.1875, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.9375, 0.1875, 0.8125, 1, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.75, 0.875, 0.1875, 0.8125, 0.9375, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.875, 0.75, 0.8125, 0.9375, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.875, 0.1875, 0.25, 0.9375, 0.8125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.1875, 0.875, 0.1875, 0.8125, 0.9375, 0.25), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.15625, 0, 0.375, 0.21875, 1, 0.625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.78125, 0, 0.375, 0.84375, 1, 0.625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.84375, 0, 0.40625, 0.90625, 0.75, 0.59375), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(-0.03125, 0.4375, 0.4375, 0.15625, 0.875, 0.5625), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.21875, 0.1875, 0.21875, 0.78125, 0.875, 0.78125), BooleanOp.OR);
+        shape = Shapes.join(shape, Shapes.box(0.7814375, 0.8751875, 0.7814375, 0.2185625, 0.1873125, 0.2185625), BooleanOp.OR);
+
+        return shape;
+    }
 
 }
