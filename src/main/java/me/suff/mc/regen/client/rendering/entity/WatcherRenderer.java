@@ -1,21 +1,16 @@
 package me.suff.mc.regen.client.rendering.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import me.suff.mc.regen.client.rendering.model.TimelordModel;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.entities.WatcherEntity;
-import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;

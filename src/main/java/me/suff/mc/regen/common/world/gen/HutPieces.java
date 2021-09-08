@@ -20,7 +20,6 @@ import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.util.List;
@@ -49,13 +48,13 @@ public class HutPieces {
             super(RStructures.Structures.HUT_PIECE, 0, p_71244_, p_71245_, p_71245_.toString(), makeSettings(p_71247_, p_71245_), makePosition(p_71245_, p_71246_, p_71248_));
         }
 
-        private static BlockPos makePosition(ResourceLocation p_71245_, BlockPos p_71246_, int p_71248_) {
-            return p_71246_;
-        }
-
         public Piece(ServerLevel p_162441_, CompoundTag p_162442_) {
             super(RStructures.Structures.HUT_PIECE, p_162442_, p_162441_, (p_162451_) -> makeSettings(Rotation.NONE, p_162451_));
 
+        }
+
+        private static BlockPos makePosition(ResourceLocation p_71245_, BlockPos p_71246_, int p_71248_) {
+            return p_71246_;
         }
 
         private static StructurePlaceSettings makeSettings(Rotation p_162447_, ResourceLocation p_162448_) {

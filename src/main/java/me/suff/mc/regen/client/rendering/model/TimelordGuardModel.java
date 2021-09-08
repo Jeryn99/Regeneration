@@ -57,7 +57,7 @@ public class TimelordGuardModel extends PlayerModel<TimelordEntity> {
 
         return LayerDefinition.create(meshdefinition, 80, 80);
     }
-    
+
     @Override
     public void setupAnim(TimelordEntity timelordEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         RegenCap.get(timelordEntity).ifPresent(iRegen -> {

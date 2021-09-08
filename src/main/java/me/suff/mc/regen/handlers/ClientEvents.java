@@ -1,6 +1,5 @@
 package me.suff.mc.regen.handlers;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Transformation;
 import me.suff.mc.regen.Regeneration;
@@ -166,7 +165,7 @@ public class ClientEvents {
 
             handleGunCrosshair(event, player, cap);
 
-           // if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
+            // if (event.getType() != RenderGameOverlayEvent.ElementType.HELMET) return;
 
             if (cap.regenState() == RegenStates.REGENERATING && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
                 event.setCanceled(true);

@@ -34,7 +34,6 @@ import org.lwjgl.glfw.GLFW;
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,6 +70,23 @@ public class IncarnationScreen extends AbstractContainerScreen {
             isAlex = skins.get(position).toPath().startsWith(CommonSkin.SKIN_DIRECTORY_ALEX.toPath().toString());
             renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
         }
+    }
+
+    public static void getHash() throws IOException {
+        StringBuilder end = new StringBuilder();
+        for (File file : skins) {
+            if (!file.getName().startsWith("mk_")) {
+                String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(new FileInputStream(file));
+
+                String md5Line = "\n&quot;" + md5 + "&quot;:{";
+                String authorLine = "\n&quot;author&quot;:&quot;" + "author_here" + "&quot;";
+                String nameLine = "\n&quot;name&quot;:&quot;" + file.getName() + "&quot;}\n";
+
+                String line = md5Line + authorLine + nameLine;
+                end.append(line);
+            }
+        }
+        System.out.println(end);
     }
 
     @Override
@@ -246,24 +262,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
         SkinHandler.setPlayerSkin(Minecraft.getInstance().player, backup);
         SkinHandler.setPlayerSkinType(Minecraft.getInstance().player, backupSkinType);
         matrixStack.popPose();
-    }
-
-
-    public static void getHash() throws IOException {
-        StringBuilder end = new StringBuilder();
-        for (File file : skins) {
-            if (!file.getName().startsWith("mk_")) {
-                String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(new FileInputStream(file));
-
-                String md5Line = "\n&quot;" + md5 + "&quot;:{";
-                String authorLine = "\n&quot;author&quot;:&quot;" + "author_here" + "&quot;";
-                String nameLine = "\n&quot;name&quot;:&quot;" + file.getName() + "&quot;}\n";
-
-                String line = md5Line+authorLine+nameLine;
-                end.append(line);
-            }
-        }
-        System.out.println(end);
     }
 
     @Override

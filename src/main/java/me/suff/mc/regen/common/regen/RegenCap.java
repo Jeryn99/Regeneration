@@ -226,7 +226,7 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.CURRENT_STATE, regenState().name());
         compoundNBT.putInt(RConstants.ANIMATION_TICKS, updateTicks());
 
-        if(transitionType == null){
+        if (transitionType == null) {
             transitionType = TransitionTypes.FIERY.get();
         }
 

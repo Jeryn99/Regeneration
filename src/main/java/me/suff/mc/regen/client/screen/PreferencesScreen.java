@@ -106,7 +106,7 @@ public class PreferencesScreen extends AbstractContainerScreen {
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        RenderSystem.setShaderTexture(0,screenBackground);
+        RenderSystem.setShaderTexture(0, screenBackground);
         IRegen data = RegenCap.get(Minecraft.getInstance().player).orElseGet(null);
         blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         int cx = (width - imageWidth) / 2;

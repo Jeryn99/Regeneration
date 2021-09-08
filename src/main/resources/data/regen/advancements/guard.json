@@ -23,16 +23,24 @@
       "conditions": {
         "items": [
           {
-            "item": "regen:guard_helmet"
+            "items": [
+              "regen:guard_helmet"
+            ]
           },
           {
-            "item": "regen:guard_chest"
+            "items": [
+              "regen:guard_chest"
+            ]
           },
           {
-            "item": "regen:guard_feet"
+            "items": [
+              "regen:guard_feet"
+            ]
           },
           {
-            "item": "regen:guard_legs"
+            "items": [
+              "regen:guard_legs"
+            ]
           }
         ]
       }

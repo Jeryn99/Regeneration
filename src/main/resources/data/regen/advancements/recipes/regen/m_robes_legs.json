@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "regen:zinc"
+            "items": [
+              "regen:zinc"
+            ]
           }
         ]
       }

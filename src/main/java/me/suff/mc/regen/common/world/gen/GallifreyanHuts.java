@@ -3,7 +3,6 @@ package me.suff.mc.regen.common.world.gen;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
-import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.objects.REntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
@@ -61,6 +59,16 @@ public class GallifreyanHuts extends StructureFeature<ProbabilityFeatureConfigur
     public static class Start extends StructureStart<ProbabilityFeatureConfiguration> {
 
 
+        private static final LevelHeightAccessor OLD_LEVEL_HEIGHT = new LevelHeightAccessor() {
+            public int getMinBuildHeight() {
+                return 0;
+            }
+
+            public int getHeight() {
+                return 128;
+            }
+        };
+
         public Start(StructureFeature<ProbabilityFeatureConfiguration> p_163595_, ChunkPos p_163596_, int p_163597_, long p_163598_) {
             super(p_163595_, p_163596_, p_163597_, p_163598_);
         }
@@ -70,12 +78,12 @@ public class GallifreyanHuts extends StructureFeature<ProbabilityFeatureConfigur
             Rotation rotation = Rotation.values()[this.random.nextInt(Rotation.values().length)];
             int x = (getChunkPos().x << 4) + 7;
             int z = (getChunkPos().z << 4) + 7;
-          //TODO Height  int surfaceY = chunkGenerator.getBaseHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG);
-            BlockPos blockpos = new BlockPos(x, 64, z);
 
+            int surfaceY = chunkGenerator.getFirstFreeHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, OLD_LEVEL_HEIGHT);
+            BlockPos blockpos = new BlockPos(x, surfaceY, z);
+            System.out.println(blockpos);
             HutPieces.start(structureManager, blockpos, rotation, this.pieces, this.random);
             this.createBoundingBox();
-            Regeneration.LOG.info("Hut at " + (blockpos.getX()) + " " + blockpos.getY() + " " + (blockpos.getZ()));
         }
     }
 

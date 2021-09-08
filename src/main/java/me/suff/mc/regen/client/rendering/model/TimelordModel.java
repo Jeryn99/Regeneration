@@ -33,11 +33,6 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
         LeftLeg = root.getChild("LeftLeg");
     }
 
-    @Override
-    public void renderCloak(PoseStack p_103412_, VertexConsumer p_103413_, int p_103414_, int p_103415_) {
-
-    }
-
     public static LayerDefinition getModelData() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
@@ -67,6 +62,11 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
     }
 
     @Override
+    public void renderCloak(PoseStack p_103412_, VertexConsumer p_103413_, int p_103414_, int p_103415_) {
+
+    }
+
+    @Override
     public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         matrixStack.pushPose();
         Head.render(matrixStack, buffer, packedLight, packedOverlay);
@@ -77,6 +77,11 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
         LeftLeg.render(matrixStack, buffer, packedLight, packedOverlay);
         renderCloak(matrixStack, buffer, packedLight, packedOverlay);
         Head.visible = false;
+        jacket.visible = false;
+        leftSleeve.visible = false;
+        rightSleeve.visible = false;
+        leftPants.visible = false;
+        rightPants.visible = false;
         matrixStack.popPose();
     }
 

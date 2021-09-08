@@ -20,14 +20,11 @@ import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.DownloadSkinsThread;
 import me.suff.mc.regen.util.PlayerUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.worldgen.biome.BiomeReport;
-import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -77,6 +74,16 @@ public class Regeneration {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
     }
 
+    @SubscribeEvent
+    public static void onAddCaps(RegisterCapabilitiesEvent capabilitiesEvent) {
+        capabilitiesEvent.register(IRegen.class);
+    }
+
+    @SubscribeEvent
+    public static void onAttributes(EntityAttributeCreationEvent attributeCreationEvent) {
+        attributeCreationEvent.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
+        attributeCreationEvent.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
+    }
 
     private void doCommonStuff(final FMLCommonSetupEvent event) {
         event.enqueueWork(() ->
@@ -94,22 +101,10 @@ public class Regeneration {
     }
 
     @SubscribeEvent
-    public static void onAddCaps(RegisterCapabilitiesEvent capabilitiesEvent){
-        capabilitiesEvent.register(IRegen.class);
-    }
-
-    @SubscribeEvent
     public void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(REntities.TIMELORD.get(), TimelordRenderer::new);
         event.registerEntityRenderer(REntities.WATCHER.get(), WatcherRenderer::new);
         event.registerEntityRenderer(REntities.LASER.get(), RenderLaser::new);
-    }
-
-
-    @SubscribeEvent
-    public static void onAttributes(EntityAttributeCreationEvent attributeCreationEvent){
-        attributeCreationEvent.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
-        attributeCreationEvent.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

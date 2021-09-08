@@ -7,7 +7,6 @@ import me.suff.mc.regen.client.rendering.types.RenderTypes;
 import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
-import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;

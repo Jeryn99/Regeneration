@@ -22,7 +22,9 @@
       "conditions": {
         "items": [
           {
-            "item": "regen:fobwatch"
+            "items": [
+              "regen:fobwatch"
+            ]
           }
         ]
       }

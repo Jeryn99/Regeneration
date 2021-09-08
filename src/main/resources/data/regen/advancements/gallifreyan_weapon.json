@@ -23,10 +23,14 @@
       "conditions": {
         "items": [
           {
-            "item": "regen:staser"
+            "items": [
+              "regen:staser"
+            ]
           },
           {
-            "item": "regen:rifle"
+            "items": [
+              "regen:rifle"
+            ]
           }
         ]
       }

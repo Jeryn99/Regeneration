@@ -1,6 +1,5 @@
 package micdoodle8.mods.galacticraft.api.client.tabs;
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -33,21 +32,21 @@ public abstract class AbstractTab extends AbstractButton {
             int xOffset = this.id == 2 ? 0 : 1;
             int yPos = this.y + (this.active ? 3 : 0);
             ItemRenderer itemRender = mc.getItemRenderer();
-            RenderSystem.setShaderTexture(0,this.texture);
+            RenderSystem.setShaderTexture(0, this.texture);
             this.blit(matrixStack, this.x, yPos, xOffset * 28, yTexPos, 28, ySize);
 
             //TODO
-          //  Lighting.turnBackOn();
+            //  Lighting.turnBackOn();
             this.setBlitOffset(this.getBlitOffset() + 30);
             itemRender.blitOffset = 10.0F;
-           // RenderSystem.enableLighting();
-          //  RenderSystem.enableRescaleNormal();
+            // RenderSystem.enableLighting();
+            //  RenderSystem.enableRescaleNormal();
             itemRender.renderAndDecorateItem(this.renderStack, this.x + 6, this.y + 8);
             itemRender.renderGuiItemDecorations(mc.font, this.renderStack, this.x + 6, this.y + 8, null);
             //RenderSystem.disableLighting();
             itemRender.blitOffset = 0.0F;
             this.setBlitOffset(this.getBlitOffset() - 30);
-           // Lighting.turnOff();
+            // Lighting.turnOff();
         }
     }
 

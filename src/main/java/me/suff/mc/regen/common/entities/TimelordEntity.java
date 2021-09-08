@@ -87,11 +87,6 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
         this.groundNavigator = new GroundPathNavigation(this, world);
     }
 
-    @Override
-    public AttributeMap getAttributes() {
-        return new AttributeMap(createAttributes().build());
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes().
                 add(Attributes.FOLLOW_RANGE, 35D).
@@ -99,6 +94,11 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
                 add(Attributes.ATTACK_DAMAGE, 3F).
                 add(Attributes.MAX_HEALTH, 20D).
                 add(Attributes.ARMOR, 2.0D);
+    }
+
+    @Override
+    public AttributeMap getAttributes() {
+        return new AttributeMap(createAttributes().build());
     }
 
     @Override

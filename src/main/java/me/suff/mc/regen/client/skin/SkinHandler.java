@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -91,7 +90,7 @@ public class SkinHandler {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             PlayerInfo info = ClientUtil.getPlayerInfo(player);
-           // if(info == null) return;
+            // if(info == null) return;
             info.registerTextures();
             boolean isAlex = info.getModelName().equals("slim");
             NetworkDispatcher.NETWORK_CHANNEL.sendToServer(new SkinMessage(new byte[0], isAlex));
