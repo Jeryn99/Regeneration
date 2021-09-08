@@ -7,6 +7,7 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -22,8 +23,8 @@ public class RenderRegenLayer extends RenderLayer {
         super(entityRendererIn);
     }
 
-    public static void renderColorCone(PoseStack matrixStack, VertexConsumer vertexBuilder, int combinedLightIn, LivingEntity entityPlayer, float scale, float scale2, Vec3 color) {
-        RegenCap.get(entityPlayer).ifPresent(iRegen -> {
+    public static void renderColorCone(PoseStack matrixStack, VertexConsumer vertexBuilder, int combinedLightIn, Entity entityPlayer, float scale, float scale2, Vec3 color) {
+        RegenCap.get((LivingEntity) entityPlayer).ifPresent(iRegen -> {
             matrixStack.pushPose();
             for (int i = 0; i < 10; i++) {
                 matrixStack.mulPose(Vector3f.YP.rotation(entityPlayer.tickCount * 4 + i * 45));
@@ -43,10 +44,10 @@ public class RenderRegenLayer extends RenderLayer {
 
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (entitylivingbaseIn instanceof LivingEntity) {
-            RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
+        if (entitylivingbaseIn instanceof LivingEntity livingEntity) {
+            RegenCap.get(livingEntity).ifPresent(iRegen -> {
                 TransitionType type = iRegen.transitionType();
-                TransitionTypeRenderers.get(type).layer((HumanoidModel<?>) getParentModel(), matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+                TransitionTypeRenderers.get(type).layer((HumanoidModel<?>) getParentModel(), matrixStackIn, bufferIn, packedLightIn, livingEntity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
             });
         }
     }

@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "group": "regen",
   "pattern": [
-    "Z Z",
+    "   ",
     "Z Z",
     "I I"
   ],

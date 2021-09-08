@@ -34,23 +34,25 @@ public class HandLayer extends RenderLayer {
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Entity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         EntityModel<?> model = getParentModel();
-        RegenCap.get((LivingEntity) entitylivingbaseIn).ifPresent(iRegen -> {
+        if (entitylivingbaseIn instanceof LivingEntity livingEntity) {
+            RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
-            if (entitylivingbaseIn.isShiftKeyDown()) {
-                matrixStackIn.translate(0.0F, 0.2F, 0.0F);
-            }
+                if (entitylivingbaseIn.isShiftKeyDown()) {
+                    matrixStackIn.translate(0.0F, 0.2F, 0.0F);
+                }
 
-            HumanoidModel<?> bipedModel = (HumanoidModel) model;
+                HumanoidModel<?> bipedModel = (HumanoidModel) model;
 
-            //For Regen Layers
-            for (HumanoidArm handSide : HumanoidArm.values()) {
-                matrixStackIn.pushPose();
-                bipedModel.translateToHand(handSide, matrixStackIn);
+                //For Regen Layers
+                for (HumanoidArm handSide : HumanoidArm.values()) {
+                    matrixStackIn.pushPose();
+                    bipedModel.translateToHand(handSide, matrixStackIn);
 
-                renderGlowingHands((LivingEntity) entitylivingbaseIn, matrixStackIn, bufferIn, packedLightIn, handSide);
-                TransitionTypeRenderers.get(iRegen.transitionType()).thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
-                matrixStackIn.popPose();
-            }
-        });
+                    renderGlowingHands((LivingEntity) entitylivingbaseIn, matrixStackIn, bufferIn, packedLightIn, handSide);
+                    TransitionTypeRenderers.get(iRegen.transitionType()).thirdPersonHand(handSide, matrixStackIn, bufferIn, packedLightIn, livingEntity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+                    matrixStackIn.popPose();
+                }
+            });
+        }
     }
 }

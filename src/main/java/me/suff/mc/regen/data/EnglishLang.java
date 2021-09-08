@@ -248,7 +248,7 @@ public class EnglishLang extends LanguageProvider {
         add(TransitionTypes.SPARKLE.get().getTranslation().getKey(), "Sparkle");
         add(TransitionTypes.WATCHER.get().getTranslation().getKey(), "Watcher");
         add(TransitionTypes.FIERY.get().getTranslation().getKey(), "Fiery");
-        // add(TransitionTypes.TROUGHTON.get().getTranslation().getKey(), "Troughton");
+        add(TransitionTypes.TROUGHTON.get().getTranslation().getKey(), "Troughton");
         add(TransitionTypes.BLAZE.get().getTranslation().getKey(), "Blaze");
 
         //Entity
