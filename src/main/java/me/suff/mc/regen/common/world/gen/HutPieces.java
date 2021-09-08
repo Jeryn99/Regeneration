@@ -30,10 +30,6 @@ public class HutPieces {
 
     private static final ResourceLocation HUT = new ResourceLocation(RConstants.MODID, "gallifrey_shack");
 
-    private static final ResourceLocation[] ALL_STRUCTURES = new ResourceLocation[]{HUT};
-
-    private static final Map<ResourceLocation, BlockPos> OFFSET = ImmutableMap.of(HUT, BlockPos.ZERO);
-
     public static void start(StructureManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random) {
         int x = pos.getX();
         int z = pos.getZ();

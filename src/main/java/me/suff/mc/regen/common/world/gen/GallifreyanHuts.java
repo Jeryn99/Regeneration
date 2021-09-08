@@ -78,10 +78,8 @@ public class GallifreyanHuts extends StructureFeature<ProbabilityFeatureConfigur
             Rotation rotation = Rotation.values()[this.random.nextInt(Rotation.values().length)];
             int x = (getChunkPos().x << 4) + 7;
             int z = (getChunkPos().z << 4) + 7;
-
             int surfaceY = chunkGenerator.getFirstFreeHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, OLD_LEVEL_HEIGHT);
             BlockPos blockpos = new BlockPos(x, surfaceY, z);
-            System.out.println(blockpos);
             HutPieces.start(structureManager, blockpos, rotation, this.pieces, this.random);
             this.createBoundingBox();
         }
