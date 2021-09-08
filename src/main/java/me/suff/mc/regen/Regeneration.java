@@ -88,7 +88,7 @@ public class Regeneration {
         ActingForwarder.init();
         GlobalEntityTypeAttributes.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
         GlobalEntityTypeAttributes.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
-        DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
+        DownloadSkinsThread.setup();
         RSoundSchemes.init();
         TriggerManager.init();
 

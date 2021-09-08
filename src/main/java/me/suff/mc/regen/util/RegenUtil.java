@@ -29,11 +29,11 @@ public class RegenUtil {
     public static String[] USERNAMES = new String[]{};
 
     public static ITag.INamedTag<Block> makeBlock(String domain, String path) {
-        return BlockTags.bind(new ResourceLocation(domain, path).toString());
+        return BlockTags.createOptional(new ResourceLocation(domain, path));
     }
 
     public static ITag.INamedTag<Item> makeItem(String domain, String path) {
-        return ItemTags.bind(new ResourceLocation(domain, path).toString());
+        return ItemTags.createOptional(new ResourceLocation(domain, path));
     }
 
     public static double round(float value, int scale) {

@@ -40,17 +40,17 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
         super(RTiles.HAND_JAR.get());
     }
 
-    private static void spawnParticles(World world, BlockPos worldIn) {
+    public static void spawnParticles(World world, BlockPos blockPos) {
         Random random = world.random;
 
         for (Direction direction : Direction.values()) {
-            BlockPos blockpos = worldIn.relative(direction);
+            BlockPos blockpos = blockPos.relative(direction);
             if (!world.getBlockState(blockpos).isSolidRender(world, blockpos)) {
                 Direction.Axis direction$axis = direction.getAxis();
                 double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) random.nextFloat();
                 double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
                 double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
-                world.addParticle(RParticles.CONTAINER.get(), (double) worldIn.getX() + d1, (double) worldIn.getY() + d2, (double) worldIn.getZ() + d3, 0.0D, 0.0D, 0.0D);
+                world.addParticle(RParticles.CONTAINER.get(), (double) blockPos.getX() + d1, (double) blockPos.getY() + d2, (double) blockPos.getZ() + d3, 0.0D, 0.0D, 0.0D);
             }
         }
     }

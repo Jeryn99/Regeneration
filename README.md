@@ -14,8 +14,7 @@
   <br><br>
 </p>
 
-
-  | Credit | Contribution |
+| Credit | Contribution |
   | --- | --- |
   <a href="https://twitter.com/Suff1999">Suff</a> | Code
   <a href="https://github.com/HoldYourWaffle">HoldYourWaffle</a> | Code

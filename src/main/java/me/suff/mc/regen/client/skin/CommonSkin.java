@@ -3,13 +3,17 @@ package me.suff.mc.regen.client.skin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.suff.mc.regen.Regeneration;
+import me.suff.mc.regen.client.screen.RErrorScreen;
+import me.suff.mc.regen.client.screen.SkinPack;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.DownloadSkinsThread;
 import me.suff.mc.regen.util.MineSkin;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.io.FileUtils;
@@ -67,7 +71,7 @@ public class CommonSkin {
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
 
         if (folderFiles.isEmpty()) {
-            DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
+            DownloadSkinsThread.setup();
             return null;
         }
 
@@ -134,30 +138,41 @@ public class CommonSkin {
         return op.filter(img, gray);
     }
 
-    public static boolean skinpacks() throws IOException {
-        if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return false;
+    public static void skinpacks() throws IOException {
+        if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
 
-        File drWhoDir = new File(SKIN_DIRECTORY_ALEX + "/doctor_who");
+        Regeneration.LOG.info("Downloading Remote Skinpacks");
+        String packsUrl = "https://api.who-craft.com/get/regen/skins";
+        JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
 
-        long attr = drWhoDir.lastModified();
-        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(drWhoDir.list()).length == 0) {
-            Regeneration.LOG.info("Downloading Remote Skinpacks");
-            String packsUrl = "https://raw.githubusercontent.com/WhoCraft/Regeneration/skins/skinpacks/skinpacks.json";
-            JsonObject links = MineSkin.getApiResponse(new URL(packsUrl));
+        for (int skins = links.getAsJsonArray("packs").size() - 1; skins >= 0; skins--) {
+            JsonArray packs = links.getAsJsonArray("packs");
+            JsonObject currentPack = packs.get(skins).getAsJsonObject();
+            String packName = currentPack.get("name").getAsString();
+            JsonArray authorsJson = currentPack.get("authors").getAsJsonArray();
 
-            for (int skins = links.getAsJsonArray("packs").size() - 1; skins >= 0; skins--) {
-                JsonArray packs = links.getAsJsonArray("packs");
-                JsonObject currentPack = packs.get(skins).getAsJsonObject();
-                String packName = currentPack.get("name").getAsString();
-                String packCredit = currentPack.get("credits").getAsString();
-                String downloadLink = currentPack.get("download_url").getAsString();
-                String desc = currentPack.get("description").getAsString();
+            ArrayList<String> authors = new ArrayList<>();
+            for (int i = 0; i < authorsJson.size(); i++) {
+                authors.add(authorsJson.get(i).getAsString());
+            }
 
-                Regeneration.LOG.info("Downloading " + packName + " by " + packCredit + " " + desc);
+            String downloadLink = currentPack.get("download_url").getAsString();
+            ResourceLocation namespace = new ResourceLocation(currentPack.get("namespace").getAsString());
+            String desc = currentPack.get("description").getAsString();
+            String thumbnail = currentPack.get("thumbnail").getAsString();
+
+            SkinPack.add(new SkinPack(packName, authors, downloadLink, thumbnail, namespace));
+
+            File skinPackDir = new File(SKIN_DIRECTORY_ALEX + "/" + namespace.getNamespace() + "/" + namespace.getPath());
+            if (skinPackDir.exists()) {
+                skinPackDir.mkdirs();
+            }
+            long attr = skinPackDir.lastModified();
+            if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(skinPackDir.list()).length == 0) {
+                Regeneration.LOG.info("Downloading " + packName + " by " + authors + " " + desc);
                 unzipSkinPack(downloadLink);
             }
         }
-        return false;
     }
 
     public static boolean isAlexSkin(BufferedImage image) {
@@ -226,6 +241,12 @@ public class CommonSkin {
                 directory = SKIN_DIRECTORY_STEVE;
                 break;
         }
+
+        if (!directory.exists()) {
+            Minecraft.getInstance().setScreen(new RErrorScreen(new TranslationTextComponent("No Skins for " + new TranslationTextComponent("regeneration.skin_type." + choices.name().toLowerCase()).getString()), new TranslationTextComponent("Please place skins in the local Directory")));
+            return new ArrayList<>();
+        }
+
         Collection<File> folderFiles = FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
         folderFiles.removeIf(file -> !file.getName().endsWith(".png") || file.getName().contains("timelord_male") || file.getName().contains("timelord_female"));
         return new ArrayList<>(folderFiles);

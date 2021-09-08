@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "group": "regen",
   "pattern": [
-    "Z Z",
+    "I I",
     "ZLZ",
-    "ZIZ"
+    "ZZZ"
   ],
   "key": {
     "L": {
