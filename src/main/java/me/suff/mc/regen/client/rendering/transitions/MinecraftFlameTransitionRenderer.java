@@ -55,12 +55,12 @@ public class MinecraftFlameTransitionRenderer extends FieryTransitionRenderer {
             RegenCap.get(livingEntity).ifPresent(iRegen -> {
 
                 if (iRegen.regenState() == RegenStates.REGENERATING) {
-                    if (entitylivingbaseIn.tickCount % 5 == 0) {
+                    //if (entitylivingbaseIn.tickCount % 5 == 0) {
                         timer++;
                         if (timer > 3) {
                             timer = 0;
                         }
-                    }
+                   // }
                     //Hand
                     for (HandSide side : HandSide.values()) {
                         matrixStackIn.pushPose();

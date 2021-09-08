@@ -8,14 +8,8 @@ import static me.suff.mc.regen.client.skin.CommonSkin.*;
 
 public class DownloadSkinsThread extends Thread {
 
-    private final boolean isClient;
-
-    public DownloadSkinsThread(boolean isClient) {
-        this.isClient = isClient;
-    }
-
-    public static void setup(boolean isClient) {
-        DownloadSkinsThread thread = new DownloadSkinsThread(isClient);
+    public static void setup() {
+        DownloadSkinsThread thread = new DownloadSkinsThread();
         thread.setDaemon(true);
         thread.setName("Regen - Skins");
         thread.start();

@@ -6,9 +6,9 @@ issueTrackerURL = "https://github.com/WhoCraft/Regeneration/issues"
 [[mods]] #mandatory
 itemIcon = "regen:fobwatch"
 modId = "regen" #mandatory
-version = "2.0.4" #mandatory
+version = "2.0.5" #mandatory
+updateJSONURL = "https://api.who-craft.com/get/regen/update" #optional
 displayName = "Regeneration" #mandatory
-updateJSONURL = "https://raw.githubusercontent.com/WhoCraft/Regeneration/data/update.json" #optional
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration" #optional
 logoFile = "regen.png" #optional
 credits = "Connor Dawn, Angela, Magic Man, End Phoenix, Asher, TommyPie, HoldYourWaffle, GasMaskVA, Dhi, Violet, Wodaman, aaliceh" #optional
