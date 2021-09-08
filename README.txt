@@ -1,46 +1,41 @@
+[![](https://i.imgur.com/GcUuiUW.png#center)](https://www.curseforge.com/minecraft/mc-mods/regeneration/files)
 
-Source installation information for modders
--------------------------------------------
-This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to the vanilla MCP source code, giving you and it access 
-to some of the data and functions you need to build a successful mod.
+<p align="center">
+<a href="https://www.curseforge.com/minecraft/mc-mods/regeneration/files">
+  <img src="http://cf.way2muchnoise.eu/versions/regeneration.svg">
+  <img src="http://cf.way2muchnoise.eu/regeneration.svg"> <br>
+</a>
 
-Note also that the patches are built against "un-renamed" MCP source code (aka
-SRG Names) - this means that you will not be able to read them directly against
-normal code.
+</p>
+<p align="center">
+  <b>Links:</b><br>
+  <a href="https://discord.gg/SRsBsDp">Discord</a> |
+  <a href="https://www.curseforge.com/minecraft/mc-mods/regeneration">Download</a> 
+  <br><br>
+</p>
 
-Setup Process:
-==============================
+| Credit | Contribution |
+  | --- | --- |
+  <a href="https://twitter.com/Suff1999">Suff</a> | Code
+  <a href="https://github.com/HoldYourWaffle">HoldYourWaffle</a> | Code
+  <a href="https://twitter.com/nictogen">Nictogen</a> | Code
+  <a href="https://twitter.com/50ap5ud5">50ap5ud5</a> | Code
+  <a href="https://twitter.com/TheConnorDawn">Connor Dawn</a> | Ideas & Sounds
+  <a href="https://twitter.com/DisasterGaye">Angela</a> | Ideas & Voices & Models/Textures
+  <a href="https://twitter.com/MagicMrmann">Magic Man</a> | Models/Textures
+  <a href="https://twitter.com/Phoenix26947026">End Phoenix</a> | Models/Textures
+  <a href="https://twitter.com/Asher_Enterprix">Asher</a> | Timelord Voices
+  <a href="https://www.fiverr.com/share/5AE3dQ">aaliceh</a> | Timelord Voices
+  <a href="https://www.youtube.com/channel/UC0VxtmdbDvJO21xTqHD9S1w">Wodaman</a> | Timelord Voices
+  <a href="https://www.youtube.com/channel/UCYFRnwIqr7Ps8FD_qDoWhIQ">TommyPie</a> | Timelord Voices
+  <a href="https://twitter.com/TopNotchRamen">TopNotchRamen</a> | Timelord Voices
+  <a href="https://twitter.com/AlotOfSpareTime">GasMaskVA</a> | Timelord Voices
+  <a href="https://twitter.com/holo_modeller">Dhi</a> | Models & Textures
+  <a href="https://twitter.com/LocalViolet">Violet</a> | Logo & Doctor Who Skins
+  <a href="https://inventivetalent.org/">InventiveTalent</a> | MineSkin API
 
-Step 1: Open your command-line and browse to the folder where you extracted the zip file.
-
-Step 2: You're left with a choice.
-If you prefer to use Eclipse:
-1. Run the following command: `gradlew genEclipseRuns` (`./gradlew genEclipseRuns` if you are on Mac/Linux)
-2. Open Eclipse, Import > Existing Gradle Project > Select Folder 
-   or run `gradlew eclipse` to generate the project.
-
-If you prefer to use IntelliJ:
-1. Open IDEA, and import project.
-2. Select your build.gradle file and have it import.
-3. Run the following command: `gradlew genIntellijRuns` (`./gradlew genIntellijRuns` if you are on Mac/Linux)
-4. Refresh the Gradle Project in IDEA if required.
-
-If at any point you are missing libraries in your IDE, or you've run into problems you can 
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
-
-Mapping Names:
-=============================
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license, if you do not agree with it you can change your mapping names to other crowdsourced names in your 
-build.gradle. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-
-Additional Resources: 
-=========================
-Community Documentation: http://mcforge.readthedocs.io/en/latest/gettingstarted/  
-LexManos' Install Video: https://www.youtube.com/watch?v=8VEdtQLuLO0  
-Forge Forum: https://forums.minecraftforge.net/  
-Forge Discord: https://discord.gg/UvedJ9m  
+<p align="center">
+<a href="https://www.bisecthosting.com/dontblink">
+  <img src="https://www.bisecthosting.com/partners/custom-banners/dd651da3-657d-4154-9e2b-3df1d135c635.png">
+</a>
+</p>
