@@ -82,6 +82,11 @@ public class ArchBlock extends DirectionalBlock implements ICompatObject {
         IRegen cap = RegenCap.get(player).orElse(null);
         int regensLeftInHand = ArchHelper.getRegenerations(mainHandItem);
 
+        if (mainHandItem.getCount() != 1) {
+            PlayerUtil.sendMessage(player, new TranslationTextComponent("Stack items can only be equal to 1"), true);
+            return false;
+        }
+
         if (mainHandItem.isEmpty()) return false;
         if (handIn == Hand.MAIN_HAND && cap.getState() == PlayerUtil.RegenState.ALIVE) {
 
