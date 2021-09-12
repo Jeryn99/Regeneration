@@ -103,6 +103,9 @@ repositories {
     maven { url "https://maven.blamejared.com/" }
     maven { url "https://www.cursemaven.com" }
     maven { url 'https://jitpack.io' }
+    flatDir {
+        dir 'libs'
+    }
     mavenCentral()
 }
 
@@ -117,13 +120,16 @@ minecraft.runs.all {
     }
 }
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.53'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.59'
 
     library 'com.google.guava:guava:21.0'
     library 'org.spongepowered:mixin:0.8.4'
-
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    implementation fg.deobf("curse.maven:configured-457570:3434072")
+    implementation fg.deobf("curse.maven:catalogue-459701:3399552")
+
 }
+
 
 mixin {
     add sourceSets.main, "regen.refmap.json"
@@ -137,7 +143,7 @@ jar {
                 "Specification-Version"   : project.version, // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "regensareus",
+                "Implementation-Vendor"   : "Suff99",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "MixinConfigs"            : "regen.mixins.json"
         ])

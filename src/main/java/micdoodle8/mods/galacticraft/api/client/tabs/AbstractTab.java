@@ -1,6 +1,5 @@
 package micdoodle8.mods.galacticraft.api.client.tabs;
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

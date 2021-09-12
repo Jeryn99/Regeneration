@@ -85,8 +85,7 @@ public class GunItem extends Item {
             }
         }
 
-        if (entityIn instanceof Player) {
-            Player playerEntity = (Player) entityIn;
+        if (entityIn instanceof Player playerEntity) {
             if (getDamage(stack) == getMaxDamage(stack)) {
                 playerEntity.getCooldowns().addCooldown(this, getMaxDamage(stack) * cooldown * 20);
             }

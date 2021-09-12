@@ -41,7 +41,7 @@ public class AdvancementGen implements DataProvider {
 
 
     @Override
-    public void run(HashCache p_200398_1_) throws IOException {
+    public void run(HashCache hashCache) throws IOException {
         Path path = this.generator.getOutputFolder();
         TriggerManager.init();
         Advancement watchIsMe = this.createAdvancement("watch_is_me", new ItemStack(RItems.FOB.get()), InventoryChangeTrigger.TriggerInstance.hasItems(RItems.FOB.get()), null, FrameType.GOAL);
@@ -62,7 +62,7 @@ public class AdvancementGen implements DataProvider {
         Advancement council = this.createAdvancement("council", new ItemStack(RItems.M_ROBES_HEAD.get()), new BaseTrigger.Instance(TriggerManager.COUNCIL.getId()), trade);
 
         for (Advancement adv : advancements) {
-            DataProvider.save(GSON, p_200398_1_, adv.deconstruct().serializeToJson(), getPath(path, adv));
+            DataProvider.save(GSON, hashCache, adv.deconstruct().serializeToJson(), getPath(path, adv));
         }
     }
 

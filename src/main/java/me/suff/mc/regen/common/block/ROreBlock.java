@@ -29,13 +29,13 @@ public class ROreBlock extends Block {
 
     public ROreBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(LIT, Boolean.valueOf(false)));
+        this.registerDefaultState(this.defaultBlockState().setValue(LIT, Boolean.FALSE));
     }
 
     private static void activate(BlockState state, Level world, BlockPos pos) {
         spawnParticles(world, pos);
         if (!state.getValue(LIT)) {
-            world.setBlock(pos, state.setValue(LIT, Boolean.valueOf(true)), 3);
+            world.setBlock(pos, state.setValue(LIT, Boolean.TRUE), 3);
         }
 
     }
@@ -89,7 +89,7 @@ public class ROreBlock extends Block {
     @Override
     public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
         if (state.getValue(LIT)) {
-            worldIn.setBlock(pos, state.setValue(LIT, Boolean.valueOf(false)), 3);
+            worldIn.setBlock(pos, state.setValue(LIT, Boolean.FALSE), 3);
         }
     }
 

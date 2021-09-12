@@ -68,8 +68,7 @@ class CommonActing implements Acting {
                 break;
             case REGENERATING:
 
-                if (livingEntity instanceof ServerPlayer) {
-                    ServerPlayer playerEntity = (ServerPlayer) livingEntity;
+                if (livingEntity instanceof ServerPlayer playerEntity) {
                     TriggerManager.FIRST_REGENERATION.trigger(playerEntity);
                 }
 
@@ -199,6 +198,7 @@ class CommonActing implements Acting {
         } else {
             living.playSound(getRandomSound(living.getRandom(), cap), 1, 1);
         }
+
         living.getAttribute(Attributes.MAX_HEALTH).removeModifier(MAX_HEALTH_ID);
         living.getAttribute(Attributes.MOVEMENT_SPEED).removeModifier(SLOWNESS_ID);
         living.setHealth(Math.max(living.getHealth(), 8));

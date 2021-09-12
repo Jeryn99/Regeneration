@@ -71,7 +71,7 @@ public class CommonSkin {
         folderFiles.removeIf(file -> !file.getName().endsWith(".png"));
 
         if (folderFiles.isEmpty()) {
-            DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
+            DownloadSkinsThread.setup();
             return null;
         }
 

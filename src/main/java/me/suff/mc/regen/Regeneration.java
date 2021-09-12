@@ -7,6 +7,7 @@ import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.entities.TimelordEntity;
+import me.suff.mc.regen.common.entities.WatcherEntity;
 import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
@@ -82,7 +83,7 @@ public class Regeneration {
     @SubscribeEvent
     public static void onAttributes(EntityAttributeCreationEvent attributeCreationEvent) {
         attributeCreationEvent.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
-        attributeCreationEvent.put(REntities.WATCHER.get(), TimelordEntity.createAttributes().build());
+        attributeCreationEvent.put(REntities.WATCHER.get(), WatcherEntity.createAttributes().build());
     }
 
     private void doCommonStuff(final FMLCommonSetupEvent event) {
@@ -95,7 +96,7 @@ public class Regeneration {
         });
 
         ActingForwarder.init();
-        DownloadSkinsThread.setup(FMLEnvironment.dist == Dist.CLIENT);
+        DownloadSkinsThread.setup();
         RSoundSchemes.init();
         TriggerManager.init();
     }

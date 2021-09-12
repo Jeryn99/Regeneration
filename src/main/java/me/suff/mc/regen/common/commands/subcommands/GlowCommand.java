@@ -6,6 +6,8 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.suff.mc.regen.common.regen.RegenCap;
+import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 

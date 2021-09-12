@@ -2,8 +2,11 @@ package me.suff.mc.regen.network.messages;
 
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
+import me.suff.mc.regen.common.traits.AbstractTrait;
+import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.util.RegenSources;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;

@@ -37,4 +37,5 @@ public class TraitsArgumentType implements ArgumentType<AbstractTrait> {
         return SharedSuggestionProvider.suggestResource(RegenTraitRegistry.TRAIT_REGISTRY.get().getKeys(), builder);
     }
 
+
 }

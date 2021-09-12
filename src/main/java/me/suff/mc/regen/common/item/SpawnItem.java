@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
-public class SpawnItem<E extends TimelordEntity> extends Item {
+public class SpawnItem extends Item {
 
     public SpawnItem() {
         super(new Properties().tab(RItems.MAIN));

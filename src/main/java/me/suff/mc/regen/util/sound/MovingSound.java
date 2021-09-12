@@ -28,8 +28,7 @@ public class MovingSound extends AbstractTickableSoundInstance {
     @Override
     public void tick() {
 
-        if (entity instanceof Entity) {
-            Entity entityObject = (Entity) entity;
+        if (entity instanceof Entity entityObject) {
             if (stopCondition.get() || !entityObject.isAlive()) {
                 setDonePlaying();
             }
@@ -44,8 +43,7 @@ public class MovingSound extends AbstractTickableSoundInstance {
             super.z = (float) entityObject.getZ();
         }
 
-        if (entity instanceof BlockEntity) {
-            BlockEntity tileObject = (BlockEntity) entity;
+        if (entity instanceof BlockEntity tileObject) {
             BlockPos pos = tileObject.getBlockPos();
             super.x = (float) pos.getX();
             super.y = (float) pos.getY();
