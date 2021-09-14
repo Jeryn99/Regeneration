@@ -1,8 +1,13 @@
 package me.suff.mc.regen.common.entities;
 
+import com.mojang.math.Vector3d;
 import me.suff.mc.regen.util.RegenSources;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +24,9 @@ public class Laser extends ThrowableProjectile {
 
     private float damage = 3;
     private DamageSource damageSrc = RegenSources.REGEN_DMG_RIFLE;
+    private static final EntityDataAccessor<Float> RED = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> GREEN = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> BLUE = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
 
     public Laser(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
         super(type, worldIn);
@@ -34,7 +42,19 @@ public class Laser extends ThrowableProjectile {
 
     @Override
     protected void defineSynchedData() {
+        this.entityData.define(RED, 1F);
+        this.entityData.define(GREEN, 0F);
+        this.entityData.define(BLUE, 0F);
+    }
 
+    public Vector3d getColor(){
+        return new Vector3d(getEntityData().get(RED), getEntityData().get(GREEN), getEntityData().get(BLUE));
+    }
+
+    public void setColors(float red, float green, float blue){
+        getEntityData().set(RED, red);
+        getEntityData().set(GREEN, green);
+        getEntityData().set(BLUE, blue);
     }
 
     public void setDamage(float damage) {
@@ -68,10 +88,24 @@ public class Laser extends ThrowableProjectile {
     @Override
     protected void onHitEntity(EntityHitResult entityRayTraceResult) {
         Entity entity = entityRayTraceResult.getEntity();
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity;
+        if (entity instanceof LivingEntity livingEntity) {
             livingEntity.hurt(damageSrc, damage);
         }
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = super.serializeNBT();
+        nbt.putFloat("r", (float) getColor().x);
+        nbt.putFloat("g", (float) getColor().y);
+        nbt.putFloat("b", (float) getColor().z);
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        setColors(nbt.getFloat("r"), nbt.getFloat("g"),nbt.getFloat("b"));
+        super.deserializeNBT(nbt);
     }
 
     @Override
