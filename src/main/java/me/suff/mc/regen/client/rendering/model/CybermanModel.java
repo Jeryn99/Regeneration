@@ -21,10 +21,11 @@ public class CybermanModel extends HumanoidModel<Cyberman> {
         super(p_170679_, p_170680_);
     }
 
-    public static LayerDefinition createBodyLayer() {
+    public static LayerDefinition createBodyLayer(boolean isFullModel) {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
         partdefinition.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
+
 
         PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F))
                 .texOffs(32, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.5F))
@@ -49,6 +50,12 @@ public class CybermanModel extends HumanoidModel<Cyberman> {
 
         PartDefinition left_leg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(16, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
                 .texOffs(68, 16).addBox(-2.0F, 0.5F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offset(2.0F, 12.0F, 0.0F));
+
+        if(!isFullModel){
+            PartDefinition head_glow = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(68, 46).addBox(-1.0F, -10.0F, -4.0F, 2.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+            PartDefinition body_glow = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(23, 23).addBox(-1.0F, 3.0F, -2.2F, 2.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+            PartDefinition right_arm_glow = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(73, 85).addBox(-3.0F, 10.0F, -1.0F, 1.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, 2.0F, 0.0F));
+        }
 
         return LayerDefinition.create(meshdefinition, 128, 128);
     }
