@@ -1,6 +1,5 @@
 package me.suff.mc.regen.common.item;
 
-import me.suff.mc.regen.common.entities.TimelordEntity;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RSoundSchemes;
@@ -35,14 +34,14 @@ public class SpawnItem extends Item {
     public static Timelord getType(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         String timelordType = tag.getString("type");
-        timelordType = timelordType.isEmpty() ? Timelord.FEMALE_COUNCIL.name() : timelordType;
-        return Timelord.valueOf(timelordType);
+        timelordType = timelordType.isEmpty() ? SpawnItem.Timelord.FEMALE_COUNCIL.name() : timelordType;
+        return SpawnItem.Timelord.valueOf(timelordType);
     }
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         if (allowdedIn(group)) {
-            for (Timelord timelordType : Timelord.values()) {
+            for (Timelord timelordType : SpawnItem.Timelord.values()) {
                 ItemStack itemstack = new ItemStack(this);
                 setType(itemstack, timelordType);
                 items.add(itemstack);
@@ -64,13 +63,13 @@ public class SpawnItem extends Item {
         InteractionHand hand = player.getUsedItemHand();
 
         if (!worldIn.isClientSide) {
-            TimelordEntity timelord = REntities.TIMELORD.get().create(worldIn);
+            me.suff.mc.regen.common.entities.Timelord timelord = REntities.TIMELORD.get().create(worldIn);
             timelord.setMale(getType(context.getItemInHand()).isMale());
             timelord.setPersonality(RSoundSchemes.getRandom(timelord.male()).identify().toString());
-            if (getType(context.getItemInHand()) == Timelord.GUARD) {
-                timelord.setTimelordType(TimelordEntity.TimelordType.GUARD);
+            if (getType(context.getItemInHand()) == SpawnItem.Timelord.GUARD) {
+                timelord.setTimelordType(me.suff.mc.regen.common.entities.Timelord.TimelordType.GUARD);
             } else {
-                timelord.setTimelordType(TimelordEntity.TimelordType.COUNCIL);
+                timelord.setTimelordType(me.suff.mc.regen.common.entities.Timelord.TimelordType.COUNCIL);
             }
             RegenCap.get(timelord).ifPresent(iRegen -> {
                 timelord.initSkin(iRegen);

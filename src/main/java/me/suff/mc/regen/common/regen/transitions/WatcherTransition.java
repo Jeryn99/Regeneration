@@ -1,6 +1,6 @@
 package me.suff.mc.regen.common.regen.transitions;
 
-import me.suff.mc.regen.common.entities.WatcherEntity;
+import me.suff.mc.regen.common.entities.Watcher;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.IRegen;
@@ -27,10 +27,10 @@ public final class WatcherTransition extends TransitionType {
                 Direction facing = player.getMotionDirection();
                 BlockPos playerPos = player.blockPosition();
                 BlockPos spawnPos = playerPos.relative(facing, 4);
-                WatcherEntity watcherEntity = new WatcherEntity(player.level);
-                watcherEntity.setTarget(player);
-                watcherEntity.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
-                player.level.addFreshEntity(watcherEntity);
+                Watcher watcher = new Watcher(player.level);
+                watcher.setTarget(player);
+                watcher.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+                player.level.addFreshEntity(watcher);
             }
         });
     }
@@ -39,7 +39,7 @@ public final class WatcherTransition extends TransitionType {
     public void tick(IRegen cap) {
         LivingEntity living = cap.getLiving();
         Level world = living.level;
-        List<WatcherEntity> watchers = world.getEntities(REntities.WATCHER.get(), living.getBoundingBox().inflate(64), watcherEntity -> watcherEntity.getTarget() == living);
+        List<Watcher> watchers = world.getEntities(REntities.WATCHER.get(), living.getBoundingBox().inflate(64), watcher -> watcher.getTarget() == living);
 
         if (watchers.isEmpty()) {
             WatcherTransition.createWatcher(living);

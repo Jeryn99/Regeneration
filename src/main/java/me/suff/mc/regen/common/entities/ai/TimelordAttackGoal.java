@@ -1,5 +1,6 @@
-package me.suff.mc.regen.common.entities;
+package me.suff.mc.regen.common.entities.ai;
 
+import me.suff.mc.regen.common.entities.Timelord;
 import me.suff.mc.regen.common.item.GunItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
@@ -8,16 +9,16 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 /* Created by Craig on 01/03/2021 */
 public class TimelordAttackGoal extends RangedAttackGoal {
 
-    private final TimelordEntity timelord;
+    private final Timelord timelord;
 
     public TimelordAttackGoal(RangedAttackMob attacker, double movespeed, int maxAttackTime, float maxAttackDistanceIn) {
         super(attacker, movespeed, maxAttackTime, maxAttackDistanceIn);
-        this.timelord = (TimelordEntity) attacker;
+        this.timelord = (Timelord) attacker;
     }
 
     public TimelordAttackGoal(RangedAttackMob attacker, double movespeed, int p_i1650_4_, int maxAttackTime, float maxAttackDistanceIn) {
         super(attacker, movespeed, p_i1650_4_, maxAttackTime, maxAttackDistanceIn);
-        this.timelord = (TimelordEntity) attacker;
+        this.timelord = (Timelord) attacker;
     }
 
     @Override

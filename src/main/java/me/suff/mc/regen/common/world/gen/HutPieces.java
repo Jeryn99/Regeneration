@@ -1,7 +1,6 @@
 package me.suff.mc.regen.common.world.gen;
 
-import com.google.common.collect.ImmutableMap;
-import me.suff.mc.regen.common.entities.TimelordEntity;
+import me.suff.mc.regen.common.entities.Timelord;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
@@ -23,7 +22,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class HutPieces {
@@ -62,15 +60,15 @@ public class HutPieces {
         protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, Random rand, BoundingBox sbb) {
 
             if ("timelord".equals(function)) {
-                TimelordEntity timelordEntity = REntities.TIMELORD.get().create(worldIn.getLevel());
-                RegenCap.get(timelordEntity).ifPresent(iRegen -> {
-                    timelordEntity.initSkin(iRegen);
-                    timelordEntity.genName();
+                Timelord timelord = REntities.TIMELORD.get().create(worldIn.getLevel());
+                RegenCap.get(timelord).ifPresent(iRegen -> {
+                    timelord.initSkin(iRegen);
+                    timelord.genName();
                     iRegen.setRegens(rand.nextInt(12));
-                    timelordEntity.moveTo(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
+                    timelord.moveTo(pos.getX(), pos.getY(), pos.getZ(), 90, 90);
                     worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
                     iRegen.syncToClients(null);
-                    worldIn.addFreshEntity(timelordEntity);
+                    worldIn.addFreshEntity(timelord);
                 });
             }
 

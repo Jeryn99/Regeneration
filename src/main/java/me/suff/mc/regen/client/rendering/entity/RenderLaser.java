@@ -3,7 +3,7 @@ package me.suff.mc.regen.client.rendering.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import me.suff.mc.regen.common.entities.LaserProjectile;
+import me.suff.mc.regen.common.entities.Laser;
 import me.suff.mc.regen.util.RenderHelp;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -14,7 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 /* Created by Craig on 01/03/2021 */
-public class RenderLaser extends EntityRenderer<LaserProjectile> {
+public class RenderLaser extends EntityRenderer<Laser> {
 
 
     public RenderLaser(EntityRendererProvider.Context p_174008_) {
@@ -22,7 +22,7 @@ public class RenderLaser extends EntityRenderer<LaserProjectile> {
     }
 
     @Override
-    public void render(LaserProjectile entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(Laser entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLightIn) {
         matrixStack.pushPose();
         Vec3 vec1 = new Vec3(entity.xOld, entity.yOld, entity.zOld);
         Vec3 vec2 = new Vec3(entity.getX(), entity.getY(), entity.getZ());
@@ -44,7 +44,7 @@ public class RenderLaser extends EntityRenderer<LaserProjectile> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(LaserProjectile entity) {
+    public ResourceLocation getTextureLocation(Laser entity) {
         return null;
     }
 

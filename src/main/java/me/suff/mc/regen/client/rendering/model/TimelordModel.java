@@ -3,7 +3,7 @@ package me.suff.mc.regen.client.rendering.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import me.suff.mc.regen.common.entities.TimelordEntity;
+import me.suff.mc.regen.common.entities.Timelord;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 
-public class TimelordModel extends PlayerModel<TimelordEntity> {
+public class TimelordModel extends PlayerModel<Timelord> {
 
     private final ModelPart Head;
     private final ModelPart Body;
@@ -42,22 +42,22 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
 
         PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().mirror(false).texOffs(54, 16).addBox(-5.0F, -0.25F, 3.0F, 10.0F, 23.0F, 0.0F, new CubeDeformation(0.0F))
                 .mirror(false).texOffs(16, 16).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
-                .mirror(false).texOffs(16, 32).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+                .mirror(false).texOffs(16, 32).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 
         PartDefinition Collar = Body.addOrReplaceChild("Collar", CubeListBuilder.create().mirror(false).texOffs(0, 84).addBox(-7.5F, -24.275F, -2.5F, 15.0F, 3.0F, 5.0F, new CubeDeformation(0.0F))
                 .mirror(false).texOffs(0, 64).addBox(-7.5F, -36.275F, -2.5F, 15.0F, 12.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 24.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 
         PartDefinition RightArm = partdefinition.addOrReplaceChild("RightArm", CubeListBuilder.create().mirror(false).texOffs(40, 16).addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
-                .mirror(false).texOffs(40, 32).addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(-5.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+                .mirror(false).texOffs(40, 32).addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offsetAndRotation(-5.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 
         PartDefinition LeftArm = partdefinition.addOrReplaceChild("LeftArm", CubeListBuilder.create().mirror(false).texOffs(32, 48).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
-                .mirror(false).texOffs(48, 48).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(5.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+                .mirror(false).texOffs(48, 48).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offsetAndRotation(5.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 
         PartDefinition RightLeg = partdefinition.addOrReplaceChild("RightLeg", CubeListBuilder.create().mirror(false).texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
-                .mirror(false).texOffs(0, 32).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(-1.9F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+                .mirror(false).texOffs(0, 32).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offsetAndRotation(-1.9F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 
         PartDefinition LeftLeg = partdefinition.addOrReplaceChild("LeftLeg", CubeListBuilder.create().mirror(false).texOffs(16, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
-                .mirror(false).texOffs(0, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)), PartPose.offsetAndRotation(1.9F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+                .mirror(false).texOffs(0, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)), PartPose.offsetAndRotation(1.9F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F));
         return LayerDefinition.create(meshdefinition, 100, 100);
     }
 
@@ -86,15 +86,15 @@ public class TimelordModel extends PlayerModel<TimelordEntity> {
     }
 
     @Override
-    public void setupAnim(TimelordEntity timelordEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(timelordEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+    public void setupAnim(Timelord timelord, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        super.setupAnim(timelord, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         Head.copyFrom(head);
         Body.copyFrom(body);
         LeftArm.copyFrom(leftArm);
         RightArm.copyFrom(rightArm);
         RightLeg.copyFrom(rightLeg);
         LeftLeg.copyFrom(leftLeg);
-        boolean flag = timelordEntity.getUnhappyCounter() > 0;
+        boolean flag = timelord.getUnhappyCounter() > 0;
         if (flag) {
             this.Head.yRot = 0.3F * Mth.sin(1.45F * ageInTicks);
         } else {

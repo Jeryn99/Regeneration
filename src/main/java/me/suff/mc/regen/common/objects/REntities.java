@@ -1,8 +1,9 @@
 package me.suff.mc.regen.common.objects;
 
-import me.suff.mc.regen.common.entities.LaserProjectile;
-import me.suff.mc.regen.common.entities.TimelordEntity;
-import me.suff.mc.regen.common.entities.WatcherEntity;
+import me.suff.mc.regen.common.entities.Cyberman;
+import me.suff.mc.regen.common.entities.Laser;
+import me.suff.mc.regen.common.entities.Timelord;
+import me.suff.mc.regen.common.entities.Watcher;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -17,9 +18,10 @@ public class REntities {
 
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, RConstants.MODID);
-    public static RegistryObject<EntityType<TimelordEntity>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(TimelordEntity::new, MobCategory.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
-    public static RegistryObject<EntityType<WatcherEntity>> WATCHER = ENTITIES.register("watcher", () -> registerNoSpawnerBase(WatcherEntity::new, MobCategory.MISC, 0.6F, 1.95F, 128, 1, true, "watcher"));
-    public static RegistryObject<EntityType<LaserProjectile>> LASER = ENTITIES.register("laser", () -> registerNoSpawnerBase(LaserProjectile::new, MobCategory.MISC, 0.25F, 0.25F, 128, 1, true, "laser"));
+    public static RegistryObject<EntityType<Timelord>> TIMELORD = ENTITIES.register("timelord", () -> registerNoSpawnerBase(Timelord::new, MobCategory.MISC, 0.6F, 1.95F, 128, 1, true, "timelord"));
+    public static RegistryObject<EntityType<Watcher>> WATCHER = ENTITIES.register("watcher", () -> registerNoSpawnerBase(Watcher::new, MobCategory.MISC, 0.6F, 1.95F, 128, 1, true, "watcher"));
+    public static RegistryObject<EntityType<Laser>> LASER = ENTITIES.register("laser", () -> registerNoSpawnerBase(Laser::new, MobCategory.MISC, 0.25F, 0.25F, 128, 1, true, "laser"));
+    public static RegistryObject<EntityType<Cyberman>> CYBERLORD = ENTITIES.register("cyberman", () -> registerNoSpawnerBase(Cyberman::new, MobCategory.MISC, 0.6F, 1.95F, 128, 1, true, "cyberman"));
 
     // Entity Creation
     private static <T extends Entity> EntityType<T> registerNoSpawnerBase(EntityType.EntityFactory<T> factory, MobCategory classification, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate, String name) {

@@ -1,17 +1,13 @@
 package me.suff.mc.regen.common.block;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
 /* Created by Craig on 09/03/2021 */
 public class BlockShapes {
 
-    public static VoxelShape makeClosedJar(){
+    public static VoxelShape makeClosedJar() {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0.1875, 0.09375, 0.1875, 0.8125, 0.1875, 0.25), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0.75, 0.09375, 0.1875, 0.8125, 0.1875, 0.8125), BooleanOp.OR);
@@ -31,8 +27,8 @@ public class BlockShapes {
 
         return shape;
     }
-    
-    public static VoxelShape makeOpenJar(){
+
+    public static VoxelShape makeOpenJar() {
         VoxelShape shape = Shapes.empty();
         shape = Shapes.join(shape, Shapes.box(0.1875, 0.09375, 0.1875, 0.8125, 0.1875, 0.25), BooleanOp.OR);
         shape = Shapes.join(shape, Shapes.box(0.75, 0.09375, 0.1875, 0.8125, 0.1875, 0.8125), BooleanOp.OR);

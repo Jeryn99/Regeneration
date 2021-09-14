@@ -7,7 +7,6 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.transitions.TransitionType;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypeRenderers;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;

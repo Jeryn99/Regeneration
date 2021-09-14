@@ -20,14 +20,23 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class WatcherEntity extends Mob {
+public class Watcher extends Mob {
 
-    public WatcherEntity(EntityType<? extends Mob> type, Level worldIn) {
+    public Watcher(EntityType<? extends Mob> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public WatcherEntity(Level worldIn) {
+    public Watcher(Level worldIn) {
         super(REntities.WATCHER.get(), worldIn);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Monster.createMonsterAttributes().
+                add(Attributes.FOLLOW_RANGE, 35D).
+                add(Attributes.MOVEMENT_SPEED, 0.23F).
+                add(Attributes.ATTACK_DAMAGE, 3F).
+                add(Attributes.MAX_HEALTH, 20D).
+                add(Attributes.ARMOR, 2.0D);
     }
 
     @Override
@@ -73,16 +82,6 @@ public class WatcherEntity extends Mob {
     @Override
     public AttributeMap getAttributes() {
         return new AttributeMap(createAttributes().build());
-    }
-
-
-    public static AttributeSupplier.Builder createAttributes() {
-        return Monster.createMonsterAttributes().
-                add(Attributes.FOLLOW_RANGE, 35D).
-                add(Attributes.MOVEMENT_SPEED, 0.23F).
-                add(Attributes.ATTACK_DAMAGE, 3F).
-                add(Attributes.MAX_HEALTH, 20D).
-                add(Attributes.ARMOR, 2.0D);
     }
 
     @Override

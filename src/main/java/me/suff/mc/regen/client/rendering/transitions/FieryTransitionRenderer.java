@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import me.suff.mc.regen.client.animation.AnimationHandler;
 import me.suff.mc.regen.client.rendering.types.RenderTypes;
-import me.suff.mc.regen.common.entities.TimelordEntity;
+import me.suff.mc.regen.common.entities.Timelord;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.util.RConstants;
@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -117,7 +116,7 @@ public class FieryTransitionRenderer implements TransitionRenderer {
 
             //Render player overlay
             if (((LivingEntity) entitylivingbaseIn).hurtTime > 0 && iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.REGENERATING) {
-                if (entitylivingbaseIn instanceof TimelordEntity) return;
+                if (entitylivingbaseIn instanceof Timelord) return;
                 float opacity = Mth.clamp(Mth.sin((entitylivingbaseIn.tickCount + Minecraft.getInstance().getFrameTime()) / 5) * 0.1F + 0.1F, 0.11F, 1F);
                 renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());
                 renderOverlay(matrix, bufferIn.getBuffer(RenderTypes.REGEN_FLAMES), packedLightIn, bipedModel, (LivingEntity) entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, opacity, iRegen.getPrimaryColors());

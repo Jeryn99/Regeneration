@@ -149,7 +149,7 @@ public class ClientEvents {
                 e.setGreen(0.5F);
             }
 
-           if (data.transitionType() == TransitionTypes.TROUGHTON.get() && data.regenState() == RegenStates.REGENERATING) {
+            if (data.transitionType() == TransitionTypes.TROUGHTON.get() && data.regenState() == RegenStates.REGENERATING) {
                 e.setRed(0);
                 e.setGreen(0);
                 e.setBlue(0);
@@ -224,7 +224,7 @@ public class ClientEvents {
                     event.setCanceled(true);
                     event.setDensity(35F);
                 }
-               if (data.transitionType() == TransitionTypes.TROUGHTON.get() && data.updateTicks() > 0) {
+                if (data.transitionType() == TransitionTypes.TROUGHTON.get() && data.updateTicks() > 0) {
                     event.setCanceled(true);
                     event.setDensity(17);
                 }

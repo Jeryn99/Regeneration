@@ -8,7 +8,7 @@ import me.suff.mc.regen.client.rendering.layers.TimelordHeadLayer;
 import me.suff.mc.regen.client.rendering.model.RModels;
 import me.suff.mc.regen.client.rendering.model.TimelordGuardModel;
 import me.suff.mc.regen.client.rendering.model.TimelordModel;
-import me.suff.mc.regen.common.entities.TimelordEntity;
+import me.suff.mc.regen.common.entities.Timelord;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.config.RegenConfig;
@@ -35,7 +35,7 @@ import java.util.UUID;
  * Created by Craig
  * on 03/05/2020 @ 19:02
  */
-public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, PlayerModel<TimelordEntity>> {
+public class TimelordRenderer extends LivingEntityRenderer<Timelord, PlayerModel<Timelord>> {
 
     public static PlayerModel mainModel;
     public static TimelordModel councilModel;
@@ -56,15 +56,15 @@ public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, Playe
     }
 
 
-    public static ResourceLocation getTimelordFace(TimelordEntity timelordEntity) {
-        IRegen data = RegenCap.get(timelordEntity).orElseGet(null);
+    public static ResourceLocation getTimelordFace(Timelord timelord) {
+        IRegen data = RegenCap.get(timelord).orElseGet(null);
 
         if (data.updateTicks() > 100 && data.updateTicks() < 105) {
-            TIMELORDS.remove(timelordEntity.getUUID());
+            TIMELORDS.remove(timelord.getUUID());
         }
 
-        if (TIMELORDS.containsKey(timelordEntity.getUUID())) {
-            return TIMELORDS.get(timelordEntity.getUUID());
+        if (TIMELORDS.containsKey(timelord.getUUID())) {
+            return TIMELORDS.get(timelord.getUUID());
         }
 
         NativeImage nativeImage = null;
@@ -79,13 +79,13 @@ public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, Playe
             return DefaultPlayerSkin.getDefaultSkin();
         }
         ResourceLocation location = Minecraft.getInstance().getTextureManager().register("timelord_", new DynamicTexture(nativeImage));
-        TIMELORDS.put(timelordEntity.getUUID(), location);
+        TIMELORDS.put(timelord.getUUID(), location);
         return location;
 
     }
 
     @Override
-    public void render(TimelordEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(Timelord entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         switch (entityIn.getTimelordType()) {
             case GUARD -> mainModel = guardModel;
             case COUNCIL -> mainModel = councilModel;
@@ -100,7 +100,7 @@ public class TimelordRenderer extends LivingEntityRenderer<TimelordEntity, Playe
 
     @Nullable
     @Override
-    public ResourceLocation getTextureLocation(TimelordEntity entity) {
+    public ResourceLocation getTextureLocation(Timelord entity) {
         String gender = entity.male() ? "male" : "female";
         return switch (entity.getTimelordType()) {
             case COUNCIL -> new ResourceLocation(RConstants.MODID, "textures/entity/timelords/timelord/timelord_council_" + gender + ".png");

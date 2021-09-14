@@ -17,6 +17,13 @@
       "regen:drum_beat"
     ]
   },
+  "cyber_walk": {
+    "subtitle": "regen.sound.cyber_walk",
+    "sounds": [
+      "regen:cyber/cyber_walk",
+      "regen:cyber/cyber_walk_two"
+    ]
+  },
   "saxons_england": {
     "subtitle": "regen.sound.saxons_england",
     "sounds": [

@@ -3,7 +3,7 @@ package me.suff.mc.regen.client.rendering.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import me.suff.mc.regen.common.entities.TimelordEntity;
+import me.suff.mc.regen.common.entities.Timelord;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import net.minecraft.client.Minecraft;
@@ -13,7 +13,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class TimelordGuardModel extends PlayerModel<TimelordEntity> {
+public class TimelordGuardModel extends PlayerModel<Timelord> {
     private final ModelPart Head;
     private final ModelPart Body;
     private final ModelPart RightArm;
@@ -59,23 +59,23 @@ public class TimelordGuardModel extends PlayerModel<TimelordEntity> {
     }
 
     @Override
-    public void setupAnim(TimelordEntity timelordEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        RegenCap.get(timelordEntity).ifPresent(iRegen -> {
+    public void setupAnim(Timelord timelord, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        RegenCap.get(timelord).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
                 rightArmPose = ArmPose.EMPTY;
             }
 
-            super.setupAnim(timelordEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            super.setupAnim(timelord, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
 
-            if (timelordEntity.getAiming()) {
+            if (timelord.getAiming()) {
                 leftArm.xRot = head.xRot;
                 leftArm.yRot = head.yRot;
                 leftArm.zRot = head.zRot;
                 rightArm.xRot = head.xRot;
                 rightArm.yRot = head.yRot;
                 rightArm.zRot = head.zRot;
-                float aimTicks = timelordEntity.getAimingTicks();
+                float aimTicks = timelord.getAimingTicks();
                 leftArm.xRot += (float) Math.toRadians(-55F + aimTicks * -30F);
                 leftArm.yRot += (float) Math.toRadians((-45F + aimTicks * -20F) * (-1));
                 rightArm.xRot += (float) Math.toRadians(-42F + aimTicks * -48F);

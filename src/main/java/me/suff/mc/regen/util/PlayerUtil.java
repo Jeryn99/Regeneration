@@ -31,7 +31,7 @@ import java.util.List;
 public class PlayerUtil {
 
 
-    public static ArrayList<MobEffect> POTIONS = new ArrayList();
+    public static ArrayList<MobEffect> POTIONS = new ArrayList<>();
 
     public static void setupPotions() {
         if (!RegenConfig.COMMON.postRegenEffects.get().isEmpty()) {
@@ -55,8 +55,8 @@ public class PlayerUtil {
                 return false;
             }
         }
-        if (playerEntity instanceof ServerPlayer) {
-            TriggerManager.ZERO_ROOM.trigger((ServerPlayer) playerEntity);
+        if (playerEntity instanceof ServerPlayer serverPlayer) {
+            TriggerManager.ZERO_ROOM.trigger(serverPlayer);
         }
         return true;
     }

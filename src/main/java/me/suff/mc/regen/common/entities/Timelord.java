@@ -2,6 +2,7 @@ package me.suff.mc.regen.common.entities;
 
 import me.suff.mc.regen.client.skin.CommonSkin;
 import me.suff.mc.regen.common.advancement.TriggerManager;
+import me.suff.mc.regen.common.entities.ai.TimelordAttackGoal;
 import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.common.item.SpawnItem;
 import me.suff.mc.regen.common.objects.*;
@@ -43,6 +44,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
@@ -66,22 +68,22 @@ import java.util.Random;
  * Created by Suff
  * on 03/05/2020 @ 18:50
  */
-public class TimelordEntity extends Villager implements RangedAttackMob {
+public class Timelord extends AbstractVillager implements RangedAttackMob {
 
-    private static final EntityDataAccessor<String> TYPE = SynchedEntityData.defineId(TimelordEntity.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<String> PERSONALITY = SynchedEntityData.defineId(TimelordEntity.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<Boolean> AIMING = SynchedEntityData.defineId(TimelordEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> IS_MALE = SynchedEntityData.defineId(TimelordEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> HAS_SETUP = SynchedEntityData.defineId(TimelordEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Float> AIMING_TICKS = SynchedEntityData.defineId(TimelordEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<String> TYPE = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> PERSONALITY = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Boolean> AIMING = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_MALE = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> HAS_SETUP = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> AIMING_TICKS = SynchedEntityData.defineId(Timelord.class, EntityDataSerializers.FLOAT);
     protected final WaterBoundPathNavigation waterNavigator;
     protected final GroundPathNavigation groundNavigator;
 
-    public TimelordEntity(Level world) {
+    public Timelord(Level world) {
         this(REntities.TIMELORD.get(), world);
     }
 
-    public TimelordEntity(EntityType<TimelordEntity> entityEntityType, Level world) {
+    public Timelord(EntityType<Timelord> entityEntityType, Level world) {
         super(entityEntityType, world);
         this.waterNavigator = new WaterBoundPathNavigation(this, world);
         this.groundNavigator = new GroundPathNavigation(this, world);
@@ -159,9 +161,10 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
 
     protected void applyEntityAI() {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(TimelordEntity.class));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(Timelord.class));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Zombie.class, false));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Skeleton.class, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Cyberman.class, false));
     }
 
     @Override
@@ -281,9 +284,7 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
         if (!getEntityData().get(HAS_SETUP)) {
             setup();
         }
-
         super.tick();
-
         RegenCap.get(this).ifPresent((data) -> {
             if (!level.isClientSide) {
 
@@ -330,7 +331,7 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
         if (!level.isClientSide) {
             NetworkDispatcher.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new RemoveTimelordSkinMessage(this));
         }
-        super.kill();
+        remove(RemovalReason.KILLED);
     }
 
     public SoundScheme getPersonality() {
@@ -393,16 +394,15 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
                 ItemStack item = new ItemStack(RItems.ELIXIR.get());
                 Item[] currency = RegenUtil.TIMELORD_CURRENCY.getValues().toArray(new Item[0]);
                 ElixirItem.setTrait(item, trait);
-                TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[random.nextInt(currency.length)], Mth.clamp(random.nextInt(10), 6, 20)), item, random.nextInt(7), 5)};
+                TimelordTrade[] trades = new TimelordTrade[]{new Timelord.TimelordTrade(new ItemStack(currency[random.nextInt(currency.length)], Mth.clamp(random.nextInt(10), 6, 20)), item, random.nextInt(7), 5)};
                 this.addOffersFromItemListings(merchantoffers, trades, 5);
             }
 
             TimelordTrade[] tradetrades = new TimelordTrade[]{
-                    new TimelordEntity.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),
-                    new TimelordEntity.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), random.nextInt(7), 5)
+                    new Timelord.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),
+                    new Timelord.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), random.nextInt(7), 5)
             };
             this.addOffersFromItemListings(merchantoffers, tradetrades, 5);
-            super.updateTrades();
         }
     }
 
@@ -412,6 +412,10 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
             Item stack = random.nextBoolean() ? RItems.RIFLE.get() : RItems.PISTOL.get();
             this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(stack));
         }
+        if (getTimelordType() == TimelordType.COUNCIL) {
+            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.ENCHANTED_BOOK));
+        }
+
     }
 
     @Override
@@ -423,17 +427,17 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
     public void performRangedAttack(LivingEntity target, float distanceFactor) {
         boolean isPistol = getItemBySlot(EquipmentSlot.MAINHAND).getItem() == RItems.PISTOL.get();
 
-        LaserProjectile laserProjectile = new LaserProjectile(REntities.LASER.get(), this, level);
-        laserProjectile.setDamage(isPistol ? 4 : 10);
-        laserProjectile.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
+        Laser laser = new Laser(REntities.LASER.get(), this, level);
+        laser.setDamage(isPistol ? 4 : 10);
+        laser.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
         double d0 = target.getEyeY() - (double) 1.1F;
         double d1 = target.getX() - this.getX();
-        double d2 = d0 - laserProjectile.getY();
+        double d2 = d0 - laser.getY();
         double d3 = target.getZ() - this.getZ();
         float f = Mth.sqrt((float) (d1 * d1 + d3 * d3)) * 0.2F;
-        laserProjectile.shoot(d1, d2 + (double) f, d3, 1.6F, 0);
+        laser.shoot(d1, d2 + (double) f, d3, 1.6F, 0);
         this.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 0.3F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.level.addFreshEntity(laserProjectile);
+        this.level.addFreshEntity(laser);
     }
 
     public boolean getAiming() {
@@ -462,8 +466,7 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
             } else {
                 if (!this.level.isClientSide) {
                     this.setTradingPlayer(p_230254_1_);
-                    if (p_230254_1_ instanceof ServerPlayer) {
-                        ServerPlayer playerEntity = (ServerPlayer) p_230254_1_;
+                    if (p_230254_1_ instanceof ServerPlayer playerEntity) {
                         TriggerManager.TIMELORD_TRADE.trigger(playerEntity);
                     }
                     this.openTradingScreen(p_230254_1_, this.getDisplayName(), 1);
@@ -478,14 +481,16 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
     @Override
     public ItemStack getPickedResult(HitResult target) {
         switch (getTimelordType()) {
-            case GUARD:
+            case GUARD -> {
                 ItemStack guardStack = new ItemStack(RItems.SPAWN_ITEM.get());
                 SpawnItem.setType(guardStack, SpawnItem.Timelord.GUARD);
                 return guardStack;
-            case COUNCIL:
+            }
+            case COUNCIL -> {
                 ItemStack councilStack = new ItemStack(RItems.SPAWN_ITEM.get());
                 SpawnItem.setType(councilStack, male() ? SpawnItem.Timelord.MALE_COUNCIL : SpawnItem.Timelord.FEMALE_COUNCIL);
                 return councilStack;
+            }
         }
         return null;
     }
@@ -506,12 +511,12 @@ public class TimelordEntity extends Villager implements RangedAttackMob {
 
     public static class TimelordTrade implements VillagerTrades.ItemListing {
 
-        private ItemStack coin2;
-        private ItemStack coin;
-        private ItemStack wares;
+        private final ItemStack coin2;
+        private final ItemStack coin;
+        private final ItemStack wares;
 
-        private int xp;
-        private int stock;
+        private final int xp;
+        private final int stock;
 
         public TimelordTrade(ItemStack coin, ItemStack coin2, ItemStack wares, int stock, int xp) {
             this.xp = xp;

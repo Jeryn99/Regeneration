@@ -1,6 +1,6 @@
 package me.suff.mc.regen.common.item;
 
-import me.suff.mc.regen.common.entities.LaserProjectile;
+import me.suff.mc.regen.common.entities.Laser;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RSounds;
@@ -59,12 +59,12 @@ public class GunItem extends Item {
                 playerIn.getCooldowns().addCooldown(this, cooldown);
                 setDamage(stack, getDamage(stack) + 1);
                 if (!worldIn.isClientSide) {
-                    LaserProjectile laserProjectile = new LaserProjectile(REntities.LASER.get(), playerIn, worldIn);
-                    laserProjectile.setDamage(damage);
-                    laserProjectile.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
-                    laserProjectile.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F, 1.0F);
+                    Laser laser = new Laser(REntities.LASER.get(), playerIn, worldIn);
+                    laser.setDamage(damage);
+                    laser.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
+                    laser.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F, 1.0F);
                     entityLiving.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 1.0F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
-                    worldIn.addFreshEntity(laserProjectile);
+                    worldIn.addFreshEntity(laser);
                 }
             }
         }

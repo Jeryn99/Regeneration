@@ -15,20 +15,20 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 /* Created by Craig on 01/03/2021 */
-public class LaserProjectile extends ThrowableProjectile {
+public class Laser extends ThrowableProjectile {
 
     private float damage = 3;
     private DamageSource damageSrc = RegenSources.REGEN_DMG_RIFLE;
 
-    public LaserProjectile(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
+    public Laser(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public LaserProjectile(EntityType<? extends ThrowableProjectile> type, double x, double y, double z, Level worldIn) {
+    public Laser(EntityType<? extends ThrowableProjectile> type, double x, double y, double z, Level worldIn) {
         super(type, x, y, z, worldIn);
     }
 
-    public LaserProjectile(EntityType<? extends ThrowableProjectile> type, LivingEntity livingEntityIn, Level worldIn) {
+    public Laser(EntityType<? extends ThrowableProjectile> type, LivingEntity livingEntityIn, Level worldIn) {
         super(type, livingEntityIn, worldIn);
     }
 

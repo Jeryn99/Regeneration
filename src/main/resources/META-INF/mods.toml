@@ -1,17 +1,17 @@
-modLoader = "javafml" 
+modLoader = "javafml"
 loaderVersion = "[34,)"
 license = "https://raw.githubusercontent.com/WhoCraft/Regeneration/1.16/LICENSE"
 issueTrackerURL = "https://github.com/WhoCraft/Regeneration/issues"
 [[mods]]
 itemIcon = "regen:fobwatch"
-modId = "regen" 
-version = "1.0.0" 
-displayName = "Regeneration" 
-updateJSONURL = "https://api.who-craft.com/get/regen/update" 
-displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration" 
-logoFile = "regen.png" 
-credits = "Connor Dawn, Angela, Magic Man, End Phoenix, Asher, TommyPie, HoldYourWaffle, GasMaskVA, Dhi, Violet, Wodaman, aaliceh" 
-authors = "Nictogen, Suff99, HoldYourWaffle, 50ap5ud5" 
+modId = "regen"
+version = "1.0.0"
+displayName = "Regeneration"
+updateJSONURL = "https://api.who-craft.com/get/regen/update"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration"
+logoFile = "regen.png"
+credits = "Connor Dawn, Angela, Magic Man, End Phoenix, Asher, TommyPie, HoldYourWaffle, GasMaskVA, Dhi, Violet, Wodaman, aaliceh"
+authors = "Nictogen, Suff99, HoldYourWaffle, 50ap5ud5"
 description = '''
 Minecraft Mod that allows for players to given themselves the power of Regeneration to Regenerate and change bodies like a Time Lord!
 '''

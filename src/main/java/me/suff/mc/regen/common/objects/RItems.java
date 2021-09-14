@@ -15,7 +15,6 @@ import static net.minecraft.world.item.ArmorMaterials.LEATHER;
 public class RItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RConstants.MODID);
-    public static RegistryObject<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
     //Item group
     public static CreativeModeTab MAIN = new CreativeModeTab("regen") {
         @Override
@@ -23,6 +22,7 @@ public class RItems {
             return new ItemStack(RItems.FOB.get());
         }
     };
+    public static RegistryObject<Item> FOB = ITEMS.register("fobwatch", FobWatchItem::new);
     public static RegistryObject<Item> SPAWN_ITEM = ITEMS.register("timelord", SpawnItem::new);
     public static RegistryObject<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));
     public static RegistryObject<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));

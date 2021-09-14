@@ -4,6 +4,7 @@ import me.suff.mc.regen.client.rendering.model.armor.GuardArmorModel;
 import me.suff.mc.regen.client.rendering.model.armor.RobesModel;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 
@@ -12,6 +13,8 @@ public class RModels {
     //Entities
     public static ModelLayerLocation TIMELORD = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "timelord"), "council");
     public static ModelLayerLocation TIMELORD_GUARD = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "timelord"), "guard");
+    public static ModelLayerLocation CYBERMAN = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "cyberman"), "cyberman");
+    public static ModelLayerLocation MOD_PLAYER = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "mod_player"), "mod_player");
 
     //Arms
     public static ModelLayerLocation ARM_ALEX = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "arm_alex"), "arm_alex");
@@ -26,6 +29,8 @@ public class RModels {
 
     public static void addModels(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(TIMELORD, TimelordModel::getModelData);
+        event.registerLayerDefinition(MOD_PLAYER, () -> ModifiedPlayerModel.createMesh(new CubeDeformation(-0.25F)));
+        event.registerLayerDefinition(CYBERMAN, CybermanModel::createBodyLayer);
         event.registerLayerDefinition(TIMELORD_GUARD, TimelordGuardModel::getModelData);
         event.registerLayerDefinition(GUARD_ARMOR, () -> GuardArmorModel.createBodyLayer(true));
         event.registerLayerDefinition(GUARD_ARMOR_STEVE, () -> GuardArmorModel.createBodyLayer(false));

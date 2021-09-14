@@ -2,12 +2,13 @@ package me.suff.mc.regen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.suff.mc.regen.client.rendering.entity.CyberRender;
 import me.suff.mc.regen.client.rendering.entity.RenderLaser;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
 import me.suff.mc.regen.common.advancement.TriggerManager;
-import me.suff.mc.regen.common.entities.TimelordEntity;
-import me.suff.mc.regen.common.entities.WatcherEntity;
+import me.suff.mc.regen.common.entities.Timelord;
+import me.suff.mc.regen.common.entities.Watcher;
 import me.suff.mc.regen.common.objects.*;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
@@ -38,7 +39,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,8 +71,9 @@ public class Regeneration {
 
         NetworkDispatcher.init();
         PlayerUtil.setupPotions();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
+        ModLoadingContext modLoadingContext = ModLoadingContext.get();
+        modLoadingContext.registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
+        modLoadingContext.registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
     }
 
     @SubscribeEvent
@@ -82,13 +83,12 @@ public class Regeneration {
 
     @SubscribeEvent
     public static void onAttributes(EntityAttributeCreationEvent attributeCreationEvent) {
-        attributeCreationEvent.put(REntities.TIMELORD.get(), TimelordEntity.createAttributes().build());
-        attributeCreationEvent.put(REntities.WATCHER.get(), WatcherEntity.createAttributes().build());
+        attributeCreationEvent.put(REntities.TIMELORD.get(), Timelord.createAttributes().build());
+        attributeCreationEvent.put(REntities.WATCHER.get(), Watcher.createAttributes().build());
     }
 
     private void doCommonStuff(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() ->
-        {
+        event.enqueueWork(() -> {
             RSurfaceBuilder.registerConfiguredSurfaceBuilders();
             RStructures.setupStructures();
             RStructures.ConfiguredStructures.registerConfiguredStructures();
@@ -106,6 +106,7 @@ public class Regeneration {
         event.registerEntityRenderer(REntities.TIMELORD.get(), TimelordRenderer::new);
         event.registerEntityRenderer(REntities.WATCHER.get(), WatcherRenderer::new);
         event.registerEntityRenderer(REntities.LASER.get(), RenderLaser::new);
+        event.registerEntityRenderer(REntities.CYBERLORD.get(), CyberRender::new);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

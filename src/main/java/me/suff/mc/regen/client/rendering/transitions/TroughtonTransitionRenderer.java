@@ -3,7 +3,7 @@ package me.suff.mc.regen.client.rendering.transitions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
-import me.suff.mc.regen.common.entities.TimelordEntity;
+import me.suff.mc.regen.common.entities.Timelord;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
@@ -61,8 +61,8 @@ public class TroughtonTransitionRenderer implements TransitionRenderer {
                 PlayerRenderer playerRenderer = (PlayerRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(Minecraft.getInstance().player);
                 ResourceLocation headTexture = entityRenderer.getTextureLocation(entitylivingbaseIn);
 
-                if (entitylivingbaseIn instanceof TimelordEntity timelordEntity) {
-                    headTexture = TimelordRenderer.getTimelordFace(timelordEntity);
+                if (entitylivingbaseIn instanceof Timelord timelord) {
+                    headTexture = TimelordRenderer.getTimelordFace(timelord);
                 }
 
                 Vec3 color = new Vec3(1, 1, 1);
