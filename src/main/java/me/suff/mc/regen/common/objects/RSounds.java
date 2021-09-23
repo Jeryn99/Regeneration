@@ -30,7 +30,10 @@ public class RSounds {
     public static final RegistryObject<SoundEvent> REGENERATION_TROUGHTON = SOUNDS.register("regeneration_troughton", () -> setUpSound("regeneration_troughton"));
     public static final RegistryObject<SoundEvent> REGENERATION_WATCHER = SOUNDS.register("regeneration_watcher", () -> setUpSound("regeneration_watcher"));
     public static final RegistryObject<SoundEvent> DRUM_BEAT = SOUNDS.register("drum_beat", () -> setUpSound("drum_beat"));
+
+    //Cyber
     public static final RegistryObject<SoundEvent> CYBER_WALK = SOUNDS.register("cyber_walk", () -> setUpSound("cyber_walk"));
+    public static final RegistryObject<SoundEvent> CYBER_FIRE = SOUNDS.register("cyber_fire", () -> setUpSound("cyber_fire"));
 
     //Asher Timelord
     public static final RegistryObject<SoundEvent> F_ASHER_TIMELORD_HURT = SOUNDS.register("f_asher_timelord_hurt", () -> setUpSound("f_asher_timelord_hurt"));

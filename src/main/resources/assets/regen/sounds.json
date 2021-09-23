@@ -24,6 +24,12 @@
       "regen:cyber/cyber_walk_two"
     ]
   },
+  "cyber_fire": {
+    "subtitle": "regen.sound.cyber_fire",
+    "sounds": [
+      "regen:cyber/cyber_fire"
+    ]
+  },
   "saxons_england": {
     "subtitle": "regen.sound.saxons_england",
     "sounds": [

@@ -39,8 +39,8 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
     }
 
     @Override
-    public void killed(ServerLevel p_19929_, LivingEntity livingEntity) {
-        super.killed(p_19929_, livingEntity);
+    public void killed(ServerLevel serverLevel, LivingEntity livingEntity) {
+        super.killed(serverLevel, livingEntity);
 
         if (ForgeEventFactory.canLivingConvert(livingEntity, REntities.TIMELORD.get(), (timer) -> {
         }) && livingEntity instanceof Timelord timelord) {
@@ -61,12 +61,11 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
     protected void registerGoals() {
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(2, new RangedAttackGoal(this, 1.0D, 40, 20.0F));
+        this.goalSelector.addGoal(2, new RangedAttackGoal(this, 1.0D, 20, 20.0F));
         this.addBehaviourGoals();
     }
 
     protected void addBehaviourGoals() {
-        this.targetSelector.addGoal(8, new FixedMeleeGoal(this, 0.5, false));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(Cyberman.class));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
@@ -104,15 +103,19 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
 
     @Override
     public void performRangedAttack(LivingEntity livingEntity, float p_33318_) {
-        Laser laser = new Laser(REntities.LASER.get(), this, level);
-        laser.setColors(1, 0, 0);
-        double d0 = livingEntity.getEyeY() - (double) 1.1F;
-        double d1 = livingEntity.getX() - this.getX();
-        double d2 = d0 - laser.getY();
-        double d3 = livingEntity.getZ() - this.getZ();
-        double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double) 0.2F;
-        laser.shoot(d1, d2 + d4, d3, 1.6F, 0F);
-        this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.level.addFreshEntity(laser);
+        RegenCap.get(livingEntity).ifPresent(iRegen -> {
+           if(iRegen.regenState() != RegenStates.REGENERATING){
+               Laser laser = new Laser(REntities.LASER.get(), this, level);
+               laser.setColors(0, 0, 0.2F);
+               double d0 = livingEntity.getEyeY() - (double) 1.1F;
+               double d1 = livingEntity.getX() - this.getX();
+               double d2 = d0 - laser.getY();
+               double d3 = livingEntity.getZ() - this.getZ();
+               double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double) 0.2F;
+               laser.shoot(d1, d2 + d4, d3, 0.5F, 14 - livingEntity.level.getDifficulty().getId() * 4);
+               this.playSound(RSounds.CYBER_FIRE.get(), 0.5F, 0.0F);
+               this.level.addFreshEntity(laser);
+           }
+        });
     }
 }

@@ -7,6 +7,7 @@ import me.suff.mc.regen.client.rendering.entity.RenderLaser;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
 import me.suff.mc.regen.common.advancement.TriggerManager;
+import me.suff.mc.regen.common.entities.Cyberman;
 import me.suff.mc.regen.common.entities.Timelord;
 import me.suff.mc.regen.common.entities.Watcher;
 import me.suff.mc.regen.common.objects.*;
@@ -85,6 +86,7 @@ public class Regeneration {
     public static void onAttributes(EntityAttributeCreationEvent attributeCreationEvent) {
         attributeCreationEvent.put(REntities.TIMELORD.get(), Timelord.createAttributes().build());
         attributeCreationEvent.put(REntities.WATCHER.get(), Watcher.createAttributes().build());
+        attributeCreationEvent.put(REntities.CYBERLORD.get(), Timelord.createAttributes().build());
     }
 
     private void doCommonStuff(final FMLCommonSetupEvent event) {
