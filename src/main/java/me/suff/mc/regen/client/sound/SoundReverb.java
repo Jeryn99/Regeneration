@@ -5,6 +5,7 @@ import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.RegenCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
@@ -21,10 +22,7 @@ public class SoundReverb {
     private static int auxEffectSlot;
 
     public static void addReloader() {
-        ((ReloadableResourceManager) MC.getResourceManager()).registerReloadListener((p_10638_, p_10639_, p_10640_, p_10641_, p_10642_, p_10643_) -> {
-            setup = false;
-            return new CompletableFuture<>();
-        });
+        ((ReloadableResourceManager)Minecraft.getInstance().getResourceManager()).registerReloadListener((ResourceManagerReloadListener) p_10758_ -> setup = false);
     }
 
     public static void setSelfPosition(int soundId) {
