@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -184,7 +185,7 @@ public class ClientHandler {
     @SubscribeEvent
     public void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
         Entity viewer = Minecraft.getInstance().getCameraEntity();
-        if (viewer != null) {
+        if (viewer instanceof LivingEntity) {
             RegenCap.get(viewer).ifPresent((data) -> {
                 if (data.getState() == RegenState.GRACE_CRIT) {
                     event.setCanceled(true);
