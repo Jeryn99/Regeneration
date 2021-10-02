@@ -17,7 +17,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
 
-version = '1.0'
+version = '1.0.1'
 group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'regen'
 
@@ -140,7 +140,7 @@ jar {
         attributes([
                 "Specification-Title"     : "regen",
                 "Specification-Vendor"    : "Suff99",
-                "Specification-Version"   : project.version, // We are version 1 of ourselves
+                "Specification-Version"   : project.version,
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "Suff99",

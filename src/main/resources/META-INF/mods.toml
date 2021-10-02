@@ -5,7 +5,7 @@ issueTrackerURL = "https://github.com/WhoCraft/Regeneration/issues"
 [[mods]]
 itemIcon = "regen:fobwatch"
 modId = "regen"
-version = "1.0.0"
+version = "1.0.1"
 displayName = "Regeneration"
 updateJSONURL = "https://api.who-craft.com/get/regen/update"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/regeneration"
@@ -18,7 +18,7 @@ Minecraft Mod that allows for players to given themselves the power of Regenerat
 [[dependencies.regen]]
 modId = "forge"
 mandatory = true
-versionRange = "[34,)"
+versionRange = "[37.0.59,)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.regen]]
