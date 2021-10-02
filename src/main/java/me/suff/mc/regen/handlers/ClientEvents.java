@@ -219,7 +219,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onSetupFogDensity(EntityViewRenderEvent.RenderFogEvent.FogDensity event) {
         Entity viewer = Minecraft.getInstance().getCameraEntity();
-        if (viewer != null) {
+        if (viewer instanceof LivingEntity) {
             RegenCap.get((LivingEntity) viewer).ifPresent((data) -> {
                 if (data.regenState() == RegenStates.GRACE_CRIT) {
                     GlStateManager._fogMode(GlStateManager.FogMode.EXP.value);

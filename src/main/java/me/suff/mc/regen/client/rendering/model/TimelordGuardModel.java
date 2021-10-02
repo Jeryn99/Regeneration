@@ -104,10 +104,4 @@ public class TimelordGuardModel extends PlayerModel<TimelordEntity> {
         LeftLeg.render(matrixStack, buffer, packedLight, packedOverlay);
 
     }
-
-    public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.xRot = x;
-        modelRenderer.yRot = y;
-        modelRenderer.zRot = z;
-    }
 }
