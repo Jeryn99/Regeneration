@@ -4,15 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
 import me.suff.mc.regen.Regeneration;
-import me.suff.mc.regen.client.screen.RErrorScreen;
 import me.suff.mc.regen.client.screen.SkinPack;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.DownloadSkinsThread;
 import me.suff.mc.regen.util.MineSkin;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -226,21 +223,13 @@ public class CommonSkin {
 
 
     public static List<File> listAllSkins(PlayerUtil.SkinType choices) {
-        File directory = null;
-        switch (choices) {
-            case EITHER:
-                directory = SKIN_DIRECTORY;
-                break;
-            case ALEX:
-                directory = SKIN_DIRECTORY_ALEX;
-                break;
-            case STEVE:
-                directory = SKIN_DIRECTORY_STEVE;
-                break;
-        }
+        File directory = switch (choices) {
+            case EITHER -> SKIN_DIRECTORY;
+            case ALEX -> SKIN_DIRECTORY_ALEX;
+            case STEVE -> SKIN_DIRECTORY_STEVE;
+        };
 
         if (!directory.exists()) {
-            Minecraft.getInstance().setScreen(new RErrorScreen(new TranslatableComponent("No Skins for " + new TranslatableComponent("regeneration.skin_type." + choices.name().toLowerCase()).getString()), new TranslatableComponent("Please place skins in the local Directory")));
             return new ArrayList<>();
         }
 
