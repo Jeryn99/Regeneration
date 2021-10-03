@@ -1,6 +1,5 @@
 package me.suff.mc.regen.common.tiles;
 
-import me.suff.mc.regen.common.block.JarBlock;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RParticles;
@@ -32,25 +31,27 @@ import java.util.Random;
 
 public class BioContainerBlockEntity extends BlockEntity implements BlockEntityTicker<BioContainerBlockEntity> {
 
+    private final ItemStackHandler itemHandler = createHandler();
+    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
     private boolean updateSkin = true;
-    private ItemStackHandler itemHandler = createHandler();
-    private LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
+    private boolean isOpen = false;
+    private float openAmount = 0.0F;
 
-    public BioContainerBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-        super(RTiles.HAND_JAR.get(), p_155229_, p_155230_);
+    public BioContainerBlockEntity(BlockPos pos, BlockState state) {
+        super(RTiles.HAND_JAR.get(), pos, state);
     }
 
-    private static void spawnParticles(Level world, BlockPos worldIn) {
+    public static void spawnParticles(Level world, BlockPos blockPos) {
         Random random = world.random;
 
         for (Direction direction : Direction.values()) {
-            BlockPos blockpos = worldIn.relative(direction);
+            BlockPos blockpos = blockPos.relative(direction);
             if (!world.getBlockState(blockpos).isSolidRender(world, blockpos)) {
                 Direction.Axis direction$axis = direction.getAxis();
                 double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) random.nextFloat();
                 double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) random.nextFloat();
                 double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) random.nextFloat();
-                world.addParticle(RParticles.CONTAINER.get(), (double) worldIn.getX() + d1, (double) worldIn.getY() + d2, (double) worldIn.getZ() + d3, 0.0D, 0.0D, 0.0D);
+                world.addParticle(RParticles.CONTAINER.get(), (double) blockPos.getX() + d1, (double) blockPos.getY() + d2, (double) blockPos.getZ() + d3, 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -64,6 +65,19 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
         HandItem.setEnergy(lindos, getHand());
     }
 
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
+    }
+
+    public float getOpenAmount() {
+        return openAmount;
+    }
+
+
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
@@ -71,17 +85,33 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     @Override
-    public void tick(Level level, BlockPos blockPos, BlockState blockState, BioContainerBlockEntity bioContainerBlockEntity) {
+    public void tick(Level p_155253_, BlockPos p_155254_, BlockState p_155255_, BioContainerBlockEntity p_155256_) {
+
+        isOpen = getHand().isEmpty();
+
+        if (isOpen) {
+            this.openAmount += 0.1F;
+        } else {
+            this.openAmount -= 0.1F;
+        }
+
+        if (this.openAmount > 1.0F) {
+            this.openAmount = 1.0F;
+        }
+
+        if (this.openAmount < 0.0F) {
+            this.openAmount = 0.0F;
+        }
+
         if (isValid(Action.CREATE)) {
             spawnParticles(level, worldPosition);
         }
         if (level != null && level.isClientSide) return;
 
-        if (isValid(Action.CREATE)) {
-            if (level.getGameTime() % 77 == 0) {
-                level.playSound(null, getBlockPos(), RSounds.JAR_BUBBLES.get(), SoundSource.PLAYERS, 0.2F, 0.2F);
-            }
+        if (level.getGameTime() % 77 == 0 && !isOpen) {
+            level.playSound(null, getBlockPos(), RSounds.JAR_BUBBLES.get(), SoundSource.PLAYERS, 0.2F, 0.2F);
         }
+
 
         if (level.getGameTime() % 100 == 0) {
             if (updateSkin) {
@@ -119,13 +149,11 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
     }
 
     public void sendUpdates() {
-        if (level != null && level.getBlockState(worldPosition).getBlock() instanceof JarBlock) {
-            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(JarBlock.IS_OPEN, getHand().getItem() != RItems.HAND.get()));
-        }
         level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         setChanged();
     }
+
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -139,14 +167,19 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
             itemHandler.deserializeNBT(nbt.getCompound("inv"));
         }
         setUpdateSkin(nbt.getBoolean("update_skin"));
+        setOpen(nbt.getBoolean("is_open"));
+        openAmount = nbt.getFloat("openAmount");
         super.load(nbt);
     }
+
 
     @Override
     public CompoundTag save(CompoundTag compound) {
         compound.putFloat("energy", getLindos());
         compound.put("inv", itemHandler.serializeNBT());
         compound.putBoolean("update_skin", updateSkin);
+        compound.putBoolean("is_open", isOpen);
+        compound.putFloat("openAmount", openAmount);
         return super.save(compound);
     }
 

@@ -26,6 +26,7 @@ public class RModels {
     public static ModelLayerLocation COUNCIL_ROBES_STEVE = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "council_robes_steve"), "council_robes_steve");
     public static ModelLayerLocation GUARD_ARMOR = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "guard_armor"), "guard_armor");
     public static ModelLayerLocation GUARD_ARMOR_STEVE = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "guard_armor_steve"), "guard_armor_steve");
+    public static ModelLayerLocation CONTAINER = new ModelLayerLocation(new ResourceLocation(RConstants.MODID, "container"), "container");
 
 
     public static void addModels(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -40,5 +41,6 @@ public class RModels {
         event.registerLayerDefinition(COUNCIL_ROBES_STEVE, () -> RobesModel.createBodyLayer(false));
         event.registerLayerDefinition(ARM_ALEX, () -> ArmModel.createMesh(true));
         event.registerLayerDefinition(ARM_STEVE, () -> ArmModel.createMesh(false));
+        event.registerLayerDefinition(CONTAINER, ContainerModel::createBodyLayer);
     }
 }

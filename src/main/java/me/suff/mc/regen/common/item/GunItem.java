@@ -5,20 +5,17 @@ import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.util.RegenSources;
-import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -29,18 +26,13 @@ public class GunItem extends Item {
     private final float damage;
 
     public GunItem(int shotsPerRound, int cooldown, float damage) {
-        super(new Properties().tab(RItems.MAIN).durability(shotsPerRound).setNoRepair());
+        super(new Item.Properties().tab(RItems.MAIN).durability(shotsPerRound).setNoRepair());
         this.cooldown = cooldown;
         this.damage = damage;
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        return super.useOn(context);
-    }
-
-    @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack p_41454_) {
         return 72000;
     }
 
@@ -54,42 +46,47 @@ public class GunItem extends Item {
 
         if (entityLiving instanceof Player playerIn) {
             boolean isPistol = this == RItems.PISTOL.get();
-            if (stack.getDamageValue() < stack.getMaxDamage() && !playerIn.getCooldowns().isOnCooldown(this)) {
-                worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), isPistol ? RSounds.RIFLE.get() : RSounds.STASER.get(), SoundSource.NEUTRAL, 0.5F, 0.4F / (RegenUtil.RAND.nextFloat() * 0.4F + 0.8F));
+            if (hasAmmo(entityLiving, stack) && stack.getDamageValue() < stack.getMaxDamage() && !playerIn.getCooldowns().isOnCooldown(this)) {
+                worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), isPistol ? RSounds.RIFLE.get() : RSounds.STASER.get(), SoundSource.NEUTRAL, 0.5F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
                 playerIn.getCooldowns().addCooldown(this, cooldown);
-                setDamage(stack, getDamage(stack) + 1);
+                if (worldIn.random.nextInt(40) < 10 && !playerIn.isCreative()) {
+                    setDamage(stack, getDamage(stack) + 1);
+                }
                 if (!worldIn.isClientSide) {
-                    Laser laser = new Laser(REntities.LASER.get(), playerIn, worldIn);
-                    laser.setDamage(damage);
-                    laser.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
-                    laser.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F, 1.0F);
+                    Laser laserProjectile = new Laser(REntities.LASER.get(), playerIn, worldIn);
+                    laserProjectile.setDamage(damage);
+                    laserProjectile.setDamageSource(isPistol ? RegenSources.REGEN_DMG_STASER : RegenSources.REGEN_DMG_RIFLE);
+                    laserProjectile.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F, 1.0F);
                     entityLiving.playSound(isPistol ? RSounds.STASER.get() : RSounds.RIFLE.get(), 1.0F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
-                    worldIn.addFreshEntity(laser);
+                    worldIn.addFreshEntity(laserProjectile);
                 }
             }
         }
     }
 
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        playerIn.startUsingItem(handIn);
-        return super.use(worldIn, playerIn, handIn);
+    private boolean hasAmmo(LivingEntity entityLiving, ItemStack gun) {
+        if (entityLiving instanceof Player player) {
+            if (player.isCreative() || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, gun) > 0) {
+                return true;
+            }
+            for (ItemStack itemStack : player.getInventory().items) {
+                if (itemStack.getItem() == RItems.PLASMA_CARTRIDGE.get()) {
+                    itemStack.shrink(1);
+                    return true;
+                }
+            }
+            player.getCooldowns().addCooldown(this, 10);
+            player.playSound(RSounds.GUN_EMPTY.get(), 1, 1);
+
+        }
+        return false;
     }
 
-    @Override
-    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-        if (entityIn.tickCount % 100 == 0) {
-            if (getDamage(stack) > 0) {
-                setDamage(stack, getDamage(stack) - 1);
-            }
-        }
 
-        if (entityIn instanceof Player playerEntity) {
-            if (getDamage(stack) == getMaxDamage(stack)) {
-                playerEntity.getCooldowns().addCooldown(this, getMaxDamage(stack) * cooldown * 20);
-            }
-        }
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player player, InteractionHand interactionHand) {
+        player.startUsingItem(interactionHand);
+        return super.use(worldIn, player, interactionHand);
     }
 
     public float getDamage() {
@@ -97,37 +94,18 @@ public class GunItem extends Item {
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
+    public UseAnim getUseAnimation(ItemStack p_41452_) {
         return UseAnim.NONE;
     }
 
+
     @Override
-    public int getEnchantmentValue() {
-        return 0;
+    public boolean isValidRepairItem(ItemStack p_82789_1_, ItemStack p_82789_2_) {
+        return p_82789_2_.getItem() == RItems.ZINC.get();
     }
 
     @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
-    }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return false;
-    }
-
-    @Override
-    public int getItemEnchantability(ItemStack stack) {
-        return 0;
-    }
-
-    @Override
-    public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
+    public boolean canAttackBlock(BlockState p_41441_, Level p_41442_, BlockPos p_41443_, Player p_41444_) {
         return false;
     }
 }

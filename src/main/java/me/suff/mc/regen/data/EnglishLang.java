@@ -113,6 +113,7 @@ public class EnglishLang extends LanguageProvider {
         add(RItems.HAND.get(), "Hand");
         add("item.regen.hand_with_arg", "%s Hand");
 
+        add(RItems.PLASMA_CARTRIDGE.get(), "Plasma Cartridge");
         add(RItems.M_ROBES_HEAD.get(), "Timelord Collar Piece (Male)");
         add(RItems.M_ROBES_CHEST.get(), "Timelord Suit (Male)");
         add(RItems.M_ROBES_LEGS.get(), "Timelord Lower Robes (Male)");
