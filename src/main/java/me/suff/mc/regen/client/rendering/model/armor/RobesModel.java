@@ -5,6 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.suff.mc.regen.util.ClientUtil;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+import net.minecraft.client.renderer.entity.layers.CapeLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
@@ -85,6 +86,8 @@ public class RobesModel extends BipedModel<LivingEntity> implements LivingArmor 
 
         mainArmLeft = LeftArm;
         mainArmRight = RightArm;
+        Body.addChild(Collar);
+
     }
 
     public static void capeBob(ModelRenderer p_239101_0_, float p_239101_2_) {
@@ -93,18 +96,13 @@ public class RobesModel extends BipedModel<LivingEntity> implements LivingArmor 
 
     @Override
     public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-
-        if (slot == EquipmentSlotType.HEAD) {
-            matrixStack.pushPose();
-            if (livingEntity.isShiftKeyDown()) {
-                matrixStack.translate(0, 0.1, 0);
-            }
-            Collar.render(matrixStack, buffer, packedLight, packedOverlay);
-            matrixStack.popPose();
-        }
-        if (slot == EquipmentSlotType.CHEST) {
+        if (slot == EquipmentSlotType.CHEST || slot == EquipmentSlotType.HEAD) {
             updateArms(livingEntity);
             Body.render(matrixStack, buffer, packedLight, packedOverlay);
+            Body.visible = true;
+            Collar.visible = true;
+
+            if(slot == EquipmentSlotType.HEAD) return;
             mainArmRight.render(matrixStack, buffer, packedLight, packedOverlay);
             mainArmLeft.render(matrixStack, buffer, packedLight, packedOverlay);
             capeBob(this.Cape, livingEntity.tickCount);

@@ -21,6 +21,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerTrades;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -56,7 +57,7 @@ import java.util.Random;
  * Created by Suff
  * on 03/05/2020 @ 18:50
  */
-public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
+public class TimelordEntity extends AbstractVillagerEntity implements IRangedAttackMob {
 
     private static final DataParameter<String> TYPE = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
     private static final DataParameter<String> PERSONALITY = EntityDataManager.defineId(TimelordEntity.class, DataSerializers.STRING);
@@ -384,10 +385,10 @@ public class TimelordEntity extends VillagerEntity implements IRangedAttackMob {
 
             TimelordTrade[] tradetrades = new TimelordTrade[]{
                     new TimelordEntity.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),
-                    new TimelordEntity.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), random.nextInt(7), 5)
+                    new TimelordEntity.TimelordTrade(new ItemStack(Items.NETHERITE_INGOT, 4), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.PISTOL.get()), random.nextInt(7), 5),
+                    new TimelordEntity.TimelordTrade(new ItemStack(Items.IRON_INGOT, 4), new ItemStack(RItems.ZINC.get(), 6), new ItemStack(RItems.PLASMA_CARTRIDGE.get()), random.nextInt(7), 5)
             };
             this.addOffersFromItemListings(merchantoffers, tradetrades, 5);
-            super.updateTrades();
         }
     }
 

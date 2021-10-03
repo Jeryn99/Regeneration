@@ -58,7 +58,7 @@ public class GunItem extends Item {
             if (hasAmmo(entityLiving, stack) && stack.getDamageValue() < stack.getMaxDamage() && !playerIn.getCooldowns().isOnCooldown(this)) {
                 worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), isPistol ? RSounds.RIFLE.get() : RSounds.STASER.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
                 playerIn.getCooldowns().addCooldown(this, cooldown);
-                if (worldIn.random.nextInt(40) == 0 && !playerIn.isCreative()) {
+                if (worldIn.random.nextInt(40) < 10  && !playerIn.isCreative()) {
                     setDamage(stack, getDamage(stack) + 1);
                 }
                 if (!worldIn.isClientSide) {
@@ -130,6 +130,17 @@ public class GunItem extends Item {
     @Override
     public int getItemEnchantability(ItemStack stack) {
         return 0;
+    }
+
+    @Override
+    public boolean isRepairable(ItemStack stack) {
+        System.out.println(super.isRepairable(stack));
+        return super.isRepairable(stack);
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack p_82789_1_, ItemStack p_82789_2_) {
+        return p_82789_2_.getItem() == RItems.ZINC.get();
     }
 
     @Override
