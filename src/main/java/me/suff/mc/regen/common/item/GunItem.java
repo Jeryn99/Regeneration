@@ -7,7 +7,8 @@ import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.util.RegenSources;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -54,10 +55,12 @@ public class GunItem extends Item {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerIn = (PlayerEntity) entityLiving;
             boolean isPistol = this == RItems.PISTOL.get();
-            if (stack.getDamageValue() < stack.getMaxDamage() && !playerIn.getCooldowns().isOnCooldown(this)) {
+            if (hasAmmo(entityLiving, stack) && stack.getDamageValue() < stack.getMaxDamage() && !playerIn.getCooldowns().isOnCooldown(this)) {
                 worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), isPistol ? RSounds.RIFLE.get() : RSounds.STASER.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
                 playerIn.getCooldowns().addCooldown(this, cooldown);
-                setDamage(stack, getDamage(stack) + 1);
+                if (worldIn.random.nextInt(40) == 0 && !playerIn.isCreative()) {
+                    setDamage(stack, getDamage(stack) + 1);
+                }
                 if (!worldIn.isClientSide) {
                     LaserProjectile laserProjectile = new LaserProjectile(REntities.LASER.get(), playerIn, worldIn);
                     laserProjectile.setDamage(damage);
@@ -70,27 +73,29 @@ public class GunItem extends Item {
         }
     }
 
+    private boolean hasAmmo(LivingEntity entityLiving, ItemStack gun) {
+        if (entityLiving instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) entityLiving;
+            if (playerEntity.isCreative() || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, gun) > 0) {
+                return true;
+            }
+            for (ItemStack itemStack : playerEntity.inventory.items) {
+                if (itemStack.getItem() == RItems.PLASMA_CARTRIDGE.get()) {
+                    itemStack.shrink(1);
+                    return true;
+                }
+            }
+            playerEntity.getCooldowns().addCooldown(this, 10);
+            playerEntity.playSound(RSounds.GUN_EMPTY.get(), 1,1);
+
+        }
+        return false;
+    }
+
     @Override
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         playerIn.startUsingItem(handIn);
         return super.use(worldIn, playerIn, handIn);
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-        if (entityIn.tickCount % 100 == 0) {
-            if (getDamage(stack) > 0) {
-                setDamage(stack, getDamage(stack) - 1);
-            }
-        }
-
-        if (entityIn instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity) entityIn;
-            if (getDamage(stack) == getMaxDamage(stack)) {
-                playerEntity.getCooldowns().addCooldown(this, getMaxDamage(stack) * cooldown * 20);
-            }
-        }
     }
 
     public float getDamage() {

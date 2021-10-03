@@ -24,8 +24,8 @@ public class RItems {
         }
     };
     public static RegistryObject<Item> SPAWN_ITEM = ITEMS.register("timelord", SpawnItem::new);
-    public static RegistryObject<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(18, 5, 4.0F));
-    public static RegistryObject<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(30, 10, 10.0F));
+    public static RegistryObject<Item> PISTOL = ITEMS.register("staser", () -> new GunItem(100, 5, 4.0F));
+    public static RegistryObject<Item> RIFLE = ITEMS.register("rifle", () -> new GunItem(250, 10, 10.0F));
     public static RegistryObject<Item> ELIXIR = ITEMS.register("elixir", ElixirItem::new);
     public static RegistryObject<Item> ZINC = ITEMS.register("zinc", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
     public static RegistryObject<Item> HAND = ITEMS.register("hand", () -> new HandItem(new Item.Properties().tab(RItems.MAIN).stacksTo(1)));
@@ -46,6 +46,7 @@ public class RItems {
     public static RegistryObject<Item> M_ROBES_LEGS = ITEMS.register("m_robes_legs", () -> new ClothingItem(LEATHER, EquipmentSlotType.LEGS, clothing.durability(375)));
 
     public static RegistryObject<Item> ROBES_FEET = ITEMS.register("robes_feet", () -> new ClothingItem(LEATHER, EquipmentSlotType.FEET, clothing.durability(350)));
+    public static RegistryObject<Item> PLASMA_CARTRIDGE = ITEMS.register("plasma_cartridge", () -> new Item(new Item.Properties().tab(RItems.MAIN)));
 
 
 }

@@ -7,10 +7,7 @@ import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.tiles.JarTile;
 import me.suff.mc.regen.util.VoxelShapeUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
-import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -18,12 +15,14 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
@@ -32,51 +31,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class JarBlock extends DirectionalBlock {
 
-    public static final DirectionProperty FACING = HorizontalBlock.FACING;
-    public static final BooleanProperty IS_OPEN = BooleanProperty.create("is_open");
-
-    public static final VoxelShape NORTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_180);
-    public static final VoxelShape EAST = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.COUNTERCLOCKWISE_90);
-    public static final VoxelShape SOUTH = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.NONE);
-    public static final VoxelShape WEST = VoxelShapeUtils.rotate(BlockShapes.JAR.get(), Rotation.CLOCKWISE_90);
-
-    public static final VoxelShape NORTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.CLOCKWISE_180);
-    public static final VoxelShape EAST_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.COUNTERCLOCKWISE_90);
-    public static final VoxelShape SOUTH_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.NONE);
-    public static final VoxelShape WEST_OPEN = VoxelShapeUtils.rotate(BlockShapes.JAR_OPEN.get(), Rotation.CLOCKWISE_90);
-
+    public static final IntegerProperty ROTATION = BlockStateProperties.ROTATION_16;
 
     public JarBlock() {
         super(Properties.of(Material.METAL).noOcclusion());
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        registerDefaultState(defaultBlockState().setValue(CampfireBlock.WATERLOGGED, false));
     }
-
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        if (state.getValue(IS_OPEN)) {
-            switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
-                case EAST:
-                    return EAST_OPEN;
-                case SOUTH:
-                    return SOUTH_OPEN;
-                case WEST:
-                    return WEST_OPEN;
-                default:
-                    return NORTH_OPEN;
-            }
-        }
-        switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
-            case EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH;
-            case WEST:
-                return WEST;
-            default:
-                return NORTH;
-        }
-    }
-
 
     @Override
     public boolean hasTileEntity(BlockState state) {
@@ -91,22 +51,23 @@ public class JarBlock extends DirectionalBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getClockWise()).setValue(IS_OPEN, true);
+        return this.defaultBlockState().setValue(ROTATION, MathHelper.floor((double) (context.getRotation() * 16.0F / 360.0F) + 0.5D) & 15);
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+        return state.setValue(ROTATION, rot.rotate(state.getValue(ROTATION), 16));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+        return state.setValue(ROTATION, mirrorIn.mirror(state.getValue(ROTATION), 16));
     }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, IS_OPEN);
+        builder.add(ROTATION);
+        builder.add(BlockStateProperties.WATERLOGGED);
     }
 
     @Override
@@ -168,5 +129,8 @@ public class JarBlock extends DirectionalBlock {
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 
-
+    @Override
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
 }

@@ -1,34 +1,7 @@
 {
   "variants": {
-    "facing=east,is_open=false": {
-      "model": "regen:block/bio_container",
-      "y": 270
-    },
-    "facing=north,is_open=false": {
-      "model": "regen:block/bio_container",
-      "y": 180
-    },
-    "facing=south,is_open=false": {
-      "model": "regen:block/bio_container"
-    },
-    "facing=west,is_open=false": {
-      "model": "regen:block/bio_container",
-      "y": 90
-    },
-    "facing=east,is_open=true": {
-      "model": "regen:block/bio_container_open",
-      "y": 270
-    },
-    "facing=north,is_open=true": {
-      "model": "regen:block/bio_container_open",
-      "y": 180
-    },
-    "facing=south,is_open=true": {
-      "model": "regen:block/bio_container_open"
-    },
-    "facing=west,is_open=true": {
-      "model": "regen:block/bio_container_open",
-      "y": 90
+    "": {
+      "model": "regen:block/azbantium"
     }
   }
 }

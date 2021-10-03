@@ -23,6 +23,14 @@
       "regen:saxons_england"
     ]
   },
+  "gun_empty": {
+    "subtitle": "regen.sound.gun_empty",
+    "sounds": [
+      "regen:empty_gun_1",
+      "regen:empty_gun_2",
+      "regen:empty_gun_3"
+    ]
+  },
   "m_wodaman_timelord_hurt": {
     "subtitle": "regen.sound.m_timelord_hurt",
     "sounds": [

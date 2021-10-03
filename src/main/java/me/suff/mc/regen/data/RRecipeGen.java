@@ -45,5 +45,7 @@ public class RRecipeGen extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RBlocks.BIO_CONTAINER.get()).pattern("FZF").pattern("FPF").pattern("FOF").define('Z', RItems.ZINC.get()).define('F', Items.IRON_INGOT).define('P', Items.ROTTEN_FLESH).define('O', Items.GLOWSTONE_DUST).unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
         ShapedRecipeBuilder.shaped(RBlocks.AZBANTIUM.get(), 2).pattern("ZZZ").pattern("Z Z").pattern("ZZZ").define('Z', RItems.ZINC.get()).unlockedBy("has_zinc", has(RItems.ZINC.get())).save(consumer);
 
+        ShapelessRecipeBuilder.shapeless(RItems.PLASMA_CARTRIDGE.get(), 20).requires(RItems.ZINC.get()).requires(Items.IRON_INGOT).requires(Items.GUNPOWDER).unlockedBy("has_zinc", has(RBlocks.ZINC_ORE.get())).save(consumer, "zinc");
+
     }
 }

@@ -1,6 +1,5 @@
 package me.suff.mc.regen.common.tiles;
 
-import me.suff.mc.regen.common.block.JarBlock;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.common.objects.RParticles;
@@ -32,9 +31,11 @@ import java.util.Random;
 
 public class JarTile extends TileEntity implements ITickableTileEntity {
 
+    private final ItemStackHandler itemHandler = createHandler();
+    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
     private boolean updateSkin = true;
-    private ItemStackHandler itemHandler = createHandler();
-    private LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
+    private boolean isOpen = false;
+    private float openAmount = 0.0F;
 
     public JarTile() {
         super(RTiles.HAND_JAR.get());
@@ -64,6 +65,18 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
         HandItem.setEnergy(lindos, getHand());
     }
 
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
+    }
+
+    public float getOpenAmount() {
+        return openAmount;
+    }
+
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
@@ -72,16 +85,32 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void tick() {
+
+        isOpen = getHand().isEmpty();
+
+        if (isOpen) {
+            this.openAmount += 0.1F;
+        } else {
+            this.openAmount -= 0.1F;
+        }
+
+        if (this.openAmount > 1.0F) {
+            this.openAmount = 1.0F;
+        }
+
+        if (this.openAmount < 0.0F) {
+            this.openAmount = 0.0F;
+        }
+
         if (isValid(Action.CREATE)) {
             spawnParticles(level, worldPosition);
         }
         if (level != null && level.isClientSide) return;
 
-        if (isValid(Action.CREATE)) {
-            if (level.getGameTime() % 77 == 0) {
-                level.playSound(null, getBlockPos(), RSounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.2F, 0.2F);
-            }
+        if (level.getGameTime() % 77 == 0 && !isOpen) {
+            level.playSound(null, getBlockPos(), RSounds.JAR_BUBBLES.get(), SoundCategory.PLAYERS, 0.2F, 0.2F);
         }
+
 
         if (level.getGameTime() % 100 == 0) {
             if (updateSkin) {
@@ -119,9 +148,6 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
     }
 
     public void sendUpdates() {
-        if (level != null && level.getBlockState(worldPosition).getBlock() instanceof JarBlock) {
-            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(JarBlock.IS_OPEN, getHand().getItem() != RItems.HAND.get()));
-        }
         level.updateNeighbourForOutputSignal(worldPosition, getBlockState().getBlock());
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         setChanged();
@@ -139,6 +165,8 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
             itemHandler.deserializeNBT(nbt.getCompound("inv"));
         }
         setUpdateSkin(nbt.getBoolean("update_skin"));
+        setOpen(nbt.getBoolean("is_open"));
+        openAmount = nbt.getFloat("openAmount");
         super.load(state, nbt);
     }
 
@@ -147,6 +175,8 @@ public class JarTile extends TileEntity implements ITickableTileEntity {
         compound.putFloat("energy", getLindos());
         compound.put("inv", itemHandler.serializeNBT());
         compound.putBoolean("update_skin", updateSkin);
+        compound.putBoolean("is_open", isOpen);
+        compound.putFloat("openAmount", openAmount);
         return super.save(compound);
     }
 

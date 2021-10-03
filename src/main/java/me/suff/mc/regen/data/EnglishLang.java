@@ -129,6 +129,7 @@ public class EnglishLang extends LanguageProvider {
 
         add(RBlocks.ZINC_ORE.get(), "Zinc Ore");
         add(RItems.ZINC.get(), "Zinc Ingot");
+        add(RItems.PLASMA_CARTRIDGE.get(), "Plasma Cartridge");
 
         //Messages
         add("regen.messages.regen_death_msg", "%s is regenerating...");

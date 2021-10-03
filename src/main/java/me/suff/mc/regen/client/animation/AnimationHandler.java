@@ -55,9 +55,7 @@ public class AnimationHandler {
 
     public static boolean showArms(LivingEntity livingEntity) {
         AtomicBoolean show = new AtomicBoolean(true);
-        RegenCap.get(livingEntity).ifPresent(iRegen -> {
-            show.set(iRegen.handState() == IRegen.Hand.LEFT_GONE);
-        });
+        RegenCap.get(livingEntity).ifPresent(iRegen -> show.set(iRegen.handState() == IRegen.Hand.LEFT_GONE));
         return !show.get();
     }
 

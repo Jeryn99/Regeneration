@@ -2,11 +2,13 @@ package me.suff.mc.regen.client.rendering;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import me.suff.mc.regen.client.rendering.model.AlexArmModel;
-import me.suff.mc.regen.client.rendering.model.SteveArmModel;
+import me.suff.mc.regen.client.rendering.model.ArmModel;
+import me.suff.mc.regen.client.rendering.model.ContainerModel;
 import me.suff.mc.regen.client.skin.SkinHandler;
+import me.suff.mc.regen.common.block.JarBlock;
 import me.suff.mc.regen.common.item.HandItem;
 import me.suff.mc.regen.common.tiles.JarTile;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -22,6 +24,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockDisplayReader;
 
@@ -35,10 +38,11 @@ public class JarTileRender extends TileEntityRenderer<JarTile> {
     private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
     private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
     public static HashMap<JarTile, ResourceLocation> TEXTURES = new HashMap<>();
-    SteveArmModel steveArmModel = new SteveArmModel();
-    AlexArmModel alexArmModel = new AlexArmModel();
-    EntityModel mainModel = new AlexArmModel();
 
+    ArmModel steveArmModel = new ArmModel(false);
+    ArmModel armModel = new ArmModel(true);
+    EntityModel mainModel = new ArmModel(true);
+    ContainerModel containerModel = new ContainerModel();
 
     public JarTileRender(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
@@ -47,9 +51,14 @@ public class JarTileRender extends TileEntityRenderer<JarTile> {
     @Override
     public void render(JarTile tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
-        if (tileEntityIn.getHand().getItem() instanceof HandItem && !tileEntityIn.isValid(JarTile.Action.CREATE)) {
+        matrixStackIn.pushPose();
+        BlockState blockstate = tileEntityIn.getBlockState();
+        float rotation = 22.5F * (float) blockstate.getValue(JarBlock.ROTATION);
+
+        // Render remaining lindos amount
+        if (tileEntityIn.getHand().getItem() instanceof HandItem && !tileEntityIn.isValid(JarTile.Action.CREATE) && Minecraft.renderNames()) {
             matrixStackIn.pushPose();
-            matrixStackIn.translate(0.5D, 1.5, 0.5D);
+            matrixStackIn.translate(0.5D, 1.2, 0.5D);
             matrixStackIn.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
             matrixStackIn.scale(-0.025F, -0.025F, 0.025F);
             Matrix4f matrix4f = matrixStackIn.last().pose();
@@ -64,16 +73,36 @@ public class JarTileRender extends TileEntityRenderer<JarTile> {
             TEXTURES.remove(tileEntityIn);
         }
 
+        // Render Hand
         if (tileEntityIn.getHand().getItem() instanceof HandItem) {
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5D, -0.6, 0.5D);
             boolean isAlex = HandItem.isAlex(tileEntityIn.getHand());
-            mainModel = isAlex ? alexArmModel : steveArmModel;
+            mainModel = isAlex ? armModel : steveArmModel;
+            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(rotation));
+            matrixStackIn.scale(0.8F,0.8F,0.8F);
+            matrixStackIn.translate(0,0.1F,0.04);
             mainModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(getOrCreateTexture(tileEntityIn))), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
             matrixStackIn.popPose();
         } else {
             TEXTURES.remove(tileEntityIn);
         }
+
+        // Render Block
+        matrixStackIn.pushPose();
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
+        matrixStackIn.translate(0.5,-1.5,0.5);
+        matrixStackIn.translate(-1,0,-1);
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(rotation));
+        containerModel.Lid.xRot = -(tileEntityIn.getOpenAmount() * ((float) Math.PI / 3F));;
+        containerModel.Lid.yRot = 0;
+        containerModel.Lid.zRot = 0;
+        containerModel.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(ContainerModel.CONTAINER_TEXTURE)), combinedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+        matrixStackIn.popPose();
+
+
+        matrixStackIn.popPose();
 
     }
 
