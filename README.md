@@ -21,7 +21,7 @@
   <a href="https://twitter.com/nictogen">Nictogen</a> | Code
   <a href="https://twitter.com/50ap5ud5">50ap5ud5</a> | Code
   <a href="https://twitter.com/TheConnorDawn">Connor Dawn</a> | Ideas & Sounds
-  <a href="https://twitter.com/DisasterGaye">Angela</a> | Ideas & Voices & Models/Textures
+  <a href="https://twitter.com/DisasterGaye">DisasterGaye</a> | Ideas & Voices & Models/Textures
   <a href="https://twitter.com/MagicMrmann">Magic Man</a> | Models/Textures
   <a href="https://twitter.com/Phoenix26947026">End Phoenix</a> | Models/Textures
   <a href="https://twitter.com/Asher_Enterprix">Asher</a> | Timelord Voices
