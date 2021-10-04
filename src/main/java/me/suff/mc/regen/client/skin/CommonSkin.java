@@ -3,19 +3,14 @@ package me.suff.mc.regen.client.skin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.suff.mc.regen.Regeneration;
-import me.suff.mc.regen.client.screen.RErrorScreen;
 import me.suff.mc.regen.client.screen.SkinPack;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.DownloadSkinsThread;
 import me.suff.mc.regen.util.MineSkin;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -243,7 +238,6 @@ public class CommonSkin {
         }
 
         if (!directory.exists()) {
-            Minecraft.getInstance().setScreen(new RErrorScreen(new TranslationTextComponent("No Skins for " + new TranslationTextComponent("regeneration.skin_type." + choices.name().toLowerCase()).getString()), new TranslationTextComponent("Please place skins in the local Directory")));
             return new ArrayList<>();
         }
 
