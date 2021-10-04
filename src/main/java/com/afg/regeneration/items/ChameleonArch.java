@@ -15,31 +15,27 @@ import net.minecraft.world.World;
 /**
  * Created by AFlyingGrayson on 8/28/17
  */
-public class ChameleonArch extends Item
-{
-	public ChameleonArch() {
-		this.setUnlocalizedName("chameleonArch");
-		this.setRegistryName("chameleonarch");
-		this.setCreativeTab(CreativeTabs.TOOLS);
-	}
+public class ChameleonArch extends Item {
+    public ChameleonArch() {
+        this.setUnlocalizedName("chameleonArch");
+        this.setRegistryName("chameleonarch");
+        this.setCreativeTab(CreativeTabs.TOOLS);
+    }
 
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
-	{
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		if (playerIn.hasCapability(TimelordCapability.TIMELORD_CAP, null))
-		{
-			ITimelordCapability capability = playerIn.getCapability(TimelordCapability.TIMELORD_CAP, null);
-			if(capability.isTimelord()){
-				playerIn.sendStatusMessage(new TextComponentString("You've reset your regeneration cycles!"), true);
-				capability.setRegenCount(0);
-				capability.syncToPlayer();
-			} else {
-				playerIn.sendStatusMessage(new TextComponentString("You've become a timelord! (animation coming soon)"), true);
-				capability.setTimelord(true);
-				capability.syncToPlayer();
-			}
-		}
-		else return new ActionResult<>(EnumActionResult.FAIL, itemstack);
-		return new ActionResult<>(EnumActionResult.PASS, ItemStack.EMPTY);
-	}
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack itemstack = playerIn.getHeldItem(handIn);
+        if (playerIn.hasCapability(TimelordCapability.TIMELORD_CAP, null)) {
+            ITimelordCapability capability = playerIn.getCapability(TimelordCapability.TIMELORD_CAP, null);
+            if (capability.isTimelord()) {
+                playerIn.sendStatusMessage(new TextComponentString("You've reset your regeneration cycles!"), true);
+                capability.setRegenCount(0);
+                capability.syncToPlayer();
+            } else {
+                playerIn.sendStatusMessage(new TextComponentString("You've become a timelord! (animation coming soon)"), true);
+                capability.setTimelord(true);
+                capability.syncToPlayer();
+            }
+        } else return new ActionResult<>(EnumActionResult.FAIL, itemstack);
+        return new ActionResult<>(EnumActionResult.PASS, ItemStack.EMPTY);
+    }
 }

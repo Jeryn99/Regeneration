@@ -15,36 +15,36 @@ import java.util.UUID;
 /**
  * Created by AFlyingGrayson on 12/30/17
  */
-public class MessageSyncTimelordCap implements IMessage
-{
-	public UUID playerUUID;
-	public NBTTagCompound nbt;
+public class MessageSyncTimelordCap implements IMessage {
+    public UUID playerUUID;
+    public NBTTagCompound nbt;
 
-	public MessageSyncTimelordCap(){}
-	public MessageSyncTimelordCap(EntityPlayer player){
-		this.playerUUID = player.getPersistentID();
-		nbt = (NBTTagCompound) TimelordCapability.TIMELORD_CAP.getStorage().writeNBT(TimelordCapability.TIMELORD_CAP, player.getCapability(TimelordCapability.TIMELORD_CAP, null), null );
-	}
+    public MessageSyncTimelordCap() {
+    }
 
-	@Override public void fromBytes(ByteBuf buf)
-	{
-		this.playerUUID = UUID.fromString(ByteBufUtils.readUTF8String(buf));
-		this.nbt = ByteBufUtils.readTag(buf);
-	}
+    public MessageSyncTimelordCap(EntityPlayer player) {
+        this.playerUUID = player.getPersistentID();
+        nbt = (NBTTagCompound) TimelordCapability.TIMELORD_CAP.getStorage().writeNBT(TimelordCapability.TIMELORD_CAP, player.getCapability(TimelordCapability.TIMELORD_CAP, null), null);
+    }
 
-	@Override public void toBytes(ByteBuf buf)
-	{
-		ByteBufUtils.writeUTF8String(buf, this.playerUUID.toString());
-		ByteBufUtils.writeTag(buf, this.nbt);
-	}
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        this.playerUUID = UUID.fromString(ByteBufUtils.readUTF8String(buf));
+        this.nbt = ByteBufUtils.readTag(buf);
+    }
 
-	public static class Handler implements IMessageHandler<MessageSyncTimelordCap, IMessage>
-	{
+    @Override
+    public void toBytes(ByteBuf buf) {
+        ByteBufUtils.writeUTF8String(buf, this.playerUUID.toString());
+        ByteBufUtils.writeTag(buf, this.nbt);
+    }
 
-		@Override public IMessage onMessage(MessageSyncTimelordCap message, MessageContext ctx)
-		{
-			Minecraft.getMinecraft().addScheduledTask(() -> TimelordCapability.TIMELORD_CAP.getStorage().readNBT(TimelordCapability.TIMELORD_CAP, Minecraft.getMinecraft().world.getPlayerEntityByUUID(message.playerUUID).getCapability(TimelordCapability.TIMELORD_CAP, null), null, message.nbt));
-			return null;
-		}
-	}
+    public static class Handler implements IMessageHandler<MessageSyncTimelordCap, IMessage> {
+
+        @Override
+        public IMessage onMessage(MessageSyncTimelordCap message, MessageContext ctx) {
+            Minecraft.getMinecraft().addScheduledTask(() -> TimelordCapability.TIMELORD_CAP.getStorage().readNBT(TimelordCapability.TIMELORD_CAP, Minecraft.getMinecraft().world.getPlayerEntityByUUID(message.playerUUID).getCapability(TimelordCapability.TIMELORD_CAP, null), null, message.nbt));
+            return null;
+        }
+    }
 }

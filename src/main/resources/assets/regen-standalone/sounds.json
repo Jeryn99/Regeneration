@@ -1,20 +1,22 @@
 {
-	"regen_1": {
-		"category": "master",
-		"subtitle": "regen_1",
-		"sounds": [{
-			"name": "regen-standalone:regen_1",
-			"stream": true
-		}]
-	},
-	
-		"regen_2": {
-		"category": "master",
-		"subtitle": "regen_2",
-		"sounds": [{
-			"name": "regen-standalone:regen_2",
-			"stream": true
-		}]
-	}
-	
+  "regen_1": {
+    "category": "master",
+    "subtitle": "regen_1",
+    "sounds": [
+      {
+        "name": "regen-standalone:regen_1",
+        "stream": true
+      }
+    ]
+  },
+  "regen_2": {
+    "category": "master",
+    "subtitle": "regen_2",
+    "sounds": [
+      {
+        "name": "regen-standalone:regen_2",
+        "stream": true
+      }
+    ]
+  }
 }
