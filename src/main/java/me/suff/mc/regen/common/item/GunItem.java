@@ -59,7 +59,7 @@ public class GunItem extends Item {
                 worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), isPistol ? RSounds.RIFLE.get() : RSounds.STASER.get(), SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
                 playerIn.getCooldowns().addCooldown(this, cooldown);
                 if (worldIn.random.nextInt(40) < 10  && !playerIn.isCreative()) {
-                    setDamage(stack, getDamage(stack) + 1);
+                    setDamage(stack, getDamage(stack) + 10);
                 }
                 if (!worldIn.isClientSide) {
                     LaserProjectile laserProjectile = new LaserProjectile(REntities.LASER.get(), playerIn, worldIn);
@@ -105,37 +105,6 @@ public class GunItem extends Item {
     @Override
     public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.NONE;
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        return 0;
-    }
-
-    @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
-    }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return false;
-    }
-
-    @Override
-    public int getItemEnchantability(ItemStack stack) {
-        return 0;
-    }
-
-    @Override
-    public boolean isRepairable(ItemStack stack) {
-        System.out.println(super.isRepairable(stack));
-        return super.isRepairable(stack);
     }
 
     @Override

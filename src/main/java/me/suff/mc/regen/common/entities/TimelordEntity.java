@@ -320,7 +320,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
     }
 
     public SoundScheme getPersonality() {
-        return RSoundSchemes.get(new ResourceLocation(getEntityData().get(PERSONALITY)));
+        return RSoundSchemes.get(new ResourceLocation(getEntityData().get(PERSONALITY)), male());
     }
 
     public void setPersonality(ResourceLocation per) {
