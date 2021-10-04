@@ -335,7 +335,7 @@ public class Timelord extends AbstractVillager implements RangedAttackMob {
     }
 
     public SoundScheme getPersonality() {
-        return RSoundSchemes.get(new ResourceLocation(getEntityData().get(PERSONALITY)));
+        return RSoundSchemes.get(new ResourceLocation(getEntityData().get(PERSONALITY)),male());
     }
 
     public void setPersonality(ResourceLocation per) {

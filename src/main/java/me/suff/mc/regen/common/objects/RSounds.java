@@ -45,11 +45,10 @@ public class RSounds {
 
 
     //Angela Timelord
-    public static final RegistryObject<SoundEvent> F_ANGELA_TIMELORD_HURT = SOUNDS.register("f_angela_timelord_hurt", () -> setUpSound("f_angela_timelord_hurt"));
-    public static final RegistryObject<SoundEvent> F_ANGELA_TIMELORD_DIE = SOUNDS.register("f_angela_timelord_die", () -> setUpSound("f_angela_timelord_die"));
-    public static final RegistryObject<SoundEvent> F_ANGELA_TIMELORD_TRADE_FAIL = SOUNDS.register("f_angela_timelord_trade_fail", () -> setUpSound("f_angela_timelord_trade_fail"));
-    public static final RegistryObject<SoundEvent> F_ANGELA_TIMELORD_TRADE_SUCCESS = SOUNDS.register("f_angela_timelord_trade_success", () -> setUpSound("f_angela_timelord_trade_success"));
-    public static final RegistryObject<SoundEvent> F_ANGELA_TIMELORD_SCREAM = SOUNDS.register("f_angela_timelord_scream", () -> setUpSound("f_angela_timelord_scream"));
+    public static final RegistryObject<SoundEvent> M_DISASTER_TIMELORD_HURT = SOUNDS.register("m_disaster_timelord_hurt", () -> setUpSound("m_disaster_timelord_hurt"));
+    public static final RegistryObject<SoundEvent> M_DISASTER_TIMELORD_TRADE_FAIL = SOUNDS.register("m_disaster_timelord_trade_fail", () -> setUpSound("m_disaster_timelord_trade_fail"));
+    public static final RegistryObject<SoundEvent> M_DISASTER_TIMELORD_TRADE_SUCCESS = SOUNDS.register("m_disaster_timelord_trade_success", () -> setUpSound("m_disaster_timelord_trade_success"));
+    public static final RegistryObject<SoundEvent> M_DISASTER_TIMELORD_SCREAM = SOUNDS.register("m_disaster_timelord_scream", () -> setUpSound("m_disaster_timelord_scream"));
 
     //aaliceh Timelord
     public static final RegistryObject<SoundEvent> F_AALICEH_TIMELORD_HURT = SOUNDS.register("f_aaliceh_timelord_hurt", () -> setUpSound("f_aaliceh_timelord_hurt"));
