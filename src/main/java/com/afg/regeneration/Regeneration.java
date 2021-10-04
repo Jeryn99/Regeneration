@@ -36,56 +36,48 @@ import java.lang.reflect.Field;
 
 @Mod(modid = Regeneration.MODID, name = "Regeneration", version = Regeneration.VERSION, acceptedMinecraftVersions = "1.12, 1.12.1, 1.12.2")
 @Mod.EventBusSubscriber
-public class Regeneration
-{
-	public static final String MODID = "regen-standalone", VERSION = "1.1";
+public class Regeneration {
+    public static final String MODID = "regen-standalone", VERSION = "1.1";
 
-	public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(Regeneration.MODID);
+    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(Regeneration.MODID);
 
-	@Mod.EventHandler
-	public void init(FMLInitializationEvent event)
-	{
-		if (event.getSide().equals(Side.CLIENT)){
-			MinecraftForge.EVENT_BUS.register(new PlayerRenderHandler());
-		}
-		MinecraftForge.EVENT_BUS.register(new TimelordCapability.EventHandler());
-		NETWORK_WRAPPER.registerMessage(MessageSyncTimelordCap.Handler.class, MessageSyncTimelordCap.class, 0, Side.CLIENT);
-		CapabilityManager.INSTANCE.register(ITimelordCapability.class, new TimelordCapability.Storage(), TimelordCapability.class);
-	}
+    @SubscribeEvent
+    public static void registerItems(RegistryEvent.Register<Item> event) throws Exception {
+        event.getRegistry().register(new ChameleonArch());
+    }
 
-	@GameRegistry.ObjectHolder(MODID)
-	public static class Items
-	{
-		public static final Item chameleonArch = null;
-	}
+    @SubscribeEvent
+    public static void registerModels(ModelRegistryEvent event) throws Exception {
+        for (Field f : Items.class.getDeclaredFields()) {
+            Item item = (Item) f.get(null);
+            ModelResourceLocation loc = new ModelResourceLocation(item.getRegistryName(), "inventory");
+            ModelLoader.setCustomModelResourceLocation(item, 0, loc);
+        }
+    }
 
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) throws Exception
-	{
-		event.getRegistry().register(new ChameleonArch());
-	}
+    @SubscribeEvent
+    public static void loot(LootTableLoadEvent e) {
+        if (e.getName().toString().toLowerCase().contains("minecraft:chests/")) {
+            LootPool pool = e.getTable().getPool("main");
+            LootCondition[] chance = {new RandomChance(0.5F)};
+            LootFunction[] count = {new SetCount(chance, new RandomValueRange(1.0F, 1.0F))};
+            LootEntryItem item = new LootEntryItem(Items.chameleonArch, 10, 1, count, chance, "symbol_" + Items.chameleonArch.getUnlocalizedName());
+            pool.addEntry(item);
+        }
+    }
 
-	@SubscribeEvent
-	public static void registerModels(ModelRegistryEvent event) throws Exception
-	{
-		for (Field f : Items.class.getDeclaredFields())
-		{
-			Item item = (Item) f.get(null);
-			ModelResourceLocation loc = new ModelResourceLocation(item.getRegistryName(), "inventory");
-			ModelLoader.setCustomModelResourceLocation(item, 0, loc);
-		}
-	}
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        if (event.getSide().equals(Side.CLIENT)) {
+            MinecraftForge.EVENT_BUS.register(new PlayerRenderHandler());
+        }
+        MinecraftForge.EVENT_BUS.register(new TimelordCapability.EventHandler());
+        NETWORK_WRAPPER.registerMessage(MessageSyncTimelordCap.Handler.class, MessageSyncTimelordCap.class, 0, Side.CLIENT);
+        CapabilityManager.INSTANCE.register(ITimelordCapability.class, new TimelordCapability.Storage(), TimelordCapability.class);
+    }
 
-	@SubscribeEvent
-	public static void loot(LootTableLoadEvent e)
-	{
-		if (e.getName().toString().toLowerCase().contains("minecraft:chests/"))
-		{
-			LootPool pool = e.getTable().getPool("main");
-			LootCondition[] chance = { new RandomChance(0.5F) };
-			LootFunction[] count = { new SetCount(chance, new RandomValueRange(1.0F, 1.0F)) };
-			LootEntryItem item = new LootEntryItem(Items.chameleonArch, 10, 1, count, chance, "symbol_" + Items.chameleonArch.getUnlocalizedName());
-			pool.addEntry(item);
-		}
-	}
+    @GameRegistry.ObjectHolder(MODID)
+    public static class Items {
+        public static final Item chameleonArch = null;
+    }
 }

@@ -1,16 +1,18 @@
 [
-{
-  "modid": "regen-standalone",
-  "name": "Regeneration",
-  "description": "Mod that adds regeneration to Minecraft",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["Grayson, Sub"],
-  "credits": "SmokedOak for the idea, Sheriff for item textures",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+  {
+    "modid": "regen-standalone",
+    "name": "Regeneration",
+    "description": "Mod that adds regeneration to Minecraft",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "Grayson, Sub"
+    ],
+    "credits": "SmokedOak for the idea, Sheriff for item textures",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
 ]
