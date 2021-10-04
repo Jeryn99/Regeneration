@@ -9,12 +9,14 @@ import me.suff.mc.regen.common.regen.acting.Acting;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.util.PlayerUtil;
+import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +26,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.tardis.mod.ars.ConsoleRoom;
 import net.tardis.mod.entity.hostile.dalek.DalekEntity;
 import net.tardis.mod.helper.TardisHelper;
 import net.tardis.mod.helper.WorldHelper;
@@ -167,10 +170,9 @@ public class TardisMod implements Acting {
             ConsoleTile console = (ConsoleTile) world.getBlockEntity(TardisHelper.TARDIS_POS);
             if(cap.getLiving() instanceof PlayerEntity){
                 PlayerEntity playerEntity = (PlayerEntity) cap.getLiving();
-                System.out.println("before: " +console.getEmotionHandler().getLoyalty(playerEntity.getUUID()));
                 console.getEmotionHandler().setLoyalty(playerEntity.getUUID(), console.getEmotionHandler().getLoyalty(playerEntity.getUUID())- RegenUtil.RAND.nextInt(25));
-                System.out.println("after: " +console.getEmotionHandler().getLoyalty(playerEntity.getUUID()));
                 console.getInteriorManager().setAlarmOn(false);
+                console.getUnlockManager().addConsoleRoom(ConsoleRoom.getRegistry().get(new ResourceLocation(RConstants.MODID, "mccoy")));
             }
         }
     }

@@ -59,7 +59,7 @@ public class ClientEvents {
     public static void onName(RenderNameplateEvent event) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         RegenCap.get(player).ifPresent(iRegen -> {
-            if (iRegen.regenState() == RegenStates.POST || iRegen.regenState() == RegenStates.GRACE_CRIT) {
+            if (iRegen.regenState() == RegenStates.POST && !PlayerUtil.isPlayerAboveZeroGrid(player)|| iRegen.regenState() == RegenStates.GRACE_CRIT) {
                 event.setContent(new StringTextComponent(TextFormatting.OBFUSCATED + event.getContent().getString()));
             }
         });
