@@ -2,11 +2,18 @@ package me.suff.mc.regen.util;
 
 import me.suff.mc.regen.Regeneration;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.VersionChecker;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -27,6 +34,19 @@ public class RegenUtil {
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};
+
+    public static void versionCheck(PlayerEntity playerEntity) {
+        VersionChecker.CheckResult version = VersionChecker.getResult(ModList.get().getModFileById(RConstants.MODID).getMods().get(0));
+        if (version.status == VersionChecker.Status.OUTDATED) {
+            TranslationTextComponent click = new TranslationTextComponent("Download");
+            click.setStyle(Style.EMPTY.setUnderlined(true).withColor(TextFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/regeneration/files")));
+
+            TranslationTextComponent translationTextComponent = new TranslationTextComponent(TextFormatting.BOLD+"[" + TextFormatting.RESET + TextFormatting.YELLOW + "Regeneration" + TextFormatting.RESET + TextFormatting.BOLD + "]");
+            translationTextComponent.append(new TranslationTextComponent(" New Update Found: (" + version.target + ") ").append(click));
+
+            PlayerUtil.sendMessage(playerEntity, translationTextComponent, false);
+        }
+    }
 
     public static ITag.INamedTag<Block> makeBlock(String domain, String path) {
         return BlockTags.createOptional(new ResourceLocation(domain, path));

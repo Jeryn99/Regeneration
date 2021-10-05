@@ -18,6 +18,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -78,7 +79,7 @@ public class PlayerUtil {
         }
     }
 
-    public static void sendMessage(LivingEntity livingEntity, TranslationTextComponent translation, boolean hotBar) {
+    public static void sendMessage(LivingEntity livingEntity, IFormattableTextComponent translation, boolean hotBar) {
         if (!(livingEntity instanceof PlayerEntity)) return;
         PlayerEntity player = (PlayerEntity) livingEntity;
         if (!player.level.isClientSide) {

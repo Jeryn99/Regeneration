@@ -84,8 +84,7 @@ public class MineSkin {
         uc = (HttpsURLConnection) url.openConnection();
         uc.addRequestProperty("User-Agent", USER_AGENT);
         InputStream inputStream = uc.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        return JSONUtils.parse(br);
+        return JSONUtils.parse(new BufferedReader(new InputStreamReader(inputStream)));
     }
 
 

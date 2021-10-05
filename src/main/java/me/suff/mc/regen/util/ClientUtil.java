@@ -73,7 +73,6 @@ import static me.suff.mc.regen.common.item.FobWatchItem.isOpen;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientUtil {
 
-    private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
     public static HashMap<Item, BipedModel<?>> ARMOR_MODELS = new HashMap<>();
 
     public static String getImgurLink(String base64Image) throws Exception {

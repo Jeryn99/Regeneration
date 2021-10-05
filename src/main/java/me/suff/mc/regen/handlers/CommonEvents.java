@@ -14,6 +14,7 @@ import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
+import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -39,6 +40,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -297,6 +299,14 @@ public class CommonEvents {
                 tempMap.put(RStructures.Structures.HUTS.get(), DimensionStructuresSettings.DEFAULTS.get(RStructures.Structures.HUTS.get()));
                 serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLoad(PlayerEvent.PlayerLoggedInEvent event){
+        if(event.getEntity() instanceof PlayerEntity){
+            PlayerEntity playerEntity = (PlayerEntity) event.getEntity();
+            RegenUtil.versionCheck(playerEntity);
         }
     }
 
