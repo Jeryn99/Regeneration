@@ -29,6 +29,8 @@ import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.client.model.data.IModelData;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -44,8 +46,6 @@ import java.util.Objects;
 public class IncarnationScreen extends AbstractContainerScreen {
 
     private static final ResourceLocation screenBackground = new ResourceLocation(RConstants.MODID, "textures/gui/customizer.png");
-    private static final ModelPart alexModel = ClientUtil.getPlayerModel(true);
-    private static final ModelPart steveModel = ClientUtil.getPlayerModel(false);
     public static boolean isAlex = true;
     private static ResourceLocation currentTexture = DefaultPlayerSkin.getDefaultSkin();
     private static PlayerUtil.SkinType currentSkinType = RegenCap.get(Objects.requireNonNull(Minecraft.getInstance().player)).orElse(null).preferredModel();
@@ -108,6 +108,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         final int btnW = 55, btnH = 18;
         position = 0;
         skins = CommonSkin.listAllSkins(PlayerUtil.SkinType.EITHER);
+        excludeTrending.active = true;
       /*  try {
             getHash();
         } catch (IOException e) {
@@ -125,9 +126,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
             if (skins.isEmpty() || searchField.getValue().isEmpty()) {
                 skins = CommonSkin.listAllSkins(currentSkinType);
             }
-
             stripTrending();
-
             Collections.sort(skins);
             updateModels();
         });
@@ -199,8 +198,9 @@ public class IncarnationScreen extends AbstractContainerScreen {
         this.excludeTrending = new RCheckbox(cx + 10, cy + 25, 150, 20, new TranslatableComponent("Trending?"), true, checkboxButton -> {
             if (checkboxButton instanceof Checkbox check) {
                 position = 0;
+                searchField.setValue("");
                 if (!check.selected()) {
-                    skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
+                    skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("mineskin"));
                 } else {
                     skins = CommonSkin.listAllSkins(currentSkinType);
                 }
@@ -231,7 +231,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
     private void stripTrending() {
         if (!excludeTrending.selected()) {
-            skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
+            skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("mineskin"));
         }
     }
 
@@ -307,17 +307,15 @@ public class IncarnationScreen extends AbstractContainerScreen {
     @Override
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.searchField.tick();
-        excludeTrending.active = searchField.getValue().isEmpty();
+
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        for (DescButton descButton : descButtons) {
-            if (descButton.isHovered()) {
-                if (descButton.getDescription() != null) {
-                    renderToolTip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
-                }
+        descButtons.forEach(descButton -> {
+            if(descButton.isHovered()){
+                this.renderToolTip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
             }
-        }
+        });
     }
 
     //Spectre0987
@@ -333,7 +331,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
         scale = Mth.clamp(scale, 0.0F, 1.0F);
         matrix.translate(x, y, 0);
         matrix.scale(scale, scale, scale);
-        drawCenteredString(matrix, Minecraft.getInstance().font, text, 0, 0, Color.WHITE.getRGB());
+        drawCenteredString(matrix, Minecraft.getInstance().font, text, 0, 0, color);
         matrix.popPose();
     }
 

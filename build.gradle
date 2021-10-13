@@ -120,7 +120,7 @@ minecraft.runs.all {
     }
 }
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.59'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.88'
 
     library 'com.google.guava:guava:21.0'
     library 'org.spongepowered:mixin:0.8.4'

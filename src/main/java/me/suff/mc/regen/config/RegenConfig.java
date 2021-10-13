@@ -39,7 +39,7 @@ public class RegenConfig {
             changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regen.perspective").define("changePerspective", true);
             renderTimelordHeadwear = builder.comment("Toggle whether Timelords second head layers render, as some look good without and some look good with, I just leave this decision up to you").translation("config.regen.timelordRenderSecondLayers").define("timelordRenderSecondLayers", true);
             heartIcons = builder.comment("Toggle whether re-skinned hearts render when you have Regenerations").translation("config.regen.heartIcons").define("heartIcons", true);
-            downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from NameMC").translation("config.regen.downloadTrendingSkins").define("downloadTrendingSkins", true);
+            downloadTrendingSkins = builder.comment("Toggle whether a bunch of trending skins are downloaded from mineskin").translation("config.regen.downloadTrendingSkins").define("downloadTrendingSkins", true);
             downloadInteralSkins = builder.comment("Toggle whether the mod downloads it's own pack of Doctor who Skins").translation("config.regen.downloadInternalSkins").define("downloadInternalSkins", true);
             builder.pop();
         }

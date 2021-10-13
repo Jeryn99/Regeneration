@@ -55,8 +55,7 @@ public class RBlocks {
      * <br> Use when you need a special BlockItem. The BlockItem should be registered in RItems with the same registry name as the block
      */
     private static <T extends Block> RegistryObject<T> registerBlockOnly(String id, Supplier<T> blockSupplier) {
-        RegistryObject<T> registryObject = BLOCKS.register(id, blockSupplier);
-        return registryObject;
+        return BLOCKS.register(id, blockSupplier);
     }
 
     /**

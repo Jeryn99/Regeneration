@@ -14,7 +14,6 @@ import org.lwjgl.openal.EXTEfx;
 import java.util.concurrent.CompletableFuture;
 
 public class SoundReverb {
-    private static final Minecraft MC = Minecraft.getInstance();
 
     private static boolean available;
     private static boolean setup;

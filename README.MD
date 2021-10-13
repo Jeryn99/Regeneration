@@ -2,8 +2,8 @@
 
 <p align="center">
 <a href="https://www.curseforge.com/minecraft/mc-mods/regeneration/files">
-  <img src="http://cf.way2muchnoise.eu/versions/regeneration.svg">
-  <img src="http://cf.way2muchnoise.eu/regeneration.svg"> <br>
+  <img src="https://cf.way2muchnoise.eu/versions/regeneration.svg" alt="Regeneration Versions">
+  <img src="https://cf.way2muchnoise.eu/regeneration.svg" alt="Regeneration Download Count"> <br>
 </a>
 
 </p>
@@ -36,6 +36,6 @@
 
 <p align="center">
 <a href="https://www.bisecthosting.com/dontblink">
-  <img src="https://www.bisecthosting.com/partners/custom-banners/dd651da3-657d-4154-9e2b-3df1d135c635.png">
+  <img src="https://www.bisecthosting.com/partners/custom-banners/dd651da3-657d-4154-9e2b-3df1d135c635.png" alt="Bisect Sponser">
 </a>
 </p>

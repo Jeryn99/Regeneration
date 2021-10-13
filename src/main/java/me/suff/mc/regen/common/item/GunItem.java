@@ -32,7 +32,7 @@ public class GunItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack p_41454_) {
+    public int getUseDuration(ItemStack itemStack) {
         return 72000;
     }
 

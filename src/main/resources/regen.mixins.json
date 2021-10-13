@@ -7,8 +7,5 @@
     "RenderPlayerMixin",
     "SoundSourceMixin"
   ],
-  "minVersion": "0.8",
-  "mixins": [
-    "VillagerTradeMixin"
-  ]
+  "minVersion": "0.8"
 }
