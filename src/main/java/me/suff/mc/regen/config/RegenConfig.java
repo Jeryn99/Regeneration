@@ -27,6 +27,7 @@ public class RegenConfig {
     public static class Client {
 
         public final ForgeConfigSpec.BooleanValue changeMySkin;
+        public final ForgeConfigSpec.BooleanValue shaders;
         public final ForgeConfigSpec.BooleanValue changePerspective;
         public final ForgeConfigSpec.BooleanValue renderTimelordHeadwear;
         public final ForgeConfigSpec.BooleanValue heartIcons;
@@ -36,6 +37,7 @@ public class RegenConfig {
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client").push("client");
             changeMySkin = builder.comment("Disabling this will disable skin changing for you and you will retain your Mojang one").translation("config.regeneration.changemyskin").define("changeMySkin", true);
+            shaders = builder.comment("Toggle Regeneration visual Shaders on and off").translation("config.regeneration.shaders").define("shaders", true);
             changePerspective = builder.comment("Changes the players perspective on regeneration").translation("config.regeneration.perspective").define("changePerspective", true);
             renderTimelordHeadwear = builder.comment("Toggle whether Timelords second head layers render, as some look good without and some look good with, I just leave this decision up to you").translation("config.regeneration.timelordRenderSecondLayers").define("timelordRenderSecondLayers", true);
             heartIcons = builder.comment("Toggle whether re-skinned hearts render when you have Regenerations").translation("config.regeneration.heartIcons").define("heartIcons", true);

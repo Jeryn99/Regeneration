@@ -24,6 +24,7 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
@@ -47,13 +48,66 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
 
     public static ResourceLocation OLD = AbstractGui.GUI_ICONS_LOCATION;
     public static ResourceLocation NEW = new ResourceLocation(RConstants.MODID, "textures/gui/crosshair.png");
     public static ResourceLocation HEARTS = new ResourceLocation(RConstants.MODID, "textures/gui/hearts.png");
+    public static boolean shouldReset = false;
     private static ISound iSound = null;
+
+    @SubscribeEvent
+    public static void on(ClientChatEvent event){
+
+    }
+
+
+    // TODO Make this code cleaner
+    public static void updateShaders(Entity entity){
+        if(!RegenConfig.CLIENT.shaders.get()) return;
+        if(!(entity instanceof LivingEntity)){
+            return;
+        }
+        GameRenderer renderer = Minecraft.getInstance().gameRenderer;
+
+        AtomicReference<String> shader = new AtomicReference<>();
+
+        RegenCap.get((LivingEntity) entity).ifPresent(iRegen -> {
+            if(iRegen.regenState() == RegenStates.ALIVE || iRegen.regenState() == RegenStates.REGENERATING || PlayerUtil.isPlayerAboveZeroGrid((LivingEntity) entity)){
+                if(shouldReset) {
+                    renderer.shutdownEffect();
+                    return;
+                }
+            }
+
+            if(iRegen.regenState() == RegenStates.GRACE && !checkShaderLoaded(renderer, "desaturate")){
+                shader.set("desaturate");
+                shouldReset = true;
+            }
+
+            if(iRegen.regenState() == RegenStates.GRACE_CRIT && !checkShaderLoaded(renderer, "blur")){
+                shader.set("blur");
+                shouldReset = true;
+            }
+
+            if(iRegen.regenState() == RegenStates.POST && !PlayerUtil.isPlayerAboveZeroGrid((LivingEntity) entity) && !checkShaderLoaded(renderer, "deconverge")){
+                shader.set("deconverge");
+                shouldReset = true;
+            }
+        });
+
+        if(shader.get() != null){
+            renderer.loadEffect(new ResourceLocation("shaders/post/"+shader+".json"));
+        }
+    }
+
+    private static boolean checkShaderLoaded(GameRenderer renderer, String blur) {
+        if(renderer.currentEffect() == null) return false;
+        return renderer.currentEffect().getName().toLowerCase().contains(blur);
+    }
 
     @SubscribeEvent
     public static void onName(RenderNameplateEvent event) {
@@ -137,6 +191,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onColorFog(EntityViewRenderEvent.RenderFogEvent.FogColors e) {
+
         Entity renderView = Minecraft.getInstance().getCameraEntity();
         if (!(Minecraft.getInstance().getCameraEntity() instanceof LivingEntity)) {
             return;
@@ -161,6 +216,8 @@ public class ClientEvents {
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onRenderOverlay(RenderGameOverlayEvent.Pre event) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
+        updateShaders(Minecraft.getInstance().getCameraEntity());
+
         RegenCap.get(player).ifPresent((cap) -> {
             String warning = null;
 

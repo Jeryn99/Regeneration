@@ -7,12 +7,14 @@ import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.config.RegenConfig;
+import me.suff.mc.regen.handlers.ClientEvents;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SkinMessage;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -50,7 +52,7 @@ class ClientActing implements Acting {
 
     @Override
     public void onRegenFinish(IRegen cap) {
-
+        ClientEvents.shouldReset = false;
     }
 
     @Override
@@ -60,6 +62,7 @@ class ClientActing implements Acting {
 
     @Override
     public void onRegenTrigger(IRegen cap) {
+
         if (Minecraft.getInstance().player.getUUID().equals(cap.getLiving().getUUID())) {
 
             if (RegenConfig.CLIENT.changeMySkin.get()) {
