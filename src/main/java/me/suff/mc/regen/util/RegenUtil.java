@@ -8,6 +8,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -34,6 +36,11 @@ public class RegenUtil {
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};
+
+    public static Vector3d vecFromPos(Vector3i location) {
+        return new Vector3d(location.getX() + 0.5, location.getY() + 0.5, location.getZ() + 0.5);
+    }
+
 
     public static void versionCheck(PlayerEntity playerEntity) {
         VersionChecker.CheckResult version = VersionChecker.getResult(ModList.get().getModFileById(RConstants.MODID).getMods().get(0));

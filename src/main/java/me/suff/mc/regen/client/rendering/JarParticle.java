@@ -12,13 +12,28 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class JarParticle extends SpriteTexturedParticle {
     private JarParticle(ClientWorld world, double x, double y, double z, double motionX, double motionY, double motionZ) {
         super(world, x, y, z, motionX, motionY, motionZ);
-        Vector3d color = random.nextBoolean() ? TransitionTypes.FIERY.get().getDefaultSecondaryColor() : TransitionTypes.FIERY.get().getDefaultSecondaryColor();
+        Vector3d color = random.nextBoolean() ? TransitionTypes.FIERY.get().getDefaultPrimaryColor() : TransitionTypes.FIERY.get().getDefaultSecondaryColor();
         this.rCol = (float) color.x;
         this.gCol = (float) color.y;
         this.bCol = (float) color.z;
         this.alpha = 0.2F;
         this.setSize(0.02F, 0.02F);
         this.quadSize *= this.random.nextFloat() * 0.6F + 0.5F;
+        this.xd *= 0.02F;
+        this.yd *= 0.02F;
+        this.zd *= 0.02F;
+        this.lifetime = (int) (20.0D / (Math.random() * 0.8D + 0.2D));
+    }
+
+    private JarParticle(ClientWorld world, double x, double y, double z, double motionX, double motionY, double motionZ, float scale) {
+        super(world, x, y, z, motionX, motionY, motionZ);
+        Vector3d color = random.nextBoolean() ? TransitionTypes.FIERY.get().getDefaultPrimaryColor() : TransitionTypes.FIERY.get().getDefaultSecondaryColor();
+        this.rCol = (float) color.x;
+        this.gCol = (float) color.y;
+        this.bCol = (float) color.z;
+        this.alpha = 0.2F;
+        this.setSize(0.02F, 0.02F);
+        this.quadSize *= scale;
         this.xd *= 0.02F;
         this.yd *= 0.02F;
         this.zd *= 0.02F;

@@ -76,14 +76,18 @@ public class ClientEvents {
         AtomicReference<String> shader = new AtomicReference<>();
 
         RegenCap.get((LivingEntity) entity).ifPresent(iRegen -> {
-            if(iRegen.regenState() == RegenStates.ALIVE || iRegen.regenState() == RegenStates.REGENERATING || PlayerUtil.isPlayerAboveZeroGrid((LivingEntity) entity)){
+
+            boolean regeneratingTroughton = iRegen.regenState() == RegenStates.REGENERATING && iRegen.transitionType() == TransitionTypes.TROUGHTON.get();
+
+
+            if(iRegen.regenState() == RegenStates.ALIVE || iRegen.regenState() == RegenStates.REGENERATING && !regeneratingTroughton || PlayerUtil.isPlayerAboveZeroGrid((LivingEntity) entity)){
                 if(shouldReset) {
                     renderer.shutdownEffect();
                     return;
                 }
             }
 
-            if(iRegen.regenState() == RegenStates.GRACE && !checkShaderLoaded(renderer, "desaturate")){
+            if((iRegen.regenState() == RegenStates.GRACE || regeneratingTroughton) && !checkShaderLoaded(renderer, "desaturate")){
                 shader.set("desaturate");
                 shouldReset = true;
             }

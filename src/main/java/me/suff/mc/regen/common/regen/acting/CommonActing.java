@@ -2,6 +2,7 @@ package me.suff.mc.regen.common.regen.acting;
 
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.block.JarBlock;
+import me.suff.mc.regen.common.objects.RParticles;
 import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.transitions.WatcherTransition;
 import me.suff.mc.regen.common.tiles.JarTile;
@@ -12,6 +13,7 @@ import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.SFXMessage;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RegenSources;
+import me.suff.mc.regen.util.RegenUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -19,11 +21,13 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.play.server.SSpawnParticlePacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -89,6 +93,16 @@ class CommonActing implements Acting {
                         }
                         if (livingEntity.level.random.nextBoolean() && serverWorld.getGameTime() % 5 == 0) {
                             jarTile.setLindos(jarTile.getLindos() + 0.7F);
+                            //TODO
+                            BlockPos artonPos = livingEntity.blockPosition();
+                            Vector3d end = RegenUtil.vecFromPos(artonPos);
+                            Vector3d start = RegenUtil.vecFromPos(jarTile.getBlockPos().below());
+                            Vector3d path = start.subtract(end);
+                            for (int i = 0; i < 20; ++i) {
+                                double percent = (double) i / 10.0D;
+                                Vector3d spawnPoint = new Vector3d(artonPos.getX() + 0.5D + path.x() * percent, artonPos.getY() + 1.3D + path.y() * percent, artonPos.getZ() + 0.5D + path.z * percent);
+                                serverWorld.sendParticles(RParticles.CONTAINER.get(), spawnPoint.x, spawnPoint.y, spawnPoint.z, 0, 0, 0, 0, 0);
+                            }
                         }
                         jarTile.sendUpdates();
                         return;

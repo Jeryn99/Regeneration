@@ -126,7 +126,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
     implementation fg.deobf("curse.maven:configured-457570:3244520")
-    implementation fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:530b1493a6')
+    implementation fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:cd84c21dd9')
 }
 
 
