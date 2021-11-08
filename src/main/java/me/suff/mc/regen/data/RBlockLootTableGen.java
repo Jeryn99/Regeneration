@@ -23,7 +23,7 @@ public class RBlockLootTableGen extends LootTableProvider {
 
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private DataGenerator generator;
+    private final DataGenerator generator;
 
 
     public RBlockLootTableGen(DataGenerator dataGeneratorIn) {

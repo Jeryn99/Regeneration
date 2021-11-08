@@ -120,11 +120,14 @@ minecraft.runs.all {
     }
 }
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.88'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.104'
 
     library 'com.google.guava:guava:21.0'
     library 'org.spongepowered:mixin:0.8.4'
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    implementation fg.deobf("curse.maven:configured-457570:3434072")
+    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
 }
 
 

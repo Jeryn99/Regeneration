@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "regen:smelt_zinc"
+      "regen:smelt_zinc_deep"
     ]
   },
   "criteria": {
@@ -12,7 +12,7 @@
         "items": [
           {
             "items": [
-              "regen:zinc_ore"
+              "regen:deepslate_zinc_ore"
             ]
           }
         ]
@@ -21,7 +21,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "regen:smelt_zinc"
+        "recipe": "regen:smelt_zinc_deep"
       }
     }
   },

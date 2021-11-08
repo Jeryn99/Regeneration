@@ -24,6 +24,8 @@ public class RegenUtil {
     public static Tag.Named<Block> BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
     public static Tag.Named<Block> ARS = makeBlock("tardis", "ars");
     public static Tag.Named<Item> TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
+    public static Tag.Named<Block> ZINC = makeBlock("forge", "ores/zinc");
+    public static Tag.Named<Item> ZINC_INGOT = makeItem("forge", "ingots/zinc");
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};

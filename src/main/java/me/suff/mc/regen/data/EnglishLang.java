@@ -64,6 +64,8 @@ public class EnglishLang extends LanguageProvider {
         add(RBlocks.ZERO_ROUNDEL.get(), "Zero Roundel (Half)");
         add(RBlocks.ZERO_ROOM_FULL.get(), "Zero Roundel (Full)");
         add(RBlocks.AZBANTIUM.get(), "Azbantium");
+        add(RBlocks.ZINC_ORE.get(), "Zinc Ore");
+        add(RBlocks.ZINC_ORE_DEEPSLATE.get(), "Deepslate Zinc Ore");
 
         //Item Group
         add("itemGroup.regen", "Regeneration");
@@ -127,8 +129,6 @@ public class EnglishLang extends LanguageProvider {
         add(RItems.GUARD_CHEST.get(), "Timelord Chest Armor");
         add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
         add(RItems.GUARD_FEET.get(), "Timelord Boots");
-
-        add(RBlocks.ZINC_ORE.get(), "Zinc Ore");
         add(RItems.ZINC.get(), "Zinc Ingot");
 
         //Messages

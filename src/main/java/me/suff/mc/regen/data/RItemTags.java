@@ -1,5 +1,6 @@
 package me.suff.mc.regen.data;
 
+import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;
@@ -23,6 +24,7 @@ public class RItemTags extends ItemTagsProvider {
     @Override
     protected void addTags() {
         add(RegenUtil.TIMELORD_CURRENCY, Items.GOLD_INGOT, Items.BONE, Items.EMERALD, RItems.ZINC.get(), Items.IRON_INGOT);
+        add(RegenUtil.ZINC_INGOT, RItems.ZINC.get());
     }
 
     public void add(Tag.Named<Item> branch, Item item) {
