@@ -33,6 +33,8 @@ public class RegenUtil {
     public static ITag.INamedTag<Block> BANNED_BLOCKS = makeBlock("weeping_angels", "angel_proof");
     public static ITag.INamedTag<Block> ARS = makeBlock("tardis", "ars");
     public static ITag.INamedTag<Item> TIMELORD_CURRENCY = makeItem(RConstants.MODID, "timelord_currency");
+    public static ITag.INamedTag<Block> FORGE_ZINC = makeBlock("forge", "ore/zinc");
+    public static ITag.INamedTag<Item> FORGE_ZINC_ITEM = makeItem("forge", "ore/zinc");
 
     public static Random RAND = new Random();
     public static String[] USERNAMES = new String[]{};

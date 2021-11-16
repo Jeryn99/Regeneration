@@ -31,7 +31,7 @@ public class RegenTraitRegistry {
     public static final RegistryObject<AbstractTrait> FIRE = TRAITS.register("fire_resistant", (TraitFireResistant::new));
     public static final RegistryObject<AbstractTrait> ENDER_HURT = TRAITS.register("ender_hurt", () -> new TraitBase(Color.MAGENTA.getRGB()));
     public static final RegistryObject<AbstractTrait> WATER_STRIDE = TRAITS.register("water_stride", () -> new TraitBase(Color.WHITE.getRGB()));
-    public static final RegistryObject<AbstractTrait> PHOTOSYNTHETIC = TRAITS.register("photosynthetic", () -> new TraitBase(Color.green.getRGB()));
+    public static final RegistryObject<AbstractTrait> PHOTOSYNTHETIC = TRAITS.register("photosynthetic", () -> new TraitBase(Color.ORANGE.getRGB()));
     public static Supplier<IForgeRegistry<AbstractTrait>> TRAIT_REGISTRY = TRAITS.makeRegistry("regeneration_traits", () -> new RegistryBuilder<AbstractTrait>().setMaxID(Integer.MAX_VALUE - 1));
 
 

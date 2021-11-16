@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class SkinPack {
 
-    private static final HashMap<ResourceLocation, ResourceLocation> THUMBNAIL = new HashMap<>();
+    public static final HashMap<ResourceLocation, ResourceLocation> THUMBNAIL = new HashMap<>();
     private static final ArrayList<SkinPack> skins = new ArrayList<>();
     private final ResourceLocation namespace;
     private String name;
@@ -62,16 +62,6 @@ public class SkinPack {
             e.printStackTrace();
         }
         return DefaultPlayerSkin.getDefaultSkin();
-    }
-
-    public static ResourceLocation urlToTexture(File file) {
-        NativeImage nativeImage = null;
-        try {
-            nativeImage = NativeImage.read(new FileInputStream(file));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return SkinHandler.loadImage(nativeImage);
     }
 
     public static Collection<? extends SkinPack> getAll() {

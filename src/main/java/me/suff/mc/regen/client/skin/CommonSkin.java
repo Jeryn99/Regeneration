@@ -33,6 +33,7 @@ import java.util.zip.ZipFile;
 public class CommonSkin {
 
     public static final File SKIN_DIRECTORY = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/skins/");
+    public static final File THUMBNAILS = new File(RegenConfig.COMMON.skinDir.get() + "/Regeneration Data/thumbnails/");
     public static final File SKIN_DIRECTORY_STEVE = new File(SKIN_DIRECTORY, "/steve");
     public static final File SKIN_DIRECTORY_ALEX = new File(SKIN_DIRECTORY, "/alex");
     public static final File SKIN_DIRECTORY_MALE_TIMELORD = new File(SKIN_DIRECTORY, "/timelord/male");
@@ -73,9 +74,26 @@ public class CommonSkin {
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
+    public static void downloadOnCommand(SkinPack skinPack){
+        ResourceLocation namespace = skinPack.location();
+        File skinPackDir = new File(SKIN_DIRECTORY_ALEX + "/" + namespace.getNamespace() + "/" + namespace.getPath());
+        if (skinPackDir.exists()) {
+            skinPackDir.mkdirs();
+        }
+        long attr = skinPackDir.lastModified();
+        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(skinPackDir.list()).length == 0) {
+            Regeneration.LOG.info("Downloading " + skinPack.getName() + " by " + skinPack.getAuthors() + " " + skinPack.getName());
+            try {
+                unzipSkinPack(skinPack.getDownloadUrl());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public static void folderSetup() throws IOException {
-        File[] folders = new File[]{SKIN_DIRECTORY, SKIN_DIRECTORY_ALEX, SKIN_DIRECTORY_FEMALE_TIMELORD, SKIN_DIRECTORY_MALE_TIMELORD, SKIN_DIRECTORY_STEVE};
+        File[] folders = new File[]{THUMBNAILS, SKIN_DIRECTORY, SKIN_DIRECTORY_ALEX, SKIN_DIRECTORY_FEMALE_TIMELORD, SKIN_DIRECTORY_MALE_TIMELORD, SKIN_DIRECTORY_STEVE};
         for (File folder : folders) {
             if (!folder.exists()) {
                 FileUtils.forceMkdir(folder);
@@ -155,18 +173,8 @@ public class CommonSkin {
             ResourceLocation namespace = new ResourceLocation(currentPack.get("namespace").getAsString());
             String desc = currentPack.get("description").getAsString();
             String thumbnail = currentPack.get("thumbnail").getAsString();
-
             SkinPack.add(new SkinPack(packName, authors, downloadLink, thumbnail, namespace));
-
-            File skinPackDir = new File(SKIN_DIRECTORY_ALEX + "/" + namespace.getNamespace() + "/" + namespace.getPath());
-            if (skinPackDir.exists()) {
-                skinPackDir.mkdirs();
-            }
-            long attr = skinPackDir.lastModified();
-            if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(skinPackDir.list()).length == 0) {
-                Regeneration.LOG.info("Downloading " + packName + " by " + authors + " " + desc);
-                unzipSkinPack(downloadLink);
-            }
+            CommonSkin.downloadSkinsSpecific(new URL(thumbnail), namespace.getPath(), THUMBNAILS);
         }
     }
 
