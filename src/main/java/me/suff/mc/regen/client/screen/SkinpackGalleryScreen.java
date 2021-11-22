@@ -32,7 +32,6 @@ public class SkinpackGalleryScreen extends Screen {
     private static File SCREENSHOTS_DIR = CommonSkin.THUMBNAILS;
     private static final TextureManager textureManager = Minecraft.getInstance().getTextureManager();
     private static ArrayList<ResourceLocation> THUMBNAILS = new ArrayList<>();
-    private final PlayerUtil.SkinType skintype;
     private ArrayList<File> allThumbnails;
     private ArrayList<List<File>> pagesOfThumbnails;
     private int index;
@@ -42,10 +41,9 @@ public class SkinpackGalleryScreen extends Screen {
     private static final int COLUMN = 4;
     private static final int IMAGES_TO_DISPLAY = ROW * COLUMN;
 
-    public SkinpackGalleryScreen(int index, PlayerUtil.SkinType skinType) {
+    public SkinpackGalleryScreen(int index) {
         super(TITLE);
         this.index = index;
-        this.skintype = skinType;
     }
 
     @Override

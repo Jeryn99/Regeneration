@@ -74,21 +74,22 @@ public class CommonSkin {
         return (File) folderFiles.toArray()[rand.nextInt(folderFiles.size())];
     }
 
-    public static void downloadOnCommand(SkinPack skinPack){
-        ResourceLocation namespace = skinPack.location();
-        File skinPackDir = new File(SKIN_DIRECTORY_ALEX + "/" + namespace.getNamespace() + "/" + namespace.getPath());
-        if (skinPackDir.exists()) {
+    public static void downloadOnCommand(SkinPack skinPack) {
+        Thread thread = new Thread(() -> {
+            ResourceLocation namespace = skinPack.location();
+            File skinPackDir = new File(SKIN_DIRECTORY_ALEX + "/" + namespace.getNamespace() + "/" + namespace.getPath());
+            if (!skinPackDir.exists()) {
+                skinPackDir.delete();
+            }
             skinPackDir.mkdirs();
-        }
-        long attr = skinPackDir.lastModified();
-        if (System.currentTimeMillis() - attr >= 86400000 || Objects.requireNonNull(skinPackDir.list()).length == 0) {
             Regeneration.LOG.info("Downloading " + skinPack.getName() + " by " + skinPack.getAuthors() + " " + skinPack.getName());
             try {
                 unzipSkinPack(skinPack.getDownloadUrl());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        });
+        thread.start();
     }
 
 

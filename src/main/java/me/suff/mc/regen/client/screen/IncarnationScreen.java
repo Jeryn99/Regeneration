@@ -168,7 +168,7 @@ public class IncarnationScreen extends ContainerScreen {
         DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.reset_skin"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                Minecraft.getInstance().setScreen(new SkinpackGalleryScreen(0, currentSkinType));
+                Minecraft.getInstance().setScreen(new SkinpackGalleryScreen(0));
                 SkinHandler.sendResetMessage();
             }
         }).setDescription(new String[]{"button.tooltip.reset_mojang"});
@@ -178,7 +178,7 @@ public class IncarnationScreen extends ContainerScreen {
                 CheckboxButton check = (CheckboxButton) checkboxButton;
                 position = 0;
                 if (!check.selected()) {
-                    skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
+                    skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("mineskin"));
                 } else {
                     skins = CommonSkin.listAllSkins(currentSkinType);
                 }
@@ -209,7 +209,7 @@ public class IncarnationScreen extends ContainerScreen {
 
     private void stripTrending() {
         if (!excludeTrending.selected()) {
-            skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("namemc"));
+            skins.removeIf(file -> file.getAbsoluteFile().toPath().toString().contains("mineskin"));
         }
     }
 
