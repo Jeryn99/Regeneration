@@ -6,6 +6,7 @@ import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.block.Blocks;
+import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.LockableLootTileEntity;
@@ -28,8 +29,10 @@ import java.util.Random;
 public class HutPieces {
 
     private static final ResourceLocation HUT = new ResourceLocation(RConstants.MODID, "gallifrey_shack");
+    private static final ResourceLocation HUT_1 = new ResourceLocation(RConstants.MODID, "gallifrey_barn_d");
+    private static final ResourceLocation HUT_2 = new ResourceLocation(RConstants.MODID, "gallifrey_barn_m");
 
-    private static final ResourceLocation[] ALL_STRUCTURES = new ResourceLocation[]{HUT};
+    private static final ResourceLocation[] ALL_STRUCTURES = new ResourceLocation[]{HUT, HUT_1, HUT_2};
 
     private static final Map<ResourceLocation, BlockPos> OFFSET = ImmutableMap.of(HUT, BlockPos.ZERO);
 
@@ -38,7 +41,7 @@ public class HutPieces {
         int z = pos.getZ();
         BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
         BlockPos blockpos = rotationOffSet.offset(x, pos.getY(), z);
-        pieceList.add(new HutPieces.Piece(templateManager, new ResourceLocation(RConstants.MODID, "gallifrey_shack"), blockpos, rotation));
+        pieceList.add(new HutPieces.Piece(templateManager, ALL_STRUCTURES[random.nextInt(ALL_STRUCTURES.length)], blockpos, rotation));
     }
 
     public static class Piece extends TemplateStructurePiece {
@@ -96,6 +99,11 @@ public class HutPieces {
             if ("chest_stone".equals(function)) {
                 LockableLootTileEntity.setLootTable(worldIn, rand, pos.above(), LootTables.STRONGHOLD_LIBRARY);
                 worldIn.setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
+            }
+
+            if ("barrel_down".equals(function)) {
+                LockableLootTileEntity.setLootTable(worldIn, rand, pos.below(), LootTables.STRONGHOLD_LIBRARY);
+                worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
             }
 
         }

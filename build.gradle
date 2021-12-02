@@ -36,11 +36,15 @@ minecraft {
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
     runs {
-        client {
-            workingDirectory project.file('run')
+
+        configureEach {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             arg "-mixin.config=regen.mixins.json"
+        }
+
+        client {
+            workingDirectory project.file('run')
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
@@ -66,8 +70,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
@@ -80,8 +82,6 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -133,6 +133,7 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
     implementation fg.deobf("curse.maven:configured-457570:3244520")
     implementation fg.deobf("curse.maven:jei-238222:3519343")
+    implementation fg.deobf("curse.maven:terraforged-363820:3451426")
     implementation fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:1.5.2')
 }
 

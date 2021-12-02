@@ -10,5 +10,6 @@
   ],
   "minVersion": "0.8",
   "mixins": [
+    "ChunkInvokerMixin"
   ]
 }
