@@ -43,14 +43,14 @@ public class FieryTransition extends TransitionType {
 
 
             PlayerUtil.regenerationExplosion(livingEntity);
-            double x = livingEntity.getX() + livingEntity.getRandom().nextGaussian() * 2 * capability.getDamage();
-            double y = livingEntity.getY() + 0.5 + livingEntity.getRandom().nextGaussian() * 2 * capability.getDamage();
-            double z = livingEntity.getZ() + livingEntity.getRandom().nextGaussian() * 2 * capability.getDamage();
+            double x = livingEntity.getX() + livingEntity.getRandom().nextGaussian() * 2;
+            double y = livingEntity.getY() + 0.5 + livingEntity.getRandom().nextGaussian() * 2;
+            double z = livingEntity.getZ() + livingEntity.getRandom().nextGaussian() * 2;
 
             //BlockPos.betweenClosedStream(livingEntity.getBoundingBox().inflate(capability.getDamage())).forEach(blockPos -> livingEntity.level.setBlock(blockPos, Blocks.FIRE.defaultBlockState(), 12));
 
             if (!PlayerUtil.isPlayerAboveZeroGrid(livingEntity)) {
-                livingEntity.level.explode(livingEntity, x, y, z, capability.getDamage(), RegenConfig.COMMON.fieryRegen.get(), capability.getDamage() > 5 ? Explosion.Mode.BREAK : Explosion.Mode.NONE);
+                livingEntity.level.explode(livingEntity, x, y, z, 0.2F, RegenConfig.COMMON.fieryRegen.get(), Explosion.Mode.NONE);
             }
             Iterator<BlockPos> iterator = BlockPos.betweenClosedStream(new BlockPos(livingEntity.position()).north().west(), new BlockPos(livingEntity.position()).south().east()).iterator();
             while (iterator.hasNext()) {

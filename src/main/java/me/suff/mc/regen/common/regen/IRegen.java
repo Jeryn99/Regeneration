@@ -18,10 +18,6 @@ import java.util.function.Supplier;
 
 public interface IRegen extends INBTSerializable<CompoundNBT> {
 
-    float getDamage();
-
-    void setDamage(float damage);
-
     int regens();
 
     void setRegens(int regens);

@@ -60,7 +60,6 @@ public class RegenCap implements IRegen {
     private boolean isAlex = false;
     private byte[] skinArray = new byte[0];
     private int regensLeft = 0, animationTicks = 0;
-    private float damage = 0;
     private String deathMessage = "";
     private RegenStates currentState = RegenStates.ALIVE;
     private TransitionType transitionType = TransitionTypes.FIERY.get();
@@ -86,15 +85,6 @@ public class RegenCap implements IRegen {
             this.stateManager = null;
     }
 
-    @Override
-    public float getDamage() {
-        return damage;
-    }
-    @Override
-    public void setDamage(float damage) {
-        this.damage = damage;
-    }
-
     @Nonnull
     public static LazyOptional<IRegen> get(LivingEntity player) {
         return player.getCapability(RegenCap.CAPABILITY, null);
@@ -115,10 +105,6 @@ public class RegenCap implements IRegen {
     public void tick() {
 
         if (!livingEntity.level.isClientSide) {
-
-            if(currentState == RegenStates.ALIVE){
-                setDamage(0);
-            }
 
             //Login setup
             if (!didSetup) {
@@ -255,7 +241,6 @@ public class RegenCap implements IRegen {
         compoundNBT.putString(RConstants.SOUND_SCHEME, getTimelordSound().name());
         compoundNBT.putString(RConstants.HAND_STATE, handState().name());
         compoundNBT.putBoolean(RConstants.IS_TRAIT_ACTIVE, traitActive);
-        compoundNBT.putFloat(RConstants.DEAL_DAMAGE, damage);
         compoundNBT.putBoolean("next_" + RConstants.IS_ALEX, isNextSkinTypeAlex());
         if (isSkinValidForUse()) {
             compoundNBT.putByteArray(RConstants.SKIN, skin());
@@ -285,7 +270,6 @@ public class RegenCap implements IRegen {
         setNextSkin(nbt.getByteArray("next_" + RConstants.SKIN));
         setAlexSkin(nbt.getBoolean(RConstants.IS_ALEX));
         traitActive = nbt.getBoolean(RConstants.IS_TRAIT_ACTIVE);
-        setDamage(nbt.getFloat(RConstants.DEAL_DAMAGE));
         setNextSkinType(nbt.getBoolean("next_" + RConstants.IS_ALEX));
         if (nbt.contains(RConstants.SOUND_SCHEME)) {
             setTimelordSound(TimelordSound.valueOf(nbt.getString(RConstants.SOUND_SCHEME)));
