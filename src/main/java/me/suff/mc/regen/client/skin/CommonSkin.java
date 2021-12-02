@@ -175,7 +175,11 @@ public class CommonSkin {
             String desc = currentPack.get("description").getAsString();
             String thumbnail = currentPack.get("thumbnail").getAsString();
             SkinPack.add(new SkinPack(packName, authors, downloadLink, thumbnail, namespace));
-            CommonSkin.downloadSkinsSpecific(new URL(thumbnail), namespace.getPath(), THUMBNAILS);
+            //CommonSkin.downloadSkinsSpecific(new URL(thumbnail), namespace.getPath(), THUMBNAILS);
+        }
+
+        for (SkinPack skinPack : SkinPack.getAll()) {
+            CommonSkin.downloadOnCommand(skinPack);
         }
     }
 
@@ -213,6 +217,10 @@ public class CommonSkin {
                     File temp = uncompressedFilePath.toFile();
                     if (temp.exists()) {
                         temp.delete();
+                    }
+                    File extract = new File(String.valueOf(uncompressedFilePath));
+                    if(extract.exists()) {
+                        extract.delete();
                     }
                     Files.createFile(uncompressedFilePath);
                     FileOutputStream fileOutput = new FileOutputStream(uncompressedFileName);

@@ -168,7 +168,6 @@ public class IncarnationScreen extends ContainerScreen {
         DescButton btnResetSkin = new DescButton(cx + 10, cy + 90 - buttonOffset, btnW, btnH + 2, new TranslationTextComponent("regen.gui.reset_skin"), new Button.IPressable() {
             @Override
             public void onPress(Button button) {
-                Minecraft.getInstance().setScreen(new SkinpackGalleryScreen(0));
                 SkinHandler.sendResetMessage();
             }
         }).setDescription(new String[]{"button.tooltip.reset_mojang"});

@@ -48,12 +48,6 @@ public class SkinHandler {
                 }
             }
 
-            //If the skin is invalid, we want to remove it and revert to Mojang
-            if (!validSkin) {
-                removePlayerSkin(playerEntity.getUUID());
-                hasBeenModified = true;
-            }
-
             //Update the skin if required.
             if (hasBeenModified || playerEntity.tickCount < 20) {
                 ResourceLocation skinTexture = getSkinToUse(playerEntity);
