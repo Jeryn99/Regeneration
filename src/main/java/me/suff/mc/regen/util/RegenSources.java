@@ -12,7 +12,7 @@ public class RegenSources extends DamageSource {
             REGEN_DMG_CRITICAL = new RegenSources("regen_crit").bypassInvul().bypassArmor(),
             REGEN_DMG_KILLED = new RegenSources("regen_killed").bypassInvul().bypassArmor(),
             REGEN_DMG_FORCED = new RegenSources("forced").bypassInvul().bypassArmor(),
-            REGEN_DMG_RIFLE = new RegenSources("rifle").bypassInvul().bypassArmor(),
+            REGEN_DMG_RIFLE = new RegenSources("rifle").bypassArmor(),
             REGEN_DMG_HAND = new RegenSources("hand_cut").bypassInvul().bypassArmor(),
             REGEN_DMG_STASER = new RegenSources("staser");
 
