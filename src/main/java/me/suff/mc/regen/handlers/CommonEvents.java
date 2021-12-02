@@ -11,7 +11,6 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;
-import me.suff.mc.regen.mixin.ChunkInvokerMixin;
 import me.suff.mc.regen.util.PlayerUtil;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenSources;
@@ -27,8 +26,6 @@ import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -43,6 +40,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -50,7 +48,6 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
@@ -288,22 +285,6 @@ public class CommonEvents {
         if (event.getWorld() instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) event.getWorld();
 
-
-            if (ModList.get().isLoaded("terraforged")) {
-                try {
-                    ChunkInvokerMixin chunkGeneratorMixin = (ChunkInvokerMixin) serverWorld.getChunkSource().generator;
-                    ResourceLocation chunkGeneratorLoc = Registry.CHUNK_GENERATOR.getKey(chunkGeneratorMixin.giveMeTheCodecFam());
-                    if (chunkGeneratorLoc != null && chunkGeneratorLoc.getNamespace().equals("terraforged")) {
-                        Regeneration.LOG.info("Setting up compatibility with Terraforged's ChunkGenerator for world {}!", serverWorld.dimension().getRegistryName());
-                        return;
-                    }
-                } catch (Exception e) {
-                    Regeneration.LOG.error("Was unable to check if {} is using Terraforged's ChunkGenerator.", serverWorld.dimension().getRegistryName());
-                }
-            }
-
-
-
             /* Prevent spawning our structure in Vanilla's superflat world as
              * people seem to want their superflat worlds free of modded structures.
              * Also, vanilla superflat is really tricky and buggy to work with as mentioned in WAObjects#registerConfiguredStructure
@@ -322,8 +303,8 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onLoad(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof PlayerEntity) {
+    public static void onLoad(PlayerEvent.PlayerLoggedInEvent event){
+        if(event.getEntity() instanceof PlayerEntity){
             PlayerEntity playerEntity = (PlayerEntity) event.getEntity();
             RegenUtil.versionCheck(playerEntity);
         }

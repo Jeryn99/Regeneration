@@ -2,7 +2,6 @@ package me.suff.mc.regen.common.world.gen;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.util.RConstants;
 import net.minecraft.util.ResourceLocation;
@@ -14,13 +13,10 @@ import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class RStructures {
@@ -91,36 +87,7 @@ public class RStructures {
                         .putAll(DimensionStructuresSettings.DEFAULTS)
                         .put(structure, structureSeparationSettings)
                         .build();
-
-        if (ModList.get().isLoaded("terraforged"))
-            addHackyStructureModCompat(structure, structureSeparationSettings);
-
     }
-
-    /**
-     * Special snowflake to account for an edge case of certain mods which try to get a structure's seperation settings before a world has loaded
-     * <br> These mods take the settings from the WorldGenRegistries, before datapacks load.
-     * */
-    public static <F extends Structure<?>> void addHackyStructureModCompat(F structure, StructureSeparationSettings structureSeparationSettings) {
-        WorldGenRegistries.NOISE_GENERATOR_SETTINGS.forEach(settings -> {
-            Map<Structure<?>, StructureSeparationSettings> structureMap = settings.structureSettings().structureConfig();
-
-            //Stupid hack to account for mods if make the map immutable for some reason
-            if(structureMap instanceof ImmutableMap){
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
-                tempMap.put(structure, structureSeparationSettings);
-                settings.structureSettings().structureConfig = tempMap;
-            }
-            else{
-                structureMap.put(structure, structureSeparationSettings);
-            }
-            Regeneration.LOG.info("Added compatibility with other world generation mods for structure {}: Adding StructureSeperationSettings early into WorldGenRegistries!", structure.getRegistryName().toString());
-            Regeneration.LOG.info("Warning: This may break compatibility with vanilla datapacks!");
-        });
-    }
-
-
-
 
     /**
      * Register the pieces of your structure if this has not been done by a jigsaw pool.
