@@ -11,6 +11,7 @@ import me.suff.mc.regen.common.regen.state.RegenStates;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.AbstractTrait;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
+import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.RemoveTimelordSkinMessage;
 import me.suff.mc.regen.util.RConstants;
@@ -158,6 +159,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         }
     }
 
+
     public void setup() {
         if (!level.isClientSide()) {
 
@@ -280,6 +282,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
 
                 if (tickCount < 20) {
                     data.syncToClients(null);
+                    getOffers().removeIf(merchantOffer -> !RegenConfig.COMMON.traitsEnabled.get() && merchantOffer.getResult().getItem() instanceof ElixirItem || RegenTraitRegistry.stripElixir(merchantOffer.getResult()));
                 }
 
                 if (data.regenState().isGraceful() && data.glowing())
@@ -305,11 +308,6 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         });
     }
 
-
-    @Override
-    protected float getVoicePitch() {
-        return 1;
-    }
 
     @Override
     public void kill() {
@@ -374,14 +372,17 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
         if (getTimelordType() == TimelordType.COUNCIL) {
             MerchantOffers merchantoffers = this.getOffers();
 
-            for (int i = random.nextInt(7); i > 0; i--) {
-                AbstractTrait trait = RegenTraitRegistry.getRandomTrait(random, false);
-                ItemStack item = new ItemStack(RItems.ELIXIR.get());
-                Item[] currency = RegenUtil.TIMELORD_CURRENCY.getValues().toArray(new Item[0]);
-                ElixirItem.setTrait(item, trait);
-                TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[random.nextInt(currency.length)], MathHelper.clamp(random.nextInt(10), 6, 20)), item, random.nextInt(7), 5)};
-                this.addOffersFromItemListings(merchantoffers, trades, 5);
+            if (RegenConfig.COMMON.traitsEnabled.get()) {
+                for (int i = random.nextInt(7); i > 0; i--) {
+                    AbstractTrait trait = RegenTraitRegistry.getRandomTrait(random, false);
+                    ItemStack item = new ItemStack(RItems.ELIXIR.get());
+                    Item[] currency = RegenUtil.TIMELORD_CURRENCY.getValues().toArray(new Item[0]);
+                    ElixirItem.setTrait(item, trait);
+                    TimelordTrade[] trades = new TimelordTrade[]{new TimelordEntity.TimelordTrade(new ItemStack(currency[random.nextInt(currency.length)], MathHelper.clamp(random.nextInt(10), 6, 20)), item, random.nextInt(7), 5)};
+                    this.addOffersFromItemListings(merchantoffers, trades, 5);
+                }
             }
+
 
             TimelordTrade[] tradetrades = new TimelordTrade[]{
                     new TimelordEntity.TimelordTrade(new ItemStack(Items.DIAMOND, 3), new ItemStack(RItems.ZINC.get(), 15), new ItemStack(RItems.RIFLE.get()), random.nextInt(7), 5),
@@ -391,6 +392,7 @@ public class TimelordEntity extends AbstractVillagerEntity implements IRangedAtt
             this.addOffersFromItemListings(merchantoffers, tradetrades, 5);
         }
     }
+
 
     @Override
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {

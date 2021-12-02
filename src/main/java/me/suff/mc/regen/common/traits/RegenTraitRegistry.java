@@ -1,8 +1,10 @@
 package me.suff.mc.regen.common.traits;
 
 import com.google.common.collect.Iterables;
+import me.suff.mc.regen.common.item.ElixirItem;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.util.RConstants;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -12,6 +14,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -58,15 +61,20 @@ public class RegenTraitRegistry {
     public static AbstractTrait getRandomTrait(Random random, boolean isMob) {
         Collection<AbstractTrait> value = TRAIT_REGISTRY.get().getValues();
         ArrayList<AbstractTrait> traits = new ArrayList<>(value);
-        traits.removeIf(trait -> trait.isPlayerOnly() && isMob || trait.getRegistryName().equals(RegenTraitRegistry.BORING.get().getRegistryName()));
-        for (AbstractTrait trait : traits) {
+        traits.removeIf(trait -> trait.isPlayerOnly() && isMob || trait.getRegistryName().equals(RegenTraitRegistry.BORING.get().getRegistryName()) || RegenConfig.COMMON.disabledTraits.get().contains(trait.getRegistryName().toString().toLowerCase()));
+        int i = random.nextInt(value.size());
+        return Iterables.get(value, i);
+    }
+
+    public static boolean stripElixir(ItemStack stack) {
+        if(stack.getItem() instanceof ElixirItem){
+            AbstractTrait trait = ElixirItem.getTrait(stack);
             for (String s : RegenConfig.COMMON.disabledTraits.get()) {
-                if (trait.getRegistryName().toString().contains(s)) {
-                    traits.remove(trait);
+                if(s.equalsIgnoreCase(trait.getRegistryName().toString())){
+                    return true;
                 }
             }
         }
-        int i = random.nextInt(value.size());
-        return Iterables.get(value, i);
+        return false;
     }
 }

@@ -136,8 +136,8 @@ public class RegenCap implements IRegen {
 
             if(currentState.isGraceful()){
                 if(livingEntity.tickCount % 50 == 0){
-                    setDamage(damage+= currentState == RegenStates.GRACE_CRIT ? 1 : 0.05);
-                    System.out.println("New Damage: " + getDamage());
+                   // setDamage(damage+= currentState == RegenStates.GRACE_CRIT ? 1 : 0.05);
+                   // System.out.println("New Damage: " + getDamage());
                 }
             }
 
