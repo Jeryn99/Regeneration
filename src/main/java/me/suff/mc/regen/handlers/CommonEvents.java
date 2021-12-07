@@ -281,9 +281,14 @@ public class CommonEvents {
      * but this sometimes does not work in code made dimensions.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void addDimensionalSpacing(final WorldEvent.Load event) {
+    public static void space(final WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) event.getWorld();
+
+            if(serverWorld.getChunkSource().generator.getClass().getName().toLowerCase().contains("tfchunkgenerator")){
+                System.out.println("HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                return;
+            }
 
             /* Prevent spawning our structure in Vanilla's superflat world as
              * people seem to want their superflat worlds free of modded structures.

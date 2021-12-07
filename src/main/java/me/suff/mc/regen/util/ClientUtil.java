@@ -31,12 +31,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.toasts.SystemToast;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -47,6 +47,7 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
@@ -287,9 +288,12 @@ public class ClientUtil {
         }
     }
 
+    private static final ResourceLocation SUN_TEXTURES = new ResourceLocation("textures/environment/sun.png");
+
+
     public static void renderSky(MatrixStack matrixStackIn) {
         if (Minecraft.getInstance().level == null || matrixStackIn == null) return;
-      /*  if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension()== RConstants.GALLIFREY) {
+        if (Minecraft.getInstance().level.dimension() != null &&  Minecraft.getInstance().level.dimension().location().toString().equalsIgnoreCase("regen:gallifrey")) {
             float scale = 30.0F;
             BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
             matrixStackIn.pushPose();
@@ -305,6 +309,6 @@ public class ClientUtil {
             matrixStackIn.popPose();
             bufferbuilder.end();
             WorldVertexBufferUploader.end(bufferbuilder);
-        }*/
+        }
     }
 }
