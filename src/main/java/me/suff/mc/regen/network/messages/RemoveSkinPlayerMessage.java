@@ -3,7 +3,7 @@ package me.suff.mc.regen.network.messages;
 import me.suff.mc.regen.client.skin.SkinHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;

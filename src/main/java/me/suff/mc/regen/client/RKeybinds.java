@@ -6,7 +6,7 @@ import me.suff.mc.regen.network.messages.ForceRegenMessage;
 import me.suff.mc.regen.network.messages.ToggleTraitMessage;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
+import net.minecraftforge.client.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
 
 public class RKeybinds {

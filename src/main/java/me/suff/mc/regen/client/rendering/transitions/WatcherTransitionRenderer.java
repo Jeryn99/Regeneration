@@ -30,7 +30,7 @@ public class WatcherTransitionRenderer implements TransitionRenderer {
 
         RegenCap.get(player).ifPresent(iRegen -> {
             if (iRegen.regenState() == RegenStates.REGENERATING) {
-                PoseStack maxtrix = pre.getMatrixStack();
+                PoseStack maxtrix = pre.getPoseStack();
                 player.yBodyRot = player.yBodyRotO = 0;
                 maxtrix.translate(0, 0.1, 0);
                 maxtrix.mulPose(Vector3f.XN.rotationDegrees(90));

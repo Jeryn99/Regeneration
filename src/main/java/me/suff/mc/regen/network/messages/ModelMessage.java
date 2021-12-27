@@ -3,7 +3,7 @@ package me.suff.mc.regen.network.messages;
 import me.suff.mc.regen.common.regen.RegenCap;
 import me.suff.mc.regen.util.PlayerUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Objects;
 import java.util.function.Supplier;

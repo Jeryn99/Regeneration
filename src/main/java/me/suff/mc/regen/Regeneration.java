@@ -7,7 +7,6 @@ import me.suff.mc.regen.client.rendering.entity.RenderLaser;
 import me.suff.mc.regen.client.rendering.entity.TimelordRenderer;
 import me.suff.mc.regen.client.rendering.entity.WatcherRenderer;
 import me.suff.mc.regen.common.advancement.TriggerManager;
-import me.suff.mc.regen.common.entities.Cyberman;
 import me.suff.mc.regen.common.entities.Timelord;
 import me.suff.mc.regen.common.entities.Watcher;
 import me.suff.mc.regen.common.objects.*;
@@ -15,8 +14,6 @@ import me.suff.mc.regen.common.regen.IRegen;
 import me.suff.mc.regen.common.regen.acting.ActingForwarder;
 import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
-import me.suff.mc.regen.common.world.biome.surface.RSurfaceBuilder;
-import me.suff.mc.regen.common.world.gen.RStructures;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
 import me.suff.mc.regen.network.NetworkDispatcher;
@@ -24,7 +21,6 @@ import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.DownloadSkinsThread;
 import me.suff.mc.regen.util.PlayerUtil;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.worldgen.biome.BiomeReport;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -62,11 +58,8 @@ public class Regeneration {
         REntities.ENTITIES.register(modBus);
 
         RTiles.TILES.register(modBus);
-        RStructures.Structures.STRUCTURES.register(modBus);
-        RStructures.FEATURES.register(modBus);
         RParticles.TYPES.register(modBus);
         RGlobalLoot.GLM.register(modBus);
-        RSurfaceBuilder.SurfaceBuilders.SURFACE_BUILDERS.register(modBus);
         RegenTraitRegistry.TRAITS.register(modBus);
         TransitionTypes.TRANSITION_TYPES.register(modBus);
 
@@ -90,13 +83,6 @@ public class Regeneration {
     }
 
     private void doCommonStuff(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            RSurfaceBuilder.registerConfiguredSurfaceBuilders();
-            RStructures.setupStructures();
-            RStructures.ConfiguredStructures.registerConfiguredStructures();
-            RStructures.registerConfiguredFeatures();
-        });
-
         ActingForwarder.init();
         DownloadSkinsThread.setup();
         RSoundSchemes.init();
@@ -118,7 +104,6 @@ public class Regeneration {
     @SubscribeEvent
     public void onGatherData(GatherDataEvent e) {
         DataGenerator generator = e.getGenerator();
-        boolean reports = false;
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
         generator.addProvider(new EnglishLang(generator));
         generator.addProvider(new RBlockLootTableGen(generator));
@@ -128,9 +113,6 @@ public class Regeneration {
         generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
         generator.addProvider(new RRecipeGen(generator));
         generator.addProvider(new AdvancementGen(generator));
-        if (reports) {
-            generator.addProvider(new BiomeReport(generator));
-        }
     }
 
 }

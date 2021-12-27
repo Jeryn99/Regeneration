@@ -5,7 +5,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -64,15 +64,15 @@ public class TabRegistry {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void guiPostInit(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (event.getGui() instanceof InventoryScreen) {
-            int guiLeft = (event.getGui().width - 176) / 2;
-            int guiTop = (event.getGui().height - 166) / 2;
+    public void guiPostInit(ScreenEvent.InitScreenEvent.Post event) {
+        if (event.getScreen() instanceof InventoryScreen) {
+            int guiLeft = (event.getScreen().width - 176) / 2;
+            int guiTop = (event.getScreen().height - 166) / 2;
 
             TabRegistry.updateTabValues(guiLeft, guiTop, InventoryTabVanilla.class);
             for (AbstractTab tab : TabRegistry.tabList) {
                 if (tab.shouldAddToList()) {
-                    event.addWidget(tab);
+                    event.addListener(tab);
                 }
             }
         }

@@ -111,14 +111,15 @@ public class JarBlock extends Block implements EntityBlock {
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
-    @Override
+    //TODO IMPORTANT
+  /*  @Override
     public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (!world.isClientSide()) {
             BioContainerBlockEntity jarTile = (BioContainerBlockEntity) world.getBlockEntity(pos);
             jarTile.dropHandIfPresent(player);
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
-    }
+    }*/
 
     @Override
     public RenderShape getRenderShape(BlockState p_60550_) {

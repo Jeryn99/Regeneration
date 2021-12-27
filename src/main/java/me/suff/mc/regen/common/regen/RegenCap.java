@@ -30,11 +30,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -46,8 +47,8 @@ import java.util.Map;
 public class RegenCap implements IRegen {
 
     //Injection
-    @CapabilityInject(IRegen.class)
-    public static final Capability<IRegen> CAPABILITY = null;
+
+    public static final Capability<IRegen> CAPABILITY =  CapabilityManager.get(new CapabilityToken<IRegen>(){});
     //State
     private final StateManager stateManager;
     //Data

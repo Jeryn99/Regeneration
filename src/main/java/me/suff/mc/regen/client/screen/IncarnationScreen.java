@@ -312,8 +312,8 @@ public class IncarnationScreen extends AbstractContainerScreen {
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
 
         descButtons.forEach(descButton -> {
-            if(descButton.isHovered()){
-                this.renderToolTip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
+            if(descButton.isHoveredOrFocused()){
+                this.renderTooltip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
             }
         });
     }

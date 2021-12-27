@@ -244,12 +244,12 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void keyInput(InputUpdateEvent e) {
+    public static void keyInput(MovementInputUpdateEvent e) {
         if (Minecraft.getInstance().player == null) return;
         LocalPlayer player = Minecraft.getInstance().player;
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data -> {
             if (data.regenState() == RegenStates.REGENERATING) { // locking user
-                Input moveType = e.getMovementInput();
+                Input moveType = e.getInput();
                 blockMovement(moveType);
                 upwardsMovement(player, data);
             }
