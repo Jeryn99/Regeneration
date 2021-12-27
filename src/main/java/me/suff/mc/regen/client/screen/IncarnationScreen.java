@@ -67,7 +67,8 @@ public class IncarnationScreen extends AbstractContainerScreen {
     public static void updateModels() {
         if (!skins.isEmpty()) {
             currentTexture = CommonSkin.fileTotexture(skins.get(position));
-            isAlex = skins.get(position).toPath().startsWith(CommonSkin.SKIN_DIRECTORY_ALEX.toPath().toString());
+            System.out.println(skins.get(position).toPath() + " || " + CommonSkin.SKIN_DIRECTORY_ALEX);
+            isAlex = skins.get(position).toString().contains("\\skins\\alex");
             renderChoice = isAlex ? PlayerUtil.SkinType.ALEX : PlayerUtil.SkinType.STEVE;
         }
     }
@@ -108,7 +109,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
         final int btnW = 55, btnH = 18;
         position = 0;
         skins = CommonSkin.listAllSkins(PlayerUtil.SkinType.EITHER);
-        excludeTrending.active = true;
       /*  try {
             getHash();
         } catch (IOException e) {
@@ -227,6 +227,10 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> currentSkinType = data.preferredModel());
         updateModels();
+
+        excludeTrending.active = true;
+
+
     }
 
     private void stripTrending() {
