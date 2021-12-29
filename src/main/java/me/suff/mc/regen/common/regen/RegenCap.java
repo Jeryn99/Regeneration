@@ -146,7 +146,7 @@ public class RegenCap implements IRegen {
     @Override
     public boolean canRegenerate() {
         if (livingEntity != null) {
-            return regens() > 0 && livingEntity.getY() > 0 && currentState != RegenStates.POST;
+            return regens() > 0 && livingEntity.getY() > livingEntity.getCommandSenderWorld().getMinBuildHeight() && currentState != RegenStates.POST;
         }
         return false;
     }

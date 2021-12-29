@@ -129,8 +129,7 @@ public class CommonEvents {
                 return;
             }
 
-            if (trueSource instanceof Player && event.getEntityLiving() != null) {
-                Player player = (Player) trueSource;
+            if (trueSource instanceof Player player && event.getEntityLiving() != null) {
                 RegenCap.get(player).ifPresent((data) -> data.stateManager().onPunchEntity(event));
             }
 
@@ -175,8 +174,9 @@ public class CommonEvents {
                 event.setCanceled(notDead);
             }
         }));
-
     }
+
+
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void adMortemInimicus(LivingDeathEvent event) {
