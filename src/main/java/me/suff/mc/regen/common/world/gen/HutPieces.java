@@ -27,13 +27,16 @@ import java.util.Random;
 public class HutPieces {
 
     private static final ResourceLocation HUT = new ResourceLocation(RConstants.MODID, "gallifrey_shack");
+    private static final ResourceLocation HUT_D = new ResourceLocation(RConstants.MODID, "gallifrey_barn_m");
+    private static final ResourceLocation HUT_C = new ResourceLocation(RConstants.MODID, "gallifrey_barn_d");
+    private static final ResourceLocation[] HUTS = new ResourceLocation[]{HUT, HUT_C, HUT_D};
 
     public static void start(StructureManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random) {
         int x = pos.getX();
         int z = pos.getZ();
         BlockPos rotationOffSet = new BlockPos(0, 0, 0).rotate(rotation);
         BlockPos blockpos = rotationOffSet.offset(x, pos.getY(), z);
-        pieceList.add(new HutPieces.Piece(templateManager, new ResourceLocation(RConstants.MODID, "gallifrey_shack"), blockpos, rotation, 64));
+        pieceList.add(new HutPieces.Piece(templateManager, HUTS[random.nextInt(HUTS.length)], blockpos, rotation, 64));
     }
 
     public static class Piece extends TemplateStructurePiece {
@@ -75,6 +78,12 @@ public class HutPieces {
             if ("chest_stone".equals(function)) {
                 RandomizableContainerBlockEntity.setLootTable(worldIn, rand, pos.above(), BuiltInLootTables.STRONGHOLD_LIBRARY);
                 worldIn.setBlock(pos, Blocks.STONE.defaultBlockState(), 2);
+            }
+
+
+            if ("barrel_down".equals(function)) {
+                RandomizableContainerBlockEntity.setLootTable(worldIn, rand, pos.below(), BuiltInLootTables.STRONGHOLD_LIBRARY);
+                worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
             }
 
         }

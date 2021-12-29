@@ -116,7 +116,7 @@ public class CommonSkin {
         uc = url.openConnection();
         uc.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36");
         BufferedImage img = ImageIO.read(uc.getInputStream());
-        //  img= toBlackAndWhite(img);
+          //img= toBlackAndWhite(img);
         File file = specific;
         if (!file.exists()) {
             file.mkdirs();
@@ -131,6 +131,8 @@ public class CommonSkin {
         ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
         return op.filter(img, gray);
     }
+
+
 
     public static void skinpacks() throws IOException {
         if (!RegenConfig.CLIENT.downloadInteralSkins.get() || !RegenUtil.doesHaveInternet()) return;
@@ -278,4 +280,5 @@ public class CommonSkin {
             }
         }
     }
+
 }

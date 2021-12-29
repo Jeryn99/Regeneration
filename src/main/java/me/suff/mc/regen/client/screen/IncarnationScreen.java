@@ -108,7 +108,6 @@ public class IncarnationScreen extends AbstractContainerScreen {
         final int btnW = 55, btnH = 18;
         position = 0;
         skins = CommonSkin.listAllSkins(PlayerUtil.SkinType.EITHER);
-        excludeTrending.active = true;
       /*  try {
             getHash();
         } catch (IOException e) {
@@ -227,6 +226,9 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         RegenCap.get(Minecraft.getInstance().player).ifPresent((data) -> currentSkinType = data.preferredModel());
         updateModels();
+
+        excludeTrending.active = true;
+
     }
 
     private void stripTrending() {
@@ -313,7 +315,7 @@ public class IncarnationScreen extends AbstractContainerScreen {
 
         descButtons.forEach(descButton -> {
             if(descButton.isHovered()){
-                this.renderToolTip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
+                this.renderTooltip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
             }
         });
     }
