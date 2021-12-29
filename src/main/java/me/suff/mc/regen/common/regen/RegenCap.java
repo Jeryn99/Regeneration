@@ -43,6 +43,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RegenCap implements IRegen {
 
@@ -619,7 +620,7 @@ public class RegenCap implements IRegen {
                 if (livingEntity instanceof Player) {
                     TranslatableComponent text = new TranslatableComponent("regen.messages.regen_death_msg", livingEntity.getName());
                     text.setStyle(text.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(deathMessage()))));
-                    PlayerUtil.sendMessageToAll(text);
+                    PlayerUtil.globalChat(text, Objects.requireNonNull(livingEntity.getServer()));
                 }
             }
 

@@ -23,14 +23,11 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -316,8 +313,10 @@ public class IncarnationScreen extends AbstractContainerScreen {
         this.searchField.render(matrixStack, mouseX, mouseY, partialTicks);
 
         descButtons.forEach(descButton -> {
-            if(descButton.isHoveredOrFocused()){
-                this.renderTooltip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
+            if (descButton.isHoveredOrFocused()) {
+                if (descButton.getDescription() != null) {
+                    this.renderTooltip(matrixStack, descButton.getDescription(), mouseX, mouseY, Minecraft.getInstance().font);
+                }
             }
         });
     }

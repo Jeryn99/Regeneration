@@ -16,6 +16,7 @@ import me.suff.mc.regen.common.regen.transitions.TransitionTypes;
 import me.suff.mc.regen.common.traits.RegenTraitRegistry;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.data.*;
+import me.suff.mc.regen.level.RFeatures;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.DownloadSkinsThread;
@@ -57,6 +58,7 @@ public class Regeneration {
         RItems.ITEMS.register(modBus);
         REntities.ENTITIES.register(modBus);
 
+
         RTiles.TILES.register(modBus);
         RParticles.TYPES.register(modBus);
         RGlobalLoot.GLM.register(modBus);
@@ -87,6 +89,10 @@ public class Regeneration {
         DownloadSkinsThread.setup();
         RSoundSchemes.init();
         TriggerManager.init();
+        event.enqueueWork(() ->
+        {
+            RFeatures.ores();
+        });
     }
 
     @SubscribeEvent

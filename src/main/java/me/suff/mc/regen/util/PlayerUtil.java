@@ -5,8 +5,12 @@ import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.config.RegenConfig;
 import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.network.messages.ModelMessage;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
@@ -69,26 +73,27 @@ public class PlayerUtil {
         }
     }
 
+    public static void globalChat(Component body, MinecraftServer server) {
+        if(server == null) return;
+        server.getPlayerList().broadcastMessage(body, ChatType.SYSTEM, Util.NIL_UUID);
+    }
+
+    public static void chatAs(Entity from, Component body) {
+        from.getServer().getPlayerList().broadcastMessage(new TranslatableComponent("chat.type.text", from.getDisplayName(), body), ChatType.CHAT, from.getUUID());
+    }
 
     public static void sendMessage(LivingEntity livingEntity, String message, boolean hotBar) {
-        if (!(livingEntity instanceof Player)) return;
-        Player player = (Player) livingEntity;
+        if (!(livingEntity instanceof Player player)) return;
         if (!player.level.isClientSide) {
             player.displayClientMessage(new TranslatableComponent(message), hotBar);
         }
     }
 
     public static void sendMessage(LivingEntity livingEntity, TranslatableComponent translation, boolean hotBar) {
-        if (!(livingEntity instanceof Player)) return;
-        Player player = (Player) livingEntity;
+        if (!(livingEntity instanceof Player player)) return;
         if (!player.level.isClientSide) {
             player.displayClientMessage(translation, hotBar);
         }
-    }
-
-    public static void sendMessageToAll(TranslatableComponent translation) {
-        List<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
-        players.forEach(playerMP -> sendMessage(playerMP, translation, false));
     }
 
     public static void applyPotionIfAbsent(LivingEntity player, MobEffect potion, int length, int amplifier, boolean ambient, boolean showParticles) {
