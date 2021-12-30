@@ -25,12 +25,10 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class PlayerUtil {
 
@@ -74,7 +72,7 @@ public class PlayerUtil {
     }
 
     public static void globalChat(Component body, MinecraftServer server) {
-        if(server == null) return;
+        if (server == null) return;
         server.getPlayerList().broadcastMessage(body, ChatType.SYSTEM, Util.NIL_UUID);
     }
 

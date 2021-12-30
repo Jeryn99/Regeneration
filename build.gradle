@@ -10,6 +10,7 @@ buildscript {
 
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
@@ -17,6 +18,8 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: "com.matthewprenger.cursegradle"
+
 
 
 version = '1.0.1'
@@ -36,6 +39,17 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+
+            if (project.hasProperty('mc_uuid')) {
+                args '--uuid', project.getProperty('mc_uuid')
+            }
+            if (project.hasProperty('mc_username')) {
+                args '--username', project.getProperty('mc_username')
+            }
+            if (project.hasProperty('mc_accessToken')) {
+                args '--accessToken', project.getProperty('mc_accessToken')
+            }
+
             arg "-mixin.config=regen.mixins.json"
 
             property 'mixin.env.remapRefMap', 'true'
@@ -143,6 +157,23 @@ jar {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "MixinConfigs"            : "regen.mixins.json"
         ])
+    }
+}
+
+curseforge {
+    if (project.hasProperty('curseforge') && project.hasProperty('regen')) {
+        apiKey = rootProject.curseforge
+        project {
+            id = rootProject.weeping_angels
+            changelog = new File("${project.projectDir}/changelog.html").text
+            changelogType = 'html'
+            releaseType = 'release'
+            addGameVersion '1.18'
+            addGameVersion '1.18.1'
+            mainArtifact(jar) {
+                displayName = "[1.18.X] Regeneration - $project.version"
+            }
+        }
     }
 }
 

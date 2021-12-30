@@ -10,7 +10,6 @@ import net.minecraft.tags.Tag;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.ForgeBlockTagsProvider;
 
 /* Created by Craig on 08/03/2021 */
 public class RBlockTags extends BlockTagsProvider {

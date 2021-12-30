@@ -49,7 +49,8 @@ public class RegenCap implements IRegen {
 
     //Injection
 
-    public static final Capability<IRegen> CAPABILITY =  CapabilityManager.get(new CapabilityToken<IRegen>(){});
+    public static final Capability<IRegen> CAPABILITY = CapabilityManager.get(new CapabilityToken<IRegen>() {
+    });
     //State
     private final StateManager stateManager;
     //Data

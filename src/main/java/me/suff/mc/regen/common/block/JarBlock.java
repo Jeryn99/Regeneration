@@ -111,15 +111,17 @@ public class JarBlock extends Block implements EntityBlock {
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
-    //TODO IMPORTANT
-  /*  @Override
-    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (!world.isClientSide()) {
             BioContainerBlockEntity jarTile = (BioContainerBlockEntity) world.getBlockEntity(pos);
-            jarTile.dropHandIfPresent(player);
+            if (jarTile != null) {
+                jarTile.dropHandIfPresent(player);
+            }
         }
-        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
-    }*/
+        return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
+    }
+
 
     @Override
     public RenderShape getRenderShape(BlockState p_60550_) {
@@ -133,7 +135,7 @@ public class JarBlock extends Block implements EntityBlock {
     }
 
     @Nullable
-    @Override //TODO
+    @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
         return EntityBlock.super.getTicker(p_153212_, p_153213_, p_153214_);
     }

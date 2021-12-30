@@ -22,11 +22,11 @@ import net.minecraftforge.network.NetworkHooks;
 /* Created by Craig on 01/03/2021 */
 public class Laser extends ThrowableProjectile {
 
-    private float damage = 3;
-    private DamageSource damageSrc = RegenSources.REGEN_DMG_RIFLE;
     private static final EntityDataAccessor<Float> RED = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> GREEN = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> BLUE = SynchedEntityData.defineId(Laser.class, EntityDataSerializers.FLOAT);
+    private float damage = 3;
+    private DamageSource damageSrc = RegenSources.REGEN_DMG_RIFLE;
 
     public Laser(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
         super(type, worldIn);
@@ -47,11 +47,11 @@ public class Laser extends ThrowableProjectile {
         this.entityData.define(BLUE, 0F);
     }
 
-    public Vector3d getColor(){
+    public Vector3d getColor() {
         return new Vector3d(getEntityData().get(RED), getEntityData().get(GREEN), getEntityData().get(BLUE));
     }
 
-    public void setColors(float red, float green, float blue){
+    public void setColors(float red, float green, float blue) {
         getEntityData().set(RED, red);
         getEntityData().set(GREEN, green);
         getEntityData().set(BLUE, blue);
@@ -104,7 +104,7 @@ public class Laser extends ThrowableProjectile {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        setColors(nbt.getFloat("r"), nbt.getFloat("g"),nbt.getFloat("b"));
+        setColors(nbt.getFloat("r"), nbt.getFloat("g"), nbt.getFloat("b"));
         super.deserializeNBT(nbt);
     }
 

@@ -1,6 +1,5 @@
 package me.suff.mc.regen.data;
 
-import me.suff.mc.regen.common.objects.RBlocks;
 import me.suff.mc.regen.common.objects.RItems;
 import me.suff.mc.regen.util.RConstants;
 import me.suff.mc.regen.util.RegenUtil;

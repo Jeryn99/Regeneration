@@ -2,7 +2,6 @@ package me.suff.mc.regen.common.regen.transitions;
 
 import me.suff.mc.regen.util.RConstants;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;

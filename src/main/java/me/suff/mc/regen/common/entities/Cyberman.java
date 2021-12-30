@@ -1,6 +1,5 @@
 package me.suff.mc.regen.common.entities;
 
-import me.suff.mc.regen.common.entities.ai.FixedMeleeGoal;
 import me.suff.mc.regen.common.objects.REntities;
 import me.suff.mc.regen.common.objects.RSounds;
 import me.suff.mc.regen.common.regen.RegenCap;
@@ -10,7 +9,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
@@ -104,18 +102,18 @@ public class Cyberman extends PathfinderMob implements RangedAttackMob {
     @Override
     public void performRangedAttack(LivingEntity livingEntity, float p_33318_) {
         RegenCap.get(livingEntity).ifPresent(iRegen -> {
-           if(iRegen.regenState() != RegenStates.REGENERATING){
-               Laser laser = new Laser(REntities.LASER.get(), this, level);
-               laser.setColors(0, 0, 0.2F);
-               double d0 = livingEntity.getEyeY() - (double) 1.1F;
-               double d1 = livingEntity.getX() - this.getX();
-               double d2 = d0 - laser.getY();
-               double d3 = livingEntity.getZ() - this.getZ();
-               double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double) 0.2F;
-               laser.shoot(d1, d2 + d4, d3, 0.5F, 14 - livingEntity.level.getDifficulty().getId() * 4);
-               this.playSound(RSounds.CYBER_FIRE.get(), 0.5F, 0.0F);
-               this.level.addFreshEntity(laser);
-           }
+            if (iRegen.regenState() != RegenStates.REGENERATING) {
+                Laser laser = new Laser(REntities.LASER.get(), this, level);
+                laser.setColors(0, 0, 0.2F);
+                double d0 = livingEntity.getEyeY() - (double) 1.1F;
+                double d1 = livingEntity.getX() - this.getX();
+                double d2 = d0 - laser.getY();
+                double d3 = livingEntity.getZ() - this.getZ();
+                double d4 = Math.sqrt(d1 * d1 + d3 * d3) * (double) 0.2F;
+                laser.shoot(d1, d2 + d4, d3, 0.5F, 14 - livingEntity.level.getDifficulty().getId() * 4);
+                this.playSound(RSounds.CYBER_FIRE.get(), 0.5F, 0.0F);
+                this.level.addFreshEntity(laser);
+            }
         });
     }
 }

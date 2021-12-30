@@ -11,8 +11,6 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
 import org.lwjgl.openal.EXTEfx;
 
-import java.util.concurrent.CompletableFuture;
-
 public class SoundReverb {
 
     private static boolean available;
@@ -21,7 +19,7 @@ public class SoundReverb {
     private static int auxEffectSlot;
 
     public static void addReloader() {
-        ((ReloadableResourceManager)Minecraft.getInstance().getResourceManager()).registerReloadListener((ResourceManagerReloadListener) p_10758_ -> setup = false);
+        ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener((ResourceManagerReloadListener) p_10758_ -> setup = false);
     }
 
     public static void setSelfPosition(int soundId) {

@@ -197,7 +197,6 @@ public class ClientUtil {
     }
 
 
-
     private static HumanoidModel<?> getHumanoidModel(ItemStack itemStack, boolean trySteve) {
 
         if (trySteve) {
