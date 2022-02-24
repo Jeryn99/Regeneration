@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[34,)"
+loaderVersion = "[39,)"
 license = "https://raw.githubusercontent.com/WhoCraft/Regeneration/1.16/LICENSE"
 issueTrackerURL = "https://github.com/WhoCraft/Regeneration/issues"
 [[mods]]
@@ -18,7 +18,7 @@ Minecraft Mod that allows for players to given themselves the power of Regenerat
 [[dependencies.regen]]
 modId = "forge"
 mandatory = true
-versionRange = "[37.0.59,)"
+versionRange = "[39.0.45,)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.regen]]

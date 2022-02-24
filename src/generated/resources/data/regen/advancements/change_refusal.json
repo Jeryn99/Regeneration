@@ -1,0 +1,29 @@
+{
+  "parent": "regen:first_regen",
+  "display": {
+    "icon": {
+      "item": "regen:bio_container"
+    },
+    "title": {
+      "translate": "advancements.regen.title.change_refusal"
+    },
+    "description": {
+      "translate": "advancements.regen.desc.change_refusal"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regen:textures/block/zero_roundel_half.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:change_refusal"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

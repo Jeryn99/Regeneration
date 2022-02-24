@@ -136,7 +136,7 @@ minecraft.runs.all {
     }
 }
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.8'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.85'
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
@@ -164,7 +164,7 @@ curseforge {
     if (project.hasProperty('curseforge') && project.hasProperty('regen')) {
         apiKey = rootProject.curseforge
         project {
-            id = rootProject.weeping_angels
+            id = rootProject.regen
             changelog = new File("${project.projectDir}/changelog.html").text
             changelogType = 'html'
             releaseType = 'release'
@@ -175,6 +175,10 @@ curseforge {
             }
         }
     }
+}
+
+processResources {
+    duplicatesStrategy = 'exclude'
 }
 
 jar.finalizedBy('reobfJar')

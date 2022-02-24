@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "regen:blast_zinc"
+    ]
+  },
+  "criteria": {
+    "has_any_zinc": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "regen:zinc_ore"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "regen:blast_zinc"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_any_zinc",
+      "has_the_recipe"
+    ]
+  ]
+}

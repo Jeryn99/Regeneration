@@ -145,7 +145,9 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
 
     @Override
     public CompoundTag getUpdateTag() {
-        return save(new CompoundTag());
+        CompoundTag compoundTag = new CompoundTag();
+        saveAdditional(compoundTag);
+        return compoundTag;
     }
 
     public void sendUpdates() {
@@ -174,13 +176,13 @@ public class BioContainerBlockEntity extends BlockEntity implements BlockEntityT
 
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
         compound.putFloat("energy", getLindos());
         compound.put("inv", itemHandler.serializeNBT());
         compound.putBoolean("update_skin", updateSkin);
         compound.putBoolean("is_open", isOpen);
         compound.putFloat("openAmount", openAmount);
-        return super.save(compound);
+        super.saveAdditional(compound);
     }
 
     public boolean isUpdateSkin() {

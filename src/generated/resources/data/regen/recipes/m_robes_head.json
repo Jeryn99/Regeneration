@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "regen",
+  "pattern": [
+    "Z Z",
+    "ILI",
+    "Z Z"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "I": {
+      "item": "regen:zinc"
+    },
+    "Z": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "result": {
+    "item": "regen:m_robes_head"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "parent": "regen:timelord_trade",
+  "display": {
+    "icon": {
+      "item": "regen:m_robes_head",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancements.regen.title.council"
+    },
+    "description": {
+      "translate": "advancements.regen.desc.council"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regen:textures/block/zero_roundel_half.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:council"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

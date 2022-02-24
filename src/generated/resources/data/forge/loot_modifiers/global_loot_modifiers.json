@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "entries": [
+    "regen:chests/stronghold_library",
+    "regen:gameplay/hero_of_the_village/librarian_gift",
+    "regen:chests/end_city_treasure",
+    "regen:chests/abandoned_mineshaft",
+    "regen:chests/bastion_bridge",
+    "regen:chests/shipwreck_treasure",
+    "regen:gameplay/fishing/treasure",
+    "regen:chests/bastion_treasure",
+    "regen:chests/woodland_mansion",
+    "regen:chests/buried_treasure",
+    "regen:chests/shipwreck_supply"
+  ]
+}

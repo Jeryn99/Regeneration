@@ -1,0 +1,29 @@
+{
+  "parent": "regen:change_refusal",
+  "display": {
+    "icon": {
+      "item": "minecraft:clock"
+    },
+    "title": {
+      "translate": "advancements.regen.title.critical_period"
+    },
+    "description": {
+      "translate": "advancements.regen.desc.critical_period"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "regen:textures/block/zero_roundel_half.png"
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:critical_period"
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}
