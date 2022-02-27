@@ -107,16 +107,16 @@ public class Regeneration {
         boolean reports = false;
         ExistingFileHelper existingFileHelper = e.getExistingFileHelper();
         generator.addProvider(new EnglishLang(generator));
-        generator.addProvider(new RBlockLootTableGen(generator));
-        generator.addProvider(new LootGen(generator));
-        RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
-        generator.addProvider(blockTags);
-        generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
-        generator.addProvider(new RRecipeGen(generator));
-        generator.addProvider(new AdvancementGen(generator));
-        if (reports) {
-            generator.addProvider(new BiomeProvider(generator));
-        }
+//        generator.addProvider(new RBlockLootTableGen(generator));
+//        generator.addProvider(new LootGen(generator));
+//        RBlockTags blockTags = new RBlockTags(generator, existingFileHelper);
+//        generator.addProvider(blockTags);
+//        generator.addProvider(new RItemTags(generator, blockTags, existingFileHelper));
+//        generator.addProvider(new RRecipeGen(generator));
+//        generator.addProvider(new AdvancementGen(generator));
+//        if (reports) {
+//            generator.addProvider(new BiomeProvider(generator));
+//        }
     }
 
 }

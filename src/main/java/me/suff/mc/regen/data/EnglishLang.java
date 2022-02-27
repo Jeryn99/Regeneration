@@ -192,7 +192,7 @@ public class EnglishLang extends LanguageProvider {
         add("config.regeneration.reset_oxygen", "Reset Air?");
         add("config.regeneration.regeneration_fire_immunity", "Fire immunity?");
         add("config.regeneration.regeneration_knocksback_players", "Knocksback players?");
-        add("config.regeneration.absorbtion_level", "Absorbtion Level?");
+        add("config.regeneration.absorption_level", "Absorption Level?");
         add("config.regeneration.post_effects", "Post Regeneration Effects");
         add("config.regeneration.gracePeriodLength", "Grace Period Length");
         add("config.regeneration.criticalPhaseLength", "Critical Period Length");
@@ -205,6 +205,7 @@ public class EnglishLang extends LanguageProvider {
         add("config.regeneration.traitsenabled", "Traits Enabled?");
         add("config.regeneration.disabledTraits", "Disabled Traits");
         add("config.regeneration.upwards_motion", "Upwards motion?");
+        add("config.regeneration.update_checker", "Enable Update Checker");
 
 
         // === Toasts ===
