@@ -46,7 +46,7 @@ public class EnglishLang extends LanguageProvider {
 
         // === Damages Sources ===
         add("regen.source.regen_energy", "%s was blasted by Regeneration Energy!");
-        add("regen.source.regen_heal", "%s died by donating too much Regeneration energy...");
+        add("regen.source.regen_heal", "%s died by donating too much Regeneration Energy...");
         add("regen.source.regen_crit", "%s died from holding in their regeneration for too long");
         add("regen.source.theft", "%s had their body stolen!");
         add("regen.source.lindos", "%s consumed lindos hormones! They are reborn!");
@@ -122,7 +122,7 @@ public class EnglishLang extends LanguageProvider {
         add(RItems.F_ROBES_CHEST.get(), "Timelord Suit (Female)");
         add(RItems.F_ROBES_LEGS.get(), "Timelord Lower Robes (Female)");
 
-        add(RItems.GUARD_HELMET.get(), "Timelord Solider Helmet");
+        add(RItems.GUARD_HELMET.get(), "Timelord Soldier Helmet");
         add(RItems.GUARD_CHEST.get(), "Timelord Chest Armor");
         add(RItems.GUARD_LEGS.get(), "Timelord Lower Armor");
         add(RItems.GUARD_FEET.get(), "Timelord Boots");
@@ -136,16 +136,16 @@ public class EnglishLang extends LanguageProvider {
         add("regen.messages.now_timelord", "You are now a Time lord!");
         add("regen.messages.gained_regens", "Recieved Regenerations!");
         add("regen.messages.new_skin", "Your skin will change next Regeneration!");
-        add("regen.messages.transfer.success", "You've transferred one of your regenerations into the watch");
-        add("regen.messages.transfer.full_watch", "You can't store anymore regenerations in this watch!");
+        add("regen.messages.transfer.success", "You've transferred one of your Regenerations into the watch");
+        add("regen.messages.transfer.full_watch", "You can't store anymore Regenerations in this watch!");
         add("regen.messages.transfer.empty_watch", "This watch is empty!");
-        add("regen.messages.transfer.max_regens", "You already have the maximum number of regenerations");
-        add("regen.messages.transfer.no_regens", "You don't have any regenerations left to transfer");
+        add("regen.messages.transfer.max_regens", "You already have the maximum number of Regenerations");
+        add("regen.messages.transfer.no_regens", "You don't have any Regenerations left to transfer");
         add("regen.messages.regen_chat_message", "%s is regenerating...");
         add("regen.messages.warning.grace", "You are in a state of grace! || Press %s to regenerate!");
         add("regen.messages.warning.grace_critical", "You are near death! || Press %s to regenerate!");
         add("regen.messages.regen_delayed", "Regeneration delayed!");
-        add("regen.messages.regen_warning", "Punch a block to delay your regeneration further");
+        add("regen.messages.regen_warning", "Punch a block to delay your Regeneration further");
         add("regen.messages.jar", "You have gained a Regeneration from harvested lindos!");
         add("regen.messages.jar_not_enough", "There is not enough Lindos in this jar! [100 Lindos = 1 free Regeneration]");
         add("regen.messages.jar_no_break", "You cannot break this Jar while it has %s Lindos Energy!");
@@ -153,8 +153,8 @@ public class EnglishLang extends LanguageProvider {
         add("regen.messages.item_taken_regens", "You have gained %s regenerations from %s");
         add("regen.messages.cannot_use", "You cannot use this right now!");
         add("regen.messages.healed", "You have given %s some of your Regeneration Energy!");
-        add("regen.messages.reduced_dmg", "Reduced Damage due to Post Regen State!");
-        add("regen.messages.fall_dmg", "Fall damage reduced due to post regen state! Although you're gonna feel sick..");
+        add("regen.messages.reduced_dmg", "Reduced Damage due to post-regen State!");
+        add("regen.messages.fall_dmg", "Fall damage reduced due to post-regen state! Although you're gonna feel sick..");
         add("regen.messages.post_ended", "Your Regeneration process is now entirely completed!");
         add("regen.messages.fast_forward_cmd_fail", "Nothing to fast forward to.");
         add("regen.messages.new_trait", "New Trait: %s");
@@ -180,7 +180,7 @@ public class EnglishLang extends LanguageProvider {
 
         //Common
         add("config.regeneration.max_regens", "Maximum Regenerations?");
-        add("config.regeneration.lose_regens_on_death", "Lose Regeneratons on Death?");
+        add("config.regeneration.lose_regens_on_death", "Lose Regenerations on Death?");
         add("config.regeneration.fiery_regen", "Spawn Fire?");
         add("config.regeneration.genFobLoot", "Chameleon Arch in chests?");
         add("config.regeneration.mobsHaveRegens", "Mobs allowed Regenerations?");
@@ -191,7 +191,7 @@ public class EnglishLang extends LanguageProvider {
         add("config.regeneration.reset_hunger", "Reset Hunger?");
         add("config.regeneration.reset_oxygen", "Reset Air?");
         add("config.regeneration.regeneration_fire_immunity", "Fire immunity?");
-        add("config.regeneration.regeneration_knocksback_players", "Knocksback players?");
+        add("config.regeneration.regeneration_knocksback_players", "Knocks back players?");
         add("config.regeneration.absorption_level", "Absorption Level?");
         add("config.regeneration.post_effects", "Post Regeneration Effects");
         add("config.regeneration.gracePeriodLength", "Grace Period Length");
@@ -210,7 +210,7 @@ public class EnglishLang extends LanguageProvider {
 
         // === Toasts ===
         add("regen.toast.regenerated", "You have regenerated!");
-        add("regen.toast.regenerations_left", "%s regenerations left");
+        add("regen.toast.regenerations_left", "%s Regenerations left");
         add("regen.toast.enter_critical", "You are going critical");
         add("regen.toast.enter_critical.sub", "%s minutes left...");
         add("regen.toast.timelord", "You are now a Time lord!");
