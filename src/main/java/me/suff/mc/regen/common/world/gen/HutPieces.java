@@ -34,8 +34,6 @@ public class HutPieces {
 
     private static final ResourceLocation[] ALL_STRUCTURES = new ResourceLocation[]{HUT, HUT_1, HUT_2};
 
-    private static final Map<ResourceLocation, BlockPos> OFFSET = ImmutableMap.of(HUT, BlockPos.ZERO);
-
     public static void start(TemplateManager templateManager, BlockPos pos, Rotation rotation, List<StructurePiece> pieceList, Random random) {
         int x = pos.getX();
         int z = pos.getZ();
@@ -51,7 +49,7 @@ public class HutPieces {
         public Piece(TemplateManager templateManagerIn, ResourceLocation resourceLocationIn, BlockPos pos, Rotation rotationIn) {
             super(RStructures.Structures.HUT_PIECE, 0);
             this.resourceLocation = resourceLocationIn;
-            BlockPos blockpos = HutPieces.OFFSET.get(resourceLocation);
+            BlockPos blockpos = BlockPos.ZERO;
             this.templatePosition = pos.offset(blockpos.getX(), blockpos.getY(), blockpos.getZ());
             this.rotation = rotationIn;
             this.setupPiece(templateManagerIn);

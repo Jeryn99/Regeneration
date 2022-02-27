@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 
 public class InventoryTabVanilla extends AbstractTab {
     public InventoryTabVanilla() {
-        super(0, 0, 0, new ItemStack(Blocks.CRAFTING_TABLE));
+        super(0, new ItemStack(Blocks.CRAFTING_TABLE));
     }
 
     @Override

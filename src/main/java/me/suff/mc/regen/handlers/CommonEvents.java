@@ -1,5 +1,6 @@
 package me.suff.mc.regen.handlers;
 
+import com.mojang.serialization.Codec;
 import me.suff.mc.regen.Regeneration;
 import me.suff.mc.regen.common.advancement.TriggerManager;
 import me.suff.mc.regen.common.commands.RegenCommand;
@@ -26,9 +27,12 @@ import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -49,8 +53,10 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -280,21 +286,23 @@ public class CommonEvents {
      * In {@link RStructures#setupStructure(Structure, StructureSeparationSettings, boolean)} we call {@link DimensionStructuresSettings#DEFAULTS}
      * but this sometimes does not work in code made dimensions.
      */
+    private static Method GETCODEC_METHOD;
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void space(final WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) event.getWorld();
+            ChunkGenerator chunkGenerator = serverWorld.getChunkSource().getGenerator();
 
-            if(serverWorld.getChunkSource().generator.getClass().getName().toLowerCase().contains("tfchunkgenerator")){
-                System.out.println("HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                return;
+            try {
+                if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "codec");
+                ResourceLocation cgRL = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(chunkGenerator));
+                if(cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
+            }
+            catch(Exception e){
+                Regeneration.LOG.error("Was unable to check if " + serverWorld.dimension().location() + " is using Terraforged's ChunkGenerator.");
             }
 
-            /* Prevent spawning our structure in Vanilla's superflat world as
-             * people seem to want their superflat worlds free of modded structures.
-             * Also, vanilla superflat is really tricky and buggy to work with as mentioned in WAObjects#registerConfiguredStructure
-             * BiomeModificationEvent does not seem to fire for superflat biomes...you can't add structures to superflat without mixin it seems.
-             * */
             if (serverWorld.getChunkSource().getGenerator() instanceof FlatChunkGenerator && serverWorld.dimension().equals(World.OVERWORLD)) {
                 return;
             }

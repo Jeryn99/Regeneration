@@ -39,7 +39,7 @@ public class PreferencesScreen extends ContainerScreen {
     public void init() {
         super.init();
         TabRegistry.updateTabValues(leftPos + 2, topPos, RegenPrefTab.class);
-        for (AbstractTab button : TabRegistry.tabList) {
+        for (AbstractTab button : TabRegistry.getTabList()) {
             addButton(button);
         }
 

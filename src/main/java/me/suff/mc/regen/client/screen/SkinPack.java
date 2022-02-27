@@ -33,7 +33,7 @@ public class SkinPack {
         this.downloadUrl = downloadUrl;
         this.namespace = namespace;
 
-        if (!thumbnail.isEmpty()) {
+       /* if (!thumbnail.isEmpty()) {
             Thread thread = new Thread(() -> {
                 try {
                     THUMBNAIL.put(namespace, urlToTexture(new URL(thumbnail)));
@@ -41,10 +41,10 @@ public class SkinPack {
                     e.printStackTrace();
                 }
             });
-            thread.run();
+            thread.start();
         } else {
             THUMBNAIL.put(namespace, null);
-        }
+        }*/
     }
 
     public static ResourceLocation urlToTexture(URL url) {

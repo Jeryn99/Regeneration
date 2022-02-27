@@ -20,7 +20,7 @@ apply plugin: 'maven-publish'
 apply plugin: "com.matthewprenger.cursegradle"
 
 
-version = '2.0.7'
+version = '2.0.8'
 group = 'me.suff.mc.regen' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = '[1.16] Regeneration'
 
@@ -33,8 +33,6 @@ minecraft {
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
             workingDirectory project.file('run')
@@ -134,7 +132,7 @@ dependencies {
     implementation fg.deobf("curse.maven:configured-457570:3244520")
     implementation fg.deobf("curse.maven:terraforged-363820:3451426")
     implementation fg.deobf("curse.maven:jei-238222:3519343")
-    implementation fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:1.5.2')
+    compileOnly fg.deobf('com.gitlab.Spectre0987:TardisMod-1-14:1.5.2')
 }
 
 
