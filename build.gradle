@@ -126,13 +126,13 @@ repositories {
 dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     minecraft "net.minecraftforge:forge:${forge_version}"
-    compileOnly 'org.jetbrains:annotations:15.0'
+    compileOnly 'org.jetbrains:annotations:22.0.0'
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
     implementation fg.deobf("curse.maven:configured-457570:3244520")
     implementation fg.deobf("curse.maven:terraforged-363820:3451426")
     implementation fg.deobf("curse.maven:jei-238222:3519343")
-    compileOnly fg.deobf("com.gitlab.Spectre0987:TardisMod-1-14:${tm_version}")
+    implementation fg.deobf("com.gitlab.Spectre0987:TardisMod-1-14:${tm_version}")
 }
 
 
