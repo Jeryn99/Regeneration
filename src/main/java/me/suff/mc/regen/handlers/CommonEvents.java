@@ -44,7 +44,6 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -295,11 +294,11 @@ public class CommonEvents {
             ChunkGenerator chunkGenerator = serverWorld.getChunkSource().getGenerator();
 
             try {
-                if(GETCODEC_METHOD == null) GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "codec");
+                if (GETCODEC_METHOD == null)
+                    GETCODEC_METHOD = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "codec");
                 ResourceLocation cgRL = Registry.CHUNK_GENERATOR.getKey((Codec<? extends ChunkGenerator>) GETCODEC_METHOD.invoke(chunkGenerator));
-                if(cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
-            }
-            catch(Exception e){
+                if (cgRL != null && cgRL.getNamespace().equals("terraforged")) return;
+            } catch (Exception e) {
                 Regeneration.LOG.error("Was unable to check if " + serverWorld.dimension().location() + " is using Terraforged's ChunkGenerator.");
             }
 
@@ -316,8 +315,8 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onLoad(PlayerEvent.PlayerLoggedInEvent event){
-        if(event.getEntity() instanceof PlayerEntity){
+    public static void onLoad(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntity();
             RegenUtil.versionCheck(playerEntity);
         }
