@@ -175,6 +175,7 @@ public class ClientUtil {
         clothingModels();
         transitionTypes();
         RKeybinds.init();
+        TabRegistry.registerEventListeners(MinecraftForge.EVENT_BUS);
         RenderTypeLookup.setRenderLayer(RBlocks.BIO_CONTAINER.get(), RenderType.cutoutMipped());
         Minecraft.getInstance().getItemColors().register((stack, color) -> color > 0 ? -1 : ElixirItem.getTrait(stack).color(), RItems.ELIXIR.get());
     }

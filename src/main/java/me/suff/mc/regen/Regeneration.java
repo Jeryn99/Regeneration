@@ -20,6 +20,7 @@ import me.suff.mc.regen.network.NetworkDispatcher;
 import me.suff.mc.regen.util.ClientUtil;
 import me.suff.mc.regen.util.DownloadSkinsThread;
 import me.suff.mc.regen.util.PlayerUtil;
+import micdoodle8.mods.galacticraft.api.client.tabs.TabRegistry;
 import net.minecraft.data.BiomeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -50,6 +51,7 @@ public class Regeneration {
 
     public Regeneration() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff));
         modBus.addListener(this::doCommonStuff);
         modBus.register(this);
@@ -72,6 +74,7 @@ public class Regeneration {
         PlayerUtil.setupPotions();
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RegenConfig.CLIENT_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RegenConfig.COMMON_SPEC);
+
     }
 
 

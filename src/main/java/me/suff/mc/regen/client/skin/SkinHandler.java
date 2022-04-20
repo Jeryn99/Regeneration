@@ -48,6 +48,7 @@ public class SkinHandler {
                 }
             }
 
+
             //Update the skin if required.
             if (hasBeenModified || playerEntity.tickCount < 20) {
                 ResourceLocation skinTexture = getSkinToUse(playerEntity);
