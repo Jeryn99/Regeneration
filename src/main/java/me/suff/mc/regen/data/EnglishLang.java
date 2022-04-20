@@ -299,6 +299,9 @@ public class EnglishLang extends LanguageProvider {
 
         add(RegenTraitRegistry.PHOTOSYNTHETIC.get().translation().getKey(), "Photosynthetic");
         add(RegenTraitRegistry.PHOTOSYNTHETIC.get().description().getKey(), "The sun energizes you!");
+        
+        //Compat translations
+        add("ars.piece.category.regen.room", "Room (Regeneration Mod)");
     }
 
     public String grammerNazi(String text) {
